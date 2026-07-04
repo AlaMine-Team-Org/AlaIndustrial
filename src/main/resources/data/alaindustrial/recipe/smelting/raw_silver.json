@@ -1,0 +1,6 @@
+{
+  "type": "alaindustrial:smelting",
+  "ingredient": "alaindustrial:raw_silver",
+  "result": { "id": "alaindustrial:silver_ingot", "count": 1 },
+  "energy": 200
+}

@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "alaindustrial:gold_dust",
+  "result": {
+    "id": "minecraft:gold_ingot",
+    "count": 1
+  },
+  "energy": 260
+}

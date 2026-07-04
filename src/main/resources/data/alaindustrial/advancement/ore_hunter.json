@@ -1,0 +1,29 @@
+{
+  "parent": "alaindustrial:root",
+  "display": {
+    "icon": { "id": "alaindustrial:raw_tin" },
+    "title": { "translate": "advancements.alaindustrial.ore_hunter.title" },
+    "description": { "translate": "advancements.alaindustrial.ore_hunter.description" }
+  },
+  "criteria": {
+    "raw_tin": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:raw_tin" }] }
+    },
+    "raw_silver": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:raw_silver" }] }
+    },
+    "raw_nickel": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:raw_nickel" }] }
+    },
+    "raw_uranium": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:raw_uranium" }] }
+    }
+  },
+  "requirements": [
+    ["raw_tin", "raw_silver", "raw_nickel", "raw_uranium"]
+  ]
+}

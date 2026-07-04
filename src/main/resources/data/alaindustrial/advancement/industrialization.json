@@ -1,0 +1,33 @@
+{
+  "parent": "alaindustrial:first_machine",
+  "display": {
+    "icon": { "id": "alaindustrial:macerator" },
+    "title": { "translate": "advancements.alaindustrial.industrialization.title" },
+    "description": { "translate": "advancements.alaindustrial.industrialization.description" },
+    "frame": "goal"
+  },
+  "criteria": {
+    "macerator": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [ { "condition": "minecraft:block_state_property", "block": "alaindustrial:macerator" } ] }
+    },
+    "electric_furnace": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [ { "condition": "minecraft:block_state_property", "block": "alaindustrial:electric_furnace" } ] }
+    },
+    "compressor": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [ { "condition": "minecraft:block_state_property", "block": "alaindustrial:compressor" } ] }
+    },
+    "extractor": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [ { "condition": "minecraft:block_state_property", "block": "alaindustrial:extractor" } ] }
+    }
+  },
+  "requirements": [
+    [ "macerator" ],
+    [ "electric_furnace" ],
+    [ "compressor" ],
+    [ "extractor" ]
+  ]
+}

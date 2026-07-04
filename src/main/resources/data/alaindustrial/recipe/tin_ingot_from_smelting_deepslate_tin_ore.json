@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smelting",
+  "experience": 0.7,
+  "group": "tin_ingot",
+  "ingredient": "alaindustrial:deepslate_tin_ore",
+  "result": { "id": "alaindustrial:tin_ingot" }
+}

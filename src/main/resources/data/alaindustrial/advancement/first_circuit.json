@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:ore_hunter",
+  "display": {
+    "icon": { "id": "alaindustrial:electronic_circuit" },
+    "title": { "translate": "advancements.alaindustrial.first_circuit.title" },
+    "description": { "translate": "advancements.alaindustrial.first_circuit.description" }
+  },
+  "criteria": {
+    "circuit": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:electronic_circuit" }] }
+    }
+  },
+  "requirements": [["circuit"]]
+}

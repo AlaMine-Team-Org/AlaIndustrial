@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"SNS",
+		"QEQ",
+		"SNS"
+	],
+	"key": {
+		"S": "alaindustrial:silver_ingot",
+		"N": "alaindustrial:nickel_ingot",
+		"Q": "minecraft:quartz",
+		"E": "minecraft:emerald"
+	},
+	"result": {
+		"id": "alaindustrial:electronic_circuit",
+		"count": 1
+	}
+}

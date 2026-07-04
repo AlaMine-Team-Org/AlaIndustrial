@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "alaindustrial:block/battery_box_side",
+    "down": "alaindustrial:block/battery_box_bottom",
+    "up": "alaindustrial:block/battery_box_top",
+    "north": "alaindustrial:block/battery_box_output",
+    "south": "alaindustrial:block/battery_box_front",
+    "east": "alaindustrial:block/battery_box_side",
+    "west": "alaindustrial:block/battery_box_side"
+  }
+}

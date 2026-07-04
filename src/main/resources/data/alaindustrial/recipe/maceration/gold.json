@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "#alaindustrial:macerable_gold",
+  "result": {
+    "id": "alaindustrial:gold_dust",
+    "count": 2
+  },
+  "energy": 300
+}

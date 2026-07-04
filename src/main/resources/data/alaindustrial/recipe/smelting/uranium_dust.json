@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:smelting",
+  "ingredient": "alaindustrial:uranium_dust",
+  "result": {
+    "id": "alaindustrial:uranium_ingot",
+    "count": 1
+  },
+  "energy": 200
+}

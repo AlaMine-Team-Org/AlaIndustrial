@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_1": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:nickel_ingot" } ] } },
+    "has_item_2": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "minecraft:glowstone" } ] } },
+    "has_item_3": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:electronic_circuit" } ] } }
+  },
+  "requirements": [ [ "has_item_1" ], [ "has_item_2" ], [ "has_item_3" ] ],
+  "rewards": {
+    "recipes": [ "alaindustrial:alignment_chip_day" ]
+  }
+}

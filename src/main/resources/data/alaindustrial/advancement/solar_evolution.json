@@ -1,0 +1,20 @@
+{
+  "parent": "alaindustrial:solar_debut",
+  "display": {
+    "icon": { "id": "alaindustrial:alignment_chip_day" },
+    "title": { "translate": "advancements.alaindustrial.solar_evolution.title" },
+    "description": { "translate": "advancements.alaindustrial.solar_evolution.description" },
+    "frame": "goal"
+  },
+  "criteria": {
+    "chip_day": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:alignment_chip_day" }] }
+    },
+    "chip_night": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:alignment_chip_night" }] }
+    }
+  },
+  "requirements": [["chip_day", "chip_night"]]
+}

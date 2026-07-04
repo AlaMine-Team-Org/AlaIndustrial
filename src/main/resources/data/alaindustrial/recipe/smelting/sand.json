@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:smelting",
+  "ingredient": "minecraft:sand",
+  "result": {
+    "id": "minecraft:glass",
+    "count": 1
+  },
+  "energy": 200
+}

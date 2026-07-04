@@ -1,0 +1,14 @@
+{
+  "display": {
+    "icon": { "id": "alaindustrial:solar_panel" },
+    "title": { "translate": "advancements.alaindustrial.root.title" },
+    "description": { "translate": "advancements.alaindustrial.root.description" },
+    "background": "minecraft:gui/advancements/backgrounds/stone",
+    "show_toast": false,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "tick": { "trigger": "minecraft:tick" }
+  },
+  "requirements": [ [ "tick" ] ]
+}

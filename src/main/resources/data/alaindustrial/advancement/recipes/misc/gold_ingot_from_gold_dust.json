@@ -1,0 +1,10 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_1": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:gold_dust" } ] } }
+  },
+  "requirements": [ [ "has_item_1" ] ],
+  "rewards": {
+    "recipes": [ "alaindustrial:gold_ingot_from_gold_dust" ]
+  }
+}

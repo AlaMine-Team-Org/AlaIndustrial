@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "#alaindustrial:macerable_tin",
+  "result": {
+    "id": "alaindustrial:tin_dust",
+    "count": 2
+  },
+  "energy": 300
+}

@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:raw_uranium",
+    "alaindustrial:uranium_ore",
+    "alaindustrial:deepslate_uranium_ore"
+  ]
+}

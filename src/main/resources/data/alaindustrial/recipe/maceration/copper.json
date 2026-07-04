@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "#alaindustrial:macerable_copper",
+  "result": {
+    "id": "alaindustrial:copper_dust",
+    "count": 2
+  },
+  "energy": 300
+}

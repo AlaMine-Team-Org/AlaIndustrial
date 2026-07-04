@@ -1,0 +1,7 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": { "N": "alaindustrial:nickel_ingot", "G": "minecraft:glowstone", "E": "alaindustrial:electronic_circuit" },
+	"pattern": ["NGN","GEG","NGN"],
+	"result": { "id": "alaindustrial:alignment_chip_day" }
+}

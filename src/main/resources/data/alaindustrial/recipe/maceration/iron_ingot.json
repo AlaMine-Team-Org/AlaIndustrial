@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "minecraft:iron_ingot",
+  "result": {
+    "id": "alaindustrial:iron_dust",
+    "count": 1
+  },
+  "energy": 300
+}

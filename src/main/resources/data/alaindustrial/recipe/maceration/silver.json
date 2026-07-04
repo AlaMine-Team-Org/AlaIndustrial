@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "#alaindustrial:macerable_silver",
+  "result": {
+    "id": "alaindustrial:silver_dust",
+    "count": 2
+  },
+  "energy": 300
+}

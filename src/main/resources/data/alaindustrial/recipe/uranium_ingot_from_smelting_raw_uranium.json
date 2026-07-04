@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smelting",
+  "experience": 0.7,
+  "group": "uranium_ingot",
+  "ingredient": "alaindustrial:raw_uranium",
+  "result": { "id": "alaindustrial:uranium_ingot" }
+}

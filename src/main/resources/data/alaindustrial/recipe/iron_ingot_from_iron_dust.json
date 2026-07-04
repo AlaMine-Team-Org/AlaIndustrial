@@ -1,0 +1,8 @@
+{
+	"type": "minecraft:smelting",
+	"category": "misc",
+	"ingredient": "alaindustrial:iron_dust",
+	"result": { "id": "minecraft:iron_ingot" },
+	"experience": 0.5,
+	"cookingtime": 200
+}

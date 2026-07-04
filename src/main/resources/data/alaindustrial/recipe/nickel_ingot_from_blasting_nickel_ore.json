@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:blasting",
+  "experience": 0.7,
+  "group": "nickel_ingot",
+  "ingredient": "alaindustrial:nickel_ore",
+  "result": { "id": "alaindustrial:nickel_ingot" }
+}

@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:blasting",
+  "experience": 0.7,
+  "group": "uranium_ingot",
+  "ingredient": "alaindustrial:uranium_ore",
+  "result": { "id": "alaindustrial:uranium_ingot" }
+}

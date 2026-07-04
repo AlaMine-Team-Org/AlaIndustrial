@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:blasting",
+  "experience": 0.7,
+  "group": "silver_ingot",
+  "ingredient": "alaindustrial:silver_ore",
+  "result": { "id": "alaindustrial:silver_ingot" }
+}

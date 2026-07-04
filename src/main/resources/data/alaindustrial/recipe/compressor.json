@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"S": "minecraft:stone",
+		"P": "minecraft:piston",
+		"E": "alaindustrial:electronic_circuit",
+		"A": "alaindustrial:silver_ingot"
+	},
+	"pattern": ["SSS", "PEP", "SAS"],
+	"result": { "id": "alaindustrial:compressor" }
+}

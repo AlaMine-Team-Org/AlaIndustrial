@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "alaindustrial:block/battery_box"
+    },
+    "facing=south": {
+      "model": "alaindustrial:block/battery_box",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "alaindustrial:block/battery_box",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "alaindustrial:block/battery_box",
+      "y": 90
+    }
+  }
+}

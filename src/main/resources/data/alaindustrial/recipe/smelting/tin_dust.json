@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:smelting",
+  "ingredient": "alaindustrial:tin_dust",
+  "result": {
+    "id": "alaindustrial:tin_ingot",
+    "count": 1
+  },
+  "energy": 200
+}

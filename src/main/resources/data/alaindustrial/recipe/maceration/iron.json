@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "#alaindustrial:macerable_iron",
+  "result": {
+    "id": "alaindustrial:iron_dust",
+    "count": 2
+  },
+  "energy": 300
+}

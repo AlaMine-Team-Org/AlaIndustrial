@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:extracting",
+  "ingredient": "minecraft:blaze_rod",
+  "result": {
+    "id": "minecraft:blaze_powder",
+    "count": 3
+  },
+  "energy": 240
+}

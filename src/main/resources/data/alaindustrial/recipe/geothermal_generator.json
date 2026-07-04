@@ -1,0 +1,7 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": { "S": "minecraft:smooth_stone", "G": "alaindustrial:generator", "E": "alaindustrial:electronic_circuit" },
+	"pattern": ["SSS","SGS","SES"],
+	"result": { "id": "alaindustrial:geothermal_generator" }
+}

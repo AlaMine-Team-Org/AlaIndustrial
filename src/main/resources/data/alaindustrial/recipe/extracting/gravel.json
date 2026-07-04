@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:extracting",
+  "ingredient": "minecraft:gravel",
+  "result": {
+    "id": "minecraft:flint",
+    "count": 1
+  },
+  "energy": 240
+}

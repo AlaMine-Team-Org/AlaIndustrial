@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:smelting",
+  "ingredient": "minecraft:cobblestone",
+  "result": {
+    "id": "minecraft:stone",
+    "count": 1
+  },
+  "energy": 200
+}

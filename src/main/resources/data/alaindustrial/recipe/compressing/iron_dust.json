@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "alaindustrial:iron_dust",
+  "result": {
+    "id": "minecraft:iron_ingot",
+    "count": 1
+  },
+  "energy": 260
+}

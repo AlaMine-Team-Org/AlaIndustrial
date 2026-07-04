@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"S": "alaindustrial:silver_ingot",
+		"F": "minecraft:furnace",
+		"C": "alaindustrial:electronic_circuit"
+	},
+	"pattern": ["SSS", "FCF", "SSS"],
+	"result": { "id": "alaindustrial:electric_furnace" }
+}

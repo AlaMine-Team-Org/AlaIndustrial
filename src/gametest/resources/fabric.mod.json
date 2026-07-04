@@ -1,0 +1,28 @@
+{
+	"schemaVersion": 1,
+	"id": "alaindustrial-gametest",
+	"version": "1.0.0",
+	"name": "AlaIndustrial GameTest",
+	"environment": "*",
+	"depends": {
+		"alaindustrial": "*"
+	},
+	"entrypoints": {
+		"fabric-client-gametest": [
+			"dev.alaindustrial.gametest.GuiClientGameTest"
+		],
+		"fabric-gametest": [
+			"dev.alaindustrial.gametest.AlaCommonGameTest",
+			"dev.alaindustrial.gametest.OreGameTest",
+			"dev.alaindustrial.gametest.GeneratorGameTest",
+			"dev.alaindustrial.gametest.MachineGameTest",
+			"dev.alaindustrial.gametest.SolarPanelGameTest",
+			"dev.alaindustrial.gametest.BatteryBoxGameTest",
+			"dev.alaindustrial.gametest.NetworkGameTest",
+			"dev.alaindustrial.gametest.NetworkBenchGameTest",
+			"dev.alaindustrial.gametest.FluidGameTest",
+			"dev.alaindustrial.gametest.EnergyFaceGameTest",
+			"dev.alaindustrial.gametest.PersistenceGameTest"
+		]
+	}
+}

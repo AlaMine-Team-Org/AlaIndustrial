@@ -1,0 +1,12 @@
+{
+  "parent": "alaindustrial:first_watt",
+  "display": {
+    "icon": { "id": "alaindustrial:copper_cable" },
+    "title": { "translate": "advancements.alaindustrial.energized_network.title" },
+    "description": { "translate": "advancements.alaindustrial.energized_network.description" }
+  },
+  "criteria": {
+    "energized": { "trigger": "alaindustrial:network_energized" }
+  },
+  "requirements": [ [ "energized" ] ]
+}

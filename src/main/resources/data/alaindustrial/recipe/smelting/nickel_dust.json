@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:smelting",
+  "ingredient": "alaindustrial:nickel_dust",
+  "result": {
+    "id": "alaindustrial:nickel_ingot",
+    "count": 1
+  },
+  "energy": 200
+}

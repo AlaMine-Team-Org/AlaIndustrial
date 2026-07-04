@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "#alaindustrial:macerable_uranium",
+  "result": {
+    "id": "alaindustrial:uranium_dust",
+    "count": 2
+  },
+  "energy": 300
+}

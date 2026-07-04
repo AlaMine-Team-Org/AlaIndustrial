@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:industrialization",
+  "display": {
+    "icon": { "id": "alaindustrial:network_analyzer" },
+    "title": { "translate": "advancements.alaindustrial.network_analyst.title" },
+    "description": { "translate": "advancements.alaindustrial.network_analyst.description" }
+  },
+  "criteria": {
+    "network_analyzer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:network_analyzer" }] }
+    }
+  },
+  "requirements": [["network_analyzer"]]
+}

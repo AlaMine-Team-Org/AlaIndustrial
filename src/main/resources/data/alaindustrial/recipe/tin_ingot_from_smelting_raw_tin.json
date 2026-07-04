@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smelting",
+  "experience": 0.7,
+  "group": "tin_ingot",
+  "ingredient": "alaindustrial:raw_tin",
+  "result": { "id": "alaindustrial:tin_ingot" }
+}

@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:tin_ore",
+    "alaindustrial:deepslate_tin_ore",
+    "alaindustrial:silver_ore",
+    "alaindustrial:deepslate_silver_ore",
+    "alaindustrial:nickel_ore",
+    "alaindustrial:deepslate_nickel_ore"
+  ]
+}

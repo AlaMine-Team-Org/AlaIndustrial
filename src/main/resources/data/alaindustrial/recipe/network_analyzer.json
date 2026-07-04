@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"T": "alaindustrial:tin_ingot",
+		"C": "alaindustrial:electronic_circuit",
+		"U": "minecraft:copper_ingot"
+	},
+	"pattern": [
+		"TTT",
+		"TCT",
+		"UUU"
+	],
+	"result": { "id": "alaindustrial:network_analyzer" }
+}

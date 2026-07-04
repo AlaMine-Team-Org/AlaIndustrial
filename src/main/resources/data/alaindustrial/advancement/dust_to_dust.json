@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:first_machine",
+  "display": {
+    "icon": { "id": "alaindustrial:iron_dust" },
+    "title": { "translate": "advancements.alaindustrial.dust_to_dust.title" },
+    "description": { "translate": "advancements.alaindustrial.dust_to_dust.description" }
+  },
+  "criteria": {
+    "iron_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:iron_dust" }] }
+    }
+  },
+  "requirements": [["iron_dust"]]
+}

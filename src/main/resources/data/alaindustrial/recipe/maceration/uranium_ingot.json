@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "alaindustrial:uranium_ingot",
+  "result": {
+    "id": "alaindustrial:uranium_dust",
+    "count": 1
+  },
+  "energy": 300
+}

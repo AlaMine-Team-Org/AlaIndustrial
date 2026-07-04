@@ -1,0 +1,27 @@
+{
+  "parent": "alaindustrial:energized_network",
+  "display": {
+    "icon": { "id": "alaindustrial:electric_furnace" },
+    "title": { "translate": "advancements.alaindustrial.first_machine.title" },
+    "description": { "translate": "advancements.alaindustrial.first_machine.description" }
+  },
+  "criteria": {
+    "macerator": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:macerator" }] }
+    },
+    "electric_furnace": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:electric_furnace" }] }
+    },
+    "compressor": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:compressor" }] }
+    },
+    "extractor": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:extractor" }] }
+    }
+  },
+  "requirements": [["macerator", "electric_furnace", "compressor", "extractor"]]
+}

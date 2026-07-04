@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smelting",
+  "experience": 0.7,
+  "group": "nickel_ingot",
+  "ingredient": "alaindustrial:raw_nickel",
+  "result": { "id": "alaindustrial:nickel_ingot" }
+}

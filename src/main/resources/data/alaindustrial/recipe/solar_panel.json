@@ -1,0 +1,7 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": { "G": "minecraft:glass", "R": "minecraft:redstone", "E": "alaindustrial:electronic_circuit", "I": "minecraft:iron_ingot", "C": "alaindustrial:copper_cable" },
+	"pattern": ["GGG","RER","ICI"],
+	"result": { "id": "alaindustrial:solar_panel" }
+}

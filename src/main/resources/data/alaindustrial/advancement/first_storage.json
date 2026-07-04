@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:energized_network",
+  "display": {
+    "icon": { "id": "alaindustrial:battery_box" },
+    "title": { "translate": "advancements.alaindustrial.first_storage.title" },
+    "description": { "translate": "advancements.alaindustrial.first_storage.description" }
+  },
+  "criteria": {
+    "battery_box": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:battery_box" }] }
+    }
+  },
+  "requirements": [["battery_box"]]
+}

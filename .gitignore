@@ -1,0 +1,19 @@
+.gradle/
+build/
+out/
+versions/
+run/
+.idea/
+*.iml
+*.log
+*.tmp
+*.bak
+Thumbs.db
+.DS_Store
+.fabric/
+remappedSrc/
+bin/
+
+# Python bytecode
+__pycache__/
+*.pyc
