@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:first_circuit",
+  "display": {
+    "icon": { "id": "alaindustrial:generator" },
+    "title": { "translate": "advancements.alaindustrial.first_generator.title" },
+    "description": { "translate": "advancements.alaindustrial.first_generator.description" }
+  },
+  "criteria": {
+    "generator": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:generator" }] }
+    }
+  },
+  "requirements": [["generator"]]
+}

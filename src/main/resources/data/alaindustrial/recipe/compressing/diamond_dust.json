@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "alaindustrial:diamond_dust",
+  "result": {
+    "id": "minecraft:diamond",
+    "count": 1
+  },
+  "energy": 260
+}

@@ -3,6 +3,12 @@ build/
 out/
 versions/
 run/
+runs/
+# but DO track manual test-session history (alamod-test writes here; alamod-sync commits it)
+!docs/testing/runs/
+# 3D block render working dirs (per-face source textures + 1024px block render);
+# only the flattened tools/*_3d.png at tools root are tracked (used by preview HTML)
+tools/*_3d/
 .idea/
 *.iml
 *.log
@@ -14,6 +20,9 @@ Thumbs.db
 remappedSrc/
 bin/
 
-# Python bytecode
+# Python bytecode (docs/tools validators)
 __pycache__/
 *.pyc
+
+# Generated standalone distribution files (rebuild via: python tools/build_standalone.py)
+tools/AlaIndustrial_Guide.html

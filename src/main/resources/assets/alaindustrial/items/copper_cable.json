@@ -1,6 +1,10 @@
 {
 	"model": {
-		"type": "minecraft:model",
-		"model": "alaindustrial:block/copper_cable_core"
+		"type": "minecraft:select",
+		"property": "minecraft:display_context",
+		"cases": [
+			{ "when": "gui", "model": { "type": "minecraft:model", "model": "alaindustrial:item/copper_cable_gui" } }
+		],
+		"fallback": { "type": "minecraft:model", "model": "alaindustrial:block/copper_cable_core" }
 	}
 }

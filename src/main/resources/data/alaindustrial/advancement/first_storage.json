@@ -1,5 +1,5 @@
 {
-  "parent": "alaindustrial:energized_network",
+  "parent": "alaindustrial:first_wire",
   "display": {
     "icon": { "id": "alaindustrial:battery_box" },
     "title": { "translate": "advancements.alaindustrial.first_storage.title" },

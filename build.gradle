@@ -16,9 +16,9 @@ repositories {
 		name = 'Fabric'
 		url = 'https://maven.fabricmc.net/'
 	}
-	// JUnit 5 (L1 unit tests).
+	// JUnit 5 (L1 unit tests) — see docs/testing/AUTOMATION-STANDARDS.md.
 	mavenCentral()
-	// REI (recipe viewer) + its Cloth Config dependency.
+	// REI (recipe viewer) + its Cloth Config dependency (MOD-018).
 	maven { url = 'https://maven.shedaniel.me/' }
 	// Architectury API — required transitive runtime dependency of REI on Fabric.
 	maven { url = 'https://maven.architectury.dev/' }
@@ -36,7 +36,7 @@ loom {
 
 	runs {
 		// GUI-only screenshot mode: ./gradlew runClientGameTest -Pguionly
-		// (Behaviour self-test fully migrated to ./gradlew runGameTest.)
+		// (Behaviour self-test fully migrated to ./gradlew runGameTest — see docs/testing/AUTOMATION-STANDARDS.md.)
 		configureEach {
 			if (project.findProperty("guionly") != null) {
 				vmArg("-Dalaindustrial.guionly=1")
@@ -66,12 +66,11 @@ dependencies {
 	// Fabric API.
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	// Team Reborn Energy API — underlying energy storage/transport interface.
-	// Added like fabric-api (plain `implementation`); Loom 1.17 handles mod remapping.
-	// Production JiJ bundling strategy is revisited in Stage 1/5.
-	implementation "teamreborn:energy:${project.energy_version}"
+	// Team Reborn Energy API — bundled inside the mod JAR via Fabric JiJ.
+	// Users do not need to install this separately.
+	include(implementation("teamreborn:energy:${project.energy_version}"))
 
-	// REI (Roughly Enough Items) recipe viewer. Optional dependency: the compat plugin is
+	// REI (Roughly Enough Items) recipe viewer — MOD-018. Optional dependency: the compat plugin is
 	// client-only (src/client/.../compat/rei) and the mod loads fine without REI installed. This
 	// Loom 1.17 has no mod* configurations (see docs/BUILD.md) — mod deps use plain Gradle configs
 	// and Loom auto-remaps them.
@@ -87,7 +86,7 @@ dependencies {
 	clientCompileOnly "dev.architectury:architectury-fabric:21.0.2"
 	clientRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
 
-	// L1 unit tests (JUnit 5). Pure-logic only — no Minecraft bootstrap.
+	// L1 unit tests (JUnit 5). Pure-logic only — no Minecraft bootstrap. See AUTOMATION-STANDARDS.md.
 	testImplementation platform("org.junit:junit-bom:${project.junit_version}")
 	testImplementation "org.junit.jupiter:junit-jupiter"
 	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
@@ -153,3 +152,11 @@ jar {
 	}
 }
 
+// Repo validators (OKF docs, assets, balance, traceability) wired into `checkAll` / `check`.
+// See gradle/checks.gradle. Skip for a fast local build with -PskipChecks. The script is
+// developer-only tooling (it drives Python validators over docs/ and tools/, which are not
+// part of a source release), so it is applied only when present — a distribution without it
+// still builds cleanly.
+if (file('gradle/checks.gradle').exists()) {
+	apply from: 'gradle/checks.gradle'
+}

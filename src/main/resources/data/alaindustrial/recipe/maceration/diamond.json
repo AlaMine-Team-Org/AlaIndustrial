@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "#alaindustrial:macerable_diamond",
+  "result": {
+    "id": "alaindustrial:diamond_dust",
+    "count": 2
+  },
+  "energy": 300
+}

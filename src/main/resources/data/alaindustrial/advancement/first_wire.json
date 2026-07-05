@@ -1,5 +1,5 @@
 {
-  "parent": "alaindustrial:first_circuit",
+  "parent": "alaindustrial:smelter",
   "display": {
     "icon": { "id": "alaindustrial:copper_cable" },
     "title": { "translate": "advancements.alaindustrial.first_wire.title" },

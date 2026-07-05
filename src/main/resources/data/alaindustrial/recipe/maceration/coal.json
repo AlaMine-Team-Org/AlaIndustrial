@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "#alaindustrial:macerable_coal",
+  "result": {
+    "id": "alaindustrial:coal_dust",
+    "count": 2
+  },
+  "energy": 300
+}

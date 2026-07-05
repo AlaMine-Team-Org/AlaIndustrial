@@ -1,0 +1,29 @@
+{
+  "parent": "alaindustrial:ore_hunter",
+  "display": {
+    "icon": { "id": "alaindustrial:tin_ingot" },
+    "title": { "translate": "advancements.alaindustrial.smelter.title" },
+    "description": { "translate": "advancements.alaindustrial.smelter.description" }
+  },
+  "criteria": {
+    "tin_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:tin_ingot" }] }
+    },
+    "silver_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:silver_ingot" }] }
+    },
+    "nickel_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:nickel_ingot" }] }
+    },
+    "uranium_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:uranium_ingot" }] }
+    }
+  },
+  "requirements": [
+    ["tin_ingot", "silver_ingot", "nickel_ingot", "uranium_ingot"]
+  ]
+}

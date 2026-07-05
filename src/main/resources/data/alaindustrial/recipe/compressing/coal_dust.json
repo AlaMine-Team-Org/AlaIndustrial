@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "alaindustrial:coal_dust",
+  "result": {
+    "id": "minecraft:coal",
+    "count": 1
+  },
+  "energy": 260
+}

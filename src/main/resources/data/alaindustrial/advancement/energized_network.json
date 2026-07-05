@@ -1,5 +1,5 @@
 {
-  "parent": "alaindustrial:first_watt",
+  "parent": "alaindustrial:first_generator",
   "display": {
     "icon": { "id": "alaindustrial:copper_cable" },
     "title": { "translate": "advancements.alaindustrial.energized_network.title" },

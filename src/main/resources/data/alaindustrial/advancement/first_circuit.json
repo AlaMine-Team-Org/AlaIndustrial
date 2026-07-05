@@ -1,5 +1,5 @@
 {
-  "parent": "alaindustrial:ore_hunter",
+  "parent": "alaindustrial:smelter",
   "display": {
     "icon": { "id": "alaindustrial:electronic_circuit" },
     "title": { "translate": "advancements.alaindustrial.first_circuit.title" },

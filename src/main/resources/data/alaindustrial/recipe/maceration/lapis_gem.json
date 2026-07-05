@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "minecraft:lapis_lazuli",
+  "result": {
+    "id": "alaindustrial:lapis_dust",
+    "count": 1
+  },
+  "energy": 300
+}

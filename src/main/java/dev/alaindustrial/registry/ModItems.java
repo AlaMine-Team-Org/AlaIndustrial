@@ -38,6 +38,10 @@ public final class ModItems {
 	public static final Item IRON_DUST = item("iron_dust");
 	public static final Item COPPER_DUST = item("copper_dust");
 	public static final Item GOLD_DUST = item("gold_dust");
+	public static final Item COAL_DUST = item("coal_dust");
+	public static final Item DIAMOND_DUST = item("diamond_dust");
+	public static final Item EMERALD_DUST = item("emerald_dust");
+	public static final Item LAPIS_DUST = item("lapis_dust");
 	public static final Item TIN_DUST = item("tin_dust");
 	public static final Item RAW_TIN = item("raw_tin");
 	public static final Item TIN_INGOT = item("tin_ingot");
@@ -144,6 +148,10 @@ public final class ModItems {
 					output.accept(IRON_DUST);
 					output.accept(COPPER_DUST);
 					output.accept(GOLD_DUST);
+					output.accept(COAL_DUST);
+					output.accept(DIAMOND_DUST);
+					output.accept(EMERALD_DUST);
+					output.accept(LAPIS_DUST);
 					output.accept(NETWORK_ANALYZER);
 				})
 				.build();

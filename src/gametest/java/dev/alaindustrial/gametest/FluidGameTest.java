@@ -320,21 +320,56 @@ public class FluidGameTest {
 	}
 
 	/**
-	 * @implements TC-GEO-001-NEG04 — a full buffer pauses the burn so lava-ticks are not wasted.
+	 * @implements TC-GEO-001-NEG04 — a full energy buffer pauses the lavaTicks→EU conversion so
+	 *     lava-ticks are not wasted (R-NRG-11). Lava intake (bucket→lavaTicks) is intentionally
+	 *     NOT blocked: the bucket slot is cleared before the frozen-check so the two concerns are
+	 *     tested independently.
 	 * @covers R-NRG-11
 	 */
 	@GameTest
 	public void tcGeo001Neg04_fullBufferPausesBurn(GameTestHelper helper) {
 		GeothermalGeneratorBlockEntity geo = place(helper);
-		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET, 64));
-		drive(geo, helper, 1); // start a burn so lavaTicks > 0
+		// Load one bucket into the burn buffer so lavaTicks > 0.
+		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET, 1));
+		drive(geo, helper, 1); // bucket consumed → lavaTicks = geothermalBurnTicks
+		// Clear the input slot so further intake cannot confound the burn-pause check.
+		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, ItemStack.EMPTY);
 		geo.getEnergyStorage().amount = geo.getEnergyStorage().getCapacity(); // force buffer full
 		drive(geo, helper, 1);
 		int ticks1 = geo.getDataAccess().get(2); // index 2 == progress (lavaTicks)
 		drive(geo, helper, 1);
 		int ticks2 = geo.getDataAccess().get(2);
+		// lavaTicks must not decrease: the burn (lavaTicks→EU) is paused while the buffer is full.
 		if (!(ticks1 > 0 && ticks1 == ticks2)) {
 			helper.fail("full buffer must freeze lavaTicks: ticks1=" + ticks1 + " ticks2=" + ticks2);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-GEO-001-FUN06 — a lava bucket is consumed into lavaTicks even when the energy
+	 *     buffer is full; the lavaTicks→EU step stays paused (R-NRG-11). This verifies that intake
+	 *     and burn are decoupled: you can pre-load the lava buffer independently of energy state.
+	 * @covers R-NRG-11
+	 */
+	@GameTest
+	public void tcGeo001Fun06_lavaBucketLoadedWhenEnergyFull(GameTestHelper helper) {
+		GeothermalGeneratorBlockEntity geo = place(helper);
+		geo.getEnergyStorage().amount = geo.getEnergyStorage().getCapacity(); // force buffer full
+		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET, 1));
+		drive(geo, helper, 1);
+		int lavaTicks = geo.getDataAccess().get(2); // progress = lavaTicks
+		boolean bucketConsumed = geo.getItem(GeothermalGeneratorBlockEntity.INPUT_SLOT).isEmpty();
+		boolean energyStillFull = geo.getEnergyStorage().getAmount() == geo.getEnergyStorage().getCapacity();
+		if (!bucketConsumed) {
+			helper.fail("lava bucket must be consumed even when energy buffer is full");
+		}
+		if (lavaTicks <= 0) {
+			helper.fail("lavaTicks must be positive after bucket load: lavaTicks=" + lavaTicks);
+		}
+		if (!energyStillFull) {
+			helper.fail("energy buffer must stay full (no EU generated while full): energy="
+					+ geo.getEnergyStorage().getAmount());
 		}
 		helper.succeed();
 	}
@@ -534,7 +569,7 @@ public class FluidGameTest {
 	 * @implements R-NRG-03 — pump per-face energy roles: every face accepts EU (IN), none emits,
 	 *     matching the current implementation ({@code PumpBlockEntity#energyRoleForFace} unconditionally
 	 *     returns IN for every {@code Direction} — the FACING face is NOT inert in code). No dedicated
-	 *     TC-PUMP-001 ID covers this (pump.md's "Open Questions" flags the doc's "5×IN + FACING
+	 *     TC-PUMP-001 ID covers this (pump.md's "Open questions" flags the doc's "5×IN + FACING
 	 *     inert" claim as unverified by a pump-specific {@code EnergyFaceGameTest} case, leaving the
 	 *     decision to a reviewer); this method is written against the code as it stands, mirroring how
 	 *     {@code EnergyFaceGameTest} asserts other blocks' face roles directly via

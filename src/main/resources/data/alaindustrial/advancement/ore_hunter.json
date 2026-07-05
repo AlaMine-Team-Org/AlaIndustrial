@@ -1,9 +1,11 @@
 {
-  "parent": "alaindustrial:root",
   "display": {
     "icon": { "id": "alaindustrial:raw_tin" },
     "title": { "translate": "advancements.alaindustrial.ore_hunter.title" },
-    "description": { "translate": "advancements.alaindustrial.ore_hunter.description" }
+    "description": { "translate": "advancements.alaindustrial.ore_hunter.description" },
+    "background": "minecraft:gui/advancements/backgrounds/stone",
+    "show_toast": true,
+    "announce_to_chat": true
   },
   "criteria": {
     "raw_tin": {

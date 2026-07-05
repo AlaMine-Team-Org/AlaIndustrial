@@ -1,0 +1,4 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": { "layer0": "alaindustrial:item/moonlit_solar_panel_3d" }
+}

@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:first_generator",
+  "display": {
+    "icon": { "id": "alaindustrial:geothermal_generator" },
+    "title": { "translate": "advancements.alaindustrial.geothermal_power.title" },
+    "description": { "translate": "advancements.alaindustrial.geothermal_power.description" }
+  },
+  "criteria": {
+    "geothermal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:geothermal_generator" }] }
+    }
+  },
+  "requirements": [["geothermal"]]
+}

@@ -137,7 +137,7 @@ public class CableBlock extends AbstractMachineBlock {
 	 * (idempotent, and keeps the entity's own {@code registered} flag in sync so it can never leak an
 	 * unregistered-on-removal entry — see the MOD-015/016 code review) so the resulting network's
 	 * awake state is known synchronously, and fires {@link ModCriteria#NETWORK_ENERGIZED} if placing
-	 * this cable just connected a producer to a consumer (MOD-015 "Closed Circuit").
+	 * this cable just connected a producer to a consumer (MOD-015 "Closed circuit").
 	 */
 	@Override
 	public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {

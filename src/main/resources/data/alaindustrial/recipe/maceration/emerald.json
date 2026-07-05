@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "#alaindustrial:macerable_emerald",
+  "result": {
+    "id": "alaindustrial:emerald_dust",
+    "count": 2
+  },
+  "energy": 300
+}

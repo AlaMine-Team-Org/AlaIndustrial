@@ -16,7 +16,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 
 /**
  * {@code /ala} build-visibility command. Permission level 0 (available to everyone) so any player can
- * verify which build of AlaIndustrial the server is running.
+ * verify which build of Ala Industrial the server is running.
  *
  * <ul>
  *   <li>{@code /ala version} — one line: version, git hash, build time.</li>
@@ -53,7 +53,7 @@ public final class AlaCommand {
 	}
 
 	private static String versionLine() {
-		return "AlaIndustrial " + BuildInfo.version() + " · build " + BuildInfo.git() + " · " + BuildInfo.built();
+		return "Ala Industrial " + BuildInfo.version() + " · build " + BuildInfo.git() + " · " + BuildInfo.built();
 	}
 
 	private static String statusBody(net.minecraft.server.MinecraftServer server) {

@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "minecraft:diamond",
+  "result": {
+    "id": "alaindustrial:diamond_dust",
+    "count": 1
+  },
+  "energy": 300
+}

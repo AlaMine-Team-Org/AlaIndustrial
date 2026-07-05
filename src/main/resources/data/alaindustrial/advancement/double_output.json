@@ -1,0 +1,29 @@
+{
+  "parent": "alaindustrial:first_machine",
+  "display": {
+    "icon": { "id": "alaindustrial:diamond_dust" },
+    "title": { "translate": "advancements.alaindustrial.double_output.title" },
+    "description": { "translate": "advancements.alaindustrial.double_output.description" }
+  },
+  "criteria": {
+    "diamond_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:diamond_dust" }] }
+    },
+    "emerald_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:emerald_dust" }] }
+    },
+    "coal_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:coal_dust" }] }
+    },
+    "lapis_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:lapis_dust" }] }
+    }
+  },
+  "requirements": [
+    ["diamond_dust", "emerald_dust", "coal_dust", "lapis_dust"]
+  ]
+}

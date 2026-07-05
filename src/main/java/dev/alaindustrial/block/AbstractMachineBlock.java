@@ -52,7 +52,7 @@ public abstract class AbstractMachineBlock extends BaseEntityBlock {
 	 * registered by {@link dev.alaindustrial.block.CableBlock#setPlacedBy}); any other machine block
 	 * is only ever a neighbour endpoint, never a member, so {@link ModCriteria#tryFireNetworkEnergized}
 	 * checks both {@code pos} and its neighbours to cover the "player plugs the last machine into an
-	 * already-built cable run" case too (MOD-015 "Closed Circuit" — see the code review note: without
+	 * already-built cable run" case too (MOD-015 "Closed circuit" — see the code review note: without
 	 * this, the achievement could be permanently unobtainable if a machine, not a cable, is the last
 	 * piece placed).
 	 */

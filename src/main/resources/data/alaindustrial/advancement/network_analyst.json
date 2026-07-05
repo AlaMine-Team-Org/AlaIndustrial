@@ -1,5 +1,5 @@
 {
-  "parent": "alaindustrial:industrialization",
+  "parent": "alaindustrial:first_circuit",
   "display": {
     "icon": { "id": "alaindustrial:network_analyzer" },
     "title": { "translate": "advancements.alaindustrial.network_analyst.title" },

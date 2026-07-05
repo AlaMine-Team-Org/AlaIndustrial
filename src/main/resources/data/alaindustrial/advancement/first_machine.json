@@ -1,7 +1,7 @@
 {
-  "parent": "alaindustrial:energized_network",
+  "parent": "alaindustrial:first_circuit",
   "display": {
-    "icon": { "id": "alaindustrial:electric_furnace" },
+    "icon": { "id": "alaindustrial:macerator" },
     "title": { "translate": "advancements.alaindustrial.first_machine.title" },
     "description": { "translate": "advancements.alaindustrial.first_machine.description" }
   },

@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "alaindustrial-gametest",
 	"version": "1.0.0",
-	"name": "AlaIndustrial GameTest",
+	"name": "Ala Industrial GameTest",
 	"environment": "*",
 	"depends": {
 		"alaindustrial": "*"

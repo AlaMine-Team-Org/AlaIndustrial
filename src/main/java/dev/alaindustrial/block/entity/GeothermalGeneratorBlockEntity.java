@@ -86,23 +86,21 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 	@Override
 	protected int produce(Level level, BlockPos pos, BlockState state) {
 		int tank = tankCapacity();
-		// Refill the burn buffer from a lava bucket when there is room and an empty bucket can be returned.
-		// Freeze all fuel intake while the energy buffer is full so no lava is wasted (R-NRG-11, TC-GEO-001-NEG04).
-		boolean bufferHasRoom = energy.amount < energy.getCapacity();
-		if (bufferHasRoom
-				&& lavaTicks + Config.geothermalBurnTicks <= tank
+		// Load lava from a bucket into the burn buffer whenever there is room.
+		// This is independent of the energy buffer: lavaTicks is an intermediate store, not EU.
+		// EU generation is gated separately below so lava is never wasted (R-NRG-11).
+		if (lavaTicks + Config.geothermalBurnTicks <= tank
 				&& items.get(INPUT_SLOT).is(Items.LAVA_BUCKET) && canReturnBucket()) {
 			items.get(INPUT_SLOT).shrink(1);
 			returnBucket();
 			lavaTicks += Config.geothermalBurnTicks;
 		}
 
-		// Refill the burn buffer from the fluid tank: drain 1 bucket of lava, add a burn quantum.
+		// Drain lava from the fluid tank into the burn buffer when there is room.
 		// This is the generator consuming its OWN fuel, so it bypasses the tank's canExtract guard
 		// (which is false to stop neighbours pulling lava back out) by mutating the tank directly.
 		// produce() runs outside any Transaction, so a direct field update is the correct internal path.
-		if (bufferHasRoom
-				&& lavaTicks + Config.geothermalBurnTicks <= tank
+		if (lavaTicks + Config.geothermalBurnTicks <= tank
 				&& fluidTank.amount >= FluidConstants.BUCKET
 				&& fluidTank.variant.isOf(Fluids.LAVA)) {
 			fluidTank.amount -= FluidConstants.BUCKET;
@@ -113,6 +111,8 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 			setChanged();
 		}
 
+		// Convert lavaTicks → EU only when the energy buffer has room (R-NRG-11, TC-GEO-001-NEG04).
+		// Lava is already in lavaTicks, so pausing here wastes nothing.
 		int made = 0;
 		if (lavaTicks > 0 && energy.amount < energy.getCapacity()) {
 			lavaTicks--;
