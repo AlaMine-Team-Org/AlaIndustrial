@@ -41,6 +41,11 @@ jobs:
       - name: Build
         run: ./gradlew build --no-daemon --stacktrace
 
+      # In-world behaviour tests must pass before a release ships. Required tests
+      # gate the build; tests marked optional (unfinished features) only warn.
+      - name: Game tests
+        run: ./gradlew runGameTest --no-daemon --stacktrace
+
       # Resolve the production jar path and read the changelog into a multi-line output.
       - name: Resolve artifact and changelog
         id: meta

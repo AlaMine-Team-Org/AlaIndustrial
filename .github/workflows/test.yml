@@ -1,0 +1,34 @@
+# Installed into the PUBLIC repo at: .github/workflows/test.yml
+# Continuous test coverage: compiles the mod, runs the JUnit unit tests (via
+# `build`) and the in-world game tests (`runGameTest`). Runs on branch pushes,
+# pull requests and on demand. Tags are handled by release.yml (which runs the
+# same tests before publishing), so they are excluded here to avoid a double run.
+name: Tests
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Unit tests + build
+        run: ./gradlew build --no-daemon --stacktrace
+
+      - name: Game tests (in-world behaviour)
+        run: ./gradlew runGameTest --no-daemon --stacktrace
