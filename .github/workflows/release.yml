@@ -1,7 +1,12 @@
 # Installed into the PUBLIC repo at: .github/workflows/release.yml
-# Triggered by pushing a tag `vX.Y.Z`. Builds the mod and publishes the JAR to
-# CurseForge, and creates a matching GitHub Release. Release notes come from the
-# matching section of CHANGELOG.md.
+# Triggered by pushing a tag `vX.Y.Z`. Builds the mod, publishes to CurseForge
+# with a MARKDOWN changelog, and creates a matching GitHub Release.
+#
+# Why two publish steps: mc-publish does NOT send CurseForge's `changelogType`,
+# so CurseForge stores the changelog as plain text and the Markdown never renders.
+# We therefore upload to CurseForge with itsmeow/curseforge-upload, which sets
+# `changelog_type: markdown` explicitly, and keep mc-publish only for the GitHub
+# Release. The display name carries the loader in brackets, e.g. "... v0.1.1 [Fabric]".
 name: Release
 
 on:
@@ -36,28 +41,41 @@ jobs:
       - name: Build
         run: ./gradlew build --no-daemon --stacktrace
 
+      # Resolve the production jar path and read the changelog into a multi-line output.
+      - name: Resolve artifact and changelog
+        id: meta
+        run: |
+          JAR=$(ls build/libs/*.jar | grep -vE -- '-(dev|sources|javadoc)\.jar$' | head -1)
+          echo "jar=$JAR" >> "$GITHUB_OUTPUT"
+          {
+            echo 'changelog<<__CHANGELOG_EOF__'
+            cat CHANGELOG.md
+            echo '__CHANGELOG_EOF__'
+          } >> "$GITHUB_OUTPUT"
+
+      # CurseForge upload with an explicit MARKDOWN changelog and a loader-tagged name.
+      # game_versions are matched by name; if "26.2" ever collides, prefix it with its
+      # type, e.g. "Minecraft 1.21:26.2".
       - name: Publish to CurseForge
+        uses: itsmeow/curseforge-upload@v3
+        with:
+          token: ${{ secrets.CURSEFORGE_TOKEN }}
+          project_id: 1597723
+          game_endpoint: minecraft
+          file_path: ${{ steps.meta.outputs.jar }}
+          display_name: AlaIndustrial ${{ github.ref_name }} [Fabric]
+          changelog: ${{ steps.meta.outputs.changelog }}
+          changelog_type: markdown
+          game_versions: "26.2,Java 25,Fabric"
+          release_type: release
+
+      # GitHub Release (jar + changelog). mc-publish renders Markdown fine on GitHub.
+      - name: Create GitHub Release
         uses: Kira-NT/mc-publish@v3.3.0
         with:
-          # --- CurseForge ---
-          curseforge-id: 1597723
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-
-          # --- Artifact (remapped production jar; excludes dev/sources/javadoc) ---
           files: build/libs/!(*-@(dev|sources|javadoc)).jar
-
-          # --- Metadata ---
           name: AlaIndustrial ${{ github.ref_name }}
           version: ${{ github.ref_name }}
           version-type: release
-          loaders: fabric
-          game-versions: '26.2'
-          java: '25'
-          dependencies: |
-            fabric-api(required)
-
-          # --- Changelog: mc-publish extracts the section matching this version ---
           changelog-file: CHANGELOG.md
-
-          # --- Also create a GitHub Release with the jar attached ---
           github-token: ${{ secrets.GITHUB_TOKEN }}
