@@ -1,0 +1,38 @@
+# Installed into the PUBLIC repo at: .github/workflows/verify.yml
+# SAFE, READ-ONLY token check. Manual trigger only (workflow_dispatch). It does
+# NOT build the mod and NOT upload anything to CurseForge — it only makes one
+# authenticated GET to the read-only game-versions endpoint, which simultaneously
+# proves the token is valid and shows whether CurseForge knows Minecraft 26.2.
+name: Verify CurseForge Token
+
+on:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Token + game-version check (read-only, no upload)
+        env:
+          CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+        run: |
+          if [ -z "$CF_TOKEN" ]; then
+            echo "::error::CURSEFORGE_TOKEN secret is missing or empty"; exit 1
+          fi
+          code=$(curl -s -o versions.json -w '%{http_code}' \
+            -H "X-Api-Token: $CF_TOKEN" \
+            https://minecraft.curseforge.com/api/game/versions)
+          echo "HTTP status: $code"
+          if [ "$code" != "200" ]; then
+            echo "::error::CurseForge rejected the token (HTTP $code) — token invalid or lacks upload scope"
+            exit 1
+          fi
+          echo "✅ Token is VALID — CurseForge accepted it."
+          echo "Game-version entries returned: $(jq 'length' versions.json)"
+          echo "--- Is Minecraft 26.2 known to CurseForge? ---"
+          if jq -e '.[] | select(.name=="26.2")' versions.json >/dev/null; then
+            echo "✅ 26.2 is present — release mapping will work."
+          else
+            echo "⚠️ 26.2 NOT found yet. Newest versions CurseForge currently lists:"
+            jq -r '.[].name' versions.json | sort -Vr | head -12
+          fi

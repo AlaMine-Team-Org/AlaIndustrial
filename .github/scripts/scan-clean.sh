@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+# =============================================================================
+# Cleanliness gate for the PUBLIC AlaIndustrial repository.
+#
+# Scans the working tree and reports every violation as file:line so it can be
+# reviewed instantly. Runs identically in two places:
+#   1. Locally, inside the /alamod-publish skill, BEFORE the release commit.
+#   2. In CI (.github/workflows/guard.yml) on every push/PR — the safety net
+#      that catches anything pushed by hand, bypassing the skill.
+#
+# Layers:
+#   L1  Cyrillic text            -> the public repo is English-only.
+#   L2  AI traces                -> Claude/Anthropic/co-authored-by/... must never appear.
+#   L3  Secrets / local paths    -> tokens, keys, C:\Users\... never leak.
+#   L4  Denylisted paths         -> .claude/, docs internals, PRD, etc. never publish.
+#
+# Exit: 0 = clean, 1 = violations found, 2 = usage error.
+# =============================================================================
+set -uo pipefail
+
+# Force the C locale so byte-oriented patterns behave identically in Git Bash
+# (where LANG may be unset) and in CI. Cyrillic is matched by its UTF-8 byte
+# sequence below, which is locale-independent.
+export LC_ALL=C
+
+ROOT="${1:-.}"
+cd "$ROOT" || { echo "scan: cannot cd to $ROOT" >&2; exit 2; }
+
+# Cyrillic block U+0400–U+04FF encodes in UTF-8 as lead byte 0xD0–0xD3 followed
+# by a 0x80–0xBF continuation byte — exactly this range, no other block overlaps.
+CYRILLIC='[\xd0-\xd3][\x80-\xbf]'
+
+# Self-test: if the regex engine can't match a known Cyrillic byte pair, the
+# scanner is broken — fail loud instead of silently passing dirty content.
+if ! printf '\xd0\xa0' | grep -qP "$CYRILLIC"; then
+  echo "scan: FATAL — grep -P cannot match Cyrillic bytes; aborting to avoid a false pass" >&2
+  exit 2
+fi
+
+# Text files only: prune vendored/build dirs, skip binary assets.
+mapfile -t files < <(find . \
+  -type d \( -name .git -o -name build -o -name .gradle -o -name run \
+             -o -name .idea -o -name .fabric \) -prune -o \
+  -type f \
+    -not -iname '*.png'  -not -iname '*.jpg'  -not -iname '*.jpeg' \
+    -not -iname '*.gif'  -not -iname '*.ico'  -not -iname '*.jar' \
+    -not -iname '*.zip'  -not -iname '*.ogg'  -not -iname '*.wav' \
+    -not -iname '*.class' -not -iname '*.woff2' -not -iname '*.ttf' \
+    -print)
+
+# The cleanliness tooling itself contains the very AI-term / secret patterns it
+# searches for (this scanner's own regexes; guard.yml's commit-metadata grep).
+# Exclude those two files from content scans so they never flag themselves — they
+# are our CI infrastructure, not published mod content.
+mapfile -t files < <(printf '%s\n' "${files[@]}" | grep -vE '(^|/)(scan-clean\.sh|guard\.yml)$' || true)
+
+# In-game translation files legitimately contain every language (incl. Cyrillic
+# ru_ru/uk_ua/...). They are a shipped feature, not a leak — excluded from the
+# English-only (L1) check, but still scanned by L2/L3 (AI traces / secrets).
+mapfile -t l1_files < <(printf '%s\n' "${files[@]}" | grep -vE '/lang/[a-z_]+\.json$' || true)
+
+fail=0
+# scan <label> <grep-flags> <pattern> [filelist-var]
+scan() {
+  local label="$1" flags="$2" pattern="$3" listvar="${4:-files}" hits
+  local -n _list="$listvar"
+  [[ ${#_list[@]} -eq 0 ]] && return 0
+  hits=$(printf '%s\0' "${_list[@]}" | xargs -0 grep -nI $flags -e "$pattern" 2>/dev/null || true)
+  if [[ -n "$hits" ]]; then
+    printf '❌ %s\n' "$label"
+    printf '%s\n' "$hits" | sed 's/^/   /'
+    fail=1
+  fi
+}
+
+# L1 — Cyrillic (matched by UTF-8 byte range; see $CYRILLIC above).
+# Scans everything EXCEPT in-game lang translation files.
+scan "L1 Cyrillic text (non-English)"        "-P"  "$CYRILLIC"  l1_files
+
+# L2 — explicit AI / assistant traces.
+scan "L2 AI traces"                          "-iE" \
+  'claude|anthropic|co-authored-by|generated with|copilot|noreply@anthropic|artificial intelligence|\bgpt\b|\bllm\b'
+
+# L2b — bare "AI" word. Higher false-positive risk, reported separately so a
+# human can clear legitimate hits at a glance.
+scan "L2 bare 'AI' token (review manually)"  "-E"  '\bAI\b'
+
+# L3 — secrets and machine-local paths.
+scan "L3 secrets / local machine paths"      "-E"  \
+  'PRIVATE KEY|ghp_[A-Za-z0-9]{20,}|xox[baprs]-[A-Za-z0-9-]+|AKIA[0-9A-Z]{16}|C:\\\\Users\\\\'
+
+# L3b — sensitive filenames anywhere in the tree.
+badnames=$(printf '%s\n' "${files[@]}" \
+  | grep -iE '(^|/)\.env($|\.)|\.pem$|\.key$|(^|/)id_rsa|_secret|credentials' || true)
+if [[ -n "$badnames" ]]; then
+  printf '❌ L3 sensitive filenames\n'
+  printf '%s\n' "$badnames" | sed 's/^/   /'
+  fail=1
+fi
+
+# L4 — denylisted paths that must NEVER be published.
+denied=$(printf '%s\n' "${files[@]}" \
+  | grep -iE '(^|/)(\.claude|\.agents|\.githooks|tools)/|(^|/)(PRD|AGENTS|CLAUDE)\.md$' || true)
+if [[ -n "$denied" ]]; then
+  printf '❌ L4 denylisted path present\n'
+  printf '%s\n' "$denied" | sed 's/^/   /'
+  fail=1
+fi
+
+if [[ $fail -eq 0 ]]; then
+  echo "✅ Cleanliness gate passed — no Cyrillic, AI traces, secrets, or denylisted paths."
+fi
+exit $fail
