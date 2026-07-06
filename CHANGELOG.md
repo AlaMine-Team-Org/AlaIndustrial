@@ -1,19 +1,17 @@
-## 0.1.2
+## 0.1.3
 
-A quality patch focused on convenience and correctness: a placement preview for cables, fully
-translated command output, and two fixes for ore processing and recipe visibility.
+This update sharpens the machine interface and brings the mod to more players around the world. Working generators now cast light, energy bars show an exact readout on hover, and the Network Analyzer keeps its last scan right on the tool.
+
+### Gameplay
+
+- **Running generators now emit light.** Fuel and geothermal generators glow while they are active, lighting up the space around them like a lit furnace, and go dark again when idle.
 
 ### Quality of Life
 
-- **Cable placement preview** — while you hold a cable and aim at a block, a translucent ghost shows
-  exactly where it will go, already wired up with the right connections to nearby cables and machines.
-- The **`/ala` commands** (`version`, `status`, `net`) now print in your game language, across 13
-  languages.
+- **Energy bar tooltips.** Hover over the energy bar in any machine or generator to see its exact charge (current / max EU). The geothermal generator additionally shows its stored lava level on hover.
+- **Network Analyzer readout on the tool.** The Network Analyzer now remembers its last scan and shows a summary in the item tooltip — hold **Shift** to expand the full breakdown (cables, energy sources and consumers, and throughput). The on-screen readout now also reports how many sources and consumers the network has.
+- **More languages.** The mod is now available in 18 languages, adding Hindi, Italian, Dutch, Swedish and Indonesian.
 
 ### Bug Fixes
 
-- **Raw ore is no longer doubled in the Ore Crusher.** Raw iron, copper, gold, tin, silver, nickel
-  and uranium now yield a single dust, the same as an ingot — doubling stays where it belongs, on the
-  mined ore block. This closes the loophole of doubling a single vein twice (ore → raw → ×2).
-- **Machine recipes now appear in the recipe viewer.** The Ore Crusher, Electric Furnace, Compressor
-  and Extractor show their recipes (input → output, energy, time) in both directions.
+- **Generator energy bar now fills the full height** when the buffer is full — previously it only filled about halfway at 100% charge.

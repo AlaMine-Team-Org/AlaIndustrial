@@ -32,6 +32,10 @@ public class GeothermalGeneratorScreen extends AbstractContainerScreen<Geotherma
 	private static final int EFILL_SU = 176, EFILL_SV = 0, EFILL_W = 10, EFILL_H = 44;
 	private static final int EFILL_X = 149, EFILL_BOTTOM = 64;
 
+	// Lava burn buffer expressed in millibuckets for the tooltip. The tank holds 10 buckets
+	// (see GeothermalGeneratorBlockEntity.TANK_CAPACITY); 10 buckets × 1000 mB = 10000 mB.
+	private static final int LAVA_TANK_MB = 10_000;
+
 	public GeothermalGeneratorScreen(GeothermalGeneratorMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title);
 	}
@@ -70,6 +74,26 @@ public class GeothermalGeneratorScreen extends AbstractContainerScreen<Geotherma
 					x + EFILL_X, y + EFILL_BOTTOM - eFill,
 					(float) EFILL_SU, (float) (EFILL_SV + EFILL_H - eFill),
 					EFILL_W, eFill, TEX_SIZE, TEX_SIZE);
+		}
+	}
+
+	@Override
+	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		super.extractTooltip(graphics, mouseX, mouseY);
+		// Right bar — stored EU / buffer.
+		if (this.isHovering(EFILL_X, EFILL_BOTTOM - EFILL_H, EFILL_W, EFILL_H, mouseX, mouseY)) {
+			graphics.setTooltipForNextFrame(this.font,
+					Component.translatable("gui.alaindustrial.energy", this.menu.getEnergy(), this.menu.getCapacity()),
+					mouseX, mouseY);
+		}
+		// Left bar — lava burn buffer as millibuckets. Derive mB from the progress/maxProgress ratio
+		// (tank = 10000 mB) so it stays correct even if geothermalBurnTicks changes in config.
+		int maxProgress = this.menu.getMaxProgress();
+		if (maxProgress > 0 && this.isHovering(LAVA_X, LAVA_BOTTOM - LAVA_H, LAVA_W, LAVA_H, mouseX, mouseY)) {
+			int lavaMb = (int) ((long) this.menu.getProgress() * LAVA_TANK_MB / maxProgress);
+			graphics.setTooltipForNextFrame(this.font,
+					Component.translatable("gui.alaindustrial.lava", lavaMb, LAVA_TANK_MB),
+					mouseX, mouseY);
 		}
 	}
 }

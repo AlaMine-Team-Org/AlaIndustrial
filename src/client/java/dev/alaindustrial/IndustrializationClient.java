@@ -15,6 +15,9 @@ import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.client.CompressorScreen;
 import dev.alaindustrial.client.ElectricFurnaceScreen;
 import dev.alaindustrial.client.SolarPanelScreen;
+import dev.alaindustrial.item.NetworkAnalyzerItem;
+import dev.alaindustrial.item.NetworkScanData;
+import dev.alaindustrial.registry.ModDataComponents;
 import dev.alaindustrial.registry.ModMenus;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
@@ -23,6 +26,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 import java.util.List;
@@ -64,6 +68,10 @@ public class IndustrializationClient implements ClientModInitializer {
 
 	private static void registerTooltips() {
 		ItemTooltipCallback.EVENT.register((stack, context, flag, lines) -> {
+			if (stack.getItem() instanceof NetworkAnalyzerItem) {
+				addNetworkAnalyzerTooltip(stack, lines);
+				return;
+			}
 			if (!(stack.getItem() instanceof BlockItem bi)) return;
 			Block block = bi.getBlock();
 			if (!isMachineBlock(block)) return;
@@ -76,6 +84,35 @@ public class IndustrializationClient implements ClientModInitializer {
 						.withStyle(ChatFormatting.DARK_GRAY));
 			}
 		});
+	}
+
+	/**
+	 * Tooltip for the Network Analyzer tool. The usage line is always shown; the last scan (stored on
+	 * the item as {@link ModDataComponents#NETWORK_SCAN} the moment it is used) is replayed under
+	 * [SHIFT] so the reading persists in the inventory after the actionbar message fades (MOD-016).
+	 */
+	private static void addNetworkAnalyzerTooltip(ItemStack stack, List<Component> lines) {
+		lines.add(Component.translatable("tooltip.alaindustrial.network_analyzer.usage")
+				.withStyle(ChatFormatting.GRAY));
+		NetworkScanData scan = stack.get(ModDataComponents.NETWORK_SCAN);
+		if (scan == null) {
+			return;
+		}
+		if (Minecraft.getInstance().hasShiftDown()) {
+			lines.add(Component.translatable("tooltip.alaindustrial.network_analyzer.last_scan")
+					.withStyle(ChatFormatting.AQUA));
+			lines.add(Component.translatable("tooltip.alaindustrial.network_analyzer.cables", scan.cables())
+					.withStyle(ChatFormatting.GRAY));
+			lines.add(Component.translatable("tooltip.alaindustrial.network_analyzer.endpoints",
+					scan.producers(), scan.consumers()).withStyle(ChatFormatting.GRAY));
+			lines.add(Component.translatable("tooltip.alaindustrial.network_analyzer.flow",
+					scan.supply(), scan.demand()).withStyle(ChatFormatting.GRAY));
+			lines.add(Component.translatable("tooltip.alaindustrial.network_analyzer.moved", scan.moved())
+					.withStyle(ChatFormatting.GRAY));
+		} else {
+			lines.add(Component.translatable("tooltip.alaindustrial.hold_shift")
+					.withStyle(ChatFormatting.DARK_GRAY));
+		}
 	}
 
 	private static boolean isMachineBlock(Block block) {

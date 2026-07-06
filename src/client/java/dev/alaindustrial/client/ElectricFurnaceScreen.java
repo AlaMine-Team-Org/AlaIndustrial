@@ -68,4 +68,17 @@ public class ElectricFurnaceScreen extends AbstractContainerScreen<ElectricFurna
 					progFilled, PROG_SH, TEX_SIZE, TEX_SIZE);
 		}
 	}
+
+	@Override
+	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		super.extractTooltip(graphics, mouseX, mouseY);
+		// Hovering the energy bar shows the exact buffer as "X / max EU" (R-GUI-14). The EFILL_*
+		// constants describe the bar interior; isHovering subtracts leftPos/topPos and adds a 1px
+		// margin, so the visible bar border is covered too. Reuses gui.alaindustrial.energy.
+		if (this.isHovering(EFILL_X, EFILL_BOTTOM - EFILL_H, EFILL_W, EFILL_H, mouseX, mouseY)) {
+			graphics.setTooltipForNextFrame(this.font,
+					Component.translatable("gui.alaindustrial.energy", this.menu.getEnergy(), this.menu.getCapacity()),
+					mouseX, mouseY);
+		}
+	}
 }

@@ -17,8 +17,10 @@ public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
 	private static final Identifier TEXTURE = Industrialization.id("textures/gui/container/generator.png");
 	private static final int TEX_SIZE = 256;
 
-	// Orange segmented energy-fill sprite in atlas service area (bottom-up).
-	private static final int EFILL_SU = 176, EFILL_SV = 21, EFILL_W = 10, EFILL_H = 23;
+	// Orange energy-fill sprite in atlas service area (bottom-up). The sprite is the full 44px bar
+	// height at u=176..185, v=0..43; sampling it in full makes a 100% buffer fill the whole visible
+	// bar (the old SV=21/H=23 only sampled the bottom 23px, so a full buffer stopped at mid-bar).
+	private static final int EFILL_SU = 176, EFILL_SV = 0, EFILL_W = 10, EFILL_H = 44;
 	private static final int EFILL_X = 17, EFILL_BOTTOM = 64;
 
 	// Burn indicator: flame sprite starts at u=188 (teardrop inner pixels, 14px wide at widest).
@@ -66,6 +68,18 @@ public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
 					x + FLAME_X, y + FLAME_Y + FLAME_H - flameFill,
 					(float) FLAME_SU, (float) (FLAME_SV + FLAME_H - flameFill),
 					FLAME_W, flameFill, TEX_SIZE, TEX_SIZE);
+		}
+	}
+
+	@Override
+	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		super.extractTooltip(graphics, mouseX, mouseY);
+		// Hovering the energy bar shows the exact buffer as "X / max EU" (R-GUI-14). The EFILL_*
+		// constants describe the bar interior; isHovering adds a 1px margin for the drawn border.
+		if (this.isHovering(EFILL_X, EFILL_BOTTOM - EFILL_H, EFILL_W, EFILL_H, mouseX, mouseY)) {
+			graphics.setTooltipForNextFrame(this.font,
+					Component.translatable("gui.alaindustrial.energy", this.menu.getEnergy(), this.menu.getCapacity()),
+					mouseX, mouseY);
 		}
 	}
 }

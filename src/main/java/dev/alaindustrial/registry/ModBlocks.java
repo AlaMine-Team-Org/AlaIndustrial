@@ -20,6 +20,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 /**
  * Central registration for all Industrialization blocks: the Phase 1 energy-core set
@@ -31,7 +33,8 @@ public final class ModBlocks {
 
 	public static final ResourceKey<Block> GENERATOR_KEY = key("generator");
 	public static final Block GENERATOR = register(GENERATOR_KEY,
-			new GeneratorBlock(props(GENERATOR_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL)));
+			new GeneratorBlock(props(GENERATOR_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.lightLevel(ModBlocks::litLight)));
 
 	public static final ResourceKey<Block> SOLAR_PANEL_KEY = key("solar_panel");
 	public static final Block SOLAR_PANEL = register(SOLAR_PANEL_KEY,
@@ -47,7 +50,8 @@ public final class ModBlocks {
 
 	public static final ResourceKey<Block> GEOTHERMAL_GENERATOR_KEY = key("geothermal_generator");
 	public static final Block GEOTHERMAL_GENERATOR = register(GEOTHERMAL_GENERATOR_KEY,
-			new GeothermalGeneratorBlock(props(GEOTHERMAL_GENERATOR_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL)));
+			new GeothermalGeneratorBlock(props(GEOTHERMAL_GENERATOR_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.lightLevel(ModBlocks::litLight)));
 
 	public static final ResourceKey<Block> PUMP_KEY = key("pump");
 	public static final Block PUMP = register(PUMP_KEY,
@@ -123,6 +127,17 @@ public final class ModBlocks {
 
 	private static ResourceKey<Block> key(String path) {
 		return ResourceKey.create(Registries.BLOCK, Industrialization.id(path));
+	}
+
+	/**
+	 * Per-state light emission for fuel-burning generators (MOD-013): a working generator
+	 * ({@code lit=true}) glows at light level 13 like a lit vanilla furnace; idle ({@code lit=false})
+	 * emits none. Applied only to {@code generator} and {@code geothermal_generator} — the EU-powered
+	 * processing machines (macerator/furnace/extractor/compressor) share the {@code lit} state but do
+	 * not burn fuel, so they stay dark.
+	 */
+	private static int litLight(BlockState state) {
+		return state.getValue(BlockStateProperties.LIT) ? 13 : 0;
 	}
 
 	private static BlockBehaviour.Properties props(ResourceKey<Block> key) {
