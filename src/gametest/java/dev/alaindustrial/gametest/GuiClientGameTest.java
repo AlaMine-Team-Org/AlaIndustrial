@@ -17,6 +17,7 @@ import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.ChatVisiblity;
 import net.minecraft.world.inventory.MenuType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
     @Override
     public void runTest(ClientGameTestContext context) {
         try (TestSingleplayerContext singleplayer = context.worldBuilder().create()) {
+            configureVisualTestClient(context, singleplayer);
             singleplayer.getClientLevel().waitForChunksRender();
 
             if (!GUI_ONLY) {
@@ -111,7 +113,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
         });
         context.waitTicks(5);
         LOG.info("[GUITEST][R-GUI-04] adv_alaindustrial_root -> {}",
-                context.takeScreenshot("adv_alaindustrial_root").toAbsolutePath());
+                takeCleanScreenshot(context, "adv_alaindustrial_root").toAbsolutePath());
 
         // ── Transition: switch to a vanilla tab (proves tab navigation) ────────────────
         context.runOnClient(mc -> {
@@ -121,7 +123,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
         });
         context.waitTicks(5);
         LOG.info("[GUITEST][R-GUI-04] adv_vanilla_story -> {}",
-                context.takeScreenshot("adv_vanilla_story").toAbsolutePath());
+                takeCleanScreenshot(context, "adv_vanilla_story").toAbsolutePath());
 
         // ── Back to our tab (icons must survive re-select) ─────────────────────────────
         context.runOnClient(mc -> {
@@ -131,16 +133,17 @@ public class GuiClientGameTest implements FabricClientGameTest {
         });
         context.waitTicks(5);
         LOG.info("[GUITEST][R-GUI-04] adv_alaindustrial_return -> {}",
-                context.takeScreenshot("adv_alaindustrial_return").toAbsolutePath());
+                takeCleanScreenshot(context, "adv_alaindustrial_return").toAbsolutePath());
 
         // Close the advancements screen.
         context.runOnClient(mc -> mc.setScreenAndShow(null));
         context.waitTicks(3);
 
         // ── All 7 fixed block-item icons in the hotbar (same gui render context) ───────
-        server.runCommand("gamemode survival @p");
+        server.runCommand("fill 6 99 17 12 99 23 minecraft:smooth_stone");
+        server.runCommand("gamemode creative @p");
         server.runCommand("clear @p");
-        server.runCommand("tp @p 9 103 20 180 0");
+        server.runCommand("tp @p 9 100 20 180 0");
         String[] fixedItems = {
             "solar_panel", "daylight_solar_panel", "moonlit_solar_panel",
             "copper_cable", "tin_cable", "insulated_copper_cable", "insulated_tin_cable"
@@ -148,7 +151,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
         for (String it : fixedItems) server.runCommand("give @p alaindustrial:" + it);
         context.waitTicks(5);
         LOG.info("[GUITEST][R-GUI-04] hud_fixed_item_icons -> {}",
-                context.takeScreenshot("hud_fixed_item_icons").toAbsolutePath());
+                takeCleanScreenshot(context, "hud_fixed_item_icons").toAbsolutePath());
     }
 
     // ────────────────────────────────────────────────────────────────────────────────
@@ -196,7 +199,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
             server.runCommand("tp @p " + v[0]);
             singleplayer.getClientLevel().waitForChunksRender();
             context.waitTicks(5);
-            LOG.info("[GUITEST][R-VIS-04] {} -> {}", v[1], context.takeScreenshot(v[1]).toAbsolutePath());
+            LOG.info("[GUITEST][R-VIS-04] {} -> {}", v[1], takeCleanScreenshot(context, v[1]).toAbsolutePath());
         }
 
         // ── Solar Panel (thin top-slab model) ────────────────────────────────────────
@@ -215,7 +218,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
             server.runCommand("tp @p " + v[0]);
             singleplayer.getClientLevel().waitForChunksRender();
             context.waitTicks(5);
-            LOG.info("[GUITEST][R-VIS-04] {} -> {}", v[1], context.takeScreenshot(v[1]).toAbsolutePath());
+            LOG.info("[GUITEST][R-VIS-04] {} -> {}", v[1], takeCleanScreenshot(context, v[1]).toAbsolutePath());
         }
     }
 
@@ -252,35 +255,35 @@ public class GuiClientGameTest implements FabricClientGameTest {
         // Camera: 1 blk from south face (Z=81), pitch=37 centres block vertically.
         server.runCommand("tp @p 80 100 82 180 37");
         context.waitTicks(5);
-        LOG.info("[GUITEST][R-VIS-01] gen_idle -> {}", context.takeScreenshot("vis_gen_idle").toAbsolutePath());
+        LOG.info("[GUITEST][R-VIS-01] gen_idle -> {}", takeCleanScreenshot(context, "vis_gen_idle").toAbsolutePath());
 
         // Insert 64 coal into slot 0 (fuel slot)
         server.runCommand("item replace block 80 100 80 container.0 with minecraft:coal 64");
         context.waitTicks(20);
-        LOG.info("[GUITEST][R-VIS-01] gen_active -> {}", context.takeScreenshot("vis_gen_active").toAbsolutePath());
+        LOG.info("[GUITEST][R-VIS-01] gen_active -> {}", takeCleanScreenshot(context, "vis_gen_active").toAbsolutePath());
 
         // ── Macerator (needs energy + raw ore) ───────────────────────────────────────
         server.runCommand("setblock 80 100 80 alaindustrial:macerator[facing=south]");
         singleplayer.getClientLevel().waitForChunksRender();
         context.waitTicks(5);
-        LOG.info("[GUITEST][R-VIS-01] mac_idle -> {}", context.takeScreenshot("vis_mac_idle").toAbsolutePath());
+        LOG.info("[GUITEST][R-VIS-01] mac_idle -> {}", takeCleanScreenshot(context, "vis_mac_idle").toAbsolutePath());
 
         // Inject energy (Team Reborn Energy stores as "energy" Long in NBT) + ore input
         server.runCommand("data merge block 80 100 80 {energy:4000L}");
         server.runCommand("item replace block 80 100 80 container.0 with minecraft:raw_iron 8");
         context.waitTicks(20);
-        LOG.info("[GUITEST][R-VIS-01] mac_active -> {}", context.takeScreenshot("vis_mac_active").toAbsolutePath());
+        LOG.info("[GUITEST][R-VIS-01] mac_active -> {}", takeCleanScreenshot(context, "vis_mac_active").toAbsolutePath());
 
         // ── Electric Furnace ──────────────────────────────────────────────────────────
         server.runCommand("setblock 80 100 80 alaindustrial:electric_furnace[facing=south]");
         singleplayer.getClientLevel().waitForChunksRender();
         context.waitTicks(5);
-        LOG.info("[GUITEST][R-VIS-01] furnace_idle -> {}", context.takeScreenshot("vis_furnace_idle").toAbsolutePath());
+        LOG.info("[GUITEST][R-VIS-01] furnace_idle -> {}", takeCleanScreenshot(context, "vis_furnace_idle").toAbsolutePath());
 
         server.runCommand("data merge block 80 100 80 {energy:4000L}");
         server.runCommand("item replace block 80 100 80 container.0 with minecraft:raw_iron 4");
         context.waitTicks(20);
-        LOG.info("[GUITEST][R-VIS-01] furnace_active -> {}", context.takeScreenshot("vis_furnace_active").toAbsolutePath());
+        LOG.info("[GUITEST][R-VIS-01] furnace_active -> {}", takeCleanScreenshot(context, "vis_furnace_active").toAbsolutePath());
     }
 
     // ────────────────────────────────────────────────────────────────────────────────
@@ -319,27 +322,27 @@ public class GuiClientGameTest implements FabricClientGameTest {
         singleplayer.getClientLevel().waitForChunksRender();
         server.runCommand("tp @p 101 100 101 135 30");
         context.waitTicks(5);
-        LOG.info("[GUITEST][R-CON-03] cable_alone -> {}", context.takeScreenshot("con_cable_alone").toAbsolutePath());
+        LOG.info("[GUITEST][R-CON-03] cable_alone -> {}", takeCleanScreenshot(context, "con_cable_alone").toAbsolutePath());
 
         // Add east neighbour (+X)
         server.runCommand("setblock 101 100 100 alaindustrial:copper_cable");
         context.waitTicks(3);
-        LOG.info("[GUITEST][R-CON-03] cable_east_arm -> {}", context.takeScreenshot("con_cable_east_arm").toAbsolutePath());
+        LOG.info("[GUITEST][R-CON-03] cable_east_arm -> {}", takeCleanScreenshot(context, "con_cable_east_arm").toAbsolutePath());
 
         // Add south neighbour (+Z) → L-corner
         server.runCommand("setblock 100 100 101 alaindustrial:copper_cable");
         context.waitTicks(3);
-        LOG.info("[GUITEST][R-CON-03] cable_corner -> {}", context.takeScreenshot("con_cable_corner").toAbsolutePath());
+        LOG.info("[GUITEST][R-CON-03] cable_corner -> {}", takeCleanScreenshot(context, "con_cable_corner").toAbsolutePath());
 
         // Remove east → only south arm remains
         server.runCommand("setblock 101 100 100 minecraft:air");
         context.waitTicks(3);
-        LOG.info("[GUITEST][R-CON-03] cable_south_only -> {}", context.takeScreenshot("con_cable_south_only").toAbsolutePath());
+        LOG.info("[GUITEST][R-CON-03] cable_south_only -> {}", takeCleanScreenshot(context, "con_cable_south_only").toAbsolutePath());
 
         // Add vertical arm (above)
         server.runCommand("setblock 100 101 100 alaindustrial:copper_cable");
         context.waitTicks(3);
-        LOG.info("[GUITEST][R-CON-03] cable_vertical -> {}", context.takeScreenshot("con_cable_vertical").toAbsolutePath());
+        LOG.info("[GUITEST][R-CON-03] cable_vertical -> {}", takeCleanScreenshot(context, "con_cable_vertical").toAbsolutePath());
 
         // Cleanup — remove helpers so later rigs don't see stray cables
         server.runCommand("setblock 100 100 101 minecraft:air");
@@ -382,7 +385,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
         server.runCommand("tp @p 9 103 8 180 25");
         singleplayer.getClientLevel().waitForChunksRender();
         context.waitTicks(10);
-        LOG.info("[GUITEST] world screenshot -> {}", context.takeScreenshot("world_blocks").toAbsolutePath());
+        LOG.info("[GUITEST] world screenshot -> {}", takeCleanScreenshot(context, "world_blocks").toAbsolutePath());
 
         // Cable network at eye level (y=101) for a clean close-up: a straight machine->cable->machine
         // run along X, plus a junction with south/up branches, so every arm direction is exercised.
@@ -396,7 +399,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
         server.runCommand("tp @p 5 101 8 180 0");
         singleplayer.getClientLevel().waitForChunksRender();
         context.waitTicks(10);
-        LOG.info("[GUITEST] cable screenshot -> {}", context.takeScreenshot("world_cables").toAbsolutePath());
+        LOG.info("[GUITEST] cable screenshot -> {}", takeCleanScreenshot(context, "world_cables").toAbsolutePath());
 
         // Isolated panel-vs-neighbour culling check, far from other blocks. Row at z=42 (generator,
         // solar panel, stone) on dirt; camera SOUTH at z=46 looking NORTH (yaw 180) at the seam —
@@ -410,12 +413,12 @@ public class GuiClientGameTest implements FabricClientGameTest {
         server.runCommand("tp @p 43 101 46 180 8");
         singleplayer.getClientLevel().waitForChunksRender();
         context.waitTicks(10);
-        LOG.info("[GUITEST] panel-neighbour -> {}", context.takeScreenshot("panel_neighbour").toAbsolutePath());
+        LOG.info("[GUITEST] panel-neighbour -> {}", takeCleanScreenshot(context, "panel_neighbour").toAbsolutePath());
         // Top-down on the same seam.
         server.runCommand("tp @p 43 103 42 180 80");
         singleplayer.getClientLevel().waitForChunksRender();
         context.waitTicks(10);
-        LOG.info("[GUITEST] panel-neighbour top -> {}", context.takeScreenshot("panel_neighbour_top").toAbsolutePath());
+        LOG.info("[GUITEST] panel-neighbour top -> {}", takeCleanScreenshot(context, "panel_neighbour_top").toAbsolutePath());
     }
 
     /**
@@ -606,7 +609,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
             }
         });
         context.waitTicks(5);
-        java.nio.file.Path path = context.takeScreenshot(name);
+        java.nio.file.Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
     }
 
@@ -621,7 +624,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
         LOG.info("[GUITEST] opening {}", name);
         context.runOnClient(mc -> MenuScreens.create(type, mc, 0, Component.literal(displayName)));
         context.waitTicks(5);
-        java.nio.file.Path path = context.takeScreenshot(name);
+        java.nio.file.Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
     }
 
@@ -670,7 +673,33 @@ public class GuiClientGameTest implements FabricClientGameTest {
             }
         });
         context.waitTicks(5);
-        java.nio.file.Path path = context.takeScreenshot(name);
+        java.nio.file.Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
+    }
+
+    private static void configureVisualTestClient(ClientGameTestContext context, TestSingleplayerContext singleplayer) {
+        TestServerContext server = singleplayer.getServer();
+        server.runCommand("gamerule announceAdvancements false");
+        server.runCommand("gamerule sendCommandFeedback false");
+        server.runCommand("gamerule commandBlockOutput false");
+        server.runCommand("gamerule fallDamage false");
+        server.runCommand("gamerule doImmediateRespawn true");
+
+        context.runOnClient(mc -> {
+            mc.options.inGameNotification().set(false);
+            mc.options.chatVisibility().set(ChatVisiblity.HIDDEN);
+            mc.options.guiScale().set(2);
+            mc.getWindow().setWindowed(1280, 720);
+            mc.getWindow().setGuiScale(mc.getWindow().calculateScale(2, mc.isEnforceUnicode()));
+            mc.resizeGui();
+            mc.gui.toastManager().clear();
+        });
+        context.waitTicks(3);
+    }
+
+    private static java.nio.file.Path takeCleanScreenshot(ClientGameTestContext context, String name) {
+        context.runOnClient(mc -> mc.gui.toastManager().clear());
+        context.waitTicks(1);
+        return context.takeScreenshot(name);
     }
 }

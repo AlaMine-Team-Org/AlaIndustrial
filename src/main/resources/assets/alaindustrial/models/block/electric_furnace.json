@@ -3,7 +3,7 @@
   "textures": {
     "particle": "alaindustrial:block/machine_side",
     "down": "alaindustrial:block/machine_bottom",
-    "up": "alaindustrial:block/machine_top",
+    "up": "alaindustrial:block/electric_furnace_top",
     "north": "alaindustrial:block/electric_furnace_front",
     "east": "alaindustrial:block/machine_side",
     "south": "alaindustrial:block/machine_back",

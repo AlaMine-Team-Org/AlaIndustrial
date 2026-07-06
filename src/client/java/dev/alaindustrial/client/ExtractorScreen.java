@@ -33,7 +33,7 @@ public class ExtractorScreen extends AbstractContainerScreen<ExtractorMenu> {
     // Sprite: u=176-185 (10px), v=0-46 (solid orange). Bar interior runs x=17-26, full fill spans
     // y=19 (top) to y=63 (bottom) — 45px tall, edge-to-edge inside the bar border. Only the bottom
     // EFILL_H rows of the sprite are sampled at full charge.
-    private static final int EFILL_SU = 176, EFILL_SV = 0, EFILL_W = 10, EFILL_H = 45;
+    private static final int EFILL_SU = 176, EFILL_SV = 0, EFILL_W = 10, EFILL_H = 44;
     private static final int EFILL_X = 17, EFILL_BOTTOM = 64;
 
     // Cyan progress-chevron sprite in the atlas service area (left-to-right, grows with progress).

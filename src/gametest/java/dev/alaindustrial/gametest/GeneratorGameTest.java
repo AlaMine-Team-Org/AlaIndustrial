@@ -23,6 +23,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import dev.alaindustrial.menu.GeneratorMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.level.GameType;
 
 /**
  * L2 functional suite for the fuel generator — automates the parts of {@code TC-GEN-001}
@@ -157,6 +160,22 @@ public class GeneratorGameTest {
 		GeneratorBlockEntity gen = placeGenerator(helper);
 		if (gen.canPlaceItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.LAVA_BUCKET))) {
 			helper.fail("fuel slot accepts a lava bucket — lava belongs to the geothermal generator");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-GEN-001-NEG04b — GeneratorMenu#Slot.mayPlace rejects a lava bucket at the GUI
+	 *     level (client-side fast path that avoids optimistic placement → server-correction flicker).
+	 *     Complements NEG04 which tests the hopper path (canPlaceItem).
+	 */
+	@GameTest
+	public void tcGen001Neg04b_menuSlotRejectsLavaBucket(GameTestHelper helper) {
+		GeneratorBlockEntity gen = placeGenerator(helper);
+		var player = helper.makeMockPlayer(GameType.SURVIVAL);
+		var menu = new GeneratorMenu(0, player.getInventory(), gen, ContainerLevelAccess.NULL);
+		if (menu.slots.get(0).mayPlace(new ItemStack(Items.LAVA_BUCKET))) {
+			helper.fail("GeneratorMenu fuel slot accepted a lava bucket — mayPlace must return false");
 		}
 		helper.succeed();
 	}

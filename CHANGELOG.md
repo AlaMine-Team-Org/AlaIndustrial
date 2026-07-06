@@ -1,17 +1,12 @@
-## 0.1.3
+## 0.1.4
 
-This update sharpens the machine interface and brings the mod to more players around the world. Working generators now cast light, energy bars show an exact readout on hover, and the Network Analyzer keeps its last scan right on the tool.
+A small polish pass: machines get their own distinct tops, the energy bars line up cleanly, and the basic generator stops accepting fuel it can't use.
 
-### Gameplay
+### Visuals
 
-- **Running generators now emit light.** Fuel and geothermal generators glow while they are active, lighting up the space around them like a lit furnace, and go dark again when idle.
-
-### Quality of Life
-
-- **Energy bar tooltips.** Hover over the energy bar in any machine or generator to see its exact charge (current / max EU). The geothermal generator additionally shows its stored lava level on hover.
-- **Network Analyzer readout on the tool.** The Network Analyzer now remembers its last scan and shows a summary in the item tooltip — hold **Shift** to expand the full breakdown (cables, energy sources and consumers, and throughput). The on-screen readout now also reports how many sources and consumers the network has.
-- **More languages.** The mod is now available in 18 languages, adding Hindi, Italian, Dutch, Swedish and Indonesian.
+- **Distinct tops for machines and generators.** Generators, the electric furnace, extractor and compressor now have their own top faces instead of all sharing a single one, with separate looks for when they're idle and when they're running. Machines are much easier to tell apart at a glance.
 
 ### Bug Fixes
 
-- **Generator energy bar now fills the full height** when the buffer is full — previously it only filled about halfway at 100% charge.
+- **The basic generator no longer takes lava buckets.** Lava is meant for the geothermal generator, so the basic generator now cleanly rejects lava buckets placed into its slot — no more flicker where the item briefly appeared and popped back out.
+- **Energy bars fit their frame.** Fixed the energy bar in the extractor and compressor screens spilling a pixel past the top and bottom of its border.

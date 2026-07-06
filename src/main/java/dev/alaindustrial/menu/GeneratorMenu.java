@@ -7,6 +7,8 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 /** Menu for the LV generator (one fuel slot). */
 public class GeneratorMenu extends MachineMenu {
@@ -23,6 +25,16 @@ public class GeneratorMenu extends MachineMenu {
 
 	@Override
 	protected void addMachineSlots() {
-		addSlot(new Slot(machine, 0, 79, 35));
+		addSlot(new Slot(machine, 0, 79, 35) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				// Explicit client-side check so the client rejects immediately without
+				// optimistic placement → server correction → visible flicker.
+				if (stack.is(Items.LAVA_BUCKET)) {
+					return false;
+				}
+				return machine.canPlaceItem(0, stack);
+			}
+		});
 	}
 }

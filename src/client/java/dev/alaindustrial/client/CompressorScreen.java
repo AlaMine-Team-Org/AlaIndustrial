@@ -28,8 +28,8 @@ public class CompressorScreen extends AbstractContainerScreen<CompressorMenu> {
     private static final int TEX_SIZE = 256;
 
     // Energy fill: orange bar, bottom-up. Sprite extended to 47px (v=0-46) in the atlas.
-    private static final int EFILL_SU = 176, EFILL_SV = 0, EFILL_W = 10, EFILL_H = 47;
-    private static final int EFILL_X = 17, EFILL_BOTTOM = 66;
+    private static final int EFILL_SU = 176, EFILL_SV = 0, EFILL_W = 10, EFILL_H = 44;
+    private static final int EFILL_X = 17, EFILL_BOTTOM = 64;
 
     // Compression arrows (pixel-verified against compressor.png):
     //   Left  static arrow: x=81-86, y=34-51
