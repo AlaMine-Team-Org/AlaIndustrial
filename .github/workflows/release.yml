@@ -74,7 +74,7 @@ jobs:
           project_id: 1597723
           game_endpoint: minecraft
           file_path: ${{ steps.meta.outputs.jar }}
-          display_name: AlaIndustrial ${{ github.ref_name }} [Fabric]
+          display_name: Ala Industrial ${{ github.ref_name }} [Fabric]
           changelog: ${{ steps.meta.outputs.changelog }}
           changelog_type: markdown
           game_versions: "16498,7499"
@@ -85,7 +85,7 @@ jobs:
         uses: Kira-NT/mc-publish@v3.3.0
         with:
           files: build/libs/!(*-@(dev|sources|javadoc)).jar
-          name: AlaIndustrial ${{ github.ref_name }}
+          name: Ala Industrial ${{ github.ref_name }}
           version: ${{ github.ref_name }}
           version-type: release
           changelog-file: CHANGELOG.md
