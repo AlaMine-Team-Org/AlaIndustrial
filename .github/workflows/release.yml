@@ -46,39 +46,42 @@ jobs:
       - name: Game tests
         run: ./gradlew runGameTest --no-daemon --stacktrace
 
-      # Resolve the production jar path and read the changelog into a multi-line output.
-      - name: Resolve artifact and changelog
+      # Resolve the production jar path.
+      - name: Resolve artifact
         id: meta
         run: |
           JAR=$(ls build/libs/*.jar | grep -vE -- '-(dev|sources|javadoc)\.jar$' | head -1)
           echo "jar=$JAR" >> "$GITHUB_OUTPUT"
-          {
-            echo 'changelog<<__CHANGELOG_EOF__'
-            cat CHANGELOG.md
-            echo '__CHANGELOG_EOF__'
-          } >> "$GITHUB_OUTPUT"
 
-      # CurseForge upload with an explicit MARKDOWN changelog and a loader-tagged name.
+      # CurseForge upload via a DIRECT API call (not itsmeow/curseforge-upload).
+      # Why: passing the changelog through a GitHub Actions output→input hop
+      # (`${{ steps.meta.outputs.changelog }}` into `with:`) collapses the newlines of a
+      # multi-line value, so CurseForge receives the notes as ONE line and renders the
+      # Markdown as escaped plain text (\#, \*). We instead read CHANGELOG.md straight
+      # from disk into the metadata JSON with `jq --rawfile`, which preserves newlines,
+      # and send changelogType=markdown. Endpoint/headers per the CurseForge upload API
+      # (same as the action used: POST {game}.curseforge.com/api/projects/{id}/upload-file,
+      # X-Api-Token header, multipart metadata + file).
       # game_versions uses explicit numeric CurseForge IDs, NOT names: matching "26.2"
-      # by name wrongly picks a stale legacy entry (id 16500, version-type 1), which
-      # CurseForge rejects with error 1009 ("invalid dependency"). The Java version is
-      # intentionally omitted (not needed for the compatibility filter).
-      #   16498 = Minecraft 26.2 (version-type 86297)
-      #   7499  = Fabric (modloader)
+      # by name wrongly picks a stale legacy entry (id 16500), rejected with error 1009.
+      #   16498 = Minecraft 26.2 · 7499 = Fabric (modloader)
       # Look up IDs for a new version via:
       #   https://minecraft.curseforge.com/api/game/versions?token=TOKEN
       - name: Publish to CurseForge
-        uses: itsmeow/curseforge-upload@v3
-        with:
-          token: ${{ secrets.CURSEFORGE_TOKEN }}
-          project_id: 1597723
-          game_endpoint: minecraft
-          file_path: ${{ steps.meta.outputs.jar }}
-          display_name: Ala Industrial ${{ github.ref_name }} [Fabric]
-          changelog: ${{ steps.meta.outputs.changelog }}
-          changelog_type: markdown
-          game_versions: "16498,7499"
-          release_type: release
+        env:
+          CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          JAR: ${{ steps.meta.outputs.jar }}
+          DISPLAY_NAME: Ala Industrial ${{ github.ref_name }} [Fabric]
+        run: |
+          metadata=$(jq -n \
+            --rawfile changelog CHANGELOG.md \
+            --arg name "$DISPLAY_NAME" \
+            '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, 7499], releaseType: "release"}')
+          curl -sSf -X POST \
+            "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
+            -H "X-Api-Token: $CF_TOKEN" \
+            --form-string "metadata=$metadata" \
+            -F "file=@$JAR"
 
       # GitHub Release (jar + changelog). mc-publish renders Markdown fine on GitHub.
       - name: Create GitHub Release
