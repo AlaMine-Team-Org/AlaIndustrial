@@ -59,11 +59,14 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       # CurseForge upload with an explicit MARKDOWN changelog and a loader-tagged name.
-      # game_versions are matched by name; if "26.2" ever collides, prefix it with its
-      # type, e.g. "Minecraft 1.21:26.2". Only the Minecraft version and the modloader
-      # are sent — the Java version is deliberately omitted: CurseForge rejects newer
-      # Java tags as "invalid dependency" (error 1009), and it is not needed for the
-      # compatibility filter.
+      # game_versions uses explicit numeric CurseForge IDs, NOT names: matching "26.2"
+      # by name wrongly picks a stale legacy entry (id 16500, version-type 1), which
+      # CurseForge rejects with error 1009 ("invalid dependency"). The Java version is
+      # intentionally omitted (not needed for the compatibility filter).
+      #   16498 = Minecraft 26.2 (version-type 86297)
+      #   7499  = Fabric (modloader)
+      # Look up IDs for a new version via:
+      #   https://minecraft.curseforge.com/api/game/versions?token=TOKEN
       - name: Publish to CurseForge
         uses: itsmeow/curseforge-upload@v3
         with:
@@ -74,7 +77,7 @@ jobs:
           display_name: AlaIndustrial ${{ github.ref_name }} [Fabric]
           changelog: ${{ steps.meta.outputs.changelog }}
           changelog_type: markdown
-          game_versions: "26.2,Fabric"
+          game_versions: "16498,7499"
           release_type: release
 
       # GitHub Release (jar + changelog). mc-publish renders Markdown fine on GitHub.
