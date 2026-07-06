@@ -66,6 +66,17 @@ public final class ModRecipes {
 
 	private static final Kind[] ALL = {MACERATION, SMELTING, COMPRESSING, EXTRACTING};
 
+	/** Resolve a {@link Kind} back from its string id, or {@code null} if unknown. Used by the REI
+	 *  display serializer to rebuild a display's kind from its synced id (see {@code AlaProcessingDisplay}). */
+	public static Kind byId(String id) {
+		for (Kind kind : ALL) {
+			if (kind.id.equals(id)) {
+				return kind;
+			}
+		}
+		return null;
+	}
+
 	public static void init() {
 		for (Kind kind : ALL) {
 			Identifier id = Industrialization.id(kind.id);

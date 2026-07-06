@@ -116,5 +116,15 @@
 	"gui.alaindustrial.network_analyzer.stats": "Netzwerk: %1$s Kabel · Angebot %2$s EU/t · Bedarf %3$s EU/t · letzter Tick %4$s EU",
 	"gui.alaindustrial.network_analyzer.none": "Hier ist kein Energienetzwerk",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — EU-Technikmod für Fabric. Baut euer Energienetz: Generatoren (Solarpanel, Geothermie, Brennstoff), Kupferkabel, Energiespeicher und vier Verarbeitungsmaschinen. LV-Stufe fertig, MV — in Entwicklung.",
-	"modmenu.summaryTranslation.alaindustrial": "EU-Technikmod für Fabric: Generatoren, Kabel, Energiespeicher, 4 Maschinen."
+	"modmenu.summaryTranslation.alaindustrial": "EU-Technikmod für Fabric: Generatoren, Kabel, Energiespeicher, 4 Maschinen.",
+
+	"command.alaindustrial.version": "Ala Industrial %1$s · Build %2$s · %3$s",
+	"command.alaindustrial.status.registry": "Registry: Blöcke=%1$s Items=%2$s Rezepte=%3$s",
+	"command.alaindustrial.status.network": "Energienetz: zwischengespeicherter Union-Find-Graph (Kabelübertragung = Durchsatzgrenze, kein Verlust)",
+	"command.alaindustrial.status.config": "Config: machineEuPerTick=%1$s networksPerTick=%2$s",
+	"command.alaindustrial.net.header": "Energienetze (zwischengespeicherter Union-Find-Graph):",
+	"command.alaindustrial.net.unavailable": "Energienetze: Server nicht verfügbar",
+	"command.alaindustrial.net.dimension": "  %1$s: Netze=%2$s (aktiv %3$s / schlafend %4$s) Kabel=%5$s | getickt=%6$s EU/t=%7$s gesamt=%8$s",
+	"command.alaindustrial.net.empty": "  (keine Energienetze geladen)",
+	"command.alaindustrial.net.totals": "Gesamt: Netze=%1$s Kabel=%2$s EU letzter Tick=%3$s EU gesamt=%4$s"
 }

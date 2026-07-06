@@ -119,5 +119,15 @@
 	"gui.alaindustrial.network_analyzer.stats": "Network: %1$s cables · supply %2$s EU/t · demand %3$s EU/t · last tick %4$s EU",
 	"gui.alaindustrial.network_analyzer.none": "No energy network here",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — EU-powered tech mod for Fabric. Build your energy network: generators (solar panel, geothermal, fuel), copper cable, Battery Box and four processing machines. LV tier is ready, MV — in development.",
-	"modmenu.summaryTranslation.alaindustrial": "EU tech mod for Fabric: generators, cables, Battery Box, 4 machines."
+	"modmenu.summaryTranslation.alaindustrial": "EU tech mod for Fabric: generators, cables, Battery Box, 4 machines.",
+
+	"command.alaindustrial.version": "Ala Industrial %1$s · build %2$s · %3$s",
+	"command.alaindustrial.status.registry": "Registry: blocks=%1$s items=%2$s recipes=%3$s",
+	"command.alaindustrial.status.network": "Energy network: cached union-find graph (cable transport = throughput limit, no loss)",
+	"command.alaindustrial.status.config": "Config: machineEuPerTick=%1$s networksPerTick=%2$s",
+	"command.alaindustrial.net.header": "Energy networks (cached union-find graph):",
+	"command.alaindustrial.net.unavailable": "Energy networks: server unavailable",
+	"command.alaindustrial.net.dimension": "  %1$s: nets=%2$s (awake %3$s / asleep %4$s) cables=%5$s | ticked=%6$s EU/t=%7$s total=%8$s",
+	"command.alaindustrial.net.empty": "  (no energy networks loaded)",
+	"command.alaindustrial.net.totals": "Totals: nets=%1$s cables=%2$s EU last tick=%3$s EU total=%4$s"
 }

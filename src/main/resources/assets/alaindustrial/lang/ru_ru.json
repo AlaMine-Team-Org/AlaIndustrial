@@ -116,5 +116,15 @@
 	"gui.alaindustrial.network_analyzer.stats": "Сеть: %1$s кабелей · выработка %2$s EU/t · потребление %3$s EU/t · прошлый тик %4$s EU",
 	"gui.alaindustrial.network_analyzer.none": "Здесь нет энергосети",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — EU-технологический мод для Fabric. Стройте энергосеть: генераторы (солнечная панель, геотермалка, топливный), медный кабель, Энергохранилище и четыре перерабатывающие машины. LV-тир готов, MV — в разработке.",
-	"modmenu.summaryTranslation.alaindustrial": "EU-тех-мод для Fabric: генераторы, кабели, Энергохранилище, 4 машины."
+	"modmenu.summaryTranslation.alaindustrial": "EU-тех-мод для Fabric: генераторы, кабели, Энергохранилище, 4 машины.",
+
+	"command.alaindustrial.version": "Ala Industrial %1$s · сборка %2$s · %3$s",
+	"command.alaindustrial.status.registry": "Реестр: блоков=%1$s предметов=%2$s рецептов=%3$s",
+	"command.alaindustrial.status.network": "Энергосеть: кэшированный union-find граф (передача по кабелю = лимит пропускной способности, без потерь)",
+	"command.alaindustrial.status.config": "Конфиг: machineEuPerTick=%1$s networksPerTick=%2$s",
+	"command.alaindustrial.net.header": "Энергосети (кэшированный union-find граф):",
+	"command.alaindustrial.net.unavailable": "Энергосети: сервер недоступен",
+	"command.alaindustrial.net.dimension": "  %1$s: сетей=%2$s (активных %3$s / спящих %4$s) кабелей=%5$s | тиков=%6$s EU/t=%7$s всего=%8$s",
+	"command.alaindustrial.net.empty": "  (загруженных энергосетей нет)",
+	"command.alaindustrial.net.totals": "Итого: сетей=%1$s кабелей=%2$s EU за прошлый тик=%3$s EU всего=%4$s"
 }

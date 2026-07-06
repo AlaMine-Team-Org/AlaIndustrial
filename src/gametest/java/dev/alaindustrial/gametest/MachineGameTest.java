@@ -93,10 +93,18 @@ public class MachineGameTest {
 
 	// ── Positive (FUN, EP valid class) ──────────────────────────────────────────────
 
-	/** @implements TC-MACH-001-FUN01 — macerator grinds raw iron into 2× iron dust. @covers R-GUI-02 */
+	/** @implements TC-MACH-001-FUN01 — macerator grinds raw iron into 1× iron dust (raw is the
+	 *      intermediate form, not the ore block — only mined ore blocks double). @covers R-GUI-02 */
 	@GameTest
 	public void tcMach001Fun01_maceratorGrindsRawIron(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_IRON, 4), ModItems.IRON_DUST, 2);
+		assertProduces(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_IRON, 4), ModItems.IRON_DUST, 1);
+	}
+
+	/** @implements TC-MACH-001-FUN-ironOre — macerator grinds an iron ore block into 2× iron dust
+	 *      (the ×2 doubling path, via {@code #alaindustrial:macerable_iron}). @covers R-GUI-02 */
+	@GameTest
+	public void tcMach001FunIronOre_maceratorGrindsIronOre(GameTestHelper helper) {
+		assertProduces(helper, ModBlocks.MACERATOR, new ItemStack(Items.IRON_ORE, 4), ModItems.IRON_DUST, 2);
 	}
 
 	/** @implements TC-MACH-002-FUN01 — electric furnace smelts raw iron into an iron ingot. */
@@ -159,25 +167,26 @@ public class MachineGameTest {
 	}
 
 	/**
-	 * @implements TC-MACH-001-PRF — the data-driven maceration recipe for raw iron yields ×2 and its
-	 *     EU cost equals the shared E_op (machineEuPerTick × maceratorDuration), keeping the JSON recipe
-	 *     and {@link dev.alaindustrial.Config} in sync. Ported from
+	 * @implements TC-MACH-001-PRF — the data-driven maceration recipe for an iron ore block yields ×2
+	 *     and its EU cost equals the shared E_op (machineEuPerTick × maceratorDuration), keeping the JSON
+	 *     recipe and {@link dev.alaindustrial.Config} in sync. Ported from
 	 *     {@code IndustrializationSelfTest} MACERATOR_MULTIPLIER. @covers R-NRG-04 (E_op)
 	 */
 	@GameTest
 	public void tcMach001Prf_maceratorEopMatchesConfig(GameTestHelper helper) {
-		// Looked up through the vanilla RecipeManager (R-14); raw_iron resolves via the
-		// #alaindustrial:macerable_iron tag (R-15), proving tag ingredients match.
-		SingleRecipeInput input = new SingleRecipeInput(new ItemStack(Items.RAW_IRON));
+		// Looked up through the vanilla RecipeManager (R-14); iron_ore resolves via the
+		// #alaindustrial:macerable_iron tag (R-15), proving tag ingredients match. The ×2 doubling
+		// applies to mined ore blocks only; raw_iron has its own direct ×1 recipe (raw_iron.json).
+		SingleRecipeInput input = new SingleRecipeInput(new ItemStack(Items.IRON_ORE));
 		AlaProcessingRecipe ironRecipe = ModRecipes.MACERATION.newCheck()
 				.getRecipeFor(input, helper.getLevel()).map(RecipeHolder::value).orElse(null);
 		if (ironRecipe == null) {
-			helper.fail("no maceration recipe for raw_iron (datapack not loaded?)");
+			helper.fail("no maceration recipe for iron_ore (datapack not loaded?)");
 			return;
 		}
 		int count = ironRecipe.assemble(input).getCount();
 		if (count != 2) {
-			helper.fail("raw_iron maceration count expected 2 but got " + count);
+			helper.fail("iron_ore maceration count expected 2 but got " + count);
 		}
 		int eOp = Config.machineEuPerTick * Config.maceratorDuration;
 		if (ironRecipe.energy() / Config.machineEuPerTick != Config.maceratorDuration) {
@@ -216,22 +225,23 @@ public class MachineGameTest {
 	// ── Extra recipes (FUN) ──────────────────────────────────────────────────────────
 
 	/**
-	 * @implements TC-MACH-001-FUN-copperRaw — macerator grinds raw copper (via
-	 *     {@code #alaindustrial:macerable_copper}) into 2× copper dust, mirroring the iron tag path.
+	 * @implements TC-MACH-001-FUN-copperRaw — macerator grinds raw copper (direct recipe
+	 *     {@code raw_copper.json}) into 1× copper dust, mirroring the iron raw path; only ore blocks double.
 	 * @covers R-GUI-02
 	 */
 	@GameTest
 	public void tcMach001FunCopperRaw_maceratorGrindsRawCopper(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_COPPER, 4), ModItems.COPPER_DUST, 2);
+		assertProduces(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_COPPER, 4), ModItems.COPPER_DUST, 1);
 	}
 
 	/**
-	 * @implements TC-MACH-001-FUN-goldRaw — macerator grinds raw gold into 2× gold dust (tag path).
+	 * @implements TC-MACH-001-FUN-goldRaw — macerator grinds raw gold into 1× gold dust (direct
+	 *     recipe {@code raw_gold.json}); only ore blocks double.
 	 * @covers R-GUI-02
 	 */
 	@GameTest
 	public void tcMach001FunGoldRaw_maceratorGrindsRawGold(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_GOLD, 4), ModItems.GOLD_DUST, 2);
+		assertProduces(helper, ModBlocks.MACERATOR, new ItemStack(Items.RAW_GOLD, 4), ModItems.GOLD_DUST, 1);
 	}
 
 	/**
@@ -362,13 +372,13 @@ public class MachineGameTest {
 
 	/**
 	 * @implements TC-MACH-001-FUN02 — macerator consumes exactly 1 raw_iron per operation (150 ticks),
-	 *     leaving 3 of the initial 4 and yielding exactly 2× iron_dust.
+	 *     leaving 3 of the initial 4 and yielding exactly 1× iron_dust (raw → ×1; only ore blocks double).
 	 * @covers R-GUI-02
 	 */
 	@GameTest
 	public void tcMach001Fun02_maceratorConsumesExactlyOnePerOperation(GameTestHelper helper) {
 		assertConsumesExactlyOnePerOperation(helper, ModBlocks.MACERATOR, Items.RAW_IRON, 4,
-				Config.maceratorDuration, ModItems.IRON_DUST, 2);
+				Config.maceratorDuration, ModItems.IRON_DUST, 1);
 	}
 
 	/**

@@ -116,5 +116,15 @@
 	"gui.alaindustrial.network_analyzer.stats": "네트워크: 케이블 %1$s개 · 공급 %2$s EU/t · 수요 %3$s EU/t · 마지막 틱 %4$s EU",
 	"gui.alaindustrial.network_analyzer.none": "여기에는 에너지 네트워크가 없습니다",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — Fabric용 EU 기술 모드. 에너지 네트워크를 구축하세요: 발전기(태양광 패널, 지열, 연료), 구리 케이블, 에너지 저장소 및 처리 기계 4종. LV 티어 완성, MV — 개발 중.",
-	"modmenu.summaryTranslation.alaindustrial": "Fabric용 EU 기술 모드: 발전기, 구리 케이블, 에너지 저장소, 처리 기계 4종."
+	"modmenu.summaryTranslation.alaindustrial": "Fabric용 EU 기술 모드: 발전기, 구리 케이블, 에너지 저장소, 처리 기계 4종.",
+
+	"command.alaindustrial.version": "Ala Industrial %1$s · 빌드 %2$s · %3$s",
+	"command.alaindustrial.status.registry": "레지스트리: 블록=%1$s 아이템=%2$s 레시피=%3$s",
+	"command.alaindustrial.status.network": "에너지 네트워크: 캐시된 union-find 그래프 (케이블 전송 = 처리량 한계, 손실 없음)",
+	"command.alaindustrial.status.config": "설정: machineEuPerTick=%1$s networksPerTick=%2$s",
+	"command.alaindustrial.net.header": "에너지 네트워크 (캐시된 union-find 그래프):",
+	"command.alaindustrial.net.unavailable": "에너지 네트워크: 서버 사용 불가",
+	"command.alaindustrial.net.dimension": "  %1$s: 네트워크=%2$s (활성 %3$s / 대기 %4$s) 케이블=%5$s | 틱=%6$s EU/t=%7$s 총=%8$s",
+	"command.alaindustrial.net.empty": "  (불러온 에너지 네트워크 없음)",
+	"command.alaindustrial.net.totals": "합계: 네트워크=%1$s 케이블=%2$s EU 지난 틱=%3$s EU 총=%4$s"
 }

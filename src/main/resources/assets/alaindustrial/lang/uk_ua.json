@@ -116,5 +116,15 @@
 	"gui.alaindustrial.network_analyzer.stats": "Мережа: %1$s кабелів · постачання %2$s EU/t · попит %3$s EU/t · останній тік %4$s EU",
 	"gui.alaindustrial.network_analyzer.none": "Тут немає енергомережі",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — EU-технологічний мод для Fabric. Будуйте енергомережу: генератори (сонячна панель, геотермалка, паливний), мідний кабель, Енергосховище та чотири переробні машини. LV-тир готовий, MV — в розробці.",
-	"modmenu.summaryTranslation.alaindustrial": "EU-тех-мод для Fabric: генератори, кабелі, Енергосховище, 4 машини."
+	"modmenu.summaryTranslation.alaindustrial": "EU-тех-мод для Fabric: генератори, кабелі, Енергосховище, 4 машини.",
+
+	"command.alaindustrial.version": "Ala Industrial %1$s · збірка %2$s · %3$s",
+	"command.alaindustrial.status.registry": "Реєстр: блоків=%1$s предметів=%2$s рецептів=%3$s",
+	"command.alaindustrial.status.network": "Енергомережа: кешований union-find граф (передача кабелем = ліміт пропускної здатності, без втрат)",
+	"command.alaindustrial.status.config": "Конфіг: machineEuPerTick=%1$s networksPerTick=%2$s",
+	"command.alaindustrial.net.header": "Енергомережі (кешований union-find граф):",
+	"command.alaindustrial.net.unavailable": "Енергомережі: сервер недоступний",
+	"command.alaindustrial.net.dimension": "  %1$s: мереж=%2$s (активних %3$s / сплячих %4$s) кабелів=%5$s | тіків=%6$s EU/t=%7$s всього=%8$s",
+	"command.alaindustrial.net.empty": "  (завантажених енергомереж немає)",
+	"command.alaindustrial.net.totals": "Разом: мереж=%1$s кабелів=%2$s EU за минулий тік=%3$s EU всього=%4$s"
 }

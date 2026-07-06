@@ -116,5 +116,15 @@
 	"gui.alaindustrial.network_analyzer.stats": "Sieć: %1$s kabli · zasilanie %2$s EU/t · zapotrzebowanie %3$s EU/t · ostatni tick %4$s EU",
 	"gui.alaindustrial.network_analyzer.none": "Brak sieci energetycznej w tym miejscu",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — mod technologiczny EU dla Fabric. Buduj sieć energetyczną: generatory (panel słoneczny, geotermalny, paliwowy), kabel miedziany, Magazyn Energii i cztery maszyny przetwarzające. Poziom LV gotowy, MV — w rozwoju.",
-	"modmenu.summaryTranslation.alaindustrial": "Mod technologiczny EU dla Fabric: generatory, kabel, Magazyn Energii, 4 maszyny."
+	"modmenu.summaryTranslation.alaindustrial": "Mod technologiczny EU dla Fabric: generatory, kabel, Magazyn Energii, 4 maszyny.",
+
+	"command.alaindustrial.version": "Ala Industrial %1$s · kompilacja %2$s · %3$s",
+	"command.alaindustrial.status.registry": "Rejestr: bloki=%1$s przedmioty=%2$s przepisy=%3$s",
+	"command.alaindustrial.status.network": "Sieć energii: buforowany graf union-find (transport kablem = limit przepustowości, bez strat)",
+	"command.alaindustrial.status.config": "Config: machineEuPerTick=%1$s networksPerTick=%2$s",
+	"command.alaindustrial.net.header": "Sieci energii (buforowany graf union-find):",
+	"command.alaindustrial.net.unavailable": "Sieci energii: serwer niedostępny",
+	"command.alaindustrial.net.dimension": "  %1$s: sieci=%2$s (aktywne %3$s / uśpione %4$s) kable=%5$s | tiknięte=%6$s EU/t=%7$s razem=%8$s",
+	"command.alaindustrial.net.empty": "  (brak wczytanych sieci energii)",
+	"command.alaindustrial.net.totals": "Sumy: sieci=%1$s kable=%2$s EU ostatni tick=%3$s EU razem=%4$s"
 }

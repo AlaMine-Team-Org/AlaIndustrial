@@ -116,5 +116,15 @@
 	"gui.alaindustrial.network_analyzer.stats": "电网：%1$s 条电缆 · 供给 %2$s EU/t · 需求 %3$s EU/t · 上一刻 %4$s EU",
 	"gui.alaindustrial.network_analyzer.none": "此处没有能量电网",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — Fabric的EU能源科技模组。构建能源网络：发电机（太阳能板、地热、燃料），铜缆，储能库和四种加工机器。LV层级就绪，MV — 开发中。",
-	"modmenu.summaryTranslation.alaindustrial": "Fabric的EU科技模组：发电机、铜缆、储能库、4种加工机器。"
+	"modmenu.summaryTranslation.alaindustrial": "Fabric的EU科技模组：发电机、铜缆、储能库、4种加工机器。",
+
+	"command.alaindustrial.version": "Ala Industrial %1$s · 构建 %2$s · %3$s",
+	"command.alaindustrial.status.registry": "注册表：方块=%1$s 物品=%2$s 配方=%3$s",
+	"command.alaindustrial.status.network": "能源网络：缓存的并查集图（电缆传输 = 吞吐上限，无损耗）",
+	"command.alaindustrial.status.config": "配置：machineEuPerTick=%1$s networksPerTick=%2$s",
+	"command.alaindustrial.net.header": "能源网络（缓存的并查集图）：",
+	"command.alaindustrial.net.unavailable": "能源网络：服务器不可用",
+	"command.alaindustrial.net.dimension": "  %1$s：网络=%2$s（活动 %3$s / 休眠 %4$s）电缆=%5$s | 已tick=%6$s EU/t=%7$s 总计=%8$s",
+	"command.alaindustrial.net.empty": "  （未加载任何能源网络）",
+	"command.alaindustrial.net.totals": "合计：网络=%1$s 电缆=%2$s EU 上一tick=%3$s EU 总计=%4$s"
 }

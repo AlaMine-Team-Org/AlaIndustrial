@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "alaindustrial:raw_nickel",
+  "result": {
+    "id": "alaindustrial:nickel_dust",
+    "count": 1
+  },
+  "energy": 300
+}

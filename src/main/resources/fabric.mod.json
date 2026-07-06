@@ -27,6 +27,9 @@
 		"client": [
 			"dev.alaindustrial.IndustrializationClient"
 		],
+		"rei_common": [
+			"dev.alaindustrial.compat.rei.AlaReiCommonPlugin"
+		],
 		"rei_client": [
 			"dev.alaindustrial.compat.rei.AlaReiPlugin"
 		]

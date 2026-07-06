@@ -70,20 +70,24 @@ dependencies {
 	// Users do not need to install this separately.
 	include(implementation("teamreborn:energy:${project.energy_version}"))
 
-	// REI (Roughly Enough Items) recipe viewer — MOD-018. Optional dependency: the compat plugin is
-	// client-only (src/client/.../compat/rei) and the mod loads fine without REI installed. This
-	// Loom 1.17 has no mod* configurations (see docs/BUILD.md) — mod deps use plain Gradle configs
-	// and Loom auto-remaps them.
-	//   - api on the client compile classpath only (compile-only: not shipped, not a hard dep);
+	// REI (Roughly Enough Items) recipe viewer — MOD-018. Optional dependency: the compat plugins are
+	// loaded only via REI's own rei_common/rei_client entrypoints, so the mod loads fine without REI
+	// installed. This Loom 1.17 has no mod* configurations (see docs/BUILD.md) — mod deps use plain
+	// Gradle configs and Loom auto-remaps them.
+	//   - api on the MAIN compile classpath (compile-only: not shipped, not a hard dep). On MC 26.2 the
+	//     recipe→display filling runs server-side (rei_common, AlaReiCommonPlugin) and the synced
+	//     display class (AlaProcessingDisplay) lives in the main source set, so the api must be on the
+	//     main compile classpath, not just client.
 	//   - full REI (+ its transitive Cloth Config / Architectury) on the dev client run classpath
 	//     only (clientRuntimeOnly), so `runClient` shows the recipe categories. Not in the jar.
-	clientCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
-	// REI's GUI API exposes me.shedaniel.math (Point/Rectangle) from this small helper lib; it is a
-	// runtime transitive of REI but is needed on the compile classpath for the category widgets.
-	clientCompileOnly "me.shedaniel.cloth:basic-math:0.6.1"
+	compileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
 	// REI's EntryStacks/EntryIngredients have FluidStack overloads from Architectury; the class must
 	// be on the compile classpath for overload resolution even though we only use the item overloads.
-	clientCompileOnly "dev.architectury:architectury-fabric:21.0.2"
+	// Needed on main too now (AlaProcessingDisplay calls EntryIngredients.of there).
+	compileOnly "dev.architectury:architectury-fabric:21.0.2"
+	// REI's GUI API exposes me.shedaniel.math (Point/Rectangle) from this small helper lib; only the
+	// client category widgets (AlaProcessingCategory) use it, so it stays client compile-only.
+	clientCompileOnly "me.shedaniel.cloth:basic-math:0.6.1"
 	clientRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
 
 	// L1 unit tests (JUnit 5). Pure-logic only — no Minecraft bootstrap. See AUTOMATION-STANDARDS.md.

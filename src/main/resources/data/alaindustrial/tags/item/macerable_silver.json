@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "alaindustrial:raw_silver",
     "alaindustrial:silver_ore",
     "alaindustrial:deepslate_silver_ore"
   ]

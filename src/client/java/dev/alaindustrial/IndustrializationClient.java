@@ -57,6 +57,7 @@ public class IndustrializationClient implements ClientModInitializer {
 
 		registerTooltips();
 		dev.alaindustrial.client.NetworkVisualizationClient.init();
+		dev.alaindustrial.client.CablePlacementPreview.init();
 
 		Industrialization.LOGGER.info("Industrialization client initialized.");
 	}
@@ -177,14 +178,27 @@ public class IndustrializationClient implements ClientModInitializer {
 			lines.add(Component.translatable("tooltip.alaindustrial.battery_box_io")
 					.withStyle(ChatFormatting.GRAY));
 		} else if (block instanceof CableBlock) {
-			lines.add(Component.translatable("tooltip.alaindustrial.cable_no_loss")
-					.withStyle(ChatFormatting.GRAY));
+			lines.add(tt("cable_loss", cableLossPercent()));
 		}
 	}
 
 	private static Component tt(String key, Object value) {
 		return Component.translatable("tooltip.alaindustrial." + key, value)
 				.withStyle(ChatFormatting.GRAY);
+	}
+
+	/**
+	 * Copper-cable loss as a percent-per-block string, sourced live from {@link Config#copperCableLossPerBlock}
+	 * so the tooltip can never drift from the actual model (the bug this replaced: a hard-coded "no loss" line
+	 * left stale after MOD-021 re-introduced losses). Locale.ROOT + trailing-zero trim yields "1.25" from 0.0125.
+	 */
+	private static String cableLossPercent() {
+		double pct = Config.copperCableLossPerBlock * 100.0;
+		String s = String.format(java.util.Locale.ROOT, "%.3f", pct);
+		if (s.contains(".")) {
+			s = s.replaceAll("0+$", "").replaceAll("\\.$", "");
+		}
+		return s;
 	}
 
 	private static Component tier() {

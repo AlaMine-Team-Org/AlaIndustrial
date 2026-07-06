@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "alaindustrial:raw_tin",
     "alaindustrial:tin_ore",
     "alaindustrial:deepslate_tin_ore"
   ]

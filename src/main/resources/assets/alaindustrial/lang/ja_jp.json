@@ -116,5 +116,15 @@
 	"gui.alaindustrial.network_analyzer.stats": "ネットワーク: ケーブル%1$s本 · 供給 %2$s EU/t · 需要 %3$s EU/t · 前回のtick %4$s EU",
 	"gui.alaindustrial.network_analyzer.none": "ここにエネルギーネットワークはありません",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — FabricのEU技術MOD。エネルギーネットワークを構築：発電機（ソーラーパネル・地熱・燃料）、銅ケーブル、エネルギー貯蔵庫、4種の加工機械。LVティア実装済み、MV開発中。",
-	"modmenu.summaryTranslation.alaindustrial": "FabricのEU技術MOD：発電機・銅ケーブル・エネルギー貯蔵庫・加工機械4種。"
+	"modmenu.summaryTranslation.alaindustrial": "FabricのEU技術MOD：発電機・銅ケーブル・エネルギー貯蔵庫・加工機械4種。",
+
+	"command.alaindustrial.version": "Ala Industrial %1$s · ビルド %2$s · %3$s",
+	"command.alaindustrial.status.registry": "レジストリ: ブロック=%1$s アイテム=%2$s レシピ=%3$s",
+	"command.alaindustrial.status.network": "エネルギーネットワーク: キャッシュ済み union-find グラフ（ケーブル転送 = スループット上限、損失なし）",
+	"command.alaindustrial.status.config": "設定: machineEuPerTick=%1$s networksPerTick=%2$s",
+	"command.alaindustrial.net.header": "エネルギーネットワーク（キャッシュ済み union-find グラフ）:",
+	"command.alaindustrial.net.unavailable": "エネルギーネットワーク: サーバー利用不可",
+	"command.alaindustrial.net.dimension": "  %1$s: ネット=%2$s（稼働 %3$s / 休止 %4$s）ケーブル=%5$s | tick=%6$s EU/t=%7$s 合計=%8$s",
+	"command.alaindustrial.net.empty": "  （読み込み済みのエネルギーネットワークなし）",
+	"command.alaindustrial.net.totals": "合計: ネット=%1$s ケーブル=%2$s EU 前tick=%3$s EU 合計=%4$s"
 }

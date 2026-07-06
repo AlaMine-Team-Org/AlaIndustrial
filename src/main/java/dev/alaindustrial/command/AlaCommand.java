@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -36,27 +37,30 @@ public final class AlaCommand {
 						.requires(Commands.hasPermission(Commands.LEVEL_ALL))
 						.then(Commands.literal("version")
 								.executes(ctx -> {
-									ctx.getSource().sendSuccess(() -> Component.literal(versionLine()), false);
+									ctx.getSource().sendSuccess(AlaCommand::versionLine, false);
 									return Command.SINGLE_SUCCESS;
 								}))
 						.then(Commands.literal("status")
 								.executes(ctx -> {
-									ctx.getSource().sendSuccess(() -> Component.literal(versionLine()), false);
-									ctx.getSource().sendSuccess(() -> Component.literal(statusBody(ctx.getSource().getServer())), false);
+									MinecraftServer server = ctx.getSource().getServer();
+									ctx.getSource().sendSuccess(AlaCommand::versionLine, false);
+									ctx.getSource().sendSuccess(() -> statusBody(server), false);
 									return Command.SINGLE_SUCCESS;
 								}))
 						.then(Commands.literal("net")
 								.executes(ctx -> {
-									ctx.getSource().sendSuccess(() -> Component.literal(netBody(ctx.getSource().getServer())), false);
+									MinecraftServer server = ctx.getSource().getServer();
+									ctx.getSource().sendSuccess(() -> netBody(server), false);
 									return Command.SINGLE_SUCCESS;
 								}))));
 	}
 
-	private static String versionLine() {
-		return "Ala Industrial " + BuildInfo.version() + " · build " + BuildInfo.git() + " · " + BuildInfo.built();
+	private static Component versionLine() {
+		return Component.translatable("command.alaindustrial.version",
+				BuildInfo.version(), BuildInfo.git(), BuildInfo.built());
 	}
 
-	private static String statusBody(net.minecraft.server.MinecraftServer server) {
+	private static Component statusBody(MinecraftServer server) {
 		int blocks = countNamespace(BuiltInRegistries.BLOCK.keySet());
 		int items = countNamespace(BuiltInRegistries.ITEM.keySet());
 		int recipes = 0;
@@ -67,18 +71,19 @@ public final class AlaCommand {
 				}
 			}
 		}
-		return "Registry: blocks=" + blocks + " items=" + items + " recipes=" + recipes
-				+ " | Energy network: cached union-find graph (cable transport = throughput limit, no loss)"
-				+ " | Config: machineEuPerTick=" + Config.machineEuPerTick
-				+ " networksPerTick=" + Config.networksPerTick;
+		MutableComponent msg = Component.translatable("command.alaindustrial.status.registry", blocks, items, recipes);
+		msg.append(" | ").append(Component.translatable("command.alaindustrial.status.network"));
+		msg.append(" | ").append(Component.translatable("command.alaindustrial.status.config",
+				Config.machineEuPerTick, Config.networksPerTick));
+		return msg;
 	}
 
 	/** Render live energy-network telemetry: one line per dimension that has networks, plus a total. */
-	private static String netBody(MinecraftServer server) {
+	private static Component netBody(MinecraftServer server) {
 		if (server == null) {
-			return "Energy networks: server unavailable";
+			return Component.translatable("command.alaindustrial.net.unavailable");
 		}
-		StringBuilder sb = new StringBuilder("Energy networks (cached union-find graph):");
+		MutableComponent msg = Component.translatable("command.alaindustrial.net.header");
 		int totalNets = 0;
 		int totalCables = 0;
 		long totalLast = 0;
@@ -94,22 +99,17 @@ public final class AlaCommand {
 				continue; // skip idle dimensions to keep the readout short
 			}
 			any = true;
-			sb.append("\n  ").append(level.dimension().identifier())
-					.append(": nets=").append(s.networks())
-					.append(" (awake ").append(s.awake()).append(" / asleep ").append(s.asleep()).append(')')
-					.append(" cables=").append(s.cables())
-					.append(" | ticked=").append(s.tickedLastTick())
-					.append(" EU/t=").append(s.euMovedLastTick())
-					.append(" total=").append(s.euMovedTotal());
+			msg.append("\n").append(Component.translatable("command.alaindustrial.net.dimension",
+					level.dimension().identifier().toString(),
+					s.networks(), s.awake(), s.asleep(), s.cables(),
+					s.tickedLastTick(), s.euMovedLastTick(), s.euMovedTotal()));
 		}
 		if (!any) {
-			sb.append("\n  (no energy networks loaded)");
+			msg.append("\n").append(Component.translatable("command.alaindustrial.net.empty"));
 		}
-		sb.append("\nTotals: nets=").append(totalNets)
-				.append(" cables=").append(totalCables)
-				.append(" EU last tick=").append(totalLast)
-				.append(" EU total=").append(totalAll);
-		return sb.toString();
+		msg.append("\n").append(Component.translatable("command.alaindustrial.net.totals",
+				totalNets, totalCables, totalLast, totalAll));
+		return msg;
 	}
 
 	private static int countNamespace(Iterable<Identifier> keys) {

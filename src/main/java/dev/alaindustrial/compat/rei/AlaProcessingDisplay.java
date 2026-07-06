@@ -1,8 +1,8 @@
 package dev.alaindustrial.compat.rei;
 
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.alaindustrial.Config;
+import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.registry.ModRecipes;
 import java.util.List;
@@ -17,17 +17,19 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * REI display for one {@link AlaProcessingRecipe} (macerator / electric furnace / compressor /
  * extractor). One class serves all four machines: the recipe's {@link ModRecipes.Kind} picks the
- * category (see {@link AlaReiPlugin}), and the displayed EU cost / time come from the recipe.
+ * category, and the displayed EU cost / time come from the recipe.
  *
- * <p>Built once per recipe by the filler in {@link AlaReiPlugin#registerDisplays}. Client-local:
- * REI regenerates it on each client, so the {@link #getSerializer() serializer} is only exercised
- * if REI ever syncs displays over the network — it round-trips inputs, outputs, kind and energy.
+ * <p>Lives in the <em>main</em> (common) source set — it is pure recipe data (inputs, outputs, kind,
+ * energy) built on REI's common API only, with no client/GUI types. Displays are built server-side by
+ * {@link AlaReiCommonPlugin} (where the {@code RecipeManager} is populated) and synced to the client
+ * via {@link #SERIALIZER}; the client only supplies the category widgets ({@code AlaProcessingCategory}).
+ * This split is required on MC 26.2, where the client no longer receives full recipes.
  */
 public class AlaProcessingDisplay extends BasicDisplay {
 	private final ModRecipes.Kind kind;
 	private final int energy;
 
-	/** Build a display from a live recipe (the common case, used by the filler). */
+	/** Build a display from a live recipe (the common case, used by the server-side filler). */
 	public AlaProcessingDisplay(AlaProcessingRecipe recipe) {
 		this(List.of(EntryIngredients.ofIngredient(recipe.ingredient())),
 				List.of(EntryIngredients.of(recipe.result())),
@@ -58,7 +60,9 @@ public class AlaProcessingDisplay extends BasicDisplay {
 
 	@Override
 	public CategoryIdentifier<?> getCategoryIdentifier() {
-		return AlaReiPlugin.categoryFor(kind);
+		// Each machine kind maps 1:1 to a REI category id (alaindustrial:<kind>). Computed directly so
+		// this common-side class stays independent of the client plugin.
+		return CategoryIdentifier.of(Industrialization.id(kind.id()));
 	}
 
 	@Override
@@ -83,6 +87,6 @@ public class AlaProcessingDisplay extends BasicDisplay {
 
 	private static AlaProcessingDisplay fromParts(List<EntryIngredient> inputs, List<EntryIngredient> outputs,
 			String kindId, int energy) {
-		return new AlaProcessingDisplay(inputs, outputs, AlaReiPlugin.kindById(kindId), energy);
+		return new AlaProcessingDisplay(inputs, outputs, ModRecipes.byId(kindId), energy);
 	}
 }

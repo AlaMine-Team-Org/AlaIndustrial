@@ -116,5 +116,15 @@
 	"gui.alaindustrial.network_analyzer.stats": "Réseau : %1$s câbles · offre %2$s EU/t · demande %3$s EU/t · dernier tick %4$s EU",
 	"gui.alaindustrial.network_analyzer.none": "Aucun réseau d'énergie ici",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — mod technologique EU pour Fabric. Construisez votre réseau d'énergie : générateurs (panneau solaire, géothermie, combustible), câble en cuivre, Stockage d'Énergie et quatre machines de traitement. Niveau LV prêt, MV — en développement.",
-	"modmenu.summaryTranslation.alaindustrial": "Mod technologique EU pour Fabric : générateurs, câbles, Stockage d'Énergie, 4 machines."
+	"modmenu.summaryTranslation.alaindustrial": "Mod technologique EU pour Fabric : générateurs, câbles, Stockage d'Énergie, 4 machines.",
+
+	"command.alaindustrial.version": "Ala Industrial %1$s · build %2$s · %3$s",
+	"command.alaindustrial.status.registry": "Registre : blocs=%1$s objets=%2$s recettes=%3$s",
+	"command.alaindustrial.status.network": "Réseau d'énergie : graphe union-find en cache (transport par câble = limite de débit, sans perte)",
+	"command.alaindustrial.status.config": "Config : machineEuPerTick=%1$s networksPerTick=%2$s",
+	"command.alaindustrial.net.header": "Réseaux d'énergie (graphe union-find en cache) :",
+	"command.alaindustrial.net.unavailable": "Réseaux d'énergie : serveur indisponible",
+	"command.alaindustrial.net.dimension": "  %1$s : réseaux=%2$s (actifs %3$s / en veille %4$s) câbles=%5$s | tickés=%6$s EU/t=%7$s total=%8$s",
+	"command.alaindustrial.net.empty": "  (aucun réseau d'énergie chargé)",
+	"command.alaindustrial.net.totals": "Totaux : réseaux=%1$s câbles=%2$s EU dernier tick=%3$s EU total=%4$s"
 }
