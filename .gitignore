@@ -10,6 +10,7 @@ runs/
 # only the flattened tools/*_3d.png at tools root are tracked (used by preview HTML)
 tools/*_3d/
 .idea/
+.vscode/
 *.iml
 *.log
 *.tmp

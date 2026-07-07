@@ -163,6 +163,9 @@ public final class NetworkVisualizationClient {
 	}
 
 	private static void render(LevelRenderContext context) {
+		if (!AlaClientConfig.networkOverlayEnabled) {
+			return;
+		}
 		if (cables.isEmpty() && producers.isEmpty() && consumers.isEmpty()) {
 			return;
 		}
@@ -172,35 +175,39 @@ public final class NetworkVisualizationClient {
 		}
 
 		DrawableGizmoPrimitives gizmos = new DrawableGizmoPrimitives();
+		int tubeColor = AlaClientConfig.networkOverlayColor;
 
 		for (BlockPos pos : cables) {
 			if (level.isLoaded(pos) && jointNodes.contains(pos)) {
-				addJointCube(gizmos, nodeCenter(level, pos), JOINT_HALF_SIZE, TUBE_COLOR);
+				addJointCube(gizmos, nodeCenter(level, pos), JOINT_HALF_SIZE, tubeColor);
 			}
 		}
 		for (TubeRun run : tubeRuns) {
 			if (allLoaded(level, run.positions())) {
-				addTube(gizmos, nodeCenter(level, run.from()), nodeCenter(level, run.to()), TUBE_COLOR,
+				addTube(gizmos, nodeCenter(level, run.from()), nodeCenter(level, run.to()), tubeColor,
 						TUBE_HALF_THICKNESS, true, true);
 			}
 		}
 
-		double timeSeconds = System.currentTimeMillis() / 1000.0;
-		for (FlowEdge flow : flowEdges) {
-			if (!level.isLoaded(flow.from()) || !level.isLoaded(flow.to())) {
-				continue;
-			}
-			Vec3 from = nodeCenter(level, flow.from());
-			Vec3 to = nodeCenter(level, flow.to());
-			for (int i = 0; i < FLOW_DOTS_PER_EDGE; i++) {
-				double phase = (timeSeconds * FLOW_SPEED_EDGES_PER_SECOND + (double) i / FLOW_DOTS_PER_EDGE) % 1.0;
-				gizmos.addPoint(from.lerp(to, phase), FLOW_COLOR, FLOW_POINT_SIZE);
+		if (AlaClientConfig.networkOverlayFlowDots) {
+			double timeSeconds = System.currentTimeMillis() / 1000.0;
+			for (FlowEdge flow : flowEdges) {
+				if (!level.isLoaded(flow.from()) || !level.isLoaded(flow.to())) {
+					continue;
+				}
+				Vec3 from = nodeCenter(level, flow.from());
+				Vec3 to = nodeCenter(level, flow.to());
+				for (int i = 0; i < FLOW_DOTS_PER_EDGE; i++) {
+					double phase = (timeSeconds * FLOW_SPEED_EDGES_PER_SECOND + (double) i / FLOW_DOTS_PER_EDGE) % 1.0;
+					gizmos.addPoint(from.lerp(to, phase), FLOW_COLOR, FLOW_POINT_SIZE);
+				}
 			}
 		}
 
 		addJointCubes(gizmos, producers, PRODUCER_COLOR, level);
 		addJointCubes(gizmos, consumers, CONSUMER_COLOR, level);
-		gizmos.submit(context.submitNodeCollector(), context.levelState().cameraRenderState, true);
+		gizmos.submit(context.submitNodeCollector(), context.levelState().cameraRenderState,
+				AlaClientConfig.networkOverlayThroughBlocks);
 	}
 
 	/**

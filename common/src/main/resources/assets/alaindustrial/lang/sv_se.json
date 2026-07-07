@@ -1,5 +1,6 @@
 {
 	"subtitles.alaindustrial.macerator_grind": "Krossen mal",
+	"subtitles.alaindustrial.generator_hum": "Generatorn brummar",
 	"block.alaindustrial.generator": "LV-generator",
 	"block.alaindustrial.geothermal_generator": "Geotermisk generator",
 	"block.alaindustrial.solar_panel": "Solpanel",
@@ -66,7 +67,6 @@
 	"gui.alaindustrial.solar_panel.mode.idle_day": "Inaktiv (dag)",
 	"gui.alaindustrial.solar_panel.branch.neutral": "Neutral",
 	"itemGroup.alaindustrial": "Ala Industrial",
-
 	"tooltip.alaindustrial.hold_shift": "Håll [SHIFT] för detaljer",
 	"tooltip.alaindustrial.tier_lv": "Nivå: LV",
 	"tooltip.alaindustrial.capacity": "Kapacitet: %s EU",
@@ -92,7 +92,6 @@
 	"tooltip.alaindustrial.network_analyzer.endpoints": "Källor: %1$s   Förbrukare: %2$s",
 	"tooltip.alaindustrial.network_analyzer.flow": "Tillgång: %1$s EU/t   Efterfrågan: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "Överfört senaste tick: %s EU",
-
 	"advancements.alaindustrial.root.description": "Första steget mot industrin",
 	"advancements.alaindustrial.ore_hunter.title": "Geolog",
 	"advancements.alaindustrial.ore_hunter.description": "Bryt din första Ala Industrial-malm",
@@ -126,12 +125,20 @@
 	"advancements.alaindustrial.evo_chip.description": "Tillverka ett sol- eller mån-utvecklingschip",
 	"advancements.alaindustrial.solar_evolution.title": "Solutveckling",
 	"advancements.alaindustrial.solar_evolution.description": "Utveckla en solpanel till dagsljus- eller månbelyst variant",
-
 	"gui.alaindustrial.network_analyzer.stats": "Nätverk: %1$s kablar · %2$s källor · %3$s förbrukare · tillgång %4$s EU/t · efterfrågan %5$s EU/t · senaste tick %6$s EU",
 	"gui.alaindustrial.network_analyzer.none": "Inget energinätverk här",
+	"config.alaindustrial.title": "Ala Industrial inställningar",
+	"config.alaindustrial.category.network_overlay": "Nätverksmarkering",
+	"config.alaindustrial.category.tooltips": "Verktygstips",
+	"config.alaindustrial.network_overlay.enabled": "Markera nätverk",
+	"config.alaindustrial.network_overlay.through_blocks": "Genom block",
+	"config.alaindustrial.network_overlay.flow_dots": "Flödespunkter",
+	"config.alaindustrial.network_overlay.color": "Färg: %s",
+	"config.alaindustrial.network_overlay.alpha": "Alfa: %s",
+	"config.alaindustrial.tooltips.always_detailed": "Detaljerade tips",
+	"config.alaindustrial.tooltips.show_eu_numbers": "EU/FE-tal",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — en EU-driven teknikmod för Fabric. Bygg ditt energinätverk: generatorer (solpanel, geotermisk, bränsle), kopparkabel, energilager och fyra bearbetningsmaskiner. LV-nivån är klar, MV — under utveckling.",
 	"modmenu.summaryTranslation.alaindustrial": "EU-teknikmod för Fabric: generatorer, kablar, energilager, 4 maskiner.",
-
 	"command.alaindustrial.version": "Ala Industrial %1$s · build %2$s · %3$s",
 	"command.alaindustrial.status.registry": "Register: block=%1$s föremål=%2$s recept=%3$s",
 	"command.alaindustrial.status.network": "Energinätverk: cachad union-find-graf (kabeltransport = genomströmningsgräns, ingen förlust)",

@@ -1,5 +1,6 @@
 {
 	"subtitles.alaindustrial.macerator_grind": "Macinatore in funzione",
+	"subtitles.alaindustrial.generator_hum": "Generatore in ronzio",
 	"block.alaindustrial.generator": "Generatore LV",
 	"block.alaindustrial.geothermal_generator": "Generatore geotermico",
 	"block.alaindustrial.solar_panel": "Pannello solare",
@@ -66,7 +67,6 @@
 	"gui.alaindustrial.solar_panel.mode.idle_day": "Inattivo (giorno)",
 	"gui.alaindustrial.solar_panel.branch.neutral": "Neutro",
 	"itemGroup.alaindustrial": "Ala Industrial",
-
 	"tooltip.alaindustrial.hold_shift": "Tieni premuto [SHIFT] per i dettagli",
 	"tooltip.alaindustrial.tier_lv": "Livello: LV",
 	"tooltip.alaindustrial.capacity": "Capacità: %s EU",
@@ -92,7 +92,6 @@
 	"tooltip.alaindustrial.network_analyzer.endpoints": "Sorgenti: %1$s   Consumatori: %2$s",
 	"tooltip.alaindustrial.network_analyzer.flow": "Fornitura: %1$s EU/t   Richiesta: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "Trasferito l'ultimo tick: %s EU",
-
 	"advancements.alaindustrial.root.description": "Il primo passo verso l'industria",
 	"advancements.alaindustrial.ore_hunter.title": "Geologo",
 	"advancements.alaindustrial.ore_hunter.description": "Estrai il tuo primo minerale di Ala Industrial",
@@ -126,12 +125,20 @@
 	"advancements.alaindustrial.evo_chip.description": "Crea un chip di evoluzione solare o lunare",
 	"advancements.alaindustrial.solar_evolution.title": "Evoluzione solare",
 	"advancements.alaindustrial.solar_evolution.description": "Evolvi un pannello solare nella variante diurna o al chiaro di luna",
-
 	"gui.alaindustrial.network_analyzer.stats": "Rete: %1$s cavi · %2$s sorgenti · %3$s consumatori · fornitura %4$s EU/t · richiesta %5$s EU/t · ultimo tick %6$s EU",
 	"gui.alaindustrial.network_analyzer.none": "Nessuna rete di energia qui",
+	"config.alaindustrial.title": "Impostazioni Ala Industrial",
+	"config.alaindustrial.category.network_overlay": "Evidenzia rete",
+	"config.alaindustrial.category.tooltips": "Suggerimenti",
+	"config.alaindustrial.network_overlay.enabled": "Evidenzia rete",
+	"config.alaindustrial.network_overlay.through_blocks": "Attraverso blocchi",
+	"config.alaindustrial.network_overlay.flow_dots": "Punti flusso",
+	"config.alaindustrial.network_overlay.color": "Colore: %s",
+	"config.alaindustrial.network_overlay.alpha": "Alfa: %s",
+	"config.alaindustrial.tooltips.always_detailed": "Suggerimenti dettagliati",
+	"config.alaindustrial.tooltips.show_eu_numbers": "Numeri EU/FE",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — mod tecnologica a EU per Fabric. Costruisci la tua rete energetica: generatori (pannello solare, geotermico, a combustibile), cavo di rame, Deposito di energia e quattro macchine di lavorazione. Livello LV pronto, MV — in sviluppo.",
 	"modmenu.summaryTranslation.alaindustrial": "Mod tecnologica a EU per Fabric: generatori, cavi, Deposito di energia, 4 macchine.",
-
 	"command.alaindustrial.version": "Ala Industrial %1$s · build %2$s · %3$s",
 	"command.alaindustrial.status.registry": "Registro: blocchi=%1$s oggetti=%2$s ricette=%3$s",
 	"command.alaindustrial.status.network": "Rete energetica: grafo union-find in cache (trasporto via cavo = limite di portata, senza perdite)",

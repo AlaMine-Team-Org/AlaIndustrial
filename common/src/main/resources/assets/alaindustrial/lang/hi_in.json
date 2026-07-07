@@ -1,5 +1,6 @@
 {
 	"subtitles.alaindustrial.macerator_grind": "मैसरेटर पीस रहा है",
+	"subtitles.alaindustrial.generator_hum": "जनरेटर गुनगुना रहा है",
 	"block.alaindustrial.generator": "LV जेनरेटर",
 	"block.alaindustrial.geothermal_generator": "भूतापीय जेनरेटर",
 	"block.alaindustrial.solar_panel": "सोलर पैनल",
@@ -66,7 +67,6 @@
 	"gui.alaindustrial.solar_panel.mode.idle_day": "निष्क्रिय (दिन)",
 	"gui.alaindustrial.solar_panel.branch.neutral": "तटस्थ",
 	"itemGroup.alaindustrial": "Ala Industrial",
-
 	"tooltip.alaindustrial.hold_shift": "विवरण के लिए [SHIFT] दबाए रखें",
 	"tooltip.alaindustrial.tier_lv": "टियर: LV",
 	"tooltip.alaindustrial.capacity": "क्षमता: %s EU",
@@ -92,7 +92,6 @@
 	"tooltip.alaindustrial.network_analyzer.endpoints": "स्रोत: %1$s   उपभोक्ता: %2$s",
 	"tooltip.alaindustrial.network_analyzer.flow": "आपूर्ति: %1$s EU/t   मांग: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "पिछले tick में स्थानांतरित: %s EU",
-
 	"advancements.alaindustrial.root.description": "उद्योग की ओर पहला कदम",
 	"advancements.alaindustrial.ore_hunter.title": "भूविज्ञानी",
 	"advancements.alaindustrial.ore_hunter.description": "अपना पहला Ala Industrial अयस्क खोदें",
@@ -126,12 +125,20 @@
 	"advancements.alaindustrial.evo_chip.description": "एक सोलर या लूनर इवोल्यूशन चिप बनाएं",
 	"advancements.alaindustrial.solar_evolution.title": "सौर विकास",
 	"advancements.alaindustrial.solar_evolution.description": "एक सोलर पैनल को डेलाइट या मूनलिट रूप में विकसित करें",
-
 	"gui.alaindustrial.network_analyzer.stats": "नेटвर्क: %1$s केबल · %2$s स्रोत · %3$s उपभोक्ता · आपूर्ति %4$s EU/t · मांग %5$s EU/t · अंतिम tick %6$s EU",
 	"gui.alaindustrial.network_analyzer.none": "यहां कोई ऊर्जा नेटवर्क नहीं है",
+	"config.alaindustrial.title": "Ala Industrial सेटिंग्स",
+	"config.alaindustrial.category.network_overlay": "नेटवर्क हाइलाइट",
+	"config.alaindustrial.category.tooltips": "टूलटिप",
+	"config.alaindustrial.network_overlay.enabled": "नेटवर्क हाइलाइट",
+	"config.alaindustrial.network_overlay.through_blocks": "ब्लॉक के पार",
+	"config.alaindustrial.network_overlay.flow_dots": "प्रवाह बिंदु",
+	"config.alaindustrial.network_overlay.color": "रंग: %s",
+	"config.alaindustrial.network_overlay.alpha": "अल्फा: %s",
+	"config.alaindustrial.tooltips.always_detailed": "विस्तृत टूलटिप",
+	"config.alaindustrial.tooltips.show_eu_numbers": "EU/FE संख्याएँ",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — Fabric के लिए EU-चालित टेक मॉड। अपना ऊर्जा नेटवर्क बनाएं: जेनरेटर (सोलर पैनल, भूतापीय, ईंधन), तांबे की केबल, बैटरी बॉक्स और चार प्रोसेसिंग मशीनें। LV टियर तैयार है, MV — विकासाधीन।",
 	"modmenu.summaryTranslation.alaindustrial": "Fabric के लिए EU टेक मॉड: जेनरेटर, केबल, बैटरी बॉक्स, 4 मशीनें।",
-
 	"command.alaindustrial.version": "Ala Industrial %1$s · build %2$s · %3$s",
 	"command.alaindustrial.status.registry": "रजिस्ट्री: ब्लॉक=%1$s आइटम=%2$s रेसिपी=%3$s",
 	"command.alaindustrial.status.network": "ऊर्जा नेटवर्क: कैश्ड union-find ग्राफ़ (केबल परिवहन = थ्रूपुट सीमा, कोई हानि नहीं)",

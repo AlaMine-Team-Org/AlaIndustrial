@@ -36,8 +36,9 @@ public final class MachineTooltips {
 
 	/** Append Ala Industrial tooltip lines for {@code stack} (machine stats or analyzer reading). */
 	public static void append(ItemStack stack, List<Component> lines, boolean shiftDown) {
+		boolean detailed = shiftDown || AlaClientConfig.alwaysDetailedTooltips;
 		if (stack.getItem() instanceof NetworkAnalyzerItem) {
-			addNetworkAnalyzerTooltip(stack, lines, shiftDown);
+			addNetworkAnalyzerTooltip(stack, lines, detailed);
 			return;
 		}
 		if (!(stack.getItem() instanceof BlockItem bi)) {
@@ -47,12 +48,45 @@ public final class MachineTooltips {
 		if (!isMachineBlock(block)) {
 			return;
 		}
+		if (!AlaClientConfig.showEuNumbers) {
+			if (detailed) {
+				addNonNumericTooltip(block, lines);
+			} else {
+				lines.add(Component.translatable("tooltip.alaindustrial.hold_shift")
+						.withStyle(ChatFormatting.DARK_GRAY));
+			}
+			return;
+		}
 		addBasicTooltip(block, lines);
-		if (shiftDown) {
+		if (detailed) {
 			addDetailedTooltip(block, lines);
 		} else {
 			lines.add(Component.translatable("tooltip.alaindustrial.hold_shift")
 					.withStyle(ChatFormatting.DARK_GRAY));
+		}
+	}
+
+	private static void addNonNumericTooltip(Block block, List<Component> lines) {
+		if (block instanceof BatteryBoxBlock) {
+			lines.add(tier());
+			lines.add(Component.translatable("tooltip.alaindustrial.battery_box_io")
+					.withStyle(ChatFormatting.GRAY));
+		} else if (block instanceof CableBlock) {
+			lines.add(tier());
+		} else if (block instanceof SolarPanelBlock) {
+			lines.add(tier());
+			lines.add(Component.translatable("tooltip.alaindustrial.solar_chip_hint")
+					.withStyle(ChatFormatting.DARK_GRAY));
+		} else if (block instanceof DaylightSolarPanelBlock
+				|| block instanceof MoonlitSolarPanelBlock
+				|| block instanceof GeneratorBlock
+				|| block instanceof GeothermalGeneratorBlock
+				|| block instanceof MaceratorBlock
+				|| block instanceof ElectricFurnaceBlock
+				|| block instanceof CompressorBlock
+				|| block instanceof ExtractorBlock
+				|| block instanceof PumpBlock) {
+			lines.add(tier());
 		}
 	}
 

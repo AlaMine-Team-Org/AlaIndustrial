@@ -4,6 +4,8 @@ plugins {
 }
 
 repositories {
+    // Mod Menu optional integration (MOD-030): compile bridge + dev-run button only.
+    maven { url = 'https://maven.terraformersmc.com/' }
     // REI (recipe viewer) + Cloth Config (MOD-018).
     maven { url = 'https://maven.shedaniel.me/' }
     // Architectury API — transitive runtime dependency of REI on Fabric.
@@ -30,6 +32,9 @@ dependencies {
     compileOnly("me.shedaniel.cloth:basic-math:0.6.1")
     compileOnly("dev.architectury:architectury-fabric:21.0.2")
     runtimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
+
+    compileOnly("com.terraformersmc:modmenu:${modmenu_version}")
+    runtimeOnly("com.terraformersmc:modmenu:${modmenu_version}")
 }
 
 loom {

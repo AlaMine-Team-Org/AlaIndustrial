@@ -1,5 +1,6 @@
 {
 	"subtitles.alaindustrial.macerator_grind": "Penghancur menggiling",
+	"subtitles.alaindustrial.generator_hum": "Generator berdengung",
 	"block.alaindustrial.generator": "Generator LV",
 	"block.alaindustrial.geothermal_generator": "Generator Geotermal",
 	"block.alaindustrial.solar_panel": "Panel Surya",
@@ -66,7 +67,6 @@
 	"gui.alaindustrial.solar_panel.mode.idle_day": "Diam (siang)",
 	"gui.alaindustrial.solar_panel.branch.neutral": "Netral",
 	"itemGroup.alaindustrial": "Ala Industrial",
-
 	"tooltip.alaindustrial.hold_shift": "Tahan [SHIFT] untuk detail",
 	"tooltip.alaindustrial.tier_lv": "Tingkat: LV",
 	"tooltip.alaindustrial.capacity": "Kapasitas: %s EU",
@@ -92,7 +92,6 @@
 	"tooltip.alaindustrial.network_analyzer.endpoints": "Sumber: %1$s   Konsumen: %2$s",
 	"tooltip.alaindustrial.network_analyzer.flow": "Pasokan: %1$s EU/t   Permintaan: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "Ditransfer tick terakhir: %s EU",
-
 	"advancements.alaindustrial.root.description": "Langkah pertama menuju industri",
 	"advancements.alaindustrial.ore_hunter.title": "Geolog",
 	"advancements.alaindustrial.ore_hunter.description": "Tambang bijih Ala Industrial pertamamu",
@@ -126,12 +125,20 @@
 	"advancements.alaindustrial.evo_chip.description": "Buat Chip Evolusi Surya atau Bulan",
 	"advancements.alaindustrial.solar_evolution.title": "Evolusi Surya",
 	"advancements.alaindustrial.solar_evolution.description": "Kembangkan Panel Surya menjadi varian Siang atau Cahaya Bulan",
-
 	"gui.alaindustrial.network_analyzer.stats": "Jaringan: %1$s kabel · %2$s sumber · %3$s konsumen · pasokan %4$s EU/t · permintaan %5$s EU/t · tick terakhir %6$s EU",
 	"gui.alaindustrial.network_analyzer.none": "Tidak ada jaringan energi di sini",
+	"config.alaindustrial.title": "Pengaturan Ala Industrial",
+	"config.alaindustrial.category.network_overlay": "Sorotan jaringan",
+	"config.alaindustrial.category.tooltips": "Tooltip",
+	"config.alaindustrial.network_overlay.enabled": "Sorot jaringan",
+	"config.alaindustrial.network_overlay.through_blocks": "Tembus blok",
+	"config.alaindustrial.network_overlay.flow_dots": "Titik aliran",
+	"config.alaindustrial.network_overlay.color": "Warna: %s",
+	"config.alaindustrial.network_overlay.alpha": "Alfa: %s",
+	"config.alaindustrial.tooltips.always_detailed": "Tooltip detail",
+	"config.alaindustrial.tooltips.show_eu_numbers": "Angka EU/FE",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — mod teknologi bertenaga EU untuk Fabric. Bangun jaringan energimu: generator (panel surya, geotermal, bahan bakar), kabel tembaga, Penyimpanan Energi, dan empat mesin pemroses. Tingkat LV sudah siap, MV — dalam pengembangan.",
 	"modmenu.summaryTranslation.alaindustrial": "Mod teknologi EU untuk Fabric: generator, kabel, Penyimpanan Energi, 4 mesin.",
-
 	"command.alaindustrial.version": "Ala Industrial %1$s · build %2$s · %3$s",
 	"command.alaindustrial.status.registry": "Registry: blok=%1$s item=%2$s resep=%3$s",
 	"command.alaindustrial.status.network": "Jaringan energi: graf union-find tersimpan di cache (transport kabel = batas throughput, tanpa kehilangan)",

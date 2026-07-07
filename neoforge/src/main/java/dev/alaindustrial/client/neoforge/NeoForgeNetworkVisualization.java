@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.neoforge;
 
+import dev.alaindustrial.client.AlaClientConfig;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.NetworkTopology;
 import dev.alaindustrial.network.NetworkTopology.FlowEdge;
@@ -56,6 +57,9 @@ public final class NeoForgeNetworkVisualization {
 
 	/** Submit the highlight for this client tick from the last received payload, if any. */
 	public static void tick() {
+		if (!AlaClientConfig.networkOverlayEnabled) {
+			return;
+		}
 		NetworkAnalyzerPayload payload = NeoForgeNetworkClient.latest();
 		if (payload == null) {
 			return;
@@ -72,24 +76,33 @@ public final class NeoForgeNetworkVisualization {
 		}
 
 		try (Gizmos.TemporaryCollection collection = Minecraft.getInstance().collectPerTickGizmos()) {
+			int tubeColor = AlaClientConfig.networkOverlayColor;
 			for (NetworkEdge edge : edges) {
 				if (level.isLoaded(edge.a()) && level.isLoaded(edge.b())) {
-					Gizmos.line(center(edge.a()), center(edge.b()), TUBE_COLOR, EDGE_WIDTH).setAlwaysOnTop();
+					var line = Gizmos.line(center(edge.a()), center(edge.b()), tubeColor, EDGE_WIDTH);
+					if (AlaClientConfig.networkOverlayThroughBlocks) {
+						line.setAlwaysOnTop();
+					}
 				}
 			}
 			drawNodes(level, producers, PRODUCER_COLOR);
 			drawNodes(level, consumers, CONSUMER_COLOR);
 
-			double timeSeconds = System.currentTimeMillis() / 1000.0;
-			for (FlowEdge flow : flowEdges) {
-				if (!level.isLoaded(flow.from()) || !level.isLoaded(flow.to())) {
-					continue;
-				}
-				Vec3 from = center(flow.from());
-				Vec3 to = center(flow.to());
-				for (int i = 0; i < FLOW_DOTS_PER_EDGE; i++) {
-					double phase = (timeSeconds * FLOW_SPEED_EDGES_PER_SECOND + (double) i / FLOW_DOTS_PER_EDGE) % 1.0;
-					Gizmos.point(from.lerp(to, phase), FLOW_COLOR, FLOW_POINT_SIZE).setAlwaysOnTop();
+			if (AlaClientConfig.networkOverlayFlowDots) {
+				double timeSeconds = System.currentTimeMillis() / 1000.0;
+				for (FlowEdge flow : flowEdges) {
+					if (!level.isLoaded(flow.from()) || !level.isLoaded(flow.to())) {
+						continue;
+					}
+					Vec3 from = center(flow.from());
+					Vec3 to = center(flow.to());
+					for (int i = 0; i < FLOW_DOTS_PER_EDGE; i++) {
+						double phase = (timeSeconds * FLOW_SPEED_EDGES_PER_SECOND + (double) i / FLOW_DOTS_PER_EDGE) % 1.0;
+						var point = Gizmos.point(from.lerp(to, phase), FLOW_COLOR, FLOW_POINT_SIZE);
+						if (AlaClientConfig.networkOverlayThroughBlocks) {
+							point.setAlwaysOnTop();
+						}
+					}
 				}
 			}
 		}
@@ -109,7 +122,10 @@ public final class NeoForgeNetworkVisualization {
 		GizmoStyle style = GizmoStyle.strokeAndFill(color, 2.0f, (color & 0x00FFFFFF) | 0x66000000);
 		for (BlockPos pos : positions) {
 			if (level.isLoaded(pos)) {
-				Gizmos.cuboid(box(center(pos), ENDPOINT_HALF), style).setAlwaysOnTop();
+				var cuboid = Gizmos.cuboid(box(center(pos), ENDPOINT_HALF), style);
+				if (AlaClientConfig.networkOverlayThroughBlocks) {
+					cuboid.setAlwaysOnTop();
+				}
 			}
 		}
 	}

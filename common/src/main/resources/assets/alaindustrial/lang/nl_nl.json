@@ -1,5 +1,6 @@
 {
 	"subtitles.alaindustrial.macerator_grind": "Vermaler maalt",
+	"subtitles.alaindustrial.generator_hum": "Generator bromt",
 	"block.alaindustrial.generator": "LV-generator",
 	"block.alaindustrial.geothermal_generator": "Geothermische generator",
 	"block.alaindustrial.solar_panel": "Zonnepaneel",
@@ -66,7 +67,6 @@
 	"gui.alaindustrial.solar_panel.mode.idle_day": "Inactief (dag)",
 	"gui.alaindustrial.solar_panel.branch.neutral": "Neutraal",
 	"itemGroup.alaindustrial": "Ala Industrial",
-
 	"tooltip.alaindustrial.hold_shift": "Houd [SHIFT] ingedrukt voor details",
 	"tooltip.alaindustrial.tier_lv": "Niveau: LV",
 	"tooltip.alaindustrial.capacity": "Capaciteit: %s EU",
@@ -92,7 +92,6 @@
 	"tooltip.alaindustrial.network_analyzer.endpoints": "Bronnen: %1$s   Verbruikers: %2$s",
 	"tooltip.alaindustrial.network_analyzer.flow": "Aanbod: %1$s EU/t   Vraag: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "Vorige tick overgedragen: %s EU",
-
 	"advancements.alaindustrial.root.description": "De eerste stap naar industrie",
 	"advancements.alaindustrial.ore_hunter.title": "Geoloog",
 	"advancements.alaindustrial.ore_hunter.description": "Delf je eerste Ala Industrial-erts",
@@ -126,12 +125,20 @@
 	"advancements.alaindustrial.evo_chip.description": "Vervaardig een zonne- of maan-evolutiechip",
 	"advancements.alaindustrial.solar_evolution.title": "Zonne-evolutie",
 	"advancements.alaindustrial.solar_evolution.description": "Evolueer een zonnepaneel naar een daglicht- of maanverlichte variant",
-
 	"gui.alaindustrial.network_analyzer.stats": "Netwerk: %1$s kabels · %2$s bronnen · %3$s verbruikers · aanbod %4$s EU/t · vraag %5$s EU/t · laatste tick %6$s EU",
 	"gui.alaindustrial.network_analyzer.none": "Hier is geen energienetwerk",
+	"config.alaindustrial.title": "Ala Industrial instellingen",
+	"config.alaindustrial.category.network_overlay": "Netwerkmarkering",
+	"config.alaindustrial.category.tooltips": "Tooltips",
+	"config.alaindustrial.network_overlay.enabled": "Netwerk markeren",
+	"config.alaindustrial.network_overlay.through_blocks": "Door blokken",
+	"config.alaindustrial.network_overlay.flow_dots": "Stroompunten",
+	"config.alaindustrial.network_overlay.color": "Kleur: %s",
+	"config.alaindustrial.network_overlay.alpha": "Alpha: %s",
+	"config.alaindustrial.tooltips.always_detailed": "Gedetailleerde tooltips",
+	"config.alaindustrial.tooltips.show_eu_numbers": "EU/FE-getallen",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — EU-technologiemod voor Fabric. Bouw je energienetwerk: generatoren (zonnepaneel, geothermie, brandstof), koperen kabel, energieopslag en vier verwerkingsmachines. Niveau LV is klaar, MV — in ontwikkeling.",
 	"modmenu.summaryTranslation.alaindustrial": "EU-technologiemod voor Fabric: generatoren, kabels, energieopslag, 4 machines.",
-
 	"command.alaindustrial.version": "Ala Industrial %1$s · build %2$s · %3$s",
 	"command.alaindustrial.status.registry": "Register: blokken=%1$s voorwerpen=%2$s recepten=%3$s",
 	"command.alaindustrial.status.network": "Energienetwerk: gecachete union-find-graaf (kabeltransport = doorvoerlimiet, geen verlies)",

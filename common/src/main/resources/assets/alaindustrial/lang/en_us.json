@@ -1,5 +1,6 @@
 {
 	"subtitles.alaindustrial.macerator_grind": "Macerator grinds",
+	"subtitles.alaindustrial.generator_hum": "Generator hums",
 	"block.alaindustrial.generator": "LV Generator",
 	"block.alaindustrial.water_mill": "Water Mill",
 	"block.alaindustrial.wind_mill": "Wind Mill",
@@ -66,7 +67,6 @@
 	"gui.alaindustrial.solar_panel.mode.idle_day": "Idle (day)",
 	"gui.alaindustrial.solar_panel.branch.neutral": "Neutral",
 	"itemGroup.alaindustrial": "Ala Industrial",
-
 	"tooltip.alaindustrial.hold_shift": "Hold [SHIFT] for details",
 	"tooltip.alaindustrial.tier_lv": "Tier: LV",
 	"tooltip.alaindustrial.capacity": "Capacity: %s EU",
@@ -92,7 +92,6 @@
 	"tooltip.alaindustrial.network_analyzer.endpoints": "Sources: %1$s   Consumers: %2$s",
 	"tooltip.alaindustrial.network_analyzer.flow": "Supply: %1$s EU/t   Demand: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "Moved last tick: %s EU",
-
 	"advancements.alaindustrial.root.description": "The first step toward industry",
 	"advancements.alaindustrial.ore_hunter.title": "Geologist",
 	"advancements.alaindustrial.ore_hunter.description": "Mine your first Ala Industrial ore",
@@ -126,12 +125,20 @@
 	"advancements.alaindustrial.evo_chip.description": "Craft a Solar or Lunar Evolution Chip",
 	"advancements.alaindustrial.solar_evolution.title": "Solar Evolution",
 	"advancements.alaindustrial.solar_evolution.description": "Evolve a Solar Panel into Daylight or Moonlit variant",
-
 	"gui.alaindustrial.network_analyzer.stats": "Network: %1$s cables · %2$s sources · %3$s consumers · supply %4$s EU/t · demand %5$s EU/t · last tick %6$s EU",
 	"gui.alaindustrial.network_analyzer.none": "No energy network here",
+	"config.alaindustrial.title": "Ala Industrial Settings",
+	"config.alaindustrial.category.network_overlay": "Network overlay",
+	"config.alaindustrial.category.tooltips": "Tooltips",
+	"config.alaindustrial.network_overlay.enabled": "Highlight network",
+	"config.alaindustrial.network_overlay.through_blocks": "Through blocks",
+	"config.alaindustrial.network_overlay.flow_dots": "Flow dots",
+	"config.alaindustrial.network_overlay.color": "Color: %s",
+	"config.alaindustrial.network_overlay.alpha": "Alpha: %s",
+	"config.alaindustrial.tooltips.always_detailed": "Detailed tooltips",
+	"config.alaindustrial.tooltips.show_eu_numbers": "EU/FE numbers",
 	"modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — EU-powered tech mod for Fabric. Build your energy network: generators (solar panel, geothermal, fuel), copper cable, Battery Box and four processing machines. LV tier is ready, MV — in development.",
 	"modmenu.summaryTranslation.alaindustrial": "EU tech mod for Fabric: generators, cables, Battery Box, 4 machines.",
-
 	"command.alaindustrial.version": "Ala Industrial %1$s · build %2$s · %3$s",
 	"command.alaindustrial.status.registry": "Registry: blocks=%1$s items=%2$s recipes=%3$s",
 	"command.alaindustrial.status.network": "Energy network: cached union-find graph (cable transport = throughput limit, no loss)",

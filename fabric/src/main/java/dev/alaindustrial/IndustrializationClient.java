@@ -1,5 +1,6 @@
 package dev.alaindustrial;
 
+import dev.alaindustrial.client.AlaClientConfig;
 import dev.alaindustrial.client.CompressorScreen;
 import dev.alaindustrial.client.ElectricFurnaceScreen;
 import dev.alaindustrial.client.MachineTooltips;
@@ -7,6 +8,7 @@ import dev.alaindustrial.client.SolarPanelScreen;
 import dev.alaindustrial.registry.ModMenus;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 
@@ -18,6 +20,8 @@ import net.minecraft.client.gui.screens.MenuScreens;
 public class IndustrializationClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
+		AlaClientConfig.init(FabricLoader.getInstance().getConfigDir());
+
 		MenuScreens.<dev.alaindustrial.menu.GeneratorMenu, dev.alaindustrial.client.GeneratorScreen>register(
 				ModMenus.GENERATOR, dev.alaindustrial.client.GeneratorScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.MaceratorMenu, dev.alaindustrial.client.MaceratorScreen>register(
