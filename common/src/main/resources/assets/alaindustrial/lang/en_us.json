@@ -93,6 +93,7 @@
 	"tooltip.alaindustrial.network_analyzer.flow": "Supply: %1$s EU/t   Demand: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "Moved last tick: %s EU",
 
+	"advancements.alaindustrial.root.description": "The first step toward industry",
 	"advancements.alaindustrial.ore_hunter.title": "Geologist",
 	"advancements.alaindustrial.ore_hunter.description": "Mine your first Ala Industrial ore",
 	"advancements.alaindustrial.smelter.title": "Smelter",

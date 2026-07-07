@@ -93,6 +93,7 @@
 	"tooltip.alaindustrial.network_analyzer.flow": "Aanbod: %1$s EU/t   Vraag: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "Vorige tick overgedragen: %s EU",
 
+	"advancements.alaindustrial.root.description": "De eerste stap naar industrie",
 	"advancements.alaindustrial.ore_hunter.title": "Geoloog",
 	"advancements.alaindustrial.ore_hunter.description": "Delf je eerste Ala Industrial-erts",
 	"advancements.alaindustrial.smelter.title": "Smelter",

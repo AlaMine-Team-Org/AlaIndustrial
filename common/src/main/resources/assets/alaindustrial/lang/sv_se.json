@@ -93,6 +93,7 @@
 	"tooltip.alaindustrial.network_analyzer.flow": "Tillgång: %1$s EU/t   Efterfrågan: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "Överfört senaste tick: %s EU",
 
+	"advancements.alaindustrial.root.description": "Första steget mot industrin",
 	"advancements.alaindustrial.ore_hunter.title": "Geolog",
 	"advancements.alaindustrial.ore_hunter.description": "Bryt din första Ala Industrial-malm",
 	"advancements.alaindustrial.smelter.title": "Smältare",

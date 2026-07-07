@@ -91,6 +91,7 @@
 	"tooltip.alaindustrial.network_analyzer.endpoints": "Джерел: %1$s   Споживачів: %2$s",
 	"tooltip.alaindustrial.network_analyzer.flow": "Постачання: %1$s EU/t   Попит: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "Передано минулий тік: %s EU",
+	"advancements.alaindustrial.root.description": "Перший крок до індустрії",
 	"advancements.alaindustrial.ore_hunter.title": "Геолог",
 	"advancements.alaindustrial.ore_hunter.description": "Добудьте першу руду Ala Industrial",
 	"advancements.alaindustrial.smelter.title": "Плавильник",

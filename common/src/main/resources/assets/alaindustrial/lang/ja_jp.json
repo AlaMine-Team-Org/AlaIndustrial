@@ -91,6 +91,7 @@
 	"tooltip.alaindustrial.network_analyzer.endpoints": "供給元: %1$s   消費先: %2$s",
 	"tooltip.alaindustrial.network_analyzer.flow": "供給: %1$s EU/t   需要: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "前回のtickで転送: %s EU",
+	"advancements.alaindustrial.root.description": "産業への第一歩",
 	"advancements.alaindustrial.ore_hunter.title": "地質学者",
 	"advancements.alaindustrial.ore_hunter.description": "初めてのAla Industrial鉱石を採掘しよう",
 	"advancements.alaindustrial.smelter.title": "製錬士",

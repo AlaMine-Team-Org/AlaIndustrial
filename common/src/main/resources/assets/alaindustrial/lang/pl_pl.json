@@ -91,6 +91,7 @@
 	"tooltip.alaindustrial.network_analyzer.endpoints": "Źródła: %1$s   Odbiorniki: %2$s",
 	"tooltip.alaindustrial.network_analyzer.flow": "Zasilanie: %1$s EU/t   Zapotrzebowanie: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "Przesłano w ostatnim ticku: %s EU",
+	"advancements.alaindustrial.root.description": "Pierwszy krok ku przemysłowi",
 	"advancements.alaindustrial.ore_hunter.title": "Geolog",
 	"advancements.alaindustrial.ore_hunter.description": "Wykop swój pierwszy surowiec Ala Industrial",
 	"advancements.alaindustrial.smelter.title": "Hutnik",

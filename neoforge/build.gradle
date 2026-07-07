@@ -3,6 +3,11 @@ plugins {
     id 'net.neoforged.moddev'
 }
 
+repositories {
+    // JEI (recipe viewer) optional compat for NeoForge.
+    maven { url = 'https://maven.blamejared.com/' }
+}
+
 neoForge {
     version = neoforge_version
     // Automatically enable NeoForge AccessTransformers if the file exists.
@@ -55,6 +60,11 @@ neoForge {
 }
 
 dependencies {
+    // JEI - optional dev/runtime recipe viewer. API only at compile time; full JEI only in dev runs.
+    compileOnly "mezz.jei:jei-26.2-common-api:${jei_version}@jar"
+    compileOnly "mezz.jei:jei-26.2-neoforge-api:${jei_version}@jar"
+    runtimeOnly "mezz.jei:jei-26.2-neoforge:${jei_version}@jar"
+
     // net.neoforged:testframework provides EphemeralTestServerProvider (verified coordinate from the
     // neoforge userdev config.json `testLibraries`). Pulled from the NeoForged maven (settings.gradle).
     testImplementation "net.neoforged:testframework:${neoforge_version}"

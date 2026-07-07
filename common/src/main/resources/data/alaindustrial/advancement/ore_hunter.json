@@ -1,4 +1,5 @@
 {
+  "parent": "alaindustrial:root",
   "display": {
     "icon": { "id": "alaindustrial:raw_tin" },
     "title": { "translate": "advancements.alaindustrial.ore_hunter.title" },

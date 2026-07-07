@@ -91,6 +91,7 @@
 	"tooltip.alaindustrial.network_analyzer.endpoints": "Sources : %1$s   Consommateurs : %2$s",
 	"tooltip.alaindustrial.network_analyzer.flow": "Offre : %1$s EU/t   Demande : %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "Transféré au dernier tick : %s EU",
+	"advancements.alaindustrial.root.description": "Le premier pas vers l'industrie",
 	"advancements.alaindustrial.ore_hunter.title": "Géologue",
 	"advancements.alaindustrial.ore_hunter.description": "Extrayez votre premier minerai Ala Industrial",
 	"advancements.alaindustrial.smelter.title": "Fondeur",

@@ -69,16 +69,19 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 		int euPerBucket = Math.max(1, Config.pumpEuPerBucket);
 
 		// 1) Acquire lava if we have power and tank room.
+		BlockPos acquiredFrom = null;
 		if (energy.amount >= euPerBucket && fluidTank.amount + FluidAmounts.BUCKET <= TANK_CAPACITY) {
-			if (acquireLava(level, pos)) {
+			acquiredFrom = acquireLava(level, pos);
+			if (acquiredFrom != null) {
 				energy.amount -= euPerBucket;
 				worked = true;
 			}
 		}
 
-		// 2) Push tank lava into adjacent insertable fluid ports (e.g. the geothermal tank).
+		// 2) Push tank lava into adjacent insertable fluid ports; skip the neighbour we just
+		//    acquired from to prevent same-tick push-back (D8 fix, MOD-032).
 		if (fluidTank.amount > 0) {
-			worked |= pushLava(level, pos);
+			worked |= pushLava(level, pos, acquiredFrom);
 		}
 
 		updateLit(worked);
@@ -90,8 +93,12 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 		return 0;
 	}
 
-	/** Try to put one bucket of lava into the tank from a source block or an adjacent fluid port. */
-	private boolean acquireLava(Level level, BlockPos pos) {
+	/**
+	 * Try to put one bucket of lava into the tank from a source block or an adjacent fluid port.
+	 * Returns the neighbour {@link BlockPos} that supplied the lava (for same-tick push exclusion),
+	 * or {@code null} if nothing was acquired.
+	 */
+	private BlockPos acquireLava(Level level, BlockPos pos) {
 		FluidHolder lava = FluidHolder.of(Fluids.LAVA);
 		// Source block directly below or orthogonally adjacent.
 		for (Direction dir : Direction.values()) {
@@ -104,7 +111,7 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 				});
 				if (acquired[0]) {
 					level.setBlockAndUpdate(np, Blocks.AIR.defaultBlockState());
-					return true;
+					return np;
 				}
 			}
 		}
@@ -119,14 +126,14 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 			EnergyTransactions.get().runCommitting(
 					txn -> moved[0] = FluidMover.move(src, fluidTank, lava, FluidAmounts.BUCKET, txn));
 			if (moved[0] > 0) {
-				return true;
+				return np;
 			}
 		}
-		return false;
+		return null;
 	}
 
-	/** Push tank lava into any adjacent insertable fluid port. */
-	private boolean pushLava(Level level, BlockPos pos) {
+	/** Push tank lava into any adjacent insertable fluid port, skipping {@code excludePos}. */
+	private boolean pushLava(Level level, BlockPos pos, BlockPos excludePos) {
 		boolean moved = false;
 		FluidHolder lava = FluidHolder.of(Fluids.LAVA);
 		for (Direction dir : Direction.values()) {
@@ -134,6 +141,9 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 				break;
 			}
 			BlockPos np = pos.relative(dir);
+			if (np.equals(excludePos)) {
+				continue;
+			}
 			FluidPort dst = FluidLookup.get().find(level, np, dir.getOpposite());
 			if (dst == null || !dst.supportsInsertion()) {
 				continue;

@@ -617,23 +617,9 @@ public class FluidGameTest {
 	 *     neighbour: {@code PumpBlockEntity#fluidTank.canExtract} is always {@code true} (unlike the
 	 *     geothermal generator's tank, whose {@code canExtract} is always false — R-CON-08 — so it
 	 *     cannot serve as a donor here).
-	 *
-	 *     <p>Because the donor is itself a pump, its tank is also a valid INSERT target for the puller's
-	 *     own same-tick {@code pushLava} step (step 2 runs right after step 1 in {@code onServerTick}),
-	 *     which would immediately shove the just-pulled bucket straight back — masking a successful pull
-	 *     if asserted via final tank amount alone. Verify the pull via its other side effect instead
-	 *     (EU drained by {@code acquireLava}, TC-PUMP-001-FUN02's proven pattern), which happens
-	 *     independently of whatever the push step does afterward.
 	 * @covers R-CON-01
-	 *
-	 *     <p>TODO(code D8): {@code required = false} — real production wart, not a test bug. In one tick
-	 *     the pump runs acquire-then-push ({@code onServerTick}); with the donor being the only fluid
-	 *     neighbour it is BOTH the extract source and a valid insert target, so {@code pushLava} immediately
-	 *     shoves the just-pulled bucket straight back into the donor (net tank = 0). The real fix is a
-	 *     pump-side change (skip the neighbour it acquired from this tick), deferred to the code-fix phase;
-	 *     pump is hidden in v1.0 (MOD-010-adjacent), so this is low priority. See coverage/README D8.
 	 */
-	@GameTest(required = false)
+	@GameTest
 	public void tcPump001Fun03_pullsFromAdjacentFluidStorage(GameTestHelper helper) {
 		BlockPos donorRel = new BlockPos(1, 2, 1);
 		BlockPos pumpRel = new BlockPos(2, 2, 1);
@@ -654,6 +640,10 @@ public class FluidGameTest {
 		if (donor.fluidTank.amount != 0) {
 			helper.fail("expected the donor's tank to be drained, got " + donor.fluidTank.amount
 					+ " (pump.fluidTank=" + pump.fluidTank.amount + ")");
+		}
+		if (pump.fluidTank.amount != FluidAmounts.BUCKET) {
+			helper.fail("expected the pump's tank to hold exactly 1 bucket after pull, got "
+					+ pump.fluidTank.amount);
 		}
 		helper.succeed();
 	}

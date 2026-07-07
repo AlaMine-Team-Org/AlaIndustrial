@@ -93,6 +93,7 @@
 	"tooltip.alaindustrial.network_analyzer.flow": "आपूर्ति: %1$s EU/t   मांग: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "पिछले tick में स्थानांतरित: %s EU",
 
+	"advancements.alaindustrial.root.description": "उद्योग की ओर पहला कदम",
 	"advancements.alaindustrial.ore_hunter.title": "भूविज्ञानी",
 	"advancements.alaindustrial.ore_hunter.description": "अपना पहला Ala Industrial अयस्क खोदें",
 	"advancements.alaindustrial.smelter.title": "गलाने वाला",

@@ -93,6 +93,7 @@
 	"tooltip.alaindustrial.network_analyzer.flow": "Pasokan: %1$s EU/t   Permintaan: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "Ditransfer tick terakhir: %s EU",
 
+	"advancements.alaindustrial.root.description": "Langkah pertama menuju industri",
 	"advancements.alaindustrial.ore_hunter.title": "Geolog",
 	"advancements.alaindustrial.ore_hunter.description": "Tambang bijih Ala Industrial pertamamu",
 	"advancements.alaindustrial.smelter.title": "Peleburan",

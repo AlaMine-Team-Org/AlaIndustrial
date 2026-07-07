@@ -1,12 +1,16 @@
 package dev.alaindustrial.compat.rei;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.client.MachineRecipeViewerTargets;
 import dev.alaindustrial.registry.ModBlocks;
 import dev.alaindustrial.registry.ModRecipes;
+import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
+import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.level.block.Block;
 
 /**
@@ -31,6 +35,10 @@ public class AlaReiPlugin implements REIClientPlugin {
 		return new Machine(kind, block, CategoryIdentifier.of(Industrialization.id(kind.id())));
 	}
 
+	private static CategoryIdentifier<AlaProcessingDisplay> categoryId(ModRecipes.Kind kind) {
+		return CategoryIdentifier.of(Industrialization.id(kind.id()));
+	}
+
 	private static final Machine[] MACHINES = {
 			machine(ModRecipes.MACERATION, ModBlocks.MACERATOR),
 			machine(ModRecipes.SMELTING, ModBlocks.ELECTRIC_FURNACE),
@@ -45,5 +53,22 @@ public class AlaReiPlugin implements REIClientPlugin {
 			// Clicking the machine block in REI opens its recipes.
 			registry.addWorkstations(m.id(), EntryStacks.of(m.block()));
 		}
+	}
+
+	@Override
+	public void registerScreens(ScreenRegistry registry) {
+		for (MachineRecipeViewerTargets.Target target : MachineRecipeViewerTargets.ALL) {
+			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
+			registerClickArea(registry, target.screenClass(), rect, categoryId(target.kind()));
+		}
+	}
+
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	private static void registerClickArea(ScreenRegistry registry, Class<? extends AbstractContainerScreen<?>> screenClass,
+			MachineRecipeViewerTargets.GuiRect rect, CategoryIdentifier<?> categoryId) {
+		registry.registerContainerClickArea(
+				new Rectangle(rect.x(), rect.y(), rect.width(), rect.height()),
+				(Class) screenClass,
+				categoryId);
 	}
 }

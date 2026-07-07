@@ -91,6 +91,7 @@
 	"tooltip.alaindustrial.network_analyzer.endpoints": "電源：%1$s   消耗者：%2$s",
 	"tooltip.alaindustrial.network_analyzer.flow": "供給：%1$s EU/t   需求：%2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "上一刻傳輸：%s EU",
+	"advancements.alaindustrial.root.description": "邁向工業的第一步",
 	"advancements.alaindustrial.ore_hunter.title": "地質學家",
 	"advancements.alaindustrial.ore_hunter.description": "挖掘你的第一塊Ala Industrial礦石",
 	"advancements.alaindustrial.smelter.title": "冶煉師",

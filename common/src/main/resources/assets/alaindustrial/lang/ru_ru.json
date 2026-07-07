@@ -91,6 +91,7 @@
 	"tooltip.alaindustrial.network_analyzer.endpoints": "Источников: %1$s   Потребителей: %2$s",
 	"tooltip.alaindustrial.network_analyzer.flow": "Подача: %1$s EU/t   Потребление: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "Передано прошлый тик: %s EU",
+	"advancements.alaindustrial.root.description": "Первый шаг к индустрии",
 	"advancements.alaindustrial.ore_hunter.title": "Геолог",
 	"advancements.alaindustrial.ore_hunter.description": "Добудьте первую руду Ala Industrial",
 	"advancements.alaindustrial.smelter.title": "Литейщик",

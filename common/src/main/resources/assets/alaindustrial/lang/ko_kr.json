@@ -91,6 +91,7 @@
 	"tooltip.alaindustrial.network_analyzer.endpoints": "공급원: %1$s   소비자: %2$s",
 	"tooltip.alaindustrial.network_analyzer.flow": "공급: %1$s EU/t   수요: %2$s EU/t",
 	"tooltip.alaindustrial.network_analyzer.moved": "지난 틱 전송: %s EU",
+	"advancements.alaindustrial.root.description": "산업을 향한 첫걸음",
 	"advancements.alaindustrial.ore_hunter.title": "지질학자",
 	"advancements.alaindustrial.ore_hunter.description": "처음으로 Ala Industrial 광석을 채굴하세요",
 	"advancements.alaindustrial.smelter.title": "제련사",
