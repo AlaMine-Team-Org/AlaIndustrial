@@ -1,0 +1,51 @@
+{
+	"schemaVersion": 1,
+	"id": "alaindustrial",
+	"version": "${version}",
+	"name": "Ala Industrial",
+	"description": "EU-powered tech mod for Fabric. Build your energy network: generators, copper cable, Battery Box and four processing machines. LV tier ready.",
+	"authors": [
+		"Ala Team"
+	],
+	"contact": {
+		"homepage": "https://alamine.day/",
+		"sources": "https://github.com/AlaMine-Team-Org/AlaIndustrial",
+		"issues": "https://github.com/AlaMine-Team-Org/AlaIndustrial/issues"
+	},
+	"license": "MIT",
+	"icon": {
+		"16": "assets/alaindustrial/icon-16.png",
+		"32": "assets/alaindustrial/icon-32.png",
+		"128": "assets/alaindustrial/icon-128.png",
+		"512": "assets/alaindustrial/icon-512.png"
+	},
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"dev.alaindustrial.IndustrializationFabric"
+		],
+		"client": [
+			"dev.alaindustrial.IndustrializationClient"
+		],
+		"rei_common": [
+			"dev.alaindustrial.compat.rei.AlaReiCommonPlugin"
+		],
+		"rei_client": [
+			"dev.alaindustrial.compat.rei.AlaReiPlugin"
+		]
+	},
+	"mixins": [
+		"alaindustrial.mixins.json",
+		{
+			"config": "alaindustrial.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=${fabric_loader_version}",
+		"minecraft": "~${minecraft_version}",
+		"java": ">=25",
+		"fabric-api": "*",
+		"team_reborn_energy": "*"
+	}
+}

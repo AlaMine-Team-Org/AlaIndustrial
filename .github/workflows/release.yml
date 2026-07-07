@@ -1,12 +1,14 @@
 # Installed into the PUBLIC repo at: .github/workflows/release.yml
-# Triggered by pushing a tag `vX.Y.Z`. Builds the mod, publishes to CurseForge
-# with a MARKDOWN changelog, and creates a matching GitHub Release.
+# Triggered by pushing a tag `vX.Y.Z`. Builds BOTH loaders (Fabric + NeoForge),
+# publishes TWO files to CurseForge (one per loader) with a MARKDOWN changelog,
+# and creates one GitHub Release carrying both jars.
 #
-# Why two publish steps: mc-publish does NOT send CurseForge's `changelogType`,
-# so CurseForge stores the changelog as plain text and the Markdown never renders.
-# We therefore upload to CurseForge with itsmeow/curseforge-upload, which sets
-# `changelog_type: markdown` explicitly, and keep mc-publish only for the GitHub
-# Release. The display name carries the loader in brackets, e.g. "... v0.1.1 [Fabric]".
+# Why a direct API curl (not mc-publish/itsmeow) for CurseForge: mc-publish does
+# NOT send CurseForge's `changelogType`, so the Markdown never renders; itsmeow's
+# output→input hop collapses newlines. We POST to the upload API with
+# `jq --rawfile` (preserves newlines) + changelogType=markdown. mc-publish is kept
+# only for the GitHub Release. Each file's displayName carries its loader in
+# brackets, e.g. "... v0.1.5 [Fabric]" / "... v0.1.5 [NeoForge]".
 name: Release
 
 on:
@@ -38,39 +40,66 @@ jobs:
       - name: Cleanliness gate
         run: bash .github/scripts/scan-clean.sh .
 
+      # One root build compiles all modules (common + fabric + neoforge) and runs
+      # the Fabric server gametests as part of :fabric:build.
       - name: Build
         run: ./gradlew build --no-daemon --stacktrace
 
-      # In-world behaviour tests must pass before a release ships. Required tests
-      # gate the build; tests marked optional (unfinished features) only warn.
-      - name: Game tests
-        run: ./gradlew runGameTest --no-daemon --stacktrace
+      # In-world behaviour tests for BOTH loaders must pass before a release ships.
+      # :fabric:runGameTest = Fabric server gametests; :neoforge:runGameTests =
+      # NeoForge gameTestServer world tests. Required tests gate the build; tests
+      # marked optional (unfinished features) only warn.
+      - name: Game tests (both loaders)
+        run: ./gradlew :fabric:runGameTest :neoforge:runGameTests --no-daemon --stacktrace
 
-      # Resolve the production jar path.
-      - name: Resolve artifact
+      # Resolve BOTH production jars and validate them before any upload. Guards:
+      #  1. each jar exists and is non-empty,
+      #  2. the version in each filename matches the tag (catches a stale jar),
+      #  3. each jar actually carries its loader's metadata — so the [Fabric] /
+      #     [NeoForge] label can never be pinned to the wrong artifact.
+      - name: Resolve & validate artifacts
         id: meta
         run: |
-          JAR=$(ls build/libs/*.jar | grep -vE -- '-(dev|sources|javadoc)\.jar$' | head -1)
-          echo "jar=$JAR" >> "$GITHUB_OUTPUT"
+          VERSION="${GITHUB_REF_NAME#v}"
+          FABRIC_JAR=$(ls fabric/build/libs/*.jar | grep -vE -- '-(dev|sources|javadoc)\.jar$' | head -1)
+          NEOFORGE_JAR=$(ls neoforge/build/libs/*.jar | grep -vE -- '-(dev|sources|javadoc)\.jar$' | head -1)
+          for f in "$FABRIC_JAR" "$NEOFORGE_JAR"; do
+            [ -s "$f" ] || { echo "::error::missing or empty jar: $f"; exit 1; }
+          done
+          case "$FABRIC_JAR"   in *"-$VERSION.jar") ;; *) echo "::error::fabric jar version != $VERSION ($FABRIC_JAR)"; exit 1;; esac
+          case "$NEOFORGE_JAR" in *"-$VERSION.jar") ;; *) echo "::error::neoforge jar version != $VERSION ($NEOFORGE_JAR)"; exit 1;; esac
+          unzip -l "$FABRIC_JAR"   | grep -q 'fabric.mod.json'              || { echo "::error::fabric jar lacks fabric.mod.json — wrong artifact?"; exit 1; }
+          unzip -l "$NEOFORGE_JAR" | grep -q 'META-INF/neoforge.mods.toml' || { echo "::error::neoforge jar lacks neoforge.mods.toml — wrong artifact?"; exit 1; }
+          echo "version=$VERSION"          >> "$GITHUB_OUTPUT"
+          echo "fabric_jar=$FABRIC_JAR"     >> "$GITHUB_OUTPUT"
+          echo "neoforge_jar=$NEOFORGE_JAR" >> "$GITHUB_OUTPUT"
+          echo "Fabric:   $FABRIC_JAR"
+          echo "NeoForge: $NEOFORGE_JAR"
 
-      # CurseForge upload via a DIRECT API call (not itsmeow/curseforge-upload).
-      # Why: passing the changelog through a GitHub Actions output→input hop
-      # (`${{ steps.meta.outputs.changelog }}` into `with:`) collapses the newlines of a
-      # multi-line value, so CurseForge receives the notes as ONE line and renders the
-      # Markdown as escaped plain text (\#, \*). We instead read CHANGELOG.md straight
-      # from disk into the metadata JSON with `jq --rawfile`, which preserves newlines,
-      # and send changelogType=markdown. Endpoint/headers per the CurseForge upload API
-      # (same as the action used: POST {game}.curseforge.com/api/projects/{id}/upload-file,
-      # X-Api-Token header, multipart metadata + file).
-      # game_versions uses explicit numeric CurseForge IDs, NOT names: matching "26.2"
-      # by name wrongly picks a stale legacy entry (id 16500), rejected with error 1009.
-      #   16498 = Minecraft 26.2 · 7499 = Fabric (modloader)
-      # Look up IDs for a new version via:
-      #   https://minecraft.curseforge.com/api/game/versions?token=TOKEN
-      - name: Publish to CurseForge
+      # Resolve the CurseForge modloader IDs. Fabric is pinned (7499, proven across
+      # releases). NeoForge is resolved dynamically by name from the versions API
+      # (the CURSEFORGE_TOKEN is the upload token, which this endpoint accepts), so a
+      # future id change does not silently break the NeoForge upload. Minecraft's
+      # version id (16498) stays pinned — name-matching "26.2" wrongly picks a stale
+      # legacy entry (id 16500), rejected with error 1009.
+      - name: Resolve CurseForge loader IDs
+        id: loaders
         env:
           CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-          JAR: ${{ steps.meta.outputs.jar }}
+        run: |
+          versions=$(curl -sSf "https://minecraft.curseforge.com/api/game/versions?token=$CF_TOKEN")
+          NEOFORGE_ID=$(printf '%s' "$versions" | jq -r 'map(select(.name=="NeoForge")) | .[0].id // empty')
+          [ -n "$NEOFORGE_ID" ] || { echo "::error::could not resolve the NeoForge modloader id from the versions API"; exit 1; }
+          echo "neoforge_id=$NEOFORGE_ID" >> "$GITHUB_OUTPUT"
+          echo "NeoForge modloader id: $NEOFORGE_ID (Fabric pinned: 7499, Minecraft pinned: 16498)"
+
+      # Two CurseForge uploads, one per loader, as SEPARATE steps so a partial
+      # failure (one loader up, the other down) is unambiguous in the job log and
+      # you re-run only what failed. Same changelog for both.
+      - name: Publish Fabric to CurseForge
+        env:
+          CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          JAR: ${{ steps.meta.outputs.fabric_jar }}
           DISPLAY_NAME: Ala Industrial ${{ github.ref_name }} [Fabric]
         run: |
           metadata=$(jq -n \
@@ -83,11 +112,32 @@ jobs:
             --form-string "metadata=$metadata" \
             -F "file=@$JAR"
 
-      # GitHub Release (jar + changelog). mc-publish renders Markdown fine on GitHub.
+      - name: Publish NeoForge to CurseForge
+        env:
+          CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          JAR: ${{ steps.meta.outputs.neoforge_jar }}
+          NEOFORGE_ID: ${{ steps.loaders.outputs.neoforge_id }}
+          DISPLAY_NAME: Ala Industrial ${{ github.ref_name }} [NeoForge]
+        run: |
+          metadata=$(jq -n \
+            --rawfile changelog CHANGELOG.md \
+            --arg name "$DISPLAY_NAME" \
+            --argjson nf "$NEOFORGE_ID" \
+            '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, $nf], releaseType: "release"}')
+          curl -sSf -X POST \
+            "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
+            -H "X-Api-Token: $CF_TOKEN" \
+            --form-string "metadata=$metadata" \
+            -F "file=@$JAR"
+
+      # One GitHub Release carrying BOTH loader jars. mc-publish renders Markdown
+      # fine on GitHub.
       - name: Create GitHub Release
         uses: Kira-NT/mc-publish@v3.3.0
         with:
-          files: build/libs/!(*-@(dev|sources|javadoc)).jar
+          files: |
+            fabric/build/libs/!(*-@(dev|sources|javadoc)).jar
+            neoforge/build/libs/!(*-@(dev|sources|javadoc)).jar
           name: Ala Industrial ${{ github.ref_name }}
           version: ${{ github.ref_name }}
           version-type: release

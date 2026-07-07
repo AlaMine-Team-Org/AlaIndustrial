@@ -1,0 +1,11 @@
+{
+	"type": "neoforge:add_features",
+	"biomes": "#minecraft:is_overworld",
+	"features": [
+		"alaindustrial:tin_ore",
+		"alaindustrial:silver_ore",
+		"alaindustrial:nickel_ore",
+		"alaindustrial:uranium_ore"
+	],
+	"step": "underground_ores"
+}

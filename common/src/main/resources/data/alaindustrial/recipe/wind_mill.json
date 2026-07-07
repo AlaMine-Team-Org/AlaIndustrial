@@ -1,0 +1,7 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": { "W": "#minecraft:wool", "C": "alaindustrial:copper_cable" },
+	"pattern": ["WWW","WCW","WWW"],
+	"result": { "id": "alaindustrial:wind_mill" }
+}

@@ -1,6 +1,7 @@
 # Installed into the PUBLIC repo at: .github/workflows/test.yml
-# Continuous test coverage: compiles the mod, runs the JUnit unit tests (via
-# `build`) and the in-world game tests (`runGameTest`). Runs on branch pushes,
+# Continuous test coverage: compiles all modules (common + fabric + neoforge),
+# runs the JUnit unit tests (via `build`) and the in-world game tests on BOTH
+# loaders (:fabric:runGameTest + :neoforge:runGameTests). Runs on branch pushes,
 # pull requests and on demand. Tags are handled by release.yml (which runs the
 # same tests before publishing), so they are excluded here to avoid a double run.
 name: Tests
@@ -30,5 +31,5 @@ jobs:
       - name: Unit tests + build
         run: ./gradlew build --no-daemon --stacktrace
 
-      - name: Game tests (in-world behaviour)
-        run: ./gradlew runGameTest --no-daemon --stacktrace
+      - name: Game tests (both loaders, in-world behaviour)
+        run: ./gradlew :fabric:runGameTest :neoforge:runGameTests --no-daemon --stacktrace

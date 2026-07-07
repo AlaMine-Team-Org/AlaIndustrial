@@ -1,0 +1,97 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.fabricmc.fabric-loom'
+}
+
+repositories {
+    // REI (recipe viewer) + Cloth Config (MOD-018).
+    maven { url = 'https://maven.shedaniel.me/' }
+    // Architectury API — transitive runtime dependency of REI on Fabric.
+    maven { url = 'https://maven.architectury.dev/' }
+}
+
+dependencies {
+    minecraft("com.mojang:minecraft:${minecraft_version}")
+    implementation("net.fabricmc:fabric-loader:${fabric_loader_version}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
+
+    // Team Reborn Energy — Fabric energy interface. Bundled into the Fabric jar (JiJ).
+    // NOTE: our Loom 1.17.12 pin has no `mod*` configurations — mod deps use plain
+    // Gradle configs and Loom auto-remaps them (see docs/BUILD.md).
+    include(implementation("teamreborn:energy:${energy_version}"))
+
+    // REI — optional dev/runtime recipe viewer (MOD-018). The compat plugin (compat/rei/*) is
+    // client-only and the mod loads fine without REI installed, so REI stays off the shipped jar:
+    // API on the compile classpath, full REI on the dev-run classpath only.
+    compileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${rei_version}")
+    // REI's GUI API exposes me.shedaniel.math (Point/Rectangle) via this helper lib, and its display
+    // registry pulls dev.architectury types — both needed on the compile classpath for the category
+    // widgets. (Loom 1.17 here is not split-client, so these map to compileOnly, not clientCompileOnly.)
+    compileOnly("me.shedaniel.cloth:basic-math:0.6.1")
+    compileOnly("dev.architectury:architectury-fabric:21.0.2")
+    runtimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
+}
+
+loom {
+    def aw = project(':common').file("src/main/resources/${mod_id}.accesswidener")
+    if (aw.exists()) {
+        accessWidenerPath.set(aw)
+    }
+    runs {
+        client {
+            client()
+            setConfigName('Fabric Client')
+            ideConfigGenerated(true)
+            runDir('runs/client')
+        }
+        server {
+            server()
+            setConfigName('Fabric Server')
+            ideConfigGenerated(true)
+            runDir('runs/server')
+        }
+        // GUI-only screenshot mode: ./gradlew :fabric:runClientGameTest -Pguionly
+        configureEach {
+            if (project.findProperty("guionly") != null) {
+                vmArg("-Dalaindustrial.guionly=1")
+            }
+        }
+    }
+}
+
+// L2 game tests. `configureTests` (fabric-loom Fabric-API extension) creates the `gametest`
+// source set at src/gametest/ and the run tasks:
+//   - server:  ./gradlew :fabric:runGameTest        (fabric-gametest entrypoint, exits non-zero on failure)
+//   - client:  ./gradlew :fabric:runClientGameTest  (fabric-client-gametest, GUI screenshots)
+// The L2 driver is Fabric-specific: the @GameTest annotation and the fabric.mod.json entrypoints
+// are Fabric infrastructure. The pure-logic invariants they assert stay in common as L1 JUnit
+// (common/src/test). A NeoForge headless gametest path is not wired yet — no machines are
+// migrated to the NeoForge side to test (Phase 4). See docs/BUILD.md.
+fabricApi {
+    configureTests {
+        createSourceSet = true
+        modId = "${mod_id}-gametest"
+        enableGameTests = true
+        enableClientGameTests = true
+        eula = true
+    }
+}
+
+// Implement mcgradleconventions loader attribute.
+// NOTE: our Loom 1.17.12 does not create the template's `includeInternal` /
+// `modCompileClasspath` configurations, so tag only variants that exist.
+def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements', 'includeInternal', 'modCompileClasspath'].each { variant ->
+    configurations.findByName(variant)?.attributes {
+        attribute(loaderAttribute, 'fabric')
+    }
+}
+sourceSets.configureEach {
+    [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName].each { variant ->
+        configurations.named(variant) {
+            attributes {
+                attribute(loaderAttribute, 'fabric')
+            }
+        }
+    }
+}

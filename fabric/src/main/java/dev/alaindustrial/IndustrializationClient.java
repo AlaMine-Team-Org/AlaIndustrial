@@ -1,0 +1,54 @@
+package dev.alaindustrial;
+
+import dev.alaindustrial.client.CompressorScreen;
+import dev.alaindustrial.client.ElectricFurnaceScreen;
+import dev.alaindustrial.client.MachineTooltips;
+import dev.alaindustrial.client.SolarPanelScreen;
+import dev.alaindustrial.registry.ModMenus;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
+
+/**
+ * Client entrypoint for Industrialization. Binds machine menus to their screens and registers the
+ * hover-tooltip provider. The tooltip content itself is loader-neutral in
+ * {@link MachineTooltips} (common); this only hooks it onto Fabric's {@code ItemTooltipCallback}.
+ */
+public class IndustrializationClient implements ClientModInitializer {
+	@Override
+	public void onInitializeClient() {
+		MenuScreens.<dev.alaindustrial.menu.GeneratorMenu, dev.alaindustrial.client.GeneratorScreen>register(
+				ModMenus.GENERATOR, dev.alaindustrial.client.GeneratorScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.MaceratorMenu, dev.alaindustrial.client.MaceratorScreen>register(
+				ModMenus.MACERATOR, dev.alaindustrial.client.MaceratorScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.ElectricFurnaceMenu, ElectricFurnaceScreen>register(
+				ModMenus.ELECTRIC_FURNACE, ElectricFurnaceScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.ExtractorMenu, dev.alaindustrial.client.ExtractorScreen>register(
+				ModMenus.EXTRACTOR, dev.alaindustrial.client.ExtractorScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.CompressorMenu, CompressorScreen>register(
+				ModMenus.COMPRESSOR, CompressorScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.SolarPanelMenu, SolarPanelScreen>register(
+				ModMenus.SOLAR_PANEL, SolarPanelScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.MoonlitSolarPanelMenu, dev.alaindustrial.client.MoonlitSolarPanelScreen>register(
+				ModMenus.MOONLIT_SOLAR_PANEL, dev.alaindustrial.client.MoonlitSolarPanelScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.BatteryBoxMenu, dev.alaindustrial.client.BatteryBoxScreen>register(
+				ModMenus.BATTERY_BOX, dev.alaindustrial.client.BatteryBoxScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.DaylightSolarPanelMenu, dev.alaindustrial.client.DaylightSolarPanelScreen>register(
+				ModMenus.DAYLIGHT_SOLAR_PANEL, dev.alaindustrial.client.DaylightSolarPanelScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.GeothermalGeneratorMenu, dev.alaindustrial.client.GeothermalGeneratorScreen>register(
+				ModMenus.GEOTHERMAL_GENERATOR, dev.alaindustrial.client.GeothermalGeneratorScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.WaterMillMenu, dev.alaindustrial.client.WaterMillScreen>register(
+				ModMenus.WATER_MILL, dev.alaindustrial.client.WaterMillScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.WindMillMenu, dev.alaindustrial.client.WindMillScreen>register(
+				ModMenus.WIND_MILL, dev.alaindustrial.client.WindMillScreen::new);
+
+		ItemTooltipCallback.EVENT.register((stack, context, flag, lines) ->
+				MachineTooltips.append(stack, lines, Minecraft.getInstance().hasShiftDown()));
+		dev.alaindustrial.client.NetworkVisualizationClient.init();
+		dev.alaindustrial.client.CablePlacementPreview.init();
+		dev.alaindustrial.client.sound.MachineHumClientHook.register();
+
+		Industrialization.LOGGER.info("Industrialization client initialized.");
+	}
+}

@@ -1,0 +1,88 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.neoforged.moddev'
+}
+
+neoForge {
+    version = neoforge_version
+    // Automatically enable NeoForge AccessTransformers if the file exists.
+    def at = project(':common').file('src/main/resources/META-INF/accesstransformer.cfg')
+    if (at.exists()) {
+        accessTransformers.from(at.absolutePath)
+    }
+    runs {
+        configureEach {
+            systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
+            ideName = "NeoForge ${it.name.capitalize()} (${project.path})" // Unify run config names with Fabric.
+        }
+        client {
+            client()
+            gameDirectory = this.mkdir(this.file('runs/client'))
+        }
+        data {
+            clientData()
+            gameDirectory = this.mkdir(this.file('runs/data'))
+            // "./gradlew :neoforge:runData"
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+        server {
+            server()
+            this.file('runs/server').createParentDirectories()
+            gameDirectory = this.mkdir(this.file('runs/server'))
+        }
+        // MOD-022 — NeoForge world gametest lane. Boots a dedicated gameTestServer headless, which sets
+        // ServerModLoader.isGameTestServer() -> GameTestHooks.isGametestEnabled(), so RegisterGameTestsEvent
+        // fires and our world scenarios (dev.alaindustrial.gametest.neoforge.NeoForgeGameTests) run in a real
+        // chunk-loaded world. enabledGameTestNamespaces = mod_id (configureEach above) scopes the run to our
+        // tests. The task exits non-zero on any failure. Run: ./gradlew :neoforge:runGameTests
+        gameTests {
+            type = "gameTestServer"
+            gameDirectory = this.mkdir(this.file('runs/gameTests'))
+        }
+    }
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+    // MOD-022 feasibility spike: JUnit-in-server runtime tests (ModDevGradle unitTest).
+    // Boots a headless MinecraftServer so the real NeoForge EnergyHandler adapter + capability
+    // lookup can be exercised at runtime (not just compile/review verified).
+    unitTest {
+        enable()
+        testedMod = mods."${mod_id}"
+    }
+}
+
+dependencies {
+    // net.neoforged:testframework provides EphemeralTestServerProvider (verified coordinate from the
+    // neoforge userdev config.json `testLibraries`). Pulled from the NeoForged maven (settings.gradle).
+    testImplementation "net.neoforged:testframework:${neoforge_version}"
+    testImplementation "org.junit.jupiter:junit-jupiter:${junit_version}"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+// Implement mcgradleconventions loader attribute.
+def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements'].each { variant ->
+    configurations.named(variant) {
+        attributes {
+            attribute(loaderAttribute, 'neoforge')
+        }
+    }
+}
+sourceSets.configureEach {
+    [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName, it.getTaskName(null, 'jarJar')].each { variant ->
+        configurations.named(variant) {
+            attributes {
+                attribute(loaderAttribute, 'neoforge')
+            }
+        }
+    }
+}

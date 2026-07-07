@@ -1,0 +1,19 @@
+{
+  "parent": "alaindustrial:energized_network",
+  "display": {
+    "icon": { "id": "alaindustrial:daylight_solar_panel" },
+    "title": { "translate": "advancements.alaindustrial.solar_debut.title" },
+    "description": { "translate": "advancements.alaindustrial.solar_debut.description" }
+  },
+  "criteria": {
+    "daylight": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:daylight_solar_panel" }] }
+    },
+    "moonlit": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:moonlit_solar_panel" }] }
+    }
+  },
+  "requirements": [["daylight", "moonlit"]]
+}

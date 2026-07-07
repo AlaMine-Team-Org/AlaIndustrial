@@ -1,12 +1,12 @@
-## 0.1.4
+## 0.1.5
 
-A small polish pass: machines get their own distinct tops, the energy bars line up cleanly, and the basic generator stops accepting fuel it can't use.
+Two new passive generators join the lineup, and machines now come alive with ambient sound.
 
-### Visuals
+### New Content
 
-- **Distinct tops for machines and generators.** Generators, the electric furnace, extractor and compressor now have their own top faces instead of all sharing a single one, with separate looks for when they're idle and when they're running. Machines are much easier to tell apart at a glance.
+- **Water Mill.** A passive low-voltage generator that produces a steady trickle of power whenever there's water next to it — no fuel, no upkeep. Its screen shows the stored charge.
+- **Wind Mill.** A passive low-voltage generator powered by wind: the higher it sits under open sky the more it makes, and weather gives it a boost. Tuck it under a roof or below sea level and it idles.
 
-### Bug Fixes
+### Audio
 
-- **The basic generator no longer takes lava buckets.** Lava is meant for the geothermal generator, so the basic generator now cleanly rejects lava buckets placed into its slot — no more flicker where the item briefly appeared and popped back out.
-- **Energy bars fit their frame.** Fixed the energy bar in the extractor and compressor screens spilling a pixel past the top and bottom of its border.
+- **Machines and generators now hum while they run.** Running blocks give off a quiet ambient loop, and the macerator has its own grinding sound. Everything goes quiet again once the block stops.

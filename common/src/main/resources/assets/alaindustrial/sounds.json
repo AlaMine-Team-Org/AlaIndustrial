@@ -1,0 +1,20 @@
+{
+  "macerator_grind": {
+    "subtitle": "subtitles.alaindustrial.macerator_grind",
+    "sounds": [
+      {
+        "name": "alaindustrial:macerator_grind",
+        "stream": false
+      }
+    ]
+  },
+  "generator_hum": {
+    "subtitle": "subtitles.alaindustrial.generator_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:generator_hum",
+        "stream": false
+      }
+    ]
+  }
+}

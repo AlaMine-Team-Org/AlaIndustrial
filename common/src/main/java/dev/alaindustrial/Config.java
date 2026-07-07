@@ -1,0 +1,228 @@
+package dev.alaindustrial;
+
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import java.io.BufferedReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import net.minecraft.util.GsonHelper;
+
+/**
+ * Tunable balance knobs (v0.2 defaults), loaded from {@code config/alaindustrial.json}.
+ * Generators/machines/storage/cables read these at runtime, so a server can rebalance without a
+ * code change. Missing keys fall back to the v0.2 default, so the file is forward/backward safe.
+ *
+ * <p>The balance fields and the pure file read/write ({@link #loadFrom(Path)}) are loader-neutral
+ * and live in {@code common}. Resolving the per-loader config directory and hooking the
+ * datapack-reload event is a platform seam: Fabric wires it in
+ * {@code dev.alaindustrial.FabricConfigLoader}; NeoForge will do the same on its side (MOD-022).
+ */
+public final class Config {
+	private Config() {
+	}
+
+	// --- Global multipliers (v0.2-neutral defaults) ---
+	/** Scales every generator's EU/t output. Applied once in AbstractGeneratorBlockEntity.serverTick. */
+	public static float globalEuRateMultiplier = 1.0f;
+	/** Scales machine speed (E_op-invariant): EU/t up, duration down by the same factor. */
+	public static float globalMachineSpeedMultiplier = 1.0f;
+
+	// --- Generators (EU/tick) ---
+	public static int solarEuPerTick = 1;
+	public static int daylightEuPerTick = 4;
+	public static int moonlitEuPerTick = 3;
+	/** Flat EU/t the moonlit panel still produces at night during rain/thunder (a weather trickle). */
+	public static int moonlitWeatherEuPerTick = 1;
+	public static int fuelEuPerTick = 8;
+	public static int geothermalEuPerTick = 16;
+	public static int geothermalBurnTicks = 1000;
+	/**
+	 * EU/t a water mill produces per adjacent vanilla-water block (source or flowing) on its four
+	 * horizontal sides — so 0..4 EU/t, continuous while water is present, no fuel. Reads the world
+	 * directly; never touches the fluid/tank system (Phases 4–5).
+	 */
+	public static int waterMillEuPerTick = 1;
+	// --- Wind mill (LV) — needs open sky; base scales with height, boosted by weather ---
+	/** Clear-sky height cap: base EU/t = min((y − seaLevel) / 16, this). 0 at/below sea level. */
+	public static int windMillMaxBaseEuPerTick = 4;
+	/** Hard cap on wind-mill EU/t after the weather multiplier (thunder can otherwise push past base). */
+	public static int windMillMaxEuPerTick = 8;
+	/** Weather multiplier applied to the height base when it is raining (not thundering). */
+	public static float windMillRainFactor = 1.5f;
+	/** Weather multiplier applied to the height base when it is thundering. */
+	public static float windMillThunderFactor = 2.0f;
+	/** How often (ticks) the wind mill re-samples height/sky/weather; the rate is cached between samples. */
+	public static int windMillSampleTicks = 40;
+	/** Output multiplier when a solar panel sees the sky through a translucent block (leaves, cobweb). MOD-004. */
+	public static float solarTransparentFactor = 0.5f;
+	/** Output multiplier under snow: a snow layer above the panel, or snowfall in a cold biome — MODE_SNOW. */
+	public static float solarSnowFactor = 0.2f;
+	/**
+	 * Active sky-time ticks (at the chip's time of day, i.e. only while its half of the day/night
+	 * cycle is active) needed to evolve a base solar panel into its T2 branch. 33 600 = ~2.8
+	 * active half-days (~12 000 ticks/half-day) of continuous clear-weather generation, ≈28 real
+	 * minutes, ≈3 in-game days accounting for weather/night gaps.
+	 */
+	public static int solarEvolveTicks = 33_600;
+
+	// --- Pump (LV, EU-powered lava mover) ---
+	/** EU spent per bucket of lava the pump moves (extract + push). */
+	public static int pumpEuPerBucket = 100;
+
+	// --- Storage / per-block buffers (EU) ---
+	public static int batteryBoxBuffer = 20_000;
+	public static int maceratorBuffer = 800;
+	/** Shared buffer for electric furnace / compressor / extractor. */
+	public static int machineBuffer = 800;
+	public static int generatorBuffer = 4000;
+	public static int geothermalBuffer = 4000;
+	public static int waterMillBuffer = 4000;
+	public static int windMillBuffer = 4000;
+	public static int solarBuffer = 8000;
+	public static int cableBuffer = 64;
+
+	// --- Machines: shared EU/tick + per-machine duration (ticks) -> E_op = euPerTick × duration ---
+	public static int machineEuPerTick = 2;
+	public static int maceratorDuration = 150;
+	public static int electricFurnaceDuration = 100;
+	public static int compressorDuration = 130;
+	public static int extractorDuration = 120;
+
+	// --- Cable ---
+	/**
+	 * Fraction of throughput lost per cable block traversed (copper LV). Resistive/proportional model
+	 * (MOD-021): a consumer at cable-distance {@code d} from the nearest producer receives
+	 * {@code floor(gross × copperCableLossPerBlock × d)} fewer EU, capped at {@code gross} so delivery
+	 * never goes negative. Proportional — not the flat per-tick toll removed in MOD-009 — so a small
+	 * top-off packet floors to zero loss and a buffer still reaches its exact capacity on a long line.
+	 *
+	 * <p>{@code 0.0125} = 1.25%/block (PROPOSED, tune by playtest — source of truth PERFORMANCE.md):
+	 * ~1 EU/t lost on a 10-cable line at the 8 EU/t fuel-generator baseline, ~4 EU/t at a full 32 EU
+	 * LV packet; a 1–2 cable hop at a full packet floors to zero.
+	 */
+	public static double copperCableLossPerBlock = 0.0125;
+
+	// --- Energy network ---
+	/** Max awake energy networks processed per server tick; the rest are deferred round-robin. */
+	public static int networksPerTick = 512;
+
+	/** Effective machine drain per tick after the speed multiplier (E_op stays ~constant). */
+	public static int machineEuPerTickEffective() {
+		return Math.max(1, Math.round(machineEuPerTick * globalMachineSpeedMultiplier));
+	}
+
+	/** Scale a base duration (ticks) by the speed multiplier: faster machine -> fewer ticks. */
+	public static int scaledDuration(int baseTicks) {
+		return Math.max(1, Math.round(baseTicks / globalMachineSpeedMultiplier));
+	}
+
+	/** Load the config file at {@code path}, or write the v0.2 defaults if it does not exist yet. */
+	public static void loadFrom(Path path) {
+		try {
+			if (Files.exists(path)) {
+				try (BufferedReader reader = Files.newBufferedReader(path)) {
+					JsonObject o = GsonHelper.parse(reader);
+					globalEuRateMultiplier = GsonHelper.getAsFloat(o, "globalEuRateMultiplier", globalEuRateMultiplier);
+					if (globalEuRateMultiplier <= 0) {
+						globalEuRateMultiplier = 1.0f;
+					}
+					globalMachineSpeedMultiplier = GsonHelper.getAsFloat(o, "globalMachineSpeedMultiplier", globalMachineSpeedMultiplier);
+					if (globalMachineSpeedMultiplier <= 0) {
+						globalMachineSpeedMultiplier = 1.0f;
+					}
+					solarEuPerTick = GsonHelper.getAsInt(o, "solarEuPerTick", solarEuPerTick);
+					daylightEuPerTick = GsonHelper.getAsInt(o, "daylightEuPerTick", daylightEuPerTick);
+					moonlitEuPerTick = GsonHelper.getAsInt(o, "moonlitEuPerTick", moonlitEuPerTick);
+					moonlitWeatherEuPerTick = GsonHelper.getAsInt(o, "moonlitWeatherEuPerTick", moonlitWeatherEuPerTick);
+					fuelEuPerTick = GsonHelper.getAsInt(o, "fuelEuPerTick", fuelEuPerTick);
+					geothermalEuPerTick = GsonHelper.getAsInt(o, "geothermalEuPerTick", geothermalEuPerTick);
+					geothermalBurnTicks = GsonHelper.getAsInt(o, "geothermalBurnTicks", geothermalBurnTicks);
+					waterMillEuPerTick = GsonHelper.getAsInt(o, "waterMillEuPerTick", waterMillEuPerTick);
+					windMillMaxBaseEuPerTick = GsonHelper.getAsInt(o, "windMillMaxBaseEuPerTick", windMillMaxBaseEuPerTick);
+					windMillMaxEuPerTick = GsonHelper.getAsInt(o, "windMillMaxEuPerTick", windMillMaxEuPerTick);
+					windMillRainFactor = GsonHelper.getAsFloat(o, "windMillRainFactor", windMillRainFactor);
+					windMillThunderFactor = GsonHelper.getAsFloat(o, "windMillThunderFactor", windMillThunderFactor);
+					windMillSampleTicks = GsonHelper.getAsInt(o, "windMillSampleTicks", windMillSampleTicks);
+					if (windMillSampleTicks <= 0) {
+						windMillSampleTicks = 40;
+					}
+					solarTransparentFactor = GsonHelper.getAsFloat(o, "solarTransparentFactor", solarTransparentFactor);
+					solarSnowFactor = GsonHelper.getAsFloat(o, "solarSnowFactor", solarSnowFactor);
+					solarEvolveTicks = GsonHelper.getAsInt(o, "solarEvolveTicks", solarEvolveTicks);
+					if (solarEvolveTicks <= 0) {
+						solarEvolveTicks = 33_600;
+					}
+					pumpEuPerBucket = GsonHelper.getAsInt(o, "pumpEuPerBucket", pumpEuPerBucket);
+					batteryBoxBuffer = GsonHelper.getAsInt(o, "batteryBoxBuffer", batteryBoxBuffer);
+					maceratorBuffer = GsonHelper.getAsInt(o, "maceratorBuffer", maceratorBuffer);
+					machineBuffer = GsonHelper.getAsInt(o, "machineBuffer", machineBuffer);
+					generatorBuffer = GsonHelper.getAsInt(o, "generatorBuffer", generatorBuffer);
+					geothermalBuffer = GsonHelper.getAsInt(o, "geothermalBuffer", geothermalBuffer);
+					waterMillBuffer = GsonHelper.getAsInt(o, "waterMillBuffer", waterMillBuffer);
+					windMillBuffer = GsonHelper.getAsInt(o, "windMillBuffer", windMillBuffer);
+					solarBuffer = GsonHelper.getAsInt(o, "solarBuffer", solarBuffer);
+					cableBuffer = GsonHelper.getAsInt(o, "cableBuffer", cableBuffer);
+					machineEuPerTick = GsonHelper.getAsInt(o, "machineEuPerTick", machineEuPerTick);
+					maceratorDuration = GsonHelper.getAsInt(o, "maceratorDuration", maceratorDuration);
+					electricFurnaceDuration = GsonHelper.getAsInt(o, "electricFurnaceDuration", electricFurnaceDuration);
+					compressorDuration = GsonHelper.getAsInt(o, "compressorDuration", compressorDuration);
+					extractorDuration = GsonHelper.getAsInt(o, "extractorDuration", extractorDuration);
+					copperCableLossPerBlock = GsonHelper.getAsFloat(o, "copperCableLossPerBlock", (float) copperCableLossPerBlock);
+					if (copperCableLossPerBlock < 0) {
+						copperCableLossPerBlock = 0.0;
+					}
+					networksPerTick = GsonHelper.getAsInt(o, "networksPerTick", networksPerTick);
+					if (networksPerTick <= 0) {
+						networksPerTick = 512;
+					}
+				}
+				Industrialization.LOGGER.info("[config] loaded {}", path);
+			} else {
+				Files.writeString(path, new GsonBuilder().setPrettyPrinting().create().toJson(snapshot()));
+				Industrialization.LOGGER.info("[config] wrote defaults to {}", path);
+			}
+		} catch (Exception e) {
+			Industrialization.LOGGER.error("[config] failed to load {}: {}", path, e.toString());
+		}
+	}
+
+	private static JsonObject snapshot() {
+		JsonObject o = new JsonObject();
+		o.addProperty("globalEuRateMultiplier", globalEuRateMultiplier);
+		o.addProperty("globalMachineSpeedMultiplier", globalMachineSpeedMultiplier);
+		o.addProperty("solarEuPerTick", solarEuPerTick);
+		o.addProperty("daylightEuPerTick", daylightEuPerTick);
+		o.addProperty("moonlitEuPerTick", moonlitEuPerTick);
+		o.addProperty("moonlitWeatherEuPerTick", moonlitWeatherEuPerTick);
+		o.addProperty("fuelEuPerTick", fuelEuPerTick);
+		o.addProperty("geothermalEuPerTick", geothermalEuPerTick);
+		o.addProperty("geothermalBurnTicks", geothermalBurnTicks);
+		o.addProperty("waterMillEuPerTick", waterMillEuPerTick);
+		o.addProperty("windMillMaxBaseEuPerTick", windMillMaxBaseEuPerTick);
+		o.addProperty("windMillMaxEuPerTick", windMillMaxEuPerTick);
+		o.addProperty("windMillRainFactor", windMillRainFactor);
+		o.addProperty("windMillThunderFactor", windMillThunderFactor);
+		o.addProperty("windMillSampleTicks", windMillSampleTicks);
+		o.addProperty("solarTransparentFactor", solarTransparentFactor);
+		o.addProperty("solarSnowFactor", solarSnowFactor);
+		o.addProperty("solarEvolveTicks", solarEvolveTicks);
+		o.addProperty("pumpEuPerBucket", pumpEuPerBucket);
+		o.addProperty("batteryBoxBuffer", batteryBoxBuffer);
+		o.addProperty("maceratorBuffer", maceratorBuffer);
+		o.addProperty("machineBuffer", machineBuffer);
+		o.addProperty("generatorBuffer", generatorBuffer);
+		o.addProperty("geothermalBuffer", geothermalBuffer);
+		o.addProperty("waterMillBuffer", waterMillBuffer);
+		o.addProperty("windMillBuffer", windMillBuffer);
+		o.addProperty("solarBuffer", solarBuffer);
+		o.addProperty("cableBuffer", cableBuffer);
+		o.addProperty("machineEuPerTick", machineEuPerTick);
+		o.addProperty("maceratorDuration", maceratorDuration);
+		o.addProperty("electricFurnaceDuration", electricFurnaceDuration);
+		o.addProperty("compressorDuration", compressorDuration);
+		o.addProperty("extractorDuration", extractorDuration);
+		o.addProperty("copperCableLossPerBlock", copperCableLossPerBlock);
+		o.addProperty("networksPerTick", networksPerTick);
+		return o;
+	}
+}

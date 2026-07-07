@@ -1,166 +1,21 @@
 plugins {
-	id 'net.fabricmc.fabric-loom' version "${loom_version}"
-	id 'maven-publish'
+    // see https://maven.fabricmc.net/fabric-loom/fabric-loom.gradle.plugin/maven-metadata.xml for new versions
+    // Reconciled up from the template's 1.16.3 to our pin (MOD-022).
+    id 'net.fabricmc.fabric-loom' version '1.17.12' apply false
+    // see https://projects.neoforged.net/neoforged/moddevgradle for new versions
+    id 'net.neoforged.moddev' version '2.0.141' apply false
 }
 
-version = project.mod_version
-group = project.maven_group
-
-base {
-	archivesName = project.archives_base_name
-}
-
-repositories {
-	// Team Reborn Energy API is published to the Fabric maven.
-	maven {
-		name = 'Fabric'
-		url = 'https://maven.fabricmc.net/'
-	}
-	// JUnit 5 (L1 unit tests) — see docs/testing/AUTOMATION-STANDARDS.md.
-	mavenCentral()
-	// REI (recipe viewer) + its Cloth Config dependency (MOD-018).
-	maven { url = 'https://maven.shedaniel.me/' }
-	// Architectury API — required transitive runtime dependency of REI on Fabric.
-	maven { url = 'https://maven.architectury.dev/' }
-}
-
-loom {
-	splitEnvironmentSourceSets()
-
-	mods {
-		"alaindustrial" {
-			sourceSet sourceSets.main
-			sourceSet sourceSets.client
-		}
-	}
-
-	runs {
-		// GUI-only screenshot mode: ./gradlew runClientGameTest -Pguionly
-		// (Behaviour self-test fully migrated to ./gradlew runGameTest — see docs/testing/AUTOMATION-STANDARDS.md.)
-		configureEach {
-			if (project.findProperty("guionly") != null) {
-				vmArg("-Dalaindustrial.guionly=1")
-			}
-		}
-	}
-}
-
-// Client game tests (fabric-client-gametest-api-v1): creates the `gametest` source set and the
-// `runClientGameTest` task. Used to render machine screens headlessly and capture screenshots.
-fabricApi {
-	configureTests {
-		createSourceSet = true
-		modId = "alaindustrial-gametest"
-		enableClientGameTests = true
-		eula = true
-	}
-}
-
-dependencies {
-	// To change the versions see the gradle.properties file.
-	// No `mappings` dependency: Fabric dropped Yarn for the 26.x scheme; Loom 1.17
-	// uses Mojang official mappings by default. See docs/BUILD.md.
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-	// Fabric API.
-	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-
-	// Team Reborn Energy API — bundled inside the mod JAR via Fabric JiJ.
-	// Users do not need to install this separately.
-	include(implementation("teamreborn:energy:${project.energy_version}"))
-
-	// REI (Roughly Enough Items) recipe viewer — MOD-018. Optional dependency: the compat plugins are
-	// loaded only via REI's own rei_common/rei_client entrypoints, so the mod loads fine without REI
-	// installed. This Loom 1.17 has no mod* configurations (see docs/BUILD.md) — mod deps use plain
-	// Gradle configs and Loom auto-remaps them.
-	//   - api on the MAIN compile classpath (compile-only: not shipped, not a hard dep). On MC 26.2 the
-	//     recipe→display filling runs server-side (rei_common, AlaReiCommonPlugin) and the synced
-	//     display class (AlaProcessingDisplay) lives in the main source set, so the api must be on the
-	//     main compile classpath, not just client.
-	//   - full REI (+ its transitive Cloth Config / Architectury) on the dev client run classpath
-	//     only (clientRuntimeOnly), so `runClient` shows the recipe categories. Not in the jar.
-	compileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
-	// REI's EntryStacks/EntryIngredients have FluidStack overloads from Architectury; the class must
-	// be on the compile classpath for overload resolution even though we only use the item overloads.
-	// Needed on main too now (AlaProcessingDisplay calls EntryIngredients.of there).
-	compileOnly "dev.architectury:architectury-fabric:21.0.2"
-	// REI's GUI API exposes me.shedaniel.math (Point/Rectangle) from this small helper lib; only the
-	// client category widgets (AlaProcessingCategory) use it, so it stays client compile-only.
-	clientCompileOnly "me.shedaniel.cloth:basic-math:0.6.1"
-	clientRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
-
-	// L1 unit tests (JUnit 5). Pure-logic only — no Minecraft bootstrap. See AUTOMATION-STANDARDS.md.
-	testImplementation platform("org.junit:junit-bom:${project.junit_version}")
-	testImplementation "org.junit.jupiter:junit-jupiter"
-	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
-}
-
-// L1 unit-test task: ./gradlew test
-test {
-	useJUnitPlatform()
-	testLogging {
-		events "passed", "skipped", "failed"
-	}
-}
-
-// Build stamp: capture a short git commit hash + a build timestamp at configuration time and bake
-// them into a runtime-readable resource (alaindustrial.build.json) via processResources expansion.
-// providers.exec is configuration-cache compatible; on any failure (no git, not a repo) we fall back
-// to "nogit" so the build never breaks.
-def gitHash
-try {
-	gitHash = providers.exec {
-		workingDir = projectDir
-		commandLine 'git', 'rev-parse', '--short', 'HEAD'
-		ignoreExitValue = true
-	}.standardOutput.asText.map { it.trim() }.orElse("nogit").map { it.isEmpty() ? "nogit" : it }.get()
-} catch (Exception ignored) {
-	// git binary missing / not a repo: never fail the build over a build stamp.
-	gitHash = "nogit"
-}
-def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
-
-processResources {
-	def props = ["version": project.version, "minecraft_version": project.minecraft_version, "loader_version": project.loader_version]
-	inputs.properties props
-
-	filesMatching("fabric.mod.json") {
-		expand props
-	}
-
-	// Build-stamp expansion for alaindustrial.build.json. Declared as inputs.property so the task is
-	// re-run (and the cache invalidated) when the version, git hash, or build time change.
-	def buildProps = ["version": project.version, "githash": gitHash, "buildtime": buildTime]
-	inputs.properties buildProps
-
-	filesMatching("alaindustrial.build.json") {
-		expand buildProps
-	}
-}
-
-tasks.withType(JavaCompile).configureEach {
-	it.options.release = 25
-}
-
-java {
-	withSourcesJar()
-
-	sourceCompatibility = JavaVersion.VERSION_25
-	targetCompatibility = JavaVersion.VERSION_25
-}
-
-jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archives_base_name}" }
-	}
-}
-
-// Repo validators (OKF docs, assets, balance, traceability) wired into `checkAll` / `check`.
-// See gradle/checks.gradle. Skip for a fast local build with -PskipChecks. The script is
-// developer-only tooling (it drives Python validators over docs/ and tools/, which are not
-// part of a source release), so it is applied only when present — a distribution without it
-// still builds cleanly.
+// Repo validators (OKF docs, assets, balance, traceability, tasks, status, i18n, changelog) wired
+// into `./gradlew checkAll` at the root. The MultiLoader restructure (MOD-022) dropped this; the
+// python validators are loader-agnostic (they read repo-relative paths), so one root wiring covers
+// all subprojects. See gradle/checks.gradle. Fast build: -PskipChecks.
+//
+// Applied only when present: the script is developer-only tooling (it drives Python validators over
+// docs/ and tools/, which are NOT part of a clean-room source release), so a published distribution
+// without gradle/checks.gradle still builds cleanly. This keeps the root build.gradle a safe
+// blind-copy target for the /alamod-publish sync (private has the file → checks run; public omits it
+// → checks skipped). Keep this guard identical to the public repo's build.gradle.
 if (file('gradle/checks.gradle').exists()) {
 	apply from: 'gradle/checks.gradle'
 }
