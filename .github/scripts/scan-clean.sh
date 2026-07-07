@@ -37,16 +37,23 @@ if ! printf '\xd0\xa0' | grep -qP "$CYRILLIC"; then
   exit 2
 fi
 
-# Text files only: prune vendored/build dirs, skip binary assets.
-mapfile -t files < <(find . \
-  -type d \( -name .git -o -name build -o -name .gradle -o -name run \
-             -o -name .idea -o -name .fabric \) -prune -o \
-  -type f \
-    -not -iname '*.png'  -not -iname '*.jpg'  -not -iname '*.jpeg' \
-    -not -iname '*.gif'  -not -iname '*.ico'  -not -iname '*.jar' \
-    -not -iname '*.zip'  -not -iname '*.ogg'  -not -iname '*.wav' \
-    -not -iname '*.class' -not -iname '*.woff2' -not -iname '*.ttf' \
-    -print)
+# Enumerate the files that would actually be committed/published: tracked + new
+# untracked, MINUS anything gitignored (build/, runs/, .gradle/, …). Using git so
+# .gitignore is honoured automatically — a build artifact (e.g. a NeoForge gametest
+# run log whose timestamps carry localized Cyrillic month names like "07июл") can
+# never trip the gate, and the exclusion list can't drift from .gitignore as new
+# build/run dirs appear. Falls back to a pruned find outside a git work tree.
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  mapfile -t allfiles < <(git ls-files --cached --others --exclude-standard)
+else
+  mapfile -t allfiles < <(find . \
+    -type d \( -name .git -o -name build -o -name .gradle -o -name run -o -name runs \
+               -o -name .idea -o -name .fabric \) -prune -o \
+    -type f -print)
+fi
+# Text files only: skip binary assets by extension.
+mapfile -t files < <(printf '%s\n' "${allfiles[@]}" \
+  | grep -viE '\.(png|jpg|jpeg|gif|ico|jar|zip|ogg|wav|class|woff2|ttf)$' || true)
 
 # The cleanliness tooling itself contains the very AI-term / secret patterns it
 # searches for (this scanner's own regexes; guard.yml's commit-metadata grep).
