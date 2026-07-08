@@ -1,6 +1,8 @@
 {
 	"subtitles.alaindustrial.macerator_grind": "Дробилка перемалывает",
 	"subtitles.alaindustrial.generator_hum": "Генератор гудит",
+	"subtitles.alaindustrial.iron_chest_open": "Железный сундук открывается",
+	"subtitles.alaindustrial.iron_chest_close": "Железный сундук закрывается",
 	"block.alaindustrial.generator": "Генератор (LV)",
 	"block.alaindustrial.water_mill": "Водяная мельница",
 	"block.alaindustrial.wind_mill": "Ветряк",
@@ -18,6 +20,7 @@
 	"block.alaindustrial.extractor": "Экстрактор",
 	"block.alaindustrial.compressor": "Компрессор",
 	"block.alaindustrial.pump": "Насос",
+	"block.alaindustrial.iron_chest": "Железный сундук",
 	"item.alaindustrial.electronic_circuit": "Электронная схема",
 	"item.alaindustrial.alignment_chip_day": "Солнечный эволюционный чип",
 	"item.alaindustrial.alignment_chip_night": "Лунный эволюционный чип",

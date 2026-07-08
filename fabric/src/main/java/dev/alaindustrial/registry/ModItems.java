@@ -82,6 +82,7 @@ public final class ModItems {
 	public static final BlockItem DEEPSLATE_NICKEL_ORE_ITEM = blockItem("deepslate_nickel_ore", ModBlocks.DEEPSLATE_NICKEL_ORE);
 	public static final BlockItem URANIUM_ORE_ITEM = blockItem("uranium_ore", ModBlocks.URANIUM_ORE);
 	public static final BlockItem DEEPSLATE_URANIUM_ORE_ITEM = blockItem("deepslate_uranium_ore", ModBlocks.DEEPSLATE_URANIUM_ORE);
+	public static final BlockItem IRON_CHEST_ITEM = blockItem("iron_chest", ModBlocks.IRON_CHEST);
 
 	private static Item item(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
@@ -123,6 +124,7 @@ public final class ModItems {
 					output.accept(COMPRESSOR_ITEM);
 					// Storage + cables
 					output.accept(BATTERY_BOX_ITEM);
+					output.accept(IRON_CHEST_ITEM);
 					output.accept(COPPER_CABLE_ITEM);
 					// Ores + materials
 					output.accept(TIN_ORE_ITEM);
@@ -216,5 +218,6 @@ public final class ModItems {
 		ModContent.DEEPSLATE_NICKEL_ORE_ITEM = () -> DEEPSLATE_NICKEL_ORE_ITEM;
 		ModContent.URANIUM_ORE_ITEM = () -> URANIUM_ORE_ITEM;
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = () -> DEEPSLATE_URANIUM_ORE_ITEM;
+		ModContent.IRON_CHEST_ITEM = () -> IRON_CHEST_ITEM;
 	}
 }

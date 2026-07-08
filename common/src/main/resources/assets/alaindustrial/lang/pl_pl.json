@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "Sieci energii: serwer niedostępny",
 	"command.alaindustrial.net.dimension": "  %1$s: sieci=%2$s (aktywne %3$s / uśpione %4$s) kable=%5$s | tiknięte=%6$s EU/t=%7$s razem=%8$s",
 	"command.alaindustrial.net.empty": "  (brak wczytanych sieci energii)",
-	"command.alaindustrial.net.totals": "Sumy: sieci=%1$s kable=%2$s EU ostatni tick=%3$s EU razem=%4$s"
+	"command.alaindustrial.net.totals": "Sumy: sieci=%1$s kable=%2$s EU ostatni tick=%3$s EU razem=%4$s",
+	"block.alaindustrial.iron_chest": "Żelazna skrzynia",
+	"subtitles.alaindustrial.iron_chest_open": "Żelazna skrzynia otwiera się",
+	"subtitles.alaindustrial.iron_chest_close": "Żelazna skrzynia zamyka się"
 }

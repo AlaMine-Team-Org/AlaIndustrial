@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "Energinätverk: server otillgänglig",
 	"command.alaindustrial.net.dimension": "  %1$s: nät=%2$s (vakna %3$s / sovande %4$s) kablar=%5$s | tickade=%6$s EU/t=%7$s totalt=%8$s",
 	"command.alaindustrial.net.empty": "  (inga energinätverk laddade)",
-	"command.alaindustrial.net.totals": "Totalt: nät=%1$s kablar=%2$s EU förra ticken=%3$s EU totalt=%4$s"
+	"command.alaindustrial.net.totals": "Totalt: nät=%1$s kablar=%2$s EU förra ticken=%3$s EU totalt=%4$s",
+	"block.alaindustrial.iron_chest": "Järnkista",
+	"subtitles.alaindustrial.iron_chest_open": "Järnkista öppnas",
+	"subtitles.alaindustrial.iron_chest_close": "Järnkista stängs"
 }

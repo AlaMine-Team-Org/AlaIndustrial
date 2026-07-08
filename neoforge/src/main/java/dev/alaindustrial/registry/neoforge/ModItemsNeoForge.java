@@ -105,6 +105,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("uranium_ore", ModBlocksNeoForge.URANIUM_ORE);
 	public static final DeferredItem<BlockItem> DEEPSLATE_URANIUM_ORE_ITEM =
 			ITEMS.registerSimpleBlockItem("deepslate_uranium_ore", ModBlocksNeoForge.DEEPSLATE_URANIUM_ORE);
+	public static final DeferredItem<BlockItem> IRON_CHEST_ITEM =
+			ITEMS.registerSimpleBlockItem("iron_chest", ModBlocksNeoForge.IRON_CHEST);
 
 	private ModItemsNeoForge() {
 	}
@@ -165,5 +167,6 @@ public final class ModItemsNeoForge {
 		ModContent.DEEPSLATE_NICKEL_ORE_ITEM = DEEPSLATE_NICKEL_ORE_ITEM;
 		ModContent.URANIUM_ORE_ITEM = URANIUM_ORE_ITEM;
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = DEEPSLATE_URANIUM_ORE_ITEM;
+		ModContent.IRON_CHEST_ITEM = IRON_CHEST_ITEM;
 	}
 }

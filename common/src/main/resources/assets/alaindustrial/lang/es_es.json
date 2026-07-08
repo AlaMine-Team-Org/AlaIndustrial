@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "Redes de energía: servidor no disponible",
 	"command.alaindustrial.net.dimension": "  %1$s: redes=%2$s (activas %3$s / dormidas %4$s) cables=%5$s | procesadas=%6$s EU/t=%7$s total=%8$s",
 	"command.alaindustrial.net.empty": "  (no hay redes de energía cargadas)",
-	"command.alaindustrial.net.totals": "Totales: redes=%1$s cables=%2$s EU último tick=%3$s EU total=%4$s"
+	"command.alaindustrial.net.totals": "Totales: redes=%1$s cables=%2$s EU último tick=%3$s EU total=%4$s",
+	"block.alaindustrial.iron_chest": "Cofre de hierro",
+	"subtitles.alaindustrial.iron_chest_open": "Cofre de hierro se abre",
+	"subtitles.alaindustrial.iron_chest_close": "Cofre de hierro se cierra"
 }

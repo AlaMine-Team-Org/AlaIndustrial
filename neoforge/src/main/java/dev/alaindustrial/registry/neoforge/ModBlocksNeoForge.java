@@ -9,6 +9,7 @@ import dev.alaindustrial.block.ElectricFurnaceBlock;
 import dev.alaindustrial.block.ExtractorBlock;
 import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
+import dev.alaindustrial.block.IronChestBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PumpBlock;
@@ -106,6 +107,10 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<Block> DEEPSLATE_URANIUM_ORE =
 			BLOCKS.registerBlock("deepslate_uranium_ore", Block::new, machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)));
 
+	// --- Storage (pure container, no energy) ---
+	public static final DeferredBlock<IronChestBlock> IRON_CHEST =
+			BLOCKS.registerBlock("iron_chest", IronChestBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()));
+
 	private ModBlocksNeoForge() {
 	}
 
@@ -162,5 +167,6 @@ public final class ModBlocksNeoForge {
 		ModContent.DEEPSLATE_NICKEL_ORE = DEEPSLATE_NICKEL_ORE::get;
 		ModContent.URANIUM_ORE = URANIUM_ORE::get;
 		ModContent.DEEPSLATE_URANIUM_ORE = DEEPSLATE_URANIUM_ORE::get;
+		ModContent.IRON_CHEST = IRON_CHEST::get;
 	}
 }

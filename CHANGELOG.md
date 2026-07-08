@@ -1,14 +1,19 @@
-## 0.1.7
+## 0.1.8
 
-This update adds a client settings screen and gives players more control over how network diagnostics and item tooltips are shown in-game.
+This update introduces four new metal ores to discover underground and adds a larger early-game storage option with the Iron Chest.
+
+### Gameplay
+
+- Added four new ores that generate naturally in the world: **tin, silver, nickel, and uranium** — each with a regular and a deepslate variant.
+- Each new metal comes in **raw, dust, and ingot** forms.
+- Ore processing is fully supported: macerate ores into dust (two dust per ore, one from raw or an ingot), then smelt the dust back into ingots.
+
+### New Blocks
+
+- Added the **Iron Chest**, a 36-slot storage block (4 rows of 9) that upgrades the vanilla copper chest and needs no power.
+- Craft it by surrounding a copper chest with eight iron ingots.
+- The Iron Chest renders as a real 3D chest with an animated lid and has its own open and close sounds.
 
 ### Quality of Life
 
-- Added an in-game settings screen for Ala Industrial client preferences.
-- Added controls for the Network Analyzer overlay: visibility, see-through rendering, flow particles, color, and opacity.
-- Added tooltip preferences for always showing detailed information and hiding numeric EU/FE values.
-- Improved the settings layout so category labels and footer buttons stay readable on smaller screens.
-
-### Changes
-
-- Updated translations across all supported languages so energy-number settings refer to EU/FE consistently.
+- Added translations for all new blocks, items, and sounds across every supported language.

@@ -9,6 +9,7 @@ import dev.alaindustrial.client.ElectricFurnaceScreen;
 import dev.alaindustrial.client.ExtractorScreen;
 import dev.alaindustrial.client.GeneratorScreen;
 import dev.alaindustrial.client.GeothermalGeneratorScreen;
+import dev.alaindustrial.client.IronChestBlockEntityRenderer;
 import dev.alaindustrial.client.MaceratorScreen;
 import dev.alaindustrial.client.MachineTooltips;
 import dev.alaindustrial.client.MoonlitSolarPanelScreen;
@@ -17,15 +18,18 @@ import dev.alaindustrial.client.WaterMillScreen;
 import dev.alaindustrial.client.WindMillScreen;
 import dev.alaindustrial.client.neoforge.NeoForgeCableGhost;
 import dev.alaindustrial.client.neoforge.NeoForgeNetworkVisualization;
+import dev.alaindustrial.registry.neoforge.ModBlockEntitiesNeoForge;
 import dev.alaindustrial.registry.neoforge.ModMenusNeoForge;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.object.chest.ChestModel;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
@@ -49,6 +53,11 @@ public final class IndustrializationNeoForgeClient {
 		container.registerExtensionPoint(IConfigScreenFactory.class,
 				(modContainer, parent) -> new AlaConfigScreen(parent));
 		modBus.addListener(this::registerMenuScreens);
+		// Iron chest: 3D model + animated lid. Register the BlockEntityRenderer + bake the chest
+		// model layer (vanilla single-body chest geometry), the NeoForge counterpart to the Fabric
+		// BlockEntityRendererRegistry + ModelLayerRegistry calls in IndustrializationClient.
+		modBus.addListener(this::registerRenderers);
+		modBus.addListener(this::registerLayerDefinitions);
 		// Install the client-side machine-hum manager (looping ambient sound). Counterpart to the Fabric
 		// IndustrializationClient call; this @Mod class is dist=CLIENT, so it runs only on the physical client.
 		dev.alaindustrial.client.sound.MachineHumClientHook.register();
@@ -88,5 +97,27 @@ public final class IndustrializationNeoForgeClient {
 		event.register(ModMenusNeoForge.GEOTHERMAL_GENERATOR.get(), GeothermalGeneratorScreen::new);
 		event.register(ModMenusNeoForge.WATER_MILL.get(), WaterMillScreen::new);
 		event.register(ModMenusNeoForge.WIND_MILL.get(), WindMillScreen::new);
+		event.register(ModMenusNeoForge.IRON_CHEST.get(), dev.alaindustrial.client.IronChestScreen::new);
+	}
+
+	/**
+	 * Binds the iron chest's 3D model + animated-lid renderer to its BlockEntity type. Verified
+	 * pattern (neoforge 26.2.0.8-beta): {@code event.registerBlockEntityRenderer(type, factory)}
+	 * where {@code factory} is a {@code BlockEntityRendererProvider<T, S>}. This is the NeoForge
+	 * counterpart to the Fabric {@code BlockEntityRendererRegistry.register} call.
+	 */
+	private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.IRON_CHEST.get(),
+				IronChestBlockEntityRenderer::new);
+	}
+
+	/**
+	 * Bakes the iron chest model layer (vanilla single-body chest geometry) so the renderer can
+	 * resolve its {@code ModelPart} via {@code EntityModelSet#bakeLayer}. NeoForge counterpart to
+	 * the Fabric {@code ModelLayerRegistry.registerModelLayer} call.
+	 */
+	private void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+		event.registerLayerDefinition(IronChestBlockEntityRenderer.IRON_CHEST_LAYER,
+				ChestModel::createSingleBodyLayer);
 	}
 }

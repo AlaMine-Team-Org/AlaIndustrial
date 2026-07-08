@@ -7,6 +7,7 @@ import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import dev.alaindustrial.menu.ElectricFurnaceMenu;
 import dev.alaindustrial.menu.GeothermalGeneratorMenu;
 import dev.alaindustrial.menu.ExtractorMenu;
+import dev.alaindustrial.menu.IronChestMenu;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.GeneratorMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
@@ -36,6 +37,7 @@ public final class ModMenus {
 	public static MenuType<GeothermalGeneratorMenu> GEOTHERMAL_GENERATOR;
 	public static MenuType<WaterMillMenu> WATER_MILL;
 	public static MenuType<WindMillMenu> WIND_MILL;
+	public static MenuType<IronChestMenu> IRON_CHEST;
 
 	public static void init() {
 		GENERATOR = register("generator", new MenuType<>(GeneratorMenu::new, FeatureFlags.VANILLA_SET));
@@ -61,6 +63,8 @@ public final class ModMenus {
 				new MenuType<>(WaterMillMenu::new, FeatureFlags.VANILLA_SET));
 		WIND_MILL = register("wind_mill",
 				new MenuType<>(WindMillMenu::new, FeatureFlags.VANILLA_SET));
+		IRON_CHEST = register("iron_chest",
+				new MenuType<>(IronChestMenu::new, FeatureFlags.VANILLA_SET));
 
 		// MOD-022 registration facade: publish each eagerly-registered MenuType into the loader-neutral
 		// ModContent so content Menu constructors (which read ModContent.X_MENU.get() at runtime) resolve
@@ -77,6 +81,7 @@ public final class ModMenus {
 		ModContent.GEOTHERMAL_GENERATOR_MENU = () -> GEOTHERMAL_GENERATOR;
 		ModContent.WATER_MILL_MENU = () -> WATER_MILL;
 		ModContent.WIND_MILL_MENU = () -> WIND_MILL;
+		ModContent.IRON_CHEST_MENU = () -> IRON_CHEST;
 	}
 
 	private static <T extends AbstractContainerMenu> MenuType<T> register(String path, MenuType<T> type) {

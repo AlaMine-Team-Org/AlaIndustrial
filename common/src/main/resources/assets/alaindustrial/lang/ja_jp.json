@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "エネルギーネットワーク: サーバー利用不可",
 	"command.alaindustrial.net.dimension": "  %1$s: ネット=%2$s（稼働 %3$s / 休止 %4$s）ケーブル=%5$s | tick=%6$s EU/t=%7$s 合計=%8$s",
 	"command.alaindustrial.net.empty": "  （読み込み済みのエネルギーネットワークなし）",
-	"command.alaindustrial.net.totals": "合計: ネット=%1$s ケーブル=%2$s EU 前tick=%3$s EU 合計=%4$s"
+	"command.alaindustrial.net.totals": "合計: ネット=%1$s ケーブル=%2$s EU 前tick=%3$s EU 合計=%4$s",
+	"block.alaindustrial.iron_chest": "鉄のチェスト",
+	"subtitles.alaindustrial.iron_chest_open": "鉄のチェストが開く",
+	"subtitles.alaindustrial.iron_chest_close": "鉄のチェストが閉じる"
 }

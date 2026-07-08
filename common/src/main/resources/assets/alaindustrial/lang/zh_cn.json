@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "能源网络：服务器不可用",
 	"command.alaindustrial.net.dimension": "  %1$s：网络=%2$s（活动 %3$s / 休眠 %4$s）电缆=%5$s | 已tick=%6$s EU/t=%7$s 总计=%8$s",
 	"command.alaindustrial.net.empty": "  （未加载任何能源网络）",
-	"command.alaindustrial.net.totals": "合计：网络=%1$s 电缆=%2$s EU 上一tick=%3$s EU 总计=%4$s"
+	"command.alaindustrial.net.totals": "合计：网络=%1$s 电缆=%2$s EU 上一tick=%3$s EU 总计=%4$s",
+	"block.alaindustrial.iron_chest": "铁箱子",
+	"subtitles.alaindustrial.iron_chest_open": "铁箱子开启",
+	"subtitles.alaindustrial.iron_chest_close": "铁箱子关闭"
 }

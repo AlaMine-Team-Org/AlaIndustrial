@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "#minecraft:copper_chests",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "III",
+    "ICI",
+    "III"
+  ],
+  "result": {
+    "id": "alaindustrial:iron_chest"
+  }
+}

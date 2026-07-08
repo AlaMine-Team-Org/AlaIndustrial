@@ -1,6 +1,8 @@
 {
 	"subtitles.alaindustrial.macerator_grind": "Macerator grinds",
 	"subtitles.alaindustrial.generator_hum": "Generator hums",
+	"subtitles.alaindustrial.iron_chest_open": "Iron Chest opens",
+	"subtitles.alaindustrial.iron_chest_close": "Iron Chest closes",
 	"block.alaindustrial.generator": "LV Generator",
 	"block.alaindustrial.water_mill": "Water Mill",
 	"block.alaindustrial.wind_mill": "Wind Mill",
@@ -18,6 +20,7 @@
 	"block.alaindustrial.extractor": "Extractor",
 	"block.alaindustrial.compressor": "Compressor",
 	"block.alaindustrial.pump": "Pump",
+	"block.alaindustrial.iron_chest": "Iron Chest",
 	"item.alaindustrial.electronic_circuit": "Electronic Circuit",
 	"item.alaindustrial.alignment_chip_day": "Solar Evolution Chip",
 	"item.alaindustrial.alignment_chip_night": "Lunar Evolution Chip",

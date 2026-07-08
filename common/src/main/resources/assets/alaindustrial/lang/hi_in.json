@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "ऊर्जा नेटवर्क: सर्वर अनुपलब्ध",
 	"command.alaindustrial.net.dimension": "  %1$s: नेट=%2$s (सक्रिय %3$s / निष्क्रिय %4$s) केबल=%5$s | टिक्ड=%6$s EU/t=%7$s कुल=%8$s",
 	"command.alaindustrial.net.empty": "  (कोई ऊर्जा नेटवर्क लोड नहीं हुआ)",
-	"command.alaindustrial.net.totals": "कुल योग: नेट=%1$s केबल=%2$s EU पिछले टिक=%3$s EU कुल=%4$s"
+	"command.alaindustrial.net.totals": "कुल योग: नेट=%1$s केबल=%2$s EU पिछले टिक=%3$s EU कुल=%4$s",
+	"block.alaindustrial.iron_chest": "आयरन चेस्ट",
+	"subtitles.alaindustrial.iron_chest_open": "आयरन चेस्ट खुल रहा है",
+	"subtitles.alaindustrial.iron_chest_close": "आयरन चेस्ट बंद हो रहा है"
 }

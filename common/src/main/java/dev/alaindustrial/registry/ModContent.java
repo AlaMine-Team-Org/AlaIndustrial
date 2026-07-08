@@ -90,6 +90,9 @@ public final class ModContent {
 	public static Supplier<Block> DEEPSLATE_NICKEL_ORE = unbound("DEEPSLATE_NICKEL_ORE");
 	public static Supplier<Block> URANIUM_ORE = unbound("URANIUM_ORE");
 	public static Supplier<Block> DEEPSLATE_URANIUM_ORE = unbound("DEEPSLATE_URANIUM_ORE");
+	// Iron Chest — a pure-storage block (no energy), so its BE extends vanilla
+	// BaseContainerBlockEntity, not the mod's MachineBlockEntity. See docs/blocks/iron_chest.md.
+	public static Supplier<Block> IRON_CHEST = unbound("IRON_CHEST");
 
 	// --- Items (crafting components + tools) ---
 	public static Supplier<Item> ELECTRONIC_CIRCUIT = unbound("ELECTRONIC_CIRCUIT");
@@ -138,6 +141,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> DEEPSLATE_NICKEL_ORE_ITEM = unbound("DEEPSLATE_NICKEL_ORE_ITEM");
 	public static Supplier<BlockItem> URANIUM_ORE_ITEM = unbound("URANIUM_ORE_ITEM");
 	public static Supplier<BlockItem> DEEPSLATE_URANIUM_ORE_ITEM = unbound("DEEPSLATE_URANIUM_ORE_ITEM");
+	public static Supplier<BlockItem> IRON_CHEST_ITEM = unbound("IRON_CHEST_ITEM");
 
 	// --- Block entity types ---
 	public static Supplier<BlockEntityType<?>> GENERATOR_BE = unbound("GENERATOR_BE");
@@ -154,6 +158,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> EXTRACTOR_BE = unbound("EXTRACTOR_BE");
 	public static Supplier<BlockEntityType<?>> COMPRESSOR_BE = unbound("COMPRESSOR_BE");
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
+	public static Supplier<BlockEntityType<?>> IRON_CHEST_BE = unbound("IRON_CHEST_BE");
 
 	// --- Menu types ---
 	public static Supplier<MenuType<?>> GENERATOR_MENU = unbound("GENERATOR_MENU");
@@ -168,6 +173,7 @@ public final class ModContent {
 	public static Supplier<MenuType<?>> GEOTHERMAL_GENERATOR_MENU = unbound("GEOTHERMAL_GENERATOR_MENU");
 	public static Supplier<MenuType<?>> WATER_MILL_MENU = unbound("WATER_MILL_MENU");
 	public static Supplier<MenuType<?>> WIND_MILL_MENU = unbound("WIND_MILL_MENU");
+	public static Supplier<MenuType<?>> IRON_CHEST_MENU = unbound("IRON_CHEST_MENU");
 
 	/** A placeholder handle that throws if read before the loader populated it. */
 	private static <T> Supplier<T> unbound(String name) {

@@ -9,6 +9,7 @@ import dev.alaindustrial.block.ElectricFurnaceBlock;
 import dev.alaindustrial.block.ExtractorBlock;
 import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
+import dev.alaindustrial.block.IronChestBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PumpBlock;
@@ -135,6 +136,10 @@ public final class ModBlocks {
 	public static final Block DEEPSLATE_URANIUM_ORE = register(DEEPSLATE_URANIUM_ORE_KEY,
 			new Block(props(DEEPSLATE_URANIUM_ORE_KEY).strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)));
 
+	public static final ResourceKey<Block> IRON_CHEST_KEY = key("iron_chest");
+	public static final Block IRON_CHEST = register(IRON_CHEST_KEY,
+			new IronChestBlock(props(IRON_CHEST_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()));
+
 	private static ResourceKey<Block> key(String path) {
 		return ResourceKey.create(Registries.BLOCK, Industrialization.id(path));
 	}
@@ -197,5 +202,6 @@ public final class ModBlocks {
 		ModContent.DEEPSLATE_NICKEL_ORE = () -> DEEPSLATE_NICKEL_ORE;
 		ModContent.URANIUM_ORE = () -> URANIUM_ORE;
 		ModContent.DEEPSLATE_URANIUM_ORE = () -> DEEPSLATE_URANIUM_ORE;
+		ModContent.IRON_CHEST = () -> IRON_CHEST;
 	}
 }

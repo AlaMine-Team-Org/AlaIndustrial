@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "Reti energetiche: server non disponibile",
 	"command.alaindustrial.net.dimension": "  %1$s: reti=%2$s (attive %3$s / in pausa %4$s) cavi=%5$s | processate=%6$s EU/t=%7$s totale=%8$s",
 	"command.alaindustrial.net.empty": "  (nessuna rete energetica caricata)",
-	"command.alaindustrial.net.totals": "Totali: reti=%1$s cavi=%2$s EU ultimo tick=%3$s EU totale=%4$s"
+	"command.alaindustrial.net.totals": "Totali: reti=%1$s cavi=%2$s EU ultimo tick=%3$s EU totale=%4$s",
+	"block.alaindustrial.iron_chest": "Baule di ferro",
+	"subtitles.alaindustrial.iron_chest_open": "Il baule di ferro si apre",
+	"subtitles.alaindustrial.iron_chest_close": "Il baule di ferro si chiude"
 }

@@ -85,6 +85,16 @@ public class IndustrializationFabric implements ModInitializer {
 				dev.alaindustrial.registry.ModSounds.GENERATOR_HUM_ID,
 				dev.alaindustrial.registry.ModSounds.createGeneratorHum());
 		dev.alaindustrial.registry.ModSounds.GENERATOR_HUM = () -> generatorHum;
+		net.minecraft.sounds.SoundEvent ironChestOpen = net.minecraft.core.Registry.register(
+				net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT,
+				dev.alaindustrial.registry.ModSounds.IRON_CHEST_OPEN_ID,
+				dev.alaindustrial.registry.ModSounds.createIronChestOpen());
+		dev.alaindustrial.registry.ModSounds.IRON_CHEST_OPEN = () -> ironChestOpen;
+		net.minecraft.sounds.SoundEvent ironChestClose = net.minecraft.core.Registry.register(
+				net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT,
+				dev.alaindustrial.registry.ModSounds.IRON_CHEST_CLOSE_ID,
+				dev.alaindustrial.registry.ModSounds.createIronChestClose());
+		dev.alaindustrial.registry.ModSounds.IRON_CHEST_CLOSE = () -> ironChestClose;
 
 		// Every ModContent handle must be bound by the Mod*.init() calls above (Fabric registers all content
 		// eagerly). Fail loudly at init if any handle was added to ModContent but forgotten in a registry's

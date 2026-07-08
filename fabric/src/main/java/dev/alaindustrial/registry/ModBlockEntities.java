@@ -9,6 +9,7 @@ import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.ExtractorBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
+import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
@@ -55,6 +56,8 @@ public final class ModBlockEntities {
 	public static BlockEntityType<PumpBlockEntity> PUMP;
 	public static BlockEntityType<WaterMillBlockEntity> WATER_MILL;
 	public static BlockEntityType<WindMillBlockEntity> WIND_MILL;
+	// Iron chest is a pure Container (no EnergyPort), so no Team Reborn EnergyStorage.SIDED line below.
+	public static BlockEntityType<IronChestBlockEntity> IRON_CHEST;
 
 	public static void init() {
 		GENERATOR = register("generator",
@@ -86,6 +89,8 @@ public final class ModBlockEntities {
 				new BlockEntityType<>(WaterMillBlockEntity::new, Set.of(ModBlocks.WATER_MILL)));
 		WIND_MILL = register("wind_mill",
 				new BlockEntityType<>(WindMillBlockEntity::new, Set.of(ModBlocks.WIND_MILL)));
+		IRON_CHEST = register("iron_chest",
+				new BlockEntityType<>(IronChestBlockEntity::new, Set.of(ModBlocks.IRON_CHEST)));
 
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GENERATOR);
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GEOTHERMAL_GENERATOR);
@@ -119,6 +124,7 @@ public final class ModBlockEntities {
 		ModContent.PUMP_BE = () -> PUMP;
 		ModContent.WATER_MILL_BE = () -> WATER_MILL;
 		ModContent.WIND_MILL_BE = () -> WIND_MILL;
+		ModContent.IRON_CHEST_BE = () -> IRON_CHEST;
 
 		// Fluid (lava) storages: the geothermal generator accepts lava, the pump exposes its tank. Both
 		// publish their neutral FluidPort (via FluidPortHost#fluidPort) through the TankAsFluidStorage

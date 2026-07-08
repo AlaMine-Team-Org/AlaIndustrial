@@ -3,14 +3,19 @@ package dev.alaindustrial;
 import dev.alaindustrial.client.AlaClientConfig;
 import dev.alaindustrial.client.CompressorScreen;
 import dev.alaindustrial.client.ElectricFurnaceScreen;
+import dev.alaindustrial.client.IronChestBlockEntityRenderer;
 import dev.alaindustrial.client.MachineTooltips;
 import dev.alaindustrial.client.SolarPanelScreen;
+import dev.alaindustrial.registry.ModBlockEntities;
 import dev.alaindustrial.registry.ModMenus;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.model.object.chest.ChestModel;
 
 /**
  * Client entrypoint for Industrialization. Binds machine menus to their screens and registers the
@@ -46,12 +51,20 @@ public class IndustrializationClient implements ClientModInitializer {
 				ModMenus.WATER_MILL, dev.alaindustrial.client.WaterMillScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.WindMillMenu, dev.alaindustrial.client.WindMillScreen>register(
 				ModMenus.WIND_MILL, dev.alaindustrial.client.WindMillScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.IronChestMenu, dev.alaindustrial.client.IronChestScreen>register(
+				ModMenus.IRON_CHEST, dev.alaindustrial.client.IronChestScreen::new);
 
 		ItemTooltipCallback.EVENT.register((stack, context, flag, lines) ->
 				MachineTooltips.append(stack, lines, Minecraft.getInstance().hasShiftDown()));
 		dev.alaindustrial.client.NetworkVisualizationClient.init();
 		dev.alaindustrial.client.CablePlacementPreview.init();
 		dev.alaindustrial.client.sound.MachineHumClientHook.register();
+
+		// Iron chest: 3D model + animated lid. Register the BlockEntityRenderer against the iron
+		// chest BE type, and bake the chest model layer (vanilla single-body chest geometry).
+		BlockEntityRendererRegistry.register(ModBlockEntities.IRON_CHEST, IronChestBlockEntityRenderer::new);
+		ModelLayerRegistry.registerModelLayer(IronChestBlockEntityRenderer.IRON_CHEST_LAYER,
+				ChestModel::createSingleBodyLayer);
 
 		Industrialization.LOGGER.info("Industrialization client initialized.");
 	}

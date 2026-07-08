@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "Energienetze: Server nicht verfügbar",
 	"command.alaindustrial.net.dimension": "  %1$s: Netze=%2$s (aktiv %3$s / schlafend %4$s) Kabel=%5$s | getickt=%6$s EU/t=%7$s gesamt=%8$s",
 	"command.alaindustrial.net.empty": "  (keine Energienetze geladen)",
-	"command.alaindustrial.net.totals": "Gesamt: Netze=%1$s Kabel=%2$s EU letzter Tick=%3$s EU gesamt=%4$s"
+	"command.alaindustrial.net.totals": "Gesamt: Netze=%1$s Kabel=%2$s EU letzter Tick=%3$s EU gesamt=%4$s",
+	"block.alaindustrial.iron_chest": "Eisentruhe",
+	"subtitles.alaindustrial.iron_chest_open": "Eisentruhe öffnet sich",
+	"subtitles.alaindustrial.iron_chest_close": "Eisentruhe schließt sich"
 }

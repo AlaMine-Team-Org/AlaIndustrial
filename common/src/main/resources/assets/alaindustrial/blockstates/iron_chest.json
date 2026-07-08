@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "alaindustrial:block/iron_chest"
+    },
+    "facing=south": {
+      "model": "alaindustrial:block/iron_chest"
+    },
+    "facing=west": {
+      "model": "alaindustrial:block/iron_chest"
+    },
+    "facing=east": {
+      "model": "alaindustrial:block/iron_chest"
+    }
+  }
+}

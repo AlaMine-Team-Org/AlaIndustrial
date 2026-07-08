@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "Energienetwerken: server niet beschikbaar",
 	"command.alaindustrial.net.dimension": "  %1$s: netwerken=%2$s (actief %3$s / slapend %4$s) kabels=%5$s | getickt=%6$s EU/t=%7$s totaal=%8$s",
 	"command.alaindustrial.net.empty": "  (geen energienetwerken geladen)",
-	"command.alaindustrial.net.totals": "Totalen: netwerken=%1$s kabels=%2$s EU laatste tick=%3$s EU totaal=%4$s"
+	"command.alaindustrial.net.totals": "Totalen: netwerken=%1$s kabels=%2$s EU laatste tick=%3$s EU totaal=%4$s",
+	"block.alaindustrial.iron_chest": "IJzeren kist",
+	"subtitles.alaindustrial.iron_chest_open": "IJzeren kist gaat open",
+	"subtitles.alaindustrial.iron_chest_close": "IJzeren kist gaat dicht"
 }

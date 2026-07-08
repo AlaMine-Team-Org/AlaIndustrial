@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "Réseaux d'énergie : serveur indisponible",
 	"command.alaindustrial.net.dimension": "  %1$s : réseaux=%2$s (actifs %3$s / en veille %4$s) câbles=%5$s | tickés=%6$s EU/t=%7$s total=%8$s",
 	"command.alaindustrial.net.empty": "  (aucun réseau d'énergie chargé)",
-	"command.alaindustrial.net.totals": "Totaux : réseaux=%1$s câbles=%2$s EU dernier tick=%3$s EU total=%4$s"
+	"command.alaindustrial.net.totals": "Totaux : réseaux=%1$s câbles=%2$s EU dernier tick=%3$s EU total=%4$s",
+	"block.alaindustrial.iron_chest": "Coffre en fer",
+	"subtitles.alaindustrial.iron_chest_open": "Le coffre en fer s'ouvre",
+	"subtitles.alaindustrial.iron_chest_close": "Le coffre en fer se ferme"
 }

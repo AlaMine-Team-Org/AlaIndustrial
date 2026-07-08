@@ -16,5 +16,23 @@
         "stream": false
       }
     ]
+  },
+  "iron_chest_open": {
+    "subtitle": "subtitles.alaindustrial.iron_chest_open",
+    "sounds": [
+      {
+        "name": "alaindustrial:iron_chest_open",
+        "stream": false
+      }
+    ]
+  },
+  "iron_chest_close": {
+    "subtitle": "subtitles.alaindustrial.iron_chest_close",
+    "sounds": [
+      {
+        "name": "alaindustrial:iron_chest_close",
+        "stream": false
+      }
+    ]
   }
 }

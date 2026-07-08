@@ -40,6 +40,32 @@ public final class ModSounds {
 		return SoundEvent.createVariableRangeEvent(GENERATOR_HUM_ID);
 	}
 
+	/** The registry id for the iron chest open sound (lid lifts). */
+	public static final Identifier IRON_CHEST_OPEN_ID = Industrialization.id("iron_chest_open");
+
+	/** Bound once per loader before the chest BE plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> IRON_CHEST_OPEN = () -> {
+		throw new IllegalStateException("ModSounds.IRON_CHEST_OPEN read before its loader bound it");
+	};
+
+	/** Build the iron-chest-open event instance both loaders register. */
+	public static SoundEvent createIronChestOpen() {
+		return SoundEvent.createVariableRangeEvent(IRON_CHEST_OPEN_ID);
+	}
+
+	/** The registry id for the iron chest close sound (lid drops). */
+	public static final Identifier IRON_CHEST_CLOSE_ID = Industrialization.id("iron_chest_close");
+
+	/** Bound once per loader before the chest BE plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> IRON_CHEST_CLOSE = () -> {
+		throw new IllegalStateException("ModSounds.IRON_CHEST_CLOSE read before its loader bound it");
+	};
+
+	/** Build the iron-chest-close event instance both loaders register. */
+	public static SoundEvent createIronChestClose() {
+		return SoundEvent.createVariableRangeEvent(IRON_CHEST_CLOSE_ID);
+	}
+
 	private ModSounds() {
 	}
 }

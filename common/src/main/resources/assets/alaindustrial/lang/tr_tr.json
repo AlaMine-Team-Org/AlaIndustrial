@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "Enerji ağları: sunucu kullanılamıyor",
 	"command.alaindustrial.net.dimension": "  %1$s: ağlar=%2$s (etkin %3$s / uykuda %4$s) kablolar=%5$s | ticklendi=%6$s EU/t=%7$s toplam=%8$s",
 	"command.alaindustrial.net.empty": "  (yüklü enerji ağı yok)",
-	"command.alaindustrial.net.totals": "Toplamlar: ağlar=%1$s kablolar=%2$s EU son tick=%3$s EU toplam=%4$s"
+	"command.alaindustrial.net.totals": "Toplamlar: ağlar=%1$s kablolar=%2$s EU son tick=%3$s EU toplam=%4$s",
+	"block.alaindustrial.iron_chest": "Demir Sandık",
+	"subtitles.alaindustrial.iron_chest_open": "Demir Sandık açılıyor",
+	"subtitles.alaindustrial.iron_chest_close": "Demir Sandık kapanıyor"
 }

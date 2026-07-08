@@ -11,6 +11,8 @@ runs/
 tools/*_3d/
 .idea/
 .vscode/
+# ZCode agent local state (plans, session data) — not source, do not publish.
+.zcode/
 *.iml
 *.log
 *.tmp
@@ -27,3 +29,18 @@ __pycache__/
 
 # Generated standalone distribution files (rebuild via: python tools/build_standalone.py)
 tools/AlaIndustrial_Guide.html
+
+# Generated guide website (rebuild via: python docs/tools/gen_guide_site.py --all)
+# Like build/, site/ is an output artifact, not source — regenerated from docs/blocks/.
+site/
+
+# Sound generation tool (tools/tts/) — secrets + generated audio stay local.
+# The .env holds the ElevenLabs API key; output/ holds generated candidate sounds.
+# Triple-protected from the public repo: this gitignore, sync-code.sh allowlist
+# (tools/ is not in SYNC_PATHS), and scan-clean.sh L4 denylist ((^|/)tools/).
+.env
+.env.local
+.env.production
+# .env.example is the documented placeholder — keep it tracked.
+!.env.example
+tools/tts/output/

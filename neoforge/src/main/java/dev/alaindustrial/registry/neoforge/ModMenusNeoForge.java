@@ -7,6 +7,7 @@ import dev.alaindustrial.menu.ElectricFurnaceMenu;
 import dev.alaindustrial.menu.ExtractorMenu;
 import dev.alaindustrial.menu.GeneratorMenu;
 import dev.alaindustrial.menu.GeothermalGeneratorMenu;
+import dev.alaindustrial.menu.IronChestMenu;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
@@ -67,6 +68,8 @@ public final class ModMenusNeoForge {
 			register("water_mill", (id, inv, buf) -> new WaterMillMenu(id, inv));
 	public static final DeferredHolder<MenuType<?>, MenuType<WindMillMenu>> WIND_MILL =
 			register("wind_mill", (id, inv, buf) -> new WindMillMenu(id, inv));
+	public static final DeferredHolder<MenuType<?>, MenuType<IronChestMenu>> IRON_CHEST =
+			register("iron_chest", (id, inv, buf) -> new IronChestMenu(id, inv));
 
 	private ModMenusNeoForge() {
 	}
@@ -93,6 +96,7 @@ public final class ModMenusNeoForge {
 		ModContent.GEOTHERMAL_GENERATOR_MENU = GEOTHERMAL_GENERATOR::get;
 		ModContent.WATER_MILL_MENU = WATER_MILL::get;
 		ModContent.WIND_MILL_MENU = WIND_MILL::get;
+		ModContent.IRON_CHEST_MENU = IRON_CHEST::get;
 	}
 
 	/**

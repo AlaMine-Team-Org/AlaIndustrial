@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "에너지 네트워크: 서버 사용 불가",
 	"command.alaindustrial.net.dimension": "  %1$s: 네트워크=%2$s (활성 %3$s / 대기 %4$s) 케이블=%5$s | 틱=%6$s EU/t=%7$s 총=%8$s",
 	"command.alaindustrial.net.empty": "  (불러온 에너지 네트워크 없음)",
-	"command.alaindustrial.net.totals": "합계: 네트워크=%1$s 케이블=%2$s EU 지난 틱=%3$s EU 총=%4$s"
+	"command.alaindustrial.net.totals": "합계: 네트워크=%1$s 케이블=%2$s EU 지난 틱=%3$s EU 총=%4$s",
+	"block.alaindustrial.iron_chest": "철 상자",
+	"subtitles.alaindustrial.iron_chest_open": "철 상자가 열립니다",
+	"subtitles.alaindustrial.iron_chest_close": "철 상자가 닫힙니다"
 }

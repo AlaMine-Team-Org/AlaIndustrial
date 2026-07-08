@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "Redes de energia: servidor indisponível",
 	"command.alaindustrial.net.dimension": "  %1$s: redes=%2$s (ativas %3$s / dormentes %4$s) cabos=%5$s | tickadas=%6$s EU/t=%7$s total=%8$s",
 	"command.alaindustrial.net.empty": "  (nenhuma rede de energia carregada)",
-	"command.alaindustrial.net.totals": "Totais: redes=%1$s cabos=%2$s EU último tick=%3$s EU total=%4$s"
+	"command.alaindustrial.net.totals": "Totais: redes=%1$s cabos=%2$s EU último tick=%3$s EU total=%4$s",
+	"block.alaindustrial.iron_chest": "Baú de ferro",
+	"subtitles.alaindustrial.iron_chest_open": "Baú de ferro abre",
+	"subtitles.alaindustrial.iron_chest_close": "Baú de ferro fecha"
 }

@@ -9,6 +9,7 @@ import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.ExtractorBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
+import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
@@ -80,6 +81,9 @@ public final class ModBlockEntitiesNeoForge {
 			register("water_mill", WaterMillBlockEntity::new, ModBlocksNeoForge.WATER_MILL);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WindMillBlockEntity>> WIND_MILL =
 			register("wind_mill", WindMillBlockEntity::new, ModBlocksNeoForge.WIND_MILL);
+	// Pure container (no EnergyPort) — no capability binding in IndustrializationNeoForge#registerCapabilities.
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IronChestBlockEntity>> IRON_CHEST =
+			register("iron_chest", IronChestBlockEntity::new, ModBlocksNeoForge.IRON_CHEST);
 
 	private ModBlockEntitiesNeoForge() {
 	}
@@ -110,6 +114,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.PUMP_BE = PUMP::get;
 		ModContent.WATER_MILL_BE = WATER_MILL::get;
 		ModContent.WIND_MILL_BE = WIND_MILL::get;
+		ModContent.IRON_CHEST_BE = IRON_CHEST::get;
 	}
 
 	/**

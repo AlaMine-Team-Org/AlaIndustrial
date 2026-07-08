@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "Jaringan energi: server tidak tersedia",
 	"command.alaindustrial.net.dimension": "  %1$s: jaringan=%2$s (aktif %3$s / tidur %4$s) kabel=%5$s | ter-tick=%6$s EU/t=%7$s total=%8$s",
 	"command.alaindustrial.net.empty": "  (tidak ada jaringan energi yang dimuat)",
-	"command.alaindustrial.net.totals": "Total: jaringan=%1$s kabel=%2$s EU tick terakhir=%3$s EU total=%4$s"
+	"command.alaindustrial.net.totals": "Total: jaringan=%1$s kabel=%2$s EU tick terakhir=%3$s EU total=%4$s",
+	"block.alaindustrial.iron_chest": "Peti Besi",
+	"subtitles.alaindustrial.iron_chest_open": "Peti Besi terbuka",
+	"subtitles.alaindustrial.iron_chest_close": "Peti Besi tertutup"
 }

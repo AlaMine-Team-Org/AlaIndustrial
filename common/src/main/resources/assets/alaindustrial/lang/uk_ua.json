@@ -147,5 +147,8 @@
 	"command.alaindustrial.net.unavailable": "Енергомережі: сервер недоступний",
 	"command.alaindustrial.net.dimension": "  %1$s: мереж=%2$s (активних %3$s / сплячих %4$s) кабелів=%5$s | тіків=%6$s EU/t=%7$s всього=%8$s",
 	"command.alaindustrial.net.empty": "  (завантажених енергомереж немає)",
-	"command.alaindustrial.net.totals": "Разом: мереж=%1$s кабелів=%2$s EU за минулий тік=%3$s EU всього=%4$s"
+	"command.alaindustrial.net.totals": "Разом: мереж=%1$s кабелів=%2$s EU за минулий тік=%3$s EU всього=%4$s",
+	"block.alaindustrial.iron_chest": "Залізна скриня",
+	"subtitles.alaindustrial.iron_chest_open": "Залізна скриня відкривається",
+	"subtitles.alaindustrial.iron_chest_close": "Залізна скриня зачиняється"
 }

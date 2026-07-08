@@ -23,10 +23,18 @@ public final class ModSoundsNeoForge {
 	public static final DeferredHolder<SoundEvent, SoundEvent> GENERATOR_HUM =
 			SOUNDS.register("generator_hum", ModSounds::createGeneratorHum);
 
+	public static final DeferredHolder<SoundEvent, SoundEvent> IRON_CHEST_OPEN =
+			SOUNDS.register("iron_chest_open", ModSounds::createIronChestOpen);
+
+	public static final DeferredHolder<SoundEvent, SoundEvent> IRON_CHEST_CLOSE =
+			SOUNDS.register("iron_chest_close", ModSounds::createIronChestClose);
+
 	/** Bind the neutral handles to the deferred holders. Called from the {@code @Mod} ctor after register. */
 	public static void init() {
 		ModSounds.MACERATOR_GRIND = MACERATOR_GRIND;
 		ModSounds.GENERATOR_HUM = GENERATOR_HUM;
+		ModSounds.IRON_CHEST_OPEN = IRON_CHEST_OPEN;
+		ModSounds.IRON_CHEST_CLOSE = IRON_CHEST_CLOSE;
 	}
 
 	private ModSoundsNeoForge() {
