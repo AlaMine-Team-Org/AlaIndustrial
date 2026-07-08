@@ -1,7 +1,8 @@
 # Installed into the PUBLIC repo at: .github/workflows/release.yml
 # Triggered by pushing a tag `vX.Y.Z`. Builds BOTH loaders (Fabric + NeoForge),
-# publishes TWO files to CurseForge (one per loader) with a MARKDOWN changelog,
-# and creates one GitHub Release carrying both jars.
+# publishes TWO files to CurseForge and TWO versions to Modrinth (one per
+# loader) with a MARKDOWN changelog, and creates one GitHub Release carrying
+# both jars.
 #
 # Why a direct API curl (not mc-publish/itsmeow) for CurseForge: mc-publish does
 # NOT send CurseForge's `changelogType`, so the Markdown never renders; itsmeow's
@@ -9,6 +10,8 @@
 # `jq --rawfile` (preserves newlines) + changelogType=markdown. mc-publish is kept
 # only for the GitHub Release. Each file's displayName carries its loader in
 # brackets, e.g. "... v0.1.5 [Fabric]" / "... v0.1.5 [NeoForge]".
+# Modrinth uses separate version numbers per loader (`X.Y.Z+fabric` and
+# `X.Y.Z+neoforge`) so Fabric API remains a Fabric-only required dependency.
 name: Release
 
 on:
@@ -75,6 +78,94 @@ jobs:
           echo "neoforge_jar=$NEOFORGE_JAR" >> "$GITHUB_OUTPUT"
           echo "Fabric:   $FABRIC_JAR"
           echo "NeoForge: $NEOFORGE_JAR"
+
+      # Modrinth project ACLWFBlU (slug: ala-industrial). We publish separate
+      # versions per loader because Modrinth dependencies are version-level, not
+      # file-level: Fabric requires Fabric API, NeoForge does not.
+      - name: Check Modrinth upload targets
+        id: modrinth
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: |
+          [ -n "$MODRINTH_TOKEN" ] || { echo "::error::MODRINTH_TOKEN secret is missing or empty"; exit 1; }
+          VERSION="${{ steps.meta.outputs.version }}"
+          versions=$(curl -sSf \
+            "https://api.modrinth.com/v2/project/ACLWFBlU/version" \
+            -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0")
+          fabric_exists=$(printf '%s' "$versions" | jq -r --arg v "$VERSION+fabric" 'any(.[]; .version_number == $v)')
+          neoforge_exists=$(printf '%s' "$versions" | jq -r --arg v "$VERSION+neoforge" 'any(.[]; .version_number == $v)')
+          echo "fabric_exists=$fabric_exists" >> "$GITHUB_OUTPUT"
+          echo "neoforge_exists=$neoforge_exists" >> "$GITHUB_OUTPUT"
+          echo "Modrinth Fabric target $VERSION+fabric exists: $fabric_exists"
+          echo "Modrinth NeoForge target $VERSION+neoforge exists: $neoforge_exists"
+
+      - name: Publish Fabric to Modrinth
+        if: steps.modrinth.outputs.fabric_exists != 'true'
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          VERSION: ${{ steps.meta.outputs.version }}
+          JAR: ${{ steps.meta.outputs.fabric_jar }}
+        run: |
+          data=$(jq -n \
+            --rawfile changelog CHANGELOG.md \
+            --arg project "ACLWFBlU" \
+            --arg version "$VERSION+fabric" \
+            --arg name "Ala Industrial $VERSION [Fabric]" \
+            '{
+              name: $name,
+              version_number: $version,
+              changelog: $changelog,
+              dependencies: [{project_id: "P7dR8mSH", dependency_type: "required"}],
+              game_versions: ["26.2"],
+              version_type: "release",
+              loaders: ["fabric"],
+              featured: false,
+              status: "listed",
+              project_id: $project,
+              file_parts: ["fabric_file"],
+              primary_file: "fabric_file",
+              environment: "client_and_server"
+            }')
+          curl -sSf -X POST \
+            "https://api.modrinth.com/v2/version" \
+            -H "Authorization: $MODRINTH_TOKEN" \
+            -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0" \
+            --form-string "data=$data" \
+            -F "fabric_file=@$JAR"
+
+      - name: Publish NeoForge to Modrinth
+        if: steps.modrinth.outputs.neoforge_exists != 'true'
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          VERSION: ${{ steps.meta.outputs.version }}
+          JAR: ${{ steps.meta.outputs.neoforge_jar }}
+        run: |
+          data=$(jq -n \
+            --rawfile changelog CHANGELOG.md \
+            --arg project "ACLWFBlU" \
+            --arg version "$VERSION+neoforge" \
+            --arg name "Ala Industrial $VERSION [NeoForge]" \
+            '{
+              name: $name,
+              version_number: $version,
+              changelog: $changelog,
+              dependencies: [],
+              game_versions: ["26.2"],
+              version_type: "release",
+              loaders: ["neoforge"],
+              featured: false,
+              status: "listed",
+              project_id: $project,
+              file_parts: ["neoforge_file"],
+              primary_file: "neoforge_file",
+              environment: "client_and_server"
+            }')
+          curl -sSf -X POST \
+            "https://api.modrinth.com/v2/version" \
+            -H "Authorization: $MODRINTH_TOKEN" \
+            -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0" \
+            --form-string "data=$data" \
+            -F "neoforge_file=@$JAR"
 
       # Resolve the CurseForge modloader IDs. Fabric is pinned (7499, proven across
       # releases). NeoForge is resolved dynamically by name from the versions API
