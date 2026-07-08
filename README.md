@@ -1,6 +1,8 @@
-# AlaIndustrial
+<p align="center">
+  <img src="docs/branding/logo_pixel_art_2k.jpeg" alt="AlaIndustrial pixel-art banner" width="100%">
+</p>
 
-<img src="docs/branding/icon_master_2048.png" alt="AlaIndustrial icon" width="128" height="128">
+<h1 align="center">AlaIndustrial</h1>
 
 An IndustrialCraft-inspired tech mod for **Minecraft (Java Edition)** on **Fabric**. It adds an
 **EU** energy system with voltage tiers (LV/MV/HV), generators, processing machines, storage, and
