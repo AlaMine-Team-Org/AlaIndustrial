@@ -22,6 +22,12 @@ on:
 permissions:
   contents: write   # needed to create the GitHub Release
 
+env:
+  # Standard release mode. Keep this explicit so accidental one-loader releases
+  # cannot happen by editing individual upload steps. Emergency single-loader
+  # repairs should use a separate, deliberate workflow.
+  PUBLISH_LOADERS: both
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -37,6 +43,21 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x gradlew
+
+      - name: Release mode guard
+        id: mode
+        run: |
+          case "${PUBLISH_LOADERS}" in
+            both)
+              echo "publish_fabric=true" >> "$GITHUB_OUTPUT"
+              echo "publish_neoforge=true" >> "$GITHUB_OUTPUT"
+              echo "Release mode: both loaders"
+              ;;
+            *)
+              echo "::error::PUBLISH_LOADERS must be 'both' for the standard release workflow (got '${PUBLISH_LOADERS}')"
+              exit 1
+              ;;
+          esac
 
       # Hard gate: never publish a tree that carries Cyrillic, forbidden vendor
       # traces, secrets or denylisted paths — even if the guard workflow is skipped.
@@ -73,6 +94,11 @@ jobs:
           case "$NEOFORGE_JAR" in *"-$VERSION.jar") ;; *) echo "::error::neoforge jar version != $VERSION ($NEOFORGE_JAR)"; exit 1;; esac
           unzip -l "$FABRIC_JAR"   | grep -q 'fabric.mod.json'              || { echo "::error::fabric jar lacks fabric.mod.json — wrong artifact?"; exit 1; }
           unzip -l "$NEOFORGE_JAR" | grep -q 'META-INF/neoforge.mods.toml' || { echo "::error::neoforge jar lacks neoforge.mods.toml — wrong artifact?"; exit 1; }
+          python .github/scripts/verify-artifacts.py \
+            --version "$VERSION" \
+            --fabric "$FABRIC_JAR" \
+            --neoforge "$NEOFORGE_JAR" \
+            --output release-manifest.json
           echo "version=$VERSION"          >> "$GITHUB_OUTPUT"
           echo "fabric_jar=$FABRIC_JAR"     >> "$GITHUB_OUTPUT"
           echo "neoforge_jar=$NEOFORGE_JAR" >> "$GITHUB_OUTPUT"
@@ -89,7 +115,7 @@ jobs:
         run: |
           [ -n "$MODRINTH_TOKEN" ] || { echo "::error::MODRINTH_TOKEN secret is missing or empty"; exit 1; }
           VERSION="${{ steps.meta.outputs.version }}"
-          versions=$(curl -sSf \
+          versions=$(curl -sSf --retry 3 --retry-all-errors --connect-timeout 20 \
             "https://api.modrinth.com/v2/project/ACLWFBlU/version" \
             -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0")
           fabric_exists=$(printf '%s' "$versions" | jq -r --arg v "$VERSION+fabric" 'any(.[]; .version_number == $v)')
@@ -100,7 +126,7 @@ jobs:
           echo "Modrinth NeoForge target $VERSION+neoforge exists: $neoforge_exists"
 
       - name: Publish Fabric to Modrinth
-        if: steps.modrinth.outputs.fabric_exists != 'true'
+        if: steps.mode.outputs.publish_fabric == 'true' && steps.modrinth.outputs.fabric_exists != 'true'
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           VERSION: ${{ steps.meta.outputs.version }}
@@ -126,7 +152,7 @@ jobs:
               primary_file: "fabric_file",
               environment: "client_and_server"
             }')
-          curl -sSf -X POST \
+          curl -sSf --retry 3 --retry-all-errors --connect-timeout 20 -X POST \
             "https://api.modrinth.com/v2/version" \
             -H "Authorization: $MODRINTH_TOKEN" \
             -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0" \
@@ -134,7 +160,7 @@ jobs:
             -F "fabric_file=@$JAR"
 
       - name: Publish NeoForge to Modrinth
-        if: steps.modrinth.outputs.neoforge_exists != 'true'
+        if: steps.mode.outputs.publish_neoforge == 'true' && steps.modrinth.outputs.neoforge_exists != 'true'
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           VERSION: ${{ steps.meta.outputs.version }}
@@ -160,7 +186,7 @@ jobs:
               primary_file: "neoforge_file",
               environment: "client_and_server"
             }')
-          curl -sSf -X POST \
+          curl -sSf --retry 3 --retry-all-errors --connect-timeout 20 -X POST \
             "https://api.modrinth.com/v2/version" \
             -H "Authorization: $MODRINTH_TOKEN" \
             -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0" \
@@ -178,16 +204,44 @@ jobs:
         env:
           CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
         run: |
-          versions=$(curl -sSf "https://minecraft.curseforge.com/api/game/versions?token=$CF_TOKEN")
+          [ -n "$CF_TOKEN" ] || { echo "::error::CURSEFORGE_TOKEN secret is missing or empty"; exit 1; }
+          versions=$(curl -sSf --retry 3 --retry-all-errors --connect-timeout 20 "https://minecraft.curseforge.com/api/game/versions?token=$CF_TOKEN")
           NEOFORGE_ID=$(printf '%s' "$versions" | jq -r 'map(select(.name=="NeoForge")) | .[0].id // empty')
           [ -n "$NEOFORGE_ID" ] || { echo "::error::could not resolve the NeoForge modloader id from the versions API"; exit 1; }
           echo "neoforge_id=$NEOFORGE_ID" >> "$GITHUB_OUTPUT"
           echo "NeoForge modloader id: $NEOFORGE_ID (Fabric pinned: 7499, Minecraft pinned: 16498)"
 
+      # Best-effort public index check before hitting the CurseForge upload API.
+      # If cfwidget is unavailable we fail closed: a re-run could otherwise create
+      # duplicate files because the upload API has no documented "list files" route.
+      - name: Check CurseForge upload targets
+        id: curseforge
+        run: |
+          VERSION="${{ steps.meta.outputs.version }}"
+          widget=$(curl -sSf --retry 3 --retry-all-errors --connect-timeout 20 \
+            "https://api.cfwidget.com/minecraft/mc-mods/1597723" \
+            -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0")
+          python - "$VERSION" "$widget" <<'PY' >> "$GITHUB_OUTPUT"
+          import json, sys
+          version = sys.argv[1]
+          data = json.loads(sys.argv[2])
+          names = []
+          for f in data.get("files", []):
+              names.append(str(f.get("display", "")))
+              names.append(str(f.get("name", "")))
+          fabric = any(f"v{version} [Fabric]" in name or f"{version} [Fabric]" in name for name in names)
+          neoforge = any(f"v{version} [NeoForge]" in name or f"{version} [NeoForge]" in name for name in names)
+          print(f"fabric_exists={str(fabric).lower()}")
+          print(f"neoforge_exists={str(neoforge).lower()}")
+          PY
+          echo "CurseForge Fabric target exists: $(grep '^fabric_exists=' "$GITHUB_OUTPUT" | cut -d= -f2)"
+          echo "CurseForge NeoForge target exists: $(grep '^neoforge_exists=' "$GITHUB_OUTPUT" | cut -d= -f2)"
+
       # Two CurseForge uploads, one per loader, as SEPARATE steps so a partial
       # failure (one loader up, the other down) is unambiguous in the job log and
       # you re-run only what failed. Same changelog for both.
       - name: Publish Fabric to CurseForge
+        if: steps.mode.outputs.publish_fabric == 'true' && steps.curseforge.outputs.fabric_exists != 'true'
         env:
           CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           JAR: ${{ steps.meta.outputs.fabric_jar }}
@@ -197,13 +251,14 @@ jobs:
             --rawfile changelog CHANGELOG.md \
             --arg name "$DISPLAY_NAME" \
             '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, 7499], releaseType: "release"}')
-          curl -sSf -X POST \
+          curl -sSf --retry 3 --retry-all-errors --connect-timeout 20 -X POST \
             "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
             -H "X-Api-Token: $CF_TOKEN" \
             --form-string "metadata=$metadata" \
             -F "file=@$JAR"
 
       - name: Publish NeoForge to CurseForge
+        if: steps.mode.outputs.publish_neoforge == 'true' && steps.curseforge.outputs.neoforge_exists != 'true'
         env:
           CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           JAR: ${{ steps.meta.outputs.neoforge_jar }}
@@ -215,7 +270,7 @@ jobs:
             --arg name "$DISPLAY_NAME" \
             --argjson nf "$NEOFORGE_ID" \
             '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, $nf], releaseType: "release"}')
-          curl -sSf -X POST \
+          curl -sSf --retry 3 --retry-all-errors --connect-timeout 20 -X POST \
             "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
             -H "X-Api-Token: $CF_TOKEN" \
             --form-string "metadata=$metadata" \
@@ -229,6 +284,7 @@ jobs:
           files: |
             fabric/build/libs/!(*-@(dev|sources|javadoc)).jar
             neoforge/build/libs/!(*-@(dev|sources|javadoc)).jar
+            release-manifest.json
           name: Ala Industrial ${{ github.ref_name }}
           version: ${{ github.ref_name }}
           version-type: release
