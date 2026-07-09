@@ -5,6 +5,7 @@ import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.core.EnergyRole;
 import dev.alaindustrial.core.EnergyTier;
 import dev.alaindustrial.core.SolarSky;
+import dev.alaindustrial.core.WindMillClearance;
 import dev.alaindustrial.core.WindMillOutput;
 import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -31,13 +33,15 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity implements MenuProvider {
 	private static final int MAX_EXTRACT = 32;
+	public static final int ROTOR_SLOT = 0;
 
 	/** Transient sampling state — recomputed from the world, never serialised. */
 	private int sampleCounter = 0;
 	private int cachedRate = 0;
+	private int cachedMode = WindMillBlockEntity.MODE_NO_ROTOR;
 
 	public StormWindMillBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.STORM_WIND_MILL_BE.get(), pos, state, EnergyTier.LV, 0, Config.t2WindMillBuffer, MAX_EXTRACT);
+		super(ModContent.STORM_WIND_MILL_BE.get(), pos, state, EnergyTier.LV, 1, Config.t2WindMillBuffer, MAX_EXTRACT);
 	}
 
 	/**
@@ -66,15 +70,56 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 				Config.stormWindMillRainFactor, Config.stormWindMillThunderFactor);
 	}
 
+	private int sampleMode(Level level, BlockPos pos, int rate, boolean obstructed) {
+		if (!openSky(level, pos)) {
+			return WindMillBlockEntity.MODE_ROOFED;
+		}
+		if (obstructed) {
+			return WindMillBlockEntity.MODE_OBSTRUCTED;
+		}
+		if (level.isThundering() && rate > 0) {
+			return WindMillBlockEntity.MODE_STORM;
+		}
+		if (level.isRaining() && rate > 0) {
+			return WindMillBlockEntity.MODE_GALE;
+		}
+		if (rate <= 0) {
+			return WindMillBlockEntity.MODE_CALM;
+		}
+		return WindMillBlockEntity.MODE_BREEZE;
+	}
+
 	@Override
 	protected int produce(Level level, BlockPos pos, BlockState state) {
+		ItemStack rotor = items.get(ROTOR_SLOT);
+		if (rotor.isEmpty()) {
+			cachedRate = 0;
+			cachedMode = WindMillBlockEntity.MODE_NO_ROTOR;
+			sampleCounter = 0;
+			this.progress = 0;
+			this.maxProgress = WindMillBlockEntity.MODE_NO_ROTOR;
+			return 0;
+		}
 		if (sampleCounter % Config.windMillSampleTicks == 0) {
-			cachedRate = sampleRate(level, pos);
+			// Blade clearance: a solid block in the rotor disc stalls the blades (rate 0), regardless
+			// of height or weather. Only meaningful under open sky — a roof above is already fatal.
+			Direction facing = state.hasProperty(HorizontalMachineBlock.FACING)
+					? state.getValue(HorizontalMachineBlock.FACING)
+					: Direction.NORTH;
+			boolean sky = openSky(level, pos);
+			boolean obstructed = sky && WindMillClearance.hasObstruction(level, pos, facing);
+			cachedRate = obstructed ? 0 : sampleRate(level, pos);
+			cachedMode = sampleMode(level, pos, cachedRate, obstructed);
 		}
 		sampleCounter++;
 		this.progress = cachedRate;
-		this.maxProgress = Config.stormWindMillMaxEuPerTick;
+		this.maxProgress = cachedMode;
 		return cachedRate;
+	}
+
+	@Override
+	public boolean canPlaceItem(int slot, ItemStack stack) {
+		return slot == ROTOR_SLOT && stack.is(ModContent.WINDMILL_ROTOR.get());
 	}
 
 	@Override

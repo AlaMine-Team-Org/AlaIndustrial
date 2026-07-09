@@ -15,6 +15,7 @@ import dev.alaindustrial.client.MachineTooltips;
 import dev.alaindustrial.client.MoonlitSolarPanelScreen;
 import dev.alaindustrial.client.SolarPanelScreen;
 import dev.alaindustrial.client.WaterMillScreen;
+import dev.alaindustrial.client.WaterMillWheelBlockEntityRenderer;
 import dev.alaindustrial.client.WindMillScreen;
 import dev.alaindustrial.client.WindMillRotorBlockEntityRenderer;
 import dev.alaindustrial.client.neoforge.NeoForgeCableGhost;
@@ -112,6 +113,8 @@ public final class IndustrializationNeoForgeClient {
 	private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.IRON_CHEST.get(),
 				IronChestBlockEntityRenderer::new);
+		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.WATER_MILL.get(),
+				WaterMillWheelBlockEntityRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.WIND_MILL.get(),
 				WindMillRotorBlockEntityRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.HIGH_ALTITUDE_WIND_MILL.get(),

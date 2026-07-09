@@ -5,6 +5,7 @@ import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.core.EnergyRole;
 import dev.alaindustrial.core.EnergyTier;
 import dev.alaindustrial.core.SolarSky;
+import dev.alaindustrial.core.WindMillClearance;
 import dev.alaindustrial.core.WindMillOutput;
 import dev.alaindustrial.menu.WindMillMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -31,6 +32,12 @@ import net.minecraft.world.level.storage.ValueOutput;
  * and capped at {@link Config#windMillMaxEuPerTick}. Requires the Overworld and an open sky column above
  * the block; roofed or below sea level → 0.
  *
+ * <p><b>Blade clearance.</b> The 2×2 rotor overhangs the front face and sweeps a disc of radius ~1
+ * block, so it also needs air around the mill: one block ahead (where the rotor sits), one block to
+ * each side, and a three-block pit below (centre + both sides) for the lower blade arc. A solid block
+ * in any of those positions stalls the blades → 0 ({@link WindMillClearance}). A roof above is already
+ * caught by {@code openSky}, so it is not re-checked here.
+ *
  * <p><b>Rotor gate.</b> A {@code windmill_rotor} must be installed in {@link #ROTOR_SLOT} or the mill
  * produces nothing — the rotor is a progression gate (and a hook for future wear). It does not decay.
  *
@@ -47,6 +54,10 @@ import net.minecraft.world.level.storage.ValueOutput;
  * <p>Sync channels: 0 energy, 1 capacity, 2 production (EU/t), 3 mode, 4 evolution progress
  * (permille 0..1000), 5 denominator (constant 1000). Permille avoids the 16-bit DataSlot overflow
  * that {@code windMillEvolveTicks} = 33 600 would otherwise cause (mirrors SolarPanelBlockEntity).
+ *
+ * <p>Mode codes: {@code no_rotor} (no rotor), {@code roofed} (no open sky), {@code obstructed}
+ * (a block stalls the blades), {@code calm}/{@code breeze} (clear), {@code gale} (rain),
+ * {@code storm} (thunder). Priority of failure reasons: rotor → sky → obstruction → weather.
  */
 public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements MenuProvider {
 	/** Slot indices shared with the menu. */
@@ -55,13 +66,19 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 
 	private static final int MAX_EXTRACT = 32;
 
-	/** Mode codes shared with the screen. */
+	/**
+	 * Mode codes shared with the screen. The numeric value is arbitrary (never persisted —
+	 * {@code cachedMode} is transient and recomputed); it only has to be stable across a sync window
+	 * so the screen can map it to a label. {@link #modeFor} returns these in priority order:
+	 * no rotor → roofed → obstructed → weather, so a more fundamental reason masks a lesser one.
+	 */
 	public static final int MODE_NO_ROTOR = 0;
 	public static final int MODE_ROOFED = 1;
-	public static final int MODE_CALM = 2;
-	public static final int MODE_BREEZE = 3;
-	public static final int MODE_GALE = 4;
-	public static final int MODE_STORM = 5;
+	public static final int MODE_OBSTRUCTED = 2;
+	public static final int MODE_CALM = 3;
+	public static final int MODE_BREEZE = 4;
+	public static final int MODE_GALE = 5;
+	public static final int MODE_STORM = 6;
 
 	/** Transient sampling state — recomputed from the world, never serialised. */
 	private int sampleCounter = 0;
@@ -124,14 +141,20 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 		}
 
 		boolean sky = openSky(level, pos);
+		// Blade clearance: a solid block where the spinning 2×2 rotor sweeps stalls the blades. Only
+		// relevant under open sky — a roof above is already fatal and reported as ROOFED (higher priority).
+		Direction facing = state.hasProperty(HorizontalMachineBlock.FACING)
+				? state.getValue(HorizontalMachineBlock.FACING)
+				: Direction.NORTH;
+		boolean obstructed = sky && WindMillClearance.hasObstruction(level, pos, facing);
 
-		// --- Evolution: advance while a chip sees open sky (rotor already installed). ---
+		// --- Evolution: advance while a chip sees open sky AND free blades (rotor already installed). ---
 		// The wind mill shares the solar-panel evolution chips: day → high-altitude, night → storm.
 		// One chip family covers both generator families so a player's chip investment transfers.
 		ItemStack chip = items.get(CHIP_SLOT);
 		boolean dayChip = chip.is(ModContent.ALIGNMENT_CHIP_DAY.get());
 		boolean nightChip = chip.is(ModContent.ALIGNMENT_CHIP_NIGHT.get());
-		if ((dayChip || nightChip) && sky) {
+		if ((dayChip || nightChip) && sky && !obstructed) {
 			evolveProgress++;
 			if (evolveProgress >= Config.windMillEvolveTicks) {
 				evolveInto(level, pos, dayChip ? ModContent.HIGH_ALTITUDE_WIND_MILL.get() : ModContent.STORM_WIND_MILL.get());
@@ -144,8 +167,9 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 		if (sampleCounter % Config.windMillSampleTicks == 0) {
 			int previousRate = cachedRate;
 			int previousMode = cachedMode;
-			cachedRate = sampleRate(level, pos);
-			cachedMode = modeFor(sky, cachedRate, level.isRaining(), level.isThundering());
+			// An obstruction zeroes the rate (blades cannot turn) regardless of height or weather.
+			cachedRate = obstructed ? 0 : sampleRate(level, pos);
+			cachedMode = modeFor(sky, obstructed, cachedRate, level.isRaining(), level.isThundering());
 			if (cachedRate != previousRate || cachedMode != previousMode) {
 				syncBlockEntityToClient();
 			}
@@ -156,10 +180,18 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 		return cachedRate;
 	}
 
-	/** Map the current sky/rate/weather state to a GUI mode code. */
-	private static int modeFor(boolean sky, int rate, boolean raining, boolean thundering) {
+	/**
+	 * Map the current sky/obstruction/rate/weather state to a GUI mode code. Order is the priority of
+	 * failure reasons: a roofed mill is dead for a more fundamental reason (no sky at all) than an
+	 * obstructed one, so ROOFED masks OBSTRUCTED — the player should fix the roof first. Obstruction
+	 * in turn masks weather, because even a storm cannot turn blocked blades.
+	 */
+	private static int modeFor(boolean sky, boolean obstructed, int rate, boolean raining, boolean thundering) {
 		if (!sky) {
 			return MODE_ROOFED;
+		}
+		if (obstructed) {
+			return MODE_OBSTRUCTED;
 		}
 		if (thundering) {
 			return MODE_STORM;
@@ -176,6 +208,7 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	/** Replace this mill with its evolved branch, carrying stored energy; the chip is consumed. */
 	private void evolveInto(Level level, BlockPos pos, Block target) {
 		long saved = energy.amount;
+		ItemStack rotor = items.get(ROTOR_SLOT).copy();
 		items.set(CHIP_SLOT, ItemStack.EMPTY);
 		BlockState oldState = getBlockState();
 		BlockState newState = target.defaultBlockState();
@@ -186,6 +219,9 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 		level.setBlockAndUpdate(pos, newState);
 		if (level.getBlockEntity(pos) instanceof MachineBlockEntity evolved) {
 			evolved.getEnergyStorage().amount = Math.min(saved, evolved.getEnergyStorage().getCapacity());
+			if (!rotor.isEmpty() && evolved.getContainerSize() > ROTOR_SLOT) {
+				evolved.setItem(ROTOR_SLOT, rotor);
+			}
 			evolved.setChanged();
 		}
 	}

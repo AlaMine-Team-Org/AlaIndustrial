@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * NeoForge Network-Analyzer highlight (MOD-022, the NeoForge counterpart to the Fabric
@@ -51,6 +52,8 @@ public final class NeoForgeNetworkVisualization {
 	private static List<BlockPos> consumers = List.of();
 	private static List<NetworkEdge> edges = List.of();
 	private static List<FlowEdge> flowEdges = List.of();
+	/** Producer ∪ consumer positions — endpoints whose Y anchor follows their collision shape. */
+	private static java.util.Set<BlockPos> endpointPositions = java.util.Set.of();
 
 	private NeoForgeNetworkVisualization() {
 	}
@@ -79,7 +82,8 @@ public final class NeoForgeNetworkVisualization {
 			int tubeColor = AlaClientConfig.networkOverlayColor;
 			for (NetworkEdge edge : edges) {
 				if (level.isLoaded(edge.a()) && level.isLoaded(edge.b())) {
-					var line = Gizmos.line(center(edge.a()), center(edge.b()), tubeColor, EDGE_WIDTH);
+					var line = Gizmos.line(nodeCenter(level, edge.a()), nodeCenter(level, edge.b()),
+							tubeColor, EDGE_WIDTH);
 					if (AlaClientConfig.networkOverlayThroughBlocks) {
 						line.setAlwaysOnTop();
 					}
@@ -94,8 +98,8 @@ public final class NeoForgeNetworkVisualization {
 					if (!level.isLoaded(flow.from()) || !level.isLoaded(flow.to())) {
 						continue;
 					}
-					Vec3 from = center(flow.from());
-					Vec3 to = center(flow.to());
+					Vec3 from = nodeCenter(level, flow.from());
+					Vec3 to = nodeCenter(level, flow.to());
 					for (int i = 0; i < FLOW_DOTS_PER_EDGE; i++) {
 						double phase = (timeSeconds * FLOW_SPEED_EDGES_PER_SECOND + (double) i / FLOW_DOTS_PER_EDGE) % 1.0;
 						var point = Gizmos.point(from.lerp(to, phase), FLOW_COLOR, FLOW_POINT_SIZE);
@@ -116,13 +120,16 @@ public final class NeoForgeNetworkVisualization {
 		consumers = payload.consumers();
 		edges = NetworkTopology.fullAdjacency(cables, producers, consumers);
 		flowEdges = NetworkTopology.flowDirections(edges, producers);
+		java.util.Set<BlockPos> endpoints = new java.util.HashSet<>(producers);
+		endpoints.addAll(consumers);
+		endpointPositions = endpoints;
 	}
 
 	private static void drawNodes(ClientLevel level, List<BlockPos> positions, int color) {
 		GizmoStyle style = GizmoStyle.strokeAndFill(color, 2.0f, (color & 0x00FFFFFF) | 0x66000000);
 		for (BlockPos pos : positions) {
 			if (level.isLoaded(pos)) {
-				var cuboid = Gizmos.cuboid(box(center(pos), ENDPOINT_HALF), style);
+				var cuboid = Gizmos.cuboid(box(nodeCenter(level, pos), ENDPOINT_HALF), style);
 				if (AlaClientConfig.networkOverlayThroughBlocks) {
 					cuboid.setAlwaysOnTop();
 				}
@@ -130,8 +137,24 @@ public final class NeoForgeNetworkVisualization {
 		}
 	}
 
-	private static Vec3 center(BlockPos pos) {
-		return new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+	/**
+	 * Mirror of the Fabric {@code NetworkVisualizationClient.nodeCenter}: horizontally the cell
+	 * centre (cable bounds are skewed by arms, so shape centre would bend straight runs), vertically
+	 * the endpoint's surface/centre from its collision shape. A half-block endpoint (e.g. Solar Panel,
+	 * {@code maxY == 0.5}) anchors on its top surface so a line from an adjacent cable lands on the
+	 * panel instead of plunging into it; a full-height endpoint anchors at the vertical centre. Cables
+	 * (not in {@link #endpointPositions}) use the raw cell centre on every axis (MOD-042 parity).
+	 */
+	private static Vec3 nodeCenter(ClientLevel level, BlockPos pos) {
+		double y = pos.getY() + 0.5;
+		if (endpointPositions.contains(pos)) {
+			VoxelShape shape = level.getBlockState(pos).getShape(level, pos);
+			if (!shape.isEmpty()) {
+				AABB bounds = shape.bounds();
+				y = pos.getY() + (bounds.maxY < 1.0 ? bounds.maxY : (bounds.minY + bounds.maxY) / 2.0);
+			}
+		}
+		return new Vec3(pos.getX() + 0.5, y, pos.getZ() + 0.5);
 	}
 
 	private static AABB box(Vec3 c, float half) {

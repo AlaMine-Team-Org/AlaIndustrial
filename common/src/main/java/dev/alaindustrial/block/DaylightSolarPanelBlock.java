@@ -59,7 +59,8 @@ public class DaylightSolarPanelBlock extends AbstractMachineBlock implements Mac
 
 	@Override
 	public float humVolume() {
-		return 0.40f;
+		// Quieter than the generator (0.4): solar farms stack many panels, so each is tuned lower.
+		return 0.28f;
 	}
 
 	@Override

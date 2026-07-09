@@ -6,6 +6,7 @@ import dev.alaindustrial.client.ElectricFurnaceScreen;
 import dev.alaindustrial.client.IronChestBlockEntityRenderer;
 import dev.alaindustrial.client.MachineTooltips;
 import dev.alaindustrial.client.SolarPanelScreen;
+import dev.alaindustrial.client.WaterMillWheelBlockEntityRenderer;
 import dev.alaindustrial.client.WindMillRotorBlockEntityRenderer;
 import dev.alaindustrial.registry.ModBlockEntities;
 import dev.alaindustrial.registry.ModMenus;
@@ -70,6 +71,7 @@ public class IndustrializationClient implements ClientModInitializer {
 		BlockEntityRendererRegistry.register(ModBlockEntities.IRON_CHEST, IronChestBlockEntityRenderer::new);
 		ModelLayerRegistry.registerModelLayer(IronChestBlockEntityRenderer.IRON_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
+		BlockEntityRendererRegistry.register(ModBlockEntities.WATER_MILL, WaterMillWheelBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.WIND_MILL, WindMillRotorBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.HIGH_ALTITUDE_WIND_MILL, WindMillRotorBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.STORM_WIND_MILL, WindMillRotorBlockEntityRenderer::new);

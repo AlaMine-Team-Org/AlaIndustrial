@@ -2,6 +2,7 @@ package dev.alaindustrial.compat.jei;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.MachineRecipeViewerTargets;
+import dev.alaindustrial.client.RecipeViewerInfo;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.neoforge.ModBlocksNeoForge;
@@ -19,6 +20,7 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -70,6 +72,16 @@ public final class AlaJeiPlugin implements IModPlugin {
 			Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI recipe(s) for {}", machineRecipes.size(),
 					machine.kind().id());
 			registration.addRecipes(machine.type(), machineRecipes);
+		}
+		// Informational pages (MOD-043): for blocks/items with no crafting recipe — the solar panel
+		// evolution line today — JEI's built-in ingredient info gives a paginated, auto-wrapping page.
+		// Title + lines come from the same loader-neutral source the Fabric REI integration uses.
+		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.solarEvolutionEntries()) {
+			List<Component> description = new ArrayList<>();
+			description.add(RecipeViewerInfo.title(entry));
+			description.addAll(RecipeViewerInfo.buildLines(entry));
+			registration.addIngredientInfo((net.minecraft.world.level.ItemLike) entry.owner().get(),
+					description.toArray(new Component[0]));
 		}
 	}
 

@@ -109,19 +109,19 @@ public final class ModItems {
 				.title(Component.translatable("itemGroup.alaindustrial"))
 				.icon(() -> new ItemStack(MACERATOR_ITEM))
 				.displayItems((params, output) -> {
-					// NB: pump + non-copper cables (tin, insulated copper/tin) are registered but
-					// deliberately hidden for the v1.0 release (no tab entry, recipe removed). Re-add
-					// their output.accept(...) + recipe JSON to bring them back. See task MOD-010.
-					// Generators
-					output.accept(SOLAR_PANEL_ITEM);
-					output.accept(DAYLIGHT_SOLAR_PANEL_ITEM);
-					output.accept(MOONLIT_SOLAR_PANEL_ITEM);
-					output.accept(GENERATOR_ITEM);
-					output.accept(GEOTHERMAL_GENERATOR_ITEM);
-					output.accept(WATER_MILL_ITEM);
-					output.accept(WIND_MILL_ITEM);
-					output.accept(HIGH_ALTITUDE_WIND_MILL_ITEM);
-					output.accept(STORM_WIND_MILL_ITEM);
+						// NB: pump + non-copper cables (tin, insulated copper/tin) are registered but
+						// deliberately hidden for the v1.0 release (no tab entry, recipe removed). Re-add
+						// their output.accept(...) + recipe JSON to bring them back. See task MOD-010.
+						// Likewise the water mill + high-altitude/storm windmills are temporarily hidden
+						// from the player (no tab entry; water_mill recipe removed). Re-add their
+						// output.accept(...) + the water_mill recipe JSON to bring them back.
+						// Generators
+						output.accept(SOLAR_PANEL_ITEM);
+						output.accept(DAYLIGHT_SOLAR_PANEL_ITEM);
+						output.accept(MOONLIT_SOLAR_PANEL_ITEM);
+						output.accept(GENERATOR_ITEM);
+						output.accept(GEOTHERMAL_GENERATOR_ITEM);
+						output.accept(WIND_MILL_ITEM);
 					// Machines
 					output.accept(MACERATOR_ITEM);
 					output.accept(ELECTRIC_FURNACE_ITEM);

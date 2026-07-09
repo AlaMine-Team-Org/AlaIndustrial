@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
-    "particle": "alaindustrial:block/machine_side",
-    "down": "alaindustrial:block/machine_bottom",
-    "up": "alaindustrial:block/machine_top",
+    "particle": "alaindustrial:block/water_mill_side",
+    "down": "alaindustrial:block/water_mill_bottom",
+    "up": "alaindustrial:block/water_mill_top",
     "north": "alaindustrial:block/water_mill_front",
-    "east": "alaindustrial:block/machine_side",
-    "south": "alaindustrial:block/machine_back",
-    "west": "alaindustrial:block/machine_side"
+    "east": "alaindustrial:block/water_mill_side",
+    "south": "alaindustrial:block/water_mill_side",
+    "west": "alaindustrial:block/water_mill_side"
   }
 }

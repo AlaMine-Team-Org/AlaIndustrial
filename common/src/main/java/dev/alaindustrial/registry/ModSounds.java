@@ -48,9 +48,14 @@ public final class ModSounds {
 		throw new IllegalStateException("ModSounds.SOLAR_PANEL_HUM read before its loader bound it");
 	};
 
-	/** Build the solar-panel-hum event instance both loaders register. */
+	/**
+	 * Build the solar-panel-hum event instance both loaders register. Fixed 10-block audible range
+	 * (vs the generator's variable {@code /16}): solar farms place many sources close together, and
+	 * each stacks into the others, so each panel is tuned shorter-range than a lone generator to keep
+	 * a farm from becoming a wall of sound. Per-block {@code humVolume()} (0.28) sets the loudness.
+	 */
 	public static SoundEvent createSolarPanelHum() {
-		return SoundEvent.createVariableRangeEvent(SOLAR_PANEL_HUM_ID);
+		return SoundEvent.createFixedRangeEvent(SOLAR_PANEL_HUM_ID, 10.0f);
 	}
 
 	/** The registry id for the iron chest open sound (lid lifts). */

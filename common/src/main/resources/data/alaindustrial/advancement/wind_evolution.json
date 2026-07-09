@@ -1,5 +1,5 @@
 {
-  "parent": "alaindustrial:evo_chip",
+  "parent": "alaindustrial:wind_power",
   "display": {
     "icon": {
       "id": "alaindustrial:high_altitude_wind_mill"

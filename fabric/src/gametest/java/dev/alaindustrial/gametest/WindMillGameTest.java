@@ -147,8 +147,11 @@ public class WindMillGameTest {
 	}
 
 	/**
-	 * @implements TC-WINDMILL-001-NEG01 — a solid roof (no open sky column) forces 0 EU, no matter the
-	 *     height or weather. Drives well past a sample window under a thunderstorm and asserts nothing accrues.
+	 * @implements TC-WINDMILL-001-NEG01 — a solid roof (no open sky column) forces mode ROOFED. The
+	 *     mill sits below sea level in the region (so EU/t is 0 from height regardless), which makes the
+	 *     accumulated-EU check alone indistinguishable from "always 0" — so the case asserts the MODE code
+	 *     on the maxProgress sync channel (3) as well, which is the only signal that distinguishes "dead from
+	 *     height" from "dead from roof". Drives past a sample window under a thunderstorm for coverage.
 	 * @covers R-NRG-04
 	 */
 	@GameTest(skyAccess = true, maxTicks = 120)
@@ -157,10 +160,93 @@ public class WindMillGameTest {
 		helper.setBlock(POS.above(), Blocks.STONE);
 		setRaining(helper, true); // even in a storm, a roof kills it
 		mill.getEnergyStorage().amount = 0;
-		drive(mill, helper, Config.windMillSampleTicks * 2 + 5);
+		drive(mill, helper, Config.windMillSampleTicks + 1);
 		long got = mill.getEnergyStorage().getAmount();
 		if (got != 0) {
 			helper.fail("roofed wind mill generated " + got + " EU; expected 0 (no open sky)");
+		}
+		if (mill.getDataAccess().get(3) != WindMillBlockEntity.MODE_ROOFED) {
+			helper.fail("roofed wind mill mode = " + mill.getDataAccess().get(3) + "; expected ROOFED ("
+					+ WindMillBlockEntity.MODE_ROOFED + ")");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-NEG02 — the spinning 2×2 rotor lives in the FRONT neighbour's block
+	 *     space (the renderer pushes the quad 0.58 forward, past the mill's boundary). FACING = NORTH by
+	 *     default, so the front is one block north. A solid block there stalls the blades: mode OBSTRUCTED.
+	 *     The mode assertion is what catches the regression — EU is 0 from height here anyway.
+	 * @covers R-NRG-04
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Neg02_frontObstructionYieldsZero(GameTestHelper helper) {
+		WindMillBlockEntity mill = place(helper);
+		helper.setBlock(POS.north(), Blocks.STONE); // FACING NORTH → the front block the rotor occupies
+		setRaining(helper, true); // storm would normally maximise output
+		mill.getEnergyStorage().amount = 0;
+		drive(mill, helper, Config.windMillSampleTicks + 1);
+		if (mill.getDataAccess().get(3) != WindMillBlockEntity.MODE_OBSTRUCTED) {
+			helper.fail("front-obstructed wind mill mode = " + mill.getDataAccess().get(3)
+					+ "; expected OBSTRUCTED (" + WindMillBlockEntity.MODE_OBSTRUCTED + ")");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-NEG03 — the blade tips reach one block left/right of the FRONT block
+	 *     (not the mill body). FACING = NORTH, so the front is north; its east neighbour is POS.north().east().
+	 *     A solid block there stalls a blade tip: mode OBSTRUCTED.
+	 * @covers R-NRG-04
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Neg03_sideObstructionYieldsZero(GameTestHelper helper) {
+		WindMillBlockEntity mill = place(helper);
+		helper.setBlock(POS.north().east(), Blocks.STONE); // blade tip reaches one block east of the front
+		setRaining(helper, true);
+		mill.getEnergyStorage().amount = 0;
+		drive(mill, helper, Config.windMillSampleTicks + 1);
+		if (mill.getDataAccess().get(3) != WindMillBlockEntity.MODE_OBSTRUCTED) {
+			helper.fail("side-obstructed wind mill mode = " + mill.getDataAccess().get(3)
+					+ "; expected OBSTRUCTED (" + WindMillBlockEntity.MODE_OBSTRUCTED + ")");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-NEG04 — the lower blade arc dips into the pit below the FRONT block.
+	 *     A solid block directly beneath the front (centre of the pit) stalls the blades: mode OBSTRUCTED.
+	 * @covers R-NRG-04
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Neg04_pitObstructionYieldsZero(GameTestHelper helper) {
+		WindMillBlockEntity mill = place(helper);
+		helper.setBlock(POS.north().below(), Blocks.STONE); // the pit's centre is below the front block
+		setRaining(helper, true);
+		mill.getEnergyStorage().amount = 0;
+		drive(mill, helper, Config.windMillSampleTicks + 1);
+		if (mill.getDataAccess().get(3) != WindMillBlockEntity.MODE_OBSTRUCTED) {
+			helper.fail("pit-obstructed wind mill mode = " + mill.getDataAccess().get(3)
+					+ "; expected OBSTRUCTED (" + WindMillBlockEntity.MODE_OBSTRUCTED + ")");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-NEG05 — control case: with open sky and all clearance positions free,
+	 *     the mill is NOT obstructed. On the region's low altitude EU/t is 0 from height, so the mode is
+	 *     CALM — which is distinct from OBSTRUCTED and proves the clearance check does not fire on empty
+	 *     space. Guards against false positives in {@code WindMillClearance}.
+	 * @covers R-NRG-04
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Neg05_clearAreaNotObstructed(GameTestHelper helper) {
+		WindMillBlockEntity mill = place(helper);
+		setClear(helper);
+		drive(mill, helper, Config.windMillSampleTicks + 1);
+		int mode = mill.getDataAccess().get(3);
+		if (mode == WindMillBlockEntity.MODE_OBSTRUCTED) {
+			helper.fail("wind mill reported OBSTRUCTED with a clear area; mode=" + mode);
 		}
 		helper.succeed();
 	}

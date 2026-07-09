@@ -1,10 +1,14 @@
 {
   "multipart": [
     { "apply": { "model": "alaindustrial:block/copper_cable_core" } },
-    { "when": { "north": true }, "apply": { "model": "alaindustrial:block/copper_cable_arm" } },
-    { "when": { "east": true },  "apply": { "model": "alaindustrial:block/copper_cable_arm", "y": 90 } },
-    { "when": { "south": true }, "apply": { "model": "alaindustrial:block/copper_cable_arm", "y": 180 } },
-    { "when": { "west": true },  "apply": { "model": "alaindustrial:block/copper_cable_arm", "y": 270 } },
+    { "when": { "north": true, "north_low": false }, "apply": { "model": "alaindustrial:block/copper_cable_arm" } },
+    { "when": { "north": true, "north_low": true },  "apply": { "model": "alaindustrial:block/copper_cable_arm_low" } },
+    { "when": { "east": true,  "east_low": false },  "apply": { "model": "alaindustrial:block/copper_cable_arm", "y": 90 } },
+    { "when": { "east": true,  "east_low": true },   "apply": { "model": "alaindustrial:block/copper_cable_arm_low", "y": 90 } },
+    { "when": { "south": true, "south_low": false }, "apply": { "model": "alaindustrial:block/copper_cable_arm", "y": 180 } },
+    { "when": { "south": true, "south_low": true },  "apply": { "model": "alaindustrial:block/copper_cable_arm_low", "y": 180 } },
+    { "when": { "west": true,  "west_low": false },  "apply": { "model": "alaindustrial:block/copper_cable_arm", "y": 270 } },
+    { "when": { "west": true,  "west_low": true },   "apply": { "model": "alaindustrial:block/copper_cable_arm_low", "y": 270 } },
     { "when": { "up": true },    "apply": { "model": "alaindustrial:block/copper_cable_arm", "x": 270 } },
     { "when": { "down": true },  "apply": { "model": "alaindustrial:block/copper_cable_arm", "x": 90 } }
   ]

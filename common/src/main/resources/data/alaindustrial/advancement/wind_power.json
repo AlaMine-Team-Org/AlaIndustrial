@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:first_circuit",
+  "display": {
+    "icon": { "id": "alaindustrial:wind_mill" },
+    "title": { "translate": "advancements.alaindustrial.wind_power.title" },
+    "description": { "translate": "advancements.alaindustrial.wind_power.description" }
+  },
+  "criteria": {
+    "wind_mill": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:wind_mill" }] }
+    }
+  },
+  "requirements": [["wind_mill"]]
+}

@@ -37,6 +37,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * {@code north/south/east/west/up/down} connection properties (reused from {@link PipeBlock}),
  * so a multipart blockstate can join segments with arm models. Energy relay lives in
  * {@link CableBlockEntity}.
+ *
+ * <p>Horizontal arms toward a <b>half-block</b> neighbour (e.g. a Solar Panel, top at Y=8px) drop
+ * to the base of the block via a per-direction {@code *_low} flag — see {@link #ARMS_LOW} — so the
+ * sleeve hugs the slab's side instead of floating 3px above its surface (MOD-042). The flag is
+ * derived generically from the neighbour's collision shape ({@code maxY <= 0.5}), not from any
+ * specific block type, so any future half-block machine connects the same way.
  */
 public class CableBlock extends AbstractMachineBlock {
 	public static final MapCodec<CableBlock> CODEC = simpleCodec(CableBlock::new);
@@ -53,10 +59,52 @@ public class CableBlock extends AbstractMachineBlock {
 		ARMS.put(Direction.EAST, Block.box(11, 5, 5, 16, 11, 11));
 	}
 
+	/**
+	 * Low arms for horizontal connections to a half-block neighbour (e.g. a Solar Panel, top at
+	 * Y=8). The normal horizontal arm sits at Y=5..11 (the cable's vertical centre), so its upper
+	 * 3px would float in the air above a 0.5-block surface. These drop the sleeve to Y=0..5 so it
+	 * hugs the base/side of the slab — same 6px cross-section, lowered. See {@link #LOW_FLAGS}.
+	 */
+	private static final Map<Direction, VoxelShape> ARMS_LOW = new EnumMap<>(Direction.class);
+	static {
+		ARMS_LOW.put(Direction.NORTH, Shapes.or(
+				Block.box(5, 5, 2, 11, 11, 5),
+				Block.box(5, 2, 0, 11, 8, 2)));
+		ARMS_LOW.put(Direction.SOUTH, Shapes.or(
+				Block.box(5, 5, 11, 11, 11, 14),
+				Block.box(5, 2, 14, 11, 8, 16)));
+		ARMS_LOW.put(Direction.WEST, Shapes.or(
+				Block.box(2, 5, 5, 5, 11, 11),
+				Block.box(0, 2, 5, 2, 8, 11)));
+		ARMS_LOW.put(Direction.EAST, Shapes.or(
+				Block.box(11, 5, 5, 14, 11, 11),
+				Block.box(14, 2, 5, 16, 8, 11)));
+	}
+
+	/**
+	 * Per-horizontal-direction {@code *Low} flag — {@code true} when the neighbour in that direction
+	 * is a half-block (collision {@code maxY <= LOW_NEIGHBOUR_THRESHOLD}), so the arm drops to
+	 * {@link #ARMS_LOW}. Vertical directions are not flagged: a cable above/below a slab connects
+	 * at the cell centre already and is visually fine.
+	 */
+	private static final Map<Direction, BooleanProperty> LOW_FLAGS = new EnumMap<>(Direction.class);
+	static {
+		LOW_FLAGS.put(Direction.NORTH, BooleanProperty.create("north_low"));
+		LOW_FLAGS.put(Direction.SOUTH, BooleanProperty.create("south_low"));
+		LOW_FLAGS.put(Direction.WEST, BooleanProperty.create("west_low"));
+		LOW_FLAGS.put(Direction.EAST, BooleanProperty.create("east_low"));
+	}
+
+	/** Neighbours at or below this height (in blocks) are "half-blocks" for the low-arm geometry. */
+	private static final double LOW_NEIGHBOUR_THRESHOLD = 0.5;
+
 	public CableBlock(Properties properties) {
 		super(properties);
 		BlockState state = stateDefinition.any();
 		for (BooleanProperty prop : PipeBlock.PROPERTY_BY_DIRECTION.values()) {
+			state = state.setValue(prop, false);
+		}
+		for (BooleanProperty prop : LOW_FLAGS.values()) {
 			state = state.setValue(prop, false);
 		}
 		registerDefaultState(state);
@@ -71,6 +119,7 @@ public class CableBlock extends AbstractMachineBlock {
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		PipeBlock.PROPERTY_BY_DIRECTION.values().forEach(builder::add);
+		LOW_FLAGS.values().forEach(builder::add);
 	}
 
 	@Override
@@ -80,6 +129,10 @@ public class CableBlock extends AbstractMachineBlock {
 		BlockPos pos = context.getClickedPos();
 		for (Direction dir : Direction.values()) {
 			state = state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(dir), connectsTo(level, pos, dir));
+			BooleanProperty lowFlag = LOW_FLAGS.get(dir);
+			if (lowFlag != null) {
+				state = state.setValue(lowFlag, isLowNeighbour(level, pos.relative(dir)));
+			}
 		}
 		return state;
 	}
@@ -88,8 +141,15 @@ public class CableBlock extends AbstractMachineBlock {
 	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess,
 			BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState,
 			RandomSource random) {
-		return state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction),
+		state = state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction),
 				connectsTo(level, pos, direction));
+		BooleanProperty lowFlag = LOW_FLAGS.get(direction);
+		if (lowFlag != null) {
+			// Re-read at neighborPos so the shape sees any neighbour-dependent (updateShape) state,
+			// not the static default. level is a LevelReader, which extends BlockGetter.
+			state = state.setValue(lowFlag, isLowNeighbour(level, neighborPos));
+		}
+		return state;
 	}
 
 	/**
@@ -120,12 +180,28 @@ public class CableBlock extends AbstractMachineBlock {
 		return block instanceof AbstractMachineBlock machine && machine.isCableConnectable();
 	}
 
+	/**
+	 * Whether the block at {@code neighborPos} is a "low" (half-block) neighbour — collision shape
+	 * top at or below {@link #LOW_NEIGHBOUR_THRESHOLD} (0.5 blocks, e.g. a Solar Panel). Drives the
+	 * per-direction {@code *_low} flag so the horizontal arm drops to {@link #ARMS_LOW}. This reads
+	 * the neighbour's shape generically (no block-type special-casing), so any future half-block
+	 * machine connects the same way. {@link LevelReader} extends {@link BlockGetter}, so it satisfies
+	 * {@link BlockState#getShape(BlockGetter, BlockPos)}; empty shapes (air, fluids) are not low.
+	 */
+	private static boolean isLowNeighbour(LevelReader level, BlockPos neighborPos) {
+		VoxelShape shape = level.getBlockState(neighborPos).getShape(level, neighborPos);
+		return !shape.isEmpty() && shape.bounds().maxY <= LOW_NEIGHBOUR_THRESHOLD;
+	}
+
 	@Override
 	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		VoxelShape shape = CORE;
 		for (Map.Entry<Direction, BooleanProperty> entry : PipeBlock.PROPERTY_BY_DIRECTION.entrySet()) {
+			Direction dir = entry.getKey();
 			if (state.getValue(entry.getValue())) {
-				shape = Shapes.or(shape, ARMS.get(entry.getKey()));
+				BooleanProperty lowFlag = LOW_FLAGS.get(dir);
+				VoxelShape arm = lowFlag != null && state.getValue(lowFlag) ? ARMS_LOW.get(dir) : ARMS.get(dir);
+				shape = Shapes.or(shape, arm);
 			}
 		}
 		return shape;

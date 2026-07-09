@@ -219,10 +219,14 @@ public final class NetworkVisualizationClient {
 	 * different offsets. The cell centre is on the block grid, so orthogonally-adjacent cables line up
 	 * into perfectly straight axis-aligned tubes, matching how the cable blocks themselves are laid out.
 	 *
-	 * <p>Vertically, endpoints (producers/consumers) follow their collision shape so a half-height model
-	 * like the Solar Panel gets its marker sitting on the panel rather than floating at the cell centre
-	 * above it; cables always use the cell centre (their arms skew the vertical bounds just as badly as
-	 * the horizontal ones, so the shape can't be trusted for them on any axis).
+	 * <p>Vertically, endpoints (producers/consumers) follow their collision shape. A full-height
+	 * machine (shape {@code maxY == 1.0}) is anchored at its vertical centre (cell centre), so a tube
+	 * meets it mid-face. A <b>half-block</b> endpoint (shape {@code maxY < 1.0}, e.g. a Solar Panel
+	 * with {@code maxY == 0.5}) is anchored on its <i>top surface</i> — otherwise the marker would sit
+	 * at the slab's vertical centre (0.25) and a tube from an adjacent cable would appear to plunge
+	 * into the panel rather than land on it (MOD-042). Cables always use the cell centre (their arms
+	 * skew the vertical bounds just as badly as the horizontal ones, so the shape can't be trusted
+	 * for them on any axis).
 	 */
 	private static Vec3 nodeCenter(ClientLevel level, BlockPos pos) {
 		double y = pos.getY() + 0.5;
@@ -230,7 +234,9 @@ public final class NetworkVisualizationClient {
 			VoxelShape shape = level.getBlockState(pos).getShape(level, pos);
 			if (!shape.isEmpty()) {
 				AABB bounds = shape.bounds();
-				y = pos.getY() + (bounds.minY + bounds.maxY) / 2.0;
+				// Half-block endpoints (e.g. Solar Panel, maxY=0.5) anchor on their top surface; full
+				// cubes anchor at the vertical centre. Keeps full machines mid-face, no regression.
+				y = pos.getY() + (bounds.maxY < 1.0 ? bounds.maxY : (bounds.minY + bounds.maxY) / 2.0);
 			}
 		}
 		return new Vec3(pos.getX() + 0.5, y, pos.getZ() + 0.5);

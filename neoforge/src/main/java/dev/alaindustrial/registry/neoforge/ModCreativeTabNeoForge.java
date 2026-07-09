@@ -16,7 +16,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  * title, Macerator icon and item list, so both loaders show the identical "Ala Industrial" tab.
  *
  * <p>Release-hidden blocks (pump, non-copper cables — MOD-010) are intentionally omitted here too, matching
- * the Fabric {@code displayItems} list.
+ * the Fabric {@code displayItems} list. The water mill + high-altitude/storm windmills are likewise
+ * temporarily hidden from the player (no tab entry; the {@code water_mill} recipe is removed).
  */
 public final class ModCreativeTabNeoForge {
 	public static final DeferredRegister<CreativeModeTab> TABS =
@@ -33,10 +34,7 @@ public final class ModCreativeTabNeoForge {
 						output.accept(ModItemsNeoForge.MOONLIT_SOLAR_PANEL_ITEM.get());
 						output.accept(ModItemsNeoForge.GENERATOR_ITEM.get());
 						output.accept(ModItemsNeoForge.GEOTHERMAL_GENERATOR_ITEM.get());
-						output.accept(ModItemsNeoForge.WATER_MILL_ITEM.get());
 						output.accept(ModItemsNeoForge.WIND_MILL_ITEM.get());
-						output.accept(ModItemsNeoForge.HIGH_ALTITUDE_WIND_MILL_ITEM.get());
-						output.accept(ModItemsNeoForge.STORM_WIND_MILL_ITEM.get());
 						// Machines
 						output.accept(ModItemsNeoForge.MACERATOR_ITEM.get());
 						output.accept(ModItemsNeoForge.ELECTRIC_FURNACE_ITEM.get());

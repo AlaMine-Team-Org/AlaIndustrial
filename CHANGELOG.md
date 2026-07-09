@@ -1,22 +1,22 @@
-## 0.1.10
+## 0.1.11
 
-<p><img alt="Ala Industrial 0.1.10 — a wooden wind turbine with its rotor blades atop a pole, facing the open sky in a sunny savanna" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.10/release-media/v0.1.10/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.11 update preview — wind turbine with rotor and generator blocks" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.11/release-media/v0.1.11/changelog.png" width="720"></p>
 
-Solar Panels now hum while they work, Wind Mills are now Wind Turbines, and the Storm Turbine is stronger in bad weather.
+Polish for wind turbines and solar panels, a cleaner status command, and a cleaner cable connection.
 
-### Added
+### Gameplay
 
-- **Solar Panels now hum** while generating, and go quiet when they stop (at night, in rain, under cover).
+- **Windmill blades no longer clip through walls.** A solid block in the rotor's path stops the turbine and shows **Obstructed** in the menu.
+- **Wind Turbine has its own advancement**, like the other generators.
 
-### Changed
+### Quality of Life
 
-- **Wind Mills are now Wind Turbines.** New names for all three mills across every language. Display-only — existing worlds keep working.
-- **Storm Turbine hits harder in bad weather** — a thunderstorm now pushes it to its full cap.
-- **Mills show a proper output port on the back**, matching the Battery Box.
-- **Refreshed the mod description** for listing pages and the in-game mod list.
+- **Solar Panels are quieter.** Each panel is now only audible within 10 blocks; beyond that, silent.
+- **Evolution recipes show an info page.** Pressing the recipe key on the Daylight or Moonlit Solar Panel now explains how to evolve it, instead of opening an empty page.
+- **`/ala status` is readable** — structured, color-coded sections instead of a wall of text.
+- **Cable connects to half-height blocks cleanly**, stepping down to the block's side instead of floating.
 
-### Fixed
+### Changes
 
-- **Removed the click at the loop point** of the Solar Panel hum.
-- **Fixed the rotor freezing** after picking a mill up and placing it back.
-- **Rotor and chip slots now take only one item** (they allowed a full stack before).
+- **Upgraded turbines renamed** to Sky Turbine and Storm Turbine. Existing worlds keep working.
+- **Upgraded turbines get a cleaner menu after evolution** — no chip slot, just the rotor and energy bar.

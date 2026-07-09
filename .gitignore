@@ -44,3 +44,6 @@ site/
 # .env.example is the documented placeholder — keep it tracked.
 !.env.example
 tools/tts/output/
+# Dubbing/voice-clone workspace: source audio (15 MB+), cloned samples, transcripts,
+# generated mp3 segments and per-run state — all local, regenerated on demand.
+tools/tts/_dub/

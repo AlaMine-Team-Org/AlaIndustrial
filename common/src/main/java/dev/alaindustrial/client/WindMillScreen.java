@@ -19,6 +19,8 @@ import net.minecraft.world.entity.player.Inventory;
  * SolarPanelScreen:
  *   - Energy bar : UV(176,48..91) orange with tick marks, blitted bottom-up.
  *   - Status gear: UV(177,0..12) blue gear when the mill is generating (breeze/gale/storm).
+ *   - Status text: centred translated label explaining why an idle mill is stopped (no rotor /
+ *     roofed / obstructed / calm), so the player can fix it without guessing.
  *   - Evo bar    : UV(176,17) orange (day chip → high-altitude) or UV(176,32) blue (night chip → storm).
  *
  * Layout matches the supplied mockup: energy bar on the left, rotor slot in the center, chip slot on
@@ -45,6 +47,9 @@ public class WindMillScreen extends AbstractContainerScreen<WindMillMenu> {
 	private static final int   STATUS_FRAME_H = 13;
 	private static final float STATUS_UV_X     = 177.0F;
 	private static final float STATUS_UV_Y     = 0.0F;
+
+	// ── Idle-status text row (centred, between the rotor slot and the evolution bar) ──
+	private static final int STATUS_TEXT_Y = 50;
 
 	// ── Evo bar fill zone (x=55..130, y=70..76 = 76×7) ─────────────────────────
 	private static final int   EVO_X          = 55;
@@ -117,8 +122,33 @@ public class WindMillScreen extends AbstractContainerScreen<WindMillMenu> {
 					TEX_SIZE, TEX_SIZE);
 		}
 
-		// No foreground text in the machine area: the wind-mill layout is icon/slot driven, and
-		// vanilla labels are too wide in several locales for the compact top panel.
+		// ── Status text — explain WHY the mill is idle ───────────────────────────
+		// While generating (breeze/gale/storm) the gear icon above is enough; when the mill is stopped
+		// the player needs to see the reason at a glance. Each idle mode maps to a translated label drawn
+		// centered in the empty band between the rotor slot (ends y≈40) and the evolution bar (y=70).
+		drawStatusText(graphics, mode, x, y);
+	}
+
+	/** Centered status label for idle modes; nothing is drawn when the mill is generating. */
+	private void drawStatusText(GuiGraphicsExtractor graphics, int mode, int x, int y) {
+		Component label = modeLabel(mode);
+		if (label == null) {
+			return; // generating (or generating-capable) — the gear icon covers it
+		}
+		int tx = x + (this.imageWidth - this.font.width(label)) / 2;
+		graphics.text(this.font, label, tx, y + STATUS_TEXT_Y, GuiStyle.TEXT_DIM, false);
+	}
+
+	/** Map a wind-mill mode code to its translated status label, or {@code null} while generating. */
+	private static Component modeLabel(int mode) {
+		String key = switch (mode) {
+			case WindMillBlockEntity.MODE_NO_ROTOR -> "gui.alaindustrial.wind_mill.mode.no_rotor";
+			case WindMillBlockEntity.MODE_ROOFED -> "gui.alaindustrial.wind_mill.mode.roofed";
+			case WindMillBlockEntity.MODE_OBSTRUCTED -> "gui.alaindustrial.wind_mill.mode.obstructed";
+			case WindMillBlockEntity.MODE_CALM -> "gui.alaindustrial.wind_mill.mode.calm";
+			default -> null; // breeze/gale/storm — generating, the gear icon is the indicator
+		};
+		return key == null ? null : Component.translatable(key);
 	}
 
 	@Override
