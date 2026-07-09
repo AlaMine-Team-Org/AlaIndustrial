@@ -93,4 +93,36 @@ public final class SolarSky {
 	public static boolean snowLayerAbove(Level level, BlockPos panelPos) {
 		return level.getBlockState(panelPos.above()).getBlock() == Blocks.SNOW;
 	}
+
+	/**
+	 * Whether a day-type panel (T1 neutral / T2 daylight) is currently producing, derived purely from
+	 * side-agnostic world state. Mirrors the production verdict of {@code produce()} in
+	 * {@code SolarPanelBlockEntity} / {@code DaylightSolarPanelBlockEntity} without touching server-only
+	 * fields: Overworld, day, open/translucent sky, and no rain/thunder blackout. Snow and partial
+	 * (filtered) light still count as active — they only dim output, they don't silence it. Used by the
+	 * ambient hum (pattern C) so the loop fades when the panel genuinely goes dark.
+	 */
+	public static boolean isDaylitActive(Level level, BlockPos pos) {
+		if (!level.dimension().equals(Level.OVERWORLD) || !level.isBrightOutside()) {
+			return false;
+		}
+		if (classify(level, pos) == Access.BLOCKED) {
+			return false;
+		}
+		// Rain/thunder blackouts day panels (snow / partial / clear all keep producing).
+		return classifyWeather(level, pos) != Weather.RAIN;
+	}
+
+	/**
+	 * Whether the night-type panel (T2 moonlit) is currently producing, derived purely from side-agnostic
+	 * world state. Mirrors {@code MoonlitSolarPanelBlockEntity#produce()}: Overworld, night, and
+	 * open/translucent sky. Rain keeps a trickle (so it stays "active"), snow/partial/clear likewise —
+	 * only day or a fully blocked sky silence it.
+	 */
+	public static boolean isMoonlitActive(Level level, BlockPos pos) {
+		if (!level.dimension().equals(Level.OVERWORLD) || level.isBrightOutside()) {
+			return false;
+		}
+		return classify(level, pos) != Access.BLOCKED;
+	}
 }

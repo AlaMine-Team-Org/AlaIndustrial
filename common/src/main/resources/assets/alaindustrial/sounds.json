@@ -17,6 +17,15 @@
       }
     ]
   },
+  "solar_panel_hum": {
+    "subtitle": "subtitles.alaindustrial.solar_panel_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:solar_panel_hum",
+        "stream": false
+      }
+    ]
+  },
   "iron_chest_open": {
     "subtitle": "subtitles.alaindustrial.iron_chest_open",
     "sounds": [

@@ -1,6 +1,5 @@
 package dev.alaindustrial.client.sound;
 
-import dev.alaindustrial.block.LitMachineBlock;
 import dev.alaindustrial.block.MachineHumProvider;
 import dev.alaindustrial.sound.MachineHum;
 import java.util.HashMap;
@@ -14,11 +13,12 @@ import net.minecraft.world.level.block.state.BlockState;
  * Client-side manager for machine hum loops. Called once per client tick for every loaded
  * {@link MachineHumProvider} block entity (via {@code humMachineTicker}). It keeps at most one
  * looping {@link MachineHumSoundInstance} per position: it starts the loop when the machine is
- * working ({@code lit=true}) and the listener is within {@link #START_DISTANCE_SQR} — deliberately
- * larger than the sound's audible radius, so the loop is already playing (silently) before it can be
- * heard and ramps up smoothly on approach instead of snapping on. The instance self-terminates and
- * this map drops it once it is no longer active. Installed from each loader's client entrypoint via
- * {@link #register()}; client-only, never referenced on a dedicated server.
+ * {@linkplain MachineHumProvider#isWorking working} and the listener is within
+ * {@link #START_DISTANCE_SQR} — deliberately larger than the sound's audible radius, so the loop is
+ * already playing (silently) before it can be heard and ramps up smoothly on approach instead of
+ * snapping on. The instance self-terminates and this map drops it once it is no longer active.
+ * Installed from each loader's client entrypoint via {@link #register()}; client-only, never
+ * referenced on a dedicated server.
  */
 public final class MachineHumClientHook implements MachineHum.ClientHook {
 
@@ -52,7 +52,7 @@ public final class MachineHumClientHook implements MachineHum.ClientHook {
 			instance = null;
 		}
 
-		boolean working = state.hasProperty(LitMachineBlock.LIT) && state.getValue(LitMachineBlock.LIT);
+		boolean working = hum.isWorking(level, pos, state);
 		if (!working || instance != null) {
 			return;
 		}

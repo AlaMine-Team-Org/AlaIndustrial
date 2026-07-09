@@ -85,6 +85,11 @@ public class IndustrializationFabric implements ModInitializer {
 				dev.alaindustrial.registry.ModSounds.GENERATOR_HUM_ID,
 				dev.alaindustrial.registry.ModSounds.createGeneratorHum());
 		dev.alaindustrial.registry.ModSounds.GENERATOR_HUM = () -> generatorHum;
+		net.minecraft.sounds.SoundEvent solarPanelHum = net.minecraft.core.Registry.register(
+				net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT,
+				dev.alaindustrial.registry.ModSounds.SOLAR_PANEL_HUM_ID,
+				dev.alaindustrial.registry.ModSounds.createSolarPanelHum());
+		dev.alaindustrial.registry.ModSounds.SOLAR_PANEL_HUM = () -> solarPanelHum;
 		net.minecraft.sounds.SoundEvent ironChestOpen = net.minecraft.core.Registry.register(
 				net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT,
 				dev.alaindustrial.registry.ModSounds.IRON_CHEST_OPEN_ID,

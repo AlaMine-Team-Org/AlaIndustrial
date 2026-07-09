@@ -66,8 +66,13 @@ public final class Config {
 	/** Hard cap on high-altitude wind-mill EU/t after the weather multiplier. */
 	public static int highAltWindMillMaxEuPerTick = 16;
 	// --- Storm wind mill (T2, LV) — boosted by weather ---
-	/** Clear-sky height cap for the storm variant: same base shape as T1, but weather multipliers are stronger. */
-	public static int stormWindMillMaxBaseEuPerTick = 4;
+	/**
+	 * Clear-sky height cap for the storm variant: same height step as T1 (16 blocks/+1), but raised above T1
+	 * so the thunder multiplier (×3) actually reaches the T2 cap: base 6 × thunder 3 = 18 → clamped to 16.
+	 * At 4 (the old value) the peak was only 12, leaving the T2 cap dead and the storm mill strictly weaker
+	 * than the high-altitude T2. Now both T2 mills reach 16, but via different reliability profiles.
+	 */
+	public static int stormWindMillMaxBaseEuPerTick = 6;
 	/** Weather multiplier for the storm variant when it is raining (not thundering). */
 	public static float stormWindMillRainFactor = 2.0f;
 	/** Weather multiplier for the storm variant when it is thundering. */

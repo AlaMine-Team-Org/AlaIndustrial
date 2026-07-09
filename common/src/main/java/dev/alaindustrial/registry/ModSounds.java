@@ -40,6 +40,19 @@ public final class ModSounds {
 		return SoundEvent.createVariableRangeEvent(GENERATOR_HUM_ID);
 	}
 
+	/** The registry id for the solar panel ambient hum (lit-less generators — pattern C). */
+	public static final Identifier SOLAR_PANEL_HUM_ID = Industrialization.id("solar_panel_hum");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> SOLAR_PANEL_HUM = () -> {
+		throw new IllegalStateException("ModSounds.SOLAR_PANEL_HUM read before its loader bound it");
+	};
+
+	/** Build the solar-panel-hum event instance both loaders register. */
+	public static SoundEvent createSolarPanelHum() {
+		return SoundEvent.createVariableRangeEvent(SOLAR_PANEL_HUM_ID);
+	}
+
 	/** The registry id for the iron chest open sound (lid lifts). */
 	public static final Identifier IRON_CHEST_OPEN_ID = Industrialization.id("iron_chest_open");
 

@@ -113,6 +113,13 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 			}
 			this.progress = 0;
 			this.maxProgress = MODE_NO_ROTOR;
+			// Invalidate the sampling cache so a rotor re-install forces an immediate resample +
+			// sync on the next tick (sampleCounter % sampleTicks == 0 at 0). Otherwise the cached
+			// rate survives the empty window and, being unchanged, skips the sync — the client keeps
+			// production at 0 and the blades freeze even though the rotor is back in place.
+			this.sampleCounter = 0;
+			this.cachedRate = 0;
+			this.cachedMode = MODE_NO_ROTOR;
 			return 0;
 		}
 

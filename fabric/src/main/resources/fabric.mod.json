@@ -3,7 +3,7 @@
 	"id": "alaindustrial",
 	"version": "${version}",
 	"name": "Ala Industrial",
-	"description": "EU/FE tech mod for Fabric and NeoForge. Build an industrial power grid: generators, cables, Battery Box, four processing machines and network diagnostics. LV tier ready, MV/HV planned.",
+	"description": "An EU/FE tech mod for Minecraft 26.2 (Fabric and NeoForge). Build an industrial power grid with wind, solar and water generators, cables and a Battery Box, run ore through macerators, extractors and an electric furnace, mine four new metals — tin, silver, nickel and uranium — and store it all in the Iron Chest. LV tier ready, MV/HV planned.",
 	"authors": [
 		"Ala Team"
 	],

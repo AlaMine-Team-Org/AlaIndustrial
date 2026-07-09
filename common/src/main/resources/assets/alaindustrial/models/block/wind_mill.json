@@ -6,7 +6,7 @@
     "up": "alaindustrial:block/wind_mill_top",
     "north": "alaindustrial:block/wind_mill_front",
     "east": "alaindustrial:block/wind_mill_side",
-    "south": "alaindustrial:block/wind_mill_back",
+    "south": "alaindustrial:block/battery_box_front",
     "west": "alaindustrial:block/wind_mill_side"
   }
 }

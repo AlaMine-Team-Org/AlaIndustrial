@@ -1,6 +1,5 @@
 package dev.alaindustrial.client.sound;
 
-import dev.alaindustrial.block.LitMachineBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -14,8 +13,9 @@ import net.minecraft.world.level.block.state.BlockState;
  * Continuous looping ambient hum for a working machine, positioned at a block. Unlike a periodic
  * server-side {@code playSound}, this loops on the client so the sound engine attenuates it smoothly
  * as the listener moves — approaching a running machine ramps up from silence instead of snapping on
- * with a delay. The instance self-terminates when the block stops working ({@code lit=false}), is
- * removed/replaced, or the listener leaves range; the manager then re-creates it on demand.
+ * with a delay. The instance self-terminates when the block {@linkplain
+ * dev.alaindustrial.block.MachineHumProvider#isWorking stops working}, is removed/replaced, or the
+ * listener leaves range; the manager then re-creates it on demand.
  *
  * <p>Client-only class (references {@code net.minecraft.client.*}). It is only ever loaded on the
  * physical client — the block's {@code humMachineTicker} dispatches through {@code MachineHum.CLIENT},
@@ -50,9 +50,12 @@ public final class MachineHumSoundInstance extends AbstractTickableSoundInstance
 			return;
 		}
 		BlockState state = mc.level.getBlockState(pos);
+		// The block decides whether it is still working (Pattern A: lit state; Pattern C: derived
+		// from world state via MachineHumProvider#isWorking). Re-checking every tick is what lets the
+		// loop fall silent when a solar panel stops producing, with no server round-trip.
 		boolean working = state.is(block)
-				&& state.hasProperty(LitMachineBlock.LIT)
-				&& state.getValue(LitMachineBlock.LIT);
+				&& block instanceof dev.alaindustrial.block.MachineHumProvider provider
+				&& provider.isWorking(mc.level, pos, state);
 		if (!working || mc.player.distanceToSqr(x, y, z) > STOP_DISTANCE_SQR) {
 			stop();
 		}

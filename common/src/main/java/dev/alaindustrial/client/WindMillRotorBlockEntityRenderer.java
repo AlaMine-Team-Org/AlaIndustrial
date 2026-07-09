@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.Direction;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -68,8 +69,14 @@ public final class WindMillRotorBlockEntityRenderer<T extends MachineBlockEntity
 		poseStack.translate(0.0F, 0.0F, -0.58F);
 		poseStack.mulPose(Axis.ZP.rotation(state.angle));
 		TextureAtlasSprite sprite = sprites.get(SPRITE);
+		// The rotor is a decorative overhang drawn as a flat cutout quad in front of the block. It
+		// spans 2×2 blocks (HALF_SIZE) and floats off the face, so positional block light at the BE's
+		// own coords leaves its corners dark — and the NeoForge custom-geometry pipeline shades
+		// cutoutBlockItemSheet darker than Fabric's for the same light value. Forcing FULL_BRIGHT
+		// (the vanilla pattern for flags/skulls/shields) makes the blades render at full brightness,
+		// identically on both loaders and regardless of where the block sits.
 		submitNodeCollector.submitCustomGeometry(poseStack, RENDER_TYPE,
-				(pose, consumer) -> renderRotorQuad(pose, consumer, sprite, state.lightCoords));
+				(pose, consumer) -> renderRotorQuad(pose, consumer, sprite, LightCoordsUtil.FULL_BRIGHT));
 		poseStack.popPose();
 	}
 

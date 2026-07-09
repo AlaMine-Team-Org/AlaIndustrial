@@ -2,7 +2,11 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
+import dev.alaindustrial.core.SolarSky;
+import dev.alaindustrial.registry.ModSounds;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -15,7 +19,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /** Block for the Daylight Solar Panel — T2 day branch, the stronger day-mirror of {@link SolarPanelBlock}. */
-public class DaylightSolarPanelBlock extends AbstractMachineBlock {
+public class DaylightSolarPanelBlock extends AbstractMachineBlock implements MachineHumProvider {
 	public static final MapCodec<DaylightSolarPanelBlock> CODEC = simpleCodec(DaylightSolarPanelBlock::new);
 
 	/** Half-block (8px) collision/outline matching the slab model — keeps occlusion off and shape in sync. */
@@ -43,6 +47,23 @@ public class DaylightSolarPanelBlock extends AbstractMachineBlock {
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
-		return machineTicker(level);
+		return humMachineTicker(level);
+	}
+
+	// --- Ambient hum (pattern C: lit-less ambient loop, silent when the panel stops producing) ---
+
+	@Override
+	public Supplier<SoundEvent> humSound() {
+		return ModSounds.SOLAR_PANEL_HUM;
+	}
+
+	@Override
+	public float humVolume() {
+		return 0.40f;
+	}
+
+	@Override
+	public boolean isWorking(Level level, BlockPos pos, BlockState state) {
+		return SolarSky.isDaylitActive(level, pos);
 	}
 }

@@ -28,18 +28,30 @@ public class WindMillMenu extends MachineMenu {
 
 	@Override
 	protected void addMachineSlots() {
-		// Rotor slot (center) — only a windmill_rotor may be inserted.
+		// Rotor slot (center) — only a windmill_rotor may be inserted, one at a time. The rotor is a
+		// single installed component (spec: stack size 1); it may still stack to 64 in the player's
+		// inventory for transport, but only one mounts into the mill.
 		addSlot(new Slot(machine, WindMillBlockEntity.ROTOR_SLOT, 84, 23) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return machine.canPlaceItem(WindMillBlockEntity.ROTOR_SLOT, stack);
 			}
+
+			@Override
+			public int getMaxStackSize(ItemStack stack) {
+				return 1;
+			}
 		});
-		// Evolution-chip slot (right) — only altitude/storm chips may be inserted.
+		// Evolution-chip slot (right) — only altitude/storm chips may be inserted, one at a time.
 		addSlot(new Slot(machine, WindMillBlockEntity.CHIP_SLOT, 149, 39) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return machine.canPlaceItem(WindMillBlockEntity.CHIP_SLOT, stack);
+			}
+
+			@Override
+			public int getMaxStackSize(ItemStack stack) {
+				return 1;
 			}
 		});
 	}
