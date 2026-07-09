@@ -15,6 +15,7 @@ import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import dev.alaindustrial.item.NetworkScanData;
+import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -39,6 +40,12 @@ public final class MachineTooltips {
 		boolean detailed = shiftDown || AlaClientConfig.alwaysDetailedTooltips;
 		if (stack.getItem() instanceof NetworkAnalyzerItem) {
 			addNetworkAnalyzerTooltip(stack, lines, detailed);
+			return;
+		}
+		// Plain-item components (not BlockItem) — the windmill rotor is the only such item with a
+		// tooltip. Its line describes what it does in the wind mill, not standalone stats.
+		if (stack.is(ModContent.WINDMILL_ROTOR.get())) {
+			addRotorTooltip(lines, detailed);
 			return;
 		}
 		if (!(stack.getItem() instanceof BlockItem bi)) {
@@ -113,6 +120,26 @@ public final class MachineTooltips {
 					scan.supply(), scan.demand()).withStyle(ChatFormatting.GRAY));
 			lines.add(Component.translatable("tooltip.alaindustrial.network_analyzer.moved", scan.moved())
 					.withStyle(ChatFormatting.GRAY));
+		} else {
+			lines.add(Component.translatable("tooltip.alaindustrial.hold_shift")
+					.withStyle(ChatFormatting.DARK_GRAY));
+		}
+	}
+
+	/**
+	 * Tooltip for the wooden rotor — describes its role in the wind mill: required to generate,
+	 * and the base EU/t a T1 wind mill produces at full height. Numbers come from {@link Config} so
+	 * the tooltip stays in sync with the balance knobs (the rotor itself carries no stats — it is
+	 * a gate, the mill's output depends on height/weather).
+	 */
+	private static void addRotorTooltip(List<Component> lines, boolean detailed) {
+		// Always-on line: what it does.
+		lines.add(Component.translatable("tooltip.alaindustrial.rotor_role")
+				.withStyle(ChatFormatting.GRAY));
+		// Base T1 output at full height (the cap), so a player can compare rotors without placing.
+		lines.add(tt("rotor_output", Config.windMillMaxEuPerTick));
+		if (detailed) {
+			lines.add(tier());
 		} else {
 			lines.add(Component.translatable("tooltip.alaindustrial.hold_shift")
 					.withStyle(ChatFormatting.DARK_GRAY));

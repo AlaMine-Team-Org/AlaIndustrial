@@ -16,6 +16,8 @@ import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
+import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
+import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.core.fabric.PortAsEnergyStorage;
 import dev.alaindustrial.core.fabric.TankAsFluidStorage;
 import java.util.Set;
@@ -56,6 +58,8 @@ public final class ModBlockEntities {
 	public static BlockEntityType<PumpBlockEntity> PUMP;
 	public static BlockEntityType<WaterMillBlockEntity> WATER_MILL;
 	public static BlockEntityType<WindMillBlockEntity> WIND_MILL;
+	public static BlockEntityType<HighAltitudeWindMillBlockEntity> HIGH_ALTITUDE_WIND_MILL;
+	public static BlockEntityType<StormWindMillBlockEntity> STORM_WIND_MILL;
 	// Iron chest is a pure Container (no EnergyPort), so no Team Reborn EnergyStorage.SIDED line below.
 	public static BlockEntityType<IronChestBlockEntity> IRON_CHEST;
 
@@ -89,6 +93,10 @@ public final class ModBlockEntities {
 				new BlockEntityType<>(WaterMillBlockEntity::new, Set.of(ModBlocks.WATER_MILL)));
 		WIND_MILL = register("wind_mill",
 				new BlockEntityType<>(WindMillBlockEntity::new, Set.of(ModBlocks.WIND_MILL)));
+		HIGH_ALTITUDE_WIND_MILL = register("high_altitude_wind_mill",
+				new BlockEntityType<>(HighAltitudeWindMillBlockEntity::new, Set.of(ModBlocks.HIGH_ALTITUDE_WIND_MILL)));
+		STORM_WIND_MILL = register("storm_wind_mill",
+				new BlockEntityType<>(StormWindMillBlockEntity::new, Set.of(ModBlocks.STORM_WIND_MILL)));
 		IRON_CHEST = register("iron_chest",
 				new BlockEntityType<>(IronChestBlockEntity::new, Set.of(ModBlocks.IRON_CHEST)));
 
@@ -106,6 +114,8 @@ public final class ModBlockEntities {
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),PUMP);
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),WATER_MILL);
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),WIND_MILL);
+		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),HIGH_ALTITUDE_WIND_MILL);
+		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),STORM_WIND_MILL);
 
 		// MOD-022 registration facade: publish each eagerly-registered BlockEntityType into the
 		// loader-neutral ModContent so content BE constructors (which read ModContent.X_BE.get() at
@@ -124,6 +134,8 @@ public final class ModBlockEntities {
 		ModContent.PUMP_BE = () -> PUMP;
 		ModContent.WATER_MILL_BE = () -> WATER_MILL;
 		ModContent.WIND_MILL_BE = () -> WIND_MILL;
+		ModContent.HIGH_ALTITUDE_WIND_MILL_BE = () -> HIGH_ALTITUDE_WIND_MILL;
+		ModContent.STORM_WIND_MILL_BE = () -> STORM_WIND_MILL;
 		ModContent.IRON_CHEST_BE = () -> IRON_CHEST;
 
 		// Fluid (lava) storages: the geothermal generator accepts lava, the pump exposes its tank. Both

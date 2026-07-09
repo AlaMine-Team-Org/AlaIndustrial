@@ -23,7 +23,9 @@ import net.minecraft.world.phys.BlockHitResult;
 /**
  * Shared base for Industrialization machine blocks: model rendering, a server ticker that drives the
  * {@link MachineBlockEntity}, and right-click to open the block's menu (when its block entity
- * is a {@link MenuProvider}). Concrete blocks supply their codec + block entity factory.
+ * is a {@link MenuProvider}). Non-menu blocks (e.g. {@code CableBlock}) fall through to PASS so
+ * vanilla placement still runs — see {@link #useWithoutItem}. Concrete blocks supply their codec +
+ * block entity factory.
  */
 public abstract class AbstractMachineBlock extends BaseEntityBlock {
 	protected AbstractMachineBlock(Properties properties) {
@@ -38,13 +40,20 @@ public abstract class AbstractMachineBlock extends BaseEntityBlock {
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
 			Player player, BlockHitResult hit) {
-		if (!level.isClientSide()) {
-			BlockEntity be = level.getBlockEntity(pos);
-			if (be instanceof MenuProvider provider) {
+		// MOD-039: only "consume" the right-click when this block actually has a menu to open
+		// (machines / chests / generators). Cables and other non-menu blocks have no GUI, so they
+		// must return PASS — otherwise vanilla's ServerPlayerGameMode treats the click as handled
+		// and never falls through to BlockItem.place, which is why a cable could not be placed
+		// flush against another cable (RMB was eaten). Returning PASS lets placement proceed while
+		// leaving GUI-bearing blocks unchanged (they still return SUCCESS on both sides).
+		BlockEntity be = level.getBlockEntity(pos);
+		if (be instanceof MenuProvider provider) {
+			if (!level.isClientSide()) {
 				player.openMenu(provider);
 			}
+			return InteractionResult.SUCCESS;
 		}
-		return InteractionResult.SUCCESS;
+		return InteractionResult.PASS;
 	}
 
 	/**
@@ -77,6 +86,20 @@ public abstract class AbstractMachineBlock extends BaseEntityBlock {
 			Containers.dropContents(level, pos, machine);
 		}
 		return super.playerWillDestroy(level, pos, state, player);
+	}
+
+	/**
+	 * Whether a cable should visually connect to this block (draw an arm + set the
+	 * {@code PipeBlock.PROPERTY_BY_DIRECTION} flag on the neighbour cable). Default {@code true}:
+	 * machines, generators, storage and cables themselves all expose an energy port, so they connect.
+	 * Pure-container blocks with no energy contract (e.g. {@link IronChestBlock}) override this to
+	 * {@code false} so the cable does not draw a misleading "energy goes here" arm toward them
+	 * (MOD-038). Kept at the Block level (not the block entity) so the connection state is correct
+	 * the instant the block is placed — no block-entity load race, the reason {@code CableBlock} uses
+	 * a block-type check in the first place.
+	 */
+	public boolean isCableConnectable() {
+		return true;
 	}
 
 	/** Server-only ticker that forwards to {@link MachineBlockEntity#serverTick}. */

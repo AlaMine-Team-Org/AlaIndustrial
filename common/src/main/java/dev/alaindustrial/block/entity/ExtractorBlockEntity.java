@@ -23,7 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * LV extractor — extracts items (blaze rod → blaze powder, cactus → dried kelp, gravel → flint)
+ * LV extractor — extracts items (blaze rod → blaze powder, gravel → flint)
  * spending EU over the configured number of ticks. Recipes are real vanilla recipes
  * ({@link ModRecipes#EXTRACTING}) loaded from {@code data/<ns>/recipe/extracting/*.json}; the input
  * may be an item or a tag (R-14/R-15).

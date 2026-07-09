@@ -53,6 +53,27 @@ public final class Config {
 	public static float windMillThunderFactor = 2.0f;
 	/** How often (ticks) the wind mill re-samples height/sky/weather; the rate is cached between samples. */
 	public static int windMillSampleTicks = 40;
+	/**
+	 * Active open-sky ticks (with a rotor installed and an evolution chip in the slot) needed to evolve
+	 * a base wind mill into its T2 branch (high-altitude / storm). Mirrors {@link #solarEvolveTicks}.
+	 */
+	public static int windMillEvolveTicks = 33_600;
+	// --- High-altitude wind mill (T2, LV) — boosted by height ---
+	/** Clear-sky height cap for the high-altitude variant: base EU/t = min((y − seaLevel) / blocksPerBase, this). */
+	public static int highAltWindMillMaxBaseEuPerTick = 8;
+	/** Blocks of height above sea level needed for +1 EU/t of base on the high-altitude variant (half the T1 16). */
+	public static int highAltWindMillBlocksPerBase = 8;
+	/** Hard cap on high-altitude wind-mill EU/t after the weather multiplier. */
+	public static int highAltWindMillMaxEuPerTick = 16;
+	// --- Storm wind mill (T2, LV) — boosted by weather ---
+	/** Clear-sky height cap for the storm variant: same base shape as T1, but weather multipliers are stronger. */
+	public static int stormWindMillMaxBaseEuPerTick = 4;
+	/** Weather multiplier for the storm variant when it is raining (not thundering). */
+	public static float stormWindMillRainFactor = 2.0f;
+	/** Weather multiplier for the storm variant when it is thundering. */
+	public static float stormWindMillThunderFactor = 3.0f;
+	/** Hard cap on storm wind-mill EU/t after the weather multiplier. */
+	public static int stormWindMillMaxEuPerTick = 16;
 	/** Output multiplier when a solar panel sees the sky through a translucent block (leaves, cobweb). MOD-004. */
 	public static float solarTransparentFactor = 0.5f;
 	/** Output multiplier under snow: a snow layer above the panel, or snowfall in a cold biome — MODE_SNOW. */
@@ -78,6 +99,8 @@ public final class Config {
 	public static int geothermalBuffer = 4000;
 	public static int waterMillBuffer = 4000;
 	public static int windMillBuffer = 4000;
+	/** Shared buffer for both T2 wind mills (high-altitude + storm). */
+	public static int t2WindMillBuffer = 8000;
 	public static int solarBuffer = 8000;
 	public static int cableBuffer = 64;
 
@@ -146,6 +169,20 @@ public final class Config {
 					if (windMillSampleTicks <= 0) {
 						windMillSampleTicks = 40;
 					}
+					windMillEvolveTicks = GsonHelper.getAsInt(o, "windMillEvolveTicks", windMillEvolveTicks);
+					if (windMillEvolveTicks <= 0) {
+						windMillEvolveTicks = 33_600;
+					}
+					highAltWindMillMaxBaseEuPerTick = GsonHelper.getAsInt(o, "highAltWindMillMaxBaseEuPerTick", highAltWindMillMaxBaseEuPerTick);
+					highAltWindMillBlocksPerBase = GsonHelper.getAsInt(o, "highAltWindMillBlocksPerBase", highAltWindMillBlocksPerBase);
+					if (highAltWindMillBlocksPerBase <= 0) {
+						highAltWindMillBlocksPerBase = 8;
+					}
+					highAltWindMillMaxEuPerTick = GsonHelper.getAsInt(o, "highAltWindMillMaxEuPerTick", highAltWindMillMaxEuPerTick);
+					stormWindMillMaxBaseEuPerTick = GsonHelper.getAsInt(o, "stormWindMillMaxBaseEuPerTick", stormWindMillMaxBaseEuPerTick);
+					stormWindMillRainFactor = GsonHelper.getAsFloat(o, "stormWindMillRainFactor", stormWindMillRainFactor);
+					stormWindMillThunderFactor = GsonHelper.getAsFloat(o, "stormWindMillThunderFactor", stormWindMillThunderFactor);
+					stormWindMillMaxEuPerTick = GsonHelper.getAsInt(o, "stormWindMillMaxEuPerTick", stormWindMillMaxEuPerTick);
 					solarTransparentFactor = GsonHelper.getAsFloat(o, "solarTransparentFactor", solarTransparentFactor);
 					solarSnowFactor = GsonHelper.getAsFloat(o, "solarSnowFactor", solarSnowFactor);
 					solarEvolveTicks = GsonHelper.getAsInt(o, "solarEvolveTicks", solarEvolveTicks);
@@ -160,6 +197,7 @@ public final class Config {
 					geothermalBuffer = GsonHelper.getAsInt(o, "geothermalBuffer", geothermalBuffer);
 					waterMillBuffer = GsonHelper.getAsInt(o, "waterMillBuffer", waterMillBuffer);
 					windMillBuffer = GsonHelper.getAsInt(o, "windMillBuffer", windMillBuffer);
+					t2WindMillBuffer = GsonHelper.getAsInt(o, "t2WindMillBuffer", t2WindMillBuffer);
 					solarBuffer = GsonHelper.getAsInt(o, "solarBuffer", solarBuffer);
 					cableBuffer = GsonHelper.getAsInt(o, "cableBuffer", cableBuffer);
 					machineEuPerTick = GsonHelper.getAsInt(o, "machineEuPerTick", machineEuPerTick);
@@ -203,6 +241,14 @@ public final class Config {
 		o.addProperty("windMillRainFactor", windMillRainFactor);
 		o.addProperty("windMillThunderFactor", windMillThunderFactor);
 		o.addProperty("windMillSampleTicks", windMillSampleTicks);
+		o.addProperty("windMillEvolveTicks", windMillEvolveTicks);
+		o.addProperty("highAltWindMillMaxBaseEuPerTick", highAltWindMillMaxBaseEuPerTick);
+		o.addProperty("highAltWindMillBlocksPerBase", highAltWindMillBlocksPerBase);
+		o.addProperty("highAltWindMillMaxEuPerTick", highAltWindMillMaxEuPerTick);
+		o.addProperty("stormWindMillMaxBaseEuPerTick", stormWindMillMaxBaseEuPerTick);
+		o.addProperty("stormWindMillRainFactor", stormWindMillRainFactor);
+		o.addProperty("stormWindMillThunderFactor", stormWindMillThunderFactor);
+		o.addProperty("stormWindMillMaxEuPerTick", stormWindMillMaxEuPerTick);
 		o.addProperty("solarTransparentFactor", solarTransparentFactor);
 		o.addProperty("solarSnowFactor", solarSnowFactor);
 		o.addProperty("solarEvolveTicks", solarEvolveTicks);
@@ -214,6 +260,7 @@ public final class Config {
 		o.addProperty("geothermalBuffer", geothermalBuffer);
 		o.addProperty("waterMillBuffer", waterMillBuffer);
 		o.addProperty("windMillBuffer", windMillBuffer);
+		o.addProperty("t2WindMillBuffer", t2WindMillBuffer);
 		o.addProperty("solarBuffer", solarBuffer);
 		o.addProperty("cableBuffer", cableBuffer);
 		o.addProperty("machineEuPerTick", machineEuPerTick);

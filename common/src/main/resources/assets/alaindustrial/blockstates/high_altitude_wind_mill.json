@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "alaindustrial:block/high_altitude_wind_mill"
+    },
+    "facing=south": {
+      "model": "alaindustrial:block/high_altitude_wind_mill",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "alaindustrial:block/high_altitude_wind_mill",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "alaindustrial:block/high_altitude_wind_mill",
+      "y": 90
+    }
+  }
+}

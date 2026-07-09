@@ -24,7 +24,8 @@
 			"dev.alaindustrial.gametest.EnergyFaceGameTest",
 			"dev.alaindustrial.gametest.PersistenceGameTest",
 			"dev.alaindustrial.gametest.WaterMillGameTest",
-			"dev.alaindustrial.gametest.WindMillGameTest"
+			"dev.alaindustrial.gametest.WindMillGameTest",
+			"dev.alaindustrial.gametest.CablePlacementGameTest"
 		]
 	}
 }

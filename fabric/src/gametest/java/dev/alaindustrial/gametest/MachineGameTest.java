@@ -340,12 +340,6 @@ public class MachineGameTest {
 		assertProduces(helper, ModBlocks.EXTRACTOR, new ItemStack(Items.GRAVEL, 4), Items.FLINT, 1);
 	}
 
-	/** @implements TC-EXTR-001-FUN02 — extractor: cactus → dried_kelp (single-output recipe). @covers R-GUI-02 */
-	@GameTest
-	public void tcExtr001Fun02b_extractorMakesDriedKelp(GameTestHelper helper) {
-		assertProduces(helper, ModBlocks.EXTRACTOR, new ItemStack(Items.CACTUS, 4), Items.DRIED_KELP, 1);
-	}
-
 	// ── 1→1 accounting (FUN02 family) — exactly one input item consumed per operation ─────────────
 
 	/**

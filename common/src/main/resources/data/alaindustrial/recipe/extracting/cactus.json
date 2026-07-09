@@ -1,9 +1,0 @@
-{
-  "type": "alaindustrial:extracting",
-  "ingredient": "minecraft:cactus",
-  "result": {
-    "id": "minecraft:dried_kelp",
-    "count": 1
-  },
-  "energy": 240
-}

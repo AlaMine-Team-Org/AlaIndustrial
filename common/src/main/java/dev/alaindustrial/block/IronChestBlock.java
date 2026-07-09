@@ -67,6 +67,18 @@ public class IronChestBlock extends HorizontalMachineBlock {
 		return CODEC;
 	}
 
+	/**
+	 * Iron chest is a pure 36-slot container with no energy port — its block entity is a vanilla
+	 * {@code BaseContainerBlockEntity}, not a {@link dev.alaindustrial.block.entity.MachineBlockEntity}.
+	 * A cable must therefore not draw an arm toward it (MOD-038): the inherited
+	 * {@code HorizontalMachineBlock → AbstractMachineBlock} typing is there only for the {@code facing}
+	 * property and the right-click-to-open-GUI hook, not because the chest is an energy block.
+	 */
+	@Override
+	public boolean isCableConnectable() {
+		return false;
+	}
+
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new IronChestBlockEntity(pos, state);

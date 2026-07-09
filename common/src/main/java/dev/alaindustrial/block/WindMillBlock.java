@@ -11,9 +11,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Wind mill block — a full-cube LV generator that faces the player on placement. The {@code facing}
- * front is energy-inert (via {@link dev.alaindustrial.block.entity.AbstractGeneratorBlockEntity}); the
- * other five faces emit EU. No {@code lit} state (production is passive, not fuel-driven), so it extends
+ * Wind mill block — a full-cube LV generator that faces the player on placement. Energy is emitted
+ * <b>only from the back face</b> (opposite of {@code facing}); the front and the four sides are
+ * energy-inert — see {@link dev.alaindustrial.block.entity.WindMillBlockEntity#energyRoleForFace}.
+ * No {@code lit} state (production is passive, not fuel-driven), so it extends
  * {@link HorizontalMachineBlock} rather than {@link LitMachineBlock}. The default full-cube shape is
  * inherited (no {@code getShape} override).
  */

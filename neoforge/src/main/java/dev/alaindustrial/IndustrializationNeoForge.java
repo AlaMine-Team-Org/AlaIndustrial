@@ -209,6 +209,10 @@ public final class IndustrializationNeoForge {
 				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
 		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.WIND_MILL.get(),
 				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
+		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.HIGH_ALTITUDE_WIND_MILL.get(),
+				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
+		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.STORM_WIND_MILL.get(),
+				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
 
 		BlockCapability<ResourceHandler<FluidResource>, Direction> fluidCap = Capabilities.Fluid.BLOCK;
 		event.registerBlockEntity(fluidCap, ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR.get(),

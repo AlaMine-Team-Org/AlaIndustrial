@@ -5,6 +5,8 @@ import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.core.WindMillOutput;
 import dev.alaindustrial.registry.ModBlocks;
+import dev.alaindustrial.registry.ModItems;
+import net.minecraft.world.item.ItemStack;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,6 +40,14 @@ public class WindMillGameTest {
 	private static final BlockPos POS = new BlockPos(1, 2, 1);
 
 	private static WindMillBlockEntity place(GameTestHelper helper) {
+		WindMillBlockEntity be = placeWithoutRotor(helper);
+		// The rotor is a generation gate: install one so the production tests see real output.
+		be.setItem(WindMillBlockEntity.ROTOR_SLOT, new ItemStack(ModItems.WINDMILL_ROTOR));
+		return be;
+	}
+
+	/** Place a mill with no rotor — for the gate test (no rotor → no generation). */
+	private static WindMillBlockEntity placeWithoutRotor(GameTestHelper helper) {
 		helper.setBlock(POS, ModBlocks.WIND_MILL);
 		WindMillBlockEntity be = helper.getBlockEntity(POS, WindMillBlockEntity.class);
 		if (be == null) {
@@ -194,19 +204,21 @@ public class WindMillGameTest {
 	}
 
 	/**
-	 * @implements TC-WINDMILL-001-CON01 — the mill pushes EU into a directly-adjacent BatteryBox (no cable).
-	 *     Its buffer is pre-filled so there is always EU to push; the battery on another face receives it.
+	 * @implements TC-WINDMILL-001-CON01 — the mill pushes EU into a BatteryBox placed against its BACK face
+	 *     (the only output face, opposite of FACING). FACING defaults to NORTH, so the back is SOUTH.
+	 *     The mill buffer is pre-filled so there is always EU to push.
 	 * @covers R-NRG-03, R-CON-01
 	 */
 	@GameTest(skyAccess = true, maxTicks = 120)
 	public void tcWindmill001Con01_pushesToAdjacentBattery(GameTestHelper helper) {
-		WindMillBlockEntity mill = place(helper);
+		WindMillBlockEntity mill = place(helper); // FACING defaults to NORTH → output face is SOUTH
 		mill.getEnergyStorage().amount = mill.getEnergyStorage().getCapacity(); // ample supply to push
 
-		BlockPos sink = POS.relative(Direction.EAST);
-		// BatteryBox input face = FACING (MOD-006); the mill sits on its WEST side, so face WEST.
+		// Place the BatteryBox on the mill's SOUTH (back/output) face. The mill sits on the battery's
+		// NORTH side, so the battery must face NORTH to expose its input (front) to the mill's output.
+		BlockPos sink = POS.relative(Direction.SOUTH);
 		helper.setBlock(sink, ModBlocks.BATTERY_BOX.defaultBlockState()
-				.setValue(dev.alaindustrial.block.HorizontalMachineBlock.FACING, Direction.WEST));
+				.setValue(dev.alaindustrial.block.HorizontalMachineBlock.FACING, Direction.NORTH));
 		BatteryBoxBlockEntity battery = helper.getBlockEntity(sink, BatteryBoxBlockEntity.class);
 		if (battery == null) {
 			helper.fail("battery_box block entity missing after placement");
@@ -214,31 +226,79 @@ public class WindMillGameTest {
 		battery.getEnergyStorage().amount = 0;
 		drive(mill, helper, 20);
 		if (battery.getEnergyStorage().getAmount() <= 0) {
-			helper.fail("adjacent battery_box received no EU from the wind mill");
+			helper.fail("battery_box on the back face received no EU from the wind mill");
 		}
 		helper.succeed();
 	}
 
 	/**
-	 * @implements TC-WINDMILL-001-PHY01 — the FACING (front) face emits no EU; the other five faces are
-	 *     OUT-only (generator face contract, R-NRG-03). FACING defaults to NORTH on a freshly-set block, and
-	 *     is production-inert either way (FACING never affects the passive rate).
+	 * @implements TC-WINDMILL-001-PHY01 — the mill emits EU only from its BACK face (opposite of FACING);
+	 *     the front and the four sides are inert (single-output contract, R-NRG-03). FACING = NORTH by
+	 *     default, so SOUTH is the sole OUT face; NORTH/EAST/WEST/UP/DOWN must not extract.
 	 * @covers R-NRG-03
 	 */
 	@GameTest
-	public void tcWindmill001Phy01_facingFaceInert(GameTestHelper helper) {
+	public void tcWindmill001Phy01_backFaceOnlyOutput(GameTestHelper helper) {
 		helper.setBlock(POS, ModBlocks.WIND_MILL.defaultBlockState()
 				.setValue(dev.alaindustrial.block.HorizontalMachineBlock.FACING, Direction.NORTH));
-		EnergyStorage front = EnergyStorage.SIDED.find(helper.getLevel(), helper.absolutePos(POS), Direction.NORTH);
-		if (front != null && front.supportsExtraction()) {
-			helper.fail("wind mill FACING (front) face must not emit EU");
+		// Only the back face (SOUTH) should support extraction.
+		EnergyStorage back = EnergyStorage.SIDED.find(helper.getLevel(), helper.absolutePos(POS), Direction.SOUTH);
+		if (back == null || !back.supportsExtraction()) {
+			helper.fail("wind mill BACK (south) face must emit EU");
 		}
+		// The front and all four sides must be inert.
 		for (Direction d : new Direction[]{
-				Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.UP, Direction.DOWN}) {
+				Direction.NORTH, Direction.EAST, Direction.WEST, Direction.UP, Direction.DOWN}) {
 			EnergyStorage p = EnergyStorage.SIDED.find(helper.getLevel(), helper.absolutePos(POS), d);
-			if (p == null || !p.supportsExtraction()) {
-				helper.fail("wind mill face " + d + " must emit EU");
+			if (p != null && p.supportsExtraction()) {
+				helper.fail("wind mill face " + d + " must NOT emit EU (only the back face does)");
 			}
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-FUN02 — with no rotor in the slot the mill produces nothing, even under open
+	 *     sky and storm. The rotor is a generation gate (progression), not just cosmetic.
+	 * @covers R-NRG-04
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Fun02_noRotorProducesNothing(GameTestHelper helper) {
+		WindMillBlockEntity mill = placeWithoutRotor(helper);
+		setRaining(helper, true); // worst case: storm would normally maximise output
+		mill.getEnergyStorage().amount = 0;
+		drive(mill, helper, Config.windMillSampleTicks * 2 + 5);
+		long got = mill.getEnergyStorage().getAmount();
+		if (got != 0) {
+			helper.fail("rotorless wind mill generated " + got + " EU; expected 0 (no rotor = no generation)");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-FUN03 — with an altitude chip and a rotor installed, the evolve counter
+	 *     advances one tick per server-tick under open sky; once {@link Config#windMillEvolveTicks} is
+	 *     reached the block transforms into {@code high_altitude_wind_mill} carrying its stored EU.
+	 * @covers R-NRG-04
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Fun03_dayChipEvolvesToHighAltitude(GameTestHelper helper) {
+		WindMillBlockEntity mill = place(helper); // rotor installed
+		setClear(helper);
+		mill.setItem(WindMillBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_DAY));
+		mill.getEnergyStorage().amount = 1500; // seed EU to verify it carries across the transform
+		mill.setEvolveProgressTicks(Config.windMillEvolveTicks - 1); // one tick short of evolution
+		drive(mill, helper, 1); // the next tick trips the threshold
+		// The block should have transformed — the old BE is no longer the block entity at POS.
+		var evolved = helper.getLevel().getBlockEntity(helper.absolutePos(POS));
+		if (evolved == null || evolved.getType() != dev.alaindustrial.registry.ModContent.HIGH_ALTITUDE_WIND_MILL_BE.get()) {
+			helper.fail("wind mill did not evolve into high_altitude_wind_mill; got: " + evolved);
+		}
+		var evolvedMill = helper.getBlockEntity(POS, dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity.class);
+		if (evolvedMill == null) {
+			helper.fail("evolved block is not a HighAltitudeWindMillBlockEntity");
+		} else if (evolvedMill.getEnergyStorage().getAmount() != 1500) {
+			helper.fail("evolved mill did not carry EU: expected 1500, got " + evolvedMill.getEnergyStorage().getAmount());
 		}
 		helper.succeed();
 	}

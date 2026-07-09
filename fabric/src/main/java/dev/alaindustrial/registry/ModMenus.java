@@ -14,6 +14,8 @@ import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
+import dev.alaindustrial.menu.HighAltitudeWindMillMenu;
+import dev.alaindustrial.menu.StormWindMillMenu;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.flag.FeatureFlags;
@@ -37,6 +39,8 @@ public final class ModMenus {
 	public static MenuType<GeothermalGeneratorMenu> GEOTHERMAL_GENERATOR;
 	public static MenuType<WaterMillMenu> WATER_MILL;
 	public static MenuType<WindMillMenu> WIND_MILL;
+	public static MenuType<HighAltitudeWindMillMenu> HIGH_ALTITUDE_WIND_MILL;
+	public static MenuType<StormWindMillMenu> STORM_WIND_MILL;
 	public static MenuType<IronChestMenu> IRON_CHEST;
 
 	public static void init() {
@@ -63,6 +67,10 @@ public final class ModMenus {
 				new MenuType<>(WaterMillMenu::new, FeatureFlags.VANILLA_SET));
 		WIND_MILL = register("wind_mill",
 				new MenuType<>(WindMillMenu::new, FeatureFlags.VANILLA_SET));
+		HIGH_ALTITUDE_WIND_MILL = register("high_altitude_wind_mill",
+				new MenuType<>(HighAltitudeWindMillMenu::new, FeatureFlags.VANILLA_SET));
+		STORM_WIND_MILL = register("storm_wind_mill",
+				new MenuType<>(StormWindMillMenu::new, FeatureFlags.VANILLA_SET));
 		IRON_CHEST = register("iron_chest",
 				new MenuType<>(IronChestMenu::new, FeatureFlags.VANILLA_SET));
 
@@ -81,6 +89,8 @@ public final class ModMenus {
 		ModContent.GEOTHERMAL_GENERATOR_MENU = () -> GEOTHERMAL_GENERATOR;
 		ModContent.WATER_MILL_MENU = () -> WATER_MILL;
 		ModContent.WIND_MILL_MENU = () -> WIND_MILL;
+		ModContent.HIGH_ALTITUDE_WIND_MILL_MENU = () -> HIGH_ALTITUDE_WIND_MILL;
+		ModContent.STORM_WIND_MILL_MENU = () -> STORM_WIND_MILL;
 		ModContent.IRON_CHEST_MENU = () -> IRON_CHEST;
 	}
 

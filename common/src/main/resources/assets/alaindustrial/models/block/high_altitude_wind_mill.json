@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "alaindustrial:block/wind_mill_side",
+    "down": "alaindustrial:block/wind_mill_bottom",
+    "up": "alaindustrial:block/wind_mill_top",
+    "north": "alaindustrial:block/high_altitude_wind_mill_front",
+    "east": "alaindustrial:block/wind_mill_side",
+    "south": "alaindustrial:block/wind_mill_back",
+    "west": "alaindustrial:block/wind_mill_side"
+  }
+}

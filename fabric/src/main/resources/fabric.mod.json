@@ -3,12 +3,12 @@
 	"id": "alaindustrial",
 	"version": "${version}",
 	"name": "Ala Industrial",
-	"description": "EU-powered tech mod for Fabric. Build your energy network: generators, copper cable, Battery Box and four processing machines. LV tier ready.",
+	"description": "EU/FE tech mod for Fabric and NeoForge. Build an industrial power grid: generators, cables, Battery Box, four processing machines and network diagnostics. LV tier ready, MV/HV planned.",
 	"authors": [
 		"Ala Team"
 	],
 	"contact": {
-		"homepage": "https://alamine.day/",
+		"homepage": "https://github.com/AlaMine-Team-Org/AlaIndustrial",
 		"sources": "https://github.com/AlaMine-Team-Org/AlaIndustrial",
 		"issues": "https://github.com/AlaMine-Team-Org/AlaIndustrial/issues"
 	},

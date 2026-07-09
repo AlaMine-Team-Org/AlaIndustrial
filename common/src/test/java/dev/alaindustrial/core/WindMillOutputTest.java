@@ -82,4 +82,25 @@ class WindMillOutputTest {
 		// At sea level the base is 0; weather multiplies 0 → still 0 (height is required).
 		assertEquals(0, eu(SEA, true, true, true), "base 0 × thunder → 0 (height required)");
 	}
+
+	@Test
+	void highAltitudeVariantGainsBaseTwiceAsFast() {
+		// T2 high-altitude: blocksPerBase = 8 (vs T1's 16). So at sea+16 the T1 base is 1 but the T2 base is 2.
+		// Canonical T2 numbers: maxBase=8, blocksPerBase=8, maxOutput=16 (same weather factors as T1).
+		int t2MaxBase = 8;
+		int t2BlocksPerBase = 8;
+		int t2MaxOut = 16;
+		// y = sea+16: T2 base = 16/8 = 2; clear weather → 2 EU/t
+		assertEquals(2, WindMillOutput.euFor(SEA + 16, SEA, true, false, false,
+				t2MaxBase, t2BlocksPerBase, t2MaxOut, RAIN, THUNDER), "T2 +16 blocks → base 2 (8/step)");
+		// y = sea+16, thunder: base 2 × 2.0 = 4
+		assertEquals(4, WindMillOutput.euFor(SEA + 16, SEA, true, false, true,
+				t2MaxBase, t2BlocksPerBase, t2MaxOut, RAIN, THUNDER), "T2 base 2 × thunder → 4");
+		// y = sea+64: T2 base = 64/8 = 8 (the cap); clear → 8
+		assertEquals(8, WindMillOutput.euFor(SEA + 64, SEA, true, false, false,
+				t2MaxBase, t2BlocksPerBase, t2MaxOut, RAIN, THUNDER), "T2 +64 blocks → base 8 (cap)");
+		// y = sea+64, thunder: base 8 × 2.0 = 16 (the T2 cap)
+		assertEquals(16, WindMillOutput.euFor(SEA + 64, SEA, true, false, true,
+				t2MaxBase, t2BlocksPerBase, t2MaxOut, RAIN, THUNDER), "T2 base 8 × thunder → 16 (cap)");
+	}
 }

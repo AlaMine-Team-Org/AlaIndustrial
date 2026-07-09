@@ -1,0 +1,45 @@
+{
+  "parent": "alaindustrial:evo_chip",
+  "display": {
+    "icon": {
+      "id": "alaindustrial:high_altitude_wind_mill"
+    },
+    "title": {
+      "translate": "advancements.alaindustrial.wind_evolution.title"
+    },
+    "description": {
+      "translate": "advancements.alaindustrial.wind_evolution.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "high_altitude": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "alaindustrial:high_altitude_wind_mill"
+          }
+        ]
+      }
+    },
+    "storm": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "alaindustrial:storm_wind_mill"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "high_altitude",
+      "storm"
+    ]
+  ]
+}

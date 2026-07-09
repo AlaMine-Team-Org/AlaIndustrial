@@ -16,6 +16,8 @@ import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
+import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
+import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
@@ -81,6 +83,10 @@ public final class ModBlockEntitiesNeoForge {
 			register("water_mill", WaterMillBlockEntity::new, ModBlocksNeoForge.WATER_MILL);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WindMillBlockEntity>> WIND_MILL =
 			register("wind_mill", WindMillBlockEntity::new, ModBlocksNeoForge.WIND_MILL);
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<HighAltitudeWindMillBlockEntity>> HIGH_ALTITUDE_WIND_MILL =
+			register("high_altitude_wind_mill", HighAltitudeWindMillBlockEntity::new, ModBlocksNeoForge.HIGH_ALTITUDE_WIND_MILL);
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StormWindMillBlockEntity>> STORM_WIND_MILL =
+			register("storm_wind_mill", StormWindMillBlockEntity::new, ModBlocksNeoForge.STORM_WIND_MILL);
 	// Pure container (no EnergyPort) — no capability binding in IndustrializationNeoForge#registerCapabilities.
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IronChestBlockEntity>> IRON_CHEST =
 			register("iron_chest", IronChestBlockEntity::new, ModBlocksNeoForge.IRON_CHEST);
@@ -114,6 +120,8 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.PUMP_BE = PUMP::get;
 		ModContent.WATER_MILL_BE = WATER_MILL::get;
 		ModContent.WIND_MILL_BE = WIND_MILL::get;
+		ModContent.HIGH_ALTITUDE_WIND_MILL_BE = HIGH_ALTITUDE_WIND_MILL::get;
+		ModContent.STORM_WIND_MILL_BE = STORM_WIND_MILL::get;
 		ModContent.IRON_CHEST_BE = IRON_CHEST::get;
 	}
 

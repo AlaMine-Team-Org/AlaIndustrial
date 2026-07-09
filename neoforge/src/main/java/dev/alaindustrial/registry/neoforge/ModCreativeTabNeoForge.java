@@ -35,6 +35,8 @@ public final class ModCreativeTabNeoForge {
 						output.accept(ModItemsNeoForge.GEOTHERMAL_GENERATOR_ITEM.get());
 						output.accept(ModItemsNeoForge.WATER_MILL_ITEM.get());
 						output.accept(ModItemsNeoForge.WIND_MILL_ITEM.get());
+						output.accept(ModItemsNeoForge.HIGH_ALTITUDE_WIND_MILL_ITEM.get());
+						output.accept(ModItemsNeoForge.STORM_WIND_MILL_ITEM.get());
 						// Machines
 						output.accept(ModItemsNeoForge.MACERATOR_ITEM.get());
 						output.accept(ModItemsNeoForge.ELECTRIC_FURNACE_ITEM.get());
@@ -69,6 +71,7 @@ public final class ModCreativeTabNeoForge {
 						output.accept(ModItemsNeoForge.ELECTRONIC_CIRCUIT.get());
 						output.accept(ModItemsNeoForge.ALIGNMENT_CHIP_DAY.get());
 						output.accept(ModItemsNeoForge.ALIGNMENT_CHIP_NIGHT.get());
+						output.accept(ModItemsNeoForge.WINDMILL_ROTOR.get());
 						output.accept(ModItemsNeoForge.IRON_DUST.get());
 						output.accept(ModItemsNeoForge.COPPER_DUST.get());
 						output.accept(ModItemsNeoForge.GOLD_DUST.get());

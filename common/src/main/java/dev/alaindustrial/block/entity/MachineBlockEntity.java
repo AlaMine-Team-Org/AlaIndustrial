@@ -13,7 +13,12 @@ import dev.alaindustrial.core.FaceEnergyPort;
 // capability through the FabricEnergyPort / NeoForgeEnergyPort adapters and its own transaction system.
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
@@ -149,6 +154,24 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		setChanged();
 	}
 
+	/** Push inventory/NBT-visible machine changes to clients watching this chunk. */
+	protected void syncBlockEntityToClient() {
+		if (level != null && !level.isClientSide()) {
+			BlockState state = getBlockState();
+			level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_CLIENTS);
+		}
+	}
+
+	@Override
+	public Packet<ClientGamePacketListener> getUpdatePacket() {
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
+
+	@Override
+	public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+		return saveWithoutMetadata(provider);
+	}
+
 	/**
 	 * Flip the block's {@code lit} state to match whether the machine is working, so it shows its
 	 * active ("on") model. No-op for blocks without a {@code lit} blockstate (cables, solar panels).
@@ -242,6 +265,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		ItemStack removed = ContainerHelper.removeItem(items, slot, amount);
 		if (!removed.isEmpty()) {
 			setChanged();
+			syncBlockEntityToClient();
 			wake(); // output pulled / input taken — re-evaluate next tick (R-29)
 		}
 		return removed;
@@ -250,7 +274,12 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 	@Override
 	public ItemStack removeItemNoUpdate(int slot) {
 		wake();
-		return ContainerHelper.takeItem(items, slot);
+		ItemStack removed = ContainerHelper.takeItem(items, slot);
+		if (!removed.isEmpty()) {
+			setChanged();
+			syncBlockEntityToClient();
+		}
+		return removed;
 	}
 
 	/**
@@ -269,6 +298,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		}
 		items.set(slot, stack);
 		setChanged();
+		syncBlockEntityToClient();
 		wake(); // new input / output change — re-evaluate next tick (R-29)
 	}
 
@@ -280,6 +310,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 	@Override
 	public void clearContent() {
 		items.clear();
+		setChanged();
+		syncBlockEntityToClient();
 		wake();
 	}
 

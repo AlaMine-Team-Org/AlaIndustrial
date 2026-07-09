@@ -6,6 +6,7 @@ import dev.alaindustrial.client.ElectricFurnaceScreen;
 import dev.alaindustrial.client.IronChestBlockEntityRenderer;
 import dev.alaindustrial.client.MachineTooltips;
 import dev.alaindustrial.client.SolarPanelScreen;
+import dev.alaindustrial.client.WindMillRotorBlockEntityRenderer;
 import dev.alaindustrial.registry.ModBlockEntities;
 import dev.alaindustrial.registry.ModMenus;
 import net.fabricmc.api.ClientModInitializer;
@@ -51,6 +52,10 @@ public class IndustrializationClient implements ClientModInitializer {
 				ModMenus.WATER_MILL, dev.alaindustrial.client.WaterMillScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.WindMillMenu, dev.alaindustrial.client.WindMillScreen>register(
 				ModMenus.WIND_MILL, dev.alaindustrial.client.WindMillScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.HighAltitudeWindMillMenu, dev.alaindustrial.client.HighAltitudeWindMillScreen>register(
+				ModMenus.HIGH_ALTITUDE_WIND_MILL, dev.alaindustrial.client.HighAltitudeWindMillScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.StormWindMillMenu, dev.alaindustrial.client.StormWindMillScreen>register(
+				ModMenus.STORM_WIND_MILL, dev.alaindustrial.client.StormWindMillScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.IronChestMenu, dev.alaindustrial.client.IronChestScreen>register(
 				ModMenus.IRON_CHEST, dev.alaindustrial.client.IronChestScreen::new);
 
@@ -65,6 +70,9 @@ public class IndustrializationClient implements ClientModInitializer {
 		BlockEntityRendererRegistry.register(ModBlockEntities.IRON_CHEST, IronChestBlockEntityRenderer::new);
 		ModelLayerRegistry.registerModelLayer(IronChestBlockEntityRenderer.IRON_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
+		BlockEntityRendererRegistry.register(ModBlockEntities.WIND_MILL, WindMillRotorBlockEntityRenderer::new);
+		BlockEntityRendererRegistry.register(ModBlockEntities.HIGH_ALTITUDE_WIND_MILL, WindMillRotorBlockEntityRenderer::new);
+		BlockEntityRendererRegistry.register(ModBlockEntities.STORM_WIND_MILL, WindMillRotorBlockEntityRenderer::new);
 
 		Industrialization.LOGGER.info("Industrialization client initialized.");
 	}

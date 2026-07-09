@@ -72,6 +72,8 @@ public final class ModContent {
 	public static Supplier<Block> GEOTHERMAL_GENERATOR = unbound("GEOTHERMAL_GENERATOR");
 	public static Supplier<Block> WATER_MILL = unbound("WATER_MILL");
 	public static Supplier<Block> WIND_MILL = unbound("WIND_MILL");
+	public static Supplier<Block> HIGH_ALTITUDE_WIND_MILL = unbound("HIGH_ALTITUDE_WIND_MILL");
+	public static Supplier<Block> STORM_WIND_MILL = unbound("STORM_WIND_MILL");
 	public static Supplier<Block> PUMP = unbound("PUMP");
 	public static Supplier<Block> COPPER_CABLE = unbound("COPPER_CABLE");
 	public static Supplier<Block> TIN_CABLE = unbound("TIN_CABLE");
@@ -98,6 +100,7 @@ public final class ModContent {
 	public static Supplier<Item> ELECTRONIC_CIRCUIT = unbound("ELECTRONIC_CIRCUIT");
 	public static Supplier<Item> ALIGNMENT_CHIP_DAY = unbound("ALIGNMENT_CHIP_DAY");
 	public static Supplier<Item> ALIGNMENT_CHIP_NIGHT = unbound("ALIGNMENT_CHIP_NIGHT");
+	public static Supplier<Item> WINDMILL_ROTOR = unbound("WINDMILL_ROTOR");
 	public static Supplier<Item> IRON_DUST = unbound("IRON_DUST");
 	public static Supplier<Item> COPPER_DUST = unbound("COPPER_DUST");
 	public static Supplier<Item> GOLD_DUST = unbound("GOLD_DUST");
@@ -120,6 +123,8 @@ public final class ModContent {
 	public static Supplier<BlockItem> GEOTHERMAL_GENERATOR_ITEM = unbound("GEOTHERMAL_GENERATOR_ITEM");
 	public static Supplier<BlockItem> WATER_MILL_ITEM = unbound("WATER_MILL_ITEM");
 	public static Supplier<BlockItem> WIND_MILL_ITEM = unbound("WIND_MILL_ITEM");
+	public static Supplier<BlockItem> HIGH_ALTITUDE_WIND_MILL_ITEM = unbound("HIGH_ALTITUDE_WIND_MILL_ITEM");
+	public static Supplier<BlockItem> STORM_WIND_MILL_ITEM = unbound("STORM_WIND_MILL_ITEM");
 	public static Supplier<BlockItem> SOLAR_PANEL_ITEM = unbound("SOLAR_PANEL_ITEM");
 	public static Supplier<BlockItem> MOONLIT_SOLAR_PANEL_ITEM = unbound("MOONLIT_SOLAR_PANEL_ITEM");
 	public static Supplier<BlockItem> DAYLIGHT_SOLAR_PANEL_ITEM = unbound("DAYLIGHT_SOLAR_PANEL_ITEM");
@@ -148,6 +153,8 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> GEOTHERMAL_GENERATOR_BE = unbound("GEOTHERMAL_GENERATOR_BE");
 	public static Supplier<BlockEntityType<?>> WATER_MILL_BE = unbound("WATER_MILL_BE");
 	public static Supplier<BlockEntityType<?>> WIND_MILL_BE = unbound("WIND_MILL_BE");
+	public static Supplier<BlockEntityType<?>> HIGH_ALTITUDE_WIND_MILL_BE = unbound("HIGH_ALTITUDE_WIND_MILL_BE");
+	public static Supplier<BlockEntityType<?>> STORM_WIND_MILL_BE = unbound("STORM_WIND_MILL_BE");
 	public static Supplier<BlockEntityType<?>> SOLAR_PANEL_BE = unbound("SOLAR_PANEL_BE");
 	public static Supplier<BlockEntityType<?>> MOONLIT_SOLAR_PANEL_BE = unbound("MOONLIT_SOLAR_PANEL_BE");
 	public static Supplier<BlockEntityType<?>> DAYLIGHT_SOLAR_PANEL_BE = unbound("DAYLIGHT_SOLAR_PANEL_BE");
@@ -173,6 +180,8 @@ public final class ModContent {
 	public static Supplier<MenuType<?>> GEOTHERMAL_GENERATOR_MENU = unbound("GEOTHERMAL_GENERATOR_MENU");
 	public static Supplier<MenuType<?>> WATER_MILL_MENU = unbound("WATER_MILL_MENU");
 	public static Supplier<MenuType<?>> WIND_MILL_MENU = unbound("WIND_MILL_MENU");
+	public static Supplier<MenuType<?>> HIGH_ALTITUDE_WIND_MILL_MENU = unbound("HIGH_ALTITUDE_WIND_MILL_MENU");
+	public static Supplier<MenuType<?>> STORM_WIND_MILL_MENU = unbound("STORM_WIND_MILL_MENU");
 	public static Supplier<MenuType<?>> IRON_CHEST_MENU = unbound("IRON_CHEST_MENU");
 
 	/** A placeholder handle that throws if read before the loader populated it. */

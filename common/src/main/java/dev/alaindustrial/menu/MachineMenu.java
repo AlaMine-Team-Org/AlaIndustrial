@@ -41,12 +41,25 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	private void addPlayerInventory(Inventory inventory) {
 		for (int row = 0; row < 3; row++) {
 			for (int col = 0; col < 9; col++) {
-				addSlot(new Slot(inventory, 9 + row * 9 + col, 8 + col * 18, 84 + row * 18));
+				addSlot(new Slot(inventory, 9 + row * 9 + col,
+						playerInventoryX() + col * 18, playerInventoryY() + row * 18));
 			}
 		}
 		for (int col = 0; col < 9; col++) {
-			addSlot(new Slot(inventory, col, 8 + col * 18, 142));
+			addSlot(new Slot(inventory, col, playerInventoryX() + col * 18, hotbarY()));
 		}
+	}
+
+	protected int playerInventoryX() {
+		return 8;
+	}
+
+	protected int playerInventoryY() {
+		return 84;
+	}
+
+	protected int hotbarY() {
+		return 142;
 	}
 
 	public int getEnergy() {

@@ -32,6 +32,7 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> ELECTRONIC_CIRCUIT = ITEMS.registerItem("electronic_circuit", Item::new);
 	public static final DeferredItem<Item> ALIGNMENT_CHIP_DAY = ITEMS.registerItem("alignment_chip_day", Item::new);
 	public static final DeferredItem<Item> ALIGNMENT_CHIP_NIGHT = ITEMS.registerItem("alignment_chip_night", Item::new);
+	public static final DeferredItem<Item> WINDMILL_ROTOR = ITEMS.registerItem("windmill_rotor", Item::new);
 	public static final DeferredItem<Item> IRON_DUST = ITEMS.registerItem("iron_dust", Item::new);
 	public static final DeferredItem<Item> COPPER_DUST = ITEMS.registerItem("copper_dust", Item::new);
 	public static final DeferredItem<Item> GOLD_DUST = ITEMS.registerItem("gold_dust", Item::new);
@@ -81,6 +82,10 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("water_mill", ModBlocksNeoForge.WATER_MILL);
 	public static final DeferredItem<BlockItem> WIND_MILL_ITEM =
 			ITEMS.registerSimpleBlockItem("wind_mill", ModBlocksNeoForge.WIND_MILL);
+	public static final DeferredItem<BlockItem> HIGH_ALTITUDE_WIND_MILL_ITEM =
+			ITEMS.registerSimpleBlockItem("high_altitude_wind_mill", ModBlocksNeoForge.HIGH_ALTITUDE_WIND_MILL);
+	public static final DeferredItem<BlockItem> STORM_WIND_MILL_ITEM =
+			ITEMS.registerSimpleBlockItem("storm_wind_mill", ModBlocksNeoForge.STORM_WIND_MILL);
 	public static final DeferredItem<BlockItem> COPPER_CABLE_ITEM =
 			ITEMS.registerSimpleBlockItem("copper_cable", ModBlocksNeoForge.COPPER_CABLE);
 	public static final DeferredItem<BlockItem> TIN_CABLE_ITEM =
@@ -123,6 +128,7 @@ public final class ModItemsNeoForge {
 		ModContent.ELECTRONIC_CIRCUIT = ELECTRONIC_CIRCUIT;
 		ModContent.ALIGNMENT_CHIP_DAY = ALIGNMENT_CHIP_DAY;
 		ModContent.ALIGNMENT_CHIP_NIGHT = ALIGNMENT_CHIP_NIGHT;
+		ModContent.WINDMILL_ROTOR = WINDMILL_ROTOR;
 		ModContent.IRON_DUST = IRON_DUST;
 		ModContent.COPPER_DUST = COPPER_DUST;
 		ModContent.GOLD_DUST = GOLD_DUST;
@@ -155,6 +161,8 @@ public final class ModItemsNeoForge {
 		ModContent.PUMP_ITEM = PUMP_ITEM;
 		ModContent.WATER_MILL_ITEM = WATER_MILL_ITEM;
 		ModContent.WIND_MILL_ITEM = WIND_MILL_ITEM;
+		ModContent.HIGH_ALTITUDE_WIND_MILL_ITEM = HIGH_ALTITUDE_WIND_MILL_ITEM;
+		ModContent.STORM_WIND_MILL_ITEM = STORM_WIND_MILL_ITEM;
 		ModContent.COPPER_CABLE_ITEM = COPPER_CABLE_ITEM;
 		ModContent.TIN_CABLE_ITEM = TIN_CABLE_ITEM;
 		ModContent.INSULATED_COPPER_CABLE_ITEM = INSULATED_COPPER_CABLE_ITEM;

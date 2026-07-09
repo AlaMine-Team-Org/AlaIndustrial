@@ -16,6 +16,7 @@ import dev.alaindustrial.client.MoonlitSolarPanelScreen;
 import dev.alaindustrial.client.SolarPanelScreen;
 import dev.alaindustrial.client.WaterMillScreen;
 import dev.alaindustrial.client.WindMillScreen;
+import dev.alaindustrial.client.WindMillRotorBlockEntityRenderer;
 import dev.alaindustrial.client.neoforge.NeoForgeCableGhost;
 import dev.alaindustrial.client.neoforge.NeoForgeNetworkVisualization;
 import dev.alaindustrial.registry.neoforge.ModBlockEntitiesNeoForge;
@@ -97,6 +98,8 @@ public final class IndustrializationNeoForgeClient {
 		event.register(ModMenusNeoForge.GEOTHERMAL_GENERATOR.get(), GeothermalGeneratorScreen::new);
 		event.register(ModMenusNeoForge.WATER_MILL.get(), WaterMillScreen::new);
 		event.register(ModMenusNeoForge.WIND_MILL.get(), WindMillScreen::new);
+		event.register(ModMenusNeoForge.HIGH_ALTITUDE_WIND_MILL.get(), dev.alaindustrial.client.HighAltitudeWindMillScreen::new);
+		event.register(ModMenusNeoForge.STORM_WIND_MILL.get(), dev.alaindustrial.client.StormWindMillScreen::new);
 		event.register(ModMenusNeoForge.IRON_CHEST.get(), dev.alaindustrial.client.IronChestScreen::new);
 	}
 
@@ -109,6 +112,12 @@ public final class IndustrializationNeoForgeClient {
 	private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.IRON_CHEST.get(),
 				IronChestBlockEntityRenderer::new);
+		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.WIND_MILL.get(),
+				WindMillRotorBlockEntityRenderer::new);
+		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.HIGH_ALTITUDE_WIND_MILL.get(),
+				WindMillRotorBlockEntityRenderer::new);
+		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.STORM_WIND_MILL.get(),
+				WindMillRotorBlockEntityRenderer::new);
 	}
 
 	/**

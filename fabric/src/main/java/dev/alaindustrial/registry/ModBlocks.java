@@ -16,6 +16,8 @@ import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.block.WaterMillBlock;
 import dev.alaindustrial.block.WindMillBlock;
+import dev.alaindustrial.block.HighAltitudeWindMillBlock;
+import dev.alaindustrial.block.StormWindMillBlock;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -63,6 +65,14 @@ public final class ModBlocks {
 	public static final ResourceKey<Block> WIND_MILL_KEY = key("wind_mill");
 	public static final Block WIND_MILL = register(WIND_MILL_KEY,
 			new WindMillBlock(props(WIND_MILL_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL)));
+
+	public static final ResourceKey<Block> HIGH_ALTITUDE_WIND_MILL_KEY = key("high_altitude_wind_mill");
+	public static final Block HIGH_ALTITUDE_WIND_MILL = register(HIGH_ALTITUDE_WIND_MILL_KEY,
+			new HighAltitudeWindMillBlock(props(HIGH_ALTITUDE_WIND_MILL_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL)));
+
+	public static final ResourceKey<Block> STORM_WIND_MILL_KEY = key("storm_wind_mill");
+	public static final Block STORM_WIND_MILL = register(STORM_WIND_MILL_KEY,
+			new StormWindMillBlock(props(STORM_WIND_MILL_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL)));
 
 	public static final ResourceKey<Block> PUMP_KEY = key("pump");
 	public static final Block PUMP = register(PUMP_KEY,
@@ -184,6 +194,8 @@ public final class ModBlocks {
 		ModContent.GEOTHERMAL_GENERATOR = () -> GEOTHERMAL_GENERATOR;
 		ModContent.WATER_MILL = () -> WATER_MILL;
 		ModContent.WIND_MILL = () -> WIND_MILL;
+		ModContent.HIGH_ALTITUDE_WIND_MILL = () -> HIGH_ALTITUDE_WIND_MILL;
+		ModContent.STORM_WIND_MILL = () -> STORM_WIND_MILL;
 		ModContent.PUMP = () -> PUMP;
 		ModContent.COPPER_CABLE = () -> COPPER_CABLE;
 		ModContent.TIN_CABLE = () -> TIN_CABLE;

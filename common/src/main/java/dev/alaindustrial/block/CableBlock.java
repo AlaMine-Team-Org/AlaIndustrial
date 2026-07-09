@@ -108,12 +108,16 @@ public class CableBlock extends AbstractMachineBlock {
 	}
 
 	/**
-	 * A cable connects to any adjacent Industrialization block — other cables, generators, machines,
-	 * storage. Checks the neighbour's block type (always available), not its block entity, so the
-	 * connection is correct the instant the block is placed (no block-entity load race -> no gaps).
+	 * A cable connects to any adjacent energy block of this mod — other cables, generators, machines,
+	 * storage — but not to pure-container blocks that happen to inherit {@link AbstractMachineBlock}
+	 * for non-energy reasons (e.g. {@link IronChestBlock}, which is a chest, not an energy receiver).
+	 * The {@link AbstractMachineBlock#isCableConnectable()} marker carries that distinction while
+	 * keeping the check at the Block level (always available), so the connection is correct the
+	 * instant the block is placed — no block-entity load race, no visual gaps (MOD-038).
 	 */
 	private static boolean connectsTo(LevelReader level, BlockPos pos, Direction dir) {
-		return level.getBlockState(pos.relative(dir)).getBlock() instanceof AbstractMachineBlock;
+		Block block = level.getBlockState(pos.relative(dir)).getBlock();
+		return block instanceof AbstractMachineBlock machine && machine.isCableConnectable();
 	}
 
 	@Override

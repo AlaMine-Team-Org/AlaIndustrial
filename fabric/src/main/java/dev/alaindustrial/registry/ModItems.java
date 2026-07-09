@@ -35,6 +35,7 @@ public final class ModItems {
 	public static final Item ELECTRONIC_CIRCUIT = item("electronic_circuit");
 	public static final Item ALIGNMENT_CHIP_DAY = item("alignment_chip_day");
 	public static final Item ALIGNMENT_CHIP_NIGHT = item("alignment_chip_night");
+	public static final Item WINDMILL_ROTOR = item("windmill_rotor");
 	public static final Item IRON_DUST = item("iron_dust");
 	public static final Item COPPER_DUST = item("copper_dust");
 	public static final Item GOLD_DUST = item("gold_dust");
@@ -74,6 +75,8 @@ public final class ModItems {
 	public static final BlockItem PUMP_ITEM = blockItem("pump", ModBlocks.PUMP);
 	public static final BlockItem WATER_MILL_ITEM = blockItem("water_mill", ModBlocks.WATER_MILL);
 	public static final BlockItem WIND_MILL_ITEM = blockItem("wind_mill", ModBlocks.WIND_MILL);
+	public static final BlockItem HIGH_ALTITUDE_WIND_MILL_ITEM = blockItem("high_altitude_wind_mill", ModBlocks.HIGH_ALTITUDE_WIND_MILL);
+	public static final BlockItem STORM_WIND_MILL_ITEM = blockItem("storm_wind_mill", ModBlocks.STORM_WIND_MILL);
 	public static final BlockItem TIN_ORE_ITEM = blockItem("tin_ore", ModBlocks.TIN_ORE);
 	public static final BlockItem DEEPSLATE_TIN_ORE_ITEM = blockItem("deepslate_tin_ore", ModBlocks.DEEPSLATE_TIN_ORE);
 	public static final BlockItem SILVER_ORE_ITEM = blockItem("silver_ore", ModBlocks.SILVER_ORE);
@@ -117,6 +120,8 @@ public final class ModItems {
 					output.accept(GEOTHERMAL_GENERATOR_ITEM);
 					output.accept(WATER_MILL_ITEM);
 					output.accept(WIND_MILL_ITEM);
+					output.accept(HIGH_ALTITUDE_WIND_MILL_ITEM);
+					output.accept(STORM_WIND_MILL_ITEM);
 					// Machines
 					output.accept(MACERATOR_ITEM);
 					output.accept(ELECTRIC_FURNACE_ITEM);
@@ -151,6 +156,7 @@ public final class ModItems {
 					output.accept(ELECTRONIC_CIRCUIT);
 					output.accept(ALIGNMENT_CHIP_DAY);
 					output.accept(ALIGNMENT_CHIP_NIGHT);
+					output.accept(WINDMILL_ROTOR);
 					output.accept(IRON_DUST);
 					output.accept(COPPER_DUST);
 					output.accept(GOLD_DUST);
@@ -176,6 +182,7 @@ public final class ModItems {
 		ModContent.ELECTRONIC_CIRCUIT = () -> ELECTRONIC_CIRCUIT;
 		ModContent.ALIGNMENT_CHIP_DAY = () -> ALIGNMENT_CHIP_DAY;
 		ModContent.ALIGNMENT_CHIP_NIGHT = () -> ALIGNMENT_CHIP_NIGHT;
+		ModContent.WINDMILL_ROTOR = () -> WINDMILL_ROTOR;
 		ModContent.IRON_DUST = () -> IRON_DUST;
 		ModContent.COPPER_DUST = () -> COPPER_DUST;
 		ModContent.GOLD_DUST = () -> GOLD_DUST;
@@ -197,6 +204,8 @@ public final class ModItems {
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = () -> GEOTHERMAL_GENERATOR_ITEM;
 		ModContent.WATER_MILL_ITEM = () -> WATER_MILL_ITEM;
 		ModContent.WIND_MILL_ITEM = () -> WIND_MILL_ITEM;
+		ModContent.HIGH_ALTITUDE_WIND_MILL_ITEM = () -> HIGH_ALTITUDE_WIND_MILL_ITEM;
+		ModContent.STORM_WIND_MILL_ITEM = () -> STORM_WIND_MILL_ITEM;
 		ModContent.SOLAR_PANEL_ITEM = () -> SOLAR_PANEL_ITEM;
 		ModContent.MOONLIT_SOLAR_PANEL_ITEM = () -> MOONLIT_SOLAR_PANEL_ITEM;
 		ModContent.DAYLIGHT_SOLAR_PANEL_ITEM = () -> DAYLIGHT_SOLAR_PANEL_ITEM;

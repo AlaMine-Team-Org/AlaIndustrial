@@ -16,6 +16,8 @@ import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.block.WaterMillBlock;
 import dev.alaindustrial.block.WindMillBlock;
+import dev.alaindustrial.block.HighAltitudeWindMillBlock;
+import dev.alaindustrial.block.StormWindMillBlock;
 import dev.alaindustrial.registry.ModContent;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -78,6 +80,10 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("water_mill", WaterMillBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
 	public static final DeferredBlock<WindMillBlock> WIND_MILL =
 			BLOCKS.registerBlock("wind_mill", WindMillBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+	public static final DeferredBlock<HighAltitudeWindMillBlock> HIGH_ALTITUDE_WIND_MILL =
+			BLOCKS.registerBlock("high_altitude_wind_mill", HighAltitudeWindMillBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+	public static final DeferredBlock<StormWindMillBlock> STORM_WIND_MILL =
+			BLOCKS.registerBlock("storm_wind_mill", StormWindMillBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
 
 	// --- Cables ---
 	public static final DeferredBlock<CableBlock> COPPER_CABLE =
@@ -155,6 +161,8 @@ public final class ModBlocksNeoForge {
 		ModContent.PUMP = PUMP::get;
 		ModContent.WATER_MILL = WATER_MILL::get;
 		ModContent.WIND_MILL = WIND_MILL::get;
+		ModContent.HIGH_ALTITUDE_WIND_MILL = HIGH_ALTITUDE_WIND_MILL::get;
+		ModContent.STORM_WIND_MILL = STORM_WIND_MILL::get;
 		ModContent.COPPER_CABLE = COPPER_CABLE::get;
 		ModContent.TIN_CABLE = TIN_CABLE::get;
 		ModContent.INSULATED_COPPER_CABLE = INSULATED_COPPER_CABLE::get;

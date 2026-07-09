@@ -1,0 +1,164 @@
+package dev.alaindustrial.gametest;
+
+import dev.alaindustrial.registry.ModBlocks;
+import dev.alaindustrial.registry.ModItems;
+import net.fabricmc.fabric.api.gametest.v1.GameTest;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+
+/**
+ * L2 suite for MOD-039 "cable cannot be placed flush against another cable". Before the fix,
+ * {@code AbstractMachineBlock.useWithoutItem} returned {@link InteractionResult#SUCCESS} for every
+ * right-click, so vanilla's {@code ServerPlayerGameMode} treated the click as consumed and never
+ * reached {@code BlockItem.place} — making it impossible to extend a cable run by aiming at an
+ * existing cable (player had to hold Shift or aim at a different block).
+ *
+ * <p>This is the first test in the repo that simulates "right-click with item in hand on a block":
+ * {@code GameTestHelper.setBlock} bypasses {@code BlockItem} entirely (it goes straight to the
+ * chunk), so it cannot catch this bug. Instead we replay what {@code ServerPlayerGameMode.useItemOn}
+ * does at the placement point: build a {@link UseOnContext} from a player + a {@link BlockHitResult}
+ * aimed at the existing cable, then invoke {@code stack.useOn(ctx)} — which is exactly the call
+ * vanilla makes once the block returns PASS.
+ *
+ * <p>Verified against MC 26.2 (mojmap) via the bytecode of {@code ServerPlayerGameMode.useItemOn}:
+ * when {@code useWithoutItem} returns PASS (consumesAction()==false) the chain falls through to
+ * {@code ItemStack.useOn(ctx)} → {@code BlockItem.place} (see {@code task.md}, MOD-039, step 0).
+ * All players are created with {@link GameTestHelper#makeMockServerPlayerInLevel()} because the
+ * machine test triggers {@code player.openMenu(...)}, which needs a real network handler.
+ */
+public class CablePlacementGameTest {
+
+	/** Existing cable the player aims at. */
+	private static final BlockPos CABLE = new BlockPos(1, 2, 1);
+	/** Adjacent cell (+X) where the new cable should land when aiming at CABLE's EAST face. */
+	private static final BlockPos ADJACENT = new BlockPos(2, 2, 1);
+
+	/**
+	 * @implements MOD-039-CONTRACT-CABLE — a cable is a non-interactive block: right-clicking it
+	 *     with an empty hand must return PASS (not SUCCESS), so the click is not "consumed" and
+	 *     placement can proceed. Regression guard for the useWithoutItem fix.
+	 * @covers R-PLACE-01
+	 */
+	@GameTest
+	public void mod039_cableUseReturnsPass(GameTestHelper helper) {
+		helper.setBlock(CABLE, ModBlocks.COPPER_CABLE);
+		BlockState state = helper.getLevel().getBlockState(helper.absolutePos(CABLE));
+		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		BlockHitResult hit = hitOnCable(helper);
+		InteractionResult result = state.useWithoutItem(helper.getLevel(), player, hit);
+		if (result != InteractionResult.PASS) {
+			helper.fail("cable useWithoutItem should be PASS (was " + result
+					+ "); RMB is consumed and placement is blocked");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements MOD-039-CONTRACT-MENU — machines with a menu still return SUCCESS on right-click
+	 *     (so their GUI keeps opening). Regression guard ensuring the useWithoutItem fix did not
+	 *     silence interactive blocks. Battery box was chosen because its block entity implements
+	 *     MenuProvider and it is the simplest GUI-bearing machine in the mod.
+	 * @covers R-PLACE-02
+	 */
+	@GameTest
+	public void mod039_machineUseReturnsSuccess(GameTestHelper helper) {
+		helper.setBlock(CABLE, ModBlocks.BATTERY_BOX);
+		BlockState state = helper.getLevel().getBlockState(helper.absolutePos(CABLE));
+		// makeMockServerPlayerInLevel(): openMenu needs a real ServerPlayer with a network handler.
+		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		BlockHitResult hit = hitOnCable(helper);
+		InteractionResult result = state.useWithoutItem(helper.getLevel(), player, hit);
+		if (result != InteractionResult.SUCCESS) {
+			helper.fail("battery_box useWithoutItem should be SUCCESS (was " + result
+					+ "); GUI-bearing blocks must stay interactive");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements MOD-039-FULL — the actual bug scenario: with a cable in hand, right-click an
+	 *     existing cable → a new cable segment must be placed in the adjacent cell, without Shift
+	 *     and without aiming at a different block. Replays the {@code ItemStack.useOn(ctx)} step
+	 *     that vanilla reaches once the cable returns PASS.
+	 * @covers R-PLACE-03
+	 */
+	@GameTest
+	public void mod039_rmbOnCablePlacesAdjacent(GameTestHelper helper) {
+		// Place the first cable (setBlock is fine here — it is only the *target* of the click).
+		helper.setBlock(CABLE, ModBlocks.COPPER_CABLE);
+		helper.assertBlockPresent(ModBlocks.COPPER_CABLE, CABLE);
+
+		// Player aims at CABLE's EAST face (hit direction = EAST). Vanilla placement rule
+		// (BlockPlaceContext): because a cable is not canBeReplaced, the new block lands in
+		// hitPos.relative(EAST) = ADJACENT. (direction EAST ⇒ relative +X.)
+		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		ItemStack cableStack = new ItemStack(ModItems.COPPER_CABLE_ITEM);
+		BlockHitResult hit = hitOnCable(helper);
+
+		// This is the exact call ServerPlayerGameMode.useItemOn makes once useWithoutItem returned
+		// PASS (bytecode offset ~292 in 26.2): stack.useOn(ctx) → BlockItem.useOn → BlockItem.place.
+		UseOnContext ctx = new UseOnContext(player, InteractionHand.MAIN_HAND, hit);
+		cableStack.useOn(ctx);
+
+		helper.assertBlockPresent(ModBlocks.COPPER_CABLE, ADJACENT);
+		helper.succeed();
+	}
+
+	/**
+	 * @implements MOD-038 — a copper cable must NOT draw a connection arm toward an iron chest. The
+	 *     chest inherits {@code AbstractMachineBlock} (for {@code facing} + the right-click-to-open
+	 *     hook), so before the fix {@code connectsTo} saw it as "a machine" and drew a misleading
+	 *     "energy goes here" arm. The fix is the {@code AbstractMachineBlock#isCableConnectable()}
+	 *     marker, which the chest overrides to {@code false}. Because the cable ghost preview (Fabric
+	 *     {@code CablePlacementPreview} / NeoForge {@code NeoForgeCableGhost}) calls the same
+	 *     {@code getStateForPlacement} -> {@code connectsTo} path, fixing the blockstate here fixes
+	 *     the preview too — no client-side test is possible (GameTest is server-side).
+	 *
+	 * <p>Layout: cable at CABLE (1,2,1), chest one block west at CHEST (0,2,1), battery box one block
+	 * east at BATTERY (2,2,1). The chest is placed LAST so vanilla's block-update notifies the cable
+	 * and {@code updateShape} recomputes the WEST/EAST connection flags. Assertions check both sides
+	 * of the cable: WEST (chest) must be {@code false}, EAST (battery box, an energy block) must be
+	 * {@code true} — the EAST assertion is a positive control that proves {@code updateShape} did run
+	 * (otherwise both would stay {@code false}, the default, and the EAST check would fail).
+	 */
+	@GameTest
+	public void mod038_cableDoesNotConnectToIronChest(GameTestHelper helper) {
+		BlockPos cablePos = new BlockPos(1, 2, 1);
+		BlockPos chestPos = new BlockPos(0, 2, 1);   // WEST of the cable
+		BlockPos batteryPos = new BlockPos(2, 2, 1); // EAST of the cable
+
+		helper.setBlock(cablePos, ModBlocks.COPPER_CABLE);
+		helper.setBlock(batteryPos, ModBlocks.BATTERY_BOX);
+		helper.setBlock(chestPos, ModBlocks.IRON_CHEST); // placed last -> notifies the cable
+
+		BlockState cable = helper.getLevel().getBlockState(helper.absolutePos(cablePos));
+		boolean armToChest = cable.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(Direction.WEST));
+		boolean armToBattery = cable.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(Direction.EAST));
+
+		if (armToChest) {
+			helper.fail("Cable must NOT connect to iron_chest (WEST=" + armToChest
+					+ "); chest has no energy port — MOD-038 regression");
+		}
+		if (!armToBattery) {
+			helper.fail("Cable SHOULD connect to battery_box (EAST=" + armToBattery
+					+ "); positive control failed — updateShape did not run or energy blocks regressed");
+		}
+		helper.succeed();
+	}
+
+	/** A hit aimed at CABLE's +X (EAST) face: the click targets CABLE and would place at ADJACENT. */
+	private static BlockHitResult hitOnCable(GameTestHelper helper) {
+		return new BlockHitResult(
+				Vec3.atCenterOf(helper.absolutePos(CABLE)), Direction.EAST, helper.absolutePos(CABLE), false);
+	}
+}

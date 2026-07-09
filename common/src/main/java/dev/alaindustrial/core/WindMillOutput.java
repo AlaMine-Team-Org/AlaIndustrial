@@ -30,10 +30,25 @@ public final class WindMillOutput {
 	 */
 	public static int euFor(int y, int seaLevel, boolean openSky, boolean raining, boolean thundering,
 			int maxBase, int maxOutput, float rainFactor, float thunderFactor) {
+		return euFor(y, seaLevel, openSky, raining, thundering, maxBase, 16, maxOutput, rainFactor, thunderFactor);
+	}
+
+	/**
+	 * Generalised wind-mill output with a configurable {@code blocksPerBase} step. Identical contract
+	 * to the 9-arg {@link #euFor} but the height dividend is a parameter: the T1 wind mill uses 16
+	 * (one base step per 16 blocks), the high-altitude T2 variant uses 8 (gains base twice as fast with
+	 * height). Everything else — open-sky gate, zero-base gate, weather multiplier, output cap — is
+	 * identical. Kept backward-compatible: the original 9-arg overload delegates here with {@code 16}.
+	 */
+	public static int euFor(int y, int seaLevel, boolean openSky, boolean raining, boolean thundering,
+			int maxBase, int blocksPerBase, int maxOutput, float rainFactor, float thunderFactor) {
 		if (!openSky) {
 			return 0; // roofed / below the sky column → dead, height and storm irrelevant
 		}
-		int base = Math.max(0, Math.min(maxBase, (y - seaLevel) / 16));
+		if (blocksPerBase <= 0) {
+			blocksPerBase = 16; // guard: never divide by zero
+		}
+		int base = Math.max(0, Math.min(maxBase, (y - seaLevel) / blocksPerBase));
 		if (base == 0) {
 			return 0; // at/below sea level: base is 0, so a storm cannot lift it (height is required)
 		}

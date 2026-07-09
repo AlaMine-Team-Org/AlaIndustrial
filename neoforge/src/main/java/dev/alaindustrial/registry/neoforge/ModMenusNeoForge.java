@@ -13,6 +13,8 @@ import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
+import dev.alaindustrial.menu.HighAltitudeWindMillMenu;
+import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.registries.Registries;
@@ -68,6 +70,10 @@ public final class ModMenusNeoForge {
 			register("water_mill", (id, inv, buf) -> new WaterMillMenu(id, inv));
 	public static final DeferredHolder<MenuType<?>, MenuType<WindMillMenu>> WIND_MILL =
 			register("wind_mill", (id, inv, buf) -> new WindMillMenu(id, inv));
+	public static final DeferredHolder<MenuType<?>, MenuType<HighAltitudeWindMillMenu>> HIGH_ALTITUDE_WIND_MILL =
+			register("high_altitude_wind_mill", (id, inv, buf) -> new HighAltitudeWindMillMenu(id, inv));
+	public static final DeferredHolder<MenuType<?>, MenuType<StormWindMillMenu>> STORM_WIND_MILL =
+			register("storm_wind_mill", (id, inv, buf) -> new StormWindMillMenu(id, inv));
 	public static final DeferredHolder<MenuType<?>, MenuType<IronChestMenu>> IRON_CHEST =
 			register("iron_chest", (id, inv, buf) -> new IronChestMenu(id, inv));
 
@@ -96,6 +102,8 @@ public final class ModMenusNeoForge {
 		ModContent.GEOTHERMAL_GENERATOR_MENU = GEOTHERMAL_GENERATOR::get;
 		ModContent.WATER_MILL_MENU = WATER_MILL::get;
 		ModContent.WIND_MILL_MENU = WIND_MILL::get;
+		ModContent.HIGH_ALTITUDE_WIND_MILL_MENU = HIGH_ALTITUDE_WIND_MILL::get;
+		ModContent.STORM_WIND_MILL_MENU = STORM_WIND_MILL::get;
 		ModContent.IRON_CHEST_MENU = IRON_CHEST::get;
 	}
 

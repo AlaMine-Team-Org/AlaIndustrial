@@ -33,9 +33,29 @@ jar {
     }
 }
 
+// Build stamp: short git hash + build timestamp, substituted into alaindustrial.build.json
+// so /ala version prints real values instead of raw ${...} placeholders. Falls back to
+// "dev"/"unknown" when git is unavailable (e.g. a clean export without a .git directory).
+String gitHash = 'dev'
+String buildTime = 'unknown'
+try {
+    def proc = ['git', 'rev-parse', '--short', 'HEAD'].execute()
+    proc.waitFor()
+    if (proc.exitValue() == 0) {
+        gitHash = proc.text.trim()
+    }
+} catch (Exception ignored) {
+}
+try {
+    buildTime = new Date().format('yyyy-MM-dd HH:mm')
+} catch (Exception ignored) {
+}
+
 processResources {
     var expandProps = [
             'version'                      : version,
+            'githash'                      : gitHash,
+            'buildtime'                    : buildTime,
             'group'                        : project.group, // Else we target the task's group.
             'minecraft_version'            : minecraft_version,
             'minecraft_version_range'      : minecraft_version_range,
@@ -60,7 +80,7 @@ processResources {
         expand expandProps
     }
 
-    filesMatching(['pack.mcmeta', 'fabric.mod.json', '*.mixins.json']) {
+    filesMatching(['pack.mcmeta', 'fabric.mod.json', '*.mixins.json', 'alaindustrial.build.json']) {
         expand jsonExpandProps
     }
 
