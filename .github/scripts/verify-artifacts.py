@@ -64,9 +64,10 @@ def main() -> int:
         if not jar.name.endswith(f"-{args.version}.jar"):
             raise SystemExit(f"artifact: {loader} jar filename does not end with -{args.version}.jar: {jar.name}")
         meta = validator(jar, args.version)
+        artifact_path = f"{loader}/build/libs/{jar.name}"
         entries.append({
             "loader": loader,
-            "file": jar.as_posix(),
+            "file": artifact_path,
             "name": jar.name,
             "size": jar.stat().st_size,
             "sha256": sha256(jar),

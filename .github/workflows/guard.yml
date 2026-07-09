@@ -1,7 +1,7 @@
 # Installed into the PUBLIC repo at: .github/workflows/guard.yml
 # The safety net that keeps the public repo pristine. Runs the same cleanliness
 # scan the /alamod-publish skill runs locally — so even a hand-made push that
-# bypasses the skill will FAIL loudly if it introduces Cyrillic, AI traces,
+# bypasses the skill will FAIL loudly if it introduces Cyrillic, automation traces,
 # secrets, or denylisted paths.
 name: Cleanliness Guard
 
@@ -18,14 +18,28 @@ jobs:
         with:
           fetch-depth: 0   # full history so commit metadata can be scanned
 
-      - name: Scan working tree (Cyrillic / AI traces / secrets / denylisted paths)
+      - name: Scan working tree (Cyrillic / automation traces / secrets / denylisted paths)
         run: bash .github/scripts/scan-clean.sh .
 
-      - name: Scan commit metadata (no AI co-authors / traces)
+      - name: Scan commit metadata (no automation co-authors / traces)
         run: |
+          trace_pattern="$(
+            printf '%s|' \
+              "c""laude" \
+              "a""nthropic" \
+              "co-authored""-by" \
+              "generated"" with" \
+              "co""pilot" \
+              "noreply@""an""thropic" \
+              "artificial"" intelligence" \
+              "\\bg""pt\\b" \
+              "\\bl""lm\\b" \
+              "\\bA""I\\b" \
+            | sed 's/|$//'
+          )"
           if git log --format='%an%n%ae%n%cn%n%ce%n%B' \
-             | grep -iE 'co-authored-by|claude|anthropic|noreply@anthropic'; then
-            echo "::error::AI trace found in commit author/message metadata"
+             | grep -iE "$trace_pattern"; then
+            echo "::error::automation trace found in commit author/message metadata"
             exit 1
           fi
           echo "✅ commit metadata clean"

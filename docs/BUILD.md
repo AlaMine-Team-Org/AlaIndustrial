@@ -75,9 +75,9 @@ does not touch.
 | What | Where |
 |------|-------|
 | Launcher | official Minecraft Launcher, **"Fabric Loader"** profile (`fabric-loader-0.19.3-26.2`) |
-| Profile game dir | `C:\Users\User` |
-| Mods folder | `C:\Users\User\mods\` — exactly 3 files: `alaindustrial-*.jar` + `fabric-api-*.jar` + `energy-*.jar` |
-| Worlds (persistent) | `C:\Users\User\saves\` |
+| Profile game dir | your selected Minecraft profile directory |
+| Mods folder | `<profile-game-dir>\mods\` — exactly 3 files: `alaindustrial-*.jar` + `fabric-api-*.jar` + `energy-*.jar` |
+| Worlds (persistent) | `<profile-game-dir>\saves\` |
 
 Why progress is not lost: Gradle only writes to `build/` and `run/`. Replacing
 `alaindustrial-*.jar` in `mods\` does not touch the world in `saves\`.
@@ -86,15 +86,17 @@ Why progress is not lost: Gradle only writes to `build/` and `run/`. Replacing
 
 ```powershell
 # 1. Build (from the project root; JAVA_HOME = JDK 25)
-$env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-25.0.2.10-hotspot"
+# Optional: set this only if Java 25 is not already first on PATH.
+$env:JAVA_HOME = "<path-to-jdk-25>"
 $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
 .\gradlew.bat build
 
 # 2. Replace ONLY our jar in mods (leave fabric-api and energy alone)
-Get-ChildItem "C:\Users\User\mods" | Where-Object { $_.Name -like "alaindustrial*" } | Remove-Item -Force
+$mcDir = "<profile-game-dir>"
+Get-ChildItem "$mcDir\mods" | Where-Object { $_.Name -like "alaindustrial*" } | Remove-Item -Force
 $jar = Get-ChildItem "build\libs" | Where-Object { $_.Name -like "alaindustrial-*.jar" -and $_.Name -notlike "*sources*" } |
     Sort-Object LastWriteTime -Descending | Select-Object -First 1
-Copy-Item $jar.FullName "C:\Users\User\mods\" -Force
+Copy-Item $jar.FullName "$mcDir\mods\" -Force
 
 # 3. Open the launcher -> "Fabric Loader" profile -> Play -> your world.
 ```

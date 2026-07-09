@@ -10,9 +10,9 @@
 #
 # Layers:
 #   L1  Cyrillic text            -> the public repo is English-only.
-#   L2  AI traces                -> Claude/Anthropic/co-authored-by/... must never appear.
+#   L2  automation traces        -> assistant/tool co-author markers must never appear.
 #   L3  Secrets / local paths    -> tokens, keys, C:\Users\... never leak.
-#   L4  Denylisted paths         -> .claude/, docs internals, PRD, etc. never publish.
+#   L4  Denylisted paths         -> private-agent dirs, docs internals, PRD, etc. never publish.
 #
 # Exit: 0 = clean, 1 = violations found, 2 = usage error.
 # =============================================================================
@@ -24,6 +24,13 @@ set -uo pipefail
 export LC_ALL=C
 
 ROOT="${1:-.}"
+ROOT="${ROOT//\\//}"
+if [[ "$ROOT" =~ ^([A-Za-z]):/(.*)$ ]]; then
+  drive="${BASH_REMATCH[1]}"
+  rest="${BASH_REMATCH[2]}"
+  lower="$(printf '%s' "$drive" | tr '[:upper:]' '[:lower:]')"
+  [[ -d "/mnt/$lower/$rest" ]] && ROOT="/mnt/$lower/$rest"
+fi
 cd "$ROOT" || { echo "scan: cannot cd to $ROOT" >&2; exit 2; }
 
 # Cyrillic block U+0400–U+04FF encodes in UTF-8 as lead byte 0xD0–0xD3 followed
@@ -53,9 +60,9 @@ else
 fi
 # Text files only: skip binary assets by extension.
 mapfile -t files < <(printf '%s\n' "${allfiles[@]}" \
-  | grep -viE '\.(png|jpg|jpeg|gif|ico|jar|zip|ogg|wav|class|woff2|ttf)$' || true)
+  | grep -viE '\.(png|jpg|jpeg|webp|bmp|gif|ico|jar|zip|ogg|wav|class|woff2|ttf)$' || true)
 
-# The cleanliness tooling itself contains the very AI-term / secret patterns it
+# The cleanliness tooling itself contains the very trace / secret patterns it
 # searches for (this scanner's own regexes; guard.yml's commit-metadata grep).
 # Exclude those two files from content scans so they never flag themselves — they
 # are our CI infrastructure, not published mod content.
@@ -63,7 +70,7 @@ mapfile -t files < <(printf '%s\n' "${files[@]}" | grep -vE '(^|/)(scan-clean\.s
 
 # In-game translation files legitimately contain every language (incl. Cyrillic
 # ru_ru/uk_ua/...). They are a shipped feature, not a leak — excluded from the
-# English-only (L1) check, but still scanned by L2/L3 (AI traces / secrets).
+# English-only (L1) check, but still scanned by L2/L3 (automation traces / secrets).
 mapfile -t l1_files < <(printf '%s\n' "${files[@]}" | grep -vE '/lang/[a-z_]+\.json$' || true)
 
 fail=0
@@ -84,17 +91,31 @@ scan() {
 # Scans everything EXCEPT in-game lang translation files.
 scan "L1 Cyrillic text (non-English)"        "-P"  "$CYRILLIC"  l1_files
 
-# L2 — explicit AI / assistant traces.
-scan "L2 AI traces"                          "-iE" \
-  'claude|anthropic|co-authored-by|generated with|copilot|noreply@anthropic|artificial intelligence|\bgpt\b|\bllm\b'
+# L2 — explicit assistant/tooling traces. Pattern is assembled from fragments so
+# the public guard does not publish the blocked tokens as readable prose.
+trace_pattern="$(
+  printf '%s|' \
+    "c""laude" \
+    "a""nthropic" \
+    "co-authored""-by" \
+    "generated"" with" \
+    "co""pilot" \
+    "noreply@""an""thropic" \
+    "artificial"" intelligence" \
+    "\\bg""pt\\b" \
+    "\\bl""lm\\b" \
+    "\\bA""I\\b" \
+  | sed 's/|$//'
+)"
+scan "L2 automation/tooling traces"           "-iE" "$trace_pattern"
 
-# L2b — bare "AI" word. Higher false-positive risk, reported separately so a
+# L2b — bare assistant marker. Higher false-positive risk, reported separately so a
 # human can clear legitimate hits at a glance.
-scan "L2 bare 'AI' token (review manually)"  "-E"  '\bAI\b'
+scan "L2 bare marker token (review manually)" "-E"  '\bA''I\b'
 
 # L3 — secrets and machine-local paths.
 scan "L3 secrets / local machine paths"      "-E"  \
-  'PRIVATE KEY|ghp_[A-Za-z0-9]{20,}|xox[baprs]-[A-Za-z0-9-]+|AKIA[0-9A-Z]{16}|C:\\\\Users\\\\'
+  'PRIVATE KEY|ghp_[A-Za-z0-9]{20,}|xox[baprs]-[A-Za-z0-9-]+|AKIA[0-9A-Z]{16}|C:\\Users\\|[A-Za-z]:/Users/|/mnt/[a-z]/Users/|/Users/[A-Za-z0-9._-]+/|/home/[A-Za-z0-9._-]+/'
 
 # L3b — sensitive filenames anywhere in the tree.
 badnames=$(printf '%s\n' "${files[@]}" \
@@ -107,7 +128,7 @@ fi
 
 # L4 — denylisted paths that must NEVER be published.
 denied=$(printf '%s\n' "${files[@]}" \
-  | grep -iE '(^|/)(\.claude|\.agents|\.githooks|tools)/|(^|/)(PRD|AGENTS|CLAUDE)\.md$' || true)
+  | grep -iE '(^|/)(\.c[l]aude|\.agents|\.githooks|tools)/|(^|/)(PRD|AGENTS|C[L]AUDE)\.md$' || true)
 if [[ -n "$denied" ]]; then
   printf '❌ L4 denylisted path present\n'
   printf '%s\n' "$denied" | sed 's/^/   /'
@@ -115,6 +136,6 @@ if [[ -n "$denied" ]]; then
 fi
 
 if [[ $fail -eq 0 ]]; then
-  echo "✅ Cleanliness gate passed — no Cyrillic, AI traces, secrets, or denylisted paths."
+  echo "✅ Cleanliness gate passed — no Cyrillic, automation traces, secrets, or denylisted paths."
 fi
 exit $fail
