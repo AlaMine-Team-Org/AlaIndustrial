@@ -241,7 +241,7 @@ public class CablePlacementGameTest {
 	 * The two axial cables' arms toward the box must be {@code true} (positive control that proves
 	 * {@code updateShape} ran), the other four {@code false}.
 	 *
-	 * @covers R-NRG-03 (battery box single-axis IO: front input / back output only)
+	 * @covers R-NRG-03 (battery box single-axis IO, front/back faces only)
 	 */
 	@GameTest
 	public void cableConnectsOnlyToBatteryBoxIOFaces(GameTestHelper helper) {
