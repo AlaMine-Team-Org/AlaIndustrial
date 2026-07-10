@@ -101,6 +101,9 @@ public final class ModContent {
 	public static Supplier<Item> ALIGNMENT_CHIP_DAY = unbound("ALIGNMENT_CHIP_DAY");
 	public static Supplier<Item> ALIGNMENT_CHIP_NIGHT = unbound("ALIGNMENT_CHIP_NIGHT");
 	public static Supplier<Item> WINDMILL_ROTOR = unbound("WINDMILL_ROTOR");
+	public static Supplier<Item> WOODEN_GEAR = unbound("WOODEN_GEAR");
+	public static Supplier<Item> TEMPERED_IRON = unbound("TEMPERED_IRON");
+	public static Supplier<Item> TEMPERED_IRON_PICKAXE = unbound("TEMPERED_IRON_PICKAXE");
 	public static Supplier<Item> IRON_DUST = unbound("IRON_DUST");
 	public static Supplier<Item> COPPER_DUST = unbound("COPPER_DUST");
 	public static Supplier<Item> GOLD_DUST = unbound("GOLD_DUST");

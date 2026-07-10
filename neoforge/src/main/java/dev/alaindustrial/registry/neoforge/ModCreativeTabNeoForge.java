@@ -72,6 +72,8 @@ public final class ModCreativeTabNeoForge {
 						output.accept(ModItemsNeoForge.ALIGNMENT_CHIP_DAY.get());
 						output.accept(ModItemsNeoForge.ALIGNMENT_CHIP_NIGHT.get());
 						output.accept(ModItemsNeoForge.WINDMILL_ROTOR.get());
+						output.accept(ModItemsNeoForge.WOODEN_GEAR.get());
+						output.accept(ModItemsNeoForge.TEMPERED_IRON.get());
 						output.accept(ModItemsNeoForge.IRON_DUST.get());
 						output.accept(ModItemsNeoForge.COPPER_DUST.get());
 						output.accept(ModItemsNeoForge.GOLD_DUST.get());
@@ -80,6 +82,8 @@ public final class ModCreativeTabNeoForge {
 						output.accept(ModItemsNeoForge.EMERALD_DUST.get());
 						output.accept(ModItemsNeoForge.LAPIS_DUST.get());
 						output.accept(ModItemsNeoForge.NETWORK_ANALYZER.get());
+						// Tools
+						output.accept(ModItemsNeoForge.TEMPERED_IRON_PICKAXE.get());
 					})
 					.build());
 

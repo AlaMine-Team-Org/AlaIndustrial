@@ -1,16 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
+  "pattern": [
+    "PIP",
+    "CGC",
+    "PIP"
+  ],
   "key": {
+    "P": "#minecraft:planks",
     "I": "minecraft:iron_ingot",
     "C": "alaindustrial:copper_cable",
-    "O": "minecraft:oak_planks"
+    "G": "alaindustrial:wooden_gear"
   },
-  "pattern": [
-    "OIO",
-    "OCO",
-    "OIO"
-  ],
   "result": {
     "id": "alaindustrial:windmill_rotor"
   }

@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.item.BlockItem;
@@ -33,6 +34,15 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> ALIGNMENT_CHIP_DAY = ITEMS.registerItem("alignment_chip_day", Item::new);
 	public static final DeferredItem<Item> ALIGNMENT_CHIP_NIGHT = ITEMS.registerItem("alignment_chip_night", Item::new);
 	public static final DeferredItem<Item> WINDMILL_ROTOR = ITEMS.registerItem("windmill_rotor", Item::new);
+	public static final DeferredItem<Item> WOODEN_GEAR = ITEMS.registerItem("wooden_gear", Item::new);
+	public static final DeferredItem<Item> TEMPERED_IRON = ITEMS.registerItem("tempered_iron", Item::new);
+	// Tempered-iron pickaxe — first mod tool (MOD-054). MC 26.2 has no PickaxeItem class: a pickaxe is
+	// a plain Item whose `minecraft:tool` component is attached via Item.Properties.pickaxe(...). The
+	// third arg is a Properties-unary-op that applies the tempered-iron material (durability/speed/
+	// damage/enchant). setId is applied automatically by NeoForge, matching the Fabric helper.
+	public static final DeferredItem<Item> TEMPERED_IRON_PICKAXE =
+			ITEMS.registerItem("tempered_iron_pickaxe", Item::new,
+					p -> p.pickaxe(ModToolMaterials.TEMPERED_IRON, 1.0f, -2.8f));
 	public static final DeferredItem<Item> IRON_DUST = ITEMS.registerItem("iron_dust", Item::new);
 	public static final DeferredItem<Item> COPPER_DUST = ITEMS.registerItem("copper_dust", Item::new);
 	public static final DeferredItem<Item> GOLD_DUST = ITEMS.registerItem("gold_dust", Item::new);
@@ -129,6 +139,9 @@ public final class ModItemsNeoForge {
 		ModContent.ALIGNMENT_CHIP_DAY = ALIGNMENT_CHIP_DAY;
 		ModContent.ALIGNMENT_CHIP_NIGHT = ALIGNMENT_CHIP_NIGHT;
 		ModContent.WINDMILL_ROTOR = WINDMILL_ROTOR;
+		ModContent.WOODEN_GEAR = WOODEN_GEAR;
+		ModContent.TEMPERED_IRON = TEMPERED_IRON;
+		ModContent.TEMPERED_IRON_PICKAXE = TEMPERED_IRON_PICKAXE;
 		ModContent.IRON_DUST = IRON_DUST;
 		ModContent.COPPER_DUST = COPPER_DUST;
 		ModContent.GOLD_DUST = GOLD_DUST;

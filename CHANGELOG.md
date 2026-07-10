@@ -1,20 +1,16 @@
-## 0.1.14
+## 0.1.15
 
-<p><img alt="Ala Industrial 0.1.14 — now in 20 languages" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.14/release-media/v0.1.14/changelog.png" width="720"></p>
+<p><img alt="Tempered iron pickaxe, tempered iron ingot and wooden gear — the new items in this update" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.15/release-media/v0.1.15/changelog.png" width="720"></p>
 
-Ala Industrial is now available in **20 languages**. This update adds two new translations and polishes a dozen existing ones.
+This update adds a new mid-tier metal, the mod's first custom tool, and a craftable mechanical part that ties two of the early generators together.
 
-### Added
+### Gameplay
 
-- **Vietnamese** and **Bengali** translations — the full mod, translated.
-- The mod is now translated into **20 languages** in total.
+- **Tempered Iron** — a new smeltable metal. Heat an iron ingot in a furnace, blast furnace, or the mod's electric furnace to get a darker, sturdier ingot that sits a step above regular iron.
+- **Tempered Iron Pickaxe** — the mod's first custom tool. Crafted like a vanilla pickaxe but with tempered iron, it mines faster and lasts longer than an iron pickaxe (350 durability, mining speed 7.0) while still leaving diamond-level blocks — diamond ore, obsidian, ancient debris — for the diamond tier.
+- **Wooden Gear** — a new mechanical part. Four sticks and any wooden button in a crafting cross make the first "mechanical" component, opening the door to more machinery.
 
-### Quality of Life
+### Changes
 
-- **Block names now match across the whole game.** Searching for a block by name in advancements, tooltips, or the mod menu actually finds it. Several languages had the same generator split across two or three different words.
-- **Machine sounds now say the right name.** The subtitle you read when a machine runs now matches the block name you see in your inventory.
-- **Ore and metal names follow vanilla conventions.** Deepslate ores, raw metals, and dusts are named consistently with how vanilla Minecraft names them in each language.
-
-### Bug Fixes
-
-- Fixed assorted translation mistakes across Turkish, Hindi, Swedish, Dutch, German, French, Spanish, Italian, Indonesian, Japanese, Korean, Polish, and Brazilian Portuguese — including made-up words, reversed meanings, and advancement titles that were over-capitalized.
+- **Windmill Rotor** recipe reworked. The new Wooden Gear now sits at the center of the rotor as its mechanical core, planks now accept any wood type instead of only oak, and the layout reads as a clear vertical/horizontal cross.
+- **Wind Mill** recipe reworked to match. The Wooden Gear takes the center slot, planks accept any wood type, and tin was dropped from the recipe — the generator is now built around copper and the new gear.

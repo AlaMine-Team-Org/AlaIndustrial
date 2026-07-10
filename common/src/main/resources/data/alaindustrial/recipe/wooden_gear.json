@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" S ",
+		"SBS",
+		" S "
+	],
+	"key": {
+		"S": "minecraft:stick",
+		"B": "#minecraft:wooden_buttons"
+	},
+	"result": {
+		"id": "alaindustrial:wooden_gear",
+		"count": 1
+	}
+}

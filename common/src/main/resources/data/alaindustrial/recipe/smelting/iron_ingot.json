@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:smelting",
+  "ingredient": "minecraft:iron_ingot",
+  "result": {
+    "id": "alaindustrial:tempered_iron",
+    "count": 1
+  },
+  "energy": 200
+}

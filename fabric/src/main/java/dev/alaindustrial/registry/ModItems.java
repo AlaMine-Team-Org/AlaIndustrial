@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.core.Registry;
@@ -36,6 +37,9 @@ public final class ModItems {
 	public static final Item ALIGNMENT_CHIP_DAY = item("alignment_chip_day");
 	public static final Item ALIGNMENT_CHIP_NIGHT = item("alignment_chip_night");
 	public static final Item WINDMILL_ROTOR = item("windmill_rotor");
+	public static final Item WOODEN_GEAR = item("wooden_gear");
+	public static final Item TEMPERED_IRON = item("tempered_iron");
+	public static final Item TEMPERED_IRON_PICKAXE = temperedIronPickaxe("tempered_iron_pickaxe");
 	public static final Item IRON_DUST = item("iron_dust");
 	public static final Item COPPER_DUST = item("copper_dust");
 	public static final Item GOLD_DUST = item("gold_dust");
@@ -102,6 +106,18 @@ public final class ModItems {
 				new NetworkAnalyzerItem(new Item.Properties().setId(key).stacksTo(1)));
 	}
 
+	// Hand-held pickaxe built from tempered iron (first mod tool, MOD-054). In MC 26.2 there is no
+	// PickaxeItem class: a pickaxe is a plain Item with a `minecraft:tool` component attached via
+	// Item.Properties.pickaxe(ToolMaterial, attackDamage, attackSpeed). Args 1.0f / -2.8f match the
+	// vanilla iron pickaxe; the tempered-iron material (durability/speed/damage/enchant) is the upgrade.
+	private static Item temperedIronPickaxe(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new Item(new Item.Properties()
+						.pickaxe(ModToolMaterials.TEMPERED_IRON, 1.0f, -2.8f)
+						.setId(key)));
+	}
+
 	private static BlockItem blockItem(String path, Block block) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		BlockItem item = new BlockItem(block, new Item.Properties().useBlockDescriptionPrefix().setId(key));
@@ -162,6 +178,8 @@ public final class ModItems {
 					output.accept(ALIGNMENT_CHIP_DAY);
 					output.accept(ALIGNMENT_CHIP_NIGHT);
 					output.accept(WINDMILL_ROTOR);
+					output.accept(WOODEN_GEAR);
+					output.accept(TEMPERED_IRON);
 					output.accept(IRON_DUST);
 					output.accept(COPPER_DUST);
 					output.accept(GOLD_DUST);
@@ -170,6 +188,8 @@ public final class ModItems {
 					output.accept(EMERALD_DUST);
 					output.accept(LAPIS_DUST);
 					output.accept(NETWORK_ANALYZER);
+					// Tools
+					output.accept(TEMPERED_IRON_PICKAXE);
 				})
 				.build();
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TAB, tab);
@@ -188,6 +208,9 @@ public final class ModItems {
 		ModContent.ALIGNMENT_CHIP_DAY = () -> ALIGNMENT_CHIP_DAY;
 		ModContent.ALIGNMENT_CHIP_NIGHT = () -> ALIGNMENT_CHIP_NIGHT;
 		ModContent.WINDMILL_ROTOR = () -> WINDMILL_ROTOR;
+		ModContent.WOODEN_GEAR = () -> WOODEN_GEAR;
+		ModContent.TEMPERED_IRON = () -> TEMPERED_IRON;
+		ModContent.TEMPERED_IRON_PICKAXE = () -> TEMPERED_IRON_PICKAXE;
 		ModContent.IRON_DUST = () -> IRON_DUST;
 		ModContent.COPPER_DUST = () -> COPPER_DUST;
 		ModContent.GOLD_DUST = () -> GOLD_DUST;

@@ -1,0 +1,8 @@
+{
+	"type": "minecraft:smelting",
+	"category": "misc",
+	"ingredient": "minecraft:iron_ingot",
+	"result": { "id": "alaindustrial:tempered_iron" },
+	"experience": 0.5,
+	"cookingtime": 200
+}
