@@ -50,8 +50,13 @@ public final class WindMillRotorBlockEntityRenderer<T extends MachineBlockEntity
 		state.facing = entity.getBlockState().hasProperty(HorizontalMachineBlock.FACING)
 				? entity.getBlockState().getValue(HorizontalMachineBlock.FACING)
 				: Direction.NORTH;
-		state.visible = !(entity instanceof WindMillBlockEntity windMill)
-				|| !windMill.getItem(WindMillBlockEntity.ROTOR_SLOT).isEmpty();
+		// Interference (MOD-051): when a neighbouring mill's rotor disc overlaps this one's, both
+		// mills stall and hide their blades — rendering two overlapping coplanar quads would clip
+		// and z-fight. Channel 3 is the synced mode code shared by the whole wind mill family.
+		boolean interfered = entity.getDataAccess().get(3) == WindMillBlockEntity.MODE_INTERFERENCE;
+		state.visible = !interfered
+				&& (!(entity instanceof WindMillBlockEntity windMill)
+						|| !windMill.getItem(WindMillBlockEntity.ROTOR_SLOT).isEmpty());
 
 		int production = entity.getDataAccess().get(2);
 		state.angle = production <= 0 ? 0.0F : rotationAngle(entity, partialTicks, production);

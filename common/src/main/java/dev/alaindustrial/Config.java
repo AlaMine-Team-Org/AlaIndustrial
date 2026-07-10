@@ -139,6 +139,13 @@ public final class Config {
 	// --- Energy network ---
 	/** Max awake energy networks processed per server tick; the rest are deferred round-robin. */
 	public static int networksPerTick = 512;
+	/**
+	 * Cap on how many distinct {@code EnergyNetwork}s the Network Analyzer's Traverse mode (MOD-047)
+	 * will walk through storage sinks before stopping. Visualization-only — never affects energy
+	 * distribution. Generous default so realistic factories stitch fully; absurd megabases cap out
+	 * with an actionbar warning instead of freezing the client.
+	 */
+	public static int networkAnalyzerMaxTraversedNetworks = 32;
 
 	/** Effective machine drain per tick after the speed multiplier (E_op stays ~constant). */
 	public static int machineEuPerTickEffective() {
@@ -225,6 +232,11 @@ public final class Config {
 					if (networksPerTick <= 0) {
 						networksPerTick = 512;
 					}
+					networkAnalyzerMaxTraversedNetworks = GsonHelper.getAsInt(o, "networkAnalyzerMaxTraversedNetworks",
+							networkAnalyzerMaxTraversedNetworks);
+					if (networkAnalyzerMaxTraversedNetworks < 1) {
+						networkAnalyzerMaxTraversedNetworks = 32;
+					}
 				}
 				Industrialization.LOGGER.info("[config] loaded {}", path);
 			} else {
@@ -283,6 +295,7 @@ public final class Config {
 		o.addProperty("extractorDuration", extractorDuration);
 		o.addProperty("copperCableLossPerBlock", copperCableLossPerBlock);
 		o.addProperty("networksPerTick", networksPerTick);
+		o.addProperty("networkAnalyzerMaxTraversedNetworks", networkAnalyzerMaxTraversedNetworks);
 		return o;
 	}
 }

@@ -171,13 +171,20 @@ public class CableBlock extends AbstractMachineBlock {
 	 * A cable connects to any adjacent energy block of this mod — other cables, generators, machines,
 	 * storage — but not to pure-container blocks that happen to inherit {@link AbstractMachineBlock}
 	 * for non-energy reasons (e.g. {@link IronChestBlock}, which is a chest, not an energy receiver).
-	 * The {@link AbstractMachineBlock#isCableConnectable()} marker carries that distinction while
-	 * keeping the check at the Block level (always available), so the connection is correct the
-	 * instant the block is placed — no block-entity load race, no visual gaps (MOD-038).
+	 * The face-aware {@link AbstractMachineBlock#isCableConnectable(BlockState, Direction)} marker
+	 * carries both that distinction and the per-face energy role, while keeping the check at the Block
+	 * level (always available), so the connection is correct the instant the block is placed — no
+	 * block-entity load race, no visual gaps (MOD-038).
+	 *
+	 * <p>{@code dir.getOpposite()} is the world face of the neighbour block the cable touches, so a
+	 * block with a non-uniform energy role (e.g. a wind mill outputting only from its back) draws an
+	 * arm only toward the face that actually carries an energy port.
 	 */
 	private static boolean connectsTo(LevelReader level, BlockPos pos, Direction dir) {
-		Block block = level.getBlockState(pos.relative(dir)).getBlock();
-		return block instanceof AbstractMachineBlock machine && machine.isCableConnectable();
+		BlockState neighborState = level.getBlockState(pos.relative(dir));
+		Block block = neighborState.getBlock();
+		return block instanceof AbstractMachineBlock machine
+				&& machine.isCableConnectable(neighborState, dir.getOpposite());
 	}
 
 	/**

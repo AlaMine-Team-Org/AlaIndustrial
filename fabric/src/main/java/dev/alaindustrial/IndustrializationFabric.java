@@ -66,6 +66,12 @@ public class IndustrializationFabric implements ModInitializer {
 						dev.alaindustrial.registry.ModDataComponents.NETWORK_SCAN_ID,
 						dev.alaindustrial.registry.ModDataComponents.createNetworkScan());
 		dev.alaindustrial.registry.ModDataComponents.NETWORK_SCAN = () -> networkScan;
+		net.minecraft.core.component.DataComponentType<dev.alaindustrial.item.AnalyzerMode> networkAnalyzerMode =
+				net.minecraft.core.Registry.register(
+						net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE,
+						dev.alaindustrial.registry.ModDataComponents.NETWORK_ANALYZER_MODE_ID,
+						dev.alaindustrial.registry.ModDataComponents.createNetworkAnalyzerMode());
+		dev.alaindustrial.registry.ModDataComponents.NETWORK_ANALYZER_MODE = () -> networkAnalyzerMode;
 		ModBlocks.init();
 		ModBlockEntities.init();
 		ModMenus.init();

@@ -6,6 +6,7 @@ import dev.alaindustrial.core.EnergyRole;
 import dev.alaindustrial.core.EnergyTier;
 import dev.alaindustrial.core.SolarSky;
 import dev.alaindustrial.core.WindMillClearance;
+import dev.alaindustrial.core.WindMillInterference;
 import dev.alaindustrial.core.WindMillOutput;
 import dev.alaindustrial.menu.WindMillMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -56,8 +57,9 @@ import net.minecraft.world.level.storage.ValueOutput;
  * that {@code windMillEvolveTicks} = 33 600 would otherwise cause (mirrors SolarPanelBlockEntity).
  *
  * <p>Mode codes: {@code no_rotor} (no rotor), {@code roofed} (no open sky), {@code obstructed}
- * (a block stalls the blades), {@code calm}/{@code breeze} (clear), {@code gale} (rain),
- * {@code storm} (thunder). Priority of failure reasons: rotor → sky → obstruction → weather.
+ * (a block stalls the blades), {@code interference} (a neighbouring mill's rotor disc overlaps ours,
+ * MOD-051), {@code calm}/{@code breeze} (clear), {@code gale} (rain), {@code storm} (thunder).
+ * Priority of failure reasons: rotor → sky → obstruction → interference → weather.
  */
 public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements MenuProvider {
 	/** Slot indices shared with the menu. */
@@ -79,11 +81,14 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	public static final int MODE_BREEZE = 4;
 	public static final int MODE_GALE = 5;
 	public static final int MODE_STORM = 6;
+	/** A neighbouring mill's rotor disc overlaps this mill's disc (MOD-051) — both mills stall. */
+	public static final int MODE_INTERFERENCE = 7;
 
 	/** Transient sampling state — recomputed from the world, never serialised. */
 	private int sampleCounter = 0;
 	private int cachedRate = 0;
 	private int cachedMode = MODE_NO_ROTOR;
+	private boolean cachedInterfered = false;
 
 	private int evolveProgress;
 
@@ -137,6 +142,7 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 			this.sampleCounter = 0;
 			this.cachedRate = 0;
 			this.cachedMode = MODE_NO_ROTOR;
+			this.cachedInterfered = false;
 			return 0;
 		}
 
@@ -148,13 +154,34 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 				: Direction.NORTH;
 		boolean obstructed = sky && WindMillClearance.hasObstruction(level, pos, facing);
 
+		// --- Production: sample on tick 0, then every windMillSampleTicks; cache in between. ---
+		// Sampled before evolution so the evolution gate below sees a fresh interference flag.
+		if (sampleCounter % Config.windMillSampleTicks == 0) {
+			int previousRate = cachedRate;
+			int previousMode = cachedMode;
+			// Rotor interference (MOD-051): a neighbouring mill's rotor disc overlapping ours stalls
+			// both mills. Scanned only on the sample cadence (a 7×7×7 sweep is too heavy per tick)
+			// and only when the blades could otherwise turn — ROOFED and OBSTRUCTED mask it.
+			cachedInterfered = sky && !obstructed && WindMillInterference.hasInterference(level, pos, facing);
+			// An obstruction or interference zeroes the rate (blades cannot turn) regardless of
+			// height or weather.
+			cachedRate = obstructed || cachedInterfered ? 0 : sampleRate(level, pos);
+			cachedMode = modeFor(sky, obstructed, cachedInterfered, cachedRate,
+					level.isRaining(), level.isThundering());
+			if (cachedRate != previousRate || cachedMode != previousMode) {
+				syncBlockEntityToClient();
+			}
+		}
+		sampleCounter++;
+
 		// --- Evolution: advance while a chip sees open sky AND free blades (rotor already installed). ---
 		// The wind mill shares the solar-panel evolution chips: day → high-altitude, night → storm.
 		// One chip family covers both generator families so a player's chip investment transfers.
+		// Interference freezes progress like an obstruction does: blades that cannot turn do not evolve.
 		ItemStack chip = items.get(CHIP_SLOT);
 		boolean dayChip = chip.is(ModContent.ALIGNMENT_CHIP_DAY.get());
 		boolean nightChip = chip.is(ModContent.ALIGNMENT_CHIP_NIGHT.get());
-		if ((dayChip || nightChip) && sky && !obstructed) {
+		if ((dayChip || nightChip) && sky && !obstructed && !cachedInterfered) {
 			evolveProgress++;
 			if (evolveProgress >= Config.windMillEvolveTicks) {
 				evolveInto(level, pos, dayChip ? ModContent.HIGH_ALTITUDE_WIND_MILL.get() : ModContent.STORM_WIND_MILL.get());
@@ -162,19 +189,6 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 			}
 			setChanged();
 		}
-
-		// --- Production: sample on tick 0, then every windMillSampleTicks; cache in between. ---
-		if (sampleCounter % Config.windMillSampleTicks == 0) {
-			int previousRate = cachedRate;
-			int previousMode = cachedMode;
-			// An obstruction zeroes the rate (blades cannot turn) regardless of height or weather.
-			cachedRate = obstructed ? 0 : sampleRate(level, pos);
-			cachedMode = modeFor(sky, obstructed, cachedRate, level.isRaining(), level.isThundering());
-			if (cachedRate != previousRate || cachedMode != previousMode) {
-				syncBlockEntityToClient();
-			}
-		}
-		sampleCounter++;
 		this.progress = cachedRate;
 		this.maxProgress = cachedMode;
 		return cachedRate;
@@ -184,14 +198,19 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	 * Map the current sky/obstruction/rate/weather state to a GUI mode code. Order is the priority of
 	 * failure reasons: a roofed mill is dead for a more fundamental reason (no sky at all) than an
 	 * obstructed one, so ROOFED masks OBSTRUCTED — the player should fix the roof first. Obstruction
-	 * in turn masks weather, because even a storm cannot turn blocked blades.
+	 * masks interference (clear the solid block before worrying about spacing), and both mask
+	 * weather, because even a storm cannot turn blocked blades.
 	 */
-	private static int modeFor(boolean sky, boolean obstructed, int rate, boolean raining, boolean thundering) {
+	private static int modeFor(boolean sky, boolean obstructed, boolean interfered, int rate,
+			boolean raining, boolean thundering) {
 		if (!sky) {
 			return MODE_ROOFED;
 		}
 		if (obstructed) {
 			return MODE_OBSTRUCTED;
+		}
+		if (interfered) {
+			return MODE_INTERFERENCE;
 		}
 		if (thundering) {
 			return MODE_STORM;

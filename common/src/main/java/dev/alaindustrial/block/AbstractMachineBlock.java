@@ -4,6 +4,7 @@ import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModCriteria;
 import dev.alaindustrial.sound.MachineHum;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
@@ -100,6 +101,24 @@ public abstract class AbstractMachineBlock extends BaseEntityBlock {
 	 */
 	public boolean isCableConnectable() {
 		return true;
+	}
+
+	/**
+	 * Whether a cable on the given {@code side} of this block should visually connect to this face.
+	 * Face-aware variant of {@link #isCableConnectable()}: a block whose energy role varies per face
+	 * (e.g. a wind mill that outputs EU only from its back) overrides this so the cable draws an arm
+	 * only toward faces that actually carry an energy port, not toward inert faces.
+	 *
+	 * <p>{@code side} is the <b>world face of this block</b> the cable touches (the direction from
+	 * this block toward the cable), matching the convention of
+	 * {@link dev.alaindustrial.core.EnergyPortHost#energyPort(Direction)}. The decision is made purely
+	 * from the {@link BlockState} (e.g. {@code FACING}) — no block entity — for the same no-load-race
+	 * reason as the face-agnostic marker. Default delegates to {@link #isCableConnectable()} so blocks
+	 * with a uniform per-face role (every machine, cable, storage, the iron chest) keep their current
+	 * behaviour unchanged.
+	 */
+	public boolean isCableConnectable(BlockState state, Direction side) {
+		return isCableConnectable();
 	}
 
 	/** Server-only ticker that forwards to {@link MachineBlockEntity#serverTick}. */

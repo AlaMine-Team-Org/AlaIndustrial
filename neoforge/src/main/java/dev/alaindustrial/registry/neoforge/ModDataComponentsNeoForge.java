@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.AnalyzerMode;
 import dev.alaindustrial.item.NetworkScanData;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.core.component.DataComponentType;
@@ -24,10 +25,14 @@ public final class ModDataComponentsNeoForge {
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<NetworkScanData>> NETWORK_SCAN =
 			DATA_COMPONENTS.register("network_scan", ModDataComponents::createNetworkScan);
 
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<AnalyzerMode>> NETWORK_ANALYZER_MODE =
+			DATA_COMPONENTS.register("network_analyzer_mode", ModDataComponents::createNetworkAnalyzerMode);
+
 	/** Bind the neutral handles to the deferred holders. Called from the {@code @Mod} ctor after register. */
 	public static void init() {
 		ModDataComponents.STORED_ENERGY = STORED_ENERGY;
 		ModDataComponents.NETWORK_SCAN = NETWORK_SCAN;
+		ModDataComponents.NETWORK_ANALYZER_MODE = NETWORK_ANALYZER_MODE;
 	}
 
 	private ModDataComponentsNeoForge() {

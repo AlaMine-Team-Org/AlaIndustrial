@@ -13,6 +13,7 @@ import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
+import dev.alaindustrial.item.AnalyzerMode;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import dev.alaindustrial.item.NetworkScanData;
 import dev.alaindustrial.registry.ModContent;
@@ -100,11 +101,20 @@ public final class MachineTooltips {
 	/**
 	 * Tooltip for the Network Analyzer tool. The usage line is always shown; the last scan (stored on the
 	 * item as {@link ModDataComponents#NETWORK_SCAN} the moment it is used) is replayed under [SHIFT] so
-	 * the reading persists in the inventory after the actionbar message fades (MOD-016).
+	 * the reading persists in the inventory after the actionbar message fades (MOD-016). The active mode
+	 * (TRAVERSE / STOP_AT_STORAGE, MOD-047) is shown right under the usage line so the player always knows
+	 * which behaviour a cable scan will use.
 	 */
 	private static void addNetworkAnalyzerTooltip(ItemStack stack, List<Component> lines, boolean shiftDown) {
 		lines.add(Component.translatable("tooltip.alaindustrial.network_analyzer.usage")
 				.withStyle(ChatFormatting.GRAY));
+		AnalyzerMode mode = stack.get(ModDataComponents.NETWORK_ANALYZER_MODE.get());
+		if (mode == null) {
+			mode = AnalyzerMode.TRAVERSE;
+		}
+		lines.add(Component.translatable("tooltip.alaindustrial.network_analyzer.mode_label",
+						Component.translatable("tooltip.alaindustrial.network_analyzer.mode." + mode.getSerializedName()))
+				.withStyle(ChatFormatting.AQUA));
 		NetworkScanData scan = stack.get(ModDataComponents.NETWORK_SCAN.get());
 		if (scan == null) {
 			return;
@@ -115,7 +125,7 @@ public final class MachineTooltips {
 			lines.add(Component.translatable("tooltip.alaindustrial.network_analyzer.cables", scan.cables())
 					.withStyle(ChatFormatting.GRAY));
 			lines.add(Component.translatable("tooltip.alaindustrial.network_analyzer.endpoints",
-					scan.producers(), scan.consumers()).withStyle(ChatFormatting.GRAY));
+					scan.producers(), scan.consumers(), scan.storage()).withStyle(ChatFormatting.GRAY));
 			lines.add(Component.translatable("tooltip.alaindustrial.network_analyzer.flow",
 					scan.supply(), scan.demand()).withStyle(ChatFormatting.GRAY));
 			lines.add(Component.translatable("tooltip.alaindustrial.network_analyzer.moved", scan.moved())

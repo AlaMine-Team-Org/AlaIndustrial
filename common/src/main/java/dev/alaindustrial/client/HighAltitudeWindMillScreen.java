@@ -97,6 +97,7 @@ public class HighAltitudeWindMillScreen extends AbstractContainerScreen<HighAlti
 			case WindMillBlockEntity.MODE_NO_ROTOR -> "gui.alaindustrial.wind_mill.mode.no_rotor";
 			case WindMillBlockEntity.MODE_ROOFED -> "gui.alaindustrial.wind_mill.mode.roofed";
 			case WindMillBlockEntity.MODE_OBSTRUCTED -> "gui.alaindustrial.wind_mill.mode.obstructed";
+			case WindMillBlockEntity.MODE_INTERFERENCE -> "gui.alaindustrial.wind_mill.mode.interference";
 			case WindMillBlockEntity.MODE_CALM -> "gui.alaindustrial.wind_mill.mode.calm";
 			default -> null;
 		};

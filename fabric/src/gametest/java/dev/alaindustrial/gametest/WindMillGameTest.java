@@ -361,6 +361,164 @@ public class WindMillGameTest {
 		helper.succeed();
 	}
 
+	/** Place a second wind mill (rotor installed) at the given position with the given FACING. */
+	private static WindMillBlockEntity placeNeighbour(GameTestHelper helper, BlockPos pos, Direction facing) {
+		helper.setBlock(pos, ModBlocks.WIND_MILL.defaultBlockState()
+				.setValue(dev.alaindustrial.block.HorizontalMachineBlock.FACING, facing));
+		WindMillBlockEntity be = helper.getBlockEntity(pos, WindMillBlockEntity.class);
+		if (be == null) {
+			helper.fail("neighbour wind mill block entity missing after placement");
+		}
+		be.setItem(WindMillBlockEntity.ROTOR_SLOT, new ItemStack(ModItems.WINDMILL_ROTOR));
+		return be;
+	}
+
+	private static void assertMode(GameTestHelper helper, WindMillBlockEntity mill, String label, int expected) {
+		int mode = mill.getDataAccess().get(3);
+		if (mode != expected) {
+			helper.fail(label + " mode = " + mode + "; expected " + expected);
+		}
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-NEG06 — two mills side by side (directly adjacent, same FACING) with
+	 *     rotors in both: the 2×2 rotor discs are coplanar and overlap by a full block, so BOTH mills
+	 *     report MODE_INTERFERENCE and produce nothing — there is no tie-break (MOD-051). Even a storm
+	 *     does not override interference.
+	 * @covers R-NRG-04
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Neg06_sideBySideInterference(GameTestHelper helper) {
+		WindMillBlockEntity a = place(helper); // FACING NORTH at POS
+		WindMillBlockEntity b = placeNeighbour(helper, POS.east(), Direction.NORTH);
+		setRaining(helper, true);
+		a.getEnergyStorage().amount = 0;
+		b.getEnergyStorage().amount = 0;
+		drive(a, helper, Config.windMillSampleTicks + 1);
+		drive(b, helper, Config.windMillSampleTicks + 1);
+		assertMode(helper, a, "side-by-side mill A", WindMillBlockEntity.MODE_INTERFERENCE);
+		assertMode(helper, b, "side-by-side mill B", WindMillBlockEntity.MODE_INTERFERENCE);
+		if (a.getEnergyStorage().getAmount() != 0 || b.getEnergyStorage().getAmount() != 0) {
+			helper.fail("interfering mills generated EU; expected 0 for both");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-NEG07 — two mills facing each other across a one-block gap: both discs
+	 *     live in front of their mills and overlap inside the gap column, so both report
+	 *     MODE_INTERFERENCE (MOD-051). (Directly adjacent face-to-face mills are OBSTRUCTED instead —
+	 *     each disc sits inside the other mill's solid block, which WindMillClearance already catches.)
+	 * @covers R-NRG-04
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Neg07_faceToFaceInterference(GameTestHelper helper) {
+		helper.setBlock(POS, ModBlocks.WIND_MILL.defaultBlockState()
+				.setValue(dev.alaindustrial.block.HorizontalMachineBlock.FACING, Direction.EAST));
+		WindMillBlockEntity a = helper.getBlockEntity(POS, WindMillBlockEntity.class);
+		if (a == null) {
+			helper.fail("wind mill block entity missing after placement");
+		}
+		a.setItem(WindMillBlockEntity.ROTOR_SLOT, new ItemStack(ModItems.WINDMILL_ROTOR));
+		WindMillBlockEntity b = placeNeighbour(helper, POS.east(2), Direction.WEST);
+		setClear(helper);
+		drive(a, helper, Config.windMillSampleTicks + 1);
+		drive(b, helper, Config.windMillSampleTicks + 1);
+		assertMode(helper, a, "face-to-face mill A", WindMillBlockEntity.MODE_INTERFERENCE);
+		assertMode(helper, b, "face-to-face mill B", WindMillBlockEntity.MODE_INTERFERENCE);
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-NEG08 — a mill running clean flips to MODE_INTERFERENCE within one
+	 *     sample window after a rotor is installed in an adjacent mill (the disc appears only with a
+	 *     rotor). Guards the "player builds a second mill next to a working one" path (MOD-051).
+	 * @covers R-NRG-04
+	 */
+	@GameTest(skyAccess = true, maxTicks = 160)
+	public void tcWindmill001Neg08_lateRotorTriggersInterference(GameTestHelper helper) {
+		WindMillBlockEntity a = place(helper); // FACING NORTH, rotor installed
+		setClear(helper);
+		// Neighbour mill exists but has NO rotor yet: no disc, no interference.
+		helper.setBlock(POS.east(), ModBlocks.WIND_MILL.defaultBlockState()
+				.setValue(dev.alaindustrial.block.HorizontalMachineBlock.FACING, Direction.NORTH));
+		WindMillBlockEntity b = helper.getBlockEntity(POS.east(), WindMillBlockEntity.class);
+		if (b == null) {
+			helper.fail("neighbour wind mill block entity missing after placement");
+		}
+		drive(a, helper, Config.windMillSampleTicks + 1);
+		int mode = a.getDataAccess().get(3);
+		if (mode == WindMillBlockEntity.MODE_INTERFERENCE) {
+			helper.fail("mill A interfered while the neighbour had no rotor; mode=" + mode);
+		}
+		// Install the neighbour's rotor: A must flip to INTERFERENCE on its next sample.
+		b.setItem(WindMillBlockEntity.ROTOR_SLOT, new ItemStack(ModItems.WINDMILL_ROTOR));
+		drive(a, helper, Config.windMillSampleTicks);
+		assertMode(helper, a, "mill A after neighbour rotor install", WindMillBlockEntity.MODE_INTERFERENCE);
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-NEG09 — control: mills two blocks apart (one air block between, same
+	 *     FACING) have discs meeting exactly edge-to-edge, which is NOT interference — both keep running.
+	 *     Guards against false positives that would outlaw legitimate compact wind farms (MOD-051).
+	 * @covers R-NRG-04
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Neg09_spacedMillsNotInterfering(GameTestHelper helper) {
+		WindMillBlockEntity a = place(helper); // FACING NORTH at POS
+		WindMillBlockEntity b = placeNeighbour(helper, POS.east(2), Direction.NORTH);
+		setClear(helper);
+		drive(a, helper, Config.windMillSampleTicks + 1);
+		drive(b, helper, Config.windMillSampleTicks + 1);
+		if (a.getDataAccess().get(3) == WindMillBlockEntity.MODE_INTERFERENCE
+				|| b.getDataAccess().get(3) == WindMillBlockEntity.MODE_INTERFERENCE) {
+			helper.fail("mills two blocks apart reported INTERFERENCE; discs only touch edge-to-edge");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-NEG10 — control: directly adjacent mills facing AWAY from each other
+	 *     (opposite FACING) put their discs on opposite sides — no overlap, no interference (MOD-051).
+	 *     Turning mills apart is the documented way to pack them tightly.
+	 * @covers R-NRG-04
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Neg10_backToBackNotInterfering(GameTestHelper helper) {
+		WindMillBlockEntity a = place(helper); // FACING NORTH at POS
+		WindMillBlockEntity b = placeNeighbour(helper, POS.east(), Direction.SOUTH);
+		setClear(helper);
+		drive(a, helper, Config.windMillSampleTicks + 1);
+		drive(b, helper, Config.windMillSampleTicks + 1);
+		if (a.getDataAccess().get(3) == WindMillBlockEntity.MODE_INTERFERENCE
+				|| b.getDataAccess().get(3) == WindMillBlockEntity.MODE_INTERFERENCE) {
+			helper.fail("opposite-facing adjacent mills reported INTERFERENCE; their discs cannot overlap");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-FUN04 — evolution freezes under interference: with a chip, a rotor and
+	 *     an interfering neighbour, the evolve counter does not advance (blades that cannot turn do not
+	 *     evolve — same rule as obstruction, MOD-051).
+	 * @covers R-NRG-04
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Fun04_interferenceFreezesEvolution(GameTestHelper helper) {
+		WindMillBlockEntity a = place(helper); // FACING NORTH, rotor installed
+		placeNeighbour(helper, POS.east(), Direction.NORTH); // interfering neighbour with rotor
+		setClear(helper);
+		a.setItem(WindMillBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_DAY));
+		a.setEvolveProgressTicks(0);
+		drive(a, helper, Config.windMillSampleTicks + 1);
+		if (a.getEvolveProgressTicks() != 0) {
+			helper.fail("evolve counter advanced under interference: " + a.getEvolveProgressTicks()
+					+ " ticks; expected 0");
+		}
+		helper.succeed();
+	}
+
 	/**
 	 * @implements TC-WINDMILL-001-FUN03 — with an altitude chip and a rotor installed, the evolve counter
 	 *     advances one tick per server-tick under open sky; once {@link Config#windMillEvolveTicks} is

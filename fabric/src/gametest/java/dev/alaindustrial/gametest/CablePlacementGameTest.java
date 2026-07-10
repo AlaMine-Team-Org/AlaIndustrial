@@ -1,7 +1,9 @@
 package dev.alaindustrial.gametest;
 
+import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.registry.ModBlocks;
 import dev.alaindustrial.registry.ModItems;
+import java.util.List;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -130,6 +132,12 @@ public class CablePlacementGameTest {
 	 * of the cable: WEST (chest) must be {@code false}, EAST (battery box, an energy block) must be
 	 * {@code true} — the EAST assertion is a positive control that proves {@code updateShape} did run
 	 * (otherwise both would stay {@code false}, the default, and the EAST check would fail).
+	 *
+	 * <p>The battery box is oriented {@code FACING=WEST} so its input face ({@code FACING}) points
+	 * toward the cable: the cable touches the box's WEST face, which is the box's front (input) face
+	 * — a connectable face. With a default {@code FACING=NORTH} the touched WEST face would be a side
+	 * (inert), and the arm would correctly be {@code false} (see
+	 * {@code cableConnectsOnlyToBatteryBoxIOFaces}), which would defeat this test's positive control.
 	 */
 	@GameTest
 	public void mod038_cableDoesNotConnectToIronChest(GameTestHelper helper) {
@@ -138,7 +146,9 @@ public class CablePlacementGameTest {
 		BlockPos batteryPos = new BlockPos(2, 2, 1); // EAST of the cable
 
 		helper.setBlock(cablePos, ModBlocks.COPPER_CABLE);
-		helper.setBlock(batteryPos, ModBlocks.BATTERY_BOX);
+		// FACING=WEST: the box's front (input) face points at the cable on its west side.
+		helper.setBlock(batteryPos, ModBlocks.BATTERY_BOX.defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		helper.setBlock(chestPos, ModBlocks.IRON_CHEST); // placed last -> notifies the cable
 
 		BlockState cable = helper.getLevel().getBlockState(helper.absolutePos(cablePos));
@@ -160,5 +170,108 @@ public class CablePlacementGameTest {
 	private static BlockHitResult hitOnCable(GameTestHelper helper) {
 		return new BlockHitResult(
 				Vec3.atCenterOf(helper.absolutePos(CABLE)), Direction.EAST, helper.absolutePos(CABLE), false);
+	}
+
+	/**
+	 * @implements TC-WINDMILL-CONNECT — a copper cable must draw a connection arm <b>only</b> toward the
+	 *     wind mill's back face ({@code FACING.getOpposite()}, the single energy output). Before the
+	 *     fix, {@code CableBlock.connectsTo} decided by block type alone, so it drew a misleading arm
+	 *     toward every face — even the inert front (rotor), the four sides and the top/bottom — even
+	 *     though no EU can flow there. The fix is the face-aware
+	 *     {@code AbstractMachineBlock#isCableConnectable(BlockState, Direction)}, which the wind mill
+	 *     overrides to allow only the back face.
+	 *
+	 * <p>Layout: wind mill at WIND (2,2,2) with default {@code FACING=NORTH} (so back/output face is
+	 * SOUTH, i.e. +Z). One cable touches each of the mill's six faces. The wind mill is placed LAST so
+	 * vanilla's block-update notifies each cable and {@code updateShape} recomputes its connection flag
+	 * (mirrors {@code mod038_cableDoesNotConnectToIronChest}). The cable on the mill's SOUTH (+Z) side
+	 * touches the output face → its arm toward the mill must be {@code true} (also the positive control
+	 * that proves {@code updateShape} ran); the other five cables' arms toward the mill must be
+	 * {@code false}.
+	 *
+	 * <p>{@code dirToMill} is the direction <b>from the cable toward the mill</b>, i.e. the
+	 * {@code PipeBlock.PROPERTY_BY_DIRECTION} key on the cable's own state — opposite of the mill face
+	 * it touches (e.g. the +Z cable looks NORTH at the mill).
+	 *
+	 * @covers R-NRG-03 (wind mill single back-face output), docs/blocks/generators/wind_mill.md §Energy
+	 */
+	@GameTest
+	public void cableConnectsOnlyToWindMillBackFace(GameTestHelper helper) {
+		BlockPos wind = new BlockPos(2, 2, 2); // FACING=NORTH → back/output face is SOUTH (+Z)
+		// One cable per wind mill face. dirToMill = direction FROM the cable TOWARD the mill (the cable's
+		// own PipeBlock connection key). The +Z cable touches the SOUTH/output face → expect true.
+		record CableFace(BlockPos cablePos, Direction dirToMill, boolean expectArm) {
+		}
+		List<CableFace> rig = List.of(
+				new CableFace(new BlockPos(2, 2, 3), Direction.NORTH, true),  // +Z side → mill's SOUTH/output face
+				new CableFace(new BlockPos(2, 2, 1), Direction.SOUTH, false), // −Z side → mill's NORTH/front (rotor)
+				new CableFace(new BlockPos(3, 2, 2), Direction.WEST, false),  // +X side → mill's EAST side
+				new CableFace(new BlockPos(1, 2, 2), Direction.EAST, false),  // −X side → mill's WEST side
+				new CableFace(new BlockPos(2, 3, 2), Direction.DOWN, false),  // +Y side → mill's top
+				new CableFace(new BlockPos(2, 1, 2), Direction.UP, false));   // −Y side → mill's bottom
+
+		// Place cables first, then the mill last so each cable gets a neighbour-changed update.
+		for (CableFace cf : rig) {
+			helper.setBlock(cf.cablePos(), ModBlocks.COPPER_CABLE);
+		}
+		helper.setBlock(wind, ModBlocks.WIND_MILL);
+
+		for (CableFace cf : rig) {
+			BlockState cableState = helper.getLevel().getBlockState(helper.absolutePos(cf.cablePos()));
+			boolean arm = cableState.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(cf.dirToMill()));
+			if (arm != cf.expectArm()) {
+				helper.fail("Wind mill cable arm toward mill (" + cf.dirToMill() + ") = " + arm
+						+ ", expected " + cf.expectArm() + " (only the +Z/output face connects); TC-WINDMILL-CONNECT");
+			}
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-BATTERYBOX-CONNECT — a copper cable must draw a connection arm <b>only</b> toward the
+	 *     battery box's two IO faces: the front ({@code FACING}, charge input) and the back
+	 *     ({@code FACING.getOpposite()}, discharge output). The four sides, top and bottom are inert —
+	 *     no cable arm, matching {@code BatteryBoxBlockEntity#energyRoleForFace} and the MOD-006
+	 *     single-axis IO layout. Before the face-aware {@code isCableConnectable} fix the cable drew a
+	 *     misleading arm toward every face.
+	 *
+	 * <p>Layout: battery box at BOX (2,2,2) with default {@code FACING=NORTH}, so front/input = NORTH
+	 * (−Z) and back/output = SOUTH (+Z). One cable touches each of its six faces; the box is placed
+	 * LAST so vanilla's block-update notifies each cable and {@code updateShape} recomputes the flags.
+	 * The two axial cables' arms toward the box must be {@code true} (positive control that proves
+	 * {@code updateShape} ran), the other four {@code false}.
+	 *
+	 * @covers R-NRG-03 (battery box single-axis IO: front input / back output only)
+	 */
+	@GameTest
+	public void cableConnectsOnlyToBatteryBoxIOFaces(GameTestHelper helper) {
+		BlockPos box = new BlockPos(2, 2, 2); // FACING=NORTH → front/input = NORTH (−Z), back/output = SOUTH (+Z)
+		// One cable per box face. dirToBox = direction FROM the cable TOWARD the box (the cable's own
+		// PipeBlock connection key). The −Z and +Z cables touch the front/back IO faces → expect true.
+		record CableFace(BlockPos cablePos, Direction dirToBox, boolean expectArm) {
+		}
+		List<CableFace> rig = List.of(
+				new CableFace(new BlockPos(2, 2, 1), Direction.SOUTH, true),  // −Z side → box's NORTH/front (input)
+				new CableFace(new BlockPos(2, 2, 3), Direction.NORTH, true),  // +Z side → box's SOUTH/back (output)
+				new CableFace(new BlockPos(3, 2, 2), Direction.WEST, false),  // +X side → box's EAST side
+				new CableFace(new BlockPos(1, 2, 2), Direction.EAST, false),  // −X side → box's WEST side
+				new CableFace(new BlockPos(2, 3, 2), Direction.DOWN, false),  // +Y side → box's top
+				new CableFace(new BlockPos(2, 1, 2), Direction.UP, false));   // −Y side → box's bottom
+
+		// Place cables first, then the box last so each cable gets a neighbour-changed update.
+		for (CableFace cf : rig) {
+			helper.setBlock(cf.cablePos(), ModBlocks.COPPER_CABLE);
+		}
+		helper.setBlock(box, ModBlocks.BATTERY_BOX);
+
+		for (CableFace cf : rig) {
+			BlockState cableState = helper.getLevel().getBlockState(helper.absolutePos(cf.cablePos()));
+			boolean arm = cableState.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(cf.dirToBox()));
+			if (arm != cf.expectArm()) {
+				helper.fail("Battery box cable arm toward box (" + cf.dirToBox() + ") = " + arm
+						+ ", expected " + cf.expectArm() + " (only −Z/front + +Z/back IO faces connect); TC-BATTERYBOX-CONNECT");
+			}
+		}
+		helper.succeed();
 	}
 }

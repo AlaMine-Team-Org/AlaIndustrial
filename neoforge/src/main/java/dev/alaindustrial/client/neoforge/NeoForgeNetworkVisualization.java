@@ -38,6 +38,7 @@ public final class NeoForgeNetworkVisualization {
 	private static final int TUBE_COLOR = 0xFF11577A;     // muted dark teal — edges
 	private static final int PRODUCER_COLOR = 0xFF84CC16; // green
 	private static final int CONSUMER_COLOR = 0xFFFB923C; // orange
+	private static final int STORAGE_COLOR = 0xFF38BDF8;  // light blue — storage sink / bridge node (MOD-047)
 	private static final int FLOW_COLOR = 0xFFFFE9A8;     // warm near-white flow spark
 
 	private static final float EDGE_WIDTH = 4.0f;
@@ -50,9 +51,10 @@ public final class NeoForgeNetworkVisualization {
 	private static ResourceKey<Level> dimension;
 	private static List<BlockPos> producers = List.of();
 	private static List<BlockPos> consumers = List.of();
+	private static List<BlockPos> storage = List.of();
 	private static List<NetworkEdge> edges = List.of();
 	private static List<FlowEdge> flowEdges = List.of();
-	/** Producer ∪ consumer positions — endpoints whose Y anchor follows their collision shape. */
+	/** Producer ∪ consumer ∪ storage positions — endpoints whose Y anchor follows their collision shape. */
 	private static java.util.Set<BlockPos> endpointPositions = java.util.Set.of();
 
 	private NeoForgeNetworkVisualization() {
@@ -70,7 +72,7 @@ public final class NeoForgeNetworkVisualization {
 		if (payload != cachedPayload) {
 			recompute(payload);
 		}
-		if (edges.isEmpty() && producers.isEmpty() && consumers.isEmpty()) {
+		if (edges.isEmpty() && producers.isEmpty() && consumers.isEmpty() && storage.isEmpty()) {
 			return;
 		}
 		ClientLevel level = Minecraft.getInstance().level;
@@ -91,6 +93,7 @@ public final class NeoForgeNetworkVisualization {
 			}
 			drawNodes(level, producers, PRODUCER_COLOR);
 			drawNodes(level, consumers, CONSUMER_COLOR);
+			drawNodes(level, storage, STORAGE_COLOR);
 
 			if (AlaClientConfig.networkOverlayFlowDots) {
 				double timeSeconds = System.currentTimeMillis() / 1000.0;
@@ -118,11 +121,17 @@ public final class NeoForgeNetworkVisualization {
 		List<BlockPos> cables = payload.cables();
 		producers = payload.producers();
 		consumers = payload.consumers();
-		edges = NetworkTopology.fullAdjacency(cables, producers, consumers);
+		storage = payload.storage();
+		// Storage sinks bridge cable segments (MOD-047); include them as endpoints so fullAdjacency
+		// routes edges through them and nodeCenter anchors them like any other endpoint.
+		java.util.List<BlockPos> allEndpoints = new java.util.ArrayList<>(
+				producers.size() + consumers.size() + storage.size());
+		allEndpoints.addAll(producers);
+		allEndpoints.addAll(consumers);
+		allEndpoints.addAll(storage);
+		edges = NetworkTopology.fullAdjacency(cables, allEndpoints, java.util.List.of());
 		flowEdges = NetworkTopology.flowDirections(edges, producers);
-		java.util.Set<BlockPos> endpoints = new java.util.HashSet<>(producers);
-		endpoints.addAll(consumers);
-		endpointPositions = endpoints;
+		endpointPositions = new java.util.HashSet<>(allEndpoints);
 	}
 
 	private static void drawNodes(ClientLevel level, List<BlockPos> positions, int color) {

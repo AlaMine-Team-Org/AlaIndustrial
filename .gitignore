@@ -47,3 +47,8 @@ tools/tts/output/
 # Dubbing/voice-clone workspace: source audio (15 MB+), cloned samples, transcripts,
 # generated mp3 segments and per-run state — all local, regenerated on demand.
 tools/tts/_dub/
+
+# Daily download-stats notifier (tools/mod_stats/) — .env holds the Telegram bot
+# token/chat id (already covered by the .env rule above); history.json is local
+# accumulated state, not source.
+tools/mod_stats/history.json

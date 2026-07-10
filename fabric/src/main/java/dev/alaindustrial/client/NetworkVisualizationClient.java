@@ -87,6 +87,7 @@ public final class NetworkVisualizationClient {
 	private static final int TUBE_COLOR = 0xFF11577A;     // muted dark teal — tube body + joint cubes
 	private static final int PRODUCER_COLOR = 0xFF84CC16; // green
 	private static final int CONSUMER_COLOR = 0xFFFB923C; // orange
+	private static final int STORAGE_COLOR = 0xFF38BDF8;  // light blue — storage sink / bridge node (MOD-047)
 	private static final int FLOW_COLOR = 0xFFFFE9A8;     // warm near-white spark — pops against the dark tube
 
 	private static final float FLOW_POINT_SIZE = 0.50f;
@@ -125,6 +126,7 @@ public final class NetworkVisualizationClient {
 	private static List<BlockPos> cables = List.of();
 	private static List<BlockPos> producers = List.of();
 	private static List<BlockPos> consumers = List.of();
+	private static List<BlockPos> storage = List.of();
 	/** Full topology (cables + producer/consumer legs), recomputed only in {@link #init}'s payload receiver. */
 	private static List<NetworkEdge> edges = List.of();
 	/** Subset of {@link #edges} with a well-defined flow direction, recomputed alongside {@link #edges}. */
@@ -147,17 +149,22 @@ public final class NetworkVisualizationClient {
 			cables = payload.cables();
 			producers = payload.producers();
 			consumers = payload.consumers();
-			edges = NetworkTopology.fullAdjacency(cables, producers, consumers);
+			storage = payload.storage();
+			// Storage sinks bridge two cable segments and behave as endpoints for shaping (MOD-047):
+			// a BatteryBox is a full cube, but joining the endpoint set keeps nodeCenter consistent and
+			// lets fullAdjacency/tubeRuns route tubes through them like any other endpoint.
+			List<BlockPos> allEndpoints = new ArrayList<>(producers.size() + consumers.size() + storage.size());
+			allEndpoints.addAll(producers);
+			allEndpoints.addAll(consumers);
+			allEndpoints.addAll(storage);
+			edges = NetworkTopology.fullAdjacency(cables, allEndpoints, List.of());
 			flowEdges = NetworkTopology.flowDirections(edges, producers);
-			List<BlockPos> allNodes = new ArrayList<>(cables.size() + producers.size() + consumers.size());
+			List<BlockPos> allNodes = new ArrayList<>(cables.size() + allEndpoints.size());
 			allNodes.addAll(cables);
-			allNodes.addAll(producers);
-			allNodes.addAll(consumers);
+			allNodes.addAll(allEndpoints);
 			jointNodes = NetworkTopology.jointNodes(allNodes, edges);
 			tubeRuns = NetworkTopology.tubeRuns(allNodes, edges, jointNodes);
-			Set<BlockPos> endpoints = new HashSet<>(producers);
-			endpoints.addAll(consumers);
-			endpointPositions = endpoints;
+			endpointPositions = new HashSet<>(allEndpoints);
 		});
 		LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES.register(NetworkVisualizationClient::render);
 	}
@@ -166,7 +173,7 @@ public final class NetworkVisualizationClient {
 		if (!AlaClientConfig.networkOverlayEnabled) {
 			return;
 		}
-		if (cables.isEmpty() && producers.isEmpty() && consumers.isEmpty()) {
+		if (cables.isEmpty() && producers.isEmpty() && consumers.isEmpty() && storage.isEmpty()) {
 			return;
 		}
 		ClientLevel level = Minecraft.getInstance().level;
@@ -206,6 +213,7 @@ public final class NetworkVisualizationClient {
 
 		addJointCubes(gizmos, producers, PRODUCER_COLOR, level);
 		addJointCubes(gizmos, consumers, CONSUMER_COLOR, level);
+		addJointCubes(gizmos, storage, STORAGE_COLOR, level);
 		gizmos.submit(context.submitNodeCollector(), context.levelState().cameraRenderState,
 				AlaClientConfig.networkOverlayThroughBlocks);
 	}

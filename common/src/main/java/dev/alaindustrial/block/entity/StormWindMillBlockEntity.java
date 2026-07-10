@@ -6,6 +6,7 @@ import dev.alaindustrial.core.EnergyRole;
 import dev.alaindustrial.core.EnergyTier;
 import dev.alaindustrial.core.SolarSky;
 import dev.alaindustrial.core.WindMillClearance;
+import dev.alaindustrial.core.WindMillInterference;
 import dev.alaindustrial.core.WindMillOutput;
 import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -70,12 +71,15 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 				Config.stormWindMillRainFactor, Config.stormWindMillThunderFactor);
 	}
 
-	private int sampleMode(Level level, BlockPos pos, int rate, boolean obstructed) {
+	private int sampleMode(Level level, BlockPos pos, int rate, boolean obstructed, boolean interfered) {
 		if (!openSky(level, pos)) {
 			return WindMillBlockEntity.MODE_ROOFED;
 		}
 		if (obstructed) {
 			return WindMillBlockEntity.MODE_OBSTRUCTED;
+		}
+		if (interfered) {
+			return WindMillBlockEntity.MODE_INTERFERENCE;
 		}
 		if (level.isThundering() && rate > 0) {
 			return WindMillBlockEntity.MODE_STORM;
@@ -108,8 +112,18 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 					: Direction.NORTH;
 			boolean sky = openSky(level, pos);
 			boolean obstructed = sky && WindMillClearance.hasObstruction(level, pos, facing);
-			cachedRate = obstructed ? 0 : sampleRate(level, pos);
-			cachedMode = sampleMode(level, pos, cachedRate, obstructed);
+			// Rotor interference (MOD-051): a neighbouring mill's rotor disc overlapping ours stalls
+			// both mills. Only checked when the blades could otherwise turn — ROOFED/OBSTRUCTED mask it.
+			boolean interfered = sky && !obstructed && WindMillInterference.hasInterference(level, pos, facing);
+			int previousRate = cachedRate;
+			int previousMode = cachedMode;
+			cachedRate = obstructed || interfered ? 0 : sampleRate(level, pos);
+			cachedMode = sampleMode(level, pos, cachedRate, obstructed, interfered);
+			// Mirror the T1 mill: push rate/mode changes to watching clients so the rotor renderer
+			// reacts (spin speed, and hiding the blades on MODE_INTERFERENCE) without a GUI open.
+			if (cachedRate != previousRate || cachedMode != previousMode) {
+				syncBlockEntityToClient();
+			}
 		}
 		sampleCounter++;
 		this.progress = cachedRate;

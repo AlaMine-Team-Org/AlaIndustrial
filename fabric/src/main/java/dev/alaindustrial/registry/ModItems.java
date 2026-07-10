@@ -94,6 +94,10 @@ public final class ModItems {
 
 	private static Item networkAnalyzer(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		// The default AnalyzerMode (TRAVERSE) is NOT set via Item.Properties.component(...): that path
+		// resolves the DataComponentType during ModItems' static init, before the loader binds the
+		// neutral handle (see IndustrializationFabric/ModDataComponentsNeoForge). NetworkAnalyzerItem
+		// treats a missing component as TRAVERSE instead, and switchMode persists it on first use.
 		return Registry.register(BuiltInRegistries.ITEM, key,
 				new NetworkAnalyzerItem(new Item.Properties().setId(key).stacksTo(1)));
 	}

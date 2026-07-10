@@ -2,6 +2,7 @@ package dev.alaindustrial.registry;
 
 import com.mojang.serialization.Codec;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.AnalyzerMode;
 import dev.alaindustrial.item.NetworkScanData;
 import java.util.function.Supplier;
 import net.minecraft.core.component.DataComponentType;
@@ -28,6 +29,7 @@ public final class ModDataComponents {
 	/** Registry ids, shared by both loaders' registration. */
 	public static final Identifier STORED_ENERGY_ID = Industrialization.id("stored_energy");
 	public static final Identifier NETWORK_SCAN_ID = Industrialization.id("network_scan");
+	public static final Identifier NETWORK_ANALYZER_MODE_ID = Industrialization.id("network_analyzer_mode");
 
 	/** Buffered EU carried on a storage block's item form. Bound once per loader before first access. */
 	public static Supplier<DataComponentType<Long>> STORED_ENERGY = () -> {
@@ -37,6 +39,11 @@ public final class ModDataComponents {
 	/** Last Network Analyzer scan, stored on the tool so its tooltip can replay the reading (MOD-016). */
 	public static Supplier<DataComponentType<NetworkScanData>> NETWORK_SCAN = () -> {
 		throw new IllegalStateException("ModDataComponents.NETWORK_SCAN read before its loader bound it");
+	};
+
+	/** Network Analyzer's current mode (TRAVERSE / STOP_AT_STORAGE), persisted on the tool (MOD-047). */
+	public static Supplier<DataComponentType<AnalyzerMode>> NETWORK_ANALYZER_MODE = () -> {
+		throw new IllegalStateException("ModDataComponents.NETWORK_ANALYZER_MODE read before its loader bound it");
 	};
 
 	/** Build the {@code stored_energy} type both loaders register. */
@@ -52,6 +59,14 @@ public final class ModDataComponents {
 		return DataComponentType.<NetworkScanData>builder()
 				.persistent(NetworkScanData.CODEC)
 				.networkSynchronized(NetworkScanData.STREAM_CODEC)
+				.build();
+	}
+
+	/** Build the {@code network_analyzer_mode} type both loaders register (MOD-047). */
+	public static DataComponentType<AnalyzerMode> createNetworkAnalyzerMode() {
+		return DataComponentType.<AnalyzerMode>builder()
+				.persistent(AnalyzerMode.CODEC)
+				.networkSynchronized(AnalyzerMode.STREAM_CODEC)
 				.build();
 	}
 }
