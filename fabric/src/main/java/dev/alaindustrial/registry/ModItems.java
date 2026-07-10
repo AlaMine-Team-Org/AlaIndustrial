@@ -109,9 +109,9 @@ public final class ModItems {
 				.title(Component.translatable("itemGroup.alaindustrial"))
 				.icon(() -> new ItemStack(MACERATOR_ITEM))
 				.displayItems((params, output) -> {
-						// NB: pump + non-copper cables (tin, insulated copper/tin) are registered but
-						// deliberately hidden for the v1.0 release (no tab entry, recipe removed). Re-add
-						// their output.accept(...) + recipe JSON to bring them back. See task MOD-010.
+						// NB: non-copper cables (tin, insulated copper/tin) are registered but deliberately
+						// hidden for the v1.0 release (no tab entry, recipe removed). Re-add their
+						// output.accept(...) + recipe JSON to bring them back. See task MOD-010.
 						// Likewise the water mill + high-altitude/storm windmills are temporarily hidden
 						// from the player (no tab entry; water_mill recipe removed). Re-add their
 						// output.accept(...) + the water_mill recipe JSON to bring them back.
@@ -127,6 +127,7 @@ public final class ModItems {
 					output.accept(ELECTRIC_FURNACE_ITEM);
 					output.accept(EXTRACTOR_ITEM);
 					output.accept(COMPRESSOR_ITEM);
+					output.accept(PUMP_ITEM);
 					// Storage + cables
 					output.accept(BATTERY_BOX_ITEM);
 					output.accept(IRON_CHEST_ITEM);

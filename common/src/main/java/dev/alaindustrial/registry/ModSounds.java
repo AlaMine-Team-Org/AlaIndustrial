@@ -40,6 +40,19 @@ public final class ModSounds {
 		return SoundEvent.createVariableRangeEvent(GENERATOR_HUM_ID);
 	}
 
+	/** The registry id for the electric furnace ambient fire-roar hum. */
+	public static final Identifier ELECTRIC_FURNACE_HUM_ID = Industrialization.id("electric_furnace");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> ELECTRIC_FURNACE_HUM = () -> {
+		throw new IllegalStateException("ModSounds.ELECTRIC_FURNACE_HUM read before its loader bound it");
+	};
+
+	/** Build the electric-furnace-hum event instance both loaders register. */
+	public static SoundEvent createElectricFurnaceHum() {
+		return SoundEvent.createVariableRangeEvent(ELECTRIC_FURNACE_HUM_ID);
+	}
+
 	/** The registry id for the solar panel ambient hum (lit-less generators — pattern C). */
 	public static final Identifier SOLAR_PANEL_HUM_ID = Industrialization.id("solar_panel_hum");
 

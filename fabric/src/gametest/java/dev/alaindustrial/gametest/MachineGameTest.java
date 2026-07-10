@@ -340,6 +340,29 @@ public class MachineGameTest {
 		assertProduces(helper, ModBlocks.EXTRACTOR, new ItemStack(Items.GRAVEL, 4), Items.FLINT, 1);
 	}
 
+	/**
+	 * @implements TC-EXTR-001-FUN06 — extractor: cactus → 2× green_dye. Representative of the plant-derived
+	 *     ×2 dye recipes (poppy/dandelion/cornflower/cocoa_beans/sea_pickle/lily_of_the_valley/melon_slice
+	 *     all yield ×2 of their dye/seeds) — the new plant-processing niche. Verifies count and 1-per-op.
+	 * @covers R-GUI-02
+	 */
+	@GameTest
+	public void tcExtr001Fun06_extractorMakesGreenDye(GameTestHelper helper) {
+		assertConsumesExactlyOnePerOperation(helper, ModBlocks.EXTRACTOR, Items.CACTUS, 4,
+				Config.extractorDuration, Items.DYE.green(), 2);
+	}
+
+	/**
+	 * @implements TC-EXTR-001-FUN07 — extractor: pumpkin → 5× pumpkin_seeds. The largest multiplier in the
+	 *     recipe set (×5) — exercises a distinct stack-fit boundary from the ×3 (blaze_rod) path.
+	 * @covers R-GUI-02
+	 */
+	@GameTest
+	public void tcExtr001Fun07_extractorMakesPumpkinSeeds(GameTestHelper helper) {
+		assertConsumesExactlyOnePerOperation(helper, ModBlocks.EXTRACTOR, Items.PUMPKIN, 4,
+				Config.extractorDuration, Items.PUMPKIN_SEEDS, 5);
+	}
+
 	// ── 1→1 accounting (FUN02 family) — exactly one input item consumed per operation ─────────────
 
 	/**

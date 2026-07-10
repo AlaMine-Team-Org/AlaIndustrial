@@ -55,6 +55,7 @@
 	"item.alaindustrial.network_analyzer": "Analizador de red",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
+	"gui.alaindustrial.water": "%1$s / %2$s mB",
 	"gui.alaindustrial.output": "Producción: %s EU/t",
 	"gui.alaindustrial.mode": "Modo: %s",
 	"gui.alaindustrial.branch": "Rama: %s",
@@ -188,5 +189,6 @@
 	"command.alaindustrial.status.value.loss": "resistiva, por bloque",
 	"block.alaindustrial.iron_chest": "Cofre de hierro",
 	"subtitles.alaindustrial.iron_chest_open": "Cofre de hierro se abre",
-	"subtitles.alaindustrial.iron_chest_close": "Cofre de hierro se cierra"
+	"subtitles.alaindustrial.iron_chest_close": "Cofre de hierro se cierra",
+	"subtitles.alaindustrial.electric_furnace": "Horno eléctrico ruge"
 }

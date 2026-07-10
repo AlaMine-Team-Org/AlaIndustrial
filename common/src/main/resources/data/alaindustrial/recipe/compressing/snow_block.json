@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "minecraft:snow_block",
+  "result": {
+    "id": "minecraft:ice",
+    "count": 1
+  },
+  "energy": 260
+}

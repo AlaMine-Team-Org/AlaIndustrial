@@ -55,6 +55,7 @@
 	"item.alaindustrial.network_analyzer": "Analyseur de réseau",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
+	"gui.alaindustrial.water": "%1$s / %2$s mB",
 	"gui.alaindustrial.output": "Production : %s EU/t",
 	"gui.alaindustrial.mode": "Mode : %s",
 	"gui.alaindustrial.branch": "Branche : %s",
@@ -188,5 +189,6 @@
 	"command.alaindustrial.status.value.loss": "résistive, par bloc",
 	"block.alaindustrial.iron_chest": "Coffre en fer",
 	"subtitles.alaindustrial.iron_chest_open": "Le coffre en fer s'ouvre",
-	"subtitles.alaindustrial.iron_chest_close": "Le coffre en fer se ferme"
+	"subtitles.alaindustrial.iron_chest_close": "Le coffre en fer se ferme",
+	"subtitles.alaindustrial.electric_furnace": "Four électrique gronde"
 }

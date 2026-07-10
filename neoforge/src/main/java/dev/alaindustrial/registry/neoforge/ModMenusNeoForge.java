@@ -9,6 +9,7 @@ import dev.alaindustrial.menu.GeneratorMenu;
 import dev.alaindustrial.menu.GeothermalGeneratorMenu;
 import dev.alaindustrial.menu.IronChestMenu;
 import dev.alaindustrial.menu.MaceratorMenu;
+import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
@@ -66,6 +67,8 @@ public final class ModMenusNeoForge {
 			register("daylight_solar_panel", (id, inv, buf) -> new DaylightSolarPanelMenu(id, inv));
 	public static final DeferredHolder<MenuType<?>, MenuType<GeothermalGeneratorMenu>> GEOTHERMAL_GENERATOR =
 			register("geothermal_generator", (id, inv, buf) -> new GeothermalGeneratorMenu(id, inv));
+	public static final DeferredHolder<MenuType<?>, MenuType<PumpMenu>> PUMP =
+			register("pump", (id, inv, buf) -> new PumpMenu(id, inv));
 	public static final DeferredHolder<MenuType<?>, MenuType<WaterMillMenu>> WATER_MILL =
 			register("water_mill", (id, inv, buf) -> new WaterMillMenu(id, inv));
 	public static final DeferredHolder<MenuType<?>, MenuType<WindMillMenu>> WIND_MILL =
@@ -100,6 +103,7 @@ public final class ModMenusNeoForge {
 		ModContent.BATTERY_BOX_MENU = BATTERY_BOX::get;
 		ModContent.DAYLIGHT_SOLAR_PANEL_MENU = DAYLIGHT_SOLAR_PANEL::get;
 		ModContent.GEOTHERMAL_GENERATOR_MENU = GEOTHERMAL_GENERATOR::get;
+		ModContent.PUMP_MENU = PUMP::get;
 		ModContent.WATER_MILL_MENU = WATER_MILL::get;
 		ModContent.WIND_MILL_MENU = WIND_MILL::get;
 		ModContent.HIGH_ALTITUDE_WIND_MILL_MENU = HIGH_ALTITUDE_WIND_MILL::get;

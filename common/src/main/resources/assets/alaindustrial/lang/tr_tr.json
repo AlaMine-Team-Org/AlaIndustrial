@@ -55,6 +55,7 @@
 	"item.alaindustrial.network_analyzer": "Ağ Analizörü",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
+	"gui.alaindustrial.water": "%1$s / %2$s mB",
 	"gui.alaindustrial.output": "Çıkış: %s EU/t",
 	"gui.alaindustrial.mode": "Mod: %s",
 	"gui.alaindustrial.branch": "Dal: %s",
@@ -188,5 +189,6 @@
 	"command.alaindustrial.status.value.loss": "direnç, blok başına",
 	"block.alaindustrial.iron_chest": "Demir Sandık",
 	"subtitles.alaindustrial.iron_chest_open": "Demir Sandık açılıyor",
-	"subtitles.alaindustrial.iron_chest_close": "Demir Sandık kapanıyor"
+	"subtitles.alaindustrial.iron_chest_close": "Demir Sandık kapanıyor",
+	"subtitles.alaindustrial.electric_furnace": "Elektrik Fırını uğulduyor"
 }

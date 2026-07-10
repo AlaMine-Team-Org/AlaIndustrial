@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "minecraft:cocoa_beans",
+  "result": {
+    "id": "minecraft:brown_dye",
+    "count": 1
+  },
+  "energy": 260
+}

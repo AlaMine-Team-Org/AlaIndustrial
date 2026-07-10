@@ -55,6 +55,7 @@
 	"item.alaindustrial.network_analyzer": "網路分析儀",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
+	"gui.alaindustrial.water": "%1$s / %2$s mB",
 	"gui.alaindustrial.output": "輸出：%s EU/t",
 	"gui.alaindustrial.mode": "模式：%s",
 	"gui.alaindustrial.branch": "分支：%s",
@@ -188,5 +189,6 @@
 	"command.alaindustrial.status.value.loss": "電阻, 每方塊",
 	"block.alaindustrial.iron_chest": "鐵箱子",
 	"subtitles.alaindustrial.iron_chest_open": "鐵箱子開啟",
-	"subtitles.alaindustrial.iron_chest_close": "鐵箱子關閉"
+	"subtitles.alaindustrial.iron_chest_close": "鐵箱子關閉",
+	"subtitles.alaindustrial.electric_furnace": "電爐轟鳴"
 }

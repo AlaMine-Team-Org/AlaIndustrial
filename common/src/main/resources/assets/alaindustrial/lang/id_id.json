@@ -55,6 +55,7 @@
 	"item.alaindustrial.network_analyzer": "Penganalisis Jaringan",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
+	"gui.alaindustrial.water": "%1$s / %2$s mB",
 	"gui.alaindustrial.output": "Keluaran: %s EU/t",
 	"gui.alaindustrial.mode": "Mode: %s",
 	"gui.alaindustrial.branch": "Cabang: %s",
@@ -188,5 +189,6 @@
 	"command.alaindustrial.status.value.loss": "resistif, per blok",
 	"block.alaindustrial.iron_chest": "Peti Besi",
 	"subtitles.alaindustrial.iron_chest_open": "Peti Besi terbuka",
-	"subtitles.alaindustrial.iron_chest_close": "Peti Besi tertutup"
+	"subtitles.alaindustrial.iron_chest_close": "Peti Besi tertutup",
+	"subtitles.alaindustrial.electric_furnace": "Tungku Listrik bergemuruh"
 }

@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "minecraft:ice",
+  "result": {
+    "id": "minecraft:packed_ice",
+    "count": 1
+  },
+  "energy": 260
+}

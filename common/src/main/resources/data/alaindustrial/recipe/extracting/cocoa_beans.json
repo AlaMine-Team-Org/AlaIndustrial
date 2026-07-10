@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:extracting",
+  "ingredient": "minecraft:cocoa_beans",
+  "result": {
+    "id": "minecraft:brown_dye",
+    "count": 2
+  },
+  "energy": 240
+}

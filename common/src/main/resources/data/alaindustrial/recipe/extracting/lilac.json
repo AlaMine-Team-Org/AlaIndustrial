@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:extracting",
+  "ingredient": "minecraft:lilac",
+  "result": {
+    "id": "minecraft:magenta_dye",
+    "count": 3
+  },
+  "energy": 240
+}

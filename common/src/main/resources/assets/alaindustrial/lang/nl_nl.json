@@ -55,6 +55,7 @@
 	"item.alaindustrial.network_analyzer": "Netwerkanalysator",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
+	"gui.alaindustrial.water": "%1$s / %2$s mB",
 	"gui.alaindustrial.output": "Uitvoer: %s EU/t",
 	"gui.alaindustrial.mode": "Modus: %s",
 	"gui.alaindustrial.branch": "Tak: %s",
@@ -188,5 +189,6 @@
 	"command.alaindustrial.status.value.loss": "resistief, per blok",
 	"block.alaindustrial.iron_chest": "IJzeren kist",
 	"subtitles.alaindustrial.iron_chest_open": "IJzeren kist gaat open",
-	"subtitles.alaindustrial.iron_chest_close": "IJzeren kist gaat dicht"
+	"subtitles.alaindustrial.iron_chest_close": "IJzeren kist gaat dicht",
+	"subtitles.alaindustrial.electric_furnace": "Elektrische oven gonst"
 }

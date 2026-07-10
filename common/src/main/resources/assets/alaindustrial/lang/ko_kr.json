@@ -55,6 +55,7 @@
 	"item.alaindustrial.network_analyzer": "네트워크 분석기",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
+	"gui.alaindustrial.water": "%1$s / %2$s mB",
 	"gui.alaindustrial.output": "출력: %s EU/t",
 	"gui.alaindustrial.mode": "모드: %s",
 	"gui.alaindustrial.branch": "분기: %s",
@@ -188,5 +189,6 @@
 	"command.alaindustrial.status.value.loss": "저항, 블록당",
 	"block.alaindustrial.iron_chest": "철 상자",
 	"subtitles.alaindustrial.iron_chest_open": "철 상자가 열립니다",
-	"subtitles.alaindustrial.iron_chest_close": "철 상자가 닫힙니다"
+	"subtitles.alaindustrial.iron_chest_close": "철 상자가 닫힙니다",
+	"subtitles.alaindustrial.electric_furnace": "전기로가 윙윙거립니다"
 }

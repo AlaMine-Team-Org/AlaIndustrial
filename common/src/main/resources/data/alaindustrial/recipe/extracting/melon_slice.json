@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:extracting",
+  "ingredient": "minecraft:melon_slice",
+  "result": {
+    "id": "minecraft:melon_seeds",
+    "count": 2
+  },
+  "energy": 240
+}

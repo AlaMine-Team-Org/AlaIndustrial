@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:extracting",
+  "ingredient": "minecraft:wither_rose",
+  "result": {
+    "id": "minecraft:black_dye",
+    "count": 3
+  },
+  "energy": 240
+}

@@ -95,7 +95,10 @@ public class FluidGameTest {
 		BlockPos lavaAbs = helper.absolutePos(lavaRel);
 
 		level.setBlockAndUpdate(lavaAbs, net.minecraft.world.level.block.Blocks.LAVA.defaultBlockState());
-		level.setBlockAndUpdate(pumpAbs, ModBlocks.PUMP.defaultBlockState());
+		// Face the pump EAST (toward the lava source) so it acquires from the source and pushes into the
+		// geo sink on its WEST face.
+		level.setBlockAndUpdate(pumpAbs, ModBlocks.PUMP.defaultBlockState()
+				.setValue(dev.alaindustrial.block.HorizontalMachineBlock.FACING, Direction.EAST));
 		// The geothermal sink is placed later (Phase 1), so the pump first holds the lava it acquires.
 
 		boolean lavaIsSource = level.getFluidState(lavaAbs)
@@ -109,7 +112,7 @@ public class FluidGameTest {
 		long pumpTankPeak = 0;
 		boolean lavaConsumed = false;
 		if (level.getBlockEntity(pumpAbs) instanceof PumpBlockEntity pump) {
-			pump.getEnergyStorage().amount = Config.machineBuffer; // stand-in for network supply
+			pump.getEnergyStorage().amount = Config.pumpEuPerBucket; // stand-in for network supply (≥1 bucket)
 			pump.serverTick(level, pumpAbs, level.getBlockState(pumpAbs));
 			pumpTankPeak = Math.max(pumpTankPeak, pump.fluidTank.amount); // acquired, not yet pushed
 		}
@@ -127,7 +130,7 @@ public class FluidGameTest {
 		long geoTankPeak = geoTankBefore;
 		for (int i = 0; i < 4; i++) {
 			if (level.getBlockEntity(pumpAbs) instanceof PumpBlockEntity pump) {
-				pump.getEnergyStorage().amount = Config.machineBuffer;
+				pump.getEnergyStorage().amount = Config.pumpEuPerBucket;
 				pump.serverTick(level, pumpAbs, level.getBlockState(pumpAbs));
 				pumpTankPeak = Math.max(pumpTankPeak, pump.fluidTank.amount);
 			}
@@ -547,7 +550,13 @@ public class FluidGameTest {
 	// ============================================================================================
 
 	private static PumpBlockEntity placePump(GameTestHelper helper, BlockPos pos) {
-		helper.setBlock(pos, ModBlocks.PUMP);
+		return placePump(helper, pos, Direction.EAST);
+	}
+
+	/** Place a pump facing {@code facing} — the pump acquires fluid only from that face. */
+	private static PumpBlockEntity placePump(GameTestHelper helper, BlockPos pos, Direction facing) {
+		helper.setBlock(pos, ModBlocks.PUMP.defaultBlockState()
+				.setValue(dev.alaindustrial.block.HorizontalMachineBlock.FACING, facing));
 		PumpBlockEntity pump = helper.getBlockEntity(pos, PumpBlockEntity.class);
 		if (pump == null) {
 			helper.fail("pump block entity missing after placement");
@@ -588,10 +597,10 @@ public class FluidGameTest {
 	}
 
 	/**
-	 * @implements TC-PUMP-001-FUN02 — with energy.amount exactly pumpEuPerBucket (100) and a lava
-	 *     source adjacent and an empty tank, one tick acquires 1 bucket and drains the EU to 0. This is
-	 *     also the suite's PRF evidence for pumpEuPerBucket=100 (Config.pumpEuPerBucket, BVA row in
-	 *     pump.md — there is no separate PRF section/ID in the doc for this number).
+	 * @implements TC-PUMP-001-FUN02 — with energy.amount exactly pumpEuPerBucket (1000) and a lava
+	 *     source in front of the pump (FACING face) and an empty tank, one tick acquires 1 bucket and
+	 *     drains the EU to 0. This is also the suite's PRF evidence for pumpEuPerBucket=1000
+	 *     (Config.pumpEuPerBucket, BVA row in pump.md).
 	 * @covers R-NRG-04
 	 */
 	@GameTest
@@ -624,7 +633,8 @@ public class FluidGameTest {
 		BlockPos donorRel = new BlockPos(1, 2, 1);
 		BlockPos pumpRel = new BlockPos(2, 2, 1);
 		PumpBlockEntity donor = placePump(helper, donorRel);
-		PumpBlockEntity pump = placePump(helper, pumpRel);
+		// The donor is WEST of the pump, so the pump must face WEST to draw from it.
+		PumpBlockEntity pump = placePump(helper, pumpRel, Direction.WEST);
 		EnergyTransactions.get().runCommitting(txn ->
 				donor.fluidTank.insert(FluidHolder.of(Fluids.LAVA), FluidAmounts.BUCKET, txn));
 		// The donor also runs its own push-to-neighbour logic each tick (pushLava), which would move
@@ -657,7 +667,8 @@ public class FluidGameTest {
 	public void tcPump001Fun04_pushesEntireTankInOneTick(GameTestHelper helper) {
 		BlockPos pumpRel = new BlockPos(1, 2, 1);
 		BlockPos geoRel = new BlockPos(2, 2, 1);
-		PumpBlockEntity pump = placePump(helper, pumpRel);
+		// Pump faces WEST so it pushes through its EAST face into the geo (push skips the FACING face).
+		PumpBlockEntity pump = placePump(helper, pumpRel, Direction.WEST);
 		helper.setBlock(geoRel, ModBlocks.GEOTHERMAL_GENERATOR);
 		GeothermalGeneratorBlockEntity geo = helper.getBlockEntity(geoRel, GeothermalGeneratorBlockEntity.class);
 		EnergyTransactions.get().runCommitting(txn ->
@@ -694,7 +705,7 @@ public class FluidGameTest {
 			helper.fail("without power the lava source must remain untouched");
 		}
 
-		pump.getEnergyStorage().amount = Config.machineBuffer;
+		pump.getEnergyStorage().amount = Config.pumpEuPerBucket;
 		drivePump(pump, helper, 5);
 		if (pump.fluidTank.amount != FluidAmounts.BUCKET) {
 			helper.fail("after power restore expected exactly 1 bucket acquired, got " + pump.fluidTank.amount);
@@ -717,7 +728,8 @@ public class FluidGameTest {
 		BlockPos lavaAbs = helper.absolutePos(lavaRel);
 
 		level.setBlockAndUpdate(lavaAbs, Blocks.LAVA.defaultBlockState());
-		PumpBlockEntity pump = placePump(helper, pumpRel);
+		// The pump faces WEST (toward the lava source) and pushes its EAST face into the geo sink.
+		PumpBlockEntity pump = placePump(helper, pumpRel, Direction.WEST);
 		helper.setBlock(geoRel, ModBlocks.GEOTHERMAL_GENERATOR);
 		GeothermalGeneratorBlockEntity geo = helper.getBlockEntity(geoRel, GeothermalGeneratorBlockEntity.class);
 
@@ -827,28 +839,32 @@ public class FluidGameTest {
 	}
 
 	/**
-	 * @implements TC-PUMP-001-NEG05 — flowing (non-source) lava is never acquired, only source blocks.
+	 * @implements TC-PUMP-001-POS05 — flowing (non-source) lava allows acquiring connected source blocks.
 	 * @covers R-CON-01
 	 */
 	@GameTest
-	public void tcPump001Neg05_flowingLavaNotAcquired(GameTestHelper helper) {
+	public void tcPump001Pos05_flowingLavaAcquiresSource(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		PumpBlockEntity pump = placePump(helper, POS);
 		BlockPos sourceAbs = helper.absolutePos(POS.relative(Direction.EAST).relative(Direction.EAST));
 		BlockPos flowAbs = helper.absolutePos(POS.relative(Direction.EAST));
 		// A source two blocks away feeds a flowing (non-source) lava block orthogonally adjacent to the
-		// pump, so the pump only ever sees flowing lava on its own faces.
+		// pump.
 		level.setBlockAndUpdate(sourceAbs, Blocks.LAVA.defaultBlockState());
 		level.setBlockAndUpdate(flowAbs, Blocks.LAVA.defaultBlockState().setValue(
 				net.minecraft.world.level.block.LiquidBlock.LEVEL, 2));
-		boolean flowIsNotSource = !level.getFluidState(flowAbs).isSourceOfType(Fluids.LAVA);
-		pump.getEnergyStorage().amount = Config.machineBuffer;
+		// Seed enough EU to clear the per-bucket acquisition threshold (pumpEuPerBucket = 1000);
+		// machineBuffer (800) is below it and would leave the pump starved.
+		pump.getEnergyStorage().amount = Config.pumpEuPerBucket;
 		drivePump(pump, helper, 5);
-		if (!flowIsNotSource) {
-			helper.fail("test setup invalid: adjacent lava must be flowing, not a source");
+
+		// The pump must successfully acquire the source block through the flowing block
+		if (pump.fluidTank.amount != FluidAmounts.BUCKET) {
+			helper.fail("pump failed to acquire source from flowing lava, tank has " + pump.fluidTank.amount);
 		}
-		if (pump.fluidTank.amount != 0) {
-			helper.fail("pump must not acquire from flowing (non-source) lava, got " + pump.fluidTank.amount);
+		// The source block should be drained
+		if (level.getBlockState(sourceAbs).is(Blocks.LAVA)) {
+			helper.fail("pump did not drain the source block at " + sourceAbs);
 		}
 		helper.succeed();
 	}
@@ -925,6 +941,118 @@ public class FluidGameTest {
 		if (pump.fluidTank.amount != 0) {
 			helper.fail("pump tank (read directly, in mB) must drop by exactly 1 bucket (1000 mB) after "
 					+ "extracting 81000 droplets, but has " + pump.fluidTank.amount);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-PUMP-001-FUN06 — the pump acquires WATER (not just lava) from a water source block in
+	 *     front of it (FACING face). Generalised fluid intake, post-restoration: the tank whitelist accepts
+	 *     both lava and water, and the source block is consumed like a lava source would be.
+	 * @covers R-CON-01
+	 */
+	@GameTest
+	public void tcPump001Fun06_acquiresWaterFromSource(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		PumpBlockEntity pump = placePump(helper, POS);
+		BlockPos waterAbs = helper.absolutePos(POS.relative(Direction.EAST));
+		level.setBlockAndUpdate(waterAbs, Blocks.WATER.defaultBlockState());
+		pump.getEnergyStorage().amount = Config.pumpEuPerBucket;
+		drivePump(pump, helper, 1);
+		if (pump.fluidTank.amount != FluidAmounts.BUCKET) {
+			helper.fail("expected the tank to hold 1 bucket of water, got " + pump.fluidTank.amount);
+		}
+		if (!pump.fluidTank.fluid.is(Fluids.WATER)) {
+			helper.fail("expected the tank to hold WATER, got " + pump.fluidTank.fluid);
+		}
+		if (level.getFluidState(waterAbs).isSourceOfType(Fluids.WATER)) {
+			helper.fail("water source must be consumed (drained to air)");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-PUMP-001-NEG06 — single-variant tank: once the tank holds lava, a water source in
+	 *     front of the pump is NOT acquired (no mixing). The tank's single-variant guard rejects the water
+	 *     and the EU is not spent. This is the core guarantee behind the pump's "one fluid at a time" rule.
+	 * @covers R-CON-01
+	 */
+	@GameTest
+	public void tcPump001Neg06_lavaTankRejectsWater(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		PumpBlockEntity pump = placePump(helper, POS);
+		BlockPos waterAbs = helper.absolutePos(POS.relative(Direction.EAST));
+		level.setBlockAndUpdate(waterAbs, Blocks.WATER.defaultBlockState());
+		// Prime the tank with lava.
+		EnergyTransactions.get().runCommitting(txn ->
+				pump.fluidTank.insert(FluidHolder.of(Fluids.LAVA), FluidAmounts.BUCKET, txn));
+		long euBefore = Config.pumpEuPerBucket;
+		pump.getEnergyStorage().amount = euBefore;
+		drivePump(pump, helper, 3);
+		if (pump.fluidTank.fluid.is(Fluids.WATER)) {
+			helper.fail("tank must not mix: held lava but accepted water");
+		}
+		if (pump.fluidTank.amount != FluidAmounts.BUCKET) {
+			helper.fail("tank amount must stay at 1 bucket of lava, got " + pump.fluidTank.amount);
+		}
+		if (pump.getEnergyStorage().getAmount() != euBefore) {
+			helper.fail("EU must not be spent when the water is rejected, spent "
+					+ (euBefore - pump.getEnergyStorage().getAmount()));
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-PUMP-001-FUN07 — bucket feed via the GUI slots: a lava bucket in the input slot is
+	 *     emptied into the tank (1 bucket), and the empty bucket drops into the output slot. No EU cost
+	 *     (manual refill, not pumping). Mirrors the geothermal generator's bucket-emptying behaviour.
+	 * @covers R-GUI-07
+	 */
+	@GameTest
+	public void tcPump001Fun07_bucketEmptiesIntoTank(GameTestHelper helper) {
+		PumpBlockEntity pump = placePump(helper, POS);
+		pump.setItem(PumpBlockEntity.FILL_INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET));
+		pump.getEnergyStorage().amount = 0; // bucket feed needs no EU
+		drivePump(pump, helper, 1);
+		if (pump.fluidTank.amount != FluidAmounts.BUCKET) {
+			helper.fail("expected the tank to gain 1 bucket from the lava bucket, got " + pump.fluidTank.amount);
+		}
+		if (!pump.fluidTank.fluid.is(Fluids.LAVA)) {
+			helper.fail("expected the tank to hold lava, got " + pump.fluidTank.fluid);
+		}
+		if (!pump.getItem(PumpBlockEntity.FILL_INPUT_SLOT).isEmpty()) {
+			helper.fail("fill-input slot must be emptied after the bucket is consumed");
+		}
+		if (!pump.getItem(PumpBlockEntity.FILL_OUTPUT_SLOT).is(Items.BUCKET)) {
+			helper.fail("fill-output slot must hold an empty bucket, got " + pump.getItem(PumpBlockEntity.FILL_OUTPUT_SLOT));
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-PUMP-001-FUN08 — bucket drain via the GUI slots: an empty bucket in the drain-input
+	 *     slot is filled from the tank (1 bucket), and the full lava bucket drops into the drain-output
+	 *     slot. No EU cost (manual drain). The filled bucket always matches the tank's single-variant fluid.
+	 * @covers R-GUI-07
+	 */
+	@GameTest
+	public void tcPump001Fun08_fillsBucketFromTank(GameTestHelper helper) {
+		PumpBlockEntity pump = placePump(helper, POS);
+		// Prime the tank with 1 bucket of lava.
+		EnergyTransactions.get().runCommitting(txn ->
+				pump.fluidTank.insert(FluidHolder.of(Fluids.LAVA), FluidAmounts.BUCKET, txn));
+		pump.setItem(PumpBlockEntity.DRAIN_INPUT_SLOT, new ItemStack(Items.BUCKET));
+		pump.getEnergyStorage().amount = 0; // bucket drain needs no EU
+		long tankBefore = pump.fluidTank.amount;
+		drivePump(pump, helper, 1);
+		if (pump.fluidTank.amount != tankBefore - FluidAmounts.BUCKET) {
+			helper.fail("expected the tank to drop by 1 bucket after draining, got " + pump.fluidTank.amount);
+		}
+		if (!pump.getItem(PumpBlockEntity.DRAIN_INPUT_SLOT).isEmpty()) {
+			helper.fail("drain-input slot must be emptied after the bucket is filled");
+		}
+		if (!pump.getItem(PumpBlockEntity.DRAIN_OUTPUT_SLOT).is(Items.LAVA_BUCKET)) {
+			helper.fail("drain-output slot must hold a lava bucket, got " + pump.getItem(PumpBlockEntity.DRAIN_OUTPUT_SLOT));
 		}
 		helper.succeed();
 	}

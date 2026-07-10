@@ -15,9 +15,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  * but appeared in NO creative tab (invisible in the inventory). This mirrors the Fabric tab 1:1: same id,
  * title, Macerator icon and item list, so both loaders show the identical "Ala Industrial" tab.
  *
- * <p>Release-hidden blocks (pump, non-copper cables — MOD-010) are intentionally omitted here too, matching
+ * <p>Release-hidden blocks (non-copper cables — MOD-010) are intentionally omitted here too, matching
  * the Fabric {@code displayItems} list. The water mill + high-altitude/storm windmills are likewise
  * temporarily hidden from the player (no tab entry; the {@code water_mill} recipe is removed).
+ * The pump is now public (creative tab + recipe restored).
  */
 public final class ModCreativeTabNeoForge {
 	public static final DeferredRegister<CreativeModeTab> TABS =
@@ -40,6 +41,7 @@ public final class ModCreativeTabNeoForge {
 						output.accept(ModItemsNeoForge.ELECTRIC_FURNACE_ITEM.get());
 						output.accept(ModItemsNeoForge.EXTRACTOR_ITEM.get());
 						output.accept(ModItemsNeoForge.COMPRESSOR_ITEM.get());
+						output.accept(ModItemsNeoForge.PUMP_ITEM.get());
 						// Storage + cables
 						output.accept(ModItemsNeoForge.BATTERY_BOX_ITEM.get());
 						output.accept(ModItemsNeoForge.IRON_CHEST_ITEM.get());

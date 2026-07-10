@@ -49,6 +49,8 @@ public class IndustrializationClient implements ClientModInitializer {
 				ModMenus.DAYLIGHT_SOLAR_PANEL, dev.alaindustrial.client.DaylightSolarPanelScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.GeothermalGeneratorMenu, dev.alaindustrial.client.GeothermalGeneratorScreen>register(
 				ModMenus.GEOTHERMAL_GENERATOR, dev.alaindustrial.client.GeothermalGeneratorScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.PumpMenu, dev.alaindustrial.client.PumpScreen>register(
+				ModMenus.PUMP, dev.alaindustrial.client.PumpScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.WaterMillMenu, dev.alaindustrial.client.WaterMillScreen>register(
 				ModMenus.WATER_MILL, dev.alaindustrial.client.WaterMillScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.WindMillMenu, dev.alaindustrial.client.WindMillScreen>register(

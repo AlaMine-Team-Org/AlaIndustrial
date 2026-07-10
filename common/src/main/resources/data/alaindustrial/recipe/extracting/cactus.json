@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:extracting",
+  "ingredient": "minecraft:cactus",
+  "result": {
+    "id": "minecraft:green_dye",
+    "count": 2
+  },
+  "energy": 240
+}

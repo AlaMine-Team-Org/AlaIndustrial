@@ -23,6 +23,9 @@ public final class ModSoundsNeoForge {
 	public static final DeferredHolder<SoundEvent, SoundEvent> GENERATOR_HUM =
 			SOUNDS.register("generator_hum", ModSounds::createGeneratorHum);
 
+	public static final DeferredHolder<SoundEvent, SoundEvent> ELECTRIC_FURNACE_HUM =
+			SOUNDS.register("electric_furnace", ModSounds::createElectricFurnaceHum);
+
 	public static final DeferredHolder<SoundEvent, SoundEvent> SOLAR_PANEL_HUM =
 			SOUNDS.register("solar_panel_hum", ModSounds::createSolarPanelHum);
 
@@ -36,6 +39,7 @@ public final class ModSoundsNeoForge {
 	public static void init() {
 		ModSounds.MACERATOR_GRIND = MACERATOR_GRIND;
 		ModSounds.GENERATOR_HUM = GENERATOR_HUM;
+		ModSounds.ELECTRIC_FURNACE_HUM = ELECTRIC_FURNACE_HUM;
 		ModSounds.SOLAR_PANEL_HUM = SOLAR_PANEL_HUM;
 		ModSounds.IRON_CHEST_OPEN = IRON_CHEST_OPEN;
 		ModSounds.IRON_CHEST_CLOSE = IRON_CHEST_CLOSE;

@@ -55,6 +55,7 @@
 	"item.alaindustrial.network_analyzer": "ネットワークアナライザー",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
+	"gui.alaindustrial.water": "%1$s / %2$s mB",
 	"gui.alaindustrial.output": "出力: %s EU/t",
 	"gui.alaindustrial.mode": "モード: %s",
 	"gui.alaindustrial.branch": "分岐: %s",
@@ -188,5 +189,6 @@
 	"command.alaindustrial.status.value.loss": "抵抗, ブロックごと",
 	"block.alaindustrial.iron_chest": "鉄のチェスト",
 	"subtitles.alaindustrial.iron_chest_open": "鉄のチェストが開く",
-	"subtitles.alaindustrial.iron_chest_close": "鉄のチェストが閉じる"
+	"subtitles.alaindustrial.iron_chest_close": "鉄のチェストが閉じる",
+	"subtitles.alaindustrial.electric_furnace": "電気炉が唸る"
 }

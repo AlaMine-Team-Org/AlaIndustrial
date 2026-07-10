@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:extracting",
+  "ingredient": "minecraft:lily_of_the_valley",
+  "result": {
+    "id": "minecraft:white_dye",
+    "count": 2
+  },
+  "energy": 240
+}

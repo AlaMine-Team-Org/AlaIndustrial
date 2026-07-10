@@ -55,6 +55,7 @@
 	"item.alaindustrial.network_analyzer": "Аналізатор мережі",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
+	"gui.alaindustrial.water": "%1$s / %2$s mB",
 	"gui.alaindustrial.output": "Вихід: %s EU/t",
 	"gui.alaindustrial.mode": "Режим: %s",
 	"gui.alaindustrial.branch": "Гілка: %s",
@@ -188,5 +189,6 @@
 	"command.alaindustrial.status.value.loss": "резистивні, на блок",
 	"block.alaindustrial.iron_chest": "Залізна скриня",
 	"subtitles.alaindustrial.iron_chest_open": "Залізна скриня відкривається",
-	"subtitles.alaindustrial.iron_chest_close": "Залізна скриня зачиняється"
+	"subtitles.alaindustrial.iron_chest_close": "Залізна скриня зачиняється",
+	"subtitles.alaindustrial.electric_furnace": "Електропіч гудить"
 }

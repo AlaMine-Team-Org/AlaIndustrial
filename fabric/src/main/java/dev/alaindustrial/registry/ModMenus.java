@@ -9,6 +9,7 @@ import dev.alaindustrial.menu.GeothermalGeneratorMenu;
 import dev.alaindustrial.menu.ExtractorMenu;
 import dev.alaindustrial.menu.IronChestMenu;
 import dev.alaindustrial.menu.MaceratorMenu;
+import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.menu.GeneratorMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
@@ -37,6 +38,7 @@ public final class ModMenus {
 	public static MenuType<BatteryBoxMenu> BATTERY_BOX;
 	public static MenuType<DaylightSolarPanelMenu> DAYLIGHT_SOLAR_PANEL;
 	public static MenuType<GeothermalGeneratorMenu> GEOTHERMAL_GENERATOR;
+	public static MenuType<PumpMenu> PUMP;
 	public static MenuType<WaterMillMenu> WATER_MILL;
 	public static MenuType<WindMillMenu> WIND_MILL;
 	public static MenuType<HighAltitudeWindMillMenu> HIGH_ALTITUDE_WIND_MILL;
@@ -63,6 +65,7 @@ public final class ModMenus {
 				new MenuType<>(DaylightSolarPanelMenu::new, FeatureFlags.VANILLA_SET));
 		GEOTHERMAL_GENERATOR = register("geothermal_generator",
 				new MenuType<>(GeothermalGeneratorMenu::new, FeatureFlags.VANILLA_SET));
+		PUMP = register("pump", new MenuType<>(PumpMenu::new, FeatureFlags.VANILLA_SET));
 		WATER_MILL = register("water_mill",
 				new MenuType<>(WaterMillMenu::new, FeatureFlags.VANILLA_SET));
 		WIND_MILL = register("wind_mill",
@@ -87,6 +90,7 @@ public final class ModMenus {
 		ModContent.BATTERY_BOX_MENU = () -> BATTERY_BOX;
 		ModContent.DAYLIGHT_SOLAR_PANEL_MENU = () -> DAYLIGHT_SOLAR_PANEL;
 		ModContent.GEOTHERMAL_GENERATOR_MENU = () -> GEOTHERMAL_GENERATOR;
+		ModContent.PUMP_MENU = () -> PUMP;
 		ModContent.WATER_MILL_MENU = () -> WATER_MILL;
 		ModContent.WIND_MILL_MENU = () -> WIND_MILL;
 		ModContent.HIGH_ALTITUDE_WIND_MILL_MENU = () -> HIGH_ALTITUDE_WIND_MILL;

@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "minecraft:sugar_cane",
+  "result": {
+    "id": "minecraft:paper",
+    "count": 1
+  },
+  "energy": 260
+}

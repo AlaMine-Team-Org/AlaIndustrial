@@ -17,6 +17,15 @@
       }
     ]
   },
+  "electric_furnace": {
+    "subtitle": "subtitles.alaindustrial.electric_furnace",
+    "sounds": [
+      {
+        "name": "alaindustrial:electric_furnace",
+        "stream": false
+      }
+    ]
+  },
   "solar_panel_hum": {
     "subtitle": "subtitles.alaindustrial.solar_panel_hum",
     "sounds": [

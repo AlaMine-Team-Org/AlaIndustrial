@@ -1,22 +1,20 @@
-## 0.1.11
+## 0.1.12
 
-<p><img alt="Ala Industrial 0.1.11 update preview — wind turbine with rotor and generator blocks" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.11/release-media/v0.1.11/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.12 update preview — Pump draining water" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.12/release-media/v0.1.12/changelog.png" width="720"></p>
 
-Polish for wind turbines and solar panels, a cleaner status command, and a cleaner cable connection.
+The Pump searches farther for fluids, the Macerator and Extractor learn new recipes, and the Electric Furnace finally has a sound.
 
 ### Gameplay
 
-- **Windmill blades no longer clip through walls.** A solid block in the rotor's path stops the turbine and shows **Obstructed** in the menu.
-- **Wind Turbine has its own advancement**, like the other generators.
+- **The Pump reaches farther.** It now follows a flow of lava or water up to 32 blocks to find and drain the source block behind it.
+- **13 Macerator recipes** — it now also compacts materials into denser forms: ice → packed ice → blue ice, snow block → ice, sugar cane → paper, and cocoa beans → brown dye.
+- **14 Extractor recipes** — it now presses dyes (×2, or ×3 from rich sources like lilac and wither rose) and seeds (pumpkin → 5 pumpkin seeds, melon slice → 2 melon seeds) from plants and fruit.
 
 ### Quality of Life
 
-- **Solar Panels are quieter.** Each panel is now only audible within 10 blocks; beyond that, silent.
-- **Evolution recipes show an info page.** Pressing the recipe key on the Daylight or Moonlit Solar Panel now explains how to evolve it, instead of opening an empty page.
-- **`/ala status` is readable** — structured, color-coded sections instead of a wall of text.
-- **Cable connects to half-height blocks cleanly**, stepping down to the block's side instead of floating.
+- **The Electric Furnace makes sound while smelting** — a low furnace roar that stops when it's idle.
+- **The Pump menu is tidier** — the bucket slots, fluid bar, and energy bar are better aligned with the frame and arrows.
 
-### Changes
+### Bug Fixes
 
-- **Upgraded turbines renamed** to Sky Turbine and Storm Turbine. Existing worlds keep working.
-- **Upgraded turbines get a cleaner menu after evolution** — no chip slot, just the rotor and energy bar.
+- Fixed the Pump ignoring fluid sources that were a few blocks away from its intake.

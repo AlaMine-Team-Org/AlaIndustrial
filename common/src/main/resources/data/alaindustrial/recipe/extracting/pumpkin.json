@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:extracting",
+  "ingredient": "minecraft:pumpkin",
+  "result": {
+    "id": "minecraft:pumpkin_seeds",
+    "count": 5
+  },
+  "energy": 240
+}

@@ -55,6 +55,7 @@
 	"item.alaindustrial.network_analyzer": "नेटवर्क विश्लेषक",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
+	"gui.alaindustrial.water": "%1$s / %2$s mB",
 	"gui.alaindustrial.output": "आउटपुट: %s EU/t",
 	"gui.alaindustrial.mode": "मोड: %s",
 	"gui.alaindustrial.branch": "शाखा: %s",
@@ -188,5 +189,6 @@
 	"command.alaindustrial.status.value.loss": "प्रतिरोधी, प्रति ब्लॉक",
 	"block.alaindustrial.iron_chest": "आयरन चेस्ट",
 	"subtitles.alaindustrial.iron_chest_open": "आयरन चेस्ट खुल रहा है",
-	"subtitles.alaindustrial.iron_chest_close": "आयरन चेस्ट बंद हो रहा है"
+	"subtitles.alaindustrial.iron_chest_close": "आयरन चेस्ट बंद हो रहा है",
+	"subtitles.alaindustrial.electric_furnace": "इलेक्ट्रिक फर्नेस गरजता है"
 }

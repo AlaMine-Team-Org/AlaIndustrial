@@ -91,15 +91,21 @@ public final class Config {
 	 */
 	public static int solarEvolveTicks = 33_600;
 
-	// --- Pump (LV, EU-powered lava mover) ---
-	/** EU spent per bucket of lava the pump moves (extract + push). */
-	public static int pumpEuPerBucket = 100;
+	// --- Pump (LV, EU-powered fluid mover) ---
+	/** EU spent per bucket of fluid the pump moves (extract + push). The pump is one of the most
+	 * energy-hungry machines — at 1000 EU/bucket it is a noticeable consumer, while a bucket of lava
+	 * still yields 16 000 EU in the geothermal generator (16× payback on the pump's own tax). */
+	public static int pumpEuPerBucket = 1000;
 
 	// --- Storage / per-block buffers (EU) ---
 	public static int batteryBoxBuffer = 20_000;
 	public static int maceratorBuffer = 800;
 	/** Shared buffer for electric furnace / compressor / extractor. */
 	public static int machineBuffer = 800;
+	/** Pump EU buffer. Sized to hold several buckets' worth of pump cost (pumpEuPerBucket = 1000) so the
+	 * energy network can keep the pump fed across its 32 EU/t LV intake without stalling just below the
+	 * per-bucket threshold. */
+	public static int pumpBuffer = 4000;
 	public static int generatorBuffer = 4000;
 	public static int geothermalBuffer = 4000;
 	public static int waterMillBuffer = 4000;
@@ -198,6 +204,7 @@ public final class Config {
 					batteryBoxBuffer = GsonHelper.getAsInt(o, "batteryBoxBuffer", batteryBoxBuffer);
 					maceratorBuffer = GsonHelper.getAsInt(o, "maceratorBuffer", maceratorBuffer);
 					machineBuffer = GsonHelper.getAsInt(o, "machineBuffer", machineBuffer);
+					pumpBuffer = GsonHelper.getAsInt(o, "pumpBuffer", pumpBuffer);
 					generatorBuffer = GsonHelper.getAsInt(o, "generatorBuffer", generatorBuffer);
 					geothermalBuffer = GsonHelper.getAsInt(o, "geothermalBuffer", geothermalBuffer);
 					waterMillBuffer = GsonHelper.getAsInt(o, "waterMillBuffer", waterMillBuffer);
@@ -261,6 +268,7 @@ public final class Config {
 		o.addProperty("batteryBoxBuffer", batteryBoxBuffer);
 		o.addProperty("maceratorBuffer", maceratorBuffer);
 		o.addProperty("machineBuffer", machineBuffer);
+		o.addProperty("pumpBuffer", pumpBuffer);
 		o.addProperty("generatorBuffer", generatorBuffer);
 		o.addProperty("geothermalBuffer", geothermalBuffer);
 		o.addProperty("waterMillBuffer", waterMillBuffer);

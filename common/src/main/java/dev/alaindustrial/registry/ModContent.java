@@ -178,6 +178,7 @@ public final class ModContent {
 	public static Supplier<MenuType<?>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");
 	public static Supplier<MenuType<?>> DAYLIGHT_SOLAR_PANEL_MENU = unbound("DAYLIGHT_SOLAR_PANEL_MENU");
 	public static Supplier<MenuType<?>> GEOTHERMAL_GENERATOR_MENU = unbound("GEOTHERMAL_GENERATOR_MENU");
+	public static Supplier<MenuType<?>> PUMP_MENU = unbound("PUMP_MENU");
 	public static Supplier<MenuType<?>> WATER_MILL_MENU = unbound("WATER_MILL_MENU");
 	public static Supplier<MenuType<?>> WIND_MILL_MENU = unbound("WIND_MILL_MENU");
 	public static Supplier<MenuType<?>> HIGH_ALTITUDE_WIND_MILL_MENU = unbound("HIGH_ALTITUDE_WIND_MILL_MENU");

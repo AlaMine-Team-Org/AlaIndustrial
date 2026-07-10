@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:extracting",
+  "ingredient": "minecraft:kelp",
+  "result": {
+    "id": "minecraft:green_dye",
+    "count": 1
+  },
+  "energy": 240
+}

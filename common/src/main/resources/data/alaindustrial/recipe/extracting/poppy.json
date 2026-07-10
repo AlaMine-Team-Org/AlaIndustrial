@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:extracting",
+  "ingredient": "minecraft:poppy",
+  "result": {
+    "id": "minecraft:red_dye",
+    "count": 2
+  },
+  "energy": 240
+}

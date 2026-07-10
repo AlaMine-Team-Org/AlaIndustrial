@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:extracting",
+  "ingredient": "minecraft:sea_pickle",
+  "result": {
+    "id": "minecraft:lime_dye",
+    "count": 2
+  },
+  "energy": 240
+}

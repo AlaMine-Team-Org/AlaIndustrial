@@ -11,6 +11,7 @@ import dev.alaindustrial.client.GeneratorScreen;
 import dev.alaindustrial.client.GeothermalGeneratorScreen;
 import dev.alaindustrial.client.IronChestBlockEntityRenderer;
 import dev.alaindustrial.client.MaceratorScreen;
+import dev.alaindustrial.client.PumpScreen;
 import dev.alaindustrial.client.MachineTooltips;
 import dev.alaindustrial.client.MoonlitSolarPanelScreen;
 import dev.alaindustrial.client.SolarPanelScreen;
@@ -97,6 +98,7 @@ public final class IndustrializationNeoForgeClient {
 		event.register(ModMenusNeoForge.BATTERY_BOX.get(), BatteryBoxScreen::new);
 		event.register(ModMenusNeoForge.DAYLIGHT_SOLAR_PANEL.get(), DaylightSolarPanelScreen::new);
 		event.register(ModMenusNeoForge.GEOTHERMAL_GENERATOR.get(), GeothermalGeneratorScreen::new);
+		event.register(ModMenusNeoForge.PUMP.get(), PumpScreen::new);
 		event.register(ModMenusNeoForge.WATER_MILL.get(), WaterMillScreen::new);
 		event.register(ModMenusNeoForge.WIND_MILL.get(), WindMillScreen::new);
 		event.register(ModMenusNeoForge.HIGH_ALTITUDE_WIND_MILL.get(), dev.alaindustrial.client.HighAltitudeWindMillScreen::new);

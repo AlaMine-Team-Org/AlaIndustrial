@@ -55,6 +55,7 @@
 	"item.alaindustrial.network_analyzer": "Analisador de Rede",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
+	"gui.alaindustrial.water": "%1$s / %2$s mB",
 	"gui.alaindustrial.output": "Saída: %s EU/t",
 	"gui.alaindustrial.mode": "Modo: %s",
 	"gui.alaindustrial.branch": "Ramo: %s",
@@ -188,5 +189,6 @@
 	"command.alaindustrial.status.value.loss": "resistiva, por bloco",
 	"block.alaindustrial.iron_chest": "Baú de ferro",
 	"subtitles.alaindustrial.iron_chest_open": "Baú de ferro abre",
-	"subtitles.alaindustrial.iron_chest_close": "Baú de ferro fecha"
+	"subtitles.alaindustrial.iron_chest_close": "Baú de ferro fecha",
+	"subtitles.alaindustrial.electric_furnace": "Fornalha elétrica ruge"
 }

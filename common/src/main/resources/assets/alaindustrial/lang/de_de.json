@@ -55,6 +55,7 @@
 	"item.alaindustrial.network_analyzer": "Netzwerkanalysator",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
+	"gui.alaindustrial.water": "%1$s / %2$s mB",
 	"gui.alaindustrial.output": "Ausgabe: %s EU/t",
 	"gui.alaindustrial.mode": "Modus: %s",
 	"gui.alaindustrial.branch": "Zweig: %s",
@@ -188,5 +189,6 @@
 	"command.alaindustrial.status.value.loss": "resistiv, pro Block",
 	"block.alaindustrial.iron_chest": "Eisentruhe",
 	"subtitles.alaindustrial.iron_chest_open": "Eisentruhe öffnet sich",
-	"subtitles.alaindustrial.iron_chest_close": "Eisentruhe schließt sich"
+	"subtitles.alaindustrial.iron_chest_close": "Eisentruhe schließt sich",
+	"subtitles.alaindustrial.electric_furnace": "Elektroofen dröhnt"
 }
