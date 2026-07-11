@@ -5,6 +5,8 @@ import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.core.EnergyNet;
 import dev.alaindustrial.core.EnergyRole;
 import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.item.ItemEnergy;
+import dev.alaindustrial.item.PouchItem;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
@@ -19,18 +21,23 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * LV BatteryBox (spec: alaindustrial:battery_box) — the first energy store. Buffers up to 20 000 EU,
- * accepts LV in and pushes LV out, stabilising the early network. v0.1 is a buffer node; the
- * charge/discharge item slots (and charge-on-drop NBT) are deferred until a portable EU item
- * exists (see the spec's v0.1 note). No inventory.
+ * accepts LV in and pushes LV out, stabilising the early network. Since MOD-052 it also has the
+ * charge slot the spec deferred "until a portable EU item exists": slot 0 accepts an Battery Pouch and
+ * refills its {@code pouch_energy} from the buffer at the LV ceiling (32 EU/t). GUI-only — hoppers
+ * can neither feed nor drain the slot. The discharge slot stays future work.
  */
 public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuProvider {
+	/** Slot 0 — the pouch charge slot (MOD-052). */
+	public static final int CHARGE_SLOT = 0;
+
 	public BatteryBoxBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.BATTERY_BOX_BE.get(), pos, state, EnergyTier.LV, 0,
+		super(ModContent.BATTERY_BOX_BE.get(), pos, state, EnergyTier.LV, 1,
 				Config.batteryBoxBuffer, EnergyTier.LV.maxVoltage(), EnergyTier.LV.maxVoltage());
 	}
 
@@ -39,8 +46,40 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 		// Direct push to cable-less adjacent machines only; the cabled path is owned by the
 		// EnergyNetwork, which treats the battery_box as both a producer and a consumer endpoint.
 		EnergyNet.distribute(level, pos, this, true);
+		chargePouch();
 		// Storage keeps pushing every tick (a neighbour may appear with no wake event), so never sleeps.
 		return 0;
+	}
+
+	/** Refill the pouch in the charge slot from the buffer, capped at the LV per-tick ceiling. */
+	private void chargePouch() {
+		ItemStack pouch = getItem(CHARGE_SLOT);
+		if (pouch.isEmpty() || !(pouch.getItem() instanceof PouchItem) || energy.amount <= 0) {
+			return;
+		}
+		long move = Math.min(Math.min(ItemEnergy.room(pouch), energy.amount), EnergyTier.LV.maxVoltage());
+		if (move <= 0) {
+			return;
+		}
+		energy.amount -= move;
+		ItemEnergy.add(pouch, move);
+		setChanged();
+	}
+
+	/** The charge slot takes pouches only (manual/GUI path; hoppers are cut off below). */
+	@Override
+	public boolean canPlaceItem(int slot, ItemStack stack) {
+		return slot == CHARGE_SLOT && stack.getItem() instanceof PouchItem;
+	}
+
+	/**
+	 * GUI-only slot: the base class delegates hopper insertion to {@link #canPlaceItem}, which would
+	 * let hoppers push pouches in — cut that path off entirely. Extraction is already blocked by the
+	 * default {@code isOutputSlot() == false}.
+	 */
+	@Override
+	public boolean canPlaceItemThroughFace(int slot, ItemStack stack, Direction side) {
+		return false;
 	}
 
 	/**

@@ -4,6 +4,8 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
+import dev.alaindustrial.item.PouchItem;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,6 +19,7 @@ import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.block.Block;
 
@@ -89,6 +92,7 @@ public final class ModItems {
 	public static final Item RAW_URANIUM = item("raw_uranium");
 	public static final Item URANIUM_INGOT = item("uranium_ingot");
 	public static final Item NETWORK_ANALYZER = networkAnalyzer("network_analyzer");
+	public static final Item BATTERY_POUCH = pouch("battery_pouch");
 
 	// Block items.
 	public static final BlockItem GENERATOR_ITEM = blockItem("generator", ModBlocks.GENERATOR);
@@ -134,6 +138,14 @@ public final class ModItems {
 		// treats a missing component as TRAVERSE instead, and switchMode persists it on first use.
 		return Registry.register(BuiltInRegistries.ITEM, key,
 				new NetworkAnalyzerItem(new Item.Properties().setId(key).stacksTo(1)));
+	}
+
+	private static Item pouch(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		// Like networkAnalyzer: no Item.Properties.component(...) defaults — PouchItem/ItemEnergy treat
+		// absent pouch_energy/pouch_contents as 0 EU / empty (MOD-052).
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new PouchItem(new Item.Properties().setId(key).stacksTo(1)));
 	}
 
 	// Tempered-iron hand-held tools (MOD-054). In MC 26.2 PickaxeItem/SwordItem/DiggerItem were
@@ -236,6 +248,7 @@ public final class ModItems {
 					output.accept(EMERALD_DUST);
 					output.accept(LAPIS_DUST);
 						output.accept(NETWORK_ANALYZER);
+						output.accept(BATTERY_POUCH);
 						// Tempered Iron — ingot, block, tools and armor as one continuous row
 						output.accept(TEMPERED_IRON);
 						output.accept(TEMPERED_IRON_BLOCK_ITEM);
@@ -253,6 +266,37 @@ public final class ModItems {
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TAB, tab);
 
 		bindModContent();
+		registerVanillaCreativeTabs();
+	}
+
+	private static void registerVanillaCreativeTabs() {
+		CreativeModeTabEvents.modifyOutputEvent(VanillaCreativeTabs.COMBAT)
+				.register(output -> {
+					output.insertAfter(Items.IRON_SWORD, ModContent.TEMPERED_IRON_SWORD.get());
+					output.insertAfter(Items.IRON_BOOTS,
+							ModContent.TEMPERED_IRON_HELMET.get(),
+							ModContent.TEMPERED_IRON_CHESTPLATE.get(),
+							ModContent.TEMPERED_IRON_LEGGINGS.get(),
+							ModContent.TEMPERED_IRON_BOOTS.get());
+				});
+		CreativeModeTabEvents.modifyOutputEvent(VanillaCreativeTabs.TOOLS_AND_UTILITIES)
+				.register(output -> {
+					output.insertAfter(Items.IRON_HOE,
+							ModContent.TEMPERED_IRON_PICKAXE.get(),
+							ModContent.TEMPERED_IRON_AXE.get(),
+							ModContent.TEMPERED_IRON_SHOVEL.get(),
+							ModContent.TEMPERED_IRON_HOE.get());
+					output.insertAfter(Items.COMPASS, ModContent.NETWORK_ANALYZER.get());
+					output.accept(ModContent.BATTERY_POUCH.get());
+				});
+		CreativeModeTabEvents.modifyOutputEvent(VanillaCreativeTabs.INGREDIENTS)
+				.register(output -> CreativeTabContent.ingredients(output::accept));
+		CreativeModeTabEvents.modifyOutputEvent(VanillaCreativeTabs.BUILDING_BLOCKS)
+				.register(output -> CreativeTabContent.buildingBlocks(output::accept));
+		CreativeModeTabEvents.modifyOutputEvent(VanillaCreativeTabs.NATURAL_BLOCKS)
+				.register(output -> CreativeTabContent.naturalBlocks(output::accept));
+		CreativeModeTabEvents.modifyOutputEvent(VanillaCreativeTabs.FUNCTIONAL_BLOCKS)
+				.register(output -> CreativeTabContent.functionalBlocks(output::accept));
 	}
 
 	/**
@@ -280,6 +324,10 @@ public final class ModItems {
 		ModContent.IRON_DUST = () -> IRON_DUST;
 		ModContent.COPPER_DUST = () -> COPPER_DUST;
 		ModContent.GOLD_DUST = () -> GOLD_DUST;
+		ModContent.COAL_DUST = () -> COAL_DUST;
+		ModContent.DIAMOND_DUST = () -> DIAMOND_DUST;
+		ModContent.EMERALD_DUST = () -> EMERALD_DUST;
+		ModContent.LAPIS_DUST = () -> LAPIS_DUST;
 		ModContent.TIN_DUST = () -> TIN_DUST;
 		ModContent.RAW_TIN = () -> RAW_TIN;
 		ModContent.TIN_INGOT = () -> TIN_INGOT;
@@ -293,6 +341,7 @@ public final class ModItems {
 		ModContent.RAW_URANIUM = () -> RAW_URANIUM;
 		ModContent.URANIUM_INGOT = () -> URANIUM_INGOT;
 		ModContent.NETWORK_ANALYZER = () -> NETWORK_ANALYZER;
+		ModContent.BATTERY_POUCH = () -> BATTERY_POUCH;
 
 		ModContent.GENERATOR_ITEM = () -> GENERATOR_ITEM;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = () -> GEOTHERMAL_GENERATOR_ITEM;

@@ -4,6 +4,8 @@ import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.gametest.CoreEnergyScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
+import dev.alaindustrial.gametest.PouchScenarios;
+import dev.alaindustrial.gametest.TemperedIronToolScenarios;
 import java.util.function.Consumer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -282,6 +284,35 @@ public final class NeoForgeGameTests {
 		// Two generators sum into one consumer (R-CON-16, no dupe/shadow).
 		registerTest(event, "two_generators_sum_into_one_consumer", 60, true,
 				CoreEnergyScenarios::twoGeneratorsSumIntoOneConsumer);
+
+		// MOD-057: tempered-iron tools are in vanilla membership tags → enchanting table accepts them.
+		// Loader-neutral bodies in TemperedIronToolScenarios (common); guards the data/minecraft/tags/item
+		// JSON fix against regression. Mirrors Fabric TemperedIronToolsGameTest.tcTi001/tcTi002.
+		registerTest(event, "tempered_iron_tool_membership_tags", 40, true,
+				TemperedIronToolScenarios::toolMembershipTags);
+		registerTest(event, "tempered_iron_enchantment_accepted", 40, true,
+				TemperedIronToolScenarios::enchantmentAccepted);
+
+		// Battery Pouch (MOD-052, TC-POUCH-001) — same loader-neutral bodies as the Fabric PouchGameTest
+		// suite, so the pouch components / weight math / EU lock / Battery Box charge slot are proven
+		// on the NeoForge frozen-registry path too.
+		registerTest(event, "pouch_insert_requires_energy", 40, true, PouchScenarios::fun01InsertRequiresEnergy);
+		registerTest(event, "pouch_capacity_leftover", 40, true, PouchScenarios::fun02CapacityLeftover);
+		registerTest(event, "pouch_weight_math", 40, true, PouchScenarios::fun03WeightMath);
+		registerTest(event, "pouch_remove_lifo", 40, true, PouchScenarios::fun04RemoveLifo);
+		registerTest(event, "pouch_passive_drain", 40, true, PouchScenarios::fun05PassiveDrain);
+		registerTest(event, "pouch_no_drain_when_empty", 40, true, PouchScenarios::fun06NoDrainWhenEmpty);
+		registerTest(event, "pouch_charge_in_battery_box", 80, true, PouchScenarios::fun07ChargeInBatteryBox);
+		registerTest(event, "pouch_merge_on_insert", 40, true, PouchScenarios::fun08MergeOnInsert);
+		registerTest(event, "pouch_tooltip_image", 40, true, PouchScenarios::fun09TooltipImage);
+		registerTest(event, "pouch_no_pouch_in_pouch", 40, true, PouchScenarios::neg01NoPouchInPouch);
+		registerTest(event, "pouch_hopper_cut_off", 40, true, PouchScenarios::neg02HopperCutOff);
+		registerTest(event, "pouch_drain_floors_and_locks", 40, true, PouchScenarios::neg03DrainFloorsAndLocks);
+		registerTest(event, "pouch_menu_slot_filter", 40, true, PouchScenarios::neg04MenuSlotFilter);
+		registerTest(event, "pouch_charge_rate_cap", 40, true, PouchScenarios::prf01ChargeRateCap);
+		registerTest(event, "pouch_no_overcharge", 40, true, PouchScenarios::prf02NoOvercharge);
+		registerTest(event, "pouch_contents_round_trip", 40, true, PouchScenarios::per01ContentsRoundTrip);
+		registerTest(event, "pouch_energy_semantics", 40, true, PouchScenarios::per02EnergySemantics);
 	}
 
 	/** Register one code-body scenario under the alaindustrial namespace with a sane maxTicks. */

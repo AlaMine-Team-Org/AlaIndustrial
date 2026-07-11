@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.AnalyzerMode;
 import dev.alaindustrial.item.NetworkScanData;
+import dev.alaindustrial.item.PouchContents;
 import java.util.function.Supplier;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -30,6 +31,8 @@ public final class ModDataComponents {
 	public static final Identifier STORED_ENERGY_ID = Industrialization.id("stored_energy");
 	public static final Identifier NETWORK_SCAN_ID = Industrialization.id("network_scan");
 	public static final Identifier NETWORK_ANALYZER_MODE_ID = Industrialization.id("network_analyzer_mode");
+	public static final Identifier POUCH_ENERGY_ID = Industrialization.id("pouch_energy");
+	public static final Identifier POUCH_CONTENTS_ID = Industrialization.id("pouch_contents");
 
 	/** Buffered EU carried on a storage block's item form. Bound once per loader before first access. */
 	public static Supplier<DataComponentType<Long>> STORED_ENERGY = () -> {
@@ -44,6 +47,20 @@ public final class ModDataComponents {
 	/** Network Analyzer's current mode (TRAVERSE / STOP_AT_STORAGE), persisted on the tool (MOD-047). */
 	public static Supplier<DataComponentType<AnalyzerMode>> NETWORK_ANALYZER_MODE = () -> {
 		throw new IllegalStateException("ModDataComponents.NETWORK_ANALYZER_MODE read before its loader bound it");
+	};
+
+	/**
+	 * Battery Pouch EU buffer (MOD-052) — the item-in-inventory charge, distinct from {@link #STORED_ENERGY}
+	 * (which carries a <em>block's</em> buffer across break/place). Read/written only via
+	 * {@link dev.alaindustrial.item.ItemEnergy}: absent = 0 EU, writes clamp to the item's capacity.
+	 */
+	public static Supplier<DataComponentType<Long>> POUCH_ENERGY = () -> {
+		throw new IllegalStateException("ModDataComponents.POUCH_ENERGY read before its loader bound it");
+	};
+
+	/** Battery Pouch stored items (MOD-052) — immutable stack list with weight math, absent = empty. */
+	public static Supplier<DataComponentType<PouchContents>> POUCH_CONTENTS = () -> {
+		throw new IllegalStateException("ModDataComponents.POUCH_CONTENTS read before its loader bound it");
 	};
 
 	/** Build the {@code stored_energy} type both loaders register. */
@@ -67,6 +84,30 @@ public final class ModDataComponents {
 		return DataComponentType.<AnalyzerMode>builder()
 				.persistent(AnalyzerMode.CODEC)
 				.networkSynchronized(AnalyzerMode.STREAM_CODEC)
+				.build();
+	}
+
+	/**
+	 * Build the {@code pouch_energy} type both loaders register (MOD-052).
+	 *
+	 * <p>{@code ignoreSwapAnimation()}: the passive drain rewrites this component once per second,
+	 * and without the flag every write re-triggers the first-person re-equip animation — a held
+	 * pouch visibly "bobs" each second (player-reported). The flag excludes this component from the
+	 * hand renderer's stack comparison ({@code ItemStack.matchesIgnoringComponents}).
+	 */
+	public static DataComponentType<Long> createPouchEnergy() {
+		return DataComponentType.<Long>builder()
+				.persistent(Codec.LONG)
+				.networkSynchronized(ByteBufCodecs.VAR_LONG)
+				.ignoreSwapAnimation()
+				.build();
+	}
+
+	/** Build the {@code pouch_contents} type both loaders register (MOD-052). */
+	public static DataComponentType<PouchContents> createPouchContents() {
+		return DataComponentType.<PouchContents>builder()
+				.persistent(PouchContents.CODEC)
+				.networkSynchronized(PouchContents.STREAM_CODEC)
 				.build();
 	}
 }

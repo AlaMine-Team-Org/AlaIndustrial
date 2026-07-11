@@ -109,6 +109,7 @@ public final class IndustrializationNeoForge {
 		dev.alaindustrial.registry.neoforge.ModDataComponentsNeoForge.init();
 		dev.alaindustrial.registry.neoforge.ModRecipesNeoForge.init();
 		dev.alaindustrial.registry.neoforge.ModCriteriaNeoForge.init();
+		dev.alaindustrial.registry.neoforge.ModCreativeTabEventsNeoForge.register(modBus);
 
 		// Verify the facade is bound. NeoForge is still mid-migration (Phase 4 populates every registry), so
 		// most handles remain on their ModContent placeholder — report the gap loudly instead of aborting load,

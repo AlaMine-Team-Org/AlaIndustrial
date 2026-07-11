@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
+import dev.alaindustrial.item.PouchItem;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -103,6 +104,8 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> URANIUM_INGOT = ITEMS.registerItem("uranium_ingot", Item::new);
 	public static final DeferredItem<NetworkAnalyzerItem> NETWORK_ANALYZER =
 			ITEMS.registerItem("network_analyzer", NetworkAnalyzerItem::new, p -> p.stacksTo(1));
+	public static final DeferredItem<PouchItem> BATTERY_POUCH =
+			ITEMS.registerItem("battery_pouch", PouchItem::new, p -> p.stacksTo(1));
 
 	// --- Block items ---
 	public static final DeferredItem<BlockItem> GENERATOR_ITEM =
@@ -194,6 +197,10 @@ public final class ModItemsNeoForge {
 		ModContent.IRON_DUST = IRON_DUST;
 		ModContent.COPPER_DUST = COPPER_DUST;
 		ModContent.GOLD_DUST = GOLD_DUST;
+		ModContent.COAL_DUST = COAL_DUST;
+		ModContent.DIAMOND_DUST = DIAMOND_DUST;
+		ModContent.EMERALD_DUST = EMERALD_DUST;
+		ModContent.LAPIS_DUST = LAPIS_DUST;
 		ModContent.TIN_DUST = TIN_DUST;
 		ModContent.RAW_TIN = RAW_TIN;
 		ModContent.TIN_INGOT = TIN_INGOT;
@@ -209,6 +216,8 @@ public final class ModItemsNeoForge {
 		// NETWORK_ANALYZER is a DeferredItem<NetworkAnalyzerItem>; the slot is Supplier<Item>. Generics are
 		// invariant, so bind via the (still-lazy) method reference — see ModBlocksNeoForge#init javadoc.
 		ModContent.NETWORK_ANALYZER = NETWORK_ANALYZER::get;
+		// Same invariant-generics story as NETWORK_ANALYZER above.
+		ModContent.BATTERY_POUCH = BATTERY_POUCH::get;
 
 		ModContent.GENERATOR_ITEM = GENERATOR_ITEM;
 		ModContent.SOLAR_PANEL_ITEM = SOLAR_PANEL_ITEM;

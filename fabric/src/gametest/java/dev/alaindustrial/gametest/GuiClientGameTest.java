@@ -581,6 +581,9 @@ public class GuiClientGameTest implements FabricClientGameTest {
         shootMenuWithState(context, "gui_battery_box_full",
                 ModMenus.BATTERY_BOX, "BatteryBox",
                 CAP, CAP, 0, 0);
+        // MOD-052: fourth state — a half-charged Battery Pouch sitting in the new charge slot, so the
+        // reviewer sees the slot niche, the pouch icon and its EU item bar together.
+        shootBatteryBoxWithPouch(context, "gui_battery_box_pouch", CAP / 2, CAP);
 
         // ── LV Generator — three states ──────────────────────────────────────────────
         // State 1: empty — no fuel, no energy
@@ -668,6 +671,25 @@ public class GuiClientGameTest implements FabricClientGameTest {
      * state (energy fill, flame height, arrow width). Works only for screens backed by
      * {@link MachineMenu}; for other types falls back to the plain empty shot.
      */
+    /** BatteryBox screen with a half-charged Battery Pouch injected into the charge slot (MOD-052). */
+    private static void shootBatteryBoxWithPouch(ClientGameTestContext context, String name,
+                                                 int energy, int capacity) {
+        LOG.info("[GUITEST] opening {} (pouch in charge slot)", name);
+        context.runOnClient(mc -> {
+            MenuScreens.create(ModMenus.BATTERY_BOX, mc, 0, Component.literal("BatteryBox"));
+            if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                    && acs.getMenu() instanceof MachineMenu menu) {
+                menu.injectTestData(energy, capacity, 0, 0);
+                ItemStack pouch = new ItemStack(ModItems.BATTERY_POUCH);
+                dev.alaindustrial.item.ItemEnergy.set(pouch, dev.alaindustrial.Config.lvPouchBuffer / 2);
+                menu.getSlot(0).container.setItem(0, pouch);
+            }
+        });
+        context.waitTicks(5);
+        java.nio.file.Path path = takeCleanScreenshot(context, name);
+        LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
+    }
+
     private static void shootMenuWithState(ClientGameTestContext context, String name,
                                            MenuType<?> type, String displayName,
                                            int energy, int capacity, int progress, int maxProgress) {

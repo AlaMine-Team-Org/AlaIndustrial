@@ -72,6 +72,17 @@ public class IndustrializationFabric implements ModInitializer {
 						dev.alaindustrial.registry.ModDataComponents.NETWORK_ANALYZER_MODE_ID,
 						dev.alaindustrial.registry.ModDataComponents.createNetworkAnalyzerMode());
 		dev.alaindustrial.registry.ModDataComponents.NETWORK_ANALYZER_MODE = () -> networkAnalyzerMode;
+		net.minecraft.core.component.DataComponentType<Long> pouchEnergy = net.minecraft.core.Registry.register(
+				net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE,
+				dev.alaindustrial.registry.ModDataComponents.POUCH_ENERGY_ID,
+				dev.alaindustrial.registry.ModDataComponents.createPouchEnergy());
+		dev.alaindustrial.registry.ModDataComponents.POUCH_ENERGY = () -> pouchEnergy;
+		net.minecraft.core.component.DataComponentType<dev.alaindustrial.item.PouchContents> pouchContents =
+				net.minecraft.core.Registry.register(
+						net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE,
+						dev.alaindustrial.registry.ModDataComponents.POUCH_CONTENTS_ID,
+						dev.alaindustrial.registry.ModDataComponents.createPouchContents());
+		dev.alaindustrial.registry.ModDataComponents.POUCH_CONTENTS = () -> pouchContents;
 		ModBlocks.init();
 		ModBlockEntities.init();
 		ModMenus.init();

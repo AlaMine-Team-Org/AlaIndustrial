@@ -115,6 +115,17 @@ public final class Config {
 	public static int solarBuffer = 8000;
 	public static int cableBuffer = 64;
 
+	// --- Battery Pouch (MOD-052, powered item) ---
+	/** Pouch storage capacity in weight units (vanilla-bundle math: one item weighs 64/maxStackSize).
+	 * 128 = exactly twice a vanilla bundle, ≈ two stacks of ordinary items. */
+	public static int lvPouchCapacity = 128;
+	/** Pouch EU buffer. At the 1 EU/s passive drain this is ~33 min of carrying items — well past a
+	 * single mining trip; charging at the LV ceiling (32 EU/t) refills it in ~63 ticks. */
+	public static int lvPouchBuffer = 2000;
+	/** EU drained per second while the pouch is in a player inventory AND holds items. At 0 EU the
+	 * pouch locks (no insert, no extract) until recharged in the Battery Box slot. */
+	public static int lvPouchDrainPerSecond = 1;
+
 	// --- Machines: shared EU/tick + per-machine duration (ticks) -> E_op = euPerTick × duration ---
 	public static int machineEuPerTick = 2;
 	public static int maceratorDuration = 150;
@@ -219,6 +230,18 @@ public final class Config {
 					t2WindMillBuffer = GsonHelper.getAsInt(o, "t2WindMillBuffer", t2WindMillBuffer);
 					solarBuffer = GsonHelper.getAsInt(o, "solarBuffer", solarBuffer);
 					cableBuffer = GsonHelper.getAsInt(o, "cableBuffer", cableBuffer);
+					lvPouchCapacity = GsonHelper.getAsInt(o, "lvPouchCapacity", lvPouchCapacity);
+					if (lvPouchCapacity <= 0) {
+						lvPouchCapacity = 128;
+					}
+					lvPouchBuffer = GsonHelper.getAsInt(o, "lvPouchBuffer", lvPouchBuffer);
+					if (lvPouchBuffer <= 0) {
+						lvPouchBuffer = 2000;
+					}
+					lvPouchDrainPerSecond = GsonHelper.getAsInt(o, "lvPouchDrainPerSecond", lvPouchDrainPerSecond);
+					if (lvPouchDrainPerSecond < 0) {
+						lvPouchDrainPerSecond = 1;
+					}
 					machineEuPerTick = GsonHelper.getAsInt(o, "machineEuPerTick", machineEuPerTick);
 					maceratorDuration = GsonHelper.getAsInt(o, "maceratorDuration", maceratorDuration);
 					electricFurnaceDuration = GsonHelper.getAsInt(o, "electricFurnaceDuration", electricFurnaceDuration);
@@ -288,6 +311,9 @@ public final class Config {
 		o.addProperty("t2WindMillBuffer", t2WindMillBuffer);
 		o.addProperty("solarBuffer", solarBuffer);
 		o.addProperty("cableBuffer", cableBuffer);
+		o.addProperty("lvPouchCapacity", lvPouchCapacity);
+		o.addProperty("lvPouchBuffer", lvPouchBuffer);
+		o.addProperty("lvPouchDrainPerSecond", lvPouchDrainPerSecond);
 		o.addProperty("machineEuPerTick", machineEuPerTick);
 		o.addProperty("maceratorDuration", maceratorDuration);
 		o.addProperty("electricFurnaceDuration", electricFurnaceDuration);

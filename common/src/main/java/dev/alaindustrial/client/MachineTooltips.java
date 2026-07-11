@@ -14,8 +14,11 @@ import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.item.AnalyzerMode;
+import dev.alaindustrial.item.ItemEnergy;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import dev.alaindustrial.item.NetworkScanData;
+import dev.alaindustrial.item.PouchContents;
+import dev.alaindustrial.item.PouchItem;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import java.util.List;
@@ -41,6 +44,10 @@ public final class MachineTooltips {
 		boolean detailed = shiftDown || AlaClientConfig.alwaysDetailedTooltips;
 		if (stack.getItem() instanceof NetworkAnalyzerItem) {
 			addNetworkAnalyzerTooltip(stack, lines, detailed);
+			return;
+		}
+		if (stack.getItem() instanceof PouchItem) {
+			addPouchTooltip(stack, lines, detailed);
 			return;
 		}
 		// Plain-item components (not BlockItem) — the windmill rotor is the only such item with a
@@ -134,6 +141,35 @@ public final class MachineTooltips {
 			lines.add(Component.translatable("tooltip.alaindustrial.hold_shift")
 					.withStyle(ChatFormatting.DARK_GRAY));
 		}
+	}
+
+	/**
+	 * Tooltip text for the Battery Pouch (MOD-052): usage, EU charge (red DEPLETED at 0 — the lock state
+	 * must be readable at a glance), tier. The contents grid and the weight bar are visual — see
+	 * {@code PouchClientTooltip} (bundle-style tooltip image, player request).
+	 */
+	private static void addPouchTooltip(ItemStack stack, List<Component> lines, boolean detailed) {
+		// Two short list lines instead of one long sentence — long single-line tooltips stretch the
+		// box, and other locales run even longer (player feedback).
+			lines.add(Component.translatable("tooltip.alaindustrial.battery_pouch.usage_insert")
+					.withStyle(ChatFormatting.GRAY));
+		lines.add(Component.translatable("tooltip.alaindustrial.battery_pouch.usage_extract")
+				.withStyle(ChatFormatting.GRAY));
+		long eu = ItemEnergy.get(stack);
+		long cap = ItemEnergy.capacity(stack);
+		if (eu <= 0) {
+			lines.add(Component.translatable("tooltip.alaindustrial.battery_pouch.depleted")
+					.withStyle(ChatFormatting.RED));
+		} else {
+			lines.add(Component.translatable("tooltip.alaindustrial.battery_pouch.charge", eu, cap)
+					.withStyle(ChatFormatting.GOLD));
+			if (cap > 0 && eu * 10 < cap) {
+				lines.add(Component.translatable("tooltip.alaindustrial.battery_pouch.low_charge")
+						.withStyle(ChatFormatting.RED));
+			}
+		}
+		// No tier line: the Battery Pouch is a tier-less consumer item; its charge state and item
+		// bar (LV gold) already convey everything the player needs.
 	}
 
 	/**

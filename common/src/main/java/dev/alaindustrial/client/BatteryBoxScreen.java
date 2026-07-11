@@ -40,6 +40,11 @@ public class BatteryBoxScreen extends AbstractContainerScreen<BatteryBoxMenu> {
     // y=30-50 (between inner accent stripes). Width=71, Height=21.
     private static final int BATT_FILL_X = 52, BATT_FILL_Y = 30, BATT_FILL_W = 71, BATT_FILL_H = 21;
 
+    // Pouch charge-slot niche (MOD-052): 18×18 box left of the battery, centred on its rows;
+    // top-left = item position (BatteryBoxMenu.CHARGE_SLOT_X/Y) minus 1. Vanilla slot palette.
+    private static final int SLOT_X = 20, SLOT_Y = 31;
+    private static final int SLOT_DARK = 0xFF373737, SLOT_LIGHT = 0xFFFFFFFF, SLOT_FACE = 0xFF8B8B8B;
+
     public BatteryBoxScreen(BatteryBoxMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
     }
@@ -77,6 +82,13 @@ public class BatteryBoxScreen extends AbstractContainerScreen<BatteryBoxMenu> {
         // Step 2 — static frame on top (battery outline + dividers are opaque, interior transparent).
         graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, 0.0F, 0.0F,
                 this.imageWidth, this.imageHeight, TEX_SIZE, TEX_SIZE);
+
+        // Step 2b — pouch charge-slot niche (MOD-052), drawn AFTER the frame because the texture is
+        // opaque there (it predates the slot). Classic vanilla three-fill inset: dark top/left,
+        // light bottom/right, gray interior; the slot item renders on top at (21,32).
+        graphics.fill(x + SLOT_X, y + SLOT_Y, x + SLOT_X + 18, y + SLOT_Y + 18, SLOT_DARK);
+        graphics.fill(x + SLOT_X + 1, y + SLOT_Y + 1, x + SLOT_X + 18, y + SLOT_Y + 18, SLOT_LIGHT);
+        graphics.fill(x + SLOT_X + 1, y + SLOT_Y + 1, x + SLOT_X + 17, y + SLOT_Y + 17, SLOT_FACE);
 
         // Step 3 — numeric readout in the gap between the battery (ends y=53) and the inventory
         // label (y=72): stored / capacity (with %) on one line, the output cap on the next.

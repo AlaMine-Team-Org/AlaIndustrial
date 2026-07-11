@@ -3,6 +3,7 @@ package dev.alaindustrial.registry.neoforge;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.AnalyzerMode;
 import dev.alaindustrial.item.NetworkScanData;
+import dev.alaindustrial.item.PouchContents;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -28,11 +29,19 @@ public final class ModDataComponentsNeoForge {
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<AnalyzerMode>> NETWORK_ANALYZER_MODE =
 			DATA_COMPONENTS.register("network_analyzer_mode", ModDataComponents::createNetworkAnalyzerMode);
 
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> POUCH_ENERGY =
+			DATA_COMPONENTS.register("pouch_energy", ModDataComponents::createPouchEnergy);
+
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<PouchContents>> POUCH_CONTENTS =
+			DATA_COMPONENTS.register("pouch_contents", ModDataComponents::createPouchContents);
+
 	/** Bind the neutral handles to the deferred holders. Called from the {@code @Mod} ctor after register. */
 	public static void init() {
 		ModDataComponents.STORED_ENERGY = STORED_ENERGY;
 		ModDataComponents.NETWORK_SCAN = NETWORK_SCAN;
 		ModDataComponents.NETWORK_ANALYZER_MODE = NETWORK_ANALYZER_MODE;
+		ModDataComponents.POUCH_ENERGY = POUCH_ENERGY;
+		ModDataComponents.POUCH_CONTENTS = POUCH_CONTENTS;
 	}
 
 	private ModDataComponentsNeoForge() {

@@ -56,6 +56,11 @@ public final class IndustrializationNeoForgeClient {
 		container.registerExtensionPoint(IConfigScreenFactory.class,
 				(modContainer, parent) -> new AlaConfigScreen(parent));
 		modBus.addListener(this::registerMenuScreens);
+		// Battery Pouch bundle-style tooltip (MOD-052) — NeoForge counterpart to the Fabric
+		// ClientTooltipComponentCallback mapping in IndustrializationClient.
+		modBus.addListener((net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent event) ->
+				event.register(dev.alaindustrial.item.PouchTooltip.class,
+						dev.alaindustrial.client.PouchClientTooltip::new));
 		// Iron chest: 3D model + animated lid. Register the BlockEntityRenderer + bake the chest
 		// model layer (vanilla single-body chest geometry), the NeoForge counterpart to the Fabric
 		// BlockEntityRendererRegistry + ModelLayerRegistry calls in IndustrializationClient.

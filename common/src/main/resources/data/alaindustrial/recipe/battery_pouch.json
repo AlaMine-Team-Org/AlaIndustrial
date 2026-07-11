@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"L": "minecraft:leather",
+		"T": "alaindustrial:tin_ingot",
+		"B": "minecraft:bundle",
+		"C": "alaindustrial:electronic_circuit"
+	},
+	"pattern": [
+		"LTL",
+		"LBL",
+		"LCL"
+	],
+	"result": { "id": "alaindustrial:battery_pouch" }
+}

@@ -25,7 +25,9 @@
 			"dev.alaindustrial.gametest.PersistenceGameTest",
 			"dev.alaindustrial.gametest.WaterMillGameTest",
 			"dev.alaindustrial.gametest.WindMillGameTest",
-			"dev.alaindustrial.gametest.CablePlacementGameTest"
+			"dev.alaindustrial.gametest.CablePlacementGameTest",
+			"dev.alaindustrial.gametest.TemperedIronToolsGameTest",
+			"dev.alaindustrial.gametest.PouchGameTest"
 		]
 	}
 }

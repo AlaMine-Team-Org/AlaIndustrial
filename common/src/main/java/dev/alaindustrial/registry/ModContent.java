@@ -120,6 +120,10 @@ public final class ModContent {
 	public static Supplier<Item> IRON_DUST = unbound("IRON_DUST");
 	public static Supplier<Item> COPPER_DUST = unbound("COPPER_DUST");
 	public static Supplier<Item> GOLD_DUST = unbound("GOLD_DUST");
+	public static Supplier<Item> COAL_DUST = unbound("COAL_DUST");
+	public static Supplier<Item> DIAMOND_DUST = unbound("DIAMOND_DUST");
+	public static Supplier<Item> EMERALD_DUST = unbound("EMERALD_DUST");
+	public static Supplier<Item> LAPIS_DUST = unbound("LAPIS_DUST");
 	public static Supplier<Item> TIN_DUST = unbound("TIN_DUST");
 	public static Supplier<Item> RAW_TIN = unbound("RAW_TIN");
 	public static Supplier<Item> TIN_INGOT = unbound("TIN_INGOT");
@@ -133,6 +137,7 @@ public final class ModContent {
 	public static Supplier<Item> RAW_URANIUM = unbound("RAW_URANIUM");
 	public static Supplier<Item> URANIUM_INGOT = unbound("URANIUM_INGOT");
 	public static Supplier<Item> NETWORK_ANALYZER = unbound("NETWORK_ANALYZER");
+	public static Supplier<Item> BATTERY_POUCH = unbound("BATTERY_POUCH");
 
 	// --- Block items ---
 	public static Supplier<BlockItem> GENERATOR_ITEM = unbound("GENERATOR_ITEM");

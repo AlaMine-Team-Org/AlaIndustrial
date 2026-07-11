@@ -64,6 +64,11 @@ public class IndustrializationClient implements ClientModInitializer {
 
 		ItemTooltipCallback.EVENT.register((stack, context, flag, lines) ->
 				MachineTooltips.append(stack, lines, Minecraft.getInstance().hasShiftDown()));
+		// Battery Pouch bundle-style tooltip (MOD-052): map the neutral TooltipComponent to its renderer.
+		net.fabricmc.fabric.api.client.rendering.v1.ClientTooltipComponentCallback.EVENT.register(component ->
+				component instanceof dev.alaindustrial.item.PouchTooltip pouch
+						? new dev.alaindustrial.client.PouchClientTooltip(pouch)
+						: null);
 		dev.alaindustrial.client.NetworkVisualizationClient.init();
 		dev.alaindustrial.client.CablePlacementPreview.init();
 		dev.alaindustrial.client.sound.MachineHumClientHook.register();
