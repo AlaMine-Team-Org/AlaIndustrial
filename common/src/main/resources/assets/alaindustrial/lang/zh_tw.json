@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "停於儲能",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "模式：貫通 — 透過儲能連接電網",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "模式：停於儲能 — 僅單一區段",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "已達電網上限 (%s)。儲能之後的部分區段未顯示。"
+	"gui.alaindustrial.network_analyzer.traverse_limit": "已達電網上限 (%s)。儲能之後的部分區段未顯示。",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "可研磨的鐵",
+	"tag.item.alaindustrial.macerable_coal": "可研磨的煤",
+	"tag.item.alaindustrial.macerable_coal_item": "可研磨的煤",
+	"tag.item.alaindustrial.macerable_copper": "可研磨的銅",
+	"tag.item.alaindustrial.macerable_diamond": "可研磨的鑽石",
+	"tag.item.alaindustrial.macerable_emerald": "可研磨的綠寶石",
+	"tag.item.alaindustrial.macerable_gold": "可研磨的金",
+	"tag.item.alaindustrial.macerable_lapis": "可研磨的青金石",
+	"tag.item.alaindustrial.macerable_nickel": "可研磨的鎳",
+	"tag.item.alaindustrial.macerable_silver": "可研磨的銀",
+	"tag.item.alaindustrial.macerable_tin": "可研磨的錫",
+	"tag.item.alaindustrial.macerable_uranium": "可研磨的鈾"
 }

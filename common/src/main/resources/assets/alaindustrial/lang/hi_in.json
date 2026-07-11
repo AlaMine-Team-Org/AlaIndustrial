@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "भंडार तक",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "मोड: पारगमन — भंडार के माध्यम से नेटवर्क जुड़े",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "मोड: भंडार तक — केवल एक खंड",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "नेटवर्क सीमा पहुँची (%s)। भंडार के बाद कुछ खंड नहीं दिख रहे हैं।"
+	"gui.alaindustrial.network_analyzer.traverse_limit": "नेटवर्क सीमा पहुँची (%s)। भंडार के बाद कुछ खंड नहीं दिख रहे हैं।",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "पिसने योग्य लोहा",
+	"tag.item.alaindustrial.macerable_coal": "पिसने योग्य कोयला",
+	"tag.item.alaindustrial.macerable_coal_item": "पिसने योग्य कोयला",
+	"tag.item.alaindustrial.macerable_copper": "पिसने योग्य तांबा",
+	"tag.item.alaindustrial.macerable_diamond": "पिसने योग्य हीरा",
+	"tag.item.alaindustrial.macerable_emerald": "पिसने योग्य पन्ना",
+	"tag.item.alaindustrial.macerable_gold": "पिसने योग्य सोना",
+	"tag.item.alaindustrial.macerable_lapis": "पिसने योग्य लापीस लाजुली",
+	"tag.item.alaindustrial.macerable_nickel": "पिसने योग्य निकल",
+	"tag.item.alaindustrial.macerable_silver": "पिसने योग्य चांदी",
+	"tag.item.alaindustrial.macerable_tin": "पिसने योग्य टिन",
+	"tag.item.alaindustrial.macerable_uranium": "पिसने योग्य यूरेनियम"
 }

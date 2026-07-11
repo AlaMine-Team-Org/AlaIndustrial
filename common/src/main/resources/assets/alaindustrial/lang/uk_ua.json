@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "До сховища",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "Режим: Сквозний — межі об'єднані через сховища",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "Режим: До сховища — лише один сегмент",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "Досягнуто ліміт меж (%s). Частину сегментів за сховищами не показано."
+	"gui.alaindustrial.network_analyzer.traverse_limit": "Досягнуто ліміт меж (%s). Частину сегментів за сховищами не показано.",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "Подрібнюване залізо",
+	"tag.item.alaindustrial.macerable_coal": "Подрібнюване вугілля",
+	"tag.item.alaindustrial.macerable_coal_item": "Подрібнюване вугілля",
+	"tag.item.alaindustrial.macerable_copper": "Подрібнювана мідь",
+	"tag.item.alaindustrial.macerable_diamond": "Подрібнюваний алмаз",
+	"tag.item.alaindustrial.macerable_emerald": "Подрібнюваний смарагд",
+	"tag.item.alaindustrial.macerable_gold": "Подрібнюване золото",
+	"tag.item.alaindustrial.macerable_lapis": "Подрібнюваний лазурит",
+	"tag.item.alaindustrial.macerable_nickel": "Подрібнюваний нікель",
+	"tag.item.alaindustrial.macerable_silver": "Подрібнюване срібло",
+	"tag.item.alaindustrial.macerable_tin": "Подрібнюване олово",
+	"tag.item.alaindustrial.macerable_uranium": "Подрібнюваний уран"
 }

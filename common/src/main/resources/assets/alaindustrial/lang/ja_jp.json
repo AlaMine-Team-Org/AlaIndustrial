@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "貯蔵手前まで",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "モード: 貫通 — 貯蔵を介してネットワークを統合",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "モード: 貯蔵手前まで — セグメント1つのみ",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "ネットワーク上限に到達（%s）。貯蔵ブロックより先の一部セグメントは表示されない。"
+	"gui.alaindustrial.network_analyzer.traverse_limit": "ネットワーク上限に到達（%s）。貯蔵ブロックより先の一部セグメントは表示されない。",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "粉砕可能な鉄",
+	"tag.item.alaindustrial.macerable_coal": "粉砕可能な石炭",
+	"tag.item.alaindustrial.macerable_coal_item": "粉砕可能な石炭",
+	"tag.item.alaindustrial.macerable_copper": "粉砕可能な銅",
+	"tag.item.alaindustrial.macerable_diamond": "粉砕可能なダイヤモンド",
+	"tag.item.alaindustrial.macerable_emerald": "粉砕可能なエメラルド",
+	"tag.item.alaindustrial.macerable_gold": "粉砕可能な金",
+	"tag.item.alaindustrial.macerable_lapis": "粉砕可能なラピスラズリ",
+	"tag.item.alaindustrial.macerable_nickel": "粉砕可能なニッケル",
+	"tag.item.alaindustrial.macerable_silver": "粉砕可能な銀",
+	"tag.item.alaindustrial.macerable_tin": "粉砕可能なスズ",
+	"tag.item.alaindustrial.macerable_uranium": "粉砕可能なウラン"
 }

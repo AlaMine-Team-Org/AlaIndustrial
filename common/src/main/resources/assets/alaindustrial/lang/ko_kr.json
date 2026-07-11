@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "저장 지점까지",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "모드: 관통 — 저장을 통해 네트워크 결합",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "모드: 저장 지점까지 — 단일 세그먼트만",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "네트워크 한도 도달(%s). 저장 이후 일부 세그먼트는 표시되지 않습니다."
+	"gui.alaindustrial.network_analyzer.traverse_limit": "네트워크 한도 도달(%s). 저장 이후 일부 세그먼트는 표시되지 않습니다.",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "분쇄 가능한 철",
+	"tag.item.alaindustrial.macerable_coal": "분쇄 가능한 석탄",
+	"tag.item.alaindustrial.macerable_coal_item": "분쇄 가능한 석탄",
+	"tag.item.alaindustrial.macerable_copper": "분쇄 가능한 구리",
+	"tag.item.alaindustrial.macerable_diamond": "분쇄 가능한 다이아몬드",
+	"tag.item.alaindustrial.macerable_emerald": "분쇄 가능한 에메랄드",
+	"tag.item.alaindustrial.macerable_gold": "분쇄 가능한 금",
+	"tag.item.alaindustrial.macerable_lapis": "분쇄 가능한 청금석",
+	"tag.item.alaindustrial.macerable_nickel": "분쇄 가능한 니켈",
+	"tag.item.alaindustrial.macerable_silver": "분쇄 가능한 은",
+	"tag.item.alaindustrial.macerable_tin": "분쇄 가능한 주석",
+	"tag.item.alaindustrial.macerable_uranium": "분쇄 가능한 우라늄"
 }

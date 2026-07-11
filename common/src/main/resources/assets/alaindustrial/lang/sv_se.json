@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "Stanna vid lagring",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "Läge: Genomgång — nätverk sammanlänkade via lagring",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "Läge: Stanna vid lagring — endast ett segment",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "Nätverksgräns nådd (%s). Vissa segment efter lagring visas inte."
+	"gui.alaindustrial.network_analyzer.traverse_limit": "Nätverksgräns nådd (%s). Vissa segment efter lagring visas inte.",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "Krossbart järn",
+	"tag.item.alaindustrial.macerable_coal": "Krossbart kol",
+	"tag.item.alaindustrial.macerable_coal_item": "Krossbart kol",
+	"tag.item.alaindustrial.macerable_copper": "Krossbar koppar",
+	"tag.item.alaindustrial.macerable_diamond": "Krossbar diamant",
+	"tag.item.alaindustrial.macerable_emerald": "Krossbar smaragd",
+	"tag.item.alaindustrial.macerable_gold": "Krossbart guld",
+	"tag.item.alaindustrial.macerable_lapis": "Krossbar lapis",
+	"tag.item.alaindustrial.macerable_nickel": "Krossbart nickel",
+	"tag.item.alaindustrial.macerable_silver": "Krossbart silver",
+	"tag.item.alaindustrial.macerable_tin": "Krossbart tenn",
+	"tag.item.alaindustrial.macerable_uranium": "Krossbart uran"
 }

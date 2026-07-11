@@ -1,11 +1,13 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.equipment.ArmorType;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -63,6 +65,23 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> TEMPERED_IRON_SWORD =
 			ITEMS.registerItem("tempered_iron_sword", Item::new,
 					p -> p.sword(ModToolMaterials.TEMPERED_IRON, 3.0f, -2.4f));
+	// Tempered-iron armor line (MOD-056): helmet/chestplate/leggings/boots. MC 26.2 has no ArmorItem
+	// class — each piece is a plain Item whose equipment properties are attached via the single
+	// Item.Properties.humanoidArmor(ArmorMaterial, ArmorType) helper (javap-verified against the
+	// 26.2 jar; it is how vanilla Items.IRON_HELMET is built). setId is applied automatically by
+	// NeoForge, matching the Fabric helper.
+	public static final DeferredItem<Item> TEMPERED_IRON_HELMET =
+			ITEMS.registerItem("tempered_iron_helmet", Item::new,
+					p -> p.humanoidArmor(ModArmorMaterials.TEMPERED_IRON, ArmorType.HELMET));
+	public static final DeferredItem<Item> TEMPERED_IRON_CHESTPLATE =
+			ITEMS.registerItem("tempered_iron_chestplate", Item::new,
+					p -> p.humanoidArmor(ModArmorMaterials.TEMPERED_IRON, ArmorType.CHESTPLATE));
+	public static final DeferredItem<Item> TEMPERED_IRON_LEGGINGS =
+			ITEMS.registerItem("tempered_iron_leggings", Item::new,
+					p -> p.humanoidArmor(ModArmorMaterials.TEMPERED_IRON, ArmorType.LEGGINGS));
+	public static final DeferredItem<Item> TEMPERED_IRON_BOOTS =
+			ITEMS.registerItem("tempered_iron_boots", Item::new,
+					p -> p.humanoidArmor(ModArmorMaterials.TEMPERED_IRON, ArmorType.BOOTS));
 	public static final DeferredItem<Item> IRON_DUST = ITEMS.registerItem("iron_dust", Item::new);
 	public static final DeferredItem<Item> COPPER_DUST = ITEMS.registerItem("copper_dust", Item::new);
 	public static final DeferredItem<Item> GOLD_DUST = ITEMS.registerItem("gold_dust", Item::new);
@@ -168,6 +187,10 @@ public final class ModItemsNeoForge {
 		ModContent.TEMPERED_IRON_HOE = TEMPERED_IRON_HOE;
 		ModContent.TEMPERED_IRON_SHOVEL = TEMPERED_IRON_SHOVEL;
 		ModContent.TEMPERED_IRON_SWORD = TEMPERED_IRON_SWORD;
+		ModContent.TEMPERED_IRON_HELMET = TEMPERED_IRON_HELMET;
+		ModContent.TEMPERED_IRON_CHESTPLATE = TEMPERED_IRON_CHESTPLATE;
+		ModContent.TEMPERED_IRON_LEGGINGS = TEMPERED_IRON_LEGGINGS;
+		ModContent.TEMPERED_IRON_BOOTS = TEMPERED_IRON_BOOTS;
 		ModContent.IRON_DUST = IRON_DUST;
 		ModContent.COPPER_DUST = COPPER_DUST;
 		ModContent.GOLD_DUST = GOLD_DUST;

@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "Jusqu'au stockage",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "Mode : Traversée — réseaux reliés via le stockage",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "Mode : Jusqu'au stockage — un seul segment",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "Limite de réseaux atteinte (%s). Certains segments après le stockage ne sont pas affichés."
+	"gui.alaindustrial.network_analyzer.traverse_limit": "Limite de réseaux atteinte (%s). Certains segments après le stockage ne sont pas affichés.",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "Fer broyable",
+	"tag.item.alaindustrial.macerable_coal": "Charbon broyable",
+	"tag.item.alaindustrial.macerable_coal_item": "Charbon broyable",
+	"tag.item.alaindustrial.macerable_copper": "Cuivre broyable",
+	"tag.item.alaindustrial.macerable_diamond": "Diamant broyable",
+	"tag.item.alaindustrial.macerable_emerald": "Émeraude broyable",
+	"tag.item.alaindustrial.macerable_gold": "Or broyable",
+	"tag.item.alaindustrial.macerable_lapis": "Lapis-lazuli broyable",
+	"tag.item.alaindustrial.macerable_nickel": "Nickel broyable",
+	"tag.item.alaindustrial.macerable_silver": "Argent broyable",
+	"tag.item.alaindustrial.macerable_tin": "Étain broyable",
+	"tag.item.alaindustrial.macerable_uranium": "Uranium broyable"
 }

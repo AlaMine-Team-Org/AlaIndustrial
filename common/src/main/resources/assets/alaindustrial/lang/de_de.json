@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "Bis Speicher",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "Modus: Durchlaufen — Netzwerke über Speicher verbunden",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "Modus: Bis Speicher — nur ein Segment",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "Netzwerkbegrenzung erreicht (%s). Einige Segmente hinter Speichern werden nicht angezeigt."
+	"gui.alaindustrial.network_analyzer.traverse_limit": "Netzwerkbegrenzung erreicht (%s). Einige Segmente hinter Speichern werden nicht angezeigt.",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "Mahlbares Eisen",
+	"tag.item.alaindustrial.macerable_coal": "Mahlbare Kohle",
+	"tag.item.alaindustrial.macerable_coal_item": "Mahlbare Kohle",
+	"tag.item.alaindustrial.macerable_copper": "Mahlbares Kupfer",
+	"tag.item.alaindustrial.macerable_diamond": "Mahlbarer Diamant",
+	"tag.item.alaindustrial.macerable_emerald": "Mahlbarer Smaragd",
+	"tag.item.alaindustrial.macerable_gold": "Mahlbares Gold",
+	"tag.item.alaindustrial.macerable_lapis": "Mahlbarer Lapislazuli",
+	"tag.item.alaindustrial.macerable_nickel": "Mahlbares Nickel",
+	"tag.item.alaindustrial.macerable_silver": "Mahlbares Silber",
+	"tag.item.alaindustrial.macerable_tin": "Mahlbares Zinn",
+	"tag.item.alaindustrial.macerable_uranium": "Mahlbares Uran"
 }

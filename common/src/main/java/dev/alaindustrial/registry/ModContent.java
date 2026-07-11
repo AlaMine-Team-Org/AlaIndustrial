@@ -95,8 +95,8 @@ public final class ModContent {
 	// Iron Chest — a pure-storage block (no energy), so its BE extends vanilla
 	// BaseContainerBlockEntity, not the mod's MachineBlockEntity. See docs/blocks/iron_chest.md.
 	public static Supplier<Block> IRON_CHEST = unbound("IRON_CHEST");
-	// Tempered Iron Block — a "block of X" storage/compressed block (9 ingots ↔ 1 block), like
-	// vanilla iron block. Pure decorative+storage, no BE, single texture on all 6 faces.
+	// Tempered Iron Block — a "block of X" material block (9 ingots ↔ 1 block), like
+	// vanilla iron block. Pure material/decorative block, no BE, single texture on all 6 faces.
 	public static Supplier<Block> TEMPERED_IRON_BLOCK = unbound("TEMPERED_IRON_BLOCK");
 
 	// --- Items (crafting components + tools) ---
@@ -111,6 +111,12 @@ public final class ModContent {
 	public static Supplier<Item> TEMPERED_IRON_HOE = unbound("TEMPERED_IRON_HOE");
 	public static Supplier<Item> TEMPERED_IRON_SHOVEL = unbound("TEMPERED_IRON_SHOVEL");
 	public static Supplier<Item> TEMPERED_IRON_SWORD = unbound("TEMPERED_IRON_SWORD");
+	// Tempered-iron armor (MOD-056): helmet/chestplate/leggings/boots, built via the MC 26.2
+	// Item.Properties.humanoidArmor(ArmorMaterial, ArmorType) helper. Same line as MOD-054 tools.
+	public static Supplier<Item> TEMPERED_IRON_HELMET = unbound("TEMPERED_IRON_HELMET");
+	public static Supplier<Item> TEMPERED_IRON_CHESTPLATE = unbound("TEMPERED_IRON_CHESTPLATE");
+	public static Supplier<Item> TEMPERED_IRON_LEGGINGS = unbound("TEMPERED_IRON_LEGGINGS");
+	public static Supplier<Item> TEMPERED_IRON_BOOTS = unbound("TEMPERED_IRON_BOOTS");
 	public static Supplier<Item> IRON_DUST = unbound("IRON_DUST");
 	public static Supplier<Item> COPPER_DUST = unbound("COPPER_DUST");
 	public static Supplier<Item> GOLD_DUST = unbound("GOLD_DUST");

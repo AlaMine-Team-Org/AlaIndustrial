@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "Hasta almacenamiento",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "Modo: Atravesar — redes conectadas a través del almacenamiento",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "Modo: Hasta almacenamiento — solo un segmento",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "Límite de redes alcanzado (%s). Algunos segmentos tras el almacenamiento no se muestran."
+	"gui.alaindustrial.network_analyzer.traverse_limit": "Límite de redes alcanzado (%s). Algunos segmentos tras el almacenamiento no se muestran.",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "Hierro triturable",
+	"tag.item.alaindustrial.macerable_coal": "Carbón triturable",
+	"tag.item.alaindustrial.macerable_coal_item": "Carbón triturable",
+	"tag.item.alaindustrial.macerable_copper": "Cobre triturable",
+	"tag.item.alaindustrial.macerable_diamond": "Diamante triturable",
+	"tag.item.alaindustrial.macerable_emerald": "Esmeralda triturable",
+	"tag.item.alaindustrial.macerable_gold": "Oro triturable",
+	"tag.item.alaindustrial.macerable_lapis": "Lapislázuli triturable",
+	"tag.item.alaindustrial.macerable_nickel": "Níquel triturable",
+	"tag.item.alaindustrial.macerable_silver": "Plata triturable",
+	"tag.item.alaindustrial.macerable_tin": "Estaño triturable",
+	"tag.item.alaindustrial.macerable_uranium": "Uranio triturable"
 }

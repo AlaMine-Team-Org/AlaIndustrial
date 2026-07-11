@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.block.Block;
 
 /**
@@ -55,6 +57,18 @@ public final class ModItems {
 			temperedIronSubclass("tempered_iron_shovel", p -> new ShovelItem(ModToolMaterials.TEMPERED_IRON, 1.5f, -3.0f, p));
 	public static final Item TEMPERED_IRON_SWORD =
 			temperedIronTool("tempered_iron_sword", p -> p.sword(ModToolMaterials.TEMPERED_IRON, 3.0f, -2.4f));
+	// Tempered-iron armor (MOD-056). MC 26.2 has no ArmorItem: each piece is a plain Item whose
+	// equipment properties are attached via Item.Properties.humanoidArmor(ArmorMaterial, ArmorType).
+	// That helper chains durability, attributes, enchantability, the EQUIPPABLE component (with the
+	// material's asset id + equip sound) and the repair tag in one go (javap-verified).
+	public static final Item TEMPERED_IRON_HELMET =
+			temperedArmor("tempered_iron_helmet", ArmorType.HELMET);
+	public static final Item TEMPERED_IRON_CHESTPLATE =
+			temperedArmor("tempered_iron_chestplate", ArmorType.CHESTPLATE);
+	public static final Item TEMPERED_IRON_LEGGINGS =
+			temperedArmor("tempered_iron_leggings", ArmorType.LEGGINGS);
+	public static final Item TEMPERED_IRON_BOOTS =
+			temperedArmor("tempered_iron_boots", ArmorType.BOOTS);
 	public static final Item IRON_DUST = item("iron_dust");
 	public static final Item COPPER_DUST = item("copper_dust");
 	public static final Item GOLD_DUST = item("gold_dust");
@@ -143,6 +157,16 @@ public final class ModItems {
 		return Registry.register(BuiltInRegistries.ITEM, key, factory.apply(new Item.Properties().setId(key)));
 	}
 
+	// Tempered-iron armor helper (MOD-056). humanoidArmor(material, type) wires durability
+	// (type.getDurability(material.durability())), attributes, enchantability, the EQUIPPABLE
+	// component (equip sound + asset id from the material) and the repair tag in one call — this
+	// is exactly how vanilla Items.IRON_HELMET is built (javap-verified against the 26.2 jar).
+	private static Item temperedArmor(String path, ArmorType type) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new Item(new Item.Properties().humanoidArmor(ModArmorMaterials.TEMPERED_IRON, type).setId(key)));
+	}
+
 	private static BlockItem blockItem(String path, Block block) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		BlockItem item = new BlockItem(block, new Item.Properties().useBlockDescriptionPrefix().setId(key));
@@ -176,7 +200,6 @@ public final class ModItems {
 					// Storage + cables
 					output.accept(BATTERY_BOX_ITEM);
 					output.accept(IRON_CHEST_ITEM);
-					output.accept(TEMPERED_IRON_BLOCK_ITEM);
 					output.accept(COPPER_CABLE_ITEM);
 					// Ores + materials
 					output.accept(TIN_ORE_ITEM);
@@ -203,23 +226,28 @@ public final class ModItems {
 					output.accept(ELECTRONIC_CIRCUIT);
 					output.accept(ALIGNMENT_CHIP_DAY);
 					output.accept(ALIGNMENT_CHIP_NIGHT);
-					output.accept(WINDMILL_ROTOR);
-					output.accept(WOODEN_GEAR);
-					output.accept(TEMPERED_IRON);
-					output.accept(IRON_DUST);
+						output.accept(WINDMILL_ROTOR);
+						output.accept(WOODEN_GEAR);
+						output.accept(IRON_DUST);
 					output.accept(COPPER_DUST);
 					output.accept(GOLD_DUST);
 					output.accept(COAL_DUST);
 					output.accept(DIAMOND_DUST);
 					output.accept(EMERALD_DUST);
 					output.accept(LAPIS_DUST);
-					output.accept(NETWORK_ANALYZER);
-					// Tools
-					output.accept(TEMPERED_IRON_PICKAXE);
-					output.accept(TEMPERED_IRON_AXE);
-					output.accept(TEMPERED_IRON_SHOVEL);
-					output.accept(TEMPERED_IRON_HOE);
-					output.accept(TEMPERED_IRON_SWORD);
+						output.accept(NETWORK_ANALYZER);
+						// Tempered Iron — ingot, block, tools and armor as one continuous row
+						output.accept(TEMPERED_IRON);
+						output.accept(TEMPERED_IRON_BLOCK_ITEM);
+						output.accept(TEMPERED_IRON_PICKAXE);
+						output.accept(TEMPERED_IRON_AXE);
+						output.accept(TEMPERED_IRON_SHOVEL);
+						output.accept(TEMPERED_IRON_HOE);
+						output.accept(TEMPERED_IRON_SWORD);
+						output.accept(TEMPERED_IRON_HELMET);
+						output.accept(TEMPERED_IRON_CHESTPLATE);
+						output.accept(TEMPERED_IRON_LEGGINGS);
+						output.accept(TEMPERED_IRON_BOOTS);
 				})
 				.build();
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TAB, tab);
@@ -245,6 +273,10 @@ public final class ModItems {
 		ModContent.TEMPERED_IRON_HOE = () -> TEMPERED_IRON_HOE;
 		ModContent.TEMPERED_IRON_SHOVEL = () -> TEMPERED_IRON_SHOVEL;
 		ModContent.TEMPERED_IRON_SWORD = () -> TEMPERED_IRON_SWORD;
+		ModContent.TEMPERED_IRON_HELMET = () -> TEMPERED_IRON_HELMET;
+		ModContent.TEMPERED_IRON_CHESTPLATE = () -> TEMPERED_IRON_CHESTPLATE;
+		ModContent.TEMPERED_IRON_LEGGINGS = () -> TEMPERED_IRON_LEGGINGS;
+		ModContent.TEMPERED_IRON_BOOTS = () -> TEMPERED_IRON_BOOTS;
 		ModContent.IRON_DUST = () -> IRON_DUST;
 		ModContent.COPPER_DUST = () -> COPPER_DUST;
 		ModContent.GOLD_DUST = () -> GOLD_DUST;

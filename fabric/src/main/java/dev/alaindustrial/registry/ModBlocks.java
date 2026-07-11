@@ -150,7 +150,7 @@ public final class ModBlocks {
 	public static final Block IRON_CHEST = register(IRON_CHEST_KEY,
 			new IronChestBlock(props(IRON_CHEST_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()));
 
-	// Tempered Iron Block — "block of X" storage block (9 ingots ↔ 1 block), like vanilla iron
+	// Tempered Iron Block — "block of X" material block (9 ingots ↔ 1 block), like vanilla iron
 	// block. Plain Block, cube_all model, single texture on all 6 faces. Strength/sound mirror
 	// vanilla iron_block (5.0 / 6.0, METAL). See docs/blocks/materials/tempered_iron_block.md.
 	public static final ResourceKey<Block> TEMPERED_IRON_BLOCK_KEY = key("tempered_iron_block");

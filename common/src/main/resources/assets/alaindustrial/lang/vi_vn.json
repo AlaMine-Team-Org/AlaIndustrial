@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "Dừng ở lưu trữ",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "Chế độ: Duyệt qua — mạng được cầu nối qua kho lưu trữ",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "Chế độ: Dừng ở lưu trữ — chỉ một đoạn đơn",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "Đã đạt giới hạn mạng (%s). Một số đoạn vượt quá lưu trữ không được hiển thị."
+	"gui.alaindustrial.network_analyzer.traverse_limit": "Đã đạt giới hạn mạng (%s). Một số đoạn vượt quá lưu trữ không được hiển thị.",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "Sắt có thể nghiền",
+	"tag.item.alaindustrial.macerable_coal": "Than có thể nghiền",
+	"tag.item.alaindustrial.macerable_coal_item": "Than có thể nghiền",
+	"tag.item.alaindustrial.macerable_copper": "Đồng có thể nghiền",
+	"tag.item.alaindustrial.macerable_diamond": "Kim cương có thể nghiền",
+	"tag.item.alaindustrial.macerable_emerald": "Ngọc lục bảo có thể nghiền",
+	"tag.item.alaindustrial.macerable_gold": "Vàng có thể nghiền",
+	"tag.item.alaindustrial.macerable_lapis": "Lapis lazuli có thể nghiền",
+	"tag.item.alaindustrial.macerable_nickel": "Niken có thể nghiền",
+	"tag.item.alaindustrial.macerable_silver": "Bạc có thể nghiền",
+	"tag.item.alaindustrial.macerable_tin": "Thiếc có thể nghiền",
+	"tag.item.alaindustrial.macerable_uranium": "Uranium có thể nghiền"
 }

@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "alaindustrial:item/tempered_iron_helmet"
+	}
+}

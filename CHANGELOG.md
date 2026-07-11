@@ -1,15 +1,14 @@
-## 0.1.16
+## 0.1.17
 
-<p><img alt="Block of Tempered Iron — the new metal block" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.16/release-media/v0.1.16/changelog.png" width="720"></p>
+<p><img alt="Tempered Iron Armor — a full four-piece set in action" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.17/release-media/v0.1.17/changelog.png" width="720"></p>
 
-This update rounds out the tempered iron line with the rest of its tool set — axe, hoe, shovel and sword — and adds a compact block form to store and build with it.
+This update introduces a full set of Tempered Iron Armor — helmet, chestplate, leggings and boots — giving you a sturdy, enchantable alternative to iron that fits naturally between iron and diamond.
 
 ### Gameplay
 
-- **Tempered Iron Axe, Hoe, Shovel and Sword** — four new tools that complete the tempered iron set started by the pickaxe. Each is crafted like its vanilla counterpart but with tempered iron, and each is a step above iron: they last longer (350 durability), mine faster, and hit a bit harder, while the pickaxe, axe, hoe and shovel still leave diamond-level blocks for the diamond tier. The axe strips logs, the hoe tills soil, and the shovel shapes paths just like their vanilla versions.
-- **Block of Tempered Iron** — a new metal block. Nine tempered iron ingots craft into one block, and one block breaks back down into nine ingots, so the exchange is lossless in both directions. It looks and feels like a vanilla iron block: full metal cube with a single texture on every face, the same hardness and pickaxe requirement, and it drops itself when mined.
-- Craft the tools at any crafting table with tempered iron ingots and sticks, vanilla-style. Craft the block by filling a 3×3 grid with tempered iron ingots.
+- **Tempered Iron Armor** — a complete four-piece armor set (helmet, chestplate, leggings, boots). It's crafted the same way as vanilla iron armor, but from tempered iron ingots. A real step up from iron: it lasts longer, absorbs a bit more punishment, and takes enchantments more readily — yet it still leaves diamond as the clear top tier. Equip the full set for a matching dark-metal look.
+- Enchant it at the enchanting table, and repair it on the anvil with tempered iron ingots.
 
 ### Quality of Life
 
-- Pack 576 ingots' worth of tempered iron into a single inventory slot instead of leaving piles of loose ingots in chests.
+- The tempered iron items in the creative inventory have been regrouped into one continuous block. The ingot, block, and all five tools now sit together in their own "Tempered Iron" section instead of being spread across different categories, so everything in the material line is in one place.

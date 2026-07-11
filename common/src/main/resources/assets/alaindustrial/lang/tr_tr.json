@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "Depolamaya kadar",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "Mod: Geçiş — ağlar depolama üzerinden birleştirildi",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "Mod: Depolamaya kadar — yalnızca tek segment",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "Ağ limitine ulaşıldı (%s). Depolamadan sonraki bazı segmentler gösterilmiyor."
+	"gui.alaindustrial.network_analyzer.traverse_limit": "Ağ limitine ulaşıldı (%s). Depolamadan sonraki bazı segmentler gösterilmiyor.",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "Öğütülebilir Demir",
+	"tag.item.alaindustrial.macerable_coal": "Öğütülebilir Kömür",
+	"tag.item.alaindustrial.macerable_coal_item": "Öğütülebilir Kömür",
+	"tag.item.alaindustrial.macerable_copper": "Öğütülebilir Bakır",
+	"tag.item.alaindustrial.macerable_diamond": "Öğütülebilir Elmas",
+	"tag.item.alaindustrial.macerable_emerald": "Öğütülebilir Zümrüt",
+	"tag.item.alaindustrial.macerable_gold": "Öğütülebilir Altın",
+	"tag.item.alaindustrial.macerable_lapis": "Öğütülebilir Lapis Lazuli",
+	"tag.item.alaindustrial.macerable_nickel": "Öğütülebilir Nikel",
+	"tag.item.alaindustrial.macerable_silver": "Öğütülebilir Gümüş",
+	"tag.item.alaindustrial.macerable_tin": "Öğütülebilir Kalay",
+	"tag.item.alaindustrial.macerable_uranium": "Öğütülebilir Uranyum"
 }

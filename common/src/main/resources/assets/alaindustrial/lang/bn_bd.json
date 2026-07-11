@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "সংরক্ষণে থামুন",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "মোড: অতিক্রম — সংরক্ষণের মাধ্যমে নেটওয়ার্ক সংযুক্ত",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "মোড: সংরক্ষণে থামুন — শুধু একটি অংশ",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "নেটওয়ার্ক সীমা পৌঁছেছে (%s)। সংরক্ষণের পরে কিছু অংশ দেখানো হচ্ছে না।"
+	"gui.alaindustrial.network_analyzer.traverse_limit": "নেটওয়ার্ক সীমা পৌঁছেছে (%s)। সংরক্ষণের পরে কিছু অংশ দেখানো হচ্ছে না।",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "পেষণযোগ্য লোহা",
+	"tag.item.alaindustrial.macerable_coal": "পেষণযোগ্য কয়লা",
+	"tag.item.alaindustrial.macerable_coal_item": "পেষণযোগ্য কয়লা",
+	"tag.item.alaindustrial.macerable_copper": "পেষণযোগ্য তামা",
+	"tag.item.alaindustrial.macerable_diamond": "পেষণযোগ্য হীরে",
+	"tag.item.alaindustrial.macerable_emerald": "পেষণযোগ্য পান্না",
+	"tag.item.alaindustrial.macerable_gold": "পেষণযোগ্য সোনা",
+	"tag.item.alaindustrial.macerable_lapis": "পেষণযোগ্য ল্যাপিস লাজুলি",
+	"tag.item.alaindustrial.macerable_nickel": "পেষণযোগ্য নিকেল",
+	"tag.item.alaindustrial.macerable_silver": "পেষণযোগ্য রূপা",
+	"tag.item.alaindustrial.macerable_tin": "পেষণযোগ্য টিন",
+	"tag.item.alaindustrial.macerable_uranium": "পেষণযোগ্য ইউরেনিয়াম"
 }

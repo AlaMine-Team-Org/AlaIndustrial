@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "停于储能",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "模式：贯通 — 通过储能连接电网",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "模式：停于储能 — 仅单个区段",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "已达电网上限 (%s)。储能之后的部分区段未显示。"
+	"gui.alaindustrial.network_analyzer.traverse_limit": "已达电网上限 (%s)。储能之后的部分区段未显示。",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "可粉碎的铁",
+	"tag.item.alaindustrial.macerable_coal": "可粉碎的煤",
+	"tag.item.alaindustrial.macerable_coal_item": "可粉碎的煤",
+	"tag.item.alaindustrial.macerable_copper": "可粉碎的铜",
+	"tag.item.alaindustrial.macerable_diamond": "可粉碎的钻石",
+	"tag.item.alaindustrial.macerable_emerald": "可粉碎的绿宝石",
+	"tag.item.alaindustrial.macerable_gold": "可粉碎的金",
+	"tag.item.alaindustrial.macerable_lapis": "可粉碎的青金石",
+	"tag.item.alaindustrial.macerable_nickel": "可粉碎的镍",
+	"tag.item.alaindustrial.macerable_silver": "可粉碎的银",
+	"tag.item.alaindustrial.macerable_tin": "可粉碎的锡",
+	"tag.item.alaindustrial.macerable_uranium": "可粉碎的铀"
 }

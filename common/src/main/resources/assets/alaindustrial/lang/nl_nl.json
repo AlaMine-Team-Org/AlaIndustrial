@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "Tot opslag",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "Modus: Doorlopen — netwerken verbonden via opslag",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "Modus: Tot opslag — slechts één segment",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "Netwerklimit bereikt (%s). Sommige segmenten na opslag worden niet getoond."
+	"gui.alaindustrial.network_analyzer.traverse_limit": "Netwerklimit bereikt (%s). Sommige segmenten na opslag worden niet getoond.",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "Maalbaar ijzer",
+	"tag.item.alaindustrial.macerable_coal": "Maalbare steenkool",
+	"tag.item.alaindustrial.macerable_coal_item": "Maalbare steenkool",
+	"tag.item.alaindustrial.macerable_copper": "Maalbaar koper",
+	"tag.item.alaindustrial.macerable_diamond": "Maalbare diamant",
+	"tag.item.alaindustrial.macerable_emerald": "Maalbare smaragd",
+	"tag.item.alaindustrial.macerable_gold": "Maalbaar goud",
+	"tag.item.alaindustrial.macerable_lapis": "Maalbare lapis lazuli",
+	"tag.item.alaindustrial.macerable_nickel": "Maalbare nikkel",
+	"tag.item.alaindustrial.macerable_silver": "Maalbaar zilver",
+	"tag.item.alaindustrial.macerable_tin": "Maalbaar tin",
+	"tag.item.alaindustrial.macerable_uranium": "Maalbaar uranium"
 }

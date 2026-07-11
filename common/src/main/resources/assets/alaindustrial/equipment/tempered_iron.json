@@ -1,0 +1,19 @@
+{
+	"layers": {
+		"humanoid": [
+			{
+				"texture": "alaindustrial:tempered_iron"
+			}
+		],
+		"humanoid_baby": [
+			{
+				"texture": "alaindustrial:tempered_iron"
+			}
+		],
+		"humanoid_leggings": [
+			{
+				"texture": "alaindustrial:tempered_iron"
+			}
+		]
+	}
+}

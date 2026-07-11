@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "Hingga penyimpanan",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "Mode: Menembus — jaringan dihubungkan melalui penyimpanan",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "Mode: Hingga penyimpanan — hanya satu segmen",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "Batas jaringan tercapai (%s). Beberapa segmen setelah penyimpanan tidak ditampilkan."
+	"gui.alaindustrial.network_analyzer.traverse_limit": "Batas jaringan tercapai (%s). Beberapa segmen setelah penyimpanan tidak ditampilkan.",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "Besi yang dapat digiling",
+	"tag.item.alaindustrial.macerable_coal": "Batu Bara yang dapat digiling",
+	"tag.item.alaindustrial.macerable_coal_item": "Batu Bara yang dapat digiling",
+	"tag.item.alaindustrial.macerable_copper": "Tembaga yang dapat digiling",
+	"tag.item.alaindustrial.macerable_diamond": "Berlian yang dapat digiling",
+	"tag.item.alaindustrial.macerable_emerald": "Zamrud yang dapat digiling",
+	"tag.item.alaindustrial.macerable_gold": "Emas yang dapat digiling",
+	"tag.item.alaindustrial.macerable_lapis": "Lapis Lazuli yang dapat digiling",
+	"tag.item.alaindustrial.macerable_nickel": "Nikel yang dapat digiling",
+	"tag.item.alaindustrial.macerable_silver": "Perak yang dapat digiling",
+	"tag.item.alaindustrial.macerable_tin": "Timah yang dapat digiling",
+	"tag.item.alaindustrial.macerable_uranium": "Uranium yang dapat digiling"
 }

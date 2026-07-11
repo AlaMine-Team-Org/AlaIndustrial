@@ -45,7 +45,6 @@ public final class ModCreativeTabNeoForge {
 						// Storage + cables
 						output.accept(ModItemsNeoForge.BATTERY_BOX_ITEM.get());
 						output.accept(ModItemsNeoForge.IRON_CHEST_ITEM.get());
-						output.accept(ModItemsNeoForge.TEMPERED_IRON_BLOCK_ITEM.get());
 						output.accept(ModItemsNeoForge.COPPER_CABLE_ITEM.get());
 						// Ores + materials
 						output.accept(ModItemsNeoForge.TIN_ORE_ITEM.get());
@@ -74,7 +73,6 @@ public final class ModCreativeTabNeoForge {
 						output.accept(ModItemsNeoForge.ALIGNMENT_CHIP_NIGHT.get());
 						output.accept(ModItemsNeoForge.WINDMILL_ROTOR.get());
 						output.accept(ModItemsNeoForge.WOODEN_GEAR.get());
-						output.accept(ModItemsNeoForge.TEMPERED_IRON.get());
 						output.accept(ModItemsNeoForge.IRON_DUST.get());
 						output.accept(ModItemsNeoForge.COPPER_DUST.get());
 						output.accept(ModItemsNeoForge.GOLD_DUST.get());
@@ -83,12 +81,19 @@ public final class ModCreativeTabNeoForge {
 						output.accept(ModItemsNeoForge.EMERALD_DUST.get());
 						output.accept(ModItemsNeoForge.LAPIS_DUST.get());
 						output.accept(ModItemsNeoForge.NETWORK_ANALYZER.get());
-						// Tools
+						// Tempered Iron — ingot, block, tools and armor as one continuous row
+						output.accept(ModItemsNeoForge.TEMPERED_IRON.get());
+						output.accept(ModItemsNeoForge.TEMPERED_IRON_BLOCK_ITEM.get());
 						output.accept(ModItemsNeoForge.TEMPERED_IRON_PICKAXE.get());
 						output.accept(ModItemsNeoForge.TEMPERED_IRON_AXE.get());
 						output.accept(ModItemsNeoForge.TEMPERED_IRON_SHOVEL.get());
 						output.accept(ModItemsNeoForge.TEMPERED_IRON_HOE.get());
 						output.accept(ModItemsNeoForge.TEMPERED_IRON_SWORD.get());
+						// Tempered Iron armor (MOD-056)
+						output.accept(ModItemsNeoForge.TEMPERED_IRON_HELMET.get());
+						output.accept(ModItemsNeoForge.TEMPERED_IRON_CHESTPLATE.get());
+						output.accept(ModItemsNeoForge.TEMPERED_IRON_LEGGINGS.get());
+						output.accept(ModItemsNeoForge.TEMPERED_IRON_BOOTS.get());
 					})
 					.build());
 

@@ -205,5 +205,21 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "Do magazynu",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "Tryb: Przechodzenie — sieci łączone przez magazyn",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "Tryb: Do magazynu — tylko jeden segment",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "Osiągnięto limit sieci (%s). Część segmentów za magazynem nie jest pokazana."
+	"gui.alaindustrial.network_analyzer.traverse_limit": "Osiągnięto limit sieci (%s). Część segmentów za magazynem nie jest pokazana.",
+	"item.alaindustrial.tempered_iron_helmet": "Tempered Iron Helmet",
+	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
+	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
+	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"tag.item.alaindustrial.macerable_iron": "Kruszalne żelazo",
+	"tag.item.alaindustrial.macerable_coal": "Kruszalny węgiel",
+	"tag.item.alaindustrial.macerable_coal_item": "Kruszalny węgiel",
+	"tag.item.alaindustrial.macerable_copper": "Kruszalna miedź",
+	"tag.item.alaindustrial.macerable_diamond": "Kruszalny diament",
+	"tag.item.alaindustrial.macerable_emerald": "Kruszalny szmaragd",
+	"tag.item.alaindustrial.macerable_gold": "Kruszalne złoto",
+	"tag.item.alaindustrial.macerable_lapis": "Kruszalny lazuryt",
+	"tag.item.alaindustrial.macerable_nickel": "Kruszalny nikiel",
+	"tag.item.alaindustrial.macerable_silver": "Kruszalne srebro",
+	"tag.item.alaindustrial.macerable_tin": "Kruszalna cyna",
+	"tag.item.alaindustrial.macerable_uranium": "Kruszalny uran"
 }
