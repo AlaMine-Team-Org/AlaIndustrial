@@ -43,6 +43,26 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> TEMPERED_IRON_PICKAXE =
 			ITEMS.registerItem("tempered_iron_pickaxe", Item::new,
 					p -> p.pickaxe(ModToolMaterials.TEMPERED_IRON, 1.0f, -2.8f));
+	// Tempered-iron tool line (MOD-054): axe/hoe/shovel/sword. Pickaxe/sword are plain Item (their
+	// 26.2 subclasses were removed). Axe/Hoe/Shovel extend their vanilla subclasses so useOn works
+	// (log stripping / dirt tilling / grass path) — those ctors call props.{axe,hoe,shovel}() and
+	// super() themselves, so the Properties supplier stays default (NeoForge applies setId). Args
+	// mirror vanilla iron equivalents (javap-verified).
+	public static final DeferredItem<Item> TEMPERED_IRON_AXE =
+			ITEMS.registerItem("tempered_iron_axe",
+					p -> new net.minecraft.world.item.AxeItem(ModToolMaterials.TEMPERED_IRON, 6.0f, -3.1f, p),
+					Item.Properties::new);
+	public static final DeferredItem<Item> TEMPERED_IRON_HOE =
+			ITEMS.registerItem("tempered_iron_hoe",
+					p -> new net.minecraft.world.item.HoeItem(ModToolMaterials.TEMPERED_IRON, -2.0f, -1.0f, p),
+					Item.Properties::new);
+	public static final DeferredItem<Item> TEMPERED_IRON_SHOVEL =
+			ITEMS.registerItem("tempered_iron_shovel",
+					p -> new net.minecraft.world.item.ShovelItem(ModToolMaterials.TEMPERED_IRON, 1.5f, -3.0f, p),
+					Item.Properties::new);
+	public static final DeferredItem<Item> TEMPERED_IRON_SWORD =
+			ITEMS.registerItem("tempered_iron_sword", Item::new,
+					p -> p.sword(ModToolMaterials.TEMPERED_IRON, 3.0f, -2.4f));
 	public static final DeferredItem<Item> IRON_DUST = ITEMS.registerItem("iron_dust", Item::new);
 	public static final DeferredItem<Item> COPPER_DUST = ITEMS.registerItem("copper_dust", Item::new);
 	public static final DeferredItem<Item> GOLD_DUST = ITEMS.registerItem("gold_dust", Item::new);
@@ -122,6 +142,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("deepslate_uranium_ore", ModBlocksNeoForge.DEEPSLATE_URANIUM_ORE);
 	public static final DeferredItem<BlockItem> IRON_CHEST_ITEM =
 			ITEMS.registerSimpleBlockItem("iron_chest", ModBlocksNeoForge.IRON_CHEST);
+	public static final DeferredItem<BlockItem> TEMPERED_IRON_BLOCK_ITEM =
+			ITEMS.registerSimpleBlockItem("tempered_iron_block", ModBlocksNeoForge.TEMPERED_IRON_BLOCK);
 
 	private ModItemsNeoForge() {
 	}
@@ -142,6 +164,10 @@ public final class ModItemsNeoForge {
 		ModContent.WOODEN_GEAR = WOODEN_GEAR;
 		ModContent.TEMPERED_IRON = TEMPERED_IRON;
 		ModContent.TEMPERED_IRON_PICKAXE = TEMPERED_IRON_PICKAXE;
+		ModContent.TEMPERED_IRON_AXE = TEMPERED_IRON_AXE;
+		ModContent.TEMPERED_IRON_HOE = TEMPERED_IRON_HOE;
+		ModContent.TEMPERED_IRON_SHOVEL = TEMPERED_IRON_SHOVEL;
+		ModContent.TEMPERED_IRON_SWORD = TEMPERED_IRON_SWORD;
 		ModContent.IRON_DUST = IRON_DUST;
 		ModContent.COPPER_DUST = COPPER_DUST;
 		ModContent.GOLD_DUST = GOLD_DUST;
@@ -189,5 +215,6 @@ public final class ModItemsNeoForge {
 		ModContent.URANIUM_ORE_ITEM = URANIUM_ORE_ITEM;
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = DEEPSLATE_URANIUM_ORE_ITEM;
 		ModContent.IRON_CHEST_ITEM = IRON_CHEST_ITEM;
+		ModContent.TEMPERED_IRON_BLOCK_ITEM = TEMPERED_IRON_BLOCK_ITEM;
 	}
 }

@@ -117,6 +117,12 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<IronChestBlock> IRON_CHEST =
 			BLOCKS.registerBlock("iron_chest", IronChestBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()));
 
+	// Tempered Iron Block — "block of X" storage/compressed block (9 ingots ↔ 1 block), like
+	// vanilla iron block. Plain Block, cube_all model, single texture on all 6 faces.
+	// Strength/sound mirror vanilla iron_block (5.0 / 6.0, METAL).
+	public static final DeferredBlock<Block> TEMPERED_IRON_BLOCK =
+			BLOCKS.registerBlock("tempered_iron_block", Block::new, machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)));
+
 	private ModBlocksNeoForge() {
 	}
 
@@ -176,5 +182,6 @@ public final class ModBlocksNeoForge {
 		ModContent.URANIUM_ORE = URANIUM_ORE::get;
 		ModContent.DEEPSLATE_URANIUM_ORE = DEEPSLATE_URANIUM_ORE::get;
 		ModContent.IRON_CHEST = IRON_CHEST::get;
+		ModContent.TEMPERED_IRON_BLOCK = TEMPERED_IRON_BLOCK::get;
 	}
 }

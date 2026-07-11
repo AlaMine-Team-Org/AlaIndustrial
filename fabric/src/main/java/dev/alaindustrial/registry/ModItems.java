@@ -10,6 +10,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +42,19 @@ public final class ModItems {
 	public static final Item WINDMILL_ROTOR = item("windmill_rotor");
 	public static final Item WOODEN_GEAR = item("wooden_gear");
 	public static final Item TEMPERED_IRON = item("tempered_iron");
-	public static final Item TEMPERED_IRON_PICKAXE = temperedIronPickaxe("tempered_iron_pickaxe");
+	public static final Item TEMPERED_IRON_PICKAXE =
+			temperedIronTool("tempered_iron_pickaxe", p -> p.pickaxe(ModToolMaterials.TEMPERED_IRON, 1.0f, -2.8f));
+	// Axe/Hoe/Shovel extend their vanilla subclasses so useOn (stripping/tilling/path) works —
+	// in 26.2 these subclasses still exist and carry that behavior; PickaxeItem/SwordItem were
+	// removed, so pickaxe/sword stay plain Item with .pickaxe()/.sword().
+	public static final Item TEMPERED_IRON_AXE =
+			temperedIronSubclass("tempered_iron_axe", p -> new AxeItem(ModToolMaterials.TEMPERED_IRON, 6.0f, -3.1f, p));
+	public static final Item TEMPERED_IRON_HOE =
+			temperedIronSubclass("tempered_iron_hoe", p -> new HoeItem(ModToolMaterials.TEMPERED_IRON, -2.0f, -1.0f, p));
+	public static final Item TEMPERED_IRON_SHOVEL =
+			temperedIronSubclass("tempered_iron_shovel", p -> new ShovelItem(ModToolMaterials.TEMPERED_IRON, 1.5f, -3.0f, p));
+	public static final Item TEMPERED_IRON_SWORD =
+			temperedIronTool("tempered_iron_sword", p -> p.sword(ModToolMaterials.TEMPERED_IRON, 3.0f, -2.4f));
 	public static final Item IRON_DUST = item("iron_dust");
 	public static final Item COPPER_DUST = item("copper_dust");
 	public static final Item GOLD_DUST = item("gold_dust");
@@ -90,6 +105,7 @@ public final class ModItems {
 	public static final BlockItem URANIUM_ORE_ITEM = blockItem("uranium_ore", ModBlocks.URANIUM_ORE);
 	public static final BlockItem DEEPSLATE_URANIUM_ORE_ITEM = blockItem("deepslate_uranium_ore", ModBlocks.DEEPSLATE_URANIUM_ORE);
 	public static final BlockItem IRON_CHEST_ITEM = blockItem("iron_chest", ModBlocks.IRON_CHEST);
+	public static final BlockItem TEMPERED_IRON_BLOCK_ITEM = blockItem("tempered_iron_block", ModBlocks.TEMPERED_IRON_BLOCK);
 
 	private static Item item(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
@@ -106,16 +122,25 @@ public final class ModItems {
 				new NetworkAnalyzerItem(new Item.Properties().setId(key).stacksTo(1)));
 	}
 
-	// Hand-held pickaxe built from tempered iron (first mod tool, MOD-054). In MC 26.2 there is no
-	// PickaxeItem class: a pickaxe is a plain Item with a `minecraft:tool` component attached via
-	// Item.Properties.pickaxe(ToolMaterial, attackDamage, attackSpeed). Args 1.0f / -2.8f match the
-	// vanilla iron pickaxe; the tempered-iron material (durability/speed/damage/enchant) is the upgrade.
-	private static Item temperedIronPickaxe(String path) {
+	// Tempered-iron hand-held tools (MOD-054). In MC 26.2 PickaxeItem/SwordItem/DiggerItem were
+	// removed — a pickaxe/sword is a plain Item whose `minecraft:tool` component is attached via
+	// Item.Properties.{pickaxe,sword}(ToolMaterial, attackDamage, attackSpeed). AxeItem/HoeItem/
+	// ShovelItem still exist (they carry useOn behavior: stripping/tilling/path) and are used for
+	// those three tools — see temperedIronSubclass. attackDamage/attackSpeed mirror vanilla iron.
+	private static Item temperedIronTool(String path, java.util.function.UnaryOperator<Item.Properties> toolProps) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
-				new Item(new Item.Properties()
-						.pickaxe(ModToolMaterials.TEMPERED_IRON, 1.0f, -2.8f)
-						.setId(key)));
+				new Item(toolProps.apply(new Item.Properties()).setId(key)));
+	}
+
+	// Axe/Hoe/Shovel subclass helper. The vanilla ctors (ToolMaterial, float attackDamage, float
+	// attackSpeed, Properties) themselves call props.{axe,hoe,shovel}(...) and super(...), so the
+	// tool component AND the useOn behavior (log stripping / dirt tilling / grass path) come free.
+	// factory binds the two floats to a concrete ctor reference like AxeItem::new.
+	private static Item temperedIronSubclass(String path,
+			java.util.function.Function<Item.Properties, Item> factory) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key, factory.apply(new Item.Properties().setId(key)));
 	}
 
 	private static BlockItem blockItem(String path, Block block) {
@@ -151,6 +176,7 @@ public final class ModItems {
 					// Storage + cables
 					output.accept(BATTERY_BOX_ITEM);
 					output.accept(IRON_CHEST_ITEM);
+					output.accept(TEMPERED_IRON_BLOCK_ITEM);
 					output.accept(COPPER_CABLE_ITEM);
 					// Ores + materials
 					output.accept(TIN_ORE_ITEM);
@@ -190,6 +216,10 @@ public final class ModItems {
 					output.accept(NETWORK_ANALYZER);
 					// Tools
 					output.accept(TEMPERED_IRON_PICKAXE);
+					output.accept(TEMPERED_IRON_AXE);
+					output.accept(TEMPERED_IRON_SHOVEL);
+					output.accept(TEMPERED_IRON_HOE);
+					output.accept(TEMPERED_IRON_SWORD);
 				})
 				.build();
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TAB, tab);
@@ -211,6 +241,10 @@ public final class ModItems {
 		ModContent.WOODEN_GEAR = () -> WOODEN_GEAR;
 		ModContent.TEMPERED_IRON = () -> TEMPERED_IRON;
 		ModContent.TEMPERED_IRON_PICKAXE = () -> TEMPERED_IRON_PICKAXE;
+		ModContent.TEMPERED_IRON_AXE = () -> TEMPERED_IRON_AXE;
+		ModContent.TEMPERED_IRON_HOE = () -> TEMPERED_IRON_HOE;
+		ModContent.TEMPERED_IRON_SHOVEL = () -> TEMPERED_IRON_SHOVEL;
+		ModContent.TEMPERED_IRON_SWORD = () -> TEMPERED_IRON_SWORD;
 		ModContent.IRON_DUST = () -> IRON_DUST;
 		ModContent.COPPER_DUST = () -> COPPER_DUST;
 		ModContent.GOLD_DUST = () -> GOLD_DUST;
@@ -256,5 +290,6 @@ public final class ModItems {
 		ModContent.URANIUM_ORE_ITEM = () -> URANIUM_ORE_ITEM;
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = () -> DEEPSLATE_URANIUM_ORE_ITEM;
 		ModContent.IRON_CHEST_ITEM = () -> IRON_CHEST_ITEM;
+		ModContent.TEMPERED_IRON_BLOCK_ITEM = () -> TEMPERED_IRON_BLOCK_ITEM;
 	}
 }

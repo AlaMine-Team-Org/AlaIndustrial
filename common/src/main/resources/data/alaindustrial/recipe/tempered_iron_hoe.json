@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"pattern": [
+		"II",
+		" S",
+		" S"
+	],
+	"key": {
+		"I": "alaindustrial:tempered_iron",
+		"S": "minecraft:stick"
+	},
+	"result": {
+		"id": "alaindustrial:tempered_iron_hoe",
+		"count": 1
+	}
+}

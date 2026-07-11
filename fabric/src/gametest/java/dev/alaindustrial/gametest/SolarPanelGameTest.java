@@ -76,26 +76,40 @@ public class SolarPanelGameTest {
 		}
 	}
 
-	/** @implements TC-SOLAR-001-FUN01 — generates EU by day under open sky. @covers R-NRG-15 */
+	/**
+	 * @implements TC-SOLAR-001-FUN01 — generates EU by day under open sky, accumulating at exactly the
+	 *     config rate × ticks. The buffer (8000) is far from full at 20 ticks × 1 EU/t = 20 EU, so the
+	 *     rate is read cleanly. A regression that halves/doubles {@code solarEuPerTick} or drops the
+	 *     global multiplier is caught here, not just by the neighbouring PRF01 — an upper-bound-only
+	 *     {@code amount > 0} would pass a panel that generates 0.1 EU/t or 100 EU/t.
+	 * @covers R-NRG-15
+	 */
 	@GameTest(skyAccess = true, maxTicks = 40)
 	public void tcSolar001Fun01_generatesByDay(GameTestHelper helper) {
 		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		drive(panel, helper, 20);
-		if (panel.getEnergyStorage().getAmount() <= 0) {
-			helper.fail("no EU by day (bright=" + helper.getLevel().isBrightOutside() + ")");
+		int ticks = 20;
+		drive(panel, helper, ticks);
+		long perTick = Math.max(1, Math.round(Config.solarEuPerTick * Config.globalEuRateMultiplier));
+		long expected = perTick * ticks;
+		long got = panel.getEnergyStorage().getAmount();
+		if (got != expected) {
+			helper.fail("day generation over " + ticks + " ticks: got " + got + " EU, expected exactly "
+					+ expected + " (perTick=" + perTick + " = max(1, round(" + Config.solarEuPerTick + " × "
+					+ Config.globalEuRateMultiplier + ")), bright="
+					+ helper.getLevel().isBrightOutside() + ")");
 		}
 		helper.succeed();
 	}
 
 	/**
-	 * @implements TC-SOLAR-001-STA01 — rain flags the weather production mode (day + rain → MODE_WEATHER).
+	 * @implements TC-SOLAR-001-STA02 — rain flags the weather production mode (day + rain → MODE_WEATHER).
 	 *     The mode flag fires for the GUI even though output is 0 in weather (MOD-003; see NEG02). Rain set
 	 *     after the clear-day brightness is settled; everything synchronous.
 	 */
 	@GameTest(skyAccess = true, maxTicks = 40)
-	public void tcSolar001Sta01_rainFlagsWeatherMode(GameTestHelper helper) {
+	public void tcSolar001Sta02_rainFlagsWeatherMode(GameTestHelper helper) {
 		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
 		setClearDay(helper);
 		setRaining(helper, false);
@@ -110,13 +124,13 @@ public class SolarPanelGameTest {
 	}
 
 	/**
-	 * @implements TC-SOLAR-001-STA02 — thunderstorm also flags MODE_WEATHER (same zero-output as rain, MOD-003).
+	 * @implements TC-SOLAR-001-STA03 — thunderstorm also flags MODE_WEATHER (same zero-output as rain, MOD-003).
 	 *     Thunder always co-occurs with rain; both flags set so {@code isRaining()} reads true.
 	 *
 	 * @covers R-NRG-15
 	 */
 	@GameTest(skyAccess = true, maxTicks = 40)
-	public void tcSolar001Sta02_thunderFlagsWeatherMode(GameTestHelper helper) {
+	public void tcSolar001Sta03_thunderFlagsWeatherMode(GameTestHelper helper) {
 		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
 		setClearDay(helper);
 		setRaining(helper, true);
@@ -233,12 +247,14 @@ public class SolarPanelGameTest {
 	}
 
 	/**
-	 * @implements TC-SOLAR-001-STA03 — a translucent block (leaves) above flags MODE_PARTIAL and still
-	 *     generates (MOD-004). The base panel's 1 EU/t × 0.5 rounds back to 1, so assert the mode flag.
+	 * @implements TC-SOLAR-001-STA06 — a translucent block (leaves) above flags MODE_PARTIAL and still
+	 *     generates (MOD-004). The base panel's 1 EU/t × 0.5 rounds back to 1, so assert the mode flag
+	 *     AND the exact 1 EU/t generation (a regression that classifies leaves as BLOCKED → 0 EU, or
+	 *     that drops the partial factor, is caught either way).
 	 * @covers R-NRG-15
 	 */
 	@GameTest(skyAccess = true, maxTicks = 40)
-	public void tcSolar001Sta03_leavesAboveFlagPartial(GameTestHelper helper) {
+	public void tcSolar001Sta06_leavesAboveFlagPartial(GameTestHelper helper) {
 		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
 		helper.setBlock(POS.above(), Blocks.OAK_LEAVES);
 		setClearDay(helper);
@@ -249,8 +265,16 @@ public class SolarPanelGameTest {
 			helper.fail("leaves above should flag MODE_PARTIAL (" + SolarPanelBlockEntity.MODE_PARTIAL
 					+ "), got " + mode);
 		}
-		if (panel.getEnergyStorage().getAmount() <= 0) {
-			helper.fail("partial sky should still generate some EU");
+		// Partial generation: base 1 EU/t × solarTransparentFactor (0.5) → max(1, round(0.5)) = 1 EU,
+		// then × globalEuRateMultiplier. Assert the exact value so a regression to 0 (misclassified as
+		// BLOCKED) or to full-day output (factor dropped) is caught, not just "<anything > 0>".
+		long perTick = Math.max(1, Math.round(Math.round(Config.solarEuPerTick * Config.solarTransparentFactor)
+				* Config.globalEuRateMultiplier));
+		long got = panel.getEnergyStorage().getAmount();
+		if (got != perTick) {
+			helper.fail("partial-sky generation over 1 tick: got " + got + " EU, expected exactly " + perTick
+					+ " (max(1, round(round(" + Config.solarEuPerTick + " × " + Config.solarTransparentFactor
+					+ ") × " + Config.globalEuRateMultiplier + ")))");
 		}
 		helper.succeed();
 	}
@@ -386,9 +410,11 @@ public class SolarPanelGameTest {
 	}
 
 	/**
-	 * @implements TC-SOLAR-001-PRF02 — buffer cannot exceed {@code Config.solarBuffer}; excess EU is
-	 *     discarded (use-it-or-lose-it). Covers R-NRG-01 for the solar panel.
-	 *
+	 * @implements TC-SOLAR-001-PRF02 — buffer caps at {@code Config.solarBuffer} (BVA). Pre-charges the
+	 *     panel to {@code cap − 1} (one EU short of full) and drives a clear-day tick: generation of
+	 *     ≥1 EU must top the buffer off to exactly {@code cap}, never above. Starting AT the cap only
+	 *     proves "stays full", which would also pass a buffer that silently drains — the cap−1 leg is
+	 *     what proves the boundary is actually reached and enforced.
 	 * @covers R-NRG-01
 	 */
 	@GameTest(skyAccess = true, maxTicks = 40)
@@ -396,11 +422,13 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().amount = Config.solarBuffer;
-		drive(panel, helper, 20);
+		long cap = Config.solarBuffer;
+		panel.getEnergyStorage().amount = cap - 1; // BVA: one EU short of full → must top off, not exceed
+		drive(panel, helper, 5);
 		long got = panel.getEnergyStorage().getAmount();
-		if (got != Config.solarBuffer) {
-			helper.fail("buffer changed from cap: expected " + Config.solarBuffer + " got " + got);
+		if (got != cap) {
+			helper.fail("buffer did not settle at cap: expected " + cap + " (from cap-1=" + (cap - 1)
+					+ " after generation) got " + got);
 		}
 		helper.succeed();
 	}
@@ -432,16 +460,27 @@ public class SolarPanelGameTest {
 		helper.succeed();
 	}
 
-	/** @implements TC-MOONLIT-001-FUN01 — moonlit panel generates EU at midnight. @covers R-NRG-15 */
+	/**
+	 * @implements TC-MOONLIT-001-FUN01 — moonlit panel generates EU at midnight, accumulating at exactly
+	 *     {@code moonlitEuPerTick} × globalEuRateMultiplier × ticks. See {@link #tcSolar001Fun01_generatesByDay}
+	 *     for why an upper-bound-only assertion is insufficient. Moonlit buffer (8000) is far from full
+	 *     at 20 × 3 EU = 60, so the rate reads cleanly.
+	 * @covers R-NRG-15
+	 */
 	@GameTest(skyAccess = true, maxTicks = 40)
 	public void tcMoonlit001Fun01_generatesAtNight(GameTestHelper helper) {
 		helper.setBlock(POS, ModBlocks.MOONLIT_SOLAR_PANEL);
 		setNight(helper);
 		MoonlitSolarPanelBlockEntity panel = moonlitAt(helper);
-		driveMoonlit(panel, helper, 20);
-		long amount = panel.getEnergyStorage().getAmount();
-		if (amount <= 0) {
-			helper.fail("moonlit panel produced " + amount + " EU at midnight; expected > 0");
+		int ticks = 20;
+		driveMoonlit(panel, helper, ticks);
+		long perTick = Math.max(1, Math.round(Config.moonlitEuPerTick * Config.globalEuRateMultiplier));
+		long expected = perTick * ticks;
+		long got = panel.getEnergyStorage().getAmount();
+		if (got != expected) {
+			helper.fail("moonlit night generation over " + ticks + " ticks: got " + got + " EU, expected exactly "
+					+ expected + " (perTick=" + perTick + " = max(1, round(" + Config.moonlitEuPerTick + " × "
+					+ Config.globalEuRateMultiplier + ")))");
 		}
 		helper.succeed();
 	}
@@ -598,15 +637,28 @@ public class SolarPanelGameTest {
 		}
 	}
 
-	/** @implements TC-DAYLIGHT-001-FUN01 — daylight panel generates EU by day under open sky. @covers R-NRG-15 */
+	/**
+	 * @implements TC-DAYLIGHT-001-FUN01 — daylight panel generates EU by day under open sky, accumulating
+	 *     at exactly {@code daylightEuPerTick} × globalEuRateMultiplier × ticks. See
+	 *     {@link #tcSolar001Fun01_generatesByDay} for why an upper-bound-only assertion is insufficient.
+	 *     Daylight buffer (8000) is far from full at 20 × 4 EU = 80, so the rate reads cleanly.
+	 * @covers R-NRG-15
+	 */
 	@GameTest(skyAccess = true, maxTicks = 40)
 	public void tcDaylight001Fun01_generatesByDay(GameTestHelper helper) {
 		helper.setBlock(POS, ModBlocks.DAYLIGHT_SOLAR_PANEL);
 		setClearDay(helper);
 		AbstractGeneratorBlockEntity panel = genAt(helper);
-		driveGen(panel, helper, 20);
-		if (panel.getEnergyStorage().getAmount() <= 0) {
-			helper.fail("daylight panel produced no EU by day (bright=" + helper.getLevel().isBrightOutside() + ")");
+		int ticks = 20;
+		driveGen(panel, helper, ticks);
+		long perTick = Math.max(1, Math.round(Config.daylightEuPerTick * Config.globalEuRateMultiplier));
+		long expected = perTick * ticks;
+		long got = panel.getEnergyStorage().getAmount();
+		if (got != expected) {
+			helper.fail("daylight day generation over " + ticks + " ticks: got " + got + " EU, expected exactly "
+					+ expected + " (perTick=" + perTick + " = max(1, round(" + Config.daylightEuPerTick + " × "
+					+ Config.globalEuRateMultiplier + ")), bright="
+					+ helper.getLevel().isBrightOutside() + ")");
 		}
 		helper.succeed();
 	}

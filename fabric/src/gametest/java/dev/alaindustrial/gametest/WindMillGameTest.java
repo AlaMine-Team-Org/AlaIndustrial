@@ -38,6 +38,15 @@ import team.reborn.energy.api.EnergyStorage;
 public class WindMillGameTest {
 
 	private static final BlockPos POS = new BlockPos(1, 2, 1);
+	/**
+	 * Raised position for the rate tests. The gametest structure sits below the first height base step
+	 * (observed absY=−55, sea=−63 → base=0), so a mill at {@link #POS} would always produce 0 and the
+	 * rate assertion collapses to {@code 0 != 0}. {@code RAISED_POS} (relative Y = 20, absY ≈ −37)
+	 * lifts the mill above {@code sea + 16 = −47} so {@code base = 1} and the weather-driven rate is
+	 * observable end-to-end. A single glass pillar carries the mill (glass keeps the open-sky column
+	 * clear; the mill's own clearance volume is in front, not below, so the pillar does not obstruct it).
+	 */
+	private static final BlockPos RAISED_POS = new BlockPos(1, 20, 1);
 
 	private static WindMillBlockEntity place(GameTestHelper helper) {
 		WindMillBlockEntity be = placeWithoutRotor(helper);
@@ -53,6 +62,26 @@ public class WindMillGameTest {
 		if (be == null) {
 			helper.fail("wind mill block entity missing after placement");
 		}
+		return be;
+	}
+
+	/**
+	 * Place a mill at {@link #RAISED_POS} on a glass pillar so its Y clears the first height base step,
+	 * and a rotor is installed. Used by the rate tests (FUN01/STA01) that need a non-zero base.
+	 */
+	private static WindMillBlockEntity placeRaised(GameTestHelper helper) {
+		// Build a glass pillar from the structure floor up to just under the mill. Glass is transparent
+		// to skylight and the mill's clearance cone is the 2×2 in FRONT (FACING), not below, so the pillar
+		// does not trigger the roofed/obstructed mode.
+		for (int y = POS.getY(); y < RAISED_POS.getY(); y++) {
+			helper.setBlock(new BlockPos(RAISED_POS.getX(), y, RAISED_POS.getZ()), Blocks.GLASS);
+		}
+		helper.setBlock(RAISED_POS, ModBlocks.WIND_MILL);
+		WindMillBlockEntity be = helper.getBlockEntity(RAISED_POS, WindMillBlockEntity.class);
+		if (be == null) {
+			helper.fail("raised wind mill block entity missing after placement");
+		}
+		be.setItem(WindMillBlockEntity.ROTOR_SLOT, new ItemStack(ModItems.WINDMILL_ROTOR));
 		return be;
 	}
 
@@ -80,10 +109,34 @@ public class WindMillGameTest {
 		level.setRainLevel(1.0f);
 	}
 
+	/**
+	 * Precondition guard against the false-green failure mode of the rate tests. The vanilla
+	 * {@code GameTestServer} hardcodes the structure origin well below sea level (observed absY=−55,
+	 * sea=−63 in the gametest world → {@code base = (−55−(−63))/16 = 0}). At {@code base == 0}
+	 * {@link WindMillOutput#euFor} returns 0 regardless of weather, so the {@code got != expected}
+	 * assertion collapses to {@code 0 != 0} — the test passes even with a broken {@code produce()}.
+	 *
+	 * <p>This guard makes that failure mode LOUD: if the mill sits at/below the first height base step
+	 * ({@code base < 1}), the test fails at setup with a diagnostic instead of silently confirming
+	 * nothing. The rate tests below build the mill on a short pillar so {@code base >= 1} and this guard
+	 * is a no-op; it stays in place as a tripwire in case the gametest world's sea level ever changes.
+	 */
+	private static void requirePositiveHeightBase(GameTestHelper helper, BlockPos millRel) {
+		BlockPos abs = helper.absolutePos(millRel);
+		int sea = helper.getLevel().getSeaLevel();
+		int base = Math.max(0, (abs.getY() - sea) / 16);
+		if (base <= 0) {
+			helper.fail("wind-mill rate test region is below the first height base step: absY=" + abs.getY()
+					+ " sea=" + sea + " → base=0 → expected rate is always 0, so the got!=expected assertion "
+					+ "can never fail. Build the mill higher (Y ≥ sea+16=" + (sea + 16)
+					+ ") or move positive rate coverage to L1 (WindMillOutputTest).");
+		}
+	}
+
 	/** The per-tick EU the mill should produce under the current world state (open sky assumed). */
-	private static int expectedRate(GameTestHelper helper) {
+	private static int expectedRate(GameTestHelper helper, BlockPos millRel) {
 		Level level = helper.getLevel();
-		BlockPos abs = helper.absolutePos(POS);
+		BlockPos abs = helper.absolutePos(millRel);
 		return WindMillOutput.euFor(abs.getY(), level.getSeaLevel(), true,
 				level.isRaining(), level.isThundering(),
 				Config.windMillMaxBaseEuPerTick, Config.windMillMaxEuPerTick,
@@ -102,18 +155,19 @@ public class WindMillGameTest {
 	 */
 	@GameTest(skyAccess = true, maxTicks = 120)
 	public void tcWindmill001Fun01_generatesSampledRate(GameTestHelper helper) {
-		WindMillBlockEntity mill = place(helper);
+		WindMillBlockEntity mill = placeRaised(helper); // raised so base >= 1 (see RAISED_POS)
+		requirePositiveHeightBase(helper, RAISED_POS); // tripwire: fail loudly if the rig ever drops below base 1
 		setClear(helper);
 		mill.getEnergyStorage().amount = 0;
 		int ticks = Config.windMillSampleTicks * 2 + 5; // span multiple sample windows
-		long perTick = afterGlobalRate(expectedRate(helper));
+		long perTick = afterGlobalRate(expectedRate(helper, RAISED_POS));
 		drive(mill, helper, ticks);
 		long got = mill.getEnergyStorage().getAmount();
 		long expected = perTick * ticks;
 		if (got != expected) {
 			helper.fail("wind mill output over " + ticks + " ticks: got " + got + " EU, expected " + expected
-					+ " (perTick=" + perTick + ", rate=" + expectedRate(helper) + " at y="
-					+ helper.absolutePos(POS).getY() + ", sea=" + helper.getLevel().getSeaLevel() + ")");
+					+ " (perTick=" + perTick + ", rate=" + expectedRate(helper, RAISED_POS) + " at y="
+					+ helper.absolutePos(RAISED_POS).getY() + ", sea=" + helper.getLevel().getSeaLevel() + ")");
 		}
 		helper.succeed();
 	}
@@ -126,11 +180,12 @@ public class WindMillGameTest {
 	 */
 	@GameTest(skyAccess = true, maxTicks = 120)
 	public void tcWindmill001Sta01_thunderMultipliesRate(GameTestHelper helper) {
-		WindMillBlockEntity mill = place(helper);
+		WindMillBlockEntity mill = placeRaised(helper); // raised so base >= 1 (see RAISED_POS)
+		requirePositiveHeightBase(helper, RAISED_POS); // tripwire: fail loudly if the rig ever drops below base 1
 		setClear(helper);
-		int clearRate = expectedRate(helper);
+		int clearRate = expectedRate(helper, RAISED_POS);
 		setRaining(helper, true);
-		int stormRate = expectedRate(helper);
+		int stormRate = expectedRate(helper, RAISED_POS);
 		if (stormRate < clearRate) {
 			helper.fail("thunder rate " + stormRate + " < clear rate " + clearRate + " (weather must not reduce output)");
 		}

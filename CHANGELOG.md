@@ -1,16 +1,15 @@
-## 0.1.15
+## 0.1.16
 
-<p><img alt="Tempered iron pickaxe, tempered iron ingot and wooden gear — the new items in this update" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.15/release-media/v0.1.15/changelog.png" width="720"></p>
+<p><img alt="Block of Tempered Iron — the new metal block" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.16/release-media/v0.1.16/changelog.png" width="720"></p>
 
-This update adds a new mid-tier metal, the mod's first custom tool, and a craftable mechanical part that ties two of the early generators together.
+This update rounds out the tempered iron line with the rest of its tool set — axe, hoe, shovel and sword — and adds a compact block form to store and build with it.
 
 ### Gameplay
 
-- **Tempered Iron** — a new smeltable metal. Heat an iron ingot in a furnace, blast furnace, or the mod's electric furnace to get a darker, sturdier ingot that sits a step above regular iron.
-- **Tempered Iron Pickaxe** — the mod's first custom tool. Crafted like a vanilla pickaxe but with tempered iron, it mines faster and lasts longer than an iron pickaxe (350 durability, mining speed 7.0) while still leaving diamond-level blocks — diamond ore, obsidian, ancient debris — for the diamond tier.
-- **Wooden Gear** — a new mechanical part. Four sticks and any wooden button in a crafting cross make the first "mechanical" component, opening the door to more machinery.
+- **Tempered Iron Axe, Hoe, Shovel and Sword** — four new tools that complete the tempered iron set started by the pickaxe. Each is crafted like its vanilla counterpart but with tempered iron, and each is a step above iron: they last longer (350 durability), mine faster, and hit a bit harder, while the pickaxe, axe, hoe and shovel still leave diamond-level blocks for the diamond tier. The axe strips logs, the hoe tills soil, and the shovel shapes paths just like their vanilla versions.
+- **Block of Tempered Iron** — a new metal block. Nine tempered iron ingots craft into one block, and one block breaks back down into nine ingots, so the exchange is lossless in both directions. It looks and feels like a vanilla iron block: full metal cube with a single texture on every face, the same hardness and pickaxe requirement, and it drops itself when mined.
+- Craft the tools at any crafting table with tempered iron ingots and sticks, vanilla-style. Craft the block by filling a 3×3 grid with tempered iron ingots.
 
-### Changes
+### Quality of Life
 
-- **Windmill Rotor** recipe reworked. The new Wooden Gear now sits at the center of the rotor as its mechanical core, planks now accept any wood type instead of only oak, and the layout reads as a clear vertical/horizontal cross.
-- **Wind Mill** recipe reworked to match. The Wooden Gear takes the center slot, planks accept any wood type, and tin was dropped from the recipe — the generator is now built around copper and the new gear.
+- Pack 576 ingots' worth of tempered iron into a single inventory slot instead of leaving piles of loose ingots in chests.

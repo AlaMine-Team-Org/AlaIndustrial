@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"pattern": [
+		" I ",
+		" I ",
+		" S "
+	],
+	"key": {
+		"I": "alaindustrial:tempered_iron",
+		"S": "minecraft:stick"
+	},
+	"result": {
+		"id": "alaindustrial:tempered_iron_sword",
+		"count": 1
+	}
+}

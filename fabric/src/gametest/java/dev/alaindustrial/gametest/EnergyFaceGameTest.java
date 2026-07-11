@@ -72,14 +72,28 @@ public class EnergyFaceGameTest {
 		helper.succeed();
 	}
 
-	/** @implements R-NRG-03 — cable: every face participates (accepts into the network). */
+	/**
+	 * @implements R-NRG-03 — cable: every face participates in transfer in BOTH directions. A cable is a
+	 *     bidirectional conduit ({@code BOTH}), so each face must support insertion AND extraction;
+	 *     checking only {@code supportsInsertion()} would let a regression that drops extraction on one
+	 *     face (making the cable one-way) pass silently.
+	 */
 	@GameTest
 	public void rNrg03_cableEveryFaceConnects(GameTestHelper helper) {
 		helper.setBlock(POS, ModBlocks.COPPER_CABLE);
 		for (Direction d : Direction.values()) {
 			EnergyStorage p = port(helper, d);
-			if (p == null || !p.supportsInsertion()) {
-				helper.fail("cable face " + d + " must participate in transfer");
+			if (p == null) {
+				helper.fail("cable face " + d + " has no energy port — must participate in transfer");
+				return;
+			}
+			if (!p.supportsInsertion()) {
+				helper.fail("cable face " + d + " does not support insertion — cable faces are bidirectional");
+				return;
+			}
+			if (!p.supportsExtraction()) {
+				helper.fail("cable face " + d + " does not support extraction — cable faces are bidirectional");
+				return;
 			}
 		}
 		helper.succeed();

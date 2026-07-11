@@ -190,8 +190,12 @@ public class BatteryBoxGameTest {
 	}
 
 	/**
-	 * @implements TC-BATTERYBOX-001-PRF03 — the SIDED view on the input face (FACING) never offers more
-	 *     than the LV rate (32 EU/t = EnergyTier.LV.maxVoltage()) per SIMULATE call, even on an empty buffer.
+	 * @implements TC-BATTERYBOX-001-PRF03 — the SIDED view on the input face (FACING) offers EXACTLY the
+	 *     LV rate (32 EU/t = EnergyTier.LV.maxVoltage()) per SIMULATE call on an empty buffer: the port
+	 *     publishes {@code maxInsert = LV.maxVoltage()} and there is ample room, so a healthy port must
+	 *     move {@code min(maxInsert, room) = 32} EU. An upper bound alone ({@code offered <= 32}) would
+	 *     silently pass a broken {@code maxInsert == 0} port that moves 0; the exact equality catches
+	 *     both a missing cap (regression to unlimited insert) and a dead port.
 	 * @covers R-NRG-04
 	 */
 	@GameTest
@@ -209,16 +213,18 @@ public class BatteryBoxGameTest {
 			offered = in.insert(1_000L, tx);
 			// SIMULATE: do not commit.
 		}
-		if (offered > EnergyTier.LV.maxVoltage()) {
-			helper.fail("battery_box input face offered " + offered + " EU, expected <= "
-					+ EnergyTier.LV.maxVoltage());
+		long lvCap = EnergyTier.LV.maxVoltage();
+		if (offered != lvCap) {
+			helper.fail("battery_box input face offered " + offered + " EU, expected exactly " + lvCap
+					+ " (maxInsert == 0 would offer 0; unlimited insert would offer 1000/room — both are bugs)");
 		}
 		helper.succeed();
 	}
 
 	/**
-	 * @implements TC-BATTERYBOX-001-PRF04 — the SIDED view on the output face (opposite FACING) never
-	 *     offers more than the LV rate (32 EU/t) per SIMULATE call, even at a full buffer.
+	 * @implements TC-BATTERYBOX-001-PRF04 — the SIDED view on the output face (opposite FACING) offers
+	 *     EXACTLY the LV rate (32 EU/t) per SIMULATE call on a full buffer. See PRF03 for why an upper
+	 *     bound alone is insufficient: a broken {@code maxExtract == 0} port would offer 0 and pass.
 	 * @covers R-NRG-04
 	 */
 	@GameTest
@@ -236,9 +242,10 @@ public class BatteryBoxGameTest {
 			offered = out.extract(1_000L, tx);
 			// SIMULATE: do not commit.
 		}
-		if (offered > EnergyTier.LV.maxVoltage()) {
-			helper.fail("battery_box output face offered " + offered + " EU, expected <= "
-					+ EnergyTier.LV.maxVoltage());
+		long lvCap = EnergyTier.LV.maxVoltage();
+		if (offered != lvCap) {
+			helper.fail("battery_box output face offered " + offered + " EU, expected exactly " + lvCap
+					+ " (maxExtract == 0 would offer 0; unlimited extract would offer 1000/stored — both are bugs)");
 		}
 		helper.succeed();
 	}

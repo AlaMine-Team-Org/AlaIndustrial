@@ -48,20 +48,32 @@ public class FluidGameTest {
 	}
 
 	/**
-	 * @implements TC-GEO-001-FUN01 — a lava bucket is consumed for EU and the empty bucket returned.
+	 * @implements TC-GEO-001-FUN01 — a lava bucket is consumed for EU and the empty bucket returned, and
+	 *     the buffer grows by the exact per-tick rate × ticks. The buffer (4000) is far from full at 5
+	 *     ticks × 16 EU/t = 80 EU, so the rate is read cleanly with no cap masking; a regression that
+	 *     halves or doubles {@code geothermalEuPerTick} (or drops the conversion factor) is caught here,
+	 *     not just by the neighbouring PRF01.
 	 * @covers R-NRG-15
 	 */
 	@GameTest
 	public void tcGeo001Fun01_lavaBucketProducesEu(GameTestHelper helper) {
 		GeothermalGeneratorBlockEntity geo = place(helper);
 		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET));
-		drive(geo, helper, 5);
-		boolean produced = geo.getEnergyStorage().getAmount() > 0;
+		int ticks = 5;
+		drive(geo, helper, ticks);
+		long expectedEu = (long) ticks * Config.geothermalEuPerTick;
+		long got = geo.getEnergyStorage().getAmount();
 		boolean bucketBack = geo.getItem(GeothermalGeneratorBlockEntity.OUTPUT_SLOT).is(Items.BUCKET);
 		boolean consumed = geo.getItem(GeothermalGeneratorBlockEntity.INPUT_SLOT).isEmpty();
-		if (!(produced && bucketBack && consumed)) {
-			helper.fail("geothermal lava: produced=" + produced + " bucketBack=" + bucketBack
-					+ " consumed=" + consumed);
+		if (got != expectedEu) {
+			helper.fail("geothermal produced " + got + " EU over " + ticks + " ticks, expected exactly "
+					+ expectedEu + " (" + ticks + " × geothermalEuPerTick=" + Config.geothermalEuPerTick + ")");
+		}
+		if (!bucketBack) {
+			helper.fail("lava bucket was consumed but the empty bucket was not returned to the output slot");
+		}
+		if (!consumed) {
+			helper.fail("lava bucket was not consumed from the input slot");
 		}
 		helper.succeed();
 	}

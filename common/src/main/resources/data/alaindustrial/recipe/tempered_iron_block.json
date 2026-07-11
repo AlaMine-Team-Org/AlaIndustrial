@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"III",
+		"III",
+		"III"
+	],
+	"key": {
+		"I": "alaindustrial:tempered_iron"
+	},
+	"result": {
+		"id": "alaindustrial:tempered_iron_block",
+		"count": 1
+	}
+}

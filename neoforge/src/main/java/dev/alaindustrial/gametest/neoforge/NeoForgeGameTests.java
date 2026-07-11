@@ -114,6 +114,174 @@ public final class NeoForgeGameTests {
 		// NeoForge (Capabilities.Fluid.BLOCK resolves, transactions commit, lava becomes EU).
 		registerTest(event, "fluid_source_to_pump_to_geo_to_eu", 40, true,
 				CoreFluidScenarios::sourceToPumpToGeoToEu);
+
+		// Machine processing negatives — shared MachineBlockEntity loop on the NeoForge lane. These close
+		// the coverage gap with the Fabric MachineGameTest (no-power, full-output jam, input-swap reset),
+		// catching dupe/overflow/progress-reset regressions on this loader's processing path.
+		registerTest(event, "machine_no_power_no_output", 420, true,
+				CoreEnergyScenarios::machineNoPowerNoOutput);
+		registerTest(event, "machine_full_output_jams", 420, true,
+				CoreEnergyScenarios::machineFullOutputJams);
+		registerTest(event, "machine_input_swap_resets_progress", 200, true,
+				CoreEnergyScenarios::machineInputSwapResetsProgress);
+
+		// Battery box rate BVA: the buffer's per-tick insert/extract caps must be EXACTLY LV.maxVoltage().
+		// Loader-neutral (asserts the shared EnergyBuffer fields directly), complements the Fabric lane's
+		// capability-view rate tests (BatteryBoxGameTest PRF03/Prf04).
+		registerTest(event, "battery_box_rate_exact_lv", 40, true,
+				CoreEnergyScenarios::batteryBoxRateExactLv);
+
+		// Solar panel day/night generation (R-NRG-15). The day case asserts the exact rate × ticks; the
+		// night case asserts 0 EU (a brightness-read regression that leaks day gen into night fails here).
+		registerTest(event, "solar_panel_generates_by_day", 60, true,
+				CoreEnergyScenarios::solarPanelGeneratesByDay);
+		registerTest(event, "solar_panel_no_eu_at_night", 60, true,
+				CoreEnergyScenarios::solarPanelNoEuAtNight);
+
+		// Geothermal generator: exact EU rate from a lava bucket (catches a halved/doubled conversion
+		// factor) + no-lava negative (catches unconditional generation).
+		registerTest(event, "geothermal_lava_bucket_rate", 60, true,
+				CoreEnergyScenarios::geothermalLavaBucketRate);
+		registerTest(event, "geothermal_no_lava_no_eu", 60, true,
+				CoreEnergyScenarios::geothermalNoLavaNoEu);
+
+		// Cable network negatives: diagonal cables must not merge (R-CON-06); a vanilla furnace neighbour
+		// must not NPE during endpoint discovery (loader-capability null-safety).
+		registerTest(event, "diagonal_cables_do_not_connect", 40, true,
+				CoreEnergyScenarios::diagonalCablesDoNotConnect);
+		registerTest(event, "cable_vanilla_neighbor_no_npe", 100, true,
+				CoreEnergyScenarios::cableVanillaNeighborNoNpe);
+
+		// NBT persistence round-trip for the electric furnace (MachineBlockEntity save/load path on the
+		// NeoForge lane for a machine other than the macerator already covered above).
+		registerTest(event, "furnace_nbt_round_trip", 40, true,
+				CoreEnergyScenarios::furnaceNbtRoundTrip);
+
+		// Water mill: exact EU rate from one adjacent water face + no-water negative.
+		registerTest(event, "water_mill_rate_from_water", 60, true,
+				CoreEnergyScenarios::waterMillRateFromWater);
+		registerTest(event, "water_mill_no_water_no_eu", 60, true,
+				CoreEnergyScenarios::waterMillNoWaterNoEu);
+
+		// Wind mill: thunder multiplies the rate on a raised rig (weather wiring end-to-end).
+		registerTest(event, "wind_mill_thunder_multiplies_rate", 120, true,
+				CoreEnergyScenarios::windMillThunderMultipliesRate);
+
+		// Generator: full buffer pauses burn (R-NRG-11, no fuel waste) + exact EU/t rate (canon 8).
+		registerTest(event, "generator_full_buffer_pauses_burn", 40, true,
+				CoreEnergyScenarios::generatorFullBufferPausesBurn);
+		registerTest(event, "generator_rate_per_tick_matches_config", 40, true,
+				CoreEnergyScenarios::generatorRatePerTickMatchesConfig);
+
+		// Battery box conservation: genDrain == boxGain on a partial-consumer cable path (no leak).
+		registerTest(event, "battery_box_conservation_partial_consumer", 80, true,
+				CoreEnergyScenarios::batteryBoxConservationPartialConsumer);
+
+		// Moonlit panel: night generation at exact moonlitEuPerTick × multiplier.
+		registerTest(event, "moonlit_panel_generates_at_night", 60, true,
+				CoreEnergyScenarios::moonlitPanelGeneratesAtNight);
+
+		// Machine positive recipes: compressor (dust->ingot), extractor (gravel->flint), furnace
+		// (raw_iron->ingot). Each proves that machine's recipe-type resolves on the NeoForge lane.
+		registerTest(event, "compressor_makes_copper_ingot", 420, true,
+				CoreEnergyScenarios::compressorMakesCopperIngot);
+		registerTest(event, "extractor_makes_flint", 420, true,
+				CoreEnergyScenarios::extractorMakesFlint);
+		registerTest(event, "furnace_smelts_raw_iron", 420, true,
+				CoreEnergyScenarios::furnaceSmeltsRawIron);
+
+		// Pump: source -> tank -> sink (geo) -> EU. Fluid transport end-to-end on the NeoForge lane.
+		registerTest(event, "pump_source_to_tank_to_sink_to_eu", 100, true,
+				CoreEnergyScenarios::pumpSourceToTankToSinkToEu);
+
+		// Machine negatives parametric across all 4 machines (furnace/compressor/extractor): no-recipe
+		// no-EU, full-output jam, input-swap reset. Closes the per-machine gap with MachineGameTest.
+		registerTest(event, "furnace_non_recipe_no_eu_spent", 200, true,
+				CoreEnergyScenarios::furnaceNonRecipeNoEuSpent);
+		registerTest(event, "compressor_full_output_jams", 420, true,
+				CoreEnergyScenarios::compressorFullOutputJams);
+		registerTest(event, "extractor_input_swap_resets_progress", 200, true,
+				CoreEnergyScenarios::extractorInputSwapResetsProgress);
+
+		// Daylight solar: day generation at exact daylightEuPerTick + no EU at night (day-only).
+		registerTest(event, "daylight_panel_generates_by_day", 60, true,
+				CoreEnergyScenarios::daylightPanelGeneratesByDay);
+		registerTest(event, "daylight_panel_no_eu_at_night", 60, true,
+				CoreEnergyScenarios::daylightPanelNoEuAtNight);
+
+		// Extra machine recipes: extractor ×3 blaze_powder, furnace vanilla fallback (sand→glass),
+		// compressor iron_dust→iron_ingot.
+		registerTest(event, "extractor_blaze_rod_to_powder", 420, true,
+				CoreEnergyScenarios::extractorBlazeRodToPowder);
+		registerTest(event, "furnace_smelts_sand_to_glass", 420, true,
+				CoreEnergyScenarios::furnaceSmeltsSandToGlass);
+		registerTest(event, "compressor_iron_dust_to_ingot", 420, true,
+				CoreEnergyScenarios::compressorIronDustToIngot);
+
+		// Machine E_op BVA: macerator exact (completes, amount==0) + E_op−1 (stalls at duration−1).
+		registerTest(event, "macerator_eop_exact_completes", 420, true,
+				CoreEnergyScenarios::maceratorEopExactCompletes);
+		registerTest(event, "macerator_eop_minus_one_stalls", 420, true,
+				CoreEnergyScenarios::maceratorEopMinusOneStalls);
+
+		// Generator/solar buffer cap-1 BVA (R-NRG-01): tops off to exactly cap from cap-1.
+		registerTest(event, "generator_buffer_caps_at_max_bva", 40, true,
+				CoreEnergyScenarios::generatorBufferCapsAtMaxBva);
+		registerTest(event, "solar_panel_buffer_caps_at_max_bva", 60, true,
+				CoreEnergyScenarios::solarPanelBufferCapsAtMaxBva);
+
+		// Solar evolution: day chip → daylight panel after solarEvolveTicks.
+		registerTest(event, "solar_day_chip_evolves_to_daylight", 200, true,
+				CoreEnergyScenarios::solarDayChipEvolvesToDaylight);
+
+		// Ore tier-gate (R-BRK-09): wooden too low for all 8; stone OK for tin/silver/nickel,
+		// iron required for uranium.
+		registerTest(event, "ore_wooden_pickaxe_no_drop", 40, true,
+				CoreEnergyScenarios::oreWoodenPickaxeNoDrop);
+		registerTest(event, "ore_stone_pickaxe_tier_gate", 40, true,
+				CoreEnergyScenarios::oreStonePickaxeTierGate);
+
+		// Network split + rejoin (R-CON-04, R-CON-09): break stops delivery, replace resumes flow.
+		registerTest(event, "network_split_rejoin_resumes_flow", 200, true,
+				CoreEnergyScenarios::networkSplitRejoinResumesFlow);
+
+		// Geothermal tank droplet↔MB boundary: one lava bucket = exactly 1000 mB.
+		registerTest(event, "geothermal_tank_bucket_boundary", 40, true,
+				CoreEnergyScenarios::geothermalTankBucketBoundary);
+
+		// Generator rejects external EU (producer-only, R-NRG-03): maxInsert == 0.
+		registerTest(event, "generator_rejects_external_eu", 40, true,
+				CoreEnergyScenarios::generatorRejectsExternalEu);
+
+		// Battery box half-charge drop carries EU (R-BRK-07, second charge value).
+		registerTest(event, "battery_box_drop_carries_energy_half_charge", 40, true,
+				CoreEnergyScenarios::batteryBoxDropCarriesEnergyHalfCharge);
+
+		// Cable throughput cap ≤ LV.maxVoltage per tick (R-NRG-04, no overvoltage).
+		registerTest(event, "cable_throughput_capped_at_lv", 40, true,
+				CoreEnergyScenarios::cableThroughputCappedAtLv);
+
+		// Macerator lit blockstate tracks active/idle (R-VIS-01).
+		registerTest(event, "macerator_lit_tracks_active", 420, true,
+				CoreEnergyScenarios::maceratorLitTracksActive);
+
+		// Extractor multi-output recipes: cactus ×2 green_dye, pumpkin ×5 pumpkin_seeds.
+		registerTest(event, "extractor_cactus_to_green_dye", 420, true,
+				CoreEnergyScenarios::extractorCactusToGreenDye);
+		registerTest(event, "extractor_pumpkin_to_seeds", 420, true,
+				CoreEnergyScenarios::extractorPumpkinToSeeds);
+
+		// Macerator tag-ingredient recipe: iron_ore → ×2 iron_dust (doubling path).
+		registerTest(event, "macerator_iron_ore_doubles_dust", 420, true,
+				CoreEnergyScenarios::maceratorIronOreDoublesDust);
+
+		// Wind mill roofed → 0 EU (open-sky gate, mode wiring).
+		registerTest(event, "wind_mill_roofed_yields_zero", 120, true,
+				CoreEnergyScenarios::windMillRoofedYieldsZero);
+
+		// Two generators sum into one consumer (R-CON-16, no dupe/shadow).
+		registerTest(event, "two_generators_sum_into_one_consumer", 60, true,
+				CoreEnergyScenarios::twoGeneratorsSumIntoOneConsumer);
 	}
 
 	/** Register one code-body scenario under the alaindustrial namespace with a sane maxTicks. */

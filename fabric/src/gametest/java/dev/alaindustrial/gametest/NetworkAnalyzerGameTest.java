@@ -95,7 +95,12 @@ public class NetworkAnalyzerGameTest {
 
 	/**
 	 * @implements MOD-047-TRAVERSE — Traverse mode stitches two networks split by a BatteryBox into one
-	 * picture, including the BatteryBox as a storage sink. @covers MOD-047
+	 *     picture, including the BatteryBox as a storage sink.
+	 * @implements R-DIAG-02 — the analyzer is read-only: traversing the network must not mutate its
+	 *     topology (cable set) or its telemetry (last-tick moved EU). Snapshots both before and after
+	 *     {@link NetworkTraverser#traverse} and asserts byte-for-byte equality — without this a regression
+	 *     that adds a side effect to traversal (e.g. waking the network, marking dirty) would go undetected.
+	 * @covers MOD-047, R-DIAG-02
 	 */
 	@GameTest
 	public void mod047_traverseBridgesBatteryBox(GameTestHelper helper) {
@@ -109,6 +114,10 @@ public class NetworkAnalyzerGameTest {
 		if (left == right) {
 			helper.fail("precondition failed: both cables are in the same network — BatteryBox must split them");
 		}
+		// R-DIAG-02: snapshot the network state BEFORE the read-only traversal.
+		var cablesBefore = new java.util.HashSet<>(left.cables());
+		long movedBefore = left.lastTickMoved();
+
 		TraversalResult result = NetworkTraverser.traverse(helper.getLevel(), left, AnalyzerMode.TRAVERSE, 32);
 		// Both cable segments must appear in the union.
 		if (!result.cables().contains(helper.absolutePos(CABLE_A))
@@ -118,6 +127,17 @@ public class NetworkAnalyzerGameTest {
 		// The BatteryBox must be classified as a storage sink, not a plain producer/consumer.
 		if (!result.storageSinks().contains(helper.absolutePos(BAT))) {
 			helper.fail("BatteryBox not reported as a storage sink: storage=" + result.storageSinks());
+		}
+		// R-DIAG-02: the network must be byte-for-byte unchanged after the traversal (read-only contract).
+		var cablesAfter = left.cables();
+		long movedAfter = left.lastTickMoved();
+		if (!cablesAfter.equals(cablesBefore)) {
+			helper.fail("R-DIAG-02 violation: traverse mutated the cable set — before=" + cablesBefore
+					+ " after=" + cablesAfter);
+		}
+		if (movedAfter != movedBefore) {
+			helper.fail("R-DIAG-02 violation: traverse changed lastTickMoved — before=" + movedBefore
+					+ " after=" + movedAfter);
 		}
 		helper.succeed();
 	}

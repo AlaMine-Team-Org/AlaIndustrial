@@ -45,6 +45,7 @@ public final class ModCreativeTabNeoForge {
 						// Storage + cables
 						output.accept(ModItemsNeoForge.BATTERY_BOX_ITEM.get());
 						output.accept(ModItemsNeoForge.IRON_CHEST_ITEM.get());
+						output.accept(ModItemsNeoForge.TEMPERED_IRON_BLOCK_ITEM.get());
 						output.accept(ModItemsNeoForge.COPPER_CABLE_ITEM.get());
 						// Ores + materials
 						output.accept(ModItemsNeoForge.TIN_ORE_ITEM.get());
@@ -84,6 +85,10 @@ public final class ModCreativeTabNeoForge {
 						output.accept(ModItemsNeoForge.NETWORK_ANALYZER.get());
 						// Tools
 						output.accept(ModItemsNeoForge.TEMPERED_IRON_PICKAXE.get());
+						output.accept(ModItemsNeoForge.TEMPERED_IRON_AXE.get());
+						output.accept(ModItemsNeoForge.TEMPERED_IRON_SHOVEL.get());
+						output.accept(ModItemsNeoForge.TEMPERED_IRON_HOE.get());
+						output.accept(ModItemsNeoForge.TEMPERED_IRON_SWORD.get());
 					})
 					.build());
 

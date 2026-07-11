@@ -772,6 +772,34 @@ public class GuiClientGameTest implements FabricClientGameTest {
     private static java.nio.file.Path takeCleanScreenshot(ClientGameTestContext context, String name) {
         context.runOnClient(mc -> mc.gui.toastManager().clear());
         context.waitTicks(1);
-        return context.takeScreenshot(name);
+        java.nio.file.Path path = context.takeScreenshot(name);
+        // Regression guard: previously this method returned a path that nothing ever asserted on, so
+        // the whole L3 suite stayed green even if the screenshot file was never written or came out as
+        // a 0-byte / all-black frame (e.g. MenuScreens.create silently no-op'd, the screen closed before
+        // capture, the renderer threw inside the framebuffer). Asserting existence + a minimum byte size
+        // catches every "screenshot not produced" and "blank frame" failure mode without requiring a
+        // pixel-diff baseline. A non-trivial PNG of a real Minecraft frame is a few KB at minimum; a
+        // cleared/empty framebuffer compresses to a few hundred bytes. The threshold is deliberately
+        // generous so headless-driver variance never flakes a healthy capture.
+        if (!java.nio.file.Files.exists(path)) {
+            throw new AssertionError("[GUITEST] screenshot '" + name + "' was not written to " + path
+                    + " — the capture path is broken (renderer threw, screen never opened, or the headless "
+                    + "framebuffer is misconfigured). This used to pass silently; now it fails the L3 suite.");
+        }
+        try {
+            long size = java.nio.file.Files.size(path);
+            // 2 KiB: a real GUI/world frame is ≥ several KB compressed; an empty framebuffer PNG is a
+            // few hundred bytes. Keeps the gate robust against headless-driver compression variance.
+            final long MIN_SCREENSHOT_BYTES = 2 * 1024L;
+            if (size < MIN_SCREENSHOT_BYTES) {
+                throw new AssertionError("[GUITEST] screenshot '" + name + "' is only " + size
+                        + " bytes (< " + MIN_SCREENSHOT_BYTES + ") — likely a blank/cleared framebuffer, "
+                        + "not a rendered frame. Capture path: " + path);
+            }
+            LOG.info("[GUITEST] screenshot {} ({} bytes) OK", name, size);
+        } catch (java.io.IOException e) {
+            throw new AssertionError("[GUITEST] could not stat screenshot '" + name + "' at " + path, e);
+        }
+        return path;
     }
 }
