@@ -1,172 +1,38 @@
 package dev.alaindustrial.client.neoforge;
 
-import dev.alaindustrial.client.AlaClientConfig;
-import dev.alaindustrial.network.NetworkAnalyzerPayload;
-import dev.alaindustrial.network.NetworkTopology;
-import dev.alaindustrial.network.NetworkTopology.FlowEdge;
-import dev.alaindustrial.network.NetworkTopology.NetworkEdge;
+import dev.alaindustrial.client.NetworkOverlayRenderer;
 import dev.alaindustrial.network.neoforge.NeoForgeNetworkClient;
-import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.BlockPos;
-import net.minecraft.gizmos.Gizmos;
-import net.minecraft.gizmos.GizmoStyle;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
 
 /**
- * NeoForge Network-Analyzer highlight (MOD-022, the NeoForge counterpart to the Fabric
- * {@code NetworkVisualizationClient}). Draws the last {@link NetworkAnalyzerPayload} received
- * ({@link NeoForgeNetworkClient#latest()}) in world space so it reads through walls across chunks.
+ * NeoForge adapter for the loader-neutral Network Analyzer highlight (MOD-016, MOD-033): forwards the
+ * render-time collector from {@link SubmitCustomGeometryEvent} to the common
+ * {@link NetworkOverlayRenderer}, giving NeoForge the exact same per-frame tube/joint/flow-spark
+ * geometry as Fabric.
  *
- * <p><b>Approximation, by API constraint.</b> The Fabric version builds custom oriented-tube quads and
- * backface-wound joint cubes with a render-time {@code DrawableGizmoPrimitives}/{@code SubmitNodeCollector}
- * — a collector NeoForge's {@code RenderLevelStageEvent} does not expose. This uses the vanilla per-tick
- * gizmo API ({@link Minecraft#collectPerTickGizmos()} + {@link Gizmos}), which offers only high-level
- * shapes, so the topology is drawn as {@link Gizmos#line edge lines} + {@link Gizmos#cuboid node cubes} +
- * {@link Gizmos#point animated flow dots} rather than the Fabric tube look. Functionally equivalent (same
- * cables, endpoints and flow direction); visually simpler. Submitted once per client tick.
+ * <p>History: the first NeoForge port (MOD-022) approximated the overlay with vanilla per-tick
+ * gizmos ({@code Minecraft#collectPerTickGizmos()} + {@code Gizmos.line/cuboid/point}) because
+ * {@code RenderLevelStageEvent} exposes no {@code SubmitNodeCollector}. NeoForge 26.2 does expose
+ * one through {@link SubmitCustomGeometryEvent}, which fires in {@code LevelRenderer.submitFeatures}
+ * right before vanilla submits its own gizmo primitives — the same frame point as the Fabric
+ * {@code LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES} hook — so the per-tick approximation (20 Hz
+ * motion, pixel-sized flow points) is gone entirely (MOD-033, MOD-060).
  *
- * <p>Topology is recomputed only when a new payload arrives (compared by reference), not every tick.
+ * <p>Unlike Fabric, where the payload receiver pushes into the renderer, the NeoForge receive seam
+ * ({@link NeoForgeNetworkClient}) just stores the latest payload — so this adapter polls it each
+ * frame; {@link NetworkOverlayRenderer#updatePayload} compares by reference and recomputes topology
+ * only when the payload actually changed.
  */
 public final class NeoForgeNetworkVisualization {
-
-	private static final int TUBE_COLOR = 0xFF11577A;     // muted dark teal — edges
-	private static final int PRODUCER_COLOR = 0xFF84CC16; // green
-	private static final int CONSUMER_COLOR = 0xFFFB923C; // orange
-	private static final int STORAGE_COLOR = 0xFF38BDF8;  // light blue — storage sink / bridge node (MOD-047)
-	private static final int FLOW_COLOR = 0xFFFFE9A8;     // warm near-white flow spark
-
-	private static final float EDGE_WIDTH = 4.0f;
-	private static final float FLOW_POINT_SIZE = 0.5f;
-	private static final float ENDPOINT_HALF = 0.16f;
-	private static final int FLOW_DOTS_PER_EDGE = 3;
-	private static final double FLOW_SPEED_EDGES_PER_SECOND = 1.0;
-
-	private static NetworkAnalyzerPayload cachedPayload;
-	private static ResourceKey<Level> dimension;
-	private static List<BlockPos> producers = List.of();
-	private static List<BlockPos> consumers = List.of();
-	private static List<BlockPos> storage = List.of();
-	private static List<NetworkEdge> edges = List.of();
-	private static List<FlowEdge> flowEdges = List.of();
-	/** Producer ∪ consumer ∪ storage positions — endpoints whose Y anchor follows their collision shape. */
-	private static java.util.Set<BlockPos> endpointPositions = java.util.Set.of();
 
 	private NeoForgeNetworkVisualization() {
 	}
 
-	/** Submit the highlight for this client tick from the last received payload, if any. */
-	public static void tick() {
-		if (!AlaClientConfig.networkOverlayEnabled) {
-			return;
-		}
-		NetworkAnalyzerPayload payload = NeoForgeNetworkClient.latest();
-		if (payload == null) {
-			return;
-		}
-		if (payload != cachedPayload) {
-			recompute(payload);
-		}
-		if (edges.isEmpty() && producers.isEmpty() && consumers.isEmpty() && storage.isEmpty()) {
-			return;
-		}
-		ClientLevel level = Minecraft.getInstance().level;
-		if (level == null || dimension == null || !level.dimension().equals(dimension)) {
-			return;
-		}
-
-		try (Gizmos.TemporaryCollection collection = Minecraft.getInstance().collectPerTickGizmos()) {
-			int tubeColor = AlaClientConfig.networkOverlayColor;
-			for (NetworkEdge edge : edges) {
-				if (level.isLoaded(edge.a()) && level.isLoaded(edge.b())) {
-					var line = Gizmos.line(nodeCenter(level, edge.a()), nodeCenter(level, edge.b()),
-							tubeColor, EDGE_WIDTH);
-					if (AlaClientConfig.networkOverlayThroughBlocks) {
-						line.setAlwaysOnTop();
-					}
-				}
-			}
-			drawNodes(level, producers, PRODUCER_COLOR);
-			drawNodes(level, consumers, CONSUMER_COLOR);
-			drawNodes(level, storage, STORAGE_COLOR);
-
-			if (AlaClientConfig.networkOverlayFlowDots) {
-				double timeSeconds = System.currentTimeMillis() / 1000.0;
-				for (FlowEdge flow : flowEdges) {
-					if (!level.isLoaded(flow.from()) || !level.isLoaded(flow.to())) {
-						continue;
-					}
-					Vec3 from = nodeCenter(level, flow.from());
-					Vec3 to = nodeCenter(level, flow.to());
-					for (int i = 0; i < FLOW_DOTS_PER_EDGE; i++) {
-						double phase = (timeSeconds * FLOW_SPEED_EDGES_PER_SECOND + (double) i / FLOW_DOTS_PER_EDGE) % 1.0;
-						var point = Gizmos.point(from.lerp(to, phase), FLOW_COLOR, FLOW_POINT_SIZE);
-						if (AlaClientConfig.networkOverlayThroughBlocks) {
-							point.setAlwaysOnTop();
-						}
-					}
-				}
-			}
-		}
-	}
-
-	private static void recompute(NetworkAnalyzerPayload payload) {
-		cachedPayload = payload;
-		dimension = payload.dimension();
-		List<BlockPos> cables = payload.cables();
-		producers = payload.producers();
-		consumers = payload.consumers();
-		storage = payload.storage();
-		// Storage sinks bridge cable segments (MOD-047); include them as endpoints so fullAdjacency
-		// routes edges through them and nodeCenter anchors them like any other endpoint.
-		java.util.List<BlockPos> allEndpoints = new java.util.ArrayList<>(
-				producers.size() + consumers.size() + storage.size());
-		allEndpoints.addAll(producers);
-		allEndpoints.addAll(consumers);
-		allEndpoints.addAll(storage);
-		edges = NetworkTopology.fullAdjacency(cables, allEndpoints, java.util.List.of());
-		flowEdges = NetworkTopology.flowDirections(edges, producers);
-		endpointPositions = new java.util.HashSet<>(allEndpoints);
-	}
-
-	private static void drawNodes(ClientLevel level, List<BlockPos> positions, int color) {
-		GizmoStyle style = GizmoStyle.strokeAndFill(color, 2.0f, (color & 0x00FFFFFF) | 0x66000000);
-		for (BlockPos pos : positions) {
-			if (level.isLoaded(pos)) {
-				var cuboid = Gizmos.cuboid(box(nodeCenter(level, pos), ENDPOINT_HALF), style);
-				if (AlaClientConfig.networkOverlayThroughBlocks) {
-					cuboid.setAlwaysOnTop();
-				}
-			}
-		}
-	}
-
-	/**
-	 * Mirror of the Fabric {@code NetworkVisualizationClient.nodeCenter}: horizontally the cell
-	 * centre (cable bounds are skewed by arms, so shape centre would bend straight runs), vertically
-	 * the endpoint's surface/centre from its collision shape. A half-block endpoint (e.g. Solar Panel,
-	 * {@code maxY == 0.5}) anchors on its top surface so a line from an adjacent cable lands on the
-	 * panel instead of plunging into it; a full-height endpoint anchors at the vertical centre. Cables
-	 * (not in {@link #endpointPositions}) use the raw cell centre on every axis (MOD-042 parity).
-	 */
-	private static Vec3 nodeCenter(ClientLevel level, BlockPos pos) {
-		double y = pos.getY() + 0.5;
-		if (endpointPositions.contains(pos)) {
-			VoxelShape shape = level.getBlockState(pos).getShape(level, pos);
-			if (!shape.isEmpty()) {
-				AABB bounds = shape.bounds();
-				y = pos.getY() + (bounds.maxY < 1.0 ? bounds.maxY : (bounds.minY + bounds.maxY) / 2.0);
-			}
-		}
-		return new Vec3(pos.getX() + 0.5, y, pos.getZ() + 0.5);
-	}
-
-	private static AABB box(Vec3 c, float half) {
-		return new AABB(c.x - half, c.y - half, c.z - half, c.x + half, c.y + half, c.z + half);
+	/** Game-bus listener: submit this frame's overlay geometry. Registered in
+	 * {@code IndustrializationNeoForgeClient}. */
+	public static void onSubmitCustomGeometry(SubmitCustomGeometryEvent event) {
+		NetworkOverlayRenderer.updatePayload(NeoForgeNetworkClient.latest());
+		NetworkOverlayRenderer.submitFrame(event.getSubmitNodeCollector(),
+				event.getLevelRenderState().cameraRenderState);
 	}
 }

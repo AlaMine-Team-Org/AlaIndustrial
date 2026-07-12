@@ -153,9 +153,11 @@ public final class IndustrializationNeoForge {
 			}
 		});
 		NeoForge.EVENT_BUS.addListener((ServerStoppedEvent event) -> NetworkManager.clearAll());
-		// /ala build-visibility command (version + status + net), available to everyone.
+		// /ala build-visibility command (version + status + net), available to everyone; the hidden
+		// /ala demo subtree (MOD-058) registers only outside production (or with -Dalaindustrial.demo=true).
 		NeoForge.EVENT_BUS.addListener(
-				(RegisterCommandsEvent event) -> AlaCommandCommon.register(event.getDispatcher()));
+				(RegisterCommandsEvent event) -> AlaCommandCommon.register(event.getDispatcher(),
+						!net.neoforged.fml.loading.FMLEnvironment.isProduction()));
 
 		Industrialization.LOGGER.info("Industrialization (NeoForge) initialized.");
 	}

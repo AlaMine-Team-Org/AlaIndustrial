@@ -1,6 +1,7 @@
 package dev.alaindustrial.command;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.loader.api.FabricLoader;
 
 /**
  * Fabric registration seam for the {@code /ala} build-visibility command. The command tree itself is
@@ -13,6 +14,7 @@ public final class AlaCommand {
 
 	public static void register() {
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-				AlaCommandCommon.register(dispatcher));
+				AlaCommandCommon.register(dispatcher,
+						FabricLoader.getInstance().isDevelopmentEnvironment()));
 	}
 }

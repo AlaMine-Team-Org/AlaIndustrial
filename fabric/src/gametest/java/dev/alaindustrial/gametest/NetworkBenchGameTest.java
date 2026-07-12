@@ -100,10 +100,11 @@ public class NetworkBenchGameTest {
 	}
 
 	/**
-	 * @implements R-30 — large-network smoke + teardown bench. A 72-cable field unions into a single
-	 *     network that delivers EU from the generator to the macerator; tearing the whole field down
-	 *     (which re-runs the component BFS on each cut) completes well within a generous budget and
-	 *     leaves this field with no network.
+	 * Large-network smoke + teardown bench (covers R-NRG-08/R-NRG-09, but with no dedicated
+	 * case ID — this is an infrastructure check). A 72-cable field unions into a single
+	 * network that delivers EU from the generator to the macerator; tearing the whole field down
+	 * (which re-runs the component BFS on each cut) completes well within a generous budget and
+	 * leaves this field with no network.
 	 */
 	@GameTest
 	public void benchLargeNetworkSmoke(GameTestHelper helper) {

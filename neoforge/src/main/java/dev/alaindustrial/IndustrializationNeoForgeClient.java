@@ -75,13 +75,13 @@ public final class IndustrializationNeoForgeClient {
 		NeoForge.EVENT_BUS.addListener((ItemTooltipEvent event) ->
 				MachineTooltips.append(event.getItemStack(), event.getToolTip(), Minecraft.getInstance().hasShiftDown()));
 		// World overlays (counterparts to the Fabric NetworkVisualizationClient + CablePlacementPreview).
-		// Fabric feeds a DrawableGizmoPrimitives to the render-time SubmitNodeCollector its LevelRenderContext
-		// exposes; NeoForge's RenderLevelStageEvent exposes no such collector, so both overlays use the vanilla
-		// per-tick gizmo API (Minecraft#collectPerTickGizmos) instead — submitted once per client tick here.
-		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> {
-			NeoForgeNetworkVisualization.tick();
-			NeoForgeCableGhost.tick();
-		});
+		// The analyzer overlay submits per-frame custom geometry: SubmitCustomGeometryEvent exposes the
+		// render-time SubmitNodeCollector (RenderLevelStageEvent does not), firing at the same frame point
+		// as the Fabric AFTER_TRANSLUCENT_FEATURES hook — full visual parity via the common
+		// NetworkOverlayRenderer (MOD-033/MOD-060). The cable ghost stays on the vanilla per-tick gizmo
+		// API: a static block-shaped preview gains nothing from per-frame submission.
+		NeoForge.EVENT_BUS.addListener(NeoForgeNetworkVisualization::onSubmitCustomGeometry);
+		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> NeoForgeCableGhost.tick());
 		Industrialization.LOGGER.info("Industrialization (NeoForge client) initialized.");
 	}
 
