@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ru" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Инструменты из закалённого железа — Ala Industrial — Гайд</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; align-items:flex-start; gap:14px; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:4px; flex-wrap:wrap; }
+  .block-card .tag { display:inline-block; font-size:15px; padding:1px 6px;
+    border:1px solid var(--line2); color:var(--txt); background:var(--bg2);
+    font-family:'VT323',monospace; }
+  .block-card .tag.cat { font-family:'Press Start 2P',monospace; font-size:8px;
+    border:none; color:var(--bg); padding:3px 6px; }
+  .block-card .tag.tier { color:var(--gold); border-color:var(--gold); }
+  .block-card .tag.lifecycle { font-family:'Press Start 2P',monospace; font-size:8px;
+    border:none; color:var(--bg); padding:3px 6px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="Открыть меню" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">RU</summary><div class="language-popover"><span>RU</span><a href="../../en/items/tempered_iron_tools.html">EN</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Обзор</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>С чего начать</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
+<div class="group-title">Энергия</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<div class="group-title">Переработка</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="4 страницы">4</span></a>
+<div class="group-title">Мир и автоматизация</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="5 страниц">5</span></a>
+<div class="group-title">Прочее</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<div class="group-title">Предметы</div>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="4 страницы">4</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../items/index.html">Игровые предметы</a><span class="sep">/</span><span>Инструменты из закалённого железа</span></div>
+<div class="block-card">
+  <img class="icon" src="../assets/item/tempered_iron_pickaxe.png" alt="Инструменты из закалённого железа" width="64" height="64">
+  <div class="info">
+    <h1>Инструменты из закалённого железа</h1>
+    <div class="block-id">alaindustrial:tempered_iron_tools</div>
+    <div class="tags"><span class="tag cat" style="background:#d97706">Игровые предметы</span><span class="tag lifecycle" style="background:#22c55e">Реализовано</span><span class="tag">tool</span><span class="tag">tempered-iron</span><span class="tag">tier-lv</span></div>
+  </div>
+</div>
+<h2>Сводка</h2>
+<p><strong>Инструменты из закалённого железа</strong> — линейка из пяти ручных инструментов мода Ala Industrial: <a href="tempered_iron_pickaxe.html">кирка</a>, <strong>топор</strong>, <strong>мотыга</strong>, <strong>лопата</strong> и <strong>меч</strong>. Каждый крафтится как обычный ванильный инструмент (vanilla-pattern верстака), но вместо <code>iron_ingot</code> используется <a href="../components/tempered_iron.html">закалённое железо</a> мода. По всем характеристикам <strong>немного лучше</strong> ванільных железных аналогов (прочность, скорость, урон, зачарование), но инструменты добычи (кирка/топор/лопата/мотыга) <strong>не майнят diamond-level блоки</strong> — материал переиспользует <code>minecraft:incorrect_for_iron_tool</code>, поэтому алмазная прогрессия не обесценивается. Все пять инструментов используют единый материал <code>ModToolMaterials.TEMPERED_IRON</code> (record <code>ToolMaterial</code> MC 26.2). В MC 26.2 классы <code>PickaxeItem</code>/<code>SwordItem</code>/<code>DiggerItem</code>/<code>Tier</code>/<code>Tiers</code> удалены — кирка и меч это обычные <code>Item</code> с data-компонентом <code>Tool</code> через <code>Item.Properties.{pickaxe,sword}(ToolMaterial, attackDamage, attackSpeed)</code>. Однако <code>AxeItem</code>, <code>HoeItem</code>, <code>ShovelItem</code> <strong>всё ещё существуют</strong> и несут signature-поведение (<code>useOn</code>: снятие коры, вспашка, тропинка) — поэтому топор/мотыга/лопата наследуются от этих ванильных подклассов; их конструкторы сами вызывают <code>props.{axe,hoe,shovel}(...)</code> и <code>super(...)</code>, обеспечивая и <code>Tool</code>-компонент, и поведение.</p>
+<h2>Энергия</h2>
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>none (ручные инструменты, не связаны с EU/FE-системой)</td></tr></tbody></table>
+<h2>Инвентарь</h2>
+<p>Предметы. Стак: 1 каждый (инструменты с прочностью — <code>maxDamage</code>). Имеют data-компонент <code>minecraft:tool</code>, <code>minecraft:max_damage</code>, и ремонтируются через тег <code>alaindustrial:tempered_iron_tool_materials</code>. Не стекаются.</p>
+<h2>Свойства блока</h2>
+<p>Не применимо (предметы).</p>
+<h2>Характеристики (баланс)</h2>
+<p>Базовая линия — ванильные железные инструменты. Значения аргументов <code>attackDamage</code>/<code>attackSpeed</code> взяты 1:1 из байткода <code>Items.IRON_*</code> (проверено <code>javap</code> против <code>minecraft-common-deobf-26.2.jar</code>); единственное улучшение — в материале <code>ModToolMaterials.TEMPERED_IRONattackDamageBonus = 2.5</code> (vs iron 2.0), <code>durability = 350</code> (vs 250), <code>speed = 7.0</code> (vs 6.0), <code>enchantmentValue = 16</code> (vs 14). Это даёт +0.5 итогового урона и +100 прочности каждому инструменту автоматически — тот же подход, что у кирки. Формула урона в 26.2 (из <code>ToolMaterial.createToolAttributes</code>): итоговый ATTACK_DAMAGE игрока = <code>1.0 (base) + (attackDamage + attackDamageBonus)</code>. ATTACK_SPEED = <code>4.0 (base) + attackSpeed</code>.</p>
+<table><thead><tr><th>Инструмент</th><th>attackDamage (арг.)</th><th>attackSpeed (арг.)</th><th>Итог. урон (железо / закал.)</th><th>Скорость атаки</th></tr></thead><tbody><tr><td>Кирка (<code>pickaxe</code>)</td><td>1.0</td><td>−2.8</td><td>4.0 / <strong>4.5</strong></td><td>1.2</td></tr><tr><td>Топор (<code>axe</code>)</td><td>6.0</td><td>−3.1</td><td>9.0 / <strong>9.5</strong></td><td>0.9</td></tr><tr><td>Мотыга (<code>hoe</code>)</td><td>−2.0</td><td>−1.0</td><td>1.0 / <strong>1.5</strong></td><td>3.0</td></tr><tr><td>Лопата (<code>shovel</code>)</td><td>1.5</td><td>−3.0</td><td>4.5 / <strong>5.0</strong></td><td>1.0</td></tr><tr><td>Меч (<code>sword</code>)</td><td>3.0</td><td>−2.4</td><td>6.0 / <strong>6.5</strong></td><td>1.6</td></tr></tbody></table>
+<p>Общие для всех: прочность <strong>350</strong> (железо 250, +40%), скорость добычи <strong>7.0</strong> (железо 6.0), зачарование <strong>16</strong> (железо 14). Майнинг-уровень — железо (<code>needs_iron_tool</code>); кирка/топор/лопата/ мотыга не дают дроп с diamond-level блоков. Меч использует паутинную механику ванили (<code>sword</code> ставит <code>Weapon</code>-компонент + правила мгновенной добычи паутины).</p>
+<h2>Рецепты</h2>
+<p>Все пять — <code>minecraft:crafting_shaped</code>, <code>category: equipment</code>, vanilla-pattern соответствующего инструмента, вместо <code>iron_ingot</code> — <code>alaindustrial:tempered_iron</code>, рукоять — <code>minecraft:stick</code>:</p>
+<pre><code class="lang-">КИРКА (pickaxe) ТОПОР (axe) МОТЫГА (hoe) ЛОПАТА (shovel) МЕЧ (sword)
+III II II I I
+S S S S I
+S S I</code></pre>
+<p>Кирка: <code>III / S / S</code> — 3× <code>tempered_iron</code> + 2× <code>stick</code> Топор: <code>II / S / S</code> — 3× <code>tempered_iron</code> + 2× <code>stick</code> (зеркальный паттерн ванили) Мотыга: <code>II / S / S</code> — 2× <code>tempered_iron</code> + 2× <code>stick</code> (зеркальный паттерн ванили) Лопата: <code>I / S / S</code> — 1× <code>tempered_iron</code> + 2× <code>stick</code> Меч: <code>I / I / S</code> — 2× <code>tempered_iron</code> + 1× <code>stick</code> <strong>Ремонт</strong> — не рецепт, а общий тег <code>data/alaindustrial/tags/item/tempered_iron_tool_materials.json</code> (значение <code>alaindustrial:tempered_iron</code>). Любой из пяти инструментов чинится в наковальне 1 закалённым железом.</p>
+<h2>Поведение</h2>
+<p><strong>Добыча (кирка/топор/лопата/мотыга):</strong> копают блоки соответствующего ванильного тега (<code>mineable/pickaxe</code> / <code>mineable/axe</code> / <code>mineable/shovel</code> / <code>mineable/hoe</code>) со скоростью материала 7.0. Diamond-level блоки (тег <code>minecraft:incorrect_for_iron_tool</code>) роняются без дропа — идентично железным инструментам. <strong>Топор:</strong> дополнительно — снятие коры (stripping), воспламенение (правый клик по дереву), разрушение деревянных блоков быстрее. Поведение ванильного топора через <code>AxeItem.useOn</code> (подкласс сохранён в 26.2, в отличие от <code>PickaxeItem</code>/<code>SwordItem</code>). <strong>Мотыга:</strong> вспашка земли, сбор урожая, ванильные способности hoe через <code>HoeItem.useOn</code>. <strong>Лопата:</strong> формирование тропинки (path), тушение костра через <code>ShovelItem.useOn</code>. <strong>Меч:</strong> урон 6.5 (vs железо 6.0), мгновенная добыча паутины, отбрасывание (Weapon-компонент). <strong>Боёвка:</strong> урон каждого на +0.5 выше железного аналога (см. таблицу выше), скорость атаки идентична железу. Не требует EU/FE — чисто ванильная механика износа. <strong>Прочность:</strong> 350 (на 100 больше железа). Расходуется за добычу и удары. <strong>Зачарование:</strong> enchantmentValue 16 (железо 14) — материал «чуть лучше ловит чары». Инструменты добавлены в membership-теги <code>#minecraft:{pickaxes,axes,hoes,shovels,swords}</code>, поэтому через цепочку enchantable-тегов (<code>#minecraft:enchantable/{mining,weapon,durability}</code>) зачаровывающий стол предлагает полный набор ванильных чар — см. <a href="index.html#совместимость">Совместимость</a>. <strong>Ремонт:</strong> в наковальне закалённым железом через общий ремонт-тег.</p>
+<h2>Прогрессия</h2>
+<p>Тир: none (ручные инструменты, не привязаны к EnergyTier мода). Занимают слот между ванильными железными и алмазными инструментами: по прочности/скорости ближе к железу, не перекрывают алмаз по доступу к блокам. Появляются на Фазе 1, как только игрок начинает массово переплавлять железо в закалённое — естественный апгрейд до первой алмазной экипировки.</p>
+<h2>Совместимость</h2>
+<p>Просмотрщики рецептов: JEI, REI, EMI — как обычные предметы с крафтом. Зачарования: проектные — все ванильные (<code>efficiency</code>, <code>unbreaking</code>, <code>fortune</code>, <code>silk_touch</code>, <code>sharpness</code>, <code>mending</code> и т.д.) как стандартные наборы для каждого типа инструмента. Инструменты добавлены в membership-теги <code>#minecraft:{pickaxes,axes,hoes,shovels,swords}</code> (5 JSON <code>data/minecraft/tags/item/*.json</code>, <code>replace: false</code> — , по аналогии с бронёй ). По цепочке enchantable-тегов (<code>#minecraft:enchantable/{mining,weapon,durability}</code>) зачаровывающий стол предлагает полный набор: кирка/топор/лопата/мотыга — <code>efficiency</code>/<code>unbreaking</code>/<code>fortune</code>/<code>silk_touch</code>/<code>mending</code>; меч — <code>sharpness</code>/<code>looting</code>/<code>fire_aspect</code>/<code>unbreaking</code>/<code>mending</code>. Advancement <code>minecraft:story/iron_tools</code> срабатывает на крафте кирки. Причина, по которой теги нужны отдельным JSON: <code>Item.Properties.{pickaxe,axe,hoe,shovel,sword}(...)</code> в MC 26.2 ставят только <code>Tool</code>-компонент майнинга и <strong>не</strong> регистрируют предмет в теге (подтверждено <code>javap -c</code>); <code>ENCHANTABLE</code>-компонент выставляется через <code>ToolMaterial.applyCommonProperties</code> → <code>Properties.enchantable(enchantmentValue)</code>, но фильтр стола идёт по <code>supported_items</code> → тегам, не по компоненту. Ремонт в наковальне работает через <code>tempered_iron_tool_materials</code> независимо от membership-тегов.</p>
+<h2>Баланс</h2>
+<p>См. <a href="index.html#характеристики-баланс">таблицу выше</a>. Дизайн-цель: «немного лучше железа, заметно слабее алмаза, не ломает ванильную прогрессию по доступу к блокам». См.  — почему числа не вынесены в `C.</p>
+<h2>Связанное</h2>
+<p><a href="tempered_iron_pickaxe.html">Кирка из закалённого железа</a> — отдельная спека кирки (первый инструмент). <a href="../components/tempered_iron.html">Закалённое железо</a> — материал крафта и ремонта всех пяти.  — задача реализации линейки. Ванильные железные инструменты — базовая линия баланса.</p>
+
+  </main>
+</div>
+
+</body>
+</html>

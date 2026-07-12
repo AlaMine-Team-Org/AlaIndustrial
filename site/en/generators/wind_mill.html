@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Wind Turbine — Ala Industrial — Guide</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:16px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:12px 14px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; }
+  .recipe-body { display:grid; grid-template-columns:auto 24px minmax(90px,1fr); align-items:center; gap:9px; }
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); gap:2px; }
+  .recipe-processing { display:contents; }
+  .recipe-processing .ingredients { display:flex; gap:2px; flex-wrap:wrap; max-width:160px; }
+  .arrow { font-size:18px; color:var(--muted); font-family:'VT323',monospace; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .cell { width:36px; height:36px; background:var(--bg); border:1px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    position:relative; image-rendering:pixelated; }
+  .cell.empty { background:transparent; border-color:transparent; }
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:28px; height:28px; image-rendering:pixelated; }
+  .cell.result { border-color:var(--gold); }
+  .cell .count { position:absolute; bottom:-3px; right:-3px; background:var(--bg);
+    border:1px solid var(--line2); font-size:12px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; }
+  .result-name { font-size:13px; color:var(--muted); text-align:center; max-width:120px;
+    font-family:'VT323',monospace; }
+  .ricon.placeholder { font-size:12px; color:var(--muted2); }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; align-items:flex-start; gap:14px; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:4px; flex-wrap:wrap; }
+  .block-card .tag { display:inline-block; font-size:15px; padding:1px 6px;
+    border:1px solid var(--line2); color:var(--txt); background:var(--bg2);
+    font-family:'VT323',monospace; }
+  .block-card .tag.cat { font-family:'Press Start 2P',monospace; font-size:8px;
+    border:none; color:var(--bg); padding:3px 6px; }
+  .block-card .tag.tier { color:var(--gold); border-color:var(--gold); }
+  .block-card .tag.lifecycle { font-family:'Press Start 2P',monospace; font-size:8px;
+    border:none; color:var(--bg); padding:3px 6px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="Open menu" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../../ru/generators/wind_mill.html">RU</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Browse</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>Getting Started</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
+<div class="group-title">Energy</div>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="1 page">1</span></a>
+<div class="group-title">Processing</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<div class="group-title">World &amp; Automation</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<div class="group-title">Other</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<div class="group-title">Items</div>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="3 pages">3</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../generators/index.html">Generators</a><span class="sep">/</span><span>Wind Turbine</span></div>
+<div class="block-card">
+  <img class="icon" src="../assets/item/wind_mill_3d.png" alt="Wind Turbine" width="64" height="64">
+  <div class="info">
+    <h1>Wind Turbine</h1>
+    <div class="block-id">alaindustrial:wind_mill</div>
+    <div class="tags"><span class="tag cat" style="background:#f0b429">Generators</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implemented</span><span class="tag">tier-lv</span><span class="tag">energy</span><span class="tag">wind</span></div>
+  </div>
+</div>
+<h2>Summary</h2>
+<p>The Wind Turbine is a simple entry-level (LV) generator: it produces energy (EU/FE) from the wind, no fuel needed. It needs three things to work: a <strong>Wooden Rotor</strong> in its slot (no rotor — no generation), open sky above the block and <strong>free space around the blades</strong> (in front of the block, to the sides and a pit below — otherwise the blades hit the neighbouring blocks). The higher you build it and the worse the weather (rain, thunderstorm) — the more energy it makes. Over time the turbine can be upgraded: insert an <strong>evolution chip</strong> (the same one solar panels use) and it turns into the Sky Mill (stronger at altitude) or the Tempest Mill (stronger in bad weather). The Wind Turbine rewards players who build high and aren't afraid of storms.</p>
+<h3>Quick start (cheat sheet)</h3>
+<ol><li>Craft the <strong>Wind Turbine</strong> and a <strong>Wooden Rotor</strong> (recipes are at the bottom of the page).</li><li>Build a tall tower: below sea level (y = 63) the turbine doesn't work at all; it peaks at y ≈ 128.</li><li>Place the block and open it (right-click), insert the rotor into the central slot.</li><li>Make sure the sky above the block is open and the blade area (the block in front of the</li></ol>
+<p>turbine, one block to its left/right and three below it) contains only air.</p>
+<ol><li>Connect a cable <strong>to the back wall</strong> — the other sides don't output energy.</li></ol>
+<blockquote>For reference: one turbine at y ≈ 128 produces 4 EU/FE/t in clear weather and 8 EU/FE/t in a thunderstorm. The turbine has an internal buffer of 4000 EU/FE — if the energy isn't drained by a cable, generation pauses until there is room again.</blockquote>
+<p>Turbine not working? Check in this order: is the rotor in its slot → is there a roof above the block → is a block obstructing the blades → is a neighbouring turbine too close → is it calm (near the ground in clear weather the output is 0 — build higher).</p>
+<h2>Energy</h2>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>producer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>4000</td></tr><tr><td>Max input</td><td>— (does not accept energy)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>EU/FE/tick</td><td>0–8 (base 0–4 by altitude × weather multiplier, capped at 8)</td></tr></tbody></table>
+<p>Throughput: not applicable on the input side. LV output (≤32 EU/FE/packet). <strong>Faces:</strong> energy is emitted <strong>from the back face only</strong> — connect the cable to the turbine's back wall, the other sides don't output energy. Technically: a single axis, like the battery_box, but output-only (<code>FACING.getOpposite</code>). The back face carries a visual output port (the <code>battery_box_front</code> texture, shared with the Battery Box output face); the remaining faces use the turbine's machine textures.</p>
+<h2>Generation</h2>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Source</td><td>wind: altitude above sea level + open sky + weather</td></tr><tr><td>Working condition</td><td>rotor installed AND open sky above the block AND <strong>blade area is clear</strong> AND buffer not full</td></tr><tr><td>Dimensions</td><td>Overworld only (<code>minecraft:overworld</code>)</td></tr><tr><td>EU/FE/tick (base)</td><td><code>min((y − sea level) / 16, windMillMaxBaseEuPerTick)</code> = 0–4</td></tr><tr><td>Modifiers</td><td>weather: clear ×1, rain <code>windMillRainFactor</code> (1.5), thunder <code>windMillThunderFactor</code> (2.0); result capped at <code>windMillMaxEuPerTick</code> (8)</td></tr></tbody></table>
+<p><strong>Modes</strong> (shown in the GUI): <code>no_rotor</code> (no rotor → 0), <code>roofed</code> (roof → 0), <code>obstructed</code> (a block obstructs the blades → 0), <code>interference</code> (a neighbouring turbine's rotor overlaps ours → 0), <code>calm</code> (clear, base 0), <code>breeze</code> (clear, generation &gt; 0), <code>gale</code> (rain), <code>storm</code> (thunder). While the turbine is idle, an explanatory mode line is shown in the free central area of the GUI (no rotor / roofed / blocked / interference / calm); when the turbine is generating, the gear indicator lights up.</p>
+<h3>Blade clearance</h3>
+<p>Simple rule: the blades spin in the block <strong>in front of</strong> the turbine and occupy a 2×2 square. Keep clear the block in front of the turbine, one block to its left and right, and three blocks below it (the pit) — otherwise the turbine shows the "Blocked" mode and stops. Technical details. The rotor blades are a flat 2×2-block quad hovering 0.58 blocks in front of the facing side (<code>FACING</code>) and spinning around the <code>FACING</code> axis. The 0.58 offset pushes the disc past the mill block boundary (0.5 + 0.58 &gt; 1.0), so the entire spinning disc lives in the <strong>front block layer</strong> (<code>pos.relative(FACING)</code>) — not in the mill's own block. The blade tips (radius √2 ≈ 1.41) sweep:</p>
+<pre><code class="lang-">top view (FACING — north, ↑ — north)
+── z = -1: FRONT layer (the rotor spins here) ──
+[■][·][■] ← front sides: checked (blade tips horizontally)
+[■][·][■] ← below front: checked (centre + sides — the lower blade arc)
+↑
+front block (centre): the rotor lives here — checked
+═══════════════
+── z = 0: MILL layer ──
+[ WIND ] ← the mill itself (hull sides are NOT checked — the blade can't reach them)
+[ · ] = must be air/replaceable (grass, flowers, snow layer)
+[ ■ ] = obstructs (stone, glass, leaves, fence — any non-replaceable block)</code></pre>
+<p>6 positions are checked, all measured <strong>from the front block</strong>: <strong>front</strong> (1, centre), <strong>front sides</strong> (2, left/right), <strong>pit below the front</strong> (3, centre + both sides for the lower blade arc). The space above the front is NOT checked — a roof is caught by the open-sky check (<code>SolarSky.classify == CLEAR</code>), no need to duplicate it. A block counts as clear if it can be replaced (<code>canBeReplaced</code>): air, grass, flowers, saplings, snow layers; anything with a real collider obstructs — stone, glass, leaves, fences, slabs, the turbine's own support pillar. The logic lives in <code>WindMillClearance.hasObstruction(level, pos, facing)</code>, shared by all three turbines.</p>
+<h3>Rotor interference</h3>
+<p>Simple placement rules for multiple turbines: Facing the same way and standing side by side — leave <strong>1 block of air</strong> between them; placed right next to each other their blades collide and <strong>both stop</strong>. Back to back — can be placed right next to each other. Face to face — need at least 2 blocks between them. Technical details. The discs of two turbines must not overlap. Every turbine of the family (T1 / sky / tempest) with an installed rotor carries a 2×2-block disc in front of its facing side (centre ~1.08 blocks from the block centre along <code>FACING</code>). If another turbine's disc <strong>with a rotor</strong> overlaps ours (the check is an AABB intersection of the two discs: ±1.0 in the rotation plane, ±0.1 along the <code>FACING</code> axis), <strong>both</strong> turbines stop (mode <code>interference</code>, output 0 — both stop, no exceptions), and the blades are hidden in the renderer — otherwise the overlapping quads would clip into each other and flicker (z-fighting). Rules and consequences: A neighbour <strong>without a rotor</strong> causes no interference (there is no disc); installing a rotor into a neighbouring turbine also stops an already-running one — within the sampling window (<code>windMillSampleTicks</code>). Even a <strong>stationary</strong> neighbouring rotor counts (it overlaps visually all the same). Side-by-side turbines with the same <code>FACING</code> are already compatible <strong>with 1 block of air</strong> between them: the discs touch edge-to-edge, which is not an overlap. Right next to each other — interference. Turbines facing opposite directions can be placed right next to each other: the discs are on opposite sides. "Face to face" with 1 block between them — interference (the discs meet in the shared column); right next to each other face to face — that's already <code>obstructed</code> (the disc lands inside the neighbour's solid block, caught by <code>WindMillClearance</code>). The check runs on the sampling tick, scanning 7×7×7 around the block; a neighbour in an unloaded chunk counts as "no rotor" until loaded. The logic is <code>WindMillInterference.hasInterference</code>, shared by all three turbines. Stop-reason priority: <strong>no rotor → roof → obstruction → interference → weather</strong>. Obstruction beats weather: even in a full thunderstorm a block in front of the blades (or a foreign rotor in the disc) stops generation (and chip evolution doesn't progress either — the blades must spin). Altitude/sky/weather are recalculated not every tick but once per <code>windMillSampleTicks</code> (40) — between samples the turbine outputs the cached rate. Weather is read from the world directly (<code>isRaining</code>/<code>isThundering</code>), the sky — by checking the open column above the block (<code>SolarSky.classify == CLEAR</code>).</p>
+<h2>Inventory</h2>
+<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>rotor</td><td>Wooden Rotor (<code>windmill_rotor</code>) — required for generation</td><td>1</td></tr><tr><td>chip</td><td>evolution chip (solar/lunar) — starts the evolution</td><td>1</td></tr></tbody></table>
+<h2>Interface</h2>
+<p>Type: container Shows: energy bar (tooltip with exact EU/FE on hover), current output, working mode, rotor slot (centre), chip slot (right), evolution progress (bottom), status indicator (top). Implementation: <code>WindMillScreen</code> + <code>WindMillMenu</code>, texture-backed <code>assets/alaindustrial/textures/gui/container/wind_mill.png</code>. The evolution track shows <strong>at least 1px</strong> from the first active tick — same as the solar panel.</p>
+<h2>Block properties</h2>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Placement</td><td>facing the player (FACING)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Drops with energy NBT</td><td>yes — the block keeps its stored energy when broken</td></tr></tbody></table>
+<h2>Recipes</h2>
+<p>Crafting: <code>data/alaindustrial/recipe/wind_mill.json</code> — 4× copper ingot (corners), 2× planks (<code>#minecraft:planks</code>, top/bottom), 2× <code>alaindustrial:copper_cable</code> (sides), <code>alaindustrial:wooden_gear</code> (centre). Rotor (required for operation): <code>data/alaindustrial/recipe/windmill_rotor.json</code> — 4× planks (corners), 2× iron ingot (top/bottom), 2× <code>alaindustrial:copper_cable</code> (sides), <code>alaindustrial:wooden_gear</code> (centre). Processing recipes: none (generator).</p>
+<h2>Progression</h2>
+<p>The basic turbine is the neutral T1 form. With an <strong>evolution chip</strong> (shared with solar panels) + accumulated active open-sky time (rotor installed) it evolves into one of the branches, keeping its NBT (energy): <strong>Solar Evolution Chip</strong> (<code>alignment_chip_day</code>) → Sky branch: altitude boost. <strong>Lunar Evolution Chip</strong> (<code>alignment_chip_night</code>) → Tempest branch: bad-weather boost.</p>
+<table><thead><tr><th>Tier</th><th>Solar chip (altitude)</th><th>Lunar chip (storm)</th></tr></thead><tbody><tr><td>T1</td><td>Wind Turbine (neutral)</td><td>Wind Turbine (neutral)</td></tr><tr><td>T2</td><td>Sky Mill</td><td>Tempest Mill</td></tr></tbody></table>
+<p>Threshold: <code>Config.windMillEvolveTicks</code> = <strong>33,600</strong> active ticks (rotor + chip + open sky). With continuous clear weather that's ≈28 real minutes (≈3 in-game days).</p>
+<h2>Balance</h2>
+<p>Altitude base: +1 EU/FE/t per 16 blocks above sea level, capped at <code>windMillMaxBaseEuPerTick</code> = 4 (reached at roughly y ≈ 128). Weather multiplies the base up to <code>windMillMaxEuPerTick</code> = 8 in a thunderstorm. Near the ground and in clear weather the turbine is weak (0–1 EU/FE/t) — it rewards tall towers and storms. The 8 EU/FE/t peak briefly beats the <a href="geothermal_generator.html">Geothermal Generator</a> (16 EU/FE/t runs constantly — the turbine only during a storm, and not for long), complementing fuel-based sources rather than replacing them.</p>
+<table><thead><tr><th>Config key</th><th>Value</th><th>Applies to</th></tr></thead><tbody><tr><td><code>windMillMaxBaseEuPerTick</code></td><td>4</td><td>altitude base cap</td></tr><tr><td><code>windMillMaxEuPerTick</code></td><td>8</td><td>final EU/FE/t cap</td></tr><tr><td><code>windMillRainFactor</code></td><td>1.5</td><td>rain multiplier</td></tr><tr><td><code>windMillThunderFactor</code></td><td>2.0</td><td>thunder multiplier</td></tr><tr><td><code>windMillSampleTicks</code></td><td>40</td><td>recalculation rate</td></tr><tr><td><code>windMillBuffer</code></td><td>4000</td><td>buffer capacity</td></tr><tr><td><code>windMillEvolveTicks</code></td><td>33,600</td><td>evolution threshold (~28 real minutes)</td></tr></tbody></table>
+<h2>Open questions</h2>
+<p>(Closed) Weather: rain ×1.5, thunder ×2 — thunder is distinct from rain (<code>isThundering</code>). (Closed) Sky: an open column above the block is required; under a roof = 0. (Closed) Sampling rate: once per 40 ticks, cached between samples. (Closed) Blade clearance: 6 positions around the block (front + 2 sides + a 3-block pit below) must be clear; a roof above is caught by the separate sky check. Obstruction = a non-<code>canBeReplaced</code> block. Future: rotor wear (the rotor is currently everlasting — groundwork for the mechanic).</p>
+<h2>Related</h2>
+<p>Sky Mill — T2 sky evolution branch. Tempest Mill — T2 tempest evolution branch. <a href="solar_panel.html">Solar Panel</a> — shares evolution chips with the turbine.</p>
+<h2>Crafting</h2>
+<div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Copper Ingot" aria-label="Copper Ingot"><span>copper </span></div> <div class="cell placeholder" title="planks (tag)" aria-label="planks (tag)"><span>planks</span></div> <div class="cell placeholder" title="Copper Ingot" aria-label="Copper Ingot"><span>copper </span></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="28" height="28"></div> <div class="cell" title="Wooden Gear"><img src="../assets/item/wooden_gear.png" alt="Wooden Gear" width="28" height="28"></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="28" height="28"></div> <div class="cell placeholder" title="Copper Ingot" aria-label="Copper Ingot"><span>copper </span></div> <div class="cell placeholder" title="planks (tag)" aria-label="planks (tag)"><span>planks</span></div> <div class="cell placeholder" title="Copper Ingot" aria-label="Copper Ingot"><span>copper </span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Wind Turbine"><img src="../assets/block/wind_mill_top.png" alt="Wind Turbine" width="28" height="28"></div><div class="result-name">Wind Turbine</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

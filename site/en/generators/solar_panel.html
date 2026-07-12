@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Solar Panel — Ala Industrial — Guide</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:16px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:12px 14px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; }
+  .recipe-body { display:grid; grid-template-columns:auto 24px minmax(90px,1fr); align-items:center; gap:9px; }
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); gap:2px; }
+  .recipe-processing { display:contents; }
+  .recipe-processing .ingredients { display:flex; gap:2px; flex-wrap:wrap; max-width:160px; }
+  .arrow { font-size:18px; color:var(--muted); font-family:'VT323',monospace; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .cell { width:36px; height:36px; background:var(--bg); border:1px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    position:relative; image-rendering:pixelated; }
+  .cell.empty { background:transparent; border-color:transparent; }
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:28px; height:28px; image-rendering:pixelated; }
+  .cell.result { border-color:var(--gold); }
+  .cell .count { position:absolute; bottom:-3px; right:-3px; background:var(--bg);
+    border:1px solid var(--line2); font-size:12px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; }
+  .result-name { font-size:13px; color:var(--muted); text-align:center; max-width:120px;
+    font-family:'VT323',monospace; }
+  .ricon.placeholder { font-size:12px; color:var(--muted2); }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; align-items:flex-start; gap:14px; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:4px; flex-wrap:wrap; }
+  .block-card .tag { display:inline-block; font-size:15px; padding:1px 6px;
+    border:1px solid var(--line2); color:var(--txt); background:var(--bg2);
+    font-family:'VT323',monospace; }
+  .block-card .tag.cat { font-family:'Press Start 2P',monospace; font-size:8px;
+    border:none; color:var(--bg); padding:3px 6px; }
+  .block-card .tag.tier { color:var(--gold); border-color:var(--gold); }
+  .block-card .tag.lifecycle { font-family:'Press Start 2P',monospace; font-size:8px;
+    border:none; color:var(--bg); padding:3px 6px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="Open menu" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../../ru/generators/solar_panel.html">RU</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Browse</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>Getting Started</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
+<div class="group-title">Energy</div>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="1 page">1</span></a>
+<div class="group-title">Processing</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<div class="group-title">World &amp; Automation</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<div class="group-title">Other</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<div class="group-title">Items</div>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="3 pages">3</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../generators/index.html">Generators</a><span class="sep">/</span><span>Solar Panel</span></div>
+<div class="block-card">
+  <img class="icon" src="../assets/item/solar_panel_3d.png" alt="Solar Panel" width="64" height="64">
+  <div class="info">
+    <h1>Solar Panel</h1>
+    <div class="block-id">alaindustrial:solar_panel</div>
+    <div class="tags"><span class="tag cat" style="background:#f0b429">Generators</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implemented</span><span class="tag">tier-lv</span><span class="tag">energy</span><span class="tag">solar</span></div>
+  </div>
+</div>
+<h2>Summary</h2>
+<p>The Solar Panel is <strong>the mod's starter generator</strong> and the player's first source of EU/FE. During the day, with clear sky above, it produces EU/FE into an internal buffer and releases it to neighbours (cable, Battery Box, machines). The base panel is neutral and can evolve into either the day or the night branch via an evolution chip. Starter progression: Solar Panel → <a href="../energy-transfer/copper_cable.html">Copper Cable</a> → <a href="../energy-storage/battery_box.html">Battery Box</a> → <a href="../machines/macerator.html">Macerator</a>.</p>
+<h2>Energy</h2>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>producer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>8000</td></tr><tr><td>Max input</td><td>n/a (does not accept energy)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>20 (LV)</td></tr><tr><td>EU/FE/tick (base)</td><td>1 (day, clear sky, open sky above)</td></tr></tbody></table>
+<p>Throughput: not applicable on the input side. LV output (≤32 EU/FE/packet) — safe to feed an LV network. Energy is emitted in 5 directions (north/south/east/west/down); <strong>the top face is the working surface</strong> and does not emit energy.</p>
+<h2>Generation</h2>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Source</td><td>sunlight</td></tr><tr><td>Working condition</td><td>daytime AND open sky above the block</td></tr><tr><td>Dimensions</td><td>minecraft:overworld</td></tr><tr><td>EU/FE/tick (clear)</td><td>1</td></tr><tr><td>Translucent block above the panel (leaves, cobweb)</td><td>×<code>solarTransparentFactor</code> (0.5) — MODE_PARTIAL</td></tr><tr><td>Glass above the panel</td><td>no reduction (fully transparent) — MODE_DAY</td></tr><tr><td>Snow layer (<code>minecraft:snow</code>) above the panel</td><td><code>max(1, round(solarSnowFactor × 1))</code> = 1 EU/FE/tick — MODE_SNOW</td></tr><tr><td>Rain</td><td>0 — MODE_WEATHER (rain blocks direct light)</td></tr><tr><td>Snowfall (cold biome: <code>level.isRaining</code> + precipitation = snow)</td><td><code>max(1, round(solarSnowFactor × 1))</code> = 1 EU/FE/tick — MODE_SNOW</td></tr><tr><td>Thunder</td><td>0 — MODE_WEATHER</td></tr><tr><td>Night</td><td>0</td></tr></tbody></table>
+<p><strong>Sky modes</strong> (priority top-down: WEATHER &gt; NIGHT &gt; SNOW &gt; BLOCKED &gt; PARTIAL &gt; DAY):</p>
+<table><thead><tr><th>Mode</th><th>Condition</th><th>EU/FE/tick</th></tr></thead><tbody><tr><td>MODE_WEATHER</td><td>active rain or thunder</td><td>0</td></tr><tr><td>NIGHT</td><td>night time</td><td>0</td></tr><tr><td>MODE_SNOW</td><td>snowfall in biome OR snow layer above the panel</td><td><code>max(1, round(solarSnowFactor × base))</code> = 1 (floored at 1 EU/FE/t so it never rounds to 0)</td></tr><tr><td>MODE_BLOCKED</td><td>opaque block above the panel</td><td>0</td></tr><tr><td>MODE_PARTIAL</td><td>translucent block (leaves, cobweb)</td><td><code>solarTransparentFactor</code> × base (0.5)</td></tr><tr><td>MODE_DAY</td><td>day, clear sky (including glass above the panel)</td><td>base (1)</td></tr></tbody></table>
+<p>When the buffer is full, generation may continue with the excess discarded (<code>use-it-or-lose-it</code>).</p>
+<h2>Inventory</h2>
+<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>upgrade_chip</td><td>evolution chip (day/night)</td><td>1</td></tr><tr><td>energy_item</td><td>portable EU/FE carrier (optional, charges from the panel)</td><td>1</td></tr></tbody></table>
+<h2>Interface</h2>
+<p>Type: container Shows: energy storage, generation rate, sky state, branch, evolution progress, chip slot The static background contains only the panel, an empty energy bar, an empty evolution track, the chip slot and the player inventory/hotbar. Filled energy, evolution progress and all text labels are drawn by runtime code on top of the background. The evolution track shows a <strong>minimum of 1px</strong> from the first active tick (<code>evolveProgress &gt; 0</code>): at the 33 600-tick threshold a proportional fill would otherwise round to 0px for the first ~22s and read as "not working". The pixel appears only when the server is actually counting progress (correct chip, correct time of day, open sky) — at the wrong time of day the bar stays empty.</p>
+<h2>Block Properties</h2>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>low-profile panel (8px slab), <code>noOcclusion</code></td></tr><tr><td>Placement</td><td>on top of a horizontal block, working face up</td></tr><tr><td>Hardness</td><td>5.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Drops with NBT energy</td><td>true</td></tr></tbody></table>
+<h2>Recipes</h2>
+<p>Crafting: <code>data/alaindustrial/recipe/solar_panel.json</code> (photocells + casing + cable) Processing recipes: none (it's a generator)</p>
+<h3>Recipe viewer (REI / JEI,</h3>
+<p>The base solar panel is craftable, so pressing <strong>R</strong> on it shows the ordinary crafting recipe — it needs no informational page. The T2 branches (<code>daylight</code>/<code>moonlit</code>), however, are obtained by <strong>evolution</strong> and have no recipe; pressing <strong>R</strong> on them opens an informational page describing how they are obtained instead: <strong>Fabric (REI):</strong> a custom category <code>alaindustrial:evolution_info</code> (<code>AlaInfoCategory</code> + <code>AlaInfoDisplay</code>, <code>fabric/.../compat/rei/</code>). The display carries the owning item as its output ingredient so REI's R-key lookup finds it; no server sync is needed (<code>getSerializer</code> → <code>null</code>, the display is built by the client plugin). Long lines are word-wrapped via <code>StringSplitter.splitLines</code> (REI's <code>Label</code> does not wrap on its own). <strong>NeoForge (JEI):</strong> the built-in <code>addIngredientInfo(ItemLike, Component...)</code> — JEI renders the page with automatic line wrapping and pagination (<code>neoforge/.../compat/jei/AlaJeiPlugin</code>). The description source for both loaders is the shared <code>common/.../client/RecipeViewerI: a list of entries (owning item + lang keys + values from </code>Config<code>). Branch EU/FE/t values are injected into the lang strings via </code>%s<code> at build time, never hardcoded. Lang keys live under </code>jei.alaindustrial.{daylight_solar_panel,moonlit_solar_panel}.*<code> (</code>lang/en_us.json<code>, </code>lang/ru_ru.json<code>). The base </code>solar_panel` is intentionally excluded from the entry list.</p>
+<h2>Progression</h2>
+<p>The base panel is a neutral tier-1 form. Through an <strong>evolution chip</strong> + accumulated active working time at the correct time of day, it evolves into one of the branches while keeping NBT (energy, progress, name): Solar Path (day): works during the day, not at night. Lunar Path (night): works at night, not during the day.</p>
+<table><thead><tr><th>Tier</th><th>Solar Path (day)</th><th>Lunar Path (night)</th></tr></thead><tbody><tr><td>T1</td><td>Solar Panel (neutral)</td><td>Solar Panel (neutral)</td></tr><tr><td>T2</td><td><a href="daylight_solar_panel.html">Daylight Solar Panel</a></td><td><a href="moonlit_solar_panel.html">Moonlit Solar Panel</a></td></tr><tr><td>T3</td><td>Radiant Solar Panel</td><td>Umbral Solar Panel</td></tr><tr><td>T4</td><td>Zenith Solar Panel</td><td>Eclipse Solar Panel</td></tr></tbody></table>
+<p>The active-time counter grows only on the server, with open sky, during the branch's active time of day, and while generation is &gt; 0. Threshold: <strong>33 600</strong> active ticks (default) — i.e. ticks when the chip sees <em>its</em> half of the day (day for a day chip, night for a night chip). Since each half-day gives ~12 000 counted ticks, the threshold corresponds to <strong>~2.8 full active half-days</strong> (not 2.8 full in-game days — only the "own" half is counted). With continuous clear weather this is ≈28 real minutes of play and ≈3 in-game days of calendar time (evolution does not progress during rain/thunder — bad weather stretches it out).</p>
+<h2>Related</h2>
+<p><a href="../energy-transfer/copper_cable.html">Copper Cable</a> — transmits the produced EU/FE. <a href="../energy-storage/battery_box.html">Battery Box</a> — stores day-time EU/FE for the night. <a href="../machines/macerator.html">Macerator</a> — the first consumer in the starter chain.</p>
+<h2>Crafting</h2>
+<div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Glass" aria-label="Glass"><span>glass</span></div> <div class="cell placeholder" title="Glass" aria-label="Glass"><span>glass</span></div> <div class="cell placeholder" title="Glass" aria-label="Glass"><span>glass</span></div> <div class="cell placeholder" title="Redstone" aria-label="Redstone"><span>redston</span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="28" height="28"></div> <div class="cell placeholder" title="Redstone" aria-label="Redstone"><span>redston</span></div> <div class="cell placeholder" title="Iron Ingot" aria-label="Iron Ingot"><span>iron in</span></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="28" height="28"></div> <div class="cell placeholder" title="Iron Ingot" aria-label="Iron Ingot"><span>iron in</span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Solar Panel"><img src="../assets/item/solar_panel_3d.png" alt="Solar Panel" width="28" height="28"></div><div class="result-name">Solar Panel</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Батарейный мешок — Ala Industrial — Гайд</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:16px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:12px 14px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; }
+  .recipe-body { display:grid; grid-template-columns:auto 24px minmax(90px,1fr); align-items:center; gap:9px; }
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); gap:2px; }
+  .recipe-processing { display:contents; }
+  .recipe-processing .ingredients { display:flex; gap:2px; flex-wrap:wrap; max-width:160px; }
+  .arrow { font-size:18px; color:var(--muted); font-family:'VT323',monospace; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .cell { width:36px; height:36px; background:var(--bg); border:1px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    position:relative; image-rendering:pixelated; }
+  .cell.empty { background:transparent; border-color:transparent; }
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:28px; height:28px; image-rendering:pixelated; }
+  .cell.result { border-color:var(--gold); }
+  .cell .count { position:absolute; bottom:-3px; right:-3px; background:var(--bg);
+    border:1px solid var(--line2); font-size:12px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; }
+  .result-name { font-size:13px; color:var(--muted); text-align:center; max-width:120px;
+    font-family:'VT323',monospace; }
+  .ricon.placeholder { font-size:12px; color:var(--muted2); }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; align-items:flex-start; gap:14px; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:4px; flex-wrap:wrap; }
+  .block-card .tag { display:inline-block; font-size:15px; padding:1px 6px;
+    border:1px solid var(--line2); color:var(--txt); background:var(--bg2);
+    font-family:'VT323',monospace; }
+  .block-card .tag.cat { font-family:'Press Start 2P',monospace; font-size:8px;
+    border:none; color:var(--bg); padding:3px 6px; }
+  .block-card .tag.tier { color:var(--gold); border-color:var(--gold); }
+  .block-card .tag.lifecycle { font-family:'Press Start 2P',monospace; font-size:8px;
+    border:none; color:var(--bg); padding:3px 6px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="Открыть меню" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">RU</summary><div class="language-popover"><span>RU</span><a href="../../en/items/battery_pouch.html">EN</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Обзор</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>С чего начать</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
+<div class="group-title">Энергия</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<div class="group-title">Переработка</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="4 страницы">4</span></a>
+<div class="group-title">Мир и автоматизация</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="5 страниц">5</span></a>
+<div class="group-title">Прочее</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<div class="group-title">Предметы</div>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="4 страницы">4</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../items/index.html">Игровые предметы</a><span class="sep">/</span><span>Батарейный мешок</span></div>
+<div class="block-card">
+  <img class="icon" src="../assets/item/battery_pouch_3d.png" alt="Батарейный мешок" width="64" height="64">
+  <div class="info">
+    <h1>Батарейный мешок</h1>
+    <div class="block-id">alaindustrial:battery_pouch</div>
+    <div class="tags"><span class="tag cat" style="background:#d97706">Игровые предметы</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Реализовано</span><span class="tag">item</span><span class="tag">storage</span><span class="tag">energy</span><span class="tag">pouch</span></div>
+  </div>
+</div>
+<h2>Сводка</h2>
+<p>Батарейный мешок — переносное хранилище предметов с EU/FE-питанием, первый электро-предмет мода и фундамент «item energy core» (<code>ItemEnergy</code>) для будущих электро-инструментов и брони. Работает как ванильный bundle, но вдвое вместительнее (128 веса ≈ 2 стака) и требует заряда: пока внутри лежат предметы, мешок пассивно тратит 1 EU/FE/сек; при 0 EU/FE «замок» закрывается — нельзя ни положить, ни достать, пока мешок не зарядят в слоте <a href="../energy-storage/battery_box.html">Энергохранилища</a>. Заряд, содержимое и имя (наковальня) хранятся в data-компонентах и переживают дроп/смерть/перенос.</p>
+<h2>Энергия</h2>
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>потребитель-предмет (внутренний буфер, вне энергосети)</td></tr><tr><td>Буфер</td><td>2000 EU/FE (<code>lvPouchCapacity</code> — вместимость, <code>lvPouchBuffer</code> — буфер; см. Баланс)</td></tr><tr><td>Зарядка</td><td>слот Энергохранилища, ≤ 32 EU/FE/тик (потолок LV) → полный заряд ~3.2 с</td></tr><tr><td>Разряд</td><td>пассивный, 1 EU/FE/сек, ТОЛЬКО пока внутри есть предметы и мешок в инвентаре игрока</td></tr><tr><td>Компонент</td><td><code>alaindustrial:pouch_energy</code> (Long, persistent + networkSynchronized)</td></tr></tbody></table>
+<h2>Инвентарь</h2>
+<p>Не применимо (предмет). Стак: 1. Внутреннее хранилище — data-компонент <code>alaindustrial:pouch_contents</code> (список стеков), вместимость <strong>128 единиц веса</strong>; вес предмета = <code>64 / maxStackSize</code> (как ванильный bundle):</p>
+<table><thead><tr><th>Категория</th><th>maxStackSize</th><th>Вес 1 шт</th><th>Влезает в 128</th></tr></thead><tbody><tr><td>Блоки/ресурсы</td><td>64</td><td>1</td><td>128 шт (≈2 стака)</td></tr><tr><td>Жемчуг/снежки</td><td>16</td><td>4</td><td>32 шт</td></tr><tr><td>Инструменты/вёдра</td><td>1</td><td>64</td><td>2 шт</td></tr></tbody></table>
+<h2>Свойства блока</h2>
+<p>Не применимо (предмет).</p>
+<h2>Рецепты</h2>
+<p>Крафт: <code>data/alaindustrial/recipe/battery_pouch.json</code> — shaped 3×3 (кожаный корпус, оловянная застёжка, ванильный bundle в центре, электронная схема снизу):</p>
+<pre><code class="lang-">L T L L = minecraft:leather
+L B L T = alaindustrial:tin_ingot
+L C L B = minecraft:bundle
+C = alaindustrial:electronic_circuit</code></pre>
+<p>Плюс advancement <code>recipe_unlocked</code> (рецепт появляется в книге рецептов при получении всех ингредиентов: кожа, олово, схема, bundle).</p>
+<h2>Поведение</h2>
+<p><strong>Вставка:</strong> ПКМ стеком по мешку в инвентаре (<code>overrideOtherStackedOnMe</code>) или мешком по стеку в слоте (<code>overrideStackedOnOther</code>). Требует EU/FE &gt; 0. Авто-мёрдж: сначала доливает в уже лежащий неполный стек того же предмета, затем занимает новый вес. Остаток, не влезший по весу, остаётся в руке. Звук <code>minecraft:item.bundle.insert</code>. <strong>Извлечение:</strong> ПКМ мешком в воздухе (<code>use</code>) или ПКМ мешком по пустому слоту — достаётся <strong>целый верхний стек</strong> (LIFO по стекам; решение Q-EXT-1). Требует EU/FE &gt; 0 и непустое содержимое. Звук <code>minecraft:item.bundle.remove_one</code>. <strong>Замок:</strong> при 0 EU/FE обе операции отклоняются со звуком <code>minecraft:item.bundle.insert_fail</code>. Содержимое НЕ теряется — заперто до зарядки. <strong>Пассивный разряд:</strong> <code>inventoryTick</code> (server-only в 26.2, все слоты инвентаря игрока) — раз в 20 тиков −<code>lvPouchDrainPerSecond</code> EU/FE, только если внутри есть предметы и EU/FE &gt; 0. В сундуке / на земле / в слоте Энергохранилища НЕ разряжается (inventoryTick не вызывается). <strong>Индикация:</strong> item bar под иконкой = EU/FE-заряд, цвет <code>EnergyTier.LV.color</code> (0xFFD24A), виден всегда (позиция бара — ванильный рендер, x+2/ширина 13). Тултип: usage двумя пунктами-списком, заряд (при &lt;10% — предупреждение, при 0 — красное «разряжен»); плюс bundle-стайл визуальный блок (<code>PouchTooltip</code>/<code>PouchClientTooltip</code>): сетка ВСЕХ хранимых стеков (верхний — первым; 4 колонки, с 9+ стеков — 8) и шкала заполненности с цифрами «вес / 128». Компонент заряда собран с <code>ignoreSwapAnimation</code> — ежесекундный разряд не дёргает анимацию предмета в руке. Строка тира LV убрана — мешок позиционируется как тир-нейтральный потребительский предмет, заряд и item bar достаточны. <strong>Запреты:</strong> мешок нельзя вложить в мешок; вложение в ванильный bundle/шалкер разрешено (вес 64 / 1 слот соответственно). <strong>Rename:</strong> ванильная наковальня (<code>CUSTOM_NAME</code>) — специального кода нет. <strong>Дроп/смерть:</strong> компоненты persistent — заряд и содержимое сохраняются в предмете.</p>
+<h2>Прогрессия</h2>
+<p>Первый электро-предмет; линейка на будущее: MV (256 веса, фильтры), HV (512, линковка) — см. дизайн §9. Доступен после Энергохранилища (без него мешок не зарядить).</p>
+<h2>Совместимость</h2>
+<p>Просмотрщики: JEI, REI, EMI (как обычный предмет). Зарядка сторонними модами (TR Energy / NeoForge ) — вне scope MVP, мосты добавятся при появлении ≥2 электро-предметов.</p>
+<h2>Баланс</h2>
+<table><thead><tr><th>Параметр</th><th>Значение</th><th>Конфиг-ключ</th></tr></thead><tbody><tr><td>Вместимость (вес)</td><td><strong>128</strong></td><td><code>lvPouchCapacity</code></td></tr><tr><td>EU/FE-буфер</td><td><strong>2000</strong></td><td><code>lvPouchBuffer</code></td></tr><tr><td>Пассивный разряд</td><td><strong>1</strong> EU/FE/сек</td><td><code>lvPouchDrainPerSecond</code></td></tr></tbody></table>
+<p>2000 EU/FE / 1 EU/FE/сек = ~33 мин активного ношения — заметно дольше одной экспедиции; зарядка 2000 EU/FE при 32 EU/FE/т — ~63 тика.</p>
+<h2>Связанное</h2>
+<p><a href="../energy-storage/battery_box.html">Энергохранилище</a> — единственный способ зарядки (слот charge). <a href="../components/electronic_circuit.html">Электронная схема</a> — компонент крафта. <a href="../materials/tin.html">Олово</a> — застёжка в крафте. Задача  + дизайн-док + план реализации.</p>
+<h2>Крафт</h2>
+<div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Leather" aria-label="Leather"><span>leather</span></div> <div class="cell" title="Оловянный слиток"><img src="../assets/item/tin_ingot.png" alt="Оловянный слиток" width="28" height="28"></div> <div class="cell placeholder" title="Leather" aria-label="Leather"><span>leather</span></div> <div class="cell placeholder" title="Leather" aria-label="Leather"><span>leather</span></div> <div class="cell placeholder" title="Bundle" aria-label="Bundle"><span>bundle</span></div> <div class="cell placeholder" title="Leather" aria-label="Leather"><span>leather</span></div> <div class="cell placeholder" title="Leather" aria-label="Leather"><span>leather</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit.png" alt="Электронная схема" width="28" height="28"></div> <div class="cell placeholder" title="Leather" aria-label="Leather"><span>leather</span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Батарейный мешок"><img src="../assets/item/battery_pouch.png" alt="Батарейный мешок" width="28" height="28"></div><div class="result-name">Батарейный мешок</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>
