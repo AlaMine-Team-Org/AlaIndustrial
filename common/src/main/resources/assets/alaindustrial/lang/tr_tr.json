@@ -62,6 +62,8 @@
 	"item.alaindustrial.uranium_ingot": "Uranyum Külçesi",
 	"item.alaindustrial.network_analyzer": "Ağ Analizörü",
 	"item.alaindustrial.battery_pouch": "Pil Kesesi",
+	"item.alaindustrial.stock_display_frame": "Stok Gösterge Çerçevesi",
+	"entity.alaindustrial.stock_display_frame": "Stok Gösterge Çerçevesi",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
 	"gui.alaindustrial.water": "%1$s / %2$s mB",

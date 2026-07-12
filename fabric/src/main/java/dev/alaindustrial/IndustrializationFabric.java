@@ -86,6 +86,9 @@ public class IndustrializationFabric implements ModInitializer {
 		ModBlocks.init();
 		ModBlockEntities.init();
 		ModMenus.init();
+		// Entity types before items: the stock-display-frame item's constructor takes the resolved
+		// EntityType (MOD-066).
+		dev.alaindustrial.registry.ModEntities.init();
 		ModItems.init();
 		ModRecipes.init();
 		ModCriteria.init();

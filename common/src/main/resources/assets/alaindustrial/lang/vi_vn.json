@@ -66,6 +66,8 @@
 	"item.alaindustrial.uranium_ingot": "Thỏi Uranium",
 	"item.alaindustrial.network_analyzer": "Bộ phân tích mạng",
 	"item.alaindustrial.battery_pouch": "Túi pin",
+	"item.alaindustrial.stock_display_frame": "Khung hiển thị kho",
+	"entity.alaindustrial.stock_display_frame": "Khung hiển thị kho",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
 	"gui.alaindustrial.water": "%1$s / %2$s mB",

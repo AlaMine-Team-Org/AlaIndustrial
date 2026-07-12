@@ -93,6 +93,9 @@ public final class ModItems {
 	public static final Item URANIUM_INGOT = item("uranium_ingot");
 	public static final Item NETWORK_ANALYZER = networkAnalyzer("network_analyzer");
 	public static final Item BATTERY_POUCH = pouch("battery_pouch");
+	// Stock Display Frame (MOD-066). Referencing ModEntities here also triggers its eager class-init
+	// registration, so the EntityType exists before the item is constructed.
+	public static final Item STOCK_DISPLAY_FRAME = stockDisplayFrame("stock_display_frame");
 
 	// Block items.
 	public static final BlockItem GENERATOR_ITEM = blockItem("generator", ModBlocks.GENERATOR);
@@ -179,6 +182,13 @@ public final class ModItems {
 				new Item(new Item.Properties().humanoidArmor(ModArmorMaterials.TEMPERED_IRON, type).setId(key)));
 	}
 
+	private static Item stockDisplayFrame(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new dev.alaindustrial.item.StockDisplayFrameItem(ModEntities.STOCK_DISPLAY_FRAME,
+						new Item.Properties().setId(key)));
+	}
+
 	private static BlockItem blockItem(String path, Block block) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		BlockItem item = new BlockItem(block, new Item.Properties().useBlockDescriptionPrefix().setId(key));
@@ -212,6 +222,7 @@ public final class ModItems {
 					// Storage + cables
 					output.accept(BATTERY_BOX_ITEM);
 					output.accept(IRON_CHEST_ITEM);
+					output.accept(STOCK_DISPLAY_FRAME);
 					output.accept(COPPER_CABLE_ITEM);
 					// Ores + materials
 					output.accept(TIN_ORE_ITEM);
@@ -342,6 +353,7 @@ public final class ModItems {
 		ModContent.URANIUM_INGOT = () -> URANIUM_INGOT;
 		ModContent.NETWORK_ANALYZER = () -> NETWORK_ANALYZER;
 		ModContent.BATTERY_POUCH = () -> BATTERY_POUCH;
+		ModContent.STOCK_DISPLAY_FRAME_ITEM = () -> STOCK_DISPLAY_FRAME;
 
 		ModContent.GENERATOR_ITEM = () -> GENERATOR_ITEM;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = () -> GEOTHERMAL_GENERATOR_ITEM;

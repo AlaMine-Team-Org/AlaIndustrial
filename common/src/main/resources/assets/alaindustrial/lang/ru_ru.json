@@ -70,6 +70,8 @@
 	"item.alaindustrial.uranium_ingot": "Урановый слиток",
 	"item.alaindustrial.network_analyzer": "Сетевой анализатор",
 	"item.alaindustrial.battery_pouch": "Батарейный мешок",
+	"item.alaindustrial.stock_display_frame": "Рамка-индикатор",
+	"entity.alaindustrial.stock_display_frame": "Рамка-индикатор",
 	"tag.item.alaindustrial.macerable_iron": "Дробимое железо",
 	"tag.item.alaindustrial.macerable_coal": "Дробимый уголь",
 	"tag.item.alaindustrial.macerable_coal_item": "Дробимый уголь",

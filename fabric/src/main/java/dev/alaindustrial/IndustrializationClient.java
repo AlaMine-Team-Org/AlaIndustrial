@@ -83,6 +83,12 @@ public class IndustrializationClient implements ClientModInitializer {
 		BlockEntityRendererRegistry.register(ModBlockEntities.HIGH_ALTITUDE_WIND_MILL, WindMillRotorBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.STORM_WIND_MILL, WindMillRotorBlockEntityRenderer::new);
 
+		// Stock Display Frame (MOD-066): the mod's first entity renderer. Vanilla EntityRenderers.register
+		// is the path Fabric's own docs recommend (their EntityRendererRegistry is a thin legacy wrapper).
+		net.minecraft.client.renderer.entity.EntityRenderers.register(
+				dev.alaindustrial.registry.ModEntities.STOCK_DISPLAY_FRAME,
+				dev.alaindustrial.client.StockDisplayFrameRenderer::new);
+
 		Industrialization.LOGGER.info("Industrialization client initialized.");
 	}
 }

@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_1": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:wooden_gear" } ] } },
+    "has_item_2": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:silver_ingot" } ] } }
+  },
+  "requirements": [ [ "has_item_1", "has_item_2" ] ],
+  "rewards": {
+    "recipes": [ "alaindustrial:stock_display_frame" ]
+  }
+}

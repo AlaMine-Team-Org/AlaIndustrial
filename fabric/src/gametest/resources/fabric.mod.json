@@ -28,7 +28,8 @@
 			"dev.alaindustrial.gametest.CablePlacementGameTest",
 			"dev.alaindustrial.gametest.TemperedIronToolsGameTest",
 			"dev.alaindustrial.gametest.PouchGameTest",
-			"dev.alaindustrial.gametest.DemoStandGameTest"
+			"dev.alaindustrial.gametest.DemoStandGameTest",
+			"dev.alaindustrial.gametest.StockDisplayFrameGameTest"
 		]
 	}
 }

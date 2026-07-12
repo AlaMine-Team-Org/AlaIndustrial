@@ -5,6 +5,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -138,6 +139,13 @@ public final class ModContent {
 	public static Supplier<Item> URANIUM_INGOT = unbound("URANIUM_INGOT");
 	public static Supplier<Item> NETWORK_ANALYZER = unbound("NETWORK_ANALYZER");
 	public static Supplier<Item> BATTERY_POUCH = unbound("BATTERY_POUCH");
+	// Stock Display Frame (MOD-066) — placement item for the frame entity below.
+	public static Supplier<Item> STOCK_DISPLAY_FRAME_ITEM = unbound("STOCK_DISPLAY_FRAME_ITEM");
+
+	// --- Entity types ---
+	// Stock Display Frame (MOD-066) — the mod's first entity: an ItemFrame subclass that counts the
+	// container behind it. See docs/blocks/utility/stock_display_frame.md.
+	public static Supplier<EntityType<?>> STOCK_DISPLAY_FRAME = unbound("STOCK_DISPLAY_FRAME");
 
 	// --- Block items ---
 	public static Supplier<BlockItem> GENERATOR_ITEM = unbound("GENERATOR_ITEM");

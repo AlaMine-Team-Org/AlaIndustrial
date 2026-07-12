@@ -62,6 +62,8 @@
 	"item.alaindustrial.uranium_ingot": "우라늄 주괴",
 	"item.alaindustrial.network_analyzer": "네트워크 분석기",
 	"item.alaindustrial.battery_pouch": "배터리 주머니",
+	"item.alaindustrial.stock_display_frame": "재고 표시 액자",
+	"entity.alaindustrial.stock_display_frame": "재고 표시 액자",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
 	"gui.alaindustrial.water": "%1$s / %2$s mB",

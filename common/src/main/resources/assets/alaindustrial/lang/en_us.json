@@ -70,6 +70,8 @@
 	"item.alaindustrial.uranium_ingot": "Uranium Ingot",
 	"item.alaindustrial.network_analyzer": "Network Analyzer",
 	"item.alaindustrial.battery_pouch": "Battery Pouch",
+	"item.alaindustrial.stock_display_frame": "Stock Display Frame",
+	"entity.alaindustrial.stock_display_frame": "Stock Display Frame",
 	"tag.item.alaindustrial.macerable_iron": "Macerable Iron",
 	"tag.item.alaindustrial.macerable_coal": "Macerable Coal",
 	"tag.item.alaindustrial.macerable_coal_item": "Macerable Coal",

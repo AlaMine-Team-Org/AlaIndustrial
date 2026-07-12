@@ -6,9 +6,18 @@ run/
 runs/
 # but DO track manual test-session history (alamod-test writes here; alamod-sync commits it)
 !docs/testing/runs/
-# 3D block render working dirs (per-face source textures + 1024px block render);
-# only the flattened tools/*_3d.png at tools root are tracked (used by preview HTML)
+# 3D block render working dirs (per-face source textures + 1024px block render).
 tools/*_3d/
+# Unified 3D-render catalog (regenerated on demand by tools/gen_renders_3d.py).
+# Like site/ and build/, this is a derived artifact — the single source of truth
+# is the 16x16 game textures + the gen_*_3d.py scripts. The README is tracked
+# so the catalog's purpose / regen command are visible in the repo.
+# NOTE: must override the `tools/*_3d/` rule above — `renders_3d` happens to
+# match that pattern (renders + _3d). The `!dir` re-includes the directory so
+# git descends into it; then contents are ignored except README.
+!tools/renders_3d/
+tools/renders_3d/*
+!tools/renders_3d/README.md
 .idea/
 .vscode/
 # ZCode agent local state (plans, session data) — not source, do not publish.

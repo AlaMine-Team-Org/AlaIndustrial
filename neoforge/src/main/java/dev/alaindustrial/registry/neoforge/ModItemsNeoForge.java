@@ -106,6 +106,14 @@ public final class ModItemsNeoForge {
 			ITEMS.registerItem("network_analyzer", NetworkAnalyzerItem::new, p -> p.stacksTo(1));
 	public static final DeferredItem<PouchItem> BATTERY_POUCH =
 			ITEMS.registerItem("battery_pouch", PouchItem::new, p -> p.stacksTo(1));
+	// Stock Display Frame (MOD-066). The factory lambda runs during the ITEM RegisterEvent, by which
+	// point the ENTITY_TYPE register has already fired (vanilla registry order) — so resolving the
+	// entity-type holder here is safe, and never at static-init time.
+	public static final DeferredItem<dev.alaindustrial.item.StockDisplayFrameItem> STOCK_DISPLAY_FRAME_ITEM =
+			ITEMS.registerItem("stock_display_frame",
+					p -> new dev.alaindustrial.item.StockDisplayFrameItem(
+							ModEntitiesNeoForge.STOCK_DISPLAY_FRAME.get(), p),
+					Item.Properties::new);
 
 	// --- Block items ---
 	public static final DeferredItem<BlockItem> GENERATOR_ITEM =
@@ -218,6 +226,7 @@ public final class ModItemsNeoForge {
 		ModContent.NETWORK_ANALYZER = NETWORK_ANALYZER::get;
 		// Same invariant-generics story as NETWORK_ANALYZER above.
 		ModContent.BATTERY_POUCH = BATTERY_POUCH::get;
+		ModContent.STOCK_DISPLAY_FRAME_ITEM = STOCK_DISPLAY_FRAME_ITEM::get;
 
 		ModContent.GENERATOR_ITEM = GENERATOR_ITEM;
 		ModContent.SOLAR_PANEL_ITEM = SOLAR_PANEL_ITEM;

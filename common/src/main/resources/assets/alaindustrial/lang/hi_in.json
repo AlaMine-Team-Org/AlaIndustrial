@@ -62,6 +62,8 @@
 	"item.alaindustrial.uranium_ingot": "यूरेनियम का पिंड",
 	"item.alaindustrial.network_analyzer": "नेटवर्क विश्लेषक",
 	"item.alaindustrial.battery_pouch": "बैटरी थैली",
+	"item.alaindustrial.stock_display_frame": "स्टॉक प्रदर्शन फ्रेम",
+	"entity.alaindustrial.stock_display_frame": "स्टॉक प्रदर्शन फ्रेम",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
 	"gui.alaindustrial.water": "%1$s / %2$s mB",

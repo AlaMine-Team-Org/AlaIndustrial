@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "G": "alaindustrial:gold_dust",
+    "W": "alaindustrial:wooden_gear",
+    "S": "alaindustrial:silver_ingot",
+    "F": "minecraft:item_frame"
+  },
+  "pattern": [
+    "GWG",
+    "SFS",
+    "GWG"
+  ],
+  "result": {
+    "id": "alaindustrial:stock_display_frame"
+  }
+}

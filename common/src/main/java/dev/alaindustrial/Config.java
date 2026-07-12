@@ -126,6 +126,11 @@ public final class Config {
 	 * pouch locks (no insert, no extract) until recharged in the Battery Box slot. */
 	public static int lvPouchDrainPerSecond = 1;
 
+	// --- Stock Display Frame (MOD-066, no energy) ---
+	/** How often (ticks) a stock display frame rescans the container behind it. 20 = once a second;
+	 * a 100-frame warehouse costs ~5 container sums per tick at the default. */
+	public static int stockFrameScanIntervalTicks = 20;
+
 	// --- Machines: shared EU/tick + per-machine duration (ticks) -> E_op = euPerTick × duration ---
 	public static int machineEuPerTick = 2;
 	public static int maceratorDuration = 150;
@@ -242,6 +247,10 @@ public final class Config {
 					if (lvPouchDrainPerSecond < 0) {
 						lvPouchDrainPerSecond = 1;
 					}
+					stockFrameScanIntervalTicks = GsonHelper.getAsInt(o, "stockFrameScanIntervalTicks", stockFrameScanIntervalTicks);
+					if (stockFrameScanIntervalTicks <= 0) {
+						stockFrameScanIntervalTicks = 20;
+					}
 					machineEuPerTick = GsonHelper.getAsInt(o, "machineEuPerTick", machineEuPerTick);
 					maceratorDuration = GsonHelper.getAsInt(o, "maceratorDuration", maceratorDuration);
 					electricFurnaceDuration = GsonHelper.getAsInt(o, "electricFurnaceDuration", electricFurnaceDuration);
@@ -314,6 +323,7 @@ public final class Config {
 		o.addProperty("lvPouchCapacity", lvPouchCapacity);
 		o.addProperty("lvPouchBuffer", lvPouchBuffer);
 		o.addProperty("lvPouchDrainPerSecond", lvPouchDrainPerSecond);
+		o.addProperty("stockFrameScanIntervalTicks", stockFrameScanIntervalTicks);
 		o.addProperty("machineEuPerTick", machineEuPerTick);
 		o.addProperty("maceratorDuration", maceratorDuration);
 		o.addProperty("electricFurnaceDuration", electricFurnaceDuration);

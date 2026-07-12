@@ -62,6 +62,8 @@
 	"item.alaindustrial.uranium_ingot": "Lingotto di uranio",
 	"item.alaindustrial.network_analyzer": "Analizzatore di rete",
 	"item.alaindustrial.battery_pouch": "Borsa a batteria",
+	"item.alaindustrial.stock_display_frame": "Cornice indicatrice di scorte",
+	"entity.alaindustrial.stock_display_frame": "Cornice indicatrice di scorte",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
 	"gui.alaindustrial.water": "%1$s / %2$s mB",

@@ -84,6 +84,9 @@ public final class IndustrializationNeoForge {
 		// Blocks register drives BlockItems/BlockEntityTypes/MenuTypes that depend on the blocks existing,
 		// so it goes first.
 		ModBlocksNeoForge.BLOCKS.register(modBus);
+		// Entity types before items only for readability — the frame item resolves its EntityType
+		// lazily inside the item RegisterEvent lambda, so no call-order dependency exists (MOD-066).
+		dev.alaindustrial.registry.neoforge.ModEntitiesNeoForge.ENTITY_TYPES.register(modBus);
 		ModItemsNeoForge.ITEMS.register(modBus);
 		ModBlockEntitiesNeoForge.BLOCK_ENTITIES.register(modBus);
 		ModMenusNeoForge.MENUS.register(modBus);
@@ -102,6 +105,7 @@ public final class IndustrializationNeoForge {
 		// assigned directly and resolves lazily after each RegisterEvent — assigning it here, before the events
 		// fire, is intentional (see ModContent). Must run after .register(modBus) above.
 		ModBlocksNeoForge.init();
+		dev.alaindustrial.registry.neoforge.ModEntitiesNeoForge.init();
 		ModItemsNeoForge.init();
 		ModBlockEntitiesNeoForge.init();
 		ModMenusNeoForge.init();

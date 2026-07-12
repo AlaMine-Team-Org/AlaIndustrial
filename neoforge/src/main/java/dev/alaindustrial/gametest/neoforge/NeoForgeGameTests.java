@@ -5,6 +5,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.gametest.CoreEnergyScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.PouchScenarios;
+import dev.alaindustrial.gametest.StockDisplayFrameScenarios;
 import dev.alaindustrial.gametest.TemperedIronToolScenarios;
 import java.util.function.Consumer;
 import net.minecraft.core.Holder;
@@ -304,6 +305,14 @@ public final class NeoForgeGameTests {
 		registerTest(event, "pouch_no_drain_when_empty", 40, true, PouchScenarios::fun06NoDrainWhenEmpty);
 		registerTest(event, "pouch_charge_in_battery_box", 80, true, PouchScenarios::fun07ChargeInBatteryBox);
 		registerTest(event, "pouch_merge_on_insert", 40, true, PouchScenarios::fun08MergeOnInsert);
+
+		// Stock Display Frame (MOD-066, TC-FRAME-001) — same loader-neutral bodies as the Fabric suite.
+		registerTest(event, "stock_frame_counts_whole_container", 60, true, StockDisplayFrameScenarios::fun01CountsWholeContainer);
+		registerTest(event, "stock_frame_filter_counts_matching", 60, true, StockDisplayFrameScenarios::fun02FilterCountsOnlyMatching);
+		registerTest(event, "stock_frame_double_chest_combined", 60, true, StockDisplayFrameScenarios::fun03DoubleChestCombined);
+		registerTest(event, "stock_frame_updates_after_change", 60, true, StockDisplayFrameScenarios::fun04UpdatesAfterChange);
+		registerTest(event, "stock_frame_no_container", 60, true, StockDisplayFrameScenarios::fun05NoContainer);
+		registerTest(event, "stock_frame_drops_own_item", 60, true, StockDisplayFrameScenarios::fun06DropsOwnItem);
 		registerTest(event, "pouch_tooltip_image", 40, true, PouchScenarios::fun09TooltipImage);
 		registerTest(event, "pouch_no_pouch_in_pouch", 40, true, PouchScenarios::neg01NoPouchInPouch);
 		registerTest(event, "pouch_hopper_cut_off", 40, true, PouchScenarios::neg02HopperCutOff);

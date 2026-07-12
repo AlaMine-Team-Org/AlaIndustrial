@@ -128,6 +128,11 @@ public final class IndustrializationNeoForgeClient {
 				WindMillRotorBlockEntityRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.STORM_WIND_MILL.get(),
 				WindMillRotorBlockEntityRenderer::new);
+		// Stock Display Frame (MOD-066): the mod's first entity renderer — NeoForge counterpart to
+		// the Fabric EntityRenderers.register call in IndustrializationClient.
+		event.registerEntityRenderer(
+				dev.alaindustrial.registry.neoforge.ModEntitiesNeoForge.STOCK_DISPLAY_FRAME.get(),
+				dev.alaindustrial.client.StockDisplayFrameRenderer::new);
 	}
 
 	/**

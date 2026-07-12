@@ -62,6 +62,8 @@
 	"item.alaindustrial.uranium_ingot": "ウランインゴット",
 	"item.alaindustrial.network_analyzer": "ネットワークアナライザー",
 	"item.alaindustrial.battery_pouch": "バッテリーポーチ",
+	"item.alaindustrial.stock_display_frame": "在庫表示額縁",
+	"entity.alaindustrial.stock_display_frame": "在庫表示額縁",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
 	"gui.alaindustrial.water": "%1$s / %2$s mB",

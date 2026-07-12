@@ -112,6 +112,7 @@ public final class CreativeTabContent {
 	private static void storageAndCables(Sink out) {
 		out.accept(ModContent.BATTERY_BOX_ITEM.get());
 		out.accept(ModContent.IRON_CHEST_ITEM.get());
+		out.accept(ModContent.STOCK_DISPLAY_FRAME_ITEM.get());
 		out.accept(ModContent.COPPER_CABLE_ITEM.get());
 	}
 

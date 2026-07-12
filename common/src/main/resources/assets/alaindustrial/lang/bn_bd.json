@@ -66,6 +66,8 @@
 	"item.alaindustrial.uranium_ingot": "ইউরেনিয়ামের পিণ্ড",
 	"item.alaindustrial.network_analyzer": "নেটওয়ার্ক বিশ্লেষক",
 	"item.alaindustrial.battery_pouch": "ব্যাটারি থলি",
+	"item.alaindustrial.stock_display_frame": "স্টক প্রদর্শন ফ্রেম",
+	"entity.alaindustrial.stock_display_frame": "স্টক প্রদর্শন ফ্রেম",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
 	"gui.alaindustrial.water": "%1$s / %2$s mB",
