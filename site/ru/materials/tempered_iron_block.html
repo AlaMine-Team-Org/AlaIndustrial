@@ -325,17 +325,18 @@
   </div>
 </div>
 <h2>Сводка</h2>
-<p><strong>Блок закалённого железа</strong> — материальный блок («block of X») для закалённого железа, прямой аналог ванильного <code>minecraft:iron_block</code>. Полный куб 16³, одна и та же текстура на всех 6 гранях (<code>minecraft:block/cube_all</code>). Не имеет BlockEntity, не хранит энергию, не взаимодействует с сетью — материальный блок с обратимым крафтом 9:1. Реализовано в .</p>
+<p><strong>Блок закалённого железа</strong> — это «слитковый блок»: 9 слитков закалённого железа, сжатые в один полноразмерный блок. Нужен, чтобы экономить место в сундуках — вместо 9 стопок слитков один стек блоков. Собирается на верстаке и разбирается обратно без потерь, как ванильный железный или золотой блок. Сам по себе энергии не даёт и ни с чем не взаимодействует — это просто компактная форма металла.</p>
 <table><thead><tr><th>id</th><th>Форма</th><th>Получение</th></tr></thead><tbody><tr><td><code>alaindustrial:tempered_iron_block</code></td><td>Блок (полный куб)</td><td>крафт 9× <code>tempered_iron</code> → 1 блок; обратный крафт 1 блок → 9× <code>tempered_iron</code></td></tr></tbody></table>
 <h2>Энергия</h2>
+<p>Это чисто материальный блок — он не хранит энергию и не подключается к сети.</p>
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>none — материальный блок без энергии</td></tr></tbody></table>
 <h2>Свойства блока</h2>
+<p>Обычный цельный блок: такая же прочность и «звук» при добыче, как у ванильного железного блока. Ломается любой киркой.</p>
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>Полный куб 16³, <code>minecraft:block/cube_all</code> (одна текстура на 6 граней)</td></tr><tr><td>Класс</td><td>ванильный <code>net.minecraft.world.level.block.Block</code> (без подкласса, без BlockEntity)</td></tr><tr><td>Прочность / взрывоуст.</td></tr><tr><td>Звук</td><td><code>SoundType.METAL</code></td></tr></tbody></table>
-<p>Прочность/взрывоустойчивость намеренно совпадают с ванильным <code>iron_block</code> (5.0 / 6.0) — блок выглядит и «ведёт себя» при добыче/взрыве как железный. нет — блок не имеет тир-гейта (как и ванильный iron_block в 1.21+, который добывается любой киркой), только тег инструмента.</p>
 <h2>Рецепты</h2>
-<p>Реализовано. Оба рецепта — <code>category: misc</code>: <strong>9 слитков → 1 блок</strong> (<code>recipe/tempered_iron_block.json</code>, shaped 3×3): pattern <code>III / III / III</code>, key <code>I = alaindustrial:tempered_iron</code>, result 1 блок. <strong>1 блок → 9 слитков</strong> (<code>recipe/tempered_iron_from_block.json</code>, shapeless): ingredient <code>alaindustrial:tempered_iron_block</code>, result 9× <code>tempered_iron</code>. Цикл 9:1 строго обратим (без потерь), как ванильные iron/gold/copper block. Слиток-источник — <a href="../components/tempered_iron.html">закалённое железо</a> (<code>alaindustrial:tempered_iron</code>, переплавка <code>iron_ingot</code> в печи/бластере).</p>
+<p>Два рецепта на верстаке: собрать блок из 9 слитков и разобрать блок обратно в 9 слитков. Цикл строго обратимый, без потерь — как ванильные iron/gold/copper block. <strong>9 слитков → 1 блок</strong> (<code>recipe/tempered_iron_block.json</code>, shaped 3×3): pattern <code>III / III / III</code>, key <code>I = alaindustrial:tempered_iron</code>, result 1 блок. <strong>1 блок → 9 слитков</strong> (<code>recipe/tempered_iron_from_block.json</code>, shapeless): ingredient <code>alaindustrial:tempered_iron_block</code>, result 9× <code>tempered_iron</code>. Слиток-источник — <a href="../components/tempered_iron.html">закалённое железо</a> (переплавка <code>iron_ingot</code> в печи/бластере).</p>
 <h2>Прогрессия</h2>
-<p>Тир: none (материал). Ведёт в: на данный момент — компактная форма металла (9 слитков в одном слоту стека), декоративный строительный блок. Будущие потребители (beacon-совместимость, MV-корпус из закалённого блока и т.п.) — Требует: <a href="../components/tempered_iron.html">закалённое железо</a> (источник слитков).</p>
+<p>Тир: none (материал). Ведёт в: на данный момент — компактная форма металла и декоративный строительный блок. Будущие применения (beacon-совместимость, MV-корпус из закалённого блока и т.п.) — в планах. Требует: <a href="../components/tempered_iron.html">закалённое железо</a> (источник слитков).</p>
 <h2>Совместимость</h2>
 <p>Просмотрщики: JEI/REI/EMI — оба рецепта (сборка/разбор) видны после регистрации.</p>
 <h2>Связанное</h2>

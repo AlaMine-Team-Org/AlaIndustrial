@@ -325,27 +325,28 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The Battery Box is the mod's first storage block. It accepts EU/FE from generators, holds up to 20 000 EU/FE, and releases it to machines and cables through its LV output. It stabilises an early network: banking surplus during the day or while fuel burns, and smoothing consumption peaks.</p>
+<p>The <strong>Battery Box</strong> is the mod's first storage block: it accepts EU/FE from generators, holds up to 20 000 EU/FE, and feeds it to machines and cables through its LV output (32 EU/FE/tick). It exists to stabilise an early network — banking surplus while a generator runs or fuel burns, and smoothing the spikes when several machines wake up at once. Both its input and output are capped at LV, so it can never overload the LV machines connected to it. It is a buffer, not a source of energy: on its own it produces no EU/FE. It connects only through two opposite faces — one takes energy in, the other sends it out.</p>
 <h2>Energy</h2>
+<p>Storage specs at a glance: how much it holds and how fast energy goes in and out.</p>
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>storage</td></tr><tr><td>Buffer (EU/FE)</td><td>20000</td></tr><tr><td>Max input (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>Faces</td><td><strong>accepts</strong> on the <code>FACING</code> face, <strong>emits</strong> from the opposite face; the other 4 faces are inert</td></tr></tbody></table>
-<p>Throughput: LV in/out (≤32 EU/FE per tick). Under a larger inflow it only takes its own limit — the surplus is not forwarded, nothing breaks. The output is always LV — safe for LV machines. Unidirectional IO along the <code>FACING</code> axis (the front face is the input, the back face is the output; the four side faces don't connect). The player orients the Battery Box with its input toward the source.</p>
+<p>Both input and output are LV, up to 32 EU/FE per tick. Under a larger inflow it only takes its own limit — the surplus simply doesn't pass through, nothing breaks. The output is always LV, so it is safe for any LV machine. It connects only through two opposite faces: one accepts energy, the other emits it; the four side faces don't connect. The player places the box with its input toward the energy source.</p>
 <blockquote>⚠️ The <code>battery_box_output</code> texture currently sits on the <code>FACING</code> face, which has since become the <strong>input</strong>.</blockquote>
 <h2>Inventory</h2>
+<p>Two slots for portable EU/FE items (batteries): one charges them from the buffer, the other drains an item back into the buffer.</p>
 <table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>charge</td><td>chargeable items/batteries (charges them)</td><td>1</td></tr><tr><td>discharge</td><td>EU/FE-source items (drains them into the buffer)</td><td>1</td></tr></tbody></table>
 <h2>Interface</h2>
 <p>Type: container Shows: energy storage, in/out rate, charge/discharge slots</p>
 <h2>Block Properties</h2>
+<p>An ordinary solid block: a pickaxe breaks it, and it keeps its charge when broken — you don't lose energy by moving the box around.</p>
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Drops with NBT energy</td><td>true (keeps its charge when broken)</td></tr></tbody></table>
 <h2>Recipes</h2>
-<p>Crafting: <code>data/alaindustrial/recipe/battery_box.json</code> — a wooden casing + RE-batteries/wiring (see <a href="../components/material_forms.html">components</a>). Processing recipes: none (this is a storage block, not a processor).</p>
+<p>Crafted at a workbench from a wooden casing and electronic components. It's a storage block, not a processor — it has no processing recipes. Crafting: <code>data/alaindustrial/recipe/battery_box.json</code> — a wooden casing + RE-batteries/wiring (see <a href="../components/material_forms.html">components</a>). Processing recipes: none (this is a storage block, not a processor).</p>
 <h2>Compatibility</h2>
-<p>Recipe viewers: JEI, REI, EMI Tooltips: Jade, The One Probe (EU/FE storage and in/out rate)</p>
+<p>Visible in the standard viewer and tooltip mods: shows its crafting recipe and the current EU/FE store on hover. Recipe viewers: JEI, REI, EMI Tooltips: Jade, The One Probe (EU/FE storage and in/out rate)</p>
 <h2>Progression</h2>
-<p>Tier: LV → then CESU (MV, not yet documented) Evolves into: CESU (MV storage, not yet documented) → MFSU</p>
-<h2>Balance</h2>
-<p>Base: 20 000 EU/FE, in/out 32 EU/FE/tick. Rationale: ~8 minutes of running a single <a href="../machines/macerator.html">Macerator</a> (2 EU/FE/tick) from a full box — a tangible but not endless buffer for an early base; serious reserves need the move to MV/HV storage.</p>
+<p>The entry step of the storage line. As the base grows the LV buffer stops being enough, and higher-tier storage blocks take over. Tier: LV → then higher-tier storage (MV/HV).</p>
 <h2>Related</h2>
-<p><a href="../generators/generator.html">Generator</a> — the typical charge source. MFSU — the top of the storage line.</p>
+<p><a href="../generators/generator.html">Generator</a> — the typical charge source.</p>
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Oak Planks" aria-label="Oak Planks"><span>oak pla</span></div> <div class="cell placeholder" title="Oak Planks" aria-label="Oak Planks"><span>oak pla</span></div> <div class="cell placeholder" title="Oak Planks" aria-label="Oak Planks"><span>oak pla</span></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="28" height="28"></div> <div class="cell placeholder" title="Redstone" aria-label="Redstone"><span>redston</span></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="28" height="28"></div> <div class="cell placeholder" title="Oak Planks" aria-label="Oak Planks"><span>oak pla</span></div> <div class="cell placeholder" title="Oak Planks" aria-label="Oak Planks"><span>oak pla</span></div> <div class="cell placeholder" title="Oak Planks" aria-label="Oak Planks"><span>oak pla</span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Battery Box"><img src="../assets/block/battery_box_top.png" alt="Battery Box" width="28" height="28"></div><div class="result-name">Battery Box</div></div></div></div></div>
   </main>

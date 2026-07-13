@@ -325,27 +325,29 @@
   </div>
 </div>
 <h2>Сводка</h2>
-<p>Электропечь — полный электрический аналог ванильной печи: принимает <strong>любой предмет, который плавит обычная печь</strong> (руды, пища, стекло, булыжник…), и дополнительно поддерживает рецепты мода (<code>alaindustrial:smelting</code>) — в первую очередь <strong>пыль → слиток</strong>. Рецепты мода имеют приоритет над ванильными при совпадении входа. Питается EU/FE вместо топлива, работает вдвое быстрее ванильной печи.</p>
+<p><strong>Электропечь</strong> — полный электрический аналог ванильной печи. Она плавит <strong>всё то же, что и обычная печь</strong> (руды, еду, стекло, булыжник…), но питается EU/FE вместо топлива и работает вдвое быстрее. Поверх ванильных рецептов мод добавляет свои — в первую очередь <strong>пыль → слиток</strong>, чтобы закрыть цикл удвоения руды. Если на один вход есть и мод-, и ванильный рецепт, мод-рецепт имеет приоритет.</p>
 <h2>Энергия</h2>
+<p>Электропечь только потребляет EU/FE и держит небольшой буфер для ровной работы.</p>
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>потребитель с буфером</td></tr><tr><td>Буфер (EU/FE)</td><td>800</td></tr><tr><td>Макс. вход (EU/FE/такт)</td><td>32 (LV)</td></tr><tr><td>EU/FE/такт</td><td>2 (во время работы)</td></tr></tbody></table>
-<p>Пропускная способность: LV-машина, принимает ≤32 EU/FE за тик; излишек в сети не передаётся. <strong>Грани:</strong> EU/FE принимается с 5 граней (все кроме FACING); лицевая грань (FACING) инертна — кабели к ней не подключаются, воронки через неё не работают.</p>
+<p>LV-машина: берёт до 32 EU/FE за тик. Лишняя энергия сети не передаётся. <strong>Грани:</strong> энергия заходит с пяти граней; лицевая (туда «смотрит» морда) — инертна: кабели к ней не подключаются, воронки через неё не работают.</p>
 <h2>Процессинг</h2>
+<p>Сначала печь ищет рецепт мода, а если его нет — берёт ванильную плавку. Базовая плавка идёт ~100 тиков (~5 с), рецепты мода могут задавать свой EU/FE-cost.</p>
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Рецепты (приоритет)</td><td><code>alaindustrial:smelting</code> из <code>data/alaindustrial/recipe/smelting/*.json</code> (пыль → слиток, прочие)</td></tr><tr><td>Рецепты (fallback)</td><td>vanilla <code>minecraft:smelting</code> — все ванильные рецепты печи</td></tr><tr><td>Длительность (мод)</td><td>из поля <code>energy</code> рецепта ÷ <code>machineEuPerTick</code></td></tr><tr><td>Длительность (ваниль)</td><td><code>electricFurnaceDuration</code> тиков ≈ 100 (Config)</td></tr><tr><td>Авто-выгрузка</td><td>false</td></tr></tbody></table>
 <h2>Рецепты мода (smelting/*.json)</h2>
+<p>Собственные рецепты мода — каждый по 200 EU/FE. Сюда входит переплавка пыли и сырой руды в слитки, а также пара ванильных операций (булыжник в камень, песок в стекло).</p>
 <table><thead><tr><th>Вход</th><th>→</th><th>Выход</th><th>EU/FE</th></tr></thead><tbody><tr><td>copper_dust</td><td>→</td><td>copper_ingot</td><td>200</td></tr><tr><td>iron_dust</td><td>→</td><td>iron_ingot</td><td>200</td></tr><tr><td>gold_dust</td><td>→</td><td>gold_ingot</td><td>200</td></tr><tr><td>raw_copper</td><td>→</td><td>copper_ingot</td><td>200</td></tr><tr><td>raw_iron</td><td>→</td><td>iron_ingot</td><td>200</td></tr><tr><td>raw_gold</td><td>→</td><td>gold_ingot</td><td>200</td></tr><tr><td>cobblestone</td><td>→</td><td>stone</td><td>200</td></tr><tr><td>sand</td><td>→</td><td>glass</td><td>200</td></tr></tbody></table>
 <p>Всё остальное (любая ванильная плавка) обрабатывается через fallback на <code>minecraft:smelting</code>.</p>
 <h2>Инвентарь</h2>
+<p>Один слот на вход, один на выход.</p>
 <table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>input</td><td>любой плавящийся предмет (мод + ваниль)</td><td>1</td></tr><tr><td>output</td><td>результат</td><td>1</td></tr></tbody></table>
 <h2>Крафт</h2>
 <p>Файл: <code>data/alaindustrial/recipe/electric_furnace.json</code></p>
-<pre><code class="lang-">S S S
-F C F
-S S S</code></pre>
 <table><thead><tr><th>Символ</th><th>Предмет</th></tr></thead><tbody><tr><td><code>S</code></td><td><code>alaindustrial:silver_ingot</code> — серебряный слиток</td></tr><tr><td><code>F</code></td><td><code>minecraft:furnace</code> — ванильная печь</td></tr><tr><td><code>C</code></td><td><code>alaindustrial:electronic_circuit</code> — электронная схема</td></tr></tbody></table>
-<p>Логика: печи встроены по бокам как основа механизма плавки, схема управляет процессом, серебряные слитки формируют корпус — по три штуки на верхней и нижней строках.</p>
+<p>Печи встроены по бокам как основа механизма плавки, схема управляет процессом, а серебряные слитки формируют корпус — по три штуки на верхней и нижней строках.</p>
 <h2>Интерфейс</h2>
 <p>Тип: container Показывает: запас энергии, прогресс, вход, выход</p>
 <h2>Свойства блока</h2>
+<p>Обычный цельный куб, мягче камня: ломается любой киркой.</p>
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³ (окклюдер)</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr></tbody></table>
 <h2>Баланс</h2>
 <p>База: 2 EU/FE/такт × 100 тиков = 200 EU/FE за плавку, ~5 с (вдвое быстрее ванильных 10 с). Рецепты мода могут задавать другой EU/FE-cost через поле <code>energy</code>. Числа тюнятся конфигом (<code>electricFurnaceDuration</code>, <code>machineEuPerTick</code>).</p>

@@ -325,14 +325,16 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The Copper Cable is the main early-game cable and <strong>the wire of the starter chain</strong> (Solar Panel → cable → Battery Box → Macerator). It carries LV packets (≤32 EU/FE/tick) and loses some energy over distance: <code>floor(flow × 0.0125 × distance)</code> EU/FE/tick per consumer — the longer the line and the higher the flow, the bigger the loss. On a short line (1–2 cables) and on a top-up packet the loss floors to 0, so the buffer always tops up to 100%. It's cheap, which is why it's used to wire a base before moving to higher tiers.</p>
+<p>The <strong>Copper Cable</strong> is the main early-game cable and the wire of the starter chain: Solar Panel → Battery Box → Macerator. It connects neighbouring blocks into a single line and carries LV energy (up to 32 EU/FE/tick). On a long line some energy is lost along the way — the longer the wire and the higher the flow, the bigger the loss; on a short run the loss rounds down to zero, so the receiver's buffer always tops up to full. It is cheap to craft, which makes it handy for wiring a base before the higher-tier cables are unlocked.</p>
 <h2>Energy</h2>
+<p>The cable carries LV energy and connects to neighbouring blocks. Each wire run from a source to a consumer costs a little EU/FE — the exact formula is given in the table.</p>
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>transfer</td></tr><tr><td>Max voltage</td><td>32 (LV)</td></tr><tr><td>Loss</td><td><code>floor(flow × 0.0125 × distance)</code> EU/FE/tick per consumer (<code>copperCableLossPerBlock</code>). Distance = number of cables from the nearest source. Short hop / top-up → 0</td></tr><tr><td>Insulation</td><td>can be insulated for safe adjacency</td></tr></tbody></table>
-<p>Throughput: the cable does not explode from overload. The 32 EU/FE/packet limit (LV) is only a throughput cap; anything above it is not transferred, so a proper MV/HV/EV flow needs a cable of the matching tier.</p>
+<p>The cable does not explode from overload: 32 EU/FE/packet is only a throughput cap, and anything above it simply does not pass through. A proper MV/HV/EV flow needs a cable of the matching tier.</p>
 <h2>Block Properties</h2>
+<p>A thin wire that connects to neighbouring blocks. Any tool breaks it, and shears are especially handy.</p>
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>thin rod (6px core + sleeves), <code>noOcclusion</code></td></tr><tr><td>Hardness</td><td>0.2</td></tr><tr><td>Tool</td><td>any / shears</td></tr></tbody></table>
 <h2>Recipes</h2>
-<p>Crafting: <code>data/alaindustrial/recipe/copper_cable.json</code> — copper wire/ingots + rubber (insulation). Processing recipes: none.</p>
+<p>Crafted at a workbench from copper and rubber — the most accessible wire for a starting base. Crafting: <code>data/alaindustrial/recipe/copper_cable.json</code> — copper wire/ingots + rubber (insulation). Processing recipes: none.</p>
 <h2>Related</h2>
 <p>Glass Fibre Cable — backbone line with low losses.</p>
 <h2>Crafting</h2>

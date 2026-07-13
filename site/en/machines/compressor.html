@@ -325,23 +325,23 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The Compressor squeezes raw materials into denser forms — dust into plates, materials into compacted blocks and billets. A basic step toward advanced crafting components.</p>
+<p>The <strong>Compressor</strong> is an LV machine that squeezes raw materials into denser forms: metal dust into ingots, coal and gem dust back into items, ice and snow into denser blocks, and sugar cane or cocoa into paper and dye. It is one of the basic steps toward advanced components — for example, it closes the ore-doubling loop (ore → 2 dust in the Macerator → 2 ingots/items in the Compressor). It runs on an LV network and uses the same numbers as the other early-tier machines.</p>
 <h2>Energy</h2>
+<p>The Compressor only consumes EU/FE and keeps a small buffer so it does not stutter when the supply is uneven.</p>
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>800</td></tr><tr><td>Max input (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>EU/FE/tick</td><td>2</td></tr></tbody></table>
-<p>Throughput: an LV machine, accepts ≤32 EU/FE per tick; any surplus in the network is not forwarded, the block is not damaged. <strong>Faces:</strong> EU/FE is accepted from 5 faces (all except the front, <code>FACING</code>); the front face is inert — cables don't connect to it and hoppers don't work through it.</p>
+<p>An LV machine — it draws up to 32 EU/FE per tick. Any surplus in the network is not forwarded, the block is not damaged. <strong>Faces:</strong> EU/FE comes in on five faces; the front face (where the machine "looks") is inert — cables do not connect to it and hoppers do not work through it.</p>
 <h2>Processing</h2>
+<p>Each operation takes 130 ticks (~6.5 s) and costs 260 EU/FE. The finished result does not eject on its own — pick it up by hand or with a hopper.</p>
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Recipe type</td><td><code>alaindustrial:compressing</code> (<code>data/alaindustrial/recipe/compressing/*.json</code>)</td></tr><tr><td>Duration (ticks)</td><td>130</td></tr><tr><td>Auto-eject</td><td>false</td></tr></tbody></table>
 <h2>Inventory</h2>
+<p>One input slot, one output slot.</p>
 <table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>input</td><td>items with a compressing recipe</td><td>1</td></tr><tr><td>output</td><td>result</td><td>1</td></tr></tbody></table>
 <h2>Crafting</h2>
-<pre><code class="lang-">SSS
-PEP
-SAS</code></pre>
-<p><strong>S</strong> = <code>minecraft:stone</code> — stone (top and bottom corners) <strong>P</strong> = <code>minecraft:piston</code> — piston (sides) <strong>E</strong> = <code>alaindustrial:electronic_circuit</code> — Electronic Circuit (centre) <strong>A</strong> = <code>alaindustrial:silver_ingot</code> — Silver Ingot (bottom centre)</p>
 <h2>Block Properties</h2>
+<p>An ordinary solid cube, softer than stone: any pickaxe breaks it.</p>
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
 <h2>Processing recipes</h2>
-<p>Type <code>alaindustrial:compressing</code>, <code>data/alaindustrial/recipe/compressing/*.json</code>, 260 EU/FE per operation.</p>
+<p>Every recipe costs 260 EU/FE (130 ticks × 2 EU/FE/tick). The right column explains what each row is for, and notes where the Compressor beats the crafting table. Type <code>alaindustrial:compressing</code>, <code>data/alaindustrial/recipe/compressing/*.json</code>, 260 EU/FE per operation.</p>
 <table><thead><tr><th>Input</th><th>Output</th><th>Purpose</th></tr></thead><tbody><tr><td><code>alaindustrial:{copper,iron,gold}_dust</code></td><td><code>minecraft:{copper,iron,gold}_ingot</code> ×1</td><td>alternate path from metal dust to ingot (on par with smelting in the Electric Furnace)</td></tr><tr><td><code>minecraft:clay_ball</code></td><td><code>minecraft:brick</code> ×1</td><td>pressing clay into bricks</td></tr><tr><td><code>alaindustrial:coal_dust</code></td><td><code>minecraft:coal</code> ×1</td><td>gem/coal dusts are restored <strong>in the Compressor</strong>,</td></tr><tr><td><code>alaindustrial:diamond_dust</code></td><td><code>minecraft:diamond</code> ×1</td><td>not in the Electric Furnace (these are "non-standard" dusts, not metals).</td></tr><tr><td><code>alaindustrial:emerald_dust</code></td><td><code>minecraft:emerald</code> ×1</td><td>Closes the ore-doubling loop: ore → 2 dust → 2 items</td></tr><tr><td><code>alaindustrial:lapis_dust</code></td><td><code>minecraft:lapis_lazuli</code> ×1</td><td>(lapis → 6). No duplication: item → 1 dust → 1 item.</td></tr><tr><td><code>minecraft:ice</code></td><td><code>minecraft:packed_ice</code> ×1</td><td>compressing ice under pressure (vanilla crafting needs 9 ice; the Compressor does 1:1 for EU/FE)</td></tr><tr><td><code>minecraft:packed_ice</code></td><td><code>minecraft:blue_ice</code> ×1</td><td>compressing packed ice into blue ice (crafting needs 9 packed ice)</td></tr><tr><td><code>minecraft:snow_block</code></td><td><code>minecraft:ice</code> ×1</td><td>pressing a snow block into ice — a new route to ice, with no loop back</td></tr><tr><td><code>minecraft:sugar_cane</code></td><td><code>minecraft:paper</code> ×1</td><td>pressing sugar cane into paper (alternative to the 3→3 crafting, 1:1 for EU/FE)</td></tr><tr><td><code>minecraft:cocoa_beans</code></td><td><code>minecraft:brown_dye</code> ×1</td><td>squeezing cocoa beans into brown dye (alternative to the crafting menu)</td></tr></tbody></table>
 <h2>Balance</h2>
 <p>Base: 2 EU/FE/tick × 130 ticks = 260 EU/FE per operation — the shared LV-machine "price". The outputs (plates/ingots/gems) feed the <a href="../components/index.html">components</a> chain. Numbers are starter values.</p>

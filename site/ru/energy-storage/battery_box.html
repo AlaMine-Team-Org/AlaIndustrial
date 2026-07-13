@@ -325,27 +325,30 @@
   </div>
 </div>
 <h2>Сводка</h2>
-<p>Энергохранилище — первый накопитель. Принимает EU/FE от генераторов, хранит до 20 000 EU/FE и отдаёт LV-выходом машинам и кабелям. Стабилизирует раннюю сеть: копит излишки днём/при горении и сглаживает пики потребления.</p>
+<p><strong>Энергохранилище</strong> — первый накопитель мода: принимает EU/FE от генераторов, хранит до 20 000 EU/FE и отдаёт их машинам и кабелям LV-выходом (32 EU/FE/такт). Нужно, чтобы стабилизировать раннюю сеть — копит излишки, пока генератор работает или горит топливо, и сглаживает пики, когда машины разом просыпаются. На входе и выходе держит LV-лимит, поэтому никогда не перегрузит подключенные LV-машины. Это буфер, а не источник энергии: сам по себе он EU/FE не производит. Подключается только двумя противоположными гранями — одна принимает энергию, вторая отдаёт.</p>
 <h2>Энергия</h2>
+<p>Характеристики накопителя: сколько влезает и с какой скоростью энергия входит и выходит.</p>
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>накопитель</td></tr><tr><td>Буфер (EU/FE)</td><td>20000</td></tr><tr><td>Макс. вход (EU/FE/такт)</td><td>32 (LV)</td></tr><tr><td>Макс. выход (EU/FE/такт)</td><td>32 (LV)</td></tr><tr><td>Грани</td><td><strong>принимает</strong> на грани <code>FACING</code>, <strong>отдаёт</strong> с противоположной; остальные 4 грани инертны</td></tr></tbody></table>
-<p>Пропускная способность: вход/выход LV (≤32 EU/FE за тик). При большем притоке принимает только свой лимит — излишек не передаётся, разрушения нет. Выход всегда LV — безопасен для LV-машин. Однонаправленный IO по оси <code>FACING</code> (решение: вход — лицевая грань, выход — тыльная; четыре боковые грани не подключаются. Игрок ориентирует Энергохранилище входом к источнику. Реализация: <code>BatteryBoxBlockEntity.energyRoleForFace</code>. Медный кабель рисует «рукав» подключения тоже только к этим двум граням (вход/выход); к боковым, верхней и нижней грани кабель не подключается (<code>BatteryBoxBlock.isCableConnectable</code>).</p>
+<p>Вход и выход — оба LV, до 32 EU/FE за тик. Если приток больше, накопитель возьмёт только свой лимит — лишнее просто не пройдёт, ничего не сломается. Выход всегда LV, поэтому он безопасен для любых LV-машин. Подключается только двумя противоположными гранями: одна принимает энергию, вторая отдаёт; четыре боковые грани не подключаются. Игрок ставит накопитель входом к источнику энергии.</p>
 <blockquote>⚠️ Текстура <code>battery_box_output</code> сейчас на грани <code>FACING</code>, которая после стала <strong>входной</strong>.</blockquote>
 <h2>Инвентарь</h2>
+<p>Два слота под переносные EU/FE-предметы (батареи): один заряжает их от буфера, второй — наоборот, осушает предмет в буфер.</p>
 <table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>charge</td><td>заряжаемые предметы/батареи (заряжает их)</td><td>1</td></tr><tr><td>discharge</td><td>предметы-источники EU/FE (разряжает в буфер)</td><td>1</td></tr></tbody></table>
 <h2>Интерфейс</h2>
 <p>Тип: container Показывает: запас энергии, скорость вход/выход, слоты заряд/разряд</p>
 <h2>Свойства блока</h2>
+<p>Обычный цельный блок: ломается киркой и при сломе сохраняет свой заряд — энергию не теряешь, переставляя накопитель.</p>
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³ (окклюдер)</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Дроп с NBT энергии</td><td>true (сохраняет заряд при сломе)</td></tr></tbody></table>
 <h2>Рецепты</h2>
-<p>Крафт: <code>data/alaindustrial/recipe/battery_box.json</code> — корпус из дерева + RE-батареи/провода (см. <a href="../components/material_forms.html">компоненты</a>). Рецепты переработки: нет (это накопитель, а не переработчик).</p>
+<p>Собирается на верстаке из деревянного корпуса и электронных компонентов. Это накопитель, а не переработчик — рецептов переработки у него нет. Крафт: <code>data/alaindustrial/recipe/battery_box.json</code> — корпус из дерева + RE-батареи/провода (см. <a href="../components/material_forms.html">компоненты</a>). Рецепты переработки: нет (это накопитель, а не переработчик).</p>
 <h2>Совместимость</h2>
-<p>Просмотрщики: JEI, REI, EMI Тултипы: Jade, The One Probe (запас EU/FE и скорость вход/выход)</p>
+<p>Виден в стандартных модах на просмотр и тултипы: показывает рецепт крафта и текущий запас энергии при наведении. Просмотрщики: JEI, REI, EMI Тултипы: Jade, The One Probe (запас EU/FE и скорость вход/выход)</p>
 <h2>Прогрессия</h2>
-<p>Тир: LV → далее CESU (MV, ещё не описан) Развивается в: CESU (MV-накопитель, ещё не описан) → MFSU</p>
+<p>Стартовая ступень линейки накопителей. По мере роста базы LV-буфера становится мало, и его сменяют накопители более высоких тиров. Тир: LV → далее накопители более высоких тиров (MV/HV).</p>
 <h2>Баланс</h2>
 <p>База: 20 000 EU/FE, вход/выход 32 EU/FE/такт. Обоснование: ~8 минут работы одного <a href="../machines/macerator.html">Дробителя</a> (2 EU/FE/такт) из полного бокса — ощутимый, но не бесконечный буфер для ранней базы; для серьёзных запасов нужен переход на MV/HV-накопители.</p>
 <h2>Связанное</h2>
-<p><a href="../generators/generator.html">Генератор</a> — типичный источник заряда. MFSU — вершина линейки накопителей.</p>
+<p><a href="../generators/generator.html">Генератор</a> — типичный источник заряда.</p>
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Oak Planks" aria-label="Oak Planks"><span>oak pla</span></div> <div class="cell placeholder" title="Oak Planks" aria-label="Oak Planks"><span>oak pla</span></div> <div class="cell placeholder" title="Oak Planks" aria-label="Oak Planks"><span>oak pla</span></div> <div class="cell" title="Медный кабель"><img src="../assets/item/copper_cable_3d.png" alt="Медный кабель" width="28" height="28"></div> <div class="cell placeholder" title="Redstone" aria-label="Redstone"><span>redston</span></div> <div class="cell" title="Медный кабель"><img src="../assets/item/copper_cable_3d.png" alt="Медный кабель" width="28" height="28"></div> <div class="cell placeholder" title="Oak Planks" aria-label="Oak Planks"><span>oak pla</span></div> <div class="cell placeholder" title="Oak Planks" aria-label="Oak Planks"><span>oak pla</span></div> <div class="cell placeholder" title="Oak Planks" aria-label="Oak Planks"><span>oak pla</span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Энергохранилище"><img src="../assets/block/battery_box_top.png" alt="Энергохранилище" width="28" height="28"></div><div class="result-name">Энергохранилище</div></div></div></div></div>
   </main>

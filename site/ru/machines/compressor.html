@@ -325,23 +325,23 @@
   </div>
 </div>
 <h2>Сводка</h2>
-<p>Компрессор сжимает сырьё в более плотные формы — пыль в пластины, материалы в уплотнённые блоки и заготовки. Базовый шаг к продвинутым крафт-компонентам.</p>
+<p><strong>Компрессор</strong> — LV-машина, которая сжимает сырьё в более плотные формы: металлическую пыль — в слитки, угольную/самоцветную пыль — обратно в предметы, лёд и снег — в более плотные блоки, а тростник и какао — в бумагу и краситель. Это один из базовых шагов к продвинутым компонентам: например, он замыкает цикл удвоения руды (руда → 2 пыли в дробителе → 2 слитка/предмета в компрессоре). Питается от LV-сети и работает на тех же числах, что и остальные машины раннего тира.</p>
 <h2>Энергия</h2>
+<p>Компрессор только потребляет EU/FE и держит небольшой буфер, чтобы не дёргаться при рывках подачи.</p>
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>потребитель с буфером</td></tr><tr><td>Буфер (EU/FE)</td><td>800</td></tr><tr><td>Макс. вход (EU/FE/такт)</td><td>32 (LV)</td></tr><tr><td>EU/FE/такт</td><td>2</td></tr></tbody></table>
-<p>Пропускная способность: LV-машина, принимает ≤32 EU/FE за тик; излишек в сети не передаётся, блок не разрушается. <strong>Грани:</strong> EU/FE принимается с 5 граней (все кроме FACING); лицевая грань (FACING) инертна — кабели к ней не подключаются, воронки через неё не работают.</p>
+<p>LV-машина: берёт до 32 EU/FE за тик. Лишняя энергия сети не передаётся, блок не разрушается. <strong>Грани:</strong> энергия заходит с пяти граней; лицевая (туда «смотрит» морда) — инертна: кабели к ней не подключаются, воронки через неё не работают.</p>
 <h2>Процессинг</h2>
+<p>Каждая операция идёт 130 тиков (~6,5 с) и стоит 260 EU/FE. Готовый результат сам не вылетает — забирайте руками или воронкой.</p>
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Тип рецепта</td><td>ванильный <code>RecipeType alaindustrial:compressing</code> (<code>data/alaindustrial/recipe/compressing/*.json</code>)</td></tr><tr><td>Длительность (тики)</td><td>130</td></tr><tr><td>Авто-выгрузка</td><td>false</td></tr></tbody></table>
 <h2>Инвентарь</h2>
+<p>Один слот на вход, один на выход.</p>
 <table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>input</td><td>предметы с рецептом compression</td><td>1</td></tr><tr><td>output</td><td>результат</td><td>1</td></tr></tbody></table>
 <h2>Крафт</h2>
-<pre><code class="lang-">SSS
-PEP
-SAS</code></pre>
-<p><strong>S</strong> = <code>minecraft:stone</code> — камень (верх и нижние углы) <strong>P</strong> = <code>minecraft:piston</code> — поршень (по бокам) <strong>E</strong> = <code>alaindustrial:electronic_circuit</code> — электронная схема (центр) <strong>A</strong> = <code>alaindustrial:silver_ingot</code> — серебряный слиток (низ по центру)</p>
 <h2>Свойства блока</h2>
+<p>Обычный цельный куб, мягче камня: ломается любой киркой.</p>
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³ (окклюдер)</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr></tbody></table>
 <h2>Рецепты обработки</h2>
-<p>Тип <code>alaindustrial:compressing</code>, <code>data/alaindustrial/recipe/compressing/*.json</code>, 260 EU/FE/операция.</p>
+<p>Все рецепты — по 260 EU/FE за штуку (130 тиков × 2 EU/FE/тик). Подробное назначение каждой строки — в правом столбце: где важно, указано, чем компрессор выгоднее верстака. Тип <code>alaindustrial:compressing</code>, <code>data/alaindustrial/recipe/compressing/*.json</code>, 260 EU/FE/операция.</p>
 <table><thead><tr><th>Вход</th><th>Выход</th><th>Назначение</th></tr></thead><tbody><tr><td><code>alaindustrial:{copper,iron,gold}_dust</code></td><td><code>minecraft:{copper,iron,gold}_ingot</code> ×1</td><td>альт. путь металлической пыли в слиток (наравне с плавкой в электропечи)</td></tr><tr><td><code>minecraft:clay_ball</code></td><td><code>minecraft:brick</code> ×1</td><td>обжиг глины давлением</td></tr><tr><td><code>alaindustrial:coal_dust</code></td><td><code>minecraft:coal</code> ×1</td><td>самоцветные/угольная пыли восстанавливаются <strong>в компрессоре</strong>,</td></tr><tr><td><code>alaindustrial:diamond_dust</code></td><td><code>minecraft:diamond</code> ×1</td><td>а не в электропечи (это «нестандартные» пыли, не металл).</td></tr><tr><td><code>alaindustrial:emerald_dust</code></td><td><code>minecraft:emerald</code> ×1</td><td>Замыкает удвоение через руду: руда → 2 пыли → 2 предмета</td></tr><tr><td><code>alaindustrial:lapis_dust</code></td><td><code>minecraft:lapis_lazuli</code> ×1</td><td>(лазурит → 6). Дюпа нет: предмет → 1 пыль → 1 предмет.</td></tr><tr><td><code>minecraft:ice</code></td><td><code>minecraft:packed_ice</code> ×1</td><td>уплотнение льда давлением (ванильный верстак требует 9 льда; компрессор — 1:1 за EU/FE)</td></tr><tr><td><code>minecraft:packed_ice</code></td><td><code>minecraft:blue_ice</code> ×1</td><td>уплотнение плотного льда в синий (верстак требует 9 packed_ice)</td></tr><tr><td><code>minecraft:snow_block</code></td><td><code>minecraft:ice</code> ×1</td><td>спрессовывание снежного блока в лёд — новый путь к льду, без цикла обратно</td></tr><tr><td><code>minecraft:sugar_cane</code></td><td><code>minecraft:paper</code> ×1</td><td>прессование тростника в бумагу (альтернатива верстаку 3→3, 1:1 за EU/FE)</td></tr><tr><td><code>minecraft:cocoa_beans</code></td><td><code>minecraft:brown_dye</code> ×1</td><td>отжим какао-бобов в коричневый краситель (альтернатива крафт-меню)</td></tr></tbody></table>
 <h2>Баланс</h2>
 <p>База: 2 EU/FE/такт × 130 тиков = 260 EU/FE за операцию — общий «прайс» LV-машин. Выходы (пластины/слитки/ самоцветы) питают цепочку <a href="../components/index.html">компонентов</a>. Числа — стартовые.</p>
