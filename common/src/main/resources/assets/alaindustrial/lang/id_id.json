@@ -235,5 +235,14 @@
 	"item.alaindustrial.filled_vacuum_capsule": "Kapsul Vakum Terisi",
 	"item.alaindustrial.filled_vacuum_capsule.named": "Kapsul: %s",
 	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 ember)",
-	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Fluida tidak dikenal"
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Fluida tidak dikenal",
+	"item.alaindustrial.scythe_wood": "Sabit Besar Kayu",
+	"item.alaindustrial.scythe_stone": "Sabit Besar Batu",
+	"item.alaindustrial.scythe_iron": "Sabit Besar Besi",
+	"item.alaindustrial.scythe_tempered_iron": "Sabit Besar Besi Temper",
+	"item.alaindustrial.scythe_diamond": "Sabit Besar Intan",
+	"item.alaindustrial.scythe_netherite": "Sabit Besar Netherite",
+	"item.alaindustrial.scythe_gold": "Sabit Besar Emas",
+	"subtitles.alaindustrial.scythe_swing": "Sabit Besar mengayun",
+	"item.alaindustrial.scythe_copper": "Sabit Besar Tembaga"
 }

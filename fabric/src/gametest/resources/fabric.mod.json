@@ -30,7 +30,8 @@
 			"dev.alaindustrial.gametest.PouchGameTest",
 			"dev.alaindustrial.gametest.CapsuleGameTest",
 			"dev.alaindustrial.gametest.DemoStandGameTest",
-			"dev.alaindustrial.gametest.StockDisplayFrameGameTest"
+			"dev.alaindustrial.gametest.StockDisplayFrameGameTest",
+			"dev.alaindustrial.gametest.ScytheGameTest"
 		]
 	}
 }

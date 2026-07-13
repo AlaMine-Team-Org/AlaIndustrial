@@ -5,6 +5,7 @@ import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import dev.alaindustrial.item.PouchItem;
+import dev.alaindustrial.item.ScytheItem;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.core.Registry;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.block.Block;
 
@@ -99,6 +101,28 @@ public final class ModItems {
 	// Stock Display Frame (MOD-066). Referencing ModEntities here also triggers its eager class-init
 	// registration, so the EntityType exists before the item is constructed.
 	public static final Item STOCK_DISPLAY_FRAME = stockDisplayFrame("stock_display_frame");
+	// Scythe (MOD-068): six material tiers, each an AOE foliage clearer. Registered like a hoe
+	// (.hoe(material, -2.0f, -1.0f) attaches the tool component + enchantability) but as ScytheItem,
+	// not HoeItem — the scythe must not till dirt on right-click, it clears its area instead.
+	public static final Item SCYTHE_WOOD =
+			scythe("scythe_wood", ToolMaterial.WOOD, new ScytheItem.Profile(3, 2, 12), false);
+	public static final Item SCYTHE_STONE =
+			scythe("scythe_stone", ToolMaterial.STONE, new ScytheItem.Profile(3, 3, 18), false);
+	public static final Item SCYTHE_COPPER =
+			scythe("scythe_copper", ToolMaterial.COPPER, new ScytheItem.Profile(3, 3, 24), false);
+	public static final Item SCYTHE_IRON =
+			scythe("scythe_iron", ToolMaterial.IRON, new ScytheItem.Profile(5, 3, 30), false);
+	// Gold: iron-sized area but fragile (gold durability) and highly enchantable — the vanilla gold
+	// philosophy (cheap, weak, enchant-hungry), a side-grade rather than a strict step up.
+	public static final Item SCYTHE_GOLD =
+			scythe("scythe_gold", ToolMaterial.GOLD, new ScytheItem.Profile(5, 3, 30), false);
+	public static final Item SCYTHE_TEMPERED_IRON =
+			scythe("scythe_tempered_iron", ModToolMaterials.TEMPERED_IRON, new ScytheItem.Profile(5, 4, 40), false);
+	public static final Item SCYTHE_DIAMOND =
+			scythe("scythe_diamond", ToolMaterial.DIAMOND, new ScytheItem.Profile(5, 5, 50), false);
+	// Netherite tier is fire-resistant like all vanilla netherite gear (survives lava/fire).
+	public static final Item SCYTHE_NETHERITE =
+			scythe("scythe_netherite", ToolMaterial.NETHERITE, new ScytheItem.Profile(7, 5, 70), true);
 
 	// Block items.
 	public static final BlockItem GENERATOR_ITEM = blockItem("generator", ModBlocks.GENERATOR);
@@ -201,6 +225,18 @@ public final class ModItems {
 				new Item(new Item.Properties().humanoidArmor(ModArmorMaterials.TEMPERED_IRON, type).setId(key)));
 	}
 
+	// Scythe helper (MOD-068). .hoe(material, attackDamage, attackSpeed) attaches the data-driven
+	// tool component (durability/mining speed/enchantability/attack) exactly like a vanilla hoe, but
+	// the instance is a ScytheItem so right-click runs the AOE clear instead of tilling.
+	private static Item scythe(String path, ToolMaterial material, ScytheItem.Profile profile, boolean fireResistant) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		Item.Properties props = new Item.Properties().hoe(material, -2.0f, -1.0f);
+		if (fireResistant) {
+			props.fireResistant();
+		}
+		return Registry.register(BuiltInRegistries.ITEM, key, new ScytheItem(profile, props.setId(key)));
+	}
+
 	private static Item stockDisplayFrame(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
@@ -293,6 +329,15 @@ public final class ModItems {
 						output.accept(TEMPERED_IRON_CHESTPLATE);
 						output.accept(TEMPERED_IRON_LEGGINGS);
 						output.accept(TEMPERED_IRON_BOOTS);
+							// Scythes (MOD-068) — one continuous tier row wood → netherite.
+							output.accept(SCYTHE_WOOD);
+							output.accept(SCYTHE_STONE);
+							output.accept(SCYTHE_COPPER);
+							output.accept(SCYTHE_IRON);
+							output.accept(SCYTHE_GOLD);
+							output.accept(SCYTHE_TEMPERED_IRON);
+							output.accept(SCYTHE_DIAMOND);
+							output.accept(SCYTHE_NETHERITE);
 				})
 				.build();
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TAB, tab);
@@ -318,6 +363,16 @@ public final class ModItems {
 							ModContent.TEMPERED_IRON_AXE.get(),
 							ModContent.TEMPERED_IRON_SHOVEL.get(),
 							ModContent.TEMPERED_IRON_HOE.get());
+					// Each scythe sits right after the matching vanilla hoe tier; the iron + tempered-iron
+					// scythes follow the mod's tempered-iron hoe (which is itself right after the iron hoe).
+					output.insertAfter(Items.WOODEN_HOE, ModContent.SCYTHE_WOOD.get());
+					output.insertAfter(Items.STONE_HOE, ModContent.SCYTHE_STONE.get());
+					output.insertAfter(Items.COPPER_HOE, ModContent.SCYTHE_COPPER.get());
+					output.insertAfter(ModContent.TEMPERED_IRON_HOE.get(),
+							ModContent.SCYTHE_IRON.get(), ModContent.SCYTHE_TEMPERED_IRON.get());
+					output.insertAfter(Items.GOLDEN_HOE, ModContent.SCYTHE_GOLD.get());
+					output.insertAfter(Items.DIAMOND_HOE, ModContent.SCYTHE_DIAMOND.get());
+					output.insertAfter(Items.NETHERITE_HOE, ModContent.SCYTHE_NETHERITE.get());
 					output.insertAfter(Items.COMPASS, ModContent.NETWORK_ANALYZER.get());
 					output.accept(ModContent.BATTERY_POUCH.get());
 				});
@@ -377,6 +432,14 @@ public final class ModItems {
 		ModContent.VACUUM_CAPSULE = () -> VACUUM_CAPSULE;
 		ModContent.FILLED_VACUUM_CAPSULE = () -> FILLED_VACUUM_CAPSULE;
 		ModContent.STOCK_DISPLAY_FRAME_ITEM = () -> STOCK_DISPLAY_FRAME;
+		ModContent.SCYTHE_WOOD = () -> SCYTHE_WOOD;
+		ModContent.SCYTHE_STONE = () -> SCYTHE_STONE;
+		ModContent.SCYTHE_COPPER = () -> SCYTHE_COPPER;
+		ModContent.SCYTHE_IRON = () -> SCYTHE_IRON;
+		ModContent.SCYTHE_GOLD = () -> SCYTHE_GOLD;
+		ModContent.SCYTHE_TEMPERED_IRON = () -> SCYTHE_TEMPERED_IRON;
+		ModContent.SCYTHE_DIAMOND = () -> SCYTHE_DIAMOND;
+		ModContent.SCYTHE_NETHERITE = () -> SCYTHE_NETHERITE;
 
 		ModContent.GENERATOR_ITEM = () -> GENERATOR_ITEM;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = () -> GEOTHERMAL_GENERATOR_ITEM;

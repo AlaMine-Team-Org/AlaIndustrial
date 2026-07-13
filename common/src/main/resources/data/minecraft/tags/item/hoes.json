@@ -1,6 +1,14 @@
 {
   "replace": false,
   "values": [
-    "alaindustrial:tempered_iron_hoe"
+    "alaindustrial:tempered_iron_hoe",
+    "alaindustrial:scythe_wood",
+    "alaindustrial:scythe_stone",
+    "alaindustrial:scythe_copper",
+    "alaindustrial:scythe_iron",
+    "alaindustrial:scythe_gold",
+    "alaindustrial:scythe_tempered_iron",
+    "alaindustrial:scythe_diamond",
+    "alaindustrial:scythe_netherite"
   ]
 }

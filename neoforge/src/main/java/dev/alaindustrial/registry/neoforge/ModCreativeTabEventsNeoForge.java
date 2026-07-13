@@ -38,6 +38,17 @@ public final class ModCreativeTabEventsNeoForge {
 			insertAfter(event, pickaxe, axe);
 			insertAfter(event, axe, shovel);
 			insertAfter(event, shovel, hoe);
+			// Each scythe sits right after the matching vanilla hoe tier; the iron + tempered-iron
+			// scythes follow the mod's tempered-iron hoe (which is itself right after the iron hoe).
+			insertAfter(event, Items.WOODEN_HOE.getDefaultInstance(), ModContent.SCYTHE_WOOD.get().getDefaultInstance());
+			insertAfter(event, Items.STONE_HOE.getDefaultInstance(), ModContent.SCYTHE_STONE.get().getDefaultInstance());
+			insertAfter(event, Items.COPPER_HOE.getDefaultInstance(), ModContent.SCYTHE_COPPER.get().getDefaultInstance());
+			ItemStack ironScythe = ModContent.SCYTHE_IRON.get().getDefaultInstance();
+			insertAfter(event, hoe, ironScythe);
+			insertAfter(event, ironScythe, ModContent.SCYTHE_TEMPERED_IRON.get().getDefaultInstance());
+			insertAfter(event, Items.GOLDEN_HOE.getDefaultInstance(), ModContent.SCYTHE_GOLD.get().getDefaultInstance());
+			insertAfter(event, Items.DIAMOND_HOE.getDefaultInstance(), ModContent.SCYTHE_DIAMOND.get().getDefaultInstance());
+			insertAfter(event, Items.NETHERITE_HOE.getDefaultInstance(), ModContent.SCYTHE_NETHERITE.get().getDefaultInstance());
 			insertAfter(event, Items.COMPASS.getDefaultInstance(), ModContent.NETWORK_ANALYZER.get().getDefaultInstance());
 			event.accept(ModContent.BATTERY_POUCH.get());
 		} else if (event.getTabKey().equals(VanillaCreativeTabs.INGREDIENTS)) {

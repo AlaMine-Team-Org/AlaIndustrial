@@ -1,15 +1,18 @@
-## 0.1.21
+## 0.1.22
 
-<p><img alt="Vacuum Capsule filling with fluid" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.21/release-media/v0.1.21/changelog.webp" width="720"></p>
+<p><img alt="Scythe clearing a wide area of foliage in one swing" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.22/release-media/v0.1.22/changelog.webp" width="720"></p>
 
-This update adds the **Vacuum Capsule** — a stackable fluid container that finally makes moving liquids less of an inventory puzzle.
+This update adds the **Scythe** — a new tool that sweeps away leaves, grass, flowers and other decorative foliage in a single swing.
 
 ### Gameplay
 
-- **New item: Vacuum Capsule.** A stackable alternative to buckets. Empty capsules stack to 64, so you can carry plenty without dedicating a slot to each one. Fill one and it becomes a *filled* capsule holding exactly one bucket's worth (1000 mB) of a single fluid — up to 16 filled capsules of the same fluid stack together, and different fluids never mix.
-- **Fill and empty it anywhere.** Right-click a fluid source in the world (just like a bucket), fill it from any of the mod's machine fluid ports, or let pipes and tanks from other mods fill it in a slot. The filled capsule's look updates to match the fluid inside.
-- **Craftable.** Built from tin, glass panes, copper cable and redstone.
+- **New item: Scythe.** A right-click area tool for clearing decorative foliage. One swing mows down leaves, grass, flowers, ferns, mushrooms, vines, roots and saplings in front of you, dropping their normal loot — Fortune and Silk Touch work just like breaking by hand.
+- **Eight material tiers.** Wood → Stone → Copper → Iron → Gold → Tempered Iron → Diamond → Netherite. Higher tiers cover a wider area and clear more blocks per swing — from a small patch at wood up to a wide sweep at netherite.
+- **Each tier has a personality.** Gold is fragile but takes enchantments extremely well; Netherite is fire-resistant.
+- **Gentle on what matters.** The Scythe only clears decorative foliage — it never touches crops, water, logs or the ground underneath. Grass and flowers cost no durability; clearing leaves wears the tool down like normal.
+- **Optional area.** Hold Shift while right-clicking to do a single-block break instead of the area sweep.
+- **Craftable and enchantable.** Three blocks of the tier's material plus two sticks. Enchants like a hoe.
 
-### Bug Fixes
+### Quality of Life
 
-- **Cleaned up the recipe viewer.** Items that aren't craftable yet no longer clutter the recipe viewer — only things you can actually make show up there now.
+- **Sweep feedback.** Every successful swing has its own sound and a particle sweep, so you can see and hear the area you just cleared.

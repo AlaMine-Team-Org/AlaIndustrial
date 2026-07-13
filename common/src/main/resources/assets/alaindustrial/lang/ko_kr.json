@@ -235,5 +235,14 @@
 	"item.alaindustrial.filled_vacuum_capsule": "가득 찬 진공 캡슐",
 	"item.alaindustrial.filled_vacuum_capsule.named": "캡슐: %s",
 	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (양동이 1개)",
-	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "알 수 없는 액체"
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "알 수 없는 액체",
+	"item.alaindustrial.scythe_wood": "나무 큰낫",
+	"item.alaindustrial.scythe_stone": "돌 큰낫",
+	"item.alaindustrial.scythe_iron": "철 큰낫",
+	"item.alaindustrial.scythe_tempered_iron": "담금질 철 큰낫",
+	"item.alaindustrial.scythe_diamond": "다이아몬드 큰낫",
+	"item.alaindustrial.scythe_netherite": "네더라이트 큰낫",
+	"item.alaindustrial.scythe_gold": "황금 큰낫",
+	"subtitles.alaindustrial.scythe_swing": "큰낫 휘두르는 소리",
+	"item.alaindustrial.scythe_copper": "구리 큰낫"
 }

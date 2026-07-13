@@ -235,5 +235,14 @@
 	"item.alaindustrial.filled_vacuum_capsule": "Cápsula de vacío llena",
 	"item.alaindustrial.filled_vacuum_capsule.named": "Cápsula: %s",
 	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 cubo)",
-	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Fluido desconocido"
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Fluido desconocido",
+	"item.alaindustrial.scythe_wood": "Guadaña de madera",
+	"item.alaindustrial.scythe_stone": "Guadaña de piedra",
+	"item.alaindustrial.scythe_iron": "Guadaña de hierro",
+	"item.alaindustrial.scythe_tempered_iron": "Guadaña de hierro templado",
+	"item.alaindustrial.scythe_diamond": "Guadaña de diamante",
+	"item.alaindustrial.scythe_netherite": "Guadaña de netherita",
+	"item.alaindustrial.scythe_gold": "Guadaña de oro",
+	"subtitles.alaindustrial.scythe_swing": "Guadaña silba",
+	"item.alaindustrial.scythe_copper": "Guadaña de cobre"
 }

@@ -6,6 +6,7 @@ import dev.alaindustrial.gametest.CoreEnergyScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.CapsuleScenarios;
 import dev.alaindustrial.gametest.PouchScenarios;
+import dev.alaindustrial.gametest.ScytheScenarios;
 import dev.alaindustrial.gametest.StockDisplayFrameScenarios;
 import dev.alaindustrial.gametest.TemperedIronToolScenarios;
 import java.util.function.Consumer;
@@ -329,6 +330,17 @@ public final class NeoForgeGameTests {
 		registerTest(event, "capsule_stacking_by_fluid", 40, true, CapsuleScenarios::fun01StackingByFluid);
 		registerTest(event, "capsule_fill_from_tank", 40, true, CapsuleScenarios::fun02FillFromTank);
 		registerTest(event, "capsule_empty_into_tank", 40, true, CapsuleScenarios::fun03EmptyIntoTank);
+
+		// MOD-068 Scythe (suite TC-SCYTHE-001) — same neutral bodies as the Fabric ScytheGameTest. Proves
+		// the AOE clear, tag filter, ServerPlayerGameMode.destroyBlock durability/creative parity, the
+		// per-use cap and the shift / crops / water guards on the NeoForge lane too.
+		registerTest(event, "scythe_clears_foliage_keeps_solids", 40, true, ScytheScenarios::fun01ClearsFoliageKeepsSolids);
+		registerTest(event, "scythe_shift_does_not_aoe", 40, true, ScytheScenarios::neg01ShiftDoesNotAoe);
+		registerTest(event, "scythe_durability_per_block", 40, true, ScytheScenarios::prf01DurabilityPerBlock);
+		registerTest(event, "scythe_creative_no_durability", 40, true, ScytheScenarios::prf02CreativeNoDurability);
+		registerTest(event, "scythe_stops_at_max_blocks", 40, true, ScytheScenarios::bva01StopsAtMaxBlocks);
+		registerTest(event, "scythe_keeps_crops_and_water", 40, true, ScytheScenarios::neg02KeepsCropsAndWater);
+		registerTest(event, "scythe_netherite_fire_resistant", 40, true, ScytheScenarios::con02NetheriteFireResistant);
 	}
 
 	/** Register one code-body scenario under the alaindustrial namespace with a sane maxTicks. */

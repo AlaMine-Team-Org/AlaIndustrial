@@ -25,6 +25,7 @@ public final class CreativeTabContent {
 		oresAndMaterials(out);
 		components(out);
 		temperedIron(out);
+		scythes(out);
 	}
 
 	public static void combat(Sink out) {
@@ -40,7 +41,20 @@ public final class CreativeTabContent {
 		out.accept(ModContent.TEMPERED_IRON_AXE.get());
 		out.accept(ModContent.TEMPERED_IRON_SHOVEL.get());
 		out.accept(ModContent.TEMPERED_IRON_HOE.get());
+		scythes(out);
 		out.accept(ModContent.NETWORK_ANALYZER.get());
+	}
+
+	/** The six scythe tiers (MOD-068), wood → netherite, as one continuous row. */
+	public static void scythes(Sink out) {
+		out.accept(ModContent.SCYTHE_WOOD.get());
+		out.accept(ModContent.SCYTHE_STONE.get());
+		out.accept(ModContent.SCYTHE_COPPER.get());
+		out.accept(ModContent.SCYTHE_IRON.get());
+		out.accept(ModContent.SCYTHE_GOLD.get());
+		out.accept(ModContent.SCYTHE_TEMPERED_IRON.get());
+		out.accept(ModContent.SCYTHE_DIAMOND.get());
+		out.accept(ModContent.SCYTHE_NETHERITE.get());
 	}
 
 	public static void ingredients(Sink out) {

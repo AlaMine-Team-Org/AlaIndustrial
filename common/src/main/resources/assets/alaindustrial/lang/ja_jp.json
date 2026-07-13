@@ -235,5 +235,14 @@
 	"item.alaindustrial.filled_vacuum_capsule": "満杯の真空カプセル",
 	"item.alaindustrial.filled_vacuum_capsule.named": "カプセル：%s",
 	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB（バケツ1杯）",
-	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "不明な液体"
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "不明な液体",
+	"item.alaindustrial.scythe_wood": "木の大鎌",
+	"item.alaindustrial.scythe_stone": "石の大鎌",
+	"item.alaindustrial.scythe_iron": "鉄の大鎌",
+	"item.alaindustrial.scythe_tempered_iron": "調質鉄の大鎌",
+	"item.alaindustrial.scythe_diamond": "ダイヤモンドの大鎌",
+	"item.alaindustrial.scythe_netherite": "ネザライトの大鎌",
+	"item.alaindustrial.scythe_gold": "金の大鎌",
+	"subtitles.alaindustrial.scythe_swing": "大鎌を振る音",
+	"item.alaindustrial.scythe_copper": "銅の大鎌"
 }

@@ -97,6 +97,19 @@ public final class ModSounds {
 		return SoundEvent.createVariableRangeEvent(IRON_CHEST_CLOSE_ID);
 	}
 
+	/** The registry id for the scythe swing/cut sound (MOD-068), played once per successful AOE clear. */
+	public static final Identifier SCYTHE_SWING_ID = Industrialization.id("scythe_swing");
+
+	/** Bound once per loader before the scythe plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> SCYTHE_SWING = () -> {
+		throw new IllegalStateException("ModSounds.SCYTHE_SWING read before its loader bound it");
+	};
+
+	/** Build the scythe-swing event instance both loaders register. */
+	public static SoundEvent createScytheSwing() {
+		return SoundEvent.createVariableRangeEvent(SCYTHE_SWING_ID);
+	}
+
 	private ModSounds() {
 	}
 }

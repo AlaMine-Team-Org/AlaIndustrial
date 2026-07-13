@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"pattern": [
+		"MM ",
+		" SM",
+		" S "
+	],
+	"key": {
+		"M": "minecraft:iron_ingot",
+		"S": "minecraft:stick"
+	},
+	"result": {
+		"id": "alaindustrial:scythe_iron",
+		"count": 1
+	}
+}

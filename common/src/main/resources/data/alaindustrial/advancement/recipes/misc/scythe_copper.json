@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_material": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "minecraft:copper_ingot" } ] } },
+    "has_stick": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "minecraft:stick" } ] } }
+  },
+  "requirements": [ [ "has_material" ], [ "has_stick" ] ],
+  "rewards": {
+    "recipes": [ "alaindustrial:scythe_copper" ]
+  }
+}

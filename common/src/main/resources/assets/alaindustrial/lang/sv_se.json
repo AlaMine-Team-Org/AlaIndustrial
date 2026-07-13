@@ -235,5 +235,14 @@
 	"item.alaindustrial.filled_vacuum_capsule": "Fylld vakuumkapsel",
 	"item.alaindustrial.filled_vacuum_capsule.named": "Kapsel: %s",
 	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 hink)",
-	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Okänd vätska"
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Okänd vätska",
+	"item.alaindustrial.scythe_wood": "Trä Lie",
+	"item.alaindustrial.scythe_stone": "Sten Lie",
+	"item.alaindustrial.scythe_iron": "Järn Lie",
+	"item.alaindustrial.scythe_tempered_iron": "Härdat Järn Lie",
+	"item.alaindustrial.scythe_diamond": "Diamant Lie",
+	"item.alaindustrial.scythe_netherite": "Netherit Lie",
+	"item.alaindustrial.scythe_gold": "Guld Lie",
+	"subtitles.alaindustrial.scythe_swing": "Lien viner",
+	"item.alaindustrial.scythe_copper": "Koppar Lie"
 }

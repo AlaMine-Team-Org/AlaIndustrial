@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"pattern": [
+		"MM ",
+		" SM",
+		" S "
+	],
+	"key": {
+		"M": "minecraft:netherite_ingot",
+		"S": "minecraft:stick"
+	},
+	"result": {
+		"id": "alaindustrial:scythe_netherite",
+		"count": 1
+	}
+}

@@ -235,5 +235,14 @@
 	"item.alaindustrial.filled_vacuum_capsule": "Napełniona kapsuła próżniowa",
 	"item.alaindustrial.filled_vacuum_capsule.named": "Kapsuła: %s",
 	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 wiadro)",
-	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Nieznany płyn"
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Nieznany płyn",
+	"item.alaindustrial.scythe_wood": "Drewniana kosa",
+	"item.alaindustrial.scythe_stone": "Kamienna kosa",
+	"item.alaindustrial.scythe_iron": "Żelazna kosa",
+	"item.alaindustrial.scythe_tempered_iron": "Kosa z utwardzonego żelaza",
+	"item.alaindustrial.scythe_diamond": "Diamentowa kosa",
+	"item.alaindustrial.scythe_netherite": "Netherytowa kosa",
+	"item.alaindustrial.scythe_gold": "Złota kosa",
+	"subtitles.alaindustrial.scythe_swing": "Kosa świszcze",
+	"item.alaindustrial.scythe_copper": "Miedziana kosa"
 }

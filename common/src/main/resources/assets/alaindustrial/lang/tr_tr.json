@@ -235,5 +235,14 @@
 	"item.alaindustrial.filled_vacuum_capsule": "Dolu vakum kapsülü",
 	"item.alaindustrial.filled_vacuum_capsule.named": "Kapsül: %s",
 	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 kova)",
-	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Bilinmeyen sıvı"
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Bilinmeyen sıvı",
+	"item.alaindustrial.scythe_wood": "Ahşap Tırpan",
+	"item.alaindustrial.scythe_stone": "Taş Tırpan",
+	"item.alaindustrial.scythe_iron": "Demir Tırpan",
+	"item.alaindustrial.scythe_tempered_iron": "Menevişlenmiş Demir Tırpan",
+	"item.alaindustrial.scythe_diamond": "Elmas Tırpan",
+	"item.alaindustrial.scythe_netherite": "Netherit Tırpan",
+	"item.alaindustrial.scythe_gold": "Altın Tırpan",
+	"subtitles.alaindustrial.scythe_swing": "Tırpan savruluyor",
+	"item.alaindustrial.scythe_copper": "Bakır Tırpan"
 }

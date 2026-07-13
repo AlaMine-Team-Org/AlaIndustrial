@@ -145,6 +145,16 @@ public final class ModContent {
 	public static Supplier<Item> FILLED_VACUUM_CAPSULE = unbound("FILLED_VACUUM_CAPSULE");
 	// Stock Display Frame (MOD-066) — placement item for the frame entity below.
 	public static Supplier<Item> STOCK_DISPLAY_FRAME_ITEM = unbound("STOCK_DISPLAY_FRAME_ITEM");
+	// Scythe (MOD-068) — AOE foliage-clearing tool, six material tiers. Behaviour lives in
+	// dev.alaindustrial.item.ScytheItem (common); each loader registers the six items.
+	public static Supplier<Item> SCYTHE_WOOD = unbound("SCYTHE_WOOD");
+	public static Supplier<Item> SCYTHE_STONE = unbound("SCYTHE_STONE");
+	public static Supplier<Item> SCYTHE_COPPER = unbound("SCYTHE_COPPER");
+	public static Supplier<Item> SCYTHE_IRON = unbound("SCYTHE_IRON");
+	public static Supplier<Item> SCYTHE_GOLD = unbound("SCYTHE_GOLD");
+	public static Supplier<Item> SCYTHE_TEMPERED_IRON = unbound("SCYTHE_TEMPERED_IRON");
+	public static Supplier<Item> SCYTHE_DIAMOND = unbound("SCYTHE_DIAMOND");
+	public static Supplier<Item> SCYTHE_NETHERITE = unbound("SCYTHE_NETHERITE");
 
 	// --- Entity types ---
 	// Stock Display Frame (MOD-066) — the mod's first entity: an ItemFrame subclass that counts the

@@ -235,5 +235,14 @@
 	"item.alaindustrial.filled_vacuum_capsule": "Заполненная вакуумная капсула",
 	"item.alaindustrial.filled_vacuum_capsule.named": "Капсула: %s",
 	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 мБ (1 ведро)",
-	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Неизвестная жидкость"
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Неизвестная жидкость",
+	"item.alaindustrial.scythe_wood": "Деревянная коса",
+	"item.alaindustrial.scythe_stone": "Каменная коса",
+	"item.alaindustrial.scythe_iron": "Железная коса",
+	"item.alaindustrial.scythe_tempered_iron": "Закалённая железная коса",
+	"item.alaindustrial.scythe_diamond": "Алмазная коса",
+	"item.alaindustrial.scythe_netherite": "Незеритовая коса",
+	"item.alaindustrial.scythe_gold": "Золотая коса",
+	"subtitles.alaindustrial.scythe_swing": "Коса свистит",
+	"item.alaindustrial.scythe_copper": "Медная коса"
 }

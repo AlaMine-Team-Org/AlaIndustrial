@@ -235,5 +235,14 @@
 	"item.alaindustrial.filled_vacuum_capsule": "भरा हुआ वैक्यूम कैप्सूल",
 	"item.alaindustrial.filled_vacuum_capsule.named": "कैप्सूल: %s",
 	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 बाल्टी)",
-	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "अज्ञात तरल"
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "अज्ञात तरल",
+	"item.alaindustrial.scythe_wood": "लकड़ी की दराँती",
+	"item.alaindustrial.scythe_stone": "पत्थर की दराँती",
+	"item.alaindustrial.scythe_iron": "लोहे की दराँती",
+	"item.alaindustrial.scythe_tempered_iron": "टेम्पर्ड आयरन दराँती",
+	"item.alaindustrial.scythe_diamond": "हीरे की दराँती",
+	"item.alaindustrial.scythe_netherite": "नेदराइट की दराँती",
+	"item.alaindustrial.scythe_gold": "सोने की दराँती",
+	"subtitles.alaindustrial.scythe_swing": "दराँती लहरा रही है",
+	"item.alaindustrial.scythe_copper": "तांबे की दराँती"
 }

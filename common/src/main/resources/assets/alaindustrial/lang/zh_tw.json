@@ -235,5 +235,14 @@
 	"item.alaindustrial.filled_vacuum_capsule": "已裝滿的真空膠囊",
 	"item.alaindustrial.filled_vacuum_capsule.named": "膠囊：%s",
 	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB（1桶）",
-	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "未知液體"
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "未知液體",
+	"item.alaindustrial.scythe_wood": "木大鐮刀",
+	"item.alaindustrial.scythe_stone": "石大鐮刀",
+	"item.alaindustrial.scythe_iron": "鐵大鐮刀",
+	"item.alaindustrial.scythe_tempered_iron": "淬火鐵大鐮刀",
+	"item.alaindustrial.scythe_diamond": "鑽石大鐮刀",
+	"item.alaindustrial.scythe_netherite": "獄髓大鐮刀",
+	"item.alaindustrial.scythe_gold": "金大鐮刀",
+	"subtitles.alaindustrial.scythe_swing": "大鐮刀揮舞",
+	"item.alaindustrial.scythe_copper": "銅大鐮刀"
 }

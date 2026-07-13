@@ -52,5 +52,14 @@
         "stream": false
       }
     ]
+  },
+  "scythe_swing": {
+    "subtitle": "subtitles.alaindustrial.scythe_swing",
+    "sounds": [
+      {
+        "name": "alaindustrial:scythe_swing",
+        "stream": false
+      }
+    ]
   }
 }

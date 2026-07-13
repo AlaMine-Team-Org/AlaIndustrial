@@ -5,9 +5,11 @@ import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import dev.alaindustrial.item.PouchItem;
+import dev.alaindustrial.item.ScytheItem;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -120,6 +122,44 @@ public final class ModItemsNeoForge {
 					p -> new dev.alaindustrial.item.StockDisplayFrameItem(
 							ModEntitiesNeoForge.STOCK_DISPLAY_FRAME.get(), p),
 					Item.Properties::new);
+
+	// Scythe (MOD-068): six AOE foliage tiers. The factory builds a ScytheItem (its own AOE useOn);
+	// the properties operator applies .hoe(material, ...) for the tool component + enchantability,
+	// exactly like the Fabric ModItems#scythe helper. NeoForge applies setId from the deferred key.
+	public static final DeferredItem<ScytheItem> SCYTHE_WOOD =
+			ITEMS.registerItem("scythe_wood",
+					p -> new ScytheItem(new ScytheItem.Profile(3, 2, 12), p),
+					p -> p.hoe(ToolMaterial.WOOD, -2.0f, -1.0f));
+	public static final DeferredItem<ScytheItem> SCYTHE_STONE =
+			ITEMS.registerItem("scythe_stone",
+					p -> new ScytheItem(new ScytheItem.Profile(3, 3, 18), p),
+					p -> p.hoe(ToolMaterial.STONE, -2.0f, -1.0f));
+	public static final DeferredItem<ScytheItem> SCYTHE_COPPER =
+			ITEMS.registerItem("scythe_copper",
+					p -> new ScytheItem(new ScytheItem.Profile(3, 3, 24), p),
+					p -> p.hoe(ToolMaterial.COPPER, -2.0f, -1.0f));
+	public static final DeferredItem<ScytheItem> SCYTHE_IRON =
+			ITEMS.registerItem("scythe_iron",
+					p -> new ScytheItem(new ScytheItem.Profile(5, 3, 30), p),
+					p -> p.hoe(ToolMaterial.IRON, -2.0f, -1.0f));
+	// Gold: iron-sized area, fragile + highly enchantable (vanilla gold philosophy). See Fabric ModItems.
+	public static final DeferredItem<ScytheItem> SCYTHE_GOLD =
+			ITEMS.registerItem("scythe_gold",
+					p -> new ScytheItem(new ScytheItem.Profile(5, 3, 30), p),
+					p -> p.hoe(ToolMaterial.GOLD, -2.0f, -1.0f));
+	public static final DeferredItem<ScytheItem> SCYTHE_TEMPERED_IRON =
+			ITEMS.registerItem("scythe_tempered_iron",
+					p -> new ScytheItem(new ScytheItem.Profile(5, 4, 40), p),
+					p -> p.hoe(ModToolMaterials.TEMPERED_IRON, -2.0f, -1.0f));
+	public static final DeferredItem<ScytheItem> SCYTHE_DIAMOND =
+			ITEMS.registerItem("scythe_diamond",
+					p -> new ScytheItem(new ScytheItem.Profile(5, 5, 50), p),
+					p -> p.hoe(ToolMaterial.DIAMOND, -2.0f, -1.0f));
+	// Netherite tier is fire-resistant like all vanilla netherite gear (survives lava/fire).
+	public static final DeferredItem<ScytheItem> SCYTHE_NETHERITE =
+			ITEMS.registerItem("scythe_netherite",
+					p -> new ScytheItem(new ScytheItem.Profile(7, 5, 70), p),
+					p -> p.hoe(ToolMaterial.NETHERITE, -2.0f, -1.0f).fireResistant());
 
 	// --- Block items ---
 	public static final DeferredItem<BlockItem> GENERATOR_ITEM =
@@ -235,6 +275,15 @@ public final class ModItemsNeoForge {
 		ModContent.VACUUM_CAPSULE = VACUUM_CAPSULE::get;
 		ModContent.FILLED_VACUUM_CAPSULE = FILLED_VACUUM_CAPSULE::get;
 		ModContent.STOCK_DISPLAY_FRAME_ITEM = STOCK_DISPLAY_FRAME_ITEM::get;
+		// DeferredItem<ScytheItem> into Supplier<Item> slots — bind via ::get (invariant generics).
+		ModContent.SCYTHE_WOOD = SCYTHE_WOOD::get;
+		ModContent.SCYTHE_STONE = SCYTHE_STONE::get;
+		ModContent.SCYTHE_COPPER = SCYTHE_COPPER::get;
+		ModContent.SCYTHE_IRON = SCYTHE_IRON::get;
+		ModContent.SCYTHE_GOLD = SCYTHE_GOLD::get;
+		ModContent.SCYTHE_TEMPERED_IRON = SCYTHE_TEMPERED_IRON::get;
+		ModContent.SCYTHE_DIAMOND = SCYTHE_DIAMOND::get;
+		ModContent.SCYTHE_NETHERITE = SCYTHE_NETHERITE::get;
 
 		ModContent.GENERATOR_ITEM = GENERATOR_ITEM;
 		ModContent.SOLAR_PANEL_ITEM = SOLAR_PANEL_ITEM;

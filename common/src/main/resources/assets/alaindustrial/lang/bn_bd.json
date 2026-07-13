@@ -235,5 +235,14 @@
 	"item.alaindustrial.filled_vacuum_capsule": "পূর্ণ ভ্যাকুয়াম ক্যাপসুল",
 	"item.alaindustrial.filled_vacuum_capsule.named": "ক্যাপসুল: %s",
 	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 বালতি)",
-	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "অজানা তরল"
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "অজানা তরল",
+	"item.alaindustrial.scythe_wood": "কাঠের কাস্তে",
+	"item.alaindustrial.scythe_stone": "পাথরের কাস্তে",
+	"item.alaindustrial.scythe_iron": "লোহার কাস্তে",
+	"item.alaindustrial.scythe_tempered_iron": "টেম্পার্ড আয়রন কাস্তে",
+	"item.alaindustrial.scythe_diamond": "হীরের কাস্তে",
+	"item.alaindustrial.scythe_netherite": "নেদারাইটের কাস্তে",
+	"item.alaindustrial.scythe_gold": "সোনার কাস্তে",
+	"subtitles.alaindustrial.scythe_swing": "কাস্তে দুলছে",
+	"item.alaindustrial.scythe_copper": "তামার কাস্তে"
 }

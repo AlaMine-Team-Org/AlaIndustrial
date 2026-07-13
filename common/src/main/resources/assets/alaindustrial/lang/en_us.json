@@ -41,6 +41,12 @@
 	"item.alaindustrial.tempered_iron_chestplate": "Tempered Iron Chestplate",
 	"item.alaindustrial.tempered_iron_leggings": "Tempered Iron Leggings",
 	"item.alaindustrial.tempered_iron_boots": "Tempered Iron Boots",
+	"item.alaindustrial.scythe_wood": "Wooden Scythe",
+	"item.alaindustrial.scythe_stone": "Stone Scythe",
+	"item.alaindustrial.scythe_iron": "Iron Scythe",
+	"item.alaindustrial.scythe_tempered_iron": "Tempered Iron Scythe",
+	"item.alaindustrial.scythe_diamond": "Diamond Scythe",
+	"item.alaindustrial.scythe_netherite": "Netherite Scythe",
 	"item.alaindustrial.iron_dust": "Iron Dust",
 	"item.alaindustrial.copper_dust": "Copper Dust",
 	"item.alaindustrial.gold_dust": "Gold Dust",
@@ -235,5 +241,8 @@
 	"item.alaindustrial.filled_vacuum_capsule": "Filled Vacuum Capsule",
 	"item.alaindustrial.filled_vacuum_capsule.named": "Capsule: %s",
 	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 bucket)",
-	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Unknown fluid"
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Unknown fluid",
+	"item.alaindustrial.scythe_gold": "Golden Scythe",
+	"subtitles.alaindustrial.scythe_swing": "Scythe swings",
+	"item.alaindustrial.scythe_copper": "Copper Scythe"
 }

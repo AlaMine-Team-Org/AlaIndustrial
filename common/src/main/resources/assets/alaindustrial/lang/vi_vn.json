@@ -235,5 +235,14 @@
 	"item.alaindustrial.filled_vacuum_capsule": "Viên nang chân không đã đầy",
 	"item.alaindustrial.filled_vacuum_capsule.named": "Viên nang: %s",
 	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 xô)",
-	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Chất lỏng không xác định"
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Chất lỏng không xác định",
+	"item.alaindustrial.scythe_wood": "Lưỡi Hái Gỗ",
+	"item.alaindustrial.scythe_stone": "Lưỡi Hái Đá",
+	"item.alaindustrial.scythe_iron": "Lưỡi Hái Sắt",
+	"item.alaindustrial.scythe_tempered_iron": "Lưỡi Hái Sắt Tôi",
+	"item.alaindustrial.scythe_diamond": "Lưỡi Hái Kim Cương",
+	"item.alaindustrial.scythe_netherite": "Lưỡi Hái Netherite",
+	"item.alaindustrial.scythe_gold": "Lưỡi Hái Vàng",
+	"subtitles.alaindustrial.scythe_swing": "Lưỡi Hái vung",
+	"item.alaindustrial.scythe_copper": "Lưỡi Hái Đồng"
 }

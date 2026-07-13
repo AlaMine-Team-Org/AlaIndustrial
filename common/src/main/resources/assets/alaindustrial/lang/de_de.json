@@ -235,5 +235,14 @@
 	"item.alaindustrial.filled_vacuum_capsule": "Gefüllte Vakuumkapsel",
 	"item.alaindustrial.filled_vacuum_capsule.named": "Kapsel: %s",
 	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 Eimer)",
-	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Unbekannte Flüssigkeit"
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Unbekannte Flüssigkeit",
+	"item.alaindustrial.scythe_wood": "Holzsense",
+	"item.alaindustrial.scythe_stone": "Steinsense",
+	"item.alaindustrial.scythe_iron": "Eisensense",
+	"item.alaindustrial.scythe_tempered_iron": "Gehärtete Eisensense",
+	"item.alaindustrial.scythe_diamond": "Diamantsense",
+	"item.alaindustrial.scythe_netherite": "Netheritsense",
+	"item.alaindustrial.scythe_gold": "Goldsense",
+	"subtitles.alaindustrial.scythe_swing": "Sense schwingt",
+	"item.alaindustrial.scythe_copper": "Kupfersense"
 }
