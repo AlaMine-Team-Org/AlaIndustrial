@@ -158,15 +158,17 @@
     text-shadow:2px 2px 0 var(--line2); }
   .block-card .block-id { color:var(--muted); font-size:16px;
     font-family:'VT323',monospace; margin-bottom:8px; }
-  .block-card .tags { display:flex; gap:4px; flex-wrap:wrap; }
-  .block-card .tag { display:inline-block; font-size:15px; padding:1px 6px;
-    border:1px solid var(--line2); color:var(--txt); background:var(--bg2);
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:27px; font-size:16px; padding:0 10px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
     font-family:'VT323',monospace; }
-  .block-card .tag.cat { font-family:'Press Start 2P',monospace; font-size:8px;
-    border:none; color:var(--bg); padding:3px 6px; }
-  .block-card .tag.tier { color:var(--gold); border-color:var(--gold); }
-  .block-card .tag.lifecycle { font-family:'Press Start 2P',monospace; font-size:8px;
-    border:none; color:var(--bg); padding:3px 6px; }
+  .block-card .tag.cat { font-family:'Press Start 2P',monospace; font-size:9px;
+    color:var(--bg); padding:0 10px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-family:'Press Start 2P',monospace; font-size:9px;
+    color:var(--bg); padding:0 10px; }
 
   
   .content h2 { color:var(--gold);
