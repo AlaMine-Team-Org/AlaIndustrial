@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Scythe — Ala Industrial — Guide</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:27px; font-size:16px; padding:0 10px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  .block-card .tag.cat { font-family:'Press Start 2P',monospace; font-size:9px;
+    color:var(--bg); padding:0 10px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-family:'Press Start 2P',monospace; font-size:9px;
+    color:var(--bg); padding:0 10px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="Open menu" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../../ru/items/scythe.html">RU</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Browse</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>Getting Started</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
+<div class="group-title">Energy</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="1 page">1</span></a>
+<div class="group-title">Processing</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<div class="group-title">World &amp; Automation</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<div class="group-title">Other</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<div class="group-title">Items</div>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="5 pages">5</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../items/index.html">Items</a><span class="sep">/</span><span>Scythe</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/item/scythe_diamond.png" alt="Scythe" width="64" height="64">
+    <div class="info">
+      <h1>Scythe</h1>
+      <div class="block-id">alaindustrial:scythe</div>
+      <div class="tags"><span class="tag cat" style="background:#d97706">Items</span><span class="tag lifecycle" style="background:#22c55e">Implemented</span><span class="tag">tool</span><span class="tag">scythe</span><span class="tag">aoe</span><span class="tag">foliage</span></div>
+    </div>
+  </div>
+</div>
+<h2>Summary</h2>
+<p>The <strong>Scythe</strong> is an Ala Industrial hand tool for quickly clearing decorative foliage. A right-click on a block mows down every eligible plant (leaves, grass, flowers, ferns, mushrooms, vines, roots, saplings) in a flat rectangular area in front of the player, dropping normal vanilla loot exactly as if the player had broken each block by hand. Eight material tiers (wood → stone → copper → iron → gold → tempered iron → diamond → netherite) scale the area and the per-swing block cap. The scythe is a quality-of-life tool for building and gathering decorations; it does <strong>not</strong> replace the axe, the hoe or an auto-farm: the first version deliberately does <strong>not</strong> harvest <code>#minecraft:crops</code>.</p>
+<h2>Energy</h2>
+<p>An ordinary hand tool — it does not connect to the mod's energy network and uses no EU/FE.</p>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>none (hand tool, not part of the EU/FE system)</td></tr></tbody></table>
+<h2>Inventory</h2>
+<p>An item. Stacks to 1 (a durability tool). It carries the <code>minecraft:tool</code> data component via <code>Item.Properties.hoe(material, -2.0f, -1.0f)</code>, but it is <strong>not</strong> a <code>HoeItem</code> — the scythe does not till dirt on right-click; it runs its own AOE. Repaired with the matching tier material (vanilla repair tags; tempered iron via <code>#alaindustrial:tempered_iron_tool_materials</code>).</p>
+<h2>Block properties</h2>
+<p>Not applicable (an item).</p>
+<h2>Stats (balance)</h2>
+<p>The area is a flat <code>width × depth × height</code> box in front of the player: depth runs forward along the look direction, width (always odd — there is a centre line) along the perpendicular horizontal axis, height is always 3 (the clicked layer ±1). The centre is the clicked block. Durability and mining speed come from the vanilla <code>ToolMaterial</code>; the numbers live in code (/<code>ModItemsNeoForge</code> via <code>ScytheItem.Profile</code>), not in `C.</p>
+<table><thead><tr><th>Tier</th><th>Material</th><th>Area (W×D×H)</th><th>Max blocks/swing</th><th>Durability</th><th>Enchant.</th></tr></thead><tbody><tr><td>Wood</td><td><code>ToolMaterial.WOOD</code></td><td>3×2×3</td><td>12</td><td>59</td><td>15</td></tr><tr><td>Stone</td><td><code>ToolMaterial.STONE</code></td><td>3×3×3</td><td>18</td><td>131</td><td>5</td></tr><tr><td>Copper</td><td><code>ToolMaterial.COPPER</code></td><td>3×3×3</td><td>24</td><td>190</td><td>13</td></tr><tr><td>Iron</td><td><code>ToolMaterial.IRON</code></td><td>5×3×3</td><td>30</td><td>250</td><td>14</td></tr><tr><td>Gold</td><td><code>ToolMaterial.GOLD</code></td><td>5×3×3</td><td>30</td><td>32</td><td>22</td></tr><tr><td>Tempered Iron</td><td><code>ModToolMaterials.TEMPERED_IRON</code></td><td>5×4×3</td><td>40</td><td>350</td><td>16</td></tr><tr><td>Diamond</td><td><code>ToolMaterial.DIAMOND</code></td><td>5×5×3</td><td>50</td><td>1561</td><td>10</td></tr><tr><td>Netherite</td><td><code>ToolMaterial.NETHERITE</code></td><td>7×5×3</td><td>70</td><td>2031</td><td>15</td></tr></tbody></table>
+<p><strong>Gold</strong> is a deliberate side-grade: iron-sized area, but fragile (32 durability) and highly enchantable (22) — the vanilla gold philosophy (shines with Unbreaking/Mending). <strong>Copper</strong> is a modest step between stone and iron. The <strong>netherite</strong> scythe is fire-resistant (<code>.fireResistant</code>), like all vanilla netherite gear. The attack profile mirrors a hoe (<code>hoe(material, -2.0f, -1.0f)</code>): low damage, not intended as a weapon.</p>
+<h2>Target blocks</h2>
+<p>Only blocks in the <code>alaindustrial:scythe_harvestable</code> tag (<code>data/alaindustrial/tags/block/scythe_harvestable.json</code>) are mowed: sub-tags: <code>#minecraft:leaves</code>, <code>#minecraft:flowers</code> (includes <code>#small_flowers</code>), <code>#minecraft:saplings</code>, <code>#minecraft:cave_vines</code>; grass/ferns: <code>short_grass</code>, <code>tall_grass</code>, <code>fern</code>, <code>large_fern</code>, <code>dead_bush</code>, <code>bush</code>, <code>firefly_bush</code>, <code>short_dry_grass</code>, <code>tall_dry_grass</code>, <code>leaf_litter</code>; other: <code>moss_carpet</code>, <code>pale_moss_carpet</code>, <code>brown_mushroom</code>, <code>red_mushroom</code>, <code>vine</code>, <code>glow_lichen</code>, <code>hanging_roots</code>, <code>nether_sprouts</code>, <code>warped_roots</code>, <code>crimson_roots</code>. <strong>Excluded</strong> (deliberately for v1): <code>#minecraft:crops</code> (a separate farming mechanic), pumpkin/melon stems, sugar cane, cactus, bamboo, kelp (farming/resources), logs, dirt, moss block (terrain), and water/seagrass. <code>chorus_flower</code> comes in transitively via <code>#minecraft:flowers</code> — accepted as a decorative block.</p>
+<h2>Recipes</h2>
+<p>All eight are crafted at a workbench with one custom shape (3 tier materials + 2 sticks), deliberately different from the vanilla hoe since the scythe is stronger and has an AOE:</p>
+<pre><code class="lang-">MM.
+.SM
+.S.</code></pre>
+<p>The <code>M</code> material per tier: <code>#minecraft:planks</code>, <code>minecraft:cobblestone</code>, <code>minecraft:copper_ingot</code>, <code>minecraft:iron_ingot</code>, <code>minecraft:gold_ingot</code>, <code>alaindustrial:tempered_iron</code>, <code>minecraft:diamond</code>, <code>minecraft:netherite_ingot</code>; <code>S</code> is <code>minecraft:stick</code>. Each tier has a recipe advancement (<code>advancement/recipes/misc/scythe_*.json</code>), so the recipe appears in the recipe book once its material is picked up.</p>
+<h2>Behaviour</h2>
+<p><strong>Trigger:</strong> only a right-click <code>useOn</code>, only from the <strong>main hand</strong>. <code>Shift</code>/secondary use and the off-hand return <code>PASS</code> (normal interaction is not blocked). <strong>Breaking:</strong> via <code>ServerPlayerGameMode.destroyBlock(pos)</code> — the canonical "player mined a block" path. That gives, for free: tool-aware loot (<strong>Fortune/Silk Touch work</strong>), correct double-plant handling (the other half disappears without a duplicate drop), automatic durability, creative parity (no drop, no durability), adventure/spawn-protection, and both loaders' block-break events (Fabric <code>PlayerBlockBreakEvents</code> / NeoForge <code>BlockEvent.BreakEvent</code>) firing — protection mods can veto each block. <strong>Durability (vanilla tool rules):</strong> 0-hardness blocks (short grass, fern, flowers) break instantly and cost <strong>no</strong> durability; blocks with hardness &gt; 0 (leaves at 0.2) cost 1 durability each. Grass can be mowed forever; leaves cost durability per the tier. <strong>Cap:</strong> never more than the tier's <code>max blocks/swing</code>; if the tool breaks mid-swing the pass stops (it never breaks past the available durability). Candidates are sorted by distance from the click — the clicked block breaks first, so cap and durability are deterministic. <strong>Sound:</strong> one swing/cut <code>alaindustrial:scythe_swing</code> per successful swing (not per block), source <code>PLAYERS</code>, with a slight pitch variance. <strong>Effect:</strong> a <code>minecraft:sweep_attack</code> particle flourish over the cleared area, spread across the scythe's width/depth (more when more is cleared).</p>
+<h2>Progression</h2>
+<p>Tier: none (a hand tool, not tied to the mod's energy tiers). Eight material steps parallel the vanilla hoes; in creative each scythe sits right after its tier's hoe (the Tools &amp; Utilities tab). Area and cap grow with tier; gold is a fragile enchantable side-grade, tempered iron a step between iron and diamond.</p>
+<h2>Compatibility</h2>
+<p>Recipe viewers: JEI, REI, EMI — as ordinary crafted items. Enchantments: the scythe is in <code>#minecraft:hoes</code>, so via the <code>#minecraft:enchantable/*</code> chain it accepts <code>efficiency</code>/<code>unbreaking</code>/<code>fortune</code>/<code>silk_touch</code>/<code>mending</code>. Fortune boosts the drop (the break path is tool-aware); Efficiency does not affect the instant AOE. Protection/adventure: the scythe does not bypass vanilla restrictions or the loaders' break events.</p>
+<h2>Balance</h2>
+<p>See the <a href="index.html#stats-balance">table above</a>. Design goal: "convenient decoration clearing that does not replace the axe/hoe/auto-farm". The numbers are fixed in code (<code>ScytheItem.Profile</code> + vanilla See .</p>
+<h2>Related</h2>
+<p><a href="tempered_iron_tools.html">Tempered Iron tools</a> — the mod's data-driven tool pattern and the <code>TEMPERED_IRON</code> material. Vanilla hoes — the material baseline and the creative-tab position.</p>
+
+  </main>
+</div>
+
+</body>
+</html>
