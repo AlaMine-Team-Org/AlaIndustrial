@@ -116,9 +116,16 @@
   .breadcrumbs .sep { margin:0 4px; opacity:.6; }
 
   
-  .block-card { display:flex; align-items:flex-start; gap:14px; padding:14px 16px;
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
     background:var(--panel); border:2px solid var(--line2);
-    margin-bottom:20px; image-rendering:pixelated; }
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
   .block-card .icon { width:64px; height:64px; flex:0 0 64px;
     background:var(--bg); border:1px solid var(--line2);
     object-fit:contain; image-rendering:pixelated; }
@@ -284,7 +291,7 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="4 pages">4</span></a>
-<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="4 pages">4</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><span>Items</span></div>
@@ -293,11 +300,11 @@
   <div class="info">
     <h1>Items</h1>
     <p style="color:var(--muted);margin:8px 0 0">Electric items and hand tools: battery pouch, tempered iron.</p>
-    <div class="tags"><span class="tag tier">3 pages</span></div>
+    <div class="tags"><span class="tag tier">4 pages</span></div>
   </div>
 </div>
 <ul class="concept-list">
-<li><a class="concept-card" style="--c:#d97706" href="battery_pouch.html"><div class="cc-icon"><img src="../assets/item/battery_pouch_3d.png" alt="Battery Pouch" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Battery Pouch</div><div class="cc-desc">A chargeable item pouch — holds 128 weight, runs on a built-in 2000 EU/FE battery and locks when it runs out of charge.</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">Implemented</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="tempered_iron_pickaxe.html"><div class="cc-icon"><img src="../assets/item/tempered_iron_pickaxe_3d.png" alt="Tempered Iron Pickaxe" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Tempered Iron Pickaxe</div><div class="cc-desc">A hand-held tempered-iron pickaxe — slightly better than vanilla iron in every stat, but it cannot mine diamond-level blocks.</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">Implemented</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="tempered_iron_tools.html"><div class="cc-icon"><img src="../assets/item/tempered_iron_pickaxe.png" alt="Tempered Iron Tools" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Tempered Iron Tools</div><div class="cc-desc">A set of five hand tools made of tempered iron — pickaxe, axe, hoe, shovel and sword; slightly better than vanilla iron, but they cannot mine diamond-level blocks.</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">Implemented</span></div></div></a></li>
+<li><a class="concept-card" style="--c:#d97706" href="battery_pouch.html"><div class="cc-icon"><img src="../assets/item/battery_pouch_3d.png" alt="Battery Pouch" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Battery Pouch</div><div class="cc-desc">A chargeable item pouch — holds 128 weight, runs on a built-in 2000 EU/FE battery and locks when it runs out of charge.</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">Implemented</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="vacuum_capsule.html"><div class="cc-icon"><img src="../assets/item/vacuum_capsule_3d.png" alt="Vacuum Capsule" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Vacuum Capsule</div><div class="cc-desc">A stackable one-bucket fluid container — up to 16 capsules of one fluid per stack, filled from the world or the mod&#x27;s tanks.</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">Implemented</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="tempered_iron_pickaxe.html"><div class="cc-icon"><img src="../assets/item/tempered_iron_pickaxe_3d.png" alt="Tempered Iron Pickaxe" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Tempered Iron Pickaxe</div><div class="cc-desc">A hand-held tempered-iron pickaxe — slightly better than vanilla iron in every stat, but it cannot mine diamond-level blocks.</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">Implemented</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="tempered_iron_tools.html"><div class="cc-icon"><img src="../assets/item/tempered_iron_pickaxe.png" alt="Tempered Iron Tools" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Tempered Iron Tools</div><div class="cc-desc">A set of five hand tools made of tempered iron — pickaxe, axe, hoe, shovel and sword; slightly better than vanilla iron, but they cannot mine diamond-level blocks.</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">Implemented</span></div></div></a></li>
 </ul><h2>More available items</h2><div class="item-showcase"><div class="item-showcase-card"><img src="../assets/item/tempered_iron_axe.png" alt="" width="64" height="64"><span>Tempered Iron Axe</span></div><div class="item-showcase-card"><img src="../assets/item/tempered_iron_shovel.png" alt="" width="64" height="64"><span>Tempered Iron Shovel</span></div><div class="item-showcase-card"><img src="../assets/item/tempered_iron_hoe.png" alt="" width="64" height="64"><span>Tempered Iron Hoe</span></div><div class="item-showcase-card"><img src="../assets/item/tempered_iron_sword.png" alt="" width="64" height="64"><span>Tempered Iron Sword</span></div><div class="item-showcase-card"><img src="../assets/item/tempered_iron_helmet.png" alt="" width="64" height="64"><span>Tempered Iron Helmet</span></div><div class="item-showcase-card"><img src="../assets/item/tempered_iron_chestplate.png" alt="" width="64" height="64"><span>Tempered Iron Chestplate</span></div><div class="item-showcase-card"><img src="../assets/item/tempered_iron_leggings.png" alt="" width="64" height="64"><span>Tempered Iron Leggings</span></div><div class="item-showcase-card"><img src="../assets/item/tempered_iron_boots.png" alt="" width="64" height="64"><span>Tempered Iron Boots</span></div></div>
   </main>
 </div>

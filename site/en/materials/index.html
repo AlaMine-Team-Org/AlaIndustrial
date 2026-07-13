@@ -116,9 +116,16 @@
   .breadcrumbs .sep { margin:0 4px; opacity:.6; }
 
   
-  .block-card { display:flex; align-items:flex-start; gap:14px; padding:14px 16px;
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
     background:var(--panel); border:2px solid var(--line2);
-    margin-bottom:20px; image-rendering:pixelated; }
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
   .block-card .icon { width:64px; height:64px; flex:0 0 64px;
     background:var(--bg); border:1px solid var(--line2);
     object-fit:contain; image-rendering:pixelated; }
@@ -284,7 +291,7 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="4 pages">4</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="4 pages">4</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><span>Materials</span></div>
