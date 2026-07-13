@@ -229,5 +229,11 @@
 	"tag.item.alaindustrial.macerable_nickel": "Подрібнюваний нікель",
 	"tag.item.alaindustrial.macerable_silver": "Подрібнюване срібло",
 	"tag.item.alaindustrial.macerable_tin": "Подрібнюване олово",
-	"tag.item.alaindustrial.macerable_uranium": "Подрібнюваний уран"
+	"tag.item.alaindustrial.macerable_uranium": "Подрібнюваний уран",
+	"item.alaindustrial.vacuum_capsule": "Вакуумна капсула",
+	"item.alaindustrial.vacuum_capsule.hint": "ПКМ по джерелу рідини — наповнити.",
+	"item.alaindustrial.filled_vacuum_capsule": "Наповнена вакуумна капсула",
+	"item.alaindustrial.filled_vacuum_capsule.named": "Капсула: %s",
+	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 мБ (1 відро)",
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Невідома рідина"
 }

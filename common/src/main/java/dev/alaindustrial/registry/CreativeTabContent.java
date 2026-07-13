@@ -147,6 +147,8 @@ public final class CreativeTabContent {
 		out.accept(ModContent.LAPIS_DUST.get());
 		out.accept(ModContent.NETWORK_ANALYZER.get());
 		out.accept(ModContent.BATTERY_POUCH.get());
+		// Empty capsule only — the filled form (MOD-063) is obtained by using it on a fluid.
+		out.accept(ModContent.VACUUM_CAPSULE.get());
 	}
 
 	private static void temperedIron(Sink out) {

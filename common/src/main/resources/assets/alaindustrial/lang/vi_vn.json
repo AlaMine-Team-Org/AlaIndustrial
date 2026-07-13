@@ -229,5 +229,11 @@
 	"tag.item.alaindustrial.macerable_nickel": "Niken có thể nghiền",
 	"tag.item.alaindustrial.macerable_silver": "Bạc có thể nghiền",
 	"tag.item.alaindustrial.macerable_tin": "Thiếc có thể nghiền",
-	"tag.item.alaindustrial.macerable_uranium": "Uranium có thể nghiền"
+	"tag.item.alaindustrial.macerable_uranium": "Uranium có thể nghiền",
+	"item.alaindustrial.vacuum_capsule": "Viên nang chân không",
+	"item.alaindustrial.vacuum_capsule.hint": "Chuột phải vào nguồn chất lỏng để đổ đầy.",
+	"item.alaindustrial.filled_vacuum_capsule": "Viên nang chân không đã đầy",
+	"item.alaindustrial.filled_vacuum_capsule.named": "Viên nang: %s",
+	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 xô)",
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Chất lỏng không xác định"
 }

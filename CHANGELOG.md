@@ -1,14 +1,15 @@
-## 0.1.20
+## 0.1.21
 
-<p><img alt="Stock Display Frame showing live item counts on a double chest" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.20/release-media/v0.1.20/changelog.png" width="720"></p>
+<p><img alt="Vacuum Capsule filling with fluid" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.21/release-media/v0.1.21/changelog.webp" width="720"></p>
 
-This update adds the **Stock Display Frame** — a new item-frame-style block that shows how many items are inside the container it's attached to, right on the frame itself.
+This update adds the **Vacuum Capsule** — a stackable fluid container that finally makes moving liquids less of an inventory puzzle.
 
 ### Gameplay
 
-- **New block: Stock Display Frame.** Place it on a chest, barrel, shulker box or Iron Chest and it displays the item count directly on the frame. Counts up to 10 000 exactly, then switches to compact `12.3k` / `1.2M` — so it stays readable even on massive storage.
-- **Use an item as a filter.** Pop any item into the frame and it counts only that item type. Leave it empty and it tracks the whole container.
+- **New item: Vacuum Capsule.** A stackable alternative to buckets. Empty capsules stack to 64, so you can carry plenty without dedicating a slot to each one. Fill one and it becomes a *filled* capsule holding exactly one bucket's worth (1000 mB) of a single fluid — up to 16 filled capsules of the same fluid stack together, and different fluids never mix.
+- **Fill and empty it anywhere.** Right-click a fluid source in the world (just like a bucket), fill it from any of the mod's machine fluid ports, or let pipes and tanks from other mods fill it in a slot. The filled capsule's look updates to match the fluid inside.
+- **Craftable.** Built from tin, glass panes, copper cable and redstone.
 
 ### Bug Fixes
 
-- **Chinese (Simplified and Traditional) translation pass.** Subtitles now follow the vanilla `Subject: Action` pattern, block and item names are aligned to the in-game block registry, ore names use the vanilla `-ore` suffix, and several consistency and punctuation issues are fixed.
+- **Cleaned up the recipe viewer.** Items that aren't craftable yet no longer clutter the recipe viewer — only things you can actually make show up there now.

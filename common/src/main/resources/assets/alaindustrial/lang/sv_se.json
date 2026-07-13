@@ -229,5 +229,11 @@
 	"tag.item.alaindustrial.macerable_nickel": "Krossbart nickel",
 	"tag.item.alaindustrial.macerable_silver": "Krossbart silver",
 	"tag.item.alaindustrial.macerable_tin": "Krossbart tenn",
-	"tag.item.alaindustrial.macerable_uranium": "Krossbart uran"
+	"tag.item.alaindustrial.macerable_uranium": "Krossbart uran",
+	"item.alaindustrial.vacuum_capsule": "Vakuumkapsel",
+	"item.alaindustrial.vacuum_capsule.hint": "Högerklicka på en källvätska för att fylla.",
+	"item.alaindustrial.filled_vacuum_capsule": "Fylld vakuumkapsel",
+	"item.alaindustrial.filled_vacuum_capsule.named": "Kapsel: %s",
+	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 hink)",
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Okänd vätska"
 }

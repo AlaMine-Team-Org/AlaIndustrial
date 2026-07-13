@@ -229,5 +229,11 @@
 	"tag.item.alaindustrial.macerable_nickel": "Nickel broyable",
 	"tag.item.alaindustrial.macerable_silver": "Argent broyable",
 	"tag.item.alaindustrial.macerable_tin": "Étain broyable",
-	"tag.item.alaindustrial.macerable_uranium": "Uranium broyable"
+	"tag.item.alaindustrial.macerable_uranium": "Uranium broyable",
+	"item.alaindustrial.vacuum_capsule": "Capsule à vide",
+	"item.alaindustrial.vacuum_capsule.hint": "Clic droit sur un fluide source pour la remplir.",
+	"item.alaindustrial.filled_vacuum_capsule": "Capsule à vide remplie",
+	"item.alaindustrial.filled_vacuum_capsule.named": "Capsule : %s",
+	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 seau)",
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Fluide inconnu"
 }

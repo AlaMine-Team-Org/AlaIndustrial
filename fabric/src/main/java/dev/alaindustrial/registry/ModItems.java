@@ -93,6 +93,9 @@ public final class ModItems {
 	public static final Item URANIUM_INGOT = item("uranium_ingot");
 	public static final Item NETWORK_ANALYZER = networkAnalyzer("network_analyzer");
 	public static final Item BATTERY_POUCH = pouch("battery_pouch");
+	// Vacuum Capsule (MOD-063): empty (×64) + filled (×16, fluid in the capsule_fluid component).
+	public static final Item VACUUM_CAPSULE = vacuumCapsule("vacuum_capsule");
+	public static final Item FILLED_VACUUM_CAPSULE = filledCapsule("filled_vacuum_capsule");
 	// Stock Display Frame (MOD-066). Referencing ModEntities here also triggers its eager class-init
 	// registration, so the EntityType exists before the item is constructed.
 	public static final Item STOCK_DISPLAY_FRAME = stockDisplayFrame("stock_display_frame");
@@ -149,6 +152,22 @@ public final class ModItems {
 		// absent pouch_energy/pouch_contents as 0 EU / empty (MOD-052).
 		return Registry.register(BuiltInRegistries.ITEM, key,
 				new PouchItem(new Item.Properties().setId(key).stacksTo(1)));
+	}
+
+	// Vacuum Capsule (MOD-063). Empty capsule stacks to the vanilla default (64); no fluid component
+	// default — ItemFluid treats an absent capsule_fluid as empty.
+	private static Item vacuumCapsule(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new dev.alaindustrial.item.VacuumCapsuleItem(new Item.Properties().setId(key)));
+	}
+
+	// Filled capsule: one bucket of a single fluid, stacking to FilledCapsuleItem.STACK_SIZE (16).
+	private static Item filledCapsule(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new dev.alaindustrial.item.FilledCapsuleItem(
+						new Item.Properties().setId(key).stacksTo(dev.alaindustrial.item.FilledCapsuleItem.STACK_SIZE)));
 	}
 
 	// Tempered-iron hand-held tools (MOD-054). In MC 26.2 PickaxeItem/SwordItem/DiggerItem were
@@ -260,6 +279,8 @@ public final class ModItems {
 					output.accept(LAPIS_DUST);
 						output.accept(NETWORK_ANALYZER);
 						output.accept(BATTERY_POUCH);
+						// Empty capsule only — the filled form is obtained by using it on a fluid.
+						output.accept(VACUUM_CAPSULE);
 						// Tempered Iron — ingot, block, tools and armor as one continuous row
 						output.accept(TEMPERED_IRON);
 						output.accept(TEMPERED_IRON_BLOCK_ITEM);
@@ -353,6 +374,8 @@ public final class ModItems {
 		ModContent.URANIUM_INGOT = () -> URANIUM_INGOT;
 		ModContent.NETWORK_ANALYZER = () -> NETWORK_ANALYZER;
 		ModContent.BATTERY_POUCH = () -> BATTERY_POUCH;
+		ModContent.VACUUM_CAPSULE = () -> VACUUM_CAPSULE;
+		ModContent.FILLED_VACUUM_CAPSULE = () -> FILLED_VACUUM_CAPSULE;
 		ModContent.STOCK_DISPLAY_FRAME_ITEM = () -> STOCK_DISPLAY_FRAME;
 
 		ModContent.GENERATOR_ITEM = () -> GENERATOR_ITEM;

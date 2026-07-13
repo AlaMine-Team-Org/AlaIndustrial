@@ -229,5 +229,11 @@
 	"tag.item.alaindustrial.macerable_nickel": "Kruszalny nikiel",
 	"tag.item.alaindustrial.macerable_silver": "Kruszalne srebro",
 	"tag.item.alaindustrial.macerable_tin": "Kruszalna cyna",
-	"tag.item.alaindustrial.macerable_uranium": "Kruszalny uran"
+	"tag.item.alaindustrial.macerable_uranium": "Kruszalny uran",
+	"item.alaindustrial.vacuum_capsule": "Kapsuła próżniowa",
+	"item.alaindustrial.vacuum_capsule.hint": "Kliknij PPM na źródło płynu, aby napełnić.",
+	"item.alaindustrial.filled_vacuum_capsule": "Napełniona kapsuła próżniowa",
+	"item.alaindustrial.filled_vacuum_capsule.named": "Kapsuła: %s",
+	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 wiadro)",
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Nieznany płyn"
 }

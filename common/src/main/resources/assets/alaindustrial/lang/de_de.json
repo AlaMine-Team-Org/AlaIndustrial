@@ -229,5 +229,11 @@
 	"tag.item.alaindustrial.macerable_nickel": "Mahlbares Nickel",
 	"tag.item.alaindustrial.macerable_silver": "Mahlbares Silber",
 	"tag.item.alaindustrial.macerable_tin": "Mahlbares Zinn",
-	"tag.item.alaindustrial.macerable_uranium": "Mahlbares Uran"
+	"tag.item.alaindustrial.macerable_uranium": "Mahlbares Uran",
+	"item.alaindustrial.vacuum_capsule": "Vakuumkapsel",
+	"item.alaindustrial.vacuum_capsule.hint": "Rechtsklick auf eine Quellflüssigkeit zum Befüllen.",
+	"item.alaindustrial.filled_vacuum_capsule": "Gefüllte Vakuumkapsel",
+	"item.alaindustrial.filled_vacuum_capsule.named": "Kapsel: %s",
+	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 Eimer)",
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Unbekannte Flüssigkeit"
 }

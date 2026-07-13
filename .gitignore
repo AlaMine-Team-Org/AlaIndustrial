@@ -39,8 +39,9 @@ __pycache__/
 # Generated standalone distribution files (rebuild via: python tools/build_standalone.py)
 tools/AlaIndustrial_Guide.html
 
-# Guide website (site/) is shipped: static build of the GitHub Pages wiki.
-# Generated in the private repo via docs/tools/gen_guide_site.py and committed here.
+# Generated guide website (rebuild via: python docs/tools/gen_guide_site.py --all)
+# Like build/, site/ is an output artifact, not source — regenerated from docs/blocks/.
+site/
 
 # Sound generation tool (tools/tts/) — secrets + generated audio stay local.
 # The .env holds the ElevenLabs API key; output/ holds generated candidate sounds.

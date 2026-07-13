@@ -229,5 +229,11 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "Stop at storage",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "Mode: Traverse — networks bridged through storage",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "Mode: Stop at storage — single segment only",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "Network limit reached (%s). Some segments beyond storage are not shown."
+	"gui.alaindustrial.network_analyzer.traverse_limit": "Network limit reached (%s). Some segments beyond storage are not shown.",
+	"item.alaindustrial.vacuum_capsule": "Vacuum Capsule",
+	"item.alaindustrial.vacuum_capsule.hint": "Right-click a source fluid to fill it.",
+	"item.alaindustrial.filled_vacuum_capsule": "Filled Vacuum Capsule",
+	"item.alaindustrial.filled_vacuum_capsule.named": "Capsule: %s",
+	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 bucket)",
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Unknown fluid"
 }

@@ -106,6 +106,12 @@ public final class ModItemsNeoForge {
 			ITEMS.registerItem("network_analyzer", NetworkAnalyzerItem::new, p -> p.stacksTo(1));
 	public static final DeferredItem<PouchItem> BATTERY_POUCH =
 			ITEMS.registerItem("battery_pouch", PouchItem::new, p -> p.stacksTo(1));
+	// Vacuum Capsule (MOD-063): empty stacks to the vanilla default (64), filled to STACK_SIZE (16).
+	public static final DeferredItem<dev.alaindustrial.item.VacuumCapsuleItem> VACUUM_CAPSULE =
+			ITEMS.registerItem("vacuum_capsule", dev.alaindustrial.item.VacuumCapsuleItem::new);
+	public static final DeferredItem<dev.alaindustrial.item.FilledCapsuleItem> FILLED_VACUUM_CAPSULE =
+			ITEMS.registerItem("filled_vacuum_capsule", dev.alaindustrial.item.FilledCapsuleItem::new,
+					p -> p.stacksTo(dev.alaindustrial.item.FilledCapsuleItem.STACK_SIZE));
 	// Stock Display Frame (MOD-066). The factory lambda runs during the ITEM RegisterEvent, by which
 	// point the ENTITY_TYPE register has already fired (vanilla registry order) — so resolving the
 	// entity-type holder here is safe, and never at static-init time.
@@ -226,6 +232,8 @@ public final class ModItemsNeoForge {
 		ModContent.NETWORK_ANALYZER = NETWORK_ANALYZER::get;
 		// Same invariant-generics story as NETWORK_ANALYZER above.
 		ModContent.BATTERY_POUCH = BATTERY_POUCH::get;
+		ModContent.VACUUM_CAPSULE = VACUUM_CAPSULE::get;
+		ModContent.FILLED_VACUUM_CAPSULE = FILLED_VACUUM_CAPSULE::get;
 		ModContent.STOCK_DISPLAY_FRAME_ITEM = STOCK_DISPLAY_FRAME_ITEM::get;
 
 		ModContent.GENERATOR_ITEM = GENERATOR_ITEM;

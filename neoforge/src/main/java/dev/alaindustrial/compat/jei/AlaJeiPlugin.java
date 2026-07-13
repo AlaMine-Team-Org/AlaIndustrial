@@ -13,16 +13,19 @@ import java.util.List;
 import java.util.function.Supplier;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.types.IRecipeHolderType;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.level.ItemLike;
@@ -101,6 +104,18 @@ public final class AlaJeiPlugin implements IModPlugin {
 					rect.x(), rect.y(), rect.width(), rect.height(),
 					AlaJeiRecipeTypes.byKind(target.kind()));
 		}
+	}
+
+	@Override
+	public void onRuntimeAvailable(IJeiRuntime runtime) {
+		// Hide items that ship registered-but-invisible for v1.0 (no creative-tab entry, no recipe —
+		// see RecipeViewerInfo.hiddenFromRecipeViewerItems). Same list as the Fabric/REI side, so the
+		// recipe viewer grid stays in sync across loaders.
+		List<ItemStack> hidden = new ArrayList<>();
+		for (Supplier<? extends ItemLike> item : RecipeViewerInfo.hiddenFromRecipeViewerItems()) {
+			hidden.add(new ItemStack(item.get().asItem()));
+		}
+		runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, hidden);
 	}
 
 	private static List<RecipeHolder<AlaProcessingRecipe>> recipesFor(RecipeMap recipes, ModRecipes.Kind kind) {

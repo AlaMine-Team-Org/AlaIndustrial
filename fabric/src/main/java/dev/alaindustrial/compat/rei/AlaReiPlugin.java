@@ -5,14 +5,17 @@ import dev.alaindustrial.client.MachineRecipeViewerTargets;
 import dev.alaindustrial.client.RecipeViewerInfo;
 import dev.alaindustrial.registry.ModBlocks;
 import dev.alaindustrial.registry.ModRecipes;
+import java.util.function.Supplier;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
+import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
 /**
@@ -71,6 +74,16 @@ public class AlaReiPlugin implements REIClientPlugin {
 		// Config values), so it is added directly here rather than synced via ServerDisplayRegistry.
 		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.solarEvolutionEntries()) {
 			registry.add(new AlaInfoDisplay(entry));
+		}
+	}
+
+	@Override
+	public void registerEntries(EntryRegistry registry) {
+		// Hide items that ship registered-but-invisible for v1.0 (no creative-tab entry, no recipe —
+		// see RecipeViewerInfo.hiddenFromRecipeViewerItems). Same list as the NeoForge/JEI side, so the
+		// recipe viewer grid stays in sync across loaders.
+		for (Supplier<? extends ItemLike> item : RecipeViewerInfo.hiddenFromRecipeViewerItems()) {
+			registry.removeEntry(EntryStacks.of(item.get()));
 		}
 	}
 

@@ -229,5 +229,11 @@
 	"tag.item.alaindustrial.macerable_nickel": "可研磨的鎳",
 	"tag.item.alaindustrial.macerable_silver": "可研磨的銀",
 	"tag.item.alaindustrial.macerable_tin": "可研磨的錫",
-	"tag.item.alaindustrial.macerable_uranium": "可研磨的鈾"
+	"tag.item.alaindustrial.macerable_uranium": "可研磨的鈾",
+	"item.alaindustrial.vacuum_capsule": "真空膠囊",
+	"item.alaindustrial.vacuum_capsule.hint": "右鍵點擊源液體以填充。",
+	"item.alaindustrial.filled_vacuum_capsule": "已裝滿的真空膠囊",
+	"item.alaindustrial.filled_vacuum_capsule.named": "膠囊：%s",
+	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB（1桶）",
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "未知液體"
 }

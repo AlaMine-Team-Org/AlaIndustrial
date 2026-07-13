@@ -6,9 +6,13 @@ import dev.alaindustrial.item.AnalyzerMode;
 import dev.alaindustrial.item.NetworkScanData;
 import dev.alaindustrial.item.PouchContents;
 import java.util.function.Supplier;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.material.Fluid;
 
 /**
  * Custom data components (MOD-022 facade). {@link #STORED_ENERGY} lets an energy-storage block carry
@@ -33,6 +37,7 @@ public final class ModDataComponents {
 	public static final Identifier NETWORK_ANALYZER_MODE_ID = Industrialization.id("network_analyzer_mode");
 	public static final Identifier POUCH_ENERGY_ID = Industrialization.id("pouch_energy");
 	public static final Identifier POUCH_CONTENTS_ID = Industrialization.id("pouch_contents");
+	public static final Identifier CAPSULE_FLUID_ID = Industrialization.id("capsule_fluid");
 
 	/** Buffered EU carried on a storage block's item form. Bound once per loader before first access. */
 	public static Supplier<DataComponentType<Long>> STORED_ENERGY = () -> {
@@ -61,6 +66,18 @@ public final class ModDataComponents {
 	/** Battery Pouch stored items (MOD-052) — immutable stack list with weight math, absent = empty. */
 	public static Supplier<DataComponentType<PouchContents>> POUCH_CONTENTS = () -> {
 		throw new IllegalStateException("ModDataComponents.POUCH_CONTENTS read before its loader bound it");
+	};
+
+	/**
+	 * Vacuum Capsule contents (MOD-063) — the single {@link Fluid} a filled capsule holds, stored as a
+	 * {@link Holder Holder&lt;Fluid&gt;} (like vanilla {@code break_sound} carries a {@code Holder<SoundEvent>}).
+	 * Read/written only via {@link dev.alaindustrial.item.ItemFluid}: absent = empty capsule. A registry
+	 * holder's identity is stable per fluid, so two filled capsules of the same fluid share one component
+	 * value and stack automatically (up to {@link dev.alaindustrial.item.FilledCapsuleItem#STACK_SIZE});
+	 * different fluids never merge.
+	 */
+	public static Supplier<DataComponentType<Holder<Fluid>>> CAPSULE_FLUID = () -> {
+		throw new IllegalStateException("ModDataComponents.CAPSULE_FLUID read before its loader bound it");
 	};
 
 	/** Build the {@code stored_energy} type both loaders register. */
@@ -108,6 +125,24 @@ public final class ModDataComponents {
 		return DataComponentType.<PouchContents>builder()
 				.persistent(PouchContents.CODEC)
 				.networkSynchronized(PouchContents.STREAM_CODEC)
+				.build();
+	}
+
+	/**
+	 * Build the {@code capsule_fluid} type both loaders register (MOD-063).
+	 *
+	 * <p>Codec/stream-codec follow the vanilla registry-holder recipe (verified against the 26.2
+	 * sources — {@code Potion.CODEC} / {@code DataComponents.BREAK_SOUND}): the persistent side encodes
+	 * the fluid by its registry id via {@link net.minecraft.core.Registry#holderByNameCodec()}, the
+	 * network side via {@link ByteBufCodecs#holderRegistry}. {@code cacheEncoding()} matches vanilla and
+	 * avoids re-encoding the (immutable) holder on every sync. Being persistent is also what lets the
+	 * item model select on it (vanilla {@code minecraft:select} / {@code minecraft:component}).
+	 */
+	public static DataComponentType<Holder<Fluid>> createCapsuleFluid() {
+		return DataComponentType.<Holder<Fluid>>builder()
+				.persistent(BuiltInRegistries.FLUID.holderByNameCodec())
+				.networkSynchronized(ByteBufCodecs.holderRegistry(Registries.FLUID))
+				.cacheEncoding()
 				.build();
 	}
 }

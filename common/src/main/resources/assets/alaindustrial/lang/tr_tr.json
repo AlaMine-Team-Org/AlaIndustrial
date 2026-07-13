@@ -229,5 +229,11 @@
 	"tag.item.alaindustrial.macerable_nickel": "Öğütülebilir Nikel",
 	"tag.item.alaindustrial.macerable_silver": "Öğütülebilir Gümüş",
 	"tag.item.alaindustrial.macerable_tin": "Öğütülebilir Kalay",
-	"tag.item.alaindustrial.macerable_uranium": "Öğütülebilir Uranyum"
+	"tag.item.alaindustrial.macerable_uranium": "Öğütülebilir Uranyum",
+	"item.alaindustrial.vacuum_capsule": "Vakum kapsülü",
+	"item.alaindustrial.vacuum_capsule.hint": "Doldurmak için bir kaynak sıvıya sağ tıklayın.",
+	"item.alaindustrial.filled_vacuum_capsule": "Dolu vakum kapsülü",
+	"item.alaindustrial.filled_vacuum_capsule.named": "Kapsül: %s",
+	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 kova)",
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Bilinmeyen sıvı"
 }

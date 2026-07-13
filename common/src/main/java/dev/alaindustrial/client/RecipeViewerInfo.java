@@ -45,6 +45,32 @@ public final class RecipeViewerInfo {
 	}
 
 	/**
+	 * Blocks/items registered for internal/worldgen reasons but deliberately kept out of the player's
+	 * hands for the v1.0 release (see {@code fabric/.../registry/ModItems.java} creative-tab section —
+	 * they have no {@code output.accept(...)} entry). They are also removed from the recipe viewer
+	 * (REI on Fabric, JEI on NeoForge) so the player never sees them before they ship.
+	 *
+	 * <p>Today: the non-copper cables (tin / insulated copper / insulated tin) and the
+	 * water mill + high-altitude/storm windmills. The base {@code wind_mill} and {@code copper_cable}
+	 * stay visible. Each entry is the same {@code Supplier<? extends ItemLike>} used everywhere else
+	 * in the mod, so the Fabric and NeoForge recipe viewers read one source and cannot drift.
+	 */
+	public static List<Supplier<? extends ItemLike>> hiddenFromRecipeViewerItems() {
+		return List.of(
+				// Generators (no recipe yet; hidden from creative tab too).
+				ModContent.WATER_MILL,
+				ModContent.HIGH_ALTITUDE_WIND_MILL,
+				ModContent.STORM_WIND_MILL,
+				// Cables — only copper_cable ships in v1.0.
+				ModContent.TIN_CABLE,
+				ModContent.INSULATED_COPPER_CABLE,
+				ModContent.INSULATED_TIN_CABLE,
+				// Filled capsule (MOD-063) has no recipe — it is obtained by filling an empty capsule, so it
+				// would otherwise show as a recipe-less entry. Empty vacuum_capsule stays visible (craftable).
+				ModContent.FILLED_VACUUM_CAPSULE);
+	}
+
+	/**
 	 * The two solar T2 branches that have no crafting recipe and are obtained only by evolving the
 	 * base panel. The base {@code solar_panel} itself is craftable (see {@code solar_panel.json}) and is
 	 * intentionally left out — it does not need an informational page.

@@ -226,5 +226,11 @@ public final class IndustrializationNeoForge {
 				(be, side) -> TankAsResourceHandler.of(be.fluidPort(side)));
 		event.registerBlockEntity(fluidCap, ModBlockEntitiesNeoForge.PUMP.get(),
 				(be, side) -> TankAsResourceHandler.of(be.fluidPort(side)));
+
+		// MOD-063: item-side fluid capability for the Vacuum Capsule, so other mods' pipes/tanks can fill
+		// or drain a capsule sitting in a slot. One CapsuleResourceHandler per stack access, both items.
+		event.registerItem(Capabilities.Fluid.ITEM,
+				(stack, access) -> new dev.alaindustrial.core.neoforge.CapsuleResourceHandler(access),
+				ModItemsNeoForge.VACUUM_CAPSULE.get(), ModItemsNeoForge.FILLED_VACUUM_CAPSULE.get());
 	}
 }

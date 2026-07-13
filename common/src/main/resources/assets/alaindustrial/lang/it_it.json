@@ -229,5 +229,11 @@
 	"tag.item.alaindustrial.macerable_nickel": "Nichel triturabile",
 	"tag.item.alaindustrial.macerable_silver": "Argento triturabile",
 	"tag.item.alaindustrial.macerable_tin": "Stagno triturabile",
-	"tag.item.alaindustrial.macerable_uranium": "Uranio triturabile"
+	"tag.item.alaindustrial.macerable_uranium": "Uranio triturabile",
+	"item.alaindustrial.vacuum_capsule": "Capsula sottovuoto",
+	"item.alaindustrial.vacuum_capsule.hint": "Clic destro su un fluido sorgente per riempirla.",
+	"item.alaindustrial.filled_vacuum_capsule": "Capsula sottovuoto piena",
+	"item.alaindustrial.filled_vacuum_capsule.named": "Capsula: %s",
+	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 secchio)",
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Fluido sconosciuto"
 }

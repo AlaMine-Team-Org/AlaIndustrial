@@ -229,5 +229,11 @@
 	"tag.item.alaindustrial.macerable_nickel": "पिसने योग्य निकल",
 	"tag.item.alaindustrial.macerable_silver": "पिसने योग्य चांदी",
 	"tag.item.alaindustrial.macerable_tin": "पिसने योग्य टिन",
-	"tag.item.alaindustrial.macerable_uranium": "पिसने योग्य यूरेनियम"
+	"tag.item.alaindustrial.macerable_uranium": "पिसने योग्य यूरेनियम",
+	"item.alaindustrial.vacuum_capsule": "वैक्यूम कैप्सूल",
+	"item.alaindustrial.vacuum_capsule.hint": "भरने के लिए किसी स्रोत तरल पर राइट-क्लिक करें।",
+	"item.alaindustrial.filled_vacuum_capsule": "भरा हुआ वैक्यूम कैप्सूल",
+	"item.alaindustrial.filled_vacuum_capsule.named": "कैप्सूल: %s",
+	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 बाल्टी)",
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "अज्ञात तरल"
 }

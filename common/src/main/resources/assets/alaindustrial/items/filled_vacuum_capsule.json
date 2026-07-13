@@ -1,0 +1,12 @@
+{
+	"model": {
+		"type": "minecraft:select",
+		"property": "minecraft:component",
+		"component": "alaindustrial:capsule_fluid",
+		"cases": [
+			{ "when": "minecraft:water", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_water" } },
+			{ "when": "minecraft:lava", "model": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_lava" } }
+		],
+		"fallback": { "type": "minecraft:model", "model": "alaindustrial:item/vacuum_capsule_filled" }
+	}
+}

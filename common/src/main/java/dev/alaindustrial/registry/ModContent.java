@@ -139,6 +139,10 @@ public final class ModContent {
 	public static Supplier<Item> URANIUM_INGOT = unbound("URANIUM_INGOT");
 	public static Supplier<Item> NETWORK_ANALYZER = unbound("NETWORK_ANALYZER");
 	public static Supplier<Item> BATTERY_POUCH = unbound("BATTERY_POUCH");
+	// Vacuum Capsule (MOD-063) — a stackable fluid container: empty (×64) exchanges with the
+	// fluid-carrying filled form (×16). See docs/blocks/items/vacuum_capsule.md.
+	public static Supplier<Item> VACUUM_CAPSULE = unbound("VACUUM_CAPSULE");
+	public static Supplier<Item> FILLED_VACUUM_CAPSULE = unbound("FILLED_VACUUM_CAPSULE");
 	// Stock Display Frame (MOD-066) — placement item for the frame entity below.
 	public static Supplier<Item> STOCK_DISPLAY_FRAME_ITEM = unbound("STOCK_DISPLAY_FRAME_ITEM");
 

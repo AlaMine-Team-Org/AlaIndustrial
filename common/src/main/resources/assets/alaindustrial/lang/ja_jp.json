@@ -229,5 +229,11 @@
 	"tag.item.alaindustrial.macerable_nickel": "粉砕可能なニッケル",
 	"tag.item.alaindustrial.macerable_silver": "粉砕可能な銀",
 	"tag.item.alaindustrial.macerable_tin": "粉砕可能なスズ",
-	"tag.item.alaindustrial.macerable_uranium": "粉砕可能なウラン"
+	"tag.item.alaindustrial.macerable_uranium": "粉砕可能なウラン",
+	"item.alaindustrial.vacuum_capsule": "真空カプセル",
+	"item.alaindustrial.vacuum_capsule.hint": "液体源を右クリックで充填します。",
+	"item.alaindustrial.filled_vacuum_capsule": "満杯の真空カプセル",
+	"item.alaindustrial.filled_vacuum_capsule.named": "カプセル：%s",
+	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB（バケツ1杯）",
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "不明な液体"
 }

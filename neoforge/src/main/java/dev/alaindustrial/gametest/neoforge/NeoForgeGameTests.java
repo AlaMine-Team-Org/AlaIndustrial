@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.gametest.CoreEnergyScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
+import dev.alaindustrial.gametest.CapsuleScenarios;
 import dev.alaindustrial.gametest.PouchScenarios;
 import dev.alaindustrial.gametest.StockDisplayFrameScenarios;
 import dev.alaindustrial.gametest.TemperedIronToolScenarios;
@@ -322,6 +323,12 @@ public final class NeoForgeGameTests {
 		registerTest(event, "pouch_no_overcharge", 40, true, PouchScenarios::prf02NoOvercharge);
 		registerTest(event, "pouch_contents_round_trip", 40, true, PouchScenarios::per01ContentsRoundTrip);
 		registerTest(event, "pouch_energy_semantics", 40, true, PouchScenarios::per02EnergySemantics);
+
+		// MOD-063 Vacuum Capsule (suite TC-CAPS-001) — same neutral bodies as the Fabric CapsuleGameTest.
+		registerTest(event, "capsule_component_round_trip", 40, true, CapsuleScenarios::per01ComponentRoundTrip);
+		registerTest(event, "capsule_stacking_by_fluid", 40, true, CapsuleScenarios::fun01StackingByFluid);
+		registerTest(event, "capsule_fill_from_tank", 40, true, CapsuleScenarios::fun02FillFromTank);
+		registerTest(event, "capsule_empty_into_tank", 40, true, CapsuleScenarios::fun03EmptyIntoTank);
 	}
 
 	/** Register one code-body scenario under the alaindustrial namespace with a sane maxTicks. */

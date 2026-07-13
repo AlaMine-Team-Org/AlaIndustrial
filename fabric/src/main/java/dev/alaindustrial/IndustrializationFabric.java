@@ -46,6 +46,8 @@ public class IndustrializationFabric implements ModInitializer {
 		// MOD-028: install the Fabric fluid lookup seam (same seam shape as energy) so common fluid
 		// content (the pump) can resolve a neighbour's FluidPort without importing Fabric Transfer types.
 		FluidLookup.install(new FabricFluidLookup());
+		// MOD-063: item-side fluid capability for the Vacuum Capsule, so other mods' pipes/tanks can fill
+		// or drain a capsule sitting in a slot. Registered after ModItems.init() below (needs the items).
 
 		// MOD-022 Phase 3: install the Fabric packet-send seam so content code (e.g. NetworkAnalyzerItem)
 		// dispatches through the neutral NetworkDispatcher instead of ServerPlayNetworking directly.
@@ -83,6 +85,12 @@ public class IndustrializationFabric implements ModInitializer {
 						dev.alaindustrial.registry.ModDataComponents.POUCH_CONTENTS_ID,
 						dev.alaindustrial.registry.ModDataComponents.createPouchContents());
 		dev.alaindustrial.registry.ModDataComponents.POUCH_CONTENTS = () -> pouchContents;
+		net.minecraft.core.component.DataComponentType<net.minecraft.core.Holder<net.minecraft.world.level.material.Fluid>> capsuleFluid =
+				net.minecraft.core.Registry.register(
+						net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE,
+						dev.alaindustrial.registry.ModDataComponents.CAPSULE_FLUID_ID,
+						dev.alaindustrial.registry.ModDataComponents.createCapsuleFluid());
+		dev.alaindustrial.registry.ModDataComponents.CAPSULE_FLUID = () -> capsuleFluid;
 		ModBlocks.init();
 		ModBlockEntities.init();
 		ModMenus.init();
@@ -90,6 +98,8 @@ public class IndustrializationFabric implements ModInitializer {
 		// EntityType (MOD-066).
 		dev.alaindustrial.registry.ModEntities.init();
 		ModItems.init();
+		// MOD-063: capsule item fluid capability (needs the items registered just above).
+		dev.alaindustrial.core.fabric.CapsuleItemFluidStorage.register();
 		ModRecipes.init();
 		ModCriteria.init();
 		ModWorldGen.init();

@@ -229,5 +229,11 @@
 	"tag.item.alaindustrial.macerable_nickel": "Nikel yang dapat digiling",
 	"tag.item.alaindustrial.macerable_silver": "Perak yang dapat digiling",
 	"tag.item.alaindustrial.macerable_tin": "Timah yang dapat digiling",
-	"tag.item.alaindustrial.macerable_uranium": "Uranium yang dapat digiling"
+	"tag.item.alaindustrial.macerable_uranium": "Uranium yang dapat digiling",
+	"item.alaindustrial.vacuum_capsule": "Kapsul Vakum",
+	"item.alaindustrial.vacuum_capsule.hint": "Klik kanan pada sumber fluida untuk mengisi.",
+	"item.alaindustrial.filled_vacuum_capsule": "Kapsul Vakum Terisi",
+	"item.alaindustrial.filled_vacuum_capsule.named": "Kapsul: %s",
+	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 mB (1 ember)",
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Fluida tidak dikenal"
 }

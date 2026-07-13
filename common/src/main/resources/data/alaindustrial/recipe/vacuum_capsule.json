@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"T": "alaindustrial:tin_ingot",
+		"G": "minecraft:glass_pane",
+		"R": "minecraft:redstone",
+		"C": "alaindustrial:copper_cable"
+	},
+	"pattern": [
+		"TGT",
+		"TGT",
+		"RCR"
+	],
+	"result": { "id": "alaindustrial:vacuum_capsule" }
+}

@@ -229,5 +229,11 @@
 	"tooltip.alaindustrial.network_analyzer.mode.stop_at_storage": "До хранилища",
 	"gui.alaindustrial.network_analyzer.mode_switched.traverse": "Режим: Сквозной — сети объединены через хранилища",
 	"gui.alaindustrial.network_analyzer.mode_switched.stop_at_storage": "Режим: До хранилища — только один сегмент",
-	"gui.alaindustrial.network_analyzer.traverse_limit": "Достигнут лимит сетей (%s). Часть сегментов за хранилищами не показана."
+	"gui.alaindustrial.network_analyzer.traverse_limit": "Достигнут лимит сетей (%s). Часть сегментов за хранилищами не показана.",
+	"item.alaindustrial.vacuum_capsule": "Вакуумная капсула",
+	"item.alaindustrial.vacuum_capsule.hint": "ПКМ по источнику жидкости — наполнить.",
+	"item.alaindustrial.filled_vacuum_capsule": "Заполненная вакуумная капсула",
+	"item.alaindustrial.filled_vacuum_capsule.named": "Капсула: %s",
+	"item.alaindustrial.filled_vacuum_capsule.amount": "1000 мБ (1 ведро)",
+	"item.alaindustrial.filled_vacuum_capsule.fluid_unknown": "Неизвестная жидкость"
 }
