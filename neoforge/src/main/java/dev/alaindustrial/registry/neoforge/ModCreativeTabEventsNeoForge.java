@@ -34,18 +34,20 @@ public final class ModCreativeTabEventsNeoForge {
 			ItemStack axe = ModContent.TEMPERED_IRON_AXE.get().getDefaultInstance();
 			ItemStack shovel = ModContent.TEMPERED_IRON_SHOVEL.get().getDefaultInstance();
 			ItemStack hoe = ModContent.TEMPERED_IRON_HOE.get().getDefaultInstance();
-			insertAfter(event, Items.IRON_HOE.getDefaultInstance(), pickaxe);
-			insertAfter(event, pickaxe, axe);
-			insertAfter(event, axe, shovel);
-			insertAfter(event, shovel, hoe);
-			// Each scythe sits right after the matching vanilla hoe tier; the iron + tempered-iron
-			// scythes follow the mod's tempered-iron hoe (which is itself right after the iron hoe).
+			// Each scythe sits right after the matching vanilla hoe tier. The iron scythe follows the
+			// vanilla iron hoe; the tempered-iron scythe follows the mod's tempered-iron hoe.
 			insertAfter(event, Items.WOODEN_HOE.getDefaultInstance(), ModContent.SCYTHE_WOOD.get().getDefaultInstance());
 			insertAfter(event, Items.STONE_HOE.getDefaultInstance(), ModContent.SCYTHE_STONE.get().getDefaultInstance());
 			insertAfter(event, Items.COPPER_HOE.getDefaultInstance(), ModContent.SCYTHE_COPPER.get().getDefaultInstance());
 			ItemStack ironScythe = ModContent.SCYTHE_IRON.get().getDefaultInstance();
-			insertAfter(event, hoe, ironScythe);
-			insertAfter(event, ironScythe, ModContent.SCYTHE_TEMPERED_IRON.get().getDefaultInstance());
+			insertAfter(event, Items.IRON_HOE.getDefaultInstance(), ironScythe);
+			// The tempered-iron tool set is the mod's tier between iron and gold, so it follows the iron
+			// scythe right after the vanilla iron hoe.
+			insertAfter(event, ironScythe, pickaxe);
+			insertAfter(event, pickaxe, axe);
+			insertAfter(event, axe, shovel);
+			insertAfter(event, shovel, hoe);
+			insertAfter(event, hoe, ModContent.SCYTHE_TEMPERED_IRON.get().getDefaultInstance());
 			insertAfter(event, Items.GOLDEN_HOE.getDefaultInstance(), ModContent.SCYTHE_GOLD.get().getDefaultInstance());
 			insertAfter(event, Items.DIAMOND_HOE.getDefaultInstance(), ModContent.SCYTHE_DIAMOND.get().getDefaultInstance());
 			insertAfter(event, Items.NETHERITE_HOE.getDefaultInstance(), ModContent.SCYTHE_NETHERITE.get().getDefaultInstance());

@@ -584,29 +584,11 @@ public class FluidGameTest {
 		}
 	}
 
-	/**
-	 * @implements R-NRG-03 — pump per-face energy roles: every face accepts EU (IN), none emits,
-	 *     matching the current implementation ({@code PumpBlockEntity#energyRoleForFace} unconditionally
-	 *     returns IN for every {@code Direction} — the FACING face is NOT inert in code). No dedicated
-	 *     TC-PUMP-001 ID covers this (pump.md's "Open questions" flags the doc's "5×IN + FACING
-	 *     inert" claim as unverified by a pump-specific {@code EnergyFaceGameTest} case, leaving the
-	 *     decision to a reviewer); this method is written against the code as it stands, mirroring how
-	 *     {@code EnergyFaceGameTest} asserts other blocks' face roles directly via
-	 *     {@code EnergyStorage.SIDED}.
-	 * @covers R-NRG-03
-	 */
-	@GameTest
-	public void rNrg03_pumpEveryFaceInOnly(GameTestHelper helper) {
-		PumpBlockEntity pump = placePump(helper, POS);
-		BlockPos abs = pump.getBlockPos();
-		for (Direction d : Direction.values()) {
-			EnergyStorage p = EnergyStorage.SIDED.find(helper.getLevel(), abs, d);
-			if (p == null || !p.supportsInsertion() || p.supportsExtraction()) {
-				helper.fail("pump face " + d + " must be IN-only");
-			}
-		}
-		helper.succeed();
-	}
+	// NOTE: pump per-face energy roles are covered by EnergyFaceGameTest#rNrg03_pumpWorkingFacesInOnly
+	// (FACING is inert, the other five faces are IN-only). An earlier rNrg03_pumpEveryFaceInOnly test
+	// here asserted "all six faces IN" against the pre-MOD-061 code; the pump now follows the standard
+	// horizontal-machine rule (FACING inert), so that duplicate was removed in favour of the more
+	// precise EnergyFaceGameTest case, which also checks the null port on FACING.
 
 	/**
 	 * @implements TC-PUMP-001-FUN02 — with energy.amount exactly pumpEuPerBucket (1000) and a lava

@@ -1,18 +1,14 @@
-## 0.1.22
+## 0.1.23
 
-<p><img alt="Scythe clearing a wide area of foliage in one swing" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.22/release-media/v0.1.22/changelog.webp" width="720"></p>
+<p><img alt="Ala Industrial 0.1.23 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.23/release-media/v0.1.23/changelog.png" width="720"></p>
 
-This update adds the **Scythe** — a new tool that sweeps away leaves, grass, flowers and other decorative foliage in a single swing.
+A small but tidy update — cleaner machine fronts, honest recipe lookups, and scythes that hit like they should.
 
-### Gameplay
+### Bug Fixes
 
-- **New item: Scythe.** A right-click area tool for clearing decorative foliage. One swing mows down leaves, grass, flowers, ferns, mushrooms, vines, roots and saplings in front of you, dropping their normal loot — Fortune and Silk Touch work just like breaking by hand.
-- **Eight material tiers.** Wood → Stone → Copper → Iron → Gold → Tempered Iron → Diamond → Netherite. Higher tiers cover a wider area and clear more blocks per swing — from a small patch at wood up to a wide sweep at netherite.
-- **Each tier has a personality.** Gold is fragile but takes enchantments extremely well; Netherite is fire-resistant.
-- **Gentle on what matters.** The Scythe only clears decorative foliage — it never touches crops, water, logs or the ground underneath. Grass and flowers cost no durability; clearing leaves wears the tool down like normal.
-- **Optional area.** Hold Shift while right-clicking to do a single-block break instead of the area sweep.
-- **Craftable and enchantable.** Three blocks of the tier's material plus two sticks. Enchants like a hoe.
+- **Cables no longer connect to the front face of machines.** The copper cable used to draw a connection sleeve toward the front of every generator, macerator, electric furnace, extractor, compressor and geothermal generator — even though no energy actually flows through that face. The misleading sleeve is gone: cables now connect only to the five working faces, and the machine's front stays clean and readable. The water mill gets the same treatment for free, and the pump now follows the same rule (its front is no longer an exception). Fluid intake on the pump is unchanged — it still draws from the block in front of it. Existing worlds migrate automatically: stale sleeves disappear the first time the chunk loads.
+- **Scythes now deal at least 1 damage.** The wooden, stone, copper and gold scythes showed **0 Attack Damage** on their tooltip, which made them look broken. Each tier now has a sensible attack value: wood / stone / copper / gold / iron / tempered iron → 1, diamond → 2, netherite → 3. Attack speed is unchanged.
 
 ### Quality of Life
 
-- **Sweep feedback.** Every successful swing has its own sound and a particle sweep, so you can see and hear the area you just cleared.
+- **The electric furnace shows up next to vanilla smelting recipes.** When you look up how to smelt tin ore, sand into glass, raw beef into steak or any other vanilla furnace recipe, the electric furnace now appears as an option alongside the vanilla furnace — because it can actually perform all of those recipes. One small change that makes the recipe viewer honest about what the machine can do.

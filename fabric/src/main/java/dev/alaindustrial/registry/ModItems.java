@@ -102,27 +102,30 @@ public final class ModItems {
 	// registration, so the EntityType exists before the item is constructed.
 	public static final Item STOCK_DISPLAY_FRAME = stockDisplayFrame("stock_display_frame");
 	// Scythe (MOD-068): six material tiers, each an AOE foliage clearer. Registered like a hoe
-	// (.hoe(material, -2.0f, -1.0f) attaches the tool component + enchantability) but as ScytheItem,
-	// not HoeItem — the scythe must not till dirt on right-click, it clears its area instead.
+	// (.hoe(material, attackDamage, -1.0f) attaches the tool component + enchantability) but as
+	// ScytheItem, not HoeItem — the scythe must not till dirt on right-click, it clears its area
+	// instead. attackDamage is per-tier so every scythe shows at least 1 attack damage: wood/stone/
+	// copper/gold, whose material bonus alone would render as 0, are lifted to 1; iron and up keep
+	// -2.0f and rely on the material bonus (iron 1, diamond 2, netherite 3).
 	public static final Item SCYTHE_WOOD =
-			scythe("scythe_wood", ToolMaterial.WOOD, new ScytheItem.Profile(3, 2, 12), false);
+			scythe("scythe_wood", ToolMaterial.WOOD, 0.0f, new ScytheItem.Profile(3, 2, 12), false);
 	public static final Item SCYTHE_STONE =
-			scythe("scythe_stone", ToolMaterial.STONE, new ScytheItem.Profile(3, 3, 18), false);
+			scythe("scythe_stone", ToolMaterial.STONE, -1.0f, new ScytheItem.Profile(3, 3, 18), false);
 	public static final Item SCYTHE_COPPER =
-			scythe("scythe_copper", ToolMaterial.COPPER, new ScytheItem.Profile(3, 3, 24), false);
+			scythe("scythe_copper", ToolMaterial.COPPER, -1.0f, new ScytheItem.Profile(3, 3, 24), false);
 	public static final Item SCYTHE_IRON =
-			scythe("scythe_iron", ToolMaterial.IRON, new ScytheItem.Profile(5, 3, 30), false);
+			scythe("scythe_iron", ToolMaterial.IRON, -2.0f, new ScytheItem.Profile(5, 3, 30), false);
 	// Gold: iron-sized area but fragile (gold durability) and highly enchantable — the vanilla gold
 	// philosophy (cheap, weak, enchant-hungry), a side-grade rather than a strict step up.
 	public static final Item SCYTHE_GOLD =
-			scythe("scythe_gold", ToolMaterial.GOLD, new ScytheItem.Profile(5, 3, 30), false);
+			scythe("scythe_gold", ToolMaterial.GOLD, 0.0f, new ScytheItem.Profile(5, 3, 30), false);
 	public static final Item SCYTHE_TEMPERED_IRON =
-			scythe("scythe_tempered_iron", ModToolMaterials.TEMPERED_IRON, new ScytheItem.Profile(5, 4, 40), false);
+			scythe("scythe_tempered_iron", ModToolMaterials.TEMPERED_IRON, -2.0f, new ScytheItem.Profile(5, 4, 40), false);
 	public static final Item SCYTHE_DIAMOND =
-			scythe("scythe_diamond", ToolMaterial.DIAMOND, new ScytheItem.Profile(5, 5, 50), false);
+			scythe("scythe_diamond", ToolMaterial.DIAMOND, -2.0f, new ScytheItem.Profile(5, 5, 50), false);
 	// Netherite tier is fire-resistant like all vanilla netherite gear (survives lava/fire).
 	public static final Item SCYTHE_NETHERITE =
-			scythe("scythe_netherite", ToolMaterial.NETHERITE, new ScytheItem.Profile(7, 5, 70), true);
+			scythe("scythe_netherite", ToolMaterial.NETHERITE, -2.0f, new ScytheItem.Profile(7, 5, 70), true);
 
 	// Block items.
 	public static final BlockItem GENERATOR_ITEM = blockItem("generator", ModBlocks.GENERATOR);
@@ -227,10 +230,13 @@ public final class ModItems {
 
 	// Scythe helper (MOD-068). .hoe(material, attackDamage, attackSpeed) attaches the data-driven
 	// tool component (durability/mining speed/enchantability/attack) exactly like a vanilla hoe, but
-	// the instance is a ScytheItem so right-click runs the AOE clear instead of tilling.
-	private static Item scythe(String path, ToolMaterial material, ScytheItem.Profile profile, boolean fireResistant) {
+	// the instance is a ScytheItem so right-click runs the AOE clear instead of tilling. attackDamage
+	// is per-tier: displayed damage = 1 (player base) + attackDamage + material.attackDamageBonus, so
+	// the low tiers whose bonus alone would show 0 (wood/stone/copper/gold) pass a higher value to
+	// reach the 1-damage floor; iron and up keep -2.0f and let the material bonus carry them.
+	private static Item scythe(String path, ToolMaterial material, float attackDamage, ScytheItem.Profile profile, boolean fireResistant) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
-		Item.Properties props = new Item.Properties().hoe(material, -2.0f, -1.0f);
+		Item.Properties props = new Item.Properties().hoe(material, attackDamage, -1.0f);
 		if (fireResistant) {
 			props.fireResistant();
 		}
@@ -358,18 +364,20 @@ public final class ModItems {
 				});
 		CreativeModeTabEvents.modifyOutputEvent(VanillaCreativeTabs.TOOLS_AND_UTILITIES)
 				.register(output -> {
-					output.insertAfter(Items.IRON_HOE,
+					// Each scythe sits right after the matching vanilla hoe tier. The iron scythe follows
+					// the vanilla iron hoe; the tempered-iron scythe follows the mod's tempered-iron hoe.
+					output.insertAfter(Items.IRON_HOE, ModContent.SCYTHE_IRON.get());
+					// The tempered-iron tool set is the mod's tier between iron and gold, so it follows the
+					// iron scythe right after the vanilla iron hoe.
+					output.insertAfter(ModContent.SCYTHE_IRON.get(),
 							ModContent.TEMPERED_IRON_PICKAXE.get(),
 							ModContent.TEMPERED_IRON_AXE.get(),
 							ModContent.TEMPERED_IRON_SHOVEL.get(),
 							ModContent.TEMPERED_IRON_HOE.get());
-					// Each scythe sits right after the matching vanilla hoe tier; the iron + tempered-iron
-					// scythes follow the mod's tempered-iron hoe (which is itself right after the iron hoe).
 					output.insertAfter(Items.WOODEN_HOE, ModContent.SCYTHE_WOOD.get());
 					output.insertAfter(Items.STONE_HOE, ModContent.SCYTHE_STONE.get());
 					output.insertAfter(Items.COPPER_HOE, ModContent.SCYTHE_COPPER.get());
-					output.insertAfter(ModContent.TEMPERED_IRON_HOE.get(),
-							ModContent.SCYTHE_IRON.get(), ModContent.SCYTHE_TEMPERED_IRON.get());
+					output.insertAfter(ModContent.TEMPERED_IRON_HOE.get(), ModContent.SCYTHE_TEMPERED_IRON.get());
 					output.insertAfter(Items.GOLDEN_HOE, ModContent.SCYTHE_GOLD.get());
 					output.insertAfter(Items.DIAMOND_HOE, ModContent.SCYTHE_DIAMOND.get());
 					output.insertAfter(Items.NETHERITE_HOE, ModContent.SCYTHE_NETHERITE.get());

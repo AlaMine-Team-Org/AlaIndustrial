@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -268,9 +269,185 @@ public class CablePlacementGameTest {
 			BlockState cableState = helper.getLevel().getBlockState(helper.absolutePos(cf.cablePos()));
 			boolean arm = cableState.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(cf.dirToBox()));
 			if (arm != cf.expectArm()) {
-				helper.fail("Battery box cable arm toward box (" + cf.dirToBox() + ") = " + arm
-						+ ", expected " + cf.expectArm() + " (only −Z/front + +Z/back IO faces connect); TC-BATTERYBOX-CONNECT");
+			helper.fail("Battery box cable arm toward box (" + cf.dirToBox() + ") = " + arm
+					+ ", expected " + cf.expectArm() + " (only −Z/front + +Z/back IO faces connect); TC-BATTERYBOX-CONNECT");
 			}
+		}
+		helper.succeed();
+	}
+
+	// --- MOD-061: cable must not arm toward a horizontal machine's FACING (front) face -----------
+
+	/**
+	 * Shared rig for the six MOD-061 target machines (generator, geothermal, macerator, electric
+	 * furnace, extractor, compressor) and the pump exception. Each of a block's six faces gets a
+	 * cable; the block is placed LAST so each cable gets a neighbour-changed update and
+	 * {@code updateShape} recomputes its flag. {@code facingArm} is the expected arm on the FACING
+	 * face: {@code false} for the six machines (front is energy-inert, R-NRG-03), {@code true} for
+	 * the pump (its front is the fluid-intake + energy-IN face, so it cancels the default). The five
+	 * non-FACING faces are always expected to arm — both the six machines and the pump expose energy
+	 * on their sides — so only the FACING expectation varies.
+	 *
+	 * <p>Layout: machine at {@code (2,2,2)} with the given {@code facing} (default NORTH for most,
+	 * EAST for the non-NORTH regression). One cable touches each of the six faces. With
+	 * {@code FACING=NORTH}, the front face is the machine's NORTH (−Z) side, so the −Z cable's arm
+	 * toward the machine (its {@code SOUTH} key) must be {@code facingArm}.
+	 *
+	 * <p>{@code dirToMachine} is the direction <b>from the cable toward the machine</b>, i.e. the
+	 * {@code PipeBlock.PROPERTY_BY_DIRECTION} key on the cable's own state — mirrors
+	 * {@code cableConnectsOnlyToWindMillBackFace}.
+	 */
+	private static void assertArmsAround(GameTestHelper helper, Block machine, Direction facing,
+			boolean facingArm) {
+		BlockPos machinePos = new BlockPos(2, 2, 2);
+		// For each of the six faces: cable pos, the cable's direction-key toward the machine, and
+		// which face of the machine that cable touches. Expected arm = (machineFace == facing) ? facingArm : true.
+		record CableFace(BlockPos cablePos, Direction dirToMachine, Direction machineFace) {
+		}
+		java.util.List<CableFace> rig = List.of(
+				new CableFace(new BlockPos(2, 2, 1), Direction.SOUTH, Direction.NORTH),
+				new CableFace(new BlockPos(2, 2, 3), Direction.NORTH, Direction.SOUTH),
+				new CableFace(new BlockPos(3, 2, 2), Direction.WEST, Direction.EAST),
+				new CableFace(new BlockPos(1, 2, 2), Direction.EAST, Direction.WEST),
+				new CableFace(new BlockPos(2, 3, 2), Direction.DOWN, Direction.UP),
+				new CableFace(new BlockPos(2, 1, 2), Direction.UP, Direction.DOWN));
+		// Place cables first, then the machine LAST so each cable gets a neighbour-changed update.
+		for (CableFace cf : rig) {
+			helper.setBlock(cf.cablePos(), ModBlocks.COPPER_CABLE);
+		}
+		BlockState machineState = machine.defaultBlockState();
+		if (machineState.hasProperty(HorizontalMachineBlock.FACING)) {
+			machineState = machineState.setValue(HorizontalMachineBlock.FACING, facing);
+		}
+		helper.setBlock(machinePos, machineState);
+
+		for (CableFace cf : rig) {
+			boolean expected = cf.machineFace() == facing ? facingArm : true;
+			BlockState cableState = helper.getLevel().getBlockState(helper.absolutePos(cf.cablePos()));
+			boolean arm = cableState.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(cf.dirToMachine()));
+			if (arm != expected) {
+				helper.fail(machine + " cable arm toward machine (" + cf.dirToMachine()
+						+ ", machine face " + cf.machineFace() + ", FACING=" + facing + ") = " + arm
+						+ ", expected " + expected + " — MOD-061 FACING-inert regression");
+			}
+		}
+		helper.succeed();
+	}
+
+	/** @implements TC-GEN-001-CON01 — generator front (FACING) face is energy-inert; cable must not arm there. */
+	@GameTest
+	public void mod061_cableDoesNotArmToGeneratorFacing(GameTestHelper helper) {
+		assertArmsAround(helper, ModBlocks.GENERATOR, Direction.NORTH, false);
+	}
+
+	/** @implements MOD-061 — geothermal generator front (FACING) face is energy-inert. */
+	@GameTest
+	public void mod061_cableDoesNotArmToGeothermalFacing(GameTestHelper helper) {
+		assertArmsAround(helper, ModBlocks.GEOTHERMAL_GENERATOR, Direction.NORTH, false);
+	}
+
+	/** @implements TC-MACH-001-CON04 — macerator front (FACING) face is energy-inert. */
+	@GameTest
+	public void mod061_cableDoesNotArmToMaceratorFacing(GameTestHelper helper) {
+		assertArmsAround(helper, ModBlocks.MACERATOR, Direction.NORTH, false);
+	}
+
+	/** @implements MOD-061 — electric furnace front (FACING) face is energy-inert. */
+	@GameTest
+	public void mod061_cableDoesNotArmToElectricFurnaceFacing(GameTestHelper helper) {
+		assertArmsAround(helper, ModBlocks.ELECTRIC_FURNACE, Direction.NORTH, false);
+	}
+
+	/** @implements MOD-061 — extractor front (FACING) face is energy-inert. */
+	@GameTest
+	public void mod061_cableDoesNotArmToExtractorFacing(GameTestHelper helper) {
+		assertArmsAround(helper, ModBlocks.EXTRACTOR, Direction.NORTH, false);
+	}
+
+	/** @implements MOD-061 — compressor front (FACING) face is energy-inert. */
+	@GameTest
+	public void mod061_cableDoesNotArmToCompressorFacing(GameTestHelper helper) {
+		assertArmsAround(helper, ModBlocks.COMPRESSOR, Direction.NORTH, false);
+	}
+
+	/**
+	 * Regression guard against the classic bug where the override compares {@code side == NORTH}
+	 * (a hardcoded direction) instead of {@code side == state.getValue(FACING)}, or confuses
+	 * {@code getOpposite()}. With {@code FACING=EAST}, the EAST cable's arm must be {@code false}
+	 * (front), while the NORTH cable's arm must be {@code true} (side). Mirrors the all-four-facing
+	 * sweep in {@code EnergyFaceGameTest.rNrg03_batteryBoxAllFacingDirections}; here one non-default
+	 * facing is enough as a regression guard.
+	 */
+	@GameTest
+	public void mod061_cableFacingInertOnNonNorthFacing(GameTestHelper helper) {
+		assertArmsAround(helper, ModBlocks.GENERATOR, Direction.EAST, false);
+	}
+
+	/**
+	 * @implements MOD-061 (pump) — the pump is no longer an exception: its front ({@code FACING}) face
+	 *     is energy-inert just like the other six machines, so a cable arms toward the five working
+	 *     faces only. Fluid intake is a separate subsystem and still reads {@code FACING} directly, so
+	 *     this does not change which way the pump draws fluid from — only the energy/cable contract.
+	 */
+	@GameTest
+	public void mod061_cableDoesNotArmToPumpFacing(GameTestHelper helper) {
+		assertArmsAround(helper, ModBlocks.PUMP, Direction.NORTH, false);
+	}
+
+	/**
+	 * @implements MOD-061 migration — the connection flags saved in chunk palette NBT go stale when
+	 *     {@code isCableConnectable} semantics change. The once-per-load {@code validateShape} on
+	 *     {@link dev.alaindustrial.block.entity.CableBlockEntity} must re-derive them on the first
+	 *     server tick. This covers the LOGIC + once-semantics: a cable whose every flag was forced
+	 *     to {@code true} against a machine with an inert front face must drop the FACING flag after
+	 *     one {@code serverTick}; a second {@code serverTick} must be a no-op (the once-flag holds).
+	 *
+	 * <p>The on-load TRIGGER itself ({@code shapeValidated == false} after chunk reload) is not
+	 *     testable here — the suite has no chunk save/reload infrastructure — so this drives
+	 *     {@code serverTick} directly the way {@code MachineGameTest.drive} does. The trigger path
+	 *     is covered by manual playtest (see task MOD-061 acceptance).
+	 */
+	@GameTest
+	public void mod061_cableStaleFlagsReshapeOnFirstTick(GameTestHelper helper) {
+		BlockPos genPos = new BlockPos(2, 2, 2);
+		BlockPos cablePos = new BlockPos(2, 2, 1); // −Z of the generator → touches its NORTH face
+		// Place the generator first (FACING=NORTH → front/NORTH is inert), then the cable.
+		helper.setBlock(genPos, ModBlocks.GENERATOR);
+		helper.setBlock(cablePos, ModBlocks.COPPER_CABLE);
+		// Force every connection flag of the cable to true, simulating a stale pre-MOD-061 state
+		// saved in chunk palette NBT: the SOUTH key (toward the generator's inert NORTH face) is the
+		// one we expect validateShape to flip back to false.
+		BlockState stale = helper.getLevel().getBlockState(helper.absolutePos(cablePos));
+		for (Direction dir : Direction.values()) {
+			stale = stale.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(dir), true);
+		}
+		helper.setBlock(cablePos, stale);
+
+		dev.alaindustrial.block.entity.CableBlockEntity cable = helper.getBlockEntity(cablePos,
+				dev.alaindustrial.block.entity.CableBlockEntity.class);
+		if (cable == null) {
+			helper.fail("cable block entity missing at " + cablePos);
+			return;
+		}
+		// First serverTick triggers validateShape → stale flags reconciled with connectsTo.
+		cable.serverTick(helper.getLevel(), cable.getBlockPos(),
+				helper.getLevel().getBlockState(helper.absolutePos(cablePos)));
+		BlockState afterFirst = helper.getLevel().getBlockState(helper.absolutePos(cablePos));
+		boolean armToFront = afterFirst.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(Direction.SOUTH));
+		if (armToFront) {
+			helper.fail("stale SOUTH arm toward generator's inert NORTH/FACING face was not cleared"
+					+ " after first serverTick; validateShape did not run — MOD-061 migration");
+			return;
+		}
+		// Second serverTick must be a no-op: once-flag holds, no further setBlock. If the flag never
+		// set, validateShape would re-run every tick (silent per-tick perf regression) — catching
+		// this requires comparing state before/after, since setBlock(updateClients) is otherwise silent.
+		cable.serverTick(helper.getLevel(), cable.getBlockPos(), afterFirst);
+		BlockState afterSecond = helper.getLevel().getBlockState(helper.absolutePos(cablePos));
+		if (!afterFirst.equals(afterSecond)) {
+			helper.fail("cable state changed on the SECOND serverTick — once-semantics broken"
+					+ " (shapeValidated never set), per-tick revalidate perf regression — MOD-061");
+			return;
 		}
 		helper.succeed();
 	}

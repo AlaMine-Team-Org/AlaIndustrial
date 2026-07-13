@@ -73,10 +73,37 @@ public class EnergyFaceGameTest {
 	}
 
 	/**
+	 * @implements MOD-061 (pump) energy contract — every face of the pump except {@code FACING} accepts
+	 *     energy; the front face is energy-inert (it is the fluid-intake face). Pairs with the arm-test
+	 *     {@code mod061_cableDoesNotArmToPumpFacing}: the visual and the energy contract must agree. A
+	 *     regression that flipped the pump back to all-six-faces-IN would pass the arm test (override
+	 *     still drops) but break this one — the front would gain an energy port it should not have.
+	 */
+	@GameTest
+	public void rNrg03_pumpWorkingFacesInOnly(GameTestHelper helper) {
+		helper.setBlock(POS, ModBlocks.PUMP); // default FACING = NORTH → front/NORTH face is energy-inert
+		for (Direction d : Direction.values()) {
+			EnergyStorage p = port(helper, d);
+			if (d == Direction.NORTH) {
+				if (p != null) {
+					helper.fail("pump FACING face (north) must be inert (no energy port) — MOD-061");
+					return;
+				}
+				continue;
+			}
+			if (p == null || !p.supportsInsertion() || p.supportsExtraction()) {
+				helper.fail("pump working face " + d + " must be IN-only — MOD-061");
+				return;
+			}
+		}
+		helper.succeed();
+	}
+
+	/**
 	 * @implements R-NRG-03 — cable: every face participates in transfer in BOTH directions. A cable is a
-	 *     bidirectional conduit ({@code BOTH}), so each face must support insertion AND extraction;
-	 *     checking only {@code supportsInsertion()} would let a regression that drops extraction on one
-	 *     face (making the cable one-way) pass silently.
+	 * bidirectional conduit ({@code BOTH}), so each face must support insertion AND extraction;
+	 * checking only {@code supportsInsertion()} would let a regression that drops extraction on one
+	 * face (making the cable one-way) pass silently.
 	 */
 	@GameTest
 	public void rNrg03_cableEveryFaceConnects(GameTestHelper helper) {

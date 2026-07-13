@@ -125,10 +125,16 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 		};
 	}
 
-	/** EU consumer: every face accepts energy, none emits (R-NRG-03). */
+	/**
+	 * EU consumer: every face except {@code FACING} accepts energy (R-NRG-03), none emits. The front
+	 * face is the fluid-intake side and is energy-inert, matching the {@code HorizontalMachineBlock}
+	 * cable rule ({@code FACING} draws no cable arm). Fluid intake is a separate subsystem and keeps
+	 * reading {@code FACING} directly ({@link #acquireFluid}), so this only changes the energy/cable
+	 * contract on that one face — it does not change which way the pump draws fluid from.
+	 */
 	@Override
 	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return EnergyRole.IN;
+		return facingAwareRole(worldFace, EnergyRole.IN);
 	}
 
 	/** Every face exposes the same single tank — the pump has no per-face fluid restriction. */

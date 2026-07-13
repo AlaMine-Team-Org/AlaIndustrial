@@ -98,6 +98,16 @@ public class CableBlock extends AbstractMachineBlock {
 	/** Neighbours at or below this height (in blocks) are "half-blocks" for the low-arm geometry. */
 	private static final double LOW_NEIGHBOUR_THRESHOLD = 0.5;
 
+	/**
+	 * Public accessor for the four horizontal {@code *_low} flags, used by
+	 * {@link CableBlockEntity#validateShape} to re-derive the low-arm geometry on chunk load (MOD-061).
+	 * Returns {@code null} for vertical directions (UP/DOWN have no low variant), matching the
+	 * {@link #LOW_FLAGS} contents.
+	 */
+	public static BooleanProperty lowFlagFor(Direction dir) {
+		return LOW_FLAGS.get(dir);
+	}
+
 	public CableBlock(Properties properties) {
 		super(properties);
 		BlockState state = stateDefinition.any();
@@ -188,6 +198,19 @@ public class CableBlock extends AbstractMachineBlock {
 	}
 
 	/**
+	 * Public mirror of {@link #connectsTo} so {@link CableBlockEntity} can re-derive a cable's
+	 * connection flags without duplicating the "is the neighbour a connectable machine" logic. Used
+	 * by the once-per-load {@code validateShape} migration (MOD-061): flags saved in chunk palette
+	 * NBT go stale when {@code isCableConnectable} semantics change (e.g. the FACING-inert default),
+	 * and {@code updateShape} only runs on {@code neighborChanged}, not on chunk load — so the entity
+	 * re-derives them on its first server tick. Same {@code dir} convention: direction from the cable
+	 * toward the neighbour.
+	 */
+	public static boolean shouldConnectTo(LevelReader level, BlockPos pos, Direction dir) {
+		return connectsTo(level, pos, dir);
+	}
+
+	/**
 	 * Whether the block at {@code neighborPos} is a "low" (half-block) neighbour — collision shape
 	 * top at or below {@link #LOW_NEIGHBOUR_THRESHOLD} (0.5 blocks, e.g. a Solar Panel). Drives the
 	 * per-direction {@code *_low} flag so the horizontal arm drops to {@link #ARMS_LOW}. This reads
@@ -198,6 +221,18 @@ public class CableBlock extends AbstractMachineBlock {
 	private static boolean isLowNeighbour(LevelReader level, BlockPos neighborPos) {
 		VoxelShape shape = level.getBlockState(neighborPos).getShape(level, neighborPos);
 		return !shape.isEmpty() && shape.bounds().maxY <= LOW_NEIGHBOUR_THRESHOLD;
+	}
+
+	/**
+	 * Public mirror of {@link #isLowNeighbour} for the {@link CableBlockEntity} once-per-load shape
+	 * migration (MOD-061): the four horizontal {@code *_low} flags must be re-derived together with
+	 * the connection flags so a migrated cable's geometry stays self-consistent with
+	 * {@code updateShape}/{@code getStateForPlacement}. For full-cube machine neighbours this is
+	 * provably {@code false}; re-deriving it is free (we already walk the neighbours) and future-proofs
+	 * the half-block case (MOD-042 sibling).
+	 */
+	public static boolean isLowNeighbourAt(LevelReader level, BlockPos neighborPos) {
+		return isLowNeighbour(level, neighborPos);
 	}
 
 	@Override

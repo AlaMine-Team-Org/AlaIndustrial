@@ -126,18 +126,21 @@ public final class ModItemsNeoForge {
 	// Scythe (MOD-068): six AOE foliage tiers. The factory builds a ScytheItem (its own AOE useOn);
 	// the properties operator applies .hoe(material, ...) for the tool component + enchantability,
 	// exactly like the Fabric ModItems#scythe helper. NeoForge applies setId from the deferred key.
+	// The first .hoe float is per-tier attackDamage: displayed damage = 1 + attackDamage +
+	// material.attackDamageBonus, so wood/stone/copper/gold (whose bonus alone renders 0) are lifted
+	// to 1; iron and up keep -2.0f. Keep these values in sync with the Fabric ModItems#scythe helper.
 	public static final DeferredItem<ScytheItem> SCYTHE_WOOD =
 			ITEMS.registerItem("scythe_wood",
 					p -> new ScytheItem(new ScytheItem.Profile(3, 2, 12), p),
-					p -> p.hoe(ToolMaterial.WOOD, -2.0f, -1.0f));
+					p -> p.hoe(ToolMaterial.WOOD, 0.0f, -1.0f));
 	public static final DeferredItem<ScytheItem> SCYTHE_STONE =
 			ITEMS.registerItem("scythe_stone",
 					p -> new ScytheItem(new ScytheItem.Profile(3, 3, 18), p),
-					p -> p.hoe(ToolMaterial.STONE, -2.0f, -1.0f));
+					p -> p.hoe(ToolMaterial.STONE, -1.0f, -1.0f));
 	public static final DeferredItem<ScytheItem> SCYTHE_COPPER =
 			ITEMS.registerItem("scythe_copper",
 					p -> new ScytheItem(new ScytheItem.Profile(3, 3, 24), p),
-					p -> p.hoe(ToolMaterial.COPPER, -2.0f, -1.0f));
+					p -> p.hoe(ToolMaterial.COPPER, -1.0f, -1.0f));
 	public static final DeferredItem<ScytheItem> SCYTHE_IRON =
 			ITEMS.registerItem("scythe_iron",
 					p -> new ScytheItem(new ScytheItem.Profile(5, 3, 30), p),
@@ -146,7 +149,7 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<ScytheItem> SCYTHE_GOLD =
 			ITEMS.registerItem("scythe_gold",
 					p -> new ScytheItem(new ScytheItem.Profile(5, 3, 30), p),
-					p -> p.hoe(ToolMaterial.GOLD, -2.0f, -1.0f));
+					p -> p.hoe(ToolMaterial.GOLD, 0.0f, -1.0f));
 	public static final DeferredItem<ScytheItem> SCYTHE_TEMPERED_IRON =
 			ITEMS.registerItem("scythe_tempered_iron",
 					p -> new ScytheItem(new ScytheItem.Profile(5, 4, 40), p),

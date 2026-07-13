@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.types.IRecipeHolderType;
@@ -93,6 +94,15 @@ public final class AlaJeiPlugin implements IModPlugin {
 		for (Machine machine : MACHINES) {
 			registration.addCraftingStation(machine.type(), (ItemLike) machine.block().get());
 		}
+		// MOD-076: the electric furnace also performs vanilla smelting — ElectricFurnaceBlockEntity
+		// falls back to RecipeType.SMELTING when no alaindustrial:smelting recipe matches — so it is a
+		// crafting station for JEI's built-in minecraft:smelting category too (ore smelting,
+		// sand → glass, food, etc.). The MACHINES loop above cannot cover this because it is typed to
+		// IRecipeHolderType<AlaProcessingRecipe>, while vanilla smelting is IRecipeHolderType<SmeltingRecipe>.
+		// BLASTING/SMOKING/CAMPFIRE are intentionally NOT added — the electric furnace cannot blast/smoke.
+		registration.addCraftingStation(
+				RecipeTypes.SMELTING,
+				(ItemLike) ModBlocksNeoForge.ELECTRIC_FURNACE.get());
 	}
 
 	@Override

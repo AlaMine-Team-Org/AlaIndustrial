@@ -61,6 +61,15 @@ public class AlaReiPlugin implements REIClientPlugin {
 			// Clicking the machine block in REI opens its recipes.
 			registry.addWorkstations(m.id(), EntryStacks.of(m.block()));
 		}
+		// MOD-076: the electric furnace also performs vanilla smelting — ElectricFurnaceBlockEntity
+		// falls back to RecipeType.SMELTING when no alaindustrial:smelting recipe matches — so it is a
+		// workstation for REI's built-in "minecraft:plugins/smelting" category too (ore smelting,
+		// sand → glass, food, etc.). This mirrors how vanilla FURNACE is registered for that category
+		// by REI's DefaultClientPlugin. BuiltinPlugin.SMELTING (the constant) lives in the REI runtime
+		// jar, not the compileOnly api jar, so the string form is used to stay compile-clean.
+		registry.addWorkstations(
+				CategoryIdentifier.of("minecraft", "plugins/smelting"),
+				EntryStacks.of(ModBlocks.ELECTRIC_FURNACE));
 		// Informational category: the T2 solar branches (and future evolution lines) with no crafting
 		// recipe. The base solar_panel is craftable, so it is intentionally not linked here.
 		registry.add(new AlaInfoCategory());
