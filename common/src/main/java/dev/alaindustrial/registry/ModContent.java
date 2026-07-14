@@ -139,6 +139,10 @@ public final class ModContent {
 	public static Supplier<Item> URANIUM_INGOT = unbound("URANIUM_INGOT");
 	public static Supplier<Item> NETWORK_ANALYZER = unbound("NETWORK_ANALYZER");
 	public static Supplier<Item> BATTERY_POUCH = unbound("BATTERY_POUCH");
+	// Energy Pack (MOD-065) — worn LV energy buffer (chest slot) that tops up the powered items the
+	// player carries; BATTERY is its crafting component (an inert cell, no charge of its own).
+	public static Supplier<Item> BATTERY = unbound("BATTERY");
+	public static Supplier<Item> ENERGY_PACK = unbound("ENERGY_PACK");
 	// Vacuum Capsule (MOD-063) — a stackable fluid container: empty (×64) exchanges with the
 	// fluid-carrying filled form (×16). See docs/blocks/items/vacuum_capsule.md.
 	public static Supplier<Item> VACUUM_CAPSULE = unbound("VACUUM_CAPSULE");

@@ -126,6 +126,17 @@ public final class Config {
 	 * pouch locks (no insert, no extract) until recharged in the Battery Box slot. */
 	public static int lvPouchDrainPerSecond = 1;
 
+	// --- Energy Pack (MOD-065, worn LV buffer) ---
+	/** Energy Pack EU buffer — 10 pouches' worth, the same size as the Battery Box (LV tier). Charging
+	 * it from a Battery Box at the LV ceiling (32 EU/t) takes ~625 ticks (~31 s). */
+	public static int energyPackBuffer = 20_000;
+	/** Max EU/tick the pack accepts while sitting in a charge slot. At the LV ceiling this is what a
+	 * Battery Box can push anyway; the knob exists so a future MV charger can feed the pack faster. */
+	public static int energyPackInputRate = 32;
+	/** Max EU/tick the worn pack hands out to powered items in the player's inventory. The transfer
+	 * runs once per second in batches of {@code energyPackOutputRate × 20} EU (see EnergyPackItem). */
+	public static int energyPackOutputRate = 32;
+
 	// --- Stock Display Frame (MOD-066, no energy) ---
 	/** How often (ticks) a stock display frame rescans the container behind it. 20 = once a second;
 	 * a 100-frame warehouse costs ~5 container sums per tick at the default. */
@@ -247,6 +258,18 @@ public final class Config {
 					if (lvPouchDrainPerSecond < 0) {
 						lvPouchDrainPerSecond = 1;
 					}
+					energyPackBuffer = GsonHelper.getAsInt(o, "energyPackBuffer", energyPackBuffer);
+					if (energyPackBuffer <= 0) {
+						energyPackBuffer = 20_000;
+					}
+					energyPackInputRate = GsonHelper.getAsInt(o, "energyPackInputRate", energyPackInputRate);
+					if (energyPackInputRate <= 0) {
+						energyPackInputRate = 32;
+					}
+					energyPackOutputRate = GsonHelper.getAsInt(o, "energyPackOutputRate", energyPackOutputRate);
+					if (energyPackOutputRate <= 0) {
+						energyPackOutputRate = 32;
+					}
 					stockFrameScanIntervalTicks = GsonHelper.getAsInt(o, "stockFrameScanIntervalTicks", stockFrameScanIntervalTicks);
 					if (stockFrameScanIntervalTicks <= 0) {
 						stockFrameScanIntervalTicks = 20;
@@ -323,6 +346,9 @@ public final class Config {
 		o.addProperty("lvPouchCapacity", lvPouchCapacity);
 		o.addProperty("lvPouchBuffer", lvPouchBuffer);
 		o.addProperty("lvPouchDrainPerSecond", lvPouchDrainPerSecond);
+		o.addProperty("energyPackBuffer", energyPackBuffer);
+		o.addProperty("energyPackInputRate", energyPackInputRate);
+		o.addProperty("energyPackOutputRate", energyPackOutputRate);
 		o.addProperty("stockFrameScanIntervalTicks", stockFrameScanIntervalTicks);
 		o.addProperty("machineEuPerTick", machineEuPerTick);
 		o.addProperty("maceratorDuration", maceratorDuration);

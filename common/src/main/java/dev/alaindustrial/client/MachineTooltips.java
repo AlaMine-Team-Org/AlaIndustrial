@@ -14,6 +14,7 @@ import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.item.AnalyzerMode;
+import dev.alaindustrial.item.EnergyPackItem;
 import dev.alaindustrial.item.ItemEnergy;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import dev.alaindustrial.item.NetworkScanData;
@@ -48,6 +49,10 @@ public final class MachineTooltips {
 		}
 		if (stack.getItem() instanceof PouchItem) {
 			addPouchTooltip(stack, lines, detailed);
+			return;
+		}
+		if (stack.getItem() instanceof EnergyPackItem) {
+			addEnergyPackTooltip(stack, lines);
 			return;
 		}
 		// Plain-item components (not BlockItem) — the windmill rotor is the only such item with a
@@ -170,6 +175,31 @@ public final class MachineTooltips {
 		}
 		// No tier line: the Battery Pouch is a tier-less consumer item; its charge state and item
 		// bar (LV gold) already convey everything the player needs.
+	}
+
+	/**
+	 * Tooltip text for the Energy Pack (MOD-065): what it does while worn, then its EU charge — same
+	 * shape as the pouch tooltip (gold charge line, red DEPLETED at 0). No [SHIFT] gate: the pack has
+	 * no second layer of detail to hide, and its charge is the one thing the player checks.
+	 *
+	 * <p>The usage text is split over two short lines: the equipment tooltip already carries the
+	 * "When on Chest / +2 Armor" block, and one long sentence on top of that stretched the box across
+	 * half the screen (player feedback).
+	 */
+	private static void addEnergyPackTooltip(ItemStack stack, List<Component> lines) {
+		lines.add(Component.translatable("tooltip.alaindustrial.energy_pack.usage")
+				.withStyle(ChatFormatting.GRAY));
+		lines.add(Component.translatable("tooltip.alaindustrial.energy_pack.usage_charges")
+				.withStyle(ChatFormatting.GRAY));
+		long eu = ItemEnergy.get(stack);
+		long cap = ItemEnergy.capacity(stack);
+		if (eu <= 0) {
+			lines.add(Component.translatable("tooltip.alaindustrial.energy_pack.depleted")
+					.withStyle(ChatFormatting.RED));
+		} else {
+			lines.add(Component.translatable("tooltip.alaindustrial.energy_pack.charge", eu, cap)
+					.withStyle(ChatFormatting.GOLD));
+		}
 	}
 
 	/**

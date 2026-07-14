@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"L": "minecraft:leather",
+		"E": "alaindustrial:electronic_circuit",
+		"B": "alaindustrial:battery",
+		"T": "alaindustrial:tin_ingot"
+	},
+	"pattern": [
+		"LEL",
+		"BBB",
+		"LTL"
+	],
+	"result": {
+		"id": "alaindustrial:energy_pack",
+		"count": 1
+	}
+}

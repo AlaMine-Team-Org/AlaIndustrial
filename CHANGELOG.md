@@ -1,9 +1,15 @@
-## 0.1.25
+## 0.1.26
 
-<p><img alt="Ala Industrial 0.1.25 — refreshed energy buffer gauge before and after" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.25/release-media/v0.1.25/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.26 — Energy Pack worn EU buffer and charge HUD" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.26/release-media/v0.1.26/changelog.png" width="720"></p>
 
-A visual polish pass on every machine — the energy buffer gauge gets a fresh, cleaner look. Same machines, same numbers, just a nicer read on how much power you're sitting on.
+Take your power on the go. The new **Energy Pack** is a chest-slot battery that keeps your chargeable gear topped up while you explore.
 
-### Visual
+### New
 
-- **Refreshed energy buffer gauge across all machines.** Every generator, furnace, macerator, extractor, compressor, pump, solar panel and wind turbine now sports a restyled energy storage indicator — the orange buffer bar you watch fill up as your machines work. The look is updated; behavior, capacity and balance numbers are untouched. Purely a visual polish pass.
+- **Energy Pack.** A wearable battery for the chest slot — 20,000 EU of reserve power. Charge it in the Battery Box, then wear it on your back. While equipped, it slowly recharges the items in your hotbar, inventory and off-hand, so your tools and pouches no longer run dry mid-expedition. No idle drain: power only flows when something needs charging. Crafted from the new **battery** component.
+- **Charge indicator.** A small on-screen widget shows the pack's charge level and a color bar (green → yellow → red). Press **H** to toggle it (rebindable under *Controls → Ala Industrial*), or flip it in the mod config. On by default.
+
+### Changes
+
+- **Drained look.** At zero charge, the pack's icon and back model switch to a dimmed "depleted" look — red light, faded cells — so you can tell at a glance it needs a recharge.
+- **Battery Box charge slot** now accepts any EU-holding item, not just the battery pouch.

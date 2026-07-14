@@ -3,17 +3,22 @@ package dev.alaindustrial;
 import dev.alaindustrial.client.AlaClientConfig;
 import dev.alaindustrial.client.CompressorScreen;
 import dev.alaindustrial.client.ElectricFurnaceScreen;
+import dev.alaindustrial.client.EnergyPackHud;
 import dev.alaindustrial.client.IronChestBlockEntityRenderer;
 import dev.alaindustrial.client.MachineTooltips;
+import dev.alaindustrial.client.ModKeyMappings;
 import dev.alaindustrial.client.SolarPanelScreen;
 import dev.alaindustrial.client.WaterMillWheelBlockEntityRenderer;
 import dev.alaindustrial.client.WindMillRotorBlockEntityRenderer;
 import dev.alaindustrial.registry.ModBlockEntities;
 import dev.alaindustrial.registry.ModMenus;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -69,6 +74,13 @@ public class IndustrializationClient implements ClientModInitializer {
 				component instanceof dev.alaindustrial.item.PouchTooltip pouch
 						? new dev.alaindustrial.client.PouchClientTooltip(pouch)
 						: null);
+		// Energy Pack charge readout (MOD-065): the mod's first HUD element and first key mapping.
+		// The drawing itself is loader-neutral (EnergyPackHud) — Fabric's HudElement and NeoForge's
+		// GuiLayer take the same (GuiGraphicsExtractor, DeltaTracker) pair.
+		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_ENERGY_HUD);
+		ClientTickEvents.END_CLIENT_TICK.register(client -> ModKeyMappings.handleInput());
+		HudElementRegistry.addLast(Industrialization.id("energy_pack_hud"), EnergyPackHud::render);
+
 		dev.alaindustrial.client.NetworkVisualizationClient.init();
 		dev.alaindustrial.client.CablePlacementPreview.init();
 		dev.alaindustrial.client.sound.MachineHumClientHook.register();

@@ -6,6 +6,7 @@ import dev.alaindustrial.gametest.CoreEnergyScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.CapsuleScenarios;
 import dev.alaindustrial.gametest.GeothermalLavaInputScenarios;
+import dev.alaindustrial.gametest.EnergyPackScenarios;
 import dev.alaindustrial.gametest.PouchScenarios;
 import dev.alaindustrial.gametest.ScytheScenarios;
 import dev.alaindustrial.gametest.StockDisplayFrameScenarios;
@@ -335,6 +336,22 @@ public final class NeoForgeGameTests {
 		registerTest(event, "pouch_no_overcharge", 40, true, PouchScenarios::prf02NoOvercharge);
 		registerTest(event, "pouch_contents_round_trip", 40, true, PouchScenarios::per01ContentsRoundTrip);
 		registerTest(event, "pouch_energy_semantics", 40, true, PouchScenarios::per02EnergySemantics);
+
+		// Energy Pack (MOD-065, TC-PACK-001) — same loader-neutral bodies as the Fabric EnergyPackGameTest
+		// suite: worn-pack transfer, the offhand pass, the anti-loop filter, the charge slot, persistence.
+		registerTest(event, "pack_worn_charges_pouch", 40, true, EnergyPackScenarios::fun01WornPackChargesPouch);
+		registerTest(event, "pack_charges_offhand", 40, true, EnergyPackScenarios::fun02ChargesOffhand);
+		registerTest(event, "pack_budget_split", 40, true, EnergyPackScenarios::fun03BudgetSplitAcrossConsumers);
+		registerTest(event, "pack_charge_in_battery_box", 80, true, EnergyPackScenarios::fun04ChargeInBatteryBox);
+		registerTest(event, "pack_does_not_charge_pack", 40, true, EnergyPackScenarios::fun05PackDoesNotChargePack);
+		registerTest(event, "pack_worn_asset_follows_charge", 40, true, EnergyPackScenarios::fun06WornAssetFollowsCharge);
+		registerTest(event, "pack_inventory_tick_transfers", 60, true, EnergyPackScenarios::fun07InventoryTickDrivesTransfer);
+		registerTest(event, "pack_component_charge_fixes_look", 40, true, EnergyPackScenarios::fun08ChargedByComponentFixesItsLook);
+		registerTest(event, "pack_offhand_pack_not_charged", 40, true, EnergyPackScenarios::neg04PackInOffhandNotCharged);
+		registerTest(event, "pack_no_transfer_when_idle", 40, true, EnergyPackScenarios::neg01NoTransferWhenNothingToDo);
+		registerTest(event, "pack_floors_at_zero", 40, true, EnergyPackScenarios::neg02PackFloorsAtZero);
+		registerTest(event, "pack_menu_slot_accepts_pack", 40, true, EnergyPackScenarios::neg03MenuSlotAcceptsPack);
+		registerTest(event, "pack_charge_round_trip", 40, true, EnergyPackScenarios::per01ChargeRoundTrip);
 
 		// MOD-063 Vacuum Capsule (suite TC-CAPS-001) — same neutral bodies as the Fabric CapsuleGameTest.
 		registerTest(event, "capsule_component_round_trip", 40, true, CapsuleScenarios::per01ComponentRoundTrip);

@@ -6,7 +6,6 @@ import dev.alaindustrial.core.EnergyNet;
 import dev.alaindustrial.core.EnergyRole;
 import dev.alaindustrial.core.EnergyTier;
 import dev.alaindustrial.item.ItemEnergy;
-import dev.alaindustrial.item.PouchItem;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
@@ -28,9 +27,10 @@ import net.minecraft.world.level.block.state.BlockState;
 /**
  * LV BatteryBox (spec: alaindustrial:battery_box) — the first energy store. Buffers up to 20 000 EU,
  * accepts LV in and pushes LV out, stabilising the early network. Since MOD-052 it also has the
- * charge slot the spec deferred "until a portable EU item exists": slot 0 accepts an Battery Pouch and
- * refills its {@code pouch_energy} from the buffer at the LV ceiling (32 EU/t). GUI-only — hoppers
- * can neither feed nor drain the slot. The discharge slot stays future work.
+ * charge slot the spec deferred "until a portable EU item exists": slot 0 accepts any powered item —
+ * the Battery Pouch (MOD-052) and the Energy Pack (MOD-065) today — and refills its
+ * {@code pouch_energy} from the buffer at the lower of the LV ceiling (32 EU/t) and the item's own
+ * intake. GUI-only — hoppers can neither feed nor drain the slot. The discharge slot stays future work.
  */
 public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuProvider {
 	/** Slot 0 — the pouch charge slot (MOD-052). */
@@ -51,31 +51,40 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 		return 0;
 	}
 
-	/** Refill the pouch in the charge slot from the buffer, capped at the LV per-tick ceiling. */
+	/**
+	 * Refill the powered item in the charge slot from the buffer. The rate is the lower of the box's
+	 * own LV ceiling and the item's intake ({@link ItemEnergy#inputRate}) — a pouch charges at 32 EU/t,
+	 * an Energy Pack at its own rate, and neither can be force-fed faster than it accepts.
+	 */
 	private void chargePouch() {
-		ItemStack pouch = getItem(CHARGE_SLOT);
-		if (pouch.isEmpty() || !(pouch.getItem() instanceof PouchItem) || energy.amount <= 0) {
+		ItemStack target = getItem(CHARGE_SLOT);
+		if (target.isEmpty() || energy.amount <= 0) {
 			return;
 		}
-		long move = Math.min(Math.min(ItemEnergy.room(pouch), energy.amount), EnergyTier.LV.maxVoltage());
+		long rate = Math.min(EnergyTier.LV.maxVoltage(), ItemEnergy.inputRate(target));
+		long move = Math.min(Math.min(ItemEnergy.room(target), energy.amount), rate);
 		if (move <= 0) {
 			return;
 		}
 		energy.amount -= move;
-		ItemEnergy.add(pouch, move);
+		ItemEnergy.add(target, move);
 		setChanged();
 	}
 
-	/** The charge slot takes pouches only (manual/GUI path; hoppers are cut off below). */
+	/**
+	 * The charge slot takes any powered item — a Battery Pouch (MOD-052), an Energy Pack (MOD-065),
+	 * and whatever gains a buffer later; {@code capacity > 0} is the single test for "this holds EU"
+	 * (manual/GUI path; hoppers are cut off below).
+	 */
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
-		return slot == CHARGE_SLOT && stack.getItem() instanceof PouchItem;
+		return slot == CHARGE_SLOT && ItemEnergy.capacity(stack) > 0;
 	}
 
 	/**
 	 * GUI-only slot: the base class delegates hopper insertion to {@link #canPlaceItem}, which would
-	 * let hoppers push pouches in — cut that path off entirely. Extraction is already blocked by the
-	 * default {@code isOutputSlot() == false}.
+	 * let hoppers push powered items in — cut that path off entirely. Extraction is already blocked by
+	 * the default {@code isOutputSlot() == false}.
 	 */
 	@Override
 	public boolean canPlaceItemThroughFace(int slot, ItemStack stack, Direction side) {

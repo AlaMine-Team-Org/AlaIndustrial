@@ -1,6 +1,7 @@
 package dev.alaindustrial.item;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.core.EnergyTier;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.world.item.ItemStack;
 
@@ -28,6 +29,24 @@ public final class ItemEnergy {
 		if (stack.getItem() instanceof PouchItem) {
 			return Config.lvPouchBuffer;
 		}
+		if (stack.getItem() instanceof EnergyPackItem) {
+			return Config.energyPackBuffer;
+		}
+		return 0L;
+	}
+
+	/**
+	 * Max EU/tick this item accepts while sitting in a charge slot. A charger caps its transfer at
+	 * {@code min(its own tier ceiling, inputRate(stack))} — the item's own ceiling, so a small pouch
+	 * cannot be force-fed at a big charger's rate. 0 for items without a buffer.
+	 */
+	public static long inputRate(ItemStack stack) {
+		if (stack.getItem() instanceof PouchItem) {
+			return EnergyTier.LV.maxVoltage();
+		}
+		if (stack.getItem() instanceof EnergyPackItem) {
+			return Config.energyPackInputRate;
+		}
 		return 0L;
 	}
 
@@ -47,6 +66,11 @@ public final class ItemEnergy {
 			stack.remove(ModDataComponents.POUCH_ENERGY.get());
 		} else {
 			stack.set(ModDataComponents.POUCH_ENERGY.get(), clamped);
+		}
+		if (stack.getItem() instanceof EnergyPackItem) {
+			// The pack looks different when dead (red light, pale cells), and the worn model is chosen by
+			// its EQUIPPABLE asset — so the visual follows the charge from the one place charge changes.
+			EnergyPackItem.refreshWornAsset(stack, clamped);
 		}
 	}
 

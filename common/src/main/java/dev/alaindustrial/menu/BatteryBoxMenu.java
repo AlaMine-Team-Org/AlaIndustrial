@@ -2,7 +2,7 @@ package dev.alaindustrial.menu;
 
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
-import dev.alaindustrial.item.PouchItem;
+import dev.alaindustrial.item.ItemEnergy;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,12 +30,12 @@ public class BatteryBoxMenu extends MachineMenu {
 
 	@Override
 	protected void addMachineSlots() {
-		// Pouch-only filter in BOTH mayPlace (client prediction) and the BE's canPlaceItem (server /
+		// Powered-item filter in BOTH mayPlace (client prediction) and the BE's canPlaceItem (server /
 		// hoppers) — only the server check causes a visible item flicker (generator lava-slot lesson).
 		addSlot(new Slot(machine, BatteryBoxBlockEntity.CHARGE_SLOT, CHARGE_SLOT_X, CHARGE_SLOT_Y) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
-				return stack.getItem() instanceof PouchItem;
+				return ItemEnergy.capacity(stack) > 0;
 			}
 		});
 	}

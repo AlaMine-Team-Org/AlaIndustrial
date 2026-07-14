@@ -1,0 +1,14 @@
+{
+	"layers": {
+		"humanoid": [
+			{
+				"texture": "alaindustrial:energy_pack"
+			}
+		],
+		"humanoid_baby": [
+			{
+				"texture": "alaindustrial:energy_pack"
+			}
+		]
+	}
+}

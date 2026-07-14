@@ -286,14 +286,14 @@ public final class PouchScenarios {
 		helper.succeed();
 	}
 
-	/** NEG04: the menu slot's client-side filter (mayPlace) accepts only pouches. */
+	/** NEG04: the menu slot's client-side filter (mayPlace) takes the pouch and refuses plain items. */
 	public static void neg04MenuSlotFilter(GameTestHelper helper) {
 		BatteryBoxBlockEntity box = placeBox(helper);
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
 		BatteryBoxMenu menu = new BatteryBoxMenu(0, player.getInventory(), box, ContainerLevelAccess.NULL);
 		Slot slot = menu.slots.get(0);
 		if (!slot.mayPlace(pouch(0)) || slot.mayPlace(new ItemStack(Items.COBBLESTONE))) {
-			helper.fail("charge slot mayPlace must accept only PouchItem");
+			helper.fail("charge slot mayPlace must accept the pouch and refuse items without a buffer");
 		}
 		helper.succeed();
 	}

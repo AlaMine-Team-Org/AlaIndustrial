@@ -29,6 +29,9 @@ public final class ModCreativeTabEventsNeoForge {
 			insertAfter(event, helmet, chestplate);
 			insertAfter(event, chestplate, leggings);
 			insertAfter(event, leggings, boots);
+			// The Energy Pack is worn in the chest slot, so a player looking for chest gear finds it here
+			// too — it also sits with the other powered items under Tools & Utilities below.
+			insertAfter(event, boots, ModContent.ENERGY_PACK.get().getDefaultInstance());
 		} else if (event.getTabKey().equals(VanillaCreativeTabs.TOOLS_AND_UTILITIES)) {
 			ItemStack pickaxe = ModContent.TEMPERED_IRON_PICKAXE.get().getDefaultInstance();
 			ItemStack axe = ModContent.TEMPERED_IRON_AXE.get().getDefaultInstance();
@@ -53,6 +56,7 @@ public final class ModCreativeTabEventsNeoForge {
 			insertAfter(event, Items.NETHERITE_HOE.getDefaultInstance(), ModContent.SCYTHE_NETHERITE.get().getDefaultInstance());
 			insertAfter(event, Items.COMPASS.getDefaultInstance(), ModContent.NETWORK_ANALYZER.get().getDefaultInstance());
 			event.accept(ModContent.BATTERY_POUCH.get());
+			event.accept(ModContent.ENERGY_PACK.get());
 		} else if (event.getTabKey().equals(VanillaCreativeTabs.INGREDIENTS)) {
 			CreativeTabContent.ingredients(event::accept);
 		} else if (event.getTabKey().equals(VanillaCreativeTabs.BUILDING_BLOCKS)) {

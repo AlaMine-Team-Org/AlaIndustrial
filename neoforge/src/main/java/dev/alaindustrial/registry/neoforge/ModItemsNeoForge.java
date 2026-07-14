@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.EnergyPackItem;
 import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
@@ -108,6 +109,12 @@ public final class ModItemsNeoForge {
 			ITEMS.registerItem("network_analyzer", NetworkAnalyzerItem::new, p -> p.stacksTo(1));
 	public static final DeferredItem<PouchItem> BATTERY_POUCH =
 			ITEMS.registerItem("battery_pouch", PouchItem::new, p -> p.stacksTo(1));
+	// Energy Pack (MOD-065): worn LV buffer + the inert battery cell it is crafted from. Equipment
+	// properties (EQUIPPABLE + token armor attribute, no ArmorMaterial) come from the common helper,
+	// so both loaders build the same item; NeoForge supplies the id from the deferred key itself.
+	public static final DeferredItem<Item> BATTERY = ITEMS.registerItem("battery", Item::new);
+	public static final DeferredItem<EnergyPackItem> ENERGY_PACK =
+			ITEMS.registerItem("energy_pack", EnergyPackItem::new, EnergyPackItem::equipmentProperties);
 	// Vacuum Capsule (MOD-063): empty stacks to the vanilla default (64), filled to STACK_SIZE (16).
 	public static final DeferredItem<dev.alaindustrial.item.VacuumCapsuleItem> VACUUM_CAPSULE =
 			ITEMS.registerItem("vacuum_capsule", dev.alaindustrial.item.VacuumCapsuleItem::new);
@@ -280,6 +287,8 @@ public final class ModItemsNeoForge {
 		ModContent.NETWORK_ANALYZER = NETWORK_ANALYZER::get;
 		// Same invariant-generics story as NETWORK_ANALYZER above.
 		ModContent.BATTERY_POUCH = BATTERY_POUCH::get;
+		ModContent.BATTERY = BATTERY::get;
+		ModContent.ENERGY_PACK = ENERGY_PACK::get;
 		ModContent.VACUUM_CAPSULE = VACUUM_CAPSULE::get;
 		ModContent.FILLED_VACUUM_CAPSULE = FILLED_VACUUM_CAPSULE::get;
 		ModContent.STOCK_DISPLAY_FRAME_ITEM = STOCK_DISPLAY_FRAME_ITEM::get;

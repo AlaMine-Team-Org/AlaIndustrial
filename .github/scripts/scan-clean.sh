@@ -78,12 +78,16 @@ mapfile -t l1_files < <(printf '%s\n' "${files[@]}" \
   | grep -vE '/lang/[a-z_]+\.json$|^site/ru/|^site/(index|404)\.html$' || true)
 
 fail=0
-# scan <label> <grep-flags> <pattern> [filelist-var]
+# scan <label> <grep-flags> <pattern> [filelist-var] [whitelist-line-regex]
 scan() {
-  local label="$1" flags="$2" pattern="$3" listvar="${4:-files}" hits
+  local label="$1" flags="$2" pattern="$3" listvar="${4:-files}" whitelist="${5:-}" hits
   local -n _list="$listvar"
   [[ ${#_list[@]} -eq 0 ]] && return 0
-  hits=$(printf '%s\0' "${_list[@]}" | xargs -0 grep -nI $flags -e "$pattern" 2>/dev/null || true)
+  if [[ -n "$whitelist" ]]; then
+    hits=$(printf '%s\0' "${_list[@]}" | xargs -0 grep -nI $flags -e "$pattern" 2>/dev/null | grep -vE "$whitelist" || true)
+  else
+    hits=$(printf '%s\0' "${_list[@]}" | xargs -0 grep -nI $flags -e "$pattern" 2>/dev/null || true)
+  fi
   if [[ -n "$hits" ]]; then
     printf '❌ %s\n' "$label"
     printf '%s\n' "$hits" | sed 's/^/   /'
@@ -111,11 +115,16 @@ trace_pattern="$(
     "\\bA""I\\b" \
   | sed 's/|$//'
 )"
-scan "L2 automation/tooling traces"           "-iE" "$trace_pattern"
+# L2 whitelist: vanilla Minecraft uses `ai` as a package path for mob behavior
+# (net.minecraft.world.entity.ai.* — goals, pathfinding, attributes). The
+# `\bAI\b` token must not flag these legitimate API references in import
+# statements, javadoc {@link} tags, or code that registers attribute modifiers.
+L2_VANILLA_WHITELIST='net\.minecraft\.world\.entity\.ai\.|entity\.ai\.attributes'
+scan "L2 automation/tooling traces"           "-iE" "$trace_pattern"  files  "$L2_VANILLA_WHITELIST"
 
 # L2b — bare assistant marker. Higher false-positive risk, reported separately so a
 # human can clear legitimate hits at a glance.
-scan "L2 bare marker token (review manually)" "-E"  '\bA''I\b'
+scan "L2 bare marker token (review manually)" "-E"  '\bA''I\b'  files  "$L2_VANILLA_WHITELIST"
 
 # L3 — secrets and machine-local paths.
 scan "L3 secrets / local machine paths"      "-E"  \

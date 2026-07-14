@@ -6,7 +6,9 @@ import dev.alaindustrial.client.BatteryBoxScreen;
 import dev.alaindustrial.client.CompressorScreen;
 import dev.alaindustrial.client.DaylightSolarPanelScreen;
 import dev.alaindustrial.client.ElectricFurnaceScreen;
+import dev.alaindustrial.client.EnergyPackHud;
 import dev.alaindustrial.client.ExtractorScreen;
+import dev.alaindustrial.client.ModKeyMappings;
 import dev.alaindustrial.client.GeneratorScreen;
 import dev.alaindustrial.client.GeothermalGeneratorScreen;
 import dev.alaindustrial.client.IronChestBlockEntityRenderer;
@@ -32,6 +34,8 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -82,6 +86,18 @@ public final class IndustrializationNeoForgeClient {
 		// API: a static block-shaped preview gains nothing from per-frame submission.
 		NeoForge.EVENT_BUS.addListener(NeoForgeNetworkVisualization::onSubmitCustomGeometry);
 		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> NeoForgeCableGhost.tick());
+		// Energy Pack charge readout (MOD-065) — counterpart to the Fabric KeyMappingHelper +
+		// HudElementRegistry + ClientTickEvents trio. The drawing is loader-neutral (EnergyPackHud):
+		// NeoForge's GuiLayer and Fabric's HudElement take the same (GuiGraphicsExtractor, DeltaTracker).
+		// Only the mapping — NOT the category. ModKeyMappings builds the category with the vanilla
+		// KeyMapping.Category.register, which already appends it to the sort order on both loaders;
+		// calling event.registerCategory here as well would list it twice on NeoForge (harmless today,
+		// since lookups take the first match, but a real loader asymmetry).
+		modBus.addListener((RegisterKeyMappingsEvent event) ->
+				event.register(ModKeyMappings.TOGGLE_ENERGY_HUD));
+		modBus.addListener((RegisterGuiLayersEvent event) ->
+				event.registerAboveAll(Industrialization.id("energy_pack_hud"), EnergyPackHud::render));
+		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> ModKeyMappings.handleInput());
 		Industrialization.LOGGER.info("Industrialization (NeoForge client) initialized.");
 	}
 

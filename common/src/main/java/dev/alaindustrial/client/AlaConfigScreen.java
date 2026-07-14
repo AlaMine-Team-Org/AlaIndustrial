@@ -13,7 +13,13 @@ public final class AlaConfigScreen extends Screen {
 	private static final int BORDER = 0xFF5D7488;
 	private static final int TEXT = 0xFFE8EEF2;
 	private static final int TEXT_DIM = 0xFF9AA7B0;
-	private static final int PANEL_HEIGHT = 234;
+	// Tight on purpose: Minecraft only guarantees a 240px scaled height (1280x720 at the auto-picked
+	// GUI Scale 3), and the panel plus its footer has to fit inside that — otherwise Done/Cancel land
+	// off-screen and Esc silently discards the edits. Every row below is placed against this budget.
+	private static final int PANEL_HEIGHT = 238;
+	/** Row pitch (20px button + 1px gap) and the extra gap that opens a new titled section. */
+	private static final int ROW = 21;
+	private static final int SECTION = 34;
 
 	private final Screen parent;
 	private Snapshot draft;
@@ -31,35 +37,39 @@ public final class AlaConfigScreen extends Screen {
 		int y = panelY();
 		int buttonWidth = panelWidth - 32;
 		int bx = x + 16;
-		int row = y + 32;
+		int row = y + 28;
 
 		addToggle(bx, row, buttonWidth, "config.alaindustrial.network_overlay.enabled",
 				draft.networkOverlayEnabled(), value -> draft = draft.withNetworkOverlayEnabled(value));
-		row += 22;
+		row += ROW;
 		addToggle(bx, row, buttonWidth, "config.alaindustrial.network_overlay.through_blocks",
 				draft.networkOverlayThroughBlocks(), value -> draft = draft.withNetworkOverlayThroughBlocks(value));
-		row += 22;
+		row += ROW;
 		addToggle(bx, row, buttonWidth, "config.alaindustrial.network_overlay.flow_dots",
 				draft.networkOverlayFlowDots(), value -> draft = draft.withNetworkOverlayFlowDots(value));
-		row += 22;
+		row += ROW;
 		addRenderableWidget(Button.builder(colorMessage(), b -> {
 			draft = draft.withNetworkOverlayColor(AlaClientConfig.nextNetworkColor(draft.networkOverlayColor()));
 			b.setMessage(colorMessage());
 		}).bounds(bx, row, buttonWidth - 28, 20).build());
-		row += 22;
+		row += ROW;
 		addRenderableWidget(Button.builder(alphaMessage(), b -> {
 			int next = draft.networkOverlayAlpha() <= 64 ? 255 : draft.networkOverlayAlpha() - 64;
 			draft = draft.withNetworkOverlayAlpha(next);
 			b.setMessage(alphaMessage());
 		}).bounds(bx, row, buttonWidth, 20).build());
-		row += 38;
+		row += SECTION;
 		addToggle(bx, row, buttonWidth, "config.alaindustrial.tooltips.always_detailed",
 				draft.alwaysDetailedTooltips(), value -> draft = draft.withAlwaysDetailedTooltips(value));
-		row += 22;
+		row += ROW;
 		addToggle(bx, row, buttonWidth, "config.alaindustrial.tooltips.show_eu_numbers",
 				draft.showEuNumbers(), value -> draft = draft.withShowEuNumbers(value));
+		row += ROW;
+		// Worn-pack charge readout (MOD-065) — the same switch the H key flips in-game.
+		addToggle(bx, row, buttonWidth, "config.alaindustrial.hud.energy_pack",
+				draft.energyHudEnabled(), value -> draft = draft.withEnergyHudEnabled(value));
 
-		int footerY = y + PANEL_HEIGHT - 28;
+		int footerY = y + PANEL_HEIGHT - 26;
 		int w = (buttonWidth - 16) / 3;
 		addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> {
 			AlaClientConfig.apply(draft);
@@ -86,19 +96,19 @@ public final class AlaConfigScreen extends Screen {
 		int y = panelY();
 		graphics.fill(x, y, x + panelWidth, y + PANEL_HEIGHT, PANEL);
 		graphics.outline(x, y, panelWidth, PANEL_HEIGHT, BORDER);
-		graphics.centeredText(this.font, this.title, this.width / 2, y + 10, TEXT);
+		graphics.centeredText(this.font, this.title, this.width / 2, y + 6, TEXT);
 		graphics.text(this.font, Component.translatable("config.alaindustrial.category.network_overlay"),
-				x + 16, y + 22, TEXT_DIM, false);
+				x + 16, y + 17, TEXT_DIM, false);
 		graphics.text(this.font, Component.translatable("config.alaindustrial.category.tooltips"),
-				x + 16, y + 148, TEXT_DIM, false);
-		int colorY = y + 98;
+				x + 16, y + 135, TEXT_DIM, false);
+		int colorY = y + 91;
 		int colorX = x + 16 + panelWidth - 32 - 20;
 		graphics.fill(colorX, colorY, colorX + 20, colorY + 20, draft.networkOverlayColor());
 		graphics.outline(colorX, colorY, 20, 20, BORDER);
 	}
 
 	private int panelY() {
-		return Math.max(18, (this.height - PANEL_HEIGHT) / 2);
+		return Math.max(1, (this.height - PANEL_HEIGHT) / 2);
 	}
 
 	@Override

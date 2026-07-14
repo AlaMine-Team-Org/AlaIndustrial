@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -61,6 +62,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 checkSixFaceSurvey(context, singleplayer);      // R-VIS-04
                 checkActiveIdleTextures(context, singleplayer); // R-VIS-01
                 checkCableConnectivity(context, singleplayer);  // R-CON-03
+                checkEnergyPackWorn(context, singleplayer);     // MOD-065 worn model
                 // Water-mill BER wheel visual removed: block is hidden/not ready (tests deleted until it ships).
                 // R-PHY-10: mc.debugHitboxes removed in MC 26.2; re-enable when API is found.
             }
@@ -363,6 +365,41 @@ public class GuiClientGameTest implements FabricClientGameTest {
      * block models / textures (directional fronts, the thin cable, etc.) can be verified visually —
      * not just the GUIs. Uses server commands to build the rig and pose the camera.
      */
+    /**
+     * MOD-065: photographs the player wearing the Energy Pack, from behind and from the front. The
+     * worn model is data-driven (the item's EQUIPPABLE component points at
+     * {@code assets/alaindustrial/equipment/energy_pack.json}, whose layers name the humanoid
+     * textures) — nothing in code renders it, so a typo in either file shows up as a player with a
+     * bare chest and nothing else. These two frames are the only place that would catch it.
+     */
+    private static void checkEnergyPackWorn(ClientGameTestContext context, TestSingleplayerContext singleplayer) {
+        TestServerContext server = singleplayer.getServer();
+        server.runCommand("gamerule doDaylightCycle false");
+        server.runCommand("time set day");
+        // Own little stage: the player must stand on solid ground and be fully settled, otherwise the
+        // third-person camera catches them mid-fall and the body never renders into the frame.
+        server.runCommand("fill 4 100 3 14 100 13 minecraft:smooth_stone");
+        server.runCommand("gamemode survival @p");
+        server.runCommand("item replace entity @p armor.chest with alaindustrial:energy_pack");
+        server.runCommand("tp @p 9 101 8 180 0");
+        singleplayer.getClientLevel().waitForChunksRender();
+        context.waitTicks(20);
+
+        context.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK));
+        context.waitTicks(10);
+        LOG.info("[GUITEST] worn pack (back) -> {}",
+                takeCleanScreenshot(context, "worn_energy_pack_back").toAbsolutePath());
+
+        context.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT));
+        context.waitTicks(10);
+        LOG.info("[GUITEST] worn pack (front) -> {}",
+                takeCleanScreenshot(context, "worn_energy_pack_front").toAbsolutePath());
+
+        context.runOnClient(mc -> mc.options.setCameraType(CameraType.FIRST_PERSON));
+        server.runCommand("item replace entity @p armor.chest with minecraft:air");
+        context.waitTicks(5);
+    }
+
     private static void renderBlocksInWorld(ClientGameTestContext context, TestSingleplayerContext singleplayer) {
         TestServerContext server = singleplayer.getServer();
         server.runCommand("gamerule doDaylightCycle false");
@@ -517,6 +554,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
         // MOD-052: fourth state — a half-charged Battery Pouch sitting in the new charge slot, so the
         // reviewer sees the slot niche, the pouch icon and its EU item bar together.
         shootBatteryBoxWithPouch(context, "gui_battery_box_pouch", CAP / 2, CAP);
+        shootBatteryBoxWithPack(context, "gui_battery_box_energy_pack", CAP / 2, CAP);
 
         // ── LV Generator — three states ──────────────────────────────────────────────
         // State 1: empty — no fuel, no energy
@@ -616,6 +654,29 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 ItemStack pouch = new ItemStack(ModItems.BATTERY_POUCH);
                 dev.alaindustrial.item.ItemEnergy.set(pouch, dev.alaindustrial.Config.lvPouchBuffer / 2);
                 menu.getSlot(0).container.setItem(0, pouch);
+            }
+        });
+        context.waitTicks(5);
+        java.nio.file.Path path = takeCleanScreenshot(context, name);
+        LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
+    }
+
+    /**
+     * BatteryBox screen with a half-charged Energy Pack in the charge slot (MOD-065). Proves in one
+     * frame that the slot accepts the pack at all (the filter is "any item with an EU buffer", not
+     * "pouch only") and that the pack's icon + charge bar render in a GUI slot.
+     */
+    private static void shootBatteryBoxWithPack(ClientGameTestContext context, String name,
+                                                int energy, int capacity) {
+        LOG.info("[GUITEST] opening {} (energy pack in charge slot)", name);
+        context.runOnClient(mc -> {
+            MenuScreens.create(ModMenus.BATTERY_BOX, mc, 0, Component.literal("BatteryBox"));
+            if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                    && acs.getMenu() instanceof MachineMenu menu) {
+                menu.injectTestData(energy, capacity, 0, 0);
+                ItemStack pack = new ItemStack(ModItems.ENERGY_PACK);
+                dev.alaindustrial.item.ItemEnergy.set(pack, dev.alaindustrial.Config.energyPackBuffer / 2);
+                menu.getSlot(0).container.setItem(0, pack);
             }
         });
         context.waitTicks(5);

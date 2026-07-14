@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.EnergyPackItem;
 import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
@@ -95,6 +96,9 @@ public final class ModItems {
 	public static final Item URANIUM_INGOT = item("uranium_ingot");
 	public static final Item NETWORK_ANALYZER = networkAnalyzer("network_analyzer");
 	public static final Item BATTERY_POUCH = pouch("battery_pouch");
+	// Energy Pack (MOD-065): worn LV buffer + the inert battery cell it is crafted from.
+	public static final Item BATTERY = item("battery");
+	public static final Item ENERGY_PACK = energyPack("energy_pack");
 	// Vacuum Capsule (MOD-063): empty (×64) + filled (×16, fluid in the capsule_fluid component).
 	public static final Item VACUUM_CAPSULE = vacuumCapsule("vacuum_capsule");
 	public static final Item FILLED_VACUUM_CAPSULE = filledCapsule("filled_vacuum_capsule");
@@ -179,6 +183,15 @@ public final class ModItems {
 		// absent pouch_energy/pouch_contents as 0 EU / empty (MOD-052).
 		return Registry.register(BuiltInRegistries.ITEM, key,
 				new PouchItem(new Item.Properties().setId(key).stacksTo(1)));
+	}
+
+	// Energy Pack (MOD-065). Equipment properties come from the common helper (EQUIPPABLE + token armor
+	// attribute, no ArmorMaterial — see EnergyPackItem.equipmentProperties); like the pouch, no
+	// pouch_energy default is preset, ItemEnergy reads an absent component as 0 EU.
+	private static Item energyPack(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new EnergyPackItem(EnergyPackItem.equipmentProperties(new Item.Properties().setId(key))));
 	}
 
 	// Vacuum Capsule (MOD-063). Empty capsule stacks to the vanilla default (64); no fluid component
@@ -325,6 +338,8 @@ public final class ModItems {
 					output.accept(LAPIS_DUST);
 						output.accept(NETWORK_ANALYZER);
 						output.accept(BATTERY_POUCH);
+						output.accept(BATTERY);
+						output.accept(ENERGY_PACK);
 						// Empty capsule only — the filled form is obtained by using it on a fluid.
 						output.accept(VACUUM_CAPSULE);
 						// Tempered Iron — ingot, block, tools and armor as one continuous row
@@ -365,6 +380,9 @@ public final class ModItems {
 							ModContent.TEMPERED_IRON_CHESTPLATE.get(),
 							ModContent.TEMPERED_IRON_LEGGINGS.get(),
 							ModContent.TEMPERED_IRON_BOOTS.get());
+					// The Energy Pack is worn in the chest slot, so a player looking for chest gear finds it
+					// here too — it also sits with the other powered items under Tools & Utilities below.
+					output.insertAfter(ModContent.TEMPERED_IRON_BOOTS.get(), ModContent.ENERGY_PACK.get());
 				});
 		CreativeModeTabEvents.modifyOutputEvent(VanillaCreativeTabs.TOOLS_AND_UTILITIES)
 				.register(output -> {
@@ -387,6 +405,7 @@ public final class ModItems {
 					output.insertAfter(Items.NETHERITE_HOE, ModContent.SCYTHE_NETHERITE.get());
 					output.insertAfter(Items.COMPASS, ModContent.NETWORK_ANALYZER.get());
 					output.accept(ModContent.BATTERY_POUCH.get());
+					output.accept(ModContent.ENERGY_PACK.get());
 				});
 		CreativeModeTabEvents.modifyOutputEvent(VanillaCreativeTabs.INGREDIENTS)
 				.register(output -> CreativeTabContent.ingredients(output::accept));
@@ -441,6 +460,8 @@ public final class ModItems {
 		ModContent.URANIUM_INGOT = () -> URANIUM_INGOT;
 		ModContent.NETWORK_ANALYZER = () -> NETWORK_ANALYZER;
 		ModContent.BATTERY_POUCH = () -> BATTERY_POUCH;
+		ModContent.BATTERY = () -> BATTERY;
+		ModContent.ENERGY_PACK = () -> ENERGY_PACK;
 		ModContent.VACUUM_CAPSULE = () -> VACUUM_CAPSULE;
 		ModContent.FILLED_VACUUM_CAPSULE = () -> FILLED_VACUUM_CAPSULE;
 		ModContent.STOCK_DISPLAY_FRAME_ITEM = () -> STOCK_DISPLAY_FRAME;

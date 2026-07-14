@@ -22,6 +22,8 @@ public final class AlaClientConfig {
 	public static int networkOverlayAlpha = 255;
 	public static boolean alwaysDetailedTooltips = false;
 	public static boolean showEuNumbers = true;
+	/** Worn-pack charge readout (MOD-065). On by default; toggled in-game with the H key. */
+	public static boolean energyHudEnabled = true;
 
 	private static Path path;
 
@@ -35,7 +37,7 @@ public final class AlaClientConfig {
 
 	public static Snapshot snapshot() {
 		return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
-				networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers);
+				networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled);
 	}
 
 	public static void apply(Snapshot snapshot) {
@@ -46,6 +48,7 @@ public final class AlaClientConfig {
 		networkOverlayAlpha = clamp(snapshot.networkOverlayAlpha(), 0, 255);
 		alwaysDetailedTooltips = snapshot.alwaysDetailedTooltips();
 		showEuNumbers = snapshot.showEuNumbers();
+		energyHudEnabled = snapshot.energyHudEnabled();
 		save();
 	}
 
@@ -66,6 +69,7 @@ public final class AlaClientConfig {
 					networkOverlayColor = withAlpha(networkOverlayColor, networkOverlayAlpha);
 					alwaysDetailedTooltips = GsonHelper.getAsBoolean(o, "alwaysDetailedTooltips", alwaysDetailedTooltips);
 					showEuNumbers = GsonHelper.getAsBoolean(o, "showEuNumbers", showEuNumbers);
+					energyHudEnabled = GsonHelper.getAsBoolean(o, "energyHudEnabled", energyHudEnabled);
 				}
 				Industrialization.LOGGER.info("[client-config] loaded {}", path);
 			} else {
@@ -98,6 +102,7 @@ public final class AlaClientConfig {
 		o.addProperty("networkOverlayAlpha", snapshot.networkOverlayAlpha());
 		o.addProperty("alwaysDetailedTooltips", snapshot.alwaysDetailedTooltips());
 		o.addProperty("showEuNumbers", snapshot.showEuNumbers());
+		o.addProperty("energyHudEnabled", snapshot.energyHudEnabled());
 		return o;
 	}
 
@@ -149,44 +154,50 @@ public final class AlaClientConfig {
 			int networkOverlayColor,
 			int networkOverlayAlpha,
 			boolean alwaysDetailedTooltips,
-			boolean showEuNumbers) {
+			boolean showEuNumbers,
+			boolean energyHudEnabled) {
 		public static Snapshot defaults() {
-			return new Snapshot(true, true, true, DEFAULT_NETWORK_COLOR, 255, false, true);
+			return new Snapshot(true, true, true, DEFAULT_NETWORK_COLOR, 255, false, true, true);
 		}
 
 		public Snapshot withNetworkOverlayEnabled(boolean value) {
 			return new Snapshot(value, networkOverlayThroughBlocks, networkOverlayFlowDots, networkOverlayColor,
-					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers);
+					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled);
 		}
 
 		public Snapshot withNetworkOverlayThroughBlocks(boolean value) {
 			return new Snapshot(networkOverlayEnabled, value, networkOverlayFlowDots, networkOverlayColor,
-					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers);
+					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled);
 		}
 
 		public Snapshot withNetworkOverlayFlowDots(boolean value) {
 			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, value, networkOverlayColor,
-					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers);
+					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled);
 		}
 
 		public Snapshot withNetworkOverlayColor(int value) {
 			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots, value,
-					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers);
+					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled);
 		}
 
 		public Snapshot withNetworkOverlayAlpha(int value) {
 			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
-					networkOverlayColor, clamp(value, 0, 255), alwaysDetailedTooltips, showEuNumbers);
+					networkOverlayColor, clamp(value, 0, 255), alwaysDetailedTooltips, showEuNumbers, energyHudEnabled);
 		}
 
 		public Snapshot withAlwaysDetailedTooltips(boolean value) {
 			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
-					networkOverlayColor, networkOverlayAlpha, value, showEuNumbers);
+					networkOverlayColor, networkOverlayAlpha, value, showEuNumbers, energyHudEnabled);
 		}
 
 		public Snapshot withShowEuNumbers(boolean value) {
 			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
-					networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, value);
+					networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, value, energyHudEnabled);
+		}
+
+		public Snapshot withEnergyHudEnabled(boolean value) {
+			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
+					networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, value);
 		}
 	}
 }
