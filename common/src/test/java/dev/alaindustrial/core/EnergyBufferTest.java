@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
  * Both loaders drive this same common class, so these loader-free tests pin the transfer semantics on
  * <em>both</em> at once (the adapters are thin pass-throughs). Guards the migration against a regression
  * that would silently diverge Fabric and NeoForge behaviour.
+ *
+ * @implements energy-buffer insert/extract math, capacity/rate caps, transaction snapshot/rollback (MOD-009 top-off)
  */
 class EnergyBufferTest {
 

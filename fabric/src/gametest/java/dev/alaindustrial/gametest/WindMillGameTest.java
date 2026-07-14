@@ -57,12 +57,7 @@ public class WindMillGameTest {
 
 	/** Place a mill with no rotor — for the gate test (no rotor → no generation). */
 	private static WindMillBlockEntity placeWithoutRotor(GameTestHelper helper) {
-		helper.setBlock(POS, ModBlocks.WIND_MILL);
-		WindMillBlockEntity be = helper.getBlockEntity(POS, WindMillBlockEntity.class);
-		if (be == null) {
-			helper.fail("wind mill block entity missing after placement");
-		}
-		return be;
+		return AlaGameTestHelper.place(helper, POS, ModBlocks.WIND_MILL, WindMillBlockEntity.class);
 	}
 
 	/**
@@ -86,11 +81,7 @@ public class WindMillGameTest {
 	}
 
 	private static void drive(WindMillBlockEntity be, GameTestHelper helper, int ticks) {
-		BlockPos abs = be.getBlockPos();
-		for (int i = 0; i < ticks; i++) {
-			BlockState state = helper.getLevel().getBlockState(abs);
-			be.serverTick(helper.getLevel(), abs, state);
-		}
+		AlaGameTestHelper.drive(be, helper, ticks);
 	}
 
 	private static void setClear(GameTestHelper helper) {

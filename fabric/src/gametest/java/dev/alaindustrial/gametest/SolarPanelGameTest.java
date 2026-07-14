@@ -71,9 +71,7 @@ public class SolarPanelGameTest {
 	}
 
 	private static void drive(SolarPanelBlockEntity be, GameTestHelper helper, int ticks) {
-		for (int i = 0; i < ticks; i++) {
-			be.serverTick(helper.getLevel(), be.getBlockPos(), helper.getLevel().getBlockState(be.getBlockPos()));
-		}
+		AlaGameTestHelper.drive(be, helper, ticks);
 	}
 
 	/**

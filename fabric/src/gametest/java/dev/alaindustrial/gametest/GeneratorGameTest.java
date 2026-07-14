@@ -43,20 +43,11 @@ public class GeneratorGameTest {
 
 	/** Place a generator at {@link #POS} and return its block entity (absolute pos for serverTick). */
 	private static GeneratorBlockEntity placeGenerator(GameTestHelper helper) {
-		helper.setBlock(POS, ModBlocks.GENERATOR);
-		GeneratorBlockEntity gen = helper.getBlockEntity(POS, GeneratorBlockEntity.class);
-		if (gen == null) {
-			helper.fail("generator block entity missing after placement");
-		}
-		return gen;
+		return AlaGameTestHelper.place(helper, POS, ModBlocks.GENERATOR, GeneratorBlockEntity.class);
 	}
 
 	private static void drive(GeneratorBlockEntity gen, GameTestHelper helper, int ticks) {
-		BlockPos abs = gen.getBlockPos();
-		for (int i = 0; i < ticks; i++) {
-			BlockState state = helper.getLevel().getBlockState(abs);
-			gen.serverTick(helper.getLevel(), abs, state);
-		}
+		AlaGameTestHelper.drive(gen, helper, ticks);
 	}
 
 	/**

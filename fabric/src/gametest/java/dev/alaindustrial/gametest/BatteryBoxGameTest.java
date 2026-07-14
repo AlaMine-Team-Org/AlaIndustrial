@@ -38,12 +38,7 @@ public class BatteryBoxGameTest {
 	private static final BlockPos POS = new BlockPos(1, 2, 1);
 
 	private static BatteryBoxBlockEntity place(GameTestHelper helper) {
-		helper.setBlock(POS, ModBlocks.BATTERY_BOX);
-		BatteryBoxBlockEntity be = helper.getBlockEntity(POS, BatteryBoxBlockEntity.class);
-		if (be == null) {
-			helper.fail("battery_box block entity missing");
-		}
-		return be;
+		return AlaGameTestHelper.place(helper, POS, ModBlocks.BATTERY_BOX, BatteryBoxBlockEntity.class);
 	}
 
 	/**

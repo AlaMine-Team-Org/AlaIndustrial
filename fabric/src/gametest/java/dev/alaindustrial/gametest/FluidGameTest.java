@@ -33,18 +33,11 @@ public class FluidGameTest {
 	private static final BlockPos POS = new BlockPos(1, 2, 1);
 
 	private static GeothermalGeneratorBlockEntity place(GameTestHelper helper) {
-		helper.setBlock(POS, ModBlocks.GEOTHERMAL_GENERATOR);
-		GeothermalGeneratorBlockEntity be = helper.getBlockEntity(POS, GeothermalGeneratorBlockEntity.class);
-		if (be == null) {
-			helper.fail("geothermal block entity missing");
-		}
-		return be;
+		return AlaGameTestHelper.place(helper, POS, ModBlocks.GEOTHERMAL_GENERATOR, GeothermalGeneratorBlockEntity.class);
 	}
 
 	private static void drive(GeothermalGeneratorBlockEntity be, GameTestHelper helper, int ticks) {
-		for (int i = 0; i < ticks; i++) {
-			be.serverTick(helper.getLevel(), be.getBlockPos(), helper.getLevel().getBlockState(be.getBlockPos()));
-		}
+		AlaGameTestHelper.drive(be, helper, ticks);
 	}
 
 	/**

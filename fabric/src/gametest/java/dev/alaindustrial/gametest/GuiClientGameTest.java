@@ -61,7 +61,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 checkSixFaceSurvey(context, singleplayer);      // R-VIS-04
                 checkActiveIdleTextures(context, singleplayer); // R-VIS-01
                 checkCableConnectivity(context, singleplayer);  // R-CON-03
-                checkWaterMillWheel(context, singleplayer);     // BER wheel visual
+                // Water-mill BER wheel visual removed: block is hidden/not ready (tests deleted until it ships).
                 // R-PHY-10: mc.debugHitboxes removed in MC 26.2; re-enable when API is found.
             }
 
@@ -353,73 +353,6 @@ public class GuiClientGameTest implements FabricClientGameTest {
     // ────────────────────────────────────────────────────────────────────────────────
     // Water mill — BER wheel visual (volume, lighting, rotation pose)
     // ────────────────────────────────────────────────────────────────────────────────
-
-    /**
-     * Photographs the water-mill wheel (procedural BlockEntityRenderer) from four angles.
-     * The mill sits on a stone post above a water basin so the wheel hangs free and dips
-     * into the water; a side water pocket feeds production so the wheel is captured in a
-     * rotating (non-cardinal) pose. The night shot verifies the wheel darkens with world
-     * light instead of rendering full-bright.
-     *
-     * <p>Platform centred at (120, 99, 120).
-     */
-    private static void checkWaterMillWheel(ClientGameTestContext context, TestSingleplayerContext singleplayer) {
-        TestServerContext server = singleplayer.getServer();
-
-        // Clear the cable-connectivity rig so it doesn't bleed into the background.
-        server.runCommand("fill 96 99 96 104 103 104 minecraft:air");
-        singleplayer.getClientLevel().waitForChunksRender();
-        context.waitTicks(3);
-
-        server.runCommand("fill 114 99 114 128 99 128 minecraft:smooth_stone");
-        server.runCommand("gamemode spectator @p");
-
-        // Basin under the wheel (walls = smooth stone ring at y=100, water inside).
-        server.runCommand("fill 117 100 120 124 100 125 minecraft:smooth_stone");
-        server.runCommand("fill 118 100 121 123 100 124 minecraft:water");
-
-        // Stone post carrying the mill above the basin.
-        server.runCommand("setblock 120 100 118 minecraft:smooth_stone");
-        server.runCommand("setblock 120 101 118 minecraft:smooth_stone");
-        server.runCommand("setblock 120 101 119 minecraft:smooth_stone");
-        server.runCommand("setblock 120 102 119 minecraft:smooth_stone");
-        // Mill faces south → wheel hangs over the basin at z≈122.5.
-        server.runCommand("setblock 120 102 121 alaindustrial:water_mill[facing=south]");
-        server.runCommand("setblock 120 101 121 minecraft:smooth_stone");
-        server.runCommand("setblock 120 100 121 minecraft:smooth_stone");
-
-        // Enclosed water pocket against the mill's west face → production > 0 → wheel spins.
-        server.runCommand("setblock 119 101 121 minecraft:smooth_stone");
-        server.runCommand("setblock 118 102 121 minecraft:smooth_stone");
-        server.runCommand("setblock 119 102 120 minecraft:smooth_stone");
-        server.runCommand("setblock 119 102 122 minecraft:smooth_stone");
-        server.runCommand("setblock 119 102 121 minecraft:water");
-
-        singleplayer.getClientLevel().waitForChunksRender();
-        context.waitTicks(20);
-
-        String[][] millViews = {
-            {"120.5 101 128.5 180 8", "wmill_front"},   // from the south, full wheel face
-            {"124.5 102 126.5 135 18", "wmill_iso"},    // SE isometric
-            {"126.0 101.5 122.5 90 8", "wmill_side"},   // from the east, paddle depth visible
-        };
-        for (String[] v : millViews) {
-            server.runCommand("tp @p " + v[0]);
-            singleplayer.getClientLevel().waitForChunksRender();
-            context.waitTicks(5);
-            LOG.info("[GUITEST][WMILL] {} -> {}", v[1], takeCleanScreenshot(context, v[1]).toAbsolutePath());
-        }
-
-        // Night shot — the wheel must pick up world light (no full-bright ghosting).
-        server.runCommand("time set midnight");
-        context.waitTicks(10);
-        server.runCommand("tp @p 120.5 101 128.5 180 8");
-        singleplayer.getClientLevel().waitForChunksRender();
-        context.waitTicks(5);
-        LOG.info("[GUITEST][WMILL] wmill_night -> {}", takeCleanScreenshot(context, "wmill_night").toAbsolutePath());
-        server.runCommand("time set day");
-        context.waitTicks(5);
-    }
 
     // ────────────────────────────────────────────────────────────────────────────────
     // Existing: world render rig + GUI screenshots

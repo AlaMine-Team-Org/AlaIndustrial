@@ -6,7 +6,6 @@ import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
-import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.core.EnergyNetwork;
 import dev.alaindustrial.core.EnergyTier;
@@ -68,8 +67,6 @@ public final class CoreEnergyScenarios {
 			mac.serverTick(helper.getLevel(), p, st);
 		} else if (be instanceof BatteryBoxBlockEntity bb) {
 			bb.serverTick(helper.getLevel(), p, st);
-		} else if (be instanceof WaterMillBlockEntity wm) {
-			wm.serverTick(helper.getLevel(), p, st);
 		} else if (be instanceof WindMillBlockEntity wd) {
 			wd.serverTick(helper.getLevel(), p, st);
 		}
@@ -99,6 +96,15 @@ public final class CoreEnergyScenarios {
 			ItemStack out = mac.getItem(MaceratorBlockEntity.OUTPUT_SLOT);
 			if (out.isEmpty()) {
 				helper.fail("macerator produced no output — maceration recipe did not resolve on this loader");
+				return;
+			}
+			// Assert the SPECIFIC output item, not just non-empty — otherwise a regression returning the
+			// input emerald (or any fallback item) would pass trivially. Sibling tests (iron_ore→dust)
+			// already check identity; this first recipe must too.
+			if (!out.is(dev.alaindustrial.registry.ModContent.EMERALD_DUST.get())) {
+				helper.fail("macerator output was " + out.getItem() + " x" + out.getCount()
+						+ ", expected emerald_dust — wrong recipe resolved on this loader");
+				return;
 			}
 			helper.succeed();
 			return;
@@ -522,39 +528,7 @@ public final class CoreEnergyScenarios {
 		helper.succeed();
 	}
 
-	// ── scenario 6: water mill generates from adjacent water and pushes to a battery box ──────────────
-
-	private static final BlockPos MILL = new BlockPos(1, 2, 1);
-
-	/**
-	 * Water mill produces EU from vanilla water on a horizontal face and pushes it into a directly-adjacent
-	 * battery box (passive LV generator, no fuel, no cable). Water detection reads the world fluid state, so
-	 * this exercises the full world path on the NeoForge lane.
-	 * Mirrors: WaterMillGameTest.tcWmill001Con01_pushesToAdjacentBattery
-	 */
-	public static void waterMillChargesAdjacentBox(GameTestHelper helper) {
-		helper.setBlock(MILL, ModContent.WATER_MILL.get());
-		WaterMillBlockEntity mill = helper.getBlockEntity(MILL, WaterMillBlockEntity.class);
-		if (mill == null) {
-			helper.fail("water mill block entity missing after placement");
-		}
-		helper.setBlock(MILL.north(), Blocks.WATER); // keep it generating
-		BlockPos sink = MILL.east(); // mill sits on the box's WEST side
-		helper.setBlock(sink, ModContent.BATTERY_BOX.get().defaultBlockState()
-				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
-		BatteryBoxBlockEntity box = helper.getBlockEntity(sink, BatteryBoxBlockEntity.class);
-		if (box == null) {
-			helper.fail("battery box missing after placement");
-		}
-		box.getEnergyStorage().amount = 0;
-		for (int i = 0; i < 20; i++) {
-			tick(helper, mill);
-		}
-		if (box.getEnergyStorage().getAmount() <= 0) {
-			helper.fail("adjacent battery box received no EU from the water mill");
-		}
-		helper.succeed();
-	}
+	// ── scenario 6: wind mill pushes buffered EU to an adjacent battery box ───────────────────────
 
 	/**
 	 * Wind mill pushes its buffered EU into a directly-adjacent battery box (passive LV generator, no cable).
@@ -564,14 +538,15 @@ public final class CoreEnergyScenarios {
 	 * Mirrors: WindMillGameTest.tcWindmill001Con01_pushesToAdjacentBattery
 	 */
 	public static void windMillChargesAdjacentBox(GameTestHelper helper) {
-		helper.setBlock(MILL, ModContent.WIND_MILL.get());
-		WindMillBlockEntity mill = helper.getBlockEntity(MILL, WindMillBlockEntity.class);
+		BlockPos millPos = new BlockPos(1, 2, 1);
+		helper.setBlock(millPos, ModContent.WIND_MILL.get());
+		WindMillBlockEntity mill = helper.getBlockEntity(millPos, WindMillBlockEntity.class);
 		if (mill == null) {
 			helper.fail("wind mill block entity missing after placement");
 		}
 		mill.getEnergyStorage().amount = mill.getEnergyStorage().getCapacity(); // ample supply to push
 		mill.setChanged();
-		BlockPos sink = MILL.east(); // mill sits on the box's WEST side
+		BlockPos sink = millPos.east(); // mill sits on the box's WEST side
 		helper.setBlock(sink, ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		BatteryBoxBlockEntity box = helper.getBlockEntity(sink, BatteryBoxBlockEntity.class);
@@ -903,14 +878,30 @@ public final class CoreEnergyScenarios {
 		helper.setBlock(gen, ModContent.GENERATOR.get());
 		helper.setBlock(cable, ModContent.COPPER_CABLE.get());
 		helper.setBlock(furnace, Blocks.FURNACE);
+		long genEuBefore = 0;
 		if (be(helper, gen) instanceof GeneratorBlockEntity g) {
 			g.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+			genEuBefore = g.getEnergyStorage().getAmount();
+		} else {
+			helper.fail("generator block entity missing");
+			return;
 		}
 		// 60 ticks: must not NPE while probing the vanilla furnace neighbour each tick.
 		for (int i = 0; i < 60; i++) {
 			tick(helper, be(helper, gen));
 			tick(helper, be(helper, cable));
 			NetworkManager.tickAll(helper.getLevel());
+		}
+		// Cross-loader no-leak oracle: the generator burns coal and produces EU, but the only neighbour
+		// on the cable's far side is a vanilla furnace (no energy capability on either loader). EU must
+		// therefore accumulate in the generator's own buffer (strictly more than before) — if it had
+		// leaked into / been voided by the furnace, the buffer would not grow. This mirrors the Fabric
+		// lane's EnergyStorage.SIDED.find(...)==null check without depending on a loader-specific API.
+		long genEuAfter = be(helper, gen) instanceof GeneratorBlockEntity g2 ? g2.getEnergyStorage().getAmount() : -1;
+		if (genEuAfter <= genEuBefore) {
+			helper.fail("generator buffer did not grow over 60 ticks (before=" + genEuBefore
+					+ ", after=" + genEuAfter + ") — EU likely leaked into the vanilla furnace or was voided");
+			return;
 		}
 		helper.succeed();
 	}
@@ -958,63 +949,7 @@ public final class CoreEnergyScenarios {
 		helper.succeed();
 	}
 
-	// ── scenario 13: water mill exact EU rate from adjacent water (R-NRG-04) ────────────────────────
-
-	private static final BlockPos WAT = new BlockPos(1, 2, 1);
-
-	/**
-	 * Water mill produces exactly {@code waterMillEuPerTick} EU/t per adjacent water face. The mill at
-	 * (1,2,1) has one water face (north), so over {@code ticks} ticks the buffer grows by
-	 * {@code ticks × waterMillEuPerTick × globalEuRateMultiplier}. Buffer (4000) is far from full.
-	 * Mirrors: WaterMillGameTest.tcWmill001Fun01_generatesByWaterFaces
-	 */
-	public static void waterMillRateFromWater(GameTestHelper helper) {
-		helper.setBlock(WAT, ModContent.WATER_MILL.get());
-		helper.setBlock(WAT.north(), Blocks.WATER); // one water face
-		if (be(helper, WAT) instanceof WaterMillBlockEntity mill) {
-			int ticks = 20;
-			for (int i = 0; i < ticks; i++) {
-				mill.serverTick(helper.getLevel(), mill.getBlockPos(),
-						helper.getLevel().getBlockState(mill.getBlockPos()));
-			}
-			long perTick = Math.max(1, Math.round(Config.waterMillEuPerTick * Config.globalEuRateMultiplier));
-			long expected = perTick * ticks;
-			long got = mill.getEnergyStorage().getAmount();
-			if (got != expected) {
-				helper.fail("water mill over " + ticks + " ticks: got " + got + " EU, expected exactly "
-						+ expected + " (perTick=" + perTick + " = waterMillEuPerTick=" + Config.waterMillEuPerTick
-						+ " × " + Config.globalEuRateMultiplier + ", one water face)");
-				return;
-			}
-			helper.succeed();
-			return;
-		}
-		helper.fail("water mill block entity missing");
-	}
-
-	/**
-	 * Water mill with no adjacent water produces 0 EU. Catches a regression where the mill generates
-	 * unconditionally (ignores the water-face count).
-	 */
-	public static void waterMillNoWaterNoEu(GameTestHelper helper) {
-		helper.setBlock(WAT, ModContent.WATER_MILL.get());
-		if (be(helper, WAT) instanceof WaterMillBlockEntity mill) {
-			for (int i = 0; i < 20; i++) {
-				mill.serverTick(helper.getLevel(), mill.getBlockPos(),
-						helper.getLevel().getBlockState(mill.getBlockPos()));
-			}
-			long got = mill.getEnergyStorage().getAmount();
-			if (got != 0) {
-				helper.fail("water mill generated " + got + " EU with no adjacent water; expected 0");
-				return;
-			}
-			helper.succeed();
-			return;
-		}
-		helper.fail("water mill block entity missing");
-	}
-
-	// ── scenario 14: wind mill weather multiplier on a raised rig (R-NRG-04) ───────────────────────
+	// ── scenario 13: wind mill weather multiplier on a raised rig (R-NRG-04) ──────────────────────
 
 	private static final BlockPos WIND_RAISED = new BlockPos(1, 20, 1); // above sea level (see WindMillGameTest)
 
@@ -1032,8 +967,12 @@ public final class CoreEnergyScenarios {
 	}
 
 	/**
-	 * A thunderstorm multiplies the wind mill's base rate (×windMillThunderFactor), so the storm rate is
-	 * ≥ the clear-sky rate for the same raised block. Both rates are non-zero on the raised rig.
+	 * A thunderstorm multiplies the wind mill's base rate (×windMillThunderFactor). Rather than calling
+	 * {@code WindMillOutput.euFor} for the oracle (which would make the test tautological — the same code
+	 * under test computes the expected value), this drives the real mill in-world for a fixed tick window
+	 * at clear weather and at thunder, measuring the buffer growth each time. The storm rate must be
+	 * STRICTLY greater than the clear rate (thunder factor > 1), proving the weather wiring end-to-end
+	 * through the block entity, not just the static helper.
 	 * Mirrors: WindMillGameTest.tcWindmill001Sta01_thunderMultipliesRate
 	 */
 	public static void windMillThunderMultipliesRate(GameTestHelper helper) {
@@ -1043,29 +982,37 @@ public final class CoreEnergyScenarios {
 			return;
 		}
 		ServerLevel level = helper.getLevel();
-		BlockPos abs = helper.absolutePos(WIND_RAISED);
-		// Clear
+		int ticks = Config.windMillSampleTicks > 0 ? Config.windMillSampleTicks : 40;
+
+		// Clear-weather sample: empty buffer, drive, measure growth.
 		level.getWeatherData().setRaining(false);
 		level.getWeatherData().setThundering(false);
 		level.setRainLevel(0.0f);
-		int clearRate = dev.alaindustrial.core.WindMillOutput.euFor(abs.getY(), level.getSeaLevel(), true,
-				level.isRaining(), level.isThundering(), Config.windMillMaxBaseEuPerTick,
-				Config.windMillMaxEuPerTick, Config.windMillRainFactor, Config.windMillThunderFactor);
-		// Storm
+		mill.getEnergyStorage().amount = 0;
+		for (int i = 0; i < ticks; i++) {
+			mill.serverTick(level, mill.getBlockPos(), level.getBlockState(mill.getBlockPos()));
+		}
+		long clearRate = mill.getEnergyStorage().getAmount();
+
+		// Storm sample: empty buffer again, drive, measure growth.
 		level.getWeatherData().setRaining(true);
 		level.getWeatherData().setThundering(true);
 		level.setRainLevel(1.0f);
-		int stormRate = dev.alaindustrial.core.WindMillOutput.euFor(abs.getY(), level.getSeaLevel(), true,
-				level.isRaining(), level.isThundering(), Config.windMillMaxBaseEuPerTick,
-				Config.windMillMaxEuPerTick, Config.windMillRainFactor, Config.windMillThunderFactor);
+		mill.getEnergyStorage().amount = 0;
+		for (int i = 0; i < ticks; i++) {
+			mill.serverTick(level, mill.getBlockPos(), level.getBlockState(mill.getBlockPos()));
+		}
+		long stormRate = mill.getEnergyStorage().getAmount();
+
 		if (clearRate <= 0) {
-			helper.fail("raised wind mill still has base=0: absY=" + abs.getY() + " sea=" + level.getSeaLevel()
-					+ " — raise the rig further");
+			helper.fail("raised wind mill generated 0 EU over " + ticks + " clear-weather ticks"
+					+ " — raise the rig further so height base > 0");
 			return;
 		}
-		if (stormRate < clearRate) {
-			helper.fail("thunder rate " + stormRate + " < clear rate " + clearRate
-					+ " at absY=" + abs.getY() + " (weather must not reduce wind output)");
+		if (stormRate <= clearRate) {
+			helper.fail("thunder did not raise wind output: clear=" + clearRate + " storm=" + stormRate
+					+ " over " + ticks + " ticks (expected storm > clear, thunderFactor="
+					+ Config.windMillThunderFactor + ")");
 			return;
 		}
 		helper.succeed();
@@ -2064,9 +2011,10 @@ public final class CoreEnergyScenarios {
 	 * Mirrors: WindMillGameTest.tcWindmill001Neg01_roofedYieldsZero (mode leg)
 	 */
 	public static void windMillRoofedYieldsZero(GameTestHelper helper) {
-		helper.setBlock(WAT, ModContent.WIND_MILL.get());
-		helper.setBlock(WAT.above(), Blocks.STONE); // roof
-		if (be(helper, WAT) instanceof WindMillBlockEntity mill) {
+		BlockPos millPos = new BlockPos(1, 2, 1);
+		helper.setBlock(millPos, ModContent.WIND_MILL.get());
+		helper.setBlock(millPos.above(), Blocks.STONE); // roof
+		if (be(helper, millPos) instanceof WindMillBlockEntity mill) {
 			mill.setItem(WindMillBlockEntity.ROTOR_SLOT,
 					new ItemStack(dev.alaindustrial.registry.ModContent.WINDMILL_ROTOR.get()));
 			mill.getEnergyStorage().amount = 0;

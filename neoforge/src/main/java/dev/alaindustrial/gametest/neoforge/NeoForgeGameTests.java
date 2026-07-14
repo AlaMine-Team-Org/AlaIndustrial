@@ -90,17 +90,20 @@ public final class NeoForgeGameTests {
 				CoreEnergyScenarios::returnRoundRobinNoLeak);
 		registerTest(event, "mod009_battery_box_charges_to_full", 80, true,
 				CoreEnergyScenarios::mod009BatteryBoxChargesToFull);
-		// MOD-021 cable-loss on NeoForge: REQUIRED (guards a now-FIXED NeoForge-only defect). — surfaces a REAL NeoForge energy-core defect this
-		// world lane found (the JUnit adapter tests could not). NeoForgeEnergyLookup.find() hardcodes
-		// EnergyRole.BOTH, and NeoForgeEnergyPort.supportsInsertion/Extraction derive from that role, so
-		// EVERY face reports supporting BOTH insertion and extraction regardless of its real per-face role.
-		// EnergyNetwork.refreshEndpoints therefore classifies every storage/consumer as a producer too, so
-		// computeConsumerDistances seeds cable-distance 1 at every consumer and the MOD-021 loss floors to 0
-		// (the box gains a full lossless 32 EU/tick). insert()/extract() still gate correctly on role via the
-		// block-side FaceEnergyPort, so delivery works — only the classification-only supports* predicates are
-		// wrong. Root cause: the per-face role is lost across the Capabilities.Energy.BLOCK round-trip
-		// (EnergyHandler has no supports* predicate). Fix belongs in the NeoForge energy adapter, not here.
-		// Fabric's tcCable001Nrg02 passes because EnergyStorage.supports* reflect the real per-face capability.
+		// MOD-021 cable-loss on NeoForge: REQUIRED regression guard. This world lane surfaced (and the
+		// adapter fix in 7e673dc7 / MOD-022 closed) a NeoForge-only energy-core defect the JUnit adapter
+		// tests could not: NeoForgeEnergyLookup.find() had hardcoded EnergyRole.BOTH, and
+		// NeoForgeEnergyPort.supportsInsertion/Extraction derived from that role, so EVERY face reported
+		// supporting BOTH insertion and extraction regardless of its real per-face role. EnergyNetwork.
+		// refreshEndpoints therefore classified every storage/consumer as a producer too, so
+		// computeConsumerDistances seeded cable-distance 1 at every consumer and the MOD-021 loss floored
+		// to 0 (the box gained a full lossless 32 EU/tick). insert()/extract() still gated correctly on
+		// role via the block-side FaceEnergyPort, so delivery worked — only the classification-only
+		// supports* predicates were wrong. Root cause: the per-face role was lost across the
+		// Capabilities.Energy.BLOCK round-trip (EnergyHandler had no supports* predicate), fixed in the
+		// NeoForge energy adapter. The scenario body now guards against regression (fails on lossless
+		// delivery), so a reappearance of the defect will fail this required test. Fabric's
+		// tcCable001Nrg02 passes because EnergyStorage.supports* reflect the real per-face capability.
 		registerTest(event, "mod021_loss_over_ten_cables", 100, true,
 				CoreEnergyScenarios::mod021LossOverTenCables);
 		registerTest(event, "nbt_round_trip_preserves_state", 40, true,
@@ -109,10 +112,9 @@ public final class NeoForgeGameTests {
 		// in common/.../CoreEnergyScenarios — NetworkManager/EnergyNetwork are shared, not per-loader).
 		registerTest(event, "ring_network_merges_on_close", 200, true,
 				CoreEnergyScenarios::ringNetworkMergesOnClose);
-		// Phase-03 LV expansion: water mill + wind mill world-tested on NeoForge (passive LV generators,
-		// cable-less push path). Loader-neutral bodies in common/.../CoreEnergyScenarios.
-		registerTest(event, "water_mill_charges_adjacent_box", 40, true,
-				CoreEnergyScenarios::waterMillChargesAdjacentBox);
+		// Phase-03 LV expansion: wind mill world-tested on NeoForge (passive LV generator, cable-less
+		// push path). Loader-neutral body in common/.../CoreEnergyScenarios. (Water-mill scenarios removed:
+		// block is hidden/not ready — tests deleted until it ships.)
 		registerTest(event, "wind_mill_charges_adjacent_box", 40, true,
 				CoreEnergyScenarios::windMillChargesAdjacentBox);
 
@@ -176,12 +178,6 @@ public final class NeoForgeGameTests {
 		// NeoForge lane for a machine other than the macerator already covered above).
 		registerTest(event, "furnace_nbt_round_trip", 40, true,
 				CoreEnergyScenarios::furnaceNbtRoundTrip);
-
-		// Water mill: exact EU rate from one adjacent water face + no-water negative.
-		registerTest(event, "water_mill_rate_from_water", 60, true,
-				CoreEnergyScenarios::waterMillRateFromWater);
-		registerTest(event, "water_mill_no_water_no_eu", 60, true,
-				CoreEnergyScenarios::waterMillNoWaterNoEu);
 
 		// Wind mill: thunder multiplies the rate on a raised rig (weather wiring end-to-end).
 		registerTest(event, "wind_mill_thunder_multiplies_rate", 120, true,

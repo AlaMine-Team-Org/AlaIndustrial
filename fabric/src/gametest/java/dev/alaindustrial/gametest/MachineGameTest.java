@@ -38,18 +38,11 @@ public class MachineGameTest {
 	private static final int DRIVE_TICKS = 400;    // > longest machine duration (150) + margin
 
 	private static MachineBlockEntity place(GameTestHelper helper, Block block) {
-		helper.setBlock(POS, block);
-		MachineBlockEntity be = helper.getBlockEntity(POS, MachineBlockEntity.class);
-		if (be == null) {
-			helper.fail("block entity missing for " + block);
-		}
-		return be;
+		return AlaGameTestHelper.place(helper, POS, block);
 	}
 
 	private static void drive(MachineBlockEntity be, GameTestHelper helper, int ticks) {
-		for (int i = 0; i < ticks; i++) {
-			be.serverTick(helper.getLevel(), be.getBlockPos(), helper.getLevel().getBlockState(be.getBlockPos()));
-		}
+		AlaGameTestHelper.drive(be, helper, ticks);
 	}
 
 	/** Positive: powered machine with a valid input produces the expected output (≥ minCount). */
