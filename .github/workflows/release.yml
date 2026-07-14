@@ -115,7 +115,7 @@ jobs:
         run: |
           [ -n "$MODRINTH_TOKEN" ] || { echo "::error::MODRINTH_TOKEN secret is missing or empty"; exit 1; }
           VERSION="${{ steps.meta.outputs.version }}"
-          versions=$(curl -sSf --retry 3 --retry-all-errors --connect-timeout 20 \
+          versions=$(curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 \
             "https://api.modrinth.com/v2/project/ACLWFBlU/version" \
             -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0")
           fabric_exists=$(printf '%s' "$versions" | jq -r --arg v "$VERSION+fabric" 'any(.[]; .version_number == $v)')
@@ -152,7 +152,7 @@ jobs:
               primary_file: "fabric_file",
               environment: "client_and_server"
             }')
-          curl -sSf --retry 3 --retry-all-errors --connect-timeout 20 -X POST \
+          curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 -X POST \
             "https://api.modrinth.com/v2/version" \
             -H "Authorization: $MODRINTH_TOKEN" \
             -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0" \
@@ -186,7 +186,7 @@ jobs:
               primary_file: "neoforge_file",
               environment: "client_and_server"
             }')
-          curl -sSf --retry 3 --retry-all-errors --connect-timeout 20 -X POST \
+          curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 -X POST \
             "https://api.modrinth.com/v2/version" \
             -H "Authorization: $MODRINTH_TOKEN" \
             -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0" \
@@ -205,7 +205,7 @@ jobs:
           CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
         run: |
           [ -n "$CF_TOKEN" ] || { echo "::error::CURSEFORGE_TOKEN secret is missing or empty"; exit 1; }
-          versions=$(curl -sSf --retry 3 --retry-all-errors --connect-timeout 20 "https://minecraft.curseforge.com/api/game/versions?token=$CF_TOKEN")
+          versions=$(curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 "https://minecraft.curseforge.com/api/game/versions?token=$CF_TOKEN")
           NEOFORGE_ID=$(printf '%s' "$versions" | jq -r 'map(select(.name=="NeoForge")) | .[0].id // empty')
           [ -n "$NEOFORGE_ID" ] || { echo "::error::could not resolve the NeoForge modloader id from the versions API"; exit 1; }
           echo "neoforge_id=$NEOFORGE_ID" >> "$GITHUB_OUTPUT"
@@ -218,7 +218,7 @@ jobs:
         id: curseforge
         run: |
           VERSION="${{ steps.meta.outputs.version }}"
-          widget=$(curl -sSf --retry 3 --retry-all-errors --connect-timeout 20 \
+          widget=$(curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 \
             "https://api.cfwidget.com/minecraft/mc-mods/1597723" \
             -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0")
           python - "$VERSION" "$widget" <<'PY' >> "$GITHUB_OUTPUT"
@@ -251,7 +251,7 @@ jobs:
             --rawfile changelog CHANGELOG.md \
             --arg name "$DISPLAY_NAME" \
             '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, 7499], releaseType: "release"}')
-          curl -sSf --retry 3 --retry-all-errors --connect-timeout 20 -X POST \
+          curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 -X POST \
             "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
             -H "X-Api-Token: $CF_TOKEN" \
             --form-string "metadata=$metadata" \
@@ -270,7 +270,7 @@ jobs:
             --arg name "$DISPLAY_NAME" \
             --argjson nf "$NEOFORGE_ID" \
             '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, $nf], releaseType: "release"}')
-          curl -sSf --retry 3 --retry-all-errors --connect-timeout 20 -X POST \
+          curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 -X POST \
             "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
             -H "X-Api-Token: $CF_TOKEN" \
             --form-string "metadata=$metadata" \
