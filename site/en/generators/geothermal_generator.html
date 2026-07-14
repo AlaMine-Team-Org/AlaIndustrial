@@ -319,7 +319,7 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="4 pages">4</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="6 pages">6</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../generators/index.html">Generators</a><span class="sep">/</span><span>Geothermal Generator</span></div>
@@ -342,8 +342,8 @@
 <p>The generator burns lava at 16 EU/FE/tick. One bucket lasts 1000 ticks, i.e. 16 000 EU/FE — noticeably better value per unit of fuel-handling than coal.</p>
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Source</td><td>lava (10-bucket tank; fill by bucket or as a fluid via a pump)</td></tr><tr><td>Working condition</td><td>lava intake: lava present in the tank/slot AND room in the lava buffer (<code>lavaTicks &lt; tankCapacity</code>); EU/FE generation: the lava buffer is not empty AND the EU/FE buffer is not full</td></tr><tr><td>EU/FE/tick (base)</td><td>16</td></tr><tr><td>EU/FE per bucket</td><td>16000 (1 bucket = <code>geothermalBurnTicks</code> 1000 ticks × 16 EU/FE/t)</td></tr><tr><td>Modifiers</td><td>none</td></tr></tbody></table>
 <h2>Inventory</h2>
-<p>Lava goes in two ways: by bucket through the item slot (the empty bucket returns to the output slot), or as a fluid straight into the internal 10-bucket tank — for example from an adjacent Pump.</p>
-<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>lava_input</td><td>lava bucket (the empty bucket returns to the output slot)</td><td>1</td></tr><tr><td>output</td><td>empty buckets</td><td>—</td></tr></tbody></table>
+<p>Lava goes in several ways: by container through the item slot (the empty container returns to the output slot), as a fluid straight into the internal 10-bucket tank (for example from an adjacent Pump), or by <strong>shift-right-clicking the block directly</strong> with a lava bucket or a lava <a href="../items/vacuum_capsule.html">capsule</a> — the lava goes into the tank and the empty container stays in your hand (nothing spills in front of the block). The <code>lava_input</code> slot accepts both a lava bucket and a lava capsule; either way the matching empty container (bucket or capsule) returns to the output slot. When the tank is full any input is a silent no-op: the container stays full and nothing spills.</p>
+<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>lava_input</td><td>lava bucket or lava capsule (the empty container returns to the output slot)</td><td>1</td></tr><tr><td>output</td><td>empty buckets / empty capsules</td><td>—</td></tr></tbody></table>
 <p>The internal tank behaves identically on both loaders (Fabric and NeoForge): it accepts only lava, and neighbours can't drain it — the generator burns its own lava. Capacity is 10 buckets. Volume is tracked in millibuckets (1 bucket = 1000 mB), so the tank size and the EU/FE-per-bucket yield match on both loaders. Lava saved in the tank before a mod upgrade is carried over on world load without loss or reset.</p>
 <h2>Interface</h2>
 <p>Type: container Shows: energy storage, lava level, output rate</p>

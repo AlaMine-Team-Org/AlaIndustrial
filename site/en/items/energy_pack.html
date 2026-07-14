@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Energy Pack — Ala Industrial — Guide</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:16px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:12px 14px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; }
+  .recipe-body { display:grid; grid-template-columns:auto 24px minmax(90px,1fr); align-items:center; gap:9px; }
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); gap:2px; }
+  .recipe-processing { display:contents; }
+  .recipe-processing .ingredients { display:flex; gap:2px; flex-wrap:wrap; max-width:160px; }
+  .arrow { font-size:18px; color:var(--muted); font-family:'VT323',monospace; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .cell { width:36px; height:36px; background:var(--bg); border:1px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    position:relative; image-rendering:pixelated; }
+  .cell.empty { background:transparent; border-color:transparent; }
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:28px; height:28px; image-rendering:pixelated; }
+  .cell.result { border-color:var(--gold); }
+  .cell .count { position:absolute; bottom:-3px; right:-3px; background:var(--bg);
+    border:1px solid var(--line2); font-size:12px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; }
+  .result-name { font-size:13px; color:var(--muted); text-align:center; max-width:120px;
+    font-family:'VT323',monospace; }
+  .ricon.placeholder { font-size:12px; color:var(--muted2); }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:27px; font-size:16px; padding:0 10px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  .block-card .tag.cat { font-family:'Press Start 2P',monospace; font-size:9px;
+    color:var(--bg); padding:0 10px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-family:'Press Start 2P',monospace; font-size:9px;
+    color:var(--bg); padding:0 10px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="Open menu" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../../ru/items/energy_pack.html">RU</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Browse</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>Getting Started</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
+<div class="group-title">Energy</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="1 page">1</span></a>
+<div class="group-title">Processing</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<div class="group-title">World &amp; Automation</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<div class="group-title">Other</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<div class="group-title">Items</div>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="6 pages">6</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../items/index.html">Items</a><span class="sep">/</span><span>Energy Pack</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/item/energy_pack.png" alt="Energy Pack" width="64" height="64">
+    <div class="info">
+      <h1>Energy Pack</h1>
+      <div class="block-id">alaindustrial:energy_pack</div>
+      <div class="tags"><span class="tag cat" style="background:#d97706">Items</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implemented</span><span class="tag">item</span><span class="tag">energy</span><span class="tag">wearable</span><span class="tag">chestplate</span><span class="tag">pack</span></div>
+    </div>
+  </div>
+</div>
+<h2>Summary</h2>
+<p>The <strong>Energy Pack</strong> is a wearable energy buffer: it goes in the chest slot and, for as long as you wear it, tops up every powered item in your inventory once a second. Today that means the <a href="battery_pouch.html">Battery Pouch</a> — with the pack on your back the pouch no longer drains to zero and locks itself in the middle of an expedition. The pack holds <strong>20 000 EU/FE</strong> — ten times the pouch, and as much as a <a href="../energy-storage/battery_box.html">Battery Box</a>. It charges in the Battery Box charge slot. It is a device, not armor: it has <strong>no durability</strong> (it never breaks and takes no damage), it cannot be enchanted, and it grants a token <strong>2 armor points</strong> — less than a leather chestplate. A chest slot filled by the pack is a chest slot not filled by armor: that is the trade. The pack itself has <strong>no passive drain</strong> (unlike the pouch) — EU/FE only leave it to charge something.</p>
+<h2>Energy</h2>
+<p>Its own buffer, outside the energy network. It charges in the Battery Box slot and hands energy to items in the player's inventory — but only while it is worn.</p>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>wearable buffer item: consumer at a charger, source for carried items</td></tr><tr><td>Buffer</td><td>20 000 EU/FE (<code>energyPackBuffer</code>)</td></tr><tr><td>Charging</td><td>Battery Box slot, ≤ 32 EU/FE/tick (<code>energyPackInputRate</code>, capped by the LV ceiling) → full in ~31 s</td></tr><tr><td>Output</td><td>32 EU/FE/tick (<code>energyPackOutputRate</code>) → 640 EU/FE per step, one step per second</td></tr><tr><td>Passive drain</td><td>none</td></tr><tr><td>Component</td><td><code>alaindustrial:pouch_energy</code> (Long, persistent + networkSynchronized) — the shared component of every powered item in the mod</td></tr></tbody></table>
+<p>Output goes out in <strong>one batch per second</strong> rather than a trickle every tick: each charge write rewrites a data component and resyncs the item to the client, and a batch does the same work at a twentieth of the cost.</p>
+<h2>Inventory</h2>
+<p>Not applicable — the pack has no internal item storage (stack size 1).</p>
+<h2>Block properties</h2>
+<p>Not applicable (item).</p>
+<h2>Recipes</h2>
+<p>Crafted at a workbench from three <strong>batteries</strong> — a new cell component (tin, redstone and copper cable) — in a leather body, with an electronic circuit on top and a tin buckle below. Battery: <code>data/alaindustrial/recipe/battery.json</code> — shaped 3×3. Pack: <code>data/alaindustrial/recipe/energy_pack.json</code> — shaped 3×3. The battery is a crafting component only for now: it stores no charge of its own.</p>
+<h2>Behaviour</h2>
+<p><strong>Wearing:</strong> the chest slot. The pack works <strong>only while worn</strong> — in a bag, a chest or your hand it charges nothing. <strong>Charging items:</strong> once a second the pack hands out up to 640 EU/FE (32 EU/FE/tick × 20) to items with an EU/FE buffer. It walks the slots in order — the hotbar first, then the rest of the inventory, then the offhand; each item takes what it has room for and the rest of the budget moves on. <strong>Offhand:</strong> a pouch in the offhand is charged like any other — it gets its own pass (in 26.2 the offhand is not part of the main slot list). <strong>What is not charged:</strong> other Energy Packs (two packs would otherwise pump energy back and forth for nothing) and items inside containers — a pouch, a vanilla bundle, a shulker box. <strong>Idle:</strong> with nothing to charge — a full pouch, an empty pack, ordinary items — the pack spends neither EU/FE nor writes: its charge does not change at all. <strong>Charging the pack:</strong> in the Battery Box charge slot, up to 32 EU/FE/tick. The same slot takes the pouch — it accepts any item with an EU/FE buffer. <strong>Readout:</strong> the bar under the icon shows the charge (yellow, the LV colour — same as the pouch). The tooltip reads "Charge: X / 20 000 EU/FE", or a red "Empty" at zero. <strong>On-screen readout (HUD):</strong> while the pack is worn, its icon, charge percentage and a bar (green → gold → red as it drains) sit in the top-left corner. On by default, toggled with the <strong>H</strong> key (rebindable under Controls → Ala Industrial) or in the mod's settings. With no pack worn there is nothing to show, and nothing is shown. <strong>Drained look:</strong> at zero charge both the icon and the model on the player's back switch to the dead variant — a red indicator light instead of the green one, and pale cells. <strong>Durability and enchantments:</strong> no durability — the pack never breaks and takes no damage when you do; the anvil and the enchanting table both ignore it. <strong>Drop / death / relog:</strong> the charge lives on the item and survives.</p>
+<h2>Progression</h2>
+<p>The next step after the <a href="battery_pouch.html">Battery Pouch</a>: the pouch carries your things, the pack feeds the pouch. Available after the <a href="../energy-storage/battery_box.html">Battery Box</a> — without one there is no way to charge the pack. LV tier. Bigger versions (MV/HV — larger buffer, faster output) and electric tools as consumers are future work.</p>
+<h2>Compatibility</h2>
+<p>Viewers: JEI, REI, EMI (an ordinary item). Charging items from <strong>other</strong> energy mods is not supported yet: the pack only feeds this mod's items. Bridges to foreign energy systems (Team Reborn Energy on Fabric, the FE capability on NeoForge) are a separate future task; the hand-out logic is written so they can be added without rewriting the pack.</p>
+<h2>Balance</h2>
+<table><thead><tr><th>Parameter</th><th>Value</th><th>Config key</th></tr></thead><tbody><tr><td>EU/FE buffer</td><td><strong>20 000</strong></td><td><code>energyPackBuffer</code></td></tr><tr><td>EU/FE intake</td><td><strong>32</strong> EU/FE/tick</td><td><code>energyPackInputRate</code></td></tr><tr><td>EU/FE output</td><td><strong>32</strong> EU/FE/tick (640 EU/FE per step, one step per second)</td><td><code>energyPackOutputRate</code></td></tr><tr><td>Armor</td><td><strong>2</strong> points</td><td>— (item attribute, not a config knob)</td></tr></tbody></table>
+<p>20 000 EU/FE = ten full pouches; against the pouch's 1 EU/FE/s passive drain a single pack covers roughly 5.5 hours of carrying items. Charging from a Battery Box at 32 EU/FE/t takes ~625 ticks (~31 s). The</p>
+<h2>Related</h2>
+<p><a href="battery_pouch.html">Battery Pouch</a> — the first consumer of the pack's energy. <a href="../energy-storage/battery_box.html">Battery Box</a> — charges the pack (charge slot). <a href="../components/electronic_circuit.html">Electronic Circuit</a> — crafting component. <a href="../materials/tin.html">Tin</a> — the battery casing and the pack's buckle.</p>
+<h2>Crafting</h2>
+<div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Leather" aria-label="Leather"><span>leather</span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="28" height="28"></div> <div class="cell placeholder" title="Leather" aria-label="Leather"><span>leather</span></div> <div class="cell" title="Battery"><img src="../assets/item/battery.png" alt="Battery" width="28" height="28"></div> <div class="cell" title="Battery"><img src="../assets/item/battery.png" alt="Battery" width="28" height="28"></div> <div class="cell" title="Battery"><img src="../assets/item/battery.png" alt="Battery" width="28" height="28"></div> <div class="cell placeholder" title="Leather" aria-label="Leather"><span>leather</span></div> <div class="cell" title="Tin Ingot"><img src="../assets/item/tin_ingot.png" alt="Tin Ingot" width="28" height="28"></div> <div class="cell placeholder" title="Leather" aria-label="Leather"><span>leather</span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Energy Pack"><img src="../assets/item/energy_pack.png" alt="Energy Pack" width="28" height="28"></div><div class="result-name">Energy Pack</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

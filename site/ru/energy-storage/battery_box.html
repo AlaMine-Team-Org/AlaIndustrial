@@ -319,7 +319,7 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="2 страницы">2</span></a>
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="4 страницы">4</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="5 страниц">5</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="6 страниц">6</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../energy-storage/index.html">Накопители энергии</a><span class="sep">/</span><span>Энергохранилище</span></div>
@@ -342,7 +342,8 @@
 <blockquote>⚠️ Текстура <code>battery_box_output</code> сейчас на грани <code>FACING</code>, которая после стала <strong>входной</strong>.</blockquote>
 <h2>Инвентарь</h2>
 <p>Два слота под переносные EU/FE-предметы (батареи): один заряжает их от буфера, второй — наоборот, осушает предмет в буфер.</p>
-<table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>charge</td><td>заряжаемые предметы/батареи (заряжает их)</td><td>1</td></tr><tr><td>discharge</td><td>предметы-источники EU/FE (разряжает в буфер)</td><td>1</td></tr></tbody></table>
+<table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>charge</td><td>любой предмет с EU/FE-буфером: <a href="../items/battery_pouch.html">батарейный мешок</a>, <a href="../items/energy_pack.html">энергоранец</a> (заряжает их)</td><td>1</td></tr><tr><td>discharge</td><td>предметы-источники EU/FE (разряжает в буфер)</td><td>1</td></tr></tbody></table>
+<p>Слот зарядки заряжает предмет со скоростью <code>min(32 EU/FE/т — потолок LV, приём самого предмета)</code>: мешок — 32 EU/FE/т (~3 с до полного), ранец — 32 EU/FE/т (~31 с). Слот только ручной: воронки в него не кладут и из него не тянут.</p>
 <h2>Интерфейс</h2>
 <p>Тип: container Показывает: запас энергии, скорость вход/выход, слоты заряд/разряд</p>
 <h2>Свойства блока</h2>

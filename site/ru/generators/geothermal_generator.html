@@ -319,7 +319,7 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="2 страницы">2</span></a>
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="4 страницы">4</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="5 страниц">5</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="6 страниц">6</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../generators/index.html">Генераторы</a><span class="sep">/</span><span>Геотермальный генератор</span></div>
@@ -342,8 +342,8 @@
 <p>Генератор жжёт лаву по 16 EU/FE/такт. Одного ведра хватает на 1000 тиков работы, то есть на 16 000 EU/FE — заметно выгоднее угля по энергии на единицу возни с топливом.</p>
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Источник</td><td>лава (бак на 10 вёдер; вход вёдрами или жидкостью через насос)</td></tr><tr><td>Условие работы</td><td>приём лавы: в баке/слоте есть лава И есть место в лава-буфере (<code>lavaTicks &lt; tankCapacity</code>); генерация EU/FE: лава-буфер не пуст И буфер EU/FE не полон</td></tr><tr><td>EU/FE/такт (база)</td><td>16</td></tr><tr><td>EU/FE на ведро</td><td>16000 (1 ведро = <code>geothermalBurnTicks</code> 1000 тиков × 16 EU/FE/t)</td></tr><tr><td>Модификаторы</td><td>нет</td></tr></tbody></table>
 <h2>Инвентарь</h2>
-<p>Лава заливается двумя способами: вёдрами через слот (пустое ведро возвращается в выходной слот) или жидкостью напрямую во внутренний бак на 10 вёдер — например, от соседнего насоса.</p>
-<table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>lava_input</td><td>ведро лавы (пустое ведро возвращается в выходной слот)</td><td>1</td></tr><tr><td>output</td><td>пустые вёдра</td><td>—</td></tr></tbody></table>
+<p>Лава заливается несколькими способами: тарой через слот (пустая тара возвращается в выходной слот), жидкостью напрямую во внутренний бак на 10 вёдер (например, от соседнего насоса), либо <strong>shift+ПКМ прямо по блоку</strong> ведром лавы или лава-<a href="../items/vacuum_capsule.html">капсулой</a> — лава кладётся в бак, в руке остаётся пустая тара (лава не выливается перед блоком). В слот <code>lava_input</code> принимаются и ведро лавы, и лава-капсула; в обоих случаях в выходной слот возвращается соответствующая пустая тара (ведро или капсула). Когда бак полон, любой ввод — тихий no-op: тара остаётся полной, ничего не выливается.</p>
+<table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>lava_input</td><td>ведро лавы или лава-капсула (пустая тара возвращается в выходной слот)</td><td>1</td></tr><tr><td>output</td><td>пустые вёдра / пустые капсулы</td><td>—</td></tr></tbody></table>
 <p>Внутренний бак одинаков на обоих лоадерах (Fabric и NeoForge): принимает только лаву, и соседи не могут её откачать — генератор жжёт свою лаву сам. Ёмкость — 10 вёдер. Объём внутри считается в миллибакетах (1 ведро = 1000 mB), поэтому бак и запас EU/FE на ведро на обоих лоадерах совпадают. Лава, сохранённая в баке до апгрейда мода, при загрузке мира переносится без потерь и не сбрасывается.</p>
 <h2>Интерфейс</h2>
 <p>Тип: container Показывает: запас энергии, уровень лавы, скорость выдачи</p>
