@@ -39,9 +39,9 @@ __pycache__/
 # Generated standalone distribution files (rebuild via: python tools/build_standalone.py)
 tools/AlaIndustrial_Guide.html
 
-# Generated guide website (rebuild via: python docs/tools/gen_guide_site.py --all)
-# Like build/, site/ is an output artifact, not source — regenerated from docs/blocks/.
-site/
+# The guide site (site/) is NOT ignored here — it is what this repository publishes.
+# GitHub Pages serves it, so every page has to be tracked. Ignoring it made git skip newly
+# added pages in silence and stage renames as deletions with no replacement.
 
 # Sound generation tool (tools/tts/) — secrets + generated audio stay local.
 # The .env holds the ElevenLabs API key; output/ holds generated candidate sounds.
