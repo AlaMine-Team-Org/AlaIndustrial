@@ -78,21 +78,49 @@ mapfile -t l1_files < <(printf '%s\n' "${files[@]}" \
   | grep -vE '/lang/[a-z_]+\.json$|^site/ru/|^site/(index|404)\.html$' || true)
 
 fail=0
-# scan <label> <grep-flags> <pattern> [filelist-var] [whitelist-line-regex]
+# scan <label> <grep-flags> <pattern> [filelist-var] [whitelist-text-regex]
+#
+# -H: force the filename prefix. Without it grep omits the name whenever an xargs batch happens to
+# hold exactly one file, and a finding is reported as a bare "12:offending line" with no path.
 scan() {
   local label="$1" flags="$2" pattern="$3" listvar="${4:-files}" whitelist="${5:-}" hits
   local -n _list="$listvar"
   [[ ${#_list[@]} -eq 0 ]] && return 0
   if [[ -n "$whitelist" ]]; then
-    hits=$(printf '%s\0' "${_list[@]}" | xargs -0 grep -nI $flags -e "$pattern" 2>/dev/null | grep -vE "$whitelist" || true)
+    # Cut the whitelisted TEXT out of each candidate line, then re-test what is left. Discarding
+    # the whole line instead (grep -v) would let a real marker hide behind a whitelisted token on
+    # the same line: a javadoc line naming net.minecraft.world.entity.ai.attributes AND carrying a
+    # forbidden word would sail straight through. That hole was real — verified with a probe file.
+    hits=$(printf '%s\0' "${_list[@]}" | xargs -0 grep -HnI $flags -e "$pattern" 2>/dev/null \
+           | sed -E "s/($whitelist)//g" | grep $flags -e "$pattern" || true)
   else
-    hits=$(printf '%s\0' "${_list[@]}" | xargs -0 grep -nI $flags -e "$pattern" 2>/dev/null || true)
+    hits=$(printf '%s\0' "${_list[@]}" | xargs -0 grep -HnI $flags -e "$pattern" 2>/dev/null || true)
   fi
   if [[ -n "$hits" ]]; then
     printf '❌ %s\n' "$label"
     printf '%s\n' "$hits" | sed 's/^/   /'
     fail=1
   fi
+}
+
+# Self-test of the scan pipeline itself, in the same spirit as the Cyrillic probe above.
+#
+# Every stage of scan() swallows its exit status (`2>/dev/null … || true`), because "no match" and
+# "grep blew up" are indistinguishable through xargs anyway (xargs reports 123 either way). So a
+# typo in a pattern — or in the whitelist regex, which is fed to sed — would not error out: it
+# would simply match nothing, print no findings, and hand back a green "clean tree" over a dirty
+# one. Fail-open in a gate whose whole job is to block. Instead, run a known-dirty and a
+# known-clean line through the real pipeline and demand the expected verdict on both.
+selftest() {
+  local dirty="$1" clean="$2" pattern="$3" whitelist="$4" tmp probe
+  tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' RETURN
+  printf '%s\n' "$dirty" > "$tmp/dirty"; printf '%s\n' "$clean" > "$tmp/clean"
+  probe=$(grep -HnIiE -e "$pattern" "$tmp/dirty" 2>/dev/null | sed -E "s/($whitelist)//g" \
+          | grep -iE -e "$pattern" || true)
+  [[ -n "$probe" ]] || { echo "scan: FATAL — the pipeline does not flag a known marker; aborting to avoid a false pass" >&2; exit 2; }
+  probe=$(grep -HnIiE -e "$pattern" "$tmp/clean" 2>/dev/null | sed -E "s/($whitelist)//g" \
+          | grep -iE -e "$pattern" || true)
+  [[ -z "$probe" ]] || { echo "scan: FATAL — the whitelist does not clear a known-good line; aborting" >&2; exit 2; }
 }
 
 # L1 — Cyrillic (matched by UTF-8 byte range; see $CYRILLIC above).
@@ -120,11 +148,17 @@ trace_pattern="$(
 # `\bAI\b` token must not flag these legitimate API references in import
 # statements, javadoc {@link} tags, or code that registers attribute modifiers.
 L2_VANILLA_WHITELIST='net\.minecraft\.world\.entity\.ai\.|entity\.ai\.attributes'
+# Prove the pipeline still works before trusting a green result from it: a line carrying a marker
+# BEHIND a whitelisted path must be caught, and a plain vanilla import must not be.
+selftest "// {@link net.minecraft.world.entity.ai.attributes.Attributes} generated""_with c""laude" \
+         "import net.minecraft.world.entity.ai.attributes.Attributes;" \
+         "$trace_pattern" "$L2_VANILLA_WHITELIST"
 scan "L2 automation/tooling traces"           "-iE" "$trace_pattern"  files  "$L2_VANILLA_WHITELIST"
 
-# L2b — bare assistant marker. Higher false-positive risk, reported separately so a
-# human can clear legitimate hits at a glance.
-scan "L2 bare marker token (review manually)" "-E"  '\bA''I\b'  files  "$L2_VANILLA_WHITELIST"
+# L2b — bare assistant marker, case-SENSITIVE. No whitelist: the vanilla package path is lowercase
+# `ai`, so it never matched this pattern in the first place — passing the whitelist here only ever
+# risked clearing a line that should have been reported.
+scan "L2 bare marker token (review manually)" "-E"  '\bA''I\b'
 
 # L3 — secrets and machine-local paths.
 scan "L3 secrets / local machine paths"      "-E"  \
