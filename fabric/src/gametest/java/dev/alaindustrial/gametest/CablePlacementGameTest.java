@@ -451,4 +451,48 @@ public class CablePlacementGameTest {
 		}
 		helper.succeed();
 	}
+
+	// --- MOD-071: cable must not arm toward a solar panel's UP (working) face ---------------------
+
+	/**
+	 * Shared driver for the three MOD-071 panel cases. The panels are <b>not</b> {@code Horizontal}
+	 * (no {@code FACING} property), so they reuse {@link #assertArmsAround} with the inert face passed
+	 * as {@code facing}: passing {@code UP} as the "facing" makes {@code assertArmsAround} expect
+	 * {@code false} on the {@code UP} face (inert daylight/moonlight surface) and {@code true} on the
+	 * five other faces — exactly the MOD-071 contract. The helper's {@code hasProperty(FACING)} guard
+	 * skips the orientation step, so the block is placed default (symmetric, no rotation).
+	 *
+	 * <p>See {@link dev.alaindustrial.block.AbstractSolarPanelBlock} for why the override lives on the
+	 * shared base of the three panels (sibling to MOD-061, but per-block because panels are not
+	 * Horizontal).
+	 */
+	private static void assertArmsAroundPanel(GameTestHelper helper, Block panel) {
+		assertArmsAround(helper, panel, Direction.UP, false);
+	}
+
+	/**
+	 * @implements MOD-071 — a copper cable must NOT draw a connection arm toward a solar panel's
+	 *     {@code UP} face: {@code UP} is the daylight capture surface and is energy-inert
+	 *     ({@code SolarPanelBlockEntity#energyRoleForFace(UP) == NONE}); EU flows from the other five
+	 *     faces only. Before the {@code AbstractSolarPanelBlock#isCableConnectable} override, the cable
+	 *     inherited the all-faces-true default and drew a misleading "energy goes here" arm toward
+	 *     {@code UP}.
+	 * @covers R-NRG-03 (solar panel 5-side output, UP = working surface)
+	 */
+	@GameTest
+	public void mod071_cableDoesNotArmToSolarPanelUp(GameTestHelper helper) {
+		assertArmsAroundPanel(helper, ModBlocks.SOLAR_PANEL);
+	}
+
+	/** @implements MOD-071 — Daylight Solar Panel T2, same UP-inert contract as the base panel. */
+	@GameTest
+	public void mod071_cableDoesNotArmToDaylightSolarPanelUp(GameTestHelper helper) {
+		assertArmsAroundPanel(helper, ModBlocks.DAYLIGHT_SOLAR_PANEL);
+	}
+
+	/** @implements MOD-071 — Moonlit Solar Panel (night mirror), same UP-inert contract. */
+	@GameTest
+	public void mod071_cableDoesNotArmToMoonlitSolarPanelUp(GameTestHelper helper) {
+		assertArmsAroundPanel(helper, ModBlocks.MOONLIT_SOLAR_PANEL);
+	}
 }

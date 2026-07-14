@@ -5,6 +5,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.gametest.CoreEnergyScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.CapsuleScenarios;
+import dev.alaindustrial.gametest.GeothermalLavaInputScenarios;
 import dev.alaindustrial.gametest.PouchScenarios;
 import dev.alaindustrial.gametest.ScytheScenarios;
 import dev.alaindustrial.gametest.StockDisplayFrameScenarios;
@@ -119,6 +120,20 @@ public final class NeoForgeGameTests {
 		// NeoForge (Capabilities.Fluid.BLOCK resolves, transactions commit, lava becomes EU).
 		registerTest(event, "fluid_source_to_pump_to_geo_to_eu", 40, true,
 				CoreFluidScenarios::sourceToPumpToGeoToEu);
+
+		// MOD-077: geothermal lava-input parity (capsule in the GUI slot, vanilla lava bucket via the
+		// RightClickBlock interception helper, full-tank no-op) + lava-capsule furnace fuel (the two
+		// common furnace mixins). Proves the mixins actually apply on the NeoForge lane.
+		registerTest(event, "geothermal_capsule_in_slot_drains", 40, true,
+				GeothermalLavaInputScenarios::fun05CapsuleInSlotDrains);
+		registerTest(event, "geothermal_bucket_deposit_via_shift", 40, true,
+				GeothermalLavaInputScenarios::fun06BucketDepositViaShift);
+		registerTest(event, "geothermal_bucket_full_tank_no_op", 40, true,
+				GeothermalLavaInputScenarios::neg06BucketFullTankNoOp);
+		registerTest(event, "lava_capsule_is_furnace_fuel", 40, true,
+				GeothermalLavaInputScenarios::fun04LavaCapsuleIsFurnaceFuel);
+		registerTest(event, "furnace_fuel_slot_caps_lava_capsule", 40, true,
+				GeothermalLavaInputScenarios::fun05FurnaceFuelSlotCapsOne);
 
 		// Machine processing negatives — shared MachineBlockEntity loop on the NeoForge lane. These close
 		// the coverage gap with the Fabric MachineGameTest (no-power, full-output jam, input-swap reset),

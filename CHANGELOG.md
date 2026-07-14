@@ -1,14 +1,15 @@
-## 0.1.23
+## 0.1.24
 
-<p><img alt="Ala Industrial 0.1.23 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.23/release-media/v0.1.23/changelog.png" width="720"></p>
+<p><img alt="Geothermal generator taking lava from a capsule" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.24/release-media/v0.1.24/changelog.png" width="720"></p>
 
-A small but tidy update — cleaner machine fronts, honest recipe lookups, and scythes that hit like they should.
+A convenience pass on the geothermal generator — lava goes in the way you'd expect, and empty containers come back out.
 
-### Bug Fixes
+### Gameplay
 
-- **Cables no longer connect to the front face of machines.** The copper cable used to draw a connection sleeve toward the front of every generator, macerator, electric furnace, extractor, compressor and geothermal generator — even though no energy actually flows through that face. The misleading sleeve is gone: cables now connect only to the five working faces, and the machine's front stays clean and readable. The water mill gets the same treatment for free, and the pump now follows the same rule (its front is no longer an exception). Fluid intake on the pump is unchanged — it still draws from the block in front of it. Existing worlds migrate automatically: stale sleeves disappear the first time the chunk loads.
-- **Scythes now deal at least 1 damage.** The wooden, stone, copper and gold scythes showed **0 Attack Damage** on their tooltip, which made them look broken. Each tier now has a sensible attack value: wood / stone / copper / gold / iron / tempered iron → 1, diamond → 2, netherite → 3. Attack speed is unchanged.
+- **Feed the geothermal generator with a lava capsule.** You can now drop a filled vacuum capsule straight into the generator's input slot, exactly like a lava bucket. The capsule is consumed for its lava, and an empty capsule lands back in the output slot — ready to be refilled and used again. Same energy per dose as a bucket.
+- **Pour a lava bucket directly into the tank with shift + right-click.** Using a lava bucket on the generator block while sneaking now fills its internal tank and leaves you with an empty bucket, instead of just pouring lava on the ground in front of the block. The capsule already worked this way; the bucket now matches it. If the tank is already full, nothing happens — your bucket or capsule stays full, and no lava is spilled.
+- **Lava capsules work as furnace fuel.** A filled lava capsule burns in a vanilla furnace for the same time as a lava bucket, and returns an empty capsule to the slot when it's done. Water capsules are not fuel. Capsules in the fuel slot don't stack past one — same rule as buckets — so you never lose a container to a stack burn.
 
 ### Quality of Life
 
-- **The electric furnace shows up next to vanilla smelting recipes.** When you look up how to smelt tin ore, sand into glass, raw beef into steak or any other vanilla furnace recipe, the electric furnace now appears as an option alongside the vanilla furnace — because it can actually perform all of those recipes. One small change that makes the recipe viewer honest about what the machine can do.
+- **One consistent way to load lava.** Buckets and capsules now behave the same around the geothermal generator — whichever you're holding, the tank fills and the empty container comes back to you. No more picking the "wrong" container and watching lava spill on the ground.

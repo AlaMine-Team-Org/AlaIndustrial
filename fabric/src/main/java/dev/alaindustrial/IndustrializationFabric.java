@@ -20,6 +20,7 @@ import dev.alaindustrial.registry.ModMenus;
 import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.ModWorldGen;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -163,6 +164,12 @@ public class IndustrializationFabric implements ModInitializer {
 		});
 		ServerLevelEvents.UNLOAD.register((server, level) -> NetworkManager.clear(level));
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> NetworkManager.clearAll());
+
+		// MOD-077: shift-right-clicking a mod fluid tank (geothermal generator, pump) with a vanilla lava
+		// bucket loads the bucket into the tank instead of spilling it. UseBlockCallback fires early on both
+		// sides — before vanilla's sneak-bypass runs BucketItem#useOn — so it can intercept the spill.
+		UseBlockCallback.EVENT.register((player, level, hand, hit) ->
+				dev.alaindustrial.item.VanillaBucketDeposit.tryDeposit(level, player, hand, hit));
 
 		// /ala build-visibility command (version + status), available to everyone.
 		AlaCommand.register();

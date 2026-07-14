@@ -24,7 +24,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
+import net.minecraft.world.InteractionResult;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -157,6 +159,18 @@ public final class IndustrializationNeoForge {
 			}
 		});
 		NeoForge.EVENT_BUS.addListener((ServerStoppedEvent event) -> NetworkManager.clearAll());
+		// MOD-077: shift-right-clicking a mod fluid tank (geothermal generator, pump) with a vanilla lava
+		// bucket loads the bucket into the tank instead of spilling it. RightClickBlock fires early on both
+		// sides — before vanilla's sneak-bypass runs BucketItem#useOn — so it can intercept the spill. The
+		// neutral helper is shared with the Fabric UseBlockCallback registration.
+		NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock event) -> {
+			InteractionResult result = dev.alaindustrial.item.VanillaBucketDeposit.tryDeposit(
+					event.getLevel(), event.getEntity(), event.getHand(), event.getHitVec());
+			if (result != InteractionResult.PASS) {
+				event.setCancellationResult(result);
+				event.setCanceled(true);
+			}
+		});
 		// /ala build-visibility command (version + status + net), available to everyone; the hidden
 		// /ala demo subtree (MOD-058) registers only outside production (or with -Dalaindustrial.demo=true).
 		NeoForge.EVENT_BUS.addListener(

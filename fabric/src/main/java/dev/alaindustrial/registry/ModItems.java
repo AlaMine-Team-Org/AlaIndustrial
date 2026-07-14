@@ -190,11 +190,15 @@ public final class ModItems {
 	}
 
 	// Filled capsule: one bucket of a single fluid, stacking to FilledCapsuleItem.STACK_SIZE (16).
+	// MOD-077: craftRemainder = the empty capsule, so a lava capsule burnt in a vanilla furnace returns an
+	// empty capsule (the fuel remainder), exactly as a lava bucket returns an empty bucket. VACUUM_CAPSULE is
+	// initialised just above (field order), so it is already registered here.
 	private static Item filledCapsule(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
 				new dev.alaindustrial.item.FilledCapsuleItem(
-						new Item.Properties().setId(key).stacksTo(dev.alaindustrial.item.FilledCapsuleItem.STACK_SIZE)));
+						new Item.Properties().setId(key).stacksTo(dev.alaindustrial.item.FilledCapsuleItem.STACK_SIZE)
+								.craftRemainder(VACUUM_CAPSULE)));
 	}
 
 	// Tempered-iron hand-held tools (MOD-054). In MC 26.2 PickaxeItem/SwordItem/DiggerItem were

@@ -79,14 +79,19 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 	@Override
 	protected int produce(Level level, BlockPos pos, BlockState state) {
 		int tank = tankCapacity();
-		// Load lava from a bucket into the burn buffer whenever there is room.
-		// This is independent of the energy buffer: lavaTicks is an intermediate store, not EU.
-		// EU generation is gated separately below so lava is never wasted (R-NRG-11).
-		if (lavaTicks + Config.geothermalBurnTicks <= tank
-				&& items.get(INPUT_SLOT).is(Items.LAVA_BUCKET) && canReturnBucket()) {
-			items.get(INPUT_SLOT).shrink(1);
-			returnBucket();
-			lavaTicks += Config.geothermalBurnTicks;
+		// Load lava from a filler item (vanilla lava bucket OR a lava-filled Vacuum Capsule) into the burn
+		// buffer whenever there is room, returning the emptied container to the output slot. This is
+		// independent of the energy buffer: lavaTicks is an intermediate store, not EU. EU generation is
+		// gated separately below so lava is never wasted (R-NRG-11). MOD-077: capsule parity — same
+		// all-or-nothing exchange as the bucket, returning an empty capsule instead of an empty bucket.
+		if (lavaTicks + Config.geothermalBurnTicks <= tank) {
+			ItemStack input = items.get(INPUT_SLOT);
+			ItemStack container = fillerContainer(input);
+			if (!container.isEmpty() && canReturn(container)) {
+				input.shrink(1);
+				putReturn(container);
+				lavaTicks += Config.geothermalBurnTicks;
+			}
 		}
 
 		// Drain lava from the fluid tank into the burn buffer when there is room.
@@ -116,15 +121,33 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 		return made;
 	}
 
-	private boolean canReturnBucket() {
-		ItemStack out = items.get(OUTPUT_SLOT);
-		return out.isEmpty() || (out.is(Items.BUCKET) && out.getCount() < out.getMaxStackSize());
+	/**
+	 * The empty container an accepted lava filler leaves behind — a single empty bucket for a
+	 * {@link Items#LAVA_BUCKET}, a single empty {@link ModContent#VACUUM_CAPSULE} for a lava-filled
+	 * capsule — or {@link ItemStack#EMPTY} if {@code input} is not a lava filler this machine accepts.
+	 */
+	private static ItemStack fillerContainer(ItemStack input) {
+		if (input.is(Items.LAVA_BUCKET)) {
+			return new ItemStack(Items.BUCKET);
+		}
+		if (dev.alaindustrial.item.CapsuleFuel.isLavaCapsule(input)) {
+			return new ItemStack(ModContent.VACUUM_CAPSULE.get());
+		}
+		return ItemStack.EMPTY;
 	}
 
-	private void returnBucket() {
+	/** Whether the output slot can accept one more {@code returned} container (empty slot or a matching stack). */
+	private boolean canReturn(ItemStack returned) {
+		ItemStack out = items.get(OUTPUT_SLOT);
+		return out.isEmpty()
+				|| (ItemStack.isSameItemSameComponents(out, returned) && out.getCount() < out.getMaxStackSize());
+	}
+
+	/** Place one {@code returned} container into the output slot (must have passed {@link #canReturn}). */
+	private void putReturn(ItemStack returned) {
 		ItemStack out = items.get(OUTPUT_SLOT);
 		if (out.isEmpty()) {
-			items.set(OUTPUT_SLOT, new ItemStack(Items.BUCKET));
+			items.set(OUTPUT_SLOT, returned);
 		} else {
 			out.grow(1);
 		}
@@ -132,7 +155,8 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
-		return slot == INPUT_SLOT && stack.is(Items.LAVA_BUCKET);
+		return slot == INPUT_SLOT
+				&& (stack.is(Items.LAVA_BUCKET) || dev.alaindustrial.item.CapsuleFuel.isLavaCapsule(stack));
 	}
 
 	@Override
