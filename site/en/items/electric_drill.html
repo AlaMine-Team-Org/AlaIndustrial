@@ -5,10 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#16161a">
-<title>Moonlit Solar Panel — Ala Industrial — Guide</title>
+<title>Electric Drill — Ala Industrial — Guide</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:16px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:12px 14px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; }
+  .recipe-body { display:grid; grid-template-columns:auto 24px minmax(90px,1fr); align-items:center; gap:9px; }
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); gap:2px; }
+  .recipe-processing { display:contents; }
+  .recipe-processing .ingredients { display:flex; gap:2px; flex-wrap:wrap; max-width:160px; }
+  .arrow { font-size:18px; color:var(--muted); font-family:'VT323',monospace; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .cell { width:36px; height:36px; background:var(--bg); border:1px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    position:relative; image-rendering:pixelated; }
+  .cell.empty { background:transparent; border-color:transparent; }
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:28px; height:28px; image-rendering:pixelated; }
+  .cell.result { border-color:var(--gold); }
+  .cell .count { position:absolute; bottom:-3px; right:-3px; background:var(--bg);
+    border:1px solid var(--line2); font-size:12px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; }
+  .result-name { font-size:13px; color:var(--muted); text-align:center; max-width:120px;
+    font-family:'VT323',monospace; }
+  .ricon.placeholder { font-size:12px; color:var(--muted2); }
+</style>
 <style>
   
   @font-face {
@@ -271,7 +299,7 @@
     <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
     <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
   </div>
-  <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../../ru/generators/moonlit_solar_panel.html">RU</a></div></details>
+  <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../../ru/items/electric_drill.html">RU</a></div></details>
 </nav>
 
 <div class="layout">
@@ -280,7 +308,7 @@
 <a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>Getting Started</span></a>
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="6 pages">6</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Processing</div>
@@ -291,40 +319,49 @@
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="5 pages">5</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="7 pages">7</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="7 pages">7</span></a>
   </aside>
   <main class="content" id="main-content">
-    <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../generators/index.html">Generators</a><span class="sep">/</span><span>Moonlit Solar Panel</span></div>
+    <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../items/index.html">Items</a><span class="sep">/</span><span>Electric Drill</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/item/moonlit_solar_panel_3d.png" alt="Moonlit Solar Panel" width="64" height="64">
+    <img class="icon" src="../assets/item/electric_drill.png" alt="Electric Drill" width="64" height="64">
     <div class="info">
-      <h1>Moonlit Solar Panel</h1>
-      <div class="block-id">alaindustrial:moonlit_solar_panel</div>
-      <div class="tags"><span class="tag cat" style="background:#f0b429">Generators</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implemented</span><span class="tag">tier-lv</span><span class="tag">energy</span><span class="tag">solar</span><span class="tag">lunar</span><span class="tag">tier2</span></div>
+      <h1>Electric Drill</h1>
+      <div class="block-id">alaindustrial:electric_drill</div>
+      <div class="tags"><span class="tag cat" style="background:#d97706">Items</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implemented</span><span class="tag">item</span><span class="tag">energy</span><span class="tag">tool</span><span class="tag">pickaxe</span><span class="tag">drill</span></div>
     </div>
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Moonlit Solar Panel</strong> is the second tier of the night branch (T2), the mirror of the <a href="daylight_solar_panel.html">Daylight Solar Panel</a>. It produces EU/FE <strong>at night</strong> with open sky above and nothing during the day — a gentle "everlasting" source for the dark hours. It cannot be crafted — it is obtained <strong>only through evolution</strong> of the base panel with a <strong>Lunar Evolution Chip</strong>.</p>
+<p>The <strong>Electric Drill</strong> is the mod's first powered hand tool: a diamond-tier pickaxe that runs on EU/FE instead of durability. As long as it holds one block's worth of charge it mines <strong>a touch faster than a diamond pickaxe</strong> (speed 8.5 vs 8.0, diamond mining level) and spends <strong>50 EU/FE</strong> per block successfully broken. A full buffer is <strong>10 000 EU/FE</strong>, about <strong>200 blocks</strong> on one charge. Run flat, the drill does not become useless: it keeps mining at <strong>hand speed</strong> (1.0), but the mining level and every drop are preserved — it is just slow until you recharge. It is the same charge → work → recharge loop as the <a href="energy_pack.html">Energy Pack</a>. Like the mod's other EU/FE items (the <a href="battery_pouch.html">Pouch</a>, the <a href="energy_pack.html">Energy Pack</a>), the drill has <strong>no durability</strong> and never breaks: the bar under the icon shows EU/FE charge, not wear (gold, the LV colour). It charges where they do — in the <a href="../energy-storage/battery_box.html">Battery Box</a> charge slot and from a worn <a href="energy_pack.html">Energy Pack</a>.</p>
 <h2>Energy</h2>
-<p>The panel only produces power and never accepts incoming energy. An 8000 EU/FE buffer is released into an LV-tier network. Energy is emitted in 5 directions; the top is the working face.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>producer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>8000</td></tr><tr><td>Max input</td><td>n/a (does not accept energy)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>20 (LV)</td></tr><tr><td>EU/FE/tick (base)</td><td>3 (night, clear) — config <code>moonlitEuPerTick</code></td></tr></tbody></table>
-<h2>Generation</h2>
-<p>Like the day panel, but reversed: it works only at night, with open sky above. The night branch has one unique trait — in rain or thunder it doesn't fall silent but keeps "trickling" at 1 EU/FE/tick. Glass above the panel doesn't interfere, and snow drops the output to 1 EU/FE/tick.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Source</td><td>moonlight</td></tr><tr><td>Working condition</td><td>night AND open sky above the block</td></tr><tr><td>Dimensions</td><td>minecraft:overworld</td></tr><tr><td>EU/FE/tick (clear)</td><td>3</td></tr><tr><td>Translucent block above the panel (leaves, cobweb)</td><td>×<code>solarTransparentFactor</code> (round(0.5 × 3) → 2 EU/FE/tick) — MODE_NIGHT_PARTIAL</td></tr><tr><td>Glass above the panel</td><td>no reduction (fully transparent)</td></tr><tr><td>Snow (a <code>minecraft:snow</code> layer or snowfall in a cold biome)</td><td><code>max(1, round(solarSnowFactor × 3))</code> → 1 EU/FE/tick — MODE_NIGHT_SNOW</td></tr><tr><td>Rain/thunder</td><td>1 (flat trickle — config <code>moonlitWeatherEuPerTick</code>) — MODE_NIGHT_WEATHER</td></tr><tr><td>Day</td><td>0</td></tr></tbody></table>
-<h2>Interface</h2>
-<p>Type: container — shows energy storage, generation rate, sky mode (night/snow/rain/day).</p>
-<h2>Block Properties</h2>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>low-profile panel (8px slab), <code>noOcclusion</code></td></tr><tr><td>Hardness / blast</td><td>5.0 / 6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
-<h2>Sound</h2>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Event</td><td><code>alaindustrial:solar_panel_hum</code> (shared with the base and day panels)</td></tr><tr><td>Pattern</td><td><strong>C</strong> — ambient loop (see SOUND_TRACKING)</td></tr><tr><td>Volume</td><td>0.28, fixed range of 10 blocks (quieter and narrower than the Generator)</td></tr><tr><td>Goes silent</td><td>during the day, when the sky is blocked, outside the Overworld</td></tr><tr><td>Subtitles</td><td><code>subtitles.alaindustrial.solar_panel_hum</code>, 20 languages</td></tr></tbody></table>
-<p>The same soft hum as the base panel, but with a night working condition: it plays at night under open sky. Unlike the day panels, rain and thunder don't silence it — the moonlit panel keeps trickling there and stays "active". See the <a href="solar_panel.html">base panel</a>.</p>
+<p>Its own EU/FE buffer, outside the energy network. It charges in the Battery Box slot and from a worn pack; it spends charge mining blocks.</p>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>powered hand tool: consumer at a charger</td></tr><tr><td>Buffer</td><td>10 000 EU/FE (<code>electricDrillBuffer</code>)</td></tr><tr><td>Charging</td><td>Battery Box slot / worn pack, ≤ 32 EU/FE/tick (<code>electricDrillInputRate</code>, capped by the LV ceiling) → full from a Battery Box in ~16 s</td></tr><tr><td>Cost</td><td>50 EU/FE per block successfully broken (<code>electricDrillEuPerBlock</code>)</td></tr><tr><td>Passive drain</td><td>none</td></tr><tr><td>Component</td><td><code>alaindustrial:pouch_energy</code> (Long, persistent + networkSynchronized) — the shared component of every powered item in the mod</td></tr></tbody></table>
+<p>The cost is taken <strong>server-side only</strong> and <strong>only for blocks with non-zero hardness</strong> (instant-break blocks — grass, torches, flowers — are free, just as they never wear a vanilla tool). In creative mode blocks drop nothing and no EU/FE is spent.</p>
+<h2>Inventory</h2>
+<p>Not applicable — the drill has no internal item storage (stack size 1).</p>
+<h2>Block properties</h2>
+<p>Not applicable (item).</p>
 <h2>Recipes</h2>
-<p>The Moonlit panel isn't craftable. The only way to get it is to grow it from a base panel: insert a Lunar Evolution Chip and let the panel work for a few nights under open sky. The stored energy carries over on evolution. <strong>Crafting:</strong> none. The JSON recipe was removed — the block is not available from a crafting table. <strong>Evolution (the only way to obtain it):</strong> a base <a href="solar_panel.html">Solar Panel</a> + <code>alignment_chip_night</code> + accumulated nighttime working time → turns into the Moonlit panel, carrying over its NBT (energy). <strong>Recipe viewer (REI/JEI):</strong> pressing <strong>R</strong> opens an informational page describing the evolution (implementation details in <a href="solar_panel.html">solar_panel.md</a>).</p>
+<p>Built at a workbench <strong>around a finished diamond pickaxe</strong> — it sits in the centre and gives the drill its diamond mining tier (the drill itself digs a touch faster, 8.5 vs 8.0). Two power batteries flank it, an electronic circuit sits below between two <a href="../components/copper_coil.html">copper coils</a>, and an iron body caps the top. All the power components gate the drill behind LV infrastructure.</p>
+<pre><code class="lang-">III
+BPB
+CEC</code></pre>
+<p>Craft: <code>data/alaindustrial/recipe/electric_drill.json</code> — shaped 3×3, <code>category: equipment</code>: top row (<code>I</code>): three iron ingots (<code>minecraft:iron_ingot</code>); middle row: a battery (<code>alaindustrial:battery</code>) — a diamond pickaxe (<code>minecraft:diamond_pickaxe</code>, <code>P</code>) — a battery; bottom row: a <a href="../components/copper_coil.html">copper coil</a> — an <a href="../components/electronic_circuit.html">electronic circuit</a> — a copper coil. The recipe unlocks in the recipe book once the player obtains a copper coil, an electronic circuit or a diamond pickaxe (advancement <code>recipes/misc/electric_drill</code>). <strong>Repair</strong> — not applicable: the drill has no durability, so there is nothing to repair; its "repair" is recharging EU/FE (see the Energy section).</p>
+<h2>Behavior</h2>
+<p><strong>Mining:</strong> while charge is ≥ 50 EU/FE the drill mines <code>#minecraft:mineable/pickaxe</code> at speed 8.5 (a touch above a diamond pickaxe's 8.0) with diamond mining level — its drops match a diamond pickaxe: diamond ore, obsidian, even ancient debris (diamond is the top mining tier). Each such block costs 50 EU/FE. <strong>Flat drill:</strong> below 50 EU/FE it mines at hand speed (1.0), but keeps the mining level and drops, and spends no EU/FE. Efficiency does nothing here (vanilla's <code>speed &gt; 1.0</code> gate). <strong>Charging:</strong> the Battery Box charge slot and a worn Energy Pack both accept the drill automatically (any item with an EU/FE buffer), up to 32 EU/FE/tick. <strong>Attack:</strong> hits a touch harder than a diamond pickaxe (6 damage, 1.3 attack speed), but attacks spend no EU/FE and do not wear the drill. <strong>Enchantments:</strong> the drill is in <code>#minecraft:pickaxes</code>, so the enchanting table and anvil treat it like a diamond pickaxe — Efficiency, Fortune, Silk Touch, Unbreaking, Mending. Unbreaking/Mending are useless on an unbreakable drill but harmless. <strong>Amethyst clusters:</strong> the drill yields the max shard drop (<code>#minecraft:cluster_max_harvestables</code>). <strong>Indicator:</strong> the bar under the icon shows charge (gold, LV colour). Tooltip: "Charge: X / 10 000 EU/FE", red "Empty" at zero. The texture switches to a drained variant at zero charge. <strong>On-screen readout (HUD):</strong> while the drill is in hand, its icon, charge percentage and a bar (green → gold → red as it drains) show in the top-left corner. Same overlay and same <strong>H</strong> hotkey as the <a href="energy_pack.html">Energy Pack</a> (one toggle for all of the mod's energy HUDs, rebindable in Controls → Ala Industrial category and in the mod settings); if a pack is also worn, the drill row stacks just below the pack panel. With no drill in hand the readout is hidden. <strong>Durability and repair:</strong> no durability — the drill never breaks and takes no wear; a grindstone strips enchantments, but it cannot be "repaired" (there is nothing to repair). <strong>Drop/death/relog:</strong> charge is stored in the item and persists.</p>
+<h2>Progression</h2>
+<p>The mod's first powered tool — a bridge between the energy progression and hand mining. Available after the <a href="../energy-storage/battery_box.html">Battery Box</a> and the <a href="energy_pack.html">battery</a>: without LV infrastructure the drill cannot be crafted or charged. LV tier. An advanced electric drill (faster, higher cost, netherite level) and the other electric tools (chainsaw/hoe/saber/nano-bow) are future work.</p>
+<h2>Compatibility</h2>
+<p>Viewers: JEI, REI, EMI (an ordinary item). other mods see the drill as a pickaxe. Charging the drill from <strong>third-party</strong> energy mods is not yet supported (as with the other EU/FE items): a bridge to foreign energy systems is separate future work.</p>
+<h2>Balance</h2>
+<table><thead><tr><th>Parameter</th><th>Value</th><th>Config key</th></tr></thead><tbody><tr><td>EU/FE buffer</td><td><strong>10 000</strong></td><td><code>electricDrillBuffer</code></td></tr><tr><td>Cost per block</td><td><strong>50</strong> EU/FE</td><td><code>electricDrillEuPerBlock</code></td></tr><tr><td>EU/FE intake</td><td><strong>32</strong> EU/FE/tick</td><td><code>electricDrillInputRate</code></td></tr><tr><td>Mining speed</td><td><strong>8.5</strong> charged / 1.0 flat</td><td>— (<code>TOOL</code> component, not config)</td></tr><tr><td>Mining level</td><td>diamond (<code>incorrect_for_diamond_tool</code>)</td><td>— (<code>TOOL</code> component)</td></tr><tr><td>Damage / attack speed</td><td><strong>6</strong> / <strong>1.3</strong></td><td>— (item attributes)</td></tr></tbody></table>
+<p>10 000 EU/FE = half an Energy Pack (five pouches); at 50 EU/FE/block that is ~200 blocks per charge. The per-block cost is below the 200 EU/FE/operation machine floor: breaking a block is cheaper than smelting one. Charging from a Battery Box at 32 EU/FE/t takes ~313 ticks (~16 s). Numbers are kept in sync with</p>
 <h2>Related</h2>
-<p><a href="solar_panel.html">Solar Panel</a> — the neutral T1, source of the evolution. <a href="daylight_solar_panel.html">Daylight Solar Panel</a> — the mirror of the day branch. <a href="../energy-storage/battery_box.html">Battery Box</a> · <a href="../energy-transfer/copper_cable.html">Copper Cable</a></p>
-
+<p><a href="energy_pack.html">Energy Pack</a> — the precedent for an EU/FE item without durability; charges the drill in the inventory. <a href="../energy-storage/battery_box.html">Battery Box</a> — charges the drill (charge slot). <a href="tempered_iron_pickaxe.html">Tempered Iron Pickaxe</a> — the precedent for a custom 26.2 pickaxe. <a href="../components/electronic_circuit.html">Electronic Circuit</a> — a crafting component.</p>
+<h2>Crafting</h2>
+<div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Iron Ingot" aria-label="Iron Ingot"><span>iron in</span></div> <div class="cell placeholder" title="Iron Ingot" aria-label="Iron Ingot"><span>iron in</span></div> <div class="cell placeholder" title="Iron Ingot" aria-label="Iron Ingot"><span>iron in</span></div> <div class="cell" title="Battery"><img src="../assets/item/battery.png" alt="Battery" width="28" height="28"></div> <div class="cell placeholder" title="Diamond Pickaxe" aria-label="Diamond Pickaxe"><span>diamond</span></div> <div class="cell" title="Battery"><img src="../assets/item/battery.png" alt="Battery" width="28" height="28"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil.png" alt="Copper Coil" width="28" height="28"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="28" height="28"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil.png" alt="Copper Coil" width="28" height="28"></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Electric Drill"><img src="../assets/item/electric_drill.png" alt="Electric Drill" width="28" height="28"></div><div class="result-name">Electric Drill</div></div></div></div></div>
   </main>
 </div>
 

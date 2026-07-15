@@ -1,14 +1,42 @@
 <!DOCTYPE html>
-<html lang="ru" style="background:#16161a;color-scheme:dark">
+<html lang="en" style="background:#16161a;color-scheme:dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#16161a">
-<title>Материалы — Ala Industrial — Гайд</title>
+<title>Copper Coil — Ala Industrial — Guide</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:16px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:12px 14px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; }
+  .recipe-body { display:grid; grid-template-columns:auto 24px minmax(90px,1fr); align-items:center; gap:9px; }
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); gap:2px; }
+  .recipe-processing { display:contents; }
+  .recipe-processing .ingredients { display:flex; gap:2px; flex-wrap:wrap; max-width:160px; }
+  .arrow { font-size:18px; color:var(--muted); font-family:'VT323',monospace; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .cell { width:36px; height:36px; background:var(--bg); border:1px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    position:relative; image-rendering:pixelated; }
+  .cell.empty { background:transparent; border-color:transparent; }
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:28px; height:28px; image-rendering:pixelated; }
+  .cell.result { border-color:var(--gold); }
+  .cell .count { position:absolute; bottom:-3px; right:-3px; background:var(--bg);
+    border:1px solid var(--line2); font-size:12px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; }
+  .result-name { font-size:13px; color:var(--muted); text-align:center; max-width:120px;
+    font-family:'VT323',monospace; }
+  .ricon.placeholder { font-size:12px; color:var(--muted2); }
+</style>
 <style>
   
   @font-face {
@@ -264,48 +292,74 @@
 <body>
 
 <nav class="sitenav">
-  <button class="nav-toggle" type="button" aria-label="Открыть меню" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <button class="nav-toggle" type="button" aria-label="Open menu" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
   <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
   <div class="platform-links" aria-label="Project links">
     <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
     <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
     <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
   </div>
-  <details class="language-menu"><summary aria-label="Language">RU</summary><div class="language-popover"><span>RU</span><a href="../../en/materials/index.html">EN</a></div></details>
+  <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../../ru/components/copper_coil.html">RU</a></div></details>
 </nav>
 
 <div class="layout">
   <aside class="sidebar" id="wiki-sidebar">
-<div class="group-title">Обзор</div>
-<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>С чего начать</span></a>
-<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
-<div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="6 страниц">6</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="4 страницы">4</span></a>
-<div class="group-title">Мир и автоматизация</div>
-<a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="5 страниц">5</span></a>
-<div class="group-title">Прочее</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="2 страницы">2</span></a>
-<div class="group-title">Предметы</div>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="5 страниц">5</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="7 страниц">7</span></a>
+<div class="group-title">Browse</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>Getting Started</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
+<div class="group-title">Energy</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="1 page">1</span></a>
+<div class="group-title">Processing</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<div class="group-title">World &amp; Automation</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<div class="group-title">Other</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<div class="group-title">Items</div>
+<a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="7 pages">7</span></a>
   </aside>
   <main class="content" id="main-content">
-    <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><span>Материалы</span></div>
+    <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../components/index.html">Components</a><span class="sep">/</span><span>Copper Coil</span></div>
 <div class="block-card">
-  <img class="icon" src="../assets/item/uranium_ore_3d.png" alt="" width="128" height="128">
-  <div class="info">
-    <h1>Материалы</h1>
-    <p style="color:var(--muted);margin:8px 0 0">Добываемые металлы/ресурсы: руда + формы raw/пыль/слиток.</p>
-    <div class="tags"><span class="tag tier">5 страниц</span></div>
+  <div class="card-head">
+    <img class="icon" src="../assets/item/copper_coil.png" alt="Copper Coil" width="64" height="64">
+    <div class="info">
+      <h1>Copper Coil</h1>
+      <div class="block-id">alaindustrial:copper_coil</div>
+      <div class="tags"><span class="tag cat" style="background:#94a3b8">Components</span><span class="tag lifecycle" style="background:#22c55e">Implemented</span><span class="tag">component</span><span class="tag">coil</span><span class="tag">copper</span><span class="tag">tin</span></div>
+    </div>
   </div>
 </div>
-<ul class="concept-list">
-<li><a class="concept-card" style="--c:#6b7280" href="tempered_iron_block.html"><div class="cc-icon"><img src="../assets/item/tempered_iron_block_3d.png" alt="Блок закалённого железа" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Блок закалённого железа</div><div class="cc-desc">Компактный блок из 9 слитков закалённого железа — хранит металл в одном слоте и собирается/разбирается на верстаке без потерь.</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">Реализовано</span></div></div></a></li><li><a class="concept-card" style="--c:#6b7280" href="nickel.html"><div class="cc-icon"><img src="../assets/item/nickel_ore_3d.png" alt="Никелевая руда" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Никелевая руда</div><div class="cc-desc">Самый редкий из металлов мода — руда в мире и цепочка сырьё → пыль → слиток; материал для сплавов и корпусов машин MV.</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">Реализовано</span></div></div></a></li><li><a class="concept-card" style="--c:#6b7280" href="tin.html"><div class="cc-icon"><img src="../assets/item/tin_ore_3d.png" alt="Оловянная руда" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Оловянная руда</div><div class="cc-desc">Ранний металл мода — руда в мире и цепочка сырьё → пыль → слиток; базовый материал проводов и схем LV.</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">Реализовано</span></div></div></a></li><li><a class="concept-card" style="--c:#6b7280" href="silver.html"><div class="cc-icon"><img src="../assets/item/silver_ore_3d.png" alt="Серебряная руда" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Серебряная руда</div><div class="cc-desc">Редкий металл-руда мода, рудный блок и цепочка сырьё → пыль → слиток; материал схем и компонентов среднего тира.</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">Реализовано</span></div></div></a></li><li><a class="concept-card" style="--c:#6b7280" href="uranium.html"><div class="cc-icon"><img src="../assets/item/uranium_ore_3d.png" alt="Урановая руда" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Урановая руда</div><div class="cc-desc">Самая редкая руда мода — добывается железной киркой, перерабатывается в пыль и слиток; зарезервирована под будущие ядерные машины.</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">Реализовано</span></div></div></a></li>
-</ul>
+<h2>Summary</h2>
+<p>The <strong>Copper Coil</strong> is a crafting component: copper cable wound on a tin core. It is an item, not a block — it appears in recipes as an ingredient. Its first consumer is the <a href="../items/electric_drill.html">Electric Drill</a>: two coils sit in the bottom row of its recipe. The coil ties two of the mod's base material lines — copper (cable) and tin (ingot) — into a single "electrical" component that future electric tools and devices will hang off.</p>
+<h2>Energy</h2>
+<p>A purely material item — no energy.</p>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>none (item without energy)</td></tr></tbody></table>
+<h2>Inventory</h2>
+<p>Not applicable (item).</p>
+<h2>Block Properties</h2>
+<p>Not applicable (item). Stack: 64.</p>
+<h2>Recipes</h2>
+<p>Crafted at a workbench (shaped 3×3): three tin ingots as a core down the middle column and six lengths of <a href="../energy-transfer/copper_cable.html">copper cable</a> as the winding on either side.</p>
+<pre><code class="lang-">WTW
+WTW
+WTW</code></pre>
+<p>Craft: <code>data/alaindustrial/recipe/copper_coil.json</code> — shaped 3×3: <code>W</code> (left and right columns, ×6): <a href="../energy-transfer/copper_cable.html">copper cable</a>; <code>T</code> (middle column, ×3): tin ingot (<code>alaindustrial:tin_ingot</code>). The recipe unlocks in the recipe book once the player obtains copper cable or a tin ingot (advancement <code>recipes/misc/copper_coil</code>).</p>
+<h2>Progression</h2>
+<p>Tier: none (component) Used in: the <a href="../items/electric_drill.html">Electric Drill</a> (two coils per drill). Requires: <a href="../energy-transfer/copper_cable.html">copper cable</a> (from copper ingots) and tin — i.e. the early resource gathering done, but before full LV automation.</p>
+<h2>Compatibility</h2>
+<p>Viewers: JEI, REI, EMI (as an ingredient).</p>
+<h2>Balance</h2>
+<p>A cheap intermediate component: six cables and three tin come out to a handful of copper ingots and a little tin. Its role is not a bottleneck but a thematic step between raw materials and the electric tool, so the drill cannot be built from plain iron alone. Exact numbers are open to balance tuning.</p>
+<h2>Related</h2>
+<p><a href="../items/electric_drill.html">Electric Drill</a> — the coil's first consumer. <a href="../energy-transfer/copper_cable.html">Copper Cable</a> — the winding. <a href="../materials/tin.html">Tin</a> — the core.</p>
+<h2>Crafting</h2>
+<div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="28" height="28"></div> <div class="cell" title="Tin Ingot"><img src="../assets/item/tin_ingot.png" alt="Tin Ingot" width="28" height="28"></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="28" height="28"></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="28" height="28"></div> <div class="cell" title="Tin Ingot"><img src="../assets/item/tin_ingot.png" alt="Tin Ingot" width="28" height="28"></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="28" height="28"></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="28" height="28"></div> <div class="cell" title="Tin Ingot"><img src="../assets/item/tin_ingot.png" alt="Tin Ingot" width="28" height="28"></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="28" height="28"></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Copper Coil"><img src="../assets/item/copper_coil.png" alt="Copper Coil" width="28" height="28"></div><div class="result-name">Copper Coil</div></div></div></div></div>
+<h2>Used in</h2>
+<div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Iron Ingot" aria-label="Iron Ingot"><span>iron in</span></div> <div class="cell placeholder" title="Iron Ingot" aria-label="Iron Ingot"><span>iron in</span></div> <div class="cell placeholder" title="Iron Ingot" aria-label="Iron Ingot"><span>iron in</span></div> <div class="cell" title="Battery"><img src="../assets/item/battery.png" alt="Battery" width="28" height="28"></div> <div class="cell placeholder" title="Diamond Pickaxe" aria-label="Diamond Pickaxe"><span>diamond</span></div> <div class="cell" title="Battery"><img src="../assets/item/battery.png" alt="Battery" width="28" height="28"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil.png" alt="Copper Coil" width="28" height="28"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="28" height="28"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil.png" alt="Copper Coil" width="28" height="28"></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Electric Drill"><img src="../assets/item/electric_drill.png" alt="Electric Drill" width="28" height="28"></div><div class="result-name">Electric Drill</div></div></div></div></div>
   </main>
 </div>
 

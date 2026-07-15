@@ -318,8 +318,8 @@
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="2 страницы">2</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="4 страницы">4</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="5 страниц">5</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="7 страниц">7</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../generators/index.html">Генераторы</a><span class="sep">/</span><span>Геотермальный генератор</span></div>
@@ -350,6 +350,8 @@
 <h2>Свойства блока</h2>
 <p>Обычный цельный блок. Ломается любой киркой.</p>
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³ (окклюдер)</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr></tbody></table>
+<h2>Рецепты</h2>
+<p>Собирается на верстаке из готового <a href="generator.html">Генератора</a> в каменном корпусе с электронной схемой снизу. Это генератор, поэтому рецептов переработки у него нет. Крафт: <code>data/alaindustrial/recipe/geothermal_generator.json</code> — shaped 3×3: рамка из 7 блоков гладкого камня (<code>minecraft:smooth_stone</code>), <a href="generator.html">Генератор</a> в центре, <a href="../components/electronic_circuit.html">электронная схема</a> в нижней центральной ячейке. Рецепты переработки: нет (генератор) Гейт прогрессии: нужен уже собранный обычный Генератор и электронная схема (то есть пройденный LV-старт), поэтому геотермальный — апгрейд, а не первый источник энергии.</p>
 <h2>Баланс</h2>
 <p>База: 16 EU/FE/такт (<code>geothermalEuPerTick</code>). Вдвое мощнее базового <a href="generator.html">Генератора</a> на угле (8 EU/FE/t) — награда за добычу и логистику лавы. 1 ведро = 16000 EU/FE (1000 тиков × 16), заметно выгоднее угля по EU/FE за единицу логистики.</p>
 <h2>Связанное</h2>
