@@ -1,15 +1,14 @@
-## 0.1.26
+## 0.1.27
 
-<p><img alt="Ala Industrial 0.1.26 — Energy Pack worn EU buffer and charge HUD" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.26/release-media/v0.1.26/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.27 — Electric Drill, the first powered hand tool" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.27/release-media/v0.1.27/changelog.png" width="720"></p>
 
-Take your power on the go. The new **Energy Pack** is a chest-slot battery that keeps your chargeable gear topped up while you explore.
+The first power tool is here. Meet the **Electric Drill** — a diamond-tier pickaxe that runs on your EU grid and never wears out.
 
 ### New
 
-- **Energy Pack.** A wearable battery for the chest slot — 20,000 EU of reserve power. Charge it in the Battery Box, then wear it on your back. While equipped, it slowly recharges the items in your hotbar, inventory and off-hand, so your tools and pouches no longer run dry mid-expedition. No idle drain: power only flows when something needs charging. Crafted from the new **battery** component.
-- **Charge indicator.** A small on-screen widget shows the pack's charge level and a color bar (green → yellow → red). Press **H** to toggle it (rebindable under *Controls → Ala Industrial*), or flip it in the mod config. On by default.
+- **Electric Drill.** A powered pickaxe that mines a touch faster than diamond and never breaks. It runs on a 10,000 EU battery (about 200 blocks per charge) and spends 50 EU per block. Run dry and it keeps digging at hand speed — same drops, no power spent — until you recharge it in the Battery Box or top it up from a worn Energy Pack. Takes the usual pickaxe enchantments, including full drops from amethyst buds. Crafted around a diamond pickaxe with the new **copper coils**, an electronic circuit and iron.
+- **Copper Coil.** A new crafting component — copper cable wound on a tin core. First stop: the drill recipe.
 
-### Changes
+### Quality of Life
 
-- **Drained look.** At zero charge, the pack's icon and back model switch to a dimmed "depleted" look — red light, faded cells — so you can tell at a glance it needs a recharge.
-- **Battery Box charge slot** now accepts any EU-holding item, not just the battery pouch.
+- **Charge HUD.** Hold the drill and a small widget shows its charge level and color bar (green → yellow → red). Its own keybind (**J**), its own config toggle — fully independent from the Energy Pack indicator. The readout is smoothed, so topping up mid-mining no longer makes the number flicker between 99 % and 100 %.

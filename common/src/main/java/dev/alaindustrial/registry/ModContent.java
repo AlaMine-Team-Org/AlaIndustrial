@@ -102,6 +102,8 @@ public final class ModContent {
 
 	// --- Items (crafting components + tools) ---
 	public static Supplier<Item> ELECTRONIC_CIRCUIT = unbound("ELECTRONIC_CIRCUIT");
+	// Copper Coil — a crafting component (copper cable wound on a tin core); gates the Electric Drill.
+	public static Supplier<Item> COPPER_COIL = unbound("COPPER_COIL");
 	public static Supplier<Item> ALIGNMENT_CHIP_DAY = unbound("ALIGNMENT_CHIP_DAY");
 	public static Supplier<Item> ALIGNMENT_CHIP_NIGHT = unbound("ALIGNMENT_CHIP_NIGHT");
 	public static Supplier<Item> WINDMILL_ROTOR = unbound("WINDMILL_ROTOR");
@@ -143,6 +145,8 @@ public final class ModContent {
 	// player carries; BATTERY is its crafting component (an inert cell, no charge of its own).
 	public static Supplier<Item> BATTERY = unbound("BATTERY");
 	public static Supplier<Item> ENERGY_PACK = unbound("ENERGY_PACK");
+	// Electric Drill (MOD-079) — the first powered hand tool: a diamond-tier pickaxe that runs on EU.
+	public static Supplier<Item> ELECTRIC_DRILL = unbound("ELECTRIC_DRILL");
 	// Vacuum Capsule (MOD-063) — a stackable fluid container: empty (×64) exchanges with the
 	// fluid-carrying filled form (×16). See docs/blocks/items/vacuum_capsule.md.
 	public static Supplier<Item> VACUUM_CAPSULE = unbound("VACUUM_CAPSULE");

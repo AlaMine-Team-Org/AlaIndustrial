@@ -24,6 +24,9 @@ public final class AlaClientConfig {
 	public static boolean showEuNumbers = true;
 	/** Worn-pack charge readout (MOD-065). On by default; toggled in-game with the H key. */
 	public static boolean energyHudEnabled = true;
+	/** Held-drill charge readout (MOD-079). On by default; toggled in-game with its own key (default J),
+	 * independent of the pack readout so each can be bound and shown separately. */
+	public static boolean drillHudEnabled = true;
 
 	private static Path path;
 
@@ -37,7 +40,8 @@ public final class AlaClientConfig {
 
 	public static Snapshot snapshot() {
 		return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
-				networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled);
+				networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled,
+				drillHudEnabled);
 	}
 
 	public static void apply(Snapshot snapshot) {
@@ -49,6 +53,7 @@ public final class AlaClientConfig {
 		alwaysDetailedTooltips = snapshot.alwaysDetailedTooltips();
 		showEuNumbers = snapshot.showEuNumbers();
 		energyHudEnabled = snapshot.energyHudEnabled();
+		drillHudEnabled = snapshot.drillHudEnabled();
 		save();
 	}
 
@@ -70,6 +75,7 @@ public final class AlaClientConfig {
 					alwaysDetailedTooltips = GsonHelper.getAsBoolean(o, "alwaysDetailedTooltips", alwaysDetailedTooltips);
 					showEuNumbers = GsonHelper.getAsBoolean(o, "showEuNumbers", showEuNumbers);
 					energyHudEnabled = GsonHelper.getAsBoolean(o, "energyHudEnabled", energyHudEnabled);
+					drillHudEnabled = GsonHelper.getAsBoolean(o, "drillHudEnabled", drillHudEnabled);
 				}
 				Industrialization.LOGGER.info("[client-config] loaded {}", path);
 			} else {
@@ -103,6 +109,7 @@ public final class AlaClientConfig {
 		o.addProperty("alwaysDetailedTooltips", snapshot.alwaysDetailedTooltips());
 		o.addProperty("showEuNumbers", snapshot.showEuNumbers());
 		o.addProperty("energyHudEnabled", snapshot.energyHudEnabled());
+		o.addProperty("drillHudEnabled", snapshot.drillHudEnabled());
 		return o;
 	}
 
@@ -155,49 +162,59 @@ public final class AlaClientConfig {
 			int networkOverlayAlpha,
 			boolean alwaysDetailedTooltips,
 			boolean showEuNumbers,
-			boolean energyHudEnabled) {
+			boolean energyHudEnabled,
+			boolean drillHudEnabled) {
 		public static Snapshot defaults() {
-			return new Snapshot(true, true, true, DEFAULT_NETWORK_COLOR, 255, false, true, true);
+			return new Snapshot(true, true, true, DEFAULT_NETWORK_COLOR, 255, false, true, true, true);
 		}
 
 		public Snapshot withNetworkOverlayEnabled(boolean value) {
 			return new Snapshot(value, networkOverlayThroughBlocks, networkOverlayFlowDots, networkOverlayColor,
-					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled);
+					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled, drillHudEnabled);
 		}
 
 		public Snapshot withNetworkOverlayThroughBlocks(boolean value) {
 			return new Snapshot(networkOverlayEnabled, value, networkOverlayFlowDots, networkOverlayColor,
-					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled);
+					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled, drillHudEnabled);
 		}
 
 		public Snapshot withNetworkOverlayFlowDots(boolean value) {
 			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, value, networkOverlayColor,
-					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled);
+					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled, drillHudEnabled);
 		}
 
 		public Snapshot withNetworkOverlayColor(int value) {
 			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots, value,
-					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled);
+					networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled, drillHudEnabled);
 		}
 
 		public Snapshot withNetworkOverlayAlpha(int value) {
 			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
-					networkOverlayColor, clamp(value, 0, 255), alwaysDetailedTooltips, showEuNumbers, energyHudEnabled);
+					networkOverlayColor, clamp(value, 0, 255), alwaysDetailedTooltips, showEuNumbers, energyHudEnabled,
+					drillHudEnabled);
 		}
 
 		public Snapshot withAlwaysDetailedTooltips(boolean value) {
 			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
-					networkOverlayColor, networkOverlayAlpha, value, showEuNumbers, energyHudEnabled);
+					networkOverlayColor, networkOverlayAlpha, value, showEuNumbers, energyHudEnabled, drillHudEnabled);
 		}
 
 		public Snapshot withShowEuNumbers(boolean value) {
 			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
-					networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, value, energyHudEnabled);
+					networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, value, energyHudEnabled,
+					drillHudEnabled);
 		}
 
 		public Snapshot withEnergyHudEnabled(boolean value) {
 			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
-					networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, value);
+					networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, value,
+					drillHudEnabled);
+		}
+
+		public Snapshot withDrillHudEnabled(boolean value) {
+			return new Snapshot(networkOverlayEnabled, networkOverlayThroughBlocks, networkOverlayFlowDots,
+					networkOverlayColor, networkOverlayAlpha, alwaysDetailedTooltips, showEuNumbers, energyHudEnabled,
+					value);
 		}
 	}
 }

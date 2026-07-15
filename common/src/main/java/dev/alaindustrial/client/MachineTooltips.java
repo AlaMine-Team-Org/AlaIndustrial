@@ -14,6 +14,7 @@ import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.item.AnalyzerMode;
+import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
 import dev.alaindustrial.item.ItemEnergy;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
@@ -53,6 +54,10 @@ public final class MachineTooltips {
 		}
 		if (stack.getItem() instanceof EnergyPackItem) {
 			addEnergyPackTooltip(stack, lines);
+			return;
+		}
+		if (stack.getItem() instanceof ElectricDrillItem) {
+			addElectricDrillTooltip(stack, lines);
 			return;
 		}
 		// Plain-item components (not BlockItem) — the windmill rotor is the only such item with a
@@ -198,6 +203,26 @@ public final class MachineTooltips {
 					.withStyle(ChatFormatting.RED));
 		} else {
 			lines.add(Component.translatable("tooltip.alaindustrial.energy_pack.charge", eu, cap)
+					.withStyle(ChatFormatting.GOLD));
+		}
+	}
+
+	/**
+	 * Tooltip for the Electric Drill (MOD-079): what it does, then its EU charge — same shape as the
+	 * Energy Pack tooltip (gold charge line, red DEPLETED at 0). The usage line names the per-block EU
+	 * cost so the player can gauge how many blocks a full charge is worth; no [SHIFT] gate — the charge
+	 * is the one thing worth checking on a powered tool.
+	 */
+	private static void addElectricDrillTooltip(ItemStack stack, List<Component> lines) {
+		lines.add(Component.translatable("tooltip.alaindustrial.electric_drill.usage", Config.electricDrillEuPerBlock)
+				.withStyle(ChatFormatting.GRAY));
+		long eu = ItemEnergy.get(stack);
+		long cap = ItemEnergy.capacity(stack);
+		if (eu <= 0) {
+			lines.add(Component.translatable("tooltip.alaindustrial.electric_drill.depleted")
+					.withStyle(ChatFormatting.RED));
+		} else {
+			lines.add(Component.translatable("tooltip.alaindustrial.electric_drill.charge", eu, cap)
 					.withStyle(ChatFormatting.GOLD));
 		}
 	}

@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
 import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
@@ -45,6 +46,8 @@ public final class ModItems {
 
 	// Crafting components (referenced by MaceratorBlockEntity recipes and crafting recipes).
 	public static final Item ELECTRONIC_CIRCUIT = item("electronic_circuit");
+	// Copper Coil — crafting component (copper cable + tin), gates the Electric Drill.
+	public static final Item COPPER_COIL = item("copper_coil");
 	public static final Item ALIGNMENT_CHIP_DAY = item("alignment_chip_day");
 	public static final Item ALIGNMENT_CHIP_NIGHT = item("alignment_chip_night");
 	public static final Item WINDMILL_ROTOR = item("windmill_rotor");
@@ -99,6 +102,8 @@ public final class ModItems {
 	// Energy Pack (MOD-065): worn LV buffer + the inert battery cell it is crafted from.
 	public static final Item BATTERY = item("battery");
 	public static final Item ENERGY_PACK = energyPack("energy_pack");
+	// Electric Drill (MOD-079): first powered hand tool — a diamond-tier pickaxe that runs on EU.
+	public static final Item ELECTRIC_DRILL = electricDrill("electric_drill");
 	// Vacuum Capsule (MOD-063): empty (×64) + filled (×16, fluid in the capsule_fluid component).
 	public static final Item VACUUM_CAPSULE = vacuumCapsule("vacuum_capsule");
 	public static final Item FILLED_VACUUM_CAPSULE = filledCapsule("filled_vacuum_capsule");
@@ -192,6 +197,16 @@ public final class ModItems {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
 				new EnergyPackItem(EnergyPackItem.equipmentProperties(new Item.Properties().setId(key))));
+	}
+
+	// Electric Drill (MOD-079). Like the Energy Pack: a plain-Item subclass whose properties come from
+	// a common static factory (the hand-built TOOL component + EU-item bar, no MAX_DAMAGE — see
+	// ElectricDrillItem.electricDrillProperties). No pouch_energy default is preset; ItemEnergy reads an
+	// absent component as 0 EU.
+	private static Item electricDrill(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new ElectricDrillItem(ElectricDrillItem.electricDrillProperties(new Item.Properties().setId(key))));
 	}
 
 	// Vacuum Capsule (MOD-063). Empty capsule stacks to the vanilla default (64); no fluid component
@@ -325,6 +340,7 @@ public final class ModItems {
 					output.accept(URANIUM_INGOT);
 					// Components
 					output.accept(ELECTRONIC_CIRCUIT);
+					output.accept(COPPER_COIL);
 					output.accept(ALIGNMENT_CHIP_DAY);
 					output.accept(ALIGNMENT_CHIP_NIGHT);
 						output.accept(WINDMILL_ROTOR);
@@ -340,6 +356,7 @@ public final class ModItems {
 						output.accept(BATTERY_POUCH);
 						output.accept(BATTERY);
 						output.accept(ENERGY_PACK);
+						output.accept(ELECTRIC_DRILL);
 						// Empty capsule only — the filled form is obtained by using it on a fluid.
 						output.accept(VACUUM_CAPSULE);
 						// Tempered Iron — ingot, block, tools and armor as one continuous row
@@ -406,6 +423,7 @@ public final class ModItems {
 					output.insertAfter(Items.COMPASS, ModContent.NETWORK_ANALYZER.get());
 					output.accept(ModContent.BATTERY_POUCH.get());
 					output.accept(ModContent.ENERGY_PACK.get());
+					output.accept(ModContent.ELECTRIC_DRILL.get());
 				});
 		CreativeModeTabEvents.modifyOutputEvent(VanillaCreativeTabs.INGREDIENTS)
 				.register(output -> CreativeTabContent.ingredients(output::accept));
@@ -425,6 +443,7 @@ public final class ModItems {
 	 */
 	private static void bindModContent() {
 		ModContent.ELECTRONIC_CIRCUIT = () -> ELECTRONIC_CIRCUIT;
+		ModContent.COPPER_COIL = () -> COPPER_COIL;
 		ModContent.ALIGNMENT_CHIP_DAY = () -> ALIGNMENT_CHIP_DAY;
 		ModContent.ALIGNMENT_CHIP_NIGHT = () -> ALIGNMENT_CHIP_NIGHT;
 		ModContent.WINDMILL_ROTOR = () -> WINDMILL_ROTOR;
@@ -462,6 +481,7 @@ public final class ModItems {
 		ModContent.BATTERY_POUCH = () -> BATTERY_POUCH;
 		ModContent.BATTERY = () -> BATTERY;
 		ModContent.ENERGY_PACK = () -> ENERGY_PACK;
+		ModContent.ELECTRIC_DRILL = () -> ELECTRIC_DRILL;
 		ModContent.VACUUM_CAPSULE = () -> VACUUM_CAPSULE;
 		ModContent.FILLED_VACUUM_CAPSULE = () -> FILLED_VACUUM_CAPSULE;
 		ModContent.STOCK_DISPLAY_FRAME_ITEM = () -> STOCK_DISPLAY_FRAME;

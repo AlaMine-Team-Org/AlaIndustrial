@@ -30,24 +30,42 @@ public final class ModKeyMappings {
 			GLFW.GLFW_KEY_H,
 			CATEGORY);
 
+	/** Toggle the held-drill charge readout (MOD-079). Default: J — free in vanilla, next to H. Its own
+	 * key and its own {@link AlaClientConfig#drillHudEnabled} flag, so the drill readout is bound and
+	 * shown independently of the pack readout. */
+	public static final KeyMapping TOGGLE_DRILL_HUD = new KeyMapping(
+			"key.alaindustrial.toggle_drill_hud",
+			InputConstants.Type.KEYSYM,
+			GLFW.GLFW_KEY_J,
+			CATEGORY);
+
 	private ModKeyMappings() {
 	}
 
 	/**
-	 * Consume any pending press of the toggle key: flip the overlay, persist the choice, and say so
-	 * in the action bar (the overlay may be off-screen-empty when no pack is worn, so without the
-	 * message a press would look like it did nothing).
+	 * Consume any pending press of either toggle key: flip that overlay, persist the choice, and say so
+	 * in the action bar (an overlay may be off-screen-empty when the matching gear isn't held/worn, so
+	 * without the message a press would look like it did nothing).
 	 */
 	public static void handleInput() {
+		Player player = Minecraft.getInstance().player;
 		while (TOGGLE_ENERGY_HUD.consumeClick()) {
 			// apply() writes the field AND persists the file — the same path the config screen uses.
 			AlaClientConfig.apply(AlaClientConfig.snapshot()
 					.withEnergyHudEnabled(!AlaClientConfig.energyHudEnabled));
-			Player player = Minecraft.getInstance().player;
 			if (player != null) {
 				player.sendOverlayMessage(Component.translatable(AlaClientConfig.energyHudEnabled
 						? "message.alaindustrial.energy_hud.on"
 						: "message.alaindustrial.energy_hud.off"));
+			}
+		}
+		while (TOGGLE_DRILL_HUD.consumeClick()) {
+			AlaClientConfig.apply(AlaClientConfig.snapshot()
+					.withDrillHudEnabled(!AlaClientConfig.drillHudEnabled));
+			if (player != null) {
+				player.sendOverlayMessage(Component.translatable(AlaClientConfig.drillHudEnabled
+						? "message.alaindustrial.drill_hud.on"
+						: "message.alaindustrial.drill_hud.off"));
 			}
 		}
 	}

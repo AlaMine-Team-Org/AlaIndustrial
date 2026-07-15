@@ -65,9 +65,13 @@ public final class AlaConfigScreen extends Screen {
 		addToggle(bx, row, buttonWidth, "config.alaindustrial.tooltips.show_eu_numbers",
 				draft.showEuNumbers(), value -> draft = draft.withShowEuNumbers(value));
 		row += ROW;
-		// Worn-pack charge readout (MOD-065) — the same switch the H key flips in-game.
-		addToggle(bx, row, buttonWidth, "config.alaindustrial.hud.energy_pack",
+		// Charge readouts — the same switches the H (pack, MOD-065) and J (drill, MOD-079) keys flip
+		// in-game. Two half-width toggles share one row so the panel stays inside its tight height budget.
+		int half = (buttonWidth - 4) / 2;
+		addToggle(bx, row, half, "config.alaindustrial.hud.energy_pack",
 				draft.energyHudEnabled(), value -> draft = draft.withEnergyHudEnabled(value));
+		addToggle(bx + half + 4, row, half, "config.alaindustrial.hud.electric_drill",
+				draft.drillHudEnabled(), value -> draft = draft.withDrillHudEnabled(value));
 
 		int footerY = y + PANEL_HEIGHT - 26;
 		int w = (buttonWidth - 16) / 3;

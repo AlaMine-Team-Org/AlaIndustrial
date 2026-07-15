@@ -93,10 +93,16 @@ public final class IndustrializationNeoForgeClient {
 		// KeyMapping.Category.register, which already appends it to the sort order on both loaders;
 		// calling event.registerCategory here as well would list it twice on NeoForge (harmless today,
 		// since lookups take the first match, but a real loader asymmetry).
-		modBus.addListener((RegisterKeyMappingsEvent event) ->
-				event.register(ModKeyMappings.TOGGLE_ENERGY_HUD));
-		modBus.addListener((RegisterGuiLayersEvent event) ->
-				event.registerAboveAll(Industrialization.id("energy_pack_hud"), EnergyPackHud::render));
+		modBus.addListener((RegisterKeyMappingsEvent event) -> {
+			event.register(ModKeyMappings.TOGGLE_ENERGY_HUD);
+			event.register(ModKeyMappings.TOGGLE_DRILL_HUD);
+		});
+		modBus.addListener((RegisterGuiLayersEvent event) -> {
+			event.registerAboveAll(Industrialization.id("energy_pack_hud"), EnergyPackHud::render);
+			// Electric Drill charge readout (MOD-079) — same toggle/key as the pack, stacks below it.
+			event.registerAboveAll(Industrialization.id("electric_drill_hud"),
+					dev.alaindustrial.client.ElectricDrillHud::render);
+		});
 		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> ModKeyMappings.handleInput());
 		Industrialization.LOGGER.info("Industrialization (NeoForge client) initialized.");
 	}

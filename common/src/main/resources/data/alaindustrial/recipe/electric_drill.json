@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"key": {
+		"I": "minecraft:iron_ingot",
+		"B": "alaindustrial:battery",
+		"P": "minecraft:diamond_pickaxe",
+		"C": "alaindustrial:copper_coil",
+		"E": "alaindustrial:electronic_circuit"
+	},
+	"pattern": [
+		"III",
+		"BPB",
+		"CEC"
+	],
+	"result": { "id": "alaindustrial:electric_drill" }
+}

@@ -174,8 +174,12 @@ if [[ -n "$badnames" ]]; then
 fi
 
 # L4 — denylisted paths that must NEVER be published.
+# Agent/tool dirs live only at the repo root, so anchor them with ^.../ and do
+# NOT match a bare "/tools/" segment anywhere in the path: a vanilla tag
+# namespace like data/c/tags/item/tools/ (e.g. mining_tool.json for powered tools)
+# is legitimate shipped content and must not be flagged as the private tools/ dir.
 denied=$(printf '%s\n' "${files[@]}" \
-  | grep -iE '(^|/)(\.c[l]aude|\.agents|\.githooks|tools)/|(^|/)(PRD|AGENTS|C[L]AUDE)\.md$' || true)
+  | grep -iE '^(\.c[l]aude|\.agents|\.githooks|tools)/|(^|/)(PRD|AGENTS|C[L]AUDE)\.md$' || true)
 if [[ -n "$denied" ]]; then
   printf '❌ L4 denylisted path present\n'
   printf '%s\n' "$denied" | sed 's/^/   /'

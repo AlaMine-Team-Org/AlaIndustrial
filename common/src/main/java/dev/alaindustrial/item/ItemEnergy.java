@@ -32,6 +32,9 @@ public final class ItemEnergy {
 		if (stack.getItem() instanceof EnergyPackItem) {
 			return Config.energyPackBuffer;
 		}
+		if (stack.getItem() instanceof ElectricDrillItem) {
+			return Config.electricDrillBuffer;
+		}
 		return 0L;
 	}
 
@@ -46,6 +49,9 @@ public final class ItemEnergy {
 		}
 		if (stack.getItem() instanceof EnergyPackItem) {
 			return Config.energyPackInputRate;
+		}
+		if (stack.getItem() instanceof ElectricDrillItem) {
+			return Config.electricDrillInputRate;
 		}
 		return 0L;
 	}

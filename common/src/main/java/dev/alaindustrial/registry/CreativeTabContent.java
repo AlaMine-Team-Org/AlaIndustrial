@@ -79,6 +79,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.NICKEL_DUST.get());
 		out.accept(ModContent.URANIUM_DUST.get());
 		out.accept(ModContent.ELECTRONIC_CIRCUIT.get());
+		out.accept(ModContent.COPPER_COIL.get());
 		out.accept(ModContent.ALIGNMENT_CHIP_DAY.get());
 		out.accept(ModContent.ALIGNMENT_CHIP_NIGHT.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
@@ -148,6 +149,7 @@ public final class CreativeTabContent {
 
 	private static void components(Sink out) {
 		out.accept(ModContent.ELECTRONIC_CIRCUIT.get());
+		out.accept(ModContent.COPPER_COIL.get());
 		out.accept(ModContent.ALIGNMENT_CHIP_DAY.get());
 		out.accept(ModContent.ALIGNMENT_CHIP_NIGHT.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
@@ -163,6 +165,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.BATTERY_POUCH.get());
 		out.accept(ModContent.BATTERY.get());
 		out.accept(ModContent.ENERGY_PACK.get());
+		out.accept(ModContent.ELECTRIC_DRILL.get());
 		// Empty capsule only — the filled form (MOD-063) is obtained by using it on a fluid.
 		out.accept(ModContent.VACUUM_CAPSULE.get());
 	}

@@ -1,0 +1,9 @@
+{
+	"model": {
+		"type": "minecraft:condition",
+		"property": "minecraft:has_component",
+		"component": "alaindustrial:pouch_energy",
+		"on_true": { "type": "minecraft:model", "model": "alaindustrial:item/electric_drill" },
+		"on_false": { "type": "minecraft:model", "model": "alaindustrial:item/electric_drill_off" }
+	}
+}

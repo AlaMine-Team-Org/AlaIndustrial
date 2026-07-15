@@ -6,6 +6,7 @@ import dev.alaindustrial.gametest.CoreEnergyScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.CapsuleScenarios;
 import dev.alaindustrial.gametest.GeothermalLavaInputScenarios;
+import dev.alaindustrial.gametest.ElectricDrillScenarios;
 import dev.alaindustrial.gametest.EnergyPackScenarios;
 import dev.alaindustrial.gametest.PouchScenarios;
 import dev.alaindustrial.gametest.ScytheScenarios;
@@ -352,6 +353,16 @@ public final class NeoForgeGameTests {
 		registerTest(event, "pack_floors_at_zero", 40, true, EnergyPackScenarios::neg02PackFloorsAtZero);
 		registerTest(event, "pack_menu_slot_accepts_pack", 40, true, EnergyPackScenarios::neg03MenuSlotAcceptsPack);
 		registerTest(event, "pack_charge_round_trip", 40, true, EnergyPackScenarios::per01ChargeRoundTrip);
+
+		// Electric Drill (MOD-079, TC-DRILL-001) — same loader-neutral bodies as the Fabric
+		// ElectricDrillGameTest suite: charge slot, EU drain, hand-speed fallback, pickaxe tags, enchants.
+		registerTest(event, "drill_charge_in_battery_box", 80, true, ElectricDrillScenarios::fun01ChargeInBatteryBox);
+		registerTest(event, "drill_drain_on_mine_block", 40, true, ElectricDrillScenarios::fun02DrainOnMineBlock);
+		registerTest(event, "drill_no_drain_below_cost", 40, true, ElectricDrillScenarios::fun03NoDrainBelowCost);
+		registerTest(event, "drill_speed_and_drops", 40, true, ElectricDrillScenarios::fun04SpeedAndDrops);
+		registerTest(event, "drill_no_drain_on_zero_hardness", 40, true, ElectricDrillScenarios::fun05NoDrainOnZeroHardness);
+		registerTest(event, "drill_tags_and_enchants", 40, true, ElectricDrillScenarios::fun06TagsAndEnchants);
+		registerTest(event, "drill_charge_round_trip", 40, true, ElectricDrillScenarios::per01ChargeRoundTrip);
 
 		// MOD-063 Vacuum Capsule (suite TC-CAPS-001) — same neutral bodies as the Fabric CapsuleGameTest.
 		registerTest(event, "capsule_component_round_trip", 40, true, CapsuleScenarios::per01ComponentRoundTrip);

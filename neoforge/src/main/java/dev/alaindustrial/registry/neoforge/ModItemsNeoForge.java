@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
 import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
@@ -37,6 +38,8 @@ public final class ModItemsNeoForge {
 
 	// --- Crafting components (plain items) ---
 	public static final DeferredItem<Item> ELECTRONIC_CIRCUIT = ITEMS.registerItem("electronic_circuit", Item::new);
+	// Copper Coil — crafting component (copper cable + tin), gates the Electric Drill.
+	public static final DeferredItem<Item> COPPER_COIL = ITEMS.registerItem("copper_coil", Item::new);
 	public static final DeferredItem<Item> ALIGNMENT_CHIP_DAY = ITEMS.registerItem("alignment_chip_day", Item::new);
 	public static final DeferredItem<Item> ALIGNMENT_CHIP_NIGHT = ITEMS.registerItem("alignment_chip_night", Item::new);
 	public static final DeferredItem<Item> WINDMILL_ROTOR = ITEMS.registerItem("windmill_rotor", Item::new);
@@ -115,6 +118,11 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> BATTERY = ITEMS.registerItem("battery", Item::new);
 	public static final DeferredItem<EnergyPackItem> ENERGY_PACK =
 			ITEMS.registerItem("energy_pack", EnergyPackItem::new, EnergyPackItem::equipmentProperties);
+	// Electric Drill (MOD-079): first powered hand tool — a diamond-tier pickaxe that runs on EU. The
+	// properties (hand-built TOOL component + EU-item bar, no MAX_DAMAGE) come from the common factory,
+	// so both loaders build the same item; NeoForge supplies the id from the deferred key itself.
+	public static final DeferredItem<ElectricDrillItem> ELECTRIC_DRILL =
+			ITEMS.registerItem("electric_drill", ElectricDrillItem::new, ElectricDrillItem::electricDrillProperties);
 	// Vacuum Capsule (MOD-063): empty stacks to the vanilla default (64), filled to STACK_SIZE (16).
 	public static final DeferredItem<dev.alaindustrial.item.VacuumCapsuleItem> VACUUM_CAPSULE =
 			ITEMS.registerItem("vacuum_capsule", dev.alaindustrial.item.VacuumCapsuleItem::new);
@@ -249,6 +257,7 @@ public final class ModItemsNeoForge {
 	 */
 	public static void init() {
 		ModContent.ELECTRONIC_CIRCUIT = ELECTRONIC_CIRCUIT;
+		ModContent.COPPER_COIL = COPPER_COIL;
 		ModContent.ALIGNMENT_CHIP_DAY = ALIGNMENT_CHIP_DAY;
 		ModContent.ALIGNMENT_CHIP_NIGHT = ALIGNMENT_CHIP_NIGHT;
 		ModContent.WINDMILL_ROTOR = WINDMILL_ROTOR;
@@ -289,6 +298,8 @@ public final class ModItemsNeoForge {
 		ModContent.BATTERY_POUCH = BATTERY_POUCH::get;
 		ModContent.BATTERY = BATTERY::get;
 		ModContent.ENERGY_PACK = ENERGY_PACK::get;
+		// DeferredItem<ElectricDrillItem> into a Supplier<Item> slot — bind via ::get (invariant generics).
+		ModContent.ELECTRIC_DRILL = ELECTRIC_DRILL::get;
 		ModContent.VACUUM_CAPSULE = VACUUM_CAPSULE::get;
 		ModContent.FILLED_VACUUM_CAPSULE = FILLED_VACUUM_CAPSULE::get;
 		ModContent.STOCK_DISPLAY_FRAME_ITEM = STOCK_DISPLAY_FRAME_ITEM::get;

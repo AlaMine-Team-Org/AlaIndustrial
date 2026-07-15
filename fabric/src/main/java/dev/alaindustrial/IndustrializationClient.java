@@ -78,8 +78,12 @@ public class IndustrializationClient implements ClientModInitializer {
 		// The drawing itself is loader-neutral (EnergyPackHud) — Fabric's HudElement and NeoForge's
 		// GuiLayer take the same (GuiGraphicsExtractor, DeltaTracker) pair.
 		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_ENERGY_HUD);
+		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_DRILL_HUD);
 		ClientTickEvents.END_CLIENT_TICK.register(client -> ModKeyMappings.handleInput());
 		HudElementRegistry.addLast(Industrialization.id("energy_pack_hud"), EnergyPackHud::render);
+		// Electric Drill charge readout (MOD-079) — same toggle/key as the pack, stacks below it.
+		HudElementRegistry.addLast(Industrialization.id("electric_drill_hud"),
+				dev.alaindustrial.client.ElectricDrillHud::render);
 
 		dev.alaindustrial.client.NetworkVisualizationClient.init();
 		dev.alaindustrial.client.CablePlacementPreview.init();

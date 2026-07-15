@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"W": "alaindustrial:copper_cable",
+		"T": "alaindustrial:tin_ingot"
+	},
+	"pattern": [
+		"WTW",
+		"WTW",
+		"WTW"
+	],
+	"result": { "id": "alaindustrial:copper_coil" }
+}

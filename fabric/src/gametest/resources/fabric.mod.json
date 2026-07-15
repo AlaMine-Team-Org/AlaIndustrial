@@ -29,6 +29,7 @@
 			"dev.alaindustrial.gametest.TemperedIronToolsGameTest",
 			"dev.alaindustrial.gametest.PouchGameTest",
 			"dev.alaindustrial.gametest.EnergyPackGameTest",
+			"dev.alaindustrial.gametest.ElectricDrillGameTest",
 			"dev.alaindustrial.gametest.CapsuleGameTest",
 			"dev.alaindustrial.gametest.GeothermalLavaInputGameTest",
 			"dev.alaindustrial.gametest.DemoStandGameTest",

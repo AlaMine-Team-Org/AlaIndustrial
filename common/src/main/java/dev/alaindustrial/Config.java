@@ -137,6 +137,18 @@ public final class Config {
 	 * runs once per second in batches of {@code energyPackOutputRate × 20} EU (see EnergyPackItem). */
 	public static int energyPackOutputRate = 32;
 
+	// --- Electric Drill (MOD-079, first powered hand tool) ---
+	/** Electric Drill EU buffer — half an Energy Pack, five pouches' worth. At {@link #electricDrillEuPerBlock}
+	 * per block this is ~200 blocks on a full charge. */
+	public static int electricDrillBuffer = 10_000;
+	/** EU drained per block the drill successfully mines while it has at least this much charge. Below it the
+	 * drill still mines (and drops), but at hand speed and free — see ElectricDrillItem. Kept under the LV
+	 * machine floor (200 EU/op): breaking a block is cheaper than smelting one. */
+	public static int electricDrillEuPerBlock = 50;
+	/** Max EU/tick the drill accepts while sitting in a charge slot. At the LV ceiling a full charge from a
+	 * Battery Box takes ~313 ticks (~16 s). */
+	public static int electricDrillInputRate = 32;
+
 	// --- Stock Display Frame (MOD-066, no energy) ---
 	/** How often (ticks) a stock display frame rescans the container behind it. 20 = once a second;
 	 * a 100-frame warehouse costs ~5 container sums per tick at the default. */
@@ -270,6 +282,18 @@ public final class Config {
 					if (energyPackOutputRate <= 0) {
 						energyPackOutputRate = 32;
 					}
+					electricDrillBuffer = GsonHelper.getAsInt(o, "electricDrillBuffer", electricDrillBuffer);
+					if (electricDrillBuffer <= 0) {
+						electricDrillBuffer = 10_000;
+					}
+					electricDrillEuPerBlock = GsonHelper.getAsInt(o, "electricDrillEuPerBlock", electricDrillEuPerBlock);
+					if (electricDrillEuPerBlock <= 0) {
+						electricDrillEuPerBlock = 50;
+					}
+					electricDrillInputRate = GsonHelper.getAsInt(o, "electricDrillInputRate", electricDrillInputRate);
+					if (electricDrillInputRate <= 0) {
+						electricDrillInputRate = 32;
+					}
 					stockFrameScanIntervalTicks = GsonHelper.getAsInt(o, "stockFrameScanIntervalTicks", stockFrameScanIntervalTicks);
 					if (stockFrameScanIntervalTicks <= 0) {
 						stockFrameScanIntervalTicks = 20;
@@ -349,6 +373,9 @@ public final class Config {
 		o.addProperty("energyPackBuffer", energyPackBuffer);
 		o.addProperty("energyPackInputRate", energyPackInputRate);
 		o.addProperty("energyPackOutputRate", energyPackOutputRate);
+		o.addProperty("electricDrillBuffer", electricDrillBuffer);
+		o.addProperty("electricDrillEuPerBlock", electricDrillEuPerBlock);
+		o.addProperty("electricDrillInputRate", electricDrillInputRate);
 		o.addProperty("stockFrameScanIntervalTicks", stockFrameScanIntervalTicks);
 		o.addProperty("machineEuPerTick", machineEuPerTick);
 		o.addProperty("maceratorDuration", maceratorDuration);
