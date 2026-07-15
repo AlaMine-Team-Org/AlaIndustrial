@@ -3,6 +3,8 @@ package dev.alaindustrial.registry;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.BatteryBoxBlock;
 import dev.alaindustrial.block.CableBlock;
+import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
+import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
 import dev.alaindustrial.block.ElectricFurnaceBlock;
@@ -27,6 +29,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.PushReaction;
 
 /**
  * Central registration for all Industrialization blocks: the Phase 1 energy-core set
@@ -157,6 +160,23 @@ public final class ModBlocks {
 	public static final Block TEMPERED_IRON_BLOCK = register(TEMPERED_IRON_BLOCK_KEY,
 			new Block(props(TEMPERED_IRON_BLOCK_KEY).strength(5.0f, 6.0f).sound(SoundType.METAL)));
 
+	// Enriched Uranium Torch (MOD-085) — vanilla-behaviour torch, light 15, green flame. NOT built via
+	// props() (that adds requiresCorrectToolForDrops, non-vanilla for a torch): torchProps() mirrors the
+	// vanilla TORCH property chain (no collision, instabreak, WOOD, DESTROY push reaction) exactly.
+	public static final ResourceKey<Block> ENRICHED_URANIUM_TORCH_KEY = key("enriched_uranium_torch");
+	public static final Block ENRICHED_URANIUM_TORCH = register(ENRICHED_URANIUM_TORCH_KEY,
+			new EnrichedUraniumTorchBlock(ModParticles.ENRICHED_URANIUM_FLAME, torchProps(ENRICHED_URANIUM_TORCH_KEY)));
+
+	// Wall variant: mirrors the standing torch's loot table and display name (vanilla wallVariant), so it
+	// needs neither its own loot table nor its own lang key. Registered after the standing torch (field
+	// order) so ENRICHED_URANIUM_TORCH is resolved when its loot table / description id are read here.
+	public static final ResourceKey<Block> ENRICHED_URANIUM_WALL_TORCH_KEY = key("enriched_uranium_wall_torch");
+	public static final Block ENRICHED_URANIUM_WALL_TORCH = register(ENRICHED_URANIUM_WALL_TORCH_KEY,
+			new EnrichedUraniumWallTorchBlock(ModParticles.ENRICHED_URANIUM_FLAME,
+					torchProps(ENRICHED_URANIUM_WALL_TORCH_KEY)
+							.overrideLootTable(ENRICHED_URANIUM_TORCH.getLootTable())
+							.overrideDescription(ENRICHED_URANIUM_TORCH.getDescriptionId())));
+
 	private static ResourceKey<Block> key(String path) {
 		return ResourceKey.create(Registries.BLOCK, Industrialization.id(path));
 	}
@@ -170,6 +190,20 @@ public final class ModBlocks {
 	 */
 	private static int litLight(BlockState state) {
 		return state.getValue(BlockStateProperties.LIT) ? 13 : 0;
+	}
+
+	/**
+	 * Vanilla torch property chain (MOD-085), mirroring {@code Blocks.TORCH} exactly: no collision, instant
+	 * break (breaks by hand, no tool gate — so the torch is NOT in {@code minecraft:mineable/pickaxe} and NOT
+	 * {@code requiresCorrectToolForDrops}, unlike the {@link #props} machines/ores), light level 14 (same as
+	 * the vanilla torch — kept identical to avoid any behavioural surprises; the torch's "enriched" identity
+	 * comes from the green flame, richer particles and underwater burning, not from +1 light), WOOD sound,
+	 * and {@code DESTROY} push reaction (a piston breaks it). {@code noOcclusion()} keeps the block-standards
+	 * occlusion invariant happy (non-full-cube ⇒ must not occlude).
+	 */
+	private static BlockBehaviour.Properties torchProps(ResourceKey<Block> key) {
+		return BlockBehaviour.Properties.of().setId(key).noCollision().instabreak()
+				.lightLevel(state -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY).noOcclusion();
 	}
 
 	private static BlockBehaviour.Properties props(ResourceKey<Block> key) {
@@ -223,5 +257,7 @@ public final class ModBlocks {
 		ModContent.DEEPSLATE_URANIUM_ORE = () -> DEEPSLATE_URANIUM_ORE;
 		ModContent.IRON_CHEST = () -> IRON_CHEST;
 		ModContent.TEMPERED_IRON_BLOCK = () -> TEMPERED_IRON_BLOCK;
+		ModContent.ENRICHED_URANIUM_TORCH = () -> ENRICHED_URANIUM_TORCH;
+		ModContent.ENRICHED_URANIUM_WALL_TORCH = () -> ENRICHED_URANIUM_WALL_TORCH;
 	}
 }

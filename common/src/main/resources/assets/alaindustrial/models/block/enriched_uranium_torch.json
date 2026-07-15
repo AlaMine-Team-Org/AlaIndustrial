@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_torch",
+  "textures": {
+    "torch": "alaindustrial:block/enriched_uranium_torch"
+  }
+}

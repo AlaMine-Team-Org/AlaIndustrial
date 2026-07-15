@@ -24,6 +24,7 @@ public final class CreativeTabContent {
 		storageAndCables(out);
 		oresAndMaterials(out);
 		components(out);
+		utility(out);
 		temperedIron(out);
 		scythes(out);
 	}
@@ -105,6 +106,12 @@ public final class CreativeTabContent {
 		generators(out);
 		machines(out);
 		storageAndCables(out);
+		utility(out);
+	}
+
+	/** Decorative/utility blocks that live in vanilla Functional Blocks — the Enriched Uranium Torch (MOD-085). */
+	private static void utility(Sink out) {
+		out.accept(ModContent.ENRICHED_URANIUM_TORCH_ITEM.get());
 	}
 
 	private static void generators(Sink out) {

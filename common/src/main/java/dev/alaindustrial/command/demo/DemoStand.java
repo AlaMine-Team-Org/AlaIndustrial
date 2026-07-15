@@ -4,6 +4,8 @@ import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -233,6 +235,14 @@ public final class DemoStand {
 		set(level, origin, 34, 1, 10, ModContent.PUMP.get());
 		chargeBuffer(level, origin, 34, 1, 10);
 		set(level, origin, 35, 1, 10, ModContent.GEOTHERMAL_GENERATOR.get());
+		// Enriched Uranium Torch (MOD-085): the standing torch on the floor, and the wall variant mounted
+		// on a small stone post (facing WEST → supported by the post block to its east) so both survive.
+		set(level, origin, 37, 1, 10, ModContent.ENRICHED_URANIUM_TORCH.get());
+		set(level, origin, 39, 1, 10, FLOOR);
+		set(level, origin, 39, 2, 10, FLOOR);
+		level.setBlockAndUpdate(origin.offset(38, 2, 10),
+				ModContent.ENRICHED_URANIUM_WALL_TORCH.get().defaultBlockState()
+						.setValue(WallTorchBlock.FACING, Direction.WEST));
 	}
 
 	// --- helpers ---

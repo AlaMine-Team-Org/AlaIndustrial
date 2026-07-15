@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_uranium_dust": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:uranium_dust" } ] } }
+  },
+  "requirements": [ [ "has_uranium_dust" ] ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:enriched_uranium_torch_from_scratch",
+      "alaindustrial:enriched_uranium_torch_upgrade"
+    ]
+  }
+}

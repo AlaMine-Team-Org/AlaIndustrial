@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		"minecraft:torch",
+		"alaindustrial:uranium_dust"
+	],
+	"result": {
+		"id": "alaindustrial:enriched_uranium_torch",
+		"count": 1
+	}
+}

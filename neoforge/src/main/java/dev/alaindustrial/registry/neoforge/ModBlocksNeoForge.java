@@ -6,6 +6,8 @@ import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
 import dev.alaindustrial.block.ElectricFurnaceBlock;
+import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
+import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
 import dev.alaindustrial.block.ExtractorBlock;
 import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
@@ -19,11 +21,13 @@ import dev.alaindustrial.block.WindMillBlock;
 import dev.alaindustrial.block.HighAltitudeWindMillBlock;
 import dev.alaindustrial.block.StormWindMillBlock;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModParticles;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -123,6 +127,23 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<Block> TEMPERED_IRON_BLOCK =
 			BLOCKS.registerBlock("tempered_iron_block", Block::new, machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)));
 
+	// Enriched Uranium Torch (MOD-085) — vanilla-behaviour torch, light 15, green flame. Uses torch()
+	// (vanilla TORCH properties), NOT machine() — a torch breaks by hand, so no requiresCorrectToolForDrops
+	// and no mineable/pickaxe tag entry. The particle comes from the eager ModParticles facade object.
+	public static final DeferredBlock<EnrichedUraniumTorchBlock> ENRICHED_URANIUM_TORCH =
+			BLOCKS.registerBlock("enriched_uranium_torch",
+					p -> new EnrichedUraniumTorchBlock(ModParticles.ENRICHED_URANIUM_FLAME, p), torch());
+
+	// Wall variant: drops/names from the standing torch (vanilla wallVariant). The property supplier runs
+	// during the block RegisterEvent, by which point the earlier ENRICHED_URANIUM_TORCH entry is resolved
+	// (same ordering the FILLED_VACUUM_CAPSULE craftRemainder relies on).
+	public static final DeferredBlock<EnrichedUraniumWallTorchBlock> ENRICHED_URANIUM_WALL_TORCH =
+			BLOCKS.registerBlock("enriched_uranium_wall_torch",
+					p -> new EnrichedUraniumWallTorchBlock(ModParticles.ENRICHED_URANIUM_FLAME, p),
+					() -> torchProps()
+							.overrideLootTable(ENRICHED_URANIUM_TORCH.get().getLootTable())
+							.overrideDescription(ENRICHED_URANIUM_TORCH.get().getDescriptionId()));
+
 	private ModBlocksNeoForge() {
 	}
 
@@ -134,6 +155,22 @@ public final class ModBlocksNeoForge {
 	 */
 	private static Supplier<BlockBehaviour.Properties> machine(UnaryOperator<BlockBehaviour.Properties> extra) {
 		return () -> extra.apply(BlockBehaviour.Properties.of().requiresCorrectToolForDrops());
+	}
+
+	/**
+	 * Property {@link Supplier} for the Enriched Uranium Torch (MOD-085), mirroring the Fabric
+	 * {@code ModBlocks#torchProps} helper and vanilla {@code Blocks.TORCH}: no collision, instant break
+	 * (breaks by hand — so NO {@code requiresCorrectToolForDrops} and NO {@code mineable/pickaxe} entry,
+	 * unlike {@link #machine}), light 14 (identical to the vanilla torch), WOOD sound, {@code DESTROY} push
+	 * reaction, {@code noOcclusion()}. {@code setId} is applied by {@code registerBlock} from the deferred key.
+	 */
+	private static Supplier<BlockBehaviour.Properties> torch() {
+		return ModBlocksNeoForge::torchProps;
+	}
+
+	private static BlockBehaviour.Properties torchProps() {
+		return BlockBehaviour.Properties.of().noCollision().instabreak()
+				.lightLevel(state -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY).noOcclusion();
 	}
 
 	/**
@@ -183,5 +220,7 @@ public final class ModBlocksNeoForge {
 		ModContent.DEEPSLATE_URANIUM_ORE = DEEPSLATE_URANIUM_ORE::get;
 		ModContent.IRON_CHEST = IRON_CHEST::get;
 		ModContent.TEMPERED_IRON_BLOCK = TEMPERED_IRON_BLOCK::get;
+		ModContent.ENRICHED_URANIUM_TORCH = ENRICHED_URANIUM_TORCH::get;
+		ModContent.ENRICHED_URANIUM_WALL_TORCH = ENRICHED_URANIUM_WALL_TORCH::get;
 	}
 }

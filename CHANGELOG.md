@@ -1,14 +1,14 @@
-## 0.1.27
+## 0.1.28
 
-<p><img alt="Ala Industrial 0.1.27 — Electric Drill, the first powered hand tool" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.27/release-media/v0.1.27/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.28 — Enriched Uranium Torch with underwater green flame" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.28/release-media/v0.1.28/changelog.gif" width="720"></p>
 
-The first power tool is here. Meet the **Electric Drill** — a diamond-tier pickaxe that runs on your EU grid and never wears out.
+A new radioactive light source joins the lineup, plus a smoother electric drill in hand and a charge meter that finally shows true zero and full.
 
-### New
+### Gameplay
 
-- **Electric Drill.** A powered pickaxe that mines a touch faster than diamond and never breaks. It runs on a 10,000 EU battery (about 200 blocks per charge) and spends 50 EU per block. Run dry and it keeps digging at hand speed — same drops, no power spent — until you recharge it in the Battery Box or top it up from a worn Energy Pack. Takes the usual pickaxe enchantments, including full drops from amethyst buds. Crafted around a diamond pickaxe with the new **copper coils**, an electronic circuit and iron.
-- **Copper Coil.** A new crafting component — copper cable wound on a tin core. First stop: the drill recipe.
+- **Enriched Uranium Torch** — a torch with a vivid neon-green flame. It lights up at the same level as a vanilla torch, can be placed on the floor or on walls, and burns with a living green flame that occasionally throws off radioactive sparks. Unlike a normal torch, it keeps burning **underwater** — place it right under the surface and it won't go out. Two ways to craft it: from scratch (uranium dust + coal + stick, yields 4) or by enriching a plain torch (torch + uranium dust).
 
 ### Quality of Life
 
-- **Charge HUD.** Hold the drill and a small widget shows its charge level and color bar (green → yellow → red). Its own keybind (**J**), its own config toggle — fully independent from the Energy Pack indicator. The readout is smoothed, so topping up mid-mining no longer makes the number flicker between 99 % and 100 %.
+- **Electric drill grip fixed.** The drill used to look upside down when held — grabbed by the drill tip. It now sits properly by the pistol grip with the bit pointing forward, in both first and third person and for either hand. The inventory icon is unchanged.
+- **Charge meter now reads true 0% and 100%.** The smoothed charge readout could settle just short of the real value, parking at 1% on a fully empty item and never quite reaching full. It now shows an exact 0% when empty and 100% when completely charged. Affects the energy pack and the electric drill.

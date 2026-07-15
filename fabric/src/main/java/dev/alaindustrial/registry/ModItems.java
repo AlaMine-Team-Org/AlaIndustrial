@@ -16,6 +16,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ShovelItem;
@@ -166,6 +167,11 @@ public final class ModItems {
 	public static final BlockItem DEEPSLATE_URANIUM_ORE_ITEM = blockItem("deepslate_uranium_ore", ModBlocks.DEEPSLATE_URANIUM_ORE);
 	public static final BlockItem IRON_CHEST_ITEM = blockItem("iron_chest", ModBlocks.IRON_CHEST);
 	public static final BlockItem TEMPERED_IRON_BLOCK_ITEM = blockItem("tempered_iron_block", ModBlocks.TEMPERED_IRON_BLOCK);
+	// Enriched Uranium Torch (MOD-085): a StandingAndWallBlockItem (like vanilla Items.TORCH) so using it
+	// on a wall places the wall variant and on the floor the standing variant. The wall block has no item
+	// of its own — this item maps to both blocks (StandingAndWallBlockItem#registerBlocks).
+	public static final BlockItem ENRICHED_URANIUM_TORCH_ITEM = standingAndWallBlockItem(
+			"enriched_uranium_torch", ModBlocks.ENRICHED_URANIUM_TORCH, ModBlocks.ENRICHED_URANIUM_WALL_TORCH);
 
 	private static Item item(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
@@ -288,6 +294,15 @@ public final class ModItems {
 		return Registry.register(BuiltInRegistries.ITEM, key, item);
 	}
 
+	// Torch-style item (MOD-085): places `standing` on the floor, `wall` on a vertical face — exactly how
+	// vanilla Items.TORCH is built (StandingAndWallBlockItem(TORCH, WALL_TORCH, Direction.DOWN, p)).
+	private static BlockItem standingAndWallBlockItem(String path, Block standing, Block wall) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		StandingAndWallBlockItem item = new StandingAndWallBlockItem(standing, wall,
+				net.minecraft.core.Direction.DOWN, new Item.Properties().useBlockDescriptionPrefix().setId(key));
+		return Registry.register(BuiltInRegistries.ITEM, key, item);
+	}
+
 	public static void init() {
 		CreativeModeTab tab = FabricCreativeModeTab.builder()
 				.title(Component.translatable("itemGroup.alaindustrial"))
@@ -359,6 +374,7 @@ public final class ModItems {
 						output.accept(ELECTRIC_DRILL);
 						// Empty capsule only — the filled form is obtained by using it on a fluid.
 						output.accept(VACUUM_CAPSULE);
+							output.accept(ENRICHED_URANIUM_TORCH_ITEM); // MOD-085 decorative light source
 						// Tempered Iron — ingot, block, tools and armor as one continuous row
 						output.accept(TEMPERED_IRON);
 						output.accept(TEMPERED_IRON_BLOCK_ITEM);
@@ -523,5 +539,6 @@ public final class ModItems {
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = () -> DEEPSLATE_URANIUM_ORE_ITEM;
 		ModContent.IRON_CHEST_ITEM = () -> IRON_CHEST_ITEM;
 		ModContent.TEMPERED_IRON_BLOCK_ITEM = () -> TEMPERED_IRON_BLOCK_ITEM;
+		ModContent.ENRICHED_URANIUM_TORCH_ITEM = () -> ENRICHED_URANIUM_TORCH_ITEM;
 	}
 }

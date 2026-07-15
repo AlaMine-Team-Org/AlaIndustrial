@@ -60,6 +60,12 @@ public final class IndustrializationNeoForgeClient {
 		container.registerExtensionPoint(IConfigScreenFactory.class,
 				(modContainer, parent) -> new AlaConfigScreen(parent));
 		modBus.addListener(this::registerMenuScreens);
+		// MOD-085: green flame particle provider for the Enriched Uranium Torch. registerSpriteSet =
+		// json-backed particle (assets/alaindustrial/particles/enriched_uranium_flame.json); reuses the
+		// vanilla FlameParticle provider (like soul_fire_flame), colour comes from the particle texture.
+		modBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) ->
+				event.registerSpriteSet(dev.alaindustrial.registry.ModParticles.ENRICHED_URANIUM_FLAME,
+						net.minecraft.client.particle.FlameParticle.Provider::new));
 		// Battery Pouch bundle-style tooltip (MOD-052) — NeoForge counterpart to the Fabric
 		// ClientTooltipComponentCallback mapping in IndustrializationClient.
 		modBus.addListener((net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent event) ->

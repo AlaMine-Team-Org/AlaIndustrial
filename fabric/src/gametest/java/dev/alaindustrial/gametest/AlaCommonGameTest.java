@@ -78,6 +78,12 @@ public class AlaCommonGameTest {
 			if (id.getPath().endsWith("_ore")) {
 				continue;
 			}
+			// The Enriched Uranium Wall Torch (MOD-085) intentionally has NO block item — it drops the
+			// STANDING torch via Properties.overrideLootTable (vanilla wallVariant), so block.asItem() is
+			// AIR and it cannot "self-drop". Its drop is asserted in EnrichedUraniumTorchGameTest instead.
+			if (id.getPath().equals("enriched_uranium_wall_torch")) {
+				continue;
+			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);
 			helper.setBlock(PROBE, block);
 			List<ItemStack> drops = Block.getDrops(level.getBlockState(abs), level, abs,
@@ -106,6 +112,12 @@ public class AlaCommonGameTest {
 		ItemStack pickaxe = new ItemStack(Items.DIAMOND_PICKAXE);
 		for (Identifier id : BuiltInRegistries.BLOCK.keySet()) {
 			if (!Industrialization.MOD_ID.equals(id.getNamespace())) {
+				continue;
+			}
+			// The Enriched Uranium Torch + Wall Torch (MOD-085) are vanilla-behaviour torches: instabreak,
+			// broken by hand with NO tool gate (not requiresCorrectToolForDrops, not in mineable/pickaxe).
+			// So a bare hand IS a correct tool for them — exempt from R-BRK-02, like the ore tier-gate carve-out.
+			if (id.getPath().endsWith("torch")) {
 				continue;
 			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);
@@ -150,6 +162,12 @@ public class AlaCommonGameTest {
 		List<String> failures = new ArrayList<>();
 		for (Identifier id : BuiltInRegistries.BLOCK.keySet()) {
 			if (!Industrialization.MOD_ID.equals(id.getNamespace())) {
+				continue;
+			}
+			// The Enriched Uranium Wall Torch (MOD-085) intentionally has no block item and no loot table of
+			// its own (it mirrors the standing torch via overrideLootTable/overrideDescription), so the
+			// block-item + loot invariants below do not apply. The standing torch covers the torch occlusion.
+			if (id.getPath().equals("enriched_uranium_wall_torch")) {
 				continue;
 			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);

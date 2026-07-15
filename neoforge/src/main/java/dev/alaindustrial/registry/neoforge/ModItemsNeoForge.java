@@ -243,6 +243,18 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("iron_chest", ModBlocksNeoForge.IRON_CHEST);
 	public static final DeferredItem<BlockItem> TEMPERED_IRON_BLOCK_ITEM =
 			ITEMS.registerSimpleBlockItem("tempered_iron_block", ModBlocksNeoForge.TEMPERED_IRON_BLOCK);
+	// Enriched Uranium Torch (MOD-085): a StandingAndWallBlockItem (like vanilla Items.TORCH) — floor use
+	// places the standing block, wall use the wall block. Maps to both blocks; the wall block has no item
+	// of its own. registerItem (not registerSimpleBlockItem) so we control the factory; useBlockDescriptionPrefix
+	// is added explicitly (registerSimpleBlockItem would have added it). Block refs resolve during the item
+	// RegisterEvent (blocks already registered).
+	public static final DeferredItem<BlockItem> ENRICHED_URANIUM_TORCH_ITEM =
+			ITEMS.registerItem("enriched_uranium_torch",
+					p -> new net.minecraft.world.item.StandingAndWallBlockItem(
+							ModBlocksNeoForge.ENRICHED_URANIUM_TORCH.get(),
+							ModBlocksNeoForge.ENRICHED_URANIUM_WALL_TORCH.get(),
+							net.minecraft.core.Direction.DOWN, p),
+					() -> new Item.Properties().useBlockDescriptionPrefix());
 
 	private ModItemsNeoForge() {
 	}
@@ -342,5 +354,6 @@ public final class ModItemsNeoForge {
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = DEEPSLATE_URANIUM_ORE_ITEM;
 		ModContent.IRON_CHEST_ITEM = IRON_CHEST_ITEM;
 		ModContent.TEMPERED_IRON_BLOCK_ITEM = TEMPERED_IRON_BLOCK_ITEM;
+		ModContent.ENRICHED_URANIUM_TORCH_ITEM = ENRICHED_URANIUM_TORCH_ITEM;
 	}
 }

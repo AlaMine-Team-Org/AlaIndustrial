@@ -94,6 +94,8 @@ public final class IndustrializationNeoForge {
 		ModMenusNeoForge.MENUS.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModCreativeTabNeoForge.TABS.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModSoundsNeoForge.SOUNDS.register(modBus);
+		// MOD-085: the Enriched Uranium Torch's green flame particle type.
+		dev.alaindustrial.registry.neoforge.ModParticlesNeoForge.PARTICLES.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModDataComponentsNeoForge.DATA_COMPONENTS.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModRecipesNeoForge.TYPES.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModRecipesNeoForge.SERIALIZERS.register(modBus);

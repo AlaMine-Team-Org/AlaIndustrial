@@ -85,6 +85,13 @@ public class IndustrializationClient implements ClientModInitializer {
 		HudElementRegistry.addLast(Industrialization.id("electric_drill_hud"),
 				dev.alaindustrial.client.ElectricDrillHud::render);
 
+		// MOD-085: green flame particle for the Enriched Uranium Torch. Reuses the vanilla FlameParticle
+		// provider (like soul_fire_flame) — the green colour comes entirely from the particle's own texture
+		// (assets/alaindustrial/particles/enriched_uranium_flame.json), no custom particle class or tint.
+		net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry.getInstance().register(
+				dev.alaindustrial.registry.ModParticles.ENRICHED_URANIUM_FLAME,
+				net.minecraft.client.particle.FlameParticle.Provider::new);
+
 		dev.alaindustrial.client.NetworkVisualizationClient.init();
 		dev.alaindustrial.client.CablePlacementPreview.init();
 		dev.alaindustrial.client.sound.MachineHumClientHook.register();

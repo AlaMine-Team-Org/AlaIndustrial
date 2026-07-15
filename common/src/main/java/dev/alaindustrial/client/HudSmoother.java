@@ -46,6 +46,21 @@ final class HudSmoother {
 			float k = 1.0f - (float) Math.exp(-Math.max(0.0f, dtTicks) / TAU_TICKS);
 			shown += (clamped - shown) * k;
 		}
+		// Empty and full must read exactly. Exponential easing only *approaches* its target, so a
+		// buffer that has truly hit 0 (or capacity) leaves the smoothed value a hair off the edge;
+		// combined with the 1.5-point deadband the shown number then parks on 1 % (empty) or 99 %
+		// (full) and never reaches the boundary. A genuine 0 / capacity charge is not a ripple to
+		// damp — it is the one reading that has to be precise, so snap it past the hysteresis.
+		if (clamped <= 0.0f) {
+			shown = 0.0f;
+			shownPercent = 0;
+			return 0;
+		}
+		if (clamped >= 1.0f) {
+			shown = 1.0f;
+			shownPercent = 100;
+			return 100;
+		}
 		float pct = shown * 100.0f;
 		if (shownPercent < 0 || Math.abs(pct - shownPercent) >= PERCENT_DEADBAND) {
 			shownPercent = Math.round(pct);

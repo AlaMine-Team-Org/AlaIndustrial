@@ -99,6 +99,11 @@ public final class ModContent {
 	// Tempered Iron Block — a "block of X" material block (9 ingots ↔ 1 block), like
 	// vanilla iron block. Pure material/decorative block, no BE, single texture on all 6 faces.
 	public static Supplier<Block> TEMPERED_IRON_BLOCK = unbound("TEMPERED_IRON_BLOCK");
+	// Enriched Uranium Torch (MOD-085) — a vanilla-behaviour torch (light 15, green flame) in two
+	// blocks: standing + wall. The wall variant has NO block item; it drops/names from the standing
+	// torch via overrideLootTable/overrideDescription, exactly as vanilla WALL_TORCH mirrors TORCH.
+	public static Supplier<Block> ENRICHED_URANIUM_TORCH = unbound("ENRICHED_URANIUM_TORCH");
+	public static Supplier<Block> ENRICHED_URANIUM_WALL_TORCH = unbound("ENRICHED_URANIUM_WALL_TORCH");
 
 	// --- Items (crafting components + tools) ---
 	public static Supplier<Item> ELECTRONIC_CIRCUIT = unbound("ELECTRONIC_CIRCUIT");
@@ -199,6 +204,9 @@ public final class ModContent {
 	public static Supplier<BlockItem> DEEPSLATE_URANIUM_ORE_ITEM = unbound("DEEPSLATE_URANIUM_ORE_ITEM");
 	public static Supplier<BlockItem> IRON_CHEST_ITEM = unbound("IRON_CHEST_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_BLOCK_ITEM = unbound("TEMPERED_IRON_BLOCK_ITEM");
+	// Enriched Uranium Torch (MOD-085) — only the STANDING torch has a block item; the wall variant
+	// drops this item via its overrideLootTable, so it needs no item of its own.
+	public static Supplier<BlockItem> ENRICHED_URANIUM_TORCH_ITEM = unbound("ENRICHED_URANIUM_TORCH_ITEM");
 
 	// --- Block entity types ---
 	public static Supplier<BlockEntityType<?>> GENERATOR_BE = unbound("GENERATOR_BE");

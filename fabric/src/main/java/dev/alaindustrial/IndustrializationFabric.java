@@ -92,6 +92,13 @@ public class IndustrializationFabric implements ModInitializer {
 						dev.alaindustrial.registry.ModDataComponents.CAPSULE_FLUID_ID,
 						dev.alaindustrial.registry.ModDataComponents.createCapsuleFluid());
 		dev.alaindustrial.registry.ModDataComponents.CAPSULE_FLUID = () -> capsuleFluid;
+		// MOD-085: publish the Enriched Uranium Torch's green flame (an eager object in the neutral
+		// ModParticles) into the PARTICLE_TYPE registry for networking/spawning. Fabric keeps the registry
+		// writable during init, so register eagerly; the torch block already reads the object directly.
+		net.minecraft.core.Registry.register(
+				net.minecraft.core.registries.BuiltInRegistries.PARTICLE_TYPE,
+				dev.alaindustrial.registry.ModParticles.ENRICHED_URANIUM_FLAME_ID,
+				dev.alaindustrial.registry.ModParticles.ENRICHED_URANIUM_FLAME);
 		ModBlocks.init();
 		ModBlockEntities.init();
 		ModMenus.init();
