@@ -3,7 +3,6 @@ package dev.alaindustrial.client;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.menu.WaterMillMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -13,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
  * Texture-backed screen for the LV Water Mill. Static frame from atlas PNG; dynamic layer draws
  * the energy fill (bottom-up orange bar). No burn flame — the water mill has no fuel.
  */
-public class WaterMillScreen extends AbstractContainerScreen<WaterMillMenu> {
+public class WaterMillScreen extends MachineScreen<WaterMillMenu> {
 	private static final Identifier TEXTURE = Industrialization.id("textures/gui/container/generator.png");
 	private static final int TEX_SIZE = 256;
 
@@ -34,8 +33,7 @@ public class WaterMillScreen extends AbstractContainerScreen<WaterMillMenu> {
 	}
 
 	@Override
-	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-		super.extractBackground(graphics, mouseX, mouseY, partialTick);
+	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		int x = this.leftPos;
 		int y = this.topPos;
 

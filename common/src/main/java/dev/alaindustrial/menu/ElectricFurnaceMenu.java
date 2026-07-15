@@ -18,7 +18,7 @@ public class ElectricFurnaceMenu extends MachineMenu {
 
 	/** Client side. */
 	public ElectricFurnaceMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.ELECTRIC_FURNACE_MENU.get(), syncId, playerInventory, new SimpleContainer(2),
+		super(ModContent.ELECTRIC_FURNACE_MENU.get(), syncId, playerInventory, new SimpleContainer(2 + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(4), ContainerLevelAccess.NULL, ModContent.ELECTRIC_FURNACE.get());
 	}
 

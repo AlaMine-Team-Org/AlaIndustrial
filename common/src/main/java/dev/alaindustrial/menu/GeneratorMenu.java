@@ -18,7 +18,7 @@ public class GeneratorMenu extends MachineMenu {
 
 	/** Client side. */
 	public GeneratorMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.GENERATOR_MENU.get(), syncId, playerInventory, new SimpleContainer(1),
+		super(ModContent.GENERATOR_MENU.get(), syncId, playerInventory, new SimpleContainer(1 + UPGRADE_SLOT_COUNT),
 				new net.minecraft.world.inventory.SimpleContainerData(4), ContainerLevelAccess.NULL, ModContent.GENERATOR.get());
 	}
 

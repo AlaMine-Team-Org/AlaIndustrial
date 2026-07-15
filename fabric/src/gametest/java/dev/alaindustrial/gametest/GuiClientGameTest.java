@@ -525,6 +525,11 @@ public class GuiClientGameTest implements FabricClientGameTest {
         // ── Machines without custom screens (one shot each) ──────────────────────────
         shootMenu(context, "gui_moonlit_solar_panel", ModMenus.MOONLIT_SOLAR_PANEL, "Moonlit Solar Panel");
 
+        // ── MOD-080: upgrade panel open — gear tab + cross panel + mute chip in the active slot ──
+        shootMenuWithPanelOpen(context, "gui_macerator_upgrades_open", ModMenus.MACERATOR, "Macerator", CAP, CAP, 0, 0);
+        // Dragged over the GUI: proves the panel is a top overlay (GUI slots/text do not bleed over it).
+        shootMenuWithPanelOpen(context, "gui_macerator_upgrades_dragged", ModMenus.MACERATOR, "Macerator", CAP, CAP, -120, 60);
+
         // ── Electric Furnace — three states ──────────────────────────────────────────
         // State 1: empty — no fuel, no energy
         shootMenuWithState(context, "gui_electric_furnace_empty",
@@ -714,6 +719,40 @@ public class GuiClientGameTest implements FabricClientGameTest {
         context.waitTicks(5);
         java.nio.file.Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
+    }
+
+    /**
+     * MOD-080: a machine screen with the upgrade panel expanded (gear tab clicked) and a mute chip in
+     * the active slot. Confirms in one frame that the gear tab draws, the cross panel blits beside the
+     * GUI, the locked slots read as dimmed, and a chip renders in the active slot.
+     */
+    private static void shootMenuWithPanelOpen(ClientGameTestContext context, String name,
+                                               MenuType<?> type, String displayName, int energy, int capacity,
+                                               int dragDX, int dragDY) {
+        LOG.info("[GUITEST][MOD-080] opening {} (upgrade panel open, drag {},{})", name, dragDX, dragDY);
+        context.runOnClient(mc -> {
+            // The screen reads the docked/dragged offset from AlaClientConfig in init(); set it before
+            // opening, then reset so it does not leak into later shots.
+            dev.alaindustrial.client.AlaClientConfig.upgradePanelDX = dragDX;
+            dev.alaindustrial.client.AlaClientConfig.upgradePanelDY = dragDY;
+            MenuScreens.create(type, mc, 0, Component.literal(displayName));
+            dev.alaindustrial.client.AlaClientConfig.upgradePanelDX = 0;
+            dev.alaindustrial.client.AlaClientConfig.upgradePanelDY = 0;
+            if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                    && acs.getMenu() instanceof MachineMenu menu) {
+                menu.injectTestData(energy, capacity, 0, 0);
+                menu.togglePanel();
+                for (net.minecraft.world.inventory.Slot s : menu.slots) {
+                    if (s instanceof MachineMenu.UpgradeSlot up && !up.isLocked()) {
+                        s.set(new ItemStack(dev.alaindustrial.registry.ModContent.MUTE_CHIP.get()));
+                        break;
+                    }
+                }
+            }
+        });
+        context.waitTicks(5);
+        java.nio.file.Path path = takeCleanScreenshot(context, name);
+        LOG.info("[GUITEST][MOD-080] screenshot {} -> {}", name, path.toAbsolutePath());
     }
 
     /**

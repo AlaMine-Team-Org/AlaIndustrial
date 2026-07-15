@@ -1,5 +1,6 @@
 package dev.alaindustrial.compat.rei;
 
+import dev.alaindustrial.client.MachineScreen;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.MachineRecipeViewerTargets;
 import dev.alaindustrial.client.RecipeViewerInfo;
@@ -97,11 +98,14 @@ public class AlaReiPlugin implements REIClientPlugin {
 	}
 
 	@Override
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void registerScreens(ScreenRegistry registry) {
 		for (MachineRecipeViewerTargets.Target target : MachineRecipeViewerTargets.ALL) {
 			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
 			registerClickArea(registry, target.screenClass(), rect, categoryId(target.kind()));
 		}
+		// MOD-080: keep REI's item grid clear of the upgrade panel + gear tab on every machine screen.
+		registry.exclusionZones().register((Class) MachineScreen.class, new AlaReiExclusionZones());
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})

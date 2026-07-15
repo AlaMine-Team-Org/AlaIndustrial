@@ -137,6 +137,7 @@ public final class IndustrializationNeoForgeClient {
 		event.register(ModMenusNeoForge.HIGH_ALTITUDE_WIND_MILL.get(), dev.alaindustrial.client.HighAltitudeWindMillScreen::new);
 		event.register(ModMenusNeoForge.STORM_WIND_MILL.get(), dev.alaindustrial.client.StormWindMillScreen::new);
 		event.register(ModMenusNeoForge.IRON_CHEST.get(), dev.alaindustrial.client.IronChestScreen::new);
+		event.register(ModMenusNeoForge.SILVER_CHEST.get(), dev.alaindustrial.client.SilverChestScreen::new);
 	}
 
 	/**
@@ -148,6 +149,8 @@ public final class IndustrializationNeoForgeClient {
 	private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.IRON_CHEST.get(),
 				IronChestBlockEntityRenderer::new);
+		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.SILVER_CHEST.get(),
+				dev.alaindustrial.client.SilverChestBlockEntityRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.WATER_MILL.get(),
 				WaterMillWheelBlockEntityRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.WIND_MILL.get(),
@@ -170,6 +173,8 @@ public final class IndustrializationNeoForgeClient {
 	 */
 	private void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
 		event.registerLayerDefinition(IronChestBlockEntityRenderer.IRON_CHEST_LAYER,
+				ChestModel::createSingleBodyLayer);
+		event.registerLayerDefinition(dev.alaindustrial.client.SilverChestBlockEntityRenderer.SILVER_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
 	}
 }

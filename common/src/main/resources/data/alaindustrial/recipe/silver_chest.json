@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "alaindustrial:iron_chest",
+    "S": "alaindustrial:silver_ingot"
+  },
+  "pattern": [
+    "SSS",
+    "SCS",
+    "SSS"
+  ],
+  "result": {
+    "id": "alaindustrial:silver_chest"
+  }
+}

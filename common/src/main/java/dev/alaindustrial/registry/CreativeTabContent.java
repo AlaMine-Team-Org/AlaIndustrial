@@ -83,6 +83,8 @@ public final class CreativeTabContent {
 		out.accept(ModContent.COPPER_COIL.get());
 		out.accept(ModContent.ALIGNMENT_CHIP_DAY.get());
 		out.accept(ModContent.ALIGNMENT_CHIP_NIGHT.get());
+		out.accept(ModContent.EMPTY_CHIP.get());
+		out.accept(ModContent.MUTE_CHIP.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
 		out.accept(ModContent.WOODEN_GEAR.get());
 	}
@@ -159,6 +161,8 @@ public final class CreativeTabContent {
 		out.accept(ModContent.COPPER_COIL.get());
 		out.accept(ModContent.ALIGNMENT_CHIP_DAY.get());
 		out.accept(ModContent.ALIGNMENT_CHIP_NIGHT.get());
+		out.accept(ModContent.EMPTY_CHIP.get());
+		out.accept(ModContent.MUTE_CHIP.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
 		out.accept(ModContent.WOODEN_GEAR.get());
 		out.accept(ModContent.IRON_DUST.get());

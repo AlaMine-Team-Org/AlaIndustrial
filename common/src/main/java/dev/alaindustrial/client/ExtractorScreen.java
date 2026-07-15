@@ -3,7 +3,6 @@ package dev.alaindustrial.client;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.menu.ExtractorMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -24,7 +23,7 @@ import net.minecraft.world.entity.player.Inventory;
  * frame. Item icons are drawn by vanilla at the {@link ExtractorMenu} slot positions, which match
  * this texture. No readout text — energy is the bar, progress is the chevrons.
  */
-public class ExtractorScreen extends AbstractContainerScreen<ExtractorMenu> {
+public class ExtractorScreen extends MachineScreen<ExtractorMenu> {
     private static final Identifier TEXTURE =
             Industrialization.id("textures/gui/container/extractor.png");
     private static final int TEX_SIZE = 256;
@@ -52,8 +51,7 @@ public class ExtractorScreen extends AbstractContainerScreen<ExtractorMenu> {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        super.extractBackground(graphics, mouseX, mouseY, partialTick);
+    protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         int x = this.leftPos;
         int y = this.topPos;
 

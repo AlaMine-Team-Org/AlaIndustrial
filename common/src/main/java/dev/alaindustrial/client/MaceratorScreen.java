@@ -3,7 +3,6 @@ package dev.alaindustrial.client;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.menu.MaceratorMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -16,7 +15,7 @@ import net.minecraft.world.entity.player.Inventory;
  * energy is shown by the bar, progress by the arrow. Item icons are drawn by vanilla at the
  * {@link MaceratorMenu} slot positions, which are aligned to this texture.
  */
-public class MaceratorScreen extends AbstractContainerScreen<MaceratorMenu> {
+public class MaceratorScreen extends MachineScreen<MaceratorMenu> {
 	private static final Identifier TEXTURE = Industrialization.id("textures/gui/container/macerator.png");
 	private static final int TEX_SIZE = 256;
 
@@ -39,8 +38,7 @@ public class MaceratorScreen extends AbstractContainerScreen<MaceratorMenu> {
 	}
 
 	@Override
-	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-		super.extractBackground(graphics, mouseX, mouseY, partialTick);
+	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		int x = this.leftPos;
 		int y = this.topPos;
 

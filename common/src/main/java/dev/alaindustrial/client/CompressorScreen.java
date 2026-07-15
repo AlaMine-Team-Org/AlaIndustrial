@@ -3,7 +3,6 @@ package dev.alaindustrial.client;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.menu.CompressorMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -22,7 +21,7 @@ import net.minecraft.world.entity.player.Inventory;
  *   left static arrow  x=81-86, y=34-51 → service sprite u=191-196, v=0-17
  *   right static arrow x=100-105, y=34-51 → service sprite u=210-215, v=0-17
  */
-public class CompressorScreen extends AbstractContainerScreen<CompressorMenu> {
+public class CompressorScreen extends MachineScreen<CompressorMenu> {
     private static final Identifier TEXTURE =
             Industrialization.id("textures/gui/container/compressor.png");
     private static final int TEX_SIZE = 256;
@@ -59,9 +58,8 @@ public class CompressorScreen extends AbstractContainerScreen<CompressorMenu> {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
+    protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
                                   float partialTick) {
-        super.extractBackground(graphics, mouseX, mouseY, partialTick);
         int x = this.leftPos;
         int y = this.topPos;
 

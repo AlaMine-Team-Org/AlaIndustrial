@@ -13,6 +13,7 @@ import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
 import dev.alaindustrial.block.IronChestBlock;
 import dev.alaindustrial.block.MaceratorBlock;
+import dev.alaindustrial.block.SilverChestBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
@@ -120,6 +121,10 @@ public final class ModBlocksNeoForge {
 	// --- Storage (pure container, no energy) ---
 	public static final DeferredBlock<IronChestBlock> IRON_CHEST =
 			BLOCKS.registerBlock("iron_chest", IronChestBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()));
+	// Silver Chest (MOD-087) — the tier above the iron chest: 45 slots (5×9). Same block stats as the
+	// iron chest (same chest shape: strength 3.0/6.0, METAL, noOcclusion).
+	public static final DeferredBlock<SilverChestBlock> SILVER_CHEST =
+			BLOCKS.registerBlock("silver_chest", SilverChestBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()));
 
 	// Tempered Iron Block — "block of X" material block (9 ingots ↔ 1 block), like
 	// vanilla iron block. Plain Block, cube_all model, single texture on all 6 faces.
@@ -219,6 +224,7 @@ public final class ModBlocksNeoForge {
 		ModContent.URANIUM_ORE = URANIUM_ORE::get;
 		ModContent.DEEPSLATE_URANIUM_ORE = DEEPSLATE_URANIUM_ORE::get;
 		ModContent.IRON_CHEST = IRON_CHEST::get;
+		ModContent.SILVER_CHEST = SILVER_CHEST::get;
 		ModContent.TEMPERED_IRON_BLOCK = TEMPERED_IRON_BLOCK::get;
 		ModContent.ENRICHED_URANIUM_TORCH = ENRICHED_URANIUM_TORCH::get;
 		ModContent.ENRICHED_URANIUM_WALL_TORCH = ENRICHED_URANIUM_WALL_TORCH::get;

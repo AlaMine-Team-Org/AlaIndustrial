@@ -3,7 +3,6 @@ package dev.alaindustrial.client;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.menu.GeothermalGeneratorMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -16,7 +15,7 @@ import net.minecraft.world.entity.player.Inventory;
  * Right bar: energy (orange sprite, bottom-up) — shows stored EU / buffer capacity.
  * Slots: lava-bucket input at (60,34), empty-bucket output at (98,34).
  */
-public class GeothermalGeneratorScreen extends AbstractContainerScreen<GeothermalGeneratorMenu> {
+public class GeothermalGeneratorScreen extends MachineScreen<GeothermalGeneratorMenu> {
 	private static final Identifier TEXTURE =
 			Industrialization.id("textures/gui/container/geothermal_generator.png");
 	private static final int TEX_SIZE = 256;
@@ -47,8 +46,7 @@ public class GeothermalGeneratorScreen extends AbstractContainerScreen<Geotherma
 	}
 
 	@Override
-	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-		super.extractBackground(graphics, mouseX, mouseY, partialTick);
+	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		int x = this.leftPos;
 		int y = this.topPos;
 

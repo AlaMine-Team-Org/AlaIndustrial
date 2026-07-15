@@ -18,7 +18,7 @@ public class MaceratorMenu extends MachineMenu {
 
 	/** Client side. */
 	public MaceratorMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.MACERATOR_MENU.get(), syncId, playerInventory, new SimpleContainer(2),
+		super(ModContent.MACERATOR_MENU.get(), syncId, playerInventory, new SimpleContainer(2 + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(4), ContainerLevelAccess.NULL, ModContent.MACERATOR.get());
 	}
 

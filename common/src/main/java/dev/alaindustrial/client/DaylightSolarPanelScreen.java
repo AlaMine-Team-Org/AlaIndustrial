@@ -4,7 +4,6 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -17,7 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
  * provides borders and tick marks; dynamic fills come from UV x≥176 so tick marks show through.
  * No chip slot and no evolution bar (panel is already evolved).
  */
-public class DaylightSolarPanelScreen extends AbstractContainerScreen<DaylightSolarPanelMenu> {
+public class DaylightSolarPanelScreen extends MachineScreen<DaylightSolarPanelMenu> {
 
     private static final Identifier TEXTURE =
             Industrialization.id("textures/gui/container/daylight_solar_panel.png");
@@ -50,9 +49,8 @@ public class DaylightSolarPanelScreen extends AbstractContainerScreen<DaylightSo
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
+    protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
                                   float partialTick) {
-        super.extractBackground(graphics, mouseX, mouseY, partialTick);
         int x = this.leftPos;
         int y = this.topPos;
 

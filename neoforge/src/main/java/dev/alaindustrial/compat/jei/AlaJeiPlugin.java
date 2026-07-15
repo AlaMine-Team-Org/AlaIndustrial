@@ -1,5 +1,6 @@
 package dev.alaindustrial.compat.jei;
 
+import dev.alaindustrial.client.MachineScreen;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.MachineRecipeViewerTargets;
 import dev.alaindustrial.client.RecipeViewerInfo;
@@ -106,6 +107,7 @@ public final class AlaJeiPlugin implements IModPlugin {
 	}
 
 	@Override
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		for (MachineRecipeViewerTargets.Target target : MachineRecipeViewerTargets.ALL) {
 			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
@@ -114,6 +116,8 @@ public final class AlaJeiPlugin implements IModPlugin {
 					rect.x(), rect.y(), rect.width(), rect.height(),
 					AlaJeiRecipeTypes.byKind(target.kind()));
 		}
+		// MOD-080: keep JEI's item grid clear of the upgrade panel + gear tab on every machine screen.
+		registration.addGuiContainerHandler((Class) MachineScreen.class, new AlaJeiGuiExtraAreasHandler());
 	}
 
 	@Override

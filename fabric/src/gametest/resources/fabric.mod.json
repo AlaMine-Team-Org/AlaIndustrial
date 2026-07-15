@@ -34,7 +34,8 @@
 			"dev.alaindustrial.gametest.GeothermalLavaInputGameTest",
 			"dev.alaindustrial.gametest.DemoStandGameTest",
 			"dev.alaindustrial.gametest.StockDisplayFrameGameTest",
-			"dev.alaindustrial.gametest.ScytheGameTest"
+			"dev.alaindustrial.gametest.ScytheGameTest",
+			"dev.alaindustrial.gametest.MuteChipGameTest"
 		]
 	}
 }

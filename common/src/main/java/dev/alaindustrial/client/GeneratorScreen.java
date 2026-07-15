@@ -3,7 +3,6 @@ package dev.alaindustrial.client;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.menu.GeneratorMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -13,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
  * Texture-backed screen for the LV Generator. Static frame from atlas PNG; dynamic layer draws
  * the energy fill (bottom-up orange bar) and burn flame (top-shrinks as fuel is consumed).
  */
-public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
+public class GeneratorScreen extends MachineScreen<GeneratorMenu> {
 	private static final Identifier TEXTURE = Industrialization.id("textures/gui/container/generator.png");
 	private static final int TEX_SIZE = 256;
 
@@ -40,8 +39,7 @@ public class GeneratorScreen extends AbstractContainerScreen<GeneratorMenu> {
 	}
 
 	@Override
-	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-		super.extractBackground(graphics, mouseX, mouseY, partialTick);
+	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		int x = this.leftPos;
 		int y = this.topPos;
 

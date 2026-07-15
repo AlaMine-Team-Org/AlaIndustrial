@@ -56,7 +56,10 @@ public final class MachineHumSoundInstance extends AbstractTickableSoundInstance
 		boolean working = state.is(block)
 				&& block instanceof dev.alaindustrial.block.MachineHumProvider provider
 				&& provider.isWorking(mc.level, pos, state);
-		if (!working || mc.player.distanceToSqr(x, y, z) > STOP_DISTANCE_SQR) {
+		// A mute chip inserted while the loop plays silences the machine at once (MOD-080).
+		boolean muted = mc.level.getBlockEntity(pos)
+				instanceof dev.alaindustrial.block.entity.MachineBlockEntity be && be.isMuted();
+		if (!working || muted || mc.player.distanceToSqr(x, y, z) > STOP_DISTANCE_SQR) {
 			stop();
 		}
 	}

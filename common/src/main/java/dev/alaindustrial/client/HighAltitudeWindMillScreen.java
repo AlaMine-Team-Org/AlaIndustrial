@@ -4,14 +4,13 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.menu.HighAltitudeWindMillMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 /** Texture-backed screen for the high-altitude wind mill (T2, LV). */
-public class HighAltitudeWindMillScreen extends AbstractContainerScreen<HighAltitudeWindMillMenu> {
+public class HighAltitudeWindMillScreen extends MachineScreen<HighAltitudeWindMillMenu> {
 	private static final Identifier TEXTURE = Industrialization.id("textures/gui/container/high_altitude_wind_mill.png");
 	private static final int TEX_SIZE = 256;
 	private static final int IMAGE_WIDTH = 176;
@@ -47,8 +46,7 @@ public class HighAltitudeWindMillScreen extends AbstractContainerScreen<HighAlti
 	}
 
 	@Override
-	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-		super.extractBackground(graphics, mouseX, mouseY, partialTick);
+	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		int x = this.leftPos;
 		int y = this.topPos;
 

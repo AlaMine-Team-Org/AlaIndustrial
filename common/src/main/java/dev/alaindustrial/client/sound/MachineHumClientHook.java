@@ -1,6 +1,7 @@
 package dev.alaindustrial.client.sound;
 
 import dev.alaindustrial.block.MachineHumProvider;
+import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.sound.MachineHum;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +55,11 @@ public final class MachineHumClientHook implements MachineHum.ClientHook {
 
 		boolean working = hum.isWorking(level, pos, state);
 		if (!working || instance != null) {
+			return;
+		}
+		// A mute chip in the machine's active upgrade slot silences it entirely (MOD-080): never start
+		// the loop. Contents sync with the block entity, so this read is valid client-side.
+		if (level.getBlockEntity(pos) instanceof MachineBlockEntity be && be.isMuted()) {
 			return;
 		}
 

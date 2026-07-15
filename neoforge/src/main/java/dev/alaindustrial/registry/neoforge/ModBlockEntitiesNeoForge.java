@@ -11,6 +11,7 @@ import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
+import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
@@ -90,6 +91,9 @@ public final class ModBlockEntitiesNeoForge {
 	// Pure container (no EnergyPort) — no capability binding in IndustrializationNeoForge#registerCapabilities.
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IronChestBlockEntity>> IRON_CHEST =
 			register("iron_chest", IronChestBlockEntity::new, ModBlocksNeoForge.IRON_CHEST);
+	// Pure container (no EnergyPort) — no capability binding. Silver chest = tier above the iron chest.
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SilverChestBlockEntity>> SILVER_CHEST =
+			register("silver_chest", SilverChestBlockEntity::new, ModBlocksNeoForge.SILVER_CHEST);
 
 	private ModBlockEntitiesNeoForge() {
 	}
@@ -123,6 +127,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.HIGH_ALTITUDE_WIND_MILL_BE = HIGH_ALTITUDE_WIND_MILL::get;
 		ModContent.STORM_WIND_MILL_BE = STORM_WIND_MILL::get;
 		ModContent.IRON_CHEST_BE = IRON_CHEST::get;
+		ModContent.SILVER_CHEST_BE = SILVER_CHEST::get;
 	}
 
 	/**

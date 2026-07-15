@@ -4,7 +4,6 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -17,7 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
  * the sun indicator lights up when the moon is visible (MODE_NIGHT / MODE_NIGHT_PARTIAL).
  * No chip slot and no evolution bar (panel is already evolved).
  */
-public class MoonlitSolarPanelScreen extends AbstractContainerScreen<MoonlitSolarPanelMenu> {
+public class MoonlitSolarPanelScreen extends MachineScreen<MoonlitSolarPanelMenu> {
 
     private static final Identifier TEXTURE =
             Industrialization.id("textures/gui/container/moonlit_solar_panel.png");
@@ -50,9 +49,8 @@ public class MoonlitSolarPanelScreen extends AbstractContainerScreen<MoonlitSola
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
+    protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
                                   float partialTick) {
-        super.extractBackground(graphics, mouseX, mouseY, partialTick);
         int x = this.leftPos;
         int y = this.topPos;
 

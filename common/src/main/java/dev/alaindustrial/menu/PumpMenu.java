@@ -20,7 +20,7 @@ public class PumpMenu extends MachineMenu {
 	/** Client side. */
 	public PumpMenu(int syncId, Inventory playerInventory) {
 		// SimpleContainerData width must match PumpBlockEntity.getDataAccess() (7: 4 base + tank permille/denominator/fluid-id).
-		super(ModContent.PUMP_MENU.get(), syncId, playerInventory, new SimpleContainer(4),
+		super(ModContent.PUMP_MENU.get(), syncId, playerInventory, new SimpleContainer(4 + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(7), ContainerLevelAccess.NULL, ModContent.PUMP.get());
 	}
 

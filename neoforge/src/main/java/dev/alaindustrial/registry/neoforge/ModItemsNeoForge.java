@@ -3,6 +3,7 @@ package dev.alaindustrial.registry.neoforge;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
+import dev.alaindustrial.item.HintItem;
 import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
@@ -42,6 +43,11 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> COPPER_COIL = ITEMS.registerItem("copper_coil", Item::new);
 	public static final DeferredItem<Item> ALIGNMENT_CHIP_DAY = ITEMS.registerItem("alignment_chip_day", Item::new);
 	public static final DeferredItem<Item> ALIGNMENT_CHIP_NIGHT = ITEMS.registerItem("alignment_chip_night", Item::new);
+	// Upgrade chips (MOD-080): empty blank + the mute upgrade. Each shows a gray hint line.
+	public static final DeferredItem<Item> EMPTY_CHIP = ITEMS.registerItem("empty_chip",
+			p -> new HintItem(p, "item.alaindustrial.empty_chip.hint", "item.alaindustrial.empty_chip.hint2"));
+	public static final DeferredItem<Item> MUTE_CHIP = ITEMS.registerItem("mute_chip",
+			p -> new HintItem(p, "item.alaindustrial.mute_chip.hint", "item.alaindustrial.mute_chip.hint2"));
 	public static final DeferredItem<Item> WINDMILL_ROTOR = ITEMS.registerItem("windmill_rotor", Item::new);
 	public static final DeferredItem<Item> WOODEN_GEAR = ITEMS.registerItem("wooden_gear", Item::new);
 	public static final DeferredItem<Item> TEMPERED_IRON = ITEMS.registerItem("tempered_iron", Item::new);
@@ -241,6 +247,9 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("deepslate_uranium_ore", ModBlocksNeoForge.DEEPSLATE_URANIUM_ORE);
 	public static final DeferredItem<BlockItem> IRON_CHEST_ITEM =
 			ITEMS.registerSimpleBlockItem("iron_chest", ModBlocksNeoForge.IRON_CHEST);
+	// Silver Chest (MOD-087) — the tier above the iron chest: 45 slots (5×9).
+	public static final DeferredItem<BlockItem> SILVER_CHEST_ITEM =
+			ITEMS.registerSimpleBlockItem("silver_chest", ModBlocksNeoForge.SILVER_CHEST);
 	public static final DeferredItem<BlockItem> TEMPERED_IRON_BLOCK_ITEM =
 			ITEMS.registerSimpleBlockItem("tempered_iron_block", ModBlocksNeoForge.TEMPERED_IRON_BLOCK);
 	// Enriched Uranium Torch (MOD-085): a StandingAndWallBlockItem (like vanilla Items.TORCH) — floor use
@@ -272,6 +281,8 @@ public final class ModItemsNeoForge {
 		ModContent.COPPER_COIL = COPPER_COIL;
 		ModContent.ALIGNMENT_CHIP_DAY = ALIGNMENT_CHIP_DAY;
 		ModContent.ALIGNMENT_CHIP_NIGHT = ALIGNMENT_CHIP_NIGHT;
+		ModContent.EMPTY_CHIP = EMPTY_CHIP;
+		ModContent.MUTE_CHIP = MUTE_CHIP;
 		ModContent.WINDMILL_ROTOR = WINDMILL_ROTOR;
 		ModContent.WOODEN_GEAR = WOODEN_GEAR;
 		ModContent.TEMPERED_IRON = TEMPERED_IRON;
@@ -353,6 +364,7 @@ public final class ModItemsNeoForge {
 		ModContent.URANIUM_ORE_ITEM = URANIUM_ORE_ITEM;
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = DEEPSLATE_URANIUM_ORE_ITEM;
 		ModContent.IRON_CHEST_ITEM = IRON_CHEST_ITEM;
+		ModContent.SILVER_CHEST_ITEM = SILVER_CHEST_ITEM;
 		ModContent.TEMPERED_IRON_BLOCK_ITEM = TEMPERED_IRON_BLOCK_ITEM;
 		ModContent.ENRICHED_URANIUM_TORCH_ITEM = ENRICHED_URANIUM_TORCH_ITEM;
 	}

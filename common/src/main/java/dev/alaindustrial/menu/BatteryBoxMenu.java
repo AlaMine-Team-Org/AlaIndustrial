@@ -24,7 +24,7 @@ public class BatteryBoxMenu extends MachineMenu {
 
 	/** Client side. */
 	public BatteryBoxMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.BATTERY_BOX_MENU.get(), syncId, playerInventory, new SimpleContainer(1),
+		super(ModContent.BATTERY_BOX_MENU.get(), syncId, playerInventory, new SimpleContainer(1 + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(5), ContainerLevelAccess.NULL, ModContent.BATTERY_BOX.get());
 	}
 

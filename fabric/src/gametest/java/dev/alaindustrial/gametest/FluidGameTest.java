@@ -1087,6 +1087,45 @@ public class FluidGameTest {
 	}
 
 	/**
+	 * @implements FluidTank full-drain-then-rollback keeps fluid identity — the cross-mod capability
+	 *     contract regression. A full drain drives amount to exactly 0; on rollback to the pre-drain
+	 *     amount the tank MUST still report which fluid it holds, or it becomes invisible to capability
+	 *     readers (TankAsFluidStorage/TankAsResourceHandler report fluid()). extract() therefore does NOT
+	 *     pre-clear fluid on a full drain — clearing happens at the transaction terminal only.
+	 * @covers R-CON-01
+	 */
+	@GameTest
+	public void fluidTank_fullDrainThenRollbackKeepsFluidIdentity(GameTestHelper helper) {
+		dev.alaindustrial.core.FluidTank tank = new dev.alaindustrial.core.FluidTank(
+				dev.alaindustrial.core.FluidAmounts.BUCKET * 4,
+				f -> f.is(Fluids.LAVA), f -> true, () -> {
+				});
+		dev.alaindustrial.core.EnergyTransactions.get().runCommitting(txn ->
+				tank.insert(dev.alaindustrial.core.FluidHolder.of(Fluids.LAVA),
+						dev.alaindustrial.core.FluidAmounts.BUCKET, txn));
+		long before = tank.amount; // 1 bucket
+		try {
+			// FULL drain (the exact amount stored) drives amount to 0 inside the transaction, then the
+			// throw aborts it — forcing a rollback to the pre-drain state (amount AND fluid).
+			dev.alaindustrial.core.EnergyTransactions.get().runCommitting(txn -> {
+				tank.extract(dev.alaindustrial.core.FluidHolder.of(Fluids.LAVA),
+						dev.alaindustrial.core.FluidAmounts.BUCKET, txn);
+				throw new RuntimeException("force rollback");
+			});
+		} catch (RuntimeException expected) {
+			// expected: forces the transaction to abort/roll back after the full drain.
+		}
+		boolean amountRestored = tank.amount == before;
+		boolean fluidIntact = tank.fluid().is(Fluids.LAVA);
+		if (!(amountRestored && fluidIntact)) {
+			helper.fail("full-drain-then-rollback must restore amount AND fluid identity: amount " + before + "->"
+					+ tank.amount + " fluid=" + tank.fluid()
+					+ " (a regression here makes the tank invisible to cross-mod capability readers)");
+		}
+		helper.succeed();
+	}
+
+	/**
 	 * @implements MOD-028 NBT save-compat — legacy Fabric v0.1.0 "FluidTank" (droplets) loads correctly
 	 *     when the new "FluidTankMb" key is absent, converting ÷81 and clamping to the new mB capacity.
 	 * @covers R-PER-01

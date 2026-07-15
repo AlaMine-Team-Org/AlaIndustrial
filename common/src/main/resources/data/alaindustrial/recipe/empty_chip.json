@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"G": "minecraft:glass",
+		"W": "alaindustrial:copper_coil",
+		"E": "alaindustrial:electronic_circuit"
+	},
+	"pattern": ["GGG", "WEW", "GGG"],
+	"result": { "id": "alaindustrial:empty_chip" }
+}

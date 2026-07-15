@@ -5,7 +5,6 @@ import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.menu.WindMillMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -26,7 +25,7 @@ import net.minecraft.world.entity.player.Inventory;
  * Layout matches the supplied mockup: energy bar on the left, rotor slot in the center, chip slot on
  * the right, evolution bar at the bottom, a status indicator + label at the top.
  */
-public class WindMillScreen extends AbstractContainerScreen<WindMillMenu> {
+public class WindMillScreen extends MachineScreen<WindMillMenu> {
 	private static final Identifier TEXTURE = Industrialization.id("textures/gui/container/wind_mill.png");
 	private static final int TEX_SIZE = 256;
 	private static final int IMAGE_WIDTH = 176;
@@ -73,8 +72,7 @@ public class WindMillScreen extends AbstractContainerScreen<WindMillMenu> {
 	}
 
 	@Override
-	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-		super.extractBackground(graphics, mouseX, mouseY, partialTick);
+	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		int x = this.leftPos;
 		int y = this.topPos;
 

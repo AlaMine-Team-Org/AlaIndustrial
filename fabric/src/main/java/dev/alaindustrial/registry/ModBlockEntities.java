@@ -11,6 +11,7 @@ import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
+import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
@@ -62,6 +63,8 @@ public final class ModBlockEntities {
 	public static BlockEntityType<StormWindMillBlockEntity> STORM_WIND_MILL;
 	// Iron chest is a pure Container (no EnergyPort), so no Team Reborn EnergyStorage.SIDED line below.
 	public static BlockEntityType<IronChestBlockEntity> IRON_CHEST;
+	// Silver chest is likewise a pure Container (no EnergyPort) — no Team Reborn EnergyStorage.SIDED line.
+	public static BlockEntityType<SilverChestBlockEntity> SILVER_CHEST;
 
 	public static void init() {
 		GENERATOR = register("generator",
@@ -99,6 +102,8 @@ public final class ModBlockEntities {
 				new BlockEntityType<>(StormWindMillBlockEntity::new, Set.of(ModBlocks.STORM_WIND_MILL)));
 		IRON_CHEST = register("iron_chest",
 				new BlockEntityType<>(IronChestBlockEntity::new, Set.of(ModBlocks.IRON_CHEST)));
+		SILVER_CHEST = register("silver_chest",
+				new BlockEntityType<>(SilverChestBlockEntity::new, Set.of(ModBlocks.SILVER_CHEST)));
 
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GENERATOR);
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GEOTHERMAL_GENERATOR);
@@ -137,6 +142,7 @@ public final class ModBlockEntities {
 		ModContent.HIGH_ALTITUDE_WIND_MILL_BE = () -> HIGH_ALTITUDE_WIND_MILL;
 		ModContent.STORM_WIND_MILL_BE = () -> STORM_WIND_MILL;
 		ModContent.IRON_CHEST_BE = () -> IRON_CHEST;
+		ModContent.SILVER_CHEST_BE = () -> SILVER_CHEST;
 
 		// Fluid (lava) storages: the geothermal generator accepts lava, the pump exposes its tank. Both
 		// publish their neutral FluidPort (via FluidPortHost#fluidPort) through the TankAsFluidStorage

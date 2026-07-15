@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "alaindustrial:block/silver_chest"
+    },
+    "facing=south": {
+      "model": "alaindustrial:block/silver_chest"
+    },
+    "facing=west": {
+      "model": "alaindustrial:block/silver_chest"
+    },
+    "facing=east": {
+      "model": "alaindustrial:block/silver_chest"
+    }
+  }
+}

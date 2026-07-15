@@ -3,6 +3,7 @@ package dev.alaindustrial;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.core.FluidAmounts;
@@ -169,14 +170,12 @@ class NeoForgeFluidRuntimeTest {
 		}
 		assertEquals(FluidAmounts.BUCKET, pump.fluidTank.amount,
 				"uncommitted capability extract must roll the pump's tank back to its pre-transaction amount");
-		// NOTE: NOT asserting pump.fluidTank.fluid here. A full-drain-then-rollback leaves `fluid` stuck at
-		// FluidHolder.EMPTY even though `amount` correctly rolls back to non-zero — a pre-existing FluidTank
-		// bug (common/src/main/java/dev/alaindustrial/core/FluidTank.java: extract() clears `fluid`
-		// immediately/unconditionally when amount hits 0, but readSnapshot only restores `fluid` when the
-		// restored amount is 0 — so a rollback to a positive amount never restores a `fluid` that extract()
-		// already cleared). Reproduced here via the NeoForge capability adapter, but the bug lives in the
-		// loader-neutral FluidTank and affects Fabric identically; out of scope for MOD-028 adapter-coverage
-		// review finding #1 — flagged for a separate fix, not silently patched here.
+		// The tank's `fluid` identity must ALSO survive a full-drain-then-rollback: extract() no longer
+		// pre-clears `fluid` when amount hits 0 (it clears at the commit/rollback terminal instead), so a
+		// rolled-back full drain restores both amount AND fluid. Before the FluidTank fix this read EMPTY —
+		// the tank reported amount>0 with fluid==EMPTY and became invisible to capability readers.
+		assertTrue(pump.fluidTank.fluid.is(Fluids.LAVA),
+				"rolled-back full drain must restore the fluid identity, not leave it EMPTY");
 	}
 
 	/** {@code of(null)} on both adapter directions yields no capability, mirroring the energy adapter contract. */

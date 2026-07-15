@@ -1,0 +1,7 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": { "W": "#minecraft:wool", "E": "alaindustrial:empty_chip" },
+	"pattern": ["WWW", "WEW", "WWW"],
+	"result": { "id": "alaindustrial:mute_chip" }
+}

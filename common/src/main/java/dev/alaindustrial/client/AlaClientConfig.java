@@ -27,6 +27,9 @@ public final class AlaClientConfig {
 	/** Held-drill charge readout (MOD-079). On by default; toggled in-game with its own key (default J),
 	 * independent of the pack readout so each can be bound and shown separately. */
 	public static boolean drillHudEnabled = true;
+	/** Dragged offset of the upgrade panel from its docked position (MOD-080). Persisted between sessions. */
+	public static int upgradePanelDX = 0;
+	public static int upgradePanelDY = 0;
 
 	private static Path path;
 
@@ -76,6 +79,8 @@ public final class AlaClientConfig {
 					showEuNumbers = GsonHelper.getAsBoolean(o, "showEuNumbers", showEuNumbers);
 					energyHudEnabled = GsonHelper.getAsBoolean(o, "energyHudEnabled", energyHudEnabled);
 					drillHudEnabled = GsonHelper.getAsBoolean(o, "drillHudEnabled", drillHudEnabled);
+					upgradePanelDX = GsonHelper.getAsInt(o, "upgradePanelDX", upgradePanelDX);
+					upgradePanelDY = GsonHelper.getAsInt(o, "upgradePanelDY", upgradePanelDY);
 				}
 				Industrialization.LOGGER.info("[client-config] loaded {}", path);
 			} else {
@@ -110,7 +115,16 @@ public final class AlaClientConfig {
 		o.addProperty("showEuNumbers", snapshot.showEuNumbers());
 		o.addProperty("energyHudEnabled", snapshot.energyHudEnabled());
 		o.addProperty("drillHudEnabled", snapshot.drillHudEnabled());
+		o.addProperty("upgradePanelDX", upgradePanelDX);
+		o.addProperty("upgradePanelDY", upgradePanelDY);
 		return o;
+	}
+
+	/** Persist the dragged upgrade-panel offset (MOD-080). Called on drag release, not every frame. */
+	public static void savePanelPosition(int dx, int dy) {
+		upgradePanelDX = dx;
+		upgradePanelDY = dy;
+		save();
 	}
 
 	private static int parseColor(JsonObject o, String key, int fallback) {

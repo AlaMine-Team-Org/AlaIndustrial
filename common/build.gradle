@@ -1,6 +1,7 @@
 plugins {
     id 'multiloader-common'
     id 'net.neoforged.moddev'
+    id 'jacoco'
 }
 
 neoForge {
@@ -34,6 +35,29 @@ dependencies {
 
 tasks.named('test', Test) {
     useJUnitPlatform()
+    // JaCoCo coverage for the L1 unit suite. The report lands at
+    // common/build/reports/jacoco/test/html/index.html — open it in a browser to see per-class line
+    // coverage of core/ + Config (the loader-neutral logic the L1 tests target). Only the L1 JUnit
+    // run is instrumented: the L2 world gametests run on the loader's own server process (Fabric Loom /
+    // NeoForge moddev), where a JaCoCo agent would need separate wiring and risks interfering with the
+    // game's classpath — out of scope for this initial coverage surface. MOD-090-style follow-up if
+    // loader-process coverage is ever wanted.
+    finalizedBy 'jacocoTestReport'
+}
+
+jacocoTestReport {
+    // Only report on the mod's own classes — the L1 suite pulls in Minecraft-free pure logic, so
+    // excluding third-party/neoforge-injected packages keeps the number meaningful.
+    classDirectories.setFrom(classDirectories.files.collect {
+        fileTree(dir: it, exclude: [
+                '**/mixin/**',          // mixin hooks — exercised by the loader, not unit tests
+                '**/*Mixin.class'
+        ])
+    })
+    reports {
+        xml.required = true   // CI/consumers
+        html.required = true  // human review
+    }
 }
 
 configurations {

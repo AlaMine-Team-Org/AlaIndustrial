@@ -3,7 +3,6 @@ package dev.alaindustrial.client;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -18,7 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
  *
  * <p>Battery fill is horizontal (left-to-right) proportional to stored EU / capacity.
  */
-public class BatteryBoxScreen extends AbstractContainerScreen<BatteryBoxMenu> {
+public class BatteryBoxScreen extends MachineScreen<BatteryBoxMenu> {
     private static final Identifier TEXTURE =
             Industrialization.id("textures/gui/container/battery_box.png");
     private static final int TEX_SIZE = 256;
@@ -56,9 +55,8 @@ public class BatteryBoxScreen extends AbstractContainerScreen<BatteryBoxMenu> {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
+    protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
                                   float partialTick) {
-        super.extractBackground(graphics, mouseX, mouseY, partialTick);
         int x = this.leftPos;
         int y = this.topPos;
 

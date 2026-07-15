@@ -96,6 +96,9 @@ public final class ModContent {
 	// Iron Chest — a pure-storage block (no energy), so its BE extends vanilla
 	// BaseContainerBlockEntity, not the mod's MachineBlockEntity. See docs/blocks/iron_chest.md.
 	public static Supplier<Block> IRON_CHEST = unbound("IRON_CHEST");
+	// Silver Chest (MOD-087) — the tier above the iron chest: 45 slots (5×9, +1 row). Same vanilla
+	// BaseContainerBlockEntity spine, no energy. Crafted from an iron chest ringed with silver ingots.
+	public static Supplier<Block> SILVER_CHEST = unbound("SILVER_CHEST");
 	// Tempered Iron Block — a "block of X" material block (9 ingots ↔ 1 block), like
 	// vanilla iron block. Pure material/decorative block, no BE, single texture on all 6 faces.
 	public static Supplier<Block> TEMPERED_IRON_BLOCK = unbound("TEMPERED_IRON_BLOCK");
@@ -111,6 +114,10 @@ public final class ModContent {
 	public static Supplier<Item> COPPER_COIL = unbound("COPPER_COIL");
 	public static Supplier<Item> ALIGNMENT_CHIP_DAY = unbound("ALIGNMENT_CHIP_DAY");
 	public static Supplier<Item> ALIGNMENT_CHIP_NIGHT = unbound("ALIGNMENT_CHIP_NIGHT");
+	// Upgrade chips (MOD-080): EMPTY_CHIP is the inert blank/base; MUTE_CHIP is the first functional
+	// upgrade — dropped into a machine's active upgrade slot it silences the block (see isMuted()).
+	public static Supplier<Item> EMPTY_CHIP = unbound("EMPTY_CHIP");
+	public static Supplier<Item> MUTE_CHIP = unbound("MUTE_CHIP");
 	public static Supplier<Item> WINDMILL_ROTOR = unbound("WINDMILL_ROTOR");
 	public static Supplier<Item> WOODEN_GEAR = unbound("WOODEN_GEAR");
 	public static Supplier<Item> TEMPERED_IRON = unbound("TEMPERED_IRON");
@@ -203,6 +210,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> URANIUM_ORE_ITEM = unbound("URANIUM_ORE_ITEM");
 	public static Supplier<BlockItem> DEEPSLATE_URANIUM_ORE_ITEM = unbound("DEEPSLATE_URANIUM_ORE_ITEM");
 	public static Supplier<BlockItem> IRON_CHEST_ITEM = unbound("IRON_CHEST_ITEM");
+	public static Supplier<BlockItem> SILVER_CHEST_ITEM = unbound("SILVER_CHEST_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_BLOCK_ITEM = unbound("TEMPERED_IRON_BLOCK_ITEM");
 	// Enriched Uranium Torch (MOD-085) — only the STANDING torch has a block item; the wall variant
 	// drops this item via its overrideLootTable, so it needs no item of its own.
@@ -226,6 +234,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> COMPRESSOR_BE = unbound("COMPRESSOR_BE");
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
 	public static Supplier<BlockEntityType<?>> IRON_CHEST_BE = unbound("IRON_CHEST_BE");
+	public static Supplier<BlockEntityType<?>> SILVER_CHEST_BE = unbound("SILVER_CHEST_BE");
 
 	// --- Menu types ---
 	public static Supplier<MenuType<?>> GENERATOR_MENU = unbound("GENERATOR_MENU");
@@ -244,6 +253,7 @@ public final class ModContent {
 	public static Supplier<MenuType<?>> HIGH_ALTITUDE_WIND_MILL_MENU = unbound("HIGH_ALTITUDE_WIND_MILL_MENU");
 	public static Supplier<MenuType<?>> STORM_WIND_MILL_MENU = unbound("STORM_WIND_MILL_MENU");
 	public static Supplier<MenuType<?>> IRON_CHEST_MENU = unbound("IRON_CHEST_MENU");
+	public static Supplier<MenuType<?>> SILVER_CHEST_MENU = unbound("SILVER_CHEST_MENU");
 
 	/** A placeholder handle that throws if read before the loader populated it. */
 	private static <T> Supplier<T> unbound(String name) {

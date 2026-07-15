@@ -15,24 +15,24 @@ import java.util.function.Predicate;
  * {@code canExtract} allows it. A non-zero move enlists the tank with the transaction (snapshot-before-mutate,
  * reusing {@link EnergyPort.Participant}) and then adjusts {@link #fluid}/{@link #amount}.
  *
- * <p><b>Fluid is derived from amount, not independently snapshotted.</b> {@link EnergyPort.Participant} is
- * hard {@code long}-typed (mirrors {@link EnergyBuffer}'s single {@code amount} field), so this tank's
- * transactional snapshot/rollback only carries {@link #amount}; {@link #fluid} is kept in lock-step by
- * construction: it is only ever set to a non-empty value together with a positive {@link #amount} (in
- * {@link #insert}), and reset to {@link FluidHolder#EMPTY} the instant {@link #amount} reaches 0 (in
- * {@link #extract} and in {@link #readSnapshot}). Because this tank is single-variant (holds at most one
- * fluid kind until it empties — the pump/geothermal generator only ever move lava), "which fluid" carries
- * no information once the amount is known: non-zero always means the one fluid a full transaction ever
- * inserted, and the {@code fluid} field only needs restoring to {@code EMPTY} on a rollback that drops the
- * tank back to 0. A rollback that leaves {@code amount > 0} never changes which fluid was already there
- * (extract requires an exact fluid match to begin with, and insert never introduces a second kind), so
- * {@link #fluid} needs no separate journal entry.
+ * <p><b>Fluid lifecycle: deferred clear, not snapshotted.</b> {@link EnergyPort.Participant} is hard
+ * {@code long}-typed (mirrors {@link EnergyBuffer}'s single {@code amount} field), so this tank's
+ * transactional snapshot/rollback only carries {@link #amount}; the {@link #fluid} field is never put into
+ * the snapshot journal. To keep `amount > 0 ⇒ fluid ≠ EMPTY` true across a rollback, {@link #extract}
+ * therefore does <em>not</em> clear {@code fluid} when it drives {@code amount} to 0 — clearing happens at
+ * the two transaction terminals instead: {@link #readSnapshot} on a rollback to 0, {@link #onFinalCommit}
+ * on a commit to 0. This is what lets a full-drain followed by a rollback restore both {@code amount}
+ * <em>and</em> {@code fluid}: extract left {@code fluid} in place, and the rollback to a positive
+ * {@code amount} has nothing to undo on the {@code fluid} field. (An earlier version cleared {@code fluid}
+ * eagerly inside {@code extract}; that broke the cross-mod capability contract — a rolled-back full drain
+ * left the tank reporting {@code amount > 0, fluid == EMPTY}, making it invisible to other mods probing it
+ * via {@code fluid()}.)
  *
  * <p><b>Transactions.</b> This tank is an {@link EnergyPort.Participant}: it snapshots/restores
- * {@link #amount} (with {@link #fluid} following per the invariant above), and fires {@link #onCommit}
- * once when the outermost modifying transaction commits. The loader's {@link EnergyPort.Txn} bridges these
- * hooks onto its native snapshot journal exactly as it does for {@link EnergyBuffer} — see {@link FluidPort}
- * class doc for why fluid reuses the energy transaction seam instead of a parallel type.
+ * {@link #amount}, and fires {@link #onCommit} once when the outermost modifying transaction commits. The
+ * loader's {@link EnergyPort.Txn} bridges these hooks onto its native snapshot journal exactly as it does
+ * for {@link EnergyBuffer} — see {@link FluidPort} class doc for why fluid reuses the energy transaction
+ * seam instead of a parallel type.
  *
  * <p><b>Direct field access (internal drain/production + persistence).</b> {@link #fluid} and
  * {@link #amount} are public and mutable so machine content (the geothermal generator burning its own
@@ -116,9 +116,13 @@ public class FluidTank implements FluidPort, EnergyPort.Participant {
 		if (toExtract > 0) {
 			txn.enlist(this);
 			amount -= toExtract;
-			if (amount == 0) {
-				fluid = FluidHolder.EMPTY;
-			}
+			// NOTE: `fluid` is NOT cleared here even when amount hits 0. The snapshot journal only carries
+			// `amount` (the EnergyPort.Participant API is long-typed — see EnergyPort.Participant
+			// class doc), so on a rollback to a positive amount this tank could not restore a `fluid` that
+			// extract() had already wiped — the tank would read amount>0 with fluid==EMPTY, becoming
+			// invisible to capability readers (TankAsFluidStorage/TankAsResourceHandler report fluid()). The
+			// fluid-empty invariant is upheld instead at the two transaction terminals: readSnapshot clears
+			// `fluid` on a rollback to 0, onFinalCommit clears it on a commit to 0.
 			return toExtract;
 		}
 		return 0;
@@ -159,9 +163,10 @@ public class FluidTank implements FluidPort, EnergyPort.Participant {
 	@Override
 	public void readSnapshot(long snapshot) {
 		amount = snapshot;
-		// Restore the fluid-empty invariant (see class doc): a rollback to 0 must clear the fluid; a
-		// rollback to a positive amount never changes WHICH fluid was already there (see class doc), so
-		// `fluid` is left as-is in that case.
+		// Restore the fluid-empty invariant (see class doc): a rollback to 0 must clear the fluid. A
+		// rollback to a positive amount leaves `fluid` untouched — it was non-empty before the transaction
+		// (extract requires an exact fluid match), and extract() no longer pre-clears it (see extract()),
+		// so the pre-transaction fluid is still in place and needs no separate restore.
 		if (amount == 0) {
 			fluid = FluidHolder.EMPTY;
 		}
@@ -169,6 +174,11 @@ public class FluidTank implements FluidPort, EnergyPort.Participant {
 
 	@Override
 	public void onFinalCommit() {
+		// Uphold the fluid-empty invariant on the commit path too: a committed extract that drained the
+		// tank to 0 must clear `fluid` (extract() no longer does this itself — see extract()).
+		if (amount == 0) {
+			fluid = FluidHolder.EMPTY;
+		}
 		onCommit.run();
 	}
 }

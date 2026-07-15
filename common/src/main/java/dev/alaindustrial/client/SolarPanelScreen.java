@@ -5,7 +5,6 @@ import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -20,7 +19,7 @@ import net.minecraft.world.entity.player.Inventory;
  *   - Sun dot     : yellow fill when direct sunlight (MODE_DAY or MODE_PARTIAL).
  *   - Evo bar     : UV(176,48) yellow (day chip) or UV(176,57) blue (night chip).
  */
-public class SolarPanelScreen extends AbstractContainerScreen<SolarPanelMenu> {
+public class SolarPanelScreen extends MachineScreen<SolarPanelMenu> {
     private static final Identifier TEXTURE =
             Industrialization.id("textures/gui/container/solar_panel.png");
     private static final int TEX_SIZE = 256;
@@ -68,9 +67,8 @@ public class SolarPanelScreen extends AbstractContainerScreen<SolarPanelMenu> {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
+    protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
                                   float partialTick) {
-        super.extractBackground(graphics, mouseX, mouseY, partialTick);
         int x = this.leftPos;
         int y = this.topPos;
 

@@ -7,6 +7,7 @@ import dev.alaindustrial.core.EnergyPortHost;
 import dev.alaindustrial.core.EnergyRole;
 import dev.alaindustrial.core.EnergyTier;
 import dev.alaindustrial.core.FaceEnergyPort;
+import dev.alaindustrial.registry.ModContent;
 // MOD-022 Phase 2: the energy spine now runs on the common EnergyPort/EnergyBuffer abstraction — no
 // loader energy API is imported here, so this base class (and its content subclasses) can live in
 // common. The buffer is a platform-neutral EnergyBuffer; each loader exposes it as its native
@@ -21,6 +22,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
@@ -46,8 +48,15 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 	/** Idle-sleep safety net (R-29): how long an idle machine skips its full tick before re-checking. */
 	protected static final int IDLE_SLEEP_TICKS = 40;
 
+	/** Upgrade slots appended to the tail of every GUI machine's inventory (MOD-080). */
+	public static final int UPGRADE_SLOT_COUNT = 4;
+	/** The active upgrade slot on the MVP panel (upgrade-block index 0); the mute chip goes here. */
+	public static final int ACTIVE_UPGRADE_INDEX = 0;
+
 	protected final EnergyBuffer energy;
 	protected final NonNullList<ItemStack> items;
+	/** Count of machine-specific slots (indices 0..baseSlots-1); upgrade slots follow at the tail. */
+	protected final int baseSlots;
 	protected final EnergyTier tier;
 	protected int progress;
 	protected int maxProgress;
@@ -58,7 +67,14 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 			EnergyTier tier, int slots, long capacity, long maxInsert, long maxExtract) {
 		super(type, pos, state);
 		this.tier = tier;
-		this.items = NonNullList.withSize(slots, ItemStack.EMPTY);
+		this.baseSlots = slots;
+		// Every GUI machine gets four upgrade slots appended to the tail of `items` (MOD-080). "GUI
+		// machine" = a MenuProvider; the cable is the only MachineBlockEntity that is not one, so it
+		// keeps its zero slots. Appending at the tail leaves existing indices (0=input, 1=output, …)
+		// and their gametests untouched. `this instanceof` is well-defined here: the object's runtime
+		// type is the concrete subclass throughout super-construction.
+		int total = slots + (this instanceof MenuProvider ? UPGRADE_SLOT_COUNT : 0);
+		this.items = NonNullList.withSize(total, ItemStack.EMPTY);
 		// The onCommit hook fires once when the outermost transaction that moved energy through this
 		// buffer commits (was MachineEnergyStorage.onFinalCommit): persist + GUI-sync, then wake. A
 		// committed insert/extract is external delivery/draw, which must wake an idle consumer (R-29);
@@ -293,7 +309,10 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 
 	@Override
 	public void setItem(int slot, ItemStack stack) {
-		if (slot == 0 && resetProgressOnInputChange() && !ItemStack.isSameItem(items.get(0), stack)) {
+		// `baseSlots > 0` guards machines whose input is slot 0; a base-0 machine's slot 0 is an upgrade
+		// slot (MOD-080), so installing a chip there must not touch processing progress.
+		if (slot == 0 && baseSlots > 0 && resetProgressOnInputChange()
+				&& !ItemStack.isSameItem(items.get(0), stack)) {
 			progress = 0; // input item changed -> restart the operation (TC-MACH-001-FUN04)
 		}
 		items.set(slot, stack);
@@ -315,6 +334,40 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		wake();
 	}
 
+	// --- Upgrade slots (MOD-080): GUI-only slots appended to the tail of `items` ---
+
+	/** First index of the upgrade block in {@link #items}; equals {@link #baseSlots}. */
+	public int upgradeSlotStart() {
+		return baseSlots;
+	}
+
+	/** Whether this machine carries upgrade slots (all GUI machines do; the cable does not). */
+	public boolean hasUpgradeSlots() {
+		return items.size() > baseSlots;
+	}
+
+	/** Whether {@code slot} is one of the appended upgrade slots. */
+	public boolean isUpgradeSlot(int slot) {
+		return slot >= baseSlots && slot < items.size();
+	}
+
+	/** The stack in upgrade-block index {@code i} (0-based), or empty when there are no upgrade slots. */
+	public ItemStack getUpgradeStack(int i) {
+		int idx = baseSlots + i;
+		return idx >= baseSlots && idx < items.size() ? items.get(idx) : ItemStack.EMPTY;
+	}
+
+	/**
+	 * Whether a mute chip sits in the active upgrade slot. Single source of truth for silencing this
+	 * machine: the client hum manager and any future machine sound MUST honor it. Safe to read
+	 * client-side — upgrade-slot contents sync with the block entity (getUpdateTag), so no extra
+	 * networking is needed.
+	 */
+	public boolean isMuted() {
+		return hasUpgradeSlots()
+				&& getUpgradeStack(ACTIVE_UPGRADE_INDEX).is(ModContent.MUTE_CHIP.get());
+	}
+
 	// --- Sided automation (R-GUI-05/R-GUI-07): hoppers/pipes must respect slot roles ---
 
 	/** Which slots are extractable by automation. Default: none (storage/generators keep their items). */
@@ -324,8 +377,10 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 
 	@Override
 	public int[] getSlotsForFace(Direction side) {
-		int[] slots = new int[items.size()];
-		for (int i = 0; i < slots.length; i++) {
+		// Automation sees machine slots only; upgrade slots (MOD-080) are GUI-only and excluded here
+		// so hoppers/pipes can neither fill nor drain them, on either loader.
+		int[] slots = new int[baseSlots];
+		for (int i = 0; i < baseSlots; i++) {
 			slots[i] = i;
 		}
 		return slots;

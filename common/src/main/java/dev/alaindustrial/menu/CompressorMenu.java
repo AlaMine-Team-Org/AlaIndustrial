@@ -18,7 +18,7 @@ public class CompressorMenu extends MachineMenu {
 
 	/** Client side. */
 	public CompressorMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.COMPRESSOR_MENU.get(), syncId, playerInventory, new SimpleContainer(2),
+		super(ModContent.COMPRESSOR_MENU.get(), syncId, playerInventory, new SimpleContainer(2 + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(4), ContainerLevelAccess.NULL, ModContent.COMPRESSOR.get());
 	}
 
