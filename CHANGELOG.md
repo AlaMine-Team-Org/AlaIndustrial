@@ -1,5 +1,7 @@
 ## 0.1.29
 
+<p><img alt="Ala Industrial 0.1.29 — Mute Chip in the upgrade slot silences a running machine" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.29/release-media/v0.1.29/changelog.png" width="720"></p>
+
 New storage tier, a mute chip for any machine, more ways to feed lava into the geothermal generator, and a fix for a flicker on chest lids.
 
 ### New
