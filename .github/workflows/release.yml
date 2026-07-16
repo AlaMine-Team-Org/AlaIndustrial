@@ -209,7 +209,7 @@ jobs:
           NEOFORGE_ID=$(printf '%s' "$versions" | jq -r 'map(select(.name=="NeoForge")) | .[0].id // empty')
           [ -n "$NEOFORGE_ID" ] || { echo "::error::could not resolve the NeoForge modloader id from the versions API"; exit 1; }
           echo "neoforge_id=$NEOFORGE_ID" >> "$GITHUB_OUTPUT"
-          echo "NeoForge modloader id: $NEOFORGE_ID (Fabric pinned: 7499, Minecraft pinned: 16498, Java 25 pinned: 14454)"
+          echo "NeoForge modloader id: $NEOFORGE_ID (Fabric pinned: 7499, Minecraft pinned: 16498, Client/Server env pinned: 9638/9639)"
 
       # Best-effort public index check before hitting the CurseForge upload API.
       # If cfwidget is unavailable we fail closed: a re-run could otherwise create
@@ -250,13 +250,12 @@ jobs:
           metadata=$(jq -n \
             --rawfile changelog CHANGELOG.md \
             --arg name "$DISPLAY_NAME" \
-            '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, 7499, 14454], releaseType: "release"}')
-          # 16498 = Minecraft 26.2, 7499 = Fabric, 14454 = Java 25.
-          # Java version is required since CurseForge started enforcing the
-          # "environment group" (errorCode 1021) around 2026-07; prior releases
-          # uploaded without it. Retry up to 5x, but surface the CurseForge error
-          # body on the final failure (curl -sSf hides the response body on HTTP
-          # errors, leaving a 400 without a cause).
+            '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, 7499, 9638, 9639], releaseType: "release"}')
+          # 16498 = Minecraft 26.2, 7499 = Fabric, 9638 = Client, 9639 = Server.
+          # Client/Server env tags are required since CurseForge started enforcing the
+          # "environment group" (errorCode 1021) around 2026-07; prior releases uploaded
+          # without them. Retry up to 5x, but surface the CurseForge error body on the
+          # final failure (curl -sSf hides the response body on HTTP errors).
           for attempt in 1 2 3 4 5; do
             code=$(curl -sS --connect-timeout 20 --max-time 180 -o cf_resp.json -w '%{http_code}' -X POST \
               "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
@@ -287,8 +286,8 @@ jobs:
             --rawfile changelog CHANGELOG.md \
             --arg name "$DISPLAY_NAME" \
             --argjson nf "$NEOFORGE_ID" \
-            '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, $nf, 14454], releaseType: "release"}')
-          # 16498 = Minecraft 26.2, $nf = NeoForge (resolved), 14454 = Java 25
+            '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, $nf, 9638, 9639], releaseType: "release"}')
+          # 16498 = Minecraft 26.2, $nf = NeoForge (resolved), 9638 = Client, 9639 = Server
           # (required by CurseForge's "environment group" enforcement, see Fabric step).
           for attempt in 1 2 3 4 5; do
             code=$(curl -sS --connect-timeout 20 --max-time 180 -o cf_resp.json -w '%{http_code}' -X POST \
