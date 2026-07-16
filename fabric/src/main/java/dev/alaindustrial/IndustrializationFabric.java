@@ -8,6 +8,8 @@ import dev.alaindustrial.core.NetworkManager;
 import dev.alaindustrial.core.fabric.FabricEnergyLookup;
 import dev.alaindustrial.core.fabric.FabricEnergyTransactions;
 import dev.alaindustrial.core.fabric.FabricFluidLookup;
+import dev.alaindustrial.core.fabric.FabricItemEnergyBridge;
+import dev.alaindustrial.item.ItemEnergyBridge;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.network.fabric.FabricNetworkDispatcher;
@@ -47,6 +49,9 @@ public class IndustrializationFabric implements ModInitializer {
 		// MOD-028: install the Fabric fluid lookup seam (same seam shape as energy) so common fluid
 		// content (the pump) can resolve a neighbour's FluidPort without importing Fabric Transfer types.
 		FluidLookup.install(new FabricFluidLookup());
+		// MOD-084: install the item-energy bridge seam, so the worn Energy Pack can charge other mods'
+		// powered items through EnergyStorage.ITEM without common code importing Team Reborn types.
+		ItemEnergyBridge.install(new FabricItemEnergyBridge());
 		// MOD-063: item-side fluid capability for the Vacuum Capsule, so other mods' pipes/tanks can fill
 		// or drain a capsule sitting in a slot. Registered after ModItems.init() below (needs the items).
 
@@ -92,6 +97,22 @@ public class IndustrializationFabric implements ModInitializer {
 						dev.alaindustrial.registry.ModDataComponents.CAPSULE_FLUID_ID,
 						dev.alaindustrial.registry.ModDataComponents.createCapsuleFluid());
 		dev.alaindustrial.registry.ModDataComponents.CAPSULE_FLUID = () -> capsuleFluid;
+		net.minecraft.core.component.DataComponentType<Boolean> teleporterPrivate = net.minecraft.core.Registry.register(
+				net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE,
+				dev.alaindustrial.registry.ModDataComponents.TELEPORTER_PRIVATE_ID,
+				dev.alaindustrial.registry.ModDataComponents.createTeleporterPrivate());
+		dev.alaindustrial.registry.ModDataComponents.TELEPORTER_PRIVATE = () -> teleporterPrivate;
+		net.minecraft.core.component.DataComponentType<java.util.UUID> teleporterOwner = net.minecraft.core.Registry.register(
+				net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE,
+				dev.alaindustrial.registry.ModDataComponents.TELEPORTER_OWNER_ID,
+				dev.alaindustrial.registry.ModDataComponents.createTeleporterOwner());
+		dev.alaindustrial.registry.ModDataComponents.TELEPORTER_OWNER = () -> teleporterOwner;
+		net.minecraft.core.component.DataComponentType<dev.alaindustrial.item.TeleportPoints> teleporterPoints =
+				net.minecraft.core.Registry.register(
+						net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE,
+						dev.alaindustrial.registry.ModDataComponents.TELEPORTER_POINTS_ID,
+						dev.alaindustrial.registry.ModDataComponents.createTeleporterPoints());
+		dev.alaindustrial.registry.ModDataComponents.TELEPORTER_POINTS = () -> teleporterPoints;
 		// MOD-085: publish the Enriched Uranium Torch's green flame (an eager object in the neutral
 		// ModParticles) into the PARTICLE_TYPE registry for networking/spawning. Fabric keeps the registry
 		// writable during init, so register eagerly; the torch block already reads the object directly.
@@ -108,6 +129,9 @@ public class IndustrializationFabric implements ModInitializer {
 		ModItems.init();
 		// MOD-063: capsule item fluid capability (needs the items registered just above).
 		dev.alaindustrial.core.fabric.CapsuleItemFluidStorage.register();
+		// MOD-084: item energy capability on the mod's powered items, so other mods' chargers can fill
+		// them (same ordering reason as the capsule — the items must exist first).
+		dev.alaindustrial.core.fabric.StackAsEnergyStorage.register();
 		ModRecipes.init();
 		ModCriteria.init();
 		ModWorldGen.init();
@@ -160,6 +184,26 @@ public class IndustrializationFabric implements ModInitializer {
 		// and the client receiver in NetworkVisualizationClient; NeoForge does both through
 		// RegisterPayloadHandlersEvent. Sending is neutral via NetworkDispatcher (installed above).
 		PayloadTypeRegistry.clientboundPlay().register(NetworkAnalyzerPayload.TYPE, NetworkAnalyzerPayload.CODEC);
+		// Teleport screen-fade level (MOD-106) — sent every tick of a jump's last second; the client
+		// clears itself when the levels stop, so a cancel needs no packet of its own.
+		PayloadTypeRegistry.clientboundPlay().register(
+				dev.alaindustrial.network.TeleportFadePayload.TYPE,
+				dev.alaindustrial.network.TeleportFadePayload.CODEC);
+		// Why a jump was refused (MOD-093) — shown inside the remote's screen, which covers the action
+		// bar the refusal would otherwise land on.
+		PayloadTypeRegistry.clientboundPlay().register(
+				dev.alaindustrial.network.TeleportNoticePayload.TYPE,
+				dev.alaindustrial.network.TeleportNoticePayload.CODEC);
+		// The mod's first C2S payload (MOD-093): renaming a teleport point. Every other button on that
+		// screen rides vanilla's container-button packet, which needs no registration — only a name,
+		// being a string, needs a payload of our own.
+		PayloadTypeRegistry.serverboundPlay().register(
+				dev.alaindustrial.network.TeleportRenamePayload.TYPE,
+				dev.alaindustrial.network.TeleportRenamePayload.CODEC);
+		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(
+				dev.alaindustrial.network.TeleportRenamePayload.TYPE,
+				(payload, context) -> context.server().execute(
+						() -> dev.alaindustrial.network.TeleportRenamePayload.handle(payload, context.player())));
 
 		// Energy networks: tick every per-level NetworkManager once per server tick; drop a level's
 		// transient state when that level unloads and all of it on server stop, so per-level networks
@@ -168,7 +212,28 @@ public class IndustrializationFabric implements ModInitializer {
 			for (net.minecraft.server.level.ServerLevel lvl : server.getAllLevels()) {
 				NetworkManager.tickAll(lvl);
 			}
+			// Teleport warmups are per-player, not per-level, so they tick once per server tick
+			// (MOD-092) rather than once per level.
+			dev.alaindustrial.teleporter.TeleportWarmupManager.tickAll(server);
 		});
+		// Teleport warmup cancellation (MOD-092) — the mod's first player-event listeners. Three
+		// separate hooks are needed, not two: AFTER_DAMAGE does NOT fire for a killing blow, and
+		// death does not disconnect the player, so damage/death/disconnect each need their own.
+		net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents.AFTER_DAMAGE.register(
+				(entity, source, baseDamage, damageTaken, blocked) -> {
+					if (entity instanceof net.minecraft.server.level.ServerPlayer player && damageTaken > 0.0f) {
+						dev.alaindustrial.teleporter.TeleportWarmupManager.cancel(player,
+								net.minecraft.network.chat.Component.translatable(
+										"alaindustrial.teleporter.cancelled_hurt"));
+					}
+				});
+		net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
+			if (entity instanceof net.minecraft.server.level.ServerPlayer player) {
+				dev.alaindustrial.teleporter.TeleportWarmupManager.cancel(player);
+			}
+		});
+		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
+				dev.alaindustrial.teleporter.TeleportWarmupManager.forget(handler.player.getUUID()));
 		ServerLevelEvents.UNLOAD.register((server, level) -> NetworkManager.clear(level));
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> NetworkManager.clearAll());
 

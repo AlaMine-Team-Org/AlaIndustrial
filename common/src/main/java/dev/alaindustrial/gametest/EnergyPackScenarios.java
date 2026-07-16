@@ -13,12 +13,16 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -357,6 +361,111 @@ public final class EnergyPackScenarios {
 		pack.getItem().inventoryTick(pack, level, player, EquipmentSlot.CHEST);
 		if (assetOf(pack) != EnergyPackItem.ENERGY_PACK_ASSET) {
 			helper.fail("a worn pack charged straight through the component must correct its worn look");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A mock player in a mode that gets its EU for free. {@code makeMockPlayer} only overrides
+	 * {@code gameMode()} and leaves the abilities at their survival defaults, so the abilities are
+	 * updated here exactly the way vanilla does it on a real game-mode change — which is what makes
+	 * {@code instabuild} true for CREATIVE and (deliberately) false for SPECTATOR.
+	 */
+	private static Player freePlayer(GameTestHelper helper, GameType mode) {
+		Player player = helper.makeMockPlayer(mode);
+		mode.updatePlayerAbilities(player.getAbilities());
+		return player;
+	}
+
+	/**
+	 * FUN09: creative keeps the charge (MOD-081). The pack still does its job — the pouch is fed a full
+	 * batch, exactly as in survival — but the pack itself pays nothing, the way creative does not wear a
+	 * vanilla tool down. Both halves matter: a guard that also stopped the transfer would leave creative
+	 * players with pouches that never fill.
+	 */
+	public static void fun09CreativeKeepsCharge(GameTestHelper helper) {
+		for (GameType mode : new GameType[] {GameType.CREATIVE, GameType.SPECTATOR}) {
+			Player player = freePlayer(helper, mode);
+			ItemStack pack = pack(Config.energyPackBuffer);
+			ItemStack pouch = pouch(0);
+			player.getInventory().setItem(0, pouch);
+
+			long moved = EnergyPackItem.chargeStep(pack, player);
+			if (moved != step() || ItemEnergy.get(pouch) != step()) {
+				helper.fail("in " + mode + " the pack must still charge the pouch, moved " + moved);
+			}
+			if (ItemEnergy.get(pack) != Config.energyPackBuffer) {
+				helper.fail("in " + mode + " the pack must not pay for what it sent, left "
+						+ ItemEnergy.get(pack));
+			}
+		}
+		// Survival is the control: the very same step must be paid for, or this case would pass
+		// against a build where the debit is simply gone.
+		Player survival = helper.makeMockPlayer(GameType.SURVIVAL);
+		ItemStack pack = pack(Config.energyPackBuffer);
+		survival.getInventory().setItem(0, pouch(0));
+		EnergyPackItem.chargeStep(pack, survival);
+		if (ItemEnergy.get(pack) != Config.energyPackBuffer - step()) {
+			helper.fail("survival must still pay for the batch");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * FUN10: the pouch on the cursor and the one in the inventory's 2×2 crafting grid are charged too
+	 * (MOD-082) — both sit on the player while the inventory screen is open, and before this they were
+	 * the one place where charging visibly stalled.
+	 */
+	public static void fun10ChargesCursorAndCraftGrid(GameTestHelper helper) {
+		// A real ServerPlayer, not the plain mock: writing to the crafting grid runs
+		// InventoryMenu.slotsChanged → CraftingMenu.slotChangedCraftingGrid, which casts the owner to
+		// ServerPlayer to send it the recipe result. Its gameMode() is hardcoded CREATIVE, so instabuild
+		// is forced off to keep this a survival case — the same trick ElectricDrillScenarios uses.
+		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		player.getAbilities().instabuild = false;
+		ItemStack pack = pack(Config.energyPackBuffer);
+		// The cursor is served first, so it is given room for only a quarter of the batch — otherwise it
+		// would swallow the whole thing and the grid would never be reached, passing this case for the
+		// wrong reason.
+		long cursorRoom = step() / 4;
+		ItemStack onCursor = pouch(Config.lvPouchBuffer - cursorRoom);
+		ItemStack inGrid = pouch(0);
+		player.containerMenu.setCarried(onCursor);
+		player.inventoryMenu.getCraftSlots().setItem(0, inGrid);
+
+		long moved = EnergyPackItem.chargeStep(pack, player);
+		if (ItemEnergy.get(onCursor) != Config.lvPouchBuffer) {
+			helper.fail("a pouch held on the cursor must be charged, has " + ItemEnergy.get(onCursor));
+		}
+		if (ItemEnergy.get(inGrid) != step() - cursorRoom) {
+			helper.fail("the leftover budget must flow on to the 2×2 crafting grid, grid has "
+					+ ItemEnergy.get(inGrid));
+		}
+		if (moved != step() || ItemEnergy.get(pack) != Config.energyPackBuffer - step()) {
+			helper.fail("the batch must be split across cursor and grid and paid for once, moved " + moved);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * NEG05: the pack reaches the cursor and its own crafting grid — and nothing else. The slots of
+	 * whatever container the player has open belong to a chest or a machine in the world, and a pack
+	 * must not charge through them. The regression guarded here is a lazy "walk containerMenu.slots"
+	 * implementation, which would drain the pack into any chest full of pouches.
+	 */
+	public static void neg05DoesNotChargeOpenContainer(GameTestHelper helper) {
+		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+		ItemStack pack = pack(Config.energyPackBuffer);
+		ItemStack inChest = pouch(0);
+		SimpleContainer chest = new SimpleContainer(9);
+		chest.setItem(0, inChest);
+		player.containerMenu = new ChestMenu(MenuType.GENERIC_9x1, 1, player.getInventory(), chest, 1);
+
+		if (EnergyPackItem.chargeStep(pack, player) != 0 || ItemEnergy.get(inChest) != 0) {
+			helper.fail("a pouch inside an open chest must not be charged by the worn pack");
+		}
+		if (ItemEnergy.get(pack) != Config.energyPackBuffer) {
+			helper.fail("the pack must not pay for a transfer it never made");
 		}
 		helper.succeed();
 	}

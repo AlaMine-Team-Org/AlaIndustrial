@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" M ",
+		"MGM",
+		" M "
+	],
+	"key": {
+		"M": "minecraft:iron_ingot",
+		"G": "alaindustrial:wooden_gear"
+	},
+	"result": {
+		"id": "alaindustrial:iron_gear",
+		"count": 1
+	}
+}

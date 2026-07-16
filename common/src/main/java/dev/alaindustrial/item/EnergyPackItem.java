@@ -3,6 +3,7 @@ package dev.alaindustrial.item;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.registry.ModTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
@@ -13,7 +14,9 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
@@ -24,8 +27,9 @@ import net.minecraft.world.item.equipment.EquipmentAssets;
 /**
  * Energy Pack (MOD-065) — a worn LV energy buffer: {@link Config#energyPackBuffer} EU carried in the
  * chest slot, charged in the Battery Box charge slot and handed out to the powered items the player
- * carries (today the Battery Pouch, MOD-052). Unlike the pouch it has no passive drain: EU only
- * leaves the pack when something actually takes it.
+ * carries — the mod's own (the Battery Pouch, MOD-052; the Electric Drill, MOD-079) and, since MOD-084,
+ * any other mod's item that exposes the loader's item energy capability. Unlike the pouch it has no
+ * passive drain: EU only leaves the pack when something actually takes it.
  *
  * <p>It is <b>not</b> armor. Built without {@code ArmorMaterial}/{@code Properties.humanoidArmor},
  * which would wire in durability ({@code MAX_DAMAGE} — the pack would break), enchantability and a
@@ -59,6 +63,20 @@ public class EnergyPackItem extends Item {
 
 	/** Armor points the pack grants while worn — a token amount, well below leather. */
 	public static final double ARMOR_POINTS = 2.0;
+
+	/**
+	 * Slot index for a charge target that has no vanilla {@link Inventory} index: the stack on the cursor
+	 * and the 2×2 crafting grid (MOD-082). Those two live in menu containers, not in the inventory list.
+	 *
+	 * <p>Consequence for MOD-084: the mod's own items are charged there as usual (they go through
+	 * {@link ItemEnergy}, which needs no slot), but <b>another mod's</b> item is not — both loaders' item
+	 * energy capabilities are looked up per inventory slot ({@code ContainerItemContext.ofPlayerSlot} /
+	 * {@code ItemAccess.forPlayerSlot}), and there is no index to look up here. A foreign tool held on the
+	 * cursor for a moment therefore waits until it is put back in a slot, which is the same second or two
+	 * it takes to drop it. Cursor-scoped contexts do exist on both loaders and could lift this later; it
+	 * is not worth a menu-aware code path for the one tick an item spends on the cursor.
+	 */
+	private static final int NO_SLOT = -1;
 
 	public EnergyPackItem(Properties properties) {
 		super(properties);
@@ -152,10 +170,11 @@ public class EnergyPackItem extends Item {
 	/**
 	 * One transfer step — what {@link #inventoryTick} applies once per second. Hands out up to
 	 * {@code energyPackOutputRate × 20} EU across the player's carried consumers, in slot order
-	 * (hotbar first, then the main inventory, then the offhand); each consumer takes what it has room
-	 * for and the rest of the budget moves on. No round-robin: with a whole second's worth of EU per
-	 * step every consumer fills within a few steps anyway, and remembering "who was next" would mean
-	 * persisting a cursor on the stack.
+	 * (hotbar first, then the main inventory, then the offhand, then the two places a stack can sit
+	 * while the inventory screen is open — the cursor and the 2×2 crafting grid, MOD-082); each
+	 * consumer takes what it has room for and the rest of the budget moves on. No round-robin: with a
+	 * whole second's worth of EU per step every consumer fills within a few steps anyway, and
+	 * remembering "who was next" would mean persisting a cursor on the stack.
 	 *
 	 * <p>Separated from the game-time gate so gametests can drive it deterministically. Returns the EU
 	 * actually moved (0 = nothing was written, and the components stay untouched).
@@ -168,42 +187,98 @@ public class EnergyPackItem extends Item {
 		long moved = 0L;
 		// Main inventory (hotbar 0..8 first, so the item in hand is served first) — the offhand is NOT
 		// part of this list in 26.2 (it lives in the entity's equipment), hence the separate pass below.
+		// The list index doubles as the vanilla Inventory slot index, which is what the cross-mod bridge
+		// needs to address the slot (both loaders' item capabilities are slot-scoped, not stack-scoped).
 		NonNullList<ItemStack> items = player.getInventory().getNonEquipmentItems();
 		for (int i = 0; i < items.size() && budget > 0; i++) {
-			long sent = give(items.get(i), budget);
+			long sent = give(player, i, items.get(i), budget);
 			budget -= sent;
 			moved += sent;
 		}
 		if (budget > 0) {
-			moved += give(player.getItemBySlot(EquipmentSlot.OFFHAND), budget);
+			long sent = give(player, Inventory.SLOT_OFFHAND, player.getItemBySlot(EquipmentSlot.OFFHAND), budget);
+			budget -= sent;
+			moved += sent;
+		}
+		if (budget > 0) {
+			long sent = chargeOpenScreen(player, budget);
+			budget -= sent;
+			moved += sent;
 		}
 		// The pack pays once for the whole step, not once per consumer: each write to its charge is a
 		// component write and a stack resync, and with several pouches that would be several of them
-		// for one logical transfer.
+		// for one logical transfer. Creative keeps the charge — the debit is dropped inside
+		// ItemEnergy.spend, the consumers are filled either way (MOD-081).
 		if (moved > 0) {
-			ItemEnergy.add(pack, -moved);
+			ItemEnergy.spend(pack, moved, player);
 		}
 		return moved;
 	}
 
 	/**
-	 * Fill one carried stack with up to {@code budget} EU and return how much it took (the pack is
-	 * debited for the total by the caller). Nothing is written when the transfer would be 0 — a full
-	 * consumer, or a non-powered item, must not cost a component write and a stack resync.
+	 * The two spots a powered item can occupy while the player has a screen open, neither of which is
+	 * part of the inventory list above (MOD-082): the stack held on the cursor, and the inventory's own
+	 * 2×2 crafting grid. Both are physically on the player, so a worn pack tops them up like any other
+	 * carried item; without this a pouch would visibly stop charging the moment it was picked up.
 	 *
-	 * <p>Other packs are excluded on purpose: a charger that charges chargers ping-pongs energy between
-	 * two of them and drains the wearer for nothing (a bug other mods have shipped and fixed).
+	 * <p>Only these two — <b>not</b> the slots of whatever container is open. Those belong to a chest or
+	 * a machine in the world, and a pack must not reach into them.
+	 *
+	 * <p>Both write through to the client on their own: the cursor is resynced by
+	 * {@code AbstractContainerMenu.broadcastChanges → synchronizeCarriedToRemote} (a component write
+	 * makes {@code ItemStack.matches} fail, which is exactly what triggers the resend), and the crafting
+	 * grid can only hold items while the inventory screen itself is open — closing it runs
+	 * {@code InventoryMenu.removed → clearContainer}, which hands the items back — so its slots are
+	 * being broadcast whenever there is anything in them to charge.
 	 */
-	private static long give(ItemStack target, long budget) {
-		if (target.isEmpty() || target.getItem() instanceof EnergyPackItem) {
+	private static long chargeOpenScreen(Player player, long budget) {
+		long moved = give(player, NO_SLOT, player.containerMenu.getCarried(), budget);
+		budget -= moved;
+		CraftingContainer grid = player.inventoryMenu.getCraftSlots();
+		for (int i = 0; i < grid.getContainerSize() && budget > 0; i++) {
+			long sent = give(player, NO_SLOT, grid.getItem(i), budget);
+			budget -= sent;
+			moved += sent;
+		}
+		return moved;
+	}
+
+	/**
+	 * Fill the stack in one inventory slot with up to {@code budget} EU and return how much it took (the
+	 * pack is debited for the total by the caller). Nothing is written when the transfer would be 0 — a
+	 * full consumer, or a non-powered item, must not cost a component write and a stack resync.
+	 *
+	 * <p>Items in {@link ModTags.Items#NO_AUTO_CHARGE} are skipped, which is how packs stay out of each
+	 * other's way: a charger that charges chargers ping-pongs energy between two of them and drains the
+	 * wearer for nothing (a bug other mods have shipped and fixed). Before MOD-084 that rule was an
+	 * {@code instanceof EnergyPackItem} check; a tag says the same thing about foreign chargers, which
+	 * {@code instanceof} cannot see.
+	 *
+	 * <p>The mod's own powered items go through {@link ItemEnergy} directly, and only everything else
+	 * falls through to {@link ItemEnergyBridge} — a mod item is never worth the cost of opening a
+	 * capability lookup and a transaction, and this keeps their behaviour byte-for-byte what it was.
+	 *
+	 * <p>{@code slot} is the vanilla {@link Inventory} index of the target, or {@link #NO_SLOT} when it
+	 * has none. Both loaders' item energy capabilities are scoped to a <i>slot</i>, not to a stack, so a
+	 * target without an index can only be served through {@link ItemEnergy} — see {@link #NO_SLOT}.
+	 */
+	private static long give(Player player, int slot, ItemStack target, long budget) {
+		if (target.isEmpty() || target.is(ModTags.Items.NO_AUTO_CHARGE)) {
 			return 0L;
 		}
-		long move = Math.min(ItemEnergy.room(target), budget);
-		if (move <= 0) {
+		if (ItemEnergy.capacity(target) > 0) {
+			long move = Math.min(ItemEnergy.room(target), budget);
+			if (move <= 0) {
+				return 0L;
+			}
+			ItemEnergy.add(target, move);
+			return move;
+		}
+		if (slot == NO_SLOT) {
 			return 0L;
 		}
-		ItemEnergy.add(target, move);
-		return move;
+		// Not one of ours — offer it to the loader's item energy API (a foreign FE tool, battery, ...).
+		return ItemEnergyBridge.get().chargeSlot(player, slot, budget);
 	}
 
 	// --- item bar shows the EU charge in the LV tier colour (the numbers are in the tooltip) ---

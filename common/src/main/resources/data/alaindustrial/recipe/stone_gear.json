@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" M ",
+		"MGM",
+		" M "
+	],
+	"key": {
+		"M": "#minecraft:stone_crafting_materials",
+		"G": "alaindustrial:wooden_gear"
+	},
+	"result": {
+		"id": "alaindustrial:stone_gear",
+		"count": 1
+	}
+}

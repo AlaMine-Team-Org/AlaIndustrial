@@ -12,11 +12,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Loader-neutral gametest bodies for the scythe (MOD-068). Each scenario is a plain
+ * Loader-neutral gametest bodies for the scythe (MOD-068 / MOD-098). Each scenario is a plain
  * {@code Consumer<GameTestHelper>} using only vanilla {@code GameTestHelper} + loader-neutral content
  * ({@link ModContent}); the Fabric {@code @GameTest} suite ({@code ScytheGameTest}) and the NeoForge
  * {@code gameTestServer} lane ({@code dev.alaindustrial.gametest.neoforge.NeoForgeGameTests}) run the
@@ -27,6 +29,11 @@ import net.minecraft.world.phys.Vec3;
  * dirt platform at {@code y = FLOOR} and plants foliage at {@code y = FLOOR + 1}, then right-clicks the
  * centre plant. {@link #makeSurvivalPlayer} forces SURVIVAL so drops and durability behave like a real
  * player (the raw {@code makeMockServerPlayerInLevel} mock reports CREATIVE, which suppresses both).
+ *
+ * <p><b>Two modes (MOD-098).</b> Plain right-click runs <b>decor</b> mode (clears
+ * {@code scythe_harvestable} foliage, protects crops); shift + right-click runs <b>crop</b> mode
+ * (harvests only mature {@code scythe_crops}, ignores decor). {@link #useScythe} / its shift variant
+ * set {@code shiftKeyDown} to pick the mode.
  */
 public final class ScytheScenarios {
 
@@ -79,19 +86,22 @@ public final class ScytheScenarios {
 		helper.succeed();
 	}
 
-	// ── NEG01: shift (secondary use) does not trigger the AOE ──────────────────────────────────────
+	// ── NEG01: shift on decor is crop mode → decor untouched, returns PASS ─────────────────────────
 
-	/** With shift held, the scythe must not clear anything and must return PASS. */
-	public static void neg01ShiftDoesNotAoe(GameTestHelper helper) {
+	/**
+	 * With shift held the scythe enters crop mode, so decorative foliage (not a crop) is left alone and
+	 * the swing returns PASS (no crop target present). Guards the crop-protection side of decor under
+	 * crop mode (MOD-098): a farmer shift-clicking over grass clears nothing.
+	 */
+	public static void neg01ShiftCropModeKeepsDecor(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
 		platform(helper);
 		helper.setBlock(CLICK, Blocks.SHORT_GRASS);
 		helper.setBlock(new BlockPos(2, FLOOR + 1, 3), Blocks.SHORT_GRASS);
-		player.setShiftKeyDown(true);
 
-		InteractionResult result = useScythe(helper, player, ModContent.SCYTHE_WOOD.get());
+		InteractionResult result = useScytheShift(helper, player, ModContent.SCYTHE_WOOD.get());
 		if (result != InteractionResult.PASS) {
-			helper.fail("shift-use should return PASS, got " + result);
+			helper.fail("crop-mode use over plain decor should return PASS, got " + result);
 			return;
 		}
 		helper.assertBlockPresent(Blocks.SHORT_GRASS, CLICK);
@@ -99,12 +109,12 @@ public final class ScytheScenarios {
 		helper.succeed();
 	}
 
-	// ── PRF01: durability drops by exactly the number of non-instant blocks broken ─────────────────
+	// ── PRF01: durability drops by exactly the number of blocks broken ───────────────────────────
 
 	/**
-	 * Each broken hardy-foliage block costs one durability. Uses leaves (hardness 0.2): like vanilla,
-	 * instant-break foliage (grass/flowers, hardness 0) costs nothing, so durability is charged per
-	 * broken leaf. Non-target blocks cost nothing.
+	 * Each broken foliage block costs one durability (MOD-098: flat 1/block in either mode, regardless
+	 * of hardness). Uses leaves here; {@link #prf03DurabilityOnInstantBlock} covers the hardness-0 case
+	 * (grass) that used to be free.
 	 */
 	public static void prf01DurabilityPerBlock(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -123,6 +133,36 @@ public final class ScytheScenarios {
 		int damage = scythe.getDamageValue();
 		if (damage != expected) {
 			helper.fail("durability spent " + damage + " but broke " + expected + " leaves");
+			return;
+		}
+		helper.succeed();
+	}
+
+	// ── PRF03: durability is spent even on hardness-0 (instant) blocks ─────────────────────────────
+
+	/**
+	 * The MOD-098 bug fix: short grass (hardness 0) used to be free under vanilla tool rules, so a
+	 * scythe never wore clearing it. Now every broken block costs 1, so a box of {@code N} grass blocks
+	 * must cost exactly {@code N} durability.
+	 */
+	public static void prf03DurabilityOnInstantBlock(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		platform(helper);
+		int expected = 0;
+		for (int x = 1; x <= 3; x++) {
+			for (int z = 2; z <= 3; z++) {
+				helper.setBlock(new BlockPos(x, FLOOR + 1, z), Blocks.SHORT_GRASS);
+				expected++;
+			}
+		}
+		ItemStack scythe = new ItemStack(ModContent.SCYTHE_WOOD.get());
+		player.setItemInHand(InteractionHand.MAIN_HAND, scythe);
+		useScytheStack(helper, player);
+
+		int damage = scythe.getDamageValue();
+		if (damage != expected) {
+			helper.fail("durability spent " + damage + " but broke " + expected
+					+ " hardness-0 grass blocks (should cost 1 each now)");
 			return;
 		}
 		helper.succeed();
@@ -200,9 +240,9 @@ public final class ScytheScenarios {
 		helper.succeed();
 	}
 
-	// ── NEG02: crops and water are not harvested ───────────────────────────────────────────────────
+	// ── NEG02: crops and water are not harvested in decor mode ────────────────────────────────────
 
-	/** Wheat and water are excluded from the scythe tag and must survive an AOE over them. */
+	/** Wheat and water are excluded from the decor tag and must survive an AOE over them (plain click). */
 	public static void neg02KeepsCropsAndWater(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
 		platform(helper);
@@ -217,6 +257,203 @@ public final class ScytheScenarios {
 
 		helper.assertBlockPresent(Blocks.WHEAT, new BlockPos(1, FLOOR + 1, 2));
 		helper.assertBlockPresent(Blocks.WATER, new BlockPos(3, FLOOR + 1, 2));
+		helper.succeed();
+	}
+
+	// ── FUN02: crop mode harvests mature crops ─────────────────────────────────────────────────────
+
+	/**
+	 * Shift + right-click (crop mode) over a patch of mature wheat harvests every mature wheat block in
+	 * the box. Each mature crop also costs 1 durability, same rule as decor mode.
+	 */
+	public static void fun02CropModeHarvestsMature(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		farmland(helper);
+		int mature = 0;
+		for (int x = 1; x <= 3; x++) {
+			for (int z = 2; z <= 3; z++) {
+				// Max-age wheat on farmland support.
+				helper.setBlock(new BlockPos(x, FLOOR + 1, z), Blocks.WHEAT.defaultBlockState()
+						.setValue(CropBlock.AGE, CropBlock.MAX_AGE));
+				mature++;
+			}
+		}
+		ItemStack scythe = new ItemStack(ModContent.SCYTHE_WOOD.get());
+		player.setItemInHand(InteractionHand.MAIN_HAND, scythe);
+		useScytheStackShift(helper, player);
+
+		for (int x = 1; x <= 3; x++) {
+			for (int z = 2; z <= 3; z++) {
+				BlockPos p = new BlockPos(x, FLOOR + 1, z);
+				if (!helper.getBlockState(p).isAir()) {
+					helper.fail("expected mature wheat harvested at " + p + " but found " + helper.getBlockState(p));
+					return;
+				}
+			}
+		}
+		if (scythe.getDamageValue() != mature) {
+			helper.fail("crop-mode durability spent " + scythe.getDamageValue() + " but harvested " + mature + " mature wheat");
+			return;
+		}
+		helper.succeed();
+	}
+
+	// ── NEG03: crop mode keeps immature crops ──────────────────────────────────────────────────────
+
+	/**
+	 * Crop mode never breaks a crop that is not yet mature. A box of age-0 wheat is left entirely
+	 * untouched by a shift-click, so young plants keep growing — the AOE-sickle promise.
+	 */
+	public static void neg03CropModeKeepsImmature(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		farmland(helper);
+		for (int x = 1; x <= 3; x++) {
+			for (int z = 2; z <= 3; z++) {
+				helper.setBlock(new BlockPos(x, FLOOR + 1, z), Blocks.WHEAT.defaultBlockState()
+						.setValue(CropBlock.AGE, 0));
+			}
+		}
+		ItemStack scythe = new ItemStack(ModContent.SCYTHE_WOOD.get());
+		player.setItemInHand(InteractionHand.MAIN_HAND, scythe);
+		useScytheStackShift(helper, player);
+
+		for (int x = 1; x <= 3; x++) {
+			for (int z = 2; z <= 3; z++) {
+				BlockPos p = new BlockPos(x, FLOOR + 1, z);
+				if (!helper.getBlockState(p).is(Blocks.WHEAT)) {
+					helper.fail("immature wheat should survive crop mode at " + p + " but found " + helper.getBlockState(p));
+					return;
+				}
+			}
+		}
+		if (scythe.getDamageValue() != 0) {
+			helper.fail("crop mode spent durability on immature crops: " + scythe.getDamageValue());
+			return;
+		}
+		helper.succeed();
+	}
+
+	// ── NEG04: crop mode keeps decorative foliage ──────────────────────────────────────────────────
+
+	/**
+	 * Crop mode does not touch decorative foliage: a grass block inside the box survives a shift-click.
+	 * Only the two modes' target sets differ; this pins that crop mode is a strict subset (crops), not a
+	 * superset.
+	 */
+	public static void neg04CropModeKeepsFoliage(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		platform(helper);
+		for (int x = 1; x <= 3; x++) {
+			for (int z = 2; z <= 3; z++) {
+				helper.setBlock(new BlockPos(x, FLOOR + 1, z), Blocks.SHORT_GRASS);
+			}
+		}
+		useScytheShift(helper, player, ModContent.SCYTHE_WOOD.get());
+		for (int x = 1; x <= 3; x++) {
+			for (int z = 2; z <= 3; z++) {
+				helper.assertBlockPresent(Blocks.SHORT_GRASS, new BlockPos(x, FLOOR + 1, z));
+			}
+		}
+		helper.succeed();
+	}
+
+	// ── FUN03: crop mode harvests the stalk above a sugar-cane base, keeps the base ─────────────────
+
+	/**
+	 * Crop mode on a sugar-cane column breaks the block(s) above the base and leaves the base block
+	 * alive, mirroring a hand-pick of the top of the cane. Two columns of height 2 (base + one stalk)
+	 * fill the box; after a shift-click the top of each column is gone and the base remains, so the
+	 * crop can regrow. Guards MOD-098 decision 1 (leave the base growing) and the bug fix that the
+	 * naive version broke the base too.
+	 */
+	public static void fun03CropModeHarvestsCaneStalk(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		sand(helper); // sugar cane can survive on sand
+		int stalks = 0;
+		for (int x = 1; x <= 3; x++) {
+			for (int z = 2; z <= 3; z++) {
+				// base at FLOOR+1 (on sand), one stalk block at FLOOR+2
+				helper.setBlock(new BlockPos(x, FLOOR + 1, z), Blocks.SUGAR_CANE);
+				helper.setBlock(new BlockPos(x, FLOOR + 2, z), Blocks.SUGAR_CANE);
+				stalks++;
+			}
+		}
+		ItemStack scythe = new ItemStack(ModContent.SCYTHE_WOOD.get());
+		player.setItemInHand(InteractionHand.MAIN_HAND, scythe);
+		useScytheStackShift(helper, player);
+
+		for (int x = 1; x <= 3; x++) {
+			for (int z = 2; z <= 3; z++) {
+				BlockPos base = new BlockPos(x, FLOOR + 1, z);
+				BlockPos stalk = new BlockPos(x, FLOOR + 2, z);
+				if (!helper.getBlockState(base).is(Blocks.SUGAR_CANE)) {
+					helper.fail("sugar cane base should survive at " + base + " but found " + helper.getBlockState(base));
+					return;
+				}
+				if (!helper.getBlockState(stalk).isAir()) {
+					helper.fail("sugar cane stalk above base should be harvested at " + stalk + " but found " + helper.getBlockState(stalk));
+					return;
+				}
+			}
+		}
+		if (scythe.getDamageValue() != stalks) {
+			helper.fail("crop-mode durability spent " + scythe.getDamageValue() + " but harvested " + stalks + " cane stalks");
+			return;
+		}
+		helper.succeed();
+	}
+
+	// ── NEG05: crop mode keeps a lone cactus base (no stalk above it) ──────────────────────────────
+
+	/**
+	 * A single cactus block sitting on sand (its base, nothing above it) is never a harvest target:
+	 * the stalk rule requires the same block below, and below a lone cactus is sand. Breaking it would
+	 * kill the crop. Guards the base-protection side of the cactus/cane rule.
+	 */
+	public static void neg05CropModeKeepsLoneCactus(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		sand(helper);
+		helper.setBlock(CLICK, Blocks.CACTUS); // lone cactus on sand — a base with no stalk
+		ItemStack scythe = new ItemStack(ModContent.SCYTHE_WOOD.get());
+		player.setItemInHand(InteractionHand.MAIN_HAND, scythe);
+		useScytheStackShift(helper, player);
+
+		helper.assertBlockPresent(Blocks.CACTUS, CLICK);
+		if (scythe.getDamageValue() != 0) {
+			helper.fail("crop mode spent durability on a lone cactus base: " + scythe.getDamageValue());
+			return;
+		}
+		helper.succeed();
+	}
+
+	// ── NEG06: crop mode keeps melon/pumpkin stems (even ripe) ─────────────────────────────────────
+
+	/**
+	 * Crop mode never harvests a stem, even a fully-grown one. Stems are not a pickable crop — they
+	 * spawn a melon/pumpkin on a neighbour and keep growing — so a ripe {@code melon_stem} (age 7) in
+	 * the box must survive a shift-click. Guards the explicit {@code StemBlock} guard in
+	 * {@code isCropTarget}, which sits before the AGE fallback precisely because a ripe stem carries
+	 * AGE at max and would otherwise be caught there (the MOD-098 decision-2 bug).
+	 */
+	public static void neg06CropModeKeepsStem(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		farmland(helper);
+		// Ripe melon stem: farmland support, age forced to max (7) so it is "grown" — and still must
+		// NOT break. The max-age case is the one that would slip through to the AGE fallback.
+		helper.setBlock(CLICK, Blocks.MELON_STEM.defaultBlockState()
+				.setValue(StemBlock.AGE, StemBlock.MAX_AGE));
+		ItemStack scythe = new ItemStack(ModContent.SCYTHE_WOOD.get());
+		player.setItemInHand(InteractionHand.MAIN_HAND, scythe);
+		useScytheStackShift(helper, player);
+
+		if (!helper.getBlockState(CLICK).is(Blocks.MELON_STEM)) {
+			helper.fail("ripe melon stem should survive crop mode at " + CLICK + " but found " + helper.getBlockState(CLICK));
+			return;
+		}
+		if (scythe.getDamageValue() != 0) {
+			helper.fail("crop mode spent durability on a stem: " + scythe.getDamageValue());
+			return;
+		}
 		helper.succeed();
 	}
 
@@ -259,12 +496,51 @@ public final class ScytheScenarios {
 		}
 	}
 
+	/** A 5×5 sand platform at {@code y = FLOOR} so cactus / sugar cane can survive (their canSurvive). */
+	private static void sand(GameTestHelper helper) {
+		for (int x = 0; x <= 4; x++) {
+			for (int z = 0; z <= 4; z++) {
+				helper.setBlock(new BlockPos(x, FLOOR, z), Blocks.SAND);
+			}
+		}
+	}
+
+	/** A 5×5 farmland platform at {@code y = FLOOR} so wheat has the support it needs to survive. */
+	private static void farmland(GameTestHelper helper) {
+		for (int x = 0; x <= 4; x++) {
+			for (int z = 0; z <= 4; z++) {
+				helper.setBlock(new BlockPos(x, FLOOR, z), Blocks.FARMLAND);
+			}
+		}
+	}
+
 	private static InteractionResult useScythe(GameTestHelper helper, ServerPlayer player, Item scythe) {
 		player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(scythe));
 		return useScytheStack(helper, player);
 	}
 
+	/** Crop-mode variant: holds shift so {@code useOn} runs the harvest path. */
+	private static InteractionResult useScytheShift(GameTestHelper helper, ServerPlayer player, Item scythe) {
+		player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(scythe));
+		return useScytheStackShift(helper, player);
+	}
+
 	private static InteractionResult useScytheStack(GameTestHelper helper, ServerPlayer player) {
+		return useOn(helper, player, false);
+	}
+
+	private static InteractionResult useScytheStackShift(GameTestHelper helper, ServerPlayer player) {
+		return useOn(helper, player, true);
+	}
+
+	/**
+	 * Builds the {@code UseOnContext} for a right-click on {@link #CLICK}. {@code shift} selects decor vs
+	 * crop mode — the scythe reads it via {@code context.isSecondaryUseActive()}, which the mock player
+	 * reports from {@code setShiftKeyDown}. The hit position is the absolute world position of CLICK
+	 * (gametest structure coords are structure-relative; {@code absolutePos} maps them to world space).
+	 */
+	private static InteractionResult useOn(GameTestHelper helper, ServerPlayer player, boolean shift) {
+		player.setShiftKeyDown(shift);
 		BlockPos abs = helper.absolutePos(CLICK);
 		BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(abs), Direction.UP, abs, false);
 		return player.getMainHandItem().useOn(new net.minecraft.world.item.context.UseOnContext(

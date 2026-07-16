@@ -152,12 +152,26 @@ jobs:
               primary_file: "fabric_file",
               environment: "client_and_server"
             }')
-          curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 -X POST \
-            "https://api.modrinth.com/v2/version" \
-            -H "Authorization: $MODRINTH_TOKEN" \
-            -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0" \
-            --form-string "data=$data" \
-            -F "fabric_file=@$JAR"
+          # Retry up to 5x, surfacing the Modrinth error body on failure (same pattern as the
+          # CurseForge upload steps — curl -sSf hides the response body on HTTP errors).
+          for attempt in 1 2 3 4 5; do
+            code=$(curl -sS --connect-timeout 20 --max-time 180 -o modrinth_resp.json -w '%{http_code}' -X POST \
+              "https://api.modrinth.com/v2/version" \
+              -H "Authorization: $MODRINTH_TOKEN" \
+              -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0" \
+              --form-string "data=$data" \
+              -F "fabric_file=@$JAR")
+            if [ "$code" -ge 200 ] && [ "$code" -lt 300 ]; then
+              echo "Modrinth Fabric upload OK (HTTP $code)"
+              cat modrinth_resp.json
+              exit 0
+            fi
+            echo "::warning::Modrinth Fabric upload attempt $attempt failed with HTTP $code; body:"
+            cat modrinth_resp.json || true
+            [ "$attempt" -lt 5 ] && sleep 15
+          done
+          echo "::error::Modrinth Fabric upload failed after 5 attempts (last HTTP $code). Response body above."
+          exit 1
 
       - name: Publish NeoForge to Modrinth
         if: steps.mode.outputs.publish_neoforge == 'true' && steps.modrinth.outputs.neoforge_exists != 'true'
@@ -186,12 +200,24 @@ jobs:
               primary_file: "neoforge_file",
               environment: "client_and_server"
             }')
-          curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 -X POST \
-            "https://api.modrinth.com/v2/version" \
-            -H "Authorization: $MODRINTH_TOKEN" \
-            -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0" \
-            --form-string "data=$data" \
-            -F "neoforge_file=@$JAR"
+          for attempt in 1 2 3 4 5; do
+            code=$(curl -sS --connect-timeout 20 --max-time 180 -o modrinth_resp.json -w '%{http_code}' -X POST \
+              "https://api.modrinth.com/v2/version" \
+              -H "Authorization: $MODRINTH_TOKEN" \
+              -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0" \
+              --form-string "data=$data" \
+              -F "neoforge_file=@$JAR")
+            if [ "$code" -ge 200 ] && [ "$code" -lt 300 ]; then
+              echo "Modrinth NeoForge upload OK (HTTP $code)"
+              cat modrinth_resp.json
+              exit 0
+            fi
+            echo "::warning::Modrinth NeoForge upload attempt $attempt failed with HTTP $code; body:"
+            cat modrinth_resp.json || true
+            [ "$attempt" -lt 5 ] && sleep 15
+          done
+          echo "::error::Modrinth NeoForge upload failed after 5 attempts (last HTTP $code). Response body above."
+          exit 1
 
       # Resolve the CurseForge modloader IDs. Fabric is pinned (7499, proven across
       # releases). NeoForge is resolved dynamically by name from the versions API

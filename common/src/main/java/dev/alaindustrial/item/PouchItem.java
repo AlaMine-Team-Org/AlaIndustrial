@@ -16,6 +16,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Battery Pouch (MOD-052) — the mod's first powered item: a bundle-like carrier with an EU lock.
@@ -166,21 +167,22 @@ public class PouchItem extends Item {
 			return;
 		}
 		if (level.getGameTime() % 20 == 0) {
-			drainStep(stack);
+			drainStep(stack, entity);
 		}
 	}
 
 	/**
 	 * One drain step — what {@link #inventoryTick} applies once per second. Drains only while the
 	 * pouch is charged AND holds items (an empty or dead pouch never writes the component — no
-	 * pointless stack resyncs). Separated from the game-time gate so gametests can drive it
-	 * deterministically. Returns whether EU was drained.
+	 * pointless stack resyncs), and never for a creative or spectating {@code owner}, whose EU is free
+	 * (MOD-081 — the rule lives in {@link ItemEnergy#spend}). Separated from the game-time gate so
+	 * gametests can drive it deterministically. Returns whether EU was drained.
 	 */
-	public static boolean drainStep(ItemStack stack) {
-		if (ItemEnergy.get(stack) <= 0 || contentsOf(stack).isEmpty()) {
+	public static boolean drainStep(ItemStack stack, @Nullable Entity owner) {
+		if (ItemEnergy.get(stack) <= 0 || contentsOf(stack).isEmpty() || ItemEnergy.free(owner)) {
 			return false;
 		}
-		ItemEnergy.add(stack, -Config.lvPouchDrainPerSecond);
+		ItemEnergy.spend(stack, Config.lvPouchDrainPerSecond, owner);
 		return true;
 	}
 

@@ -2,6 +2,7 @@ package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.BatteryBoxBlock;
+import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
@@ -72,6 +73,11 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("macerator", MaceratorBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
 	public static final DeferredBlock<BatteryBoxBlock> BATTERY_BOX =
 			BLOCKS.registerBlock("battery_box", BatteryBoxBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.WOOD)));
+
+	// Teleporter station (MOD-091). Registered but kept out of the creative tab and recipe set until
+	// the feature is complete (MOD-093) — see CreativeTabContent.
+	public static final DeferredBlock<TeleporterBlock> TELEPORTER =
+			BLOCKS.registerBlock("teleporter", TeleporterBlock::new, machine(p -> p.strength(5.0f, 12.0f).sound(SoundType.METAL)));
 	public static final DeferredBlock<ElectricFurnaceBlock> ELECTRIC_FURNACE =
 			BLOCKS.registerBlock("electric_furnace", ElectricFurnaceBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
 	public static final DeferredBlock<ExtractorBlock> EXTRACTOR =
@@ -206,6 +212,7 @@ public final class ModBlocksNeoForge {
 		ModContent.DAYLIGHT_SOLAR_PANEL = DAYLIGHT_SOLAR_PANEL::get;
 		ModContent.MACERATOR = MACERATOR::get;
 		ModContent.BATTERY_BOX = BATTERY_BOX::get;
+		ModContent.TELEPORTER = TELEPORTER::get;
 		ModContent.ELECTRIC_FURNACE = ELECTRIC_FURNACE::get;
 		ModContent.EXTRACTOR = EXTRACTOR::get;
 		ModContent.COMPRESSOR = COMPRESSOR::get;

@@ -141,16 +141,21 @@ public class ElectricDrillItem extends Item {
 	 * ({@code Item.mineBlock}): {@code !isClientSide} because {@code mineBlock} runs on both sides and
 	 * the charge must only change on the server (the client picks up the new value from the synced
 	 * {@code pouch_energy} component), and non-zero hardness so instant-break blocks (grass, torches,
-	 * flowers) cost nothing — just as they never wear a vanilla tool. Creative needs no handling:
-	 * {@code ServerPlayerGameMode.destroyBlock} returns on {@code preventsBlockDrops()} before this is
-	 * ever called. The drain is only taken when there was enough EU to mine at tool speed, so a block
-	 * broken at hand speed (EU below the per-block cost) is free.
+	 * flowers) cost nothing — just as they never wear a vanilla tool. The drain is only taken when there
+	 * was enough EU to mine at tool speed, so a block broken at hand speed (EU below the per-block cost)
+	 * is free.
+	 *
+	 * <p>Creative is handled twice over, and deliberately so: {@code ServerPlayerGameMode.destroyBlock}
+	 * already returns on {@code preventsBlockDrops()} before this is ever called, and the spend itself
+	 * goes through {@link ItemEnergy#spend}, which drops the debit for a creative owner (MOD-081). The
+	 * vanilla path is the one that runs today; routing through {@code spend} is what keeps the rule true
+	 * of the drill no matter who calls {@code mineBlock}.
 	 */
 	@Override
 	public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity owner) {
 		if (!level.isClientSide() && state.getDestroySpeed(level, pos) != 0.0f
 				&& ItemEnergy.get(stack) >= Config.electricDrillEuPerBlock) {
-			ItemEnergy.add(stack, -Config.electricDrillEuPerBlock);
+			ItemEnergy.spend(stack, Config.electricDrillEuPerBlock, owner);
 		}
 		return super.mineBlock(stack, level, state, pos, owner);
 	}
@@ -171,14 +176,18 @@ public class ElectricDrillItem extends Item {
 	 * {@code place()} consumes from the stack held in that context, so passing the drill directly would
 	 * try to consume the drill; passing the copy lets vanilla pick floor-vs-wall orientation, enforce
 	 * {@code canSurvive}, handle the uranium torch's waterlogged state, play the place sound and fire the
-	 * place event for protection mods — all for free. The real inventory decrement is taken by hand,
+	 * place event for protection mods — all for free. It runs on <b>both</b> sides, exactly as vanilla
+	 * {@code BlockItem.useOn} does: the client call is the placing player's own prediction and the only
+	 * thing that makes them hear the torch (see MOD-096). The real inventory decrement is taken by hand,
 	 * server-side only, only when placement actually succeeded ({@code consumesAction()}), and skipped in
 	 * creative ({@code instabuild}).
 	 *
-	 * <p>EU drain ({@link Config#electricDrillTorchEuCost}) is taken the same way, but is skipped when the
-	 * drill holds less than that — the torch still places, matching the drill's graceful-degradation rule
-	 * for a flat battery (see {@link #mineBlock}). No cooldown: vanilla {@code BlockItem.place} already
-	 * can't spam-place a single position, so a cooldown would only slow legitimate tunnel lighting.
+	 * <p>EU drain ({@link Config#electricDrillTorchEuCost}) is taken the same way — including in creative,
+	 * where {@link ItemEnergy#spend} drops it just as the torch itself is not consumed (MOD-081) — but is
+	 * skipped when the drill holds less than that: the torch still places, matching the drill's
+	 * graceful-degradation rule for a flat battery (see {@link #mineBlock}). No cooldown: vanilla
+	 * {@code BlockItem.place} already can't spam-place a single position, so a cooldown would only slow
+	 * legitimate tunnel lighting.
 	 */
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
@@ -208,11 +217,6 @@ public class ElectricDrillItem extends Item {
 			return InteractionResult.PASS;
 		}
 
-		// Client only predicts the swing — never mutate inventory or place here (prevents double-place).
-		if (level.isClientSide()) {
-			return InteractionResult.SUCCESS;
-		}
-
 		// Delegate to the torch's vanilla place() via a 1-item copy, so vanilla consumes from the copy
 		// (not the drill) and we keep floor/wall selection, canSurvive, waterlogged, sound and events.
 		// BlockItem.place() returns exactly SUCCESS (placement happened) or FAIL (no support / water /
@@ -230,11 +234,21 @@ public class ElectricDrillItem extends Item {
 			// Invalid spot (no support, water for a vanilla torch, protection veto, …) → consume nothing.
 			return InteractionResult.PASS;
 		}
+
+		// place() must run on the client too — that call is what makes the placing player hear the torch
+		// (MOD-096). Level.playSound's first argument is `except`, and the two sides read it inversely:
+		// ServerLevel broadcasts to everyone *except* that player, while ClientLevel plays the sound only
+		// *if* it is the local player. Vanilla needs both halves; skipping the client one left the placing
+		// player in silence while bystanders heard it. The client owns only the prediction (block + sound,
+		// rolled back by the server on a veto); inventory and EU stay server-authoritative below.
+		if (level.isClientSide()) {
+			return InteractionResult.SUCCESS;
+		}
 		if (!player.getAbilities().instabuild) {
 			torchStack.shrink(1);
 		}
 		if (ItemEnergy.get(drill) >= Config.electricDrillTorchEuCost) {
-			ItemEnergy.add(drill, -Config.electricDrillTorchEuCost);
+			ItemEnergy.spend(drill, Config.electricDrillTorchEuCost, player);
 		}
 		return InteractionResult.SUCCESS;
 	}

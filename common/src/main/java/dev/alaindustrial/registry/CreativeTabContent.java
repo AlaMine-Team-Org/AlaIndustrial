@@ -44,6 +44,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.TEMPERED_IRON_HOE.get());
 		scythes(out);
 		out.accept(ModContent.NETWORK_ANALYZER.get());
+		out.accept(ModContent.TELEPORTER_REMOTE.get());
 	}
 
 	/** The six scythe tiers (MOD-068), wood → netherite, as one continuous row. */
@@ -87,6 +88,10 @@ public final class CreativeTabContent {
 		out.accept(ModContent.MUTE_CHIP.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
 		out.accept(ModContent.WOODEN_GEAR.get());
+		out.accept(ModContent.STONE_GEAR.get());
+		out.accept(ModContent.IRON_GEAR.get());
+		out.accept(ModContent.GOLD_GEAR.get());
+		out.accept(ModContent.SILVER_GEAR.get());
 	}
 
 	public static void buildingBlocks(Sink out) {
@@ -135,7 +140,15 @@ public final class CreativeTabContent {
 
 	private static void storageAndCables(Sink out) {
 		out.accept(ModContent.BATTERY_BOX_ITEM.get());
+		// Teleporter (MOD-091/092/093): hidden until the feature was whole — the station banks EU with
+		// no way to spend it until the remote existed, and the remote had no list until the screen did.
+		// All three shipped, so it is visible now.
+		out.accept(ModContent.TELEPORTER_ITEM.get());
+		// The chest tiers, in upgrade order (36 → 45 → 54). Silver and Gold were missing here while
+		// present in the Fabric list, so NeoForge players saw neither in any tab — MOD-102.
 		out.accept(ModContent.IRON_CHEST_ITEM.get());
+		out.accept(ModContent.SILVER_CHEST_ITEM.get());
+		out.accept(ModContent.GOLD_CHEST_ITEM.get());
 		out.accept(ModContent.STOCK_DISPLAY_FRAME_ITEM.get());
 		out.accept(ModContent.COPPER_CABLE_ITEM.get());
 	}
@@ -165,6 +178,10 @@ public final class CreativeTabContent {
 		out.accept(ModContent.MUTE_CHIP.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
 		out.accept(ModContent.WOODEN_GEAR.get());
+		out.accept(ModContent.STONE_GEAR.get());
+		out.accept(ModContent.IRON_GEAR.get());
+		out.accept(ModContent.GOLD_GEAR.get());
+		out.accept(ModContent.SILVER_GEAR.get());
 		out.accept(ModContent.IRON_DUST.get());
 		out.accept(ModContent.COPPER_DUST.get());
 		out.accept(ModContent.GOLD_DUST.get());
@@ -177,6 +194,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.BATTERY.get());
 		out.accept(ModContent.ENERGY_PACK.get());
 		out.accept(ModContent.ELECTRIC_DRILL.get());
+		out.accept(ModContent.TELEPORTER_REMOTE.get());
 		// Empty capsule only — the filled form (MOD-063) is obtained by using it on a fluid.
 		out.accept(ModContent.VACUUM_CAPSULE.get());
 	}

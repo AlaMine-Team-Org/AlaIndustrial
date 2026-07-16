@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:block",
+	"pools": [{
+		"rolls": 1.0,
+		"entries": [{
+			"type": "minecraft:item",
+			"name": "alaindustrial:teleporter",
+			"functions": [{
+				"function": "minecraft:copy_components",
+				"source": "block_entity",
+				"include": ["alaindustrial:stored_energy", "alaindustrial:teleporter_private"]
+			}]
+		}],
+		"conditions": [{ "condition": "minecraft:survives_explosion" }]
+	}]
+}

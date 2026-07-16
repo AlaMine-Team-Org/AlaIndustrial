@@ -1,7 +1,11 @@
 package dev.alaindustrial.network.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.client.TeleportFadeHud;
+import dev.alaindustrial.client.TeleportNotice;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
+import dev.alaindustrial.network.TeleportFadePayload;
+import dev.alaindustrial.network.TeleportNoticePayload;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -34,5 +38,21 @@ public final class NeoForgeNetworkClient {
 	@Nullable
 	public static NetworkAnalyzerPayload latest() {
 		return latest;
+	}
+
+	/**
+	 * Called on the client main thread when a teleport fade level arrives (MOD-106). Hands straight to
+	 * the loader-neutral overlay, which is also what Fabric's receiver calls.
+	 */
+	public static void receiveFade(TeleportFadePayload payload) {
+		TeleportFadeHud.receive(payload.strength());
+	}
+
+	/**
+	 * Called on the client main thread when a teleport refusal arrives (MOD-093). Hands straight to
+	 * the loader-neutral holder the remote's screen reads, same as Fabric's receiver.
+	 */
+	public static void receiveNotice(TeleportNoticePayload payload) {
+		TeleportNotice.receive(payload.message());
 	}
 }

@@ -8,6 +8,9 @@
 		"alaindustrial": "*"
 	},
 	"entrypoints": {
+		"main": [
+			"dev.alaindustrial.gametest.ForeignEnergyItemMod"
+		],
 		"fabric-client-gametest": [
 			"dev.alaindustrial.gametest.GuiClientGameTest"
 		],
@@ -18,6 +21,9 @@
 			"dev.alaindustrial.gametest.MachineGameTest",
 			"dev.alaindustrial.gametest.SolarPanelGameTest",
 			"dev.alaindustrial.gametest.BatteryBoxGameTest",
+			"dev.alaindustrial.gametest.TeleporterStationGameTest",
+			"dev.alaindustrial.gametest.TeleporterJumpGameTest",
+			"dev.alaindustrial.gametest.TeleporterGuiGameTest",
 			"dev.alaindustrial.gametest.NetworkGameTest",
 			"dev.alaindustrial.gametest.NetworkBenchGameTest",
 			"dev.alaindustrial.gametest.NetworkAnalyzerGameTest",
@@ -30,6 +36,7 @@
 			"dev.alaindustrial.gametest.PouchGameTest",
 			"dev.alaindustrial.gametest.EnergyPackGameTest",
 			"dev.alaindustrial.gametest.ElectricDrillGameTest",
+			"dev.alaindustrial.gametest.ItemEnergyCapabilityGameTest",
 			"dev.alaindustrial.gametest.CapsuleGameTest",
 			"dev.alaindustrial.gametest.GeothermalLavaInputGameTest",
 			"dev.alaindustrial.gametest.DemoStandGameTest",

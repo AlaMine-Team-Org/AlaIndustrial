@@ -4,7 +4,9 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.AnalyzerMode;
 import dev.alaindustrial.item.NetworkScanData;
 import dev.alaindustrial.item.PouchContents;
+import dev.alaindustrial.item.TeleportPoints;
 import dev.alaindustrial.registry.ModDataComponents;
+import java.util.UUID;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -40,6 +42,15 @@ public final class ModDataComponentsNeoForge {
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<Fluid>>> CAPSULE_FLUID =
 			DATA_COMPONENTS.register("capsule_fluid", ModDataComponents::createCapsuleFluid);
 
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> TELEPORTER_PRIVATE =
+			DATA_COMPONENTS.register("teleporter_private", ModDataComponents::createTeleporterPrivate);
+
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<UUID>> TELEPORTER_OWNER =
+			DATA_COMPONENTS.register("teleporter_owner", ModDataComponents::createTeleporterOwner);
+
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<TeleportPoints>> TELEPORTER_POINTS =
+			DATA_COMPONENTS.register("teleporter_points", ModDataComponents::createTeleporterPoints);
+
 	/** Bind the neutral handles to the deferred holders. Called from the {@code @Mod} ctor after register. */
 	public static void init() {
 		ModDataComponents.STORED_ENERGY = STORED_ENERGY;
@@ -48,6 +59,9 @@ public final class ModDataComponentsNeoForge {
 		ModDataComponents.POUCH_ENERGY = POUCH_ENERGY;
 		ModDataComponents.POUCH_CONTENTS = POUCH_CONTENTS;
 		ModDataComponents.CAPSULE_FLUID = CAPSULE_FLUID;
+		ModDataComponents.TELEPORTER_PRIVATE = TELEPORTER_PRIVATE;
+		ModDataComponents.TELEPORTER_OWNER = TELEPORTER_OWNER;
+		ModDataComponents.TELEPORTER_POINTS = TELEPORTER_POINTS;
 	}
 
 	private ModDataComponentsNeoForge() {

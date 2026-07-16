@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "alaindustrial:block/teleporter"
+    },
+    "facing=south": {
+      "model": "alaindustrial:block/teleporter",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "alaindustrial:block/teleporter",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "alaindustrial:block/teleporter",
+      "y": 90
+    }
+  }
+}

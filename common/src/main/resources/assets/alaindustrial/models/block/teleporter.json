@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "alaindustrial:block/teleporter_side",
+    "down": "alaindustrial:block/teleporter_bottom",
+    "up": "alaindustrial:block/teleporter_top",
+    "north": "alaindustrial:block/teleporter_front",
+    "south": "alaindustrial:block/teleporter_side",
+    "east": "alaindustrial:block/teleporter_side",
+    "west": "alaindustrial:block/teleporter_side"
+  }
+}

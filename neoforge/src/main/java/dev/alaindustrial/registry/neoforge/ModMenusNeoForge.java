@@ -1,6 +1,8 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.menu.BatteryBoxMenu;
+import dev.alaindustrial.menu.TeleporterRemoteMenu;
+import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import dev.alaindustrial.menu.ElectricFurnaceMenu;
@@ -65,6 +67,12 @@ public final class ModMenusNeoForge {
 			register("compressor", (id, inv, buf) -> new CompressorMenu(id, inv));
 	public static final DeferredHolder<MenuType<?>, MenuType<BatteryBoxMenu>> BATTERY_BOX =
 			register("battery_box", (id, inv, buf) -> new BatteryBoxMenu(id, inv));
+
+	public static final DeferredHolder<MenuType<?>, MenuType<TeleporterStationMenu>> TELEPORTER_STATION =
+			register("teleporter_station", (id, inv, buf) -> new TeleporterStationMenu(id, inv));
+
+	public static final DeferredHolder<MenuType<?>, MenuType<TeleporterRemoteMenu>> TELEPORTER_REMOTE =
+			register("teleporter_remote", (id, inv, buf) -> new TeleporterRemoteMenu(id, inv));
 	public static final DeferredHolder<MenuType<?>, MenuType<DaylightSolarPanelMenu>> DAYLIGHT_SOLAR_PANEL =
 			register("daylight_solar_panel", (id, inv, buf) -> new DaylightSolarPanelMenu(id, inv));
 	public static final DeferredHolder<MenuType<?>, MenuType<GeothermalGeneratorMenu>> GEOTHERMAL_GENERATOR =
@@ -107,6 +115,8 @@ public final class ModMenusNeoForge {
 		ModContent.EXTRACTOR_MENU = EXTRACTOR::get;
 		ModContent.COMPRESSOR_MENU = COMPRESSOR::get;
 		ModContent.BATTERY_BOX_MENU = BATTERY_BOX::get;
+		ModContent.TELEPORTER_STATION_MENU = TELEPORTER_STATION::get;
+		ModContent.TELEPORTER_REMOTE_MENU = TELEPORTER_REMOTE::get;
 		ModContent.DAYLIGHT_SOLAR_PANEL_MENU = DAYLIGHT_SOLAR_PANEL::get;
 		ModContent.GEOTHERMAL_GENERATOR_MENU = GEOTHERMAL_GENERATOR::get;
 		ModContent.PUMP_MENU = PUMP::get;

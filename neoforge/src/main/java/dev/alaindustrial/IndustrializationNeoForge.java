@@ -1,6 +1,7 @@
 package dev.alaindustrial;
 
 import dev.alaindustrial.core.EnergyLookup;
+import dev.alaindustrial.item.ItemEnergyBridge;
 import dev.alaindustrial.core.EnergyTransactions;
 import dev.alaindustrial.core.FluidLookup;
 import dev.alaindustrial.core.neoforge.BufferAsEnergyHandler;
@@ -77,6 +78,9 @@ public final class IndustrializationNeoForge {
 		// content (the pump) can resolve a neighbour's FluidPort without importing NeoForge transfer types.
 		// Fluid transactions reuse the already-installed NeoForgeEnergyTransactions (see FluidPort class doc).
 		FluidLookup.install(new NeoForgeFluidLookup());
+		// MOD-084: install the item-energy bridge seam, so the worn Energy Pack can charge other mods'
+		// powered items through Capabilities.Energy.ITEM without common code importing NeoForge types.
+		ItemEnergyBridge.install(new dev.alaindustrial.core.neoforge.NeoForgeItemEnergyBridge());
 
 		// MOD-022 Phase 3: install the NeoForge packet-send seam so content code dispatches through the
 		// neutral NetworkDispatcher instead of PacketDistributor directly.
@@ -154,7 +158,26 @@ public final class IndustrializationNeoForge {
 			for (ServerLevel lvl : event.getServer().getAllLevels()) {
 				NetworkManager.tickAll(lvl);
 			}
+			// Teleport warmups are per-player, not per-level (MOD-092).
+			dev.alaindustrial.teleporter.TeleportWarmupManager.tickAll(event.getServer());
 		});
+		// Teleport warmup cancellation (MOD-092). Three hooks, not two: LivingDamageEvent.Post does
+		// not fire for a killing blow, and death does not disconnect the player.
+		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.living.LivingDamageEvent.Post event) -> {
+			if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player
+					&& event.getHealthDamage() > 0.0f) {
+				dev.alaindustrial.teleporter.TeleportWarmupManager.cancel(player,
+						net.minecraft.network.chat.Component.translatable("alaindustrial.teleporter.cancelled_hurt"));
+			}
+		});
+		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.living.LivingDeathEvent event) -> {
+			if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player) {
+				dev.alaindustrial.teleporter.TeleportWarmupManager.cancel(player);
+			}
+		});
+		NeoForge.EVENT_BUS.addListener(
+				(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) ->
+						dev.alaindustrial.teleporter.TeleportWarmupManager.forget(event.getEntity().getUUID()));
 		NeoForge.EVENT_BUS.addListener((LevelEvent.Unload event) -> {
 			if (event.getLevel() instanceof ServerLevel lvl) {
 				NetworkManager.clear(lvl);
@@ -218,6 +241,8 @@ public final class IndustrializationNeoForge {
 				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
 		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.BATTERY_BOX.get(),
 				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
+		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.TELEPORTER.get(),
+				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
 		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.ELECTRIC_FURNACE.get(),
 				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
 		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.EXTRACTOR.get(),
@@ -248,5 +273,16 @@ public final class IndustrializationNeoForge {
 		event.registerItem(Capabilities.Fluid.ITEM,
 				(stack, access) -> new dev.alaindustrial.core.neoforge.CapsuleResourceHandler(access),
 				ModItemsNeoForge.VACUUM_CAPSULE.get(), ModItemsNeoForge.FILLED_VACUUM_CAPSULE.get());
+
+		// MOD-084: item-side energy capability on the mod's powered items, so other mods' chargers can
+		// fill them. Insert-only — see StackAsEnergyHandler.
+		event.registerItem(Capabilities.Energy.ITEM,
+				(stack, access) -> new dev.alaindustrial.core.neoforge.StackAsEnergyHandler(access),
+				ModItemsNeoForge.BATTERY_POUCH.get(), ModItemsNeoForge.ENERGY_PACK.get(),
+				ModItemsNeoForge.ELECTRIC_DRILL.get());
+
+		// MOD-084: a fake "other mod" energy item, so the gametests can prove the pack charges foreign
+		// items. Dev/gametest only — inert in a shipped jar (see the class doc).
+		dev.alaindustrial.gametest.neoforge.ForeignEnergyItemStandIn.register(event);
 	}
 }

@@ -7,6 +7,7 @@ import dev.alaindustrial.item.HintItem;
 import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
+import dev.alaindustrial.item.TeleporterRemoteItem;
 import dev.alaindustrial.item.PouchItem;
 import dev.alaindustrial.item.ScytheItem;
 import dev.alaindustrial.registry.ModContent;
@@ -50,6 +51,11 @@ public final class ModItemsNeoForge {
 			p -> new HintItem(p, "item.alaindustrial.mute_chip.hint", "item.alaindustrial.mute_chip.hint2"));
 	public static final DeferredItem<Item> WINDMILL_ROTOR = ITEMS.registerItem("windmill_rotor", Item::new);
 	public static final DeferredItem<Item> WOODEN_GEAR = ITEMS.registerItem("wooden_gear", Item::new);
+	// Metal gears (MOD-105): crafting components for machinery still to come.
+	public static final DeferredItem<Item> STONE_GEAR = ITEMS.registerItem("stone_gear", Item::new);
+	public static final DeferredItem<Item> IRON_GEAR = ITEMS.registerItem("iron_gear", Item::new);
+	public static final DeferredItem<Item> GOLD_GEAR = ITEMS.registerItem("gold_gear", Item::new);
+	public static final DeferredItem<Item> SILVER_GEAR = ITEMS.registerItem("silver_gear", Item::new);
 	public static final DeferredItem<Item> TEMPERED_IRON = ITEMS.registerItem("tempered_iron", Item::new);
 	// Tempered-iron pickaxe — first mod tool (MOD-054). MC 26.2 has no PickaxeItem class: a pickaxe is
 	// a plain Item whose `minecraft:tool` component is attached via Item.Properties.pickaxe(...). The
@@ -116,6 +122,10 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> URANIUM_INGOT = ITEMS.registerItem("uranium_ingot", Item::new);
 	public static final DeferredItem<NetworkAnalyzerItem> NETWORK_ANALYZER =
 			ITEMS.registerItem("network_analyzer", NetworkAnalyzerItem::new, p -> p.stacksTo(1));
+
+	// Teleporter Remote (MOD-092) — hidden from the creative tab until MOD-093 (see CreativeTabContent).
+	public static final DeferredItem<TeleporterRemoteItem> TELEPORTER_REMOTE =
+			ITEMS.registerItem("teleporter_remote", TeleporterRemoteItem::new, p -> p.stacksTo(1));
 	public static final DeferredItem<PouchItem> BATTERY_POUCH =
 			ITEMS.registerItem("battery_pouch", PouchItem::new, p -> p.stacksTo(1));
 	// Energy Pack (MOD-065): worn LV buffer + the inert battery cell it is crafted from. Equipment
@@ -203,6 +213,9 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("macerator", ModBlocksNeoForge.MACERATOR);
 	public static final DeferredItem<BlockItem> BATTERY_BOX_ITEM =
 			ITEMS.registerSimpleBlockItem("battery_box", ModBlocksNeoForge.BATTERY_BOX);
+
+	public static final DeferredItem<BlockItem> TELEPORTER_ITEM =
+			ITEMS.registerSimpleBlockItem("teleporter", ModBlocksNeoForge.TELEPORTER);
 	public static final DeferredItem<BlockItem> ELECTRIC_FURNACE_ITEM =
 			ITEMS.registerSimpleBlockItem("electric_furnace", ModBlocksNeoForge.ELECTRIC_FURNACE);
 	public static final DeferredItem<BlockItem> EXTRACTOR_ITEM =
@@ -288,6 +301,10 @@ public final class ModItemsNeoForge {
 		ModContent.MUTE_CHIP = MUTE_CHIP;
 		ModContent.WINDMILL_ROTOR = WINDMILL_ROTOR;
 		ModContent.WOODEN_GEAR = WOODEN_GEAR;
+		ModContent.STONE_GEAR = STONE_GEAR;
+		ModContent.IRON_GEAR = IRON_GEAR;
+		ModContent.GOLD_GEAR = GOLD_GEAR;
+		ModContent.SILVER_GEAR = SILVER_GEAR;
 		ModContent.TEMPERED_IRON = TEMPERED_IRON;
 		ModContent.TEMPERED_IRON_PICKAXE = TEMPERED_IRON_PICKAXE;
 		ModContent.TEMPERED_IRON_AXE = TEMPERED_IRON_AXE;
@@ -320,6 +337,7 @@ public final class ModItemsNeoForge {
 		// NETWORK_ANALYZER is a DeferredItem<NetworkAnalyzerItem>; the slot is Supplier<Item>. Generics are
 		// invariant, so bind via the (still-lazy) method reference — see ModBlocksNeoForge#init javadoc.
 		ModContent.NETWORK_ANALYZER = NETWORK_ANALYZER::get;
+		ModContent.TELEPORTER_REMOTE = TELEPORTER_REMOTE::get;
 		// Same invariant-generics story as NETWORK_ANALYZER above.
 		ModContent.BATTERY_POUCH = BATTERY_POUCH::get;
 		ModContent.BATTERY = BATTERY::get;
@@ -345,6 +363,7 @@ public final class ModItemsNeoForge {
 		ModContent.DAYLIGHT_SOLAR_PANEL_ITEM = DAYLIGHT_SOLAR_PANEL_ITEM;
 		ModContent.MACERATOR_ITEM = MACERATOR_ITEM;
 		ModContent.BATTERY_BOX_ITEM = BATTERY_BOX_ITEM;
+		ModContent.TELEPORTER_ITEM = TELEPORTER_ITEM;
 		ModContent.ELECTRIC_FURNACE_ITEM = ELECTRIC_FURNACE_ITEM;
 		ModContent.EXTRACTOR_ITEM = EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = COMPRESSOR_ITEM;

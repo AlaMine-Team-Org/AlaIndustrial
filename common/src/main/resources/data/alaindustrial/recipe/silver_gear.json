@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		" M ",
+		"MGM",
+		" M "
+	],
+	"key": {
+		"M": "alaindustrial:silver_ingot",
+		"G": "alaindustrial:wooden_gear"
+	},
+	"result": {
+		"id": "alaindustrial:silver_gear",
+		"count": 1
+	}
+}

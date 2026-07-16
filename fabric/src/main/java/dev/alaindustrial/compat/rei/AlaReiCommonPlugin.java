@@ -2,7 +2,10 @@ package dev.alaindustrial.compat.rei;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.VanillaSmeltingMirror;
+import java.util.List;
 import me.shedaniel.rei.api.common.display.DisplaySerializerRegistry;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import me.shedaniel.rei.api.common.plugins.REICommonPlugin;
 import me.shedaniel.rei.api.common.registry.display.ServerDisplayRegistry;
 
@@ -36,5 +39,17 @@ public class AlaReiCommonPlugin implements REICommonPlugin {
 		// manager, builds the displays here, and syncs them to clients.
 		registry.beginRecipeFiller(AlaProcessingRecipe.class)
 				.fill(holder -> new AlaProcessingDisplay(holder.value()));
+		// MOD-086: the electric furnace also runs every vanilla smelt (RecipeType.SMELTING fallback), so
+		// its category lists those too — otherwise players opening it see only the mod's recipes and
+		// cannot tell the machine smelts ores, food and sand as well. Each vanilla recipe is mirrored
+		// into an AlaProcessingRecipe carrying the furnace's real EU cost; see VanillaSmeltingMirror
+		// (including why the five duplicate "balance anchor" recipes are left in).
+		// fillMultiple (not fill): a recipe that cannot be mirrored yields no display at all, and an
+		// empty collection is the only way to say "skip this one" — fill() would have to return null.
+		registry.beginRecipeFiller(SmeltingRecipe.class)
+				.fillMultiple(holder -> {
+					AlaProcessingRecipe mirror = VanillaSmeltingMirror.mirror(holder.value());
+					return mirror == null ? List.of() : List.of(new AlaProcessingDisplay(mirror));
+				});
 	}
 }

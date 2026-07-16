@@ -82,6 +82,12 @@ public final class NeoForgeGameTests {
 		// fix — ModDataComponentsNeoForge). Fabric covers this via BatteryBoxGameTest; NeoForge world lane's first.
 		registerTest(event, "battery_box_drop_carries_energy", 40, true,
 				CoreEnergyScenarios::batteryBoxDropCarriesEnergy);
+		// Teleporter station (MOD-091): its face roles and its teleporter_private data component are
+		// per-loader seams (energy adapter + frozen-registry), so the Fabric suite cannot vouch for them.
+		registerTest(event, "teleporter_face_roles", 40, true,
+				CoreEnergyScenarios::teleporterFaceRoles);
+		registerTest(event, "teleporter_drop_carries_privacy", 40, true,
+				CoreEnergyScenarios::teleporterDropCarriesPrivacy);
 		registerTest(event, "generator_charges_adjacent_box", 40, true,
 				CoreEnergyScenarios::generatorChargesAdjacentBox);
 		registerTest(event, "full_neighbour_no_leak", 40, true,
@@ -318,6 +324,7 @@ public final class NeoForgeGameTests {
 		registerTest(event, "pouch_remove_lifo", 40, true, PouchScenarios::fun04RemoveLifo);
 		registerTest(event, "pouch_passive_drain", 40, true, PouchScenarios::fun05PassiveDrain);
 		registerTest(event, "pouch_no_drain_when_empty", 40, true, PouchScenarios::fun06NoDrainWhenEmpty);
+		registerTest(event, "pouch_no_drain_in_creative", 40, true, PouchScenarios::fun05bNoDrainInCreative);
 		registerTest(event, "pouch_charge_in_battery_box", 80, true, PouchScenarios::fun07ChargeInBatteryBox);
 		registerTest(event, "pouch_merge_on_insert", 40, true, PouchScenarios::fun08MergeOnInsert);
 
@@ -345,6 +352,14 @@ public final class NeoForgeGameTests {
 		registerTest(event, "pack_budget_split", 40, true, EnergyPackScenarios::fun03BudgetSplitAcrossConsumers);
 		registerTest(event, "pack_charge_in_battery_box", 80, true, EnergyPackScenarios::fun04ChargeInBatteryBox);
 		registerTest(event, "pack_does_not_charge_pack", 40, true, EnergyPackScenarios::fun05PackDoesNotChargePack);
+		// MOD-084: the NeoForge half of the cross-mod bridge. Loader-specific bodies (they call
+		// Capabilities.Energy.ITEM), mirroring the Fabric lane's ItemEnergyCapabilityGameTest.
+		registerTest(event, "xmod_foreign_charger_fills_pouch", 40, true,
+				ItemEnergyCapabilityScenarios::fun01ForeignChargerFillsPouch);
+		registerTest(event, "xmod_foreign_machine_cannot_drain", 40, true,
+				ItemEnergyCapabilityScenarios::neg01ForeignMachineCannotDrain);
+		registerTest(event, "xmod_pack_charges_foreign_item", 40, true,
+				ItemEnergyCapabilityScenarios::fun02PackChargesForeignItem);
 		registerTest(event, "pack_worn_asset_follows_charge", 40, true, EnergyPackScenarios::fun06WornAssetFollowsCharge);
 		registerTest(event, "pack_inventory_tick_transfers", 60, true, EnergyPackScenarios::fun07InventoryTickDrivesTransfer);
 		registerTest(event, "pack_component_charge_fixes_look", 40, true, EnergyPackScenarios::fun08ChargedByComponentFixesItsLook);
@@ -352,6 +367,9 @@ public final class NeoForgeGameTests {
 		registerTest(event, "pack_no_transfer_when_idle", 40, true, EnergyPackScenarios::neg01NoTransferWhenNothingToDo);
 		registerTest(event, "pack_floors_at_zero", 40, true, EnergyPackScenarios::neg02PackFloorsAtZero);
 		registerTest(event, "pack_menu_slot_accepts_pack", 40, true, EnergyPackScenarios::neg03MenuSlotAcceptsPack);
+		registerTest(event, "pack_creative_keeps_charge", 40, true, EnergyPackScenarios::fun09CreativeKeepsCharge);
+		registerTest(event, "pack_charges_cursor_and_grid", 40, true, EnergyPackScenarios::fun10ChargesCursorAndCraftGrid);
+		registerTest(event, "pack_skips_open_container", 40, true, EnergyPackScenarios::neg05DoesNotChargeOpenContainer);
 		registerTest(event, "pack_charge_round_trip", 40, true, EnergyPackScenarios::per01ChargeRoundTrip);
 
 		// Electric Drill (MOD-079, TC-DRILL-001) — same loader-neutral bodies as the Fabric
@@ -375,15 +393,23 @@ public final class NeoForgeGameTests {
 		registerTest(event, "capsule_fill_from_tank", 40, true, CapsuleScenarios::fun02FillFromTank);
 		registerTest(event, "capsule_empty_into_tank", 40, true, CapsuleScenarios::fun03EmptyIntoTank);
 
-		// MOD-068 Scythe (suite TC-SCYTHE-001) — same neutral bodies as the Fabric ScytheGameTest. Proves
-		// the AOE clear, tag filter, ServerPlayerGameMode.destroyBlock durability/creative parity, the
-		// per-use cap and the shift / crops / water guards on the NeoForge lane too.
+		// MOD-068 / MOD-098 Scythe (suites TC-SCYTHE-001 + TC-SCYTHE-002) — same neutral bodies as the
+		// Fabric ScytheGameTest. Proves the AOE clear, tag filters, ServerPlayerGameMode.destroyBlock
+		// durability/creative parity, the per-use cap, the flat 1/block durability (incl. hardness-0),
+		// and the decor / crop modes (crop-protection, maturity, foliage-untouched-in-crop-mode).
 		registerTest(event, "scythe_clears_foliage_keeps_solids", 40, true, ScytheScenarios::fun01ClearsFoliageKeepsSolids);
-		registerTest(event, "scythe_shift_does_not_aoe", 40, true, ScytheScenarios::neg01ShiftDoesNotAoe);
+		registerTest(event, "scythe_shift_crop_mode_keeps_decor", 40, true, ScytheScenarios::neg01ShiftCropModeKeepsDecor);
 		registerTest(event, "scythe_durability_per_block", 40, true, ScytheScenarios::prf01DurabilityPerBlock);
+		registerTest(event, "scythe_durability_on_instant_block", 40, true, ScytheScenarios::prf03DurabilityOnInstantBlock);
 		registerTest(event, "scythe_creative_no_durability", 40, true, ScytheScenarios::prf02CreativeNoDurability);
 		registerTest(event, "scythe_stops_at_max_blocks", 40, true, ScytheScenarios::bva01StopsAtMaxBlocks);
 		registerTest(event, "scythe_keeps_crops_and_water", 40, true, ScytheScenarios::neg02KeepsCropsAndWater);
+		registerTest(event, "scythe_crop_mode_harvests_mature", 40, true, ScytheScenarios::fun02CropModeHarvestsMature);
+		registerTest(event, "scythe_crop_mode_keeps_immature", 40, true, ScytheScenarios::neg03CropModeKeepsImmature);
+		registerTest(event, "scythe_crop_mode_keeps_foliage", 40, true, ScytheScenarios::neg04CropModeKeepsFoliage);
+		registerTest(event, "scythe_crop_mode_harvests_cane_stalk", 40, true, ScytheScenarios::fun03CropModeHarvestsCaneStalk);
+		registerTest(event, "scythe_crop_mode_keeps_lone_cactus", 40, true, ScytheScenarios::neg05CropModeKeepsLoneCactus);
+		registerTest(event, "scythe_crop_mode_keeps_stem", 40, true, ScytheScenarios::neg06CropModeKeepsStem);
 		registerTest(event, "scythe_netherite_fire_resistant", 40, true, ScytheScenarios::con02NetheriteFireResistant);
 	}
 

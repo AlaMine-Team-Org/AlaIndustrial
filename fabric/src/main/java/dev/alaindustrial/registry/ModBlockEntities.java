@@ -2,6 +2,7 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
+import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
@@ -54,6 +55,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<CableBlockEntity> COPPER_CABLE;
 	public static BlockEntityType<MaceratorBlockEntity> MACERATOR;
 	public static BlockEntityType<BatteryBoxBlockEntity> BATTERY_BOX;
+	public static BlockEntityType<TeleporterBlockEntity> TELEPORTER;
 	public static BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE;
 	public static BlockEntityType<ExtractorBlockEntity> EXTRACTOR;
 	public static BlockEntityType<CompressorBlockEntity> COMPRESSOR;
@@ -87,6 +89,8 @@ public final class ModBlockEntities {
 				new BlockEntityType<>(MaceratorBlockEntity::new, Set.of(ModBlocks.MACERATOR)));
 		BATTERY_BOX = register("battery_box",
 				new BlockEntityType<>(BatteryBoxBlockEntity::new, Set.of(ModBlocks.BATTERY_BOX)));
+		TELEPORTER = register("teleporter",
+				new BlockEntityType<>(TeleporterBlockEntity::new, Set.of(ModBlocks.TELEPORTER)));
 		ELECTRIC_FURNACE = register("electric_furnace",
 				new BlockEntityType<>(ElectricFurnaceBlockEntity::new, Set.of(ModBlocks.ELECTRIC_FURNACE)));
 		EXTRACTOR = register("extractor",
@@ -118,6 +122,7 @@ public final class ModBlockEntities {
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),COPPER_CABLE);
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),MACERATOR);
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),BATTERY_BOX);
+		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),TELEPORTER);
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ELECTRIC_FURNACE);
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),EXTRACTOR);
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),COMPRESSOR);
@@ -138,6 +143,7 @@ public final class ModBlockEntities {
 		ModContent.COPPER_CABLE_BE = () -> COPPER_CABLE;
 		ModContent.MACERATOR_BE = () -> MACERATOR;
 		ModContent.BATTERY_BOX_BE = () -> BATTERY_BOX;
+		ModContent.TELEPORTER_BE = () -> TELEPORTER;
 		ModContent.ELECTRIC_FURNACE_BE = () -> ELECTRIC_FURNACE;
 		ModContent.EXTRACTOR_BE = () -> EXTRACTOR;
 		ModContent.COMPRESSOR_BE = () -> COMPRESSOR;

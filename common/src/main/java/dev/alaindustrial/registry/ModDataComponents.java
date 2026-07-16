@@ -5,8 +5,11 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.AnalyzerMode;
 import dev.alaindustrial.item.NetworkScanData;
 import dev.alaindustrial.item.PouchContents;
+import dev.alaindustrial.item.TeleportPoints;
+import java.util.UUID;
 import java.util.function.Supplier;
 import net.minecraft.core.Holder;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -38,6 +41,9 @@ public final class ModDataComponents {
 	public static final Identifier POUCH_ENERGY_ID = Industrialization.id("pouch_energy");
 	public static final Identifier POUCH_CONTENTS_ID = Industrialization.id("pouch_contents");
 	public static final Identifier CAPSULE_FLUID_ID = Industrialization.id("capsule_fluid");
+	public static final Identifier TELEPORTER_PRIVATE_ID = Industrialization.id("teleporter_private");
+	public static final Identifier TELEPORTER_OWNER_ID = Industrialization.id("teleporter_owner");
+	public static final Identifier TELEPORTER_POINTS_ID = Industrialization.id("teleporter_points");
 
 	/** Buffered EU carried on a storage block's item form. Bound once per loader before first access. */
 	public static Supplier<DataComponentType<Long>> STORED_ENERGY = () -> {
@@ -79,6 +85,60 @@ public final class ModDataComponents {
 	public static Supplier<DataComponentType<Holder<Fluid>>> CAPSULE_FLUID = () -> {
 		throw new IllegalStateException("ModDataComponents.CAPSULE_FLUID read before its loader bound it");
 	};
+
+	/**
+	 * Teleporter privacy flag (MOD-091) carried on the station's item form, alongside the buffered EU
+	 * in {@link #STORED_ENERGY}. Note what is <em>not</em> here: the station's owner. Ownership is
+	 * re-assigned to whoever places the block (battery-box semantics — hand a charged station to a
+	 * friend and it becomes theirs), so it lives only in the block entity's NBT and never travels on
+	 * the item. Absent = the default, {@code private}.
+	 */
+	public static Supplier<DataComponentType<Boolean>> TELEPORTER_PRIVATE = () -> {
+		throw new IllegalStateException("ModDataComponents.TELEPORTER_PRIVATE read before its loader bound it");
+	};
+
+	/**
+	 * Owner of a Teleporter Remote (MOD-092) — the UUID it binds to on first use. Only the owner can
+	 * bind or jump with it; a stolen remote is a paperweight. Unlike the station's owner (which is
+	 * re-assigned on every placement), this one travels with the item, because the item IS the thing
+	 * being owned.
+	 */
+	public static Supplier<DataComponentType<UUID>> TELEPORTER_OWNER = () -> {
+		throw new IllegalStateException("ModDataComponents.TELEPORTER_OWNER read before its loader bound it");
+	};
+
+	/**
+	 * The stations a remote knows (MOD-093) — a named list, replacing MOD-092's single point. Safe to
+	 * swap outright rather than migrate: the remote has never been craftable or in the creative tab,
+	 * so no player can be holding the old component.
+	 */
+	public static Supplier<DataComponentType<TeleportPoints>> TELEPORTER_POINTS = () -> {
+		throw new IllegalStateException("ModDataComponents.TELEPORTER_POINTS read before its loader bound it");
+	};
+
+	/** Build the {@code teleporter_owner} type both loaders register (MOD-092). */
+	public static DataComponentType<UUID> createTeleporterOwner() {
+		return DataComponentType.<UUID>builder()
+				.persistent(UUIDUtil.CODEC)
+				.networkSynchronized(UUIDUtil.STREAM_CODEC)
+				.build();
+	}
+
+	/** Build the {@code teleporter_points} type both loaders register (MOD-093). */
+	public static DataComponentType<TeleportPoints> createTeleporterPoints() {
+		return DataComponentType.<TeleportPoints>builder()
+				.persistent(TeleportPoints.CODEC)
+				.networkSynchronized(TeleportPoints.STREAM_CODEC)
+				.build();
+	}
+
+	/** Build the {@code teleporter_private} type both loaders register (MOD-091). */
+	public static DataComponentType<Boolean> createTeleporterPrivate() {
+		return DataComponentType.<Boolean>builder()
+				.persistent(Codec.BOOL)
+				.networkSynchronized(ByteBufCodecs.BOOL)
+				.build();
+	}
 
 	/** Build the {@code stored_energy} type both loaders register. */
 	public static DataComponentType<Long> createStoredEnergy() {

@@ -4,6 +4,7 @@ import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.core.BlockPos;
+import dev.alaindustrial.block.HorizontalMachineBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.Container;
@@ -245,6 +246,22 @@ public final class DemoStand {
 		level.setBlockAndUpdate(origin.offset(38, 2, 10),
 				ModContent.ENRICHED_URANIUM_WALL_TORCH.get().defaultBlockState()
 						.setValue(WallTorchBlock.FACING, Direction.WEST));
+		// Teleporter station (MOD-091): a charged battery box feeds it through a cable, so the stand
+		// shows it actually taking EU rather than standing there inert. It has no GUI and cannot jump
+		// yet — the remote is MOD-092. Hidden from the creative tab until MOD-093, so the demo stand
+		// and /give are the only ways to see it right now.
+		//
+		// The box's rotation is explicit and load-bearing: it emits ONLY from the face opposite its
+		// FACING and is inert on the other four (single-axis IO, MOD-006 — see
+		// BatteryBoxBlockEntity#energyRoleForFace). The cable sits to its east, so the box must face
+		// WEST for its output face to meet it. Placed with the default state (FACING=NORTH) it would
+		// emit southward into thin air, the cable would not even connect, and the station would sit
+		// there dead next to a full battery.
+		level.setBlockAndUpdate(origin.offset(30, 1, 12), ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		chargeBuffer(level, origin, 30, 1, 12);
+		set(level, origin, 31, 1, 12, ModContent.COPPER_CABLE.get());
+		set(level, origin, 32, 1, 12, ModContent.TELEPORTER.get());
 	}
 
 	// --- helpers ---

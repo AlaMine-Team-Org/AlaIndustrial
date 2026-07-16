@@ -2,6 +2,7 @@ package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
+import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
@@ -71,6 +72,9 @@ public final class ModBlockEntitiesNeoForge {
 			register("macerator", MaceratorBlockEntity::new, ModBlocksNeoForge.MACERATOR);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BatteryBoxBlockEntity>> BATTERY_BOX =
 			register("battery_box", BatteryBoxBlockEntity::new, ModBlocksNeoForge.BATTERY_BOX);
+
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TeleporterBlockEntity>> TELEPORTER =
+			register("teleporter", TeleporterBlockEntity::new, ModBlocksNeoForge.TELEPORTER);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE =
 			register("electric_furnace", ElectricFurnaceBlockEntity::new, ModBlocksNeoForge.ELECTRIC_FURNACE);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ExtractorBlockEntity>> EXTRACTOR =
@@ -121,6 +125,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.COPPER_CABLE_BE = COPPER_CABLE::get;
 		ModContent.MACERATOR_BE = MACERATOR::get;
 		ModContent.BATTERY_BOX_BE = BATTERY_BOX::get;
+		ModContent.TELEPORTER_BE = TELEPORTER::get;
 		ModContent.ELECTRIC_FURNACE_BE = ELECTRIC_FURNACE::get;
 		ModContent.EXTRACTOR_BE = EXTRACTOR::get;
 		ModContent.COMPRESSOR_BE = COMPRESSOR::get;

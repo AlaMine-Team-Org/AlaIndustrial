@@ -102,7 +102,16 @@ public class AlaReiPlugin implements REIClientPlugin {
 	public void registerScreens(ScreenRegistry registry) {
 		for (MachineRecipeViewerTargets.Target target : MachineRecipeViewerTargets.ALL) {
 			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
-			registerClickArea(registry, target.screenClass(), rect, categoryId(target.kind()));
+			// MOD-086: the electric furnace runs vanilla smelting as a fallback (see registerCategories),
+			// so its progress arrow opens both categories at once. The string form of the built-in category
+			// matches the addWorkstations call above — BuiltinPlugin.SMELTING lives in the runtime jar.
+			if (target.kind() == ModRecipes.SMELTING) {
+				registerClickArea(registry, target.screenClass(), rect,
+						categoryId(target.kind()),
+						CategoryIdentifier.of("minecraft", "plugins/smelting"));
+			} else {
+				registerClickArea(registry, target.screenClass(), rect, categoryId(target.kind()));
+			}
 		}
 		// MOD-080: keep REI's item grid clear of the upgrade panel + gear tab on every machine screen.
 		registry.exclusionZones().register((Class) MachineScreen.class, new AlaReiExclusionZones());
@@ -110,10 +119,10 @@ public class AlaReiPlugin implements REIClientPlugin {
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private static void registerClickArea(ScreenRegistry registry, Class<? extends AbstractContainerScreen<?>> screenClass,
-			MachineRecipeViewerTargets.GuiRect rect, CategoryIdentifier<?> categoryId) {
+			MachineRecipeViewerTargets.GuiRect rect, CategoryIdentifier<?>... categoryIds) {
 		registry.registerContainerClickArea(
 				new Rectangle(rect.x(), rect.y(), rect.width(), rect.height()),
 				(Class) screenClass,
-				categoryId);
+				categoryIds);
 	}
 }

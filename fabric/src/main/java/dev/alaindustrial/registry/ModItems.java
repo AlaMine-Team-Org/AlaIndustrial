@@ -9,6 +9,7 @@ import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import dev.alaindustrial.item.PouchItem;
 import dev.alaindustrial.item.ScytheItem;
+import dev.alaindustrial.item.TeleporterRemoteItem;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.core.Registry;
@@ -57,6 +58,11 @@ public final class ModItems {
 	public static final Item MUTE_CHIP = hintItem("mute_chip");
 	public static final Item WINDMILL_ROTOR = item("windmill_rotor");
 	public static final Item WOODEN_GEAR = item("wooden_gear");
+	// Metal gears (MOD-105): crafting components for machinery still to come.
+	public static final Item STONE_GEAR = item("stone_gear");
+	public static final Item IRON_GEAR = item("iron_gear");
+	public static final Item GOLD_GEAR = item("gold_gear");
+	public static final Item SILVER_GEAR = item("silver_gear");
 	public static final Item TEMPERED_IRON = item("tempered_iron");
 	public static final Item TEMPERED_IRON_PICKAXE =
 			temperedIronTool("tempered_iron_pickaxe", p -> p.pickaxe(ModToolMaterials.TEMPERED_IRON, 1.0f, -2.8f));
@@ -103,6 +109,9 @@ public final class ModItems {
 	public static final Item RAW_URANIUM = item("raw_uranium");
 	public static final Item URANIUM_INGOT = item("uranium_ingot");
 	public static final Item NETWORK_ANALYZER = networkAnalyzer("network_analyzer");
+	// Teleporter Remote (MOD-092): registered but kept out of the creative tab + no recipe until
+	// MOD-093 finishes the feature (same treatment as the station — see CreativeTabContent).
+	public static final Item TELEPORTER_REMOTE = teleporterRemote("teleporter_remote");
 	public static final Item BATTERY_POUCH = pouch("battery_pouch");
 	// Energy Pack (MOD-065): worn LV buffer + the inert battery cell it is crafted from.
 	public static final Item BATTERY = item("battery");
@@ -153,6 +162,7 @@ public final class ModItems {
 	public static final BlockItem INSULATED_TIN_CABLE_ITEM = blockItem("insulated_tin_cable", ModBlocks.INSULATED_TIN_CABLE);
 	public static final BlockItem MACERATOR_ITEM = blockItem("macerator", ModBlocks.MACERATOR);
 	public static final BlockItem BATTERY_BOX_ITEM = blockItem("battery_box", ModBlocks.BATTERY_BOX);
+	public static final BlockItem TELEPORTER_ITEM = blockItem("teleporter", ModBlocks.TELEPORTER);
 	public static final BlockItem ELECTRIC_FURNACE_ITEM = blockItem("electric_furnace", ModBlocks.ELECTRIC_FURNACE);
 	public static final BlockItem EXTRACTOR_ITEM = blockItem("extractor", ModBlocks.EXTRACTOR);
 	public static final BlockItem COMPRESSOR_ITEM = blockItem("compressor", ModBlocks.COMPRESSOR);
@@ -190,6 +200,12 @@ public final class ModItems {
 		return Registry.register(BuiltInRegistries.ITEM, key,
 				new HintItem(new Item.Properties().setId(key),
 						"item.alaindustrial." + path + ".hint", "item.alaindustrial." + path + ".hint2"));
+	}
+
+	private static Item teleporterRemote(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new TeleporterRemoteItem(new Item.Properties().setId(key).stacksTo(1)));
 	}
 
 	private static Item networkAnalyzer(String path) {
@@ -343,6 +359,10 @@ public final class ModItems {
 					output.accept(PUMP_ITEM);
 					// Storage + cables
 					output.accept(BATTERY_BOX_ITEM);
+					// Teleporter (MOD-093). NOTE: this list is Fabric's own — NeoForge builds the same
+					// tab from CreativeTabContent, so anything added there must be added here too, or
+					// it shows on one loader and not the other. That divergence is tracked as MOD-102.
+					output.accept(TELEPORTER_ITEM);
 					output.accept(IRON_CHEST_ITEM);
 				output.accept(SILVER_CHEST_ITEM);
 				output.accept(GOLD_CHEST_ITEM);
@@ -378,6 +398,10 @@ public final class ModItems {
 					output.accept(MUTE_CHIP);
 						output.accept(WINDMILL_ROTOR);
 						output.accept(WOODEN_GEAR);
+						output.accept(STONE_GEAR);
+						output.accept(IRON_GEAR);
+						output.accept(GOLD_GEAR);
+						output.accept(SILVER_GEAR);
 						output.accept(IRON_DUST);
 					output.accept(COPPER_DUST);
 					output.accept(GOLD_DUST);
@@ -390,6 +414,7 @@ public final class ModItems {
 						output.accept(BATTERY);
 						output.accept(ENERGY_PACK);
 						output.accept(ELECTRIC_DRILL);
+						output.accept(TELEPORTER_REMOTE);
 						// Empty capsule only — the filled form is obtained by using it on a fluid.
 						output.accept(VACUUM_CAPSULE);
 							output.accept(ENRICHED_URANIUM_TORCH_ITEM); // MOD-085 decorative light source
@@ -484,6 +509,10 @@ public final class ModItems {
 		ModContent.MUTE_CHIP = () -> MUTE_CHIP;
 		ModContent.WINDMILL_ROTOR = () -> WINDMILL_ROTOR;
 		ModContent.WOODEN_GEAR = () -> WOODEN_GEAR;
+		ModContent.STONE_GEAR = () -> STONE_GEAR;
+		ModContent.IRON_GEAR = () -> IRON_GEAR;
+		ModContent.GOLD_GEAR = () -> GOLD_GEAR;
+		ModContent.SILVER_GEAR = () -> SILVER_GEAR;
 		ModContent.TEMPERED_IRON = () -> TEMPERED_IRON;
 		ModContent.TEMPERED_IRON_PICKAXE = () -> TEMPERED_IRON_PICKAXE;
 		ModContent.TEMPERED_IRON_AXE = () -> TEMPERED_IRON_AXE;
@@ -514,6 +543,7 @@ public final class ModItems {
 		ModContent.RAW_URANIUM = () -> RAW_URANIUM;
 		ModContent.URANIUM_INGOT = () -> URANIUM_INGOT;
 		ModContent.NETWORK_ANALYZER = () -> NETWORK_ANALYZER;
+		ModContent.TELEPORTER_REMOTE = () -> TELEPORTER_REMOTE;
 		ModContent.BATTERY_POUCH = () -> BATTERY_POUCH;
 		ModContent.BATTERY = () -> BATTERY;
 		ModContent.ENERGY_PACK = () -> ENERGY_PACK;
@@ -545,6 +575,7 @@ public final class ModItems {
 		ModContent.INSULATED_TIN_CABLE_ITEM = () -> INSULATED_TIN_CABLE_ITEM;
 		ModContent.MACERATOR_ITEM = () -> MACERATOR_ITEM;
 		ModContent.BATTERY_BOX_ITEM = () -> BATTERY_BOX_ITEM;
+		ModContent.TELEPORTER_ITEM = () -> TELEPORTER_ITEM;
 		ModContent.ELECTRIC_FURNACE_ITEM = () -> ELECTRIC_FURNACE_ITEM;
 		ModContent.EXTRACTOR_ITEM = () -> EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = () -> COMPRESSOR_ITEM;

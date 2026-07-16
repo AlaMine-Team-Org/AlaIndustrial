@@ -104,12 +104,22 @@ public final class IndustrializationNeoForgeClient {
 			event.register(ModKeyMappings.TOGGLE_DRILL_HUD);
 		});
 		modBus.addListener((RegisterGuiLayersEvent event) -> {
+			// Teleport screen fade (MOD-106) — counterpart to the Fabric HudElementRegistry entry; the
+			// drawing itself is loader-neutral (TeleportFadeHud). Registered before the readouts so they
+			// stay legible over it.
+			event.registerAboveAll(Industrialization.id("teleport_fade"),
+					dev.alaindustrial.client.TeleportFadeHud::render);
 			event.registerAboveAll(Industrialization.id("energy_pack_hud"), EnergyPackHud::render);
 			// Electric Drill charge readout (MOD-079) — same toggle/key as the pack, stacks below it.
 			event.registerAboveAll(Industrialization.id("electric_drill_hud"),
 					dev.alaindustrial.client.ElectricDrillHud::render);
 		});
 		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> ModKeyMappings.handleInput());
+		// Leaving a world drops any fade in flight, so it cannot bleed into the next one (MOD-106) —
+		// the Fabric counterpart hangs off ClientPlayConnectionEvents.DISCONNECT.
+		NeoForge.EVENT_BUS.addListener(
+				(net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent.LoggingOut event) ->
+						dev.alaindustrial.client.TeleportFadeHud.reset());
 		Industrialization.LOGGER.info("Industrialization (NeoForge client) initialized.");
 	}
 
@@ -129,6 +139,10 @@ public final class IndustrializationNeoForgeClient {
 		event.register(ModMenusNeoForge.EXTRACTOR.get(), ExtractorScreen::new);
 		event.register(ModMenusNeoForge.COMPRESSOR.get(), CompressorScreen::new);
 		event.register(ModMenusNeoForge.BATTERY_BOX.get(), BatteryBoxScreen::new);
+		event.register(ModMenusNeoForge.TELEPORTER_STATION.get(),
+				dev.alaindustrial.client.TeleporterStationScreen::new);
+		event.register(ModMenusNeoForge.TELEPORTER_REMOTE.get(),
+				dev.alaindustrial.client.TeleporterRemoteScreen::new);
 		event.register(ModMenusNeoForge.DAYLIGHT_SOLAR_PANEL.get(), DaylightSolarPanelScreen::new);
 		event.register(ModMenusNeoForge.GEOTHERMAL_GENERATOR.get(), GeothermalGeneratorScreen::new);
 		event.register(ModMenusNeoForge.PUMP.get(), PumpScreen::new);

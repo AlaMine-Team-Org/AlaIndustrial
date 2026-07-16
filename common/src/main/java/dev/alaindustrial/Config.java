@@ -97,6 +97,38 @@ public final class Config {
 	 * still yields 16 000 EU in the geothermal generator (16× payback on the pump's own tax). */
 	public static int pumpEuPerBucket = 1000;
 
+	// --- Teleporter (HV anchor station, MOD-091) ---
+	/** Teleporter station EU buffer. Oversized (×25 the battery box) because a jump is paid in one
+	 * lump sum by the TARGET station: at ~10 000–20 000 EU for a typical "home from the mine" jump
+	 * this holds ~25–50 jumps, which is what makes the station usable while its chunk is unloaded
+	 * (an unloaded station does not recharge — see docs/blocks/advanced-machines/teleporter.md). */
+	public static int teleporterBuffer = 500_000;
+	/** Flat part of a jump's price — the "even next door is not free" floor (~17 macerator cycles). */
+	public static int teleporterBaseCost = 5000;
+	/** Added per block of euclidean distance to the target station. */
+	public static int teleporterCostPerBlock = 5;
+	/**
+	 * Warmup before a jump fires (100 t = 5 s).
+	 *
+	 * <p>Short on purpose: the feature's whole job is "get me home from the mine", and the original
+	 * fifteen seconds of standing still made that a chore. The anti-escape guarantee rests on the
+	 * cancel-on-damage rule rather than on the clock — a player under fire still cannot leave, but a
+	 * player who is simply done mining does not wait around. Five seconds is what the wind-up needs
+	 * to read as a scene (particles → rising sound → the screen going dark), which is why it is not
+	 * shorter. Raise it on a PvP server if you want the jump interruptible by reaction, not by a hit.
+	 */
+	public static int teleporterWarmupTicks = 100;
+	/** Anti-spam lockout after landing, per player. */
+	public static int teleporterCooldownTicks = 1200;
+	/** Moving further than this from where the warmup started cancels it. A step aside is fine. */
+	public static int teleporterWarmupCancelRadius = 2;
+	/**
+	 * Max stations one remote can hold (MOD-093). Bounds the data component (each point is a
+	 * dimension + pos + a name up to 32 chars) and keeps the screen's list finite without paging.
+	 * Enforced server-side at bind time — never by the screen.
+	 */
+	public static int teleporterMaxPoints = 16;
+
 	// --- Storage / per-block buffers (EU) ---
 	public static int batteryBoxBuffer = 20_000;
 	public static int maceratorBuffer = 800;
@@ -205,6 +237,19 @@ public final class Config {
 		return Math.max(1, Math.round(baseTicks / globalMachineSpeedMultiplier));
 	}
 
+	/**
+	 * EU the electric furnace spends on one vanilla smelt — its scaled duration times its effective
+	 * per-tick drain, i.e. exactly what {@code ElectricFurnaceBlockEntity} ticks away.
+	 *
+	 * <p>Lives here so the recipe-viewer mirrors (MOD-086) quote the same number the machine spends
+	 * under any {@link #globalMachineSpeedMultiplier}: both factors round separately, so multiplying
+	 * the raw fields would only agree at the default 1.0 (e.g. x3 really costs
+	 * round(100/3) x round(2*3) = 198 EU, not 200).
+	 */
+	public static int electricFurnaceVanillaSmeltEu() {
+		return Math.max(1, scaledDuration(electricFurnaceDuration) * machineEuPerTickEffective());
+	}
+
 	/** Load the config file at {@code path}, or write the v0.2 defaults if it does not exist yet. */
 	public static void loadFrom(Path path) {
 		try {
@@ -256,6 +301,35 @@ public final class Config {
 						solarEvolveTicks = 33_600;
 					}
 					pumpEuPerBucket = GsonHelper.getAsInt(o, "pumpEuPerBucket", pumpEuPerBucket);
+					teleporterBuffer = GsonHelper.getAsInt(o, "teleporterBuffer", teleporterBuffer);
+					if (teleporterBuffer <= 0) {
+						teleporterBuffer = 500_000;
+					}
+					teleporterBaseCost = GsonHelper.getAsInt(o, "teleporterBaseCost", teleporterBaseCost);
+					if (teleporterBaseCost < 0) {
+						teleporterBaseCost = 5000;
+					}
+					teleporterCostPerBlock = GsonHelper.getAsInt(o, "teleporterCostPerBlock", teleporterCostPerBlock);
+					if (teleporterCostPerBlock < 0) {
+						teleporterCostPerBlock = 5;
+					}
+					teleporterWarmupTicks = GsonHelper.getAsInt(o, "teleporterWarmupTicks", teleporterWarmupTicks);
+					if (teleporterWarmupTicks < 0) {
+						teleporterWarmupTicks = 100;
+					}
+					teleporterCooldownTicks = GsonHelper.getAsInt(o, "teleporterCooldownTicks", teleporterCooldownTicks);
+					if (teleporterCooldownTicks < 0) {
+						teleporterCooldownTicks = 1200;
+					}
+					teleporterWarmupCancelRadius = GsonHelper.getAsInt(o, "teleporterWarmupCancelRadius",
+							teleporterWarmupCancelRadius);
+					if (teleporterWarmupCancelRadius <= 0) {
+						teleporterWarmupCancelRadius = 2;
+					}
+					teleporterMaxPoints = GsonHelper.getAsInt(o, "teleporterMaxPoints", teleporterMaxPoints);
+					if (teleporterMaxPoints <= 0) {
+						teleporterMaxPoints = 16;
+					}
 					batteryBoxBuffer = GsonHelper.getAsInt(o, "batteryBoxBuffer", batteryBoxBuffer);
 					maceratorBuffer = GsonHelper.getAsInt(o, "maceratorBuffer", maceratorBuffer);
 					machineBuffer = GsonHelper.getAsInt(o, "machineBuffer", machineBuffer);
@@ -369,6 +443,13 @@ public final class Config {
 		o.addProperty("solarSnowFactor", solarSnowFactor);
 		o.addProperty("solarEvolveTicks", solarEvolveTicks);
 		o.addProperty("pumpEuPerBucket", pumpEuPerBucket);
+		o.addProperty("teleporterBuffer", teleporterBuffer);
+		o.addProperty("teleporterBaseCost", teleporterBaseCost);
+		o.addProperty("teleporterCostPerBlock", teleporterCostPerBlock);
+		o.addProperty("teleporterWarmupTicks", teleporterWarmupTicks);
+		o.addProperty("teleporterCooldownTicks", teleporterCooldownTicks);
+		o.addProperty("teleporterWarmupCancelRadius", teleporterWarmupCancelRadius);
+		o.addProperty("teleporterMaxPoints", teleporterMaxPoints);
 		o.addProperty("batteryBoxBuffer", batteryBoxBuffer);
 		o.addProperty("maceratorBuffer", maceratorBuffer);
 		o.addProperty("machineBuffer", machineBuffer);

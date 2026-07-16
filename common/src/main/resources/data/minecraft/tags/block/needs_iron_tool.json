@@ -1,7 +1,8 @@
 {
   "replace": false,
   "values": [
-    "alaindustrial:uranium_ore",
-    "alaindustrial:deepslate_uranium_ore"
+    "alaindustrial:deepslate_uranium_ore",
+    "alaindustrial:teleporter",
+    "alaindustrial:uranium_ore"
   ]
 }

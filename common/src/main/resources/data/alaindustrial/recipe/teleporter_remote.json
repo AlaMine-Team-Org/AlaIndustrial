@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"T": "alaindustrial:tempered_iron",
+		"C": "alaindustrial:electronic_circuit",
+		"E": "minecraft:ender_pearl"
+	},
+	"pattern": [" E ","TCT"," T "],
+	"result": { "id": "alaindustrial:teleporter_remote" }
+}

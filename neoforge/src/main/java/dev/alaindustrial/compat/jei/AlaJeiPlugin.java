@@ -5,6 +5,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.MachineRecipeViewerTargets;
 import dev.alaindustrial.client.RecipeViewerInfo;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.VanillaSmeltingMirror;
 import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.neoforge.ModBlocksNeoForge;
 import java.lang.reflect.Method;
@@ -74,6 +75,12 @@ public final class AlaJeiPlugin implements IModPlugin {
 		RecipeMap recipes = clientSyncedRecipes();
 		for (Machine machine : MACHINES) {
 			List<RecipeHolder<AlaProcessingRecipe>> machineRecipes = recipesFor(recipes, machine.kind());
+			// MOD-086: the electric furnace also runs every vanilla smelt (RecipeType.SMELTING fallback),
+			// so its category lists those too — otherwise players opening it see only the mod's recipes and
+			// cannot tell the machine smelts ores, food and sand as well.
+			if (machine.kind() == ModRecipes.SMELTING) {
+				machineRecipes.addAll(VanillaSmeltingMirror.mirrorAll(recipes));
+			}
 			Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI recipe(s) for {}", machineRecipes.size(),
 					machine.kind().id());
 			registration.addRecipes(machine.type(), machineRecipes);
@@ -111,10 +118,21 @@ public final class AlaJeiPlugin implements IModPlugin {
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		for (MachineRecipeViewerTargets.Target target : MachineRecipeViewerTargets.ALL) {
 			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
-			registration.addRecipeClickArea(
-					target.screenClass(),
-					rect.x(), rect.y(), rect.width(), rect.height(),
-					AlaJeiRecipeTypes.byKind(target.kind()));
+			// MOD-086: the electric furnace runs vanilla smelting as a fallback (see registerRecipeCatalysts),
+			// so its progress arrow opens both categories at once. addRecipeClickArea takes IRecipeType<?>...,
+			// and IRecipeHolderType extends IRecipeType, so both types fit one call.
+			if (target.kind() == ModRecipes.SMELTING) {
+				registration.addRecipeClickArea(
+						target.screenClass(),
+						rect.x(), rect.y(), rect.width(), rect.height(),
+						AlaJeiRecipeTypes.byKind(target.kind()),
+						RecipeTypes.SMELTING);
+			} else {
+				registration.addRecipeClickArea(
+						target.screenClass(),
+						rect.x(), rect.y(), rect.width(), rect.height(),
+						AlaJeiRecipeTypes.byKind(target.kind()));
+			}
 		}
 		// MOD-080: keep JEI's item grid clear of the upgrade panel + gear tab on every machine screen.
 		registration.addGuiContainerHandler((Class) MachineScreen.class, new AlaJeiGuiExtraAreasHandler());

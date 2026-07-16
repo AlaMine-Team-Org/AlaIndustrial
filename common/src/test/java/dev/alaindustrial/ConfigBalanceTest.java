@@ -38,6 +38,21 @@ class ConfigBalanceTest {
 				"default 1.0 speed multiplier must not change duration");
 	}
 
+	/**
+	 * MOD-086: the vanilla-smelt cost quoted in the electric furnace's recipe-viewer category must be
+	 * what the machine really drains — scaled duration × effective per-tick draw, the same pair
+	 * {@code ElectricFurnaceBlockEntity} ticks away. Each factor rounds on its own, so multiplying the
+	 * raw config fields would agree only at the default multiplier.
+	 */
+	@Test
+	void electricFurnaceVanillaSmeltEu_matchesRuntimeSpend() {
+		assertEquals(Config.scaledDuration(Config.electricFurnaceDuration) * Config.machineEuPerTickEffective(),
+				Config.electricFurnaceVanillaSmeltEu(),
+				"quoted vanilla smelt cost must equal what the furnace actually drains");
+		assertEquals(200, Config.electricFurnaceVanillaSmeltEu(),
+				"canonical vanilla smelt cost on the shipped defaults (100 t x 2 EU/t)");
+	}
+
 	@Test
 	void machineDurations_positive() {
 		assertTrue(Config.maceratorDuration > 0);

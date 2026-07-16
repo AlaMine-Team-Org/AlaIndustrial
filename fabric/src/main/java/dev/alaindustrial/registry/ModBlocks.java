@@ -2,6 +2,7 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.BatteryBoxBlock;
+import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
 import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
@@ -106,6 +107,11 @@ public final class ModBlocks {
 	public static final ResourceKey<Block> BATTERY_BOX_KEY = key("battery_box");
 	public static final Block BATTERY_BOX = register(BATTERY_BOX_KEY,
 			new BatteryBoxBlock(props(BATTERY_BOX_KEY).strength(3.0f, 6.0f).sound(SoundType.WOOD)));
+
+	// Teleporter station (MOD-091); visible since MOD-093 completed the feature.
+	public static final ResourceKey<Block> TELEPORTER_KEY = key("teleporter");
+	public static final Block TELEPORTER = register(TELEPORTER_KEY,
+			new TeleporterBlock(props(TELEPORTER_KEY).strength(5.0f, 12.0f).sound(SoundType.METAL)));
 
 	public static final ResourceKey<Block> ELECTRIC_FURNACE_KEY = key("electric_furnace");
 	public static final Block ELECTRIC_FURNACE = register(ELECTRIC_FURNACE_KEY,
@@ -257,6 +263,7 @@ public final class ModBlocks {
 		ModContent.INSULATED_TIN_CABLE = () -> INSULATED_TIN_CABLE;
 		ModContent.MACERATOR = () -> MACERATOR;
 		ModContent.BATTERY_BOX = () -> BATTERY_BOX;
+		ModContent.TELEPORTER = () -> TELEPORTER;
 		ModContent.ELECTRIC_FURNACE = () -> ELECTRIC_FURNACE;
 		ModContent.EXTRACTOR = () -> EXTRACTOR;
 		ModContent.COMPRESSOR = () -> COMPRESSOR;

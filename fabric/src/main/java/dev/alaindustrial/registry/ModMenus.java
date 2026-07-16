@@ -2,6 +2,8 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.menu.BatteryBoxMenu;
+import dev.alaindustrial.menu.TeleporterRemoteMenu;
+import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import dev.alaindustrial.menu.ElectricFurnaceMenu;
@@ -38,6 +40,8 @@ public final class ModMenus {
 	public static MenuType<ExtractorMenu> EXTRACTOR;
 	public static MenuType<CompressorMenu> COMPRESSOR;
 	public static MenuType<BatteryBoxMenu> BATTERY_BOX;
+	public static MenuType<TeleporterStationMenu> TELEPORTER_STATION;
+	public static MenuType<TeleporterRemoteMenu> TELEPORTER_REMOTE;
 	public static MenuType<DaylightSolarPanelMenu> DAYLIGHT_SOLAR_PANEL;
 	public static MenuType<GeothermalGeneratorMenu> GEOTHERMAL_GENERATOR;
 	public static MenuType<PumpMenu> PUMP;
@@ -65,6 +69,10 @@ public final class ModMenus {
 				new MenuType<>(CompressorMenu::new, FeatureFlags.VANILLA_SET));
 		BATTERY_BOX = register("battery_box",
 				new MenuType<>(BatteryBoxMenu::new, FeatureFlags.VANILLA_SET));
+		TELEPORTER_STATION = register("teleporter_station",
+				new MenuType<>(TeleporterStationMenu::new, FeatureFlags.VANILLA_SET));
+		TELEPORTER_REMOTE = register("teleporter_remote",
+				new MenuType<>(TeleporterRemoteMenu::new, FeatureFlags.VANILLA_SET));
 		DAYLIGHT_SOLAR_PANEL = register("daylight_solar_panel",
 				new MenuType<>(DaylightSolarPanelMenu::new, FeatureFlags.VANILLA_SET));
 		GEOTHERMAL_GENERATOR = register("geothermal_generator",
@@ -96,6 +104,8 @@ public final class ModMenus {
 		ModContent.EXTRACTOR_MENU = () -> EXTRACTOR;
 		ModContent.COMPRESSOR_MENU = () -> COMPRESSOR;
 		ModContent.BATTERY_BOX_MENU = () -> BATTERY_BOX;
+		ModContent.TELEPORTER_STATION_MENU = () -> TELEPORTER_STATION;
+		ModContent.TELEPORTER_REMOTE_MENU = () -> TELEPORTER_REMOTE;
 		ModContent.DAYLIGHT_SOLAR_PANEL_MENU = () -> DAYLIGHT_SOLAR_PANEL;
 		ModContent.GEOTHERMAL_GENERATOR_MENU = () -> GEOTHERMAL_GENERATOR;
 		ModContent.PUMP_MENU = () -> PUMP;

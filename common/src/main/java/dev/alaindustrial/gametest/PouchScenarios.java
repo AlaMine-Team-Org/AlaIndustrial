@@ -173,8 +173,34 @@ public final class PouchScenarios {
 	public static void fun05PassiveDrain(GameTestHelper helper) {
 		ItemStack pouch = pouch(Config.lvPouchBuffer);
 		PouchItem.setContents(pouch, PouchContents.EMPTY.insert(new ItemStack(Items.COBBLESTONE, 8)).contents());
-		if (!PouchItem.drainStep(pouch) || ItemEnergy.get(pouch) != Config.lvPouchBuffer - Config.lvPouchDrainPerSecond) {
+		if (!PouchItem.drainStep(pouch, null) || ItemEnergy.get(pouch) != Config.lvPouchBuffer - Config.lvPouchDrainPerSecond) {
 			helper.fail("drain step must take exactly " + Config.lvPouchDrainPerSecond + " EU");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * FUN05b: a creative or spectating owner pays no passive drain (MOD-081) — the same rule the pack
+	 * follows, so the family behaves as one. The survival control is {@link #fun05PassiveDrain} above.
+	 */
+	public static void fun05bNoDrainInCreative(GameTestHelper helper) {
+		for (GameType mode : new GameType[] {GameType.CREATIVE, GameType.SPECTATOR}) {
+			// makeMockPlayer overrides gameMode() only — the abilities stay at their survival defaults,
+			// so they are updated the way vanilla does on a real mode change (instabuild on for CREATIVE,
+			// off for SPECTATOR, which is why the spend guard checks isSpectator separately).
+			Player player = helper.makeMockPlayer(mode);
+			mode.updatePlayerAbilities(player.getAbilities());
+			ItemStack pouch = pouch(Config.lvPouchBuffer);
+			PouchItem.setContents(pouch, PouchContents.EMPTY.insert(new ItemStack(Items.COBBLESTONE, 8)).contents());
+			for (int i = 0; i < 100; i++) {
+				if (PouchItem.drainStep(pouch, player)) {
+					helper.fail("a pouch carried in " + mode + " must not drain");
+				}
+			}
+			if (ItemEnergy.get(pouch) != Config.lvPouchBuffer) {
+				helper.fail("a pouch carried in " + mode + " must keep its charge, has "
+						+ ItemEnergy.get(pouch));
+			}
 		}
 		helper.succeed();
 	}
@@ -183,7 +209,7 @@ public final class PouchScenarios {
 	public static void fun06NoDrainWhenEmpty(GameTestHelper helper) {
 		ItemStack pouch = pouch(Config.lvPouchBuffer);
 		for (int i = 0; i < 100; i++) {
-			if (PouchItem.drainStep(pouch)) {
+			if (PouchItem.drainStep(pouch, null)) {
 				helper.fail("empty pouch must not drain");
 			}
 		}
@@ -272,8 +298,8 @@ public final class PouchScenarios {
 	public static void neg03DrainFloorsAndLocks(GameTestHelper helper) {
 		ItemStack pouch = pouch(1);
 		PouchItem.setContents(pouch, PouchContents.EMPTY.insert(new ItemStack(Items.COBBLESTONE, 8)).contents());
-		PouchItem.drainStep(pouch);
-		if (ItemEnergy.get(pouch) != 0 || PouchItem.drainStep(pouch)) {
+		PouchItem.drainStep(pouch, null);
+		if (ItemEnergy.get(pouch) != 0 || PouchItem.drainStep(pouch, null)) {
 			helper.fail("drain must stop exactly at 0 EU");
 		}
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);

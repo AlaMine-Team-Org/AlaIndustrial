@@ -50,6 +50,12 @@ public class IndustrializationClient implements ClientModInitializer {
 				ModMenus.MOONLIT_SOLAR_PANEL, dev.alaindustrial.client.MoonlitSolarPanelScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.BatteryBoxMenu, dev.alaindustrial.client.BatteryBoxScreen>register(
 				ModMenus.BATTERY_BOX, dev.alaindustrial.client.BatteryBoxScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.TeleporterStationMenu,
+				dev.alaindustrial.client.TeleporterStationScreen>register(
+				ModMenus.TELEPORTER_STATION, dev.alaindustrial.client.TeleporterStationScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.TeleporterRemoteMenu,
+				dev.alaindustrial.client.TeleporterRemoteScreen>register(
+				ModMenus.TELEPORTER_REMOTE, dev.alaindustrial.client.TeleporterRemoteScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.DaylightSolarPanelMenu, dev.alaindustrial.client.DaylightSolarPanelScreen>register(
 				ModMenus.DAYLIGHT_SOLAR_PANEL, dev.alaindustrial.client.DaylightSolarPanelScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.GeothermalGeneratorMenu, dev.alaindustrial.client.GeothermalGeneratorScreen>register(
@@ -84,6 +90,21 @@ public class IndustrializationClient implements ClientModInitializer {
 		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_ENERGY_HUD);
 		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_DRILL_HUD);
 		ClientTickEvents.END_CLIENT_TICK.register(client -> ModKeyMappings.handleInput());
+		// Teleport screen fade (MOD-106). Registered first so the readouts below stay legible over it —
+		// and addLast keeps it under vanilla's own overlays, which a jump has no business hiding.
+		HudElementRegistry.addLast(Industrialization.id("teleport_fade"),
+				dev.alaindustrial.client.TeleportFadeHud::render);
+		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
+				dev.alaindustrial.network.TeleportFadePayload.TYPE,
+				(payload, context) -> context.client().execute(
+						() -> dev.alaindustrial.client.TeleportFadeHud.receive(payload.strength())));
+		net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents.DISCONNECT.register(
+				(handler, client) -> dev.alaindustrial.client.TeleportFadeHud.reset());
+		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
+				dev.alaindustrial.network.TeleportNoticePayload.TYPE,
+				(payload, context) -> context.client().execute(
+						() -> dev.alaindustrial.client.TeleportNotice.receive(payload.message())));
+
 		HudElementRegistry.addLast(Industrialization.id("energy_pack_hud"), EnergyPackHud::render);
 		// Electric Drill charge readout (MOD-079) — same toggle/key as the pack, stacks below it.
 		HudElementRegistry.addLast(Industrialization.id("electric_drill_hud"),

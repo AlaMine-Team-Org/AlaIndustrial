@@ -82,6 +82,8 @@ public final class ModContent {
 	public static Supplier<Block> INSULATED_TIN_CABLE = unbound("INSULATED_TIN_CABLE");
 	public static Supplier<Block> MACERATOR = unbound("MACERATOR");
 	public static Supplier<Block> BATTERY_BOX = unbound("BATTERY_BOX");
+	/** Teleporter station (MOD-091) — registered but hidden from the creative tab until MOD-093. */
+	public static Supplier<Block> TELEPORTER = unbound("TELEPORTER");
 	public static Supplier<Block> ELECTRIC_FURNACE = unbound("ELECTRIC_FURNACE");
 	public static Supplier<Block> EXTRACTOR = unbound("EXTRACTOR");
 	public static Supplier<Block> COMPRESSOR = unbound("COMPRESSOR");
@@ -123,6 +125,12 @@ public final class ModContent {
 	public static Supplier<Item> MUTE_CHIP = unbound("MUTE_CHIP");
 	public static Supplier<Item> WINDMILL_ROTOR = unbound("WINDMILL_ROTOR");
 	public static Supplier<Item> WOODEN_GEAR = unbound("WOODEN_GEAR");
+	// Metal gears (MOD-105): crafting components for machinery still to come. Each is a cross of the
+	// tier material around a wooden gear; no consumer recipe uses them yet.
+	public static Supplier<Item> STONE_GEAR = unbound("STONE_GEAR");
+	public static Supplier<Item> IRON_GEAR = unbound("IRON_GEAR");
+	public static Supplier<Item> GOLD_GEAR = unbound("GOLD_GEAR");
+	public static Supplier<Item> SILVER_GEAR = unbound("SILVER_GEAR");
 	public static Supplier<Item> TEMPERED_IRON = unbound("TEMPERED_IRON");
 	public static Supplier<Item> TEMPERED_IRON_PICKAXE = unbound("TEMPERED_IRON_PICKAXE");
 	public static Supplier<Item> TEMPERED_IRON_AXE = unbound("TEMPERED_IRON_AXE");
@@ -155,6 +163,8 @@ public final class ModContent {
 	public static Supplier<Item> RAW_URANIUM = unbound("RAW_URANIUM");
 	public static Supplier<Item> URANIUM_INGOT = unbound("URANIUM_INGOT");
 	public static Supplier<Item> NETWORK_ANALYZER = unbound("NETWORK_ANALYZER");
+	/** Teleporter Remote (MOD-092) — hidden from the creative tab until MOD-093 completes the feature. */
+	public static Supplier<Item> TELEPORTER_REMOTE = unbound("TELEPORTER_REMOTE");
 	public static Supplier<Item> BATTERY_POUCH = unbound("BATTERY_POUCH");
 	// Energy Pack (MOD-065) — worn LV energy buffer (chest slot) that tops up the powered items the
 	// player carries; BATTERY is its crafting component (an inert cell, no charge of its own).
@@ -200,6 +210,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> INSULATED_TIN_CABLE_ITEM = unbound("INSULATED_TIN_CABLE_ITEM");
 	public static Supplier<BlockItem> MACERATOR_ITEM = unbound("MACERATOR_ITEM");
 	public static Supplier<BlockItem> BATTERY_BOX_ITEM = unbound("BATTERY_BOX_ITEM");
+	public static Supplier<BlockItem> TELEPORTER_ITEM = unbound("TELEPORTER_ITEM");
 	public static Supplier<BlockItem> ELECTRIC_FURNACE_ITEM = unbound("ELECTRIC_FURNACE_ITEM");
 	public static Supplier<BlockItem> EXTRACTOR_ITEM = unbound("EXTRACTOR_ITEM");
 	public static Supplier<BlockItem> COMPRESSOR_ITEM = unbound("COMPRESSOR_ITEM");
@@ -233,6 +244,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> COPPER_CABLE_BE = unbound("COPPER_CABLE_BE");
 	public static Supplier<BlockEntityType<?>> MACERATOR_BE = unbound("MACERATOR_BE");
 	public static Supplier<BlockEntityType<?>> BATTERY_BOX_BE = unbound("BATTERY_BOX_BE");
+	public static Supplier<BlockEntityType<?>> TELEPORTER_BE = unbound("TELEPORTER_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_FURNACE_BE = unbound("ELECTRIC_FURNACE_BE");
 	public static Supplier<BlockEntityType<?>> EXTRACTOR_BE = unbound("EXTRACTOR_BE");
 	public static Supplier<BlockEntityType<?>> COMPRESSOR_BE = unbound("COMPRESSOR_BE");
@@ -250,6 +262,10 @@ public final class ModContent {
 	public static Supplier<MenuType<?>> EXTRACTOR_MENU = unbound("EXTRACTOR_MENU");
 	public static Supplier<MenuType<?>> COMPRESSOR_MENU = unbound("COMPRESSOR_MENU");
 	public static Supplier<MenuType<?>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");
+	/** Teleporter station screen (MOD-093): EU bar, owner, private/public toggle. */
+	public static Supplier<MenuType<?>> TELEPORTER_STATION_MENU = unbound("TELEPORTER_STATION_MENU");
+	/** Teleporter remote screen (MOD-093): the named point list. */
+	public static Supplier<MenuType<?>> TELEPORTER_REMOTE_MENU = unbound("TELEPORTER_REMOTE_MENU");
 	public static Supplier<MenuType<?>> DAYLIGHT_SOLAR_PANEL_MENU = unbound("DAYLIGHT_SOLAR_PANEL_MENU");
 	public static Supplier<MenuType<?>> GEOTHERMAL_GENERATOR_MENU = unbound("GEOTHERMAL_GENERATOR_MENU");
 	public static Supplier<MenuType<?>> PUMP_MENU = unbound("PUMP_MENU");

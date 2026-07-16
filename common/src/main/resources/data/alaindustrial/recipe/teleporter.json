@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"C": "alaindustrial:electronic_circuit",
+		"O": "alaindustrial:copper_coil",
+		"D": "minecraft:diamond_block",
+		"E": "minecraft:ender_eye",
+		"U": "alaindustrial:uranium_ingot"
+	},
+	"pattern": ["CEC","ODO","UUU"],
+	"result": { "id": "alaindustrial:teleporter" }
+}

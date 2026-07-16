@@ -6,8 +6,10 @@ import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
+import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.core.EnergyNetwork;
+import dev.alaindustrial.core.EnergyRole;
 import dev.alaindustrial.core.EnergyTier;
 import dev.alaindustrial.core.NetworkManager;
 import dev.alaindustrial.registry.ModContent;
@@ -2078,6 +2080,72 @@ public final class CoreEnergyScenarios {
 		if (got <= singleCeiling) {
 			helper.fail("battery_box should receive summed supply from two generators, got only " + got
 					+ " (a single generator alone could not exceed " + singleCeiling + " over " + ticks + ")");
+			return;
+		}
+		helper.succeed();
+	}
+
+	// ── teleporter station (MOD-091): loader-neutral seams the NeoForge world lane must guard ──────
+
+	private static final BlockPos STATION = new BlockPos(1, 2, 1);
+
+	/**
+	 * The station accepts EU on its five working faces and stays inert on its FACING front, on this
+	 * loader too. This is the exact defect class the NeoForge energy adapter has produced before
+	 * (every face reporting both insert and extract regardless of its real role), so the Fabric-side
+	 * {@code TC-TELE-001-NRG03} is not enough on its own — the adapter is per-loader code.
+	 */
+	public static void teleporterFaceRoles(GameTestHelper helper) {
+		helper.setBlock(STATION, ModContent.TELEPORTER.get());
+		if (!(be(helper, STATION) instanceof TeleporterBlockEntity station)) {
+			helper.fail("teleporter block entity missing");
+			return;
+		}
+		Direction facing = station.getBlockState().getValue(HorizontalMachineBlock.FACING);
+		if (station.energyPort(facing) != null) {
+			helper.fail("teleporter FACING front must expose no energy port on this loader");
+			return;
+		}
+		for (Direction dir : Direction.values()) {
+			if (dir == facing) {
+				continue;
+			}
+			if (station.energyRoleForFace(dir) != EnergyRole.IN) {
+				helper.fail("teleporter face " + dir + " must accept EU (IN), got "
+						+ station.energyRoleForFace(dir));
+				return;
+			}
+		}
+		if (station.getEnergyStorage().supportsExtraction()) {
+			helper.fail("teleporter must never emit EU — the network could drain the jump fund");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * The station's privacy flag rides its dropped item through the {@code teleporter_private} data
+	 * component — the MOD-022 frozen-registry seam, which is exactly what breaks per-loader when a
+	 * component is not registered on one of them (see the battery-box STORED_ENERGY case above).
+	 */
+	public static void teleporterDropCarriesPrivacy(GameTestHelper helper) {
+		helper.setBlock(STATION, ModContent.TELEPORTER.get());
+		if (!(be(helper, STATION) instanceof TeleporterBlockEntity station)) {
+			helper.fail("teleporter block entity missing");
+			return;
+		}
+		station.setPrivate(false);
+		station.getEnergyStorage().amount = 4242L;
+		DataComponentMap map = station.collectComponents();
+		if (!Boolean.FALSE.equals(map.get(ModDataComponents.TELEPORTER_PRIVATE.get()))) {
+			helper.fail("teleporter did not carry TELEPORTER_PRIVATE on drop: "
+					+ map.get(ModDataComponents.TELEPORTER_PRIVATE.get())
+					+ " (data component unregistered on this loader?)");
+			return;
+		}
+		Long eu = map.get(ModDataComponents.STORED_ENERGY.get());
+		if (eu == null || eu.longValue() != 4242L) {
+			helper.fail("teleporter did not carry STORED_ENERGY on drop: " + eu);
 			return;
 		}
 		helper.succeed();

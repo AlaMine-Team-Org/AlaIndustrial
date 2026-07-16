@@ -2,6 +2,7 @@ package dev.alaindustrial.client;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.BatteryBoxBlock;
+import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
@@ -95,6 +96,10 @@ public final class MachineTooltips {
 		if (block instanceof BatteryBoxBlock) {
 			lines.add(tier());
 			lines.add(Component.translatable("tooltip.alaindustrial.battery_box_io")
+					.withStyle(ChatFormatting.GRAY));
+		} else if (block instanceof TeleporterBlock) {
+			lines.add(tierHv());
+			lines.add(Component.translatable("tooltip.alaindustrial.teleporter_io")
 					.withStyle(ChatFormatting.GRAY));
 		} else if (block instanceof CableBlock) {
 			lines.add(tier());
@@ -346,6 +351,11 @@ public final class MachineTooltips {
 		} else if (block instanceof BatteryBoxBlock) {
 			lines.add(Component.translatable("tooltip.alaindustrial.battery_box_io")
 					.withStyle(ChatFormatting.GRAY));
+		} else if (block instanceof TeleporterBlock) {
+			lines.add(tierHv());
+			lines.add(tt("buffer", Config.teleporterBuffer));
+			lines.add(Component.translatable("tooltip.alaindustrial.teleporter_io")
+					.withStyle(ChatFormatting.GRAY));
 		} else if (block instanceof CableBlock) {
 			lines.add(tt("cable_loss", cableLossPercent()));
 		}
@@ -372,5 +382,11 @@ public final class MachineTooltips {
 	private static Component tier() {
 		return Component.translatable("tooltip.alaindustrial.tier_lv")
 				.withStyle(ChatFormatting.GREEN);
+	}
+
+	/** HV tier line — the teleporter station is the mod's only HV block (MOD-091). */
+	private static Component tierHv() {
+		return Component.translatable("tooltip.alaindustrial.tier_hv")
+				.withStyle(ChatFormatting.LIGHT_PURPLE);
 	}
 }

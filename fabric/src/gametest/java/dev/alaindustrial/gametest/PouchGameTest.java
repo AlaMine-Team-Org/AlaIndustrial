@@ -56,6 +56,15 @@ public class PouchGameTest {
 	}
 
 	/**
+	 * @implements TC-POUCH-001-FUN05B — a pouch carried by a creative or spectating player pays no
+	 *     passive drain (MOD-081).
+	 */
+	@GameTest
+	public void tcPouch001Fun05b_noDrainInCreative(GameTestHelper helper) {
+		PouchScenarios.fun05bNoDrainInCreative(helper);
+	}
+
+	/**
 	 * @implements TC-POUCH-001-FUN06 — an empty pouch never drains and never rewrites its components.
 	 */
 	@GameTest

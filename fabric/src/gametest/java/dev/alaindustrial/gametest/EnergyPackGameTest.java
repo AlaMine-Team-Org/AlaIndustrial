@@ -84,6 +84,33 @@ public class EnergyPackGameTest {
 	}
 
 	/**
+	 * @implements TC-PACK-001-FUN09 — creative and spectator keep the pack's charge (MOD-081): the
+	 *     consumers are still fed, the pack pays nothing, survival still pays.
+	 */
+	@GameTest
+	public void tcPack001Fun09_creativeKeepsCharge(GameTestHelper helper) {
+		EnergyPackScenarios.fun09CreativeKeepsCharge(helper);
+	}
+
+	/**
+	 * @implements TC-PACK-001-FUN10 — the stack on the cursor and the inventory's 2×2 crafting grid
+	 *     are charged as well (MOD-082).
+	 */
+	@GameTest
+	public void tcPack001Fun10_chargesCursorAndCraftGrid(GameTestHelper helper) {
+		EnergyPackScenarios.fun10ChargesCursorAndCraftGrid(helper);
+	}
+
+	/**
+	 * @implements TC-PACK-001-NEG05 — the slots of an open container (a chest) are NOT charged: the
+	 *     pack reaches the cursor and its own crafting grid, nothing else (MOD-082).
+	 */
+	@GameTest
+	public void tcPack001Neg05_doesNotChargeOpenContainer(GameTestHelper helper) {
+		EnergyPackScenarios.neg05DoesNotChargeOpenContainer(helper);
+	}
+
+	/**
 	 * @implements TC-PACK-001-NEG04 — a pack in the offhand is not charged either (the anti-loop
 	 *     filter covers the offhand pass too).
 	 */
