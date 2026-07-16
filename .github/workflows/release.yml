@@ -251,11 +251,25 @@ jobs:
             --rawfile changelog CHANGELOG.md \
             --arg name "$DISPLAY_NAME" \
             '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, 7499], releaseType: "release"}')
-          curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 -X POST \
-            "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
-            -H "X-Api-Token: $CF_TOKEN" \
-            --form-string "metadata=$metadata" \
-            -F "file=@$JAR"
+          # Retry up to 5x, but surface the CurseForge error body on the final failure
+          # (curl -sSf hides the response body on HTTP errors, leaving a 400 without a cause).
+          for attempt in 1 2 3 4 5; do
+            code=$(curl -sS --connect-timeout 20 --max-time 180 -o cf_resp.json -w '%{http_code}' -X POST \
+              "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
+              -H "X-Api-Token: $CF_TOKEN" \
+              --form-string "metadata=$metadata" \
+              -F "file=@$JAR")
+            if [ "$code" -ge 200 ] && [ "$code" -lt 300 ]; then
+              echo "CurseForge Fabric upload OK (HTTP $code)"
+              cat cf_resp.json
+              exit 0
+            fi
+            echo "::warning::CurseForge Fabric upload attempt $attempt failed with HTTP $code; body:"
+            cat cf_resp.json || true
+            [ "$attempt" -lt 5 ] && sleep 15
+          done
+          echo "::error::CurseForge Fabric upload failed after 5 attempts (last HTTP $code). Response body above."
+          exit 1
 
       - name: Publish NeoForge to CurseForge
         if: steps.mode.outputs.publish_neoforge == 'true' && steps.curseforge.outputs.neoforge_exists != 'true'
@@ -270,11 +284,23 @@ jobs:
             --arg name "$DISPLAY_NAME" \
             --argjson nf "$NEOFORGE_ID" \
             '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, $nf], releaseType: "release"}')
-          curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 -X POST \
-            "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
-            -H "X-Api-Token: $CF_TOKEN" \
-            --form-string "metadata=$metadata" \
-            -F "file=@$JAR"
+          for attempt in 1 2 3 4 5; do
+            code=$(curl -sS --connect-timeout 20 --max-time 180 -o cf_resp.json -w '%{http_code}' -X POST \
+              "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
+              -H "X-Api-Token: $CF_TOKEN" \
+              --form-string "metadata=$metadata" \
+              -F "file=@$JAR")
+            if [ "$code" -ge 200 ] && [ "$code" -lt 300 ]; then
+              echo "CurseForge NeoForge upload OK (HTTP $code)"
+              cat cf_resp.json
+              exit 0
+            fi
+            echo "::warning::CurseForge NeoForge upload attempt $attempt failed with HTTP $code; body:"
+            cat cf_resp.json || true
+            [ "$attempt" -lt 5 ] && sleep 15
+          done
+          echo "::error::CurseForge NeoForge upload failed after 5 attempts (last HTTP $code). Response body above."
+          exit 1
 
       # One GitHub Release carrying BOTH loader jars. mc-publish renders Markdown
       # fine on GitHub.
