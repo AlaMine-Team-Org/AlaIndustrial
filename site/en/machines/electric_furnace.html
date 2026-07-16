@@ -316,9 +316,10 @@
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="6 pages">6</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="7 pages">7</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -334,34 +335,31 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Electric Furnace</strong> is a full electrical counterpart to the vanilla furnace. It smelts <strong>everything a regular furnace can</strong> (ores, food, glass, cobblestone…), but runs on EU/FE instead of fuel and works twice as fast. On top of the vanilla recipes, the mod adds its own — primarily <strong>dust → ingot</strong>, to close the ore-doubling loop. When both a mod recipe and a vanilla one match the same input, the mod recipe takes priority.</p>
+<p>The <strong>Electric Furnace</strong> is a full electrical counterpart to the vanilla furnace. It smelts <strong>everything a regular furnace can</strong> — ores, food, glass, cobblestone — but runs on EU/FE instead of fuel and works twice as fast. On top of the vanilla recipes, the mod adds its own, mainly <strong>dust → ingot</strong>, which closes the ore-doubling loop started by the <a href="macerator.html">Macerator</a>.</p>
+<blockquote><strong>Mini-example:</strong> grind iron ore in the Macerator to get two dusts, then drop both in here. In a few seconds you have <strong>two iron ingots</strong> — one vein, doubled, no fuel spent.</blockquote>
 <h2>Energy</h2>
 <p>The Electric Furnace only consumes EU/FE and keeps a small buffer for smooth running.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>800</td></tr><tr><td>Max input (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>EU/FE/tick</td><td>2 (while working)</td></tr></tbody></table>
-<p>An LV machine — it draws up to 32 EU/FE per tick. Any surplus in the network is not forwarded. <strong>Faces:</strong> EU/FE comes in on five faces; the front face (where the machine "looks") is inert — cables do not connect to it and hoppers do not work through it.</p>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>800 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Consumption</td><td>2 EU/FE/t while working</td></tr></tbody></table>
+<p>An LV machine — it draws up to 32 EU/FE per tick. Any surplus in the network isn't taken, nothing is damaged. Energy comes in on the five working faces. The <strong>front face</strong> (the one the machine "looks" toward) is inert — cables don't connect there and hoppers don't work through it.</p>
 <h2>Processing</h2>
-<p>The furnace first looks for a mod recipe, and falls back to vanilla smelting if there is none. The base smelt takes ~100 ticks (~5 s); mod recipes may set their own EU/FE cost.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Recipes (priority)</td><td><code>alaindustrial:smelting</code> from <code>data/alaindustrial/recipe/smelting/*.json</code> (dust → ingot, others)</td></tr><tr><td>Recipes (fallback)</td><td>vanilla <code>minecraft:smelting</code> — all vanilla furnace recipes</td></tr><tr><td>Duration (mod)</td><td>from the recipe's <code>energy</code> field ÷ <code>machineEuPerTick</code></td></tr><tr><td>Duration (vanilla)</td><td><code>electricFurnaceDuration</code> ticks ≈ 100 (Config)</td></tr><tr><td>Auto-eject</td><td>false</td></tr></tbody></table>
-<h2>Mod recipes (smelting/*.json)</h2>
-<p>The mod's own recipes — 200 EU/FE each. These cover smelting dust and raw ore into ingots, plus a couple of vanilla operations (cobblestone to stone, sand to glass).</p>
-<table><thead><tr><th>Input</th><th>→</th><th>Output</th><th>EU/FE</th></tr></thead><tbody><tr><td>copper_dust</td><td>→</td><td>copper_ingot</td><td>200</td></tr><tr><td>iron_dust</td><td>→</td><td>iron_ingot</td><td>200</td></tr><tr><td>gold_dust</td><td>→</td><td>gold_ingot</td><td>200</td></tr><tr><td>raw_copper</td><td>→</td><td>copper_ingot</td><td>200</td></tr><tr><td>raw_iron</td><td>→</td><td>iron_ingot</td><td>200</td></tr><tr><td>raw_gold</td><td>→</td><td>gold_ingot</td><td>200</td></tr><tr><td>cobblestone</td><td>→</td><td>stone</td><td>200</td></tr><tr><td>sand</td><td>→</td><td>glass</td><td>200</td></tr></tbody></table>
-<p>Everything else (any vanilla smelting) is handled through the <code>minecraft:smelting</code> fallback.</p>
+<p>The furnace first looks for one of the mod's own recipes, and falls back to vanilla smelting if there is none. When both match the same input, the mod recipe wins. The base smelt takes ~100 ticks (~5 s) — about twice as fast as a vanilla furnace.</p>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Duration</td><td>~100 ticks (~5 s)</td></tr><tr><td>Cost per smelt</td><td>200 EU/FE</td></tr><tr><td>Auto-output</td><td>no</td></tr></tbody></table>
 <h2>Inventory</h2>
 <p>One input slot, one output slot.</p>
-<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>input</td><td>any smeltable item (mod + vanilla)</td><td>1</td></tr><tr><td>output</td><td>result</td><td>1</td></tr></tbody></table>
-<h2>Crafting</h2>
-<p>File: <code>data/alaindustrial/recipe/electric_furnace.json</code></p>
-<table><thead><tr><th>Symbol</th><th>Item</th></tr></thead><tbody><tr><td><code>S</code></td><td><code>alaindustrial:silver_ingot</code> — Silver Ingot</td></tr><tr><td><code>F</code></td><td><code>minecraft:furnace</code> — vanilla furnace</td></tr><tr><td><code>C</code></td><td><code>alaindustrial:electronic_circuit</code> — Electronic Circuit</td></tr></tbody></table>
-<p>Furnaces are built into the sides as the smelting core, the circuit drives the process, and silver ingots form the casing — three on the top and bottom rows each.</p>
+<table><thead><tr><th>Slot</th><th>Takes</th><th>Count</th></tr></thead><tbody><tr><td>Input</td><td>any smeltable item (mod + vanilla)</td><td>1</td></tr><tr><td>Output</td><td>the result</td><td>1</td></tr></tbody></table>
 <h2>Interface</h2>
-<p>Type: container Shows: energy storage, progress, input, output</p>
+<p>One screen shows the energy buffer, the progress, the input slot and the output slot.</p>
 <h2>Block Properties</h2>
-<p>An ordinary solid cube, softer than stone: any pickaxe breaks it.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
-<h2>Balance</h2>
-<p>Base: 2 EU/FE/tick × 100 ticks = 200 EU/FE per smelt, ~5 s (twice as fast as vanilla's 10 s). Mod recipes may set a different EU/FE cost via the <code>energy</code> field. Numbers are tuned by config (<code>electricFurnaceDuration</code>, <code>machineEuPerTick</code>).</p>
+<p>An ordinary solid block, softer than stone. Any pickaxe breaks it, but <strong>it does NOT keep its charge when broken</strong>.</p>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge on break</td><td>no</td></tr></tbody></table>
+<h2>Recipes</h2>
+<p>The Electric Furnace is crafted at a workbench: a vanilla furnace sits in the middle of each side as the smelting core, an <a href="../components/electronic_circuit.html">Electronic Circuit</a> drives the process from the centre, and silver ingots form the casing — three across the top row and three across the bottom. What it smelts:</p>
+<table><thead><tr><th>Input</th><th>Output</th><th>Notes</th></tr></thead><tbody><tr><td>Metal dust (copper, iron, gold)</td><td>ingot</td><td>the mod recipe — closes ore-doubling</td></tr><tr><td>Raw ore (raw copper, raw iron, raw gold)</td><td>ingot</td><td>the mod recipe</td></tr><tr><td>Cobblestone</td><td>stone</td><td>the mod recipe, 200 EU/FE</td></tr><tr><td>Sand</td><td>glass</td><td>the mod recipe, 200 EU/FE</td></tr><tr><td>Anything else a vanilla furnace smelts</td><td>as vanilla</td><td>the vanilla fallback, ~5 s</td></tr></tbody></table>
+<p>The mod recipes cost a flat 200 EU/FE each; everything else runs through the vanilla fallback at the same ~5 s. Non-metal dusts (coal, diamond, emerald, lapis) are <strong>not</strong> smelted here — the <a href="compressor.html">Compressor</a> handles those.</p>
+<h2>Progression</h2>
+<p>Tier: LV. The starter electric smelter and the other half of ore-doubling. Evolves into the Induction Furnace — the MV, faster, hotter evolution of smelting. Needs power from an LV source, e.g. a <a href="../generators/generator.html">Generator</a>.</p>
 <h2>Related</h2>
-<p>Induction Furnace — the MV evolution of smelting. <a href="../generators/generator.html">Generator</a> — the power source.</p>
+<p><a href="macerator.html">Macerator</a> — produces the dust this furnace smelts back into ingots. Induction Furnace — the MV evolution of smelting. <a href="compressor.html">Compressor</a> — handles the non-metal dusts this furnace can't. <a href="../generators/generator.html">Generator</a> — the power source.</p>
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Silver Ingot"><img src="../assets/item/silver_ingot.png" alt="Silver Ingot" width="28" height="28"></div> <div class="cell" title="Silver Ingot"><img src="../assets/item/silver_ingot.png" alt="Silver Ingot" width="28" height="28"></div> <div class="cell" title="Silver Ingot"><img src="../assets/item/silver_ingot.png" alt="Silver Ingot" width="28" height="28"></div> <div class="cell placeholder" title="Furnace" aria-label="Furnace"><span>furnace</span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="28" height="28"></div> <div class="cell placeholder" title="Furnace" aria-label="Furnace"><span>furnace</span></div> <div class="cell" title="Silver Ingot"><img src="../assets/item/silver_ingot.png" alt="Silver Ingot" width="28" height="28"></div> <div class="cell" title="Silver Ingot"><img src="../assets/item/silver_ingot.png" alt="Silver Ingot" width="28" height="28"></div> <div class="cell" title="Silver Ingot"><img src="../assets/item/silver_ingot.png" alt="Silver Ingot" width="28" height="28"></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Electric Furnace"><img src="../assets/block/electric_furnace_top.png" alt="Electric Furnace" width="28" height="28"></div><div class="result-name">Electric Furnace</div></div></div></div></div>
   </main>

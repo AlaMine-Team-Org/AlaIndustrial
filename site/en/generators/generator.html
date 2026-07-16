@@ -316,9 +316,10 @@
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="6 pages">6</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="7 pages">7</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -334,30 +335,31 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Generator</strong> is the mod's first source of power. It burns solid fuel (coal, charcoal, blocks of coal and the like) and produces EU/FE into an internal buffer, which it releases to neighbouring receivers. This is the entry point into LV-tier energy, feeding the first machines.</p>
+<p>The <strong>Generator</strong> burns solid fuel — coal, charcoal, a block of coal, anything that burns in a vanilla furnace — and turns it into EU/FE. It's the no-fuss power source you reach for when there's no sun and no wind: it just runs, day or night, rain or shine.</p>
+<blockquote><strong>Mini-example:</strong> drop a piece of coal in, point a cable at it, and you've got <strong>8 EU/FE/t</strong> steady power for your first <a href="../machines/macerator.html">Macerator</a>. It ignores the weather — the only thing it cares about is fuel.</blockquote>
 <h2>Energy</h2>
-<p>The generator only produces power — it never accepts incoming energy. Inside is a 4000 EU/FE buffer, released into an LV-tier network, so it's safe to feed any LV cable or machine downstream.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>producer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>4000</td></tr><tr><td>Max input</td><td>n/a (does not accept energy)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>EU/FE/tick</td><td>8 (while fuel is burning)</td></tr></tbody></table>
-<p>Energy is emitted from 5 faces; the front face (the one facing you when placed) is inert — cables don't connect to it and hoppers don't work through it.</p>
+<p>The generator only produces power — it never takes any in. It holds up to 4000 EU/FE inside and sends it out on an LV line.</p>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>4000 EU/FE</td></tr><tr><td>Output</td><td>up to 32 EU/FE/t (LV)</td></tr><tr><td>Output while burning</td><td>8 EU/FE/t</td></tr></tbody></table>
+<p>Energy leaves through the 5 working faces. The <strong>front face</strong> (the one facing you when you place it) is inert — cables don't connect there and hoppers don't work through it.</p>
 <h2>Generation</h2>
-<p>The generator burns any vanilla furnace fuel. Each unit yields as much EU/FE as it would have burned ticks in a furnace, times 8. Energy is delivered at 8 EU/FE/tick; when the buffer is full, the generator pauses until there's room again.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Source</td><td>solid fuel (items that burn in a vanilla furnace)</td></tr><tr><td>Working condition</td><td>fuel present AND buffer not full</td></tr><tr><td>EU/FE/tick (base)</td><td>8</td></tr><tr><td>Modifiers</td><td>none (burn duration = the fuel's vanilla burn time)</td></tr></tbody></table>
+<p>Feed it any vanilla furnace fuel. It burns at a steady 8 EU/FE/t for as long as the fuel lasts; when the buffer is full, it pauses until there's room again.</p>
+<table><thead><tr><th>Situation</th><th>Output</th></tr></thead><tbody><tr><td>Fuel burning, room in buffer</td><td>8 EU/FE/t</td></tr><tr><td>Buffer full</td><td>pauses (waits for room)</td></tr><tr><td>No fuel</td><td>0</td></tr></tbody></table>
+<p>Each unit of fuel gives you its vanilla burn time worth of EU/FE, paid out at 8 EU/FE/t.</p>
 <h2>Inventory</h2>
-<p>A single fuel slot. A lava bucket can't go in here — lava belongs to the Geothermal Generator, not this one.</p>
-<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>fuel</td><td>furnace fuel items (a lava bucket is <strong>not accepted</strong>; lava is for the Geothermal Generator only)</td><td>1</td></tr></tbody></table>
+<p>One slot, for fuel only.</p>
+<table><thead><tr><th>Slot</th><th>Takes</th><th>Count</th></tr></thead><tbody><tr><td>Fuel</td><td>any vanilla furnace fuel (coal, charcoal, coal block, wood…)</td><td>1</td></tr></tbody></table>
+<p>A lava bucket does <strong>not</strong> go in here — lava belongs to the <a href="geothermal_generator.html">Geothermal Generator</a>.</p>
 <h2>Interface</h2>
-<p>Type: container Shows: energy storage, burn progress, fuel slot, output rate</p>
+<p>One screen shows the buffer level, how much burn time is left on the current fuel, the fuel slot and the output rate.</p>
 <h2>Block Properties</h2>
-<p>An ordinary solid block. Any pickaxe breaks it, and on break it does not keep its charge — drain the energy into a storage block first.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Drops with NBT energy</td><td>false</td></tr></tbody></table>
+<p>An ordinary solid block. Any pickaxe breaks it, but <strong>it does NOT keep its charge when broken</strong> — drain the energy into a Battery Box before you pick it up.</p>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge on break</td><td>no</td></tr></tbody></table>
 <h2>Recipes</h2>
-<p>The generator is crafted at a workbench. It's a generator, not a processor, so it has no processing recipes. Crafting: <code>data/alaindustrial/recipe/generator.json</code> Processing recipes: none (this is a generator, not a processor)</p>
+<p>Crafted at a workbench. It's a generator, not a processing machine, so it has no processing recipes of its own.</p>
 <h2>Progression</h2>
-<p>Tier: LV Evolves into: nothing (more powerful generators are separate blocks) Requires: nothing</p>
-<h2>Compatibility</h2>
-<p>Recipe viewers: JEI, REI, EMI Tooltips: Jade, The One Probe</p>
+<p>Tier: LV. The starter fuel-burner. It doesn't evolve into anything — the stronger fuel generator (<a href="geothermal_generator.html">Geothermal Generator</a>) is a separate block you craft from this one.</p>
 <h2>Related</h2>
-<p><a href="../machines/macerator.html">Macerator</a> — the typical first LV consumer. <a href="../energy-storage/battery_box.html">Battery Box</a> — where to bank surplus EU/FE. <a href="../energy-transfer/copper_cable.html">Copper Cable</a> — how to route the energy.</p>
+<p><a href="../machines/macerator.html">Macerator</a> — the typical first LV machine to power. <a href="../energy-storage/battery_box.html">Battery Box</a> — bank the surplus, and drain this block before moving it. <a href="geothermal_generator.html">Geothermal Generator</a> — the lava-burning upgrade. <a href="../energy-transfer/copper_cable.html">Copper Cable</a> — how to route the energy.</p>
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Furnace" aria-label="Furnace"><span>furnace</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="28" height="28"></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="LV Generator"><img src="../assets/block/generator_top.png" alt="LV Generator" width="28" height="28"></div><div class="result-name">LV Generator</div></div></div></div></div>
 <h2>Used in</h2>

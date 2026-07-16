@@ -316,9 +316,10 @@
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="6 pages">6</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="7 pages">7</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -337,13 +338,13 @@
 <p>The <strong>Copper Cable</strong> is the main early-game cable and the wire of the starter chain: Solar Panel → Battery Box → Macerator. It connects neighbouring blocks into a single line and carries LV energy (up to 32 EU/FE/tick). On a long line some energy is lost along the way — the longer the wire and the higher the flow, the bigger the loss; on a short run the loss rounds down to zero, so the receiver's buffer always tops up to full. It is cheap to craft, which makes it handy for wiring a base before the higher-tier cables are unlocked.</p>
 <h2>Energy</h2>
 <p>The cable carries LV energy and connects to neighbouring blocks. Each wire run from a source to a consumer costs a little EU/FE — the exact formula is given in the table.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>transfer</td></tr><tr><td>Max voltage</td><td>32 (LV)</td></tr><tr><td>Loss</td><td><code>floor(flow × 0.0125 × distance)</code> EU/FE/tick per consumer (<code>copperCableLossPerBlock</code>). Distance = number of cables from the nearest source. Short hop / top-up → 0</td></tr><tr><td>Insulation</td><td>can be insulated for safe adjacency</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>transfer</td></tr><tr><td>Max voltage</td><td>32 (LV)</td></tr><tr><td>Loss</td><td>EU/FE/tick per consumer. Distance = number of cables from the nearest source. Short hop / top-up → 0</td></tr><tr><td>Insulation</td><td>can be insulated for safe adjacency</td></tr></tbody></table>
 <p>The cable does not explode from overload: 32 EU/FE/packet is only a throughput cap, and anything above it simply does not pass through. A proper MV/HV/EV flow needs a cable of the matching tier.</p>
 <h2>Block Properties</h2>
 <p>A thin wire that connects to neighbouring blocks. Any tool breaks it, and shears are especially handy.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>thin rod (6px core + sleeves), <code>noOcclusion</code></td></tr><tr><td>Hardness</td><td>0.2</td></tr><tr><td>Tool</td><td>any / shears</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>thin rod (6px core + sleeves),</td></tr><tr><td>Hardness</td><td>0.2</td></tr><tr><td>Tool</td><td>any / shears</td></tr></tbody></table>
 <h2>Recipes</h2>
-<p>Crafted at a workbench from copper and rubber — the most accessible wire for a starting base. Crafting: <code>data/alaindustrial/recipe/copper_cable.json</code> — copper wire/ingots + rubber (insulation). Processing recipes: none.</p>
+<p>Crafted at a workbench from copper and rubber — the most accessible wire for a starting base. Crafting: — copper wire/ingots + rubber (insulation). Processing recipes: none.</p>
 <h2>Related</h2>
 <p>Glass Fibre Cable — backbone line with low losses.</p>
 <h2>Crafting</h2>

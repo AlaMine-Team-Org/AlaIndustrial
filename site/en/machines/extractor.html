@@ -316,9 +316,10 @@
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="6 pages">6</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="7 pages">7</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -334,30 +335,31 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Extractor</strong> is an LV machine that pulls useful material out of raw inputs: dyes from flowers, seeds from pumpkin and melon, powder from blaze rods, flint from gravel. It is usually more profitable than the vanilla routes: a flower yields ×2 dye instead of ×1 at the crafting table, a pumpkin yields ×5 seeds instead of ×4. It is part of the basic LV processing chain and a handy node for hopper-fed auto-farms.</p>
+<p>The <strong>Extractor</strong> is an LV machine that pulls useful material out of raw inputs: dyes from flowers, seeds from pumpkin and melon, blaze powder from blaze rods, flint from gravel. It's nearly always a better deal than the vanilla routes — a flower gives <strong>two</strong> dyes instead of one at the crafting table — which makes it a nice node for hopper-fed auto-farms.</p>
+<blockquote><strong>Mini-example:</strong> drop a poppy in, get <strong>two red dyes</strong> back instead of the one the crafting table gives. Hook a few up to a flower farm and dyes stop being a chore.</blockquote>
 <h2>Energy</h2>
 <p>The Extractor only consumes EU/FE and keeps a small buffer for smooth running.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>800</td></tr><tr><td>Max input (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>EU/FE/tick</td><td>2</td></tr></tbody></table>
-<p>An LV machine — it draws up to 32 EU/FE per tick. Any surplus in the network is not forwarded, the block is not damaged. <strong>Faces:</strong> EU/FE comes in on five faces; the front face (where the machine "looks") is inert — cables do not connect to it and hoppers do not work through it.</p>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>800 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Consumption</td><td>2 EU/FE/t while working</td></tr></tbody></table>
+<p>An LV machine — it draws up to 32 EU/FE per tick. Any surplus in the network isn't taken, the block isn't damaged. Energy comes in on the five working faces. The <strong>front face</strong> (the one the machine "looks" toward) is inert — cables don't connect there and hoppers don't work through it.</p>
 <h2>Processing</h2>
-<p>Each operation costs 240 EU/FE and takes 120 ticks (~6 s). The recipes are ordinary datapack recipes — editable with a resource pack or <code>/reload</code>.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Recipe type</td><td><code>alaindustrial:extracting</code> (<code>data/alaindustrial/recipe/extracting/*.json</code>)</td></tr><tr><td>Duration (ticks)</td><td>set by the recipe: <code>energy / euPerTick</code> (240 EU/FE ÷ 2 = 120 ticks)</td></tr><tr><td>Auto-eject</td><td>false</td></tr></tbody></table>
-<p>Recipes (reloadable):</p>
-<table><thead><tr><th>Input</th><th>Output</th><th>EU/FE</th></tr></thead><tbody><tr><td><code>minecraft:blaze_rod</code></td><td><code>minecraft:blaze_powder</code> ×3</td><td>240</td></tr><tr><td><code>minecraft:gravel</code></td><td><code>minecraft:flint</code></td><td>240</td></tr><tr><td><code>minecraft:cactus</code></td><td><code>minecraft:green_dye</code> ×2</td><td>240</td></tr><tr><td><code>minecraft:poppy</code></td><td><code>minecraft:red_dye</code> ×2</td><td>240</td></tr><tr><td><code>minecraft:dandelion</code></td><td><code>minecraft:yellow_dye</code> ×2</td><td>240</td></tr><tr><td><code>minecraft:cornflower</code></td><td><code>minecraft:blue_dye</code> ×2</td><td>240</td></tr><tr><td><code>minecraft:cocoa_beans</code></td><td><code>minecraft:brown_dye</code> ×2</td><td>240</td></tr><tr><td><code>minecraft:lilac</code></td><td><code>minecraft:magenta_dye</code> ×3</td><td>240</td></tr><tr><td><code>minecraft:sea_pickle</code></td><td><code>minecraft:lime_dye</code> ×2</td><td>240</td></tr><tr><td><code>minecraft:kelp</code></td><td><code>minecraft:green_dye</code></td><td>240</td></tr><tr><td><code>minecraft:lily_of_the_valley</code></td><td><code>minecraft:white_dye</code> ×2</td><td>240</td></tr><tr><td><code>minecraft:wither_rose</code></td><td><code>minecraft:black_dye</code> ×3</td><td>240</td></tr><tr><td><code>minecraft:pumpkin</code></td><td><code>minecraft:pumpkin_seeds</code> ×5</td><td>240</td></tr><tr><td><code>minecraft:melon_slice</code></td><td><code>minecraft:melon_seeds</code> ×2</td><td>240</td></tr></tbody></table>
-<p>Dyes: most flowers yield ×2 (the crafting table gives ×1), and rich sources (lilac, wither rose) give ×3. Kelp yields ×1 — it has little pigment. Seeds: pumpkin → ×5 (the crafting table gives ×4), melon slice → ×2 (the crafting table gives ×1) — the Extractor is always a little better.</p>
+<p>Each pull costs 240 EU/FE and takes 120 ticks (~6 s). The finished result doesn't pop out on its own — pick it up by hand or with a hopper.</p>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Duration</td><td>120 ticks (~6 s)</td></tr><tr><td>Cost per operation</td><td>240 EU/FE</td></tr><tr><td>Auto-output</td><td>no</td></tr></tbody></table>
 <h2>Inventory</h2>
 <p>One input slot, one output slot.</p>
-<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>input</td><td>items with an extracting recipe</td><td>1</td></tr><tr><td>output</td><td>result</td><td>1</td></tr></tbody></table>
-<h2>Crafting</h2>
+<table><thead><tr><th>Slot</th><th>Takes</th><th>Count</th></tr></thead><tbody><tr><td>Input</td><td>items the Extractor can process</td><td>1</td></tr><tr><td>Output</td><td>the result</td><td>1</td></tr></tbody></table>
+<h2>Interface</h2>
+<p>One screen shows the energy buffer, the progress, the input slot and the output slot.</p>
 <h2>Block Properties</h2>
-<p>An ordinary solid cube, softer than stone: any pickaxe breaks it.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
-<h2>Balance</h2>
-<p>Base: 2 EU/FE/tick × 120 ticks = 240 EU/FE — the shared default LV-machine "price" (the fallback when a recipe sets no <code>energy</code>). All 14 extraction recipes cost 240 EU/FE each (120 ticks). Numbers are starter values. Profitability over the vanilla routes is the main incentive to build an Extractor: the crafting table gives ×1 dye from a flower, the furnace gives ×1 from cactus/sea pickle; the Extractor gives ×2 (×3 from rich sources). It doesn't break balance — dyes aren't critical to progression, but they give hopper-fed auto-farms a meaningful way to process plant matter.</p>
-<h2>Visuals</h2>
-<p>The body is shared with the other LV machines: the front face turns toward the player on placement and lights up while working. The interface window is shared too — an energy bar and two slots, with no dedicated texture of its own.</p>
+<p>An ordinary solid block, softer than stone. Any pickaxe breaks it, but <strong>it does NOT keep its charge when broken</strong>.</p>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge on break</td><td>no</td></tr></tbody></table>
+<h2>Recipes</h2>
+<p>The Extractor is crafted at a workbench (the same casing layout as the other LV machines). What it pulls out, and why it's usually worth it:</p>
+<table><thead><tr><th>Input</th><th>Output</th><th>Why it's better</th></tr></thead><tbody><tr><td>Most flowers (poppy, dandelion, cornflower, lily of the valley, sea pickle, cactus)</td><td><strong>×2 dye</strong></td><td>crafting table gives ×1</td></tr><tr><td>Lilac, wither rose</td><td><strong>×3 dye</strong></td><td>the rich sources give a little extra</td></tr><tr><td>Kelp</td><td>×1 green dye</td><td>little pigment — same as crafting</td></tr><tr><td>Pumpkin</td><td><strong>×5 seeds</strong></td><td>crafting table gives ×4</td></tr><tr><td>Melon slice</td><td><strong>×2 seeds</strong></td><td>crafting table gives ×1</td></tr><tr><td>Blaze rod</td><td><strong>×3 blaze powder</strong></td><td>handy bulk route</td></tr><tr><td>Gravel</td><td>flint</td><td>a reliable way to get flint</td></tr></tbody></table>
+<p>So the rule of thumb: for plant matter the Extractor always pays a little better than the crafting table, and it's the natural sink for a hopper-fed farm's output.</p>
+<h2>Progression</h2>
+<p>Tier: LV. A convenience machine — dyes and seeds aren't critical to progression, but the Extractor makes them painless. It doesn't evolve into anything in v0.1. Needs power from an LV source, e.g. a <a href="../generators/generator.html">Generator</a>.</p>
 <h2>Related</h2>
-<p><a href="compressor.html">Compressor</a> — the neighbouring LV processing machine.</p>
+<p><a href="compressor.html">Compressor</a> — the neighbouring LV processing machine. <a href="macerator.html">Macerator</a> — the other early grinder (for ores and metals). <a href="../generators/generator.html">Generator</a> — the power source.</p>
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Hopper" aria-label="Hopper"><span>hopper</span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="28" height="28"></div> <div class="cell placeholder" title="Hopper" aria-label="Hopper"><span>hopper</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell" title="Silver Ingot"><img src="../assets/item/silver_ingot.png" alt="Silver Ingot" width="28" height="28"></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Extractor"><img src="../assets/block/extractor_top.png" alt="Extractor" width="28" height="28"></div><div class="result-name">Extractor</div></div></div></div></div>
   </main>

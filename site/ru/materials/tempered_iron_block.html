@@ -316,9 +316,10 @@
 <div class="group-title">Мир и автоматизация</div>
 <a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="5 страниц">5</span></a>
 <div class="group-title">Прочее</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="5 страниц">5</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="6 страниц">6</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="7 страниц">7</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -334,22 +335,19 @@
   </div>
 </div>
 <h2>Сводка</h2>
-<p><strong>Блок закалённого железа</strong> — это «слитковый блок»: 9 слитков закалённого железа, сжатые в один полноразмерный блок. Нужен, чтобы экономить место в сундуках — вместо 9 стопок слитков один стек блоков. Собирается на верстаке и разбирается обратно без потерь, как ванильный железный или золотой блок. Сам по себе энергии не даёт и ни с чем не взаимодействует — это просто компактная форма металла.</p>
-<table><thead><tr><th>id</th><th>Форма</th><th>Получение</th></tr></thead><tbody><tr><td><code>alaindustrial:tempered_iron_block</code></td><td>Блок (полный куб)</td><td>крафт 9× <code>tempered_iron</code> → 1 блок; обратный крафт 1 блок → 9× <code>tempered_iron</code></td></tr></tbody></table>
-<h2>Энергия</h2>
-<p>Это чисто материальный блок — он не хранит энергию и не подключается к сети.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>none — материальный блок без энергии</td></tr></tbody></table>
+<p><strong>Блок закалённого железа</strong> — это блок-хранилище: 9 слитков закалённого железа, сжатые в один полноразмерный блок. Нужен, чтобы экономить место в сундуках — вместо 9 стопок слитков один стек блоков.</p>
+<blockquote><strong>Мини-пример:</strong> в сундуке нет места? Соберите стопку слитков в блоки, а когда снова понадобятся</blockquote>
+<p>слитки — разберите блок обратно. Цикл строго без потерь, как у ванильного железного или золотого блока. Сам по себе энергии не даёт и ни с чем не взаимодействует — это просто компактная форма металла и декоративный строительный блок.</p>
+<table><thead><tr><th>Форма</th><th>Как получить</th></tr></thead><tbody><tr><td>Блок (полный куб)</td><td>крафт 9 слитков → 1 блок; разбор 1 блока → 9 слитков</td></tr></tbody></table>
 <h2>Свойства блока</h2>
-<p>Обычный цельный блок: такая же прочность и «звук» при добыче, как у ванильного железного блока. Ломается любой киркой.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>Полный куб 16³, <code>minecraft:block/cube_all</code> (одна текстура на 6 граней)</td></tr><tr><td>Класс</td><td>ванильный <code>net.minecraft.world.level.block.Block</code> (без подкласса, без BlockEntity)</td></tr><tr><td>Прочность / взрывоуст.</td></tr><tr><td>Звук</td><td><code>SoundType.METAL</code></td></tr></tbody></table>
-<h2>Рецепты</h2>
-<p>Два рецепта на верстаке: собрать блок из 9 слитков и разобрать блок обратно в 9 слитков. Цикл строго обратимый, без потерь — как ванильные iron/gold/copper block. <strong>9 слитков → 1 блок</strong> (<code>recipe/tempered_iron_block.json</code>, shaped 3×3): pattern <code>III / III / III</code>, key <code>I = alaindustrial:tempered_iron</code>, result 1 блок. <strong>1 блок → 9 слитков</strong> (<code>recipe/tempered_iron_from_block.json</code>, shapeless): ingredient <code>alaindustrial:tempered_iron_block</code>, result 9× <code>tempered_iron</code>. Слиток-источник — <a href="../components/tempered_iron.html">закалённое железо</a> (переплавка <code>iron_ingot</code> в печи/бластере).</p>
+<p>Обычный цельный блок с тем же ощущением, что у ванильного железного блока. Ломается любой киркой.</p>
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Инструмент</td><td>любая кирка</td></tr><tr><td>Дроп</td><td>сам себя (блок выпадает при ломании)</td></tr></tbody></table>
+<h2>Рецепты (переработка)</h2>
+<p>Рецептов переработки нет — только два рецепта на верстаке, которые перемещают металл в форму блока и обратно. Цикл строго обратимый и без потерь. <strong>9 слитков → 1 блок</strong> (верстак, 3×3 слитков в сетке). <strong>1 блок → 9 слитков</strong> (верстак, бесформенный — положите блок и заберите 9 слитков обратно). Слиток-источник — <a href="../components/tempered_iron.html">закалённое железо</a>.</p>
 <h2>Прогрессия</h2>
-<p>Тир: none (материал). Ведёт в: на данный момент — компактная форма металла и декоративный строительный блок. Будущие применения (beacon-совместимость, MV-корпус из закалённого блока и т.п.) — в планах. Требует: <a href="../components/tempered_iron.html">закалённое железо</a> (источник слитков).</p>
-<h2>Совместимость</h2>
-<p>Просмотрщики: JEI/REI/EMI — оба рецепта (сборка/разбор) видны после регистрации.</p>
+<p>На данный момент блок — компактная форма металла и декоративный строительный блок. Будущие применения (beacon-совместимость, MV-корпус из закалённого блока и т.п.) — в планах, но в игре их ещё нет.</p>
 <h2>Связанное</h2>
-<p><a href="../components/tempered_iron.html">Закалённое железо</a> — слиток, из которого собирается блок. <a href="../items/tempered_iron_tools.html">Инструменты из закалённого железа</a> — главный потребитель слитков. <a href="tin.html">Олово</a> / <a href="silver.html">Серебро</a> / <a href="nickel.html">Никель</a> / <a href="uranium.html">Уран</a> — другие материалы мода.</p>
+<p><a href="../components/tempered_iron.html">Закалённое железо</a> — слиток, из которого собирается блок. <a href="../items/tempered_iron_tools.html">Инструменты из закалённого железа</a> — главный потребитель слитков. <a href="tin.html">Олово</a>, <a href="silver.html">Серебро</a>, <a href="nickel.html">Никель</a>, <a href="uranium.html">Уран</a> — другие материалы мода.</p>
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron.png" alt="Закалённое железо" width="28" height="28"></div> <div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron.png" alt="Закалённое железо" width="28" height="28"></div> <div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron.png" alt="Закалённое железо" width="28" height="28"></div> <div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron.png" alt="Закалённое железо" width="28" height="28"></div> <div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron.png" alt="Закалённое железо" width="28" height="28"></div> <div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron.png" alt="Закалённое железо" width="28" height="28"></div> <div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron.png" alt="Закалённое железо" width="28" height="28"></div> <div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron.png" alt="Закалённое железо" width="28" height="28"></div> <div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron.png" alt="Закалённое железо" width="28" height="28"></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Блок закалённого железа"><img src="../assets/block/tempered_iron_block.png" alt="Блок закалённого железа" width="28" height="28"></div><div class="result-name">Блок закалённого железа</div></div></div></div></div>
 <h2>Используется в</h2>

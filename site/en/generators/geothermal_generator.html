@@ -316,9 +316,10 @@
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="6 pages">6</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="7 pages">7</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -334,26 +335,30 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Geothermal Generator</strong> produces EU/FE by consuming lava from an internal tank. Lava can be poured in with buckets or supplied as a fluid from neighbouring reservoirs. It's a denser energy source than burning coal, and it doesn't need to be refilled every few seconds.</p>
+<p>The <strong>Geothermal Generator</strong> burns lava instead of coal. It's twice as strong as the plain <a href="generator.html">Generator</a>, and a single bucket goes a long way — so you spend far less time babysitting fuel. You craft it from a regular Generator, so it's an upgrade, not a first power source.</p>
+<blockquote><strong>Mini-example:</strong> pour one lava bucket in → it runs for a good while at <strong>16 EU/FE/t</strong>, pushing about 16 000 EU/FE into your network. A full 10-bucket tank keeps a small base running almost unattended.</blockquote>
 <h2>Energy</h2>
-<p>The generator only produces power — it never accepts incoming energy. Inside is a 4000 EU/FE buffer, released into an LV-tier network. Energy is emitted from 5 faces; the front face is inert — cables don't connect to it and hoppers don't work through it.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>producer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>4000</td></tr><tr><td>Max output (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>EU/FE/tick</td><td>16 (while lava is available)</td></tr></tbody></table>
+<p>The generator only produces power — it never takes any in. It holds up to 4000 EU/FE inside and sends it out on an LV line.</p>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>4000 EU/FE</td></tr><tr><td>Output</td><td>up to 32 EU/FE/t (LV)</td></tr><tr><td>Output while burning</td><td>16 EU/FE/t</td></tr><tr><td>Energy per lava bucket</td><td>16 000 EU/FE</td></tr></tbody></table>
+<p>Energy leaves through the 5 working faces. The <strong>front face</strong> is inert — cables don't connect there and hoppers don't work through it.</p>
 <h2>Generation</h2>
-<p>The generator burns lava at 16 EU/FE/tick. One bucket lasts 1000 ticks, i.e. 16 000 EU/FE — noticeably better value per unit of fuel-handling than coal.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Source</td><td>lava (10-bucket tank; fill by bucket or as a fluid via a pump)</td></tr><tr><td>Working condition</td><td>lava intake: lava present in the tank/slot AND room in the lava buffer (<code>lavaTicks &lt; tankCapacity</code>); EU/FE generation: the lava buffer is not empty AND the EU/FE buffer is not full</td></tr><tr><td>EU/FE/tick (base)</td><td>16</td></tr><tr><td>EU/FE per bucket</td><td>16000 (1 bucket = <code>geothermalBurnTicks</code> 1000 ticks × 16 EU/FE/t)</td></tr><tr><td>Modifiers</td><td>none</td></tr></tbody></table>
+<p>Burns lava at a steady 16 EU/FE/t. One bucket holds enough for about 16 000 EU/FE — a much better deal per unit of fuel-handling than coal.</p>
+<table><thead><tr><th>Situation</th><th>Output</th></tr></thead><tbody><tr><td>Lava in the tank, room in buffer</td><td>16 EU/FE/t</td></tr><tr><td>Buffer full</td><td>pauses (waits for room)</td></tr><tr><td>Tank empty</td><td>0</td></tr></tbody></table>
 <h2>Inventory</h2>
-<p>Lava goes in several ways: by container through the item slot (the empty container returns to the output slot), as a fluid straight into the internal 10-bucket tank (for example from an adjacent Pump), or by <strong>shift-right-clicking the block directly</strong> with a lava bucket or a lava <a href="../items/vacuum_capsule.html">capsule</a> — the lava goes into the tank and the empty container stays in your hand (nothing spills in front of the block). The <code>lava_input</code> slot accepts both a lava bucket and a lava capsule; either way the matching empty container (bucket or capsule) returns to the output slot. When the tank is full any input is a silent no-op: the container stays full and nothing spills.</p>
-<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>lava_input</td><td>lava bucket or lava capsule (the empty container returns to the output slot)</td><td>1</td></tr><tr><td>output</td><td>empty buckets / empty capsules</td><td>—</td></tr></tbody></table>
-<p>The internal tank behaves identically on both loaders (Fabric and NeoForge): it accepts only lava, and neighbours can't drain it — the generator burns its own lava. Capacity is 10 buckets. Volume is tracked in millibuckets (1 bucket = 1000 mB), so the tank size and the EU/FE-per-bucket yield match on both loaders. Lava saved in the tank before a mod upgrade is carried over on world load without loss or reset.</p>
+<p>There's an internal <strong>10-bucket lava tank</strong> plus an item slot for filling it.</p>
+<table><thead><tr><th>Slot</th><th>Takes</th><th>Count</th></tr></thead><tbody><tr><td>Lava in</td><td>lava bucket or lava capsule (empty container comes back)</td><td>1</td></tr><tr><td>Output</td><td>empty buckets / empty capsules</td><td>—</td></tr></tbody></table>
+<p>Three ways to fill the tank: Drop a <strong>lava bucket</strong> or <strong>lava capsule</strong> in the slot — the empty container returns to the output slot. Pipe lava in as a fluid (e.g. from an adjacent Pump). <strong>Shift-right-click</strong> the block directly with a lava bucket or lava capsule — the lava goes into the tank and the empty container stays in your hand (nothing spills). When the tank is full, any of these is a silent no-op — the container stays full and nothing spills.</p>
 <h2>Interface</h2>
-<p>Type: container Shows: energy storage, lava level, output rate</p>
+<p>One screen shows the buffer level, how full the lava tank is, and the output rate.</p>
 <h2>Block Properties</h2>
 <p>An ordinary solid block. Any pickaxe breaks it.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
 <h2>Recipes</h2>
-<p>Crafted at a workbench from a finished <a href="generator.html">Generator</a> in a stone body with an electronic circuit below it. It is a generator, so it has no processing recipes. Craft: <code>data/alaindustrial/recipe/geothermal_generator.json</code> — shaped 3×3: a frame of 7 smooth stone blocks (<code>minecraft:smooth_stone</code>), a <a href="generator.html">Generator</a> in the centre, and an <a href="../components/electronic_circuit.html">electronic circuit</a> in the bottom-centre cell. Processing recipes: none (generator) Progression gate: it needs an already-built plain Generator and an electronic circuit (i.e. the LV start already cleared), so the geothermal generator is an upgrade, not a first power source.</p>
+<p>Crafted at a workbench from an already-built <a href="generator.html">Generator</a> in a smooth-stone body, with an <a href="../components/electronic_circuit.html">electronic circuit</a> underneath. That makes it an upgrade: you need the LV start cleared first, so it's not a first power source.</p>
+<h2>Progression</h2>
+<p>Tier: LV. An upgrade over the coal <a href="generator.html">Generator</a> — twice the output for far less refueling, at the cost of dealing with lava.</p>
 <h2>Related</h2>
-<p><a href="generator.html">Generator</a> — the solid-fuel baseline alternative. Pump — feeds lava into the generator's tank.</p>
+<p><a href="generator.html">Generator</a> — the solid-fuel baseline, and the part you craft this from. Pump — feeds lava into the tank automatically. <a href="../items/vacuum_capsule.html">Vacuum Capsule</a> — a handy way to carry lava for the tank.</p>
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell" title="LV Generator"><img src="../assets/block/generator_top.png" alt="LV Generator" width="28" height="28"></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="28" height="28"></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Geothermal Generator"><div class="ricon placeholder">?</div></div><div class="result-name">Geothermal Generator</div></div></div></div></div>
   </main>

@@ -316,9 +316,10 @@
 <div class="group-title">Мир и автоматизация</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="5 страниц">5</span></a>
 <div class="group-title">Прочее</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="5 страниц">5</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="6 страниц">6</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="7 страниц">7</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -334,32 +335,32 @@
   </div>
 </div>
 <h2>Сводка</h2>
-<p><strong>Генератор</strong> — первый источник энергии в моде. Он сжигает твёрдое горючее (уголь, древесный уголь, блок угля и тому подобное) и вырабатывает EU/FE во внутренний буфер, который отдаёт соседним приёмникам. Это точка входа в энергетику тира LV, от которой питаются первые машины.</p>
+<p><strong>Генератор</strong> сжигает твёрдое топливо — уголь, древесный уголь, блок угля, всё, что горит в ванильной печи — и превращает его в EU/FE. Это безотказный источник, за который берутся, когда нет ни солнца, ни ветра: он просто работает, днём и ночью, в любую погоду.</p>
+<blockquote><strong>Мини-пример:</strong> бросьте кусок угля, подведите кабель — и у вас <strong>8 EU/FE/такт</strong> стабильной мощности</blockquote>
+<p>для первого <a href="../machines/macerator.html">Дробителя</a>. На погоду ему всё равно, волнует только топливо.</p>
 <h2>Энергия</h2>
-<p>Генератор только производит энергию — он не принимает чужую. Внутри буфер на 4000 EU/FE, отдаётся в сеть тира LV, поэтому им можно безопасно питать любые LV-провода и машины.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>производитель с буфером</td></tr><tr><td>Буфер (EU/FE)</td><td>4000</td></tr><tr><td>Макс. вход (EU/FE/такт)</td><td>н/п (не принимает энергию)</td></tr><tr><td>Макс. выход (EU/FE/такт)</td><td>32 (LV)</td></tr><tr><td>EU/FE/такт</td><td>8 (пока горит топливо)</td></tr></tbody></table>
-<p>Энергия выдаётся с 5 граней; лицевая грань (та, что смотрит на вас при установке) инертна — к ней не подключаются кабели и через неё не работают воронки.</p>
+<p>Генератор только производит энергию — чужую не принимает. Внутри он держит до 4000 EU/FE и отдаёт их в линию тира LV.</p>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Внутренний буфер</td><td>4000 EU/FE</td></tr><tr><td>Выход</td><td>до 32 EU/FE/такт (LV)</td></tr><tr><td>Выход во время горения</td><td>8 EU/FE/такт</td></tr></tbody></table>
+<p>Энергия уходит через 5 рабочих граней. <strong>Лицевая грань</strong> (та, что смотрит на вас при установке) инертна — кабели к ней не подключаются, и воронки через неё не работают.</p>
 <h2>Генерация</h2>
-<p>Генератор жжёт любое ванильное печное топливо. Каждая единица даёт столько EU/FE, сколько тиков она горела бы в печи, помноженное на 8. Выдаётся энергия по 8 EU/FE/такт; когда буфер полон, генератор делает паузу, пока не освободится место.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Источник</td><td>твёрдое горючее (предметы, горящие в ванильной печи)</td></tr><tr><td>Условие работы</td><td>есть топливо И буфер не полон</td></tr><tr><td>EU/FE/такт (база)</td><td>8</td></tr><tr><td>Модификаторы</td><td>нет (длительность горения = ванильное время горения топлива)</td></tr></tbody></table>
+<p>Кормите его любым ванильным печным топливом. Он жжёт ровным темпом 8 EU/FE/такт, пока хватает топлива; когда буфер полон — делает паузу до освобождения места.</p>
+<table><thead><tr><th>Ситуация</th><th>Выработка</th></tr></thead><tbody><tr><td>Топливо горит, в буфере есть место</td><td>8 EU/FE/такт</td></tr><tr><td>Буфер полон</td><td>пауза (ждёт места)</td></tr><tr><td>Нет топлива</td><td>0</td></tr></tbody></table>
+<p>Каждая единица топлива даёт столько EU/FE, сколько тиков она горела бы в печи, выплачиваемых по 8 EU/FE/такт.</p>
 <h2>Инвентарь</h2>
-<p>Один слот под топливо. Ведро лавы сюда не вставить — лава нужна геотермальному генератору, а не этому.</p>
-<table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>fuel</td><td>горючие в печи предметы (ведро лавы — <strong>не принимается</strong>; лава только для геотермального генератора)</td><td>1</td></tr></tbody></table>
+<p>Один слот, только под топливо.</p>
+<table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>Топливо</td><td>любое ванильное печное топливо (уголь, древесный уголь, блок угля, дерево…)</td><td>1</td></tr></tbody></table>
+<p>Ведро лавы сюда <strong>не класть</strong> — лава нужна <a href="geothermal_generator.html">Геотермальному генератору</a>.</p>
 <h2>Интерфейс</h2>
-<p>Тип: container Показывает: запас энергии, остаток горения, слот топлива, скорость выдачи</p>
+<p>На одном экране видно уровень буфера, сколько времени горения осталось у текущего топлива, слот топлива и скорость выдачи.</p>
 <h2>Свойства блока</h2>
-<p>Обычный цельный блок. Ломается любой киркой и при сломе не сохраняет заряд — энергию лучше сначала слить в накопитель.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³ (окклюдер)</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Дроп с NBT энергии</td><td>false</td></tr></tbody></table>
+<p>Обычный цельный блок. Ломается любой киркой, но <strong>при сломе заряд НЕ сохраняет</strong> — слейте энергию в Энергохранилище, прежде чем его поднимать.</p>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Сохраняет заряд при сломе</td><td>нет</td></tr></tbody></table>
 <h2>Рецепты</h2>
-<p>Генератор собирается на верстаке. Это генератор, а не машина переработки, поэтому рецептов переработки у него нет. Крафт: <code>data/alaindustrial/recipe/generator.json</code> Рецепты переработки: нет (это генератор, а не переработчик)</p>
+<p>Собирается на верстаке. Это генератор, а не машина переработки, поэтому рецептов переработки у него нет.</p>
 <h2>Прогрессия</h2>
-<p>Тир: LV Развивается в: нет (более мощные генераторы — отдельные блоки) Требует: нет</p>
-<h2>Совместимость</h2>
-<p>Просмотрщики: JEI, REI, EMI Тултипы: Jade, The One Probe</p>
-<h2>Баланс</h2>
-<p>База: 8 EU/FE/такт, буфер 4000 EU/FE. Обоснование: при 8 EU/FE/такт один генератор стабильно тянет одну LV-машину с умеренным расходом (см. <a href="../machines/macerator.html">Дробитель</a> — 2 EU/FE/такт) и ещё остаётся запас на подзарядку буфера. Буфер 4000 EU/FE (≈6.7 с при полной выдаче) сглаживает паузу при замене топлива, но не делает генератор хранилищем — это роль <a href="../energy-storage/index.html">накопителей</a>. Числа — осознанные стартовые значения для балансной правки, не скопированы из других модов.</p>
+<p>Тир: LV. Стартовый топливный генератор. Ни во что не развивается — более мощный топливный генератор (<a href="geothermal_generator.html">Геотермальный генератор</a>) это отдельный блок, который крафтится из этого.</p>
 <h2>Связанное</h2>
-<p><a href="../machines/macerator.html">Дробитель</a> — типичный первый потребитель LV. <a href="../energy-storage/battery_box.html">Энергохранилище</a> — куда складывать излишки EU/FE. <a href="../energy-transfer/copper_cable.html">Медный кабель</a> — чем разводить энергию.</p>
+<p><a href="../machines/macerator.html">Дробитель</a> — типичная первая LV-машина под питание. <a href="../energy-storage/battery_box.html">Энергохранилище</a> — копит излишки, а заодно принимает заряд перед переносом генератора. <a href="geothermal_generator.html">Геотермальный генератор</a> — апгрейд на лаве. <a href="../energy-transfer/copper_cable.html">Медный кабель</a> — чем разводить энергию.</p>
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Furnace" aria-label="Furnace"><span>furnace</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit.png" alt="Электронная схема" width="28" height="28"></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Генератор (LV)"><img src="../assets/block/generator_top.png" alt="Генератор (LV)" width="28" height="28"></div><div class="result-name">Генератор (LV)</div></div></div></div></div>
 <h2>Используется в</h2>

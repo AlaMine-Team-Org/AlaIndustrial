@@ -288,9 +288,10 @@
 <div class="group-title">Мир и автоматизация</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="5 страниц">5</span></a>
 <div class="group-title">Прочее</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="5 страниц">5</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="6 страниц">6</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="7 страниц">7</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -306,26 +307,30 @@
   </div>
 </div>
 <h2>Сводка</h2>
-<p><strong>Ночная (лунная) панель</strong> — вторая ступень ночной ветки (T2), зеркало <a href="daylight_solar_panel.html">дневной панели</a>. Производит EU/FE <strong>ночью</strong> при открытом небе и ничего днём — мягкий «вечный» источник для тёмного времени. Её нельзя скрафтить — она получается <strong>только через эволюцию</strong> базовой панели с <strong>лунным эволюционным чипом</strong>.</p>
+<p><strong>Ночная (лунная) панель</strong> — ночной двойник <a href="daylight_solar_panel.html">дневной панели</a>, вторая ступень ночной ветки. Она производит EU/FE <strong>ночью</strong> при открытом небе и ничего днём, так что машины не замолкают с наступлением темноты. Скрафтить её нельзя. Единственный способ — вырастить из базовой панели через <strong>лунный эволюционный чип</strong> (см. <a href="solar_panel.html">Солнечная панель</a> → <em>Прогрессия</em>).</p>
+<blockquote><strong>Мини-пример:</strong> выросшая из базовой панели с ночным чипом → <strong>3 EU/FE/такт</strong> ясной ночью. Поставьте</blockquote>
+<p>рядом дневную панель — и мастерская работает круглые сутки, пока одна заряжает Энергохранилище, вторая спит. Уникальная фишка ночной ветки: даже в дождь и грозу панель продолжает «тлеть» на <strong>1 EU/FE/такт</strong>, так что в непогоду она полностью не замолкает.</p>
 <h2>Энергия</h2>
-<p>Панель только производит энергию и не принимает чужую. Буфер на 8000 EU/FE, отдаётся в сеть тира LV. Энергия уходит в 5 сторон; верхняя грань — рабочая поверхность.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>производитель с буфером</td></tr><tr><td>Буфер (EU/FE)</td><td>8000</td></tr><tr><td>Макс. вход</td><td>н/п (не принимает энергию)</td></tr><tr><td>Макс. выход (EU/FE/такт)</td><td>20 (LV)</td></tr><tr><td>EU/FE/такт (база)</td><td>3 (ночь, ясно) — конфиг <code>moonlitEuPerTick</code></td></tr></tbody></table>
+<p>Панель только производит энергию — чужую не принимает. Держит до 8000 EU/FE и отдаёт их в линию LV.</p>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Внутренний буфер</td><td>8000 EU/FE</td></tr><tr><td>Выход</td><td>до 20 EU/FE/такт (LV)</td></tr><tr><td>Базовая выработка (ясная ночь)</td><td>3 EU/FE/такт</td></tr></tbody></table>
+<p>Энергия уходит через 4 бока и низ. <strong>Верхняя грань — рабочая поверхность</strong>, не закрывайте её.</p>
 <h2>Генерация</h2>
-<p>Как у дневной панели, но наоборот: работает только ночью и при открытом небе. У лунной ветки есть одна уникальная черта — в дождь и грозу она не замолкает полностью, а продолжает «тлеть» на 1 EU/FE/такт. Стекло над панелью не мешает, снег тоже снижает выработку до 1 EU/FE/такт.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Источник</td><td>лунный свет</td></tr><tr><td>Условие работы</td><td>ночь И открытое небо над блоком</td></tr><tr><td>Измерения</td><td>minecraft:overworld</td></tr><tr><td>EU/FE/такт ясно</td><td>3</td></tr><tr><td>Полупрозрачный блок над панелью (листва, паутина)</td><td>×<code>solarTransparentFactor</code> (round(0.5 × 3) → 2 EU/FE/такт) — MODE_NIGHT_PARTIAL</td></tr><tr><td>Стекло над панелью</td><td>без снижения (полностью прозрачно)</td></tr><tr><td>Снег (слой <code>minecraft:snow</code> или снегопад в холодном биоме)</td><td><code>max(1, round(solarSnowFactor × 3))</code> → 1 EU/FE/такт — MODE_NIGHT_SNOW</td></tr><tr><td>Дождь/гроза</td><td>1 (плоский трикл — конфиг <code>moonlitWeatherEuPerTick</code>) — MODE_NIGHT_WEATHER</td></tr><tr><td>День</td><td>0</td></tr></tbody></table>
+<p>Зеркальный отражение дневной панели: только обычный мир, только ночью, только при открытом небе. Стекло не мешает.</p>
+<table><thead><tr><th>Ситуация</th><th>Выработка</th></tr></thead><tbody><tr><td>Ясная ночь, открытое небо</td><td>3 EU/FE/такт</td></tr><tr><td>Стекло сверху (прозрачно)</td><td>3 EU/FE/такт (без изменений)</td></tr><tr><td>Листва / паутина сверху (лёгкая тень)</td><td>~2 EU/FE/такт</td></tr><tr><td>Слой снега или снегопад</td><td>1 EU/FE/такт (слабый трикл)</td></tr><tr><td>Дождь или гроза</td><td>1 EU/FE/такт (продолжает тлеть — только у ночной ветки)</td></tr><tr><td>День</td><td>0</td></tr></tbody></table>
+<p>Этот трикл в дождь и грозу — визитная карточка ночной ветки: там, где дневная панель в шторм падает до нуля, лунная продолжает давать крошечный ток.</p>
 <h2>Интерфейс</h2>
-<p>Тип: container — запас энергии, скорость генерации, режим неба (ночь/снег/дождь/день).</p>
+<p>На одном экране видно уровень буфера, текущую выработку и состояние неба (ночь / снег / дождь / день).</p>
 <h2>Свойства блока</h2>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>низкопрофильная панель (слэб 8px), <code>noOcclusion</code></td></tr><tr><td>Прочность / взрыв</td><td>5.0 / 6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr></tbody></table>
+<p>Плоский слэб в половину блока высотой, как базовая панель. Ломается любой киркой.</p>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>низкая панель (полуслэб)</td></tr><tr><td>Инструмент</td><td>кирка</td></tr></tbody></table>
 <h2>Звук</h2>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Событие</td><td><code>alaindustrial:solar_panel_hum</code> (общее с базовой и дневной панелью)</td></tr><tr><td>Паттерн</td><td><strong>C</strong> — ambient-loop без <code>lit</code> (см. SOUND_TRACKING)</td></tr><tr><td>Громкость</td><td>0.28, фиксированный радиус 10 бл (тише и уже генератора)</td></tr><tr><td>Замолкает</td><td>днём, при заблокированном небе, вне Overworld</td></tr><tr><td>Субтитры</td><td><code>subtitles.alaindustrial.solar_panel_hum</code>, 20 языков</td></tr></tbody></table>
-<p>Тот же тихий гул, что у базовой панели, но с ночным условием работы: звучит ночью при открытом небе. В отличие от дневных панелей, дождь и гроза звук не гасят — лунная панель там продолжает тлеть и остаётся «активной». Подробнее — в <a href="solar_panel.html">базовой панели</a>.</p>
+<p>Тот же тихий гул, что у базовой панели, но звучит ночью при открытом небе. В отличие от дневных панелей, дождь и гроза его не гасят — лунная панель там продолжает тлеть и остаётся «активной». Подробнее — в <a href="solar_panel.html">базовой панели</a>.</p>
 <h2>Рецепты</h2>
-<p>Ночная панель не крафтится. Единственный способ её получить — вырастить из базовой панели: вставьте лунный эволюционный чип и дайте панели поработать несколько ночей при открытом небе. Накопленная энергия при эволюции сохраняется. <strong>Крафт:</strong> отсутствует. JSON-рецепт удалён — блок недоступен в столе крафта. <strong>Эволюция (единственный способ получить):</strong> базовая <a href="solar_panel.html">солнечная панель</a> + <code>alignment_chip_night</code> + накопленное ночное рабочее время → превращается в ночную, перенос NBT (энергия). <strong>Просмотрщик рецептов (REI/JEI,:</strong> нажатие <strong>R</strong> открывает информационную страницу с описанием эволюции (детали реализации — в <a href="solar_panel.html">solar_panel.md</a>).</p>
-<h2>Баланс</h2>
-<p>T2 ночь = 3 EU/FE/такт — ниже дневной T2 (4), ночь должна быть слабее дня, но даёт ток когда солнечные молчат. Уникальная особенность лунной ветки: она единственная <strong>тлеет</strong> при плохом небе — 1 EU/FE/такт плоским трикл в дождь/грозу (<code>moonlitWeatherEuPerTick</code>) и 1 EU/FE/такт в снег (<code>max(1, round(...))</code>), тогда как дневная и базовая T1 в дождь дают 0. Тюнится конфигами <code>moonlitEuPerTick</code> и <code>moonlitWeatherEuPerTick</code>. См.</p>
+<p>Не крафтится. Единственный способ получить — вырастить из базовой <a href="solar_panel.html">Солнечной панели</a>: бросьте <strong>лунный эволюционный чип</strong> и дайте панели поработать несколько ясных ночей. Накопленная энергия сохраняется. В REI/JEI нажмите <strong>R</strong>, чтобы открыть информационную страницу с описанием эволюции (это не рецепт крафта).</p>
+<h2>Прогрессия</h2>
+<p>Вторая ступень ночной ветки (T2), вырастает из базовой <a href="solar_panel.html">Солнечной панели</a>. Дальше она может развиваться по ночной ветке в будущих тирах.</p>
 <h2>Связанное</h2>
-<p><a href="solar_panel.html">Солнечная панель</a> — нейтральная T1, источник эволюции. <a href="daylight_solar_panel.html">Дневная панель</a> — зеркало дневной ветки. <a href="../energy-storage/battery_box.html">Энергохранилище</a> · <a href="../energy-transfer/copper_cable.html">Провод</a></p>
+<p><a href="solar_panel.html">Солнечная панель</a> — нейтральная T1, из которой её выращивают. <a href="daylight_solar_panel.html">Дневная панель</a> — зеркало дневной ветки. <a href="../energy-storage/battery_box.html">Энергохранилище</a> · <a href="../energy-transfer/copper_cable.html">Провод</a></p>
 
   </main>
 </div>

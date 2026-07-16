@@ -316,9 +316,10 @@
 <div class="group-title">Мир и автоматизация</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="5 страниц">5</span></a>
 <div class="group-title">Прочее</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="5 страниц">5</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="6 страниц">6</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="7 страниц">7</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -334,30 +335,34 @@
   </div>
 </div>
 <h2>Сводка</h2>
-<p>Дробитель — ключевая машина раннего удвоения руды. Тратит EU/FE, чтобы перемолоть руду или металл в пыль. Выход зависит от входа:</p>
-<table><thead><tr><th>Тип входа</th><th>Пример</th><th>Выход</th></tr></thead><tbody><tr><td>Блок руды</td><td><code>iron_ore</code>, <code>deepslate_iron_ore</code></td><td><strong>×2 пыли</strong></td></tr><tr><td>Необработанная руда</td><td><code>raw_iron</code></td><td>×1 пыль</td></tr><tr><td>Слиток</td><td><code>iron_ingot</code></td><td>×1 пыль</td></tr></tbody></table>
-<p>Удвоение даёт <strong>только добытый блок руды</strong>. Необработанная руда (<code>raw_*</code>) и слиток — промежуточные формы того же металла, они дают ×1, иначе удвоение можно было бы получить дважды с одной жилы. Это первая машина, ради которой имеет смысл строить энергосеть.</p>
+<p><strong>Дробитель</strong> — машина раннего удвоения руды. Загрузите в него руду или металл, и он перемелет их в пыль, причём добытый блок руды даёт <strong>две</strong> пыли вместо одной — ради этого его и строят. Это первая машина, ради которой имеет смысл тянуть кабель.</p>
+<blockquote><strong>Мини-пример:</strong> бросьте блок железной руды (или сырьё), дайте ему покрутиться — и получите</blockquote>
+<p><strong>две железные пыли</strong>. Переплавьте их, и из одной жилы вышло два слитка вместо одного.</p>
+<table><thead><tr><th>Тип входа</th><th>Пример</th><th>Выход</th></tr></thead><tbody><tr><td>Блок руды</td><td>железная руда (обычная + глубинный сланец)</td><td><strong>×2 пыли</strong></td></tr><tr><td>Сырьё</td><td>сырьё (дроп с руды)</td><td><strong>×2 пыли</strong></td></tr><tr><td>Слиток</td><td>готовый слиток</td><td>×1 пыль</td></tr></tbody></table>
+<p>Удвоение даётся и за блок руды, и за сырьё — как у Mekanism/IC2: дробилка удваивает что угодно, что в неё положишь. Слиток остаётся ×1 (нетто-ноль, иначе можно было бы зациклить «слиток → пыль → слиток» с удвоением). Это первая машина, ради которой имеет смысл строить энергосеть.</p>
 <h2>Энергия</h2>
-<p>Дробитель только потребляет EU/FE и копит их в небольшом буфере, чтобы плавно работать даже при неровной подаче.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>потребитель с буфером</td></tr><tr><td>Буфер (EU/FE)</td><td>800</td></tr><tr><td>Макс. вход (EU/FE/такт)</td><td>32 (LV)</td></tr><tr><td>Макс. выход (EU/FE/такт)</td><td>н/п (не отдаёт)</td></tr><tr><td>EU/FE/такт</td><td>2 (во время работы)</td></tr></tbody></table>
-<p>Дробитель — LV-машина: он берёт до 32 EU/FE за тик. Если в сети больше энергии (например, от более мощного источника), лишнее просто не передаётся — машина берёт свой лимит и ничего не взрывается. <strong>Грани:</strong> энергия заходит с пяти граней; лицевая (туда «смотрит» морда машины) — инертна: кабели к ней не подключаются, воронки через неё не работают.</p>
+<p>Дробитель только потребляет EU/FE и держит небольшой буфер, чтобы ровно молоть даже при неровной подаче.</p>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Внутренний буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вход</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Потребление</td><td>2 EU/FE/такт во время работы</td></tr></tbody></table>
+<p>LV-машина: берёт до 32 EU/FE за тик. Если в сети больше энергии, лишнее просто не забирается — ничего не взрывается. Энергия заходит с пяти рабочих граней. <strong>Лицевая грань</strong> (туда «смотрит» морда машины) инертна — кабели к ней не подключаются, воронки через неё не работают.</p>
 <h2>Процессинг</h2>
-<p>Каждая операция идёт 150 тиков (~7,5 с) и съедает EU/FE из буфера. Готовый результат сам в сундук не вылетает — нужно забирать руками или воронкой.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Тип рецепта</td><td>alaindustrial:maceration</td></tr><tr><td>Длительность (тики)</td><td>150</td></tr><tr><td>Авто-выгрузка</td><td>false</td></tr></tbody></table>
+<p>Каждое дробление идёт 150 тиков (~7,5 с) и съедает EU/FE из буфера. Готовая пыль сама в сундук не вылетает — забирайте руками или воронкой.</p>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Длительность</td><td>150 тиков (~7,5 с)</td></tr><tr><td>Цена операции</td><td>300 EU/FE</td></tr><tr><td>Авто-выгрузка</td><td>нет</td></tr></tbody></table>
 <h2>Инвентарь</h2>
 <p>Один слот на вход, один на выход. В выходной ничего вложить нельзя — он только для результата.</p>
-<table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>input</td><td>предметы с рецептом maceration</td><td>1</td></tr><tr><td>output</td><td>только результат (вставка запрещена)</td><td>1</td></tr></tbody></table>
+<table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>Вход</td><td>предметы, которые дробитель умеет молоть</td><td>1</td></tr><tr><td>Выход</td><td>только результат (вставка запрещена)</td><td>1</td></tr></tbody></table>
 <h2>Интерфейс</h2>
-<p>Тип: container Показывает: запас энергии, прогресс (стрелка), слот входа, слот выхода</p>
+<p>На одном экране видны запас энергии, стрелка прогресса, слот входа и слот выхода.</p>
 <h2>Свойства блока</h2>
-<p>Обычный цельный куб, мягче камня: ломается любой киркой, не хранит заряд при сломе.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³ (окклюдер)</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Дроп с NBT энергии</td><td>false</td></tr></tbody></table>
+<p>Обычный цельный блок, мягче камня. Ломается любой киркой, но <strong>при сломе заряд НЕ сохраняет</strong>.</p>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Сохраняет заряд при сломе</td><td>нет</td></tr></tbody></table>
 <h2>Рецепты</h2>
-<p>Дробитель сам крафтится на верстаке: кремень сверху, булыжник по бокам и нижним углам, схема в центре, серебряный слиток снизу по центру. Рецепты дробления делятся на два уровня: <strong>Блок руды → 2 пыли.</strong> Удвоение даётся только за добытый кусок руды (<code>iron_ore</code>, <code>deepslate_iron_ore</code> и т.п.). Это главная польза дробителя — из одной жилы два слитка вместо одного. <strong>Необработанная руда (<code>raw_iron</code>) и готовый слиток → 1 пыль.</strong> Это промежуточные формы того же металла, они дают ×1 — иначе удвоение можно было бы получить дважды с одной жилы. Та же схема работает для меди, золота, олова, серебра, никеля и урана. <strong>Неметаллические пыли (уголь, алмаз, изумруд, лазурит):</strong> те же два уровня, но переплавки обратно пока нет — это задел на будущее. Руда (обычная + deepslate) даёт ×2 пыли; чистый предмет — ×1. Исключение: <strong>лазуритовая руда → 6 пыли</strong> — ванильная руда даёт сразу 4–9 лазуритов, так что простое ×2 обесценило бы дробление.</p>
+<p>Дробитель сам крафтится на верстаке: кусок кремня сверху, булыжник по бокам и нижним углам, <a href="../components/electronic_circuit.html">электронная схема</a> в центре, серебряный слиток снизу по центру. Что он мелет и что получается: <strong>Блок руды и сырьё → 2 пыли.</strong> Удвоение даётся за оба входа — это главная польза дробителя: из одной жилы два слитка вместо одного, независимо от того, добыл ты блок или сырьё. <strong>Готовый слиток → 1 пыль.</strong> Нетто-ноль, чтобы нельзя было зациклить удвоение («слиток → пыль → слиток»).</p>
+<table><thead><tr><th>Вход</th><th>Выход</th><th>Зачем</th></tr></thead><tbody><tr><td>Блок руды (железо, медь, золото, олово, серебро, никель, уран — обычная + глубинный сланец)</td><td><strong>×2 пыли</strong></td><td>ради удвоения — два слитка из одной жилы</td></tr><tr><td>Сырьё (дроп с руды)</td><td><strong>×2 пыли</strong></td><td>вторая удваиваемая форма — дробите и блок, и сырьё</td></tr><tr><td>Готовый слиток</td><td>×1 пыль</td><td>промежуточная форма, ×1 (иначе удвоение зацикливалось бы)</td></tr></tbody></table>
+<p>Та же схема работает для неметаллических пылей (уголь, алмаз, изумруд, лазурит): руда → ×2 пыли, чистый предмет → ×1. Одно исключение: <strong>лазуритовая руда → 6 пыли</strong> (ванильная руда даёт сразу 4–9 лазуритов, так что простое ×2 обесценило бы дробление).</p>
 <h2>Прогрессия</h2>
-<p>Тир: LV Развивается в: нет в v0.1 (MV-аналог уровня «дробилки» — отдельный будущий блок) Требует: питание от LV-источника, например <a href="../generators/generator.html">Генератор</a></p>
-<h2>Совместимость</h2>
-<p>Просмотрщики: JEI, REI, EMI (рецепты maceration должны рендериться отдельной категорией) Тултипы: Jade, The One Probe (показывают прогресс и запас энергии)</p>
+<p>Тир: LV. Стартовый дробильщик и повод строить первую энергосеть. Ни во что не развивается в v0.1 — MV-дробилка это отдельный будущий блок. Требует питание от LV-источника, например <a href="../generators/generator.html">Генератор</a>.</p>
+<h2>Связанное</h2>
+<p><a href="../generators/generator.html">Генератор</a> — типичный источник питания для этой машины. <a href="electric_furnace.html">Электропечь</a> — переплавляет пыль обратно в слитки. <a href="compressor.html">Компрессор</a> — замыкает цикл для неметаллических пылей (уголь, алмаз…). <a href="../components/electronic_circuit.html">Электронная схема</a> — компонент, из которого он собран.</p>
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Flint" aria-label="Flint"><span>flint</span></div> <div class="cell placeholder" title="Flint" aria-label="Flint"><span>flint</span></div> <div class="cell placeholder" title="Flint" aria-label="Flint"><span>flint</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit.png" alt="Электронная схема" width="28" height="28"></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell" title="Серебряный слиток"><img src="../assets/item/silver_ingot.png" alt="Серебряный слиток" width="28" height="28"></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Дробитель"><img src="../assets/block/macerator_top.png" alt="Дробитель" width="28" height="28"></div><div class="result-name">Дробитель</div></div></div></div></div>
   </main>

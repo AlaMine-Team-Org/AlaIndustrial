@@ -316,9 +316,10 @@
 <div class="group-title">Мир и автоматизация</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="5 страниц">5</span></a>
 <div class="group-title">Прочее</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="5 страниц">5</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="6 страниц">6</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="7 страниц">7</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -334,28 +335,31 @@
   </div>
 </div>
 <h2>Сводка</h2>
-<p><strong>Геотермальный генератор</strong> вырабатывает EU/FE, сжигая лаву из внутреннего бака. Лаву можно заливать вёдрами или подавать жидкостью из соседних резервуаров. Это более плотный по энергии источник, чем сжигание угля, и его не нужно подкармливать каждые несколько секунд.</p>
+<p><strong>Геотермальный генератор</strong> жжёт лаву вместо угля. Он вдвое сильнее обычного <a href="generator.html">Генератора</a>, а одного ведра хватает надолго — поэтому за топливом приходится следить гораздо реже. Собирается из готового Генератора, так что это апгрейд, а не первый источник энергии.</p>
+<blockquote><strong>Мини-пример:</strong> залейте одно ведро лавы → он работает приличное время на <strong>16 EU/FE/такт</strong>, отдавая</blockquote>
+<p>в сеть около 16 000 EU/FE. Полный бак на 10 вёдер тянет небольшую базу почти без присмотра.</p>
 <h2>Энергия</h2>
-<p>Генератор только производит энергию — он не принимает чужую. Внутри буфер на 4000 EU/FE, отдаётся в сеть тира LV. Энергия выдаётся с 5 граней; лицевая грань инертна — кабели к ней не подключаются, и воронки через неё не работают.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>производитель с буфером</td></tr><tr><td>Буфер (EU/FE)</td><td>4000</td></tr><tr><td>Макс. выход (EU/FE/такт)</td><td>32 (LV)</td></tr><tr><td>EU/FE/такт</td><td>16 (пока есть лава)</td></tr></tbody></table>
+<p>Генератор только производит энергию — чужую не принимает. Внутри он держит до 4000 EU/FE и отдаёт их в линию тира LV.</p>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Внутренний буфер</td><td>4000 EU/FE</td></tr><tr><td>Выход</td><td>до 32 EU/FE/такт (LV)</td></tr><tr><td>Выход во время горения</td><td>16 EU/FE/такт</td></tr><tr><td>Энергии с ведра лавы</td><td>16 000 EU/FE</td></tr></tbody></table>
+<p>Энергия уходит через 5 рабочих граней. <strong>Лицевая грань</strong> инертна — кабели к ней не подключаются, и воронки через неё не работают.</p>
 <h2>Генерация</h2>
-<p>Генератор жжёт лаву по 16 EU/FE/такт. Одного ведра хватает на 1000 тиков работы, то есть на 16 000 EU/FE — заметно выгоднее угля по энергии на единицу возни с топливом.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Источник</td><td>лава (бак на 10 вёдер; вход вёдрами или жидкостью через насос)</td></tr><tr><td>Условие работы</td><td>приём лавы: в баке/слоте есть лава И есть место в лава-буфере (<code>lavaTicks &lt; tankCapacity</code>); генерация EU/FE: лава-буфер не пуст И буфер EU/FE не полон</td></tr><tr><td>EU/FE/такт (база)</td><td>16</td></tr><tr><td>EU/FE на ведро</td><td>16000 (1 ведро = <code>geothermalBurnTicks</code> 1000 тиков × 16 EU/FE/t)</td></tr><tr><td>Модификаторы</td><td>нет</td></tr></tbody></table>
+<p>Жжёт лаву ровным темпом 16 EU/FE/такт. Одного ведра хватает примерно на 16 000 EU/FE — заметно выгоднее угля по EU/FE на единицу возни с топливом.</p>
+<table><thead><tr><th>Ситуация</th><th>Выработка</th></tr></thead><tbody><tr><td>В баке есть лава, в буфере есть место</td><td>16 EU/FE/такт</td></tr><tr><td>Буфер полон</td><td>пауза (ждёт места)</td></tr><tr><td>Бак пуст</td><td>0</td></tr></tbody></table>
 <h2>Инвентарь</h2>
-<p>Лава заливается несколькими способами: тарой через слот (пустая тара возвращается в выходной слот), жидкостью напрямую во внутренний бак на 10 вёдер (например, от соседнего насоса), либо <strong>shift+ПКМ прямо по блоку</strong> ведром лавы или лава-<a href="../items/vacuum_capsule.html">капсулой</a> — лава кладётся в бак, в руке остаётся пустая тара (лава не выливается перед блоком). В слот <code>lava_input</code> принимаются и ведро лавы, и лава-капсула; в обоих случаях в выходной слот возвращается соответствующая пустая тара (ведро или капсула). Когда бак полон, любой ввод — тихий no-op: тара остаётся полной, ничего не выливается.</p>
-<table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>lava_input</td><td>ведро лавы или лава-капсула (пустая тара возвращается в выходной слот)</td><td>1</td></tr><tr><td>output</td><td>пустые вёдра / пустые капсулы</td><td>—</td></tr></tbody></table>
-<p>Внутренний бак одинаков на обоих лоадерах (Fabric и NeoForge): принимает только лаву, и соседи не могут её откачать — генератор жжёт свою лаву сам. Ёмкость — 10 вёдер. Объём внутри считается в миллибакетах (1 ведро = 1000 mB), поэтому бак и запас EU/FE на ведро на обоих лоадерах совпадают. Лава, сохранённая в баке до апгрейда мода, при загрузке мира переносится без потерь и не сбрасывается.</p>
+<p>Внутри <strong>бак лавы на 10 вёдер</strong> плюс предметный слот для его заполнения.</p>
+<table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>Заливка лавы</td><td>ведро лавы или лава-капсула (пустая тара возвращается)</td><td>1</td></tr><tr><td>Выход</td><td>пустые вёдра / пустые капсулы</td><td>—</td></tr></tbody></table>
+<p>Залить бак можно тремя способами: Положить <strong>ведро лавы</strong> или <strong>лава-капсулу</strong> в слот — пустая тара вернётся в выходной слот. Подать лаву как жидкость (например, от соседнего насоса). <strong>Shift+ПКМ прямо по блоку</strong> ведром лавы или лава-капсулой — лава уйдёт в бак, а пустая тара останется в руке (ничего не выливается перед блоком). Когда бак полон, любой из этих способов — тихий no-op: тара остаётся полной, ничего не проливается.</p>
 <h2>Интерфейс</h2>
-<p>Тип: container Показывает: запас энергии, уровень лавы, скорость выдачи</p>
+<p>На одном экране видно уровень буфера, насколько заполнен бак лавы и скорость выдачи.</p>
 <h2>Свойства блока</h2>
 <p>Обычный цельный блок. Ломается любой киркой.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³ (окклюдер)</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr></tbody></table>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Инструмент</td><td>кирка</td></tr></tbody></table>
 <h2>Рецепты</h2>
-<p>Собирается на верстаке из готового <a href="generator.html">Генератора</a> в каменном корпусе с электронной схемой снизу. Это генератор, поэтому рецептов переработки у него нет. Крафт: <code>data/alaindustrial/recipe/geothermal_generator.json</code> — shaped 3×3: рамка из 7 блоков гладкого камня (<code>minecraft:smooth_stone</code>), <a href="generator.html">Генератор</a> в центре, <a href="../components/electronic_circuit.html">электронная схема</a> в нижней центральной ячейке. Рецепты переработки: нет (генератор) Гейт прогрессии: нужен уже собранный обычный Генератор и электронная схема (то есть пройденный LV-старт), поэтому геотермальный — апгрейд, а не первый источник энергии.</p>
-<h2>Баланс</h2>
-<p>База: 16 EU/FE/такт (<code>geothermalEuPerTick</code>). Вдвое мощнее базового <a href="generator.html">Генератора</a> на угле (8 EU/FE/t) — награда за добычу и логистику лавы. 1 ведро = 16000 EU/FE (1000 тиков × 16), заметно выгоднее угля по EU/FE за единицу логистики.</p>
+<p>Собирается на верстаке из уже готового <a href="generator.html">Генератора</a> в корпусе из гладкого камня, с <a href="../components/electronic_circuit.html">электронной схемой</a> снизу. Поэтому это апгрейд: нужен пройденный LV-старт, так что первым источником энергии он быть не может.</p>
+<h2>Прогрессия</h2>
+<p>Тир: LV. Апгрейд над угольным <a href="generator.html">Генератором</a> — вдвое больше выхода при куда меньшем числе заправок, ценой возни с лавой.</p>
 <h2>Связанное</h2>
-<p><a href="generator.html">Генератор</a> — базовая альтернатива на твёрдом топливе. Насос — подаёт лаву в бак генератора.</p>
+<p><a href="generator.html">Генератор</a> — базовая альтернатива на твёрдом топливе и деталь для крафта. Насос — автоматически подаёт лаву в бак. <a href="../items/vacuum_capsule.html">Капсула</a> — удобная тара для переноски лавы в бак.</p>
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell" title="Генератор (LV)"><img src="../assets/block/generator_top.png" alt="Генератор (LV)" width="28" height="28"></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit.png" alt="Электронная схема" width="28" height="28"></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Геотермальный генератор"><div class="ricon placeholder">?</div></div><div class="result-name">Геотермальный генератор</div></div></div></div></div>
   </main>

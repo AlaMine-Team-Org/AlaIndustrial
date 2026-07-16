@@ -316,9 +316,10 @@
 <div class="group-title">Мир и автоматизация</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="5 страниц">5</span></a>
 <div class="group-title">Прочее</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="4 страницы">4</span></a>
 <div class="group-title">Предметы</div>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="5 страниц">5</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="6 страниц">6</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="7 страниц">7</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -334,30 +335,32 @@
   </div>
 </div>
 <h2>Сводка</h2>
-<p><strong>Экстрактор</strong> — LV-машина, которая вытягивает полезный материал из сырья: красители из цветов, семена из тыквы и арбуза, порошок из стержня ифрита, кремень из гравия. Чаще всего он выгоднее ванильных способов: с цветка выходит ×2 красителя вместо ×1 на верстаке, с тыквы — ×5 семечек вместо ×4. Это часть базовой LV-цепочки переработки и удобный узел для автоферм на воронках.</p>
+<p><strong>Экстрактор</strong> — LV-машина, которая вытягивает полезный материал из сырья: красители из цветов, семена из тыквы и арбуза, порошок из стержня ифрита, кремень из гравия. Почти всегда он выгоднее ванильных способов — с цветка выходит <strong>два</strong> красителя вместо одного на верстаке — поэтому это удобный узел для автоферм на воронках.</p>
+<blockquote><strong>Мини-пример:</strong> бросьте мак — и получите <strong>два красных красителя</strong> вместо одного, как на</blockquote>
+<p>верстаке. Поставьте пару штук на цветочную ферму, и красители перестанут быть рутиной.</p>
 <h2>Энергия</h2>
 <p>Экстрактор только потребляет EU/FE и держит небольшой буфер для ровной работы.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>потребитель с буфером</td></tr><tr><td>Буфер (EU/FE)</td><td>800</td></tr><tr><td>Макс. вход (EU/FE/такт)</td><td>32 (LV)</td></tr><tr><td>EU/FE/такт</td><td>2</td></tr></tbody></table>
-<p>LV-машина: берёт до 32 EU/FE за тик. Лишняя энергия сети не передаётся, блок не разрушается. <strong>Грани:</strong> энергия заходит с пяти граней; лицевая (туда «смотрит» морда) — инертна: кабели к ней не подключаются, воронки через неё не работают.</p>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Внутренний буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вход</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Потребление</td><td>2 EU/FE/такт во время работы</td></tr></tbody></table>
+<p>LV-машина: берёт до 32 EU/FE за тик. Лишняя энергия сети не забирается, блок не страдает. Энергия заходит с пяти рабочих граней. <strong>Лицевая грань</strong> (туда «смотрит» морда) инертна — кабели к ней не подключаются, воронки через неё не работают.</p>
 <h2>Процессинг</h2>
-<p>Каждая операция стоит 240 EU/FE и идёт 120 тиков (~6 с). Рецепты — обычные датапак-рецепты, их можно править ресурс-паком или <code>/reload</code>.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Тип рецепта</td><td>ванильный <code>RecipeType alaindustrial:extracting</code> (<code>data/alaindustrial/recipe/extracting/*.json</code>)</td></tr><tr><td>Длительность (тики)</td><td>задаётся рецептом: <code>energy / euPerTick</code> (240 EU/FE ÷ 2 = 120 тиков)</td></tr><tr><td>Авто-выгрузка</td><td>false</td></tr></tbody></table>
-<p>Рецепты (<code>/reload</code>-able):</p>
-<table><thead><tr><th>Вход</th><th>Выход</th><th>EU/FE</th></tr></thead><tbody><tr><td><code>minecraft:blaze_rod</code></td><td><code>minecraft:blaze_powder</code> ×3</td><td>240</td></tr><tr><td><code>minecraft:gravel</code></td><td><code>minecraft:flint</code></td><td>240</td></tr><tr><td><code>minecraft:cactus</code></td><td><code>minecraft:green_dye</code> ×2</td><td>240</td></tr><tr><td><code>minecraft:poppy</code></td><td><code>minecraft:red_dye</code> ×2</td><td>240</td></tr><tr><td><code>minecraft:dandelion</code></td><td><code>minecraft:yellow_dye</code> ×2</td><td>240</td></tr><tr><td><code>minecraft:cornflower</code></td><td><code>minecraft:blue_dye</code> ×2</td><td>240</td></tr><tr><td><code>minecraft:cocoa_beans</code></td><td><code>minecraft:brown_dye</code> ×2</td><td>240</td></tr><tr><td><code>minecraft:lilac</code></td><td><code>minecraft:magenta_dye</code> ×3</td><td>240</td></tr><tr><td><code>minecraft:sea_pickle</code></td><td><code>minecraft:lime_dye</code> ×2</td><td>240</td></tr><tr><td><code>minecraft:kelp</code></td><td><code>minecraft:green_dye</code></td><td>240</td></tr><tr><td><code>minecraft:lily_of_the_valley</code></td><td><code>minecraft:white_dye</code> ×2</td><td>240</td></tr><tr><td><code>minecraft:wither_rose</code></td><td><code>minecraft:black_dye</code> ×3</td><td>240</td></tr><tr><td><code>minecraft:pumpkin</code></td><td><code>minecraft:pumpkin_seeds</code> ×5</td><td>240</td></tr><tr><td><code>minecraft:melon_slice</code></td><td><code>minecraft:melon_seeds</code> ×2</td><td>240</td></tr></tbody></table>
-<p>Красители: с большинства цветов выходит ×2 (на верстаке ×1), с «жирных» источников (сирень, роза Визера) — ×3. Ламинария даёт ×1 — в ней мало пигмента. Семена: тыква → ×5 (на верстаке ×4), долька арбуза → ×2 (на верстаке ×1) — экстрактор всегда немного выгоднее.</p>
+<p>Каждое извлечение стоит 240 EU/FE и идёт 120 тиков (~6 с). Готовый результат сам не вылетает — забирайте руками или воронкой.</p>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Длительность</td><td>120 тиков (~6 с)</td></tr><tr><td>Цена операции</td><td>240 EU/FE</td></tr><tr><td>Авто-выгрузка</td><td>нет</td></tr></tbody></table>
 <h2>Инвентарь</h2>
 <p>Один слот на вход, один на выход.</p>
-<table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>input</td><td>предметы с рецептом extraction</td><td>1</td></tr><tr><td>output</td><td>результат</td><td>1</td></tr></tbody></table>
-<h2>Крафт</h2>
+<table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>Вход</td><td>предметы, которые экстрактор умеет обрабатывать</td><td>1</td></tr><tr><td>Выход</td><td>результат</td><td>1</td></tr></tbody></table>
+<h2>Интерфейс</h2>
+<p>На одном экране видны запас энергии, прогресс, слот входа и слот выхода.</p>
 <h2>Свойства блока</h2>
-<p>Обычный цельный куб, мягче камня: ломается любой киркой.</p>
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³ (окклюдер)</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr></tbody></table>
-<h2>Баланс</h2>
-<p>База: 2 EU/FE/такт × 120 тиков = 240 EU/FE — общий дефолтный «прайс» LV-машин (fallback, если у рецепта не задан <code>energy</code>). Все 14 рецептов экстракции стоят 240 EU/FE каждый (120 тиков). Числа — стартовые. Выгодность относительно ванильных способов — главный стимул строить экстрактор: верстак даёт ×1 краситель с цветка, печка — ×1 с кактуса/морского огурца; экстрактор даёт ×2 (с жирных источников ×3). Это не ломает баланс — красители не критичны для прогрессии, но дают автофермам на воронках осмысленную переработку растительного сырья.</p>
-<h2>Визуальная часть / реализация</h2>
-<p>Корпус общий с другими LV-машинами: морда поворачивается к игроку при установке и подсвечивается, пока идёт работа. Окно интерфейса тоже общее — полоса энергии и два слота, отдельной текстуры нет.</p>
+<p>Обычный цельный блок, мягче камня. Ломается любой киркой, но <strong>при сломе заряд НЕ сохраняет</strong>.</p>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Сохраняет заряд при сломе</td><td>нет</td></tr></tbody></table>
+<h2>Рецепты</h2>
+<p>Экстрактор собирается на верстаке (корпус тот же, что и у других LV-машин). Что он вытягивает и почему это обычно выгоднее:</p>
+<table><thead><tr><th>Вход</th><th>Выход</th><th>Почему выгоднее</th></tr></thead><tbody><tr><td>Большинство цветов (мак, одуванчик, василёк, ландыш, морской огурец, кактус)</td><td><strong>×2 красителя</strong></td><td>на верстаке ×1</td></tr><tr><td>Сирень, роза Визера</td><td><strong>×3 красителя</strong></td><td>«жирные» источники дают чуть больше</td></tr><tr><td>Ламинария</td><td>×1 зелёный краситель</td><td>мало пигмента — как на верстаке</td></tr><tr><td>Тыква</td><td><strong>×5 семечек</strong></td><td>на верстаке ×4</td></tr><tr><td>Долька арбуза</td><td><strong>×2 семечки</strong></td><td>на верстаке ×1</td></tr><tr><td>Стержень ифрита</td><td><strong>×3 порошка ифрита</strong></td><td>удобный массовый путь</td></tr><tr><td>Гравий</td><td>кремень</td><td>надёжный способ добыть кремень</td></tr></tbody></table>
+<p>Правило простое: для растительного сырья экстрактор всегда платит чуть лучше верстака, и это естественный сток для продукции воронко-фермы.</p>
+<h2>Прогрессия</h2>
+<p>Тир: LV. Машина удобства — красители и семена не критичны для прогрессии, но экстрактор делает их неутомительными. Ни во что не развивается в v0.1. Требует питание от LV-источника, например <a href="../generators/generator.html">Генератор</a>.</p>
 <h2>Связанное</h2>
-<p><a href="compressor.html">Компрессор</a> — соседняя LV-машина переработки.</p>
+<p><a href="compressor.html">Компрессор</a> — соседняя LV-машина переработки. <a href="macerator.html">Дробитель</a> — другой ранний дробильщик (для руд и металлов). <a href="../generators/generator.html">Генератор</a> — источник питания.</p>
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Hopper" aria-label="Hopper"><span>hopper</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit.png" alt="Электронная схема" width="28" height="28"></div> <div class="cell placeholder" title="Hopper" aria-label="Hopper"><span>hopper</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell" title="Серебряный слиток"><img src="../assets/item/silver_ingot.png" alt="Серебряный слиток" width="28" height="28"></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Экстрактор"><img src="../assets/block/extractor_top.png" alt="Экстрактор" width="28" height="28"></div><div class="result-name">Экстрактор</div></div></div></div></div>
   </main>

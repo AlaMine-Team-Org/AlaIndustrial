@@ -288,9 +288,10 @@
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="6 pages">6</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="7 pages">7</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -306,24 +307,28 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Daylight Solar Panel</strong> is the second tier of the day branch (T2), an upgraded version of the <a href="solar_panel.html">base Solar Panel</a>. It produces EU/FE during the day with open sky above and nothing at night. It cannot be crafted — it is obtained <strong>only through evolution</strong> of the base panel with a <strong>Solar Evolution Chip</strong>.</p>
+<p>The <strong>Daylight Solar Panel</strong> is the grown-up version of the <a href="solar_panel.html">base Solar Panel</a> — the second tier of the day branch. It's four times stronger, still runs only by day under open sky, and produces nothing at night. You can't craft it. The only way to get one is to grow it from a base panel with a <strong>Solar Evolution Chip</strong> (see <a href="solar_panel.html">Solar Panel</a> → <em>Progression</em>).</p>
+<blockquote><strong>Mini-example:</strong> evolved from a base panel with a day chip → <strong>4 EU/FE/t</strong> in clear daylight. Two of these on a roof comfortably run a small workshop through the day and charge a Battery Box for the evening.</blockquote>
 <h2>Energy</h2>
-<p>The panel only produces power and never accepts incoming energy. An 8000 EU/FE buffer is released into an LV-tier network. Energy is emitted in 5 directions; the top face is the working surface.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>producer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>8000</td></tr><tr><td>Max input</td><td>n/a (does not accept energy)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>20 (LV)</td></tr><tr><td>EU/FE/tick (base)</td><td>4 (day, clear) — config <code>daylightEuPerTick</code></td></tr></tbody></table>
+<p>The panel only produces power — it never takes any in. It holds up to 8000 EU/FE and sends it out on an LV line.</p>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>8000 EU/FE</td></tr><tr><td>Output</td><td>up to 20 EU/FE/t (LV)</td></tr><tr><td>Base output (clear day)</td><td>4 EU/FE/t</td></tr></tbody></table>
+<p>Energy leaves through the 4 sides and the bottom. The <strong>top face is the working surface</strong> — don't cover it.</p>
 <h2>Generation</h2>
-<p>As with the base panel: it works only in the Overworld, during the day, with open sky above. Glass doesn't interfere; rain and thunder shut it down; light shade halves the output; snow drops it to 1 EU/FE/tick.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Source</td><td>sunlight</td></tr><tr><td>Working condition</td><td>daytime AND open sky above the block</td></tr><tr><td>Dimensions</td><td>minecraft:overworld</td></tr><tr><td>EU/FE/tick (clear)</td><td>4</td></tr><tr><td>Translucent block above the panel (leaves, cobweb)</td><td>×<code>solarTransparentFactor</code> (0.5 → 2 EU/FE/tick) — MODE_DAY_PARTIAL</td></tr><tr><td>Glass above the panel</td><td>no reduction (fully transparent)</td></tr><tr><td>Snow (a <code>minecraft:snow</code> layer or snowfall in a cold biome)</td><td><code>max(1, round(solarSnowFactor × 4))</code> → 1 EU/FE/tick — MODE_DAY_SNOW</td></tr><tr><td>Rain/thunder</td><td>0 (rain blocks direct light)</td></tr><tr><td>Night</td><td>0</td></tr></tbody></table>
+<p>Same rules as the base panel: Overworld only, by day, with open sky above. Glass is fine; rain, thunder or a solid roof shut it down.</p>
+<table><thead><tr><th>Situation</th><th>Output</th></tr></thead><tbody><tr><td>Clear day, open sky</td><td>4 EU/FE/t</td></tr><tr><td>Glass above (transparent)</td><td>4 EU/FE/t (no change)</td></tr><tr><td>Leaves / cobweb above (partial shade)</td><td>~2 EU/FE/t</td></tr><tr><td>Snow layer or snowfall</td><td>1 EU/FE/t (a small trickle)</td></tr><tr><td>Rain or thunder</td><td>0</td></tr><tr><td>Night</td><td>0</td></tr></tbody></table>
 <h2>Interface</h2>
-<p>Type: container — shows energy storage, generation rate, sky mode (day/snow/rain/night).</p>
+<p>One screen shows the buffer level, current output and the sky state (day / snow / rain / night).</p>
 <h2>Block Properties</h2>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>low-profile panel (8px slab), <code>noOcclusion</code></td></tr><tr><td>Hardness / blast</td><td>5.0 / 6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
+<p>A flat slab half a block tall, like the base panel. Any pickaxe breaks it.</p>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>low panel (half-slab)</td></tr><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
 <h2>Sound</h2>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Event</td><td><code>alaindustrial:solar_panel_hum</code> (shared with the base and night panels)</td></tr><tr><td>Pattern</td><td><strong>C</strong> — ambient loop (see SOUND_TRACKING)</td></tr><tr><td>Volume</td><td>0.28, fixed range of 10 blocks (quieter and narrower than the Generator)</td></tr><tr><td>Goes silent</td><td>at night, in rain/thunder, when the sky is blocked, outside the Overworld</td></tr><tr><td>Subtitles</td><td><code>subtitles.alaindustrial.solar_panel_hum</code>, 20 languages</td></tr></tbody></table>
-<p>The same soft hum as the base panel: it plays only while the panel is actually working (day, open sky) and falls silent at night, in bad weather, or under a roof. See the <a href="solar_panel.html">base panel</a>.</p>
+<p>The same soft hum as the base panel — it plays only while working (day, open sky) and falls silent at night, in bad weather or under a roof. See the <a href="solar_panel.html">base panel</a>.</p>
 <h2>Recipes</h2>
-<p>The Daylight panel isn't craftable. The only way to get it is to grow it from a base panel: insert a Solar Evolution Chip and let the panel work for a few days under open sky. The stored energy carries over on evolution. <strong>Crafting:</strong> none. The JSON recipe was removed — the block is not available from a crafting table. <strong>Evolution (the only way to obtain it):</strong> a base <a href="solar_panel.html">Solar Panel</a> + <code>alignment_chip_day</code> + accumulated daytime working time → turns into the Daylight panel, carrying over its NBT (energy). <strong>Recipe viewer (REI/JEI):</strong> pressing <strong>R</strong> opens an informational page describing the evolution (implementation details in <a href="solar_panel.html">solar_panel.md</a>).</p>
+<p>Not craftable. The only way to get it is to grow it from a base <a href="solar_panel.html">Solar Panel</a>: drop in a <strong>Solar Evolution Chip</strong> and let the panel work for a few clear days. The stored energy carries over. In REI/JEI press <strong>R</strong> to see an informational page describing the evolution (not a crafting recipe).</p>
+<h2>Progression</h2>
+<p>Second tier of the day branch (T2), grown from the base <a href="solar_panel.html">Solar Panel</a>. From here it can evolve further up the day branch in future tiers.</p>
 <h2>Related</h2>
-<p><a href="solar_panel.html">Solar Panel</a> — the neutral T1, source of the evolution. <a href="moonlit_solar_panel.html">Moonlit Solar Panel</a> — the mirror of the night branch. <a href="../energy-storage/battery_box.html">Battery Box</a> · <a href="../energy-transfer/copper_cable.html">Copper Cable</a></p>
+<p><a href="solar_panel.html">Solar Panel</a> — the neutral T1, the panel you grow this from. <a href="moonlit_solar_panel.html">Moonlit Solar Panel</a> — the mirror of the night branch. <a href="../energy-storage/battery_box.html">Battery Box</a> · <a href="../energy-transfer/copper_cable.html">Copper Cable</a></p>
 
   </main>
 </div>
