@@ -10,6 +10,7 @@ import dev.alaindustrial.menu.GeothermalGeneratorMenu;
 import dev.alaindustrial.menu.IronChestMenu;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.SilverChestMenu;
+import dev.alaindustrial.menu.GoldChestMenu;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
@@ -82,6 +83,8 @@ public final class ModMenusNeoForge {
 			register("iron_chest", (id, inv, buf) -> new IronChestMenu(id, inv));
 	public static final DeferredHolder<MenuType<?>, MenuType<SilverChestMenu>> SILVER_CHEST =
 			register("silver_chest", (id, inv, buf) -> new SilverChestMenu(id, inv));
+	public static final DeferredHolder<MenuType<?>, MenuType<GoldChestMenu>> GOLD_CHEST =
+			register("gold_chest", (id, inv, buf) -> new GoldChestMenu(id, inv));
 
 	private ModMenusNeoForge() {
 	}
@@ -113,6 +116,7 @@ public final class ModMenusNeoForge {
 		ModContent.STORM_WIND_MILL_MENU = STORM_WIND_MILL::get;
 		ModContent.IRON_CHEST_MENU = IRON_CHEST::get;
 		ModContent.SILVER_CHEST_MENU = SILVER_CHEST::get;
+		ModContent.GOLD_CHEST_MENU = GOLD_CHEST::get;
 	}
 
 	/**

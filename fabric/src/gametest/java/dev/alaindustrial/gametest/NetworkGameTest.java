@@ -804,24 +804,23 @@ public class NetworkGameTest {
 		helper.succeed();
 	}
 
-	// ── TC-CABLE-001-NRG02b: a short line is loss-free even at a full packet (MOD-021) ───────────────
+	// ── TC-CABLE-001-NRG02b: a single-hop line is loss-free even at a full packet (MOD-021 / MOD-073) ─
 
 	private static final BlockPos SHORT_GEN = new BlockPos(1, 2, 1);
 	private static final BlockPos SHORT_CABLE_A = new BlockPos(2, 2, 1);
-	private static final BlockPos SHORT_CABLE_B = new BlockPos(3, 2, 1);
-	private static final BlockPos SHORT_BOX = new BlockPos(4, 2, 1);
+	private static final BlockPos SHORT_BOX = new BlockPos(3, 2, 1);
 
 	/**
-	 * @implements TC-CABLE-001-NRG02 (short-line boundary) — at cable-distance 2 the proportional loss
-	 *     floors to zero even at a full 32 EU packet ({@code floor(32 × 0.0125 × 2) = 0}), so a nearby
-	 *     consumer receives the full throughput. Guards the "short hop is free" half of the model.
+	 * @implements TC-CABLE-001-NRG02 (short-line boundary) — at cable-distance 1 the proportional loss
+	 *     floors to zero even at a full 32 EU packet ({@code floor(32 × 0.02 × 1) = 0}), so a consumer one
+	 *     cable away receives the full throughput. Narrowed from distance 2 to 1 in MOD-073: at 0.02 a
+	 *     2-cable hop already loses 1 EU, so only the single-hop case is loss-free.
 	 * @covers PERFORMANCE.md
 	 */
 	@GameTest(maxTicks = 40)
 	public void tcCable001Nrg02b_noLossOnShortLine(GameTestHelper helper) {
 		helper.setBlock(SHORT_GEN, ModBlocks.GENERATOR);
 		helper.setBlock(SHORT_CABLE_A, ModBlocks.COPPER_CABLE);
-		helper.setBlock(SHORT_CABLE_B, ModBlocks.COPPER_CABLE);
 		helper.setBlock(SHORT_BOX, ModBlocks.BATTERY_BOX.defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		long cap = EnergyTier.LV.maxVoltage();
@@ -842,10 +841,6 @@ public class NetworkGameTest {
 			if (ca != null) {
 				tick(helper, ca);
 			}
-			var cb = be(helper, SHORT_CABLE_B);
-			if (cb != null) {
-				tick(helper, cb);
-			}
 			NetworkManager.tickAll(helper.getLevel());
 			var box = be(helper, SHORT_BOX);
 			if (box != null) {
@@ -855,7 +850,7 @@ public class NetworkGameTest {
 
 		long got = be(helper, SHORT_BOX) instanceof BatteryBoxBlockEntity bb ? bb.getEnergyStorage().getAmount() : -1;
 		long expected = cap * ticks;
-		// Full delivery minus at most one tick of registration slack; a short line must not lose EU.
+		// Full delivery minus at most one tick of registration slack; a single hop must not lose EU.
 		if (got < expected - cap) {
 			helper.fail("short line lost EU it should not: expected ~" + expected + " (full throughput), got " + got);
 		}
@@ -865,7 +860,7 @@ public class NetworkGameTest {
 	/**
 	 * @implements TC-CABLE-001-NRG02 (top-off guard, anti-MOD-009) — even on a lossy 10-cable line a
 	 *     nearly-full BatteryBox reaches its <em>exact</em> capacity: the last 1-EU top-off packet floors
-	 *     to zero loss ({@code floor(1 × 0.0125 × 10) = 0}), so it is delivered, not stranded. A flat
+	 *     to zero loss ({@code floor(1 × 0.02 × 10) = 0}), so it is delivered, not stranded. A flat
 	 *     per-tick toll (the removed MOD-009 formula) would leave it stuck at {@code capacity − loss}.
 	 * @covers PERFORMANCE.md
 	 */

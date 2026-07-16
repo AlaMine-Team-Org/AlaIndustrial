@@ -234,6 +234,7 @@
 	"command.alaindustrial.status.value.loss": "resistiv, per block",
 	"block.alaindustrial.iron_chest": "Järnkista",
 	"block.alaindustrial.silver_chest": "Silverkista",
+	"block.alaindustrial.gold_chest": "Guldkista",
 	"subtitles.alaindustrial.iron_chest_open": "Järnkista öppnas",
 	"subtitles.alaindustrial.iron_chest_close": "Järnkista stängs",
 	"subtitles.alaindustrial.electric_furnace": "Elektrisk ugn dånar",

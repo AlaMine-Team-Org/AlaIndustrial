@@ -68,6 +68,8 @@ public class IndustrializationClient implements ClientModInitializer {
 				ModMenus.IRON_CHEST, dev.alaindustrial.client.IronChestScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.SilverChestMenu, dev.alaindustrial.client.SilverChestScreen>register(
 				ModMenus.SILVER_CHEST, dev.alaindustrial.client.SilverChestScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.GoldChestMenu, dev.alaindustrial.client.GoldChestScreen>register(
+				ModMenus.GOLD_CHEST, dev.alaindustrial.client.GoldChestScreen::new);
 
 		ItemTooltipCallback.EVENT.register((stack, context, flag, lines) ->
 				MachineTooltips.append(stack, lines, Minecraft.getInstance().hasShiftDown()));
@@ -106,6 +108,10 @@ public class IndustrializationClient implements ClientModInitializer {
 		// Silver chest (MOD-087): same 3D chest model + animated lid, textured with entity/chest/silver.
 		BlockEntityRendererRegistry.register(ModBlockEntities.SILVER_CHEST, dev.alaindustrial.client.SilverChestBlockEntityRenderer::new);
 		ModelLayerRegistry.registerModelLayer(dev.alaindustrial.client.SilverChestBlockEntityRenderer.SILVER_CHEST_LAYER,
+				ChestModel::createSingleBodyLayer);
+		// Gold chest (MOD-088): same 3D chest model + animated lid, textured with entity/chest/gold.
+		BlockEntityRendererRegistry.register(ModBlockEntities.GOLD_CHEST, dev.alaindustrial.client.GoldChestBlockEntityRenderer::new);
+		ModelLayerRegistry.registerModelLayer(dev.alaindustrial.client.GoldChestBlockEntityRenderer.GOLD_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
 		BlockEntityRendererRegistry.register(ModBlockEntities.WATER_MILL, WaterMillWheelBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.WIND_MILL, WindMillRotorBlockEntityRenderer::new);

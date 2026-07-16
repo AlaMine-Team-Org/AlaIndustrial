@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "alaindustrial:block/gold_chest"
+    },
+    "facing=south": {
+      "model": "alaindustrial:block/gold_chest"
+    },
+    "facing=west": {
+      "model": "alaindustrial:block/gold_chest"
+    },
+    "facing=east": {
+      "model": "alaindustrial:block/gold_chest"
+    }
+  }
+}

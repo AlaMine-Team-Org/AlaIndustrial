@@ -1976,8 +1976,9 @@ public final class CoreEnergyScenarios {
 
 	/**
 	 * Macerator grinds an iron ORE BLOCK into 2× iron dust via the {@code #alaindustrial:macerable_iron}
-	 * tag — the ×2 doubling path, distinct from the raw_iron ×1 direct recipe. Proves tag ingredients
-	 * resolve on the NeoForge lane.
+	 * tag — the ×2 doubling path for the ore-block input (resolved through the item tag). Under MOD-095
+	 * raw_iron also macerates to ×2 via its own direct recipe, so both inputs double. Proves tag
+	 * ingredients resolve on the NeoForge lane.
 	 * Mirrors: MachineGameTest.tcMach001FunIronOre_maceratorGrindsIronOre
 	 */
 	public static void maceratorIronOreDoublesDust(GameTestHelper helper) {

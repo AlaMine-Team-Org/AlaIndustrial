@@ -234,6 +234,7 @@
 	"command.alaindustrial.status.value.loss": "resistiva, per blocco",
 	"block.alaindustrial.iron_chest": "Baule di ferro",
 	"block.alaindustrial.silver_chest": "Baule d'argento",
+	"block.alaindustrial.gold_chest": "Baule d'oro",
 	"subtitles.alaindustrial.iron_chest_open": "Il baule di ferro si apre",
 	"subtitles.alaindustrial.iron_chest_close": "Il baule di ferro si chiude",
 	"subtitles.alaindustrial.electric_furnace": "La furnace elettrica ruggisce",

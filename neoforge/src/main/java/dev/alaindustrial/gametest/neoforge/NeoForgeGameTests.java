@@ -363,6 +363,11 @@ public final class NeoForgeGameTests {
 		registerTest(event, "drill_no_drain_on_zero_hardness", 40, true, ElectricDrillScenarios::fun05NoDrainOnZeroHardness);
 		registerTest(event, "drill_tags_and_enchants", 40, true, ElectricDrillScenarios::fun06TagsAndEnchants);
 		registerTest(event, "drill_charge_round_trip", 40, true, ElectricDrillScenarios::per01ChargeRoundTrip);
+		// MOD-089 torch placement (TC-DRILL-001-FUN07/08/09): right-click places a torch from the inventory,
+		// prefers the enriched uranium torch, and still consumes when the clicked block is replaceable.
+		registerTest(event, "drill_place_torch_from_inventory", 40, true, ElectricDrillScenarios::fun07PlaceTorchFromInventory);
+		registerTest(event, "drill_torch_priority_uranium", 40, true, ElectricDrillScenarios::fun08TorchPriorityUranium);
+		registerTest(event, "drill_place_torch_on_replaceable_block", 40, true, ElectricDrillScenarios::fun09PlaceTorchOnReplaceableBlock);
 
 		// MOD-063 Vacuum Capsule (suite TC-CAPS-001) — same neutral bodies as the Fabric CapsuleGameTest.
 		registerTest(event, "capsule_component_round_trip", 40, true, CapsuleScenarios::per01ComponentRoundTrip);

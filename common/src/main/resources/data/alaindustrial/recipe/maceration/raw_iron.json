@@ -3,7 +3,7 @@
   "ingredient": "minecraft:raw_iron",
   "result": {
     "id": "alaindustrial:iron_dust",
-    "count": 1
+    "count": 2
   },
   "energy": 300
 }

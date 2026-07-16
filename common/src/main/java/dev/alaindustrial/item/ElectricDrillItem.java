@@ -2,23 +2,32 @@ package dev.alaindustrial.item;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 
 /**
  * Electric Drill (MOD-079) — the first powered hand tool: a diamond-tier pickaxe that runs on EU
@@ -47,6 +56,13 @@ import net.minecraft.world.level.block.state.BlockState;
  * <li>{@link #mineBlock}: drains {@link Config#electricDrillEuPerBlock} per successfully mined block,
  * server-side only and only for blocks with non-zero hardness (mirroring vanilla's durability gate),
  * and only when there was enough EU to run at tool speed in the first place.</li>
+ * <li>{@link #useOn}: a mining QoL — right-clicking a block places a torch from the player's inventory
+ * (the {@code enriched_uranium_torch} first, then the vanilla {@code torch}), so the drill never leaves
+ * the hotbar while lighting a tunnel. Placement is delegated to the torch's own {@link BlockItem#place}
+ * via a 1-item copy, so wall/floor orientation, {@code canSurvive}, the uranium torch's waterlogged
+ * handling, the place sound and protection events all come for free; one torch is consumed from the
+ * inventory and {@link Config#electricDrillTorchEuCost} EU is drained (skipped gracefully when the
+ * drill can't afford it — the torch still places).</li>
  * </ul>
  */
 public class ElectricDrillItem extends Item {
@@ -137,6 +153,106 @@ public class ElectricDrillItem extends Item {
 			ItemEnergy.add(stack, -Config.electricDrillEuPerBlock);
 		}
 		return super.mineBlock(stack, level, state, pos, owner);
+	}
+
+	// --- right-click: place a torch from the inventory (MOD-089) — keep the drill in the hotbar ---
+
+	/**
+	 * Right-clicking a block with the drill in the main hand places a torch pulled from the player's
+	 * inventory — a mining QoL so the hotbar never has to leave the drill while lighting a tunnel.
+	 *
+	 * <p>Priority is the {@code enriched_uranium_torch} first (the advanced, waterlog-safe torch), then
+	 * the vanilla {@code torch}; with neither present this is a no-op and returns {@code PASS}, which lets
+	 * a torch held in the off-hand place normally. Sneak-clicking and the off-hand are likewise reserved
+	 * for normal interaction (mirror of {@code ScytheItem.useOn}).
+	 *
+	 * <p>Placement is delegated to the torch's own {@link BlockItem#place} via a fresh
+	 * {@link BlockPlaceContext} built around a 1-item <b>copy</b> of the torch stack. Vanilla's
+	 * {@code place()} consumes from the stack held in that context, so passing the drill directly would
+	 * try to consume the drill; passing the copy lets vanilla pick floor-vs-wall orientation, enforce
+	 * {@code canSurvive}, handle the uranium torch's waterlogged state, play the place sound and fire the
+	 * place event for protection mods — all for free. The real inventory decrement is taken by hand,
+	 * server-side only, only when placement actually succeeded ({@code consumesAction()}), and skipped in
+	 * creative ({@code instabuild}).
+	 *
+	 * <p>EU drain ({@link Config#electricDrillTorchEuCost}) is taken the same way, but is skipped when the
+	 * drill holds less than that — the torch still places, matching the drill's graceful-degradation rule
+	 * for a flat battery (see {@link #mineBlock}). No cooldown: vanilla {@code BlockItem.place} already
+	 * can't spam-place a single position, so a cooldown would only slow legitimate tunnel lighting.
+	 */
+	@Override
+	public InteractionResult useOn(UseOnContext context) {
+		Player player = context.getPlayer();
+		// Main-hand only; reserve the off-hand and shift-click for normal interaction (matches ScytheItem).
+		if (player == null || context.getHand() != InteractionHand.MAIN_HAND) {
+			return InteractionResult.PASS;
+		}
+		Level level = context.getLevel();
+
+		// Pick the torch to place: uranium first (advanced, waterlog-safe), then vanilla.
+		BlockItem uraniumItem = (BlockItem) ModContent.ENRICHED_URANIUM_TORCH_ITEM.get();
+		BlockItem torchItem = uraniumItem;
+		ItemStack torchStack = findInInventory(player, uraniumItem);
+		if (torchStack.isEmpty()) {
+			torchItem = (BlockItem) Items.TORCH;
+			torchStack = findInInventory(player, torchItem);
+		}
+		if (torchStack.isEmpty()) {
+			// No torches anywhere in the inventory → no-op; lets an off-hand torch place normally.
+			return InteractionResult.PASS;
+		}
+
+		ItemStack drill = context.getItemInHand();
+		BlockPos clicked = context.getClickedPos();
+		if (!player.mayBuild() || !player.mayUseItemAt(clicked, context.getClickedFace(), drill)) {
+			return InteractionResult.PASS;
+		}
+
+		// Client only predicts the swing — never mutate inventory or place here (prevents double-place).
+		if (level.isClientSide()) {
+			return InteractionResult.SUCCESS;
+		}
+
+		// Delegate to the torch's vanilla place() via a 1-item copy, so vanilla consumes from the copy
+		// (not the drill) and we keep floor/wall selection, canSurvive, waterlogged, sound and events.
+		// BlockItem.place() returns exactly SUCCESS (placement happened) or FAIL (no support / water /
+		// protection veto / 5 early-return paths), and Success.consumesAction() is unconditionally true —
+		// this is the authoritative signal vanilla itself trusts (BlockItem.useOn, ServerPlayerGameMode).
+		// Do NOT recompute the placement position: BlockPlaceContext may flip replaceClicked and put the
+		// torch at the clicked cell (e.g. side of tall grass / snow) rather than clicked.relative(face),
+		// so a naive block-compare against the wrong pos would miss a real placement.
+		ItemStack proxy = torchStack.copyWithCount(1);
+		BlockHitResult hit = new BlockHitResult(
+				context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside());
+		BlockPlaceContext placeCtx = new BlockPlaceContext(player, context.getHand(), proxy, hit);
+
+		if (!torchItem.place(placeCtx).consumesAction()) {
+			// Invalid spot (no support, water for a vanilla torch, protection veto, …) → consume nothing.
+			return InteractionResult.PASS;
+		}
+		if (!player.getAbilities().instabuild) {
+			torchStack.shrink(1);
+		}
+		if (ItemEnergy.get(drill) >= Config.electricDrillTorchEuCost) {
+			ItemEnergy.add(drill, -Config.electricDrillTorchEuCost);
+		}
+		return InteractionResult.SUCCESS;
+	}
+
+	/**
+	 * First non-empty stack of {@code item} in the player's hotbar + main inventory, in slot order (so
+	 * the selected hotbar slot wins first, matching player expectation). The off-hand is intentionally
+	 * excluded — {@code getNonEquipmentItems()} mirrors the {@code EnergyPackItem} charge-scan convention.
+	 * Compares by {@link ItemStack#getItem()} reference (not {@code stack.is(...)}, which in 26.2 takes a
+	 * {@code Predicate<Holder<Item>>} and is for tag/membership tests, not a plain item identity check).
+	 */
+	private static ItemStack findInInventory(Player player, Item item) {
+		for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
+			if (!stack.isEmpty() && stack.getItem() == item) {
+				return stack;
+			}
+		}
+		return ItemStack.EMPTY;
 	}
 
 	// --- item bar shows the EU charge in the LV tier colour (numbers are in the tooltip) ---

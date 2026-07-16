@@ -224,13 +224,14 @@ public final class DemoStand {
 	}
 
 	/**
-	 * Zone <b>misc</b> (row z=10): iron chest, silver chest, tempered iron block, and a powered pump over a
+	 * Zone <b>misc</b> (row z=10): iron chest, silver chest, gold chest, tempered iron block, and a powered
 	 * sunken lava cell feeding the adjacent geothermal generator's tank.
 	 */
 	private static void buildMisc(ServerLevel level, BlockPos origin) {
 		set(level, origin, 30, 1, 10, ModContent.IRON_CHEST.get());
 		set(level, origin, 31, 1, 10, ModContent.SILVER_CHEST.get());
-		set(level, origin, 32, 1, 10, ModContent.TEMPERED_IRON_BLOCK.get());
+		set(level, origin, 32, 1, 10, ModContent.GOLD_CHEST.get());
+		set(level, origin, 33, 1, 10, ModContent.TEMPERED_IRON_BLOCK.get());
 		set(level, origin, 34, -1, 10, FLOOR);
 		set(level, origin, 34, 0, 10, Blocks.LAVA);
 		set(level, origin, 34, 1, 10, ModContent.PUMP.get());

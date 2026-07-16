@@ -234,6 +234,7 @@
 	"command.alaindustrial.status.value.loss": "dirençli, blok başına",
 	"block.alaindustrial.iron_chest": "Demir Sandık",
 	"block.alaindustrial.silver_chest": "Gümüş Sandık",
+	"block.alaindustrial.gold_chest": "Altın Sandık",
 	"subtitles.alaindustrial.iron_chest_open": "Demir Sandık açılıyor",
 	"subtitles.alaindustrial.iron_chest_close": "Demir Sandık kapanıyor",
 	"subtitles.alaindustrial.electric_furnace": "Elektrikli Fırın kükriyor",

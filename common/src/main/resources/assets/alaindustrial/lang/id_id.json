@@ -234,6 +234,7 @@
 	"command.alaindustrial.status.value.loss": "resistif, per blok",
 	"block.alaindustrial.iron_chest": "Peti Besi",
 	"block.alaindustrial.silver_chest": "Peti Perak",
+	"block.alaindustrial.gold_chest": "Peti Emas",
 	"subtitles.alaindustrial.iron_chest_open": "Peti Besi membuka",
 	"subtitles.alaindustrial.iron_chest_close": "Peti Besi menutup",
 	"subtitles.alaindustrial.electric_furnace": "Tungku Listrik bergemuruh",

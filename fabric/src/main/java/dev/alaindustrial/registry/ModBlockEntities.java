@@ -12,6 +12,7 @@ import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
+import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
@@ -65,6 +66,8 @@ public final class ModBlockEntities {
 	public static BlockEntityType<IronChestBlockEntity> IRON_CHEST;
 	// Silver chest is likewise a pure Container (no EnergyPort) — no Team Reborn EnergyStorage.SIDED line.
 	public static BlockEntityType<SilverChestBlockEntity> SILVER_CHEST;
+	// Gold chest is likewise a pure Container (no EnergyPort) — no Team Reborn EnergyStorage.SIDED line.
+	public static BlockEntityType<GoldChestBlockEntity> GOLD_CHEST;
 
 	public static void init() {
 		GENERATOR = register("generator",
@@ -104,6 +107,8 @@ public final class ModBlockEntities {
 				new BlockEntityType<>(IronChestBlockEntity::new, Set.of(ModBlocks.IRON_CHEST)));
 		SILVER_CHEST = register("silver_chest",
 				new BlockEntityType<>(SilverChestBlockEntity::new, Set.of(ModBlocks.SILVER_CHEST)));
+		GOLD_CHEST = register("gold_chest",
+				new BlockEntityType<>(GoldChestBlockEntity::new, Set.of(ModBlocks.GOLD_CHEST)));
 
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GENERATOR);
 		EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GEOTHERMAL_GENERATOR);
@@ -143,6 +148,7 @@ public final class ModBlockEntities {
 		ModContent.STORM_WIND_MILL_BE = () -> STORM_WIND_MILL;
 		ModContent.IRON_CHEST_BE = () -> IRON_CHEST;
 		ModContent.SILVER_CHEST_BE = () -> SILVER_CHEST;
+		ModContent.GOLD_CHEST_BE = () -> GOLD_CHEST;
 
 		// Fluid (lava) storages: the geothermal generator accepts lava, the pump exposes its tank. Both
 		// publish their neutral FluidPort (via FluidPortHost#fluidPort) through the TankAsFluidStorage

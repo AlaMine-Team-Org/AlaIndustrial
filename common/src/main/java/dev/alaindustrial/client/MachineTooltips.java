@@ -358,7 +358,7 @@ public final class MachineTooltips {
 
 	/**
 	 * Copper-cable loss as a percent-per-block string, sourced live from {@link Config#copperCableLossPerBlock}
-	 * so the tooltip can never drift from the actual model. Locale.ROOT + trailing-zero trim yields "1.25".
+	 * so the tooltip can never drift from the actual model. Locale.ROOT + trailing-zero trim yields "2".
 	 */
 	private static String cableLossPercent() {
 		double pct = Config.copperCableLossPerBlock * 100.0;

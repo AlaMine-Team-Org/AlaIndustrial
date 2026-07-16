@@ -3,7 +3,7 @@
   "ingredient": "minecraft:raw_copper",
   "result": {
     "id": "alaindustrial:copper_dust",
-    "count": 1
+    "count": 2
   },
   "energy": 300
 }

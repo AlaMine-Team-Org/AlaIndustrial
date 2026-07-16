@@ -21,6 +21,7 @@ import dev.alaindustrial.block.WindMillBlock;
 import dev.alaindustrial.block.HighAltitudeWindMillBlock;
 import dev.alaindustrial.block.StormWindMillBlock;
 import dev.alaindustrial.block.SilverChestBlock;
+import dev.alaindustrial.block.GoldChestBlock;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -160,6 +161,11 @@ public final class ModBlocks {
 	public static final Block SILVER_CHEST = register(SILVER_CHEST_KEY,
 			new SilverChestBlock(props(SILVER_CHEST_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()));
 
+	// Gold Chest (MOD-088) — the tier above the silver chest: 54 slots (6×9). Same block stats.
+	public static final ResourceKey<Block> GOLD_CHEST_KEY = key("gold_chest");
+	public static final Block GOLD_CHEST = register(GOLD_CHEST_KEY,
+			new GoldChestBlock(props(GOLD_CHEST_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()));
+
 	// Tempered Iron Block — "block of X" material block (9 ingots ↔ 1 block), like vanilla iron
 	// block. Plain Block, cube_all model, single texture on all 6 faces. Strength/sound mirror
 	// vanilla iron_block (5.0 / 6.0, METAL). See docs/blocks/materials/tempered_iron_block.md.
@@ -264,6 +270,7 @@ public final class ModBlocks {
 		ModContent.DEEPSLATE_URANIUM_ORE = () -> DEEPSLATE_URANIUM_ORE;
 		ModContent.IRON_CHEST = () -> IRON_CHEST;
 		ModContent.SILVER_CHEST = () -> SILVER_CHEST;
+		ModContent.GOLD_CHEST = () -> GOLD_CHEST;
 		ModContent.TEMPERED_IRON_BLOCK = () -> TEMPERED_IRON_BLOCK;
 		ModContent.ENRICHED_URANIUM_TORCH = () -> ENRICHED_URANIUM_TORCH;
 		ModContent.ENRICHED_URANIUM_WALL_TORCH = () -> ENRICHED_URANIUM_WALL_TORCH;

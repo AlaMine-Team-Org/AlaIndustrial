@@ -99,6 +99,9 @@ public final class ModContent {
 	// Silver Chest (MOD-087) — the tier above the iron chest: 45 slots (5×9, +1 row). Same vanilla
 	// BaseContainerBlockEntity spine, no energy. Crafted from an iron chest ringed with silver ingots.
 	public static Supplier<Block> SILVER_CHEST = unbound("SILVER_CHEST");
+	// Gold Chest (MOD-088) — the tier above the silver chest: 54 slots (6×9, +1 row). Same vanilla
+	// BaseContainerBlockEntity spine, no energy. Crafted from a silver chest ringed with gold ingots.
+	public static Supplier<Block> GOLD_CHEST = unbound("GOLD_CHEST");
 	// Tempered Iron Block — a "block of X" material block (9 ingots ↔ 1 block), like
 	// vanilla iron block. Pure material/decorative block, no BE, single texture on all 6 faces.
 	public static Supplier<Block> TEMPERED_IRON_BLOCK = unbound("TEMPERED_IRON_BLOCK");
@@ -211,6 +214,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> DEEPSLATE_URANIUM_ORE_ITEM = unbound("DEEPSLATE_URANIUM_ORE_ITEM");
 	public static Supplier<BlockItem> IRON_CHEST_ITEM = unbound("IRON_CHEST_ITEM");
 	public static Supplier<BlockItem> SILVER_CHEST_ITEM = unbound("SILVER_CHEST_ITEM");
+	public static Supplier<BlockItem> GOLD_CHEST_ITEM = unbound("GOLD_CHEST_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_BLOCK_ITEM = unbound("TEMPERED_IRON_BLOCK_ITEM");
 	// Enriched Uranium Torch (MOD-085) — only the STANDING torch has a block item; the wall variant
 	// drops this item via its overrideLootTable, so it needs no item of its own.
@@ -235,6 +239,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
 	public static Supplier<BlockEntityType<?>> IRON_CHEST_BE = unbound("IRON_CHEST_BE");
 	public static Supplier<BlockEntityType<?>> SILVER_CHEST_BE = unbound("SILVER_CHEST_BE");
+	public static Supplier<BlockEntityType<?>> GOLD_CHEST_BE = unbound("GOLD_CHEST_BE");
 
 	// --- Menu types ---
 	public static Supplier<MenuType<?>> GENERATOR_MENU = unbound("GENERATOR_MENU");
@@ -254,6 +259,7 @@ public final class ModContent {
 	public static Supplier<MenuType<?>> STORM_WIND_MILL_MENU = unbound("STORM_WIND_MILL_MENU");
 	public static Supplier<MenuType<?>> IRON_CHEST_MENU = unbound("IRON_CHEST_MENU");
 	public static Supplier<MenuType<?>> SILVER_CHEST_MENU = unbound("SILVER_CHEST_MENU");
+	public static Supplier<MenuType<?>> GOLD_CHEST_MENU = unbound("GOLD_CHEST_MENU");
 
 	/** A placeholder handle that throws if read before the loader populated it. */
 	private static <T> Supplier<T> unbound(String name) {

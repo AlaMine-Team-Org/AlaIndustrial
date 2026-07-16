@@ -171,6 +171,7 @@ public final class ModItems {
 	public static final BlockItem DEEPSLATE_URANIUM_ORE_ITEM = blockItem("deepslate_uranium_ore", ModBlocks.DEEPSLATE_URANIUM_ORE);
 	public static final BlockItem IRON_CHEST_ITEM = blockItem("iron_chest", ModBlocks.IRON_CHEST);
 	public static final BlockItem SILVER_CHEST_ITEM = blockItem("silver_chest", ModBlocks.SILVER_CHEST);
+	public static final BlockItem GOLD_CHEST_ITEM = blockItem("gold_chest", ModBlocks.GOLD_CHEST);
 	public static final BlockItem TEMPERED_IRON_BLOCK_ITEM = blockItem("tempered_iron_block", ModBlocks.TEMPERED_IRON_BLOCK);
 	// Enriched Uranium Torch (MOD-085): a StandingAndWallBlockItem (like vanilla Items.TORCH) so using it
 	// on a wall places the wall variant and on the floor the standing variant. The wall block has no item
@@ -344,6 +345,7 @@ public final class ModItems {
 					output.accept(BATTERY_BOX_ITEM);
 					output.accept(IRON_CHEST_ITEM);
 				output.accept(SILVER_CHEST_ITEM);
+				output.accept(GOLD_CHEST_ITEM);
 					output.accept(STOCK_DISPLAY_FRAME);
 					output.accept(COPPER_CABLE_ITEM);
 					// Ores + materials
@@ -557,6 +559,7 @@ public final class ModItems {
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = () -> DEEPSLATE_URANIUM_ORE_ITEM;
 		ModContent.IRON_CHEST_ITEM = () -> IRON_CHEST_ITEM;
 		ModContent.SILVER_CHEST_ITEM = () -> SILVER_CHEST_ITEM;
+		ModContent.GOLD_CHEST_ITEM = () -> GOLD_CHEST_ITEM;
 		ModContent.TEMPERED_IRON_BLOCK_ITEM = () -> TEMPERED_IRON_BLOCK_ITEM;
 		ModContent.ENRICHED_URANIUM_TORCH_ITEM = () -> ENRICHED_URANIUM_TORCH_ITEM;
 	}

@@ -7,24 +7,31 @@ import dev.alaindustrial.item.ItemEnergy;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Loader-neutral gametest bodies for the Electric Drill (MOD-079, suite TC-DRILL-001). Same pattern as
@@ -50,6 +57,25 @@ public final class ElectricDrillScenarios {
 		ItemStack stack = new ItemStack(ModContent.ELECTRIC_DRILL.get());
 		ItemEnergy.set(stack, eu);
 		return stack;
+	}
+
+	/**
+	 * A survival ServerPlayer mock with {@code instabuild} forced off — the {@code makeMockServerPlayerInLevel}
+	 * default leaves it on (hardcoded CREATIVE gameMode), which would skip the inventory decrement and make
+	 * the torch-placement assertions meaningless. Mirrors {@code ScytheScenarios.makeSurvivalPlayer}.
+	 */
+	private static ServerPlayer makeSurvivalPlayer(GameTestHelper helper) {
+		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		player.setGameMode(GameType.SURVIVAL);
+		player.getAbilities().instabuild = false;
+		return player;
+	}
+
+	/** Simulates a right-click of the drill's main-hand stack on the top face of {@code target}. */
+	private static InteractionResult useOnBlock(GameTestHelper helper, ServerPlayer player, BlockPos target) {
+		BlockPos abs = helper.absolutePos(target);
+		BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(abs), Direction.UP, abs, false);
+		return player.getMainHandItem().useOn(new UseOnContext(player, InteractionHand.MAIN_HAND, hit));
 	}
 
 	private static BatteryBoxBlockEntity placeBox(GameTestHelper helper) {
@@ -201,6 +227,124 @@ public final class ElectricDrillScenarios {
 		assertCanEnchant(helper, enchant(level, Enchantments.SILK_TOUCH), drill, "silk_touch");
 		if (!drill.isEnchantable()) {
 			helper.fail("the drill must be enchantable at the table (ENCHANTABLE component present, unenchanted)");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * FUN07: right-clicking a block with the drill (MOD-089) places a torch pulled from the inventory,
+	 * consumes one torch, and drains {@code electricDrillTorchEuCost} EU. The torch lands on the block
+	 * above the floor (floor-torch orientation, vanilla {@code canSurvive}); the click is on the floor
+	 * block's top face so the placement target is the air above it.
+	 */
+	public static void fun07PlaceTorchFromInventory(GameTestHelper helper) {
+		// A stone floor block to click on; the torch places in the air above it.
+		BlockPos floor = new BlockPos(1, 2, 2);
+		BlockPos torchAt = floor.above();
+		helper.setBlock(floor, Blocks.STONE);
+
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		ItemStack drillStack = drill(Config.electricDrillBuffer);
+		player.setItemInHand(InteractionHand.MAIN_HAND, drillStack);
+		// 8 vanilla torches in hotbar slot 1 — slot 0 holds the drill (the selected main-hand slot),
+		// so the torches must live elsewhere or they would overwrite the drill.
+		player.getInventory().setItem(1, new ItemStack(Items.TORCH, 8));
+
+		InteractionResult result = useOnBlock(helper, player, floor);
+		if (result != InteractionResult.SUCCESS) {
+			helper.fail("right-click with torches in inventory must return SUCCESS, got " + result);
+		}
+		helper.assertBlockPresent(Blocks.TORCH, torchAt);
+
+		// One torch consumed from the inventory, and the EU cost drained from the drill.
+		if (player.getInventory().countItem(Items.TORCH) != 7) {
+			helper.fail("one torch must be consumed (7 left), got "
+					+ player.getInventory().countItem(Items.TORCH));
+		}
+		if (ItemEnergy.get(drillStack) != Config.electricDrillBuffer - Config.electricDrillTorchEuCost) {
+			helper.fail("placing a torch must drain electricDrillTorchEuCost ("
+					+ Config.electricDrillTorchEuCost + "), left " + ItemEnergy.get(drillStack));
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * FUN08: when the inventory holds BOTH torch kinds, the drill places the enriched uranium torch first
+	 * (the advanced, waterlog-safe torch), not the vanilla one. Asserts the placed block is the uranium
+	 * standing torch and that the uranium stack — not the vanilla stack — was decremented.
+	 */
+	public static void fun08TorchPriorityUranium(GameTestHelper helper) {
+		BlockPos floor = new BlockPos(1, 2, 2);
+		BlockPos torchAt = floor.above();
+		helper.setBlock(floor, Blocks.STONE);
+
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		player.setItemInHand(InteractionHand.MAIN_HAND, drill(Config.electricDrillBuffer));
+		// Both torch kinds in the inventory; slot 0 holds the drill (selected main-hand slot), so the
+		// torches go in slots 1 and 2. Slot order does not matter — priority is uranium-first by item.
+		player.getInventory().setItem(1, new ItemStack(Items.TORCH, 8));
+		player.getInventory().setItem(2, new ItemStack(ModContent.ENRICHED_URANIUM_TORCH_ITEM.get(), 4));
+
+		InteractionResult result = useOnBlock(helper, player, floor);
+		if (result != InteractionResult.SUCCESS) {
+			helper.fail("right-click with both torch kinds must place the uranium torch, got " + result);
+		}
+		// Uranium standing torch placed (not the vanilla one), uranium stack decremented, vanilla untouched.
+		helper.assertBlockPresent(ModContent.ENRICHED_URANIUM_TORCH.get(), torchAt);
+		if (player.getInventory().countItem(ModContent.ENRICHED_URANIUM_TORCH_ITEM.get()) != 3) {
+			helper.fail("the uranium torch stack must be the one consumed (3 left), got "
+					+ player.getInventory().countItem(ModContent.ENRICHED_URANIUM_TORCH_ITEM.get()));
+		}
+		if (player.getInventory().countItem(Items.TORCH) != 8) {
+			helper.fail("the vanilla torch stack must be untouched (8 left) when uranium is available, got "
+					+ player.getInventory().countItem(Items.TORCH));
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * FUN09: regression for replaceable-block placement (the b1573697 block-compare bug). When the player
+	 * clicks the side of a REPLACEABLE block — {@code Blocks.SHORT_GRASS} (tall grass) stands in the air on
+	 * its own cell — {@code BlockPlaceContext} flips {@code replaceClicked} and {@code BlockItem.place} puts
+	 * the torch at the clicked cell itself, NOT at {@code clicked.relative(face)}. A naive
+	 * "compare getBlockState(clicked.relative(face)) before/after" success check then sees no change and
+	 * skips the inventory decrement + EU drain, giving a free torch. This case must still drain EU and
+	 * consume a torch, proving {@code consumesAction()} (not block-compare) is the success gate.
+	 *
+	 * <p>Setup mirrors FUN07 but the click target is a grass tuft standing on dirt; the torch replaces the
+	 * grass at the same cell, so the torch ends up at the click position (not above it).
+	 */
+	public static void fun09PlaceTorchOnReplaceableBlock(GameTestHelper helper) {
+		// A dirt floor with a tall-grass tuft on top — grass is replaceable, so vanilla places the torch
+		// at the grass cell (torchAt) via the replaceClicked path, not at grass.above().
+		BlockPos dirt = new BlockPos(1, 2, 2);
+		BlockPos grass = dirt.above();
+		BlockPos torchAt = grass; // replaceClicked → torch lands in the grass cell
+		helper.setBlock(dirt, Blocks.DIRT);
+		helper.setBlock(grass, Blocks.SHORT_GRASS);
+
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		ItemStack drillStack = drill(Config.electricDrillBuffer);
+		player.setItemInHand(InteractionHand.MAIN_HAND, drillStack);
+		player.getInventory().setItem(1, new ItemStack(Items.TORCH, 8));
+
+		// Click the grass (its side) — BlockPlaceContext will treat it as replaceable.
+		InteractionResult result = useOnBlock(helper, player, grass);
+		if (result != InteractionResult.SUCCESS) {
+			helper.fail("placing a torch by clicking a replaceable block must return SUCCESS, got " + result);
+		}
+		helper.assertBlockPresent(Blocks.TORCH, torchAt);
+
+		// The replaceable-block path must STILL consume a torch and drain EU — this is exactly what the
+		// old block-compare-against-wrong-pos gate got wrong (free torch + no drain).
+		if (player.getInventory().countItem(Items.TORCH) != 7) {
+			helper.fail("replaceable-block placement must still consume a torch (7 left), got "
+					+ player.getInventory().countItem(Items.TORCH));
+		}
+		if (ItemEnergy.get(drillStack) != Config.electricDrillBuffer - Config.electricDrillTorchEuCost) {
+			helper.fail("replaceable-block placement must still drain electricDrillTorchEuCost ("
+					+ Config.electricDrillTorchEuCost + "), left " + ItemEnergy.get(drillStack)
+					+ " — the b1573697 block-compare bug returned here");
 		}
 		helper.succeed();
 	}

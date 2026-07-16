@@ -250,6 +250,9 @@ public final class ModItemsNeoForge {
 	// Silver Chest (MOD-087) — the tier above the iron chest: 45 slots (5×9).
 	public static final DeferredItem<BlockItem> SILVER_CHEST_ITEM =
 			ITEMS.registerSimpleBlockItem("silver_chest", ModBlocksNeoForge.SILVER_CHEST);
+	// Gold Chest (MOD-088) — the tier above the silver chest: 54 slots (6×9).
+	public static final DeferredItem<BlockItem> GOLD_CHEST_ITEM =
+			ITEMS.registerSimpleBlockItem("gold_chest", ModBlocksNeoForge.GOLD_CHEST);
 	public static final DeferredItem<BlockItem> TEMPERED_IRON_BLOCK_ITEM =
 			ITEMS.registerSimpleBlockItem("tempered_iron_block", ModBlocksNeoForge.TEMPERED_IRON_BLOCK);
 	// Enriched Uranium Torch (MOD-085): a StandingAndWallBlockItem (like vanilla Items.TORCH) — floor use
@@ -365,6 +368,7 @@ public final class ModItemsNeoForge {
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = DEEPSLATE_URANIUM_ORE_ITEM;
 		ModContent.IRON_CHEST_ITEM = IRON_CHEST_ITEM;
 		ModContent.SILVER_CHEST_ITEM = SILVER_CHEST_ITEM;
+		ModContent.GOLD_CHEST_ITEM = GOLD_CHEST_ITEM;
 		ModContent.TEMPERED_IRON_BLOCK_ITEM = TEMPERED_IRON_BLOCK_ITEM;
 		ModContent.ENRICHED_URANIUM_TORCH_ITEM = ENRICHED_URANIUM_TORCH_ITEM;
 	}

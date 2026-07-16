@@ -234,6 +234,7 @@
 	"command.alaindustrial.status.value.loss": "rezystancyjne, na blok",
 	"block.alaindustrial.iron_chest": "Żelazna skrzynia",
 	"block.alaindustrial.silver_chest": "Srebrna skrzynia",
+	"block.alaindustrial.gold_chest": "Złota skrzynia",
 	"subtitles.alaindustrial.iron_chest_open": "Żelazna skrzynia otwiera się",
 	"subtitles.alaindustrial.iron_chest_close": "Żelazna skrzynia zamyka się",
 	"subtitles.alaindustrial.electric_furnace": "Piec elektryczny buczy",

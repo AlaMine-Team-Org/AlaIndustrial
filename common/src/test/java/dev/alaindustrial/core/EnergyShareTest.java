@@ -41,34 +41,36 @@ class EnergyShareTest {
 
 	@Test
 	void cableLoss_zeroWhenNoFlowDistanceOrRate() {
-		assertEquals(0L, EnergyShare.cableLoss(0, 0.0125, 10), "no flow → no loss");
-		assertEquals(0L, EnergyShare.cableLoss(32, 0.0125, 0), "zero distance → no loss");
+		assertEquals(0L, EnergyShare.cableLoss(0, 0.02, 10), "no flow → no loss");
+		assertEquals(0L, EnergyShare.cableLoss(32, 0.02, 0), "zero distance → no loss");
 		assertEquals(0L, EnergyShare.cableLoss(32, 0.0, 10), "zero rate → no loss");
 	}
 
 	@Test
 	void cableLoss_trickleTopOffFloorsToZero() {
-		// The MOD-009 guard: a 1 EU top-off packet over a 10-cable line loses nothing (floor(0.125)=0),
+		// The MOD-009 guard: a 1 EU top-off packet over a 10-cable line loses nothing (floor(0.2)=0),
 		// so a buffer still reaches exact capacity — a flat toll would have stranded it forever.
-		assertEquals(0L, EnergyShare.cableLoss(1, 0.0125, 10), "1 EU over 10 cables → 0 loss");
+		assertEquals(0L, EnergyShare.cableLoss(1, 0.02, 10), "1 EU over 10 cables → 0 loss");
 	}
 
 	@Test
-	void cableLoss_shortLineAtFullPacketIsFree() {
-		// floor(32 × 0.0125 × 2) = floor(0.8) = 0 — a 1–2 cable hop is loss-free even at a full packet.
-		assertEquals(0L, EnergyShare.cableLoss(32, 0.0125, 2));
+	void cableLoss_singleHopAtFullPacketIsFree() {
+		// floor(32 × 0.02 × 1) = floor(0.64) = 0 — a single cable hop is loss-free even at a full packet.
+		// At 0.02 a 2-cable hop already costs 1 (floor(32 × 0.02 × 2) = 1); this keeps the 1-hop case
+		// free (MOD-021 short-hop invariant, narrowed to distance 1 in MOD-073).
+		assertEquals(0L, EnergyShare.cableLoss(32, 0.02, 1));
 	}
 
 	@Test
 	void cableLoss_scalesWithFlowAndDistance() {
-		assertEquals(1L, EnergyShare.cableLoss(8, 0.0125, 10), "fuel-gen flow (8) over 10 cables → 1");
-		assertEquals(4L, EnergyShare.cableLoss(32, 0.0125, 10), "full packet (32) over 10 cables → 4");
+		assertEquals(1L, EnergyShare.cableLoss(8, 0.02, 10), "fuel-gen flow (8) over 10 cables → 1");
+		assertEquals(6L, EnergyShare.cableLoss(32, 0.02, 10), "full packet (32) over 10 cables → 6");
 	}
 
 	@Test
 	void cableLoss_neverExceedsGross() {
-		// floor(200 × 0.0125 × 100) = 250, but you cannot lose more than what flowed → clamped to 200.
-		assertEquals(200L, EnergyShare.cableLoss(200, 0.0125, 100));
+		// floor(200 × 0.02 × 100) = 400, but you cannot lose more than what flowed → clamped to 200.
+		assertEquals(200L, EnergyShare.cableLoss(200, 0.02, 100));
 	}
 
 	// --- split ---

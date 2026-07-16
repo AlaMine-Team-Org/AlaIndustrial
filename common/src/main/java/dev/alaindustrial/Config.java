@@ -146,8 +146,13 @@ public final class Config {
 	 * machine floor (200 EU/op): breaking a block is cheaper than smelting one. */
 	public static int electricDrillEuPerBlock = 50;
 	/** Max EU/tick the drill accepts while sitting in a charge slot. At the LV ceiling a full charge from a
-	 * Battery Box takes ~313 ticks (~16 s). */
+		Battery Box takes ~313 ticks (~16 s). */
 	public static int electricDrillInputRate = 32;
+	/** EU drained when the drill places a torch from the inventory on right-click (MOD-089). Placing a
+		torch is a comfort action, cheaper than mining a block ({@link #electricDrillEuPerBlock} = 50). The
+		drain is skipped gracefully when the drill holds less than this — the torch still places, matching the
+		drill's "degrades but keeps working" philosophy for a flat battery. */
+	public static int electricDrillTorchEuCost = 5;
 
 	// --- Stock Display Frame (MOD-066, no energy) ---
 	/** How often (ticks) a stock display frame rescans the container behind it. 20 = once a second;
@@ -169,11 +174,15 @@ public final class Config {
 	 * never goes negative. Proportional — not the flat per-tick toll removed in MOD-009 — so a small
 	 * top-off packet floors to zero loss and a buffer still reaches its exact capacity on a long line.
 	 *
-	 * <p>{@code 0.0125} = 1.25%/block (PROPOSED, tune by playtest — source of truth PERFORMANCE.md):
-	 * ~1 EU/t lost on a 10-cable line at the 8 EU/t fuel-generator baseline, ~4 EU/t at a full 32 EU
-	 * LV packet; a 1–2 cable hop at a full packet floors to zero.
+	 * <p>{@code 0.02} = 2%/block (finalized in MOD-073, source of truth PERFORMANCE.md): a full 32 EU
+	 * LV packet loses 6 EU over 10 cables, 12 over 20, and the whole packet over 50; an 8 EU/t
+	 * fuel-generator stream still loses only 1 EU over 10 cables, and a 1 EU trickle floors to zero
+	 * over any distance. Tuned to penalize long runs across the base rather than the LV tier ceiling,
+	 * pushing players to keep a BatteryBox near the load — copper stays the only cable in the release,
+	 * so 0.02 sits at the comfortable top of its band (0.025/0.03 are reserved for when glass fibre
+	 * gives a real upgrade path).
 	 */
-	public static double copperCableLossPerBlock = 0.0125;
+	public static double copperCableLossPerBlock = 0.02;
 
 	// --- Energy network ---
 	/** Max awake energy networks processed per server tick; the rest are deferred round-robin. */
@@ -294,6 +303,10 @@ public final class Config {
 					if (electricDrillInputRate <= 0) {
 						electricDrillInputRate = 32;
 					}
+					electricDrillTorchEuCost = GsonHelper.getAsInt(o, "electricDrillTorchEuCost", electricDrillTorchEuCost);
+					if (electricDrillTorchEuCost < 0) {
+						electricDrillTorchEuCost = 5;
+					}
 					stockFrameScanIntervalTicks = GsonHelper.getAsInt(o, "stockFrameScanIntervalTicks", stockFrameScanIntervalTicks);
 					if (stockFrameScanIntervalTicks <= 0) {
 						stockFrameScanIntervalTicks = 20;
@@ -376,6 +389,7 @@ public final class Config {
 		o.addProperty("electricDrillBuffer", electricDrillBuffer);
 		o.addProperty("electricDrillEuPerBlock", electricDrillEuPerBlock);
 		o.addProperty("electricDrillInputRate", electricDrillInputRate);
+		o.addProperty("electricDrillTorchEuCost", electricDrillTorchEuCost);
 		o.addProperty("stockFrameScanIntervalTicks", stockFrameScanIntervalTicks);
 		o.addProperty("machineEuPerTick", machineEuPerTick);
 		o.addProperty("maceratorDuration", maceratorDuration);

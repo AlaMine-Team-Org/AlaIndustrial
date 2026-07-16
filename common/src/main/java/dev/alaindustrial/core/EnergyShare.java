@@ -34,7 +34,7 @@ public final class EnergyShare {
 	 * not returned to any producer (it is destroyed on commit).
 	 *
 	 * @param gross          EU actually pulled from producers toward this consumer (≥ 0)
-	 * @param lossPerBlock   fraction of throughput lost per cable block (≥ 0; copper ≈ 0.0125)
+	 * @param lossPerBlock   fraction of throughput lost per cable block (≥ 0; copper ≈ 0.02)
 	 * @param distanceBlocks cable blocks between the consumer and its nearest producer (≥ 0)
 	 * @return EU to destroy in transit, in {@code [0, gross]}
 	 */

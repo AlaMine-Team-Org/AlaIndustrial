@@ -234,6 +234,7 @@
 	"command.alaindustrial.status.value.loss": "抵抗、ブロックごと",
 	"block.alaindustrial.iron_chest": "鉄のチェスト",
 	"block.alaindustrial.silver_chest": "銀のチェスト",
+	"block.alaindustrial.gold_chest": "金のチェスト",
 	"subtitles.alaindustrial.iron_chest_open": "鉄のチェストが開く",
 	"subtitles.alaindustrial.iron_chest_close": "鉄のチェストが閉じる",
 	"subtitles.alaindustrial.electric_furnace": "電気かまどが唸る",

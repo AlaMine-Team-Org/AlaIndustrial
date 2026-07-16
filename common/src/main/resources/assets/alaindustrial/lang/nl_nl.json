@@ -234,6 +234,7 @@
 	"command.alaindustrial.status.value.loss": "resistief, per blok",
 	"block.alaindustrial.iron_chest": "IJzeren kist",
 	"block.alaindustrial.silver_chest": "Zilveren kist",
+	"block.alaindustrial.gold_chest": "Gouden kist",
 	"subtitles.alaindustrial.iron_chest_open": "IJzeren kist gaat open",
 	"subtitles.alaindustrial.iron_chest_close": "IJzeren kist gaat dicht",
 	"subtitles.alaindustrial.electric_furnace": "Elektrische oven gonst",

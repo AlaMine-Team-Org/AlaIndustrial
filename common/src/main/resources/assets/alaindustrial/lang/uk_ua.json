@@ -234,6 +234,7 @@
 	"command.alaindustrial.status.value.loss": "резистивні, на блок",
 	"block.alaindustrial.iron_chest": "Залізна скриня",
 	"block.alaindustrial.silver_chest": "Срібна скриня",
+	"block.alaindustrial.gold_chest": "Золотий скриня",
 	"subtitles.alaindustrial.iron_chest_open": "Залізна скриня відкривається",
 	"subtitles.alaindustrial.iron_chest_close": "Залізна скриня зачиняється",
 	"subtitles.alaindustrial.electric_furnace": "Електропіч гудить",

@@ -234,6 +234,7 @@
 	"command.alaindustrial.status.value.loss": "저항, 블록당",
 	"block.alaindustrial.iron_chest": "철 상자",
 	"block.alaindustrial.silver_chest": "은 상자",
+	"block.alaindustrial.gold_chest": "금 상자",
 	"subtitles.alaindustrial.iron_chest_open": "철 상자가 열립니다",
 	"subtitles.alaindustrial.iron_chest_close": "철 상자가 닫힙니다",
 	"subtitles.alaindustrial.electric_furnace": "전기 화로가 웅웅거립니다",

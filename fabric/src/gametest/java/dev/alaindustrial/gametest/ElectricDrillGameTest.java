@@ -64,6 +64,34 @@ public class ElectricDrillGameTest {
 	}
 
 	/**
+	 * @implements TC-DRILL-001-FUN07 — right-click with the drill places a torch from the inventory
+	 *     (MOD-089), consuming one torch and draining electricDrillTorchEuCost.
+	 */
+	@GameTest
+	public void tcDrill001Fun07_placeTorchFromInventory(GameTestHelper helper) {
+		ElectricDrillScenarios.fun07PlaceTorchFromInventory(helper);
+	}
+
+	/**
+	 * @implements TC-DRILL-001-FUN08 — when both torch kinds are in the inventory, the drill places the
+	 *     enriched uranium torch first (priority), leaving the vanilla stack untouched.
+	 */
+	@GameTest
+	public void tcDrill001Fun08_torchPriorityUranium(GameTestHelper helper) {
+		ElectricDrillScenarios.fun08TorchPriorityUranium(helper);
+	}
+
+	/**
+	 * @implements TC-DRILL-001-FUN09 — regression for replaceable-block placement (tall grass): the torch
+	 *     lands at the clicked cell via replaceClicked, and inventory + EU must still be consumed.
+	 *     Guards against the b1573697 block-compare-against-wrong-pos bug returning.
+	 */
+	@GameTest
+	public void tcDrill001Fun09_placeTorchOnReplaceableBlock(GameTestHelper helper) {
+		ElectricDrillScenarios.fun09PlaceTorchOnReplaceableBlock(helper);
+	}
+
+	/**
 	 * @implements TC-DRILL-001-PER01 — charge survives a stack copy, 0 EU removes the component, and
 	 *     writes clamp at capacity.
 	 */

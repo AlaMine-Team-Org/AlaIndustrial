@@ -234,6 +234,7 @@
 	"command.alaindustrial.status.value.loss": "resistiv, pro Block",
 	"block.alaindustrial.iron_chest": "Eisentruhe",
 	"block.alaindustrial.silver_chest": "Silbertruhe",
+	"block.alaindustrial.gold_chest": "Goldtruhe",
 	"subtitles.alaindustrial.iron_chest_open": "Eisentruhe öffnet sich",
 	"subtitles.alaindustrial.iron_chest_close": "Eisentruhe schließt sich",
 	"subtitles.alaindustrial.electric_furnace": "Elektroofen dröhnt",

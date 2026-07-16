@@ -234,6 +234,7 @@
 	"command.alaindustrial.status.value.loss": "電阻，每方塊",
 	"block.alaindustrial.iron_chest": "鐵箱子",
 	"block.alaindustrial.silver_chest": "銀箱子",
+	"block.alaindustrial.gold_chest": "金箱子",
 	"subtitles.alaindustrial.iron_chest_open": "鐵箱子開啟",
 	"subtitles.alaindustrial.iron_chest_close": "鐵箱子關閉",
 	"subtitles.alaindustrial.electric_furnace": "電力熔爐轟鳴",

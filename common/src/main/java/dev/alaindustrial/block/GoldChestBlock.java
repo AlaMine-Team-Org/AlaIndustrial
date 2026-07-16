@@ -1,0 +1,96 @@
+package dev.alaindustrial.block;
+
+import com.mojang.serialization.MapCodec;
+import dev.alaindustrial.block.entity.GoldChestBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+/**
+ * Gold Chest block — the next tier above the silver chest, a horizontal-facing storage cube that opens
+ * a 54-slot GUI on right-click and spills its contents when broken. One row larger than the silver
+ * chest (45 → 54): 6 rows of 9 slots. Like {@link IronChestBlock} / {@link SilverChestBlock}, it
+ * extends {@link HorizontalMachineBlock} only to inherit the {@code facing} placement + the
+ * right-click-to-open-menu behaviour; it is <em>not</em> a machine (no energy, no {@code lit} state).
+ *
+ * <p>Rendering: same 3D chest model + animated lid as the iron/silver chests (see
+ * {@code GoldChestBlockEntityRenderer}), textured with {@code entity/chest/gold.png}.
+ *
+ * <p>Crafted by surrounding a silver chest with gold ingots (see {@code recipe/gold_chest.json}),
+ * mirroring the established "previous tier + 8 ingots" recipe pattern.
+ */
+public class GoldChestBlock extends HorizontalMachineBlock {
+	public static final MapCodec<GoldChestBlock> CODEC = simpleCodec(GoldChestBlock::new);
+	/**
+	 * Collision/outline shape — identical to the iron/silver chests / vanilla chest footprint: a
+	 * 14×14×14 column ({@code box(1,0,1,15,14,15)}). See {@link IronChestBlock#SHAPE} for the
+	 * occlusion invariant.
+	 */
+	private static final VoxelShape SHAPE = Block.column(14.0, 0.0, 14.0);
+
+	public GoldChestBlock(Properties properties) {
+		super(properties);
+	}
+
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec() {
+		return CODEC;
+	}
+
+	/**
+	 * Gold chest is a pure 54-slot container with no energy port — its block entity is a vanilla
+	 * {@code BaseContainerBlockEntity}, not a {@link dev.alaindustrial.block.entity.MachineBlockEntity}.
+	 * A cable must therefore not draw an arm toward it, same as the iron/silver chests (MOD-038).
+	 */
+	@Override
+	public boolean isCableConnectable() {
+		return false;
+	}
+
+	@Override
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new GoldChestBlockEntity(pos, state);
+	}
+
+	@Override
+	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+		return SHAPE;
+	}
+
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
+			BlockEntityType<T> type) {
+		// Client only — the lid controller ticks on the client (where the renderer reads it). The
+		// server never needs a per-tick callback here; opener-count rechecks arrive via the block's
+		// scheduledTick → #tick below.
+		if (!level.isClientSide()) {
+			return null;
+		}
+		return (lvl, pos, st, be) -> {
+			if (be instanceof GoldChestBlockEntity chest) {
+				GoldChestBlockEntity.lidAnimateTick(lvl, pos, st, chest);
+			}
+		};
+	}
+
+	/**
+	 * Scheduled-tick handler: re-evaluates who has the chest open on the server (same mechanism as the
+	 * iron/silver chests — see {@link IronChestBlock#tick}).
+	 */
+	@Override
+	protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+		if (level.getBlockEntity(pos) instanceof GoldChestBlockEntity chest) {
+			chest.recheckOpen();
+		}
+	}
+}

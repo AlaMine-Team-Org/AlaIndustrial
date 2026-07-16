@@ -10,6 +10,7 @@ import dev.alaindustrial.menu.ExtractorMenu;
 import dev.alaindustrial.menu.IronChestMenu;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.SilverChestMenu;
+import dev.alaindustrial.menu.GoldChestMenu;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.menu.GeneratorMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
@@ -46,6 +47,7 @@ public final class ModMenus {
 	public static MenuType<StormWindMillMenu> STORM_WIND_MILL;
 	public static MenuType<IronChestMenu> IRON_CHEST;
 	public static MenuType<SilverChestMenu> SILVER_CHEST;
+	public static MenuType<GoldChestMenu> GOLD_CHEST;
 
 	public static void init() {
 		GENERATOR = register("generator", new MenuType<>(GeneratorMenu::new, FeatureFlags.VANILLA_SET));
@@ -80,6 +82,8 @@ public final class ModMenus {
 				new MenuType<>(IronChestMenu::new, FeatureFlags.VANILLA_SET));
 		SILVER_CHEST = register("silver_chest",
 				new MenuType<>(SilverChestMenu::new, FeatureFlags.VANILLA_SET));
+		GOLD_CHEST = register("gold_chest",
+				new MenuType<>(GoldChestMenu::new, FeatureFlags.VANILLA_SET));
 
 		// MOD-022 registration facade: publish each eagerly-registered MenuType into the loader-neutral
 		// ModContent so content Menu constructors (which read ModContent.X_MENU.get() at runtime) resolve
@@ -101,6 +105,7 @@ public final class ModMenus {
 		ModContent.STORM_WIND_MILL_MENU = () -> STORM_WIND_MILL;
 		ModContent.IRON_CHEST_MENU = () -> IRON_CHEST;
 		ModContent.SILVER_CHEST_MENU = () -> SILVER_CHEST;
+		ModContent.GOLD_CHEST_MENU = () -> GOLD_CHEST;
 	}
 
 	private static <T extends AbstractContainerMenu> MenuType<T> register(String path, MenuType<T> type) {
