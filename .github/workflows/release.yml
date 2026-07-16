@@ -206,14 +206,10 @@ jobs:
         run: |
           [ -n "$CF_TOKEN" ] || { echo "::error::CURSEFORGE_TOKEN secret is missing or empty"; exit 1; }
           versions=$(curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 "https://minecraft.curseforge.com/api/game/versions?token=$CF_TOKEN")
-          # DEBUG: dump every game version (id + name + type) to find the "environment group"
-          # entries that errorCode 1021 now requires (Client/Server env tags added by CurseForge).
-          echo "=== All CurseForge game versions (id | name | type) ==="
-          printf '%s' "$versions" | jq -r '.[] | "\(.id) | \(.name) | \(.gameVersionTypeID // "no-type")"'
           NEOFORGE_ID=$(printf '%s' "$versions" | jq -r 'map(select(.name=="NeoForge")) | .[0].id // empty')
           [ -n "$NEOFORGE_ID" ] || { echo "::error::could not resolve the NeoForge modloader id from the versions API"; exit 1; }
           echo "neoforge_id=$NEOFORGE_ID" >> "$GITHUB_OUTPUT"
-          echo "NeoForge modloader id: $NEOFORGE_ID (Fabric pinned: 7499, Minecraft pinned: 16498)"
+          echo "NeoForge modloader id: $NEOFORGE_ID (Fabric pinned: 7499, Minecraft pinned: 16498, Java 25 pinned: 14454)"
 
       # Best-effort public index check before hitting the CurseForge upload API.
       # If cfwidget is unavailable we fail closed: a re-run could otherwise create
@@ -254,9 +250,13 @@ jobs:
           metadata=$(jq -n \
             --rawfile changelog CHANGELOG.md \
             --arg name "$DISPLAY_NAME" \
-            '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, 7499], releaseType: "release"}')
-          # Retry up to 5x, but surface the CurseForge error body on the final failure
-          # (curl -sSf hides the response body on HTTP errors, leaving a 400 without a cause).
+            '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, 7499, 14454], releaseType: "release"}')
+          # 16498 = Minecraft 26.2, 7499 = Fabric, 14454 = Java 25.
+          # Java version is required since CurseForge started enforcing the
+          # "environment group" (errorCode 1021) around 2026-07; prior releases
+          # uploaded without it. Retry up to 5x, but surface the CurseForge error
+          # body on the final failure (curl -sSf hides the response body on HTTP
+          # errors, leaving a 400 without a cause).
           for attempt in 1 2 3 4 5; do
             code=$(curl -sS --connect-timeout 20 --max-time 180 -o cf_resp.json -w '%{http_code}' -X POST \
               "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
@@ -287,7 +287,9 @@ jobs:
             --rawfile changelog CHANGELOG.md \
             --arg name "$DISPLAY_NAME" \
             --argjson nf "$NEOFORGE_ID" \
-            '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, $nf], releaseType: "release"}')
+            '{changelog: $changelog, changelogType: "markdown", displayName: $name, gameVersions: [16498, $nf, 14454], releaseType: "release"}')
+          # 16498 = Minecraft 26.2, $nf = NeoForge (resolved), 14454 = Java 25
+          # (required by CurseForge's "environment group" enforcement, see Fabric step).
           for attempt in 1 2 3 4 5; do
             code=$(curl -sS --connect-timeout 20 --max-time 180 -o cf_resp.json -w '%{http_code}' -X POST \
               "https://minecraft.curseforge.com/api/projects/1597723/upload-file" \
