@@ -1,0 +1,124 @@
+# Re-push CHANGELOG.md as the release notes of an already-published version.
+#
+# Why this exists: the release flow sends the changelog once, at upload time. If the text turns out
+# wrong afterwards — a typo, or notes that were staged before a late rewrite (0.1.31) — the upload
+# steps cannot fix it: they are idempotent and skip a version that already exists. Modrinth does
+# expose an edit endpoint, so this closes the loop for it.
+#
+# Scope, honestly: Modrinth and the GitHub Release only.
+#   * CurseForge's upload API creates files and has no documented edit endpoint — its changelog can
+#     only be changed by hand in the web editor.
+#   * Run this from `main`, after CHANGELOG.md holds the text you actually want. It reads the file
+#     from the checked-out ref, not from the tag.
+name: Sync Release Notes
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version whose notes to re-push, e.g. 0.1.31"
+        required: true
+        type: string
+      update_github_release:
+        description: "Also update the GitHub Release body"
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate inputs
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' \
+            || { echo "::error::version must look like X.Y.Z (got '$VERSION')"; exit 1; }
+          [ -s CHANGELOG.md ] || { echo "::error::CHANGELOG.md is missing or empty"; exit 1; }
+          echo "Notes to publish: $(wc -w < CHANGELOG.md) words"
+
+      - name: Resolve Modrinth version ids
+        id: ids
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          versions=$(curl -sSf --retry 5 --retry-delay 15 --retry-all-errors \
+            --connect-timeout 20 --max-time 180 \
+            "https://api.modrinth.com/v2/project/ACLWFBlU/version" \
+            -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0")
+          for loader in fabric neoforge; do
+            id=$(printf '%s' "$versions" | jq -r --arg v "$VERSION+$loader" \
+              'map(select(.version_number == $v)) | .[0].id // ""')
+            if [ -z "$id" ]; then
+              echo "::error::Modrinth version $VERSION+$loader not found — nothing to update"
+              exit 1
+            fi
+            echo "${loader}_id=$id" >> "$GITHUB_OUTPUT"
+            echo "Found $VERSION+$loader -> $id"
+          done
+
+      - name: Update Modrinth changelogs
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          FABRIC_ID: ${{ steps.ids.outputs.fabric_id }}
+          NEOFORGE_ID: ${{ steps.ids.outputs.neoforge_id }}
+        run: |
+          [ -n "$MODRINTH_TOKEN" ] || { echo "::error::MODRINTH_TOKEN secret is missing"; exit 1; }
+          # --rawfile, not an output hop: passing multi-line text through GitHub Actions
+          # output->input collapses newlines, which is the bug that broke changelog rendering once.
+          data=$(jq -n --rawfile changelog CHANGELOG.md '{changelog: $changelog}')
+          for pair in "Fabric:$FABRIC_ID" "NeoForge:$NEOFORGE_ID"; do
+            name="${pair%%:*}"; id="${pair##*:}"
+            ok=""
+            for attempt in 1 2 3 4 5; do
+              code=$(curl -sS --connect-timeout 20 --max-time 180 \
+                -o resp.json -w '%{http_code}' -X PATCH \
+                "https://api.modrinth.com/v2/version/$id" \
+                -H "Authorization: $MODRINTH_TOKEN" \
+                -H "Content-Type: application/json" \
+                -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0" \
+                --data "$data")
+              if [ "$code" -ge 200 ] && [ "$code" -lt 300 ]; then
+                echo "Modrinth $name notes updated (HTTP $code)"
+                ok=1
+                break
+              fi
+              # Never `curl -sSf` here: -f hides the response body, which is what turned a
+              # CurseForge 400 into a blind failure during 0.1.30.
+              echo "::warning::Modrinth $name attempt $attempt failed with HTTP $code; body:"
+              cat resp.json || true
+              [ "$attempt" -lt 5 ] && sleep 15
+            done
+            [ -n "$ok" ] || { echo "::error::Modrinth $name update failed after 5 attempts"; exit 1; }
+          done
+
+      - name: Update GitHub Release body
+        if: inputs.update_github_release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          gh release edit "v$VERSION" --notes-file CHANGELOG.md
+          echo "GitHub Release v$VERSION body updated"
+
+      - name: Verify
+        env:
+          VERSION: ${{ inputs.version }}
+          FABRIC_ID: ${{ steps.ids.outputs.fabric_id }}
+          NEOFORGE_ID: ${{ steps.ids.outputs.neoforge_id }}
+        run: |
+          want=$(wc -w < CHANGELOG.md)
+          for pair in "Fabric:$FABRIC_ID" "NeoForge:$NEOFORGE_ID"; do
+            name="${pair%%:*}"; id="${pair##*:}"
+            got=$(curl -sSf "https://api.modrinth.com/v2/version/$id" \
+              -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0" \
+              | jq -r '.changelog' | wc -w)
+            echo "$name: $got words live (expected ~$want)"
+            [ "$got" -eq "$want" ] || echo "::warning::$name word count differs — check by eye"
+          done
+          echo "::notice::CurseForge is NOT updated by this workflow — it has no edit API. Change it by hand if needed."
