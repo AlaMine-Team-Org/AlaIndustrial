@@ -206,6 +206,10 @@ jobs:
         run: |
           [ -n "$CF_TOKEN" ] || { echo "::error::CURSEFORGE_TOKEN secret is missing or empty"; exit 1; }
           versions=$(curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 "https://minecraft.curseforge.com/api/game/versions?token=$CF_TOKEN")
+          # DEBUG: dump every game version (id + name + type) to find the "environment group"
+          # entries that errorCode 1021 now requires (Client/Server env tags added by CurseForge).
+          echo "=== All CurseForge game versions (id | name | type) ==="
+          printf '%s' "$versions" | jq -r '.[] | "\(.id) | \(.name) | \(.gameVersionTypeID // "no-type")"'
           NEOFORGE_ID=$(printf '%s' "$versions" | jq -r 'map(select(.name=="NeoForge")) | .[0].id // empty')
           [ -n "$NEOFORGE_ID" ] || { echo "::error::could not resolve the NeoForge modloader id from the versions API"; exit 1; }
           echo "neoforge_id=$NEOFORGE_ID" >> "$GITHUB_OUTPUT"
