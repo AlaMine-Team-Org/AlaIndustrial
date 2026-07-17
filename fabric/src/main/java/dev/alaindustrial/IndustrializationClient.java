@@ -120,6 +120,8 @@ public class IndustrializationClient implements ClientModInitializer {
 		dev.alaindustrial.client.NetworkVisualizationClient.init();
 		dev.alaindustrial.client.CablePlacementPreview.init();
 		dev.alaindustrial.client.sound.MachineHumClientHook.register();
+		// MOD-108: answers "is Shift held" for item tooltips (the pipe shows its numbers behind Shift).
+		dev.alaindustrial.client.TooltipKeysClientHook.register();
 
 		// Iron chest: 3D model + animated lid. Register the BlockEntityRenderer against the iron
 		// chest BE type, and bake the chest model layer (vanilla single-body chest geometry).

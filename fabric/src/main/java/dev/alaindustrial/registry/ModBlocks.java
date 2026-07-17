@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.BatteryBoxBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
+import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
 import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
 import dev.alaindustrial.block.CompressorBlock;
@@ -99,6 +100,10 @@ public final class ModBlocks {
 	public static final ResourceKey<Block> INSULATED_TIN_CABLE_KEY = key("insulated_tin_cable");
 	public static final Block INSULATED_TIN_CABLE = register(INSULATED_TIN_CABLE_KEY,
 			new CableBlock(props(INSULATED_TIN_CABLE_KEY).strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion()));
+
+	public static final ResourceKey<Block> ITEM_PIPE_KEY = key("item_pipe");
+	public static final Block ITEM_PIPE = register(ITEM_PIPE_KEY,
+			new ItemPipeBlock(props(ITEM_PIPE_KEY).strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()));
 
 	public static final ResourceKey<Block> MACERATOR_KEY = key("macerator");
 	public static final Block MACERATOR = register(MACERATOR_KEY,
@@ -261,6 +266,7 @@ public final class ModBlocks {
 		ModContent.TIN_CABLE = () -> TIN_CABLE;
 		ModContent.INSULATED_COPPER_CABLE = () -> INSULATED_COPPER_CABLE;
 		ModContent.INSULATED_TIN_CABLE = () -> INSULATED_TIN_CABLE;
+		ModContent.ITEM_PIPE = () -> ITEM_PIPE;
 		ModContent.MACERATOR = () -> MACERATOR;
 		ModContent.BATTERY_BOX = () -> BATTERY_BOX;
 		ModContent.TELEPORTER = () -> TELEPORTER;

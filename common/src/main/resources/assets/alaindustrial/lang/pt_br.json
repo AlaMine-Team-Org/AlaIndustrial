@@ -84,6 +84,7 @@
 	"gui.alaindustrial.upgrades": "Melhorias",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
 	"gui.alaindustrial.water": "%1$s / %2$s mB",
+	"gui.alaindustrial.fluid": "%1$s: %2$s / %3$s mB",
 	"gui.alaindustrial.output": "Saída: %s EU/t",
 	"gui.alaindustrial.mode": "Modo: %s",
 	"gui.alaindustrial.branch": "Ramo: %s",
@@ -315,5 +316,19 @@
 	"tooltip.alaindustrial.teleporter_remote.count": "Estações: %s",
 	"alaindustrial.teleporter.default_name": "Teletransportador %s",
 	"gui.alaindustrial.teleporter.coords": "X: %s  Y: %s  Z: %s",
-	"gui.alaindustrial.teleporter.more": "%s/%s"
+	"gui.alaindustrial.teleporter.more": "%s/%s",
+	"alaindustrial.teleporter.rebound": "%s substituído por %s",
+	"tooltip.alaindustrial.teleporter_remote.bound": "Vinculado: %s",
+	"tooltip.alaindustrial.teleporter_remote.at": "em %s, %s, %s",
+	"block.alaindustrial.item_pipe": "Tubo de itens",
+	"item.alaindustrial.wrench": "Chave inglesa",
+	"message.alaindustrial.item_pipe.mode": "Lado do tubo: %s",
+	"message.alaindustrial.item_pipe.mode.neutral": "Neutro",
+	"message.alaindustrial.item_pipe.mode.extract": "Extrair",
+	"message.alaindustrial.item_pipe.mode.insert": "Inserir",
+	"message.alaindustrial.item_pipe.mode.disabled": "Desativado",
+	"item.alaindustrial.item_pipe.hint": "Move itens entre baús e máquinas.",
+	"item.alaindustrial.item_pipe.hint2": "Configure cada lado com a chave.",
+	"item.alaindustrial.wrench.hint": "Shift + clique direito: desmontar bloco",
+	"item.alaindustrial.item_pipe.tech.rate": "Ritmo: %1$s itens / %2$s ticks (%3$s/s)"
 }

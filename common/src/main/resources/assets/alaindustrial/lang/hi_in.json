@@ -84,6 +84,7 @@
 	"gui.alaindustrial.upgrades": "अपग्रेड",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
 	"gui.alaindustrial.water": "%1$s / %2$s mB",
+	"gui.alaindustrial.fluid": "%1$s: %2$s / %3$s mB",
 	"gui.alaindustrial.output": "आउटपुट: %s EU/t",
 	"gui.alaindustrial.mode": "मोड: %s",
 	"gui.alaindustrial.branch": "शाखा: %s",
@@ -315,5 +316,19 @@
 	"tooltip.alaindustrial.teleporter_remote.count": "स्टेशन: %s",
 	"alaindustrial.teleporter.default_name": "टेलीपोर्टर %s",
 	"gui.alaindustrial.teleporter.coords": "X: %s  Y: %s  Z: %s",
-	"gui.alaindustrial.teleporter.more": "%s/%s"
+	"gui.alaindustrial.teleporter.more": "%s/%s",
+	"alaindustrial.teleporter.rebound": "%s की जगह %s",
+	"tooltip.alaindustrial.teleporter_remote.bound": "जुड़ा: %s",
+	"tooltip.alaindustrial.teleporter_remote.at": "%s, %s, %s पर",
+	"block.alaindustrial.item_pipe": "वस्तु पाइप",
+	"item.alaindustrial.wrench": "रिंच",
+	"message.alaindustrial.item_pipe.mode": "पाइप पक्ष: %s",
+	"message.alaindustrial.item_pipe.mode.neutral": "तटस्थ",
+	"message.alaindustrial.item_pipe.mode.extract": "निकालें",
+	"message.alaindustrial.item_pipe.mode.insert": "डालें",
+	"message.alaindustrial.item_pipe.mode.disabled": "निष्क्रिय",
+	"item.alaindustrial.item_pipe.hint": "संदूकों और मशीनों के बीच वस्तुएँ ले जाती है।",
+	"item.alaindustrial.item_pipe.hint2": "हर दिशा रिंच से सेट करें।",
+	"item.alaindustrial.wrench.hint": "Shift + दायाँ क्लिक: ब्लॉक खोलें",
+	"item.alaindustrial.item_pipe.tech.rate": "गति: %1$s वस्तुएँ / %2$s टिक (%3$s/से)"
 }

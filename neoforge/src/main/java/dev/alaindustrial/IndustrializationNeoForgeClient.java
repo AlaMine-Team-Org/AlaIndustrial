@@ -79,6 +79,8 @@ public final class IndustrializationNeoForgeClient {
 		// Install the client-side machine-hum manager (looping ambient sound). Counterpart to the Fabric
 		// IndustrializationClient call; this @Mod class is dist=CLIENT, so it runs only on the physical client.
 		dev.alaindustrial.client.sound.MachineHumClientHook.register();
+		// MOD-108: answers "is Shift held" for item tooltips (the pipe shows its numbers behind Shift).
+		dev.alaindustrial.client.TooltipKeysClientHook.register();
 		// Hover tooltips for machine block items + the Network Analyzer. Counterpart to the Fabric
 		// ItemTooltipCallback in IndustrializationClient; the content is loader-neutral in MachineTooltips.
 		// ItemTooltipEvent fires on the game bus (client only), so it goes on NeoForge.EVENT_BUS.

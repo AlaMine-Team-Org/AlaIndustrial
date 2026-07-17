@@ -209,6 +209,12 @@ public final class DemoStand {
 			fillSlot(level, origin, 23, 1, z, 0, new ItemStack(Items.RAW_COPPER, 64));
 			z += 2;
 		}
+		// MOD-104: a short item-pipe run between two chests. The two end faces remain neutral
+		// in the stand; the wrench is used by the player to demonstrate extract/insert arrows.
+		set(level, origin, 16, 1, 22, ModContent.IRON_CHEST.get());
+		fillSlot(level, origin, 16, 1, 22, 0, new ItemStack(Items.IRON_INGOT, 32));
+		for (int x = 17; x <= 21; x++) set(level, origin, x, 1, 22, ModContent.ITEM_PIPE.get());
+		set(level, origin, 22, 1, 22, ModContent.IRON_CHEST.get());
 	}
 
 	/** Zone <b>ores</b>: a 4×2 wall at z=4 — stone variants on top, deepslate variants below. */

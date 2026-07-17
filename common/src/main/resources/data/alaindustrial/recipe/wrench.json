@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": { "I": "minecraft:iron_ingot", "G": "alaindustrial:iron_gear" },
+  "pattern": [ " I ", " GI", "I  " ],
+  "result": { "id": "alaindustrial:wrench" }
+}

@@ -55,6 +55,7 @@ public final class ModCreativeTabEventsNeoForge {
 			insertAfter(event, Items.DIAMOND_HOE.getDefaultInstance(), ModContent.SCYTHE_DIAMOND.get().getDefaultInstance());
 			insertAfter(event, Items.NETHERITE_HOE.getDefaultInstance(), ModContent.SCYTHE_NETHERITE.get().getDefaultInstance());
 			insertAfter(event, Items.COMPASS.getDefaultInstance(), ModContent.NETWORK_ANALYZER.get().getDefaultInstance());
+			event.accept(ModContent.WRENCH.get());
 			event.accept(ModContent.BATTERY_POUCH.get());
 			event.accept(ModContent.ENERGY_PACK.get());
 			event.accept(ModContent.ELECTRIC_DRILL.get());

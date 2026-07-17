@@ -12,6 +12,7 @@ import dev.alaindustrial.gametest.PouchScenarios;
 import dev.alaindustrial.gametest.ScytheScenarios;
 import dev.alaindustrial.gametest.StockDisplayFrameScenarios;
 import dev.alaindustrial.gametest.TemperedIronToolScenarios;
+import dev.alaindustrial.gametest.ItemPipeScenarios;
 import java.util.function.Consumer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -392,6 +393,20 @@ public final class NeoForgeGameTests {
 		registerTest(event, "capsule_stacking_by_fluid", 40, true, CapsuleScenarios::fun01StackingByFluid);
 		registerTest(event, "capsule_fill_from_tank", 40, true, CapsuleScenarios::fun02FillFromTank);
 		registerTest(event, "capsule_empty_into_tank", 40, true, CapsuleScenarios::fun03EmptyIntoTank);
+		// MOD-099: capsule ↔ pump through the REAL ServerPlayerGameMode routing (GUI-eats-click guard).
+		// Longer timeout: makeMockServerPlayerInLevel + openMenu path is heavier than a mock player.
+		registerTest(event, "capsule_use_routing_fill", 100, true, CapsuleScenarios::fun05UseRoutingFill);
+		registerTest(event, "capsule_use_routing_empty", 100, true, CapsuleScenarios::fun06UseRoutingEmpty);
+		registerTest(event, "capsule_use_routing_offhand", 100, true, CapsuleScenarios::fun07UseRoutingOffHand);
+		registerTest(event, "pump_sync_channels_fit_short", 100, true, CapsuleScenarios::fun08SyncChannelsFitShort);
+		registerTest(event, "pump_menu_stub_width_matches", 100, true, CapsuleScenarios::fun09MenuStubWidthMatches);
+		// MOD-107: the pump's slots exchange with fluid containers through the loader's item fluid
+		// capability. FUN10/FUN11 guard the vanilla-bucket behaviour the bridge replaced (previously
+		// untested); FUN12/FUN13 cover the capsule the player found inert in the slot.
+		registerTest(event, "pump_slot_bucket_fill", 100, true, CapsuleScenarios::fun10BucketFillsTankFromSlot);
+		registerTest(event, "pump_slot_bucket_drain", 100, true, CapsuleScenarios::fun11BucketDrainsTankFromSlot);
+		registerTest(event, "pump_slot_capsule_fill", 100, true, CapsuleScenarios::fun12CapsuleFillsTankFromSlot);
+		registerTest(event, "pump_slot_capsule_drain", 100, true, CapsuleScenarios::fun13CapsuleDrainsTankFromSlot);
 
 		// MOD-068 / MOD-098 Scythe (suites TC-SCYTHE-001 + TC-SCYTHE-002) — same neutral bodies as the
 		// Fabric ScytheGameTest. Proves the AOE clear, tag filters, ServerPlayerGameMode.destroyBlock
@@ -411,6 +426,21 @@ public final class NeoForgeGameTests {
 		registerTest(event, "scythe_crop_mode_keeps_lone_cactus", 40, true, ScytheScenarios::neg05CropModeKeepsLoneCactus);
 		registerTest(event, "scythe_crop_mode_keeps_stem", 40, true, ScytheScenarios::neg06CropModeKeepsStem);
 		registerTest(event, "scythe_netherite_fire_resistant", 40, true, ScytheScenarios::con02NetheriteFireResistant);
+
+		// MOD-104: exact end-to-end item movement through native item APIs and the disabled-face gate.
+		registerTest(event, "item_pipe_transfers_between_chests", 40, true, ItemPipeScenarios::transfersBetweenChests);
+		registerTest(event, "item_pipe_disabled_face_blocks_transfer", 40, true, ItemPipeScenarios::disabledFaceBlocksTransfer);
+		registerTest(event, "item_pipe_disabled_link_blocks_transfer", 40, true,
+				ItemPipeScenarios::disabledPipeLinkBlocksTransfer);
+		// MOD-108: chest → pipe → MACHINE. The chest-to-chest cases above never touch a machine's
+		// automation gate (canPlaceItemThroughFace), which is exactly the path players build.
+		registerTest(event, "item_pipe_inserts_into_machine", 40, true, ItemPipeScenarios::insertsIntoMachine);
+		// MOD-108 balance guard: one batch per interval, not per tick (MOD-104 shipped 20 items/s).
+		registerTest(event, "item_pipe_respects_transfer_interval", 40, true, ItemPipeScenarios::respectsTransferInterval);
+		// MOD-108: vanilla chests — the seam a player actually builds with.
+		registerTest(event, "item_pipe_vanilla_chests", 40, true, ItemPipeScenarios::transfersBetweenVanillaChests);
+		// MOD-108: shift-click with the wrench dismantles our blocks and leaves foreign ones alone.
+		registerTest(event, "wrench_dismantles_own_blocks", 40, true, ItemPipeScenarios::wrenchDismantlesOwnBlocks);
 	}
 
 	/** Register one code-body scenario under the alaindustrial namespace with a sane maxTicks. */

@@ -147,6 +147,33 @@ public final class Config {
 	public static int solarBuffer = 8000;
 	public static int cableBuffer = 64;
 
+	// --- Item pipes (MOD-104, rebalanced in MOD-108) ---
+	/**
+	 * Items a pipe network moves per transfer, once every {@link #itemPipeTransferIntervalTicks}.
+	 * Together they set the throughput: 2 items / 20 ticks = <b>2 items per second</b>.
+	 *
+	 * <p><b>Why this number.</b> MOD-104 shipped 1 item <i>every tick</i> — 20/s, which is 8× a vanilla
+	 * hopper (1 item / 8 ticks = 2.5/s) and faster than the starter tier of every comparable mod:
+	 * BuildCraft wooden pipe 1.0/s, Mekanism Basic Transporter 2.0/s, Thermal basic servo 2.67/s,
+	 * AE2 import bus 4.0/s, EnderIO conduit 8.0/s. A player emptied a stack between chests in ~3
+	 * seconds and, worse, there was nowhere left to upgrade to. 2/s matches Mekanism's Basic
+	 * Logistical Transporter exactly — a passive starter tier sits slightly below the hopper, and earns
+	 * its keep by routing and range rather than raw speed.
+	 *
+	 * <p><b>Why an interval instead of a smaller batch.</b> A batch cannot go below 1 item, so the only
+	 * way down from 20/s is to stop moving every tick. Fixing the interval and growing the batch is
+	 * also what MI, AE2, Mekanism and EnderIO all do, which leaves a clean ladder for later tiers
+	 * (batch 2 → 8 → 32 → 64 at the same interval = 2 → 8 → 32 → 64 items/s).
+	 */
+	public static int itemPipeItemsPerTransfer = 2;
+
+	/**
+	 * Server ticks between transfers on one pipe network (20 = once per second). See
+	 * {@link #itemPipeItemsPerTransfer} for the balance rationale; upgrades are expected to raise the
+	 * batch, not shorten this.
+	 */
+	public static int itemPipeTransferIntervalTicks = 20;
+
 	// --- Battery Pouch (MOD-052, powered item) ---
 	/** Pouch storage capacity in weight units (vanilla-bundle math: one item weighs 64/maxStackSize).
 	 * 128 = exactly twice a vanilla bundle, ≈ two stacks of ordinary items. */
@@ -341,6 +368,20 @@ public final class Config {
 					t2WindMillBuffer = GsonHelper.getAsInt(o, "t2WindMillBuffer", t2WindMillBuffer);
 					solarBuffer = GsonHelper.getAsInt(o, "solarBuffer", solarBuffer);
 					cableBuffer = GsonHelper.getAsInt(o, "cableBuffer", cableBuffer);
+					// MOD-108 renamed the pipe throughput keys (itemPipeItemsPerTick → PerTransfer + an
+					// interval). The old key is deliberately NOT read: it meant "per tick", and silently
+					// reusing that number as a per-transfer batch would keep an existing config at the very
+					// speed this rebalance removes. An old config simply falls back to the new defaults.
+					itemPipeItemsPerTransfer =
+							GsonHelper.getAsInt(o, "itemPipeItemsPerTransfer", itemPipeItemsPerTransfer);
+					if (itemPipeItemsPerTransfer <= 0) {
+						itemPipeItemsPerTransfer = 2;
+					}
+					itemPipeTransferIntervalTicks =
+							GsonHelper.getAsInt(o, "itemPipeTransferIntervalTicks", itemPipeTransferIntervalTicks);
+					if (itemPipeTransferIntervalTicks <= 0) {
+						itemPipeTransferIntervalTicks = 20;
+					}
 					lvPouchCapacity = GsonHelper.getAsInt(o, "lvPouchCapacity", lvPouchCapacity);
 					if (lvPouchCapacity <= 0) {
 						lvPouchCapacity = 128;
@@ -461,6 +502,8 @@ public final class Config {
 		o.addProperty("t2WindMillBuffer", t2WindMillBuffer);
 		o.addProperty("solarBuffer", solarBuffer);
 		o.addProperty("cableBuffer", cableBuffer);
+		o.addProperty("itemPipeItemsPerTransfer", itemPipeItemsPerTransfer);
+		o.addProperty("itemPipeTransferIntervalTicks", itemPipeTransferIntervalTicks);
 		o.addProperty("lvPouchCapacity", lvPouchCapacity);
 		o.addProperty("lvPouchBuffer", lvPouchBuffer);
 		o.addProperty("lvPouchDrainPerSecond", lvPouchDrainPerSecond);

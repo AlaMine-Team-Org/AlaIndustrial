@@ -102,7 +102,11 @@ public class MachineGameTest {
 		assertProduces(helper, ModBlocks.MACERATOR, new ItemStack(Items.IRON_ORE, 4), ModItems.IRON_DUST, 2);
 	}
 
-	/** @implements TC-MACH-002-FUN01 — electric furnace smelts raw iron into an iron ingot. */
+	/**
+	 * @implements TC-MACH-002-FUN01 — electric furnace smelts raw iron into an iron ingot via the
+	 *     vanilla {@code minecraft:smelting} fallback (MOD-086 dropped the duplicate mod-side JSON;
+	 *     raw_iron → iron_ingot is served by vanilla alone, so this also proves the fallback works).
+	 */
 	@GameTest
 	public void tcMach002Fun01_furnaceSmeltsRawIron(GameTestHelper helper) {
 		assertProduces(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(Items.RAW_IRON, 4), Items.IRON_INGOT, 1);
@@ -265,13 +269,21 @@ public class MachineGameTest {
 		assertProduces(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(Items.BEEF, 4), Items.COOKED_BEEF, 1);
 	}
 
-	/** @implements TC-EFURN-001-FUN03 — electric furnace mod recipes: sand→glass. @covers R-GUI-02 */
+	/**
+	 * @implements TC-EFURN-001-FUN03 — electric furnace smelts sand into glass via the vanilla
+	 *     {@code minecraft:smelting} fallback (MOD-086 dropped the duplicate mod-side JSON).
+	 * @covers R-GUI-02
+	 */
 	@GameTest
 	public void tcEfurn001Fun03a_furnaceSmeltsSand(GameTestHelper helper) {
 		assertProduces(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(Items.SAND, 4), Items.GLASS, 1);
 	}
 
-	/** @implements TC-EFURN-001-FUN03 — electric furnace mod recipes: cobblestone→stone. @covers R-GUI-02 */
+	/**
+	 * @implements TC-EFURN-001-FUN03 — electric furnace smelts cobblestone into stone via the vanilla
+	 *     {@code minecraft:smelting} fallback (MOD-086 dropped the duplicate mod-side JSON).
+	 * @covers R-GUI-02
+	 */
 	@GameTest
 	public void tcEfurn001Fun03b_furnaceSmeltsCobblestone(GameTestHelper helper) {
 		assertProduces(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(Items.COBBLESTONE, 4), Items.STONE, 1);

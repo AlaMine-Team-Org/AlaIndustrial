@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.BatteryBoxBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
+import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
 import dev.alaindustrial.block.ElectricFurnaceBlock;
@@ -106,6 +107,8 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("insulated_copper_cable", CableBlock::new, machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion()));
 	public static final DeferredBlock<CableBlock> INSULATED_TIN_CABLE =
 			BLOCKS.registerBlock("insulated_tin_cable", CableBlock::new, machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion()));
+	public static final DeferredBlock<ItemPipeBlock> ITEM_PIPE =
+			BLOCKS.registerBlock("item_pipe", ItemPipeBlock::new, machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()));
 
 	// --- Ores (plain Block, harvest tier is tag-driven — see ModBlocks#props) ---
 	public static final DeferredBlock<Block> TIN_ORE =
@@ -226,6 +229,7 @@ public final class ModBlocksNeoForge {
 		ModContent.TIN_CABLE = TIN_CABLE::get;
 		ModContent.INSULATED_COPPER_CABLE = INSULATED_COPPER_CABLE::get;
 		ModContent.INSULATED_TIN_CABLE = INSULATED_TIN_CABLE::get;
+		ModContent.ITEM_PIPE = ITEM_PIPE::get;
 		ModContent.TIN_ORE = TIN_ORE::get;
 		ModContent.DEEPSLATE_TIN_ORE = DEEPSLATE_TIN_ORE::get;
 		ModContent.SILVER_ORE = SILVER_ORE::get;

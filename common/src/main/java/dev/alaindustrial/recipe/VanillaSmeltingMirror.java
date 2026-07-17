@@ -20,7 +20,7 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
  * {@code alaindustrial:smelting} recipe matches (see {@code ElectricFurnaceBlockEntity}), so every
  * vanilla smelt is something the machine really performs. Registering the block as a crafting station
  * for the vanilla category (MOD-076) only makes that visible from the <em>vanilla</em> side; players
- * opening the machine's own category still saw the mod's 17 recipes alone. These mirrors close that
+ * opening the machine's own category still saw only the mod's own recipes. These mirrors close that
  * gap by presenting each vanilla smelt as an {@link AlaProcessingRecipe} carrying the furnace's real
  * EU cost and duration.
  *
@@ -28,12 +28,13 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
  * {@link net.minecraft.world.item.crafting.RecipeManager}. The machine keeps using the live vanilla
  * recipe at runtime, so behaviour and shown numbers come from the same place.
  *
- * <p><b>Known limitation:</b> the mod ships five recipes that numerically duplicate the vanilla
- * fallback (cobblestone → stone, sand → glass, raw copper/gold/iron → ingot — the "balance anchors"
- * documented in the electric furnace spec). Those appear twice in the category: once as the mod
- * recipe, once as the mirror. Both show the identical 200 EU / 5 s, so neither is wrong. They are not
- * de-duplicated because REI's server-side display filler gets no access to the recipe manager, and
- * filtering on JEI alone would make the two loaders disagree.
+ * <p><b>Single source of truth (Mekanism-style).</b> The mod ships no {@code alaindustrial:smelting}
+ * recipe that a vanilla {@code minecraft:smelting} recipe already covers with the same input and
+ * output (e.g. cobblestone → stone, sand → glass, raw copper/gold/iron → ingot). Those smelts live
+ * entirely in the vanilla fallback, and the mirrors below surface them in the electric furnace
+ * category once. Writing a mod-side duplicate would either double-list it here, or pin a static EU
+ * cost that drifts from the runtime once {@code globalMachineSpeedMultiplier} rounds its factors
+ * separately (see {@link Config#electricFurnaceVanillaSmeltEu}); the fallback avoids both.
  */
 public final class VanillaSmeltingMirror {
 	/**

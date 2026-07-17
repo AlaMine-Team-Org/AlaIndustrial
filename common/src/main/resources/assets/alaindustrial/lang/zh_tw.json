@@ -84,6 +84,7 @@
 	"gui.alaindustrial.upgrades": "升級",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
 	"gui.alaindustrial.water": "%1$s / %2$s mB",
+	"gui.alaindustrial.fluid": "%1$s：%2$s / %3$s mB",
 	"gui.alaindustrial.output": "輸出：%s EU/t",
 	"gui.alaindustrial.mode": "模式：%s",
 	"gui.alaindustrial.branch": "分支：%s",
@@ -315,5 +316,19 @@
 	"tooltip.alaindustrial.teleporter_remote.count": "傳送站：%s",
 	"alaindustrial.teleporter.default_name": "傳送器 %s",
 	"gui.alaindustrial.teleporter.coords": "X: %s  Y: %s  Z: %s",
-	"gui.alaindustrial.teleporter.more": "%s/%s"
+	"gui.alaindustrial.teleporter.more": "%s/%s",
+	"alaindustrial.teleporter.rebound": "已將 %s 替換為 %s",
+	"tooltip.alaindustrial.teleporter_remote.bound": "已綁定：%s",
+	"tooltip.alaindustrial.teleporter_remote.at": "位於 %s, %s, %s",
+	"block.alaindustrial.item_pipe": "物品管線",
+	"item.alaindustrial.wrench": "扳手",
+	"message.alaindustrial.item_pipe.mode": "管線面：%s",
+	"message.alaindustrial.item_pipe.mode.neutral": "中性",
+	"message.alaindustrial.item_pipe.mode.extract": "提取",
+	"message.alaindustrial.item_pipe.mode.insert": "插入",
+	"message.alaindustrial.item_pipe.mode.disabled": "已停用",
+	"item.alaindustrial.item_pipe.hint": "在箱子和機器之間搬運物品。",
+	"item.alaindustrial.item_pipe.hint2": "用扳手設定每一面。",
+	"item.alaindustrial.wrench.hint": "Shift + 右鍵：拆卸方塊",
+	"item.alaindustrial.item_pipe.tech.rate": "速度：%1$s 個 / %2$s 刻（%3$s/秒）"
 }

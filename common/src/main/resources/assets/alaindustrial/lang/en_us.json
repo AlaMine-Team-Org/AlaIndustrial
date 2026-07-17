@@ -112,6 +112,7 @@
 	"gui.alaindustrial.upgrades": "Upgrades",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
 	"gui.alaindustrial.water": "%1$s / %2$s mB",
+	"gui.alaindustrial.fluid": "%1$s: %2$s / %3$s mB",
 	"gui.alaindustrial.output": "Output: %s EU/t",
 	"gui.alaindustrial.mode": "Mode: %s",
 	"gui.alaindustrial.branch": "Branch: %s",
@@ -315,5 +316,19 @@
 	"tooltip.alaindustrial.teleporter_remote.count": "Stations: %s",
 	"alaindustrial.teleporter.default_name": "Teleporter %s",
 	"gui.alaindustrial.teleporter.coords": "X: %s  Y: %s  Z: %s",
-	"gui.alaindustrial.teleporter.more": "%s/%s"
+	"gui.alaindustrial.teleporter.more": "%s/%s",
+	"block.alaindustrial.item_pipe": "Item Pipe",
+	"item.alaindustrial.wrench": "Wrench",
+	"message.alaindustrial.item_pipe.mode": "Pipe face: %s",
+	"message.alaindustrial.item_pipe.mode.neutral": "Neutral",
+	"message.alaindustrial.item_pipe.mode.extract": "Extract",
+	"message.alaindustrial.item_pipe.mode.insert": "Insert",
+	"message.alaindustrial.item_pipe.mode.disabled": "Disabled",
+	"item.alaindustrial.item_pipe.hint": "Moves items between chests and machines.",
+	"item.alaindustrial.item_pipe.hint2": "Set each side with a wrench.",
+	"item.alaindustrial.wrench.hint": "Shift + right-click: dismantle a block",
+	"item.alaindustrial.item_pipe.tech.rate": "Rate: %1$s items / %2$s ticks (%3$s/s)",
+	"alaindustrial.teleporter.rebound": "Replaced %s with %s",
+	"tooltip.alaindustrial.teleporter_remote.bound": "Bound: %s",
+	"tooltip.alaindustrial.teleporter_remote.at": "at %s, %s, %s"
 }

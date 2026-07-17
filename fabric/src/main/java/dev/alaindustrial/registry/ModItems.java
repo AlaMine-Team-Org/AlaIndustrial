@@ -109,6 +109,7 @@ public final class ModItems {
 	public static final Item RAW_URANIUM = item("raw_uranium");
 	public static final Item URANIUM_INGOT = item("uranium_ingot");
 	public static final Item NETWORK_ANALYZER = networkAnalyzer("network_analyzer");
+	public static final Item WRENCH = wrench("wrench");
 	// Teleporter Remote (MOD-092): registered but kept out of the creative tab + no recipe until
 	// MOD-093 finishes the feature (same treatment as the station — see CreativeTabContent).
 	public static final Item TELEPORTER_REMOTE = teleporterRemote("teleporter_remote");
@@ -160,6 +161,9 @@ public final class ModItems {
 	public static final BlockItem TIN_CABLE_ITEM = blockItem("tin_cable", ModBlocks.TIN_CABLE);
 	public static final BlockItem INSULATED_COPPER_CABLE_ITEM = blockItem("insulated_copper_cable", ModBlocks.INSULATED_COPPER_CABLE);
 	public static final BlockItem INSULATED_TIN_CABLE_ITEM = blockItem("insulated_tin_cable", ModBlocks.INSULATED_TIN_CABLE);
+	// MOD-108: its own BlockItem subclass so the pipe can carry a tooltip (plain hint + Shift for the
+	// throughput numbers) — a plain blockItem() has none.
+	public static final BlockItem ITEM_PIPE_ITEM = pipeItem("item_pipe", ModBlocks.ITEM_PIPE);
 	public static final BlockItem MACERATOR_ITEM = blockItem("macerator", ModBlocks.MACERATOR);
 	public static final BlockItem BATTERY_BOX_ITEM = blockItem("battery_box", ModBlocks.BATTERY_BOX);
 	public static final BlockItem TELEPORTER_ITEM = blockItem("teleporter", ModBlocks.TELEPORTER);
@@ -216,6 +220,12 @@ public final class ModItems {
 		// treats a missing component as TRAVERSE instead, and switchMode persists it on first use.
 		return Registry.register(BuiltInRegistries.ITEM, key,
 				new NetworkAnalyzerItem(new Item.Properties().setId(key).stacksTo(1)));
+	}
+
+	private static Item wrench(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new dev.alaindustrial.item.WrenchItem(new Item.Properties().setId(key).stacksTo(1)));
 	}
 
 	private static Item pouch(String path) {
@@ -324,6 +334,14 @@ public final class ModItems {
 		return Registry.register(BuiltInRegistries.ITEM, key, item);
 	}
 
+	/** {@link #blockItem} for the item pipe, whose block item carries a tooltip (MOD-108). */
+	private static BlockItem pipeItem(String path, Block block) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		BlockItem item = new dev.alaindustrial.item.ItemPipeBlockItem(block,
+				new Item.Properties().useBlockDescriptionPrefix().setId(key));
+		return Registry.register(BuiltInRegistries.ITEM, key, item);
+	}
+
 	// Torch-style item (MOD-085): places `standing` on the floor, `wall` on a vertical face — exactly how
 	// vanilla Items.TORCH is built (StandingAndWallBlockItem(TORCH, WALL_TORCH, Direction.DOWN, p)).
 	private static BlockItem standingAndWallBlockItem(String path, Block standing, Block wall) {
@@ -368,6 +386,7 @@ public final class ModItems {
 				output.accept(GOLD_CHEST_ITEM);
 					output.accept(STOCK_DISPLAY_FRAME);
 					output.accept(COPPER_CABLE_ITEM);
+					output.accept(ITEM_PIPE_ITEM);
 					// Ores + materials
 					output.accept(TIN_ORE_ITEM);
 					output.accept(DEEPSLATE_TIN_ORE_ITEM);
@@ -410,6 +429,7 @@ public final class ModItems {
 					output.accept(EMERALD_DUST);
 					output.accept(LAPIS_DUST);
 						output.accept(NETWORK_ANALYZER);
+						output.accept(WRENCH);
 						output.accept(BATTERY_POUCH);
 						output.accept(BATTERY);
 						output.accept(ENERGY_PACK);
@@ -480,6 +500,7 @@ public final class ModItems {
 					output.insertAfter(Items.DIAMOND_HOE, ModContent.SCYTHE_DIAMOND.get());
 					output.insertAfter(Items.NETHERITE_HOE, ModContent.SCYTHE_NETHERITE.get());
 					output.insertAfter(Items.COMPASS, ModContent.NETWORK_ANALYZER.get());
+					output.accept(ModContent.WRENCH.get());
 					output.accept(ModContent.BATTERY_POUCH.get());
 					output.accept(ModContent.ENERGY_PACK.get());
 					output.accept(ModContent.ELECTRIC_DRILL.get());
@@ -543,6 +564,7 @@ public final class ModItems {
 		ModContent.RAW_URANIUM = () -> RAW_URANIUM;
 		ModContent.URANIUM_INGOT = () -> URANIUM_INGOT;
 		ModContent.NETWORK_ANALYZER = () -> NETWORK_ANALYZER;
+		ModContent.WRENCH = () -> WRENCH;
 		ModContent.TELEPORTER_REMOTE = () -> TELEPORTER_REMOTE;
 		ModContent.BATTERY_POUCH = () -> BATTERY_POUCH;
 		ModContent.BATTERY = () -> BATTERY;
@@ -573,6 +595,7 @@ public final class ModItems {
 		ModContent.TIN_CABLE_ITEM = () -> TIN_CABLE_ITEM;
 		ModContent.INSULATED_COPPER_CABLE_ITEM = () -> INSULATED_COPPER_CABLE_ITEM;
 		ModContent.INSULATED_TIN_CABLE_ITEM = () -> INSULATED_TIN_CABLE_ITEM;
+		ModContent.ITEM_PIPE_ITEM = () -> ITEM_PIPE_ITEM;
 		ModContent.MACERATOR_ITEM = () -> MACERATOR_ITEM;
 		ModContent.BATTERY_BOX_ITEM = () -> BATTERY_BOX_ITEM;
 		ModContent.TELEPORTER_ITEM = () -> TELEPORTER_ITEM;

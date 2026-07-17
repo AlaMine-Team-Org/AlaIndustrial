@@ -4,12 +4,17 @@ import dev.alaindustrial.command.AlaCommand;
 import dev.alaindustrial.core.EnergyLookup;
 import dev.alaindustrial.core.EnergyTransactions;
 import dev.alaindustrial.core.FluidLookup;
+import dev.alaindustrial.core.ItemLookup;
 import dev.alaindustrial.core.NetworkManager;
+import dev.alaindustrial.core.ItemNetworkManager;
 import dev.alaindustrial.core.fabric.FabricEnergyLookup;
 import dev.alaindustrial.core.fabric.FabricEnergyTransactions;
 import dev.alaindustrial.core.fabric.FabricFluidLookup;
 import dev.alaindustrial.core.fabric.FabricItemEnergyBridge;
+import dev.alaindustrial.core.fabric.FabricItemFluidBridge;
+import dev.alaindustrial.core.fabric.FabricItemLookup;
 import dev.alaindustrial.item.ItemEnergyBridge;
+import dev.alaindustrial.item.ItemFluidBridge;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.network.fabric.FabricNetworkDispatcher;
@@ -49,9 +54,16 @@ public class IndustrializationFabric implements ModInitializer {
 		// MOD-028: install the Fabric fluid lookup seam (same seam shape as energy) so common fluid
 		// content (the pump) can resolve a neighbour's FluidPort without importing Fabric Transfer types.
 		FluidLookup.install(new FabricFluidLookup());
+		// MOD-104: item-pipe endpoint lookup. The common pipe graph stays loader-neutral; this
+		// adapter resolves the neighbouring inventory through Fabric Transfer API.
+		ItemLookup.install(new FabricItemLookup());
 		// MOD-084: install the item-energy bridge seam, so the worn Energy Pack can charge other mods'
 		// powered items through EnergyStorage.ITEM without common code importing Team Reborn types.
 		ItemEnergyBridge.install(new FabricItemEnergyBridge());
+		// MOD-107: install the item-fluid bridge seam, so a machine's own slots can exchange a bucket with
+		// whatever fluid container sits in them — vanilla bucket, our capsule, or another mod's cell — via
+		// FluidStorage.ITEM, without common code importing Fabric Transfer types.
+		ItemFluidBridge.install(new FabricItemFluidBridge());
 		// MOD-063: item-side fluid capability for the Vacuum Capsule, so other mods' pipes/tanks can fill
 		// or drain a capsule sitting in a slot. Registered after ModItems.init() below (needs the items).
 
@@ -211,6 +223,7 @@ public class IndustrializationFabric implements ModInitializer {
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			for (net.minecraft.server.level.ServerLevel lvl : server.getAllLevels()) {
 				NetworkManager.tickAll(lvl);
+				ItemNetworkManager.tickAll(lvl);
 			}
 			// Teleport warmups are per-player, not per-level, so they tick once per server tick
 			// (MOD-092) rather than once per level.
@@ -234,8 +247,14 @@ public class IndustrializationFabric implements ModInitializer {
 		});
 		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
 				dev.alaindustrial.teleporter.TeleportWarmupManager.forget(handler.player.getUUID()));
-		ServerLevelEvents.UNLOAD.register((server, level) -> NetworkManager.clear(level));
-		ServerLifecycleEvents.SERVER_STOPPED.register(server -> NetworkManager.clearAll());
+		ServerLevelEvents.UNLOAD.register((server, level) -> {
+			NetworkManager.clear(level);
+			ItemNetworkManager.clear(level);
+		});
+		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+			NetworkManager.clearAll();
+			ItemNetworkManager.clearAll();
+		});
 
 		// MOD-077: shift-right-clicking a mod fluid tank (geothermal generator, pump) with a vanilla lava
 		// bucket loads the bucket into the tank instead of spilling it. UseBlockCallback fires early on both

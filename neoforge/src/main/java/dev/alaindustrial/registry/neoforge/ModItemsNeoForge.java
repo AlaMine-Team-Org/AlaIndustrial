@@ -122,6 +122,8 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> URANIUM_INGOT = ITEMS.registerItem("uranium_ingot", Item::new);
 	public static final DeferredItem<NetworkAnalyzerItem> NETWORK_ANALYZER =
 			ITEMS.registerItem("network_analyzer", NetworkAnalyzerItem::new, p -> p.stacksTo(1));
+	public static final DeferredItem<dev.alaindustrial.item.WrenchItem> WRENCH =
+			ITEMS.registerItem("wrench", dev.alaindustrial.item.WrenchItem::new, p -> p.stacksTo(1));
 
 	// Teleporter Remote (MOD-092) — hidden from the creative tab until MOD-093 (see CreativeTabContent).
 	public static final DeferredItem<TeleporterRemoteItem> TELEPORTER_REMOTE =
@@ -242,6 +244,11 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("insulated_copper_cable", ModBlocksNeoForge.INSULATED_COPPER_CABLE);
 	public static final DeferredItem<BlockItem> INSULATED_TIN_CABLE_ITEM =
 			ITEMS.registerSimpleBlockItem("insulated_tin_cable", ModBlocksNeoForge.INSULATED_TIN_CABLE);
+	// MOD-108: not registerSimpleBlockItem — the pipe needs its own BlockItem subclass to carry a
+	// tooltip (plain hint + Shift for the throughput numbers).
+	public static final DeferredItem<BlockItem> ITEM_PIPE_ITEM = ITEMS.registerItem("item_pipe",
+			properties -> new dev.alaindustrial.item.ItemPipeBlockItem(
+					ModBlocksNeoForge.ITEM_PIPE.get(), properties.useBlockDescriptionPrefix()));
 	public static final DeferredItem<BlockItem> TIN_ORE_ITEM =
 			ITEMS.registerSimpleBlockItem("tin_ore", ModBlocksNeoForge.TIN_ORE);
 	public static final DeferredItem<BlockItem> DEEPSLATE_TIN_ORE_ITEM =
@@ -337,6 +344,7 @@ public final class ModItemsNeoForge {
 		// NETWORK_ANALYZER is a DeferredItem<NetworkAnalyzerItem>; the slot is Supplier<Item>. Generics are
 		// invariant, so bind via the (still-lazy) method reference — see ModBlocksNeoForge#init javadoc.
 		ModContent.NETWORK_ANALYZER = NETWORK_ANALYZER::get;
+		ModContent.WRENCH = WRENCH::get;
 		ModContent.TELEPORTER_REMOTE = TELEPORTER_REMOTE::get;
 		// Same invariant-generics story as NETWORK_ANALYZER above.
 		ModContent.BATTERY_POUCH = BATTERY_POUCH::get;
@@ -377,6 +385,7 @@ public final class ModItemsNeoForge {
 		ModContent.TIN_CABLE_ITEM = TIN_CABLE_ITEM;
 		ModContent.INSULATED_COPPER_CABLE_ITEM = INSULATED_COPPER_CABLE_ITEM;
 		ModContent.INSULATED_TIN_CABLE_ITEM = INSULATED_TIN_CABLE_ITEM;
+		ModContent.ITEM_PIPE_ITEM = ITEM_PIPE_ITEM;
 		ModContent.TIN_ORE_ITEM = TIN_ORE_ITEM;
 		ModContent.DEEPSLATE_TIN_ORE_ITEM = DEEPSLATE_TIN_ORE_ITEM;
 		ModContent.SILVER_ORE_ITEM = SILVER_ORE_ITEM;

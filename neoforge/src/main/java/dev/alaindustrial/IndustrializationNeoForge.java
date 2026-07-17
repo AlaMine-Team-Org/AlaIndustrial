@@ -4,10 +4,13 @@ import dev.alaindustrial.core.EnergyLookup;
 import dev.alaindustrial.item.ItemEnergyBridge;
 import dev.alaindustrial.core.EnergyTransactions;
 import dev.alaindustrial.core.FluidLookup;
+import dev.alaindustrial.core.ItemLookup;
 import dev.alaindustrial.core.neoforge.BufferAsEnergyHandler;
 import dev.alaindustrial.core.neoforge.NeoForgeEnergyLookup;
 import dev.alaindustrial.core.neoforge.NeoForgeEnergyTransactions;
 import dev.alaindustrial.core.neoforge.NeoForgeFluidLookup;
+import dev.alaindustrial.core.neoforge.NeoForgeItemLookup;
+import dev.alaindustrial.core.neoforge.ContainerAsItemResourceHandler;
 import dev.alaindustrial.core.neoforge.TankAsResourceHandler;
 import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.network.neoforge.NeoForgeNetwork;
@@ -20,8 +23,11 @@ import dev.alaindustrial.registry.neoforge.ModMenusNeoForge;
 import java.util.List;
 import dev.alaindustrial.command.AlaCommandCommon;
 import dev.alaindustrial.core.NetworkManager;
+import dev.alaindustrial.core.ItemNetworkManager;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
@@ -37,6 +43,8 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 /**
  * NeoForge {@code @Mod} entrypoint (MOD-022 Phase 3 scaffold). Mirrors the Fabric
@@ -78,9 +86,16 @@ public final class IndustrializationNeoForge {
 		// content (the pump) can resolve a neighbour's FluidPort without importing NeoForge transfer types.
 		// Fluid transactions reuse the already-installed NeoForgeEnergyTransactions (see FluidPort class doc).
 		FluidLookup.install(new NeoForgeFluidLookup());
+		// MOD-104: common item pipes resolve neighbouring inventories through the 26.2
+		// Capabilities.Item.BLOCK transfer API at this loader seam.
+		ItemLookup.install(new NeoForgeItemLookup());
 		// MOD-084: install the item-energy bridge seam, so the worn Energy Pack can charge other mods'
 		// powered items through Capabilities.Energy.ITEM without common code importing NeoForge types.
 		ItemEnergyBridge.install(new dev.alaindustrial.core.neoforge.NeoForgeItemEnergyBridge());
+		// MOD-107: install the item-fluid bridge seam, so a machine's own slots can exchange a bucket with
+		// whatever fluid container sits in them — vanilla bucket, our capsule, or another mod's cell — via
+		// Capabilities.Fluid.ITEM, without common code importing NeoForge transfer types.
+		dev.alaindustrial.item.ItemFluidBridge.install(new dev.alaindustrial.core.neoforge.NeoForgeItemFluidBridge());
 
 		// MOD-022 Phase 3: install the NeoForge packet-send seam so content code dispatches through the
 		// neutral NetworkDispatcher instead of PacketDistributor directly.
@@ -157,6 +172,7 @@ public final class IndustrializationNeoForge {
 		NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post event) -> {
 			for (ServerLevel lvl : event.getServer().getAllLevels()) {
 				NetworkManager.tickAll(lvl);
+				ItemNetworkManager.tickAll(lvl);
 			}
 			// Teleport warmups are per-player, not per-level (MOD-092).
 			dev.alaindustrial.teleporter.TeleportWarmupManager.tickAll(event.getServer());
@@ -181,9 +197,13 @@ public final class IndustrializationNeoForge {
 		NeoForge.EVENT_BUS.addListener((LevelEvent.Unload event) -> {
 			if (event.getLevel() instanceof ServerLevel lvl) {
 				NetworkManager.clear(lvl);
+				ItemNetworkManager.clear(lvl);
 			}
 		});
-		NeoForge.EVENT_BUS.addListener((ServerStoppedEvent event) -> NetworkManager.clearAll());
+		NeoForge.EVENT_BUS.addListener((ServerStoppedEvent event) -> {
+			NetworkManager.clearAll();
+			ItemNetworkManager.clearAll();
+		});
 		// MOD-077: shift-right-clicking a mod fluid tank (geothermal generator, pump) with a vanilla lava
 		// bucket loads the bucket into the tank instead of spilling it. RightClickBlock fires early on both
 		// sides — before vanilla's sneak-bypass runs BucketItem#useOn — so it can intercept the spill. The
@@ -268,6 +288,21 @@ public final class IndustrializationNeoForge {
 		event.registerBlockEntity(fluidCap, ModBlockEntitiesNeoForge.PUMP.get(),
 				(be, side) -> TankAsResourceHandler.of(be.fluidPort(side)));
 
+		// MOD-104: publish transactional, side-aware item views for mod containers. This is required
+		// because a vanilla Container is not automatically a 26.2 ResourceHandler on NeoForge.
+		BlockCapability<ResourceHandler<ItemResource>, Direction> itemCap = Capabilities.Item.BLOCK;
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GENERATOR);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.MACERATOR);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.BATTERY_BOX);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.ELECTRIC_FURNACE);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.EXTRACTOR);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.COMPRESSOR);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.PUMP);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.IRON_CHEST);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SILVER_CHEST);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GOLD_CHEST);
+
 		// MOD-063: item-side fluid capability for the Vacuum Capsule, so other mods' pipes/tanks can fill
 		// or drain a capsule sitting in a slot. One CapsuleResourceHandler per stack access, both items.
 		event.registerItem(Capabilities.Fluid.ITEM,
@@ -284,5 +319,11 @@ public final class IndustrializationNeoForge {
 		// MOD-084: a fake "other mod" energy item, so the gametests can prove the pack charges foreign
 		// items. Dev/gametest only — inert in a shipped jar (see the class doc).
 		dev.alaindustrial.gametest.neoforge.ForeignEnergyItemStandIn.register(event);
+	}
+
+	private static <T extends BlockEntity & net.minecraft.world.Container> void registerItemContainer(
+			RegisterCapabilitiesEvent event, BlockCapability<ResourceHandler<ItemResource>, Direction> capability,
+			DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> type) {
+		event.registerBlockEntity(capability, type.get(), ContainerAsItemResourceHandler::of);
 	}
 }

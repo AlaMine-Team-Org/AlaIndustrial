@@ -9,7 +9,8 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 
 /** Menu for the pump: fluid-bucket input + empty-bucket output. Mirrors the geothermal generator menu,
- * but the client stub uses a 7-wide {@code ContainerData} to match the pump's tank-level sync channels. */
+ * but the client stub uses a 7-wide {@code ContainerData} to match the pump's tank-level sync channels
+ * (MOD-099: the fluid registry-id channel lets the client name and colour any fluid). */
 public class PumpMenu extends MachineMenu {
 	/** Server side. */
 	public PumpMenu(int syncId, Inventory playerInventory, MachineBlockEntity be, ContainerLevelAccess access) {
@@ -19,7 +20,8 @@ public class PumpMenu extends MachineMenu {
 
 	/** Client side. */
 	public PumpMenu(int syncId, Inventory playerInventory) {
-		// SimpleContainerData width must match PumpBlockEntity.getDataAccess() (7: 4 base + tank permille/denominator/fluid-id).
+		// SimpleContainerData width must match PumpBlockEntity.getDataAccess() (7: 4 base + tank
+		// permille/denominator/fluid-registry-id).
 		super(ModContent.PUMP_MENU.get(), syncId, playerInventory, new SimpleContainer(4 + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(7), ContainerLevelAccess.NULL, ModContent.PUMP.get());
 	}
@@ -45,8 +47,20 @@ public class PumpMenu extends MachineMenu {
 		return data.get(5);
 	}
 
-	/** Fluid-type id (0 empty, 1 lava, 2 water) — sync channel 6. */
-	public int getFluidId() {
+	/**
+	 * The tank fluid's {@code BuiltInRegistries.FLUID} registry id (channel 6), or {@code IdMap.DEFAULT}
+	 * (-1) when empty. MOD-099: replaces the old 0/1/2 = none/lava/water encoding so any fluid resolves.
+	 */
+	public int getFluidRegistryId() {
 		return data.get(6);
+	}
+
+	/**
+	 * How many sync channels this menu is bound to. Lets a test assert the client stub's width matches what
+	 * {@code PumpBlockEntity.getDataAccess()} projects — a mismatch only surfaces on a real client, where a
+	 * too-narrow stub throws and a too-wide one reads stale zeros.
+	 */
+	public int getDataChannelCount() {
+		return data.getCount();
 	}
 }

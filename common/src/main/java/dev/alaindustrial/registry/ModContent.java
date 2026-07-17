@@ -80,6 +80,7 @@ public final class ModContent {
 	public static Supplier<Block> TIN_CABLE = unbound("TIN_CABLE");
 	public static Supplier<Block> INSULATED_COPPER_CABLE = unbound("INSULATED_COPPER_CABLE");
 	public static Supplier<Block> INSULATED_TIN_CABLE = unbound("INSULATED_TIN_CABLE");
+	public static Supplier<Block> ITEM_PIPE = unbound("ITEM_PIPE");
 	public static Supplier<Block> MACERATOR = unbound("MACERATOR");
 	public static Supplier<Block> BATTERY_BOX = unbound("BATTERY_BOX");
 	/** Teleporter station (MOD-091) — registered but hidden from the creative tab until MOD-093. */
@@ -163,6 +164,7 @@ public final class ModContent {
 	public static Supplier<Item> RAW_URANIUM = unbound("RAW_URANIUM");
 	public static Supplier<Item> URANIUM_INGOT = unbound("URANIUM_INGOT");
 	public static Supplier<Item> NETWORK_ANALYZER = unbound("NETWORK_ANALYZER");
+	public static Supplier<Item> WRENCH = unbound("WRENCH");
 	/** Teleporter Remote (MOD-092) — hidden from the creative tab until MOD-093 completes the feature. */
 	public static Supplier<Item> TELEPORTER_REMOTE = unbound("TELEPORTER_REMOTE");
 	public static Supplier<Item> BATTERY_POUCH = unbound("BATTERY_POUCH");
@@ -208,6 +210,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> TIN_CABLE_ITEM = unbound("TIN_CABLE_ITEM");
 	public static Supplier<BlockItem> INSULATED_COPPER_CABLE_ITEM = unbound("INSULATED_COPPER_CABLE_ITEM");
 	public static Supplier<BlockItem> INSULATED_TIN_CABLE_ITEM = unbound("INSULATED_TIN_CABLE_ITEM");
+	public static Supplier<BlockItem> ITEM_PIPE_ITEM = unbound("ITEM_PIPE_ITEM");
 	public static Supplier<BlockItem> MACERATOR_ITEM = unbound("MACERATOR_ITEM");
 	public static Supplier<BlockItem> BATTERY_BOX_ITEM = unbound("BATTERY_BOX_ITEM");
 	public static Supplier<BlockItem> TELEPORTER_ITEM = unbound("TELEPORTER_ITEM");
@@ -242,6 +245,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> MOONLIT_SOLAR_PANEL_BE = unbound("MOONLIT_SOLAR_PANEL_BE");
 	public static Supplier<BlockEntityType<?>> DAYLIGHT_SOLAR_PANEL_BE = unbound("DAYLIGHT_SOLAR_PANEL_BE");
 	public static Supplier<BlockEntityType<?>> COPPER_CABLE_BE = unbound("COPPER_CABLE_BE");
+	public static Supplier<BlockEntityType<?>> ITEM_PIPE_BE = unbound("ITEM_PIPE_BE");
 	public static Supplier<BlockEntityType<?>> MACERATOR_BE = unbound("MACERATOR_BE");
 	public static Supplier<BlockEntityType<?>> BATTERY_BOX_BE = unbound("BATTERY_BOX_BE");
 	public static Supplier<BlockEntityType<?>> TELEPORTER_BE = unbound("TELEPORTER_BE");

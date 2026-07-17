@@ -1,9 +1,0 @@
-{
-  "type": "alaindustrial:smelting",
-  "ingredient": "minecraft:raw_copper",
-  "result": {
-    "id": "minecraft:copper_ingot",
-    "count": 1
-  },
-  "energy": 200
-}

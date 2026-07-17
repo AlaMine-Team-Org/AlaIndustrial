@@ -1,9 +1,0 @@
-{
-  "type": "alaindustrial:smelting",
-  "ingredient": "minecraft:raw_gold",
-  "result": {
-    "id": "minecraft:gold_ingot",
-    "count": 1
-  },
-  "energy": 200
-}

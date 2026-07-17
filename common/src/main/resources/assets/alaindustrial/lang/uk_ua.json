@@ -84,6 +84,7 @@
 	"gui.alaindustrial.upgrades": "Покращення",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
 	"gui.alaindustrial.water": "%1$s / %2$s mB",
+	"gui.alaindustrial.fluid": "%1$s: %2$s / %3$s mB",
 	"gui.alaindustrial.output": "Вихід: %s EU/t",
 	"gui.alaindustrial.mode": "Режим: %s",
 	"gui.alaindustrial.branch": "Гілка: %s",
@@ -315,5 +316,19 @@
 	"tooltip.alaindustrial.teleporter_remote.count": "Станцій: %s",
 	"alaindustrial.teleporter.default_name": "Телепорт %s",
 	"gui.alaindustrial.teleporter.coords": "X: %s  Y: %s  Z: %s",
-	"gui.alaindustrial.teleporter.more": "%s/%s"
+	"gui.alaindustrial.teleporter.more": "%s/%s",
+	"alaindustrial.teleporter.rebound": "Точку %s замінено на %s",
+	"tooltip.alaindustrial.teleporter_remote.bound": "Прив’язаний: %s",
+	"tooltip.alaindustrial.teleporter_remote.at": "на %s, %s, %s",
+	"block.alaindustrial.item_pipe": "Предметна труба",
+	"item.alaindustrial.wrench": "Гайковий ключ",
+	"message.alaindustrial.item_pipe.mode": "Сторона труби: %s",
+	"message.alaindustrial.item_pipe.mode.neutral": "Нейтральна",
+	"message.alaindustrial.item_pipe.mode.extract": "Вилучення",
+	"message.alaindustrial.item_pipe.mode.insert": "Вставлення",
+	"message.alaindustrial.item_pipe.mode.disabled": "Вимкнено",
+	"item.alaindustrial.item_pipe.hint": "Переносить предмети між скринями та механізмами.",
+	"item.alaindustrial.item_pipe.hint2": "Боки налаштовуються ключем.",
+	"item.alaindustrial.wrench.hint": "Shift + ПКМ: скрутити блок",
+	"item.alaindustrial.item_pipe.tech.rate": "Швидкість: %1$s предм. / %2$s тиків (%3$s/с)"
 }

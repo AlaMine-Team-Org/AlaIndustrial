@@ -12,11 +12,15 @@ import dev.alaindustrial.core.FluidMover;
 import dev.alaindustrial.core.FluidPort;
 import dev.alaindustrial.core.FluidPortHost;
 import dev.alaindustrial.core.FluidTank;
+import dev.alaindustrial.item.ItemFluidBridge;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.IdMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -80,8 +84,13 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 	/** Internal fluid tank: 10 buckets, extractable from any side (so neighbours may pull from it). */
 	public static final long TANK_CAPACITY = FluidAmounts.BUCKET * 10;
 
-	/** Fluid-type ids synced on ContainerData channel 6 (0 empty, 1 lava, 2 water). */
-	public static final int FLUID_NONE = 0, FLUID_LAVA = 1, FLUID_WATER = 2;
+	/**
+	 * Sentinel for an empty tank on the sync channel (registry-id slot): the vanilla {@code IdMap}
+	 * default. MOD-099: the tank now holds any fluid, so channel 6 carries the fluid's
+	 * {@link BuiltInRegistries#FLUID} registry id (resolved back to a fluid client-side) instead of
+	 * the old fixed 0/1/2 = none/lava/water encoding.
+	 */
+	public static final int FLUID_ID_NONE = net.minecraft.core.IdMap.DEFAULT;
 
 	public final FluidTank fluidTank = new FluidTank(TANK_CAPACITY,
 			PumpBlockEntity::isPumpableFluid,
@@ -100,29 +109,14 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 				Config.pumpBuffer, EnergyTier.LV.maxVoltage(), 0L);
 	}
 
-	/** Whitelist of fluids the pump will accept (into the tank or from a bucket). */
+	/**
+	 * MOD-099: the pump accepts <em>any</em> non-empty fluid, so a Vacuum Capsule (or another mod's
+	 * container) can push whatever fluid it carries into the tank — not just lava/water. The tank stays
+	 * single-variant (enforced by {@link FluidTank#insert}), so mixing is still impossible by
+	 * construction.
+	 */
 	private static boolean isPumpableFluid(FluidHolder fluid) {
-		return !fluid.isEmpty() && (fluid.is(Fluids.LAVA) || fluid.is(Fluids.WATER));
-	}
-
-	/** Stable id for a fluid for sync/tooltip; mirrors {@link #fluidIdToHolder}. */
-	private static int fluidId(FluidHolder fluid) {
-		if (fluid.is(Fluids.LAVA)) {
-			return FLUID_LAVA;
-		}
-		if (fluid.is(Fluids.WATER)) {
-			return FLUID_WATER;
-		}
-		return FLUID_NONE;
-	}
-
-	/** Inverse of {@link #fluidId}. */
-	private static FluidHolder fluidIdToHolder(int id) {
-		return switch (id) {
-			case FLUID_LAVA -> FluidHolder.of(Fluids.LAVA);
-			case FLUID_WATER -> FluidHolder.of(Fluids.WATER);
-			default -> FluidHolder.EMPTY;
-		};
+		return !fluid.isEmpty();
 	}
 
 	/**
@@ -148,10 +142,11 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 		boolean worked = false;
 		int euPerBucket = Math.max(1, Config.pumpEuPerBucket);
 
-		// 1) Bucket handling (no EU cost — manual refill/drain, not pumping):
-		//    top row empties a full bucket INTO the tank; bottom row fills an empty bucket FROM the tank.
-		worked |= emptyBucketIntoTank();
-		worked |= fillBucketFromTank();
+		// 1) Container handling (no EU cost — manual refill/drain, not pumping): top row empties a full
+		//    container INTO the tank; bottom row fills an empty container FROM the tank. Buckets, our
+		//    capsule and foreign containers all ride the same item fluid capability (MOD-107).
+		worked |= emptyContainerIntoTank();
+		worked |= fillContainerFromTank();
 
 		// Update BFS scan cooldown
 		if (scanCooldown > 0) {
@@ -195,103 +190,31 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 	}
 
 	/**
-	 * Empty a full fluid bucket from {@link #FILL_INPUT_SLOT} into the tank; the empty bucket drops into
-	 * {@link #FILL_OUTPUT_SLOT}. Mirrors the geothermal generator's fill. No EU cost (manual handling).
+	 * Empty a fluid container from {@link #FILL_INPUT_SLOT} into the tank; the emptied container drops into
+	 * {@link #FILL_OUTPUT_SLOT}. No EU cost (manual handling).
+	 *
+	 * <p>MOD-107: this runs through {@link ItemFluidBridge}, i.e. the loader's item fluid capability, rather
+	 * than a hardcoded lava/water bucket pair. Both loaders publish that capability for vanilla buckets, for
+	 * our own Vacuum Capsule, and every other mod does for its own containers — so one mechanism now serves
+	 * all three, and the tank's any-fluid rule (MOD-099) finally has a way to be fed by hand.
 	 */
-	private boolean emptyBucketIntoTank() {
-		ItemStack in = items.get(FILL_INPUT_SLOT);
-		if (in.isEmpty() || !in.is(Items.LAVA_BUCKET) && !in.is(Items.WATER_BUCKET)) {
-			return false;
-		}
-		FluidHolder fluid = in.is(Items.LAVA_BUCKET) ? FluidHolder.of(Fluids.LAVA) : FluidHolder.of(Fluids.WATER);
-		if (!canPlaceEmptyBucket(FILL_OUTPUT_SLOT)) {
-			return false;
-		}
-		// Dry-run: would the tank accept a full bucket of this fluid? The tank's single-variant guard and
-		// capacity both gate this, so we never consume a bucket we can't store.
-		boolean[] accepted = {false};
-		EnergyTransactions.get().runCommitting(txn -> {
-			long inserted = fluidTank.insert(fluid, FluidAmounts.BUCKET, txn);
-			accepted[0] = inserted >= FluidAmounts.BUCKET;
-		});
-		if (!accepted[0]) {
-			return false;
-		}
-		in.shrink(1);
-		placeItem(FILL_OUTPUT_SLOT, new ItemStack(Items.BUCKET));
-		setChanged();
-		return true;
+	private boolean emptyContainerIntoTank() {
+		return ItemFluidBridge.get()
+				.drainSlotIntoTank(this, FILL_INPUT_SLOT, FILL_OUTPUT_SLOT, fluidTank, FluidAmounts.BUCKET) > 0;
 	}
 
 	/**
-	 * Fill an empty bucket from the tank: take a bucket from {@link #DRAIN_INPUT_SLOT}, extract 1 bucket
-	 * of the tank's current fluid, and drop the filled bucket into {@link #DRAIN_OUTPUT_SLOT}. No EU cost
-	 * (manual handling). The tank is single-variant, so the filled bucket always matches its content.
+	 * Fill an empty container from {@link #DRAIN_INPUT_SLOT} with the tank's fluid; the filled container
+	 * drops into {@link #DRAIN_OUTPUT_SLOT}. No EU cost (manual handling). The tank is single-variant, so
+	 * the filled container always matches its content.
+	 *
+	 * <p>MOD-107: goes through {@link ItemFluidBridge} — see {@link #emptyContainerIntoTank}. This is also
+	 * what lets a modded fluid leave the tank by hand: a vanilla bucket only exists for lava and water, but
+	 * a capsule (or a foreign cell) takes any fluid the tank holds.
 	 */
-	private boolean fillBucketFromTank() {
-		ItemStack in = items.get(DRAIN_INPUT_SLOT);
-		if (!in.is(Items.BUCKET) || in.getCount() < 1) {
-			return false;
-		}
-		if (fluidTank.amount < FluidAmounts.BUCKET || fluidTank.fluid.isEmpty()) {
-			return false;
-		}
-		ItemStack fullBucket = fullBucketItem(fluidTank.fluid);
-		if (fullBucket == null) {
-			return false;
-		}
-		if (!canPlaceItemInSlot(DRAIN_OUTPUT_SLOT, fullBucket)) {
-			return false;
-		}
-		// Dry-run extract: would the tank give up a full bucket? extract requires an exact fluid match.
-		boolean[] extracted = {false};
-		EnergyTransactions.get().runCommitting(txn -> {
-			long got = fluidTank.extract(fluidTank.fluid, FluidAmounts.BUCKET, txn);
-			extracted[0] = got >= FluidAmounts.BUCKET;
-		});
-		if (!extracted[0]) {
-			return false;
-		}
-		in.shrink(1);
-		placeItem(DRAIN_OUTPUT_SLOT, fullBucket);
-		setChanged();
-		return true;
-	}
-
-	/** The vanilla filled bucket item matching the tank's current fluid, or {@code null} if unsupported. */
-	private static ItemStack fullBucketItem(FluidHolder fluid) {
-		if (fluid.is(Fluids.LAVA)) {
-			return new ItemStack(Items.LAVA_BUCKET);
-		}
-		if (fluid.is(Fluids.WATER)) {
-			return new ItemStack(Items.WATER_BUCKET);
-		}
-		return null;
-	}
-
-	/** True if an empty bucket (or nothing) is in {@code slot}, so an empty bucket can be added there. */
-	private boolean canPlaceEmptyBucket(int slot) {
-		ItemStack out = items.get(slot);
-		return out.isEmpty() || (out.is(Items.BUCKET) && out.getCount() < out.getMaxStackSize());
-	}
-
-	/** True if {@code stack} can be placed/merged into {@code slot} (empty slot or same item with room). */
-	private boolean canPlaceItemInSlot(int slot, ItemStack stack) {
-		ItemStack out = items.get(slot);
-		if (out.isEmpty()) {
-			return true;
-		}
-		return ItemStack.isSameItemSameComponents(out, stack) && out.getCount() + stack.getCount() <= out.getMaxStackSize();
-	}
-
-	/** Place {@code stack} into {@code slot}: start a new stack if empty, otherwise grow the existing one. */
-	private void placeItem(int slot, ItemStack stack) {
-		ItemStack out = items.get(slot);
-		if (out.isEmpty()) {
-			items.set(slot, stack);
-		} else {
-			out.grow(stack.getCount());
-		}
+	private boolean fillContainerFromTank() {
+		return ItemFluidBridge.get()
+				.fillSlotFromTank(this, DRAIN_INPUT_SLOT, DRAIN_OUTPUT_SLOT, fluidTank, FluidAmounts.BUCKET) > 0;
 	}
 
 	/**
@@ -308,7 +231,9 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 		Direction facing = state.getValue(HorizontalMachineBlock.FACING);
 		BlockPos np = pos.relative(facing);
 
-		// 1) World fluid search. Start BFS from the block directly in front of the pump.
+		// 1) World fluid search. Start BFS from the block directly in front of the pump. MOD-099: the
+		//    pump draws any world fluid source (not just lava/water), so an isPumpableFluid gate is no
+		//    longer fluid-specific — it just rejects an empty fluid state.
 		FluidState startState = level.getFluidState(np);
 		if (!startState.isEmpty()) {
 			Fluid startFluid = startState.getType();
@@ -335,16 +260,15 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 			}
 		}
 
-		// 2) Adjacent extractable fluid port in front of the pump. Try the tank's current variant first
-		//    (keep pumping the same fluid), then each whitelisted fluid so a donor of a different kind can
-		//    still prime an empty tank.
+		// 2) Adjacent extractable fluid port in front of the pump. MOD-099: rather than guessing a
+		//    fixed lava/water candidate set to prime an empty tank, read what the neighbour actually
+		//    holds (src.fluid()); that lets the pump pull any fluid a donor tank exposes. When the tank
+		//    already holds a variant, keep pumping that same one (single-variant tank).
 		FluidPort src = FluidLookup.get().find(level, np, facing.getOpposite());
 		if (src != null && src.supportsExtraction()) {
 			FluidHolder current = fluidTank.fluid;
-			FluidHolder[] candidates = current.isEmpty()
-					? new FluidHolder[] {FluidHolder.of(Fluids.LAVA), FluidHolder.of(Fluids.WATER)}
-					: new FluidHolder[] {current};
-			for (FluidHolder candidate : candidates) {
+			FluidHolder candidate = current.isEmpty() ? src.fluid() : current;
+			if (!candidate.isEmpty()) {
 				long[] moved = {0};
 				EnergyTransactions.get().runCommitting(
 						txn -> moved[0] = FluidMover.move(src, fluidTank, candidate, FluidAmounts.BUCKET, txn));
@@ -458,8 +382,20 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 
 	/**
 	 * Seven-wide sync bridge: base channels 0..3 (energy/capacity/progress/maxProgress) plus tank permille
-	 * (4), permille denominator 1000 (5), and fluid-type id {@link #fluidId} (6). Channels 4..6 are
-	 * derived, server-authoritative projections of the tank — nothing writes them back.
+	 * (4), permille denominator 1000 (5), and the fluid's registry id (6). Channels 4..6 are derived,
+	 * server-authoritative projections of the tank — nothing writes them back.
+	 *
+	 * <p>MOD-099: channel 6 is the fluid's {@link BuiltInRegistries#FLUID} registry id
+	 * ({@link IdMap#DEFAULT} = empty) so the client can resolve any fluid, not just lava/water.
+	 *
+	 * <p><b>Every channel must fit a signed 16-bit short.</b> {@code ClientboundContainerSetDataPacket}
+	 * writes each value with {@code FriendlyByteBuf.writeShort} and reads it back with {@code readShort}
+	 * (verified against the 26.2 bytecode), so a value outside {@link Short#MIN_VALUE}..{@link Short#MAX_VALUE}
+	 * silently arrives truncated to its low 16 bits. This is why the tank level is projected as a permille
+	 * (0..1000) rather than raw mB, and why the fluid's display <em>colour</em> is <b>not</b> sent here: a
+	 * packed ARGB is a 32-bit value and always truncates (lava's {@code 0xFFFF0000} arrived as {@code 0},
+	 * water's {@code 0xFF4040FF} as alpha-zero). {@code PumpScreen} derives the colour from channel 6
+	 * instead — it is a pure function of the fluid type, so it needs no syncing at all.
 	 */
 	private final ContainerData pumpData = new ContainerData() {
 		@Override
@@ -468,7 +404,7 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 				case 4 -> fluidTank.amount <= 0 ? 0
 						: Math.max(1, (int) Math.min(fluidTank.amount * 1000L / TANK_CAPACITY, 1000));
 				case 5 -> 1000;
-				case 6 -> fluidId(fluidTank.fluid);
+				case 6 -> fluidRegistryId(fluidTank.fluid);
 				default -> PumpBlockEntity.this.dataAccess.get(index);
 			};
 		}
@@ -491,13 +427,37 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 		return pumpData;
 	}
 
+	/**
+	 * Every pump slot holds fluid containers — a vanilla bucket, a Vacuum Capsule, or another mod's cell
+	 * (MOD-107; previously a hardcoded lava/water bucket list). Fill and drain are not distinguished here
+	 * (a capsule is the same item full or empty, so "is it full?" is a per-tick question for the exchange
+	 * itself, not a slot rule); the tank's own state decides what actually moves.
+	 *
+	 * <p><b>Output slots must answer true too</b>, because this method states what a slot can physically
+	 * hold — and the loader's item-transfer API asks it before letting the machine put the emptied container
+	 * there. Answering false for the output slots made the bridge silently move nothing: the swap had
+	 * nowhere to land, so the exchange rolled back and even vanilla buckets stopped working. Automation
+	 * policy is a separate question, answered by {@link #canPlaceItemThroughFace}.
+	 *
+	 * <p>This does <b>not</b> gate a player's click either: vanilla {@code Slot} accepts any item unless a
+	 * {@code mayPlace} override says otherwise, which is why a capsule could always be dropped into the slot
+	 * — it just sat there doing nothing before this task.
+	 */
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
-		// Top-row input accepts full fluid buckets; bottom-row input accepts empty buckets.
-		if (slot == FILL_INPUT_SLOT) {
-			return stack.is(Items.LAVA_BUCKET) || stack.is(Items.WATER_BUCKET);
-		}
-		return slot == DRAIN_INPUT_SLOT && stack.is(Items.BUCKET);
+		return ItemFluidBridge.get().isFluidContainer(stack);
+	}
+
+	/**
+	 * Hoppers and pipes may feed only the two input slots. The base class equates this with
+	 * {@link #canPlaceItem}, which MOD-107 had to widen to the output slots (see there) — so the pump states
+	 * the automation rule explicitly instead, keeping the pre-MOD-107 contract: automation fills the inputs,
+	 * the machine fills the outputs, and {@code canTakeItemThroughFace} still lets automation pull the
+	 * finished containers back out.
+	 */
+	@Override
+	public boolean canPlaceItemThroughFace(int slot, ItemStack stack, Direction side) {
+		return (slot == FILL_INPUT_SLOT || slot == DRAIN_INPUT_SLOT) && canPlaceItem(slot, stack);
 	}
 
 	@Override
@@ -520,8 +480,10 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
 		output.putLong("FluidTankMb", fluidTank.amount);
-		// Persist which fluid the tank holds so a reload restores the right variant (lava/water), not just
-		// the amount — essential now that the tank is no longer lava-only.
+		// Persist which fluid the tank holds so a reload restores the right variant, not just the amount.
+		// MOD-099: the key is now the fluid's full registry id (e.g. "minecraft:lava"), so any fluid
+		// survives a reload — not only lava/water. holderFromKey still accepts the legacy bare
+		// "lava"/"water" spellings for pre-MOD-099 saves.
 		output.putString("FluidTankFluid", fluidKey(fluidTank.fluid));
 	}
 
@@ -533,11 +495,12 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 		long amount = input.getLongOr("FluidTankMb", 0L);
 		if (amount == 0L) {
 			amount = input.getLong("FluidTank")
-					.map(dr -> dr / FluidAmounts.FABRIC_DROPLETS_PER_MB).orElse(0L);
+						.map(dr -> dr / FluidAmounts.FABRIC_DROPLETS_PER_MB).orElse(0L);
 		}
 		fluidTank.amount = Math.max(0L, Math.min(TANK_CAPACITY, amount));
-		// Restore the fluid variant from the persisted key. Legacy lava-only saves have no key and a
-		// non-zero amount → treat as lava (the only fluid a legacy pump could ever hold).
+		// Restore the fluid variant from the persisted registry key. The very first pump revision was
+		// lava-only with no key at all; a non-zero amount with an empty/unresolved key is therefore a
+		// legacy lava-only save → treat it as lava rather than dropping the contents.
 		String key = input.getStringOr("FluidTankFluid", "");
 		FluidHolder restored = holderFromKey(key);
 		fluidTank.fluid = fluidTank.amount > 0 && restored.isEmpty()
@@ -547,21 +510,52 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 		}
 	}
 
+	/**
+	 * Registry key of {@code fluid} for persistence (e.g. {@code "minecraft:lava"}). MOD-099: now stores
+	 * the full namespaced id so any fluid survives a reload, not just lava/water. The legacy bare
+	 * {@code "lava"}/{@code "water"} spellings (pre-MOD-099 saves) are still accepted by
+	 * {@link #holderFromKey} for backwards compatibility.
+	 */
 	private static String fluidKey(FluidHolder fluid) {
-		if (fluid.is(Fluids.LAVA)) {
-			return "lava";
+		if (fluid.isEmpty()) {
+			return "";
 		}
-		if (fluid.is(Fluids.WATER)) {
-			return "water";
-		}
-		return "";
+		return BuiltInRegistries.FLUID.getKey(fluid.fluid()).toString();
 	}
 
 	private static FluidHolder holderFromKey(String key) {
-		return switch (key) {
-			case "lava" -> FluidHolder.of(Fluids.LAVA);
-			case "water" -> FluidHolder.of(Fluids.WATER);
-			default -> FluidHolder.EMPTY;
-		};
+		if (key == null || key.isEmpty()) {
+			return FluidHolder.EMPTY;
+		}
+		// Legacy pre-MOD-099 spellings.
+		if ("lava".equals(key)) {
+			return FluidHolder.of(Fluids.LAVA);
+		}
+		if ("water".equals(key)) {
+			return FluidHolder.of(Fluids.WATER);
+		}
+		Identifier id = Identifier.tryParse(key);
+		if (id == null) {
+			return FluidHolder.EMPTY;
+		}
+		Fluid resolved = BuiltInRegistries.FLUID.getValue(id);
+		return resolved == null ? FluidHolder.EMPTY : FluidHolder.of(resolved);
+	}
+
+	/**
+	 * The {@link BuiltInRegistries#FLUID} registry id of {@code fluid} ({@link IdMap#DEFAULT} when the
+	 * tank is empty), for the client to resolve the fluid type over ContainerData channel 6.
+	 *
+	 * <p>Ids above {@link Short#MAX_VALUE} report as empty rather than as the id's truncated low 16 bits,
+	 * which the channel's short encoding (see {@link #pumpData}) would otherwise resolve to an unrelated
+	 * fluid — a wrongly-labelled tank is worse than an unlabelled one. Only reachable in a pack with
+	 * >32767 registered fluids; the tank itself is unaffected either way.
+	 */
+	private static int fluidRegistryId(FluidHolder fluid) {
+		if (fluid.isEmpty()) {
+			return FLUID_ID_NONE;
+		}
+		int id = BuiltInRegistries.FLUID.getId(fluid.fluid());
+		return id > Short.MAX_VALUE ? FLUID_ID_NONE : id;
 	}
 }

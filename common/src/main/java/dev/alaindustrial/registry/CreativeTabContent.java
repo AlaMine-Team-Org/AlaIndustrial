@@ -45,6 +45,7 @@ public final class CreativeTabContent {
 		scythes(out);
 		out.accept(ModContent.NETWORK_ANALYZER.get());
 		out.accept(ModContent.TELEPORTER_REMOTE.get());
+		out.accept(ModContent.WRENCH.get());
 	}
 
 	/** The six scythe tiers (MOD-068), wood → netherite, as one continuous row. */
@@ -151,6 +152,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.GOLD_CHEST_ITEM.get());
 		out.accept(ModContent.STOCK_DISPLAY_FRAME_ITEM.get());
 		out.accept(ModContent.COPPER_CABLE_ITEM.get());
+		out.accept(ModContent.ITEM_PIPE_ITEM.get());
 	}
 
 	private static void oresAndMaterials(Sink out) {
@@ -190,6 +192,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.EMERALD_DUST.get());
 		out.accept(ModContent.LAPIS_DUST.get());
 		out.accept(ModContent.NETWORK_ANALYZER.get());
+		out.accept(ModContent.WRENCH.get());
 		out.accept(ModContent.BATTERY_POUCH.get());
 		out.accept(ModContent.BATTERY.get());
 		out.accept(ModContent.ENERGY_PACK.get());

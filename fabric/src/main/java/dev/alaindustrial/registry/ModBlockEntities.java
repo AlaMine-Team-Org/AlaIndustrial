@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
+import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
@@ -53,6 +54,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<MoonlitSolarPanelBlockEntity> MOONLIT_SOLAR_PANEL;
 	public static BlockEntityType<DaylightSolarPanelBlockEntity> DAYLIGHT_SOLAR_PANEL;
 	public static BlockEntityType<CableBlockEntity> COPPER_CABLE;
+	public static BlockEntityType<ItemPipeBlockEntity> ITEM_PIPE;
 	public static BlockEntityType<MaceratorBlockEntity> MACERATOR;
 	public static BlockEntityType<BatteryBoxBlockEntity> BATTERY_BOX;
 	public static BlockEntityType<TeleporterBlockEntity> TELEPORTER;
@@ -85,6 +87,7 @@ public final class ModBlockEntities {
 		COPPER_CABLE = register("copper_cable",
 				new BlockEntityType<>(CableBlockEntity::new, Set.of(ModBlocks.COPPER_CABLE,
 						ModBlocks.TIN_CABLE, ModBlocks.INSULATED_COPPER_CABLE, ModBlocks.INSULATED_TIN_CABLE)));
+		ITEM_PIPE = register("item_pipe", new BlockEntityType<>(ItemPipeBlockEntity::new, Set.of(ModBlocks.ITEM_PIPE)));
 		MACERATOR = register("macerator",
 				new BlockEntityType<>(MaceratorBlockEntity::new, Set.of(ModBlocks.MACERATOR)));
 		BATTERY_BOX = register("battery_box",
@@ -141,6 +144,7 @@ public final class ModBlockEntities {
 		ModContent.MOONLIT_SOLAR_PANEL_BE = () -> MOONLIT_SOLAR_PANEL;
 		ModContent.DAYLIGHT_SOLAR_PANEL_BE = () -> DAYLIGHT_SOLAR_PANEL;
 		ModContent.COPPER_CABLE_BE = () -> COPPER_CABLE;
+		ModContent.ITEM_PIPE_BE = () -> ITEM_PIPE;
 		ModContent.MACERATOR_BE = () -> MACERATOR;
 		ModContent.BATTERY_BOX_BE = () -> BATTERY_BOX;
 		ModContent.TELEPORTER_BE = () -> TELEPORTER;

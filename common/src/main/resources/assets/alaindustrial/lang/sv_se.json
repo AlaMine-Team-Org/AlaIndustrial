@@ -84,6 +84,7 @@
 	"gui.alaindustrial.upgrades": "Uppgraderingar",
 	"gui.alaindustrial.lava": "%1$s / %2$s mB",
 	"gui.alaindustrial.water": "%1$s / %2$s mB",
+	"gui.alaindustrial.fluid": "%1$s: %2$s / %3$s mB",
 	"gui.alaindustrial.output": "Utmatning: %s EU/t",
 	"gui.alaindustrial.mode": "Läge: %s",
 	"gui.alaindustrial.branch": "Gren: %s",
@@ -315,5 +316,19 @@
 	"tooltip.alaindustrial.teleporter_remote.count": "Stationer: %s",
 	"alaindustrial.teleporter.default_name": "Teleportör %s",
 	"gui.alaindustrial.teleporter.coords": "X: %s  Y: %s  Z: %s",
-	"gui.alaindustrial.teleporter.more": "%s/%s"
+	"gui.alaindustrial.teleporter.more": "%s/%s",
+	"alaindustrial.teleporter.rebound": "Ersatte %s med %s",
+	"tooltip.alaindustrial.teleporter_remote.bound": "Bunden: %s",
+	"tooltip.alaindustrial.teleporter_remote.at": "vid %s, %s, %s",
+	"block.alaindustrial.item_pipe": "Föremålsrör",
+	"item.alaindustrial.wrench": "Skiftnyckel",
+	"message.alaindustrial.item_pipe.mode": "Rörsida: %s",
+	"message.alaindustrial.item_pipe.mode.neutral": "Neutral",
+	"message.alaindustrial.item_pipe.mode.extract": "Ta ut",
+	"message.alaindustrial.item_pipe.mode.insert": "Sätt in",
+	"message.alaindustrial.item_pipe.mode.disabled": "Inaktiverad",
+	"item.alaindustrial.item_pipe.hint": "Flyttar föremål mellan kistor och maskiner.",
+	"item.alaindustrial.item_pipe.hint2": "Ställ in varje sida med nyckeln.",
+	"item.alaindustrial.wrench.hint": "Shift + högerklick: montera ner blocket",
+	"item.alaindustrial.item_pipe.tech.rate": "Takt: %1$s föremål / %2$s tick (%3$s/s)"
 }

@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
+import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
@@ -68,6 +69,8 @@ public final class ModBlockEntitiesNeoForge {
 			register("copper_cable", CableBlockEntity::new,
 					ModBlocksNeoForge.COPPER_CABLE, ModBlocksNeoForge.TIN_CABLE,
 					ModBlocksNeoForge.INSULATED_COPPER_CABLE, ModBlocksNeoForge.INSULATED_TIN_CABLE);
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ItemPipeBlockEntity>> ITEM_PIPE =
+			register("item_pipe", ItemPipeBlockEntity::new, ModBlocksNeoForge.ITEM_PIPE);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MaceratorBlockEntity>> MACERATOR =
 			register("macerator", MaceratorBlockEntity::new, ModBlocksNeoForge.MACERATOR);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BatteryBoxBlockEntity>> BATTERY_BOX =
@@ -123,6 +126,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.MOONLIT_SOLAR_PANEL_BE = MOONLIT_SOLAR_PANEL::get;
 		ModContent.DAYLIGHT_SOLAR_PANEL_BE = DAYLIGHT_SOLAR_PANEL::get;
 		ModContent.COPPER_CABLE_BE = COPPER_CABLE::get;
+		ModContent.ITEM_PIPE_BE = ITEM_PIPE::get;
 		ModContent.MACERATOR_BE = MACERATOR::get;
 		ModContent.BATTERY_BOX_BE = BATTERY_BOX::get;
 		ModContent.TELEPORTER_BE = TELEPORTER::get;

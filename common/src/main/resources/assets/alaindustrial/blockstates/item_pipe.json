@@ -1,0 +1,26 @@
+{
+  "multipart": [
+    { "apply": { "model": "alaindustrial:block/item_pipe_core" } },
+
+    { "when": { "north_mode": "neutral" }, "apply": { "model": "alaindustrial:block/item_pipe_arm" } },
+    { "when": { "south_mode": "neutral" }, "apply": { "model": "alaindustrial:block/item_pipe_arm", "y": 180 } },
+    { "when": { "west_mode": "neutral" }, "apply": { "model": "alaindustrial:block/item_pipe_arm", "y": 270 } },
+    { "when": { "east_mode": "neutral" }, "apply": { "model": "alaindustrial:block/item_pipe_arm", "y": 90 } },
+    { "when": { "up_mode": "neutral" }, "apply": { "model": "alaindustrial:block/item_pipe_arm", "x": 270 } },
+    { "when": { "down_mode": "neutral" }, "apply": { "model": "alaindustrial:block/item_pipe_arm", "x": 90 } },
+
+    { "when": { "north_mode": "extract" }, "apply": { "model": "alaindustrial:block/item_pipe_extract" } },
+    { "when": { "south_mode": "extract" }, "apply": { "model": "alaindustrial:block/item_pipe_extract", "y": 180 } },
+    { "when": { "west_mode": "extract" }, "apply": { "model": "alaindustrial:block/item_pipe_extract", "y": 270 } },
+    { "when": { "east_mode": "extract" }, "apply": { "model": "alaindustrial:block/item_pipe_extract", "y": 90 } },
+    { "when": { "up_mode": "extract" }, "apply": { "model": "alaindustrial:block/item_pipe_extract", "x": 270 } },
+    { "when": { "down_mode": "extract" }, "apply": { "model": "alaindustrial:block/item_pipe_extract", "x": 90 } },
+
+    { "when": { "north_mode": "insert" }, "apply": { "model": "alaindustrial:block/item_pipe_insert" } },
+    { "when": { "south_mode": "insert" }, "apply": { "model": "alaindustrial:block/item_pipe_insert", "y": 180 } },
+    { "when": { "west_mode": "insert" }, "apply": { "model": "alaindustrial:block/item_pipe_insert", "y": 270 } },
+    { "when": { "east_mode": "insert" }, "apply": { "model": "alaindustrial:block/item_pipe_insert", "y": 90 } },
+    { "when": { "up_mode": "insert" }, "apply": { "model": "alaindustrial:block/item_pipe_insert", "x": 270 } },
+    { "when": { "down_mode": "insert" }, "apply": { "model": "alaindustrial:block/item_pipe_insert", "x": 90 } }
+  ]
+}
