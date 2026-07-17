@@ -126,7 +126,6 @@ jobs:
           echo "Modrinth NeoForge target $VERSION+neoforge exists: $neoforge_exists"
 
       - name: Publish Fabric to Modrinth
-        continue-on-error: true  # v0.1.33: Modrinth backend outage — do not block CurseForge/GitHub; catch up on rerun
         if: steps.mode.outputs.publish_fabric == 'true' && steps.modrinth.outputs.fabric_exists != 'true'
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
@@ -175,7 +174,6 @@ jobs:
           exit 1
 
       - name: Publish NeoForge to Modrinth
-        continue-on-error: true  # v0.1.33: Modrinth backend outage — do not block CurseForge/GitHub; catch up on rerun
         if: steps.mode.outputs.publish_neoforge == 'true' && steps.modrinth.outputs.neoforge_exists != 'true'
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
