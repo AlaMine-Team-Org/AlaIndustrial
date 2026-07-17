@@ -1,4 +1,4 @@
 {
 	"parent": "minecraft:item/generated",
-	"textures": { "layer0": "alaindustrial:item/insulated_copper_cable_3d" }
+	"textures": { "layer0": "alaindustrial:item/preview_3d/insulated_copper_cable" }
 }

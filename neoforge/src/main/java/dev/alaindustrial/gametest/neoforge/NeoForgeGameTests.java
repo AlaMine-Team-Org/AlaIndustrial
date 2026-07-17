@@ -387,6 +387,8 @@ public final class NeoForgeGameTests {
 		registerTest(event, "drill_place_torch_from_inventory", 40, true, ElectricDrillScenarios::fun07PlaceTorchFromInventory);
 		registerTest(event, "drill_torch_priority_uranium", 40, true, ElectricDrillScenarios::fun08TorchPriorityUranium);
 		registerTest(event, "drill_place_torch_on_replaceable_block", 40, true, ElectricDrillScenarios::fun09PlaceTorchOnReplaceableBlock);
+		// MOD-097 (TC-DRILL-001-NEG01): a drill below the torch cost refuses to place instead of a freebie.
+		registerTest(event, "drill_torch_refused_below_cost", 40, true, ElectricDrillScenarios::neg01TorchRefusedBelowCost);
 
 		// MOD-063 Vacuum Capsule (suite TC-CAPS-001) — same neutral bodies as the Fabric CapsuleGameTest.
 		registerTest(event, "capsule_component_round_trip", 40, true, CapsuleScenarios::per01ComponentRoundTrip);

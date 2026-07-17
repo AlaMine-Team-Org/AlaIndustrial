@@ -40,4 +40,21 @@ class EnergyTierTest {
 		assertTrue(EnergyTier.LV.capacity() < EnergyTier.MV.capacity());
 		assertTrue(EnergyTier.MV.capacity() < EnergyTier.HV.capacity());
 	}
+
+	/**
+	 * The {@code color()} ARGB value is the per-tier cable/UI tint (yellow/orange/red). Pitest flagged it as
+	 * NO_COVERAGE — flipping the return to 0 would make every tier render black and no test noticed. Pin the
+	 * exact ARGB constants (the raw hex literals from the enum decl) so a mutation changing any tier's colour
+	 * is caught, and assert the three tiers have three distinct colours (a swap would otherwise go unnoticed).
+	 */
+	@Test
+	void color_exactArgbPerTierAndAllDistinct() {
+		assertEquals(0xFFD24A, EnergyTier.LV.color(), "LV cable tint — yellow");
+		assertEquals(0xFF8A3D, EnergyTier.MV.color(), "MV cable tint — orange");
+		assertEquals(0xFF3D5A, EnergyTier.HV.color(), "HV cable tint — red");
+		// distinct — a swapped/aliased colour between tiers must be caught
+		assertTrue(EnergyTier.LV.color() != EnergyTier.MV.color());
+		assertTrue(EnergyTier.MV.color() != EnergyTier.HV.color());
+		assertTrue(EnergyTier.LV.color() != EnergyTier.HV.color());
+	}
 }

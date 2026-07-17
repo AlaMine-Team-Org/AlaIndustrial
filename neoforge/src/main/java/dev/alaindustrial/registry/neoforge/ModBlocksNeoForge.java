@@ -19,6 +19,7 @@ import dev.alaindustrial.block.SilverChestBlock;
 import dev.alaindustrial.block.GoldChestBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PumpBlock;
+import dev.alaindustrial.block.FluidTankBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.block.WaterMillBlock;
 import dev.alaindustrial.block.WindMillBlock;
@@ -89,6 +90,9 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("geothermal_generator", GeothermalGeneratorBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
 	public static final DeferredBlock<PumpBlock> PUMP =
 			BLOCKS.registerBlock("pump", PumpBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+	public static final DeferredBlock<FluidTankBlock> FLUID_TANK =
+			BLOCKS.registerBlock("fluid_tank", FluidTankBlock::new,
+					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()));
 	public static final DeferredBlock<WaterMillBlock> WATER_MILL =
 			BLOCKS.registerBlock("water_mill", WaterMillBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
 	public static final DeferredBlock<WindMillBlock> WIND_MILL =
@@ -221,6 +225,7 @@ public final class ModBlocksNeoForge {
 		ModContent.COMPRESSOR = COMPRESSOR::get;
 		ModContent.GEOTHERMAL_GENERATOR = GEOTHERMAL_GENERATOR::get;
 		ModContent.PUMP = PUMP::get;
+		ModContent.FLUID_TANK = FLUID_TANK::get;
 		ModContent.WATER_MILL = WATER_MILL::get;
 		ModContent.WIND_MILL = WIND_MILL::get;
 		ModContent.HIGH_ALTITUDE_WIND_MILL = HIGH_ALTITUDE_WIND_MILL::get;

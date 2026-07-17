@@ -78,6 +78,7 @@
 	"item.alaindustrial.battery": "Batería",
 	"item.alaindustrial.energy_pack": "Mochila de energía",
 	"item.alaindustrial.electric_drill": "Taladro eléctrico",
+	"item.alaindustrial.electric_drill.torch_no_charge": "Carga insuficiente para colocar una antorcha",
 	"item.alaindustrial.stock_display_frame": "Marco indicador de existencias",
 	"entity.alaindustrial.stock_display_frame": "Marco indicador de existencias",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.hint": "Mueve objetos entre cofres y máquinas.",
 	"item.alaindustrial.item_pipe.hint2": "Configura cada lado con la llave.",
 	"item.alaindustrial.wrench.hint": "Shift + clic derecho: desmontar bloque",
-	"item.alaindustrial.item_pipe.tech.rate": "Ritmo: %1$s objetos / %2$s ticks (%3$s/s)"
+	"item.alaindustrial.item_pipe.tech.rate": "Ritmo: %1$s objetos / %2$s ticks (%3$s/s)",
+	"block.alaindustrial.fluid_tank": "Tanque de fluidos portátil",
+	"tooltip.alaindustrial.fluid_tank.empty": "Vacío — capacidad de 8000 mB",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
 }

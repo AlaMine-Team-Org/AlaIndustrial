@@ -3,6 +3,7 @@ package dev.alaindustrial.registry;
 import com.mojang.serialization.Codec;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.AnalyzerMode;
+import dev.alaindustrial.item.FluidTankContents;
 import dev.alaindustrial.item.NetworkScanData;
 import dev.alaindustrial.item.PouchContents;
 import dev.alaindustrial.item.TeleportPoints;
@@ -44,6 +45,7 @@ public final class ModDataComponents {
 	public static final Identifier TELEPORTER_PRIVATE_ID = Industrialization.id("teleporter_private");
 	public static final Identifier TELEPORTER_OWNER_ID = Industrialization.id("teleporter_owner");
 	public static final Identifier TELEPORTER_POINTS_ID = Industrialization.id("teleporter_points");
+	public static final Identifier FLUID_TANK_CONTENTS_ID = Industrialization.id("fluid_tank_contents");
 
 	/** Buffered EU carried on a storage block's item form. Bound once per loader before first access. */
 	public static Supplier<DataComponentType<Long>> STORED_ENERGY = () -> {
@@ -84,6 +86,11 @@ public final class ModDataComponents {
 	 */
 	public static Supplier<DataComponentType<Holder<Fluid>>> CAPSULE_FLUID = () -> {
 		throw new IllegalStateException("ModDataComponents.CAPSULE_FLUID read before its loader bound it");
+	};
+
+	/** Portable fluid tank's atomic item-form contents: registry fluid + positive amount in mB. */
+	public static Supplier<DataComponentType<FluidTankContents>> FLUID_TANK_CONTENTS = () -> {
+		throw new IllegalStateException("ModDataComponents.FLUID_TANK_CONTENTS read before its loader bound it");
 	};
 
 	/**
@@ -202,6 +209,15 @@ public final class ModDataComponents {
 		return DataComponentType.<Holder<Fluid>>builder()
 				.persistent(BuiltInRegistries.FLUID.holderByNameCodec())
 				.networkSynchronized(ByteBufCodecs.holderRegistry(Registries.FLUID))
+				.cacheEncoding()
+				.build();
+	}
+
+	/** Build the portable tank contents type (MOD-111). */
+	public static DataComponentType<FluidTankContents> createFluidTankContents() {
+		return DataComponentType.<FluidTankContents>builder()
+				.persistent(FluidTankContents.CODEC)
+				.networkSynchronized(FluidTankContents.STREAM_CODEC)
 				.cacheEncoding()
 				.build();
 	}

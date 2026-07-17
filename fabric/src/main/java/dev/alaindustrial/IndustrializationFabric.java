@@ -109,6 +109,12 @@ public class IndustrializationFabric implements ModInitializer {
 						dev.alaindustrial.registry.ModDataComponents.CAPSULE_FLUID_ID,
 						dev.alaindustrial.registry.ModDataComponents.createCapsuleFluid());
 		dev.alaindustrial.registry.ModDataComponents.CAPSULE_FLUID = () -> capsuleFluid;
+		net.minecraft.core.component.DataComponentType<dev.alaindustrial.item.FluidTankContents> fluidTankContents =
+				net.minecraft.core.Registry.register(
+						net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE,
+						dev.alaindustrial.registry.ModDataComponents.FLUID_TANK_CONTENTS_ID,
+						dev.alaindustrial.registry.ModDataComponents.createFluidTankContents());
+		dev.alaindustrial.registry.ModDataComponents.FLUID_TANK_CONTENTS = () -> fluidTankContents;
 		net.minecraft.core.component.DataComponentType<Boolean> teleporterPrivate = net.minecraft.core.Registry.register(
 				net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE,
 				dev.alaindustrial.registry.ModDataComponents.TELEPORTER_PRIVATE_ID,

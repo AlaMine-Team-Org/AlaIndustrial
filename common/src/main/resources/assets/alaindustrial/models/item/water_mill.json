@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "alaindustrial:item/water_mill_preview"
-  }
-}

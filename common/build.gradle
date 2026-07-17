@@ -2,6 +2,15 @@ plugins {
     id 'multiloader-common'
     id 'net.neoforged.moddev'
     id 'jacoco'
+    // Mutation testing (MOD: test-quality-mutation-pitest). PIT mutates the compiled bytecode of
+    // the loader-neutral core (e.g. flips + to - inside the cable-loss formula) and re-runs the
+    // L1 JUnit suite to check whether the existing assertions actually catch the regression.
+    // Plugin + JUnit5 plugin versions verified 2026-07-17 against the Gradle Plugin Portal and
+    // Maven Central (gradle-pitest-plugin 1.19.0, pitest-junit5-plugin 1.2.3, default PIT core
+    // 1.22.1). Runs only against `common/` — this subproject has no Minecraft jar on its test
+    // classpath (the moddev `neoFormVersion` line only pulls mappings metadata), so PIT sees a
+    // plain Java library layout and none of the Loom/MC classpath failure modes apply.
+    id 'info.solidsoft.pitest' version '1.19.0'
 }
 
 neoForge {
@@ -58,6 +67,92 @@ jacocoTestReport {
         xml.required = true   // CI/consumers
         html.required = true  // human review
     }
+}
+
+pitest {
+    // JUnit 5 platform wiring — `junit5PluginVersion` both adds the pitest-junit5-plugin
+    // dependency and sets testPlugin = "junit5".
+    junit5PluginVersion = '1.2.3'
+
+    // Override the plugin's default PIT core (1.22.1) up to 1.25.7 — its ASM 9.10.1 reads Java 25
+    // bytecode (class file 69) cleanly. On JDK 25 the 1.22.1 default's coverage minion exited
+    // abnormally during `InstrumentationImpl.transform` (a classfile-version-read symptom); 1.25.7
+    // is the current Central release (2026-07-08) and is confirmed to support Java 25/26 upstream
+    // (hcoles/pitest#1439). gradle-pitest-plugin 1.19.0 drives it transparently via this property.
+    pitestVersion = '1.25.7'
+
+    // Scope mutations to the loader-neutral core. The default "${project.group}.*" would also pull
+    // in client/mixin/menu packages whose behaviour is only exercised by L2 gametests and that
+    // depend on the Minecraft jar — not unit-testable. core.* is exactly the surface the L1 suite
+    // targets (EnergyBuffer, EnergyShare, EnergyTier, GraphComponents, WindMillOutput, FaceEnergyPort,
+    // ...). The `excludedClasses` list below drops the core classes that nonetheless reference
+    // `net.minecraft.*` types: `common/` has NO Minecraft jar on its test classpath by design
+    // (moddev only pulls NeoForm mappings metadata), so PIT's coverage minion cannot resolve those
+    // types while computing stack-map frames and crashes with
+    // "Could not find class definition for net/minecraft/...". The 15 excluded classes are the
+    // Level/BlockPos/Direction/Fluid/StringRepresentable-coupled ones (EnergyNetwork, EnergyNet,
+    // NetworkManager, ItemNetwork, SolarSky, PipeFaceMode, FluidHolder, ...); their behaviour is
+    // covered by the Fabric L2 @GameTest + NeoForge world-scenario suites instead. These belong to
+    // a future NeoForge L1.5 pitest lane (which DOES have the MC jar), tracked separately.
+    targetClasses = ['dev.alaindustrial.core.*']
+    // The 15 MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
+    // JUnit discovery also walks every class under `targetTests` via reflection to find @Test
+    // methods — and reflection on e.g. `EnergyNet` triggers `NoClassDefFoundError:
+    // net/minecraft/world/level/Level` because the Minecraft jar is not on `common/`'s classpath.
+    // So `targetTests` is pinned to ONLY the actual L1 test classes (the *Test suffix), keeping
+    // discovery away from the MC-coupled main classes entirely.
+    targetTests = ['dev.alaindustrial.core.*Test']
+    excludedClasses = [
+            'dev.alaindustrial.core.EnergyLookup',
+            'dev.alaindustrial.core.EnergyNet',
+            'dev.alaindustrial.core.EnergyNetwork',
+            'dev.alaindustrial.core.EnergyPortHost',
+            'dev.alaindustrial.core.FluidHolder',
+            'dev.alaindustrial.core.FluidLookup',
+            'dev.alaindustrial.core.FluidPortHost',
+            'dev.alaindustrial.core.ItemLookup',
+            'dev.alaindustrial.core.ItemNetwork',
+            'dev.alaindustrial.core.ItemNetworkManager',
+            'dev.alaindustrial.core.NetworkManager',
+            'dev.alaindustrial.core.PipeFaceMode',
+            'dev.alaindustrial.core.SolarSky',
+            'dev.alaindustrial.core.WindMillClearance',
+            'dev.alaindustrial.core.WindMillInterference'
+    ]
+
+    // Curated mutator set tuned for the math-heavy core (see docs/tasks/MOD-XXX for rationale).
+    // Mutator/group names verified against the actual PIT 1.22.1 jar's constant pool
+    // (org.pitest.mutationtest.engine.gregor.config.StandardMutatorGroups): the return-value
+    // mutator is the GROUP `RETURNS` (NOT `RETURN_VALUES`/`RETURN_VALS`, which PIT rejects as
+    // unknown). DEFAULT already bundles MATH+CONDITIONALS_BOUNDARY+INCREMENTS+INVERT_NEGS+
+    // VOID_METHOD_CALLS+RETURNS; we list them explicitly so additions/removals are code-reviewed,
+    // and add NEGATE_CONDITIONALS (inverted guards) on top.
+    mutators = [
+            'MATH',                   // a+b <-> a-b, a*b <-> a/b, a%b <-> a*b — broken-formula detector
+            'CONDITIONALS_BOUNDARY',  // < <-> <= , > <-> >=      — off-by-one at tier/limit thresholds
+            'INCREMENTS',             // i++ <-> i-- , += <-> -=   — accumulator/loop-direction errors
+            'INVERT_NEGS',            // -a <-> a                  — sign flips in clamp/penalty math
+            'NEGATE_CONDITIONALS',    // == <-> != , < <-> >=      — inverted safety guards
+            'RETURNS',                // mutate returned value     — catches unasserted returns
+            'VOID_METHOD_CALLS'       // drop a void method call   — catches unasserted side-effects
+    ]
+
+    // Stable report path (no per-run timestamped subdir) so CI can diff mutations.xml between runs
+    // and the HTML drill-down lives at a predictable URL.
+    outputFormats      = ['HTML', 'XML']
+    timestampedReports = false
+
+    // PIT spawns child JVMs to run mutated test classes — give them headroom and use a classpath
+    // file (the default since gradle-pitest-plugin 1.19.0-rc.3) to avoid Windows cmdline limits.
+    timeoutConstInMillis = 5000
+    jvmArgs               = ['-Xmx2g']
+    useClasspathFile      = true
+
+    // Reporting-only baseline — do NOT fail the build on surviving mutants yet. The point of this
+    // first run is to measure where the suite is weak; hard gates (`mutationThreshold`,
+    // `maxSurviving`) get ratcheted in once the baseline is recorded and the worst gaps closed.
+    mutationThreshold = 0
+    coverageThreshold = 0
 }
 
 configurations {

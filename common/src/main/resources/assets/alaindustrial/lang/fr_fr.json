@@ -78,6 +78,7 @@
 	"item.alaindustrial.battery": "Batterie",
 	"item.alaindustrial.energy_pack": "Sac énergétique",
 	"item.alaindustrial.electric_drill": "Foreuse électrique",
+	"item.alaindustrial.electric_drill.torch_no_charge": "Charge insuffisante pour placer une torche",
 	"item.alaindustrial.stock_display_frame": "Cadre indicateur de stock",
 	"entity.alaindustrial.stock_display_frame": "Cadre indicateur de stock",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.hint": "Déplace des objets entre coffres et machines.",
 	"item.alaindustrial.item_pipe.hint2": "Réglez chaque face avec la clé.",
 	"item.alaindustrial.wrench.hint": "Maj + clic droit : démonter un bloc",
-	"item.alaindustrial.item_pipe.tech.rate": "Débit : %1$s objets / %2$s ticks (%3$s/s)"
+	"item.alaindustrial.item_pipe.tech.rate": "Débit : %1$s objets / %2$s ticks (%3$s/s)",
+	"block.alaindustrial.fluid_tank": "Réservoir de fluide portable",
+	"tooltip.alaindustrial.fluid_tank.empty": "Vide — capacité de 8000 mB",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s : %2$s / %3$s mB"
 }

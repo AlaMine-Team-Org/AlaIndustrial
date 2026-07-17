@@ -17,6 +17,7 @@ import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
+import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
@@ -62,6 +63,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<ExtractorBlockEntity> EXTRACTOR;
 	public static BlockEntityType<CompressorBlockEntity> COMPRESSOR;
 	public static BlockEntityType<PumpBlockEntity> PUMP;
+	public static BlockEntityType<FluidTankBlockEntity> FLUID_TANK;
 	public static BlockEntityType<WaterMillBlockEntity> WATER_MILL;
 	public static BlockEntityType<WindMillBlockEntity> WIND_MILL;
 	public static BlockEntityType<HighAltitudeWindMillBlockEntity> HIGH_ALTITUDE_WIND_MILL;
@@ -102,6 +104,8 @@ public final class ModBlockEntities {
 				new BlockEntityType<>(CompressorBlockEntity::new, Set.of(ModBlocks.COMPRESSOR)));
 		PUMP = register("pump",
 				new BlockEntityType<>(PumpBlockEntity::new, Set.of(ModBlocks.PUMP)));
+		FLUID_TANK = register("fluid_tank",
+				new BlockEntityType<>(FluidTankBlockEntity::new, Set.of(ModBlocks.FLUID_TANK)));
 		WATER_MILL = register("water_mill",
 				new BlockEntityType<>(WaterMillBlockEntity::new, Set.of(ModBlocks.WATER_MILL)));
 		WIND_MILL = register("wind_mill",
@@ -152,6 +156,7 @@ public final class ModBlockEntities {
 		ModContent.EXTRACTOR_BE = () -> EXTRACTOR;
 		ModContent.COMPRESSOR_BE = () -> COMPRESSOR;
 		ModContent.PUMP_BE = () -> PUMP;
+		ModContent.FLUID_TANK_BE = () -> FLUID_TANK;
 		ModContent.WATER_MILL_BE = () -> WATER_MILL;
 		ModContent.WIND_MILL_BE = () -> WIND_MILL;
 		ModContent.HIGH_ALTITUDE_WIND_MILL_BE = () -> HIGH_ALTITUDE_WIND_MILL;
@@ -165,6 +170,7 @@ public final class ModBlockEntities {
 		// reverse adapter (MOD-028), mirroring the energy PortAsEnergyStorage lines above.
 		FluidStorage.SIDED.registerForBlockEntity((be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), GEOTHERMAL_GENERATOR);
 		FluidStorage.SIDED.registerForBlockEntity((be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), PUMP);
+		FluidStorage.SIDED.registerForBlockEntity((be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), FLUID_TANK);
 	}
 
 	private static <T extends BlockEntity> BlockEntityType<T> register(String path, BlockEntityType<T> type) {

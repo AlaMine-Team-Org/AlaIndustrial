@@ -103,4 +103,23 @@ class WindMillOutputTest {
 		assertEquals(16, WindMillOutput.euFor(SEA + 64, SEA, true, false, true,
 				t2MaxBase, t2BlocksPerBase, t2MaxOut, RAIN, THUNDER), "T2 base 8 × thunder → 16 (cap)");
 	}
+
+	/**
+	 * The guard {@code if (blocksPerBase <= 0) blocksPerBase = 16} (L48) protects the height dividend
+	 * from a divide-by-zero. A boundary mutation flipping {@code <=} to {@code <} would let
+	 * {@code blocksPerBase == 0} through, and {@code (y - seaLevel) / 0} throws
+	 * {@link ArithmeticException}. Pinning {@code blocksPerBase == 0} (and a negative value) as a valid
+	 * input that falls back to the 16-block step kills the flip.
+	 */
+	@Test
+	void zeroOrNegativeBlocksPerBaseFallsBackToSixteenStep_notDivideByZero() {
+		// With the fallback to 16, y = sea+16 → base 1 → clear weather → 1 EU/t (same as baseGrowsPerSixteenBlocks).
+		assertEquals(1, WindMillOutput.euFor(SEA + 16, SEA, true, false, false,
+				MAX_BASE, 0, MAX_OUT, RAIN, THUNDER), "blocksPerBase=0 falls back to 16 → base 1");
+		assertEquals(1, WindMillOutput.euFor(SEA + 16, SEA, true, false, false,
+				MAX_BASE, -4, MAX_OUT, RAIN, THUNDER), "negative blocksPerBase falls back to 16 → base 1");
+		// And at sea level the fallback still yields base 0 (no crash, no negative base).
+		assertEquals(0, WindMillOutput.euFor(SEA, SEA, true, false, false,
+				MAX_BASE, 0, MAX_OUT, RAIN, THUNDER), "blocksPerBase=0 at sea level → 0");
+	}
 }

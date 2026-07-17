@@ -84,6 +84,7 @@
 	"item.alaindustrial.battery": "ব্যাটারি",
 	"item.alaindustrial.energy_pack": "এনার্জি ব্যাকপ্যাক",
 	"item.alaindustrial.electric_drill": "বৈদ্যুতিক ড্রিল",
+	"item.alaindustrial.electric_drill.torch_no_charge": "মশাল রাখার জন্য যথেষ্ট চার্জ নেই",
 	"item.alaindustrial.stock_display_frame": "স্টক প্রদর্শন ফ্রেম",
 	"entity.alaindustrial.stock_display_frame": "স্টক প্রদর্শন ফ্রেম",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.hint": "সিন্দুক ও যন্ত্রের মধ্যে জিনিস সরায়।",
 	"item.alaindustrial.item_pipe.hint2": "প্রতিটি দিক রেঞ্চ দিয়ে সেট করুন।",
 	"item.alaindustrial.wrench.hint": "Shift + ডান-ক্লিক: ব্লক খুলে ফেলুন",
-	"item.alaindustrial.item_pipe.tech.rate": "গতি: %1$s আইটেম / %2$s টিক (%3$s/সে)"
+	"item.alaindustrial.item_pipe.tech.rate": "গতি: %1$s আইটেম / %2$s টিক (%3$s/সে)",
+	"block.alaindustrial.fluid_tank": "বহনযোগ্য তরল ট্যাংক",
+	"tooltip.alaindustrial.fluid_tank.empty": "খালি — ধারণক্ষমতা 8000 mB",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
 }

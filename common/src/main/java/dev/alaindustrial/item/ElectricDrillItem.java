@@ -4,10 +4,13 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.core.EnergyTier;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -61,8 +64,9 @@ import net.minecraft.world.phys.BlockHitResult;
  * the hotbar while lighting a tunnel. Placement is delegated to the torch's own {@link BlockItem#place}
  * via a 1-item copy, so wall/floor orientation, {@code canSurvive}, the uranium torch's waterlogged
  * handling, the place sound and protection events all come for free; one torch is consumed from the
- * inventory and {@link Config#electricDrillTorchEuCost} EU is drained (skipped gracefully when the
- * drill can't afford it — the torch still places).</li>
+ * inventory and {@link Config#electricDrillTorchEuCost} EU is drained. A drill below that cost places
+ * nothing and tells the player on the action bar (MOD-097) — the torch is powered, not free; creative
+ * bypasses the check (the spend is dropped there anyway, MOD-081).</li>
  * </ul>
  */
 public class ElectricDrillItem extends Item {
@@ -183,9 +187,11 @@ public class ElectricDrillItem extends Item {
 	 * creative ({@code instabuild}).
 	 *
 	 * <p>EU drain ({@link Config#electricDrillTorchEuCost}) is taken the same way — including in creative,
-	 * where {@link ItemEnergy#spend} drops it just as the torch itself is not consumed (MOD-081) — but is
-	 * skipped when the drill holds less than that: the torch still places, matching the drill's
-	 * graceful-degradation rule for a flat battery (see {@link #mineBlock}). No cooldown: vanilla
+	 * where {@link ItemEnergy#spend} drops it just as the torch itself is not consumed (MOD-081). A drill
+	 * that holds less than the cost refuses the placement instead of giving a free torch (MOD-097): it
+	 * places nothing, consumes nothing, and shows a one-line action-bar notice so the player knows why.
+	 * Creative is exempt (the spend is a no-op there anyway). The check sits before {@code place()}, so by
+	 * the time the spend runs the drill is guaranteed to afford it. No cooldown: vanilla
 	 * {@code BlockItem.place} already can't spam-place a single position, so a cooldown would only slow
 	 * legitimate tunnel lighting.
 	 */
@@ -215,6 +221,20 @@ public class ElectricDrillItem extends Item {
 		BlockPos clicked = context.getClickedPos();
 		if (!player.mayBuild() || !player.mayUseItemAt(clicked, context.getClickedFace(), drill)) {
 			return InteractionResult.PASS;
+		}
+
+		// MOD-097: a torch from the drill is powered, not free. Below the EU cost the drill places nothing
+		// and tells the player on the action bar, instead of the old graceful-degradation freebie. Creative
+		// is exempt — the spend is dropped there anyway (MOD-081). CONSUME eats the click (no off-hand
+		// fallback, no place, no swing) while the drill keeps the torch in the inventory.
+		if (!player.getAbilities().instabuild && ItemEnergy.get(drill) < Config.electricDrillTorchEuCost) {
+			if (player instanceof ServerPlayer serverPlayer) {
+				serverPlayer.sendSystemMessage(
+						Component.translatable("item.alaindustrial.electric_drill.torch_no_charge")
+								.withStyle(ChatFormatting.RED),
+						true);
+			}
+			return InteractionResult.CONSUME;
 		}
 
 		// Delegate to the torch's vanilla place() via a 1-item copy, so vanilla consumes from the copy
@@ -247,9 +267,9 @@ public class ElectricDrillItem extends Item {
 		if (!player.getAbilities().instabuild) {
 			torchStack.shrink(1);
 		}
-		if (ItemEnergy.get(drill) >= Config.electricDrillTorchEuCost) {
-			ItemEnergy.spend(drill, Config.electricDrillTorchEuCost, player);
-		}
+		// The MOD-097 gate above already refused a drill that couldn't afford this, so the spend is now
+		// unconditional; ItemEnergy.spend still drops the debit for a creative owner (MOD-081).
+		ItemEnergy.spend(drill, Config.electricDrillTorchEuCost, player);
 		return InteractionResult.SUCCESS;
 	}
 

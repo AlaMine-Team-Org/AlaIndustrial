@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [{
+    "rolls": 1.0,
+    "entries": [{
+      "type": "minecraft:item",
+      "name": "alaindustrial:fluid_tank",
+      "functions": [{
+        "function": "minecraft:copy_components",
+        "source": "block_entity",
+        "include": ["alaindustrial:fluid_tank_contents", "minecraft:max_stack_size"]
+      }]
+    }],
+    "conditions": [{ "condition": "minecraft:survives_explosion" }]
+  }]
+}

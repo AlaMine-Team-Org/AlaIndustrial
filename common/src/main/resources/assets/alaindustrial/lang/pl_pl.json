@@ -78,6 +78,7 @@
 	"item.alaindustrial.battery": "Bateria",
 	"item.alaindustrial.energy_pack": "Plecak energetyczny",
 	"item.alaindustrial.electric_drill": "Wiertło elektryczne",
+	"item.alaindustrial.electric_drill.torch_no_charge": "Za mało energii, aby postawić pochodnię",
 	"item.alaindustrial.stock_display_frame": "Ramka wskaźnika zapasów",
 	"entity.alaindustrial.stock_display_frame": "Ramka wskaźnika zapasów",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.hint": "Przenosi przedmioty między skrzyniami a maszynami.",
 	"item.alaindustrial.item_pipe.hint2": "Strony ustawisz kluczem.",
 	"item.alaindustrial.wrench.hint": "Shift + PPM: zdemontuj blok",
-	"item.alaindustrial.item_pipe.tech.rate": "Tempo: %1$s przedmioty / %2$s ticków (%3$s/s)"
+	"item.alaindustrial.item_pipe.tech.rate": "Tempo: %1$s przedmioty / %2$s ticków (%3$s/s)",
+	"block.alaindustrial.fluid_tank": "Przenośny zbiornik na płyny",
+	"tooltip.alaindustrial.fluid_tank.empty": "Pusty — pojemność 8000 mB",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
 }

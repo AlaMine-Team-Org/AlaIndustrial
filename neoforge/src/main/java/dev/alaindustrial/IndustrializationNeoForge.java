@@ -287,6 +287,8 @@ public final class IndustrializationNeoForge {
 				(be, side) -> TankAsResourceHandler.of(be.fluidPort(side)));
 		event.registerBlockEntity(fluidCap, ModBlockEntitiesNeoForge.PUMP.get(),
 				(be, side) -> TankAsResourceHandler.of(be.fluidPort(side)));
+		event.registerBlockEntity(fluidCap, ModBlockEntitiesNeoForge.FLUID_TANK.get(),
+				(be, side) -> TankAsResourceHandler.of(be.fluidPort(side)));
 
 		// MOD-104: publish transactional, side-aware item views for mod containers. This is required
 		// because a vanilla Container is not automatically a 26.2 ResourceHandler on NeoForge.

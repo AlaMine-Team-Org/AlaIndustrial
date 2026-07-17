@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
 import dev.alaindustrial.item.HintItem;
+import dev.alaindustrial.item.FluidTankBlockItem;
 import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
@@ -171,6 +172,7 @@ public final class ModItems {
 	public static final BlockItem EXTRACTOR_ITEM = blockItem("extractor", ModBlocks.EXTRACTOR);
 	public static final BlockItem COMPRESSOR_ITEM = blockItem("compressor", ModBlocks.COMPRESSOR);
 	public static final BlockItem PUMP_ITEM = blockItem("pump", ModBlocks.PUMP);
+	public static final BlockItem FLUID_TANK_ITEM = fluidTankBlockItem("fluid_tank", ModBlocks.FLUID_TANK);
 	public static final BlockItem WATER_MILL_ITEM = blockItem("water_mill", ModBlocks.WATER_MILL);
 	public static final BlockItem WIND_MILL_ITEM = blockItem("wind_mill", ModBlocks.WIND_MILL);
 	public static final BlockItem HIGH_ALTITUDE_WIND_MILL_ITEM = blockItem("high_altitude_wind_mill", ModBlocks.HIGH_ALTITUDE_WIND_MILL);
@@ -342,6 +344,13 @@ public final class ModItems {
 		return Registry.register(BuiltInRegistries.ITEM, key, item);
 	}
 
+	private static BlockItem fluidTankBlockItem(String path, Block block) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		BlockItem item = new FluidTankBlockItem(block,
+				new Item.Properties().useBlockDescriptionPrefix().setId(key));
+		return Registry.register(BuiltInRegistries.ITEM, key, item);
+	}
+
 	// Torch-style item (MOD-085): places `standing` on the floor, `wall` on a vertical face — exactly how
 	// vanilla Items.TORCH is built (StandingAndWallBlockItem(TORCH, WALL_TORCH, Direction.DOWN, p)).
 	private static BlockItem standingAndWallBlockItem(String path, Block standing, Block wall) {
@@ -375,6 +384,7 @@ public final class ModItems {
 					output.accept(EXTRACTOR_ITEM);
 					output.accept(COMPRESSOR_ITEM);
 					output.accept(PUMP_ITEM);
+					output.accept(FLUID_TANK_ITEM);
 					// Storage + cables
 					output.accept(BATTERY_BOX_ITEM);
 					// Teleporter (MOD-093). NOTE: this list is Fabric's own — NeoForge builds the same
@@ -603,6 +613,7 @@ public final class ModItems {
 		ModContent.EXTRACTOR_ITEM = () -> EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = () -> COMPRESSOR_ITEM;
 		ModContent.PUMP_ITEM = () -> PUMP_ITEM;
+		ModContent.FLUID_TANK_ITEM = () -> FLUID_TANK_ITEM;
 		ModContent.TIN_ORE_ITEM = () -> TIN_ORE_ITEM;
 		ModContent.DEEPSLATE_TIN_ORE_ITEM = () -> DEEPSLATE_TIN_ORE_ITEM;
 		ModContent.SILVER_ORE_ITEM = () -> SILVER_ORE_ITEM;

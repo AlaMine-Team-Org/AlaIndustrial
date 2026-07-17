@@ -1,6 +1,8 @@
 package dev.alaindustrial.command.demo;
 
 import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.block.entity.FluidTankBlockEntity;
+import dev.alaindustrial.core.FluidHolder;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -12,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.server.level.ServerLevel;
 
 /**
@@ -244,6 +247,12 @@ public final class DemoStand {
 		set(level, origin, 34, 1, 10, ModContent.PUMP.get());
 		chargeBuffer(level, origin, 34, 1, 10);
 		set(level, origin, 35, 1, 10, ModContent.GEOTHERMAL_GENERATOR.get());
+		set(level, origin, 36, 1, 10, ModContent.FLUID_TANK.get());
+		if (level.getBlockEntity(origin.offset(36, 1, 10)) instanceof FluidTankBlockEntity tank) {
+			tank.fluidTank.fluid = FluidHolder.of(Fluids.WATER);
+			tank.fluidTank.amount = tank.fluidTank.capacity / 2;
+			tank.setChanged();
+		}
 		// Enriched Uranium Torch (MOD-085): the standing torch on the floor, and the wall variant mounted
 		// on a small stone post (facing WEST → supported by the post block to its east) so both survive.
 		set(level, origin, 37, 1, 10, ModContent.ENRICHED_URANIUM_TORCH.get());

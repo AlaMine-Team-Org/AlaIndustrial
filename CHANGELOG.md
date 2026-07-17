@@ -1,24 +1,18 @@
-## 0.1.32
+## 0.1.33
 
-<p><img alt="Item pipes linking two chests" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.32/release-media/v0.1.32/changelog.png" width="720"></p>
+<p><img alt="Portable fluid tank filled with lava, glowing through its glass window" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.33/release-media/v0.1.33/changelog.png" width="720"></p>
 
-Pipes now carry your items, and the wrench sets them up — or takes any block back apart.
+The mod's first dedicated fluid tank — carry a full tank in your pocket — plus a couple of fixes.
 
 ### New
 
-- **Item pipes** — link chests and machines, they move items for you. No power needed.
-- **The wrench sets each side** — click to cycle: pull, push, neutral, off. Wide **orange** funnel takes, narrow **teal** nozzle gives. You see it without opening anything.
-- **The wrench dismantles** — Shift + right-click any block of this mod. It drops as an item, keeping what was inside. No more pickaxing your own base.
-- **2 items per second** — a touch behind a hopper, so a stack takes about half a minute. Pipes win on routing and reach; speed comes with later tiers.
-- **Recipe** — 8 silver ingots around an iron gear gives 8 pipes.
-
-### Improved
-
-- **The pump takes any container**, not just a bucket — a vacuum capsule, or other mods' tanks.
-- **Poke the pump with a capsule** — empty takes a bucket out, full pours one in.
-- **The pump holds any fluid** now, modded ones included. Still one kind at a time.
-- **The pump screen shows the real fluid** — water looks like water, lava like lava.
+- **Portable fluid tank.** A standalone tank that holds **8 buckets** of a single fluid. No power, no screen — just storage.
+- **Carry it full.** Break the tank and the fluid rides along in the item (the tooltip names it and shows the amount); place it back and it's all still there. Empty tanks stack, a filled one doesn't, so you can't spill the contents by accident.
+- **See what's inside.** The fluid shows through the glass with its own look — water looks like water, lava like lava, and fluids from other mods show as themselves.
+- **Fill it from any side.** A bucket, a capsule, or another container — all six faces give and take. Two different fluids won't mix in one tank. A comparator next to it reads how full it is.
+- **Recipe:** tin ingots around the edges, glass panes, an iron gear in the middle and redstone below.
 
 ### Fixed
 
-- **The electric furnace listed five smelts twice** (cobblestone, sand, raw copper, gold, iron). Now once each — at the price the machine actually charges.
+- **Tank icon shows its contents.** An empty tank reads as empty; a filled one is tinted with the fluid's colour across the whole window, so a glance tells you what's inside.
+- **Electric drill won't hand out a free torch when dead.** Below the placement cost the drill no longer places a torch and says so on the action bar — placing one by hand is still free.

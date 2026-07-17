@@ -57,6 +57,7 @@ public final class IndustrializationNeoForgeClient {
 
 	public IndustrializationNeoForgeClient(IEventBus modBus, ModContainer container) {
 		AlaClientConfig.init(FMLPaths.CONFIGDIR.get());
+		dev.alaindustrial.client.FluidTankItemTintSource.register();
 		container.registerExtensionPoint(IConfigScreenFactory.class,
 				(modContainer, parent) -> new AlaConfigScreen(parent));
 		modBus.addListener(this::registerMenuScreens);
@@ -178,6 +179,8 @@ public final class IndustrializationNeoForgeClient {
 				WindMillRotorBlockEntityRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.STORM_WIND_MILL.get(),
 				WindMillRotorBlockEntityRenderer::new);
+		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.FLUID_TANK.get(),
+				dev.alaindustrial.client.FluidTankBlockEntityRenderer::new);
 		// Stock Display Frame (MOD-066): the mod's first entity renderer — NeoForge counterpart to
 		// the Fabric EntityRenderers.register call in IndustrializationClient.
 		event.registerEntityRenderer(

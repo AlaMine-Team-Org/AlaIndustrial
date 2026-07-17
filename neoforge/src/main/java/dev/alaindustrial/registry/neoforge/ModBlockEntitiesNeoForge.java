@@ -17,6 +17,7 @@ import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
+import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
@@ -88,6 +89,8 @@ public final class ModBlockEntitiesNeoForge {
 			register("geothermal_generator", GeothermalGeneratorBlockEntity::new, ModBlocksNeoForge.GEOTHERMAL_GENERATOR);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PumpBlockEntity>> PUMP =
 			register("pump", PumpBlockEntity::new, ModBlocksNeoForge.PUMP);
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidTankBlockEntity>> FLUID_TANK =
+			register("fluid_tank", FluidTankBlockEntity::new, ModBlocksNeoForge.FLUID_TANK);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WaterMillBlockEntity>> WATER_MILL =
 			register("water_mill", WaterMillBlockEntity::new, ModBlocksNeoForge.WATER_MILL);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WindMillBlockEntity>> WIND_MILL =
@@ -135,6 +138,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.COMPRESSOR_BE = COMPRESSOR::get;
 		ModContent.GEOTHERMAL_GENERATOR_BE = GEOTHERMAL_GENERATOR::get;
 		ModContent.PUMP_BE = PUMP::get;
+		ModContent.FLUID_TANK_BE = FLUID_TANK::get;
 		ModContent.WATER_MILL_BE = WATER_MILL::get;
 		ModContent.WIND_MILL_BE = WIND_MILL::get;
 		ModContent.HIGH_ALTITUDE_WIND_MILL_BE = HIGH_ALTITUDE_WIND_MILL::get;

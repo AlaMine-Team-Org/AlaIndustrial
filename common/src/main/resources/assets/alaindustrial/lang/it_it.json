@@ -78,6 +78,7 @@
 	"item.alaindustrial.battery": "Batteria",
 	"item.alaindustrial.energy_pack": "Zaino energetico",
 	"item.alaindustrial.electric_drill": "Trapano elettrico",
+	"item.alaindustrial.electric_drill.torch_no_charge": "Carica insufficiente per posizionare una torcia",
 	"item.alaindustrial.stock_display_frame": "Cornice indicatrice di scorte",
 	"entity.alaindustrial.stock_display_frame": "Cornice indicatrice di scorte",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.hint": "Sposta oggetti tra casse e macchine.",
 	"item.alaindustrial.item_pipe.hint2": "Imposta ogni lato con la chiave.",
 	"item.alaindustrial.wrench.hint": "Shift + clic destro: smontare un blocco",
-	"item.alaindustrial.item_pipe.tech.rate": "Ritmo: %1$s oggetti / %2$s tick (%3$s/s)"
+	"item.alaindustrial.item_pipe.tech.rate": "Ritmo: %1$s oggetti / %2$s tick (%3$s/s)",
+	"block.alaindustrial.fluid_tank": "Serbatoio di fluidi portatile",
+	"tooltip.alaindustrial.fluid_tank.empty": "Vuoto — capacità 8000 mB",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
 }

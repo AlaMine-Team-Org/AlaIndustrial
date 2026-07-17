@@ -78,6 +78,7 @@
 	"item.alaindustrial.battery": "Batteri",
 	"item.alaindustrial.energy_pack": "Energiryggsäck",
 	"item.alaindustrial.electric_drill": "Elektrisk borr",
+	"item.alaindustrial.electric_drill.torch_no_charge": "Inte tillräckligt med laddning för en fackla",
 	"item.alaindustrial.stock_display_frame": "Lagerindikatorram",
 	"entity.alaindustrial.stock_display_frame": "Lagerindikatorram",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.hint": "Flyttar föremål mellan kistor och maskiner.",
 	"item.alaindustrial.item_pipe.hint2": "Ställ in varje sida med nyckeln.",
 	"item.alaindustrial.wrench.hint": "Shift + högerklick: montera ner blocket",
-	"item.alaindustrial.item_pipe.tech.rate": "Takt: %1$s föremål / %2$s tick (%3$s/s)"
+	"item.alaindustrial.item_pipe.tech.rate": "Takt: %1$s föremål / %2$s tick (%3$s/s)",
+	"block.alaindustrial.fluid_tank": "Bärbar vätsketank",
+	"tooltip.alaindustrial.fluid_tank.empty": "Tom — kapacitet 8000 mB",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
 }

@@ -78,6 +78,7 @@
 	"item.alaindustrial.battery": "Baterai",
 	"item.alaindustrial.energy_pack": "Ransel Energi",
 	"item.alaindustrial.electric_drill": "Bor Listrik",
+	"item.alaindustrial.electric_drill.torch_no_charge": "Daya tidak cukup untuk memasang obor",
 	"item.alaindustrial.stock_display_frame": "Bingkai Indikator Stok",
 	"entity.alaindustrial.stock_display_frame": "Bingkai Indikator Stok",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.hint": "Memindahkan item antara peti dan mesin.",
 	"item.alaindustrial.item_pipe.hint2": "Atur tiap sisi dengan kunci pas.",
 	"item.alaindustrial.wrench.hint": "Shift + klik kanan: bongkar blok",
-	"item.alaindustrial.item_pipe.tech.rate": "Laju: %1$s item / %2$s tick (%3$s/d)"
+	"item.alaindustrial.item_pipe.tech.rate": "Laju: %1$s item / %2$s tick (%3$s/d)",
+	"block.alaindustrial.fluid_tank": "Tangki Fluida Portabel",
+	"tooltip.alaindustrial.fluid_tank.empty": "Kosong — kapasitas 8000 mB",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
 }

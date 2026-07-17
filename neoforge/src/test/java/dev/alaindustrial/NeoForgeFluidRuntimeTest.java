@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.alaindustrial.block.entity.PumpBlockEntity;
+import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.core.FluidAmounts;
 import dev.alaindustrial.core.FluidHolder;
 import dev.alaindustrial.core.FluidPort;
@@ -58,6 +59,34 @@ class NeoForgeFluidRuntimeTest {
 	/** A bare tank standing in for a foreign mod's fluid storage, published as a capability would be. */
 	private static FluidTank foreignTank(long capacity) {
 		return new FluidTank(capacity, fluid -> true, fluid -> true, () -> {});
+	}
+
+	/**
+	 * MOD-111: the portable tank publishes its actual shared core tank through the NeoForge adapter,
+	 * with the configured 8000 mB capacity and transactional rollback.
+	 */
+	@Test
+	void portableTankCapabilityUsesConfiguredCapacityAndRollsBack(MinecraftServer server) {
+		assertNotNull(server, "ephemeral MinecraftServer was not injected");
+
+		FluidTankBlockEntity tank = new FluidTankBlockEntity(new BlockPos(8, 64, 0),
+				ModContent.FLUID_TANK.get().defaultBlockState());
+		ResourceHandler<FluidResource> handler = TankAsResourceHandler.of(tank.fluidPort(null));
+		assertNotNull(handler, "portable tank must publish a NeoForge fluid handler");
+		assertEquals(Config.fluidTankCapacity,
+				handler.getCapacityAsLong(0, FluidResource.of(Fluids.WATER)),
+				"handler capacity must match Config.fluidTankCapacity");
+
+		try (Transaction tx = Transaction.openRoot()) {
+			int inserted = handler.insert(0, FluidResource.of(Fluids.WATER),
+					(int) FluidAmounts.BUCKET, tx);
+			assertEquals((int) FluidAmounts.BUCKET, inserted);
+			assertEquals(FluidAmounts.BUCKET, tank.fluidTank.amount,
+					"mid-transaction state must reflect the insert");
+			// No commit: close must restore both amount and fluid identity.
+		}
+		assertEquals(0L, tank.fluidTank.amount, "uncommitted portable-tank insert must roll back");
+		assertTrue(tank.fluidTank.fluid.isEmpty(), "rolled-back empty tank must not retain a fluid identity");
 	}
 
 	/**

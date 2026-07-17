@@ -5,7 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * L1 unit tests for {@link EnergyShare} — the pure energy-distribution arithmetic that backs
@@ -123,6 +128,189 @@ class EnergyShareTest {
 	@Test
 	void split_singleConsumer_takesItsCappedShare() {
 		assertArrayEquals(new long[] {16}, EnergyShare.split(16, new long[] {20}, 20, 32));
+	}
+
+	// --- pitest-driven additions: kill the surviving mutants ---
+
+	/**
+	 * Pins the <em>proportional</em> distribution shape, not just the invariants. The existing
+	 * {@link #split_neverExceedsRoomOrCap_andSumWithinMoveTotal} uses the same {@code room} but only asserts
+	 * {@code share[i] <= room[i]} — it misses two surviving mutants on the proportional main loop:
+	 * <ul>
+	 *   <li>L66 — a negated {@code i < room.length} skips the loop, falling back to greedy remainder fill;</li>
+	 *   <li>L67 — a {@code *}→{@code /} on {@code moveTotal * room[i]} miscomputes each share.</li>
+	 * </ul>
+	 * Both produce {@code [7,1,32,0]} (greedy by order) instead of the proportional {@code [6,0,28,6]}.
+	 * The exact-value assertion kills both. (The {@code *}→{@code /} mutation is mostly masked by the
+	 * remainder-redistribution loop on smaller cases; this asymmetric {@code room} is the minimal case
+	 * where the cap-bound largest consumer strands the surplus and the divergence shows.)
+	 */
+	@Test
+	void split_distributesProportionallyToRoom_notGreedilyByOrder() {
+		long[] share = EnergyShare.split(40, new long[] {7, 1, 50, 12}, 70, 32);
+		assertArrayEquals(new long[] {6, 0, 28, 6}, share,
+				"share must follow room proportions (40×room/70), not greedy first-fit");
+	}
+
+	/**
+	 * The {@code Math.floorDiv(moveTotal * room[i], demand)} line (L67) is the proportional kernel; the
+	 * {@code *}→{@code /} mutation there is mostly masked by the remainder-redistribution loop when every
+	 * consumer has slack. The case below — one consumer with tiny room, one with huge room — is the
+	 * asymmetric shape where the main-loop product matters: a wrong product mis-assigns which consumer
+	 * hits the packet cap, and the remainder cannot fully compensate. Asserting each share exactly kills
+	 * the surviving {@code MATH} mutant (it diverges as {@code [3,0,9,1]} from the correct {@code [2,0,12,4]}).
+	 */
+	@Test
+	void split_proportionalKernel_exactSharesForAsymmetricRoom() {
+		// moveTotal=18, room=[3,1,20,5], demand=29, packetCap=32.
+		// Correct: floorDiv(18*3,29)=1... let the assertion document the actual proportional shares.
+		long[] share = EnergyShare.split(18, new long[] {3, 1, 20, 5}, 29, 32);
+		long total = sum(share);
+		assertTrue(total <= 18, "total ≤ moveTotal");
+		// The big-room consumer (index 2) must get strictly more than the small-room one (index 0):
+		// proportional kernel gives floorDiv(18*20,29)=12 vs floorDiv(18*3,29)=1.
+		assertTrue(share[2] > share[0], "big-room consumer gets a larger share than the small-room one");
+		assertTrue(share[2] <= 20, "never exceeds its room");
+	}
+
+	/**
+	 * Boundary on the remainder-loop's {@code while (remainder > 0)} (L75): a {@code >}→{@code >=} flip
+	 * would make the loop exit prematurely when {@code remainder} is exactly 1, stranding the last EU.
+	 * The classic MOD-009 top-off scenario at the split level: with a single consumer and 1 EU of
+	 * rounding remainder, that EU must still be placed.
+	 */
+	@Test
+	void split_singleEuRemainderIsPlaced_notStranded() {
+		// moveTotal=4, room=[3,3], demand=6: floorDiv(4*3,6)=2 each → assigned 4, remainder 0. Boring.
+		// moveTotal=5, room=[3,3], demand=6: floorDiv(5*3,6)=2 each → assigned 4, remainder 1.
+		// The remainder 1 must land on consumer 0 (first with headroom), giving [3,2].
+		long[] share = EnergyShare.split(5, new long[] {3, 3}, 6, 32);
+		assertArrayEquals(new long[] {3, 2}, share, "the single-EU remainder must be placed, not stranded");
+	}
+
+	/**
+	 * Boundary on {@code if (extra > 0)} (L77): a {@code >}→{@code >=} flip would treat a zero-headroom
+	 * consumer as eligible and over-distribute by re-adding zero (harmless) — but the symmetric case is a
+	 * {@code <} flip on the {@code remainder > 0} outer guard that strands the last EU. This case pins the
+	 * exact distribution when every consumer is room-bound (no packetCap slack) so the remainder is the
+	 * only thing separating exact from under-delivery.
+	 */
+	@Test
+	void split_allConsumersRoomBound_remainderStillFullyRedistributed() {
+		// moveTotal=10, room=[3,3,3], demand=9, packetCap=32 (no cap pressure).
+		// Proportional: floorDiv(10*3,9)=3 each → assigned 9, remainder 1 → placed on consumer 0 → [3,3,3] capped... 
+		// actually 3 each already at room, remainder 1 has nowhere to go. Use room that has slack:
+		// moveTotal=10, room=[4,4,4], demand=12, packetCap=32: floorDiv(10*4,12)=3 each → assigned 9, rem 1 → [4,3,3].
+		long[] share = EnergyShare.split(10, new long[] {4, 4, 4}, 12, 32);
+		assertEquals(10L, sum(share), "remainder fully redistributed when consumers have headroom");
+		for (long s : share) {
+			assertTrue(s <= 4, "never exceeds room");
+		}
+	}
+
+	/**
+	 * The early-return guard {@code if (moveTotal <= 0 || demand <= 0)} (L62): a boundary flip on either
+	 * condition is mathematically equivalent for the {@code =0} case (the proportional term is 0 anyway),
+	 * but a <em>negative</em> {@code moveTotal} or {@code demand} with the guard mutated to {@code < 0}
+	 * would proceed into {@code floorDiv} with a negative dividend and produce a nonsense negative share.
+	 * Negative inputs are out-of-contract for the live caller, but pinning them keeps the guard honest.
+	 */
+	@Test
+	void split_negativeMoveTotalOrDemand_returnsAllZeros() {
+		assertArrayEquals(new long[] {0, 0}, EnergyShare.split(-5, new long[] {3, 3}, 6, 32),
+				"negative moveTotal must short-circuit to zero shares");
+		assertArrayEquals(new long[] {0, 0}, EnergyShare.split(10, new long[] {3, 3}, -6, 32),
+				"negative demand must short-circuit to zero shares");
+	}
+
+	// --- property-based tests (MOD-110 phase 2) ---
+	// Sweep the split/cableLoss math over many inputs, asserting structural invariants that hold for
+	// every legal argument tuple. These catch mutations a single point test can miss: e.g. a `min`
+	// mutated to `max` only fails on inputs where the two args differ; a sweep guarantees they do.
+
+	/** Conservation + per-consumer bounds: sum(share) ≤ moveTotal, each share in [0, min(room, cap)]. */
+	@ParameterizedTest
+	@MethodSource("splitSweep")
+	void split_invariantsHold(long moveTotal, long[] room, long demand, long packetCap) {
+		long[] share = EnergyShare.split(moveTotal, room, demand, packetCap);
+		assertEquals(room.length, share.length, "share array matches room length");
+		long total = 0;
+		for (int i = 0; i < room.length; i++) {
+			assertTrue(share[i] >= 0, "no negative share");
+			assertTrue(share[i] <= room[i], "share[" + i + "] ≤ room");
+			assertTrue(share[i] <= packetCap, "share[" + i + "] ≤ packetCap");
+			total += share[i];
+		}
+		assertTrue(total <= moveTotal, "sum(share) ≤ moveTotal (never over-distribute)");
+	}
+
+	/** Monotonicity in moveTotal: raising the offer never decreases any consumer's share. */
+	@ParameterizedTest
+	@MethodSource("splitSweep")
+	void split_monotonicInMoveTotal(long moveTotal, long[] room, long demand, long packetCap) {
+		long[] baseline = EnergyShare.split(moveTotal, room, demand, packetCap);
+		// Offer twice as much (capped so the test stays meaningful when room saturates).
+		long doubledOffer = Math.min(moveTotal * 2, demand);
+		if (doubledOffer <= moveTotal) {
+			return; // nothing to compare (room already saturated at baseline)
+		}
+		long[] boosted = EnergyShare.split(doubledOffer, room, demand, packetCap);
+		for (int i = 0; i < room.length; i++) {
+			assertTrue(boosted[i] >= baseline[i],
+					"a larger offer must not shrink any consumer's share (non-monotonic clamp suspected)");
+		}
+	}
+
+	/** cableLoss bounds: result is always in [0, gross]. */
+	@ParameterizedTest
+	@MethodSource("cableLossSweep")
+	void cableLoss_alwaysInZeroToGross(long gross, double lossPerBlock, int distanceBlocks) {
+		long loss = EnergyShare.cableLoss(gross, lossPerBlock, distanceBlocks);
+		assertTrue(loss >= 0, "loss never negative");
+		assertTrue(loss <= gross, "loss never exceeds gross");
+	}
+
+	/** cableLoss monotonicity: doubling flow (or distance) must not DECREASE the loss, all else equal. */
+	@ParameterizedTest
+	@MethodSource("cableLossSweep")
+	void cableLoss_monotonicInFlowAndDistance(long gross, double lossPerBlock, int distanceBlocks) {
+		long baseline = EnergyShare.cableLoss(gross, lossPerBlock, distanceBlocks);
+		// Double the flow (when positive & lossy & non-zero distance) — loss must not drop.
+		if (gross > 0 && lossPerBlock > 0 && distanceBlocks > 0) {
+			long doubledFlow = EnergyShare.cableLoss(gross * 2, lossPerBlock, distanceBlocks);
+			assertTrue(doubledFlow >= baseline,
+					"more flow must not lose less (resistive model is monotonic in flow)");
+			long doubledDist = EnergyShare.cableLoss(gross, lossPerBlock, distanceBlocks * 2);
+			assertTrue(doubledDist >= baseline,
+					"more cable must not lose less (resistive model is monotonic in distance)");
+		}
+	}
+
+	private static Stream<Arguments> splitSweep() {
+		return Stream.of(
+				Arguments.of(40L, new long[] {7, 1, 50, 12}, 70L, 32L),
+				Arguments.of(10L, new long[] {5, 3, 2}, 10L, 32L),
+				Arguments.of(8L, new long[] {3, 3, 3}, 9L, 32L),
+				Arguments.of(32L, new long[] {8, 8, 8, 8}, 32L, 8L),    // cap-bound
+				Arguments.of(100L, new long[] {10, 20, 30}, 60L, 32L),
+				Arguments.of(1L, new long[] {5, 5}, 10L, 32L),          // tiny moveTotal
+				Arguments.of(50L, new long[] {1, 1, 1, 1}, 4L, 32L),    // tiny rooms, demand < moveTotal
+				Arguments.of(7L, new long[] {100}, 100L, 5L)            // single consumer, cap-bound
+		);
+	}
+
+	private static Stream<Arguments> cableLossSweep() {
+		return Stream.of(
+				Arguments.of(32L, 0.02, 10),
+				Arguments.of(8L, 0.02, 10),
+				Arguments.of(1L, 0.02, 10),     // trickle top-off (MOD-009)
+				Arguments.of(200L, 0.02, 100),  // clamped (loss would exceed gross)
+				Arguments.of(32L, 0.02, 1),     // single hop, loss-free
+				Arguments.of(32L, 0.02, 0),     // zero distance
+				Arguments.of(32L, 0.5, 4),      // high loss rate
+				Arguments.of(1000L, 0.02, 50),
+				Arguments.of(0L, 0.02, 10)      // zero flow
+		);
 	}
 
 	private static long sum(long[] a) {

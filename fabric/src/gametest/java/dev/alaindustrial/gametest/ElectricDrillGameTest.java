@@ -92,6 +92,15 @@ public class ElectricDrillGameTest {
 	}
 
 	/**
+	 * @implements TC-DRILL-001-NEG01 — a drill below electricDrillTorchEuCost refuses to place a torch
+	 *     (MOD-097): CONSUME, no block placed, no torch consumed, charge untouched. Inverse of FUN07.
+	 */
+	@GameTest
+	public void tcDrill001Neg01_torchRefusedBelowCost(GameTestHelper helper) {
+		ElectricDrillScenarios.neg01TorchRefusedBelowCost(helper);
+	}
+
+	/**
 	 * @implements TC-DRILL-001-PER01 — charge survives a stack copy, 0 EU removes the component, and
 	 *     writes clamp at capacity.
 	 */

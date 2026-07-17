@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
 import dev.alaindustrial.item.HintItem;
+import dev.alaindustrial.item.FluidTankBlockItem;
 import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
@@ -228,6 +229,10 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("geothermal_generator", ModBlocksNeoForge.GEOTHERMAL_GENERATOR);
 	public static final DeferredItem<BlockItem> PUMP_ITEM =
 			ITEMS.registerSimpleBlockItem("pump", ModBlocksNeoForge.PUMP);
+	public static final DeferredItem<FluidTankBlockItem> FLUID_TANK_ITEM =
+			ITEMS.registerItem("fluid_tank",
+					p -> new FluidTankBlockItem(ModBlocksNeoForge.FLUID_TANK.get(),
+							p.useBlockDescriptionPrefix()));
 	public static final DeferredItem<BlockItem> WATER_MILL_ITEM =
 			ITEMS.registerSimpleBlockItem("water_mill", ModBlocksNeoForge.WATER_MILL);
 	public static final DeferredItem<BlockItem> WIND_MILL_ITEM =
@@ -377,6 +382,7 @@ public final class ModItemsNeoForge {
 		ModContent.COMPRESSOR_ITEM = COMPRESSOR_ITEM;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = GEOTHERMAL_GENERATOR_ITEM;
 		ModContent.PUMP_ITEM = PUMP_ITEM;
+		ModContent.FLUID_TANK_ITEM = FLUID_TANK_ITEM::get;
 		ModContent.WATER_MILL_ITEM = WATER_MILL_ITEM;
 		ModContent.WIND_MILL_ITEM = WIND_MILL_ITEM;
 		ModContent.HIGH_ALTITUDE_WIND_MILL_ITEM = HIGH_ALTITUDE_WIND_MILL_ITEM;

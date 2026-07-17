@@ -78,6 +78,7 @@
 	"item.alaindustrial.battery": "Батарея",
 	"item.alaindustrial.energy_pack": "Енергоранець",
 	"item.alaindustrial.electric_drill": "Електробур",
+	"item.alaindustrial.electric_drill.torch_no_charge": "Недостатньо заряду для смолоскипа",
 	"item.alaindustrial.stock_display_frame": "Рамка-індикатор",
 	"entity.alaindustrial.stock_display_frame": "Рамка-індикатор",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.hint": "Переносить предмети між скринями та механізмами.",
 	"item.alaindustrial.item_pipe.hint2": "Боки налаштовуються ключем.",
 	"item.alaindustrial.wrench.hint": "Shift + ПКМ: скрутити блок",
-	"item.alaindustrial.item_pipe.tech.rate": "Швидкість: %1$s предм. / %2$s тиків (%3$s/с)"
+	"item.alaindustrial.item_pipe.tech.rate": "Швидкість: %1$s предм. / %2$s тиків (%3$s/с)",
+	"block.alaindustrial.fluid_tank": "Переносний бак для рідини",
+	"tooltip.alaindustrial.fluid_tank.empty": "Порожньо — місткість 8000 мБ",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s мБ"
 }

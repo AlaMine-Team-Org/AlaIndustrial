@@ -78,6 +78,7 @@
 	"item.alaindustrial.battery": "Pil",
 	"item.alaindustrial.energy_pack": "Enerji Sırt Çantası",
 	"item.alaindustrial.electric_drill": "Elektrikli Matkap",
+	"item.alaindustrial.electric_drill.torch_no_charge": "Meşale koymak için yeterli şarj yok",
 	"item.alaindustrial.stock_display_frame": "Stok Gösterge Çerçevesi",
 	"entity.alaindustrial.stock_display_frame": "Stok Gösterge Çerçevesi",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.hint": "Sandıklarla makineler arasında eşya taşır.",
 	"item.alaindustrial.item_pipe.hint2": "Her yüzü anahtarla ayarlayın.",
 	"item.alaindustrial.wrench.hint": "Shift + sağ tık: bloğu sök",
-	"item.alaindustrial.item_pipe.tech.rate": "Hız: %1$s eşya / %2$s tik (%3$s/sn)"
+	"item.alaindustrial.item_pipe.tech.rate": "Hız: %1$s eşya / %2$s tik (%3$s/sn)",
+	"block.alaindustrial.fluid_tank": "Taşınabilir Sıvı Tankı",
+	"tooltip.alaindustrial.fluid_tank.empty": "Boş — kapasite 8000 mB",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
 }

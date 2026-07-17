@@ -94,6 +94,7 @@
 	"item.alaindustrial.battery": "Battery",
 	"item.alaindustrial.energy_pack": "Energy Pack",
 	"item.alaindustrial.electric_drill": "Electric Drill",
+	"item.alaindustrial.electric_drill.torch_no_charge": "Not enough charge to place a torch",
 	"item.alaindustrial.stock_display_frame": "Stock Display Frame",
 	"entity.alaindustrial.stock_display_frame": "Stock Display Frame",
 	"tag.item.alaindustrial.macerable_iron": "Macerable Iron",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.tech.rate": "Rate: %1$s items / %2$s ticks (%3$s/s)",
 	"alaindustrial.teleporter.rebound": "Replaced %s with %s",
 	"tooltip.alaindustrial.teleporter_remote.bound": "Bound: %s",
-	"tooltip.alaindustrial.teleporter_remote.at": "at %s, %s, %s"
+	"tooltip.alaindustrial.teleporter_remote.at": "at %s, %s, %s",
+	"block.alaindustrial.fluid_tank": "Portable Fluid Tank",
+	"tooltip.alaindustrial.fluid_tank.empty": "Empty — 8000 mB capacity",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
 }

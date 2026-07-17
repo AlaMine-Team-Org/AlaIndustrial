@@ -17,6 +17,7 @@ import dev.alaindustrial.block.IronChestBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PumpBlock;
+import dev.alaindustrial.block.FluidTankBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.block.WaterMillBlock;
 import dev.alaindustrial.block.WindMillBlock;
@@ -84,6 +85,10 @@ public final class ModBlocks {
 	public static final ResourceKey<Block> PUMP_KEY = key("pump");
 	public static final Block PUMP = register(PUMP_KEY,
 			new PumpBlock(props(PUMP_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL)));
+
+	public static final ResourceKey<Block> FLUID_TANK_KEY = key("fluid_tank");
+	public static final Block FLUID_TANK = register(FLUID_TANK_KEY,
+			new FluidTankBlock(props(FLUID_TANK_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()));
 
 	public static final ResourceKey<Block> COPPER_CABLE_KEY = key("copper_cable");
 	public static final Block COPPER_CABLE = register(COPPER_CABLE_KEY,
@@ -262,6 +267,7 @@ public final class ModBlocks {
 		ModContent.HIGH_ALTITUDE_WIND_MILL = () -> HIGH_ALTITUDE_WIND_MILL;
 		ModContent.STORM_WIND_MILL = () -> STORM_WIND_MILL;
 		ModContent.PUMP = () -> PUMP;
+		ModContent.FLUID_TANK = () -> FLUID_TANK;
 		ModContent.COPPER_CABLE = () -> COPPER_CABLE;
 		ModContent.TIN_CABLE = () -> TIN_CABLE;
 		ModContent.INSULATED_COPPER_CABLE = () -> INSULATED_COPPER_CABLE;

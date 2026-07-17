@@ -349,6 +349,42 @@ public final class ElectricDrillScenarios {
 		helper.succeed();
 	}
 
+	// ── NEG — negative ───────────────────────────────────────────────────────────────────────────
+
+	/**
+	 * NEG01 (MOD-097): a drill charged below {@code electricDrillTorchEuCost} refuses to place a torch
+	 * instead of giving a free one. The right-click returns {@code CONSUME} (the click is eaten, so no
+	 * off-hand fallback fires), the target cell stays air, no torch leaves the inventory, and the drill's
+	 * charge is untouched. This is the exact behaviour FUN07 asserts for a charged drill, inverted.
+	 */
+	public static void neg01TorchRefusedBelowCost(GameTestHelper helper) {
+		BlockPos floor = new BlockPos(1, 2, 2);
+		BlockPos torchAt = floor.above();
+		helper.setBlock(floor, Blocks.STONE);
+
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		long belowCost = Config.electricDrillTorchEuCost - 1;
+		ItemStack drillStack = drill(belowCost);
+		player.setItemInHand(InteractionHand.MAIN_HAND, drillStack);
+		player.getInventory().setItem(1, new ItemStack(Items.TORCH, 8));
+
+		InteractionResult result = useOnBlock(helper, player, floor);
+		if (result != InteractionResult.CONSUME) {
+			helper.fail("a drill below the torch cost must refuse with CONSUME, got " + result);
+		}
+		// Nothing placed: the cell above the clicked floor is still air.
+		helper.assertBlockPresent(Blocks.AIR, torchAt);
+		if (player.getInventory().countItem(Items.TORCH) != 8) {
+			helper.fail("a refused placement must consume no torch (8 left), got "
+					+ player.getInventory().countItem(Items.TORCH));
+		}
+		if (ItemEnergy.get(drillStack) != belowCost) {
+			helper.fail("a refused placement must not touch the drill's charge, left "
+					+ ItemEnergy.get(drillStack));
+		}
+		helper.succeed();
+	}
+
 	// ── PER — persistence ────────────────────────────────────────────────────────────────────────
 
 	/** PER01: charge survives a stack copy, 0 EU removes the component, and writes clamp at capacity. */

@@ -97,6 +97,9 @@ public final class Config {
 	 * still yields 16 000 EU in the geothermal generator (16× payback on the pump's own tax). */
 	public static int pumpEuPerBucket = 1000;
 
+	/** Portable passive tank capacity (MOD-111): 8 buckets, intentionally below machine tanks (10). */
+	public static int fluidTankCapacity = 8000;
+
 	// --- Teleporter (HV anchor station, MOD-091) ---
 	/** Teleporter station EU buffer. Oversized (×25 the battery box) because a jump is paid in one
 	 * lump sum by the TARGET station: at ~10 000–20 000 EU for a typical "home from the mine" jump
@@ -208,9 +211,9 @@ public final class Config {
 		Battery Box takes ~313 ticks (~16 s). */
 	public static int electricDrillInputRate = 32;
 	/** EU drained when the drill places a torch from the inventory on right-click (MOD-089). Placing a
-		torch is a comfort action, cheaper than mining a block ({@link #electricDrillEuPerBlock} = 50). The
-		drain is skipped gracefully when the drill holds less than this — the torch still places, matching the
-		drill's "degrades but keeps working" philosophy for a flat battery. */
+		torch is a comfort action, cheaper than mining a block ({@link #electricDrillEuPerBlock} = 50). Below
+		this charge the drill refuses to place and notifies the player instead of giving a free torch
+		(MOD-097) — the torch is powered, not free. */
 	public static int electricDrillTorchEuCost = 5;
 
 	// --- Stock Display Frame (MOD-066, no energy) ---
@@ -328,6 +331,10 @@ public final class Config {
 						solarEvolveTicks = 33_600;
 					}
 					pumpEuPerBucket = GsonHelper.getAsInt(o, "pumpEuPerBucket", pumpEuPerBucket);
+					fluidTankCapacity = GsonHelper.getAsInt(o, "fluidTankCapacity", fluidTankCapacity);
+					if (fluidTankCapacity <= 0) {
+						fluidTankCapacity = 8000;
+					}
 					teleporterBuffer = GsonHelper.getAsInt(o, "teleporterBuffer", teleporterBuffer);
 					if (teleporterBuffer <= 0) {
 						teleporterBuffer = 500_000;
@@ -484,6 +491,7 @@ public final class Config {
 		o.addProperty("solarSnowFactor", solarSnowFactor);
 		o.addProperty("solarEvolveTicks", solarEvolveTicks);
 		o.addProperty("pumpEuPerBucket", pumpEuPerBucket);
+		o.addProperty("fluidTankCapacity", fluidTankCapacity);
 		o.addProperty("teleporterBuffer", teleporterBuffer);
 		o.addProperty("teleporterBaseCost", teleporterBaseCost);
 		o.addProperty("teleporterCostPerBlock", teleporterCostPerBlock);

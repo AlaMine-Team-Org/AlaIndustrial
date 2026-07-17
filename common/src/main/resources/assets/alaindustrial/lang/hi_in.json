@@ -78,6 +78,7 @@
 	"item.alaindustrial.battery": "बैटरी",
 	"item.alaindustrial.energy_pack": "ऊर्जा बैकपैक",
 	"item.alaindustrial.electric_drill": "विद्युत ड्रिल",
+	"item.alaindustrial.electric_drill.torch_no_charge": "मशाल लगाने के लिए पर्याप्त चार्ज नहीं है",
 	"item.alaindustrial.stock_display_frame": "स्टॉक प्रदर्शन फ्रेम",
 	"entity.alaindustrial.stock_display_frame": "स्टॉक प्रदर्शन फ्रेम",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.hint": "संदूकों और मशीनों के बीच वस्तुएँ ले जाती है।",
 	"item.alaindustrial.item_pipe.hint2": "हर दिशा रिंच से सेट करें।",
 	"item.alaindustrial.wrench.hint": "Shift + दायाँ क्लिक: ब्लॉक खोलें",
-	"item.alaindustrial.item_pipe.tech.rate": "गति: %1$s वस्तुएँ / %2$s टिक (%3$s/से)"
+	"item.alaindustrial.item_pipe.tech.rate": "गति: %1$s वस्तुएँ / %2$s टिक (%3$s/से)",
+	"block.alaindustrial.fluid_tank": "पोर्टेबल द्रव टैंक",
+	"tooltip.alaindustrial.fluid_tank.empty": "खाली — क्षमता 8000 mB",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
 }

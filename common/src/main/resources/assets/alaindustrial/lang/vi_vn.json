@@ -84,6 +84,7 @@
 	"item.alaindustrial.battery": "Pin",
 	"item.alaindustrial.energy_pack": "Ba lô năng lượng",
 	"item.alaindustrial.electric_drill": "Máy khoan điện",
+	"item.alaindustrial.electric_drill.torch_no_charge": "Không đủ năng lượng để đặt đuốc",
 	"item.alaindustrial.stock_display_frame": "Khung hiển thị kho",
 	"entity.alaindustrial.stock_display_frame": "Khung hiển thị kho",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.hint": "Di chuyển vật phẩm giữa rương và máy móc.",
 	"item.alaindustrial.item_pipe.hint2": "Đặt từng mặt bằng cờ lê.",
 	"item.alaindustrial.wrench.hint": "Shift + chuột phải: tháo khối",
-	"item.alaindustrial.item_pipe.tech.rate": "Tốc độ: %1$s vật phẩm / %2$s tick (%3$s/giây)"
+	"item.alaindustrial.item_pipe.tech.rate": "Tốc độ: %1$s vật phẩm / %2$s tick (%3$s/giây)",
+	"block.alaindustrial.fluid_tank": "Bồn chất lỏng di động",
+	"tooltip.alaindustrial.fluid_tank.empty": "Trống — sức chứa 8000 mB",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
 }

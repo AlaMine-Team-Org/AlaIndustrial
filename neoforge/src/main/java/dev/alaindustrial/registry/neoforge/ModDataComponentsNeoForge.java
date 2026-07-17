@@ -5,6 +5,7 @@ import dev.alaindustrial.item.AnalyzerMode;
 import dev.alaindustrial.item.NetworkScanData;
 import dev.alaindustrial.item.PouchContents;
 import dev.alaindustrial.item.TeleportPoints;
+import dev.alaindustrial.item.FluidTankContents;
 import dev.alaindustrial.registry.ModDataComponents;
 import java.util.UUID;
 import net.minecraft.core.Holder;
@@ -42,6 +43,9 @@ public final class ModDataComponentsNeoForge {
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<Fluid>>> CAPSULE_FLUID =
 			DATA_COMPONENTS.register("capsule_fluid", ModDataComponents::createCapsuleFluid);
 
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<FluidTankContents>> FLUID_TANK_CONTENTS =
+			DATA_COMPONENTS.register("fluid_tank_contents", ModDataComponents::createFluidTankContents);
+
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> TELEPORTER_PRIVATE =
 			DATA_COMPONENTS.register("teleporter_private", ModDataComponents::createTeleporterPrivate);
 
@@ -59,6 +63,7 @@ public final class ModDataComponentsNeoForge {
 		ModDataComponents.POUCH_ENERGY = POUCH_ENERGY;
 		ModDataComponents.POUCH_CONTENTS = POUCH_CONTENTS;
 		ModDataComponents.CAPSULE_FLUID = CAPSULE_FLUID;
+		ModDataComponents.FLUID_TANK_CONTENTS = FLUID_TANK_CONTENTS;
 		ModDataComponents.TELEPORTER_PRIVATE = TELEPORTER_PRIVATE;
 		ModDataComponents.TELEPORTER_OWNER = TELEPORTER_OWNER;
 		ModDataComponents.TELEPORTER_POINTS = TELEPORTER_POINTS;

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "T": "alaindustrial:tin_ingot",
+    "G": "minecraft:glass_pane",
+    "I": "alaindustrial:iron_gear",
+    "R": "minecraft:redstone"
+  },
+  "pattern": ["TGT", "GIG", "TRT"],
+  "result": { "id": "alaindustrial:fluid_tank" }
+}

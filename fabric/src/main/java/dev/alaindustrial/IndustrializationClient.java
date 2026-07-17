@@ -33,6 +33,7 @@ public class IndustrializationClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		AlaClientConfig.init(FabricLoader.getInstance().getConfigDir());
+		dev.alaindustrial.client.FluidTankItemTintSource.register();
 
 		MenuScreens.<dev.alaindustrial.menu.GeneratorMenu, dev.alaindustrial.client.GeneratorScreen>register(
 				ModMenus.GENERATOR, dev.alaindustrial.client.GeneratorScreen::new);
@@ -140,6 +141,8 @@ public class IndustrializationClient implements ClientModInitializer {
 		BlockEntityRendererRegistry.register(ModBlockEntities.WIND_MILL, WindMillRotorBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.HIGH_ALTITUDE_WIND_MILL, WindMillRotorBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.STORM_WIND_MILL, WindMillRotorBlockEntityRenderer::new);
+		BlockEntityRendererRegistry.register(ModBlockEntities.FLUID_TANK,
+				dev.alaindustrial.client.FluidTankBlockEntityRenderer::new);
 
 		// Stock Display Frame (MOD-066): the mod's first entity renderer. Vanilla EntityRenderers.register
 		// is the path Fabric's own docs recommend (their EntityRendererRegistry is a thin legacy wrapper).

@@ -78,6 +78,7 @@
 	"item.alaindustrial.battery": "Batterij",
 	"item.alaindustrial.energy_pack": "Energierugzak",
 	"item.alaindustrial.electric_drill": "Elektrische boor",
+	"item.alaindustrial.electric_drill.torch_no_charge": "Niet genoeg lading voor een fakkel",
 	"item.alaindustrial.stock_display_frame": "Voorraadindicatorlijst",
 	"entity.alaindustrial.stock_display_frame": "Voorraadindicatorlijst",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.hint": "Verplaatst voorwerpen tussen kisten en machines.",
 	"item.alaindustrial.item_pipe.hint2": "Stel elke kant in met de sleutel.",
 	"item.alaindustrial.wrench.hint": "Shift + rechtsklik: blok demonteren",
-	"item.alaindustrial.item_pipe.tech.rate": "Tempo: %1$s voorwerpen / %2$s ticks (%3$s/s)"
+	"item.alaindustrial.item_pipe.tech.rate": "Tempo: %1$s voorwerpen / %2$s ticks (%3$s/s)",
+	"block.alaindustrial.fluid_tank": "Draagbare vloeistoftank",
+	"tooltip.alaindustrial.fluid_tank.empty": "Leeg — capaciteit 8000 mB",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
 }

@@ -78,6 +78,7 @@
 	"item.alaindustrial.battery": "배터리",
 	"item.alaindustrial.energy_pack": "에너지 팩",
 	"item.alaindustrial.electric_drill": "전동 드릴",
+	"item.alaindustrial.electric_drill.torch_no_charge": "횃불을 놓을 전력이 부족합니다",
 	"item.alaindustrial.stock_display_frame": "재고 표시 액자",
 	"entity.alaindustrial.stock_display_frame": "재고 표시 액자",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.hint": "상자와 기계 사이로 아이템을 옮깁니다.",
 	"item.alaindustrial.item_pipe.hint2": "각 면은 렌치로 설정합니다.",
 	"item.alaindustrial.wrench.hint": "Shift + 우클릭: 블록 분해",
-	"item.alaindustrial.item_pipe.tech.rate": "속도: %1$s개 / %2$s 틱 (%3$s/초)"
+	"item.alaindustrial.item_pipe.tech.rate": "속도: %1$s개 / %2$s 틱 (%3$s/초)",
+	"block.alaindustrial.fluid_tank": "휴대용 유체 탱크",
+	"tooltip.alaindustrial.fluid_tank.empty": "비어 있음 — 용량 8000 mB",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
 }

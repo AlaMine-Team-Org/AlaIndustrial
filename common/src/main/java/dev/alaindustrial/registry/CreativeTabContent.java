@@ -141,6 +141,7 @@ public final class CreativeTabContent {
 
 	private static void storageAndCables(Sink out) {
 		out.accept(ModContent.BATTERY_BOX_ITEM.get());
+		out.accept(ModContent.FLUID_TANK_ITEM.get());
 		// Teleporter (MOD-091/092/093): hidden until the feature was whole — the station banks EU with
 		// no way to spend it until the remote existed, and the remote had no list until the screen did.
 		// All three shipped, so it is visible now.

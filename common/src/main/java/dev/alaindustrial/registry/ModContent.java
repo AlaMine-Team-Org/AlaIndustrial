@@ -76,6 +76,7 @@ public final class ModContent {
 	public static Supplier<Block> HIGH_ALTITUDE_WIND_MILL = unbound("HIGH_ALTITUDE_WIND_MILL");
 	public static Supplier<Block> STORM_WIND_MILL = unbound("STORM_WIND_MILL");
 	public static Supplier<Block> PUMP = unbound("PUMP");
+	public static Supplier<Block> FLUID_TANK = unbound("FLUID_TANK");
 	public static Supplier<Block> COPPER_CABLE = unbound("COPPER_CABLE");
 	public static Supplier<Block> TIN_CABLE = unbound("TIN_CABLE");
 	public static Supplier<Block> INSULATED_COPPER_CABLE = unbound("INSULATED_COPPER_CABLE");
@@ -218,6 +219,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> EXTRACTOR_ITEM = unbound("EXTRACTOR_ITEM");
 	public static Supplier<BlockItem> COMPRESSOR_ITEM = unbound("COMPRESSOR_ITEM");
 	public static Supplier<BlockItem> PUMP_ITEM = unbound("PUMP_ITEM");
+	public static Supplier<BlockItem> FLUID_TANK_ITEM = unbound("FLUID_TANK_ITEM");
 	public static Supplier<BlockItem> TIN_ORE_ITEM = unbound("TIN_ORE_ITEM");
 	public static Supplier<BlockItem> DEEPSLATE_TIN_ORE_ITEM = unbound("DEEPSLATE_TIN_ORE_ITEM");
 	public static Supplier<BlockItem> SILVER_ORE_ITEM = unbound("SILVER_ORE_ITEM");
@@ -253,6 +255,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> EXTRACTOR_BE = unbound("EXTRACTOR_BE");
 	public static Supplier<BlockEntityType<?>> COMPRESSOR_BE = unbound("COMPRESSOR_BE");
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
+	public static Supplier<BlockEntityType<?>> FLUID_TANK_BE = unbound("FLUID_TANK_BE");
 	public static Supplier<BlockEntityType<?>> IRON_CHEST_BE = unbound("IRON_CHEST_BE");
 	public static Supplier<BlockEntityType<?>> SILVER_CHEST_BE = unbound("SILVER_CHEST_BE");
 	public static Supplier<BlockEntityType<?>> GOLD_CHEST_BE = unbound("GOLD_CHEST_BE");

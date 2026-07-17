@@ -78,6 +78,7 @@
 	"item.alaindustrial.battery": "電池",
 	"item.alaindustrial.energy_pack": "エネルギーパック",
 	"item.alaindustrial.electric_drill": "電動ドリル",
+	"item.alaindustrial.electric_drill.torch_no_charge": "松明を置くための充電が足りません",
 	"item.alaindustrial.stock_display_frame": "在庫表示額縁",
 	"entity.alaindustrial.stock_display_frame": "在庫表示額縁",
 	"gui.alaindustrial.energy": "%1$s / %2$s EU",
@@ -330,5 +331,8 @@
 	"item.alaindustrial.item_pipe.hint": "チェストと機械の間でアイテムを移動します。",
 	"item.alaindustrial.item_pipe.hint2": "各面はレンチで設定します。",
 	"item.alaindustrial.wrench.hint": "Shift + 右クリック: ブロックを分解",
-	"item.alaindustrial.item_pipe.tech.rate": "速度: %1$s 個 / %2$s ティック（%3$s/秒）"
+	"item.alaindustrial.item_pipe.tech.rate": "速度: %1$s 個 / %2$s ティック（%3$s/秒）",
+	"block.alaindustrial.fluid_tank": "携帯用流体タンク",
+	"tooltip.alaindustrial.fluid_tank.empty": "空 — 容量 8000 mB",
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
 }

@@ -1,6 +1,6 @@
 {
 	"model": {
 		"type": "minecraft:model",
-		"model": "alaindustrial:item/water_mill"
+		"model": "alaindustrial:block/water_mill"
 	}
 }

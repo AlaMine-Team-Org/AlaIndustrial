@@ -1,0 +1,50 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "alaindustrial:block/fluid_tank_frame",
+    "frame": "alaindustrial:block/fluid_tank_frame",
+    "top": "alaindustrial:block/fluid_tank_top"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 0], "to": [16, 3, 16],
+      "faces": {
+        "down": {"texture": "#top", "cullface": "down"}, "up": {"texture": "#top"},
+        "north": {"texture": "#frame", "cullface": "north"},
+        "south": {"texture": "#frame", "cullface": "south"},
+        "west": {"texture": "#frame", "cullface": "west"},
+        "east": {"texture": "#frame", "cullface": "east"}
+      }
+    },
+    {
+      "from": [0, 13, 0], "to": [16, 16, 16],
+      "faces": {
+        "down": {"texture": "#top"}, "up": {"texture": "#top", "cullface": "up"},
+        "north": {"texture": "#frame", "cullface": "north"},
+        "south": {"texture": "#frame", "cullface": "south"},
+        "west": {"texture": "#frame", "cullface": "west"},
+        "east": {"texture": "#frame", "cullface": "east"}
+      }
+    },
+    {
+      "from": [0, 3, 0], "to": [3, 13, 3],
+      "faces": {"north": {"texture": "#frame", "cullface": "north"}, "south": {"texture": "#frame"},
+        "west": {"texture": "#frame", "cullface": "west"}, "east": {"texture": "#frame"}}
+    },
+    {
+      "from": [13, 3, 0], "to": [16, 13, 3],
+      "faces": {"north": {"texture": "#frame", "cullface": "north"}, "south": {"texture": "#frame"},
+        "west": {"texture": "#frame"}, "east": {"texture": "#frame", "cullface": "east"}}
+    },
+    {
+      "from": [0, 3, 13], "to": [3, 13, 16],
+      "faces": {"north": {"texture": "#frame"}, "south": {"texture": "#frame", "cullface": "south"},
+        "west": {"texture": "#frame", "cullface": "west"}, "east": {"texture": "#frame"}}
+    },
+    {
+      "from": [13, 3, 13], "to": [16, 13, 16],
+      "faces": {"north": {"texture": "#frame"}, "south": {"texture": "#frame", "cullface": "south"},
+        "west": {"texture": "#frame"}, "east": {"texture": "#frame", "cullface": "east"}}
+    }
+  ]
+}
