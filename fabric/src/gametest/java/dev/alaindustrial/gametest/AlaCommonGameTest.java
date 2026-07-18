@@ -4,9 +4,12 @@ import dev.alaindustrial.Industrialization;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import java.util.List;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
@@ -225,6 +228,94 @@ public class AlaCommonGameTest {
 			helper.fail("BuildInfo.version() is null/empty — build version not exposed (ALA_COMMAND)");
 		}
 		helper.succeed();
+	}
+
+	/**
+	 * ORE_CONVENTION_TAGS (MOD-114): every ore block/item is exposed through the Fabric+NeoForge
+	 * common {@code c:} convention tags, so tag-driven mods (vein miners, ore-processing, unification,
+	 * REI/EMI grouping) recognise our metals as ores/materials — parity with vanilla iron/copper.
+	 *
+	 * <p>Asserts, for each of tin/silver/nickel/uranium (stone + deepslate variant):
+	 * <ul>
+	 *   <li>block in {@code #c:ores} and {@code #c:ores/<metal>};</li>
+	 *   <li>stone variant in {@code #c:ores_in_ground/stone}, deepslate variant in {@code .../deepslate};</li>
+	 *   <li>block-item in {@code #c:ores}; raw drop in {@code #c:raw_materials(/<metal>)};
+	 *       ingot in {@code #c:ingots(/<metal>)}.</li>
+	 * </ul>
+	 * A missing/typo'd tag JSON breaks membership → this test fails. The tag data lives in
+	 * {@code common/}, so the same files back the NeoForge loader (structural parity).
+	 *
+	 * @implements ORE_CONVENTION_TAGS (MOD-114)
+	 */
+	@GameTest
+	public void oresInConventionTags(GameTestHelper helper) {
+		List<String> failures = new ArrayList<>();
+		TagKey<Block> cOres = blockTag("ores");
+		TagKey<Block> inStone = blockTag("ores_in_ground/stone");
+		TagKey<Block> inDeepslate = blockTag("ores_in_ground/deepslate");
+
+		for (String metal : new String[] { "tin", "silver", "nickel", "uranium" }) {
+			Block stoneOre = ore(metal + "_ore");
+			Block deepslateOre = ore("deepslate_" + metal + "_ore");
+			TagKey<Block> perMetal = blockTag("ores/" + metal);
+
+			for (Block b : new Block[] { stoneOre, deepslateOre }) {
+				BlockState s = b.defaultBlockState();
+				if (!s.is(cOres)) {
+					failures.add(blockId(b) + " not in #c:ores");
+				}
+				if (!s.is(perMetal)) {
+					failures.add(blockId(b) + " not in #c:ores/" + metal);
+				}
+			}
+			if (!stoneOre.defaultBlockState().is(inStone)) {
+				failures.add(blockId(stoneOre) + " not in #c:ores_in_ground/stone");
+			}
+			if (!deepslateOre.defaultBlockState().is(inDeepslate)) {
+				failures.add(blockId(deepslateOre) + " not in #c:ores_in_ground/deepslate");
+			}
+
+			assertItemInTag(failures, metal + "_ore", "ores");
+			assertItemInTag(failures, "deepslate_" + metal + "_ore", "ores");
+			assertItemInTag(failures, "raw_" + metal, "raw_materials");
+			assertItemInTag(failures, "raw_" + metal, "raw_materials/" + metal);
+			assertItemInTag(failures, metal + "_ingot", "ingots");
+			assertItemInTag(failures, metal + "_ingot", "ingots/" + metal);
+		}
+
+		// Dusts (MOD-114): full processing-chain material tag for unification/grinding mods. Covers
+		// the mod's own metals plus dusts of vanilla materials it produces.
+		for (String mat : new String[] { "tin", "silver", "nickel", "uranium", "copper", "iron",
+				"gold", "coal", "diamond", "emerald", "lapis" }) {
+			assertItemInTag(failures, mat + "_dust", "dusts");
+			assertItemInTag(failures, mat + "_dust", "dusts/" + mat);
+		}
+
+		if (!failures.isEmpty()) {
+			helper.fail("Ore convention tags missing for " + failures.size() + " entry(ies): "
+					+ String.join("; ", failures));
+		}
+		helper.succeed();
+	}
+
+	private static TagKey<Block> blockTag(String path) {
+		return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("c", path));
+	}
+
+	private static Block ore(String path) {
+		return BuiltInRegistries.BLOCK.getValue(Industrialization.id(path));
+	}
+
+	private static String blockId(Block block) {
+		return BuiltInRegistries.BLOCK.getKey(block).toString();
+	}
+
+	private static void assertItemInTag(List<String> failures, String itemPath, String tagPath) {
+		Item item = BuiltInRegistries.ITEM.getValue(Industrialization.id(itemPath));
+		TagKey<Item> tag = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", tagPath));
+		if (!new ItemStack(item).is(tag)) {
+			failures.add(itemPath + " item not in #c:" + tagPath);
+		}
 	}
 
 }

@@ -1,6 +1,7 @@
 package dev.alaindustrial.core;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -221,6 +222,61 @@ class EnergyShareTest {
 				"negative moveTotal must short-circuit to zero shares");
 		assertArrayEquals(new long[] {0, 0}, EnergyShare.split(10, new long[] {3, 3}, -6, 32),
 				"negative demand must short-circuit to zero shares");
+	}
+
+	/**
+	 * The one <em>distinguishable</em> survivor on the L62 guard: {@code demand == 0}. A
+	 * {@code ConditionalsBoundary} mutant flips {@code demand <= 0} to {@code demand < 0}; for the
+	 * {@code =0} boundary that mutant skips the guard and falls into {@code Math.floorDiv(moveTotal *
+	 * room[i], 0)} — which throws {@link ArithmeticException} (division by zero). The existing
+	 * {@link #split_negativeMoveTotalOrDemand_returnsAllZeros} test uses {@code demand = -6} (negative),
+	 * where both {@code <= 0} and {@code < 0} agree (both true) — it does <em>not</em> cover the boundary.
+	 * This one does: {@code demand == 0} must short-circuit to zeros <em>without</em> throwing.
+	 *
+	 * <p><b>The 6 remaining {@code ConditionalsBoundary} survivors are proven-equivalent below</b>
+	 * (MOD-113 audit, 2026-07-18). A {@code <}/{@code <=} boundary flip is observationally identical to
+	 * the original on these guards because at the disputed {@code =0} point the downstream math is
+	 * forced to the same value either way — so no test input can distinguish the mutant from the
+	 * original. Each line below is the load-bearing identity.
+	 *
+	 * <ul>
+	 *   <li><b>{@code cableLoss} L42 — three {@code <=} guards</b> on {@code gross}, {@code lossPerBlock},
+	 *       {@code distanceBlocks}. A flip to {@code <} only changes behaviour when the argument is
+	 *       exactly {@code 0} (both sides agree for any {@code <0} input — negative is out-of-contract).
+	 *       At {@code gross == 0}: {@code floor(0 × loss × dist) = 0} ⇒ the mutant skips the early
+	 *       return but still computes {@code Math.max(0, Math.min(0, 0)) = 0} on L46. At
+	 *       {@code lossPerBlock == 0} or {@code distanceBlocks == 0}: the product is {@code 0} on L45
+	 *       ⇒ same {@code max(0, min(0, gross))} (gross is ≥ 0 by contract) ⇒ still returns {@code 0}.
+	 *       The {@code Math.max/min} clamp on L46 makes the guard redundant at the {@code =0} boundary.</li>
+	 *
+	 *   <li><b>{@code split} L62 — {@code moveTotal <= 0} guard</b>. At {@code moveTotal == 0} the
+	 *       proportional term {@code Math.floorDiv(0 × room[i], demand)} is {@code 0} for every {@code i}
+	 *       ⇒ {@code assigned == 0}, {@code remainder = moveTotal - assigned = 0} ⇒ the remainder loop
+	 *       body never fires ⇒ {@code share = [0, 0, …]}, identical to the guarded early return.</li>
+	 *
+	 *   <li><b>{@code split} L75 — {@code while (… && remainder > 0)}</b>. {@code remainder} is
+	 *       initialised as {@code moveTotal - assigned} where {@code assigned = Σ share[i]} and every
+	 *       {@code share[i]} is floored down, so {@code remainder >= 0} always. The flip {@code >} →
+	 *       {@code >=} only adds an iteration when {@code remainder == 0}; in that iteration
+	 *       {@code extra = min(0, min(room[i] - share[i], packetCap - share[i])) = 0} (the inner
+	 *       {@code min} arguments are ≥ 0 since {@code share[i] <= room[i]} and {@code share[i] <= packetCap}
+	 *       by L68–69), and {@code if (extra > 0)} on L77 skips the mutation ⇒ the extra iteration is a
+	 *       no-op ⇒ the mutant is observationally identical.</li>
+	 *
+	 *   <li><b>{@code split} L77 — {@code if (extra > 0)}</b>. The flip {@code >} → {@code >=} only
+	 *       matters when {@code extra == 0}; the body is {@code share[i] += 0; remainder -= 0;}, both
+	 *       no-ops ⇒ indistinguishable.</li>
+	 * </ul>
+	 *
+	 * <p>See MOD-113 task.md "Equivalent mutants" for the recorded audit. Not killable by any test.
+	 */
+	@Test
+	void split_demandZero_returnsZerosWithoutArithmeticException() {
+		long[] share = assertDoesNotThrow(
+				() -> EnergyShare.split(10, new long[] {3, 3}, 0, 32),
+				"demand == 0 must short-circuit BEFORE the floorDiv divides by zero");
+		assertArrayEquals(new long[] {0, 0}, share,
+				"demand == 0 yields all-zero shares (no distribution possible)");
 	}
 
 	// --- property-based tests (MOD-110 phase 2) ---

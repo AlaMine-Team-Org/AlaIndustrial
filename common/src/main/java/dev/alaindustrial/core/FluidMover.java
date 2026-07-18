@@ -15,6 +15,12 @@ package dev.alaindustrial.core;
  * nearly full), the shortfall is inserted back into {@code from} within the SAME transaction before
  * returning, so a partial acceptance never destroys fluid — mirrors {@code StorageUtil.move}'s behaviour
  * (which also refunds unaccepted amounts back to the source).
+ *
+ * <p><b>L1 testability.</b> {@link #move}'s signature takes {@link FluidPort} + {@link FluidHolder}
+ * (both coupled to {@code net.minecraft.Fluid}, absent from {@code :common}'s L1 runtime), so this class
+ * itself is exercised only by the Fabric L2 gametests. The refund arithmetic — the shortfall computation
+ * and the moved-with-refund return — is extracted into {@link FluidMoverMath} and covered there by
+ * {@code FluidMoverMathTest} + pitest (MOD-113).
  */
 public final class FluidMover {
 	private FluidMover() {
@@ -30,18 +36,20 @@ public final class FluidMover {
 			return 0;
 		}
 		long extracted = from.extract(filterFluid, maxAmount, txn);
-		if (extracted <= 0) {
+		if (FluidMoverMath.nothingExtracted(extracted)) {
 			return 0;
 		}
 		long inserted = to.insert(filterFluid, extracted, txn);
-		if (inserted < extracted) {
+		if (FluidMoverMath.shortfallNeeded(inserted, extracted)) {
 			// Refund the shortfall back into the source within the same transaction so nothing is
 			// destroyed — mirrors StorageUtil.move's partial-acceptance refund. The refund target is the
 			// same tank we just extracted from, which always has at least `shortfall` room freed by the
 			// extract above, so `refunded` should always equal `shortfall` in practice.
-			long shortfall = extracted - inserted;
+			// Refund arithmetic extracted to FluidMoverMath (MOD-113) so the L1 suite + pitest cover the
+			// shortfall / movedWithRefund MATH mutants without a live FluidHolder / FluidPort.
+			long shortfall = FluidMoverMath.shortfall(extracted, inserted);
 			long refunded = from.insert(filterFluid, shortfall, txn);
-			return inserted + refunded;
+			return FluidMoverMath.movedWithRefund(inserted, refunded);
 		}
 		return inserted;
 	}

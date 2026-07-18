@@ -1,18 +1,14 @@
-## 0.1.34
+## 0.1.35
 
-<p><img alt="Ala Industrial iron furnace in a forest, one lit and one idle" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.34/release-media/v0.1.34/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial Battery Pouch tooltip showing the fullness bar and percent" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.35/release-media/v0.1.35/changelog.png" width="720"></p>
 
-A new fuel-burning **Iron Furnace**, item pipes that fill several machines at once, and a fluid tank icon fix.
+This update makes the mod's ores behave like proper ores everywhere, plus two small tooltip and naming tweaks.
 
 ### New
 
-- **Iron Furnace.** A fuel furnace that's faster than the stone one but simpler than the electric — it smelts everything a normal furnace does, just quicker, and needs no power.
-- **Craft it as an upgrade:** a furnace ringed with **8 iron ingots**.
+- **Ores recognised by other mods.** Tin, silver, nickel and uranium — and their deepslate forms — are now tagged as real ores. Vein-miner mods, ore-processing setups and recipe viewers treat them just like iron or copper, so your metals are no longer second-class in a modpack.
 
-### Improved
+### Quality of Life
 
-- **Item pipes fill every destination at once.** A chest feeding several machines now tops them all up together instead of one at a time, so a line of furnaces keeps pace.
-
-### Fixed
-
-- **Empty fluid tank icon.** An empty tank no longer shows a stray fluid layer over its glass window in the inventory.
+- **Cleaner generator name.** The basic generator is now simply **Generator** — the tier still shows in its tooltip, so nothing is lost.
+- **Battery Pouch shows a percent.** The fullness bar now has a percentage right next to it (for example `128 / 128  100%`), so you can read the exact fill at a glance.

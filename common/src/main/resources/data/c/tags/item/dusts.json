@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "#c:dusts/tin",
+    "#c:dusts/silver",
+    "#c:dusts/nickel",
+    "#c:dusts/uranium",
+    "#c:dusts/copper",
+    "#c:dusts/iron",
+    "#c:dusts/gold",
+    "#c:dusts/coal",
+    "#c:dusts/diamond",
+    "#c:dusts/emerald",
+    "#c:dusts/lapis"
+  ]
+}

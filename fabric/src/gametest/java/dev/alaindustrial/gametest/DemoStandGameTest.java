@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
+import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.command.demo.DemoStand;
 import java.util.HashSet;
@@ -70,6 +71,23 @@ public class DemoStandGameTest {
 			if (millBattery == null || millBattery.getEnergyStorage().getAmount() <= 0) {
 				helper.fail("water mill delivered no EU to its battery box after 100 ticks");
 			}
+			// Cable zone (MOD-103): the first cable run's end furnace is NOT pre-charged, so any EU in
+			// its buffer — or any smelting progress/output — proves the charged battery box fed it
+			// through the 6-cable network. With the box mis-oriented (its output face away from the
+			// cables) the run is dead and this stays at zero, so the check fails on the pre-fix code.
+			ElectricFurnaceBlockEntity cableFurnace = helper.getLevel()
+					.getBlockEntity(origin.offset(23, 1, 14)) instanceof ElectricFurnaceBlockEntity f ? f : null;
+			if (cableFurnace == null) {
+				helper.fail("cable-zone end furnace missing on the stand");
+			} else {
+				boolean fed = cableFurnace.getEnergyStorage().getAmount() > 0
+						|| cableFurnace.getDataAccess().get(2) > 0 // progress
+						|| !cableFurnace.getItem(ElectricFurnaceBlockEntity.OUTPUT_SLOT).isEmpty();
+				if (!fed) {
+					helper.fail("cable-zone battery box delivered no EU down its cable run after 100 ticks");
+				}
+			}
+
 			MaceratorBlockEntity macerator = helper.getLevel()
 					.getBlockEntity(origin.offset(2, 1, 10)) instanceof MaceratorBlockEntity m ? m : null;
 			if (macerator == null) {

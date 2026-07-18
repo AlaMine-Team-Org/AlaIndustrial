@@ -1,6 +1,7 @@
 package dev.alaindustrial.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.function.Consumer;
@@ -165,6 +166,40 @@ class EnergyMoverTest {
 		assertEquals(0L, EnergyMover.probe(from, null, 100), "null target → 0");
 		assertEquals(0L, EnergyMover.probe(from, to, 0), "maxAmount=0 → 0");
 		assertEquals(0L, EnergyMover.probe(from, to, -5), "negative maxAmount → 0");
+	}
+
+	/**
+	 * Kills the L34 {@code maxAmount <= 0} {@code ConditionalsBoundary} survivor. The existing test above
+	 * only asserts the return value is 0 — a mutant flipping {@code <=} to {@code <} returns 0 too, but
+	 * only AFTER skipping the guard on {@code maxAmount == 0} and calling {@code from.extract(0, sim)}
+	 * inside the {@code simulate} lambda (a side effect). This test asserts that side effect stayed
+	 * absent: on the {@code =0} boundary the probe must short-circuit <em>before</em> touching either port.
+	 */
+	@Test
+	void probe_maxAmountZero_shortCircuitsBeforeCallingExtract() {
+		StubPort from = new StubPort(50, 0);
+		StubPort to = new StubPort(0, 50);
+		assertEquals(0L, EnergyMover.probe(from, to, 0));
+		assertFalse(from.extractCalled,
+				"maxAmount == 0 must short-circuit before from.extract (ConditionalsBoundary survivor)");
+		assertFalse(to.insertCalled, "maxAmount == 0 must short-circuit before to.insert");
+	}
+
+	/**
+	 * Kills the L39 {@code extracted <= 0} {@code ConditionalsBoundary} survivor inside the probe lambda.
+	 * A mutant flipping {@code <=} to {@code <} skips the {@code return 0L} on {@code extracted == 0} and
+	 * falls through to {@code to.insert(0, sim)} (a side effect on an empty source). The existing
+	 * {@link #probe_zeroWhenSourceCannotExtract} asserts only the return; this one asserts the insert
+	 * call stayed absent.
+	 */
+	@Test
+	void probe_emptySource_doesNotCallInsertOnTarget() {
+		StubPort from = new StubPort(0, 0); // source yields 0
+		StubPort to = new StubPort(0, 50);
+		assertEquals(0L, EnergyMover.probe(from, to, 100));
+		assertTrue(from.extractCalled, "probe does call from.extract to size the move");
+		assertFalse(to.insertCalled,
+				"extracted == 0 must short-circuit before to.insert (ConditionalsBoundary survivor)");
 	}
 
 	// --- commit: transfers exactly the probed amount, no refund path ---

@@ -15,6 +15,14 @@ import java.util.function.Predicate;
  * {@code canExtract} allows it. A non-zero move enlists the tank with the transaction (snapshot-before-mutate,
  * reusing {@link EnergyPort.Participant}) and then adjusts {@link #fluid}/{@link #amount}.
  *
+ * <p><b>L1 testability.</b> Because {@link #insert}/{@link #extract} take a {@link FluidHolder}
+ * (which wraps {@code net.minecraft.world.level.material.Fluid}, a type absent from {@code :common}'s
+ * L1 test runtime), this class itself is not exercised by the L1 JUnit suite — its loader-neutral
+ * behaviour is pinned instead by the Fabric L2 gametests. The <em>pure arithmetic</em> ({@code capacity - amount},
+ * the {@code Math.min} clamps, the {@code amount == 0} fluid-clear tests, the capacity guard) is
+ * extracted into {@link TankMath} and covered there by {@code TankMathTest} + pitest (see MOD-113):
+ * every {@code TankMath.*} call below is a one-line delegate to the tested helper.
+ *
  * <p><b>Fluid lifecycle: deferred clear, not snapshotted.</b> {@link EnergyPort.Participant} is hard
  * {@code long}-typed (mirrors {@link EnergyBuffer}'s single {@code amount} field), so this tank's
  * transactional snapshot/rollback only carries {@link #amount}; the {@link #fluid} field is never put into
@@ -64,10 +72,10 @@ public class FluidTank implements FluidPort, EnergyPort.Participant {
 	 */
 	public FluidTank(long capacity, Predicate<FluidHolder> canInsert, Predicate<FluidHolder> canExtract,
 			Runnable onCommit) {
-		if (capacity < 0) {
-			throw new IllegalArgumentException("Fluid tank capacity must be non-negative");
-		}
-		this.capacity = capacity;
+		// Capacity guard extracted to TankMath.checkCapacity so the L1 suite (and pitest) can cover the
+		// < 0 boundary without a live Minecraft runtime (FluidHolder wraps net.minecraft.Fluid — see
+		// TankMath class doc). Pure extract: identical check, identical exception.
+		this.capacity = TankMath.checkCapacity(capacity);
 		this.canInsert = canInsert;
 		this.canExtract = canExtract;
 		this.onCommit = onCommit;
@@ -87,8 +95,10 @@ public class FluidTank implements FluidPort, EnergyPort.Participant {
 		if (!fluid.isEmpty() && !fluid.equals(inserted)) {
 			return 0; // tank already holds a different fluid — single-variant, like SingleVariantStorage
 		}
-		long room = capacity - amount;
-		long toInsert = Math.min(maxAmount, room);
+		// toInsert math extracted to TankMath.toInsert (the load-bearing Math.min + capacity-amount
+		// kernel) so the L1 suite + pitest cover the +/- and min/max mutants without a live
+		// FluidHolder. Pure extract: returns Math.min(maxAmount, capacity - amount).
+		long toInsert = TankMath.toInsert(amount, capacity, maxAmount);
 		if (toInsert > 0) {
 			txn.enlist(this);
 			fluid = inserted;
@@ -112,7 +122,9 @@ public class FluidTank implements FluidPort, EnergyPort.Participant {
 		if (!canExtract.test(fluid)) {
 			return 0;
 		}
-		long toExtract = Math.min(maxAmount, amount);
+		// toExtract math extracted to TankMath.toExtract (Math.min(maxAmount, amount)) — same rationale
+		// as toInsert above: makes the stored-amount clamp L1-testable + pitest-covered.
+		long toExtract = TankMath.toExtract(amount, maxAmount);
 		if (toExtract > 0) {
 			txn.enlist(this);
 			amount -= toExtract;
@@ -145,12 +157,12 @@ public class FluidTank implements FluidPort, EnergyPort.Participant {
 
 	@Override
 	public boolean supportsInsertion() {
-		return capacity > 0;
+		return TankMath.supportsOp(capacity);
 	}
 
 	@Override
 	public boolean supportsExtraction() {
-		return capacity > 0;
+		return TankMath.supportsOp(capacity);
 	}
 
 	// --- EnergyPort.Participant: the loader's native journal drives these ---
@@ -167,7 +179,8 @@ public class FluidTank implements FluidPort, EnergyPort.Participant {
 		// rollback to a positive amount leaves `fluid` untouched — it was non-empty before the transaction
 		// (extract requires an exact fluid match), and extract() no longer pre-clears it (see extract()),
 		// so the pre-transaction fluid is still in place and needs no separate restore.
-		if (amount == 0) {
+		// The `amount == 0` test extracted to TankMath.shouldClearFluid for L1/pitest coverage.
+		if (TankMath.shouldClearFluid(amount)) {
 			fluid = FluidHolder.EMPTY;
 		}
 	}
@@ -176,7 +189,8 @@ public class FluidTank implements FluidPort, EnergyPort.Participant {
 	public void onFinalCommit() {
 		// Uphold the fluid-empty invariant on the commit path too: a committed extract that drained the
 		// tank to 0 must clear `fluid` (extract() no longer does this itself — see extract()).
-		if (amount == 0) {
+		// The `amount == 0` test extracted to TankMath.shouldClearFluid for L1/pitest coverage.
+		if (TankMath.shouldClearFluid(amount)) {
 			fluid = FluidHolder.EMPTY;
 		}
 		onCommit.run();

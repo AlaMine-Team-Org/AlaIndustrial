@@ -365,113 +365,11 @@ public final class ModItems {
 		CreativeModeTab tab = FabricCreativeModeTab.builder()
 				.title(Component.translatable("itemGroup.alaindustrial"))
 				.icon(() -> new ItemStack(MACERATOR_ITEM))
-				.displayItems((params, output) -> {
-						// NB: non-copper cables (tin, insulated copper/tin) are registered but deliberately
-						// hidden for the v1.0 release (no tab entry, recipe removed). Re-add their
-						// output.accept(...) + recipe JSON to bring them back. See task MOD-010.
-						// Likewise the water mill + high-altitude/storm windmills are temporarily hidden
-						// from the player (no tab entry; water_mill recipe removed). Re-add their
-						// output.accept(...) + the water_mill recipe JSON to bring them back.
-						// Generators
-						output.accept(SOLAR_PANEL_ITEM);
-						output.accept(DAYLIGHT_SOLAR_PANEL_ITEM);
-						output.accept(MOONLIT_SOLAR_PANEL_ITEM);
-						output.accept(GENERATOR_ITEM);
-						output.accept(GEOTHERMAL_GENERATOR_ITEM);
-						output.accept(WIND_MILL_ITEM);
-					// Machines
-					output.accept(MACERATOR_ITEM);
-					output.accept(ELECTRIC_FURNACE_ITEM);
-					output.accept(IRON_FURNACE_ITEM);
-					output.accept(EXTRACTOR_ITEM);
-					output.accept(COMPRESSOR_ITEM);
-					output.accept(PUMP_ITEM);
-					output.accept(FLUID_TANK_ITEM);
-					// Storage + cables
-					output.accept(BATTERY_BOX_ITEM);
-					// Teleporter (MOD-093). NOTE: this list is Fabric's own — NeoForge builds the same
-					// tab from CreativeTabContent, so anything added there must be added here too, or
-					// it shows on one loader and not the other. That divergence is tracked as MOD-102.
-					output.accept(TELEPORTER_ITEM);
-					output.accept(IRON_CHEST_ITEM);
-				output.accept(SILVER_CHEST_ITEM);
-				output.accept(GOLD_CHEST_ITEM);
-					output.accept(STOCK_DISPLAY_FRAME);
-					output.accept(COPPER_CABLE_ITEM);
-					output.accept(ITEM_PIPE_ITEM);
-					// Ores + materials
-					output.accept(TIN_ORE_ITEM);
-					output.accept(DEEPSLATE_TIN_ORE_ITEM);
-					output.accept(RAW_TIN);
-					output.accept(TIN_DUST);
-					output.accept(TIN_INGOT);
-					output.accept(SILVER_ORE_ITEM);
-					output.accept(DEEPSLATE_SILVER_ORE_ITEM);
-					output.accept(RAW_SILVER);
-					output.accept(SILVER_DUST);
-					output.accept(SILVER_INGOT);
-					output.accept(NICKEL_ORE_ITEM);
-					output.accept(DEEPSLATE_NICKEL_ORE_ITEM);
-					output.accept(RAW_NICKEL);
-					output.accept(NICKEL_DUST);
-					output.accept(NICKEL_INGOT);
-					output.accept(URANIUM_ORE_ITEM);
-					output.accept(DEEPSLATE_URANIUM_ORE_ITEM);
-					output.accept(RAW_URANIUM);
-					output.accept(URANIUM_DUST);
-					output.accept(URANIUM_INGOT);
-					// Components
-					output.accept(ELECTRONIC_CIRCUIT);
-					output.accept(COPPER_COIL);
-					output.accept(ALIGNMENT_CHIP_DAY);
-					output.accept(ALIGNMENT_CHIP_NIGHT);
-					output.accept(EMPTY_CHIP);
-					output.accept(MUTE_CHIP);
-						output.accept(WINDMILL_ROTOR);
-						output.accept(WOODEN_GEAR);
-						output.accept(STONE_GEAR);
-						output.accept(IRON_GEAR);
-						output.accept(GOLD_GEAR);
-						output.accept(SILVER_GEAR);
-						output.accept(IRON_DUST);
-					output.accept(COPPER_DUST);
-					output.accept(GOLD_DUST);
-					output.accept(COAL_DUST);
-					output.accept(DIAMOND_DUST);
-					output.accept(EMERALD_DUST);
-					output.accept(LAPIS_DUST);
-						output.accept(NETWORK_ANALYZER);
-						output.accept(WRENCH);
-						output.accept(BATTERY_POUCH);
-						output.accept(BATTERY);
-						output.accept(ENERGY_PACK);
-						output.accept(ELECTRIC_DRILL);
-						output.accept(TELEPORTER_REMOTE);
-						// Empty capsule only — the filled form is obtained by using it on a fluid.
-						output.accept(VACUUM_CAPSULE);
-							output.accept(ENRICHED_URANIUM_TORCH_ITEM); // MOD-085 decorative light source
-						// Tempered Iron — ingot, block, tools and armor as one continuous row
-						output.accept(TEMPERED_IRON);
-						output.accept(TEMPERED_IRON_BLOCK_ITEM);
-						output.accept(TEMPERED_IRON_PICKAXE);
-						output.accept(TEMPERED_IRON_AXE);
-						output.accept(TEMPERED_IRON_SHOVEL);
-						output.accept(TEMPERED_IRON_HOE);
-						output.accept(TEMPERED_IRON_SWORD);
-						output.accept(TEMPERED_IRON_HELMET);
-						output.accept(TEMPERED_IRON_CHESTPLATE);
-						output.accept(TEMPERED_IRON_LEGGINGS);
-						output.accept(TEMPERED_IRON_BOOTS);
-							// Scythes (MOD-068) — one continuous tier row wood → netherite.
-							output.accept(SCYTHE_WOOD);
-							output.accept(SCYTHE_STONE);
-							output.accept(SCYTHE_COPPER);
-							output.accept(SCYTHE_IRON);
-							output.accept(SCYTHE_GOLD);
-							output.accept(SCYTHE_TEMPERED_IRON);
-							output.accept(SCYTHE_DIAMOND);
-							output.accept(SCYTHE_NETHERITE);
-				})
+				.displayItems((params, output) ->
+						// Single source of truth shared with NeoForge (CreativeTabContent) so the mod tab
+						// is identical on both loaders. Hidden pre-release content (non-copper cables,
+						// water/high-altitude mills) is omitted there, so it stays hidden here too — MOD-102.
+						CreativeTabContent.main(output::accept))
 				.build();
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TAB, tab);
 

@@ -161,10 +161,13 @@ public final class DemoStand {
 	}
 
 	/**
-	 * Zone <b>windmills</b>: the three wind mills on pillars, battery box directly beneath each
-	 * head (an OUT face — direct push). Spacing 5 keeps them out of each other's interference
+	 * Zone <b>windmills</b>: the three wind mills on pillars, a battery box sitting directly beneath
+	 * each head as a decorative plinth. The box does <b>not</b> receive the mill's EU: a wind mill
+	 * emits only from its back <i>horizontal</i> face (opposite FACING, see
+	 * {@code WindMillBlockEntity#energyRoleForFace}), never downward, and the box's top face is inert
+	 * anyway (single-axis IO, MOD-006). Spacing 5 keeps the mills out of each other's interference
 	 * radius. Their EU/t depends on build height vs sea level, so on a low superflat they are
-	 * intentionally decorative (see MOD-058 task log).
+	 * intentionally decorative (see MOD-058 task log) — the plinth box is purely scenic (MOD-103).
 	 */
 	private static void buildWindMills(ServerLevel level, BlockPos origin) {
 		Block[] mills = {ModContent.WIND_MILL.get(),
@@ -208,7 +211,13 @@ public final class DemoStand {
 				ModContent.INSULATED_COPPER_CABLE.get(), ModContent.INSULATED_TIN_CABLE.get()};
 		int z = 14;
 		for (Block cable : cables) {
-			set(level, origin, 16, 1, z, ModContent.BATTERY_BOX.get());
+			// The box's rotation is load-bearing: single-axis IO (MOD-006) emits ONLY from the face
+			// opposite FACING. The cable run sits to the box's east (x=17..22), so the box must face
+			// WEST for its output face to meet the cables. Placed with the default state (FACING=NORTH)
+			// it would emit southward into thin air, the cables would not connect, and the whole row
+			// would sit dead (MOD-103) — the same fix pattern as the misc zone's teleporter box.
+			level.setBlockAndUpdate(origin.offset(16, 1, z), ModContent.BATTERY_BOX.get().defaultBlockState()
+					.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 			chargeBuffer(level, origin, 16, 1, z);
 			for (int x = 17; x <= 22; x++) {
 				set(level, origin, x, 1, z, cable);
