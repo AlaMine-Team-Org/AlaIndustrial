@@ -334,5 +334,6 @@
 	"item.alaindustrial.item_pipe.tech.rate": "Ritmo: %1$s itens / %2$s ticks (%3$s/s)",
 	"block.alaindustrial.fluid_tank": "Tanque de fluidos portátil",
 	"tooltip.alaindustrial.fluid_tank.empty": "Vazio — capacidade de 8000 mB",
-	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB",
+	"block.alaindustrial.iron_furnace": "Fornalha de Ferro"
 }

@@ -334,5 +334,6 @@
 	"item.alaindustrial.item_pipe.tech.rate": "Швидкість: %1$s предм. / %2$s тиків (%3$s/с)",
 	"block.alaindustrial.fluid_tank": "Переносний бак для рідини",
 	"tooltip.alaindustrial.fluid_tank.empty": "Порожньо — місткість 8000 мБ",
-	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s мБ"
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s мБ",
+	"block.alaindustrial.iron_furnace": "Залізна піч"
 }

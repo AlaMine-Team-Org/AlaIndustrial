@@ -334,5 +334,6 @@
 	"item.alaindustrial.item_pipe.tech.rate": "Débit : %1$s objets / %2$s ticks (%3$s/s)",
 	"block.alaindustrial.fluid_tank": "Réservoir de fluide portable",
 	"tooltip.alaindustrial.fluid_tank.empty": "Vide — capacité de 8000 mB",
-	"tooltip.alaindustrial.fluid_tank.contents": "%1$s : %2$s / %3$s mB"
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s : %2$s / %3$s mB",
+	"block.alaindustrial.iron_furnace": "Fourneau en fer"
 }

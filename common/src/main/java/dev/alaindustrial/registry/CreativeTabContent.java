@@ -134,6 +134,7 @@ public final class CreativeTabContent {
 	private static void machines(Sink out) {
 		out.accept(ModContent.MACERATOR_ITEM.get());
 		out.accept(ModContent.ELECTRIC_FURNACE_ITEM.get());
+		out.accept(ModContent.IRON_FURNACE_ITEM.get());
 		out.accept(ModContent.EXTRACTOR_ITEM.get());
 		out.accept(ModContent.COMPRESSOR_ITEM.get());
 		out.accept(ModContent.PUMP_ITEM.get());

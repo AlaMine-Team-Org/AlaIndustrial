@@ -334,5 +334,6 @@
 	"item.alaindustrial.item_pipe.tech.rate": "Tempo: %1$s przedmioty / %2$s ticków (%3$s/s)",
 	"block.alaindustrial.fluid_tank": "Przenośny zbiornik na płyny",
 	"tooltip.alaindustrial.fluid_tank.empty": "Pusty — pojemność 8000 mB",
-	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB",
+	"block.alaindustrial.iron_furnace": "Żelazny piec"
 }

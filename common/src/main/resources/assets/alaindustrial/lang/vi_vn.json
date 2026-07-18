@@ -334,5 +334,6 @@
 	"item.alaindustrial.item_pipe.tech.rate": "Tốc độ: %1$s vật phẩm / %2$s tick (%3$s/giây)",
 	"block.alaindustrial.fluid_tank": "Bồn chất lỏng di động",
 	"tooltip.alaindustrial.fluid_tank.empty": "Trống — sức chứa 8000 mB",
-	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB",
+	"block.alaindustrial.iron_furnace": "Lò Nung Sắt"
 }

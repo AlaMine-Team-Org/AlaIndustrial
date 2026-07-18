@@ -334,5 +334,6 @@
 	"item.alaindustrial.item_pipe.tech.rate": "गति: %1$s वस्तुएँ / %2$s टिक (%3$s/से)",
 	"block.alaindustrial.fluid_tank": "पोर्टेबल द्रव टैंक",
 	"tooltip.alaindustrial.fluid_tank.empty": "खाली — क्षमता 8000 mB",
-	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB",
+	"block.alaindustrial.iron_furnace": "आयरन फर्नेस"
 }

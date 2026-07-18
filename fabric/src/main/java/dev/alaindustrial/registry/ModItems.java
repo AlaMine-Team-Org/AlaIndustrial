@@ -186,6 +186,7 @@ public final class ModItems {
 	public static final BlockItem URANIUM_ORE_ITEM = blockItem("uranium_ore", ModBlocks.URANIUM_ORE);
 	public static final BlockItem DEEPSLATE_URANIUM_ORE_ITEM = blockItem("deepslate_uranium_ore", ModBlocks.DEEPSLATE_URANIUM_ORE);
 	public static final BlockItem IRON_CHEST_ITEM = blockItem("iron_chest", ModBlocks.IRON_CHEST);
+	public static final BlockItem IRON_FURNACE_ITEM = blockItem("iron_furnace", ModBlocks.IRON_FURNACE);
 	public static final BlockItem SILVER_CHEST_ITEM = blockItem("silver_chest", ModBlocks.SILVER_CHEST);
 	public static final BlockItem GOLD_CHEST_ITEM = blockItem("gold_chest", ModBlocks.GOLD_CHEST);
 	public static final BlockItem TEMPERED_IRON_BLOCK_ITEM = blockItem("tempered_iron_block", ModBlocks.TEMPERED_IRON_BLOCK);
@@ -381,6 +382,7 @@ public final class ModItems {
 					// Machines
 					output.accept(MACERATOR_ITEM);
 					output.accept(ELECTRIC_FURNACE_ITEM);
+					output.accept(IRON_FURNACE_ITEM);
 					output.accept(EXTRACTOR_ITEM);
 					output.accept(COMPRESSOR_ITEM);
 					output.accept(PUMP_ITEM);
@@ -623,6 +625,7 @@ public final class ModItems {
 		ModContent.URANIUM_ORE_ITEM = () -> URANIUM_ORE_ITEM;
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = () -> DEEPSLATE_URANIUM_ORE_ITEM;
 		ModContent.IRON_CHEST_ITEM = () -> IRON_CHEST_ITEM;
+		ModContent.IRON_FURNACE_ITEM = () -> IRON_FURNACE_ITEM;
 		ModContent.SILVER_CHEST_ITEM = () -> SILVER_CHEST_ITEM;
 		ModContent.GOLD_CHEST_ITEM = () -> GOLD_CHEST_ITEM;
 		ModContent.TEMPERED_IRON_BLOCK_ITEM = () -> TEMPERED_IRON_BLOCK_ITEM;

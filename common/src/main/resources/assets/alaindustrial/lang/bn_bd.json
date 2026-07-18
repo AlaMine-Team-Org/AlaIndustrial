@@ -334,5 +334,6 @@
 	"item.alaindustrial.item_pipe.tech.rate": "গতি: %1$s আইটেম / %2$s টিক (%3$s/সে)",
 	"block.alaindustrial.fluid_tank": "বহনযোগ্য তরল ট্যাংক",
 	"tooltip.alaindustrial.fluid_tank.empty": "খালি — ধারণক্ষমতা 8000 mB",
-	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB",
+	"block.alaindustrial.iron_furnace": "আয়রন ফার্নেস"
 }

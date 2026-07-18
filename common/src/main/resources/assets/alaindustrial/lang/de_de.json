@@ -334,5 +334,6 @@
 	"item.alaindustrial.item_pipe.tech.rate": "Tempo: %1$s Gegenstände / %2$s Ticks (%3$s/s)",
 	"block.alaindustrial.fluid_tank": "Tragbarer Flüssigkeitstank",
 	"tooltip.alaindustrial.fluid_tank.empty": "Leer — Kapazität 8000 mB",
-	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB",
+	"block.alaindustrial.iron_furnace": "Eisener Ofen"
 }

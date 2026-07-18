@@ -14,6 +14,8 @@ import dev.alaindustrial.block.ExtractorBlock;
 import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
 import dev.alaindustrial.block.IronChestBlock;
+import dev.alaindustrial.block.IronFurnaceBlock;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.SilverChestBlock;
 import dev.alaindustrial.block.GoldChestBlock;
@@ -82,6 +84,11 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("teleporter", TeleporterBlock::new, machine(p -> p.strength(5.0f, 12.0f).sound(SoundType.METAL)));
 	public static final DeferredBlock<ElectricFurnaceBlock> ELECTRIC_FURNACE =
 			BLOCKS.registerBlock("electric_furnace", ElectricFurnaceBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+	// Iron Furnace (MOD-115) — fuel-burning smelter between stone and electric; lit glows (light 13).
+	public static final DeferredBlock<IronFurnaceBlock> IRON_FURNACE =
+			BLOCKS.registerBlock("iron_furnace", IronFurnaceBlock::new,
+					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.METAL)
+							.lightLevel(state -> state.getValue(BlockStateProperties.LIT) ? 13 : 0)));
 	public static final DeferredBlock<ExtractorBlock> EXTRACTOR =
 			BLOCKS.registerBlock("extractor", ExtractorBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
 	public static final DeferredBlock<CompressorBlock> COMPRESSOR =
@@ -221,6 +228,7 @@ public final class ModBlocksNeoForge {
 		ModContent.BATTERY_BOX = BATTERY_BOX::get;
 		ModContent.TELEPORTER = TELEPORTER::get;
 		ModContent.ELECTRIC_FURNACE = ELECTRIC_FURNACE::get;
+		ModContent.IRON_FURNACE = IRON_FURNACE::get;
 		ModContent.EXTRACTOR = EXTRACTOR::get;
 		ModContent.COMPRESSOR = COMPRESSOR::get;
 		ModContent.GEOTHERMAL_GENERATOR = GEOTHERMAL_GENERATOR::get;

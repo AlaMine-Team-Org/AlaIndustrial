@@ -334,5 +334,6 @@
 	"item.alaindustrial.item_pipe.tech.rate": "Tempo: %1$s voorwerpen / %2$s ticks (%3$s/s)",
 	"block.alaindustrial.fluid_tank": "Draagbare vloeistoftank",
 	"tooltip.alaindustrial.fluid_tank.empty": "Leeg — capaciteit 8000 mB",
-	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB",
+	"block.alaindustrial.iron_furnace": "IJzeren oven"
 }

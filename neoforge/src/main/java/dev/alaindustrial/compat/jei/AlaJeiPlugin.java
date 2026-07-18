@@ -111,6 +111,11 @@ public final class AlaJeiPlugin implements IModPlugin {
 		registration.addCraftingStation(
 				RecipeTypes.SMELTING,
 				(ItemLike) ModBlocksNeoForge.ELECTRIC_FURNACE.get());
+		// Iron furnace (MOD-115) — fuel-burning, runs the same vanilla smelting recipes, so it is a
+		// station for the built-in smelting category too.
+		registration.addCraftingStation(
+				RecipeTypes.SMELTING,
+				(ItemLike) ModBlocksNeoForge.IRON_FURNACE.get());
 	}
 
 	@Override

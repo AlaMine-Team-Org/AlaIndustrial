@@ -334,5 +334,6 @@
 	"item.alaindustrial.item_pipe.tech.rate": "Takt: %1$s föremål / %2$s tick (%3$s/s)",
 	"block.alaindustrial.fluid_tank": "Bärbar vätsketank",
 	"tooltip.alaindustrial.fluid_tank.empty": "Tom — kapacitet 8000 mB",
-	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB",
+	"block.alaindustrial.iron_furnace": "Järnugn"
 }

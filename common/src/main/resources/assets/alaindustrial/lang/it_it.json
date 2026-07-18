@@ -334,5 +334,6 @@
 	"item.alaindustrial.item_pipe.tech.rate": "Ritmo: %1$s oggetti / %2$s tick (%3$s/s)",
 	"block.alaindustrial.fluid_tank": "Serbatoio di fluidi portatile",
 	"tooltip.alaindustrial.fluid_tank.empty": "Vuoto — capacità 8000 mB",
-	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB",
+	"block.alaindustrial.iron_furnace": "Fornace di ferro"
 }

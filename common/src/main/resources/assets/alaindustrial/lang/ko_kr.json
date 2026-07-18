@@ -334,5 +334,6 @@
 	"item.alaindustrial.item_pipe.tech.rate": "속도: %1$s개 / %2$s 틱 (%3$s/초)",
 	"block.alaindustrial.fluid_tank": "휴대용 유체 탱크",
 	"tooltip.alaindustrial.fluid_tank.empty": "비어 있음 — 용량 8000 mB",
-	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB",
+	"block.alaindustrial.iron_furnace": "철 화로"
 }

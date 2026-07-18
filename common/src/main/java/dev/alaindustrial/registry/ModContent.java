@@ -100,6 +100,7 @@ public final class ModContent {
 	// Iron Chest — a pure-storage block (no energy), so its BE extends vanilla
 	// BaseContainerBlockEntity, not the mod's MachineBlockEntity. See docs/blocks/iron_chest.md.
 	public static Supplier<Block> IRON_CHEST = unbound("IRON_CHEST");
+	public static Supplier<Block> IRON_FURNACE = unbound("IRON_FURNACE");
 	// Silver Chest (MOD-087) — the tier above the iron chest: 45 slots (5×9, +1 row). Same vanilla
 	// BaseContainerBlockEntity spine, no energy. Crafted from an iron chest ringed with silver ingots.
 	public static Supplier<Block> SILVER_CHEST = unbound("SILVER_CHEST");
@@ -229,6 +230,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> URANIUM_ORE_ITEM = unbound("URANIUM_ORE_ITEM");
 	public static Supplier<BlockItem> DEEPSLATE_URANIUM_ORE_ITEM = unbound("DEEPSLATE_URANIUM_ORE_ITEM");
 	public static Supplier<BlockItem> IRON_CHEST_ITEM = unbound("IRON_CHEST_ITEM");
+	public static Supplier<BlockItem> IRON_FURNACE_ITEM = unbound("IRON_FURNACE_ITEM");
 	public static Supplier<BlockItem> SILVER_CHEST_ITEM = unbound("SILVER_CHEST_ITEM");
 	public static Supplier<BlockItem> GOLD_CHEST_ITEM = unbound("GOLD_CHEST_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_BLOCK_ITEM = unbound("TEMPERED_IRON_BLOCK_ITEM");
@@ -257,6 +259,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
 	public static Supplier<BlockEntityType<?>> FLUID_TANK_BE = unbound("FLUID_TANK_BE");
 	public static Supplier<BlockEntityType<?>> IRON_CHEST_BE = unbound("IRON_CHEST_BE");
+	public static Supplier<BlockEntityType<?>> IRON_FURNACE_BE = unbound("IRON_FURNACE_BE");
 	public static Supplier<BlockEntityType<?>> SILVER_CHEST_BE = unbound("SILVER_CHEST_BE");
 	public static Supplier<BlockEntityType<?>> GOLD_CHEST_BE = unbound("GOLD_CHEST_BE");
 

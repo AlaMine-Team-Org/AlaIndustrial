@@ -334,5 +334,6 @@
 	"item.alaindustrial.item_pipe.tech.rate": "速度: %1$s 個 / %2$s ティック（%3$s/秒）",
 	"block.alaindustrial.fluid_tank": "携帯用流体タンク",
 	"tooltip.alaindustrial.fluid_tank.empty": "空 — 容量 8000 mB",
-	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB",
+	"block.alaindustrial.iron_furnace": "鉄のかまど"
 }

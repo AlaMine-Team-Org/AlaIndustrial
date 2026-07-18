@@ -334,5 +334,6 @@
 	"item.alaindustrial.item_pipe.tech.rate": "Laju: %1$s item / %2$s tick (%3$s/d)",
 	"block.alaindustrial.fluid_tank": "Tangki Fluida Portabel",
 	"tooltip.alaindustrial.fluid_tank.empty": "Kosong — kapasitas 8000 mB",
-	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB"
+	"tooltip.alaindustrial.fluid_tank.contents": "%1$s: %2$s / %3$s mB",
+	"block.alaindustrial.iron_furnace": "Tungku Besi"
 }

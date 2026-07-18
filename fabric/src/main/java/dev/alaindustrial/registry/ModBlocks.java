@@ -14,6 +14,7 @@ import dev.alaindustrial.block.ExtractorBlock;
 import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
 import dev.alaindustrial.block.IronChestBlock;
+import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PumpBlock;
@@ -126,6 +127,13 @@ public final class ModBlocks {
 	public static final ResourceKey<Block> ELECTRIC_FURNACE_KEY = key("electric_furnace");
 	public static final Block ELECTRIC_FURNACE = register(ELECTRIC_FURNACE_KEY,
 			new ElectricFurnaceBlock(props(ELECTRIC_FURNACE_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL)));
+
+	// Iron Furnace (MOD-115) — fuel-burning smelter between the stone and electric furnaces; the
+	// lit blockstate glows (light 13) via the shared litLight helper.
+	public static final ResourceKey<Block> IRON_FURNACE_KEY = key("iron_furnace");
+	public static final Block IRON_FURNACE = register(IRON_FURNACE_KEY,
+			new IronFurnaceBlock(props(IRON_FURNACE_KEY).strength(3.5f, 6.0f).sound(SoundType.METAL)
+					.lightLevel(ModBlocks::litLight)));
 
 	public static final ResourceKey<Block> EXTRACTOR_KEY = key("extractor");
 	public static final Block EXTRACTOR = register(EXTRACTOR_KEY,
@@ -288,6 +296,7 @@ public final class ModBlocks {
 		ModContent.URANIUM_ORE = () -> URANIUM_ORE;
 		ModContent.DEEPSLATE_URANIUM_ORE = () -> DEEPSLATE_URANIUM_ORE;
 		ModContent.IRON_CHEST = () -> IRON_CHEST;
+		ModContent.IRON_FURNACE = () -> IRON_FURNACE;
 		ModContent.SILVER_CHEST = () -> SILVER_CHEST;
 		ModContent.GOLD_CHEST = () -> GOLD_CHEST;
 		ModContent.TEMPERED_IRON_BLOCK = () -> TEMPERED_IRON_BLOCK;

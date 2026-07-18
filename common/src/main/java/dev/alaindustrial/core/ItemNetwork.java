@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +15,15 @@ import net.minecraft.server.level.ServerLevel;
 /** One connected component of item-pipe segments, ticked once by {@link ItemNetworkManager}. */
 public final class ItemNetwork {
 	private record Endpoint(BlockPos pos, Direction side) { }
+
+	/**
+	 * Stable order for {@link #sources}/{@link #targets} (MOD-115). The endpoints are collected into a
+	 * {@code HashSet}, whose iteration order shifts when the set's composition changes; a numeric
+	 * round-robin cursor over that shifting order would occasionally skip or double-serve an endpoint.
+	 * Sorting by {@code (BlockPos, side)} gives the cursor a stable meaning across rebuilds.
+	 */
+	private static final Comparator<Endpoint> ENDPOINT_ORDER =
+			Comparator.comparingLong((Endpoint e) -> e.pos().asLong()).thenComparingInt(e -> e.side().ordinal());
 
 	private final ServerLevel level;
 	private final Set<BlockPos> pipes = new HashSet<>();
@@ -49,14 +59,15 @@ public final class ItemNetwork {
 	}
 
 	/**
-	 * Moves at most {@link Config#itemPipeItemsPerTransfer} items, and only once every
-	 * {@link Config#itemPipeTransferIntervalTicks} ticks (MOD-108). Before that the network moved a batch
-	 * every single tick, which made the passive starter pipe 8× a hopper — see {@code Config} for the
-	 * balance rationale.
+	 * Once every {@link Config#itemPipeTransferIntervalTicks} ticks (MOD-108 balance gate), serves
+	 * <b>every</b> target endpoint with up to {@link Config#itemPipeItemsPerTransfer} items — parallel
+	 * distribution (MOD-115). One chest feeding several furnaces fills them together, instead of the old
+	 * behaviour that served a single endpoint per interval and made every extra machine slower.
 	 *
-	 * <p>The cooldown is only spent when something actually moved: a network whose source is empty or
-	 * whose target is full keeps checking every tick, so it resumes the instant the situation changes
-	 * rather than sitting out the rest of an interval it never used.
+	 * <p>Both cursors rotate one step per interval and independently, over the sorted (stable) endpoint
+	 * lists, so that when a source runs short no single endpoint is permanently favoured (fair N→M, no
+	 * lockstep). The cooldown is only spent when something actually moved: a network whose source is
+	 * empty or whose targets are all full keeps checking every tick and resumes the instant that changes.
 	 */
 	int tick() {
 		if (endpointsDirty) refreshEndpoints();
@@ -65,26 +76,32 @@ public final class ItemNetwork {
 			transferCooldown--;
 			return 0;
 		}
+		int per = Config.itemPipeItemsPerTransfer;
 		int sourceCount = sources.size();
 		int targetCount = targets.size();
-		for (int s = 0; s < sourceCount; s++) {
-			Endpoint source = sources.get((sourceCursor + s) % sourceCount);
-			ItemPort from = ItemLookup.get().find(level, source.pos(), source.side());
-			if (from == null) continue;
-			for (int t = 0; t < targetCount; t++) {
-				Endpoint target = targets.get((targetCursor + t) % targetCount);
+		int totalMoved = 0;
+		for (int t = 0; t < targetCount; t++) {
+			Endpoint target = targets.get((targetCursor + t) % targetCount);
+			ItemPort to = ItemLookup.get().find(level, target.pos(), target.side());
+			if (to == null) continue;
+			for (int s = 0; s < sourceCount; s++) {
+				Endpoint source = sources.get((sourceCursor + s) % sourceCount);
 				if (source.pos().equals(target.pos())) continue; // never churn an endpoint into itself
-				ItemPort to = ItemLookup.get().find(level, target.pos(), target.side());
-				int moved = ItemMover.move(from, to, Config.itemPipeItemsPerTransfer);
+				ItemPort from = ItemLookup.get().find(level, source.pos(), source.side());
+				if (from == null) continue;
+				int moved = ItemMover.move(from, to, per);
 				if (moved > 0) {
-					sourceCursor = (sourceCursor + s + 1) % sourceCount;
-					targetCursor = (targetCursor + t + 1) % targetCount;
-					transferCooldown = Math.max(0, Config.itemPipeTransferIntervalTicks - 1);
-					return moved;
+					totalMoved += moved;
+					break; // this target is served for the interval; move on to the next target
 				}
 			}
 		}
-		return 0;
+		if (totalMoved > 0) {
+			sourceCursor = (sourceCursor + 1) % sourceCount;
+			targetCursor = (targetCursor + 1) % targetCount;
+			transferCooldown = Math.max(0, Config.itemPipeTransferIntervalTicks - 1);
+		}
+		return totalMoved;
 	}
 
 	private void refreshEndpoints() {
@@ -107,6 +124,8 @@ public final class ItemNetwork {
 		}
 		sources.addAll(sourceSeen);
 		targets.addAll(targetSeen);
+		sources.sort(ENDPOINT_ORDER);
+		targets.sort(ENDPOINT_ORDER);
 		endpointsDirty = false;
 		if (!sources.isEmpty()) sourceCursor %= sources.size(); else sourceCursor = 0;
 		if (!targets.isEmpty()) targetCursor %= targets.size(); else targetCursor = 0;

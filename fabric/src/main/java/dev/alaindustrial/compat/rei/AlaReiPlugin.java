@@ -71,6 +71,10 @@ public class AlaReiPlugin implements REIClientPlugin {
 		registry.addWorkstations(
 				CategoryIdentifier.of("minecraft", "plugins/smelting"),
 				EntryStacks.of(ModBlocks.ELECTRIC_FURNACE));
+		// Iron furnace (MOD-115) — fuel-burning station for the same vanilla smelting category.
+		registry.addWorkstations(
+				CategoryIdentifier.of("minecraft", "plugins/smelting"),
+				EntryStacks.of(ModBlocks.IRON_FURNACE));
 		// Informational category: the T2 solar branches (and future evolution lines) with no crafting
 		// recipe. The base solar_panel is craftable, so it is intentionally not linked here.
 		registry.add(new AlaInfoCategory());

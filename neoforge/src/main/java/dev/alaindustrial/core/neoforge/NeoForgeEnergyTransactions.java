@@ -15,9 +15,9 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
  * wrapped as a neutral {@link EnergyPort.Txn}; the cached bridge handle is evicted after close, since
  * NeoForge's {@code TransactionContext} exposes no close callback.
  *
- * <p><b>Wiring status:</b> installed only when the NeoForge energy network is driven. As of MOD-022
- * Phase 2 no machine BlockEntity types are registered on NeoForge (Phase 3/4), so nothing calls this at
- * runtime yet; it compiles and is ready to install once the NeoForge tick loop exists.
+ * <p><b>Wiring status:</b> installed and live on NeoForge — the energy network, item pipes and machine
+ * BlockEntities all tick and open transactions through this at runtime (e.g. the item-pipe transfer in
+ * {@code ItemNetwork.tick} via {@code ItemMover.move → runCommitting}).
  */
 public final class NeoForgeEnergyTransactions implements EnergyTransactions {
 

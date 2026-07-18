@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "F": "minecraft:furnace",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "III",
+    "IFI",
+    "III"
+  ],
+  "result": {
+    "id": "alaindustrial:iron_furnace"
+  }
+}

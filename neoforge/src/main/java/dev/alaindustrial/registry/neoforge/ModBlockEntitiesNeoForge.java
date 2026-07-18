@@ -12,6 +12,7 @@ import dev.alaindustrial.block.entity.ExtractorBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
+import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
@@ -81,6 +82,8 @@ public final class ModBlockEntitiesNeoForge {
 			register("teleporter", TeleporterBlockEntity::new, ModBlocksNeoForge.TELEPORTER);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE =
 			register("electric_furnace", ElectricFurnaceBlockEntity::new, ModBlocksNeoForge.ELECTRIC_FURNACE);
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IronFurnaceBlockEntity>> IRON_FURNACE =
+			register("iron_furnace", IronFurnaceBlockEntity::new, ModBlocksNeoForge.IRON_FURNACE);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ExtractorBlockEntity>> EXTRACTOR =
 			register("extractor", ExtractorBlockEntity::new, ModBlocksNeoForge.EXTRACTOR);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CompressorBlockEntity>> COMPRESSOR =
@@ -134,6 +137,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.BATTERY_BOX_BE = BATTERY_BOX::get;
 		ModContent.TELEPORTER_BE = TELEPORTER::get;
 		ModContent.ELECTRIC_FURNACE_BE = ELECTRIC_FURNACE::get;
+		ModContent.IRON_FURNACE_BE = IRON_FURNACE::get;
 		ModContent.EXTRACTOR_BE = EXTRACTOR::get;
 		ModContent.COMPRESSOR_BE = COMPRESSOR::get;
 		ModContent.GEOTHERMAL_GENERATOR_BE = GEOTHERMAL_GENERATOR::get;

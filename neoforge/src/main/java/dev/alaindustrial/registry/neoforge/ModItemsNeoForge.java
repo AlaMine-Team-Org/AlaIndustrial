@@ -221,6 +221,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("teleporter", ModBlocksNeoForge.TELEPORTER);
 	public static final DeferredItem<BlockItem> ELECTRIC_FURNACE_ITEM =
 			ITEMS.registerSimpleBlockItem("electric_furnace", ModBlocksNeoForge.ELECTRIC_FURNACE);
+	public static final DeferredItem<BlockItem> IRON_FURNACE_ITEM =
+			ITEMS.registerSimpleBlockItem("iron_furnace", ModBlocksNeoForge.IRON_FURNACE);
 	public static final DeferredItem<BlockItem> EXTRACTOR_ITEM =
 			ITEMS.registerSimpleBlockItem("extractor", ModBlocksNeoForge.EXTRACTOR);
 	public static final DeferredItem<BlockItem> COMPRESSOR_ITEM =
@@ -378,6 +380,7 @@ public final class ModItemsNeoForge {
 		ModContent.BATTERY_BOX_ITEM = BATTERY_BOX_ITEM;
 		ModContent.TELEPORTER_ITEM = TELEPORTER_ITEM;
 		ModContent.ELECTRIC_FURNACE_ITEM = ELECTRIC_FURNACE_ITEM;
+		ModContent.IRON_FURNACE_ITEM = IRON_FURNACE_ITEM;
 		ModContent.EXTRACTOR_ITEM = EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = COMPRESSOR_ITEM;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = GEOTHERMAL_GENERATOR_ITEM;

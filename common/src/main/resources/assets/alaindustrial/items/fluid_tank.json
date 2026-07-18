@@ -1,10 +1,19 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "alaindustrial:item/fluid_tank",
-    "tints": [
-      { "type": "minecraft:constant", "value": -1 },
-      { "type": "alaindustrial:fluid_tank" }
-    ]
+    "type": "minecraft:condition",
+    "property": "minecraft:has_component",
+    "component": "alaindustrial:fluid_tank_contents",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "alaindustrial:item/fluid_tank_empty"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "alaindustrial:item/fluid_tank",
+      "tints": [
+        { "type": "minecraft:constant", "value": -1 },
+        { "type": "alaindustrial:fluid_tank" }
+      ]
+    }
   }
 }

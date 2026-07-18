@@ -228,6 +228,11 @@ public final class Config {
 	public static int compressorDuration = 130;
 	public static int extractorDuration = 120;
 
+	// --- Iron Furnace (fuel-based, MOD-115): ticks to smelt one item. Vanilla furnace = 200. ---
+	/** Ticks the iron furnace needs to smelt one item on fuel. Between vanilla (200) and the
+	 * electric furnace, so it reads as "a bit faster than stone" without devaluing the electric tier. */
+	public static int ironFurnaceCookTime = 150;
+
 	// --- Cable ---
 	/**
 	 * Fraction of throughput lost per cable block traversed (copper LV). Resistive/proportional model
@@ -438,6 +443,10 @@ public final class Config {
 					electricFurnaceDuration = GsonHelper.getAsInt(o, "electricFurnaceDuration", electricFurnaceDuration);
 					compressorDuration = GsonHelper.getAsInt(o, "compressorDuration", compressorDuration);
 					extractorDuration = GsonHelper.getAsInt(o, "extractorDuration", extractorDuration);
+					ironFurnaceCookTime = GsonHelper.getAsInt(o, "ironFurnaceCookTime", ironFurnaceCookTime);
+					if (ironFurnaceCookTime <= 0) {
+						ironFurnaceCookTime = 150;
+					}
 					copperCableLossPerBlock = GsonHelper.getAsFloat(o, "copperCableLossPerBlock", (float) copperCableLossPerBlock);
 					if (copperCableLossPerBlock < 0) {
 						copperCableLossPerBlock = 0.0;
@@ -528,6 +537,7 @@ public final class Config {
 		o.addProperty("electricFurnaceDuration", electricFurnaceDuration);
 		o.addProperty("compressorDuration", compressorDuration);
 		o.addProperty("extractorDuration", extractorDuration);
+		o.addProperty("ironFurnaceCookTime", ironFurnaceCookTime);
 		o.addProperty("copperCableLossPerBlock", copperCableLossPerBlock);
 		o.addProperty("networksPerTick", networksPerTick);
 		o.addProperty("networkAnalyzerMaxTraversedNetworks", networkAnalyzerMaxTraversedNetworks);

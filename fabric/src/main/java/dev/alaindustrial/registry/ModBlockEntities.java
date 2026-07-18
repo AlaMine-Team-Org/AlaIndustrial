@@ -12,6 +12,7 @@ import dev.alaindustrial.block.entity.ExtractorBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
+import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
@@ -60,6 +61,8 @@ public final class ModBlockEntities {
 	public static BlockEntityType<BatteryBoxBlockEntity> BATTERY_BOX;
 	public static BlockEntityType<TeleporterBlockEntity> TELEPORTER;
 	public static BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE;
+	// Iron furnace is fuel-burning, not an EnergyPort — so no Team Reborn EnergyStorage.SIDED line below.
+	public static BlockEntityType<IronFurnaceBlockEntity> IRON_FURNACE;
 	public static BlockEntityType<ExtractorBlockEntity> EXTRACTOR;
 	public static BlockEntityType<CompressorBlockEntity> COMPRESSOR;
 	public static BlockEntityType<PumpBlockEntity> PUMP;
@@ -98,6 +101,8 @@ public final class ModBlockEntities {
 				new BlockEntityType<>(TeleporterBlockEntity::new, Set.of(ModBlocks.TELEPORTER)));
 		ELECTRIC_FURNACE = register("electric_furnace",
 				new BlockEntityType<>(ElectricFurnaceBlockEntity::new, Set.of(ModBlocks.ELECTRIC_FURNACE)));
+		IRON_FURNACE = register("iron_furnace",
+				new BlockEntityType<>(IronFurnaceBlockEntity::new, Set.of(ModBlocks.IRON_FURNACE)));
 		EXTRACTOR = register("extractor",
 				new BlockEntityType<>(ExtractorBlockEntity::new, Set.of(ModBlocks.EXTRACTOR)));
 		COMPRESSOR = register("compressor",
@@ -153,6 +158,7 @@ public final class ModBlockEntities {
 		ModContent.BATTERY_BOX_BE = () -> BATTERY_BOX;
 		ModContent.TELEPORTER_BE = () -> TELEPORTER;
 		ModContent.ELECTRIC_FURNACE_BE = () -> ELECTRIC_FURNACE;
+		ModContent.IRON_FURNACE_BE = () -> IRON_FURNACE;
 		ModContent.EXTRACTOR_BE = () -> EXTRACTOR;
 		ModContent.COMPRESSOR_BE = () -> COMPRESSOR;
 		ModContent.PUMP_BE = () -> PUMP;
