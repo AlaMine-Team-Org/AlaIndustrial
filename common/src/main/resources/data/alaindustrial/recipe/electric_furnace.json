@@ -3,9 +3,10 @@
 	"category": "redstone",
 	"key": {
 		"S": "alaindustrial:silver_ingot",
-		"F": "minecraft:furnace",
-		"C": "alaindustrial:electronic_circuit"
+		"F": "alaindustrial:iron_furnace",
+		"C": "alaindustrial:electronic_circuit",
+		"B": "alaindustrial:battery"
 	},
-	"pattern": ["SSS", "FCF", "SSS"],
+	"pattern": ["SSS", "CFB", "SSS"],
 	"result": { "id": "alaindustrial:electric_furnace" }
 }

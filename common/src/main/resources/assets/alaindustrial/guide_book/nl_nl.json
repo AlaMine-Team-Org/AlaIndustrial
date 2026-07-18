@@ -1,0 +1,1631 @@
+{
+  "locale": "nl_nl",
+  "version": 1,
+  "generated_from": "OKF docs/blocks",
+  "tabs": [
+    {
+      "id": "getting_started",
+      "title": "Aan de slag",
+      "icon": "alaindustrial:guide_book",
+      "entries": [
+        {
+          "id": "welcome",
+          "title": "Welkom",
+          "icon": "alaindustrial:guide_book",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Welkom",
+              "text": "Dit is de handleiding voor Ala Industrial — EU-energie, generatoren, machines en kabels.\n\nKies links een onderdeel en blader met de pijlen. De knop \"Wiki openen\" bovenaan opent de volledige gidssite."
+            },
+            {
+              "type": "text",
+              "title": "Eerste stappen",
+              "text": "1. Delf het erts van de mod — begin met tin.\n2. Plaats een Zonnepaneel — de eenvoudigste generator.\n3. Trek er een koperen kabel naartoe.\n4. Sluit je eerste machine aan — de Vermaler.\n\nMeer details vind je in de secties Energie en Verwerking."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy_basics",
+      "title": "Energiebasis",
+      "icon": "alaindustrial:copper_cable",
+      "entries": [
+        {
+          "id": "eu_basics",
+          "title": "Wat EU is",
+          "icon": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "EU-energie",
+              "text": "EU (Energy Unit) is de energie-eenheid van de mod. Generatoren produceren EU, kabels transporteren het, opslag bewaart het en machines verbruiken het. Het staat los van het gewone redstone-systeem."
+            },
+            {
+              "type": "text",
+              "title": "Spanningsniveaus",
+              "text": "Energie stroomt in pakketten die per tick door een spanning worden begrensd:\n• LV — tot 32 EU/tick (basisblokken)\n• MV — tot 128 EU/tick\n• HV — tot 512 EU/tick\n\nDe limiet van een niveau is de doorvoer per tick, geen breekdrempel: blokken worden niet vernield door 'overspanning'."
+            },
+            {
+              "type": "text",
+              "title": "Kabels",
+              "text": "Kabels verbinden blokken tot een stroomnet en vervoeren EU. De koperen kabel verliest energie over afstand — hoe langer de leiding, hoe meer verlies. Houd leidingen kort of plaats opslag dichter bij de verbruiker."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy",
+      "title": "Energie",
+      "icon": "alaindustrial:wind_mill",
+      "entries": [
+        {
+          "id": "wind_mill",
+          "title": "Windturbine",
+          "icon": "alaindustrial:wind_mill",
+          "block_id": "alaindustrial:wind_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Windturbine",
+              "text": "Een eenvoudige LV-windturbine — wekt EU op uit wind zonder brandstof; bouw hem hoger en bij slecht weer voor meer vermogen."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 0–8 EU/t",
+                "Buffer: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:wind_mill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "water_mill",
+          "title": "Watermolen",
+          "icon": "alaindustrial:water_mill",
+          "block_id": "alaindustrial:water_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Watermolen",
+              "text": "Een passieve LV-generator — produceert EU uit water rond het blok, zonder brandstof of tanks."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 0–4 EU/t",
+                "Buffer: 4000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "generator",
+          "title": "Generator",
+          "icon": "alaindustrial:generator",
+          "block_id": "alaindustrial:generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Generator",
+              "text": "Een eenvoudige generator op steenkool en vaste brandstof — de LV-startbron van EU voor je eerste machines."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 8 EU/t",
+                "Buffer: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:furnace",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geothermal_generator",
+          "title": "Geothermische generator",
+          "icon": "alaindustrial:geothermal_generator",
+          "block_id": "alaindustrial:geothermal_generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Geothermische generator",
+              "text": "Wekt EU op uit lava — sterker dan de steenkoolgenerator en hoeft veel minder vaak bijgevuld te worden."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 16 EU/t",
+                "Buffer: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:generator",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:geothermal_generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "daylight_solar_panel",
+          "title": "Daglichtzonnepaneel",
+          "icon": "alaindustrial:daylight_solar_panel",
+          "block_id": "alaindustrial:daylight_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Daglichtzonnepaneel",
+              "text": "Het T2-dagpaneel — vier keer sterker dan het basispaneel, werkt overdag onder open hemel; alleen via evolutie te verkrijgen."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 4 EU/t (dag)",
+                "Buffer: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "moonlit_solar_panel",
+          "title": "Maanverlicht zonnepaneel",
+          "icon": "alaindustrial:moonlit_solar_panel",
+          "block_id": "alaindustrial:moonlit_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Maanverlicht zonnepaneel",
+              "text": "Het T2-nachtpaneel — wekt 's nachts EU op onder open hemel en levert zelfs bij slecht weer een beetje; alleen via evolutie te verkrijgen."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 3 EU/t (nacht)",
+                "Buffer: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "solar_panel",
+          "title": "Zonnepaneel",
+          "icon": "alaindustrial:solar_panel",
+          "block_id": "alaindustrial:solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zonnepaneel",
+              "text": "De eerste stroombron van de mod — wekt overdag EU op onder open hemel; waar de hele energieketen begint."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 1 EU/t (dag)",
+                "Buffer: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:copper_cable",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:solar_panel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_box",
+          "title": "Energieopslag",
+          "icon": "alaindustrial:battery_box",
+          "block_id": "alaindustrial:battery_box",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Energieopslag",
+              "text": "Het LV-startopslagblok — bevat 20 000 EU, slaat overschot van een generator op en levert het aan machines met 32 EU/tick."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 20 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:battery_box",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "Geïsoleerde koperen kabel",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Geïsoleerde koperen kabel",
+              "text": "Een koperen LV-kabel omwikkeld met wol — voor veilige plaatsing naast blokken en strakke bedrading bij machines."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: ≤32 EU/pakket"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "Geïsoleerde tinnen kabel",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Geïsoleerde tinnen kabel",
+              "text": "Een tinnen LV-kabel omwikkeld met wol — de goedkoopste geïsoleerde kabel voor veilige plaatsing naast blokken."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: ≤32 EU/pakket"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "copper_cable",
+          "title": "Koperen kabel",
+          "icon": "alaindustrial:copper_cable",
+          "block_id": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Koperen kabel",
+              "text": "Een goedkope, degelijke LV-kabel voor vroege energienetwerken — verbindt zonnepanelen, accu's en machines tot één lijn."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: ≤32 EU/pakket"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:copper_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "tin_cable",
+          "title": "Tinnen kabel",
+          "icon": "alaindustrial:tin_cable",
+          "block_id": "alaindustrial:tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tinnen kabel",
+              "text": "De goedkoopste LV-kabel — voor dunne, energiezuinige lijnen naar losse machines en zwakke generatoren."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: ≤32 EU/pakket"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "processing",
+      "title": "Verwerking",
+      "icon": "alaindustrial:macerator",
+      "entries": [
+        {
+          "id": "macerator",
+          "title": "Vermaler",
+          "icon": "alaindustrial:macerator",
+          "block_id": "alaindustrial:macerator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vermaler",
+              "text": "Vermaalt erts (zowel blokken als ruw erts) tot twee stof, met EU-verbruik op LV-niveau."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 300 EU/bew.",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:macerator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_furnace",
+          "title": "IJzeren oven",
+          "icon": "alaindustrial:iron_furnace",
+          "block_id": "alaindustrial:iron_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "IJzeren oven",
+              "text": "Een verbeterde brandstofoven tussen de gewone oven en de Elektrische oven — sneller dan de gewone, nog steeds op brandstof, geen EU."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:furnace",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "compressor",
+          "title": "Compressor",
+          "icon": "alaindustrial:compressor",
+          "block_id": "alaindustrial:compressor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Compressor",
+              "text": "Perst grondstoffen samen tot compactere vormen — metaalstof tot staven, steenkool-/edelsteenstof terug tot voorwerpen, ijs tot samengeperst/blauw ijs, suikerriet tot papier. Sluit de verdubbelingslus voor niet-metalen."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 260 EU/bew.",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:piston",
+                "alaindustrial:electronic_circuit",
+                "minecraft:piston",
+                "minecraft:stone",
+                "alaindustrial:silver_ingot",
+                "minecraft:stone"
+              ],
+              "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "extractor",
+          "title": "Extractor",
+          "icon": "alaindustrial:extractor",
+          "block_id": "alaindustrial:extractor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Extractor",
+              "text": "Haalt bruikbaar materiaal uit ruwe invoer — ×2 kleurstof uit bloemen, meer zaden uit pompoen/meloen, blazepoeder uit staven, vuursteen uit grind. Handig voor auto-boerderijen met trechters."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 240 EU/bew.",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:hopper",
+                "alaindustrial:electronic_circuit",
+                "minecraft:hopper",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_furnace",
+          "title": "Elektrische oven",
+          "icon": "alaindustrial:electric_furnace",
+          "block_id": "alaindustrial:electric_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrische oven",
+              "text": "Smelt alles wat de gewone oven kan, plus het stof van de mod tot staven. Werkt op EU in plaats van brandstof."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 200 EU/bew.",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_furnace",
+                "alaindustrial:battery",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electric_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "pump",
+          "title": "Pomp",
+          "icon": "alaindustrial:pump",
+          "block_id": "alaindustrial:pump",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pomp",
+              "text": "Een LV-pomp die vloeistof uit de wereld of aangrenzende tanks in zijn interne tank van 10 emmers pompt en doorgeeft aan ontvangers; wisselt vloeistof uit met capsules en containers van andere mods."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:pump",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "logistics",
+      "title": "Logistiek",
+      "icon": "alaindustrial:item_pipe",
+      "entries": [
+        {
+          "id": "item_pipe",
+          "title": "Voorwerpenbuis",
+          "icon": "alaindustrial:item_pipe",
+          "block_id": "alaindustrial:item_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Voorwerpenbuis",
+              "text": "Passieve meervoudige buis die voorwerpen tussen inventarissen verplaatst."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_gear",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:item_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "fluid_tank",
+          "title": "Draagbare vloeistoftank",
+          "icon": "alaindustrial:fluid_tank",
+          "block_id": "alaindustrial:fluid_tank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Draagbare vloeistoftank",
+              "text": "Een passieve tank van 8 emmers met zichtbaar vloeistofniveau, vloeistoftoegang aan zes zijden en behoud van de inhoud bij verplaatsing."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 10 emmers"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:iron_gear",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_tank",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "world_automation",
+      "title": "Wereld & automatisering",
+      "icon": "alaindustrial:tempered_iron_block",
+      "entries": [
+        {
+          "id": "tempered_iron_block",
+          "title": "Blok gehard ijzer",
+          "icon": "alaindustrial:tempered_iron_block",
+          "block_id": "alaindustrial:tempered_iron_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Blok gehard ijzer",
+              "text": "Een compact blok van 9 staven gehard ijzer — bewaart het metaal in één sleuf en wordt op een werkbank zonder verlies vervaardigd en weer uit elkaar gehaald."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "nickel_ore",
+          "title": "Nikkelerts",
+          "icon": "alaindustrial:nickel_ore",
+          "block_id": "alaindustrial:nickel_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Nikkelerts",
+              "text": "Het zeldzaamste metaal van de mod — erts in de wereld en de keten ruw → stof → staaf; het materiaal voor MV-legeringen en machinebehuizingen."
+            }
+          ]
+        },
+        {
+          "id": "tin_ore",
+          "title": "Tinerts",
+          "icon": "alaindustrial:tin_ore",
+          "block_id": "alaindustrial:tin_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tinerts",
+              "text": "Een vroeg metaal van de mod — erts in de wereld en de keten ruw → stof → staaf; het basismateriaal voor LV-kabels en circuits."
+            }
+          ]
+        },
+        {
+          "id": "silver_ore",
+          "title": "Zilvererts",
+          "icon": "alaindustrial:silver_ore",
+          "block_id": "alaindustrial:silver_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zilvererts",
+              "text": "Een zeldzaam ertsmetaal van de mod — ertsblok en de keten ruw → stof → staaf; het materiaal voor circuits en onderdelen van middenniveau."
+            }
+          ]
+        },
+        {
+          "id": "uranium_ore",
+          "title": "Uraniumerts",
+          "icon": "alaindustrial:uranium_ore",
+          "block_id": "alaindustrial:uranium_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Uraniumerts",
+              "text": "Het zeldzaamste erts van de mod — gedolven met een ijzeren houweel, verwerkt tot stof en staaf; gereserveerd voor toekomstige nucleaire machines."
+            }
+          ]
+        },
+        {
+          "id": "teleporter",
+          "title": "Teleporter",
+          "icon": "alaindustrial:teleporter",
+          "block_id": "alaindustrial:teleporter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Teleporter",
+              "text": "Een HV-ankerstation met een draagbare afstandsbediening — gekoppeld via shift+rechtsklik, teleporteert de speler naar een station voor hoge EU-kosten met opwarming, veilige landing en privacybescherming."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 500 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:electronic_circuit",
+                "minecraft:ender_eye",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:diamond_block",
+                "alaindustrial:copper_coil",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot"
+              ],
+              "result_id": "alaindustrial:teleporter",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "title": "Overig",
+      "icon": "alaindustrial:iron_chest",
+      "entries": [
+        {
+          "id": "iron_chest",
+          "title": "IJzeren kist",
+          "icon": "alaindustrial:iron_chest",
+          "block_id": "alaindustrial:iron_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "IJzeren kist",
+              "text": "Een kist met 36 sleuven — één rij meer dan de gewone kist, met een 3D-model, geanimeerd deksel en een eigen geluid. Heeft geen energie nodig."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 36 sleuven"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "#minecraft:copper_chests",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "enriched_uranium_torch",
+          "title": "Verrijkte uraniumfakkel",
+          "icon": "alaindustrial:enriched_uranium_torch",
+          "block_id": "alaindustrial:enriched_uranium_torch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Verrijkte uraniumfakkel",
+              "text": "Een decoratieve fakkel met een groene vlam en lichtniveau 14 — brandt zelfs onder water. Heeft geen energie nodig."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:uranium_dust",
+                "",
+                "",
+                "#minecraft:coals",
+                "",
+                "",
+                "minecraft:stick",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:enriched_uranium_torch",
+              "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "stock_display_frame",
+          "title": "Voorraadindicatorlijst",
+          "icon": "alaindustrial:stock_display_frame",
+          "block_id": "alaindustrial:stock_display_frame",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Voorraadindicatorlijst",
+              "text": "Een lijst die je op een kist hangt — hij toont het aantal voorwerpen erin, direct op de lijst. Geen energie nodig; het getal is alleen zichtbaar als er een filtervoorwerp in de lijst zit."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust",
+                "alaindustrial:silver_ingot",
+                "minecraft:item_frame",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust"
+              ],
+              "result_id": "alaindustrial:stock_display_frame",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "silver_chest",
+          "title": "Zilveren kist",
+          "icon": "alaindustrial:silver_chest",
+          "block_id": "alaindustrial:silver_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zilveren kist",
+              "text": "Een kist met 45 sleuven — het niveau boven ijzer (één rij meer), met een 3D-model en geanimeerd deksel. Heeft geen energie nodig."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 45 sleuven"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_chest",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:silver_chest",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "items",
+      "title": "Voorwerpen",
+      "icon": "alaindustrial:mute_chip",
+      "entries": [
+        {
+          "id": "mute_chip",
+          "title": "Dempingschip",
+          "icon": "alaindustrial:mute_chip",
+          "block_id": "alaindustrial:mute_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Dempingschip",
+              "text": "Een verbetering die een machine volledig verstomt — gaat in de verbeteringssleuf."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "alaindustrial:empty_chip",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool"
+              ],
+              "result_id": "alaindustrial:mute_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery",
+          "title": "Batterij",
+          "icon": "alaindustrial:battery",
+          "block_id": "alaindustrial:battery",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Batterij",
+              "text": "Een inerte energiecel — de basis waaruit de Energierugzak wordt vervaardigd; bevat zelf geen EU."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "",
+                "alaindustrial:copper_cable",
+                "",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:battery",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron",
+          "title": "Gehard ijzer",
+          "icon": "alaindustrial:tempered_iron",
+          "block_id": "alaindustrial:tempered_iron",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gehard ijzer",
+              "text": "Een staaf gesmolten uit een gewone ijzerstaaf — het basismateriaal voor het gereedschap, de wapenrusting en het blok van de mod."
+            }
+          ]
+        },
+        {
+          "id": "copper_coil",
+          "title": "Koperen spoel",
+          "icon": "alaindustrial:copper_coil",
+          "block_id": "alaindustrial:copper_coil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Koperen spoel",
+              "text": "Een vervaardigingsonderdeel — koperen kabel gewikkeld om een tinnen kern; vereist voor de Elektrische boor."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:copper_coil",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_gear",
+          "title": "IJzeren tandwiel",
+          "icon": "alaindustrial:iron_gear",
+          "block_id": "alaindustrial:iron_gear",
+          "pages": [
+            {
+              "type": "text",
+              "title": "IJzeren tandwiel",
+              "text": "De tandwielfamilie — steen, ijzer, goud en zilver; vervaardigingsonderdelen voor machines die nog komen."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "alaindustrial:wooden_gear",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "empty_chip",
+          "title": "Lege chip",
+          "icon": "alaindustrial:empty_chip",
+          "block_id": "alaindustrial:empty_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lege chip",
+              "text": "De lege basis voor machine-upgradechips; heeft op zichzelf geen effect."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:empty_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "Molenrotor",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Molenrotor",
+              "text": "Windturbinebladen — geplaatst in de rotorsleuf van elke T1/T2-windmolen; zonder rotor geen opwekking. Wordt niet verbruikt zolang hij in de sleuf zit."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "network_analyzer",
+          "title": "Netwerkanalysator",
+          "icon": "alaindustrial:network_analyzer",
+          "block_id": "alaindustrial:network_analyzer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Netwerkanalysator",
+              "text": "Een draagbaar diagnosegereedschap — klik met rechts op een kabel om de statistieken van dat stroomnet te bekijken en het in de wereld te markeren."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:network_analyzer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_dust",
+          "title": "IJzerstof",
+          "icon": "alaindustrial:iron_dust",
+          "block_id": "alaindustrial:iron_dust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "IJzerstof",
+              "text": "Stof en verwante tussenproducten (plaat, billet) — waar de Vermaler en andere machines erts in omzetten."
+            }
+          ]
+        },
+        {
+          "id": "alignment_chip_day",
+          "title": "Zonne-evolutiechip",
+          "icon": "alaindustrial:alignment_chip_day",
+          "block_id": "alaindustrial:alignment_chip_day",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zonne-evolutiechip",
+              "text": "Een paar evolutiechips — zonne (dag) en maan (nacht) — die basis-T1-zonnepanelen en -windmolens via evolutie tot T2 laten evolueren, waarbij de opgeslagen energie behouden blijft."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot"
+              ],
+              "result_id": "alaindustrial:alignment_chip_day",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electronic_circuit",
+          "title": "Elektronisch circuit",
+          "icon": "alaindustrial:electronic_circuit",
+          "block_id": "alaindustrial:electronic_circuit",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektronisch circuit",
+              "text": "Het basis-vervaardigingsonderdeel — het 'brein' van bijna elke LV-machine en elk opslagblok."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:quartz",
+                "minecraft:emerald",
+                "minecraft:quartz",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electronic_circuit",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_pouch",
+          "title": "Batterij-buidel",
+          "icon": "alaindustrial:battery_pouch",
+          "block_id": "alaindustrial:battery_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Batterij-buidel",
+              "text": "Een oplaadbare voorwerpenbuidel — draagt 128 gewicht, werkt op een ingebouwde batterij van 2000 EU en vergrendelt zodra de lading op is."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 2 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather",
+                "minecraft:leather",
+                "minecraft:bundle",
+                "minecraft:leather",
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:battery_pouch",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_chestplate",
+          "title": "Tempered Iron Chestplate",
+          "icon": "alaindustrial:tempered_iron_chestplate",
+          "block_id": "alaindustrial:tempered_iron_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tempered Iron Chestplate",
+              "text": "Een volledige set wapenrusting van gehard ijzer — helm, borstplaat, beenstukken en laarzen; steviger dan ijzer, gerepareerd met gehard ijzer."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 4 st."
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "vacuum_capsule",
+          "title": "Vacuümcapsule",
+          "icon": "alaindustrial:vacuum_capsule",
+          "block_id": "alaindustrial:vacuum_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vacuümcapsule",
+              "text": "Een stapelbare vloeistofcontainer van één emmer — tot 16 capsules van één vloeistof per stapel, gevuld uit de wereld of de tanks van de mod."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone"
+              ],
+              "result_id": "alaindustrial:vacuum_capsule",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "wrench",
+          "title": "Moersleutel",
+          "icon": "alaindustrial:wrench",
+          "block_id": "alaindustrial:wrench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Moersleutel",
+              "text": "Stelt de zijden van de Voorwerpenbuis in en demonteert de blokken van de mod."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "alaindustrial:iron_gear",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:wrench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_pickaxe",
+          "title": "Geharde IJzeren Houweel",
+          "icon": "alaindustrial:tempered_iron_pickaxe",
+          "block_id": "alaindustrial:tempered_iron_pickaxe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Geharde IJzeren Houweel",
+              "text": "Een draagbaar houweel van gehard ijzer — op elk vlak iets beter dan gewoon ijzer, maar kan geen blokken van diamantniveau delven."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "minecraft:stick",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_tools",
+          "title": "Gehard ijzeren gereedschap",
+          "icon": "alaindustrial:tempered_iron_tools",
+          "block_id": "alaindustrial:tempered_iron_tools",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gehard ijzeren gereedschap",
+              "text": "Een set van vijf handgereedschappen van gehard ijzer — houweel, bijl, schoffel, schep en zwaard; iets beter dan gewoon ijzer, maar ze kunnen geen blokken van diamantniveau delven."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 5 st."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scythe",
+          "title": "Zeis",
+          "icon": "alaindustrial:scythe",
+          "block_id": "alaindustrial:scythe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zeis",
+              "text": "Een AOE-gereedschap dat bladeren, gras, bloemen en andere sier-begroeiing in één zwaai wegkapt, en met Shift ingedrukt — een AOE-sikkel die rijpe gewassen oogst. Acht materiaalniveaus van hout tot netheriet."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 8 niveaus"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "teleporter_remote",
+          "title": "Teleporter-afstandsbediening",
+          "icon": "alaindustrial:teleporter_remote",
+          "block_id": "alaindustrial:teleporter_remote",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Teleporter-afstandsbediening",
+              "text": "Een draagbare baken-afstandsbediening — koppelt via shift+rechtsklik aan een teleporterstation en activeert een sprong ernaartoe voor EU die door het station wordt betaald."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "",
+                "minecraft:ender_pearl",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                ""
+              ],
+              "result_id": "alaindustrial:teleporter_remote",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_drill",
+          "title": "Elektrische boor",
+          "icon": "alaindustrial:electric_drill",
+          "block_id": "alaindustrial:electric_drill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrische boor",
+              "text": "Een oplaadbaar houweel van diamantniveau dat op EU werkt — delft als diamant zolang het geladen is, verbruikt EU per blok en gaat nooit stuk."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_pickaxe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "energy_pack",
+          "title": "Energierugzak",
+          "icon": "alaindustrial:energy_pack",
+          "block_id": "alaindustrial:energy_pack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Energierugzak",
+              "text": "Een draagbare EU-buffer in de borstplaatsleuf — 20 000 EU die de elektrische voorwerpen in je inventaris opgeladen houdt."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 30 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:energy_pack",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

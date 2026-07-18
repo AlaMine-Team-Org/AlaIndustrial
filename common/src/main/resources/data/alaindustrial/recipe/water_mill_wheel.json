@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "PSP",
+    "SGS",
+    "PSP"
+  ],
+  "key": {
+    "P": "#minecraft:planks",
+    "S": "minecraft:stick",
+    "G": "alaindustrial:wooden_gear"
+  },
+  "result": {
+    "id": "alaindustrial:water_mill_wheel"
+  }
+}

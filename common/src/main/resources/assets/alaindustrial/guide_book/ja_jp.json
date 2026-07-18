@@ -1,0 +1,1631 @@
+{
+  "locale": "ja_jp",
+  "version": 1,
+  "generated_from": "OKF docs/blocks",
+  "tabs": [
+    {
+      "id": "getting_started",
+      "title": "はじめに",
+      "icon": "alaindustrial:guide_book",
+      "entries": [
+        {
+          "id": "welcome",
+          "title": "ようこそ",
+          "icon": "alaindustrial:guide_book",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ようこそ",
+              "text": "これは Ala Industrial のガイドです — EUエネルギー、発電機、機械、ケーブル。\n\n左でセクションを選び、矢印でページをめくります。上部の「Wikiを開く」ボタンで完全なガイドサイトを開けます。"
+            },
+            {
+              "type": "text",
+              "title": "最初のステップ",
+              "text": "1. MODの鉱石を採掘 — まずはスズから。\n2. ソーラーパネルを設置 — 最もシンプルな発電機。\n3. そこへ銅ケーブルを引く。\n4. 最初の機械をつなぐ — 粉砕機。\n\n詳しくは「エネルギー」と「加工」のセクションを参照。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy_basics",
+      "title": "エネルギーの基礎",
+      "icon": "alaindustrial:copper_cable",
+      "entries": [
+        {
+          "id": "eu_basics",
+          "title": "EUとは",
+          "icon": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "EUエネルギー",
+              "text": "EU（エネルギーユニット）はMODのエネルギー単位です。発電機がEUを生み出し、ケーブルが伝え、貯蔵庫が蓄え、機械が消費します。バニラのレッドストーンとは別のシステムです。"
+            },
+            {
+              "type": "text",
+              "title": "電圧ティア",
+              "text": "エネルギーはtickごとの電圧で上限が決まるパケットで流れます:\n• LV — 最大 32 EU/tick（基本ブロック）\n• MV — 最大 128 EU/tick\n• HV — 最大 512 EU/tick\n\nティアの上限はtickあたりの転送量であり、破壊のしきい値ではありません。ブロックが「過電圧」で壊れることはありません。"
+            },
+            {
+              "type": "text",
+              "title": "ケーブル",
+              "text": "ケーブルはブロックをつないで電力網を作り、EUを運びます。銅ケーブルは距離に応じてエネルギーを失います — 配線が長いほど損失が増えます。配線は短く保つか、消費先の近くに貯蔵庫を置きましょう。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy",
+      "title": "エネルギー",
+      "icon": "alaindustrial:wind_mill",
+      "entries": [
+        {
+          "id": "wind_mill",
+          "title": "風力タービン",
+          "icon": "alaindustrial:wind_mill",
+          "block_id": "alaindustrial:wind_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "風力タービン",
+              "text": "基本的なLV風力タービン — 燃料なしで風からEUを発電します。高い場所や悪天候ほど発電量が増えます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 0–8 EU/t",
+                "バッファ: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:wind_mill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "water_mill",
+          "title": "水車",
+          "icon": "alaindustrial:water_mill",
+          "block_id": "alaindustrial:water_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "水車",
+              "text": "パッシブなLV発電機 — 燃料もタンクも不要で、周囲の水からEUを生み出します。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 0–4 EU/t",
+                "バッファ: 4000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "generator",
+          "title": "発電機",
+          "icon": "alaindustrial:generator",
+          "block_id": "alaindustrial:generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "発電機",
+              "text": "石炭などの固形燃料を使うシンプルな発電機 — 最初の機械向けの入門用LV電源です。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 8 EU/t",
+                "バッファ: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:furnace",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geothermal_generator",
+          "title": "地熱発電機",
+          "icon": "alaindustrial:geothermal_generator",
+          "block_id": "alaindustrial:geothermal_generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "地熱発電機",
+              "text": "溶岩からEUを発電 — 石炭発電機より強力で、補充の頻度もはるかに少なくて済みます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 16 EU/t",
+                "バッファ: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:generator",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:geothermal_generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "daylight_solar_panel",
+          "title": "日光ソーラーパネル",
+          "icon": "alaindustrial:daylight_solar_panel",
+          "block_id": "alaindustrial:daylight_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "日光ソーラーパネル",
+              "text": "T2の昼用パネル — 基本パネルの4倍強力で、開けた空の下で昼間に稼働します。進化でのみ入手できます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 4 EU/t（昼）",
+                "バッファ: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "moonlit_solar_panel",
+          "title": "月光ソーラーパネル",
+          "icon": "alaindustrial:moonlit_solar_panel",
+          "block_id": "alaindustrial:moonlit_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "月光ソーラーパネル",
+              "text": "T2の夜用パネル — 開けた空の下で夜間にEUを発電し、悪天候でもわずかに発電します。進化でのみ入手できます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 3 EU/t（夜）",
+                "バッファ: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "solar_panel",
+          "title": "ソーラーパネル",
+          "icon": "alaindustrial:solar_panel",
+          "block_id": "alaindustrial:solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ソーラーパネル",
+              "text": "MOD最初の電源 — 開けた空の下で昼間にEUを発電します。すべてのエネルギー連鎖はここから始まります。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 1 EU/t（昼）",
+                "バッファ: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:copper_cable",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:solar_panel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_box",
+          "title": "エネルギー貯蔵庫",
+          "icon": "alaindustrial:battery_box",
+          "block_id": "alaindustrial:battery_box",
+          "pages": [
+            {
+              "type": "text",
+              "title": "エネルギー貯蔵庫",
+              "text": "入門用のLV貯蔵ブロック — 20 000 EU を蓄え、発電機の余剰を貯めて 32 EU/tick で機械へ供給します。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 20 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:battery_box",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "絶縁銅ケーブル",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "絶縁銅ケーブル",
+              "text": "羊毛で包んだ銅LVケーブル — 隣接しても安全で、機械のそばの狭い配線に向いています。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: ≤32 EU/パケット"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "絶縁スズケーブル",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "絶縁スズケーブル",
+              "text": "羊毛で包んだスズLVケーブル — 隣接安全な絶縁ケーブルの中で最も安価です。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: ≤32 EU/パケット"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "copper_cable",
+          "title": "銅ケーブル",
+          "icon": "alaindustrial:copper_cable",
+          "block_id": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "銅ケーブル",
+              "text": "序盤のエネルギー網を支える安価で実用的なLVケーブル — ソーラーパネル、バッテリー、機械を一本の線でつなぎます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: ≤32 EU/パケット"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:copper_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "tin_cable",
+          "title": "スズケーブル",
+          "icon": "alaindustrial:tin_cable",
+          "block_id": "alaindustrial:tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "スズケーブル",
+              "text": "最も安価なLVケーブル — 単体の機械や非力な発電機へつなぐ、細い低出力の配線用です。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: ≤32 EU/パケット"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "processing",
+      "title": "加工",
+      "icon": "alaindustrial:macerator",
+      "entries": [
+        {
+          "id": "macerator",
+          "title": "粉砕機",
+          "icon": "alaindustrial:macerator",
+          "block_id": "alaindustrial:macerator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "粉砕機",
+              "text": "鉱石（ブロックと原石の両方）を砕いて粉2個にします。LVティアでEUを消費します。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 300 EU/処理",
+                "バッファ: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:macerator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_furnace",
+          "title": "鉄のかまど",
+          "icon": "alaindustrial:iron_furnace",
+          "block_id": "alaindustrial:iron_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "鉄のかまど",
+              "text": "バニラと電気かまどの中間にあたる、強化された燃料式かまど — バニラより速いですが、燃料式のままでEUは使いません。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:furnace",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "compressor",
+          "title": "圧縮機",
+          "icon": "alaindustrial:compressor",
+          "block_id": "alaindustrial:compressor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "圧縮機",
+              "text": "素材をより緻密な形に圧縮します — 金属の粉をインゴットに、石炭・宝石の粉を元のアイテムに、氷を氷塊・青氷に、サトウキビを紙に。非金属の倍加ループを完結させます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 260 EU/処理",
+                "バッファ: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:piston",
+                "alaindustrial:electronic_circuit",
+                "minecraft:piston",
+                "minecraft:stone",
+                "alaindustrial:silver_ingot",
+                "minecraft:stone"
+              ],
+              "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "extractor",
+          "title": "抽出機",
+          "icon": "alaindustrial:extractor",
+          "block_id": "alaindustrial:extractor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "抽出機",
+              "text": "原料から有用な素材を取り出します — 花から染料×2、カボチャ・スイカからより多くの種、ブレイズロッドからブレイズパウダー、砂利から火打石。ホッパー給餌の自動農場に便利です。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 240 EU/処理",
+                "バッファ: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:hopper",
+                "alaindustrial:electronic_circuit",
+                "minecraft:hopper",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_furnace",
+          "title": "電気かまど",
+          "icon": "alaindustrial:electric_furnace",
+          "block_id": "alaindustrial:electric_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "電気かまど",
+              "text": "バニラのかまどで焼けるものすべてに加え、MODの粉をインゴットに精錬します。燃料の代わりにEUで動きます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 200 EU/処理",
+                "バッファ: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_furnace",
+                "alaindustrial:battery",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electric_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "pump",
+          "title": "ポンプ",
+          "icon": "alaindustrial:pump",
+          "block_id": "alaindustrial:pump",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ポンプ",
+              "text": "ワールドや隣接タンクから液体を吸い上げ、バケツ10杯分の内部タンクに溜めて受け手へ送り出すLVポンプ — カプセルや他MODの容器とも液体をやり取りします。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "バッファ: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:pump",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "logistics",
+      "title": "物流",
+      "icon": "alaindustrial:item_pipe",
+      "entries": [
+        {
+          "id": "item_pipe",
+          "title": "アイテムパイプ",
+          "icon": "alaindustrial:item_pipe",
+          "block_id": "alaindustrial:item_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "アイテムパイプ",
+              "text": "インベントリ間でアイテムを移動させる、パッシブなマルチパートパイプです。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_gear",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:item_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "fluid_tank",
+          "title": "携帯用流体タンク",
+          "icon": "alaindustrial:fluid_tank",
+          "block_id": "alaindustrial:fluid_tank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "携帯用流体タンク",
+              "text": "液面が見えるパッシブなバケツ8杯分のタンク — 6面から液体を出し入れでき、移動しても中身を保持します。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: バケツ10杯"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:iron_gear",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_tank",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "world_automation",
+      "title": "ワールドと自動化",
+      "icon": "alaindustrial:tempered_iron_block",
+      "entries": [
+        {
+          "id": "tempered_iron_block",
+          "title": "調質鉄ブロック",
+          "icon": "alaindustrial:tempered_iron_block",
+          "block_id": "alaindustrial:tempered_iron_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "調質鉄ブロック",
+              "text": "調質鉄インゴット9個ぶんのコンパクトなブロック — 金属を1スロットに保管でき、作業台で損失なくクラフト・解体できます。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "nickel_ore",
+          "title": "ニッケル鉱石",
+          "icon": "alaindustrial:nickel_ore",
+          "block_id": "alaindustrial:nickel_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ニッケル鉱石",
+              "text": "MODの金属で最も希少 — ワールドの鉱石と、原石 → 粉 → インゴットの流れ。MV合金や機械筐体の素材です。"
+            }
+          ]
+        },
+        {
+          "id": "tin_ore",
+          "title": "スズ鉱石",
+          "icon": "alaindustrial:tin_ore",
+          "block_id": "alaindustrial:tin_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "スズ鉱石",
+              "text": "序盤のMOD金属 — ワールドの鉱石と、原石 → 粉 → インゴットの流れ。LVケーブルや回路の基礎素材です。"
+            }
+          ]
+        },
+        {
+          "id": "silver_ore",
+          "title": "銀鉱石",
+          "icon": "alaindustrial:silver_ore",
+          "block_id": "alaindustrial:silver_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "銀鉱石",
+              "text": "希少なMODの鉱石金属 — 鉱石ブロックと、原石 → 粉 → インゴットの流れ。中位の回路や部品の素材です。"
+            }
+          ]
+        },
+        {
+          "id": "uranium_ore",
+          "title": "ウラン鉱石",
+          "icon": "alaindustrial:uranium_ore",
+          "block_id": "alaindustrial:uranium_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ウラン鉱石",
+              "text": "MODで最も希少な鉱石 — 鉄のツルハシで採掘し、粉やインゴットに加工します。将来の原子力機械のために用意されています。"
+            }
+          ]
+        },
+        {
+          "id": "teleporter",
+          "title": "テレポーター",
+          "icon": "alaindustrial:teleporter",
+          "block_id": "alaindustrial:teleporter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "テレポーター",
+              "text": "HVのアンカーステーションと携帯リモコン — Shift+右クリックで登録し、大量のEUを消費してプレイヤーをステーションへテレポートします。ウォームアップ、安全な着地、プライバシー保護つき。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "バッファ: 500 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:electronic_circuit",
+                "minecraft:ender_eye",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:diamond_block",
+                "alaindustrial:copper_coil",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot"
+              ],
+              "result_id": "alaindustrial:teleporter",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "title": "その他",
+      "icon": "alaindustrial:iron_chest",
+      "entries": [
+        {
+          "id": "iron_chest",
+          "title": "鉄のチェスト",
+          "icon": "alaindustrial:iron_chest",
+          "block_id": "alaindustrial:iron_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "鉄のチェスト",
+              "text": "36スロットのチェスト — バニラより1列多く、3Dモデル、開閉アニメーション、専用の効果音つき。エネルギーは不要です。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 36スロット"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "#minecraft:copper_chests",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "enriched_uranium_torch",
+          "title": "濃縮ウランの松明",
+          "icon": "alaindustrial:enriched_uranium_torch",
+          "block_id": "alaindustrial:enriched_uranium_torch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "濃縮ウランの松明",
+              "text": "緑の炎と光レベル14の装飾用の松明 — 水中でも燃えます。エネルギーは不要です。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:uranium_dust",
+                "",
+                "",
+                "#minecraft:coals",
+                "",
+                "",
+                "minecraft:stick",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:enriched_uranium_torch",
+              "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "stock_display_frame",
+          "title": "在庫表示額縁",
+          "icon": "alaindustrial:stock_display_frame",
+          "block_id": "alaindustrial:stock_display_frame",
+          "pages": [
+            {
+              "type": "text",
+              "title": "在庫表示額縁",
+              "text": "チェストに掛ける額縁 — 中のアイテム数を額縁の上に表示します。エネルギーは不要。数値はフィルター用アイテムを額縁に入れているときだけ表示されます。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust",
+                "alaindustrial:silver_ingot",
+                "minecraft:item_frame",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust"
+              ],
+              "result_id": "alaindustrial:stock_display_frame",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "silver_chest",
+          "title": "銀のチェスト",
+          "icon": "alaindustrial:silver_chest",
+          "block_id": "alaindustrial:silver_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "銀のチェスト",
+              "text": "45スロットのチェスト — 鉄の1つ上のティア（1列多い）で、3Dモデルと開閉アニメーションつき。エネルギーは不要です。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 45スロット"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_chest",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:silver_chest",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "items",
+      "title": "アイテム",
+      "icon": "alaindustrial:mute_chip",
+      "entries": [
+        {
+          "id": "mute_chip",
+          "title": "消音チップ",
+          "icon": "alaindustrial:mute_chip",
+          "block_id": "alaindustrial:mute_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "消音チップ",
+              "text": "機械の音を完全に消すアップグレード — アップグレードスロットに入れます。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "alaindustrial:empty_chip",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool"
+              ],
+              "result_id": "alaindustrial:mute_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery",
+          "title": "電池",
+          "icon": "alaindustrial:battery",
+          "block_id": "alaindustrial:battery",
+          "pages": [
+            {
+              "type": "text",
+              "title": "電池",
+              "text": "不活性なエネルギーセル — エネルギーパックの素材となる素体で、それ自体はEUを蓄えません。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "",
+                "alaindustrial:copper_cable",
+                "",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:battery",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron",
+          "title": "焼き入れ鉄",
+          "icon": "alaindustrial:tempered_iron",
+          "block_id": "alaindustrial:tempered_iron",
+          "pages": [
+            {
+              "type": "text",
+              "title": "焼き入れ鉄",
+              "text": "バニラの鉄インゴットから精錬したインゴット — MODの道具、防具、ブロックの基礎素材です。"
+            }
+          ]
+        },
+        {
+          "id": "copper_coil",
+          "title": "銅コイル",
+          "icon": "alaindustrial:copper_coil",
+          "block_id": "alaindustrial:copper_coil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "銅コイル",
+              "text": "クラフト部品 — スズの芯に銅ケーブルを巻いたもの。電動ドリルの前提になります。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:copper_coil",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_gear",
+          "title": "鉄の歯車",
+          "icon": "alaindustrial:iron_gear",
+          "block_id": "alaindustrial:iron_gear",
+          "pages": [
+            {
+              "type": "text",
+              "title": "鉄の歯車",
+              "text": "歯車のシリーズ — 石、鉄、金、銀。今後の機械のためのクラフト部品です。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "alaindustrial:wooden_gear",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "empty_chip",
+          "title": "空のチップ",
+          "icon": "alaindustrial:empty_chip",
+          "block_id": "alaindustrial:empty_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "空のチップ",
+              "text": "機械のアップグレードチップの素体 — それ自体には効果はありません。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:empty_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "風力タービンのローター",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "風力タービンのローター",
+              "text": "風力タービンの羽根 — T1/T2の風力タービンのロータースロットに設置します。これがないと発電しません。スロットにある間は消費されません。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "network_analyzer",
+          "title": "ネットワークアナライザー",
+          "icon": "alaindustrial:network_analyzer",
+          "block_id": "alaindustrial:network_analyzer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ネットワークアナライザー",
+              "text": "手持ちの診断ツール — ケーブルを右クリックすると、その電力網の統計を表示し、ワールド内で強調表示します。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:network_analyzer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_dust",
+          "title": "鉄の粉",
+          "icon": "alaindustrial:iron_dust",
+          "block_id": "alaindustrial:iron_dust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "鉄の粉",
+              "text": "粉および関連する中間素材（板、ビレット） — 粉砕機などの機械が鉱石を変えたものです。"
+            }
+          ]
+        },
+        {
+          "id": "alignment_chip_day",
+          "title": "ソーラー進化チップ",
+          "icon": "alaindustrial:alignment_chip_day",
+          "block_id": "alaindustrial:alignment_chip_day",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ソーラー進化チップ",
+              "text": "2種の進化チップ — ソーラー（昼）とルナ（夜）。基本のT1ソーラーパネルや風力タービンを進化でT2にし、蓄積されたNBTエネルギーを引き継ぎます。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot"
+              ],
+              "result_id": "alaindustrial:alignment_chip_day",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electronic_circuit",
+          "title": "電子回路",
+          "icon": "alaindustrial:electronic_circuit",
+          "block_id": "alaindustrial:electronic_circuit",
+          "pages": [
+            {
+              "type": "text",
+              "title": "電子回路",
+              "text": "基礎となるクラフト部品 — ほぼすべてのLV機械と貯蔵ブロックの「頭脳」です。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:quartz",
+                "minecraft:emerald",
+                "minecraft:quartz",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electronic_circuit",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_pouch",
+          "title": "バッテリーポーチ",
+          "icon": "alaindustrial:battery_pouch",
+          "block_id": "alaindustrial:battery_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "バッテリーポーチ",
+              "text": "充電式のアイテムポーチ — 重量128まで収納でき、内蔵の2000 EUバッテリーで動作し、充電切れになるとロックされます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 2 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather",
+                "minecraft:leather",
+                "minecraft:bundle",
+                "minecraft:leather",
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:battery_pouch",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_chestplate",
+          "title": "調質鉄のチェストプレート",
+          "icon": "alaindustrial:tempered_iron_chestplate",
+          "block_id": "alaindustrial:tempered_iron_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "調質鉄のチェストプレート",
+              "text": "調質鉄の防具フルセット — ヘルメット、チェストプレート、レギンス、ブーツ。鉄より頑丈で、調質鉄で修理できます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 4個"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "vacuum_capsule",
+          "title": "真空カプセル",
+          "icon": "alaindustrial:vacuum_capsule",
+          "block_id": "alaindustrial:vacuum_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "真空カプセル",
+              "text": "スタック可能なバケツ1杯分の液体容器 — 同じ液体なら1スタックに最大16個。ワールドやMODのタンクから充填できます。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone"
+              ],
+              "result_id": "alaindustrial:vacuum_capsule",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "wrench",
+          "title": "レンチ",
+          "icon": "alaindustrial:wrench",
+          "block_id": "alaindustrial:wrench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "レンチ",
+              "text": "アイテムパイプの面を設定し、MODのブロックを分解します。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "alaindustrial:iron_gear",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:wrench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_pickaxe",
+          "title": "調質鉄のツルハシ",
+          "icon": "alaindustrial:tempered_iron_pickaxe",
+          "block_id": "alaindustrial:tempered_iron_pickaxe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "調質鉄のツルハシ",
+              "text": "手持ちの調質鉄のツルハシ — あらゆる性能でバニラの鉄をわずかに上回りますが、ダイヤモンド級のブロックは採掘できません。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "minecraft:stick",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_tools",
+          "title": "調質鉄の道具",
+          "icon": "alaindustrial:tempered_iron_tools",
+          "block_id": "alaindustrial:tempered_iron_tools",
+          "pages": [
+            {
+              "type": "text",
+              "title": "調質鉄の道具",
+              "text": "調質鉄製の5種の手道具セット — ツルハシ、斧、クワ、シャベル、剣。バニラの鉄をわずかに上回りますが、ダイヤモンド級のブロックは採掘できません。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 5個"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scythe",
+          "title": "大鎌",
+          "icon": "alaindustrial:scythe",
+          "block_id": "alaindustrial:scythe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "大鎌",
+              "text": "一振りで葉、草、花などの装飾用の植物を範囲でまとめて刈り取る道具 — Shiftを押しながらなら、熟した作物を範囲収穫する鎌になります。木からネザライトまで8段階の素材ティア。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 8ティア"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "teleporter_remote",
+          "title": "テレポーターリモコン",
+          "icon": "alaindustrial:teleporter_remote",
+          "block_id": "alaindustrial:teleporter_remote",
+          "pages": [
+            {
+              "type": "text",
+              "title": "テレポーターリモコン",
+              "text": "手持ちのビーコン型リモコン — Shift+右クリックでテレポーターステーションに登録し、ステーションが支払うEUでそこへのジャンプを発動します。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "",
+                "minecraft:ender_pearl",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                ""
+              ],
+              "result_id": "alaindustrial:teleporter_remote",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_drill",
+          "title": "電動ドリル",
+          "icon": "alaindustrial:electric_drill",
+          "block_id": "alaindustrial:electric_drill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "電動ドリル",
+              "text": "EUで動く充電式のダイヤモンド級ツルハシ — 充電中はダイヤモンド並みに採掘し、1ブロックごとにEUを消費し、決して壊れません。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "バッファ: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_pickaxe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "energy_pack",
+          "title": "エネルギーパック",
+          "icon": "alaindustrial:energy_pack",
+          "block_id": "alaindustrial:energy_pack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "エネルギーパック",
+              "text": "胸部スロットに装備するEUバッファ — 20 000 EU で、インベントリ内の電動アイテムを充電し続けます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 30 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:energy_pack",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

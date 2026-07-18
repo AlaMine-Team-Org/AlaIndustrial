@@ -1,0 +1,13 @@
+{
+	"type": "neoforge:add_table",
+	"conditions": [
+		{
+			"condition": "neoforge:loot_table_id",
+			"loot_table_id": "minecraft:chests/spawn_bonus_chest"
+		},
+		{
+			"condition": "alaindustrial:bonus_chest_enabled"
+		}
+	],
+	"table": "alaindustrial:inject/bonus_chest"
+}

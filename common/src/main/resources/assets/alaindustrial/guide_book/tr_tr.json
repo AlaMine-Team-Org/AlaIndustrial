@@ -1,0 +1,1631 @@
+{
+  "locale": "tr_tr",
+  "version": 1,
+  "generated_from": "OKF docs/blocks",
+  "tabs": [
+    {
+      "id": "getting_started",
+      "title": "Başlangıç",
+      "icon": "alaindustrial:guide_book",
+      "entries": [
+        {
+          "id": "welcome",
+          "title": "Hoş Geldiniz",
+          "icon": "alaindustrial:guide_book",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Hoş Geldiniz",
+              "text": "Bu, Ala Industrial kılavuzudur — EU enerjisi, jeneratörler, makineler ve kablolar.\n\nSoldan bir bölüm seçin, sayfaları oklarla çevirin. Yukarıdaki \"Wiki'yi aç\" düğmesi tam kılavuz sitesini açar."
+            },
+            {
+              "type": "text",
+              "title": "İlk adımlar",
+              "text": "1. Modun cevherini kazın — kalayla başlayın.\n2. Bir Güneş Paneli yerleştirin — en basit jeneratör.\n3. Ona bir bakır kablo çekin.\n4. İlk makinenizi bağlayın — Öğütücü.\n\nAyrıntılar Enerji ve İşleme bölümlerinde."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy_basics",
+      "title": "Enerji Temelleri",
+      "icon": "alaindustrial:copper_cable",
+      "entries": [
+        {
+          "id": "eu_basics",
+          "title": "EU nedir",
+          "icon": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "EU enerjisi",
+              "text": "EU (Enerji Birimi), modun enerji birimidir. Jeneratörler EU üretir, kablolar iletir, depolar saklar, makineler harcar. Bu, vanilya redstone'dan ayrı bir sistemdir."
+            },
+            {
+              "type": "text",
+              "title": "Voltaj kademeleri",
+              "text": "Enerji, tik başına voltajla sınırlı paketler hâlinde akar:\n• LV — tik başına 32 EU'ya kadar (temel bloklar)\n• MV — tik başına 128 EU'ya kadar\n• HV — tik başına 512 EU'ya kadar\n\nBir kademenin limiti, bir kırılma eşiği değil, tik başına aktarım kapasitesidir: bloklar 'aşırı voltaj' ile tahrip olmaz."
+            },
+            {
+              "type": "text",
+              "title": "Kablolar",
+              "text": "Kablolar blokları bir güç ağına bağlar ve EU taşır. Bakır kablo mesafeyle enerji kaybeder — hat ne kadar uzunsa o kadar çok kaybolur. Hatları kısa tutun veya depolamayı tüketiciye yakın yerleştirin."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy",
+      "title": "Enerji",
+      "icon": "alaindustrial:wind_mill",
+      "entries": [
+        {
+          "id": "wind_mill",
+          "title": "Rüzgar Türbini",
+          "icon": "alaindustrial:wind_mill",
+          "block_id": "alaindustrial:wind_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rüzgar Türbini",
+              "text": "Temel bir LV rüzgar türbini — yakıt olmadan rüzgardan EU üretir; daha fazla güç için onu daha yükseğe ve kötü havada inşa edin."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 0–8 EU/t",
+                "Tampon: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:wind_mill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "water_mill",
+          "title": "Su Değirmeni",
+          "icon": "alaindustrial:water_mill",
+          "block_id": "alaindustrial:water_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Su Değirmeni",
+              "text": "Pasif bir LV jeneratör — yakıt veya tank olmadan bloğun çevresindeki sudan EU üretir."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 0–4 EU/t",
+                "Tampon: 4000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "generator",
+          "title": "Jeneratör",
+          "icon": "alaindustrial:generator",
+          "block_id": "alaindustrial:generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Jeneratör",
+              "text": "Basit bir kömür ve katı yakıt jeneratörü — ilk makineleriniz için başlangıç LV EU kaynağı."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 8 EU/t",
+                "Tampon: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:furnace",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geothermal_generator",
+          "title": "Jeotermal Jeneratör",
+          "icon": "alaindustrial:geothermal_generator",
+          "block_id": "alaindustrial:geothermal_generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Jeotermal Jeneratör",
+              "text": "Lavdan EU üretir — kömür jeneratöründen daha güçlüdür ve çok daha seyrek yeniden doldurulması gerekir."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 16 EU/t",
+                "Tampon: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:generator",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:geothermal_generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "daylight_solar_panel",
+          "title": "Gün Işığı Güneş Paneli",
+          "icon": "alaindustrial:daylight_solar_panel",
+          "block_id": "alaindustrial:daylight_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gün Işığı Güneş Paneli",
+              "text": "T2 gündüz paneli — temel panelden dört kat güçlü, açık gökyüzü altında gündüzleri çalışır; yalnızca evrimle elde edilir."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 4 EU/t (gündüz)",
+                "Tampon: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "moonlit_solar_panel",
+          "title": "Ay Işığı Güneş Paneli",
+          "icon": "alaindustrial:moonlit_solar_panel",
+          "block_id": "alaindustrial:moonlit_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ay Işığı Güneş Paneli",
+              "text": "T2 gece paneli — açık gökyüzü altında geceleri EU üretir ve kötü havada bile az miktarda üretir; yalnızca evrimle elde edilir."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 3 EU/t (gece)",
+                "Tampon: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "solar_panel",
+          "title": "Güneş Paneli",
+          "icon": "alaindustrial:solar_panel",
+          "block_id": "alaindustrial:solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Güneş Paneli",
+              "text": "Modun ilk güç kaynağı — açık gökyüzü altında gündüzleri EU üretir; tüm enerji zincirinin başladığı yer."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 1 EU/t (gündüz)",
+                "Tampon: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:copper_cable",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:solar_panel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_box",
+          "title": "Enerji Deposu",
+          "icon": "alaindustrial:battery_box",
+          "block_id": "alaindustrial:battery_box",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Enerji Deposu",
+              "text": "Başlangıç LV depolama bloğu — 20 000 EU tutar, bir jeneratörden gelen fazlayı biriktirir ve makinelere tik başına 32 EU verir."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 20 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:battery_box",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "Yalıtımlı Bakır Kablo",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Yalıtımlı Bakır Kablo",
+              "text": "Yünle sarılmış bakır LV kablo — güvenli komşuluk ve makinelerin yanında sıkı kablolama için."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: ≤32 EU/paket"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "Yalıtımlı Kalay Kablo",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Yalıtımlı Kalay Kablo",
+              "text": "Yünle sarılmış kalay LV kablo — güvenli komşuluk için en ucuz yalıtımlı kablo."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: ≤32 EU/paket"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "copper_cable",
+          "title": "Bakır Kablo",
+          "icon": "alaindustrial:copper_cable",
+          "block_id": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bakır Kablo",
+              "text": "Erken enerji ağları için ucuz, iş gören bir LV kablo — güneş panellerini, pilleri ve makineleri tek bir hatta bağlar."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: ≤32 EU/paket"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:copper_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "tin_cable",
+          "title": "Kalay Kablo",
+          "icon": "alaindustrial:tin_cable",
+          "block_id": "alaindustrial:tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kalay Kablo",
+              "text": "En ucuz LV kablo — tek makinelere ve zayıf jeneratörlere giden ince, düşük güçlü hatlar için."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: ≤32 EU/paket"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "processing",
+      "title": "İşleme",
+      "icon": "alaindustrial:macerator",
+      "entries": [
+        {
+          "id": "macerator",
+          "title": "Öğütücü",
+          "icon": "alaindustrial:macerator",
+          "block_id": "alaindustrial:macerator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Öğütücü",
+              "text": "Cevheri (hem blokları hem ham cevheri) iki toza öğütür, LV kademesinde EU harcar."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 300 EU/işlem",
+                "Tampon: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:macerator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_furnace",
+          "title": "Demir Fırın",
+          "icon": "alaindustrial:iron_furnace",
+          "block_id": "alaindustrial:iron_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Demir Fırın",
+              "text": "Vanilya ile Elektrikli Fırın arasında geliştirilmiş bir yakıtlı fırın — vanilyadan hızlı, hâlâ yakıtla çalışır, EU yok."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:furnace",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "compressor",
+          "title": "Sıkıştırıcı",
+          "icon": "alaindustrial:compressor",
+          "block_id": "alaindustrial:compressor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sıkıştırıcı",
+              "text": "Ham maddeleri daha yoğun formlara sıkıştırır — metal tozunu külçeye, kömür/mücevher tozunu tekrar eşyalara, buzu sıkıştırılmış/mavi buza, şeker kamışını kâğıda. Metal olmayanlar için ikiye katlama döngüsünü kapatır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 260 EU/işlem",
+                "Tampon: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:piston",
+                "alaindustrial:electronic_circuit",
+                "minecraft:piston",
+                "minecraft:stone",
+                "alaindustrial:silver_ingot",
+                "minecraft:stone"
+              ],
+              "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "extractor",
+          "title": "Çıkarıcı",
+          "icon": "alaindustrial:extractor",
+          "block_id": "alaindustrial:extractor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Çıkarıcı",
+              "text": "Ham girdilerden faydalı madde çıkarır — çiçeklerden ×2 boya, bal kabağı/karpuzdan daha çok tohum, çubuklardan blaze tozu, çakıldan çakmaktaşı. Huniyle beslenen otomatik çiftlikler için kullanışlıdır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 240 EU/işlem",
+                "Tampon: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:hopper",
+                "alaindustrial:electronic_circuit",
+                "minecraft:hopper",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_furnace",
+          "title": "Elektrikli Fırın",
+          "icon": "alaindustrial:electric_furnace",
+          "block_id": "alaindustrial:electric_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrikli Fırın",
+              "text": "Vanilya fırının erittiği her şeyi, ayrıca modun tozlarını külçeye eritir. Yakıt yerine EU ile çalışır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 200 EU/işlem",
+                "Tampon: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_furnace",
+                "alaindustrial:battery",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electric_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "pump",
+          "title": "Pompa",
+          "icon": "alaindustrial:pump",
+          "block_id": "alaindustrial:pump",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pompa",
+              "text": "Dünyadan veya komşu tanklardan sıvıyı 10 kovalık iç tankına çeken ve alıcılara ileten bir LV pompa; kapsüllerle ve diğer modların kaplarıyla sıvı alışverişi yapar."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:pump",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "logistics",
+      "title": "Lojistik",
+      "icon": "alaindustrial:item_pipe",
+      "entries": [
+        {
+          "id": "item_pipe",
+          "title": "Eşya borusu",
+          "icon": "alaindustrial:item_pipe",
+          "block_id": "alaindustrial:item_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Eşya borusu",
+              "text": "Envanterler arasında eşya taşıyan pasif çok parçalı boru."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_gear",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:item_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "fluid_tank",
+          "title": "Taşınabilir Sıvı Tankı",
+          "icon": "alaindustrial:fluid_tank",
+          "block_id": "alaindustrial:fluid_tank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Taşınabilir Sıvı Tankı",
+              "text": "Görünür sıvı seviyesi ve altı yüzden sıvı erişimi olan, taşındığında içeriğini koruyan pasif 8 kovalık tank."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 10 kova"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:iron_gear",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_tank",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "world_automation",
+      "title": "Dünya ve Otomasyon",
+      "icon": "alaindustrial:tempered_iron_block",
+      "entries": [
+        {
+          "id": "tempered_iron_block",
+          "title": "Su Verilmiş Demir Bloğu",
+          "icon": "alaindustrial:tempered_iron_block",
+          "block_id": "alaindustrial:tempered_iron_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Su Verilmiş Demir Bloğu",
+              "text": "9 su verilmiş demir külçesinden oluşan sıkışık bir blok — metali tek yuvada saklar ve çalışma tezgahında kayıpsız üretilir veya bozulur."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "nickel_ore",
+          "title": "Nikel Cevheri",
+          "icon": "alaindustrial:nickel_ore",
+          "block_id": "alaindustrial:nickel_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Nikel Cevheri",
+              "text": "Modun metallerinin en nadiri — dünyada cevher ve ham → toz → külçe zinciri; MV alaşımları ve makine gövdeleri için malzeme."
+            }
+          ]
+        },
+        {
+          "id": "tin_ore",
+          "title": "Kalay Cevheri",
+          "icon": "alaindustrial:tin_ore",
+          "block_id": "alaindustrial:tin_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kalay Cevheri",
+              "text": "Erken bir mod metali — dünyada cevher ve ham → toz → külçe zinciri; LV kablolar ve devreler için temel malzeme."
+            }
+          ]
+        },
+        {
+          "id": "silver_ore",
+          "title": "Gümüş Cevheri",
+          "icon": "alaindustrial:silver_ore",
+          "block_id": "alaindustrial:silver_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gümüş Cevheri",
+              "text": "Nadir bir mod cevher metali — cevher bloğu ve ham → toz → külçe zinciri; orta kademe devreler ve bileşenler için malzeme."
+            }
+          ]
+        },
+        {
+          "id": "uranium_ore",
+          "title": "Uranyum Cevheri",
+          "icon": "alaindustrial:uranium_ore",
+          "block_id": "alaindustrial:uranium_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Uranyum Cevheri",
+              "text": "Modun en nadir cevheri — demir kazma ile kazılır, toz ve külçeye işlenir; gelecekteki nükleer makineler için ayrılmıştır."
+            }
+          ]
+        },
+        {
+          "id": "teleporter",
+          "title": "Işınlayıcı",
+          "icon": "alaindustrial:teleporter",
+          "block_id": "alaindustrial:teleporter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Işınlayıcı",
+              "text": "Bir HV çapa istasyonu ve elde taşınan bir kumanda — shift+sağ tık ile bağlanır, oyuncuyu büyük bir EU maliyetiyle bir istasyona ışınlar; ısınma süresi, güvenli iniş ve gizlilik koruması ile."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 500 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:electronic_circuit",
+                "minecraft:ender_eye",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:diamond_block",
+                "alaindustrial:copper_coil",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot"
+              ],
+              "result_id": "alaindustrial:teleporter",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "title": "Diğer",
+      "icon": "alaindustrial:iron_chest",
+      "entries": [
+        {
+          "id": "iron_chest",
+          "title": "Demir Sandık",
+          "icon": "alaindustrial:iron_chest",
+          "block_id": "alaindustrial:iron_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Demir Sandık",
+              "text": "36 yuvalı bir sandık — vanilyadan bir sıra fazla, 3D model, animasyonlu kapak ve kendi sesiyle. Enerji gerektirmez."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 36 yuva"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "#minecraft:copper_chests",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "enriched_uranium_torch",
+          "title": "Zenginleştirilmiş uranyum meşalesi",
+          "icon": "alaindustrial:enriched_uranium_torch",
+          "block_id": "alaindustrial:enriched_uranium_torch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zenginleştirilmiş uranyum meşalesi",
+              "text": "Yeşil alevli ve 14 ışık seviyeli dekoratif bir meşale — su altında bile yanar. Enerji gerektirmez."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:uranium_dust",
+                "",
+                "",
+                "#minecraft:coals",
+                "",
+                "",
+                "minecraft:stick",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:enriched_uranium_torch",
+              "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "stock_display_frame",
+          "title": "Stok Gösterge Çerçevesi",
+          "icon": "alaindustrial:stock_display_frame",
+          "block_id": "alaindustrial:stock_display_frame",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Stok Gösterge Çerçevesi",
+              "text": "Bir sandığa astığınız bir çerçeve — içindeki eşya sayısını doğrudan çerçevede gösterir. Enerji gerektirmez; sayı yalnızca çerçeveye bir filtre eşyası konduğunda görünür."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust",
+                "alaindustrial:silver_ingot",
+                "minecraft:item_frame",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust"
+              ],
+              "result_id": "alaindustrial:stock_display_frame",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "silver_chest",
+          "title": "Gümüş Sandık",
+          "icon": "alaindustrial:silver_chest",
+          "block_id": "alaindustrial:silver_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gümüş Sandık",
+              "text": "45 yuvalı bir sandık — demirin bir üst kademesi (bir sıra fazla), 3D model ve animasyonlu kapakla. Enerji gerektirmez."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 45 yuva"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_chest",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:silver_chest",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "items",
+      "title": "Eşyalar",
+      "icon": "alaindustrial:mute_chip",
+      "entries": [
+        {
+          "id": "mute_chip",
+          "title": "Susturma çipi",
+          "icon": "alaindustrial:mute_chip",
+          "block_id": "alaindustrial:mute_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Susturma çipi",
+              "text": "Bir makineyi tamamen susturan bir yükseltme — yükseltme yuvasına takılır."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "alaindustrial:empty_chip",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool"
+              ],
+              "result_id": "alaindustrial:mute_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery",
+          "title": "Pil",
+          "icon": "alaindustrial:battery",
+          "block_id": "alaindustrial:battery",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pil",
+              "text": "Etkisiz bir enerji hücresi — Enerji Sırt Çantası'nın üretildiği boş temel; kendi başına EU tutmaz."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "",
+                "alaindustrial:copper_cable",
+                "",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:battery",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron",
+          "title": "Su Verilmiş Demir",
+          "icon": "alaindustrial:tempered_iron",
+          "block_id": "alaindustrial:tempered_iron",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Su Verilmiş Demir",
+              "text": "Vanilya demir külçesinden eritilen bir külçe — modun aletleri, zırhı ve bloğu için temel malzeme."
+            }
+          ]
+        },
+        {
+          "id": "copper_coil",
+          "title": "Bakır Bobin",
+          "icon": "alaindustrial:copper_coil",
+          "block_id": "alaindustrial:copper_coil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bakır Bobin",
+              "text": "Bir üretim bileşeni — kalay çekirdek üzerine sarılmış bakır kablo; Elektrikli Matkap'ın ön koşuludur."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:copper_coil",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_gear",
+          "title": "Demir Dişli",
+          "icon": "alaindustrial:iron_gear",
+          "block_id": "alaindustrial:iron_gear",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Demir Dişli",
+              "text": "Dişli ailesi — taş, demir, altın ve gümüş; gelecek makineler için üretim bileşenleri."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "alaindustrial:wooden_gear",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "empty_chip",
+          "title": "Boş çip",
+          "icon": "alaindustrial:empty_chip",
+          "block_id": "alaindustrial:empty_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Boş çip",
+              "text": "Makine yükseltme çipleri için boş temel; kendi başına bir etkisi yoktur."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:empty_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "Ahşap Rotor",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ahşap Rotor",
+              "text": "Rüzgar türbini kanatları — herhangi bir T1/T2 rüzgar türbininin rotor yuvasına takılır; onsuz üretim olmaz. Yuvadayken tükenmez."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "network_analyzer",
+          "title": "Ağ Analizörü",
+          "icon": "alaindustrial:network_analyzer",
+          "block_id": "alaindustrial:network_analyzer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ağ Analizörü",
+              "text": "El tipi bir tanılama aracı — o güç ağının istatistiklerini görmek ve onu dünyada vurgulamak için bir kabloya sağ tıklayın."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:network_analyzer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_dust",
+          "title": "Demir Tozu",
+          "icon": "alaindustrial:iron_dust",
+          "block_id": "alaindustrial:iron_dust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Demir Tozu",
+              "text": "Toz ve ilgili ara ürünler (plaka, kütük) — Öğütücü'nün ve diğer makinelerin cevherleri dönüştürdüğü şey."
+            }
+          ]
+        },
+        {
+          "id": "alignment_chip_day",
+          "title": "Güneş Evrim Çipi",
+          "icon": "alaindustrial:alignment_chip_day",
+          "block_id": "alaindustrial:alignment_chip_day",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Güneş Evrim Çipi",
+              "text": "Bir çift evrim çipi — güneş (gündüz) ve ay (gece) — temel T1 güneş panellerini ve rüzgar türbinlerini evrimle T2'ye dönüştürür ve biriken NBT enerjisini aktarır."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot"
+              ],
+              "result_id": "alaindustrial:alignment_chip_day",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electronic_circuit",
+          "title": "Elektronik Devre",
+          "icon": "alaindustrial:electronic_circuit",
+          "block_id": "alaindustrial:electronic_circuit",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektronik Devre",
+              "text": "Temel üretim bileşeni — neredeyse her LV makinenin ve depolama bloğunun 'beyni'."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:quartz",
+                "minecraft:emerald",
+                "minecraft:quartz",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electronic_circuit",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_pouch",
+          "title": "Pil Kesesi",
+          "icon": "alaindustrial:battery_pouch",
+          "block_id": "alaindustrial:battery_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pil Kesesi",
+              "text": "Şarj edilebilir bir eşya kesesi — 128 ağırlık tutar, dahili 2000 EU pille çalışır ve şarjı bitince kilitlenir."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 2 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather",
+                "minecraft:leather",
+                "minecraft:bundle",
+                "minecraft:leather",
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:battery_pouch",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_chestplate",
+          "title": "Tempered Iron Chestplate",
+          "icon": "alaindustrial:tempered_iron_chestplate",
+          "block_id": "alaindustrial:tempered_iron_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tempered Iron Chestplate",
+              "text": "Tam bir su verilmiş demir zırh takımı — kask, göğüslük, pantolon ve bot; demirden dayanıklı, su verilmiş demirle onarılır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 4 parça"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "vacuum_capsule",
+          "title": "Vakum kapsülü",
+          "icon": "alaindustrial:vacuum_capsule",
+          "block_id": "alaindustrial:vacuum_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vakum kapsülü",
+              "text": "İstiflenebilir tek kovalık bir sıvı kabı — yığın başına tek sıvıdan 16 kapsüle kadar, dünyadan veya modun tanklarından doldurulur."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone"
+              ],
+              "result_id": "alaindustrial:vacuum_capsule",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "wrench",
+          "title": "İngiliz anahtarı",
+          "icon": "alaindustrial:wrench",
+          "block_id": "alaindustrial:wrench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "İngiliz anahtarı",
+              "text": "Eşya borusu yüzlerini yapılandırır ve modun bloklarını söker."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "alaindustrial:iron_gear",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:wrench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_pickaxe",
+          "title": "Menevişlenmiş Demir Kazma",
+          "icon": "alaindustrial:tempered_iron_pickaxe",
+          "block_id": "alaindustrial:tempered_iron_pickaxe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Menevişlenmiş Demir Kazma",
+              "text": "El tipi bir su verilmiş demir kazma — her istatistikte vanilya demirinden biraz daha iyi, ama elmas seviyesindeki blokları kazamaz."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "minecraft:stick",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_tools",
+          "title": "Menevişlenmiş Demir Aletler",
+          "icon": "alaindustrial:tempered_iron_tools",
+          "block_id": "alaindustrial:tempered_iron_tools",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Menevişlenmiş Demir Aletler",
+              "text": "Su verilmiş demirden yapılmış beş el aleti seti — kazma, balta, çapa, kürek ve kılıç; vanilya demirinden biraz daha iyi, ama elmas seviyesindeki blokları kazamazlar."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 5 parça"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scythe",
+          "title": "Tırpan",
+          "icon": "alaindustrial:scythe",
+          "block_id": "alaindustrial:scythe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tırpan",
+              "text": "Tek savuruşta yaprakları, otları, çiçekleri ve diğer dekoratif bitki örtüsünü temizleyen alan etkili (AOE) bir alet; Shift basılıyken — olgun ekinleri hasat eden alan etkili bir orak. Ahşaptan netherite kadar sekiz malzeme kademesi."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 8 kademe"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "teleporter_remote",
+          "title": "Işınlayıcı kumandası",
+          "icon": "alaindustrial:teleporter_remote",
+          "block_id": "alaindustrial:teleporter_remote",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Işınlayıcı kumandası",
+              "text": "El tipi bir işaretçi kumandası — shift+sağ tık ile bir ışınlayıcı istasyonuna bağlanır ve istasyonun ödediği EU karşılığında ona bir sıçrama başlatır."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "",
+                "minecraft:ender_pearl",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                ""
+              ],
+              "result_id": "alaindustrial:teleporter_remote",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_drill",
+          "title": "Elektrikli Matkap",
+          "icon": "alaindustrial:electric_drill",
+          "block_id": "alaindustrial:electric_drill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrikli Matkap",
+              "text": "EU ile çalışan, şarj edilebilir elmas kademesinde bir kazma — şarjlıyken elmas gibi kazar, blok başına EU harcar, asla kırılmaz."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_pickaxe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "energy_pack",
+          "title": "Enerji Sırt Çantası",
+          "icon": "alaindustrial:energy_pack",
+          "block_id": "alaindustrial:energy_pack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Enerji Sırt Çantası",
+              "text": "Göğüslük yuvasında giyilebilir bir EU tamponu — envanterinizdeki güçlü eşyaları dolu tutan 20 000 EU."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 30 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:energy_pack",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

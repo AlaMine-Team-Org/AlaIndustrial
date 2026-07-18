@@ -119,6 +119,9 @@ public final class IndustrializationNeoForge {
 		dev.alaindustrial.registry.neoforge.ModRecipesNeoForge.TYPES.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModRecipesNeoForge.SERIALIZERS.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModCriteriaNeoForge.TRIGGERS.register(modBus);
+		// MOD-119: the alaindustrial:bonus_chest_enabled loot condition gates the bonus-chest
+		// Global Loot Modifier (data/alaindustrial/loot_modifiers/bonus_chest_inject.json) on the config flag.
+		dev.alaindustrial.registry.neoforge.ModLootConditionsNeoForge.LOOT_CONDITION_TYPES.register(modBus);
 		// Register the alaindustrial:code gametest-instance type so the TEST_INSTANCE registry encodes cleanly
 		// during the client known-packs handshake (fixes a ClassCastException that broke NeoForge world load).
 		dev.alaindustrial.gametest.neoforge.NeoForgeGameTests.INSTANCE_TYPES.register(modBus);
@@ -194,6 +197,13 @@ public final class IndustrializationNeoForge {
 		NeoForge.EVENT_BUS.addListener(
 				(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) ->
 						dev.alaindustrial.teleporter.TeleportWarmupManager.forget(event.getEntity().getUUID()));
+		// MOD-067: auto-give the Guide Book on first join (game-bus event; once per player).
+		NeoForge.EVENT_BUS.addListener(
+				(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) -> {
+					if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+						dev.alaindustrial.core.guide.GuideBookGiver.giveIfNeeded(serverPlayer);
+					}
+				});
 		NeoForge.EVENT_BUS.addListener((LevelEvent.Unload event) -> {
 			if (event.getLevel() instanceof ServerLevel lvl) {
 				NetworkManager.clear(lvl);
@@ -203,6 +213,14 @@ public final class IndustrializationNeoForge {
 		NeoForge.EVENT_BUS.addListener((ServerStoppedEvent event) -> {
 			NetworkManager.clearAll();
 			ItemNetworkManager.clearAll();
+		});
+		// Balance-config reload parity with Fabric (MOD-100, absorbs MOD-041). OnDatapackSyncEvent fires on a
+		// player join AND on /reload; getPlayer()==null is the all-players sync, i.e. /reload — the exact
+		// analogue of Fabric's END_DATA_PACK_RELOAD. Guarding on null avoids re-reading on every single join.
+		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.OnDatapackSyncEvent event) -> {
+			if (event.getPlayer() == null) {
+				NeoForgeConfigLoader.reload();
+			}
 		});
 		// MOD-077: shift-right-clicking a mod fluid tank (geothermal generator, pump) with a vanilla lava
 		// bucket loads the bucket into the tank instead of spilling it. RightClickBlock fires early on both

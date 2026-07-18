@@ -1,0 +1,1631 @@
+{
+  "locale": "de_de",
+  "version": 1,
+  "generated_from": "OKF docs/blocks",
+  "tabs": [
+    {
+      "id": "getting_started",
+      "title": "Erste Schritte",
+      "icon": "alaindustrial:guide_book",
+      "entries": [
+        {
+          "id": "welcome",
+          "title": "Willkommen",
+          "icon": "alaindustrial:guide_book",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Willkommen",
+              "text": "Dies ist das Handbuch zu Ala Industrial — EU-Energie, Generatoren, Maschinen und Kabel.\n\nWähle links einen Abschnitt und blättere mit den Pfeilen. Die Schaltfläche „Wiki öffnen“ oben öffnet die vollständige Guide-Seite."
+            },
+            {
+              "type": "text",
+              "title": "Erste Schritte",
+              "text": "1. Baue das Erz des Mods ab — beginne mit Zinn.\n2. Platziere ein Solarpanel — den einfachsten Generator.\n3. Verlege ein Kupferkabel dorthin.\n4. Schließe deine erste Maschine an — den Brecher.\n\nDetails findest du in den Abschnitten Energie und Verarbeitung."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy_basics",
+      "title": "Energie-Grundlagen",
+      "icon": "alaindustrial:copper_cable",
+      "entries": [
+        {
+          "id": "eu_basics",
+          "title": "Was EU ist",
+          "icon": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "EU-Energie",
+              "text": "EU (Energy Unit) ist die Energieeinheit des Mods. Generatoren erzeugen EU, Kabel übertragen es, Speicher bewahren es auf und Maschinen verbrauchen es. Es ist ein von vanilla Redstone getrenntes System."
+            },
+            {
+              "type": "text",
+              "title": "Spannungsstufen",
+              "text": "Energie fließt in Paketen, die durch eine Spannung pro Tick begrenzt sind:\n• LV — bis zu 32 EU/Tick (einfache Blöcke)\n• MV — bis zu 128 EU/Tick\n• HV — bis zu 512 EU/Tick\n\nDie Grenze einer Stufe ist der Durchsatz pro Tick, keine Zerstörungsschwelle: Blöcke werden nicht durch „Überspannung“ zerstört."
+            },
+            {
+              "type": "text",
+              "title": "Kabel",
+              "text": "Kabel verbinden Blöcke zu einem Stromnetz und leiten EU. Das Kupferkabel verliert Energie über die Distanz — je länger die Leitung, desto mehr geht verloren. Halte Leitungen kurz oder platziere Speicher näher am Verbraucher."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy",
+      "title": "Energie",
+      "icon": "alaindustrial:wind_mill",
+      "entries": [
+        {
+          "id": "wind_mill",
+          "title": "Windturbine",
+          "icon": "alaindustrial:wind_mill",
+          "block_id": "alaindustrial:wind_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Windturbine",
+              "text": "Eine einfache LV-Windturbine — erzeugt EU aus Wind ohne Brennstoff; baue sie höher und bei schlechtem Wetter für mehr Leistung."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 0–8 EU/t",
+                "Puffer: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:wind_mill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "water_mill",
+          "title": "Wassermühle",
+          "icon": "alaindustrial:water_mill",
+          "block_id": "alaindustrial:water_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Wassermühle",
+              "text": "Ein passiver LV-Generator — erzeugt EU aus Wasser rund um den Block, ohne Brennstoff oder Tanks."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 0–4 EU/t",
+                "Puffer: 4000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "generator",
+          "title": "Generator",
+          "icon": "alaindustrial:generator",
+          "block_id": "alaindustrial:generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Generator",
+              "text": "Ein einfacher Generator für Kohle und feste Brennstoffe — die LV-EU-Startquelle für deine ersten Maschinen."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 8 EU/t",
+                "Puffer: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:furnace",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geothermal_generator",
+          "title": "Geothermalgenerator",
+          "icon": "alaindustrial:geothermal_generator",
+          "block_id": "alaindustrial:geothermal_generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Geothermalgenerator",
+              "text": "Erzeugt EU aus Lava — stärker als der Kohlegenerator und muss weit seltener nachgefüllt werden."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 16 EU/t",
+                "Puffer: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:generator",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:geothermal_generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "daylight_solar_panel",
+          "title": "Tageslicht-Solarpanel",
+          "icon": "alaindustrial:daylight_solar_panel",
+          "block_id": "alaindustrial:daylight_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tageslicht-Solarpanel",
+              "text": "Das T2-Tagespanel — viermal stärker als das Basispanel, läuft tagsüber unter freiem Himmel; nur durch Weiterentwicklung erhältlich."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 4 EU/t (Tag)",
+                "Puffer: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "moonlit_solar_panel",
+          "title": "Mondlicht-Solarpanel",
+          "icon": "alaindustrial:moonlit_solar_panel",
+          "block_id": "alaindustrial:moonlit_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Mondlicht-Solarpanel",
+              "text": "Das T2-Nachtpanel — erzeugt EU nachts unter freiem Himmel und liefert selbst bei schlechtem Wetter etwas; nur durch Weiterentwicklung erhältlich."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 3 EU/t (Nacht)",
+                "Puffer: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "solar_panel",
+          "title": "Solarpanel",
+          "icon": "alaindustrial:solar_panel",
+          "block_id": "alaindustrial:solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Solarpanel",
+              "text": "Die erste Energiequelle des Mods — erzeugt EU tagsüber unter freiem Himmel; hier beginnt die gesamte Energiekette."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 1 EU/t (Tag)",
+                "Puffer: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:copper_cable",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:solar_panel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_box",
+          "title": "Energiespeicher",
+          "icon": "alaindustrial:battery_box",
+          "block_id": "alaindustrial:battery_box",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Energiespeicher",
+              "text": "Der LV-Speicherblock für den Anfang — fasst 20 000 EU, speichert Überschuss eines Generators und gibt ihn mit 32 EU/Tick an Maschinen ab."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 20 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:battery_box",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "Isoliertes Kupferkabel",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Isoliertes Kupferkabel",
+              "text": "Ein LV-Kupferkabel, ummantelt mit Wolle — für sichere Nachbarschaft und enge Verkabelung neben Maschinen."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: ≤32 EU/Paket"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "Isoliertes Zinnkabel",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Isoliertes Zinnkabel",
+              "text": "Ein LV-Zinnkabel, ummantelt mit Wolle — das günstigste isolierte Kabel für sichere Nachbarschaft."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: ≤32 EU/Paket"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "copper_cable",
+          "title": "Kupferkabel",
+          "icon": "alaindustrial:copper_cable",
+          "block_id": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kupferkabel",
+              "text": "Ein günstiges LV-Allzweckkabel für frühe Energienetze — verbindet Solarpanels, Batterien und Maschinen zu einer Leitung."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: ≤32 EU/Paket"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:copper_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "tin_cable",
+          "title": "Zinnkabel",
+          "icon": "alaindustrial:tin_cable",
+          "block_id": "alaindustrial:tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zinnkabel",
+              "text": "Das günstigste LV-Kabel — für dünne, schwache Leitungen zu einzelnen Maschinen und schwachen Generatoren."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: ≤32 EU/Paket"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "processing",
+      "title": "Verarbeitung",
+      "icon": "alaindustrial:macerator",
+      "entries": [
+        {
+          "id": "macerator",
+          "title": "Brecher",
+          "icon": "alaindustrial:macerator",
+          "block_id": "alaindustrial:macerator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Brecher",
+              "text": "Zerkleinert Erz (sowohl Blöcke als auch Roherz) zu zwei Staub, verbraucht EU auf LV-Stufe."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 300 EU/Vorgang",
+                "Puffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:macerator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_furnace",
+          "title": "Eisener Ofen",
+          "icon": "alaindustrial:iron_furnace",
+          "block_id": "alaindustrial:iron_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Eisener Ofen",
+              "text": "Ein verbesserter Brennstoffofen zwischen Vanilla und dem Elektroofen — schneller als Vanilla, weiterhin brennstoffbasiert, kein EU."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:furnace",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "compressor",
+          "title": "Kompressor",
+          "icon": "alaindustrial:compressor",
+          "block_id": "alaindustrial:compressor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kompressor",
+              "text": "Presst Rohstoffe in dichtere Formen — Metallstaub zu Barren, Kohle-/Edelsteinstaub zurück zu Gegenständen, Eis zu Packeis/blauem Eis, Zuckerrohr zu Papier. Schließt den Verdopplungskreislauf für Nichtmetalle."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 260 EU/Vorgang",
+                "Puffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:piston",
+                "alaindustrial:electronic_circuit",
+                "minecraft:piston",
+                "minecraft:stone",
+                "alaindustrial:silver_ingot",
+                "minecraft:stone"
+              ],
+              "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "extractor",
+          "title": "Extraktor",
+          "icon": "alaindustrial:extractor",
+          "block_id": "alaindustrial:extractor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Extraktor",
+              "text": "Holt nützliches Material aus rohen Zutaten — ×2 Farbstoff aus Blumen, mehr Samen aus Kürbis/Melone, Lohenstaub aus Ruten, Feuerstein aus Kies. Praktisch für trichtergespeiste Autofarmen."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 240 EU/Vorgang",
+                "Puffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:hopper",
+                "alaindustrial:electronic_circuit",
+                "minecraft:hopper",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_furnace",
+          "title": "Elektroofen",
+          "icon": "alaindustrial:electric_furnace",
+          "block_id": "alaindustrial:electric_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektroofen",
+              "text": "Schmilzt alles, was der Vanilla-Ofen kann, sowie die Staubsorten des Mods zu Barren. Läuft mit EU statt Brennstoff."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 200 EU/Vorgang",
+                "Puffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_furnace",
+                "alaindustrial:battery",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electric_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "pump",
+          "title": "Pumpe",
+          "icon": "alaindustrial:pump",
+          "block_id": "alaindustrial:pump",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pumpe",
+              "text": "Eine LV-Pumpe, die Flüssigkeit aus der Welt oder benachbarten Tanks in ihren internen 10-Eimer-Tank saugt und an Empfänger weitergibt; tauscht Flüssigkeit mit Kapseln und Behältern anderer Mods aus."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:pump",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "logistics",
+      "title": "Logistik",
+      "icon": "alaindustrial:item_pipe",
+      "entries": [
+        {
+          "id": "item_pipe",
+          "title": "Gegenstandsrohr",
+          "icon": "alaindustrial:item_pipe",
+          "block_id": "alaindustrial:item_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gegenstandsrohr",
+              "text": "Passives Multipart-Rohr, das Gegenstände zwischen Inventaren transportiert."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_gear",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:item_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "fluid_tank",
+          "title": "Tragbarer Flüssigkeitstank",
+          "icon": "alaindustrial:fluid_tank",
+          "block_id": "alaindustrial:fluid_tank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tragbarer Flüssigkeitstank",
+              "text": "Ein passiver 8-Eimer-Tank mit sichtbarem Füllstand, Flüssigkeitszugang an allen sechs Seiten und Inhalt, der beim Bewegen erhalten bleibt."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 10 Eimer"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:iron_gear",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_tank",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "world_automation",
+      "title": "Welt & Automatisierung",
+      "icon": "alaindustrial:tempered_iron_block",
+      "entries": [
+        {
+          "id": "tempered_iron_block",
+          "title": "Block aus gehärtetem Eisen",
+          "icon": "alaindustrial:tempered_iron_block",
+          "block_id": "alaindustrial:tempered_iron_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Block aus gehärtetem Eisen",
+              "text": "Ein kompakter Block aus 9 Barren gehärteten Eisens — lagert das Metall auf einem Platz und lässt sich an der Werkbank verlustfrei herstellen und wieder auftrennen."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "nickel_ore",
+          "title": "Nickelerz",
+          "icon": "alaindustrial:nickel_ore",
+          "block_id": "alaindustrial:nickel_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Nickelerz",
+              "text": "Das seltenste Metall des Mods — Erz in der Welt und die Kette Roh → Staub → Barren; das Material für MV-Legierungen und Maschinengehäuse."
+            }
+          ]
+        },
+        {
+          "id": "tin_ore",
+          "title": "Zinnerz",
+          "icon": "alaindustrial:tin_ore",
+          "block_id": "alaindustrial:tin_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zinnerz",
+              "text": "Ein frühes Metall des Mods — Erz in der Welt und die Kette Roh → Staub → Barren; das Grundmaterial für LV-Kabel und Schaltungen."
+            }
+          ]
+        },
+        {
+          "id": "silver_ore",
+          "title": "Silbererz",
+          "icon": "alaindustrial:silver_ore",
+          "block_id": "alaindustrial:silver_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Silbererz",
+              "text": "Ein seltenes Erzmetall des Mods — Erzblock und die Kette Roh → Staub → Barren; das Material für Schaltungen und Bauteile der mittleren Stufe."
+            }
+          ]
+        },
+        {
+          "id": "uranium_ore",
+          "title": "Uranerz",
+          "icon": "alaindustrial:uranium_ore",
+          "block_id": "alaindustrial:uranium_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Uranerz",
+              "text": "Das seltenste Erz des Mods — mit einer Eisenspitzhacke abgebaut, zu Staub und Barren verarbeitet; reserviert für künftige Nuklearmaschinen."
+            }
+          ]
+        },
+        {
+          "id": "teleporter",
+          "title": "Teleporter",
+          "icon": "alaindustrial:teleporter",
+          "block_id": "alaindustrial:teleporter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Teleporter",
+              "text": "Eine HV-Ankerstation und eine tragbare Fernbedienung — per Umschalt+Rechtsklick gebunden; teleportiert den Spieler für hohe EU-Kosten zu einer Station, mit Aufwärmzeit, sicherer Landung und Privatsphärenschutz."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 500 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:electronic_circuit",
+                "minecraft:ender_eye",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:diamond_block",
+                "alaindustrial:copper_coil",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot"
+              ],
+              "result_id": "alaindustrial:teleporter",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "title": "Sonstiges",
+      "icon": "alaindustrial:iron_chest",
+      "entries": [
+        {
+          "id": "iron_chest",
+          "title": "Eisentruhe",
+          "icon": "alaindustrial:iron_chest",
+          "block_id": "alaindustrial:iron_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Eisentruhe",
+              "text": "Eine Truhe mit 36 Plätzen — eine Reihe mehr als Vanilla, mit 3D-Modell, animiertem Deckel und eigenem Geräusch. Benötigt keine Energie."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 36 Plätze"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "#minecraft:copper_chests",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "enriched_uranium_torch",
+          "title": "Angereicherte Uran-Fackel",
+          "icon": "alaindustrial:enriched_uranium_torch",
+          "block_id": "alaindustrial:enriched_uranium_torch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Angereicherte Uran-Fackel",
+              "text": "Eine dekorative Fackel mit grüner Flamme und Lichtstärke 14 — sie brennt sogar unter Wasser. Benötigt keine Energie."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:uranium_dust",
+                "",
+                "",
+                "#minecraft:coals",
+                "",
+                "",
+                "minecraft:stick",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:enriched_uranium_torch",
+              "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "stock_display_frame",
+          "title": "Vorratsanzeige-Rahmen",
+          "icon": "alaindustrial:stock_display_frame",
+          "block_id": "alaindustrial:stock_display_frame",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vorratsanzeige-Rahmen",
+              "text": "Ein Rahmen, den du an eine Truhe hängst — er zeigt die Anzahl der Gegenstände darin direkt auf dem Rahmen an. Benötigt keine Energie; die Zahl ist nur sichtbar, wenn ein Filtergegenstand im Rahmen liegt."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust",
+                "alaindustrial:silver_ingot",
+                "minecraft:item_frame",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust"
+              ],
+              "result_id": "alaindustrial:stock_display_frame",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "silver_chest",
+          "title": "Silbertruhe",
+          "icon": "alaindustrial:silver_chest",
+          "block_id": "alaindustrial:silver_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Silbertruhe",
+              "text": "Eine Truhe mit 45 Plätzen — die Stufe über Eisen (eine Reihe mehr), mit 3D-Modell und animiertem Deckel. Benötigt keine Energie."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 45 Plätze"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_chest",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:silver_chest",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "items",
+      "title": "Gegenstände",
+      "icon": "alaindustrial:mute_chip",
+      "entries": [
+        {
+          "id": "mute_chip",
+          "title": "Stummschalt-Chip",
+          "icon": "alaindustrial:mute_chip",
+          "block_id": "alaindustrial:mute_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Stummschalt-Chip",
+              "text": "Eine Verbesserung, die eine Maschine vollständig verstummen lässt — kommt in den Verbesserungs-Slot."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "alaindustrial:empty_chip",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool"
+              ],
+              "result_id": "alaindustrial:mute_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery",
+          "title": "Batterie",
+          "icon": "alaindustrial:battery",
+          "block_id": "alaindustrial:battery",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Batterie",
+              "text": "Eine inerte Energiezelle — der Rohling, aus dem der Energierucksack hergestellt wird; speichert selbst kein EU."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "",
+                "alaindustrial:copper_cable",
+                "",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:battery",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron",
+          "title": "Gehärtetes Eisen",
+          "icon": "alaindustrial:tempered_iron",
+          "block_id": "alaindustrial:tempered_iron",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gehärtetes Eisen",
+              "text": "Ein Barren, aus einem Vanilla-Eisenbarren geschmolzen — das Grundmaterial für die Werkzeuge, Rüstung und den Block des Mods."
+            }
+          ]
+        },
+        {
+          "id": "copper_coil",
+          "title": "Kupferspule",
+          "icon": "alaindustrial:copper_coil",
+          "block_id": "alaindustrial:copper_coil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kupferspule",
+              "text": "Ein Handwerksbauteil — Kupferkabel um einen Zinnkern gewickelt; Voraussetzung für den Elektrobohrer."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:copper_coil",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_gear",
+          "title": "Eisenzahnrad",
+          "icon": "alaindustrial:iron_gear",
+          "block_id": "alaindustrial:iron_gear",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Eisenzahnrad",
+              "text": "Die Zahnrad-Familie — Stein, Eisen, Gold und Silber; Handwerksbauteile für künftige Maschinen."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "alaindustrial:wooden_gear",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "empty_chip",
+          "title": "Leerer Chip",
+          "icon": "alaindustrial:empty_chip",
+          "block_id": "alaindustrial:empty_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Leerer Chip",
+              "text": "Der leere Rohling für Maschinen-Upgrade-Chips; hat für sich allein keine Wirkung."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:empty_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "Windturbinenrotor",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Windturbinenrotor",
+              "text": "Windturbinenblätter — werden in den Rotor-Slot jeder T1/T2-Windturbine eingesetzt; ohne sie keine Erzeugung. Wird im Slot nicht verbraucht."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "network_analyzer",
+          "title": "Netzwerkanalysator",
+          "icon": "alaindustrial:network_analyzer",
+          "block_id": "alaindustrial:network_analyzer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Netzwerkanalysator",
+              "text": "Ein tragbares Diagnosewerkzeug — Rechtsklick auf ein Kabel, um die Werte dieses Stromnetzes anzuzeigen und es in der Welt hervorzuheben."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:network_analyzer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_dust",
+          "title": "Eisenstaub",
+          "icon": "alaindustrial:iron_dust",
+          "block_id": "alaindustrial:iron_dust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Eisenstaub",
+              "text": "Staub und verwandte Zwischenprodukte (Platte, Rohling) — wozu der Brecher und andere Maschinen Erze verarbeiten."
+            }
+          ]
+        },
+        {
+          "id": "alignment_chip_day",
+          "title": "Solar-Evolutionschip",
+          "icon": "alaindustrial:alignment_chip_day",
+          "block_id": "alaindustrial:alignment_chip_day",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Solar-Evolutionschip",
+              "text": "Ein Paar Evolutionschips — Solar (Tag) und Mond (Nacht) — die einfache T1-Solarpanels und Windturbinen per Weiterentwicklung zu T2 machen und die gespeicherte NBT-Energie übernehmen."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot"
+              ],
+              "result_id": "alaindustrial:alignment_chip_day",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electronic_circuit",
+          "title": "Elektronische Schaltung",
+          "icon": "alaindustrial:electronic_circuit",
+          "block_id": "alaindustrial:electronic_circuit",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektronische Schaltung",
+              "text": "Das grundlegende Handwerksbauteil — das „Gehirn“ nahezu jeder LV-Maschine und jedes Speicherblocks."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:quartz",
+                "minecraft:emerald",
+                "minecraft:quartz",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electronic_circuit",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_pouch",
+          "title": "Batterie-Beutel",
+          "icon": "alaindustrial:battery_pouch",
+          "block_id": "alaindustrial:battery_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Batterie-Beutel",
+              "text": "Ein aufladbarer Gegenstandsbeutel — fasst 128 Gewicht, läuft mit einer eingebauten 2000-EU-Batterie und sperrt, wenn die Ladung leer ist."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 2 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather",
+                "minecraft:leather",
+                "minecraft:bundle",
+                "minecraft:leather",
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:battery_pouch",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_chestplate",
+          "title": "Tempered Iron Chestplate",
+          "icon": "alaindustrial:tempered_iron_chestplate",
+          "block_id": "alaindustrial:tempered_iron_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tempered Iron Chestplate",
+              "text": "Ein vollständiges Rüstungsset aus gehärtetem Eisen — Helm, Brustplatte, Beinschutz und Stiefel; robuster als Eisen, wird mit gehärtetem Eisen repariert."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 4 Stk."
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "vacuum_capsule",
+          "title": "Vakuumkapsel",
+          "icon": "alaindustrial:vacuum_capsule",
+          "block_id": "alaindustrial:vacuum_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vakuumkapsel",
+              "text": "Ein stapelbarer Ein-Eimer-Flüssigkeitsbehälter — bis zu 16 Kapseln einer Flüssigkeit pro Stapel, befüllt aus der Welt oder den Tanks des Mods."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone"
+              ],
+              "result_id": "alaindustrial:vacuum_capsule",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "wrench",
+          "title": "Schraubenschlüssel",
+          "icon": "alaindustrial:wrench",
+          "block_id": "alaindustrial:wrench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Schraubenschlüssel",
+              "text": "Konfiguriert die Seiten des Gegenstandsrohrs und baut die Blöcke des Mods ab."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "alaindustrial:iron_gear",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:wrench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_pickaxe",
+          "title": "Gehärtete Eisen-Spitzhacke",
+          "icon": "alaindustrial:tempered_iron_pickaxe",
+          "block_id": "alaindustrial:tempered_iron_pickaxe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gehärtete Eisen-Spitzhacke",
+              "text": "Eine Spitzhacke aus gehärtetem Eisen — in jedem Wert etwas besser als Vanilla-Eisen, kann aber keine Blöcke der Diamantstufe abbauen."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "minecraft:stick",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_tools",
+          "title": "Werkzeuge aus gehärtetem Eisen",
+          "icon": "alaindustrial:tempered_iron_tools",
+          "block_id": "alaindustrial:tempered_iron_tools",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Werkzeuge aus gehärtetem Eisen",
+              "text": "Ein Satz von fünf Handwerkzeugen aus gehärtetem Eisen — Spitzhacke, Axt, Hacke, Schaufel und Schwert; etwas besser als Vanilla-Eisen, können aber keine Blöcke der Diamantstufe abbauen."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 5 Stk."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scythe",
+          "title": "Sense",
+          "icon": "alaindustrial:scythe",
+          "block_id": "alaindustrial:scythe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sense",
+              "text": "Ein AOE-Werkzeug, das Laub, Gras, Blumen und anderes dekoratives Grünzeug mit einem Schwung entfernt, und mit gehaltener Umschalttaste — eine AOE-Sichel, die reife Feldfrüchte erntet. Acht Materialstufen von Holz bis Netherit."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 8 Stufen"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "teleporter_remote",
+          "title": "Teleporter-Fernbedienung",
+          "icon": "alaindustrial:teleporter_remote",
+          "block_id": "alaindustrial:teleporter_remote",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Teleporter-Fernbedienung",
+              "text": "Eine tragbare Leuchtfeuer-Fernbedienung — bindet sich per Umschalt+Rechtsklick an eine Teleporter-Station und löst einen Sprung dorthin aus, dessen EU die Station bezahlt."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "",
+                "minecraft:ender_pearl",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                ""
+              ],
+              "result_id": "alaindustrial:teleporter_remote",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_drill",
+          "title": "Elektrobohrer",
+          "icon": "alaindustrial:electric_drill",
+          "block_id": "alaindustrial:electric_drill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrobohrer",
+              "text": "Eine wiederaufladbare Spitzhacke der Diamantstufe, die mit EU läuft — baut geladen wie Diamant ab, verbraucht EU pro Block und geht nie kaputt."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_pickaxe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "energy_pack",
+          "title": "Energierucksack",
+          "icon": "alaindustrial:energy_pack",
+          "block_id": "alaindustrial:energy_pack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Energierucksack",
+              "text": "Ein tragbarer EU-Puffer im Brustplatten-Slot — 20 000 EU, die die Elektrogegenstände in deinem Inventar aufgeladen halten."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 30 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:energy_pack",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

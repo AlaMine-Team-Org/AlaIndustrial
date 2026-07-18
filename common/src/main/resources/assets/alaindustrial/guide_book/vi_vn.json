@@ -1,0 +1,1631 @@
+{
+  "locale": "vi_vn",
+  "version": 1,
+  "generated_from": "OKF docs/blocks",
+  "tabs": [
+    {
+      "id": "getting_started",
+      "title": "Bắt đầu",
+      "icon": "alaindustrial:guide_book",
+      "entries": [
+        {
+          "id": "welcome",
+          "title": "Chào mừng",
+          "icon": "alaindustrial:guide_book",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Chào mừng",
+              "text": "Đây là sách hướng dẫn cho Ala Industrial — năng lượng EU, máy phát điện, máy móc và cáp.\n\nChọn một mục ở bên trái, lật trang bằng các mũi tên. Nút \"Mở wiki\" ở phía trên mở trang hướng dẫn đầy đủ."
+            },
+            {
+              "type": "text",
+              "title": "Những bước đầu",
+              "text": "1. Đào quặng của mod — bắt đầu với thiếc.\n2. Đặt một Tấm năng lượng mặt trời — máy phát điện đơn giản nhất.\n3. Nối một Cáp Đồng tới nó.\n4. Kết nối cỗ máy đầu tiên của bạn — Máy nghiền.\n\nChi tiết ở mục Năng lượng và Chế biến."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy_basics",
+      "title": "Kiến thức năng lượng cơ bản",
+      "icon": "alaindustrial:copper_cable",
+      "entries": [
+        {
+          "id": "eu_basics",
+          "title": "EU là gì",
+          "icon": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Năng lượng EU",
+              "text": "EU (Đơn vị Năng lượng) là đơn vị năng lượng của mod. Máy phát điện tạo ra EU, cáp truyền tải nó, kho lưu trữ giữ nó, máy móc tiêu thụ nó. Đây là hệ thống riêng biệt với đá đỏ gốc."
+            },
+            {
+              "type": "text",
+              "title": "Cấp điện áp",
+              "text": "Năng lượng chảy theo từng gói, giới hạn bởi điện áp mỗi tick:\n• LV — lên tới 32 EU/tick (khối cơ bản)\n• MV — lên tới 128 EU/tick\n• HV — lên tới 512 EU/tick\n\nGiới hạn của một cấp là thông lượng mỗi tick, không phải ngưỡng phá hủy: khối không bị phá hủy do 'quá áp'."
+            },
+            {
+              "type": "text",
+              "title": "Cáp",
+              "text": "Cáp nối các khối thành một lưới điện và truyền EU. Cáp Đồng hao tổn năng lượng theo khoảng cách — đường dây càng dài, hao tổn càng nhiều. Hãy giữ đường dây ngắn, hoặc đặt kho lưu trữ gần thiết bị tiêu thụ hơn."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy",
+      "title": "Năng lượng",
+      "icon": "alaindustrial:wind_mill",
+      "entries": [
+        {
+          "id": "wind_mill",
+          "title": "Tuabin gió",
+          "icon": "alaindustrial:wind_mill",
+          "block_id": "alaindustrial:wind_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tuabin gió",
+              "text": "Tuabin gió LV cơ bản — tạo EU từ gió mà không cần nhiên liệu; đặt càng cao và trong thời tiết xấu để có nhiều điện hơn."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 0–8 EU/t",
+                "Bộ đệm: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:wind_mill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "water_mill",
+          "title": "Cối nước",
+          "icon": "alaindustrial:water_mill",
+          "block_id": "alaindustrial:water_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cối nước",
+              "text": "Máy phát điện LV thụ động — tạo EU từ nước quanh khối, không cần nhiên liệu hay bồn chứa."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 0–4 EU/t",
+                "Bộ đệm: 4000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "generator",
+          "title": "Máy phát điện",
+          "icon": "alaindustrial:generator",
+          "block_id": "alaindustrial:generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy phát điện",
+              "text": "Máy phát điện chạy than và nhiên liệu rắn đơn giản — nguồn EU cấp LV khởi đầu cho những cỗ máy đầu tiên của bạn."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 8 EU/t",
+                "Bộ đệm: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:furnace",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geothermal_generator",
+          "title": "Máy phát điện địa nhiệt",
+          "icon": "alaindustrial:geothermal_generator",
+          "block_id": "alaindustrial:geothermal_generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy phát điện địa nhiệt",
+              "text": "Tạo EU từ dung nham — mạnh hơn máy phát điện than và cần nạp lại ít thường xuyên hơn nhiều."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 16 EU/t",
+                "Bộ đệm: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:generator",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:geothermal_generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "daylight_solar_panel",
+          "title": "Tấm năng lượng ánh ngày",
+          "icon": "alaindustrial:daylight_solar_panel",
+          "block_id": "alaindustrial:daylight_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tấm năng lượng ánh ngày",
+              "text": "Tấm ban ngày cấp T2 — mạnh gấp bốn lần tấm cơ bản, hoạt động ban ngày dưới bầu trời quang; chỉ có được qua tiến hóa."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 4 EU/t (ngày)",
+                "Bộ đệm: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "moonlit_solar_panel",
+          "title": "Tấm năng lượng ánh trăng",
+          "icon": "alaindustrial:moonlit_solar_panel",
+          "block_id": "alaindustrial:moonlit_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tấm năng lượng ánh trăng",
+              "text": "Tấm ban đêm cấp T2 — tạo EU vào ban đêm dưới bầu trời quang và vẫn nhỏ giọt trong thời tiết xấu; chỉ có được qua tiến hóa."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 3 EU/t (đêm)",
+                "Bộ đệm: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "solar_panel",
+          "title": "Tấm năng lượng mặt trời",
+          "icon": "alaindustrial:solar_panel",
+          "block_id": "alaindustrial:solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tấm năng lượng mặt trời",
+              "text": "Nguồn điện đầu tiên của mod — tạo EU vào ban ngày dưới bầu trời quang; nơi cả chuỗi năng lượng bắt đầu."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 1 EU/t (ngày)",
+                "Bộ đệm: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:copper_cable",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:solar_panel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_box",
+          "title": "Hộp pin",
+          "icon": "alaindustrial:battery_box",
+          "block_id": "alaindustrial:battery_box",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Hộp pin",
+              "text": "Khối lưu trữ LV khởi đầu — chứa 20 000 EU, tích điện dư từ máy phát và cấp cho máy móc ở mức 32 EU/tick."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 20 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:battery_box",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "Cáp Đồng cách điện",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cáp Đồng cách điện",
+              "text": "Cáp Đồng LV bọc len — để đặt kề an toàn và đi dây sát máy móc."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: ≤32 EU/gói"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "Cáp Thiếc cách điện",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cáp Thiếc cách điện",
+              "text": "Cáp Thiếc LV bọc len — dây cách điện rẻ nhất để đặt kề an toàn."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: ≤32 EU/gói"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "copper_cable",
+          "title": "Cáp Đồng",
+          "icon": "alaindustrial:copper_cable",
+          "block_id": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cáp Đồng",
+              "text": "Cáp LV rẻ và bền bỉ cho mạng năng lượng thời kỳ đầu — nối tấm năng lượng mặt trời, pin và máy móc thành một đường dây."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: ≤32 EU/gói"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:copper_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "tin_cable",
+          "title": "Cáp Thiếc",
+          "icon": "alaindustrial:tin_cable",
+          "block_id": "alaindustrial:tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cáp Thiếc",
+              "text": "Cáp LV rẻ nhất — cho những đường dây mảnh, công suất thấp tới từng máy đơn lẻ và máy phát yếu."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: ≤32 EU/gói"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "processing",
+      "title": "Chế biến",
+      "icon": "alaindustrial:macerator",
+      "entries": [
+        {
+          "id": "macerator",
+          "title": "Máy nghiền",
+          "icon": "alaindustrial:macerator",
+          "block_id": "alaindustrial:macerator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy nghiền",
+              "text": "Nghiền quặng (cả khối quặng lẫn quặng thô) thành hai bột, tiêu thụ EU ở cấp LV."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 300 EU/thao tác",
+                "Bộ đệm: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:macerator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_furnace",
+          "title": "Lò Nung Sắt",
+          "icon": "alaindustrial:iron_furnace",
+          "block_id": "alaindustrial:iron_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lò Nung Sắt",
+              "text": "Lò nhiên liệu nâng cấp nằm giữa lò gốc và Lò điện — nhanh hơn lò gốc, vẫn dùng nhiên liệu, không cần EU."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:furnace",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "compressor",
+          "title": "Máy nén",
+          "icon": "alaindustrial:compressor",
+          "block_id": "alaindustrial:compressor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy nén",
+              "text": "Nén nguyên liệu thô thành dạng đặc hơn — bột kim loại thành thỏi, bột than/đá quý trở lại thành vật phẩm, băng thành băng nén/băng xanh, mía thành giấy. Khép vòng nhân đôi cho các vật liệu phi kim."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 260 EU/thao tác",
+                "Bộ đệm: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:piston",
+                "alaindustrial:electronic_circuit",
+                "minecraft:piston",
+                "minecraft:stone",
+                "alaindustrial:silver_ingot",
+                "minecraft:stone"
+              ],
+              "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "extractor",
+          "title": "Máy chiết xuất",
+          "icon": "alaindustrial:extractor",
+          "block_id": "alaindustrial:extractor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy chiết xuất",
+              "text": "Rút vật liệu hữu ích từ nguyên liệu thô — ×2 thuốc nhuộm từ hoa, nhiều hạt giống hơn từ bí ngô/dưa hấu, bột blaze từ que blaze, đá lửa từ sỏi. Tiện cho nông trại tự động nạp bằng phễu."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 240 EU/thao tác",
+                "Bộ đệm: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:hopper",
+                "alaindustrial:electronic_circuit",
+                "minecraft:hopper",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_furnace",
+          "title": "Lò điện",
+          "icon": "alaindustrial:electric_furnace",
+          "block_id": "alaindustrial:electric_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lò điện",
+              "text": "Nung mọi thứ mà lò gốc nung được, cộng thêm các loại bột của mod thành thỏi. Chạy bằng EU thay vì nhiên liệu."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 200 EU/thao tác",
+                "Bộ đệm: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_furnace",
+                "alaindustrial:battery",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electric_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "pump",
+          "title": "Máy bơm",
+          "icon": "alaindustrial:pump",
+          "block_id": "alaindustrial:pump",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy bơm",
+              "text": "Máy bơm LV hút chất lỏng từ thế giới hoặc các bồn kề bên vào bồn trong dung tích 10 xô của nó rồi đẩy tiếp tới các thiết bị nhận; trao đổi chất lỏng với viên nang và bình chứa của mod khác."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:pump",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "logistics",
+      "title": "Hậu cần",
+      "icon": "alaindustrial:item_pipe",
+      "entries": [
+        {
+          "id": "item_pipe",
+          "title": "Ống vật phẩm",
+          "icon": "alaindustrial:item_pipe",
+          "block_id": "alaindustrial:item_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ống vật phẩm",
+              "text": "Ống đa phần thụ động, chuyển vật phẩm giữa các kho chứa."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_gear",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:item_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "fluid_tank",
+          "title": "Bồn chất lỏng di động",
+          "icon": "alaindustrial:fluid_tank",
+          "block_id": "alaindustrial:fluid_tank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bồn chất lỏng di động",
+              "text": "Bồn thụ động dung tích 8 xô với mức chất lỏng hiển thị được, truy cập chất lỏng từ sáu mặt, và giữ nguyên nội dung khi di chuyển."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 10 xô"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:iron_gear",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_tank",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "world_automation",
+      "title": "Thế giới & Tự động hóa",
+      "icon": "alaindustrial:tempered_iron_block",
+      "entries": [
+        {
+          "id": "tempered_iron_block",
+          "title": "Khối Sắt Tôi",
+          "icon": "alaindustrial:tempered_iron_block",
+          "block_id": "alaindustrial:tempered_iron_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Khối Sắt Tôi",
+              "text": "Khối nén từ 9 thỏi Sắt Tôi — cất kim loại trong một ô và có thể chế tạo hoặc tháo tại bàn chế tạo mà không hao hụt."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "nickel_ore",
+          "title": "Quặng niken",
+          "icon": "alaindustrial:nickel_ore",
+          "block_id": "alaindustrial:nickel_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Quặng niken",
+              "text": "Kim loại hiếm nhất của mod — có quặng trong thế giới và chuỗi thô → bột → thỏi; vật liệu cho hợp kim MV và vỏ máy."
+            }
+          ]
+        },
+        {
+          "id": "tin_ore",
+          "title": "Quặng thiếc",
+          "icon": "alaindustrial:tin_ore",
+          "block_id": "alaindustrial:tin_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Quặng thiếc",
+              "text": "Kim loại thời kỳ đầu của mod — có quặng trong thế giới và chuỗi thô → bột → thỏi; vật liệu cơ bản cho dây dẫn và mạch LV."
+            }
+          ]
+        },
+        {
+          "id": "silver_ore",
+          "title": "Quặng bạc",
+          "icon": "alaindustrial:silver_ore",
+          "block_id": "alaindustrial:silver_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Quặng bạc",
+              "text": "Kim loại quặng hiếm của mod — có khối quặng và chuỗi thô → bột → thỏi; vật liệu cho mạch và linh kiện cấp trung."
+            }
+          ]
+        },
+        {
+          "id": "uranium_ore",
+          "title": "Quặng uranium",
+          "icon": "alaindustrial:uranium_ore",
+          "block_id": "alaindustrial:uranium_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Quặng uranium",
+              "text": "Quặng hiếm nhất của mod — đào bằng cuốc sắt, chế biến thành bột và thỏi; dành cho các máy hạt nhân trong tương lai."
+            }
+          ]
+        },
+        {
+          "id": "teleporter",
+          "title": "Máy dịch chuyển",
+          "icon": "alaindustrial:teleporter",
+          "block_id": "alaindustrial:teleporter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy dịch chuyển",
+              "text": "Một trạm neo HV và một điều khiển cầm tay — liên kết bằng shift + chuột phải, dịch chuyển người chơi tới một trạm với chi phí EU lớn, kèm thời gian khởi động, hạ cánh an toàn và bảo vệ quyền riêng tư."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 500 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:electronic_circuit",
+                "minecraft:ender_eye",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:diamond_block",
+                "alaindustrial:copper_coil",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot"
+              ],
+              "result_id": "alaindustrial:teleporter",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "title": "Khác",
+      "icon": "alaindustrial:iron_chest",
+      "entries": [
+        {
+          "id": "iron_chest",
+          "title": "Rương Sắt",
+          "icon": "alaindustrial:iron_chest",
+          "block_id": "alaindustrial:iron_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rương Sắt",
+              "text": "Rương 36 ô — nhiều hơn rương gốc một hàng, có mô hình 3D, nắp động và âm thanh riêng. Không cần năng lượng."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 36 ô"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "#minecraft:copper_chests",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "enriched_uranium_torch",
+          "title": "Đuốc Uranium Làm Giàu",
+          "icon": "alaindustrial:enriched_uranium_torch",
+          "block_id": "alaindustrial:enriched_uranium_torch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Đuốc Uranium Làm Giàu",
+              "text": "Đuốc trang trí với ngọn lửa xanh và mức sáng 14 — thậm chí cháy được dưới nước. Không cần năng lượng."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:uranium_dust",
+                "",
+                "",
+                "#minecraft:coals",
+                "",
+                "",
+                "minecraft:stick",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:enriched_uranium_torch",
+              "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "stock_display_frame",
+          "title": "Khung hiển thị kho",
+          "icon": "alaindustrial:stock_display_frame",
+          "block_id": "alaindustrial:stock_display_frame",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Khung hiển thị kho",
+              "text": "Một khung bạn treo lên rương — nó hiển thị số lượng vật phẩm bên trong, ngay trên khung. Không cần năng lượng; con số chỉ hiện khi có một vật phẩm lọc đặt trong khung."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust",
+                "alaindustrial:silver_ingot",
+                "minecraft:item_frame",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust"
+              ],
+              "result_id": "alaindustrial:stock_display_frame",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "silver_chest",
+          "title": "Rương Bạc",
+          "icon": "alaindustrial:silver_chest",
+          "block_id": "alaindustrial:silver_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rương Bạc",
+              "text": "Rương 45 ô — cấp trên Rương Sắt (thêm một hàng), có mô hình 3D và nắp động. Không cần năng lượng."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 45 ô"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_chest",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:silver_chest",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "items",
+      "title": "Vật phẩm",
+      "icon": "alaindustrial:mute_chip",
+      "entries": [
+        {
+          "id": "mute_chip",
+          "title": "Chip Tắt Tiếng",
+          "icon": "alaindustrial:mute_chip",
+          "block_id": "alaindustrial:mute_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Chip Tắt Tiếng",
+              "text": "Một nâng cấp làm im lặng hoàn toàn một cỗ máy — lắp vào ô nâng cấp."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "alaindustrial:empty_chip",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool"
+              ],
+              "result_id": "alaindustrial:mute_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery",
+          "title": "Pin",
+          "icon": "alaindustrial:battery",
+          "block_id": "alaindustrial:battery",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pin",
+              "text": "Một cục năng lượng trơ — phôi để chế tạo Ba lô năng lượng; bản thân không chứa EU."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "",
+                "alaindustrial:copper_cable",
+                "",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:battery",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron",
+          "title": "Sắt Tôi",
+          "icon": "alaindustrial:tempered_iron",
+          "block_id": "alaindustrial:tempered_iron",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sắt Tôi",
+              "text": "Thỏi luyện từ thỏi sắt gốc — vật liệu cơ bản cho công cụ, giáp và khối của mod."
+            }
+          ]
+        },
+        {
+          "id": "copper_coil",
+          "title": "Cuộn dây Đồng",
+          "icon": "alaindustrial:copper_coil",
+          "block_id": "alaindustrial:copper_coil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cuộn dây Đồng",
+              "text": "Một linh kiện chế tạo — cáp đồng quấn quanh lõi thiếc; là điều kiện cho Máy khoan điện."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:copper_coil",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_gear",
+          "title": "Bánh Răng Sắt",
+          "icon": "alaindustrial:iron_gear",
+          "block_id": "alaindustrial:iron_gear",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bánh Răng Sắt",
+              "text": "Dòng bánh răng — đá, sắt, vàng và bạc; các linh kiện chế tạo cho máy móc sắp ra mắt."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "alaindustrial:wooden_gear",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "empty_chip",
+          "title": "Chip Trống",
+          "icon": "alaindustrial:empty_chip",
+          "block_id": "alaindustrial:empty_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Chip Trống",
+              "text": "Phôi cơ bản cho các chip nâng cấp máy; bản thân không có tác dụng."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:empty_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "Rotor gỗ",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rotor gỗ",
+              "text": "Cánh tuabin gió — lắp vào ô rotor của bất kỳ cối gió T1/T2 nào; thiếu nó thì không phát điện. Không bị tiêu hao khi ở trong ô."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "network_analyzer",
+          "title": "Bộ phân tích mạng",
+          "icon": "alaindustrial:network_analyzer",
+          "block_id": "alaindustrial:network_analyzer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bộ phân tích mạng",
+              "text": "Công cụ chẩn đoán cầm tay — chuột phải vào cáp để xem thông số của lưới điện đó và tô sáng nó trong thế giới."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:network_analyzer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_dust",
+          "title": "Bột Sắt",
+          "icon": "alaindustrial:iron_dust",
+          "block_id": "alaindustrial:iron_dust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bột Sắt",
+              "text": "Bột và các sản phẩm trung gian liên quan (tấm, phôi) — thứ mà Máy nghiền và các máy khác biến quặng thành."
+            }
+          ]
+        },
+        {
+          "id": "alignment_chip_day",
+          "title": "Chip tiến hóa năng lượng mặt trời",
+          "icon": "alaindustrial:alignment_chip_day",
+          "block_id": "alaindustrial:alignment_chip_day",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Chip tiến hóa năng lượng mặt trời",
+              "text": "Một cặp chip tiến hóa — mặt trời (ngày) và mặt trăng (đêm) — giúp tiến hóa tấm năng lượng mặt trời và cối gió T1 cơ bản lên T2, mang theo cả năng lượng NBT đã tích lũy."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot"
+              ],
+              "result_id": "alaindustrial:alignment_chip_day",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electronic_circuit",
+          "title": "Mạch điện tử",
+          "icon": "alaindustrial:electronic_circuit",
+          "block_id": "alaindustrial:electronic_circuit",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Mạch điện tử",
+              "text": "Linh kiện chế tạo nền tảng — 'bộ não' của gần như mọi máy và khối lưu trữ cấp LV."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:quartz",
+                "minecraft:emerald",
+                "minecraft:quartz",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electronic_circuit",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_pouch",
+          "title": "Túi pin",
+          "icon": "alaindustrial:battery_pouch",
+          "block_id": "alaindustrial:battery_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Túi pin",
+              "text": "Một túi đựng vật phẩm có thể sạc — chứa 128 khối lượng, chạy bằng pin 2000 EU tích hợp và khóa lại khi hết điện."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 2 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather",
+                "minecraft:leather",
+                "minecraft:bundle",
+                "minecraft:leather",
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:battery_pouch",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_chestplate",
+          "title": "Giáp Ngực Sắt Tôi",
+          "icon": "alaindustrial:tempered_iron_chestplate",
+          "block_id": "alaindustrial:tempered_iron_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Giáp Ngực Sắt Tôi",
+              "text": "Bộ giáp Sắt Tôi đầy đủ — mũ, giáp ngực, quần và giày; bền hơn sắt, sửa bằng Sắt Tôi."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 4 món"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "vacuum_capsule",
+          "title": "Viên nang chân không",
+          "icon": "alaindustrial:vacuum_capsule",
+          "block_id": "alaindustrial:vacuum_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Viên nang chân không",
+              "text": "Bình chứa chất lỏng dung tích một xô, xếp chồng được — tối đa 16 viên nang cùng một chất lỏng mỗi chồng, đổ đầy từ thế giới hoặc các bồn của mod."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone"
+              ],
+              "result_id": "alaindustrial:vacuum_capsule",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "wrench",
+          "title": "Cờ lê",
+          "icon": "alaindustrial:wrench",
+          "block_id": "alaindustrial:wrench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cờ lê",
+              "text": "Thiết lập các mặt của Ống vật phẩm và tháo dỡ các khối của mod."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "alaindustrial:iron_gear",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:wrench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_pickaxe",
+          "title": "Cuốc Sắt Tôi",
+          "icon": "alaindustrial:tempered_iron_pickaxe",
+          "block_id": "alaindustrial:tempered_iron_pickaxe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cuốc Sắt Tôi",
+              "text": "Cuốc Sắt Tôi cầm tay — nhỉnh hơn cuốc sắt gốc ở mọi thông số, nhưng không thể đào các khối cấp kim cương."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "minecraft:stick",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_tools",
+          "title": "Bộ Công Cụ Sắt Tôi",
+          "icon": "alaindustrial:tempered_iron_tools",
+          "block_id": "alaindustrial:tempered_iron_tools",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bộ Công Cụ Sắt Tôi",
+              "text": "Bộ năm công cụ cầm tay làm từ Sắt Tôi — cuốc chim, rìu, cuốc, xẻng và kiếm; nhỉnh hơn sắt gốc, nhưng không thể đào các khối cấp kim cương."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 5 món"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scythe",
+          "title": "Lưỡi Hái",
+          "icon": "alaindustrial:scythe",
+          "block_id": "alaindustrial:scythe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lưỡi Hái",
+              "text": "Công cụ diện rộng dọn sạch lá cây, cỏ, hoa và các loại thực vật trang trí khác chỉ trong một nhát vung, và khi giữ Shift — trở thành liềm diện rộng thu hoạch cây trồng đã chín. Tám cấp vật liệu từ gỗ đến netherite."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 8 cấp"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "teleporter_remote",
+          "title": "Điều khiển dịch chuyển",
+          "icon": "alaindustrial:teleporter_remote",
+          "block_id": "alaindustrial:teleporter_remote",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Điều khiển dịch chuyển",
+              "text": "Điều khiển đèn hiệu cầm tay — liên kết với một trạm dịch chuyển bằng shift + chuột phải và kích hoạt cú nhảy tới đó với EU do trạm chi trả."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "",
+                "minecraft:ender_pearl",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                ""
+              ],
+              "result_id": "alaindustrial:teleporter_remote",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_drill",
+          "title": "Máy khoan điện",
+          "icon": "alaindustrial:electric_drill",
+          "block_id": "alaindustrial:electric_drill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy khoan điện",
+              "text": "Cuốc cấp kim cương có thể sạc, chạy bằng EU — đào như kim cương khi còn điện, tiêu thụ EU mỗi khối, không bao giờ hỏng."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_pickaxe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "energy_pack",
+          "title": "Ba lô năng lượng",
+          "icon": "alaindustrial:energy_pack",
+          "block_id": "alaindustrial:energy_pack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ba lô năng lượng",
+              "text": "Bộ đệm EU đeo được ở ô giáp ngực — 20 000 EU giúp giữ đầy các vật phẩm dùng điện trong túi đồ của bạn."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 30 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:energy_pack",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -51,6 +51,7 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> MUTE_CHIP = ITEMS.registerItem("mute_chip",
 			p -> new HintItem(p, "item.alaindustrial.mute_chip.hint", "item.alaindustrial.mute_chip.hint2"));
 	public static final DeferredItem<Item> WINDMILL_ROTOR = ITEMS.registerItem("windmill_rotor", Item::new);
+	public static final DeferredItem<Item> WATER_MILL_WHEEL = ITEMS.registerItem("water_mill_wheel", Item::new);
 	public static final DeferredItem<Item> WOODEN_GEAR = ITEMS.registerItem("wooden_gear", Item::new);
 	// Metal gears (MOD-105): crafting components for machinery still to come.
 	public static final DeferredItem<Item> STONE_GEAR = ITEMS.registerItem("stone_gear", Item::new);
@@ -125,6 +126,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerItem("network_analyzer", NetworkAnalyzerItem::new, p -> p.stacksTo(1));
 	public static final DeferredItem<dev.alaindustrial.item.WrenchItem> WRENCH =
 			ITEMS.registerItem("wrench", dev.alaindustrial.item.WrenchItem::new, p -> p.stacksTo(1));
+	public static final DeferredItem<dev.alaindustrial.item.GuideBookItem> GUIDE_BOOK =
+			ITEMS.registerItem("guide_book", dev.alaindustrial.item.GuideBookItem::new, p -> p.stacksTo(1));
 
 	// Teleporter Remote (MOD-092) — hidden from the creative tab until MOD-093 (see CreativeTabContent).
 	public static final DeferredItem<TeleporterRemoteItem> TELEPORTER_REMOTE =
@@ -314,6 +317,7 @@ public final class ModItemsNeoForge {
 		ModContent.EMPTY_CHIP = EMPTY_CHIP;
 		ModContent.MUTE_CHIP = MUTE_CHIP;
 		ModContent.WINDMILL_ROTOR = WINDMILL_ROTOR;
+		ModContent.WATER_MILL_WHEEL = WATER_MILL_WHEEL;
 		ModContent.WOODEN_GEAR = WOODEN_GEAR;
 		ModContent.STONE_GEAR = STONE_GEAR;
 		ModContent.IRON_GEAR = IRON_GEAR;
@@ -352,6 +356,7 @@ public final class ModItemsNeoForge {
 		// invariant, so bind via the (still-lazy) method reference — see ModBlocksNeoForge#init javadoc.
 		ModContent.NETWORK_ANALYZER = NETWORK_ANALYZER::get;
 		ModContent.WRENCH = WRENCH::get;
+		ModContent.GUIDE_BOOK = GUIDE_BOOK::get;
 		ModContent.TELEPORTER_REMOTE = TELEPORTER_REMOTE::get;
 		// Same invariant-generics story as NETWORK_ANALYZER above.
 		ModContent.BATTERY_POUCH = BATTERY_POUCH::get;

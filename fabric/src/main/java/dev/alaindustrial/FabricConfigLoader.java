@@ -20,9 +20,11 @@ final class FabricConfigLoader {
 		return FabricLoader.getInstance().getConfigDir().resolve("alaindustrial.json");
 	}
 
-	/** Load once at startup and re-load on every {@code /reload} (datapack reload). */
+	/** Load once at startup and re-load on every {@code /reload} (datapack reload). Binds
+	 * {@link Config#configPath} so loader-neutral callers ({@code /ala config reload}) resolve the same file. */
 	static void register() {
-		Config.loadFrom(configPath());
-		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resources, success) -> Config.loadFrom(configPath()));
+		Config.configPath = FabricConfigLoader::configPath;
+		Config.reload();
+		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resources, success) -> Config.reload());
 	}
 }

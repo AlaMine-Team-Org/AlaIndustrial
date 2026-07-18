@@ -40,6 +40,11 @@ dependencies {
     // only read static fields. Gson is a transitive of Minecraft (MC 26.2 bundles 2.14.0); the L1
     // suite runs without the Minecraft jar, so pin it explicitly here (MOD-022 Phase 1).
     testRuntimeOnly('com.google.code.gson:gson:2.14.0')
+    // Config.loadFrom logs via Industrialization.LOGGER (SLF4J). Exercising loadFrom in the L1 suite
+    // (MOD-100 config file tests) loads Industrialization, so SLF4J must be on the test classpath; like
+    // Gson it is a Minecraft transitive absent from the MC-free L1 run, so pin it explicitly.
+    testRuntimeOnly('org.slf4j:slf4j-api:2.0.9')
+    testRuntimeOnly('org.slf4j:slf4j-nop:2.0.9')
 }
 
 tasks.named('test', Test) {

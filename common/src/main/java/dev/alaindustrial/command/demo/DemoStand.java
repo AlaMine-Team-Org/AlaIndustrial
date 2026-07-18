@@ -154,6 +154,7 @@ public final class DemoStand {
 		set(level, origin, 16, -1, 4, FLOOR);
 		set(level, origin, 18, -1, 4, FLOOR);
 		set(level, origin, 17, 0, 4, ModContent.WATER_MILL.get());
+		fillSlot(level, origin, 17, 0, 4, 0, new ItemStack(ModContent.WATER_MILL_WHEEL.get()));
 		set(level, origin, 16, 0, 4, Blocks.WATER);
 		set(level, origin, 18, 0, 4, Blocks.WATER);
 		set(level, origin, 17, -1, 5, FLOOR);

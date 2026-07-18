@@ -1,24 +1,24 @@
 {
   "project": "Ala Industrial",
   "modid": "alaindustrial",
-  "version": "0.1.35",
+  "version": "0.1.36",
   "minecraft": "26.2",
   "artifacts": [
     {
       "loader": "fabric",
-      "file": "fabric/build/libs/alaindustrial-fabric-26.2-0.1.35.jar",
-      "name": "alaindustrial-fabric-26.2-0.1.35.jar",
-      "size": 1533819,
-      "sha256": "3f9506685aaf55bcf6d2d89117df86f2f5cf7d77cf4af8bb72a92a41d673119a",
-      "metadata_version": "0.1.35"
+      "file": "fabric/build/libs/alaindustrial-fabric-26.2-0.1.36.jar",
+      "name": "alaindustrial-fabric-26.2-0.1.36.jar",
+      "size": 1727748,
+      "sha256": "95c084aa13a5cbed7018c8b8eca6d06fb7f9cf8bbc3f3cece31094d91b2ecc9a",
+      "metadata_version": "0.1.36"
     },
     {
       "loader": "neoforge",
-      "file": "neoforge/build/libs/alaindustrial-neoforge-26.2-0.1.35.jar",
-      "name": "alaindustrial-neoforge-26.2-0.1.35.jar",
-      "size": 1508525,
-      "sha256": "b7712608355986bd6e17c1e6b0072aa4266b0a577d87bc1cf728efc445f09026",
-      "metadata_version": "0.1.35"
+      "file": "neoforge/build/libs/alaindustrial-neoforge-26.2-0.1.36.jar",
+      "name": "alaindustrial-neoforge-26.2-0.1.36.jar",
+      "size": 1702790,
+      "sha256": "af7726b0d6e91ece8736169efda1597efa644564a942748f7a03662261b9be73",
+      "metadata_version": "0.1.36"
     }
   ]
 }

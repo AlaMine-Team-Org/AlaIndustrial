@@ -1,0 +1,1631 @@
+{
+  "locale": "hi_in",
+  "version": 1,
+  "generated_from": "OKF docs/blocks",
+  "tabs": [
+    {
+      "id": "getting_started",
+      "title": "शुरुआत",
+      "icon": "alaindustrial:guide_book",
+      "entries": [
+        {
+          "id": "welcome",
+          "title": "स्वागत है",
+          "icon": "alaindustrial:guide_book",
+          "pages": [
+            {
+              "type": "text",
+              "title": "स्वागत है",
+              "text": "यह Ala Industrial की गाइड है — EU ऊर्जा, जेनरेटर, मशीनें और केबल।\n\nबाईं ओर से कोई अनुभाग चुनें, तीरों से पन्ने पलटें। ऊपर का \"विकी खोलें\" बटन पूरी गाइड साइट खोलता है।"
+            },
+            {
+              "type": "text",
+              "title": "पहले कदम",
+              "text": "1. मॉड का अयस्क खोदें — टिन से शुरू करें।\n2. एक सौर पैनल रखें — सबसे सरल जेनरेटर।\n3. उस तक एक तांबे की केबल बिछाएं।\n4. अपनी पहली मशीन जोड़ें — पेषक।\n\nविवरण ऊर्जा और प्रोसेसिंग अनुभागों में हैं।"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy_basics",
+      "title": "ऊर्जा की मूल बातें",
+      "icon": "alaindustrial:copper_cable",
+      "entries": [
+        {
+          "id": "eu_basics",
+          "title": "EU क्या है",
+          "icon": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "EU ऊर्जा",
+              "text": "EU (Energy Unit) मॉड की ऊर्जा की इकाई है। जेनरेटर EU बनाते हैं, केबल उसे पहुँचाते हैं, भंडारण उसे रखता है, मशीनें उसे खर्च करती हैं। यह वनीला रेडस्टोन से अलग एक प्रणाली है।"
+            },
+            {
+              "type": "text",
+              "title": "वोल्टेज श्रेणियाँ",
+              "text": "ऊर्जा पैकेटों में बहती है, जिनकी सीमा प्रति-टिक वोल्टेज तय करता है:\n• LV — 32 EU/tick तक (बुनियादी ब्लॉक)\n• MV — 128 EU/tick तक\n• HV — 512 EU/tick तक\n\nकिसी श्रेणी की सीमा प्रति टिक थ्रूपुट है, टूटने की सीमा नहीं: ब्लॉक 'अतिवोल्टेज' से नष्ट नहीं होते।"
+            },
+            {
+              "type": "text",
+              "title": "केबल",
+              "text": "केबल ब्लॉकों को एक पावर ग्रिड में जोड़ती हैं और EU ले जाती हैं। तांबे की केबल दूरी के साथ ऊर्जा खोती है — लाइन जितनी लंबी, उतनी अधिक हानि। लाइनें छोटी रखें, या भंडारण को उपभोक्ता के पास रखें।"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy",
+      "title": "ऊर्जा",
+      "icon": "alaindustrial:wind_mill",
+      "entries": [
+        {
+          "id": "wind_mill",
+          "title": "पवन चक्की",
+          "icon": "alaindustrial:wind_mill",
+          "block_id": "alaindustrial:wind_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "पवन चक्की",
+              "text": "एक बुनियादी LV पवन चक्की — बिना ईंधन के हवा से EU बनाती है; अधिक ऊर्जा के लिए इसे ऊँचाई पर और खराब मौसम में बनाएं।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 0–8 EU/t",
+                "बफ़र: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:wind_mill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "water_mill",
+          "title": "जल चक्की",
+          "icon": "alaindustrial:water_mill",
+          "block_id": "alaindustrial:water_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "जल चक्की",
+              "text": "एक निष्क्रिय LV जेनरेटर — ब्लॉक के आसपास के पानी से EU बनाता है, बिना ईंधन या टैंक के।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 0–4 EU/t",
+                "बफ़र: 4000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "generator",
+          "title": "जेनरेटर",
+          "icon": "alaindustrial:generator",
+          "block_id": "alaindustrial:generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "जेनरेटर",
+              "text": "एक साधारण कोयला-और-ठोस-ईंधन जेनरेटर — आपकी पहली मशीनों के लिए शुरुआती LV EU स्रोत।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 8 EU/t",
+                "बफ़र: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:furnace",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geothermal_generator",
+          "title": "भूतापीय जेनरेटर",
+          "icon": "alaindustrial:geothermal_generator",
+          "block_id": "alaindustrial:geothermal_generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "भूतापीय जेनरेटर",
+              "text": "लावा से EU बनाता है — कोयला जेनरेटर से अधिक शक्तिशाली और बहुत कम बार भरना पड़ता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 16 EU/t",
+                "बफ़र: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:generator",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:geothermal_generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "daylight_solar_panel",
+          "title": "दिन का सौर पैनल",
+          "icon": "alaindustrial:daylight_solar_panel",
+          "block_id": "alaindustrial:daylight_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "दिन का सौर पैनल",
+              "text": "T2 दिन का पैनल — बेस से चार गुना शक्तिशाली, खुले आसमान के नीचे दिन में चलता है; केवल विकास से प्राप्त होता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 4 EU/t (दिन)",
+                "बफ़र: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "moonlit_solar_panel",
+          "title": "चंद्र सौर पैनल",
+          "icon": "alaindustrial:moonlit_solar_panel",
+          "block_id": "alaindustrial:moonlit_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "चंद्र सौर पैनल",
+              "text": "T2 रात का पैनल — खुले आसमान के नीचे रात में EU बनाता है और खराब मौसम में भी थोड़ा-थोड़ा; केवल विकास से प्राप्त होता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 3 EU/t (रात)",
+                "बफ़र: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "solar_panel",
+          "title": "सौर पैनल",
+          "icon": "alaindustrial:solar_panel",
+          "block_id": "alaindustrial:solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "सौर पैनल",
+              "text": "मॉड का पहला ऊर्जा स्रोत — खुले आसमान के नीचे दिन में EU बनाता है; जहाँ से पूरी ऊर्जा श्रृंखला शुरू होती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 1 EU/t (दिन)",
+                "बफ़र: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:copper_cable",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:solar_panel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_box",
+          "title": "बैटरी बॉक्स",
+          "icon": "alaindustrial:battery_box",
+          "block_id": "alaindustrial:battery_box",
+          "pages": [
+            {
+              "type": "text",
+              "title": "बैटरी बॉक्स",
+              "text": "शुरुआती LV भंडारण ब्लॉक — 20 000 EU रखता है, जेनरेटर से अतिरिक्त ऊर्जा जमा करता है और मशीनों को 32 EU/tick पर देता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 20 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:battery_box",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "रोधित तांबे की केबल",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "रोधित तांबे की केबल",
+              "text": "ऊन में लिपटी तांबे की LV केबल — सुरक्षित निकटता और मशीनों के पास सघन वायरिंग के लिए।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: ≤32 EU/पैकेट"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "रोधित टिन की केबल",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "रोधित टिन की केबल",
+              "text": "ऊन में लिपटी टिन की LV केबल — सुरक्षित निकटता के लिए सबसे सस्ता रोधित तार।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: ≤32 EU/पैकेट"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "copper_cable",
+          "title": "तांबे की केबल",
+          "icon": "alaindustrial:copper_cable",
+          "block_id": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "तांबे की केबल",
+              "text": "शुरुआती ऊर्जा नेटवर्क के लिए एक सस्ती, भरोसेमंद LV केबल — सौर पैनल, बैटरियों और मशीनों को एक ही लाइन में जोड़ती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: ≤32 EU/पैकेट"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:copper_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "tin_cable",
+          "title": "टिन की केबल",
+          "icon": "alaindustrial:tin_cable",
+          "block_id": "alaindustrial:tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "टिन की केबल",
+              "text": "सबसे सस्ती LV केबल — एकल मशीनों और कमज़ोर जेनरेटरों तक पतली, कम-शक्ति वाली लाइनों के लिए।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: ≤32 EU/पैकेट"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "processing",
+      "title": "प्रोसेसिंग",
+      "icon": "alaindustrial:macerator",
+      "entries": [
+        {
+          "id": "macerator",
+          "title": "पेषक",
+          "icon": "alaindustrial:macerator",
+          "block_id": "alaindustrial:macerator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "पेषक",
+              "text": "अयस्क (ब्लॉक और कच्चा अयस्क दोनों) को कुचलकर दो चूरा बनाता है, LV श्रेणी पर EU खर्च करते हुए।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 300 EU/संचालन",
+                "बफ़र: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:macerator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_furnace",
+          "title": "आयरन फर्नेस",
+          "icon": "alaindustrial:iron_furnace",
+          "block_id": "alaindustrial:iron_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "आयरन फर्नेस",
+              "text": "वनीला और विद्युत भट्ठी के बीच की एक उन्नत ईंधन भट्ठी — वनीला से तेज़, फिर भी ईंधन-आधारित, कोई EU नहीं।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:furnace",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "compressor",
+          "title": "कंप्रेसर",
+          "icon": "alaindustrial:compressor",
+          "block_id": "alaindustrial:compressor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "कंप्रेसर",
+              "text": "कच्चे माल को सघन रूपों में दबाता है — धातु चूरा को पिंडों में, कोयला/रत्न चूरा को वापस वस्तुओं में, बर्फ़ को पैक्ड/नीली बर्फ़ में, गन्ने को कागज़ में। अधातुओं के लिए दोगुना करने का चक्र पूरा करता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 260 EU/संचालन",
+                "बफ़र: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:piston",
+                "alaindustrial:electronic_circuit",
+                "minecraft:piston",
+                "minecraft:stone",
+                "alaindustrial:silver_ingot",
+                "minecraft:stone"
+              ],
+              "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "extractor",
+          "title": "एक्सट्रैक्टर",
+          "icon": "alaindustrial:extractor",
+          "block_id": "alaindustrial:extractor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "एक्सट्रैक्टर",
+              "text": "कच्चे इनपुट से उपयोगी सामग्री निकालता है — फूलों से ×2 रंग, कद्दू/तरबूज़ से अधिक बीज, छड़ों से ब्लेज़ पाउडर, बजरी से चकमक। हॉपर-फीड ऑटो-फार्म के लिए उपयोगी।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 240 EU/संचालन",
+                "बफ़र: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:hopper",
+                "alaindustrial:electronic_circuit",
+                "minecraft:hopper",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_furnace",
+          "title": "विद्युत भट्ठी",
+          "icon": "alaindustrial:electric_furnace",
+          "block_id": "alaindustrial:electric_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "विद्युत भट्ठी",
+              "text": "वनीला भट्ठी जो कुछ गलाती है वह सब गलाती है, साथ ही मॉड के चूरे को पिंडों में। ईंधन के बजाय EU पर चलती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 200 EU/संचालन",
+                "बफ़र: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_furnace",
+                "alaindustrial:battery",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electric_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "pump",
+          "title": "पंप",
+          "icon": "alaindustrial:pump",
+          "block_id": "alaindustrial:pump",
+          "pages": [
+            {
+              "type": "text",
+              "title": "पंप",
+              "text": "एक LV पंप जो दुनिया या आसपास के टैंकों से तरल खींचकर अपने 10-बाल्टी आंतरिक टैंक में भरता है और उसे रिसीवरों तक पहुँचाता है; कैप्सूल और अन्य मॉड के कंटेनरों के साथ तरल का आदान-प्रदान करता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:pump",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "logistics",
+      "title": "लॉजिस्टिक्स",
+      "icon": "alaindustrial:item_pipe",
+      "entries": [
+        {
+          "id": "item_pipe",
+          "title": "वस्तु पाइप",
+          "icon": "alaindustrial:item_pipe",
+          "block_id": "alaindustrial:item_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "वस्तु पाइप",
+              "text": "एक निष्क्रिय मल्टीपार्ट पाइप जो इन्वेंट्री के बीच वस्तुएँ स्थानांतरित करता है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_gear",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:item_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "fluid_tank",
+          "title": "पोर्टेबल द्रव टैंक",
+          "icon": "alaindustrial:fluid_tank",
+          "block_id": "alaindustrial:fluid_tank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "पोर्टेबल द्रव टैंक",
+              "text": "एक निष्क्रिय 8-बाल्टी टैंक जिसमें दिखने वाला तरल स्तर, छहों ओर से तरल पहुँच, और हटाने पर सामग्री बनी रहती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 10 बाल्टी"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:iron_gear",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_tank",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "world_automation",
+      "title": "दुनिया और स्वचालन",
+      "icon": "alaindustrial:tempered_iron_block",
+      "entries": [
+        {
+          "id": "tempered_iron_block",
+          "title": "टेम्पर्ड आयरन ब्लॉक",
+          "icon": "alaindustrial:tempered_iron_block",
+          "block_id": "alaindustrial:tempered_iron_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "टेम्पर्ड आयरन ब्लॉक",
+              "text": "9 टेम्पर्ड-आयरन पिंडों का एक संहत ब्लॉक — धातु को एक स्लॉट में रखता है और वर्कबेंच पर बिना किसी हानि के बनाया या तोड़ा जाता है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "nickel_ore",
+          "title": "निकल का अयस्क",
+          "icon": "alaindustrial:nickel_ore",
+          "block_id": "alaindustrial:nickel_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "निकल का अयस्क",
+              "text": "मॉड की धातुओं में सबसे दुर्लभ — दुनिया में अयस्क और कच्चा → चूरा → पिंड श्रृंखला; MV मिश्रधातुओं और मशीन आवरणों की सामग्री।"
+            }
+          ]
+        },
+        {
+          "id": "tin_ore",
+          "title": "टिन का अयस्क",
+          "icon": "alaindustrial:tin_ore",
+          "block_id": "alaindustrial:tin_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "टिन का अयस्क",
+              "text": "एक शुरुआती मॉड धातु — दुनिया में अयस्क और कच्चा → चूरा → पिंड श्रृंखला; LV तारों और सर्किटों की आधार सामग्री।"
+            }
+          ]
+        },
+        {
+          "id": "silver_ore",
+          "title": "चांदी का अयस्क",
+          "icon": "alaindustrial:silver_ore",
+          "block_id": "alaindustrial:silver_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "चांदी का अयस्क",
+              "text": "एक दुर्लभ मॉड अयस्क धातु — अयस्क ब्लॉक और कच्चा → चूरा → पिंड श्रृंखला; मध्य-श्रेणी के सर्किटों और घटकों की सामग्री।"
+            }
+          ]
+        },
+        {
+          "id": "uranium_ore",
+          "title": "यूरेनियम का अयस्क",
+          "icon": "alaindustrial:uranium_ore",
+          "block_id": "alaindustrial:uranium_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "यूरेनियम का अयस्क",
+              "text": "मॉड का सबसे दुर्लभ अयस्क — लोहे की कुदाल से खोदा जाता है, चूरा और पिंड में प्रोसेस होता है; भविष्य की परमाणु मशीनों के लिए आरक्षित।"
+            }
+          ]
+        },
+        {
+          "id": "teleporter",
+          "title": "टेलीपोर्टर",
+          "icon": "alaindustrial:teleporter",
+          "block_id": "alaindustrial:teleporter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "टेलीपोर्टर",
+              "text": "एक HV एंकर स्टेशन और एक हाथ का रिमोट — shift-दायाँ क्लिक से जुड़ते हैं, खिलाड़ी को बड़ी EU लागत पर एक स्टेशन तक टेलीपोर्ट करते हैं, वार्मअप, सुरक्षित लैंडिंग और गोपनीयता सुरक्षा के साथ।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 500 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:electronic_circuit",
+                "minecraft:ender_eye",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:diamond_block",
+                "alaindustrial:copper_coil",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot"
+              ],
+              "result_id": "alaindustrial:teleporter",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "title": "अन्य",
+      "icon": "alaindustrial:iron_chest",
+      "entries": [
+        {
+          "id": "iron_chest",
+          "title": "आयरन चेस्ट",
+          "icon": "alaindustrial:iron_chest",
+          "block_id": "alaindustrial:iron_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "आयरन चेस्ट",
+              "text": "एक 36-स्लॉट संदूक — वनीला से एक पंक्ति अधिक, 3D मॉडल, एनिमेटेड ढक्कन और अपनी आवाज़ के साथ। कोई ऊर्जा नहीं चाहिए।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 36 स्लॉट"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "#minecraft:copper_chests",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "enriched_uranium_torch",
+          "title": "समृद्ध यूरेनियम मशाल",
+          "icon": "alaindustrial:enriched_uranium_torch",
+          "block_id": "alaindustrial:enriched_uranium_torch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "समृद्ध यूरेनियम मशाल",
+              "text": "हरी लौ और प्रकाश स्तर 14 वाली एक सजावटी मशाल — यह पानी के नीचे भी जलती है। कोई ऊर्जा नहीं चाहिए।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:uranium_dust",
+                "",
+                "",
+                "#minecraft:coals",
+                "",
+                "",
+                "minecraft:stick",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:enriched_uranium_torch",
+              "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "stock_display_frame",
+          "title": "स्टॉक प्रदर्शन फ्रेम",
+          "icon": "alaindustrial:stock_display_frame",
+          "block_id": "alaindustrial:stock_display_frame",
+          "pages": [
+            {
+              "type": "text",
+              "title": "स्टॉक प्रदर्शन फ्रेम",
+              "text": "एक फ्रेम जिसे आप संदूक पर टांगते हैं — यह अंदर की वस्तुओं की संख्या सीधे फ्रेम पर दिखाता है। कोई ऊर्जा नहीं चाहिए; संख्या केवल तभी दिखती है जब फ्रेम में एक फ़िल्टर वस्तु रखी हो।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust",
+                "alaindustrial:silver_ingot",
+                "minecraft:item_frame",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust"
+              ],
+              "result_id": "alaindustrial:stock_display_frame",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "silver_chest",
+          "title": "सिल्वर चेस्ट",
+          "icon": "alaindustrial:silver_chest",
+          "block_id": "alaindustrial:silver_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "सिल्वर चेस्ट",
+              "text": "एक 45-स्लॉट संदूक — लोहे से ऊपर की श्रेणी (एक पंक्ति अधिक), 3D मॉडल और एनिमेटेड ढक्कन के साथ। कोई ऊर्जा नहीं चाहिए।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 45 स्लॉट"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_chest",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:silver_chest",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "items",
+      "title": "आइटम",
+      "icon": "alaindustrial:mute_chip",
+      "entries": [
+        {
+          "id": "mute_chip",
+          "title": "मूक चिप",
+          "icon": "alaindustrial:mute_chip",
+          "block_id": "alaindustrial:mute_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "मूक चिप",
+              "text": "एक अपग्रेड जो मशीन को पूरी तरह मौन कर देता है — अपग्रेड स्लॉट में जाता है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "alaindustrial:empty_chip",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool"
+              ],
+              "result_id": "alaindustrial:mute_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery",
+          "title": "बैटरी",
+          "icon": "alaindustrial:battery",
+          "block_id": "alaindustrial:battery",
+          "pages": [
+            {
+              "type": "text",
+              "title": "बैटरी",
+              "text": "एक निष्क्रिय ऊर्जा सेल — वह खाली आधार जिससे ऊर्जा बैकपैक बनता है; अपने आप में कोई EU नहीं रखती।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "",
+                "alaindustrial:copper_cable",
+                "",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:battery",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron",
+          "title": "टेम्पर्ड लोहा",
+          "icon": "alaindustrial:tempered_iron",
+          "block_id": "alaindustrial:tempered_iron",
+          "pages": [
+            {
+              "type": "text",
+              "title": "टेम्पर्ड लोहा",
+              "text": "वनीला लोहे के पिंड से गलाया गया एक पिंड — मॉड के औज़ारों, कवच और ब्लॉक की आधार सामग्री।"
+            }
+          ]
+        },
+        {
+          "id": "copper_coil",
+          "title": "तांबे की कुंडली",
+          "icon": "alaindustrial:copper_coil",
+          "block_id": "alaindustrial:copper_coil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "तांबे की कुंडली",
+              "text": "एक क्राफ्टिंग घटक — टिन कोर पर लिपटी तांबे की केबल; विद्युत ड्रिल के लिए आवश्यक।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:copper_coil",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_gear",
+          "title": "लोहे का गियर",
+          "icon": "alaindustrial:iron_gear",
+          "block_id": "alaindustrial:iron_gear",
+          "pages": [
+            {
+              "type": "text",
+              "title": "लोहे का गियर",
+              "text": "गियर परिवार — पत्थर, लोहा, सोना और चांदी; आने वाली मशीनरी के लिए क्राफ्टिंग घटक।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "alaindustrial:wooden_gear",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "empty_chip",
+          "title": "खाली चिप",
+          "icon": "alaindustrial:empty_chip",
+          "block_id": "alaindustrial:empty_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "खाली चिप",
+              "text": "मशीन अपग्रेड चिपों का खाली आधार; अपने आप में कोई प्रभाव नहीं।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:empty_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "लकड़ी का रोटर",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "लकड़ी का रोटर",
+              "text": "पवन चक्की के ब्लेड — किसी भी T1/T2 पवन चक्की के रोटर स्लॉट में रखे जाते हैं; इसके बिना कोई उत्पादन नहीं। स्लॉट में रहते हुए खर्च नहीं होते।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "network_analyzer",
+          "title": "नेटवर्क विश्लेषक",
+          "icon": "alaindustrial:network_analyzer",
+          "block_id": "alaindustrial:network_analyzer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "नेटवर्क विश्लेषक",
+              "text": "एक हाथ का निदान उपकरण — किसी केबल पर राइट-क्लिक करके उस पावर नेटवर्क के आँकड़े देखें और उसे दुनिया में हाइलाइट करें।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:network_analyzer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_dust",
+          "title": "लोहे का चूरा",
+          "icon": "alaindustrial:iron_dust",
+          "block_id": "alaindustrial:iron_dust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "लोहे का चूरा",
+              "text": "चूरा और संबंधित मध्यवर्ती वस्तुएँ (प्लेट, बिलेट) — पेषक और अन्य मशीनें अयस्कों को इन्हीं में बदलती हैं।"
+            }
+          ]
+        },
+        {
+          "id": "alignment_chip_day",
+          "title": "सौर विकास चिप",
+          "icon": "alaindustrial:alignment_chip_day",
+          "block_id": "alaindustrial:alignment_chip_day",
+          "pages": [
+            {
+              "type": "text",
+              "title": "सौर विकास चिप",
+              "text": "विकास चिपों की एक जोड़ी — सौर (दिन) और चंद्र (रात) — जो बुनियादी T1 सौर पैनलों और पवन चक्कियों को विकास द्वारा T2 में विकसित करती है, संचित NBT ऊर्जा को साथ ले जाते हुए।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot"
+              ],
+              "result_id": "alaindustrial:alignment_chip_day",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electronic_circuit",
+          "title": "इलेक्ट्रॉनिक सर्किट",
+          "icon": "alaindustrial:electronic_circuit",
+          "block_id": "alaindustrial:electronic_circuit",
+          "pages": [
+            {
+              "type": "text",
+              "title": "इलेक्ट्रॉनिक सर्किट",
+              "text": "आधार क्राफ्टिंग घटक — लगभग हर LV मशीन और भंडारण ब्लॉक का 'दिमाग'।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:quartz",
+                "minecraft:emerald",
+                "minecraft:quartz",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electronic_circuit",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_pouch",
+          "title": "बैटरी थैली",
+          "icon": "alaindustrial:battery_pouch",
+          "block_id": "alaindustrial:battery_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "बैटरी थैली",
+              "text": "एक चार्ज होने वाली वस्तु थैली — 128 भार रखती है, अंतर्निहित 2000 EU बैटरी पर चलती है और चार्ज खत्म होने पर लॉक हो जाती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 2 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather",
+                "minecraft:leather",
+                "minecraft:bundle",
+                "minecraft:leather",
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:battery_pouch",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_chestplate",
+          "title": "Tempered Iron Chestplate",
+          "icon": "alaindustrial:tempered_iron_chestplate",
+          "block_id": "alaindustrial:tempered_iron_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tempered Iron Chestplate",
+              "text": "एक पूर्ण टेम्पर्ड-आयरन कवच सेट — हेलमेट, चेस्टप्लेट, लेगिंग्स और जूते; लोहे से अधिक मज़बूत, टेम्पर्ड लोहे से मरम्मत होती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 4 पीस"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "vacuum_capsule",
+          "title": "वैक्यूम कैप्सूल",
+          "icon": "alaindustrial:vacuum_capsule",
+          "block_id": "alaindustrial:vacuum_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "वैक्यूम कैप्सूल",
+              "text": "एक स्टैक करने योग्य एक-बाल्टी तरल कंटेनर — प्रति स्टैक एक तरल के 16 कैप्सूल तक, दुनिया या मॉड के टैंकों से भरे जाते हैं।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone"
+              ],
+              "result_id": "alaindustrial:vacuum_capsule",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "wrench",
+          "title": "रिंच",
+          "icon": "alaindustrial:wrench",
+          "block_id": "alaindustrial:wrench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "रिंच",
+              "text": "वस्तु पाइप के फलक कॉन्फ़िगर करता है और मॉड के ब्लॉक तोड़ता है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "alaindustrial:iron_gear",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:wrench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_pickaxe",
+          "title": "टेम्पर्ड आयरन फावड़ा",
+          "icon": "alaindustrial:tempered_iron_pickaxe",
+          "block_id": "alaindustrial:tempered_iron_pickaxe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "टेम्पर्ड आयरन फावड़ा",
+              "text": "एक हाथ की टेम्पर्ड-आयरन कुदाल — हर आँकड़े में वनीला लोहे से थोड़ी बेहतर, लेकिन यह हीरे-स्तर के ब्लॉक नहीं खोद सकती।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "minecraft:stick",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_tools",
+          "title": "टेम्पर्ड आयरन औज़ार",
+          "icon": "alaindustrial:tempered_iron_tools",
+          "block_id": "alaindustrial:tempered_iron_tools",
+          "pages": [
+            {
+              "type": "text",
+              "title": "टेम्पर्ड आयरन औज़ार",
+              "text": "टेम्पर्ड लोहे से बने पाँच हाथ के औज़ारों का एक सेट — कुदाल, कुल्हाड़ी, कुदाली, बेलचा और तलवार; वनीला लोहे से थोड़े बेहतर, लेकिन वे हीरे-स्तर के ब्लॉक नहीं खोद सकते।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 5 पीस"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scythe",
+          "title": "दराँती",
+          "icon": "alaindustrial:scythe",
+          "block_id": "alaindustrial:scythe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "दराँती",
+              "text": "एक AOE उपकरण जो एक ही वार में पत्ते, घास, फूल और अन्य सजावटी पत्तियाँ साफ़ कर देता है, और Shift दबाए रखने पर — एक AOE हँसिया जो पकी फसलें काटता है। लकड़ी से नेदराइट तक आठ सामग्री श्रेणियाँ।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 8 श्रेणियाँ"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "teleporter_remote",
+          "title": "टेलीपोर्टर रिमोट",
+          "icon": "alaindustrial:teleporter_remote",
+          "block_id": "alaindustrial:teleporter_remote",
+          "pages": [
+            {
+              "type": "text",
+              "title": "टेलीपोर्टर रिमोट",
+              "text": "एक हाथ का बीकन-रिमोट — shift-दायाँ क्लिक से किसी टेलीपोर्टर स्टेशन से जुड़ता है और स्टेशन द्वारा चुकाई गई EU पर उस तक एक जंप शुरू करता है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "",
+                "minecraft:ender_pearl",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                ""
+              ],
+              "result_id": "alaindustrial:teleporter_remote",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_drill",
+          "title": "विद्युत ड्रिल",
+          "icon": "alaindustrial:electric_drill",
+          "block_id": "alaindustrial:electric_drill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "विद्युत ड्रिल",
+              "text": "एक रिचार्ज करने योग्य हीरा-श्रेणी की कुदाल जो EU पर चलती है — चार्ज रहने पर हीरे जैसी खनन करती है, प्रति ब्लॉक EU खर्च करती है, कभी नहीं टूटती।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_pickaxe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "energy_pack",
+          "title": "ऊर्जा बैकपैक",
+          "icon": "alaindustrial:energy_pack",
+          "block_id": "alaindustrial:energy_pack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ऊर्जा बैकपैक",
+              "text": "छाती के स्लॉट में पहनने योग्य एक EU बफ़र — 20 000 EU जो आपकी इन्वेंट्री की विद्युत वस्तुओं को चार्ज रखता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 30 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:energy_pack",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

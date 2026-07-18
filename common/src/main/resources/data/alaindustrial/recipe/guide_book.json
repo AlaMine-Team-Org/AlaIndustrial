@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		"minecraft:book",
+		"alaindustrial:wooden_gear"
+	],
+	"result": {
+		"id": "alaindustrial:guide_book",
+		"count": 1
+	}
+}

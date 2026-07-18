@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_wooden_gear": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:wooden_gear"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_wooden_gear"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:water_mill_wheel"
+    ]
+  }
+}

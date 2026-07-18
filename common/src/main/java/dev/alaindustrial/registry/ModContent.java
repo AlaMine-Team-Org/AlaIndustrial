@@ -127,6 +127,7 @@ public final class ModContent {
 	public static Supplier<Item> EMPTY_CHIP = unbound("EMPTY_CHIP");
 	public static Supplier<Item> MUTE_CHIP = unbound("MUTE_CHIP");
 	public static Supplier<Item> WINDMILL_ROTOR = unbound("WINDMILL_ROTOR");
+	public static Supplier<Item> WATER_MILL_WHEEL = unbound("WATER_MILL_WHEEL");
 	public static Supplier<Item> WOODEN_GEAR = unbound("WOODEN_GEAR");
 	// Metal gears (MOD-105): crafting components for machinery still to come. Each is a cross of the
 	// tier material around a wooden gear; no consumer recipe uses them yet.
@@ -167,6 +168,7 @@ public final class ModContent {
 	public static Supplier<Item> URANIUM_INGOT = unbound("URANIUM_INGOT");
 	public static Supplier<Item> NETWORK_ANALYZER = unbound("NETWORK_ANALYZER");
 	public static Supplier<Item> WRENCH = unbound("WRENCH");
+	public static Supplier<Item> GUIDE_BOOK = unbound("GUIDE_BOOK");
 	/** Teleporter Remote (MOD-092) — hidden from the creative tab until MOD-093 completes the feature. */
 	public static Supplier<Item> TELEPORTER_REMOTE = unbound("TELEPORTER_REMOTE");
 	public static Supplier<Item> BATTERY_POUCH = unbound("BATTERY_POUCH");

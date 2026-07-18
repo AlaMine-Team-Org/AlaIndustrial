@@ -42,9 +42,11 @@
 			"dev.alaindustrial.gametest.DemoStandGameTest",
 			"dev.alaindustrial.gametest.StockDisplayFrameGameTest",
 			"dev.alaindustrial.gametest.ScytheGameTest",
-			"dev.alaindustrial.gametest.MuteChipGameTest"
+			"dev.alaindustrial.gametest.MuteChipGameTest",
+			"dev.alaindustrial.gametest.WaterMillWheelGameTest"
 			,"dev.alaindustrial.gametest.ItemPipeGameTest"
 			,"dev.alaindustrial.gametest.FluidTankGameTest"
+			,"dev.alaindustrial.gametest.GuideBookGameTest"
 		]
 	}
 }

@@ -1,0 +1,1631 @@
+{
+  "locale": "ko_kr",
+  "version": 1,
+  "generated_from": "OKF docs/blocks",
+  "tabs": [
+    {
+      "id": "getting_started",
+      "title": "시작하기",
+      "icon": "alaindustrial:guide_book",
+      "entries": [
+        {
+          "id": "welcome",
+          "title": "환영합니다",
+          "icon": "alaindustrial:guide_book",
+          "pages": [
+            {
+              "type": "text",
+              "title": "환영합니다",
+              "text": "Ala Industrial 가이드입니다 — EU 에너지, 발전기, 기계, 케이블.\n\n왼쪽에서 항목을 고르고, 화살표로 페이지를 넘기세요. 상단의 \"위키 열기\" 버튼으로 전체 가이드 사이트를 열 수 있습니다."
+            },
+            {
+              "type": "text",
+              "title": "첫걸음",
+              "text": "1. 모드의 광석을 채굴하세요 — 주석부터 시작합니다.\n2. 태양광 패널을 설치하세요 — 가장 간단한 발전기입니다.\n3. 구리 케이블을 연결하세요.\n4. 첫 기계를 연결하세요 — 분쇄기입니다.\n\n자세한 내용은 에너지와 가공 항목에 있습니다."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy_basics",
+      "title": "에너지 기초",
+      "icon": "alaindustrial:copper_cable",
+      "entries": [
+        {
+          "id": "eu_basics",
+          "title": "EU란?",
+          "icon": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "EU 에너지",
+              "text": "EU(에너지 단위)는 이 모드의 에너지 단위입니다. 발전기가 EU를 생산하고, 케이블이 전송하며, 저장 블록이 보관하고, 기계가 소비합니다. 바닐라 레드스톤과는 별개의 시스템입니다."
+            },
+            {
+              "type": "text",
+              "title": "전압 등급",
+              "text": "에너지는 틱당 전압으로 제한된 패킷 단위로 흐릅니다:\n• LV — 최대 32 EU/틱 (기본 블록)\n• MV — 최대 128 EU/틱\n• HV — 최대 512 EU/틱\n\n등급의 한계는 틱당 처리량이며 파괴 임계값이 아닙니다: 블록은 '과전압'으로 파괴되지 않습니다."
+            },
+            {
+              "type": "text",
+              "title": "케이블",
+              "text": "케이블은 블록을 전력망으로 연결하고 EU를 운반합니다. 구리 케이블은 거리에 따라 에너지를 잃습니다 — 배선이 길수록 손실이 커집니다. 배선을 짧게 유지하거나 소비자 가까이에 저장 블록을 두세요."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy",
+      "title": "에너지",
+      "icon": "alaindustrial:wind_mill",
+      "entries": [
+        {
+          "id": "wind_mill",
+          "title": "풍력 터빈",
+          "icon": "alaindustrial:wind_mill",
+          "block_id": "alaindustrial:wind_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "풍력 터빈",
+              "text": "기본 LV 풍력 터빈 — 연료 없이 바람에서 EU를 생산합니다; 더 높은 곳과 궂은 날씨에 지으면 더 많은 전력을 얻습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 0–8 EU/t",
+                "버퍼: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:wind_mill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "water_mill",
+          "title": "물레방아",
+          "icon": "alaindustrial:water_mill",
+          "block_id": "alaindustrial:water_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "물레방아",
+              "text": "수동형 LV 발전기 — 연료나 탱크 없이 블록 주변의 물에서 EU를 생산합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 0–4 EU/t",
+                "버퍼: 4000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "generator",
+          "title": "발전기",
+          "icon": "alaindustrial:generator",
+          "block_id": "alaindustrial:generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "발전기",
+              "text": "간단한 석탄 및 고체 연료 발전기 — 첫 기계를 위한 입문용 LV EU 공급원입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 8 EU/t",
+                "버퍼: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:furnace",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geothermal_generator",
+          "title": "지열 발전기",
+          "icon": "alaindustrial:geothermal_generator",
+          "block_id": "alaindustrial:geothermal_generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "지열 발전기",
+              "text": "용암에서 EU를 생산합니다 — 석탄 발전기보다 강력하며 훨씬 덜 자주 보충하면 됩니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 16 EU/t",
+                "버퍼: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:generator",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:geothermal_generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "daylight_solar_panel",
+          "title": "햇빛 태양광 패널",
+          "icon": "alaindustrial:daylight_solar_panel",
+          "block_id": "alaindustrial:daylight_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "햇빛 태양광 패널",
+              "text": "T2 낮 패널 — 기본형보다 4배 강력하며, 열린 하늘 아래 낮에 작동합니다; 진화로만 얻을 수 있습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 4 EU/t (낮)",
+                "버퍼: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "moonlit_solar_panel",
+          "title": "달빛 태양광 패널",
+          "icon": "alaindustrial:moonlit_solar_panel",
+          "block_id": "alaindustrial:moonlit_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "달빛 태양광 패널",
+              "text": "T2 밤 패널 — 열린 하늘 아래 밤에 EU를 생산하고 궂은 날씨에도 소량 생산합니다; 진화로만 얻을 수 있습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 3 EU/t (밤)",
+                "버퍼: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "solar_panel",
+          "title": "태양광 패널",
+          "icon": "alaindustrial:solar_panel",
+          "block_id": "alaindustrial:solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "태양광 패널",
+              "text": "모드의 첫 전력원 — 열린 하늘 아래 낮에 EU를 생산합니다; 모든 에너지 사슬이 시작되는 곳입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 1 EU/t (낮)",
+                "버퍼: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:copper_cable",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:solar_panel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_box",
+          "title": "배터리 박스",
+          "icon": "alaindustrial:battery_box",
+          "block_id": "alaindustrial:battery_box",
+          "pages": [
+            {
+              "type": "text",
+              "title": "배터리 박스",
+              "text": "입문용 LV 저장 블록 — 20 000 EU를 보관하며, 발전기의 잉여 전력을 저장했다가 32 EU/틱으로 기계에 공급합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 20 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:battery_box",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "절연 구리 케이블",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "절연 구리 케이블",
+              "text": "양털로 감싼 구리 LV 케이블 — 안전한 인접 배치와 기계 옆 촘촘한 배선에 사용합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: ≤32 EU/패킷"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "절연 주석 케이블",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "절연 주석 케이블",
+              "text": "양털로 감싼 주석 LV 케이블 — 안전한 인접 배치를 위한 가장 저렴한 절연 배선입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: ≤32 EU/패킷"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "copper_cable",
+          "title": "구리 케이블",
+          "icon": "alaindustrial:copper_cable",
+          "block_id": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "구리 케이블",
+              "text": "초반 에너지망을 위한 저렴하고 든든한 LV 케이블 — 태양광 패널, 배터리, 기계를 하나의 선으로 연결합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: ≤32 EU/패킷"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:copper_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "tin_cable",
+          "title": "주석 케이블",
+          "icon": "alaindustrial:tin_cable",
+          "block_id": "alaindustrial:tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "주석 케이블",
+              "text": "가장 저렴한 LV 케이블 — 단일 기계와 약한 발전기로 이어지는 가늘고 저전력인 배선에 사용합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: ≤32 EU/패킷"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "processing",
+      "title": "가공",
+      "icon": "alaindustrial:macerator",
+      "entries": [
+        {
+          "id": "macerator",
+          "title": "분쇄기",
+          "icon": "alaindustrial:macerator",
+          "block_id": "alaindustrial:macerator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "분쇄기",
+              "text": "광석(블록과 원석 모두)을 가루 2개로 분쇄하며, LV 등급으로 EU를 소비합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 300 EU/작업",
+                "버퍼: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:macerator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_furnace",
+          "title": "철 화로",
+          "icon": "alaindustrial:iron_furnace",
+          "block_id": "alaindustrial:iron_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "철 화로",
+              "text": "바닐라와 전기 화로 사이의 개량형 연료 화로 — 바닐라보다 빠르지만 여전히 연료 기반이며 EU가 필요 없습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:furnace",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "compressor",
+          "title": "압축기",
+          "icon": "alaindustrial:compressor",
+          "block_id": "alaindustrial:compressor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "압축기",
+              "text": "원재료를 더 조밀한 형태로 압축합니다 — 금속 가루를 주괴로, 석탄/보석 가루를 다시 아이템으로, 얼음을 크렁크/파란 얼음으로, 사탕수수를 종이로. 비금속의 2배 순환을 완성합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 260 EU/작업",
+                "버퍼: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:piston",
+                "alaindustrial:electronic_circuit",
+                "minecraft:piston",
+                "minecraft:stone",
+                "alaindustrial:silver_ingot",
+                "minecraft:stone"
+              ],
+              "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "extractor",
+          "title": "추출기",
+          "icon": "alaindustrial:extractor",
+          "block_id": "alaindustrial:extractor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "추출기",
+              "text": "원료에서 유용한 재료를 뽑아냅니다 — 꽃에서 염료 ×2, 호박/수박에서 더 많은 씨앗, 블레이즈 막대에서 블레이즈 가루, 자갈에서 부싯돌. 깔때기로 공급하는 자동 농장에 유용합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 240 EU/작업",
+                "버퍼: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:hopper",
+                "alaindustrial:electronic_circuit",
+                "minecraft:hopper",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_furnace",
+          "title": "전기 화로",
+          "icon": "alaindustrial:electric_furnace",
+          "block_id": "alaindustrial:electric_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "전기 화로",
+              "text": "바닐라 화로가 제련하는 모든 것에 더해 모드의 가루를 주괴로 제련합니다. 연료 대신 EU로 작동합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 200 EU/작업",
+                "버퍼: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_furnace",
+                "alaindustrial:battery",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electric_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "pump",
+          "title": "펌프",
+          "icon": "alaindustrial:pump",
+          "block_id": "alaindustrial:pump",
+          "pages": [
+            {
+              "type": "text",
+              "title": "펌프",
+              "text": "월드나 인접한 탱크에서 유체를 뽑아 10양동이 용량의 내부 탱크에 담고 수신처로 밀어 보내는 LV 펌프입니다; 캡슐 및 다른 모드의 용기와 유체를 주고받습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:pump",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "logistics",
+      "title": "물류",
+      "icon": "alaindustrial:item_pipe",
+      "entries": [
+        {
+          "id": "item_pipe",
+          "title": "아이템 파이프",
+          "icon": "alaindustrial:item_pipe",
+          "block_id": "alaindustrial:item_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "아이템 파이프",
+              "text": "인벤토리 간에 아이템을 옮기는 수동형 멀티파트 파이프입니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_gear",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:item_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "fluid_tank",
+          "title": "휴대용 유체 탱크",
+          "icon": "alaindustrial:fluid_tank",
+          "block_id": "alaindustrial:fluid_tank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "휴대용 유체 탱크",
+              "text": "유체 수위가 보이고, 여섯 면에서 유체를 주고받으며, 옮겨도 내용물이 유지되는 수동형 8양동이 탱크입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 양동이 10개"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:iron_gear",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_tank",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "world_automation",
+      "title": "월드 및 자동화",
+      "icon": "alaindustrial:tempered_iron_block",
+      "entries": [
+        {
+          "id": "tempered_iron_block",
+          "title": "담금질된 철 블록",
+          "icon": "alaindustrial:tempered_iron_block",
+          "block_id": "alaindustrial:tempered_iron_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "담금질된 철 블록",
+              "text": "담금질된 철 주괴 9개로 이루어진 압축 블록 — 금속을 한 칸에 보관하며 작업대에서 손실 없이 제작하고 되돌릴 수 있습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "nickel_ore",
+          "title": "니켈 광석",
+          "icon": "alaindustrial:nickel_ore",
+          "block_id": "alaindustrial:nickel_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "니켈 광석",
+              "text": "모드 금속 중 가장 희귀한 것 — 월드의 광석과 원석 → 가루 → 주괴 사슬; MV 합금과 기계 케이스의 재료입니다."
+            }
+          ]
+        },
+        {
+          "id": "tin_ore",
+          "title": "주석 광석",
+          "icon": "alaindustrial:tin_ore",
+          "block_id": "alaindustrial:tin_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "주석 광석",
+              "text": "초반 모드 금속 — 월드의 광석과 원석 → 가루 → 주괴 사슬; LV 배선과 회로의 기본 재료입니다."
+            }
+          ]
+        },
+        {
+          "id": "silver_ore",
+          "title": "은 광석",
+          "icon": "alaindustrial:silver_ore",
+          "block_id": "alaindustrial:silver_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "은 광석",
+              "text": "희귀한 모드 광석 금속 — 광석 블록과 원석 → 가루 → 주괴 사슬; 중급 회로와 부품의 재료입니다."
+            }
+          ]
+        },
+        {
+          "id": "uranium_ore",
+          "title": "우라늄 광석",
+          "icon": "alaindustrial:uranium_ore",
+          "block_id": "alaindustrial:uranium_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "우라늄 광석",
+              "text": "모드에서 가장 희귀한 광석 — 철 곡괭이로 채굴하며, 가루와 주괴로 가공됩니다; 미래의 원자력 기계용으로 예약되어 있습니다."
+            }
+          ]
+        },
+        {
+          "id": "teleporter",
+          "title": "텔레포터",
+          "icon": "alaindustrial:teleporter",
+          "block_id": "alaindustrial:teleporter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "텔레포터",
+              "text": "HV 고정 스테이션과 휴대용 리모컨 — Shift+우클릭으로 연결하며, 예열 시간과 함께 많은 EU를 소비해 플레이어를 스테이션으로 텔레포트시키고, 안전한 착지와 사생활 보호를 제공합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 500 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:electronic_circuit",
+                "minecraft:ender_eye",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:diamond_block",
+                "alaindustrial:copper_coil",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot"
+              ],
+              "result_id": "alaindustrial:teleporter",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "title": "기타",
+      "icon": "alaindustrial:iron_chest",
+      "entries": [
+        {
+          "id": "iron_chest",
+          "title": "철 상자",
+          "icon": "alaindustrial:iron_chest",
+          "block_id": "alaindustrial:iron_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "철 상자",
+              "text": "36칸 상자 — 바닐라보다 한 줄 더 많으며, 3D 모델, 애니메이션 뚜껑, 고유한 소리를 갖췄습니다. 에너지가 필요 없습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 36칸"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "#minecraft:copper_chests",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "enriched_uranium_torch",
+          "title": "농축 우라늄 횃불",
+          "icon": "alaindustrial:enriched_uranium_torch",
+          "block_id": "alaindustrial:enriched_uranium_torch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "농축 우라늄 횃불",
+              "text": "초록 불꽃과 밝기 14의 장식용 횃불 — 물속에서도 탑니다. 에너지가 필요 없습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:uranium_dust",
+                "",
+                "",
+                "#minecraft:coals",
+                "",
+                "",
+                "minecraft:stick",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:enriched_uranium_torch",
+              "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "stock_display_frame",
+          "title": "재고 표시 액자",
+          "icon": "alaindustrial:stock_display_frame",
+          "block_id": "alaindustrial:stock_display_frame",
+          "pages": [
+            {
+              "type": "text",
+              "title": "재고 표시 액자",
+              "text": "상자에 거는 액자 — 안에 든 아이템 개수를 액자에 바로 표시합니다. 에너지가 필요 없으며; 숫자는 액자에 필터 아이템을 넣어야만 보입니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust",
+                "alaindustrial:silver_ingot",
+                "minecraft:item_frame",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust"
+              ],
+              "result_id": "alaindustrial:stock_display_frame",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "silver_chest",
+          "title": "은 상자",
+          "icon": "alaindustrial:silver_chest",
+          "block_id": "alaindustrial:silver_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "은 상자",
+              "text": "45칸 상자 — 철보다 한 단계 위(한 줄 더 많음)이며, 3D 모델과 애니메이션 뚜껑을 갖췄습니다. 에너지가 필요 없습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 45칸"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_chest",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:silver_chest",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "items",
+      "title": "아이템",
+      "icon": "alaindustrial:mute_chip",
+      "entries": [
+        {
+          "id": "mute_chip",
+          "title": "소음 차단 칩",
+          "icon": "alaindustrial:mute_chip",
+          "block_id": "alaindustrial:mute_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "소음 차단 칩",
+              "text": "기계를 완전히 무음으로 만드는 업그레이드 — 업그레이드 칸에 넣습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "alaindustrial:empty_chip",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool"
+              ],
+              "result_id": "alaindustrial:mute_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery",
+          "title": "배터리",
+          "icon": "alaindustrial:battery",
+          "block_id": "alaindustrial:battery",
+          "pages": [
+            {
+              "type": "text",
+              "title": "배터리",
+              "text": "비활성 에너지 셀 — 에너지 팩을 제작하는 데 쓰이는 미가공품이며; 자체로는 EU를 담지 않습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "",
+                "alaindustrial:copper_cable",
+                "",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:battery",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron",
+          "title": "담금질된 철",
+          "icon": "alaindustrial:tempered_iron",
+          "block_id": "alaindustrial:tempered_iron",
+          "pages": [
+            {
+              "type": "text",
+              "title": "담금질된 철",
+              "text": "바닐라 철 주괴로 제련한 주괴 — 모드의 도구, 방어구, 블록의 기본 재료입니다."
+            }
+          ]
+        },
+        {
+          "id": "copper_coil",
+          "title": "구리 코일",
+          "icon": "alaindustrial:copper_coil",
+          "block_id": "alaindustrial:copper_coil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "구리 코일",
+              "text": "제작 부품 — 주석 심에 감은 구리 케이블; 전동 드릴 제작에 필요합니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:copper_coil",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_gear",
+          "title": "철 톱니바퀴",
+          "icon": "alaindustrial:iron_gear",
+          "block_id": "alaindustrial:iron_gear",
+          "pages": [
+            {
+              "type": "text",
+              "title": "철 톱니바퀴",
+              "text": "톱니바퀴 계열 — 돌, 철, 금, 은; 앞으로 추가될 기계용 제작 부품입니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "alaindustrial:wooden_gear",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "empty_chip",
+          "title": "빈 칩",
+          "icon": "alaindustrial:empty_chip",
+          "block_id": "alaindustrial:empty_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "빈 칩",
+              "text": "기계 업그레이드 칩의 미가공 기반; 자체로는 효과가 없습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:empty_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "나무 회전날",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "나무 회전날",
+              "text": "풍력 터빈 날개 — 모든 T1/T2 풍력 터빈의 회전날 칸에 넣습니다; 없으면 발전하지 않습니다. 칸에 있는 동안 소모되지 않습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "network_analyzer",
+          "title": "네트워크 분석기",
+          "icon": "alaindustrial:network_analyzer",
+          "block_id": "alaindustrial:network_analyzer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "네트워크 분석기",
+              "text": "휴대용 진단 도구 — 케이블을 우클릭하면 해당 전력망의 정보를 보고 월드에서 강조 표시합니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:network_analyzer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_dust",
+          "title": "철 가루",
+          "icon": "alaindustrial:iron_dust",
+          "block_id": "alaindustrial:iron_dust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "철 가루",
+              "text": "가루와 관련 중간재(판, 빌릿) — 분쇄기와 다른 기계가 광석을 바꿔 만드는 것들입니다."
+            }
+          ]
+        },
+        {
+          "id": "alignment_chip_day",
+          "title": "태양광 진화 칩",
+          "icon": "alaindustrial:alignment_chip_day",
+          "block_id": "alaindustrial:alignment_chip_day",
+          "pages": [
+            {
+              "type": "text",
+              "title": "태양광 진화 칩",
+              "text": "진화 칩 한 쌍 — 태양(낮)과 달(밤) — 기본 T1 태양광 패널과 풍력 터빈을 진화로 T2로 진화시키며, 축적된 NBT 에너지를 그대로 이어받습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot"
+              ],
+              "result_id": "alaindustrial:alignment_chip_day",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electronic_circuit",
+          "title": "전자 회로",
+          "icon": "alaindustrial:electronic_circuit",
+          "block_id": "alaindustrial:electronic_circuit",
+          "pages": [
+            {
+              "type": "text",
+              "title": "전자 회로",
+              "text": "기본 제작 부품 — 거의 모든 LV 기계와 저장 블록의 '두뇌'입니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:quartz",
+                "minecraft:emerald",
+                "minecraft:quartz",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electronic_circuit",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_pouch",
+          "title": "배터리 주머니",
+          "icon": "alaindustrial:battery_pouch",
+          "block_id": "alaindustrial:battery_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "배터리 주머니",
+              "text": "충전 가능한 아이템 주머니 — 무게 128을 담고, 내장된 2000 EU 배터리로 작동하며 충전이 떨어지면 잠깁니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 2 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather",
+                "minecraft:leather",
+                "minecraft:bundle",
+                "minecraft:leather",
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:battery_pouch",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_chestplate",
+          "title": "담금질 철 흉갑",
+          "icon": "alaindustrial:tempered_iron_chestplate",
+          "block_id": "alaindustrial:tempered_iron_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "담금질 철 흉갑",
+              "text": "담금질 철 방어구 풀 세트 — 투구, 흉갑, 각반, 부츠; 철보다 튼튼하며 담금질된 철로 수리합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 4개"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "vacuum_capsule",
+          "title": "진공 캡슐",
+          "icon": "alaindustrial:vacuum_capsule",
+          "block_id": "alaindustrial:vacuum_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "진공 캡슐",
+              "text": "겹쳐 쌓을 수 있는 1양동이 유체 용기 — 한 묶음에 같은 유체 캡슐을 최대 16개까지, 월드나 모드의 탱크에서 채웁니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone"
+              ],
+              "result_id": "alaindustrial:vacuum_capsule",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "wrench",
+          "title": "렌치",
+          "icon": "alaindustrial:wrench",
+          "block_id": "alaindustrial:wrench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "렌치",
+              "text": "아이템 파이프 면을 설정하고 모드의 블록을 분해합니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "alaindustrial:iron_gear",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:wrench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_pickaxe",
+          "title": "담금질 철 곡괭이",
+          "icon": "alaindustrial:tempered_iron_pickaxe",
+          "block_id": "alaindustrial:tempered_iron_pickaxe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "담금질 철 곡괭이",
+              "text": "휴대용 담금질 철 곡괭이 — 모든 능력치에서 바닐라 철보다 약간 낫지만, 다이아몬드 등급 블록은 채굴할 수 없습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "minecraft:stick",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_tools",
+          "title": "담금질 철 도구",
+          "icon": "alaindustrial:tempered_iron_tools",
+          "block_id": "alaindustrial:tempered_iron_tools",
+          "pages": [
+            {
+              "type": "text",
+              "title": "담금질 철 도구",
+              "text": "담금질된 철로 만든 손도구 다섯 종 세트 — 곡괭이, 도끼, 괭이, 삽, 검; 바닐라 철보다 약간 낫지만, 다이아몬드 등급 블록은 채굴할 수 없습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 5개"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scythe",
+          "title": "큰낫",
+          "icon": "alaindustrial:scythe",
+          "block_id": "alaindustrial:scythe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "큰낫",
+              "text": "한 번 휘둘러 나뭇잎, 풀, 꽃, 그 밖의 장식용 초목을 광역으로 베는 도구이며, Shift를 누르면 다 자란 작물을 수확하는 광역 낫이 됩니다. 나무부터 네더라이트까지 여덟 가지 재료 등급이 있습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 8등급"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "teleporter_remote",
+          "title": "텔레포터 리모컨",
+          "icon": "alaindustrial:teleporter_remote",
+          "block_id": "alaindustrial:teleporter_remote",
+          "pages": [
+            {
+              "type": "text",
+              "title": "텔레포터 리모컨",
+              "text": "휴대용 신호기 리모컨 — Shift+우클릭으로 텔레포터 스테이션에 연결하고, 스테이션이 지불하는 EU로 그곳으로 점프합니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "",
+                "minecraft:ender_pearl",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                ""
+              ],
+              "result_id": "alaindustrial:teleporter_remote",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_drill",
+          "title": "전동 드릴",
+          "icon": "alaindustrial:electric_drill",
+          "block_id": "alaindustrial:electric_drill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "전동 드릴",
+              "text": "EU로 작동하는 충전식 다이아몬드 등급 곡괭이 — 충전되어 있으면 다이아몬드처럼 채굴하고, 블록당 EU를 소비하며, 절대 부서지지 않습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_pickaxe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "energy_pack",
+          "title": "에너지 팩",
+          "icon": "alaindustrial:energy_pack",
+          "block_id": "alaindustrial:energy_pack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "에너지 팩",
+              "text": "흉갑 칸에 착용하는 EU 버퍼 — 20 000 EU로 인벤토리의 전기 아이템을 계속 충전 상태로 유지합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 30 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:energy_pack",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

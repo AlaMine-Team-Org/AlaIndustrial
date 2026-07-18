@@ -1,0 +1,1631 @@
+{
+  "locale": "uk_ua",
+  "version": 1,
+  "generated_from": "OKF docs/blocks",
+  "tabs": [
+    {
+      "id": "getting_started",
+      "title": "З чого почати",
+      "icon": "alaindustrial:guide_book",
+      "entries": [
+        {
+          "id": "welcome",
+          "title": "Ласкаво просимо",
+          "icon": "alaindustrial:guide_book",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ласкаво просимо",
+              "text": "Це путівник по моду Ala Industrial — енергія EU, генератори, машини та кабелі.\n\nОбирайте розділ ліворуч, гортайте сторінки стрілками. Кнопка «Відкрити вікі» вгорі веде на повний сайт-путівник."
+            },
+            {
+              "type": "text",
+              "title": "Перші кроки",
+              "text": "1. Добудьте руду мода — почніть з олова.\n2. Поставте Сонячну панель — найпростіший генератор.\n3. Простягніть до неї мідний кабель.\n4. Підключіть першу машину — Подрібнювач.\n\nДеталі — у розділах «Енергія» та «Переробка»."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy_basics",
+      "title": "Основи енергії",
+      "icon": "alaindustrial:copper_cable",
+      "entries": [
+        {
+          "id": "eu_basics",
+          "title": "Що таке EU",
+          "icon": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Енергія EU",
+              "text": "EU (Energy Unit) — одиниця енергії мода. Генератори виробляють EU, кабелі передають, сховища зберігають, машини витрачають. Це окрема від ванільного редстоуну система."
+            },
+            {
+              "type": "text",
+              "title": "Тіри напруги",
+              "text": "Енергія тече пакетами з обмеженням напруги за тік:\n• LV — до 32 EU/тік (базові блоки)\n• MV — до 128 EU/тік\n• HV — до 512 EU/тік\n\nЛіміт тіру — це пропускна здатність за тік, а не поріг руйнування: блоки не ламаються від «перенапруги»."
+            },
+            {
+              "type": "text",
+              "title": "Кабелі",
+              "text": "Кабелі з’єднують блоки в енергомережу та передають EU. Мідний кабель втрачає енергію на відстані — що довша лінія, то більше втрат. Тримайте лінії короткими або ставте сховище ближче до споживача."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "energy",
+      "title": "Енергія",
+      "icon": "alaindustrial:wind_mill",
+      "entries": [
+        {
+          "id": "wind_mill",
+          "title": "Вітротурбіна",
+          "icon": "alaindustrial:wind_mill",
+          "block_id": "alaindustrial:wind_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Вітротурбіна",
+              "text": "Базова вітротурбіна LV — виробляє EU від вітру без палива; будуйте вище та в негоду — отримаєте більше енергії."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 0–8 EU/t",
+                "Буфер: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:wind_mill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "water_mill",
+          "title": "Водяний млин",
+          "icon": "alaindustrial:water_mill",
+          "block_id": "alaindustrial:water_mill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Водяний млин",
+              "text": "Пасивний генератор LV — виробляє EU від води навколо блока, без палива й баків."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 0–4 EU/t",
+                "Буфер: 4000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "generator",
+          "title": "Генератор",
+          "icon": "alaindustrial:generator",
+          "block_id": "alaindustrial:generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Генератор",
+              "text": "Простий генератор на вугіллі та твердому паливі — стартове джерело EU тіру LV для перших машин."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 8 EU/t",
+                "Буфер: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:furnace",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "geothermal_generator",
+          "title": "Геотермальний генератор",
+          "icon": "alaindustrial:geothermal_generator",
+          "block_id": "alaindustrial:geothermal_generator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Геотермальний генератор",
+              "text": "Виробляє EU з лави — потужніший за вугільний генератор і потребує дозаправки значно рідше."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 16 EU/t",
+                "Буфер: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:generator",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:geothermal_generator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "daylight_solar_panel",
+          "title": "Денна сонячна панель",
+          "icon": "alaindustrial:daylight_solar_panel",
+          "block_id": "alaindustrial:daylight_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Денна сонячна панель",
+              "text": "Денна панель T2 — вчетверо потужніша за базову, працює вдень під відкритим небом; отримується лише еволюцією."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 4 EU/t (день)",
+                "Буфер: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "moonlit_solar_panel",
+          "title": "Місячна сонячна панель",
+          "icon": "alaindustrial:moonlit_solar_panel",
+          "block_id": "alaindustrial:moonlit_solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Місячна сонячна панель",
+              "text": "Нічна панель T2 — виробляє EU вночі під відкритим небом і навіть трохи жевріє в негоду; отримується лише еволюцією."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 3 EU/t (ніч)",
+                "Буфер: 8000 EU"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "solar_panel",
+          "title": "Сонячна панель",
+          "icon": "alaindustrial:solar_panel",
+          "block_id": "alaindustrial:solar_panel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Сонячна панель",
+              "text": "Перше джерело енергії мода — виробляє EU вдень під відкритим небом; з нього починається вся енергетика."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 1 EU/t (день)",
+                "Буфер: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:copper_cable",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:solar_panel",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_box",
+          "title": "Енергосховище",
+          "icon": "alaindustrial:battery_box",
+          "block_id": "alaindustrial:battery_box",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Енергосховище",
+              "text": "Стартовий блок-сховище LV — вміщує 20 000 EU, накопичує надлишок від генератора й віддає його машинам по 32 EU/тік."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 20 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:battery_box",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "Ізольований мідний кабель",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ізольований мідний кабель",
+              "text": "Мідний кабель LV, обгорнутий вовною, — для безпечного сусідства та щільної проводки впритул до машин."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: ≤32 EU/пакет"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "Ізольований олов’яний кабель",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ізольований олов’яний кабель",
+              "text": "Олов’яний кабель LV, обгорнутий вовною, — найдешевший ізольований провід для безпечного сусідства."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: ≤32 EU/пакет"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "copper_cable",
+          "title": "Мідний кабель",
+          "icon": "alaindustrial:copper_cable",
+          "block_id": "alaindustrial:copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Мідний кабель",
+              "text": "Дешевий робочий кабель LV для ранніх енергомереж — з’єднує сонячні панелі, акумулятори та машини в одну лінію."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: ≤32 EU/пакет"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:copper_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "tin_cable",
+          "title": "Олов’яний кабель",
+          "icon": "alaindustrial:tin_cable",
+          "block_id": "alaindustrial:tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Олов’яний кабель",
+              "text": "Найдешевший кабель LV — для тонких малопотужних ліній до окремих машин і слабких генераторів."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: ≤32 EU/пакет"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "processing",
+      "title": "Переробка",
+      "icon": "alaindustrial:macerator",
+      "entries": [
+        {
+          "id": "macerator",
+          "title": "Подрібнювач",
+          "icon": "alaindustrial:macerator",
+          "block_id": "alaindustrial:macerator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Подрібнювач",
+              "text": "Подрібнює руду (і блоки, і необроблену руду) на дві порції пилу, витрачаючи EU на тірі LV."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 300 EU/оп",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:flint",
+                "minecraft:cobblestone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:macerator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_furnace",
+          "title": "Залізна піч",
+          "icon": "alaindustrial:iron_furnace",
+          "block_id": "alaindustrial:iron_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Залізна піч",
+              "text": "Покращена паливна піч між ванільною та Електричною піччю — швидша за ванільну, все ще на паливі, без EU."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:furnace",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "compressor",
+          "title": "Компресор",
+          "icon": "alaindustrial:compressor",
+          "block_id": "alaindustrial:compressor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Компресор",
+              "text": "Стискає сировину в щільніші форми — металевий пил у злитки, вугільний/самоцвітний пил назад у предмети, лід у щільний/блакитний лід, цукрову тростину в папір. Замикає цикл подвоєння для неметалів."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 260 EU/оп",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:stone",
+                "minecraft:piston",
+                "alaindustrial:electronic_circuit",
+                "minecraft:piston",
+                "minecraft:stone",
+                "alaindustrial:silver_ingot",
+                "minecraft:stone"
+              ],
+              "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "extractor",
+          "title": "Екстрактор",
+          "icon": "alaindustrial:extractor",
+          "block_id": "alaindustrial:extractor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Екстрактор",
+              "text": "Витягує корисне із сировини — ×2 барвника з квітів, більше насіння з гарбуза/кавуна, вогняний порошок зі стрижнів, кремінь із гравію. Зручний для автоферм на лійках."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 240 EU/оп",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:cobblestone",
+                "minecraft:hopper",
+                "alaindustrial:electronic_circuit",
+                "minecraft:hopper",
+                "minecraft:cobblestone",
+                "alaindustrial:silver_ingot",
+                "minecraft:cobblestone"
+              ],
+              "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_furnace",
+          "title": "Електрична піч",
+          "icon": "alaindustrial:electric_furnace",
+          "block_id": "alaindustrial:electric_furnace",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Електрична піч",
+              "text": "Плавить усе, що й ванільна піч, плюс пил мода в злитки. Живиться EU замість палива."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 200 EU/оп",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_furnace",
+                "alaindustrial:battery",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electric_furnace",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "pump",
+          "title": "Помпа",
+          "icon": "alaindustrial:pump",
+          "block_id": "alaindustrial:pump",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Помпа",
+              "text": "Помпа LV — відкачує рідину зі світу або сусідніх баків у внутрішній бак на 10 відер і подає далі приймачам; обмінюється рідиною з капсулами та ємностями інших модів."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:pump",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "logistics",
+      "title": "Логістика",
+      "icon": "alaindustrial:item_pipe",
+      "entries": [
+        {
+          "id": "item_pipe",
+          "title": "Предметна труба",
+          "icon": "alaindustrial:item_pipe",
+          "block_id": "alaindustrial:item_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Предметна труба",
+              "text": "Пасивна багаточастинна труба, що переносить предмети між інвентарями."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_gear",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:item_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "fluid_tank",
+          "title": "Переносний бак для рідини",
+          "icon": "alaindustrial:fluid_tank",
+          "block_id": "alaindustrial:fluid_tank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Переносний бак для рідини",
+              "text": "Пасивний бак на 8 відер з видимим рівнем рідини, підключенням з усіх шести граней і збереженням вмісту під час перенесення."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 10 відер"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:iron_gear",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_tank",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "world_automation",
+      "title": "Світ і автоматизація",
+      "icon": "alaindustrial:tempered_iron_block",
+      "entries": [
+        {
+          "id": "tempered_iron_block",
+          "title": "Блок загартованого заліза",
+          "icon": "alaindustrial:tempered_iron_block",
+          "block_id": "alaindustrial:tempered_iron_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Блок загартованого заліза",
+              "text": "Компактний блок із 9 злитків загартованого заліза — зберігає метал в одному слоті, збирається й розбирається на верстаку без втрат."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "nickel_ore",
+          "title": "Нікелева руда",
+          "icon": "alaindustrial:nickel_ore",
+          "block_id": "alaindustrial:nickel_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Нікелева руда",
+              "text": "Найрідкісніший із металів мода — руда у світі та ланцюг необроблене → пил → злиток; матеріал для сплавів MV і корпусів машин."
+            }
+          ]
+        },
+        {
+          "id": "tin_ore",
+          "title": "Олов’яна руда",
+          "icon": "alaindustrial:tin_ore",
+          "block_id": "alaindustrial:tin_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Олов’яна руда",
+              "text": "Ранній метал мода — руда у світі та ланцюг необроблене → пил → злиток; базовий матеріал для проводів і схем LV."
+            }
+          ]
+        },
+        {
+          "id": "silver_ore",
+          "title": "Срібна руда",
+          "icon": "alaindustrial:silver_ore",
+          "block_id": "alaindustrial:silver_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Срібна руда",
+              "text": "Рідкісний рудний метал мода — рудний блок та ланцюг необроблене → пил → злиток; матеріал для схем і компонентів середнього тіру."
+            }
+          ]
+        },
+        {
+          "id": "uranium_ore",
+          "title": "Уранова руда",
+          "icon": "alaindustrial:uranium_ore",
+          "block_id": "alaindustrial:uranium_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Уранова руда",
+              "text": "Найрідкісніша руда мода — добувається залізним кайлом, переробляється в пил і злиток; зарезервована під майбутні ядерні машини."
+            }
+          ]
+        },
+        {
+          "id": "teleporter",
+          "title": "Телепорт",
+          "icon": "alaindustrial:teleporter",
+          "block_id": "alaindustrial:teleporter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Телепорт",
+              "text": "Станція-якір HV і ручний пульт — прив’язуються через shift-ПКМ, телепортують гравця до станції за велику витрату EU з розігрівом, безпечним приземленням і захистом приватності."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 500 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:electronic_circuit",
+                "minecraft:ender_eye",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:diamond_block",
+                "alaindustrial:copper_coil",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot",
+                "alaindustrial:uranium_ingot"
+              ],
+              "result_id": "alaindustrial:teleporter",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "other",
+      "title": "Інше",
+      "icon": "alaindustrial:iron_chest",
+      "entries": [
+        {
+          "id": "iron_chest",
+          "title": "Залізна скриня",
+          "icon": "alaindustrial:iron_chest",
+          "block_id": "alaindustrial:iron_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Залізна скриня",
+              "text": "Скриня на 36 слотів — на ряд більша за ванільну, з 3D-моделлю, анімованою кришкою та власним звуком. Енергії не потребує."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 36 слотів"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "#minecraft:copper_chests",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:iron_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "enriched_uranium_torch",
+          "title": "Збагачений урановий смолоскип",
+          "icon": "alaindustrial:enriched_uranium_torch",
+          "block_id": "alaindustrial:enriched_uranium_torch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Збагачений урановий смолоскип",
+              "text": "Декоративний смолоскип із зеленим полум’ям і рівнем світла 14 — горить навіть під водою. Енергії не потребує."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:uranium_dust",
+                "",
+                "",
+                "#minecraft:coals",
+                "",
+                "",
+                "minecraft:stick",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:enriched_uranium_torch",
+              "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "stock_display_frame",
+          "title": "Рамка-індикатор",
+          "icon": "alaindustrial:stock_display_frame",
+          "block_id": "alaindustrial:stock_display_frame",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Рамка-індикатор",
+              "text": "Рамка, яку вішають на скриню, — показує прямо на собі кількість предметів усередині. Енергії не потребує; число видно лише з предметом-фільтром у рамці."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust",
+                "alaindustrial:silver_ingot",
+                "minecraft:item_frame",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:gold_dust",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:gold_dust"
+              ],
+              "result_id": "alaindustrial:stock_display_frame",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "silver_chest",
+          "title": "Срібна скриня",
+          "icon": "alaindustrial:silver_chest",
+          "block_id": "alaindustrial:silver_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Срібна скриня",
+              "text": "Скриня на 45 слотів — тір вище за залізну (на ряд більша), з 3D-моделлю та анімованою кришкою. Енергії не потребує."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 45 слотів"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_chest",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:silver_chest",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "items",
+      "title": "Предмети",
+      "icon": "alaindustrial:mute_chip",
+      "entries": [
+        {
+          "id": "mute_chip",
+          "title": "Чип-глушник",
+          "icon": "alaindustrial:mute_chip",
+          "block_id": "alaindustrial:mute_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Чип-глушник",
+              "text": "Покращення, що повністю глушить машину, — вставляється в слот покращень."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "alaindustrial:empty_chip",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool",
+                "#minecraft:wool"
+              ],
+              "result_id": "alaindustrial:mute_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery",
+          "title": "Батарея",
+          "icon": "alaindustrial:battery",
+          "block_id": "alaindustrial:battery",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Батарея",
+              "text": "Інертний енергоелемент — заготовка, з якої крафтиться Енергоранець; сам по собі EU не зберігає."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "",
+                "alaindustrial:copper_cable",
+                "",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:battery",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron",
+          "title": "Загартоване залізо",
+          "icon": "alaindustrial:tempered_iron",
+          "block_id": "alaindustrial:tempered_iron",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Загартоване залізо",
+              "text": "Злиток, виплавлений із ванільного залізного злитка, — базовий матеріал для інструментів, броні та блока мода."
+            }
+          ]
+        },
+        {
+          "id": "copper_coil",
+          "title": "Мідна котушка",
+          "icon": "alaindustrial:copper_coil",
+          "block_id": "alaindustrial:copper_coil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Мідна котушка",
+              "text": "Крафт-компонент — мідний кабель, намотаний на олов’яний сердечник; гейт для Електробура."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:copper_coil",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_gear",
+          "title": "Залізна шестірня",
+          "icon": "alaindustrial:iron_gear",
+          "block_id": "alaindustrial:iron_gear",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Залізна шестірня",
+              "text": "Родина шестірень — кам’яна, залізна, золота та срібна; крафт-компоненти для майбутніх механізмів."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "alaindustrial:wooden_gear",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "empty_chip",
+          "title": "Порожній чип",
+          "icon": "alaindustrial:empty_chip",
+          "block_id": "alaindustrial:empty_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Порожній чип",
+              "text": "Заготовка-основа для чипів-покращень машин; сама по собі ефекту не має."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass"
+              ],
+              "result_id": "alaindustrial:empty_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "Ротор вітряка",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ротор вітряка",
+              "text": "Лопаті вітротурбіни — ставляться в слот ротора будь-якого вітряка T1/T2; без нього генерації немає. У слоті не витрачається."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "#minecraft:planks",
+                "minecraft:iron_ingot",
+                "#minecraft:planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "network_analyzer",
+          "title": "Аналізатор мережі",
+          "icon": "alaindustrial:network_analyzer",
+          "block_id": "alaindustrial:network_analyzer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Аналізатор мережі",
+              "text": "Ручний діагностичний прилад — ПКМ по кабелю показує статистику енергомережі та підсвічує її у світі."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:copper_ingot"
+              ],
+              "result_id": "alaindustrial:network_analyzer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_dust",
+          "title": "Залізний пил",
+          "icon": "alaindustrial:iron_dust",
+          "block_id": "alaindustrial:iron_dust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Залізний пил",
+              "text": "Пил та споріднені напівфабрикати (пластина, болванка) — те, на що Подрібнювач та інші машини перетворюють руди."
+            }
+          ]
+        },
+        {
+          "id": "alignment_chip_day",
+          "title": "Сонячний еволюційний чип",
+          "icon": "alaindustrial:alignment_chip_day",
+          "block_id": "alaindustrial:alignment_chip_day",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Сонячний еволюційний чип",
+              "text": "Пара еволюційних чипів — сонячний (день) і місячний (ніч) — еволюціонують базові сонячні панелі та вітряки T1 до T2, переносячи накопичену енергію."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot",
+                "minecraft:glowstone",
+                "alaindustrial:nickel_ingot"
+              ],
+              "result_id": "alaindustrial:alignment_chip_day",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electronic_circuit",
+          "title": "Електронна схема",
+          "icon": "alaindustrial:electronic_circuit",
+          "block_id": "alaindustrial:electronic_circuit",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Електронна схема",
+              "text": "Базовий крафт-компонент — «мозок» майже кожної LV-машини та блока-сховища."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:quartz",
+                "minecraft:emerald",
+                "minecraft:quartz",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:nickel_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:electronic_circuit",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "battery_pouch",
+          "title": "Батарейний мішок",
+          "icon": "alaindustrial:battery_pouch",
+          "block_id": "alaindustrial:battery_pouch",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Батарейний мішок",
+              "text": "Заряджуваний мішок для предметів — вміщує 128 ваги, працює від вбудованої батареї на 2000 EU і блокується, коли заряд закінчується."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 2 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather",
+                "minecraft:leather",
+                "minecraft:bundle",
+                "minecraft:leather",
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:battery_pouch",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_chestplate",
+          "title": "Загартований залізний нагрудник",
+          "icon": "alaindustrial:tempered_iron_chestplate",
+          "block_id": "alaindustrial:tempered_iron_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Загартований залізний нагрудник",
+              "text": "Повний комплект броні із загартованого заліза — шолом, нагрудник, поножі та черевики; міцніший за залізо, лагодиться загартованим залізом."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 4 шт."
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:tempered_iron_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "vacuum_capsule",
+          "title": "Вакуумна капсула",
+          "icon": "alaindustrial:vacuum_capsule",
+          "block_id": "alaindustrial:vacuum_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Вакуумна капсула",
+              "text": "Стековний контейнер на 1 відро рідини — до 16 капсул однієї рідини в стосі, наповнюється зі світу або з баків мода."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_ingot",
+                "minecraft:redstone",
+                "alaindustrial:copper_cable",
+                "minecraft:redstone"
+              ],
+              "result_id": "alaindustrial:vacuum_capsule",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "wrench",
+          "title": "Гайковий ключ",
+          "icon": "alaindustrial:wrench",
+          "block_id": "alaindustrial:wrench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Гайковий ключ",
+              "text": "Налаштовує грані Предметної труби та розбирає блоки мода."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "alaindustrial:iron_gear",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:wrench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_pickaxe",
+          "title": "Загартоване залізне кайло",
+          "icon": "alaindustrial:tempered_iron_pickaxe",
+          "block_id": "alaindustrial:tempered_iron_pickaxe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Загартоване залізне кайло",
+              "text": "Ручне кайло із загартованого заліза — трохи краще за ванільне залізне за всіма характеристиками, але алмазні блоки не добуває."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "minecraft:stick",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "tempered_iron_tools",
+          "title": "Загартовані залізні інструменти",
+          "icon": "alaindustrial:tempered_iron_tools",
+          "block_id": "alaindustrial:tempered_iron_tools",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Загартовані залізні інструменти",
+              "text": "Набір із п’яти ручних інструментів із загартованого заліза — кайло, сокира, мотика, лопата та меч; трохи кращі за ванільні залізні, але алмазні блоки не добувають."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 5 шт."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "scythe",
+          "title": "Коса",
+          "icon": "alaindustrial:scythe",
+          "block_id": "alaindustrial:scythe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Коса",
+              "text": "Інструмент з дією по області, що зрізає листя, траву, квіти та іншу декоративну рослинність одним змахом, а з затиснутим Shift — серп по області, що збирає стиглий урожай. Вісім рівнів матеріалу від дерева до незериту."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 8 тірів"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "teleporter_remote",
+          "title": "Пульт телепорту",
+          "icon": "alaindustrial:teleporter_remote",
+          "block_id": "alaindustrial:teleporter_remote",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Пульт телепорту",
+              "text": "Ручний пульт-маяк — прив’язується до станції телепорту через shift-ПКМ і запускає стрибок до неї за EU, які сплачує станція."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "",
+                "minecraft:ender_pearl",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron",
+                ""
+              ],
+              "result_id": "alaindustrial:teleporter_remote",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_drill",
+          "title": "Електробур",
+          "icon": "alaindustrial:electric_drill",
+          "block_id": "alaindustrial:electric_drill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Електробур",
+              "text": "Заряджуване кайло алмазного тіру на EU — копає як алмаз, поки заряджене, витрачає EU за блок, ніколи не ламається."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_pickaxe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "energy_pack",
+          "title": "Енергоранець",
+          "icon": "alaindustrial:energy_pack",
+          "block_id": "alaindustrial:energy_pack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Енергоранець",
+              "text": "Носимий EU-буфер у слоті нагрудника — 20 000 EU, що підтримують заряд електропредметів у вашому інвентарі."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 30 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:leather",
+                "alaindustrial:electronic_circuit",
+                "minecraft:leather",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "alaindustrial:battery",
+                "minecraft:leather",
+                "alaindustrial:tin_ingot",
+                "minecraft:leather"
+              ],
+              "result_id": "alaindustrial:energy_pack",
+              "result_count": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

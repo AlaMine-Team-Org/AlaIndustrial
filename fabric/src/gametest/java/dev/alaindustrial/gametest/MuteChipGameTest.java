@@ -115,8 +115,8 @@ public class MuteChipGameTest {
 	}
 
 	/**
-	 * A machine that had no slots before MOD-080 (the water mill, base size 0) now carries upgrade slots
-	 * and drops an installed chip on break — proving the size-0 → size-4 transition is handled.
+	 * The water mill carries its wheel component before the appended upgrade block and still drops
+	 * an installed chip from the correct active-upgrade index.
 	 */
 	@GameTest
 	public void muteChip_dropsFromFormerlySlotlessMachine(GameTestHelper helper) {

@@ -88,6 +88,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.EMPTY_CHIP.get());
 		out.accept(ModContent.MUTE_CHIP.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
+		out.accept(ModContent.WATER_MILL_WHEEL.get());
 		out.accept(ModContent.WOODEN_GEAR.get());
 		out.accept(ModContent.STONE_GEAR.get());
 		out.accept(ModContent.IRON_GEAR.get());
@@ -181,6 +182,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.EMPTY_CHIP.get());
 		out.accept(ModContent.MUTE_CHIP.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
+		out.accept(ModContent.WATER_MILL_WHEEL.get());
 		out.accept(ModContent.WOODEN_GEAR.get());
 		out.accept(ModContent.STONE_GEAR.get());
 		out.accept(ModContent.IRON_GEAR.get());
@@ -195,6 +197,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.LAPIS_DUST.get());
 		out.accept(ModContent.NETWORK_ANALYZER.get());
 		out.accept(ModContent.WRENCH.get());
+		out.accept(ModContent.GUIDE_BOOK.get());
 		out.accept(ModContent.BATTERY_POUCH.get());
 		out.accept(ModContent.BATTERY.get());
 		out.accept(ModContent.ENERGY_PACK.get());

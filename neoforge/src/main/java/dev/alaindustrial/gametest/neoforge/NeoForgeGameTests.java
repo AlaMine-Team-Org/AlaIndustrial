@@ -8,6 +8,7 @@ import dev.alaindustrial.gametest.CapsuleScenarios;
 import dev.alaindustrial.gametest.GeothermalLavaInputScenarios;
 import dev.alaindustrial.gametest.ElectricDrillScenarios;
 import dev.alaindustrial.gametest.EnergyPackScenarios;
+import dev.alaindustrial.gametest.GuideBookGiverScenarios;
 import dev.alaindustrial.gametest.PouchScenarios;
 import dev.alaindustrial.gametest.ScytheScenarios;
 import dev.alaindustrial.gametest.StockDisplayFrameScenarios;
@@ -328,6 +329,9 @@ public final class NeoForgeGameTests {
 		registerTest(event, "pouch_no_drain_in_creative", 40, true, PouchScenarios::fun05bNoDrainInCreative);
 		registerTest(event, "pouch_charge_in_battery_box", 80, true, PouchScenarios::fun07ChargeInBatteryBox);
 		registerTest(event, "pouch_merge_on_insert", 40, true, PouchScenarios::fun08MergeOnInsert);
+
+		// Guide Book (MOD-067, TC-GUIDE-001) — auto-give ledger; same body as the Fabric GuideBookGameTest.
+		registerTest(event, "guide_book_give_once", 40, true, GuideBookGiverScenarios::giveOnce);
 
 		// Stock Display Frame (MOD-066, TC-FRAME-001) — same loader-neutral bodies as the Fabric suite.
 		registerTest(event, "stock_frame_counts_whole_container", 60, true, StockDisplayFrameScenarios::fun01CountsWholeContainer);

@@ -1,6 +1,7 @@
 package dev.alaindustrial;
 
 import dev.alaindustrial.command.AlaCommand;
+import dev.alaindustrial.loot.BonusChest;
 import dev.alaindustrial.core.EnergyLookup;
 import dev.alaindustrial.core.EnergyTransactions;
 import dev.alaindustrial.core.FluidLookup;
@@ -31,7 +32,12 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 /**
  * Fabric {@code ModInitializer} entrypoint. Loader-neutral constants/helpers live in
@@ -253,6 +259,9 @@ public class IndustrializationFabric implements ModInitializer {
 		});
 		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
 				dev.alaindustrial.teleporter.TeleportWarmupManager.forget(handler.player.getUUID()));
+		// MOD-067: auto-give the Guide Book on first join (once per player; SavedData ledger).
+		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
+				dev.alaindustrial.core.guide.GuideBookGiver.giveIfNeeded(handler.player));
 		ServerLevelEvents.UNLOAD.register((server, level) -> {
 			NetworkManager.clear(level);
 			ItemNetworkManager.clear(level);
@@ -267,6 +276,21 @@ public class IndustrializationFabric implements ModInitializer {
 		// sides — before vanilla's sneak-bypass runs BucketItem#useOn — so it can intercept the spill.
 		UseBlockCallback.EVENT.register((player, level, hand, hit) ->
 				dev.alaindustrial.item.VanillaBucketDeposit.tryDeposit(level, player, hand, hit));
+
+		// MOD-119: inject the mod's starter items into the vanilla bonus chest. Adds one pool that
+		// references the shared sub-table alaindustrial:inject/bonus_chest (item list + balance live there);
+		// vanilla pools are untouched. Gated on Config.bonusChestEnabled here (NeoForge gates the same flag
+		// via the alaindustrial:bonus_chest_enabled loot condition on its Global Loot Modifier). source.isBuiltin()
+		// skips user datapacks that replace the bonus chest, respecting their override.
+		LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+			if (source.isBuiltin()
+					&& key == BuiltInLootTables.SPAWN_BONUS_CHEST
+					&& Config.bonusChestEnabled) {
+				tableBuilder.withPool(LootPool.lootPool()
+						.setRolls(ConstantValue.exactly(1.0f))
+						.add(NestedLootTable.lootTableReference(BonusChest.INJECT_TABLE)));
+			}
+		});
 
 		// /ala build-visibility command (version + status), available to everyone.
 		AlaCommand.register();

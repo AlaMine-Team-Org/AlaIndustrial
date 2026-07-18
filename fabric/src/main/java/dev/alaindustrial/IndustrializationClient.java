@@ -137,6 +137,8 @@ public class IndustrializationClient implements ClientModInitializer {
 		BlockEntityRendererRegistry.register(ModBlockEntities.GOLD_CHEST, dev.alaindustrial.client.GoldChestBlockEntityRenderer::new);
 		ModelLayerRegistry.registerModelLayer(dev.alaindustrial.client.GoldChestBlockEntityRenderer.GOLD_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
+		ModelLayerRegistry.registerModelLayer(WaterMillWheelBlockEntityRenderer.MODEL_LAYER,
+				WaterMillWheelBlockEntityRenderer::createLayer);
 		BlockEntityRendererRegistry.register(ModBlockEntities.WATER_MILL, WaterMillWheelBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.WIND_MILL, WindMillRotorBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.HIGH_ALTITUDE_WIND_MILL, WindMillRotorBlockEntityRenderer::new);

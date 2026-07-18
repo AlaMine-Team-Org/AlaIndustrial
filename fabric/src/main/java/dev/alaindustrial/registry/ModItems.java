@@ -58,6 +58,7 @@ public final class ModItems {
 	public static final Item EMPTY_CHIP = hintItem("empty_chip");
 	public static final Item MUTE_CHIP = hintItem("mute_chip");
 	public static final Item WINDMILL_ROTOR = item("windmill_rotor");
+	public static final Item WATER_MILL_WHEEL = item("water_mill_wheel");
 	public static final Item WOODEN_GEAR = item("wooden_gear");
 	// Metal gears (MOD-105): crafting components for machinery still to come.
 	public static final Item STONE_GEAR = item("stone_gear");
@@ -111,6 +112,7 @@ public final class ModItems {
 	public static final Item URANIUM_INGOT = item("uranium_ingot");
 	public static final Item NETWORK_ANALYZER = networkAnalyzer("network_analyzer");
 	public static final Item WRENCH = wrench("wrench");
+	public static final Item GUIDE_BOOK = guideBook("guide_book");
 	// Teleporter Remote (MOD-092): registered but kept out of the creative tab + no recipe until
 	// MOD-093 finishes the feature (same treatment as the station — see CreativeTabContent).
 	public static final Item TELEPORTER_REMOTE = teleporterRemote("teleporter_remote");
@@ -229,6 +231,12 @@ public final class ModItems {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
 				new dev.alaindustrial.item.WrenchItem(new Item.Properties().setId(key).stacksTo(1)));
+	}
+
+	private static Item guideBook(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new dev.alaindustrial.item.GuideBookItem(new Item.Properties().setId(key).stacksTo(1)));
 	}
 
 	private static Item pouch(String path) {
@@ -439,6 +447,7 @@ public final class ModItems {
 		ModContent.EMPTY_CHIP = () -> EMPTY_CHIP;
 		ModContent.MUTE_CHIP = () -> MUTE_CHIP;
 		ModContent.WINDMILL_ROTOR = () -> WINDMILL_ROTOR;
+		ModContent.WATER_MILL_WHEEL = () -> WATER_MILL_WHEEL;
 		ModContent.WOODEN_GEAR = () -> WOODEN_GEAR;
 		ModContent.STONE_GEAR = () -> STONE_GEAR;
 		ModContent.IRON_GEAR = () -> IRON_GEAR;
@@ -474,6 +483,7 @@ public final class ModItems {
 		ModContent.RAW_URANIUM = () -> RAW_URANIUM;
 		ModContent.URANIUM_INGOT = () -> URANIUM_INGOT;
 		ModContent.NETWORK_ANALYZER = () -> NETWORK_ANALYZER;
+		ModContent.GUIDE_BOOK = () -> GUIDE_BOOK;
 		ModContent.WRENCH = () -> WRENCH;
 		ModContent.TELEPORTER_REMOTE = () -> TELEPORTER_REMOTE;
 		ModContent.BATTERY_POUCH = () -> BATTERY_POUCH;

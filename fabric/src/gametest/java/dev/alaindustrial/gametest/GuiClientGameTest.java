@@ -63,7 +63,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 checkActiveIdleTextures(context, singleplayer); // R-VIS-01
                 checkCableConnectivity(context, singleplayer);  // R-CON-03
                 checkEnergyPackWorn(context, singleplayer);     // MOD-065 worn model
-                // Water-mill BER wheel visual removed: block is hidden/not ready (tests deleted until it ships).
+                checkWaterMillWheel(context, singleplayer);     // MOD-024 BER visual regression
                 // R-PHY-10: mc.debugHitboxes removed in MC 26.2; re-enable when API is found.
             }
 
@@ -353,8 +353,66 @@ public class GuiClientGameTest implements FabricClientGameTest {
     }
 
     // ────────────────────────────────────────────────────────────────────────────────
-    // Water mill — BER wheel visual (volume, lighting, rotation pose)
+    // Water mill — BER wheel visual (silhouette, bucket depth, lighting)
     // ────────────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Photographs the MOD-024 wheel from three gameplay angles plus a night-lighting view.
+     * The side water pocket starts production so the bucket row is captured while rotating.
+     */
+    private static void checkWaterMillWheel(ClientGameTestContext context, TestSingleplayerContext singleplayer) {
+        TestServerContext server = singleplayer.getServer();
+
+        server.runCommand("fill 96 99 96 104 103 104 minecraft:air");
+        singleplayer.getClientLevel().waitForChunksRender();
+        context.waitTicks(3);
+
+        server.runCommand("fill 114 99 114 128 99 128 minecraft:smooth_stone");
+        server.runCommand("gamemode spectator @p");
+        server.runCommand("fill 117 100 120 124 100 125 minecraft:smooth_stone");
+        server.runCommand("fill 118 100 121 123 100 124 minecraft:water");
+
+        server.runCommand("setblock 120 100 118 minecraft:smooth_stone");
+        server.runCommand("setblock 120 101 118 minecraft:smooth_stone");
+        server.runCommand("setblock 120 101 119 minecraft:smooth_stone");
+        server.runCommand("setblock 120 102 119 minecraft:smooth_stone");
+        server.runCommand("setblock 120 102 121 alaindustrial:water_mill[facing=south]");
+        server.runCommand("item replace block 120 102 121 container.0 with alaindustrial:water_mill_wheel");
+        server.runCommand("setblock 120 101 121 minecraft:smooth_stone");
+        server.runCommand("setblock 120 100 121 minecraft:smooth_stone");
+
+        server.runCommand("setblock 119 101 121 minecraft:smooth_stone");
+        server.runCommand("setblock 118 102 121 minecraft:smooth_stone");
+        server.runCommand("setblock 119 102 120 minecraft:smooth_stone");
+        server.runCommand("setblock 119 102 122 minecraft:smooth_stone");
+        server.runCommand("setblock 119 102 121 minecraft:water");
+
+        singleplayer.getClientLevel().waitForChunksRender();
+        context.waitTicks(20);
+
+        String[][] millViews = {
+            {"120.5 101 128.5 180 8", "wmill_front"},
+            {"124.5 102 126.5 135 18", "wmill_iso"},
+            {"126.0 101.5 122.5 90 8", "wmill_side"},
+        };
+        for (String[] view : millViews) {
+            server.runCommand("tp @p " + view[0]);
+            singleplayer.getClientLevel().waitForChunksRender();
+            context.waitTicks(5);
+            LOG.info("[GUITEST][WMILL] {} -> {}",
+                    view[1], takeCleanScreenshot(context, view[1]).toAbsolutePath());
+        }
+
+        server.runCommand("time set midnight");
+        context.waitTicks(10);
+        server.runCommand("tp @p 120.5 101 128.5 180 8");
+        singleplayer.getClientLevel().waitForChunksRender();
+        context.waitTicks(5);
+        LOG.info("[GUITEST][WMILL] wmill_night -> {}",
+                takeCleanScreenshot(context, "wmill_night").toAbsolutePath());
+        server.runCommand("time set day");
+        context.waitTicks(5);
+    }
 
     // ────────────────────────────────────────────────────────────────────────────────
     // Existing: world render rig + GUI screenshots

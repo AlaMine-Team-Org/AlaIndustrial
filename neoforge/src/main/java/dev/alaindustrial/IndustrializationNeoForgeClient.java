@@ -200,5 +200,7 @@ public final class IndustrializationNeoForgeClient {
 				ChestModel::createSingleBodyLayer);
 		event.registerLayerDefinition(dev.alaindustrial.client.GoldChestBlockEntityRenderer.GOLD_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
+		event.registerLayerDefinition(WaterMillWheelBlockEntityRenderer.MODEL_LAYER,
+				WaterMillWheelBlockEntityRenderer::createLayer);
 	}
 }

@@ -1,0 +1,71 @@
+{
+	"type": "minecraft:chest",
+	"pools": [
+		{
+			"rolls": 1.0,
+			"entries": [
+				{ "type": "minecraft:item", "name": "alaindustrial:scythe_wood", "weight": 6 },
+				{ "type": "minecraft:item", "name": "alaindustrial:scythe_stone", "weight": 4 },
+				{ "type": "minecraft:item", "name": "alaindustrial:scythe_gold", "weight": 2 },
+				{ "type": "minecraft:empty", "weight": 4 }
+			]
+		},
+		{
+			"rolls": 1.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "alaindustrial:enriched_uranium_torch",
+					"weight": 6,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": { "type": "minecraft:uniform", "min": 8.0, "max": 16.0 }
+						}
+					]
+				},
+				{ "type": "minecraft:empty", "weight": 3 }
+			]
+		},
+		{
+			"rolls": 1.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "alaindustrial:wooden_gear",
+					"weight": 5,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": { "type": "minecraft:uniform", "min": 1.0, "max": 2.0 }
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "alaindustrial:stone_gear",
+					"weight": 3,
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": { "type": "minecraft:uniform", "min": 1.0, "max": 2.0 }
+						}
+					]
+				},
+				{ "type": "minecraft:empty", "weight": 4 }
+			]
+		},
+		{
+			"rolls": 1.0,
+			"entries": [
+				{ "type": "minecraft:empty", "weight": 90 },
+				{ "type": "minecraft:item", "name": "alaindustrial:tempered_iron_pickaxe", "weight": 2 },
+				{ "type": "minecraft:item", "name": "alaindustrial:tempered_iron_axe", "weight": 2 },
+				{ "type": "minecraft:item", "name": "alaindustrial:tempered_iron_sword", "weight": 2 },
+				{ "type": "minecraft:item", "name": "alaindustrial:tempered_iron_shovel", "weight": 2 },
+				{ "type": "minecraft:item", "name": "alaindustrial:battery", "weight": 1 },
+				{ "type": "minecraft:item", "name": "alaindustrial:battery_pouch", "weight": 1 }
+			]
+		}
+	]
+}

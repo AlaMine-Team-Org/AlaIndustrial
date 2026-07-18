@@ -35,6 +35,8 @@ import net.minecraft.world.item.crafting.RecipeHolder;
  *   <li>{@code /ala status} — the version line plus registered block/item/recipe counts in the
  *       {@code alaindustrial} namespace, the energy-network model, and key {@link Config} values.</li>
  *   <li>{@code /ala net} — live energy-network telemetry per dimension, backed by {@link NetworkManager#stats}.</li>
+ *   <li>{@code /ala config reload} — op-only (level 2); re-reads {@code config/alaindustrial.json} into
+ *       {@link Config} so a server operator applies balance edits without a restart (MOD-100).</li>
  * </ul>
  */
 public final class AlaCommandCommon {
@@ -72,11 +74,53 @@ public final class AlaCommandCommon {
 							MinecraftServer server = ctx.getSource().getServer();
 							ctx.getSource().sendSuccess(() -> netBody(server), false);
 							return Command.SINGLE_SUCCESS;
+						}))
+				// MOD-067: recover a lost Guide Book. Does not touch the auto-give ledger — a player
+				// can always re-fetch the tutorial. Uses the vanilla give-feedback lang key.
+				.then(Commands.literal("guide")
+						.executes(ctx -> {
+							ServerPlayer player = ctx.getSource().getPlayerOrException();
+							net.minecraft.world.item.ItemStack book =
+									new net.minecraft.world.item.ItemStack(dev.alaindustrial.registry.ModContent.GUIDE_BOOK.get());
+							Component name = book.getDisplayName();
+							if (!player.addItem(book)) {
+								player.drop(book, false);
+							}
+							ctx.getSource().sendSuccess(() -> Component.translatable(
+									"commands.give.success.single", 1, name, player.getDisplayName()), false);
+							return Command.SINGLE_SUCCESS;
 						}));
+		tree.then(configTree());
 		if (demoEnabled) {
 			tree.then(demoTree());
 		}
 		dispatcher.register(tree);
+	}
+
+	/**
+	 * The {@code /ala config reload} subtree (MOD-100). Op-only (level 2) — it re-reads the server balance
+	 * file. Feedback is a plain English literal by the same op/diagnostic convention as {@link #demoTree()},
+	 * keeping the 18 player-facing locale files free of admin-only keys. Reload runs synchronously on the
+	 * server thread (where {@link Config}'s static fields are also read each tick), so there is no data race.
+	 */
+	private static LiteralArgumentBuilder<CommandSourceStack> configTree() {
+		return Commands.literal("config")
+				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.then(Commands.literal("reload").executes(ctx -> {
+					Config.LoadResult result = Config.reload();
+					switch (result) {
+						case LOADED -> ctx.getSource().sendSuccess(() -> Component.literal(
+								"Reloaded config/alaindustrial.json.").withStyle(HEADER), true);
+						case DEFAULTS_WRITTEN -> ctx.getSource().sendSuccess(() -> Component.literal(
+								"config/alaindustrial.json was missing — wrote defaults.").withStyle(HEADER), true);
+						case ERROR -> {
+							ctx.getSource().sendFailure(Component.literal(
+									"Failed to read config/alaindustrial.json — check the server log; live balance unchanged."));
+							return 0;
+						}
+					}
+					return Command.SINGLE_SUCCESS;
+				}));
 	}
 
 	/**
