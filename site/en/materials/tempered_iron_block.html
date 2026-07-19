@@ -9,33 +9,58 @@
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../assets/guide-site.js" defer></script>
 <style>
-  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:16px; margin:14px 0; }
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
   .recipe-card { background:var(--panel); border:2px solid var(--line2);
-    padding:12px 14px; image-rendering:pixelated; }
+    padding:10px 12px 12px; image-rendering:pixelated; }
   .recipe-header { display:flex; justify-content:space-between; align-items:center;
-    margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
   .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
-  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; }
-  .recipe-body { display:grid; grid-template-columns:auto 24px minmax(90px,1fr); align-items:center; gap:9px; }
-  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); gap:2px; }
-  .recipe-processing { display:contents; }
-  .recipe-processing .ingredients { display:flex; gap:2px; flex-wrap:wrap; max-width:160px; }
-  .arrow { font-size:18px; color:var(--muted); font-family:'VT323',monospace; }
-  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:4px; }
-  .cell { width:36px; height:36px; background:var(--bg); border:1px solid var(--line2);
-    display:flex; align-items:center; justify-content:center;
-    position:relative; image-rendering:pixelated; }
-  .cell.empty { background:transparent; border-color:transparent; }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 22px minmax(96px,1fr); align-items:center; gap:10px; }
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px); gap:2px; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  .cell.empty { background:transparent; box-shadow:none; }
   .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
     text-align:center; overflow:hidden; font-family:'VT323',monospace; }
-  .cell img { width:28px; height:28px; image-rendering:pixelated; }
-  .cell.result { border-color:var(--gold); }
-  .cell .count { position:absolute; bottom:-3px; right:-3px; background:var(--bg);
-    border:1px solid var(--line2); font-size:12px; padding:0 3px;
-    color:var(--txt); font-family:'VT323',monospace; }
-  .result-name { font-size:13px; color:var(--muted); text-align:center; max-width:120px;
-    font-family:'VT323',monospace; }
-  .ricon.placeholder { font-size:12px; color:var(--muted2); }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
+    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
+    padding:1px 2px; line-height:1; border-radius:0; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:4px 9px; font-family:'Press Start 2P',monospace;
+    font-size:7px; cursor:pointer; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
 </style>
 <style>
   
@@ -312,18 +337,19 @@
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="7 pages">7</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="7 pages">7</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="8 pages">8</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="11 pages">11</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../materials/index.html">Materials</a><span class="sep">/</span><span>Block of Tempered Iron</span></div>
@@ -352,9 +378,9 @@
 <h2>Related</h2>
 <p><a href="../components/tempered_iron.html">Tempered Iron</a> — the ingot the block is assembled from. <a href="../items/tempered_iron_tools.html">Tempered Iron tools</a> — the main consumer of the ingots. <a href="tin.html">Tin</a>, <a href="silver.html">Silver</a>, <a href="nickel.html">Nickel</a>, <a href="uranium.html">Uranium</a> — the mod's other materials.</p>
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="28" height="28"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="28" height="28"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="28" height="28"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="28" height="28"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="28" height="28"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="28" height="28"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="28" height="28"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="28" height="28"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="28" height="28"></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Block of Tempered Iron"><img src="../assets/block/tempered_iron_block.png" alt="Block of Tempered Iron" width="28" height="28"></div><div class="result-name">Block of Tempered Iron</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="block of tempered iron alaindustrial:tempered_iron_block" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="32" height="32"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="32" height="32"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="32" height="32"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="32" height="32"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="32" height="32"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="32" height="32"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="32" height="32"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="32" height="32"></div> <div class="cell" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="32" height="32"></div></div><div class="arrow" aria-label="Craft">▶</div><div class="recipe-result"><div class="cell result" title="Block of Tempered Iron"><img src="../assets/block/tempered_iron_block.png" alt="Block of Tempered Iron" width="32" height="32"></div><div class="result-name">Block of Tempered Iron</div></div></div></div></div>
 <h2>Used in</h2>
-<div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shapeless Crafting</span></div><div class="recipe-body"><div class="recipe-processing"><div class="ingredients"><div class="cell" title="Block of Tempered Iron"><img src="../assets/block/tempered_iron_block.png" alt="Block of Tempered Iron" width="28" height="28"></div></div><div class="arrow">→</div></div><div class="recipe-result"><div class="cell result" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="28" height="28"><span class="count">×9</span></div><div class="result-name">Tempered Iron</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="tempered iron alaindustrial:tempered_iron" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">Shapeless Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Block of Tempered Iron"><img src="../assets/block/tempered_iron_block.png" alt="Block of Tempered Iron" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="arrow" aria-label="Craft">▶</div><div class="recipe-result"><div class="cell result" title="Tempered Iron"><img src="../assets/item/tempered_iron.png" alt="Tempered Iron" width="32" height="32"><span class="count">×9</span></div><div class="result-name">Tempered Iron</div></div></div></div></div>
   </main>
 </div>
 

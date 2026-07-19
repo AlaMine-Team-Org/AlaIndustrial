@@ -9,33 +9,58 @@
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../assets/guide-site.js" defer></script>
 <style>
-  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:16px; margin:14px 0; }
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
   .recipe-card { background:var(--panel); border:2px solid var(--line2);
-    padding:12px 14px; image-rendering:pixelated; }
+    padding:10px 12px 12px; image-rendering:pixelated; }
   .recipe-header { display:flex; justify-content:space-between; align-items:center;
-    margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
   .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
-  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; }
-  .recipe-body { display:grid; grid-template-columns:auto 24px minmax(90px,1fr); align-items:center; gap:9px; }
-  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); gap:2px; }
-  .recipe-processing { display:contents; }
-  .recipe-processing .ingredients { display:flex; gap:2px; flex-wrap:wrap; max-width:160px; }
-  .arrow { font-size:18px; color:var(--muted); font-family:'VT323',monospace; }
-  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:4px; }
-  .cell { width:36px; height:36px; background:var(--bg); border:1px solid var(--line2);
-    display:flex; align-items:center; justify-content:center;
-    position:relative; image-rendering:pixelated; }
-  .cell.empty { background:transparent; border-color:transparent; }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 22px minmax(96px,1fr); align-items:center; gap:10px; }
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px); gap:2px; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  .cell.empty { background:transparent; box-shadow:none; }
   .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
     text-align:center; overflow:hidden; font-family:'VT323',monospace; }
-  .cell img { width:28px; height:28px; image-rendering:pixelated; }
-  .cell.result { border-color:var(--gold); }
-  .cell .count { position:absolute; bottom:-3px; right:-3px; background:var(--bg);
-    border:1px solid var(--line2); font-size:12px; padding:0 3px;
-    color:var(--txt); font-family:'VT323',monospace; }
-  .result-name { font-size:13px; color:var(--muted); text-align:center; max-width:120px;
-    font-family:'VT323',monospace; }
-  .ricon.placeholder { font-size:12px; color:var(--muted2); }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
+    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
+    padding:1px 2px; line-height:1; border-radius:0; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:4px 9px; font-family:'Press Start 2P',monospace;
+    font-size:7px; cursor:pointer; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
 </style>
 <style>
   
@@ -312,24 +337,25 @@
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="4 страницы">4</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="5 страниц">5</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="5 страниц">5</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="4 страницы">4</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="7 страниц">7</span></a>
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="7 страниц">7</span></a>
-<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="8 страниц">8</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="11 страниц">11</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../items/index.html">Игровые предметы</a><span class="sep">/</span><span>Электробур</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/item/electric_drill.png" alt="Электробур" width="64" height="64">
+    <img class="icon" src="../assets/item/electric_drill_3d.png" alt="Электробур" width="64" height="64">
     <div class="info">
       <h1>Электробур</h1>
       <div class="block-id">alaindustrial:electric_drill</div>
@@ -354,7 +380,7 @@ BPB
 CEC</code></pre>
 <p>Крафт: — shaped 3×3, <code>category: equipment</code>: верхний ряд (<code>I</code>): три железных слитка (<code>minecraft:iron_ingot</code>); центральный ряд: батарея — алмазная кирка (<code>minecraft:diamond_pickaxe</code>, <code>P</code>) — батарея; нижний ряд: <a href="../components/copper_coil.html">медная катушка</a> — <a href="../components/electronic_circuit.html">электронная схема</a> — медная катушка. Рецепт открывается в книге рецептов, когда у игрока появляются медная катушка, электронная схема или алмазная кирка (advancement <code>recipes/misc/electric_drill</code>). <strong>Ремонт</strong> — не применим: у бура нет прочности, чинить нечего; «ремонт» — это зарядка EU/FE (см. раздел «Энергия»).</p>
 <h2>Поведение</h2>
-<p><strong>Копание:</strong> пока заряда ≥ 50 EU/FE, бур копает <code>#minecraft:mineable/pickaxe</code> на скорости 8.5 (чуть выше алмазной кирки, 8.0) с уровнем добычи алмаза — по добыче идентичен алмазной кирке: алмазная руда, обсидиан, даже ancient debris (алмаз — потолок уровня добычи). За каждый такой блок снимается 50 EU/FE. <strong>Разряженный бур:</strong> при заряде ниже 50 EU/FE копает на скорости руки (1.0), но уровень добычи и дроп сохраняются, и EU/FE не тратится. Чара Efficiency при этом не действует (ванильный порог <code>speed &gt; 1.0</code>). <strong>Зарядка:</strong> слот зарядки Энергохранилища и надетый энергоранец — оба принимают бур автоматически (любой предмет с EU/FE-буфером), до 32 EU/FE/тик. <strong>Атака:</strong> бьёт чуть сильнее алмазной кирки (6 урона, скорость атаки 1.3), но удары <strong>не тратят EU/FE</strong> и не изнашивают бур. <strong>Чары:</strong> бур входит в <code>#minecraft:pickaxes</code>, поэтому стол зачарования и наковальня работают с ним как с алмазной киркой — Efficiency, Fortune, Silk Touch, Unbreaking, Mending. Unbreaking/Mending на неломаемом буре бесполезны, но безвредны. <strong>Аметистовые друзы:</strong> бур даёт максимальный дроп осколков (<code>#minecraft:cluster_max_harvestables</code>). <strong>Индикация:</strong> полоска под иконкой показывает заряд (жёлтая, LV-цвет). В тултипе — «Заряд: X / 10 000 EU/FE», при нуле — красное «Пуст». Текстура меняется на «погасший» вариант при нулевом заряде. <strong>Индикатор на экране (HUD):</strong> пока бур в руке, в левом верхнем углу видны его иконка, процент заряда и полоска (зелёная → жёлтая → красная по мере разряда). Тот же оверлей и та же горячая клавиша <strong>H</strong>, что и у <a href="energy_pack.html">Энергоранца</a> (общий тумблер всех энерго-HUD мода, меняется в «Управление» → категория Ala Industrial и в настройках мода); если надет и ранец, readout бура встаёт строкой ниже под панелью ранца. Без бура в руке индикатор не показывается. <strong>Прочность и ремонт:</strong> прочности нет — бур не ломается и не изнашивается; гриндстоун снимает чары, но «починить» его нельзя (нечего чинить). <strong>Дроп/смерть/релогин:</strong> заряд хранится в предмете и сохраняется. <strong>Установка факела (правый клик,:</strong> с буром в главной руке и факелами в инвентаре правый клик по блоку ставит факел, как будто он в руке — бур остаётся в хотбаре, факел расходуется из инвентаря (−1 шт.). Приоритет — <a href="../utility/enriched_uranium_torch.html">обогащённый урановый факел</a> (продвинутый, не гаснет под водой), при его отсутствии — ванильный <code>minecraft:torch</code>. За установку снимается <strong>5 EU/FE</strong> (если заряда меньше — факел всё равно ставится, EU/FE не уходит в минус). Размещение полностью делегирует ванильной логике факела: учитывается грань (напольный/настенный), правило <code>canSurvive</code>, waterlogged у уранового факела; на месте, где факел не ставится (нет опоры, вода для ванильного), — действие без расхода. Установка сопровождается обычным <strong>звуком постановки факела</strong> (звук берётся из <code>SoundType</code> фактически поставленного блока, поэтому ванильный и урановый факелы звучат каждый по-своему); звук слышат и ставящий игрок, и игроки поблизости. В творческом режиме не расходуется ни факел, ни EU/FE. Если факелов в инвентаре нет — правый клик ничего не делает, и тогда обычный факел в левой руке сработает сам. Без кулдауна: ванильный <code>BlockItem.place</code> и так не спам-ставит одну позицию. <strong>В креативе:</strong> заряд не тратится ни на добычу, ни на факелы — как ванильная кирка в креативе не теряет прочность. Правило общее для всей электро-семьи, см. <a href="energy_pack.html">энергоранец</a> и <a href="battery_pouch.html">батарейный мешок</a>.</p>
+<p><strong>Копание:</strong> пока заряда ≥ 50 EU/FE, бур копает <code>#minecraft:mineable/pickaxe</code> на скорости 8.5 (чуть выше алмазной кирки, 8.0) с уровнем добычи алмаза — по добыче идентичен алмазной кирке: алмазная руда, обсидиан, даже ancient debris (алмаз — потолок уровня добычи). За каждый такой блок снимается 50 EU/FE. <strong>Разряженный бур:</strong> при заряде ниже 50 EU/FE копает на скорости руки (1.0), но уровень добычи и дроп сохраняются, и EU/FE не тратится. Чара Efficiency при этом не действует (ванильный порог <code>speed &gt; 1.0</code>). <strong>Зарядка:</strong> слот зарядки Энергохранилища и надетый энергоранец — оба принимают бур автоматически (любой предмет с EU/FE-буфером), до 32 EU/FE/тик. <strong>Атака:</strong> бьёт чуть сильнее алмазной кирки (6 урона, скорость атаки 1.3), но удары <strong>не тратят EU/FE</strong> и не изнашивают бур. <strong>Чары:</strong> бур входит в <code>#minecraft:pickaxes</code>, поэтому стол зачарования и наковальня работают с ним как с алмазной киркой — Efficiency, Fortune, Silk Touch, Unbreaking, Mending. Unbreaking/Mending на неломаемом буре бесполезны, но безвредны. <strong>Аметистовые друзы:</strong> бур даёт максимальный дроп осколков (<code>#minecraft:cluster_max_harvestables</code>). <strong>Индикация:</strong> полоска под иконкой показывает заряд (жёлтая, LV-цвет). В тултипе — «Заряд: X / 10 000 EU/FE», при нуле — красное «Пуст». Текстура меняется на «погасший» вариант при нулевом заряде. <strong>Индикатор на экране (HUD):</strong> пока бур в руке, в левом верхнем углу видны его иконка, процент заряда и полоска (зелёная → жёлтая → красная по мере разряда). Тот же оверлей и та же горячая клавиша <strong>H</strong>, что и у <a href="energy_pack.html">Энергоранца</a> (общий тумблер всех энерго-HUD мода, меняется в «Управление» → категория Ala Industrial и в настройках мода); если надет и ранец, readout бура встаёт строкой ниже под панелью ранца. Без бура в руке индикатор не показывается. <strong>Прочность и ремонт:</strong> прочности нет — бур не ломается и не изнашивается; гриндстоун снимает чары, но «починить» его нельзя (нечего чинить). <strong>Дроп/смерть/релогин:</strong> заряд хранится в предмете и сохраняется. <strong>Установка факела (правый клик,:</strong> с буром в главной руке и факелами в инвентаре правый клик по блоку ставит факел, как будто он в руке — бур остаётся в хотбаре, факел расходуется из инвентаря (−1 шт.). Приоритет — <a href="../utility/enriched_uranium_torch.html">обогащённый урановый факел</a> (продвинутый, не гаснет под водой), при его отсутствии — ванильный <code>minecraft:torch</code>. За установку снимается <strong>5 EU/FE</strong>. Если заряда меньше — факел <strong>не ставится</strong>: бур пишет сообщение строкой над хотбаром, факел из инвентаря не расходуется, заряд не трогается. Факел работает от энергии, а не бесплатно; поставить его рукой по-прежнему можно бесплатно — достаточно переложить факел в хотбар. Размещение полностью делегирует ванильной логике факела: учитывается грань (напольный/настенный), правило <code>canSurvive</code>, waterlogged у уранового факела; на месте, где факел не ставится (нет опоры, вода для ванильного), — действие без расхода. Установка сопровождается обычным <strong>звуком постановки факела</strong> (звук берётся из <code>SoundType</code> фактически поставленного блока, поэтому ванильный и урановый факелы звучат каждый по-своему); звук слышат и ставящий игрок, и игроки поблизости. В творческом режиме не расходуется ни факел, ни EU/FE, и проверка заряда не применяется. Если факелов в инвентаре нет — правый клик ничего не делает, и тогда обычный факел в левой руке сработает сам. Без кулдауна: ванильный <code>BlockItem.place</code> и так не спам-ставит одну позицию. <strong>В креативе:</strong> заряд не тратится ни на добычу, ни на факелы — как ванильная кирка в креативе не теряет прочность. Правило общее для всей электро-семьи, см. <a href="energy_pack.html">энергоранец</a> и <a href="battery_pouch.html">батарейный мешок</a>.</p>
 <h2>Прогрессия</h2>
 <p>Первый электроинструмент мода — мост между энергетической прогрессией и ручным майнингом. Доступен после <a href="../energy-storage/battery_box.html">Энергохранилища</a> и <a href="energy_pack.html">батареи</a>: без LV-инфраструктуры бур не скрафтить и не зарядить. LV-уровень. Усиленный электробур (быстрее, больше расход, netherite-уровень) и остальные электроинструменты (пила/мотыга/сабля/нано-лук) — будущая работа.</p>
 <h2>Совместимость</h2>
@@ -362,7 +388,7 @@ CEC</code></pre>
 <h2>Связанное</h2>
 <p><a href="energy_pack.html">Энергоранец</a> — прецедент EU/FE-предмета без прочности; заряжает бур в инвентаре. <a href="../energy-storage/battery_box.html">Энергохранилище</a> — зарядка бура (слот charge). <a href="tempered_iron_pickaxe.html">Кирка из закалённого железа</a> — прецедент кастомной кирки 26.2. <a href="../components/electronic_circuit.html">Электронная схема</a> — компонент крафта.</p>
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Iron Ingot" aria-label="Iron Ingot"><span>iron in</span></div> <div class="cell placeholder" title="Iron Ingot" aria-label="Iron Ingot"><span>iron in</span></div> <div class="cell placeholder" title="Iron Ingot" aria-label="Iron Ingot"><span>iron in</span></div> <div class="cell" title="Батарея"><img src="../assets/item/battery.png" alt="Батарея" width="28" height="28"></div> <div class="cell placeholder" title="Diamond Pickaxe" aria-label="Diamond Pickaxe"><span>diamond</span></div> <div class="cell" title="Батарея"><img src="../assets/item/battery.png" alt="Батарея" width="28" height="28"></div> <div class="cell" title="Медная катушка"><img src="../assets/item/copper_coil.png" alt="Медная катушка" width="28" height="28"></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit.png" alt="Электронная схема" width="28" height="28"></div> <div class="cell" title="Медная катушка"><img src="../assets/item/copper_coil.png" alt="Медная катушка" width="28" height="28"></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Электробур"><img src="../assets/item/electric_drill.png" alt="Электробур" width="28" height="28"></div><div class="result-name">Электробур</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="электробур alaindustrial:electric_drill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Железный слиток" width="32" height="32"></div> <div class="cell" title="Батарея"><img src="../assets/item/battery.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Алмазная кирка"><img src="../assets/vanilla/item/diamond_pickaxe.png" alt="Алмазная кирка" width="32" height="32"></div> <div class="cell" title="Батарея"><img src="../assets/item/battery.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Медная катушка"><img src="../assets/item/copper_coil.png" alt="Медная катушка" width="32" height="32"></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Медная катушка"><img src="../assets/item/copper_coil.png" alt="Медная катушка" width="32" height="32"></div></div><div class="arrow" aria-label="Крафт">▶</div><div class="recipe-result"><div class="cell result" title="Электробур"><img src="../assets/item/electric_drill.png" alt="Электробур" width="32" height="32"></div><div class="result-name">Электробур</div></div></div></div></div>
   </main>
 </div>
 

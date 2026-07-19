@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Electromagnet — Ala Industrial — Guide</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 22px minmax(96px,1fr); align-items:center; gap:10px; }
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px); gap:2px; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  .cell.empty { background:transparent; box-shadow:none; }
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
+    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
+    padding:1px 2px; line-height:1; border-radius:0; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:4px 9px; font-family:'Press Start 2P',monospace;
+    font-size:7px; cursor:pointer; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:27px; font-size:16px; padding:0 10px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  .block-card .tag.cat { font-family:'Press Start 2P',monospace; font-size:9px;
+    color:var(--bg); padding:0 10px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-family:'Press Start 2P',monospace; font-size:9px;
+    color:var(--bg); padding:0 10px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="Open menu" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../../ru/items/electromagnet.html">RU</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Browse</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>Getting Started</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
+<div class="group-title">Energy</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="1 page">1</span></a>
+<div class="group-title">Processing</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<div class="group-title">Logistics</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
+<div class="group-title">World &amp; Automation</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
+<div class="group-title">Other</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="7 pages">7</span></a>
+<div class="group-title">Items</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="11 pages">11</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../items/index.html">Items</a><span class="sep">/</span><span>Electromagnet</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/item/electromagnet.png" alt="Electromagnet" width="64" height="64">
+    <div class="info">
+      <h1>Electromagnet</h1>
+      <div class="block-id">alaindustrial:electromagnet</div>
+      <div class="tags"><span class="tag cat" style="background:#d97706">Items</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implemented</span><span class="tag">item</span><span class="tag">energy</span><span class="tag">magnet</span><span class="tag">pickup</span><span class="tag">convenience</span></div>
+    </div>
+  </div>
+</div>
+<h2>Summary</h2>
+<p>The <strong>Electromagnet</strong> is an EU/FE-rechargeable convenience item: it sits in <strong>any</strong> inventory slot (hotbar / main / off-hand) and automatically <strong>draws</strong> loose dropped items (<code>ItemEntity</code>) toward the player — ore drops in a mine, scattered pieces after an explosion, unclaimed drops. This is <strong>tier 1</strong>: a spherical radius of <strong>3 blocks</strong> (up, down and sideways); each item actually pulled costs <strong>2 EU/FE</strong> (<code>magnetEuPerItem</code>). An idle scan, with nothing in range, is free. Pickup stays vanilla: every tick the magnet <strong>sets</strong> each item's velocity straight at the player (a seek, so items fly in from any direction — a drop below rises to you), and the player collects the item once it arrives. When flat the magnet simply goes quiet (like a drained <a href="electric_drill.html">Electric Drill</a> mining at hand speed) until recharged. It charges wherever the mod's whole powered family does — the <a href="../energy-storage/battery_box.html">Battery Box</a> charge slot and a worn <a href="energy_pack.html">Energy Pack</a>. <strong>Toggle (shift-right-click):</strong> the magnet can be switched off so you can carry it in your inventory next to farms, sorters and pipes without hoovering their items. A freshly crafted magnet is on.</p>
+<h2>Energy</h2>
+<p>Its own EU/FE buffer, off the grid. Charged in the Battery Box slot and by a worn pack; spends charge per pulled item.</p>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>convenience item with an EU/FE buffer: a consumer at a charger</td></tr><tr><td>Buffer</td><td>5,000 EU/FE (<code>magnetBuffer</code>)</td></tr><tr><td>Charging</td><td>Battery Box slot / worn pack, ≤ 32 EU/FE/tick (<code>magnetInputRate</code>, capped by the LV ceiling)</td></tr><tr><td>Draw</td><td>2 EU/FE per item pulled each scan tick (<code>magnetEuPerItem</code>); an idle scan is free</td></tr><tr><td>Passive drain</td><td>none (only for actual pulling)</td></tr><tr><td>Component</td><td>(Long, persistent + networkSynchronized) — the shared component of every powered item in the mod</td></tr></tbody></table>
+<p>The draw is taken <strong>server-side only</strong> (in 26.2 <code>inventoryTick</code> is called only on a <code>ServerLevel</code>). A creative/spectating owner pays nothing (the shared <code>ItemEnergy.spend</code> rule, — the magnet still pulls.</p>
+<h2>Inventory</h2>
+<p>Not applicable — the magnet has no internal item storage (stacks to 1). It holds only EU/FE charge and the on/off flag (, absent = on).</p>
+<h2>Block properties</h2>
+<p>Not applicable (item).</p>
+<h2>Recipes</h2>
+<p>Crafted on a workbench in the shape of a horseshoe magnet: an iron horseshoe body, a <a href="../components/copper_coil.html">copper coil</a> core at the centre (the electromagnet's winding), and an <a href="../components/electronic_circuit.html">electronic circuit</a> below (control). The top corners are the poles: redstone (power) on the left, lapis lazuli (magnetic "charge") on the right.</p>
+<pre><code class="lang-">R L
+ICI
+IEI</code></pre>
+<p>Recipe: — shaped 3×3, <code>category: equipment</code>: top row: redstone (<code>minecraft:redstone</code>), empty, lapis lazuli (<code>minecraft:lapis_lazuli</code>); middle row: iron (<code>minecraft:iron_ingot</code>) — <a href="../components/copper_coil.html">copper coil</a> — iron; bottom row: iron — <a href="../components/electronic_circuit.html">electronic circuit</a> — iron. <strong>Repair</strong> — not applicable: the magnet has no durability; "repair" is charging EU/FE (see <em>Energy</em>).</p>
+<h2>Behaviour</h2>
+<p><strong>Pulling (seek):</strong> <strong>every tick</strong> (<code>magnetScanIntervalTicks</code> = 1) the magnet gathers <code>ItemEntity</code> in a spherical radius and <strong>sets</strong> each item's velocity straight at the player's body centre at blocks/tick. Setting (not adding) the velocity overrides gravity and friction, so a drop below the player rises to it and one above sinks — the pickup itself is vanilla <code>playerTouch</code> once the item arrives. <strong>Tariff:</strong> each item pulled costs 2 EU/FE per tick while it flies in. If the buffer can't afford it the magnet stalls; at 0 EU/FE it doesn't pull at all. At most <strong>64</strong> items are handled per pass (a guard against mass-drop lag). <strong>What it will NOT pull:</strong> items on their pickup delay (<code>hasPickUpDelay</code>) — both a fresh player <code>Q</code>-drop (so it doesn't instantly suck back what was just thrown) and "never pick up" items (<code>setNeverPickUp</code>, delay 32767); items sitting in lava (so they aren't dragged through the fire); items out of range. Item frames / displays are untouched (the filter is strictly the <code>ItemEntity</code> class). <strong>Seek speed is capped</strong> at <code>SEEK_SPEED</code> (0.55 blocks/tick): fast enough for items to visibly fly in, but under the vanilla pickup window so they don't tunnel through the player. <strong>Works from any slot:</strong> the magnet ticks in the hotbar, main inventory and off-hand (in 26.2 the off-hand ticks through the equipment path) — carry it anywhere, not only in hand. <strong>Toggle (shift-right-click):</strong> a shift-right-click flips on/off. State lives in the <code>magnet_enabled</code> component (absent = on; disabling writes <code>false</code>, re-enabling removes the component, so an on magnet is byte-identical to a fresh one). Toggling plays a <strong>metallic click</strong> (<code>copper_bulb</code> on/off — an electrical sound, not a cloth one) and posts an action-bar line. A disabled magnet pulls nothing and spends no EU/FE. <strong>Readout:</strong> the bar under the icon shows charge (yellow, LV colour). The tooltip shows short lines: a flavour line, status (green "Active" / grey "Disabled"), the <strong>charge <code>X / Y EU/FE</code></strong>, and a radius/tariff line. <strong>Drop/death/relog:</strong> charge and the on/off flag are stored on the item and survive. <strong>In creative:</strong> no charge is spent (the shared powered-family rule,, but pulling works.</p>
+<h2>Progression</h2>
+<p>An LV-tier convenience item: it solves the classic tech-mod pain "walking a mine — loot comes to me". Available after the <a href="../energy-storage/battery_box.html">Battery Box</a> and copper coil / circuit: without LV infrastructure the magnet can be neither crafted nor charged. Filters (tag whitelist/blacklist), suppressor zones and radius tier scaling (LV/MV/HV) are future work.</p>
+<h2>Compatibility</h2>
+<p>Viewers: JEI, REI, EMI (as an ordinary item). <strong>The magnet charges from third-party energy mods</strong> (like the <a href="electric_drill.html">Electric Drill</a>, it exposes its loader's item energy capability (Team Reborn Energy on Fabric, FE capability on NeoForge), so a foreign charger tops it up alongside the <a href="../energy-storage/battery_box.html">Battery Box</a>. The capability accepts only. <strong>Known limitations (deferred to post-MVP):</strong> <strong><code>PreventRemoteMovement</code></strong> — the magnet does not yet honour this convention (the NBT "do not pull" flag on items in other mods' pipes/conveyors): on Fabric vanilla has no per-entity persistent store, so a loader abstraction is needed. <strong><code>target</code>-UUID reservation</strong> — the magnet does not check an item's <code>target</code> field (a drop reserved to a specific player). This is a technical constraint: in vanilla 26.2 <code>ItemEntity</code> has a private <code>target</code> field and <code>setTarget(...)</code>, but <strong>no public <code>getTarget</code></strong> (that is a NeoForge addition), so it cannot be read cross-loader from <code>common/</code> without a loader-specific accessor / access widener. The practical harm is small: vanilla <code>playerTouch</code> still prevents another player from <em>collecting</em> a reserved item — the magnet can only drag it. Partly covered by respecting the pickup delay. A full guard is future polish (paired with <code>PreventRemoteMovement</code>). <strong>Drain on an unreachable item</strong> — the tariff is charged per item nudged each scan tick, so an item the magnet pulls but that can't arrive/be collected (behind a 1-block wall, or when the player's inventory is full) costs ~0.4 EU/FE/tick until it despawns (5 min). This is accepted MVP behaviour (as in most magnet mods): a cheap drain, self-limited by despawn. A line-of-sight check is deliberately NOT added — it would break the desired "loot in a hole/behind a wall comes to me" case.</p>
+<h2>Balance</h2>
+<table><thead><tr><th>Parameter</th><th>Value</th><th>Config key</th></tr></thead><tbody><tr><td>EU/FE buffer</td><td><strong>5,000</strong></td><td><code>magnetBuffer</code></td></tr><tr><td>Draw per item</td><td><strong>2</strong> EU/FE/tick</td><td><code>magnetEuPerItem</code></td></tr><tr><td>EU/FE intake</td><td><strong>32</strong> EU/FE/tick</td><td><code>magnetInputRate</code></td></tr><tr><td>Radius (tier 1)</td><td><strong>3</strong> blocks</td><td><code>magnetRange</code></td></tr><tr><td>Scan interval</td><td><strong>1</strong> tick</td><td><code>magnetScanIntervalTicks</code></td></tr><tr><td>Seek speed</td><td>0.55 blocks/tick</td><td>— (<code>SEEK_SPEED</code> constant)</td></tr><tr><td>Per-pass cap</td><td>64 items</td><td>— (<code>MAX_ITEMS_PER_SCAN</code> constant)</td></tr></tbody></table>
+<p>5,000 EU/FE at 2 EU/FE/item·tick is hundreds of picked-up items per charge: a cheap, LV consumable.</p>
+<h2>Related</h2>
+<p><a href="electric_drill.html">Electric Drill</a> — the EU/FE-consumable precedent; a typical mine companion. <a href="energy_pack.html">Energy Pack</a> — charges the magnet in the inventory on the move. <a href="../energy-storage/battery_box.html">Battery Box</a> — charging the magnet (charge slot). <a href="../components/copper_coil.html">Copper Coil</a>, <a href="../components/electronic_circuit.html">Electronic Circuit</a> — crafting components.</p>
+<h2>Crafting</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="electromagnet alaindustrial:electromagnet" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Redstone"><img src="../assets/vanilla/item/redstone.png" alt="Redstone" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Lapis Lazuli"><img src="../assets/vanilla/item/lapis_lazuli.png" alt="Lapis Lazuli" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div></div><div class="arrow" aria-label="Craft">▶</div><div class="recipe-result"><div class="cell result" title="Electromagnet"><img src="../assets/item/electromagnet.png" alt="Electromagnet" width="32" height="32"></div><div class="result-name">Electromagnet</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

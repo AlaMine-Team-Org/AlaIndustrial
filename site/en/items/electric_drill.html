@@ -9,33 +9,58 @@
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../assets/guide-site.js" defer></script>
 <style>
-  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:16px; margin:14px 0; }
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
   .recipe-card { background:var(--panel); border:2px solid var(--line2);
-    padding:12px 14px; image-rendering:pixelated; }
+    padding:10px 12px 12px; image-rendering:pixelated; }
   .recipe-header { display:flex; justify-content:space-between; align-items:center;
-    margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
   .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
-  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; }
-  .recipe-body { display:grid; grid-template-columns:auto 24px minmax(90px,1fr); align-items:center; gap:9px; }
-  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); gap:2px; }
-  .recipe-processing { display:contents; }
-  .recipe-processing .ingredients { display:flex; gap:2px; flex-wrap:wrap; max-width:160px; }
-  .arrow { font-size:18px; color:var(--muted); font-family:'VT323',monospace; }
-  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:4px; }
-  .cell { width:36px; height:36px; background:var(--bg); border:1px solid var(--line2);
-    display:flex; align-items:center; justify-content:center;
-    position:relative; image-rendering:pixelated; }
-  .cell.empty { background:transparent; border-color:transparent; }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 22px minmax(96px,1fr); align-items:center; gap:10px; }
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px); gap:2px; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  .cell.empty { background:transparent; box-shadow:none; }
   .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
     text-align:center; overflow:hidden; font-family:'VT323',monospace; }
-  .cell img { width:28px; height:28px; image-rendering:pixelated; }
-  .cell.result { border-color:var(--gold); }
-  .cell .count { position:absolute; bottom:-3px; right:-3px; background:var(--bg);
-    border:1px solid var(--line2); font-size:12px; padding:0 3px;
-    color:var(--txt); font-family:'VT323',monospace; }
-  .result-name { font-size:13px; color:var(--muted); text-align:center; max-width:120px;
-    font-family:'VT323',monospace; }
-  .ricon.placeholder { font-size:12px; color:var(--muted2); }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
+    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
+    padding:1px 2px; line-height:1; border-radius:0; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:4px 9px; font-family:'Press Start 2P',monospace;
+    font-size:7px; cursor:pointer; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
 </style>
 <style>
   
@@ -312,24 +337,25 @@
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="7 pages">7</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="7 pages">7</span></a>
-<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="8 pages">8</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="11 pages">11</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../items/index.html">Items</a><span class="sep">/</span><span>Electric Drill</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/item/electric_drill.png" alt="Electric Drill" width="64" height="64">
+    <img class="icon" src="../assets/item/electric_drill_3d.png" alt="Electric Drill" width="64" height="64">
     <div class="info">
       <h1>Electric Drill</h1>
       <div class="block-id">alaindustrial:electric_drill</div>
@@ -346,7 +372,7 @@
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Buffer</td><td>10 000 EU/FE</td></tr><tr><td>Charging</td><td>Battery Box slot / worn pack, fills in ~16 s</td></tr><tr><td>Cost</td><td>50 EU/FE per block broken</td></tr><tr><td>Passive drain</td><td>none</td></tr></tbody></table>
 <p>Instant-break blocks (grass, torches, flowers) are <strong>free</strong> — just as they never wear a vanilla tool. In creative, blocks drop nothing and no EU/FE is spent.</p>
 <h2>How it behaves</h2>
-<p><strong>Mining (charged):</strong> mines everything a pickaxe should, a touch faster than diamond. Diamond ore, obsidian, even ancient debris — drops match a diamond pickaxe. Each block costs 50 EU/FE. <strong>Mining (flat):</strong> below 50 EU/FE it mines at hand speed, but keeps the mining level and drops, and spends no EU/FE. <strong>Charging:</strong> the Battery Box charge slot and a worn Energy Pack both accept it automatically. <strong>Combat:</strong> hits a touch harder than a diamond pickaxe (6 damage), but attacks spend no EU/FE. <strong>Enchantments:</strong> the enchanting table and anvil treat it like a diamond pickaxe — Efficiency, Fortune, Silk Touch, Unbreaking, Mending. (Unbreaking/Mending are harmless but useless on an unbreakable tool.) <strong>Torch placement:</strong> with the drill in your main hand and torches in your inventory, right-clicking a block places a torch — the drill stays in your hotbar and the torch is pulled from your inventory (one used up). It prefers the Enriched Uranium Torch (which stays lit underwater) and falls back to a normal torch. Each placement drains <strong>5 EU/FE</strong>; if the charge is below that the torch still places and the EU/FE never goes negative. Placing a torch this way sounds exactly like placing one by hand, for you and for anyone nearby. Where a torch can't go (no support, or water for a normal torch) nothing happens and nothing is spent. In creative neither the torch nor the EU/FE is consumed. No torches in your inventory and it does nothing (a torch in your off-hand still works as normal). No cooldown. <strong>In creative:</strong> no charge is spent — not on mining, not on torches — just as a vanilla pickaxe takes no durability damage in creative. The rule covers the whole powered family; see the Energy Pack and the Battery Pouch. <strong>HUD:</strong> while in hand, an icon + charge % + bar (green → gold → red) show top-left. Same <strong>H</strong> key toggles it as the Energy Pack.</p>
+<p><strong>Mining (charged):</strong> mines everything a pickaxe should, a touch faster than diamond. Diamond ore, obsidian, even ancient debris — drops match a diamond pickaxe. Each block costs 50 EU/FE. <strong>Mining (flat):</strong> below 50 EU/FE it mines at hand speed, but keeps the mining level and drops, and spends no EU/FE. <strong>Charging:</strong> the Battery Box charge slot and a worn Energy Pack both accept it automatically. <strong>Combat:</strong> hits a touch harder than a diamond pickaxe (6 damage), but attacks spend no EU/FE. <strong>Enchantments:</strong> the enchanting table and anvil treat it like a diamond pickaxe — Efficiency, Fortune, Silk Touch, Unbreaking, Mending. (Unbreaking/Mending are harmless but useless on an unbreakable tool.) <strong>Torch placement:</strong> with the drill in your main hand and torches in your inventory, right-clicking a block places a torch — the drill stays in your hotbar and the torch is pulled from your inventory (one used up). It prefers the Enriched Uranium Torch (which stays lit underwater) and falls back to a normal torch. Each placement drains <strong>5 EU/FE</strong>. If the charge is below that the torch is <strong>not</strong> placed: the drill shows a message above your hotbar, no torch leaves your inventory, and the charge is untouched — the torch is powered, not free (you can still place one by hand for free by moving it to your hotbar). Placing a torch this way sounds exactly like placing one by hand, for you and for anyone nearby. Where a torch can't go (no support, or water for a normal torch) nothing happens and nothing is spent. In creative neither the torch nor the EU/FE is consumed and the charge check does not apply. No torches in your inventory and it does nothing (a torch in your off-hand still works as normal). No cooldown. <strong>In creative:</strong> no charge is spent — not on mining, not on torches — just as a vanilla pickaxe takes no durability damage in creative. The rule covers the whole powered family; see the Energy Pack and the Battery Pouch. <strong>HUD:</strong> while in hand, an icon + charge % + bar (green → gold → red) show top-left. Same <strong>H</strong> key toggles it as the Energy Pack.</p>
 <h2>Recipes</h2>
 <p>Built at a workbench <strong>around a finished diamond pickaxe</strong> — it sits in the centre and gives the drill its diamond mining tier (the drill itself digs a touch faster, 8.5 vs a diamond pickaxe's 8.0). Two <a href="energy_pack.html">batteries</a> flank it, an <a href="../components/electronic_circuit.html">electronic circuit</a> sits below between two <a href="../components/copper_coil.html">copper coils</a>, and an iron body caps the top. All the power components gate the drill behind LV infrastructure.</p>
 <h2>Progression</h2>
@@ -356,7 +382,7 @@
 <h2>Related</h2>
 <p><a href="energy_pack.html">Energy Pack</a> — charges the drill in your inventory. <a href="../energy-storage/battery_box.html">Battery Box</a> — charges the drill. <a href="tempered_iron_pickaxe.html">Tempered Iron Pickaxe</a> — the non-powered alternative earlier on.</p>
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Iron Ingot" aria-label="Iron Ingot"><span>iron in</span></div> <div class="cell placeholder" title="Iron Ingot" aria-label="Iron Ingot"><span>iron in</span></div> <div class="cell placeholder" title="Iron Ingot" aria-label="Iron Ingot"><span>iron in</span></div> <div class="cell" title="Battery"><img src="../assets/item/battery.png" alt="Battery" width="28" height="28"></div> <div class="cell placeholder" title="Diamond Pickaxe" aria-label="Diamond Pickaxe"><span>diamond</span></div> <div class="cell" title="Battery"><img src="../assets/item/battery.png" alt="Battery" width="28" height="28"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil.png" alt="Copper Coil" width="28" height="28"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="28" height="28"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil.png" alt="Copper Coil" width="28" height="28"></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Electric Drill"><img src="../assets/item/electric_drill.png" alt="Electric Drill" width="28" height="28"></div><div class="result-name">Electric Drill</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="electric drill alaindustrial:electric_drill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Battery"><img src="../assets/item/battery.png" alt="Battery" width="32" height="32"></div> <div class="cell" title="Diamond Pickaxe"><img src="../assets/vanilla/item/diamond_pickaxe.png" alt="Diamond Pickaxe" width="32" height="32"></div> <div class="cell" title="Battery"><img src="../assets/item/battery.png" alt="Battery" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil.png" alt="Copper Coil" width="32" height="32"></div></div><div class="arrow" aria-label="Craft">▶</div><div class="recipe-result"><div class="cell result" title="Electric Drill"><img src="../assets/item/electric_drill.png" alt="Electric Drill" width="32" height="32"></div><div class="result-name">Electric Drill</div></div></div></div></div>
   </main>
 </div>
 

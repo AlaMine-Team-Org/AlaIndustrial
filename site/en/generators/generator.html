@@ -5,37 +5,62 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#16161a">
-<title>LV Generator — Ala Industrial — Guide</title>
+<title>Generator — Ala Industrial — Guide</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../assets/guide-site.js" defer></script>
 <style>
-  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:16px; margin:14px 0; }
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
   .recipe-card { background:var(--panel); border:2px solid var(--line2);
-    padding:12px 14px; image-rendering:pixelated; }
+    padding:10px 12px 12px; image-rendering:pixelated; }
   .recipe-header { display:flex; justify-content:space-between; align-items:center;
-    margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
   .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
-  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; }
-  .recipe-body { display:grid; grid-template-columns:auto 24px minmax(90px,1fr); align-items:center; gap:9px; }
-  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); gap:2px; }
-  .recipe-processing { display:contents; }
-  .recipe-processing .ingredients { display:flex; gap:2px; flex-wrap:wrap; max-width:160px; }
-  .arrow { font-size:18px; color:var(--muted); font-family:'VT323',monospace; }
-  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:4px; }
-  .cell { width:36px; height:36px; background:var(--bg); border:1px solid var(--line2);
-    display:flex; align-items:center; justify-content:center;
-    position:relative; image-rendering:pixelated; }
-  .cell.empty { background:transparent; border-color:transparent; }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 22px minmax(96px,1fr); align-items:center; gap:10px; }
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px); gap:2px; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  .cell.empty { background:transparent; box-shadow:none; }
   .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
     text-align:center; overflow:hidden; font-family:'VT323',monospace; }
-  .cell img { width:28px; height:28px; image-rendering:pixelated; }
-  .cell.result { border-color:var(--gold); }
-  .cell .count { position:absolute; bottom:-3px; right:-3px; background:var(--bg);
-    border:1px solid var(--line2); font-size:12px; padding:0 3px;
-    color:var(--txt); font-family:'VT323',monospace; }
-  .result-name { font-size:13px; color:var(--muted); text-align:center; max-width:120px;
-    font-family:'VT323',monospace; }
-  .ricon.placeholder { font-size:12px; color:var(--muted2); }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
+    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
+    padding:1px 2px; line-height:1; border-radius:0; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:4px 9px; font-family:'Press Start 2P',monospace;
+    font-size:7px; cursor:pointer; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
 </style>
 <style>
   
@@ -312,26 +337,27 @@
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="4 pages">4</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="7 pages">7</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="7 pages">7</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="8 pages">8</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="11 pages">11</span></a>
   </aside>
   <main class="content" id="main-content">
-    <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../generators/index.html">Generators</a><span class="sep">/</span><span>LV Generator</span></div>
+    <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../generators/index.html">Generators</a><span class="sep">/</span><span>Generator</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/item/generator_3d.png" alt="LV Generator" width="64" height="64">
+    <img class="icon" src="../assets/item/generator_3d.png" alt="Generator" width="64" height="64">
     <div class="info">
-      <h1>LV Generator</h1>
+      <h1>Generator</h1>
       <div class="block-id">alaindustrial:generator</div>
       <div class="tags"><span class="tag cat" style="background:#f0b429">Generators</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implemented</span><span class="tag">tier-lv</span><span class="tag">energy</span><span class="tag">fuel</span></div>
     </div>
@@ -364,9 +390,9 @@
 <h2>Related</h2>
 <p><a href="../machines/macerator.html">Macerator</a> — the typical first LV machine to power. <a href="../energy-storage/battery_box.html">Battery Box</a> — bank the surplus, and drain this block before moving it. <a href="geothermal_generator.html">Geothermal Generator</a> — the lava-burning upgrade. <a href="../energy-transfer/copper_cable.html">Copper Cable</a> — how to route the energy.</p>
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Furnace" aria-label="Furnace"><span>furnace</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="28" height="28"></div> <div class="cell placeholder" title="Cobblestone" aria-label="Cobblestone"><span>cobbles</span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="LV Generator"><img src="../assets/block/generator_top.png" alt="LV Generator" width="28" height="28"></div><div class="result-name">LV Generator</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="generator alaindustrial:generator" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Cobblestone"><img src="../assets/vanilla/block/cobblestone.png" alt="Cobblestone" width="32" height="32"></div> <div class="cell" title="Cobblestone"><img src="../assets/vanilla/block/cobblestone.png" alt="Cobblestone" width="32" height="32"></div> <div class="cell" title="Cobblestone"><img src="../assets/vanilla/block/cobblestone.png" alt="Cobblestone" width="32" height="32"></div> <div class="cell" title="Cobblestone"><img src="../assets/vanilla/block/cobblestone.png" alt="Cobblestone" width="32" height="32"></div> <div class="cell" title="Furnace"><img src="../assets/vanilla/block/furnace_front.png" alt="Furnace" width="32" height="32"></div> <div class="cell" title="Cobblestone"><img src="../assets/vanilla/block/cobblestone.png" alt="Cobblestone" width="32" height="32"></div> <div class="cell" title="Cobblestone"><img src="../assets/vanilla/block/cobblestone.png" alt="Cobblestone" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Cobblestone"><img src="../assets/vanilla/block/cobblestone.png" alt="Cobblestone" width="32" height="32"></div></div><div class="arrow" aria-label="Craft">▶</div><div class="recipe-result"><div class="cell result" title="Generator"><img src="../assets/block/generator_top.png" alt="Generator" width="32" height="32"></div><div class="result-name">Generator</div></div></div></div></div>
 <h2>Used in</h2>
-<div class="recipe-cards"><div class="recipe-card"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell" title="LV Generator"><img src="../assets/block/generator_top.png" alt="LV Generator" width="28" height="28"></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="28" height="28"></div> <div class="cell placeholder" title="Smooth Stone" aria-label="Smooth Stone"><span>smooth </span></div></div><div class="arrow" aria-hidden="true">→</div><div class="recipe-result"><div class="cell result" title="Geothermal Generator"><div class="ricon placeholder">?</div></div><div class="result-name">Geothermal Generator</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="geothermal generator alaindustrial:geothermal_generator" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Smooth Stone"><img src="../assets/vanilla/block/smooth_stone.png" alt="Smooth Stone" width="32" height="32"></div> <div class="cell" title="Smooth Stone"><img src="../assets/vanilla/block/smooth_stone.png" alt="Smooth Stone" width="32" height="32"></div> <div class="cell" title="Smooth Stone"><img src="../assets/vanilla/block/smooth_stone.png" alt="Smooth Stone" width="32" height="32"></div> <div class="cell" title="Smooth Stone"><img src="../assets/vanilla/block/smooth_stone.png" alt="Smooth Stone" width="32" height="32"></div> <div class="cell" title="Generator"><img src="../assets/block/generator_top.png" alt="Generator" width="32" height="32"></div> <div class="cell" title="Smooth Stone"><img src="../assets/vanilla/block/smooth_stone.png" alt="Smooth Stone" width="32" height="32"></div> <div class="cell" title="Smooth Stone"><img src="../assets/vanilla/block/smooth_stone.png" alt="Smooth Stone" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Smooth Stone"><img src="../assets/vanilla/block/smooth_stone.png" alt="Smooth Stone" width="32" height="32"></div></div><div class="arrow" aria-label="Craft">▶</div><div class="recipe-result"><div class="cell result" title="Geothermal Generator"><img src="../assets/block/geothermal_front.png" alt="Geothermal Generator" width="32" height="32"></div><div class="result-name">Geothermal Generator</div></div></div></div></div>
   </main>
 </div>
 
