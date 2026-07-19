@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.core.EnergyPort;
 import dev.alaindustrial.core.EnergyTier;
 import dev.alaindustrial.core.FluidAmounts;
 import dev.alaindustrial.core.FluidHolder;
@@ -70,11 +71,79 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 		return 10 * Config.geothermalBurnTicks;
 	}
 
-	/** Every face exposes the same single tank — the generator has no per-face fluid restriction. */
+	/**
+	 * Every face exposes the same lava fuel view — the generator has no per-face fluid restriction.
+	 *
+	 * <p><b>MOD-126.</b> This deliberately does <em>not</em> hand out the raw {@link #fluidTank}. The
+	 * generator holds lava in two stages: the {@code fluidTank} intake buffer (fed by adjacent pipes/pumps)
+	 * <em>and</em> the {@code lavaTicks} burn reserve the GUI actually draws. Bucket-fed lava lands straight
+	 * in the burn reserve, so the raw {@code fluidTank} reads empty in normal play — and HUD mods
+	 * (Jade / WTHIT / TOP), which read {@code fluid()}/{@code getAmount()} off this capability on the server,
+	 * then showed "Empty" over a generator visibly full of lava. {@link LavaFuelView} reports the combined
+	 * lava the player sees (intake + burn reserve, clamped to the one 10-bucket gauge the GUI shows) so any
+	 * capability reader sees the real fuel, while insertion/extraction still delegate to the real intake tank.
+	 */
 	@Override
 	public FluidPort fluidPort(Direction side) {
-		return fluidTank;
+		return fuelView;
 	}
+
+	/** The burn reserve ({@code lavaTicks}) expressed in mB — same derivation as the GUI lava-gauge tooltip. */
+	private long lavaFuelMb() {
+		int burnTicks = Math.max(1, Config.geothermalBurnTicks);
+		return (long) lavaTicks * FluidAmounts.BUCKET / burnTicks;
+	}
+
+	/**
+	 * Read-through fluid view exposed to the capability (MOD-126): reports the combined lava the player
+	 * sees ({@code fluidTank} intake + {@code lavaTicks} burn reserve, clamped to one 10-bucket gauge) so
+	 * HUD mods stop showing "Empty" over a lava-filled generator. Insertion/extraction and the
+	 * insertion/extraction predicates delegate to the real {@link #fluidTank} unchanged: fluid transport
+	 * ({@code FluidMover}, the pump push loop) drives ports through {@code insert()}/{@code extract()} return
+	 * values and never reads the reported amount/capacity, so surfacing the combined level changes nothing
+	 * about how lava actually moves in or out.
+	 */
+	private final class LavaFuelView implements FluidPort {
+		@Override
+		public long insert(FluidHolder fluid, long maxAmount, EnergyPort.Txn txn) {
+			return fluidTank.insert(fluid, maxAmount, txn);
+		}
+
+		@Override
+		public long extract(FluidHolder fluid, long maxAmount, EnergyPort.Txn txn) {
+			return fluidTank.extract(fluid, maxAmount, txn);
+		}
+
+		@Override
+		public FluidHolder fluid() {
+			if (!fluidTank.fluid.isEmpty()) {
+				return fluidTank.fluid;
+			}
+			return lavaTicks > 0 ? FluidHolder.of(Fluids.LAVA) : FluidHolder.EMPTY;
+		}
+
+		@Override
+		public long getAmount() {
+			return Math.min(TANK_CAPACITY, fluidTank.amount + lavaFuelMb());
+		}
+
+		@Override
+		public long getCapacity() {
+			return TANK_CAPACITY;
+		}
+
+		@Override
+		public boolean supportsInsertion() {
+			return fluidTank.supportsInsertion();
+		}
+
+		@Override
+		public boolean supportsExtraction() {
+			return fluidTank.supportsExtraction();
+		}
+	}
+
+	private final FluidPort fuelView = new LavaFuelView();
 
 	@Override
 	protected int produce(Level level, BlockPos pos, BlockState state) {

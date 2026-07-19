@@ -153,11 +153,25 @@ pitest {
     jvmArgs               = ['-Xmx2g']
     useClasspathFile      = true
 
-    // Reporting-only baseline — do NOT fail the build on surviving mutants yet. The point of this
-    // first run is to measure where the suite is weak; hard gates (`mutationThreshold`,
-    // `maxSurviving`) get ratcheted in once the baseline is recorded and the worst gaps closed.
-    mutationThreshold = 0
-    coverageThreshold = 0
+    // Incremental pitest history (MOD-136). When the history file is restored by ci.yml
+    // (actions/cache on common/build/pitest-history.bin), PIT only re-runs mutants whose bytecode
+    // changed since the last run — keeping CI pitest fast on a warm cache. Enabled only when the
+    // file already exists (cold-cache run = full discovery, then the file is written for next
+    // time). Both locations are set together because PIT's incremental store reads input and
+    // writes output in one pass; splitting them trips ErroringHistoryFactory on a missing input.
+    def historyFile = layout.buildDirectory.file('pitest-history.bin').get().asFile
+    if (historyFile.exists()) {
+        historyInputLocation  = historyFile
+        historyOutputLocation = historyFile
+    }
+
+    // NOTE: mutationThreshold/coverageThreshold are NOT set here. In gradle-pitest-plugin 1.19.0
+    // the PIT-side `mutationThreshold` is only used for an early-exit heuristic, not a hard build
+    // gate — the build can pass even with coverage below the floor. The real ratchet gate lives
+    // in docs/tools/pitest_check.py (Python validator wired into the CI pitest job, NOT into
+    // checkAll — pitest needs a prior :common:pitest run and is too slow for pre-commit). It reads
+    // this task's mutations.xml and fails the build when the killed-mutant rate drops below
+    // pitest_mutation_threshold in gradle.properties. MOD-136.
 }
 
 configurations {

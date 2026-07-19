@@ -76,7 +76,11 @@ public final class ModRecipes {
 		}
 	}
 
-	public static final Kind MACERATION = new Kind("maceration", 400);
+	// defaultEnergy is the fallback when a recipe JSON omits `energy`; every shipped
+	// maceration JSON sets `energy: 300` (= maceratorDuration × machineEuPerTick), so this default
+	// is never active. It is kept aligned with the actual recipe energy on purpose so the
+	// recipe_check.py validator does not flag a stale-looking fallback (MOD-134).
+	public static final Kind MACERATION = new Kind("maceration", 300);
 	public static final Kind SMELTING = new Kind("smelting", 200);
 	public static final Kind COMPRESSING = new Kind("compressing", 260);
 	public static final Kind EXTRACTING = new Kind("extracting", 240);

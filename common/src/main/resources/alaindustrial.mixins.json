@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "FuelValuesMixin",
-    "FurnaceFuelSlotMixin"
+    "FurnaceFuelSlotMixin",
+    "SkeletonSpawnEquipmentMixin",
+    "ZombieSpawnEquipmentMixin"
   ],
   "client": [
     "client.ItemTintSourcesAccessor"

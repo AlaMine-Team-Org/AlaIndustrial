@@ -1184,4 +1184,62 @@ public class FluidGameTest {
 		}
 		helper.succeed();
 	}
+
+	/**
+	 * @implements MOD-126 — a bucket-fed geothermal generator publishes its lava through the fluid
+	 *     capability so HUD mods (Jade / WTHIT / TOP) see it instead of "Empty". Bucket lava lands in the
+	 *     burn reserve ({@code lavaTicks}), not the raw {@code fluidTank}, so before the fix the published
+	 *     {@code Storage<FluidVariant>} reported a blank resource (capacity but no fluid) — exactly what a
+	 *     HUD renders as "Empty". This reads the capability the way Jade does on the server (
+	 *     {@code FluidStorage.SIDED.find} with side {@code null}, iterating {@code StorageView}s) and
+	 *     asserts a non-blank LAVA view with amount > 0. Fails without the {@code LavaFuelView} fix.
+	 * @covers R-CON-01
+	 */
+	@GameTest
+	public void mod126_bucketFedGeothermalPublishesLavaToHud(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		GeothermalGeneratorBlockEntity geo = place(helper);
+		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET));
+		// One tick loads the bucket's worth of lava into the burn reserve (lavaTicks); the raw fluidTank
+		// stays empty on this path — that is the whole point of the bug.
+		drive(geo, helper, 2);
+		if (geo.fluidTank.amount != 0) {
+			helper.fail("precondition: bucket-fed lava must sit in the burn reserve, not the raw fluidTank; "
+					+ "fluidTank held " + geo.fluidTank.amount + " mB");
+			return;
+		}
+
+		// Read the published capability exactly as Jade's server-side FluidStorageProvider does: side = null.
+		net.fabricmc.fabric.api.transfer.v1.storage.Storage<net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant> storage =
+				net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage.SIDED.find(level, geo.getBlockPos(), null);
+		if (storage == null) {
+			helper.fail("geothermal generator did not publish a fluid capability (side=null)");
+			return;
+		}
+
+		boolean sawLava = false;
+		long amountDroplets = 0;
+		long capacityDroplets = 0;
+		for (net.fabricmc.fabric.api.transfer.v1.storage.StorageView<net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant> view
+				: storage) {
+			if (!view.isResourceBlank()) {
+				sawLava = view.getResource().getFluid() == Fluids.LAVA;
+				amountDroplets = view.getAmount();
+				capacityDroplets = view.getCapacity();
+			}
+		}
+
+		if (!sawLava || amountDroplets <= 0) {
+			helper.fail("HUD read: bucket-fed generator must publish a non-blank LAVA view with amount > 0, "
+					+ "got sawLava=" + sawLava + " amountDroplets=" + amountDroplets + " (this is the MOD-126 bug)");
+			return;
+		}
+		long expectedCapacityDroplets =
+				GeothermalGeneratorBlockEntity.TANK_CAPACITY * FluidAmounts.FABRIC_DROPLETS_PER_MB;
+		if (capacityDroplets != expectedCapacityDroplets) {
+			helper.fail("published capacity must stay the single 10-bucket gauge (" + expectedCapacityDroplets
+					+ " droplets), got " + capacityDroplets);
+		}
+		helper.succeed();
+	}
 }

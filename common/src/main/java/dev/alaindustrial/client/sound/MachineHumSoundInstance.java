@@ -63,4 +63,13 @@ public final class MachineHumSoundInstance extends AbstractTickableSoundInstance
 			stop();
 		}
 	}
+
+	/**
+	 * Ends this loop on demand from the client hook — used when the manager drops its tracked instances
+	 * after a teleport so the ticker can rebuild them. {@link AbstractTickableSoundInstance#stop()} is
+	 * {@code protected}, unreachable from the manager (a different class), so expose it here.
+	 */
+	public void endLoop() {
+		stop();
+	}
 }

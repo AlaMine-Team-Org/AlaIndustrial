@@ -47,6 +47,7 @@
 			,"dev.alaindustrial.gametest.ItemPipeGameTest"
 			,"dev.alaindustrial.gametest.FluidTankGameTest"
 			,"dev.alaindustrial.gametest.GuideBookGameTest"
+			,"dev.alaindustrial.gametest.MobSpawnEquipmentGameTest"
 		]
 	}
 }
