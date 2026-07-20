@@ -4,8 +4,12 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.core.EnergyNet;
 import dev.alaindustrial.core.EnergyRole;
 import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.stats.PlayerStatsTracker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -39,10 +43,26 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 		made = (made > 0) ? Math.max(1, Math.round(made * Config.globalEuRateMultiplier)) : 0;
 		boolean changed = false;
 		if (made > 0) {
+			// MOD-156: "active in the mod" time is credited whenever the generator is RUNNING, before and
+			// independently of the buffer-room check below. A mature base saturates its network as a normal
+			// steady state, and gating the clock on `room > 0` froze the dashboard's uptime readout there
+			// indefinitely — production attribution needs that gate, elapsed time does not.
+			if (getOwner() != null && level instanceof ServerLevel activeLevel) {
+				PlayerStatsTracker.get().recordActive(activeLevel.getServer(), getOwner());
+			}
 			long room = energy.getCapacity() - energy.amount;
 			if (room > 0) {
-				energy.amount += Math.min(room, (long) made);
+				long credited = Math.min(room, (long) made);
+				energy.amount += credited;
 				changed = true;
+				// MOD-133: attribute the EU actually credited (not `made` before the cap) to the owner —
+				// career statistics + per-generator breakdown. No-op without an owner or off-server; the
+				// tracker additionally drops offline/creative owners.
+				if (getOwner() != null && level instanceof ServerLevel serverLevel) {
+					Identifier generatorId = BuiltInRegistries.BLOCK.getKey(state.getBlock());
+					PlayerStatsTracker.get()
+							.recordProduction(serverLevel.getServer(), getOwner(), generatorId, credited);
+				}
 			}
 		}
 		// Direct push to a cable-less adjacent machine. The cabled path is owned by the EnergyNetwork

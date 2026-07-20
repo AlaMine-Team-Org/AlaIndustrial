@@ -145,6 +145,9 @@ public final class ModItemsNeoForge {
 	// so both loaders build the same item; NeoForge supplies the id from the deferred key itself.
 	public static final DeferredItem<ElectricDrillItem> ELECTRIC_DRILL =
 			ITEMS.registerItem("electric_drill", ElectricDrillItem::new, ElectricDrillItem::electricDrillProperties);
+	// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
+	public static final DeferredItem<dev.alaindustrial.item.MagnetItem> ELECTROMAGNET =
+			ITEMS.registerItem("electromagnet", dev.alaindustrial.item.MagnetItem::new, p -> p.stacksTo(1));
 	// Vacuum Capsule (MOD-063): empty stacks to the vanilla default (64), filled to STACK_SIZE (16).
 	public static final DeferredItem<dev.alaindustrial.item.VacuumCapsuleItem> VACUUM_CAPSULE =
 			ITEMS.registerItem("vacuum_capsule", dev.alaindustrial.item.VacuumCapsuleItem::new);
@@ -364,6 +367,7 @@ public final class ModItemsNeoForge {
 		ModContent.ENERGY_PACK = ENERGY_PACK::get;
 		// DeferredItem<ElectricDrillItem> into a Supplier<Item> slot — bind via ::get (invariant generics).
 		ModContent.ELECTRIC_DRILL = ELECTRIC_DRILL::get;
+		ModContent.ELECTROMAGNET = ELECTROMAGNET::get;
 		ModContent.VACUUM_CAPSULE = VACUUM_CAPSULE::get;
 		ModContent.FILLED_VACUUM_CAPSULE = FILLED_VACUUM_CAPSULE::get;
 		ModContent.STOCK_DISPLAY_FRAME_ITEM = STOCK_DISPLAY_FRAME_ITEM::get;

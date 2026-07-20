@@ -178,6 +178,8 @@ public final class ModContent {
 	public static Supplier<Item> ENERGY_PACK = unbound("ENERGY_PACK");
 	// Electric Drill (MOD-079) — the first powered hand tool: a diamond-tier pickaxe that runs on EU.
 	public static Supplier<Item> ELECTRIC_DRILL = unbound("ELECTRIC_DRILL");
+	// Electromagnet (MOD-132) — EU item in any inventory slot that draws loose drops toward the carrier.
+	public static Supplier<Item> ELECTROMAGNET = unbound("ELECTROMAGNET");
 	// Vacuum Capsule (MOD-063) — a stackable fluid container: empty (×64) exchanges with the
 	// fluid-carrying filled form (×16). See docs/blocks/items/vacuum_capsule.md.
 	public static Supplier<Item> VACUUM_CAPSULE = unbound("VACUUM_CAPSULE");

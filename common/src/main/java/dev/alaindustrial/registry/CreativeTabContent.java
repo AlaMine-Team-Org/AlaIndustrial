@@ -202,6 +202,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.BATTERY.get());
 		out.accept(ModContent.ENERGY_PACK.get());
 		out.accept(ModContent.ELECTRIC_DRILL.get());
+		out.accept(ModContent.ELECTROMAGNET.get());
 		out.accept(ModContent.TELEPORTER_REMOTE.get());
 		// Empty capsule only — the filled form (MOD-063) is obtained by using it on a fluid.
 		out.accept(ModContent.VACUUM_CAPSULE.get());

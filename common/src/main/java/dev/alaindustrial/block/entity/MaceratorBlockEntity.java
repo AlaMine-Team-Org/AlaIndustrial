@@ -64,6 +64,7 @@ public class MaceratorBlockEntity extends MachineBlockEntity implements MenuProv
 				progress = 0;
 				items.get(INPUT_SLOT).shrink(1);
 				addOutput(recipe);
+				creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
 			}
 			setChanged();
 		} else if (recipe == null && progress != 0) {

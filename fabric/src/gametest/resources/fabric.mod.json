@@ -36,6 +36,7 @@
 			"dev.alaindustrial.gametest.PouchGameTest",
 			"dev.alaindustrial.gametest.EnergyPackGameTest",
 			"dev.alaindustrial.gametest.ElectricDrillGameTest",
+			"dev.alaindustrial.gametest.MagnetGameTest",
 			"dev.alaindustrial.gametest.ItemEnergyCapabilityGameTest",
 			"dev.alaindustrial.gametest.CapsuleGameTest",
 			"dev.alaindustrial.gametest.GeothermalLavaInputGameTest",
@@ -48,6 +49,9 @@
 			,"dev.alaindustrial.gametest.FluidTankGameTest"
 			,"dev.alaindustrial.gametest.GuideBookGameTest"
 			,"dev.alaindustrial.gametest.MobSpawnEquipmentGameTest"
+			,"dev.alaindustrial.gametest.PlayerStatsGameTest"
+			,"dev.alaindustrial.gametest.PlayerStatsAttachmentGameTest"
+			,"dev.alaindustrial.gametest.EnrichedUraniumTorchGameTest"
 		]
 	}
 }

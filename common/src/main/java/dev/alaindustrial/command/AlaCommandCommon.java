@@ -2,6 +2,7 @@ package dev.alaindustrial.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -10,6 +11,9 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.command.demo.DemoStand;
 import dev.alaindustrial.core.NetworkManager;
+import dev.alaindustrial.stats.LevelMath;
+import dev.alaindustrial.stats.PlayerModStats;
+import dev.alaindustrial.stats.PlayerStatsStore;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -91,6 +95,7 @@ public final class AlaCommandCommon {
 							return Command.SINGLE_SUCCESS;
 						}));
 		tree.then(configTree());
+		tree.then(profileTree());
 		if (demoEnabled) {
 			tree.then(demoTree());
 		}
@@ -121,6 +126,73 @@ public final class AlaCommandCommon {
 					}
 					return Command.SINGLE_SUCCESS;
 				}));
+	}
+
+	/**
+	 * The {@code /ala profile} subtree (MOD-133): inspect and force a player's mod-XP for QA — the only
+	 * way to reach high ranks without dozens of hours of real play. Op-only (level 2); plain English
+	 * literals by the same op/diagnostic convention as {@link #configTree()}/{@link #demoTree()}, so no
+	 * locale keys are spent on an admin tool.
+	 *
+	 * <p>{@code set <xp>} solves for the {@code euUsefulConsumedTotal} that lands total XP exactly on
+	 * the target (XP is derived from two career totals, so the existing generator term is backed out —
+	 * see {@link LevelMath#consumedForTargetXp}) and overwrites {@code highestLevelReached} so the tool
+	 * can move a profile <em>down</em> as well as up. Career production is never destroyed, so a target
+	 * below what production alone already grants is refused with the reachable floor rather than
+	 * silently missed.
+	 */
+	private static LiteralArgumentBuilder<CommandSourceStack> profileTree() {
+		return Commands.literal("profile")
+				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.then(Commands.literal("show").executes(ctx -> {
+					ServerPlayer player = ctx.getSource().getPlayerOrException();
+					ctx.getSource().sendSuccess(() -> profileBody(player), false);
+					return Command.SINGLE_SUCCESS;
+				}))
+				.then(Commands.literal("set")
+						.then(Commands.argument("xp", IntegerArgumentType.integer(0)).executes(ctx -> {
+							ServerPlayer player = ctx.getSource().getPlayerOrException();
+							long targetXp = IntegerArgumentType.getInteger(ctx, "xp");
+							PlayerModStats before = PlayerStatsStore.get(player);
+							long consumed = LevelMath.consumedForTargetXp(targetXp, before.euProducedTotal(),
+									Config.euPerXp, Config.euPerXpGenerated);
+							if (consumed < 0) {
+								// Unreachable: career production alone already grants more than the target, and
+								// career EU is the ground truth — we do not destroy it to satisfy a QA number.
+								long floor = before.euProducedTotal() / Math.max(1, Config.euPerXpGenerated);
+								ctx.getSource().sendFailure(Component.literal(
+										"Cannot set XP to " + targetXp + ": career generator output alone already grants "
+												+ floor + " XP. Lowest reachable value is " + floor + "."));
+								return 0;
+							}
+							// A QA command must be able to move DOWN too, so highestLevelReached is overwritten
+							// rather than max()'d — the no-demotion rule protects players, not the op tool.
+							int level = LevelMath.levelForXp(targetXp, Config.xpLevelOneCost, Config.levelXpMultiplier);
+							PlayerStatsStore.set(player, new PlayerModStats(
+									before.euProducedTotal(), consumed, level,
+									before.producedByGenerator(), before.activeTicks()));
+							ctx.getSource().sendSuccess(() -> Component.literal(
+									"Set mod XP to " + targetXp + " (level " + level + ").").withStyle(HEADER), false);
+							return Command.SINGLE_SUCCESS;
+						})));
+	}
+
+	/** One-shot readout of a player's mod-XP stats (op/QA output — plain English, no locale keys). */
+	private static Component profileBody(ServerPlayer player) {
+		PlayerModStats stats = PlayerStatsStore.get(player);
+		long xp = stats.xp(Config.euPerXp, Config.euPerXpGenerated);
+		int level = Math.max(stats.highestLevelReached(),
+				LevelMath.levelForXp(xp, Config.xpLevelOneCost, Config.levelXpMultiplier));
+		String rank = LevelMath.rankKey(level) + " " + LevelMath.roman(LevelMath.subLevel(level));
+		MutableComponent msg = Component.literal("Ala profile — " + player.getScoreboardName()).withStyle(HEADER, ChatFormatting.BOLD);
+		msg.append("\n").append(field(Component.literal("Rank").withStyle(LABEL),
+				Component.literal(rank + " (level " + level + ")").withStyle(VALUE)));
+		msg.append("\n").append(field(Component.literal("XP").withStyle(LABEL), val(xp)));
+		msg.append("\n").append(field(Component.literal("EU produced").withStyle(LABEL), val(stats.euProducedTotal())));
+		msg.append("\n").append(field(Component.literal("EU useful-consumed").withStyle(LABEL), val(stats.euUsefulConsumedTotal())));
+		msg.append("\n").append(field(Component.literal("Active minutes").withStyle(LABEL), val(stats.activeTicks() / 1200)));
+		msg.append("\n").append(field(Component.literal("Generator types").withStyle(LABEL), val(stats.producedByGenerator().size())));
+		return msg;
 	}
 
 	/**

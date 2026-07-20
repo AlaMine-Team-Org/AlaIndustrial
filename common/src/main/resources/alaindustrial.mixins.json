@@ -10,6 +10,7 @@
     "ZombieSpawnEquipmentMixin"
   ],
   "client": [
+    "client.AbstractContainerScreenAccessor",
     "client.ItemTintSourcesAccessor"
   ],
   "server": [],

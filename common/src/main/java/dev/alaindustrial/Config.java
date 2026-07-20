@@ -139,8 +139,11 @@ public final class Config {
 	/** Shared buffer for electric furnace / compressor / extractor. */
 	public static int machineBuffer = 800;
 	/** Pump EU buffer. Sized to hold several buckets' worth of pump cost (pumpEuPerBucket = 1000) so the
-	 * energy network can keep the pump fed across its 32 EU/t LV intake without stalling just below the
-	 * per-bucket threshold. */
+	 * energy network can keep the pump fed without stalling just below the per-bucket threshold. NOTE
+	 * (MOD-070): a single copper cable now carries {@link #cableBuffer} EU/tick (the segment buffer, e.g.
+	 * 12), not the LV tier voltage (32) — so a pump fed through one thin cable refills ~2.7× slower than a
+	 * directly-adjacent source. This large buffer smooths that out; feed a high-draw pump from an adjacent
+	 * source or several parallel cables if intake speed matters. */
 	public static int pumpBuffer = 4000;
 	public static int generatorBuffer = 4000;
 	public static int geothermalBuffer = 4000;
@@ -149,7 +152,17 @@ public final class Config {
 	/** Shared buffer for both T2 wind mills (high-altitude + storm). */
 	public static int t2WindMillBuffer = 8000;
 	public static int solarBuffer = 8000;
-	public static int cableBuffer = 64;
+	/**
+	 * Per-cable working EU buffer (MOD-070). A cable is a real transport segment with a small live
+	 * buffer: energy flows segment-to-segment through these buffers (inertia) instead of teleporting
+	 * producer→consumer, and on a line break the remainder is retained in the source-side cables.
+	 * Deliberately tiny so a wall of cables can never be used as bulk storage — the balance ceiling is
+	 * {@code cableBuffer × realistic-network-size ≪ batteryBoxBuffer}: a 1000-cable network holds
+	 * 12 000 EU &lt; one Battery Box ({@link #batteryBoxBuffer} = 20 000). Kept separate from
+	 * {@link dev.alaindustrial.core.EnergyTier#capacity()} (the machine buffer, 10 000 EU for LV) on
+	 * purpose. Applies to newly placed cables ({@code EnergyBuffer.capacity} is final per block entity).
+	 */
+	public static int cableBuffer = 12;
 
 	// --- Item pipes (MOD-104, rebalanced in MOD-108) ---
 	/**
@@ -217,6 +230,22 @@ public final class Config {
 		(MOD-097) — the torch is powered, not free. */
 	public static int electricDrillTorchEuCost = 5;
 
+	// --- Electromagnet (MOD-132, item-pull convenience) ---
+	/** Electromagnet EU buffer (tier 1). A modest LV reservoir: at {@link #magnetEuPerItem} per pulled
+	 * item·tick it reaps hundreds of drops before a recharge, and tops up in ~8 s at an LV charger. */
+	public static int magnetBuffer = 5_000;
+	/** Max EU/tick the magnet accepts while sitting in a charge slot (LV ceiling, like the drill). */
+	public static int magnetInputRate = 32;
+	/** Pull radius in blocks around the carrier (a sphere — up, down and sideways). Tier 1 is a modest 3
+	 * blocks; higher tiers (larger radius) are a later task. */
+	public static int magnetRange = 3;
+	/** EU spent per item actually pulled, each tick it is being drawn in. An idle scan (nothing in range)
+	 * is free, so the magnet is a consumable and not a free vacuum. Small next to the large buffer. */
+	public static int magnetEuPerItem = 2;
+	/** How often (ticks) the magnet scans for and pulls nearby drops. 1 = every tick, for a smooth, fast
+	 * XP-orb-like pull that visibly flies items in (a coarser interval read as "barely pulling"). */
+	public static int magnetScanIntervalTicks = 1;
+
 	// --- Stock Display Frame (MOD-066, no energy) ---
 	/** How often (ticks) a stock display frame rescans the container behind it. 20 = once a second;
 	 * a 100-frame warehouse costs ~5 container sums per tick at the default. */
@@ -233,6 +262,23 @@ public final class Config {
 	/** Ticks the iron furnace needs to smelt one item on fuel. Between vanilla (200) and the
 	 * electric furnace, so it reads as "a bit faster than stone" without devaluing the electric tier. */
 	public static int ironFurnaceCookTime = 150;
+
+	// --- Player stats / mod XP (MOD-133). Starting values — calibrate after playtest. ---
+	/** Useful EU (from completed machine operations) that equals one point of mod XP. Higher = slower. */
+	public static int euPerXp = 1000;
+	/**
+	 * Produced EU (actually credited into a generator's buffer) that equals one point of mod XP —
+	 * deliberately far worse than {@link #euPerXp}, because a generator runs without the player.
+	 * The token trickle keeps a big power farm from feeling unrewarded while leaving hands-on machine
+	 * work the dominant source; idle production into a full buffer credits nothing at all.
+	 */
+	public static int euPerXpGenerated = 20_000;
+	/** XP cost of the first level (1→2); each later level costs {@link #levelXpMultiplier}× the previous. */
+	public static int xpLevelOneCost = 80;
+	/** Per-level XP cost multiplier — the exponential curve over 40 levels. Must be &gt; 1.0. */
+	public static float levelXpMultiplier = 1.18f;
+	/** How often (server ticks) in-memory player stats are folded into the attachment and synced. */
+	public static int statsFlushTicks = 100;
 
 	// --- Cable ---
 	/**
@@ -485,6 +531,26 @@ public final class Config {
 			if (sElectricDrillTorchEuCost < 0) {
 				sElectricDrillTorchEuCost = 5;
 			}
+			int sMagnetBuffer = getInt(o, "magnetBuffer", magnetBuffer);
+			if (sMagnetBuffer <= 0) {
+				sMagnetBuffer = 5_000;
+			}
+			int sMagnetInputRate = getInt(o, "magnetInputRate", magnetInputRate);
+			if (sMagnetInputRate <= 0) {
+				sMagnetInputRate = 32;
+			}
+			int sMagnetRange = getInt(o, "magnetRange", magnetRange);
+			if (sMagnetRange <= 0) {
+				sMagnetRange = 3;
+			}
+			int sMagnetEuPerItem = getInt(o, "magnetEuPerItem", magnetEuPerItem);
+			if (sMagnetEuPerItem <= 0) {
+				sMagnetEuPerItem = 2;
+			}
+			int sMagnetScanIntervalTicks = getInt(o, "magnetScanIntervalTicks", magnetScanIntervalTicks);
+			if (sMagnetScanIntervalTicks <= 0) {
+				sMagnetScanIntervalTicks = 1;
+			}
 			int sStockFrameScanIntervalTicks = getInt(o, "stockFrameScanIntervalTicks", stockFrameScanIntervalTicks);
 			if (sStockFrameScanIntervalTicks <= 0) {
 				sStockFrameScanIntervalTicks = 20;
@@ -497,6 +563,27 @@ public final class Config {
 			int sIronFurnaceCookTime = getInt(o, "ironFurnaceCookTime", ironFurnaceCookTime);
 			if (sIronFurnaceCookTime <= 0) {
 				sIronFurnaceCookTime = 150;
+			}
+			// MOD-133 player-stats / XP with guards (avoid divide-by-zero and a flat/never-flushing curve).
+			int sEuPerXp = getInt(o, "euPerXp", euPerXp);
+			if (sEuPerXp < 1) {
+				sEuPerXp = 1;
+			}
+			int sEuPerXpGenerated = getInt(o, "euPerXpGenerated", euPerXpGenerated);
+			if (sEuPerXpGenerated < 1) {
+				sEuPerXpGenerated = 1;
+			}
+			int sXpLevelOneCost = getInt(o, "xpLevelOneCost", xpLevelOneCost);
+			if (sXpLevelOneCost < 1) {
+				sXpLevelOneCost = 1;
+			}
+			float sLevelXpMultiplier = getFloat(o, "levelXpMultiplier", levelXpMultiplier);
+			if (sLevelXpMultiplier <= 1.0f) {
+				sLevelXpMultiplier = 1.18f;
+			}
+			int sStatsFlushTicks = getInt(o, "statsFlushTicks", statsFlushTicks);
+			if (sStatsFlushTicks < 1) {
+				sStatsFlushTicks = 100;
 			}
 			double sCopperCableLossPerBlock = getFloat(o, "copperCableLossPerBlock", (float) copperCableLossPerBlock);
 			if (sCopperCableLossPerBlock < 0) {
@@ -572,6 +659,11 @@ public final class Config {
 			electricDrillEuPerBlock = sElectricDrillEuPerBlock;
 			electricDrillInputRate = sElectricDrillInputRate;
 			electricDrillTorchEuCost = sElectricDrillTorchEuCost;
+			magnetBuffer = sMagnetBuffer;
+			magnetInputRate = sMagnetInputRate;
+			magnetRange = sMagnetRange;
+			magnetEuPerItem = sMagnetEuPerItem;
+			magnetScanIntervalTicks = sMagnetScanIntervalTicks;
 			stockFrameScanIntervalTicks = sStockFrameScanIntervalTicks;
 			machineEuPerTick = sMachineEuPerTick;
 			maceratorDuration = sMaceratorDuration;
@@ -579,6 +671,11 @@ public final class Config {
 			compressorDuration = sCompressorDuration;
 			extractorDuration = sExtractorDuration;
 			ironFurnaceCookTime = sIronFurnaceCookTime;
+			euPerXp = sEuPerXp;
+			euPerXpGenerated = sEuPerXpGenerated;
+			xpLevelOneCost = sXpLevelOneCost;
+			levelXpMultiplier = sLevelXpMultiplier;
+			statsFlushTicks = sStatsFlushTicks;
 			copperCableLossPerBlock = sCopperCableLossPerBlock;
 			networksPerTick = sNetworksPerTick;
 			networkAnalyzerMaxTraversedNetworks = sNetworkAnalyzerMaxTraversedNetworks;
@@ -747,7 +844,7 @@ public final class Config {
 		o.addProperty("t2WindMillBuffer", t2WindMillBuffer);
 		c(o, "solarBuffer", "Solar panel EU buffer. Applies to newly placed blocks.");
 		o.addProperty("solarBuffer", solarBuffer);
-		c(o, "cableBuffer", "Per-cable EU buffer. Applies to newly placed cables.");
+		c(o, "cableBuffer", "Per-cable working EU buffer — the live transport-segment buffer (MOD-070). Tiny by design so a wall of cables can't be used as bulk storage. Applies to newly placed cables.");
 		o.addProperty("cableBuffer", cableBuffer);
 		c(o, "itemPipeItemsPerTransfer", "Items an item-pipe network moves per transfer. With the interval below this sets throughput.");
 		o.addProperty("itemPipeItemsPerTransfer", itemPipeItemsPerTransfer);
@@ -773,6 +870,16 @@ public final class Config {
 		o.addProperty("electricDrillInputRate", electricDrillInputRate);
 		c(o, "electricDrillTorchEuCost", "EU the drill spends to place a torch on right-click.");
 		o.addProperty("electricDrillTorchEuCost", electricDrillTorchEuCost);
+		c(o, "magnetBuffer", "Electromagnet EU buffer.");
+		o.addProperty("magnetBuffer", magnetBuffer);
+		c(o, "magnetInputRate", "Max EU/t the electromagnet accepts while charging in a slot.");
+		o.addProperty("magnetInputRate", magnetInputRate);
+		c(o, "magnetRange", "Electromagnet pull radius in blocks around the carrier.");
+		o.addProperty("magnetRange", magnetRange);
+		c(o, "magnetEuPerItem", "EU the electromagnet spends per item pulled each scan tick (an idle scan is free).");
+		o.addProperty("magnetEuPerItem", magnetEuPerItem);
+		c(o, "magnetScanIntervalTicks", "How often (ticks) the electromagnet scans for and pulls nearby drops.");
+		o.addProperty("magnetScanIntervalTicks", magnetScanIntervalTicks);
 		c(o, "stockFrameScanIntervalTicks", "How often (ticks) a Stock Display Frame rescans the container behind it.");
 		o.addProperty("stockFrameScanIntervalTicks", stockFrameScanIntervalTicks);
 		c(o, "machineEuPerTick", "Base EU/t a processing machine draws while running (energy per operation = this x its duration).");
@@ -787,6 +894,16 @@ public final class Config {
 		o.addProperty("extractorDuration", extractorDuration);
 		c(o, "ironFurnaceCookTime", "Ticks the (fuel-based) iron furnace takes to smelt one item. Vanilla furnace = 200.");
 		o.addProperty("ironFurnaceCookTime", ironFurnaceCookTime);
+		c(o, "euPerXp", "MOD-133 player profile: useful EU (from completed machine operations) per 1 point of mod XP. Higher = slower progression. Starting value, tune after playtest.");
+		o.addProperty("euPerXp", euPerXp);
+		c(o, "euPerXpGenerated", "MOD-133 player profile: produced EU (actually credited into a generator buffer, never idle overflow) per 1 point of mod XP. Much higher than euPerXp on purpose - a generator runs unattended, so it only trickles. Starting value, tune after playtest.");
+		o.addProperty("euPerXpGenerated", euPerXpGenerated);
+		c(o, "xpLevelOneCost", "MOD-133: XP cost of the first level (1->2); each later level costs levelXpMultiplier x the previous. Starting value.");
+		o.addProperty("xpLevelOneCost", xpLevelOneCost);
+		c(o, "levelXpMultiplier", "MOD-133: per-level XP cost multiplier (exponential curve over 40 levels). Must be > 1.0.");
+		o.addProperty("levelXpMultiplier", levelXpMultiplier);
+		c(o, "statsFlushTicks", "MOD-133: how often (server ticks) in-memory player stats fold into the attachment and sync. 100 = every 5s.");
+		o.addProperty("statsFlushTicks", statsFlushTicks);
 		c(o, "copperCableLossPerBlock", "Fraction of throughput lost per copper cable block traversed (0.02 = 2% per block).");
 		o.addProperty("copperCableLossPerBlock", copperCableLossPerBlock);
 		c(o, "networksPerTick", "Max awake energy networks processed per server tick; the rest are deferred round-robin.");

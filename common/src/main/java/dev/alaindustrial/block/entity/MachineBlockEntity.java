@@ -12,10 +12,12 @@ import dev.alaindustrial.registry.ModContent;
 // loader energy API is imported here, so this base class (and its content subclasses) can live in
 // common. The buffer is a platform-neutral EnergyBuffer; each loader exposes it as its native
 // capability through the FabricEnergyPort / NeoForgeEnergyPort adapters and its own transaction system.
+import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -34,6 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The spine of every Industrialization machine: an energy buffer, an item inventory, a generic
@@ -62,6 +65,18 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 	protected int maxProgress;
 	/** Ticks left to skip {@link #onServerTick}; reset to 0 by {@link #wake()} when external state changes. */
 	private int sleepTicks;
+
+	/**
+	 * The player who placed this machine (MOD-133). Set once at placement by
+	 * {@link dev.alaindustrial.block.AbstractMachineBlock#setPlacedBy}; re-assigned on every re-place
+	 * (it does not ride the dropped item). Null for a machine placed by non-player means (structure,
+	 * {@code /ala demo} stand) — the player-stats hooks treat a null owner as a no-op. Gated by
+	 * {@link #tracksOwner()}: transport blocks (cable, item pipe) opt out and never persist it.
+	 */
+	@Nullable
+	private UUID owner;
+	/** Owner's name at placement time — a display snapshot (no UUID→name lookup for offline players). */
+	private String ownerName = "";
 
 	protected MachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state,
 			EnergyTier tier, int slots, long capacity, long maxInsert, long maxExtract) {
@@ -160,6 +175,58 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		return tier;
 	}
 
+	// --- Ownership (MOD-133): who placed this machine, for per-player statistics/XP ---
+
+	/**
+	 * Whether this machine records its placer as {@code owner}. Default {@code true} for every
+	 * working machine, generator and storage block. Transport blocks (cable, item pipe) override to
+	 * {@code false}: they never earn player stats and are the most numerous block in a base, so
+	 * carrying a per-segment UUID would be pure NBT ballast. When false, {@code owner} is neither set
+	 * at placement nor persisted.
+	 */
+	public boolean tracksOwner() {
+		return true;
+	}
+
+	/** Set at placement (and re-place); a null UUID clears ownership. Persisted when {@link #tracksOwner()}. */
+	public void setOwner(@Nullable UUID owner, @Nullable String ownerName) {
+		this.owner = owner;
+		this.ownerName = ownerName == null ? "" : ownerName;
+		setChanged();
+	}
+
+	/** The placer's UUID, or null for a machine placed by non-player means. */
+	@Nullable
+	public UUID getOwner() {
+		return owner;
+	}
+
+	/** The placer's name snapshot, or {@code ""} when there is no owner. */
+	public String getOwnerName() {
+		return ownerName;
+	}
+
+	/** True when {@code player} is this machine's owner. */
+	public boolean isOwner(UUID player) {
+		return owner != null && owner.equals(player);
+	}
+
+	/**
+	 * MOD-133: credit one completed unit of useful work (its full EU cost) to this machine's owner —
+	 * the sole XP source. Called once per completed operation (never per tick), so a redstone
+	 * contraption that aborts an operation before completion burns EU but earns no XP. A no-op
+	 * off-server, without an owner, or for non-positive cost; the tracker additionally ignores it when
+	 * the owner is offline or in creative.
+	 */
+	protected void creditUsefulWork(net.minecraft.world.level.Level level, long euCost) {
+		if (euCost <= 0 || owner == null
+				|| !(level instanceof net.minecraft.server.level.ServerLevel serverLevel)) {
+			return;
+		}
+		dev.alaindustrial.stats.PlayerStatsTracker.get()
+				.recordUsefulWork(serverLevel.getServer(), owner, euCost);
+	}
+
 	/** The energy/progress data bridge a {@code MachineMenu} binds for live GUI sync. */
 	public ContainerData getDataAccess() {
 		return dataAccess;
@@ -242,6 +309,13 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		output.putInt("Progress", progress);
 		output.putInt("MaxProgress", maxProgress);
 		ContainerHelper.saveAllItems(output, items);
+		// MOD-133: owner persisted here (NBT keys "Owner"/"OwnerName") for every tracking machine.
+		// The teleporter station used the same keys before this moved to the base, so existing
+		// stations round-trip without a data migration.
+		if (tracksOwner()) {
+			output.storeNullable("Owner", UUIDUtil.CODEC, owner);
+			output.putString("OwnerName", ownerName);
+		}
 	}
 
 	@Override
@@ -252,6 +326,10 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		maxProgress = input.getIntOr("MaxProgress", 0);
 		items.clear();
 		ContainerHelper.loadAllItems(input, items);
+		if (tracksOwner()) {
+			owner = input.read("Owner", UUIDUtil.CODEC).orElse(null);
+			ownerName = input.getStringOr("OwnerName", "");
+		}
 	}
 
 	// --- Container over `items` ---

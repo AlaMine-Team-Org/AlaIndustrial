@@ -79,6 +79,7 @@ public class ElectricFurnaceBlockEntity extends MachineBlockEntity implements Me
 				progress = 0;
 				items.get(INPUT_SLOT).shrink(1);
 				addOutput(resultItem);
+				creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
 			}
 			setChanged();
 		} else if (!hasRecipe && progress != 0) {

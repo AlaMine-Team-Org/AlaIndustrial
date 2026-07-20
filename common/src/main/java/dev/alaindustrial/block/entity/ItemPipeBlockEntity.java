@@ -23,6 +23,12 @@ public final class ItemPipeBlockEntity extends MachineBlockEntity {
 		super(ModContent.ITEM_PIPE_BE.get(), pos, state, EnergyTier.LV, 0, 0, 0, 0);
 	}
 
+	/** Transport, not a working machine (MOD-133): no owner, no player stats, no per-segment UUID ballast. */
+	@Override
+	public boolean tracksOwner() {
+		return false;
+	}
+
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
 		ensureRegistered();

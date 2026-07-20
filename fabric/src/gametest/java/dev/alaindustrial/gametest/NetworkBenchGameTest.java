@@ -162,4 +162,59 @@ public class NetworkBenchGameTest {
 		}
 		helper.succeed();
 	}
+
+	/** Generous ceiling for {@link #benchTickTiming}: 2000 network ticks over the 72-cable field (ms). */
+	private static final long TICK_BUDGET_MS = 1500;
+
+	/**
+	 * MOD-070 tick-cost smoke. The segment-to-segment transport (propagate one hop + charge entry cables
+	 * + serve machines/sinks) runs once per network pass and is O(cables), NOT a per-cable BlockEntity
+	 * tick — the whole point of doing it network-side. This times 2000 network ticks over the filled
+	 * 72-cable field and guards a deliberately generous absolute budget: it trips only on a catastrophic
+	 * regression (an accidental per-block tick, a super-linear pass, or a hang), never on CI jitter.
+	 *
+	 * <p>The MOD-070 acceptance criterion is "≥500 cables, ≤20 % degradation". The default 8×8×8 gametest
+	 * structure caps a single connected field at 72 cables, so the ≥500-scale degradation number is a
+	 * manual in-game check (as noted on {@link #benchLargeNetworkSmoke}); this automated lane guards the
+	 * per-tick cost shape at the largest in-structure size.
+	 */
+	@GameTest(maxTicks = 100)
+	public void benchTickTiming(GameTestHelper helper) {
+		List<BlockPos> cables = buildField(helper);
+		registerCables(helper, cables);
+		// Warm up so the line is filled and every stage does real work during the timed loop.
+		for (int i = 0; i < 60; i++) {
+			BlockEntity gen = be(helper, GEN);
+			if (gen != null) {
+				tick(helper, gen);
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			BlockEntity mac = be(helper, MAC);
+			if (mac != null) {
+				tick(helper, mac);
+			}
+		}
+		// Tick the generator (regenerates supply) and macerator (consumes) INSIDE the timed loop so the
+		// line stays under real load — otherwise supply drains in ~125 ticks and the rest of the loop
+		// times a cheap early-return, not the segment transport (audit finding).
+		long startNs = System.nanoTime();
+		for (int i = 0; i < 2000; i++) {
+			BlockEntity gen = be(helper, GEN);
+			if (gen != null) {
+				tick(helper, gen);
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			BlockEntity mac = be(helper, MAC);
+			if (mac != null) {
+				tick(helper, mac);
+			}
+		}
+		long elapsedMs = (System.nanoTime() - startNs) / 1_000_000L;
+		Industrialization.LOGGER.info("[bench] 2000 network ticks over {} cables took {} ms", cables.size(), elapsedMs);
+		if (elapsedMs > TICK_BUDGET_MS) {
+			helper.fail("2000 network ticks over " + cables.size() + " cables took " + elapsedMs
+					+ " ms (> " + TICK_BUDGET_MS + " ms) — per-tick segment transport likely regressed");
+		}
+		helper.succeed();
+	}
 }

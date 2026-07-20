@@ -28,13 +28,39 @@ import net.minecraft.client.model.object.chest.ChestModel;
  * Client entrypoint for Industrialization. Binds machine menus to their screens and registers the
  * hover-tooltip provider. The tooltip content itself is loader-neutral in
  * {@link MachineTooltips} (common); this only hooks it onto Fabric's {@code ItemTooltipCallback}.
+ *
+ * <p>MOD-137: {@code onInitializeClient()} is a table of contents — each step is a named private
+ * method, called in the same order the statements ran before.
  */
 public class IndustrializationClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
+		initClientConfig();
+		registerMenuScreens();
+		registerTooltips();
+		registerHudAndKeys();
+		registerParticleProviders();
+		registerClientHooks();
+		registerBlockEntityRenderers();
+		// MOD-133: client dashboard reads the local player's synced stats attachment through the seam.
+		dev.alaindustrial.stats.PlayerStatsClientCache.bind(() -> {
+			net.minecraft.client.player.LocalPlayer p = net.minecraft.client.Minecraft.getInstance().player;
+			return p == null ? dev.alaindustrial.stats.PlayerModStats.EMPTY
+					: p.getAttachedOrElse(dev.alaindustrial.stats.fabric.FabricPlayerStats.TYPE,
+							dev.alaindustrial.stats.PlayerModStats.EMPTY);
+		});
+
+		Industrialization.LOGGER.info("Industrialization client initialized.");
+	}
+
+	/** Initialises the client config screen state and the fluid-tank item tint source. */
+	private void initClientConfig() {
 		AlaClientConfig.init(FabricLoader.getInstance().getConfigDir());
 		dev.alaindustrial.client.FluidTankItemTintSource.register();
+	}
 
+	/** Binds each machine {@code MenuType} to its {@code Screen}. */
+	private void registerMenuScreens() {
 		MenuScreens.<dev.alaindustrial.menu.GeneratorMenu, dev.alaindustrial.client.GeneratorScreen>register(
 				ModMenus.GENERATOR, dev.alaindustrial.client.GeneratorScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.MaceratorMenu, dev.alaindustrial.client.MaceratorScreen>register(
@@ -77,7 +103,10 @@ public class IndustrializationClient implements ClientModInitializer {
 				ModMenus.SILVER_CHEST, dev.alaindustrial.client.SilverChestScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.GoldChestMenu, dev.alaindustrial.client.GoldChestScreen>register(
 				ModMenus.GOLD_CHEST, dev.alaindustrial.client.GoldChestScreen::new);
+	}
 
+	/** Registers the machine hover-tooltip provider and the Battery Pouch bundle-style tooltip renderer. */
+	private void registerTooltips() {
 		ItemTooltipCallback.EVENT.register((stack, context, flag, lines) ->
 				MachineTooltips.append(stack, lines, Minecraft.getInstance().hasShiftDown()));
 		// Battery Pouch bundle-style tooltip (MOD-052): map the neutral TooltipComponent to its renderer.
@@ -85,11 +114,19 @@ public class IndustrializationClient implements ClientModInitializer {
 				component instanceof dev.alaindustrial.item.PouchTooltip pouch
 						? new dev.alaindustrial.client.PouchClientTooltip(pouch)
 						: null);
+	}
+
+	/**
+	 * Registers the HUD elements (teleport fade, energy-pack + drill charge readouts), their key
+	 * mappings, and the client-side teleport payload receivers that feed them.
+	 */
+	private void registerHudAndKeys() {
 		// Energy Pack charge readout (MOD-065): the mod's first HUD element and first key mapping.
 		// The drawing itself is loader-neutral (EnergyPackHud) — Fabric's HudElement and NeoForge's
 		// GuiLayer take the same (GuiGraphicsExtractor, DeltaTracker) pair.
 		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_ENERGY_HUD);
 		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_DRILL_HUD);
+		KeyMappingHelper.registerKeyMapping(ModKeyMappings.OPEN_PROFILE); // MOD-133 player dashboard
 		ClientTickEvents.END_CLIENT_TICK.register(client -> ModKeyMappings.handleInput());
 		// Teleport screen fade (MOD-106). Registered first so the readouts below stay legible over it —
 		// and addLast keeps it under vanilla's own overlays, which a jump has no business hiding.
@@ -110,20 +147,37 @@ public class IndustrializationClient implements ClientModInitializer {
 		// Electric Drill charge readout (MOD-079) — same toggle/key as the pack, stacks below it.
 		HudElementRegistry.addLast(Industrialization.id("electric_drill_hud"),
 				dev.alaindustrial.client.ElectricDrillHud::render);
+	}
 
+	/** Registers the green-flame particle provider for the Enriched Uranium Torch (MOD-085). */
+	private void registerParticleProviders() {
 		// MOD-085: green flame particle for the Enriched Uranium Torch. Reuses the vanilla FlameParticle
 		// provider (like soul_fire_flame) — the green colour comes entirely from the particle's own texture
 		// (assets/alaindustrial/particles/enriched_uranium_flame.json), no custom particle class or tint.
 		net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry.getInstance().register(
 				dev.alaindustrial.registry.ModParticles.ENRICHED_URANIUM_FLAME,
 				net.minecraft.client.particle.FlameParticle.Provider::new);
+	}
 
+	/** Installs the world-overlay / client-hook singletons (network viz, cable preview, hum, tooltip keys). */
+	private void registerClientHooks() {
 		dev.alaindustrial.client.NetworkVisualizationClient.init();
 		dev.alaindustrial.client.CablePlacementPreview.init();
 		dev.alaindustrial.client.sound.MachineHumClientHook.register();
 		// MOD-108: answers "is Shift held" for item tooltips (the pipe shows its numbers behind Shift).
 		dev.alaindustrial.client.TooltipKeysClientHook.register();
+		// MOD-133: add the profile button to the survival inventory screen (creative uses a different
+		// screen class, so this instanceof already excludes it). No injected mixin — a Fabric screen event.
+		net.fabricmc.fabric.api.client.screen.v1.ScreenEvents.AFTER_INIT.register((client, screen, w, h) -> {
+			if (screen instanceof net.minecraft.client.gui.screens.inventory.InventoryScreen) {
+				net.fabricmc.fabric.api.client.screen.v1.Screens.getWidgets(screen)
+						.add(dev.alaindustrial.client.dashboard.InventoryProfileButton.install(screen));
+			}
+		});
+	}
 
+	/** Registers the block-entity / entity renderers and bakes their model layers. */
+	private void registerBlockEntityRenderers() {
 		// Iron chest: 3D model + animated lid. Register the BlockEntityRenderer against the iron
 		// chest BE type, and bake the chest model layer (vanilla single-body chest geometry).
 		BlockEntityRendererRegistry.register(ModBlockEntities.IRON_CHEST, IronChestBlockEntityRenderer::new);
@@ -151,7 +205,5 @@ public class IndustrializationClient implements ClientModInitializer {
 		net.minecraft.client.renderer.entity.EntityRenderers.register(
 				dev.alaindustrial.registry.ModEntities.STOCK_DISPLAY_FRAME,
 				dev.alaindustrial.client.StockDisplayFrameRenderer::new);
-
-		Industrialization.LOGGER.info("Industrialization client initialized.");
 	}
 }

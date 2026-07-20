@@ -251,8 +251,9 @@ public final class CoreEnergyScenarios {
 
 	/**
 	 * returnRoundRobin no-leak: a cabled generator whose only consumer accepts less than a full LV
-	 * packet (5 EU room, well below the 32 EU cap) must lose EXACTLY what the consumer gains — no
-	 * surplus destroyed against the maxInsert==0 generator on the cable path.
+	 * packet (5 EU room, well below the 32 EU cap) must not destroy any EU into the void. With the
+	 * MOD-070 line buffers, conservation is system-wide: gen_drain == mac_gain + cable_buffered + loss
+	 * (loss floors to 0 for a 5 EU flow over this short line).
 	 * Mirrors: NetworkGameTest.tcCable001Nrg03_generatorNotDrainedByPartialConsumer
 	 */
 	public static void returnRoundRobinNoLeak(GameTestHelper helper) {
@@ -281,9 +282,251 @@ public final class CoreEnergyScenarios {
 		}
 		long genDrain = genStart - genEnd;
 		long macGain = macEnd - macStart;
-		if (genDrain != macGain) {
+		// MOD-070: the generator also fills the cable line buffer; conservation is system-wide.
+		long cableBuffered = be(helper, LINE_CABLE) instanceof CableBlockEntity c ? c.getEnergyStorage().getAmount() : 0;
+		if (genDrain != macGain + cableBuffered) {
 			helper.fail("generator lost " + genDrain + " EU but macerator gained " + macGain
+					+ " and cables buffered " + cableBuffered
 					+ " — surplus destroyed in returnRoundRobin (EnergyMover-class leak on the cable path)");
+		}
+		helper.succeed();
+	}
+
+	// ── scenario 2b: MOD-070 segment-to-segment flow — cables carry a live buffer, not a teleport ──
+
+	private static final BlockPos FLOW_GEN = new BlockPos(1, 2, 1);
+	private static final BlockPos[] FLOW_CABLES = {
+		new BlockPos(2, 2, 1), new BlockPos(3, 2, 1), new BlockPos(4, 2, 1),
+		new BlockPos(5, 2, 1), new BlockPos(6, 2, 1),
+	};
+	private static final BlockPos FLOW_MAC = new BlockPos(7, 2, 1);
+
+	private static void buildFlowLine(GameTestHelper helper) {
+		helper.setBlock(FLOW_GEN, ModContent.GENERATOR.get());
+		for (BlockPos c : FLOW_CABLES) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		helper.setBlock(FLOW_MAC, ModContent.MACERATOR.get());
+		if (be(helper, FLOW_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+		}
+		if (be(helper, FLOW_MAC) instanceof MaceratorBlockEntity mac) {
+			mac.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON, 8));
+		}
+	}
+
+	private static void driveFlow(GameTestHelper helper, int n) {
+		for (int i = 0; i < n; i++) {
+			tick(helper, be(helper, FLOW_GEN));
+			for (BlockPos c : FLOW_CABLES) {
+				tick(helper, be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, FLOW_MAC));
+		}
+	}
+
+	private static long cableAmount(GameTestHelper helper, BlockPos pos) {
+		return be(helper, pos) instanceof CableBlockEntity c ? c.getEnergyStorage().getAmount() : -1;
+	}
+
+	/**
+	 * MOD-070 accumulation: energy flows through the cable buffers segment-to-segment (it does not
+	 * teleport). The intermediate cable holds real EU (>0 mid-line — impossible under the old dead
+	 * buffer), delivery still works, and no cable exceeds the tiny {@code cableBuffer} cap.
+	 * Mirrors: NetworkGameTest.tcCable001Nrg04_lineAccumulatesInSegments
+	 */
+	public static void lineAccumulatesInSegments(GameTestHelper helper) {
+		buildFlowLine(helper);
+		driveFlow(helper, 40);
+
+		long mac = be(helper, FLOW_MAC) instanceof MaceratorBlockEntity m ? m.getEnergyStorage().getAmount() : -1;
+		if (mac <= 0) {
+			helper.fail("macerator received no EU over the cable line");
+		}
+		long mid = cableAmount(helper, FLOW_CABLES[2]);
+		if (mid <= 0) {
+			helper.fail("intermediate cable holds no EU — energy teleported instead of flowing through the line");
+		}
+		for (BlockPos c : FLOW_CABLES) {
+			long a = cableAmount(helper, c);
+			if (a > Config.cableBuffer) {
+				helper.fail("cable " + c + " holds " + a + " EU > cableBuffer=" + Config.cableBuffer
+						+ " — per-segment ceiling breached (battery from wires)");
+			}
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-070 break retains at source: after the line fills, removing a middle cable splits the network;
+	 * the source-side half sleeps but keeps the EU buffered in its cables (>0 after the break).
+	 * Mirrors: NetworkGameTest.tcCable001Nrg05_breakRetainsAtSource
+	 */
+	public static void breakRetainsAtSource(GameTestHelper helper) {
+		buildFlowLine(helper);
+		driveFlow(helper, 40);
+
+		helper.setBlock(FLOW_CABLES[2], Blocks.AIR);
+		long macAtBreak = be(helper, FLOW_MAC) instanceof MaceratorBlockEntity m ? m.getEnergyStorage().getAmount() : -1;
+		driveFlow(helper, 10);
+
+		long sourceSide = Math.max(0, cableAmount(helper, FLOW_CABLES[0]))
+				+ Math.max(0, cableAmount(helper, FLOW_CABLES[1]));
+		if (sourceSide <= 0) {
+			helper.fail("source-side cables retained no EU after the break — the line buffer is not real");
+		}
+		long macAfter = be(helper, FLOW_MAC) instanceof MaceratorBlockEntity m ? m.getEnergyStorage().getAmount() : -1;
+		if (macAfter > macAtBreak) {
+			helper.fail("macerator gained EU after the line was cut (" + macAtBreak + " -> " + macAfter
+					+ ") — energy teleported across the break");
+		}
+		helper.succeed();
+	}
+
+	// ── MOD-070: a storage source never charges another storage sink (no battery↔battery wash) ─────
+
+	private static final BlockPos WASH_SRC = new BlockPos(1, 2, 1);
+	private static final BlockPos WASH_CABLE = new BlockPos(2, 2, 1);
+	private static final BlockPos WASH_DST = new BlockPos(3, 2, 1);
+
+	/**
+	 * MOD-070 storage priority: a charged BatteryBox cabled to an empty one (no generator, no machine)
+	 * must NOT charge it — storage never sources for another storage sink (battery↔battery wash).
+	 * Mirrors: NetworkGameTest.tcCable001Nrg06_storageDoesNotChargeStorage
+	 */
+	public static void storageDoesNotChargeStorage(GameTestHelper helper) {
+		helper.setBlock(WASH_SRC, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		helper.setBlock(WASH_CABLE, ModContent.COPPER_CABLE.get());
+		helper.setBlock(WASH_DST, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		if (be(helper, WASH_SRC) instanceof BatteryBoxBlockEntity src) {
+			src.getEnergyStorage().amount = Config.batteryBoxBuffer;
+		}
+		if (be(helper, WASH_DST) instanceof BatteryBoxBlockEntity dst) {
+			dst.getEnergyStorage().amount = 0L;
+		}
+		for (int i = 0; i < 20; i++) {
+			tick(helper, be(helper, WASH_SRC));
+			tick(helper, be(helper, WASH_CABLE));
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, WASH_DST));
+		}
+		EnergyNetwork net = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(WASH_CABLE));
+		if (net == null) {
+			helper.fail("no energy network formed between the two BatteryBoxes — test cannot verify anti-wash");
+		}
+		long dstEnd = be(helper, WASH_DST) instanceof BatteryBoxBlockEntity d ? d.getEnergyStorage().getAmount() : -1;
+		if (dstEnd != 0L) {
+			helper.fail("empty BatteryBox was charged from another BatteryBox: " + dstEnd
+					+ " (storage must never source for another storage sink — battery↔battery wash)");
+		}
+		helper.succeed();
+	}
+
+	private static final BlockPos STO_GEN = new BlockPos(1, 2, 1);
+	private static final BlockPos[] STO_CABLES = {
+		new BlockPos(2, 2, 1), new BlockPos(3, 2, 1), new BlockPos(4, 2, 1),
+	};
+	private static final BlockPos STO_BOX = new BlockPos(5, 2, 1);
+
+	/**
+	 * MOD-070 storage-through-line: a BatteryBox charged over a multi-cable line pulls its EU THROUGH the
+	 * wires — the intermediate cable holds real EU while the box fills (direct regression for the in-game
+	 * bug where source→cable→BatteryBox left the cable empty).
+	 * Mirrors: NetworkGameTest.tcCable001Nrg07_storageChargesThroughLine
+	 */
+	public static void storageChargesThroughLine(GameTestHelper helper) {
+		helper.setBlock(STO_GEN, ModContent.GENERATOR.get());
+		for (BlockPos c : STO_CABLES) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		helper.setBlock(STO_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		if (be(helper, STO_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+		}
+		if (be(helper, STO_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().amount = 0L;
+		}
+		for (int i = 0; i < 40; i++) {
+			tick(helper, be(helper, STO_GEN));
+			for (BlockPos c : STO_CABLES) {
+				tick(helper, be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, STO_BOX));
+		}
+		long boxEnergy = be(helper, STO_BOX) instanceof BatteryBoxBlockEntity b ? b.getEnergyStorage().getAmount() : -1;
+		long midCable = be(helper, STO_CABLES[1]) instanceof CableBlockEntity c ? c.getEnergyStorage().getAmount() : -1;
+		if (boxEnergy <= 0) {
+			helper.fail("BatteryBox received no EU over the cable line: " + boxEnergy);
+		}
+		if (midCable <= 0) {
+			helper.fail("intermediate cable held no EU while charging a BatteryBox — storage charge bypassed "
+					+ "the wire instead of flowing through it (the in-game bug)");
+		}
+		helper.succeed();
+	}
+
+	private static final BlockPos LONE_BOX = new BlockPos(1, 2, 1);
+	private static final BlockPos LONE_CABLE = new BlockPos(2, 2, 1);
+
+	/**
+	 * MOD-070 audit: a lone storage source (charged BatteryBox with a cabled OUT face) with no consumer and
+	 * no generator must SLEEP, not spin a no-op tick forever, and must not charge the wire.
+	 * Mirrors: NetworkGameTest.rNrg09c_loneStorageSourceSleeps
+	 */
+	public static void loneStorageSourceSleeps(GameTestHelper helper) {
+		helper.setBlock(LONE_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		helper.setBlock(LONE_CABLE, ModContent.COPPER_CABLE.get());
+		if (be(helper, LONE_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().amount = Config.batteryBoxBuffer;
+		}
+		for (int i = 0; i < 10; i++) {
+			tick(helper, be(helper, LONE_BOX));
+			tick(helper, be(helper, LONE_CABLE));
+			NetworkManager.tickAll(helper.getLevel());
+		}
+		EnergyNetwork net = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(LONE_CABLE));
+		if (net == null) {
+			helper.fail("no network formed on the lone storage-source cable");
+		}
+		if (net.isAwake()) {
+			helper.fail("lone storage-source network is awake — no consumer and no generator, must sleep");
+		}
+		long cable = be(helper, LONE_CABLE) instanceof CableBlockEntity c ? c.getEnergyStorage().getAmount() : -1;
+		if (cable != 0L) {
+			helper.fail("a lone storage source charged the wire: " + cable + " (must fill only for a machine deficit)");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-070: a fuelled generator wired to a cable with NO consumer still fills the cable to its buffer
+	 * capacity — the wire holds energy from a source even with nowhere to deliver it (0 under the old
+	 * "producer-only network sleeps and never charges" behaviour).
+	 * Mirrors: NetworkGameTest.rNrg09b_sourceFillsCableWithoutConsumer
+	 */
+	public static void sourceFillsCableWithoutConsumer(GameTestHelper helper) {
+		BlockPos genPos = new BlockPos(1, 2, 1);
+		BlockPos cablePos = new BlockPos(2, 2, 1);
+		helper.setBlock(genPos, ModContent.GENERATOR.get());
+		helper.setBlock(cablePos, ModContent.COPPER_CABLE.get());
+		if (be(helper, genPos) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+		}
+		for (int i = 0; i < 10; i++) {
+			tick(helper, be(helper, genPos));
+			tick(helper, be(helper, cablePos));
+			NetworkManager.tickAll(helper.getLevel());
+		}
+		long cable = be(helper, cablePos) instanceof CableBlockEntity c ? c.getEnergyStorage().getAmount() : -1;
+		if (cable != Config.cableBuffer) {
+			helper.fail("producer-only cable did not fill to its buffer: " + cable + "/" + Config.cableBuffer
+					+ " — a source must charge the wires even with no consumer");
 		}
 		helper.succeed();
 	}
@@ -373,16 +616,21 @@ public final class CoreEnergyScenarios {
 			tick(helper, be(helper, LOSS_BOX));
 		}
 		long got = be(helper, LOSS_BOX) instanceof BatteryBoxBlockEntity bb ? bb.getEnergyStorage().getAmount() : -1;
-		long lossPerTick = (long) Math.floor(cap * Config.copperCableLossPerBlock * 10);
-		long expected = (cap - lossPerTick) * ticks;
+		// MOD-070: per-cable throughput is the segment buffer (cableBuffer), not the tier voltage; the
+		// MOD-021 loss formula is unchanged, applied to the actual per-tick flow. Fill front ~1 cable/tick.
+		long flow = Config.cableBuffer;
+		long lossPerTick = (long) Math.floor(flow * Config.copperCableLossPerBlock * 10);
+		long deliveredPerTick = flow - lossPerTick;
+		long fillLatency = LOSS_CABLES.length;
+		long expected = deliveredPerTick * (ticks - fillLatency);
 		if (lossPerTick <= 0) {
 			helper.fail("test misconfigured: copperCableLossPerBlock too low to lose EU over 10 cables");
 		}
-		if (got >= cap * ticks) {
+		if (got >= flow * ticks) {
 			helper.fail("expected proportional cable loss over 10 cables but got full lossless delivery: " + got);
 		}
-		if (got < expected - 2 * cap || got > expected) {
-			helper.fail("delivered EU does not match the loss model: expected ~" + expected + " (±2 ticks), got " + got);
+		if (got < expected - 2 * flow || got > deliveredPerTick * ticks) {
+			helper.fail("delivered EU does not match the loss model: expected ~" + expected + ", got " + got);
 		}
 		helper.succeed();
 	}
@@ -1080,10 +1328,11 @@ public final class CoreEnergyScenarios {
 	// ── scenario 16: battery box conservation — genDrain == boxGain (no leak) ──────────────────────
 
 	/**
-	 * A cabled generator whose only consumer is a battery box with partial room loses EXACTLY what the
-	 * box gains — no surplus destroyed against the maxInsert==0 generator on the cable path. Pre-charge
-	 * the generator (no fuel: buffer only goes down), pre-charge the box to leave 5 EU of room, drive,
-	 * assert genDrain == boxGain (cable loss floors to 0 on a 1-cable line).
+	 * A cabled generator whose only consumer is a battery box with partial room destroys no EU into the
+	 * void. With the MOD-070 line buffers the box charges THROUGH the wire, so the generator also fills
+	 * the cable buffer: conservation is system-wide, genDrain == boxGain + cableBuffered + loss (loss
+	 * floors to 0 on a 1-cable line). Pre-charge the generator (no fuel: buffer only goes down), leave the
+	 * box 5 EU of room, drive, assert conservation.
 	 * Mirrors: NetworkGameTest.tcCable001Nrg03_generatorNotDrainedByPartialConsumer
 	 */
 	public static void batteryBoxConservationPartialConsumer(GameTestHelper helper) {
@@ -1111,9 +1360,11 @@ public final class CoreEnergyScenarios {
 			helper.fail("battery box did not top off its 5 EU of room: " + boxEnd + "/" + Config.batteryBoxBuffer);
 			return;
 		}
-		if (genDrain != boxGain) {
+		// MOD-070: the box charges through the line, so the generator also fills the cable buffer.
+		long cableBuffered = be(helper, LINE_CABLE) instanceof CableBlockEntity c ? c.getEnergyStorage().getAmount() : 0;
+		if (genDrain != boxGain + cableBuffered) {
 			helper.fail("generator lost " + genDrain + " EU but box gained " + boxGain
-					+ " — surplus destroyed (cable-path EnergyMover-class leak)");
+					+ " and cables buffered " + cableBuffered + " — surplus destroyed (cable-path leak)");
 			return;
 		}
 		helper.succeed();
@@ -1863,18 +2114,24 @@ public final class CoreEnergyScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		long cap = EnergyTier.LV.maxVoltage();
 		if (be(helper, genPos) instanceof GeneratorBlockEntity gen) {
-			gen.getEnergyStorage().amount = cap * 10; // ample, no fuel: buffer fixed for this tick
+			gen.getEnergyStorage().amount = cap * 100; // ample, no fuel: buffer far above any throughput
 		}
 		if (be(helper, boxPos) instanceof BatteryBoxBlockEntity bb) {
 			bb.getEnergyStorage().amount = 0; // empty: room is never the limit
 		}
-		// Register + run exactly one network tick so the packet-cap limit is observed cleanly.
-		tick(helper, be(helper, genPos));
-		tick(helper, be(helper, cablePos));
-		NetworkManager.tickAll(helper.getLevel());
+		// MOD-070: per-cable throughput is the segment buffer (cableBuffer), not the tier voltage. Drive
+		// several ticks; cumulative delivery is bounded by cableBuffer EU/tick, never a 32 EU packet.
+		int ticks = 20;
+		for (int i = 0; i < ticks; i++) {
+			tick(helper, be(helper, genPos));
+			tick(helper, be(helper, cablePos));
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, boxPos));
+		}
 		long got = be(helper, boxPos) instanceof BatteryBoxBlockEntity bb ? bb.getEnergyStorage().getAmount() : -1;
-		if (got > cap) {
-			helper.fail("cable exceeded the LV throughput cap in one tick: delivered=" + got + " cap=" + cap);
+		long perTickCap = Config.cableBuffer;
+		if (got > perTickCap * ticks) {
+			helper.fail("cable exceeded its throughput cap: delivered=" + got + " > " + (perTickCap * ticks));
 			return;
 		}
 		if (got <= 0) {

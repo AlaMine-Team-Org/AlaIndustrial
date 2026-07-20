@@ -9,7 +9,6 @@ import dev.alaindustrial.registry.ModDataComponents;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.network.chat.Component;
@@ -18,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jspecify.annotations.Nullable;
 
 /**
  * Teleporter station block entity (MOD-091) — an HV consumer that banks EU for a jump it cannot yet
@@ -32,11 +30,9 @@ import org.jspecify.annotations.Nullable;
  * still has to accept EU pushed by the network.
  */
 public class TeleporterBlockEntity extends MachineBlockEntity {
-	/** Owner of the station: whoever placed it. Null only for a station placed by non-player means. */
-	@Nullable
-	private UUID owner;
-	/** Owner's name at placement time — a snapshot for the MOD-093 GUI, not an identity check. */
-	private String ownerName = "";
+	// Owner + name now live in the MachineBlockEntity base (MOD-133) — the station inherits setOwner /
+	// getOwner / getOwnerName / isOwner and their NBT persistence ("Owner"/"OwnerName", same keys as
+	// before, so existing stations load unchanged). Only the station-specific privacy flag stays here.
 	/** Private (owner-only) by default; MOD-093 adds the toggle that flips it. */
 	private boolean isPrivate = true;
 
@@ -87,22 +83,6 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 		return true;
 	}
 
-	/** Set at placement by {@link dev.alaindustrial.block.TeleporterBlock#setPlacedBy}. */
-	public void setOwner(UUID owner, String ownerName) {
-		this.owner = owner;
-		this.ownerName = ownerName == null ? "" : ownerName;
-		setChanged();
-	}
-
-	@Nullable
-	public UUID getOwner() {
-		return owner;
-	}
-
-	public String getOwnerName() {
-		return ownerName;
-	}
-
 	public boolean isPrivate() {
 		return isPrivate;
 	}
@@ -115,12 +95,7 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 
 	/** True when {@code player} may bind to / jump to this station: its owner, or anyone if public. */
 	public boolean allowsAccess(UUID player) {
-		return !isPrivate || owner == null || owner.equals(player);
-	}
-
-	/** True when {@code player} owns this station — the only one who may flip its privacy (MOD-093). */
-	public boolean isOwner(UUID player) {
-		return owner != null && owner.equals(player);
+		return !isPrivate || getOwner() == null || getOwner().equals(player);
 	}
 
 	/**
@@ -176,26 +151,22 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 	 * opens the menu itself instead.
 	 */
 	public Component menuTitle() {
-		return ownerName.isEmpty()
+		return getOwnerName().isEmpty()
 				? Component.translatable("block.alaindustrial.teleporter")
-				: Component.translatable("block.alaindustrial.teleporter.owned", ownerName);
+				: Component.translatable("block.alaindustrial.teleporter.owned", getOwnerName());
 	}
 
 	// --- persistence (26.2 ValueInput/ValueOutput) ---
 
 	@Override
 	protected void saveAdditional(ValueOutput output) {
-		super.saveAdditional(output);
-		output.storeNullable("Owner", UUIDUtil.CODEC, owner);
-		output.putString("OwnerName", ownerName);
+		super.saveAdditional(output); // base persists Energy/Progress/Items + Owner/OwnerName (MOD-133)
 		output.putBoolean("Private", isPrivate);
 	}
 
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		owner = input.read("Owner", UUIDUtil.CODEC).orElse(null);
-		ownerName = input.getStringOr("OwnerName", "");
 		isPrivate = input.getBooleanOr("Private", true);
 	}
 

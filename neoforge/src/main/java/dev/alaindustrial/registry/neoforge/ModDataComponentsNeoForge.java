@@ -55,6 +55,9 @@ public final class ModDataComponentsNeoForge {
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<TeleportPoints>> TELEPORTER_POINTS =
 			DATA_COMPONENTS.register("teleporter_points", ModDataComponents::createTeleporterPoints);
 
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> MAGNET_ENABLED =
+			DATA_COMPONENTS.register("magnet_enabled", ModDataComponents::createMagnetEnabled);
+
 	/** Bind the neutral handles to the deferred holders. Called from the {@code @Mod} ctor after register. */
 	public static void init() {
 		ModDataComponents.STORED_ENERGY = STORED_ENERGY;
@@ -67,6 +70,7 @@ public final class ModDataComponentsNeoForge {
 		ModDataComponents.TELEPORTER_PRIVATE = TELEPORTER_PRIVATE;
 		ModDataComponents.TELEPORTER_OWNER = TELEPORTER_OWNER;
 		ModDataComponents.TELEPORTER_POINTS = TELEPORTER_POINTS;
+		ModDataComponents.MAGNET_ENABLED = MAGNET_ENABLED;
 	}
 
 	private ModDataComponentsNeoForge() {

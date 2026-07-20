@@ -75,7 +75,28 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 @Mod(Industrialization.MOD_ID)
 public final class IndustrializationNeoForge {
 
+	/**
+	 * MOD-137: the constructor is a table of contents — each step is a named private method, called in
+	 * the same order the statements ran before. The ordering is load-bearing (DeferredRegisters register
+	 * on the mod bus before {@code .init()} binds the facade); do not reorder the calls below.
+	 */
 	public IndustrializationNeoForge(IEventBus modBus) {
+		installLoaderSeams();
+		registerDeferredRegisters(modBus);
+		bindContentFacade(modBus);
+		verifyContentBound();
+		registerModBusEvents(modBus);
+		loadConfig();
+		registerGameBusEvents();
+
+		Industrialization.LOGGER.info("Industrialization (NeoForge) initialized.");
+	}
+
+	/**
+	 * Installs the NeoForge loader seams (energy/fluid/item lookups, item-energy/item-fluid bridges,
+	 * packet dispatcher) so common transport/content code stays loader-neutral.
+	 */
+	private void installLoaderSeams() {
 		// MOD-022 Phase 2: install the NeoForge energy seams (transaction opener + capability lookup) so
 		// the common transport code can open transactions and resolve per-face ports through the NeoForge
 		// EnergyHandler API without importing loader types. These are inert until the NeoForge tick loop
@@ -100,7 +121,10 @@ public final class IndustrializationNeoForge {
 		// MOD-022 Phase 3: install the NeoForge packet-send seam so content code dispatches through the
 		// neutral NetworkDispatcher instead of PacketDistributor directly.
 		NetworkDispatcher.install(new NeoForgeNetworkDispatcher());
+	}
 
+	/** Registers every {@code DeferredRegister} on the mod bus. Must run before {@link #bindContentFacade}. */
+	private void registerDeferredRegisters(IEventBus modBus) {
 		// DeferredRegister objects must register on the mod bus here (verified split constraint). The
 		// Blocks register drives BlockItems/BlockEntityTypes/MenuTypes that depend on the blocks existing,
 		// so it goes first.
@@ -116,6 +140,7 @@ public final class IndustrializationNeoForge {
 		// MOD-085: the Enriched Uranium Torch's green flame particle type.
 		dev.alaindustrial.registry.neoforge.ModParticlesNeoForge.PARTICLES.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModDataComponentsNeoForge.DATA_COMPONENTS.register(modBus);
+		dev.alaindustrial.registry.neoforge.ModAttachmentsNeoForge.ATTACHMENTS.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModRecipesNeoForge.TYPES.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModRecipesNeoForge.SERIALIZERS.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModCriteriaNeoForge.TRIGGERS.register(modBus);
@@ -125,7 +150,10 @@ public final class IndustrializationNeoForge {
 		// Register the alaindustrial:code gametest-instance type so the TEST_INSTANCE registry encodes cleanly
 		// during the client known-packs handshake (fixes a ClassCastException that broke NeoForge world load).
 		dev.alaindustrial.gametest.neoforge.NeoForgeGameTests.INSTANCE_TYPES.register(modBus);
+	}
 
+	/** Binds the registered {@code DeferredHolder}s into the loader-neutral {@code ModContent} facade. */
+	private void bindContentFacade(IEventBus modBus) {
 		// Bind the registered DeferredHolders into the loader-neutral ModContent facade (mirrors the Fabric
 		// ModBlocks/ModItems/ModBlockEntities/ModMenus.init() calls). A DeferredHolder is a Supplier, so it is
 		// assigned directly and resolves lazily after each RegisterEvent — assigning it here, before the events
@@ -137,10 +165,14 @@ public final class IndustrializationNeoForge {
 		ModMenusNeoForge.init();
 		dev.alaindustrial.registry.neoforge.ModSoundsNeoForge.init();
 		dev.alaindustrial.registry.neoforge.ModDataComponentsNeoForge.init();
+		dev.alaindustrial.registry.neoforge.ModAttachmentsNeoForge.init(); // MOD-133 player-stats store seam
 		dev.alaindustrial.registry.neoforge.ModRecipesNeoForge.init();
 		dev.alaindustrial.registry.neoforge.ModCriteriaNeoForge.init();
 		dev.alaindustrial.registry.neoforge.ModCreativeTabEventsNeoForge.register(modBus);
+	}
 
+	/** Reports (does not abort on) any {@code ModContent} handle still unbound during the NeoForge migration. */
+	private void verifyContentBound() {
 		// Verify the facade is bound. NeoForge is still mid-migration (Phase 4 populates every registry), so
 		// most handles remain on their ModContent placeholder — report the gap loudly instead of aborting load,
 		// unlike the Fabric side (which binds everything and calls the strict ModContent.verifyAllBound()). Flip
@@ -151,7 +183,10 @@ public final class IndustrializationNeoForge {
 					"ModContent has {} handle(s) not yet bound on NeoForge (Phase 4 per-machine migration "
 							+ "pending): {}", unbound.size(), unbound);
 		}
+	}
 
+	/** Registers the mod-bus listeners (capabilities, S2C payload, world gametests). */
+	private void registerModBusEvents(IEventBus modBus) {
 		// Mod-bus events. Capability + payload registration both fire on the mod bus.
 		modBus.addListener(this::registerCapabilities);
 		// MOD-022 Phase 3: NeoForge payload registration (S2C Network Analyzer) — counterpart to the
@@ -160,11 +195,21 @@ public final class IndustrializationNeoForge {
 		// MOD-022 — NeoForge world gametest lane. RegisterGameTestsEvent fires only when
 		// GameTestHooks.isGametestEnabled() (dev/gameTestServer), so this is inert in production.
 		modBus.addListener(dev.alaindustrial.gametest.neoforge.NeoForgeGameTests::register);
+	}
 
+	/** Loads {@code config/alaindustrial.json} at startup (counterpart to {@code FabricConfigLoader}). */
+	private void loadConfig() {
 		// Balance config: load config/alaindustrial.json at startup (counterpart to FabricConfigLoader).
 		// Without this, NeoForge ignores the config file and every balance number falls back to defaults.
 		NeoForgeConfigLoader.register();
+	}
 
+	/**
+	 * Wires the game-bus listeners: energy-network ticking, teleport-warmup cancellation, guide-book
+	 * first-join grant, per-level/server-stop network teardown, config reload parity, vanilla-bucket
+	 * deposit and the {@code /ala} command.
+	 */
+	private void registerGameBusEvents() {
 		// Game-bus wiring (counterpart to the Fabric ServerTickEvents/ServerLevelEvents/ServerLifecycleEvents
 		// + CommandRegistrationCallback tail of IndustrializationFabric#onInitialize). These fire on the game
 		// event bus, not the mod bus.
@@ -179,6 +224,8 @@ public final class IndustrializationNeoForge {
 			}
 			// Teleport warmups are per-player, not per-level (MOD-092).
 			dev.alaindustrial.teleporter.TeleportWarmupManager.tickAll(event.getServer());
+			// MOD-133: fold pending per-player stat deltas into attachments on the configured cadence.
+			dev.alaindustrial.stats.PlayerStatsTracker.get().onServerTick(event.getServer());
 		});
 		// Teleport warmup cancellation (MOD-092). Three hooks, not two: LivingDamageEvent.Post does
 		// not fire for a killing blow, and death does not disconnect the player.
@@ -195,8 +242,14 @@ public final class IndustrializationNeoForge {
 			}
 		});
 		NeoForge.EVENT_BUS.addListener(
-				(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) ->
-						dev.alaindustrial.teleporter.TeleportWarmupManager.forget(event.getEntity().getUUID()));
+				(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) -> {
+					// MOD-133: flush this player's pending stats while still online (their tail would
+					// otherwise be dropped on the next server-tick flush, after they have left).
+					if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+						dev.alaindustrial.stats.PlayerStatsTracker.get().flushPlayer(serverPlayer);
+					}
+					dev.alaindustrial.teleporter.TeleportWarmupManager.forget(event.getEntity().getUUID());
+				});
 		// MOD-067: auto-give the Guide Book on first join (game-bus event; once per player).
 		NeoForge.EVENT_BUS.addListener(
 				(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) -> {
@@ -210,9 +263,14 @@ public final class IndustrializationNeoForge {
 				ItemNetworkManager.clear(lvl);
 			}
 		});
+		// MOD-133: fold every pending delta before players are saved. ServerStoppingEvent runs before the
+		// player save; ServerStoppedEvent is too late and would lose the last flush window's tail.
+		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppingEvent event) ->
+				dev.alaindustrial.stats.PlayerStatsTracker.get().flush(event.getServer()));
 		NeoForge.EVENT_BUS.addListener((ServerStoppedEvent event) -> {
 			NetworkManager.clearAll();
 			ItemNetworkManager.clearAll();
+			dev.alaindustrial.stats.PlayerStatsTracker.get().clear();
 		});
 		// Balance-config reload parity with Fabric (MOD-100, absorbs MOD-041). OnDatapackSyncEvent fires on a
 		// player join AND on /reload; getPlayer()==null is the all-players sync, i.e. /reload — the exact
@@ -239,8 +297,6 @@ public final class IndustrializationNeoForge {
 		NeoForge.EVENT_BUS.addListener(
 				(RegisterCommandsEvent event) -> AlaCommandCommon.register(event.getDispatcher(),
 						!net.neoforged.fml.loading.FMLEnvironment.isProduction()));
-
-		Industrialization.LOGGER.info("Industrialization (NeoForge) initialized.");
 	}
 
 	/**
@@ -334,7 +390,7 @@ public final class IndustrializationNeoForge {
 		event.registerItem(Capabilities.Energy.ITEM,
 				(stack, access) -> new dev.alaindustrial.core.neoforge.StackAsEnergyHandler(access),
 				ModItemsNeoForge.BATTERY_POUCH.get(), ModItemsNeoForge.ENERGY_PACK.get(),
-				ModItemsNeoForge.ELECTRIC_DRILL.get());
+				ModItemsNeoForge.ELECTRIC_DRILL.get(), ModItemsNeoForge.ELECTROMAGNET.get());
 
 		// MOD-084: a fake "other mod" energy item, so the gametests can prove the pack charges foreign
 		// items. Dev/gametest only — inert in a shipped jar (see the class doc).

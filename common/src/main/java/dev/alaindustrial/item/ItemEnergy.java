@@ -38,6 +38,9 @@ public final class ItemEnergy {
 		if (stack.getItem() instanceof ElectricDrillItem) {
 			return Config.electricDrillBuffer;
 		}
+		if (stack.getItem() instanceof MagnetItem) {
+			return Config.magnetBuffer;
+		}
 		return 0L;
 	}
 
@@ -55,6 +58,9 @@ public final class ItemEnergy {
 		}
 		if (stack.getItem() instanceof ElectricDrillItem) {
 			return Config.electricDrillInputRate;
+		}
+		if (stack.getItem() instanceof MagnetItem) {
+			return Config.magnetInputRate;
 		}
 		return 0L;
 	}

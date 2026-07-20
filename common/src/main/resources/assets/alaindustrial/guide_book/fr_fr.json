@@ -373,7 +373,8 @@
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : ≤32 EU/paquet"
+                "Énergie : ≤32 EU/paquet",
+                "Buffer: 12 EU"
               ]
             },
             {
@@ -898,6 +899,88 @@
           ]
         },
         {
+          "id": "gold_chest",
+          "title": "Gold Chest",
+          "icon": "alaindustrial:gold_chest",
+          "block_id": "alaindustrial:gold_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gold Chest",
+              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "alaindustrial:silver_chest",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot"
+              ],
+              "result_id": "alaindustrial:gold_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "guide_book",
+          "title": "Guide Book",
+          "icon": "alaindustrial:guide_book",
+          "block_id": "alaindustrial:guide_book",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Guide Book",
+              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "minecraft:book",
+                "alaindustrial:wooden_gear",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "player_profile",
+          "title": "Profil du joueur",
+          "icon": "alaindustrial:guide_book",
+          "block_id": "alaindustrial:player_profile",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Profil du joueur",
+              "text": "Un écran de profil avec les statistiques de carrière de la mod et une progression de maîtrise (40 niveaux, 8 rangs) qui monte grâce au travail des machines et, bien plus lentement, à la production des générateurs."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 1 000 EU de travail des machines = 1 point de maîtrise"
+              ]
+            }
+          ]
+        },
+        {
           "id": "enriched_uranium_torch",
           "title": "Torche d'uranium enrichi",
           "icon": "alaindustrial:enriched_uranium_torch",
@@ -1062,6 +1145,37 @@
                 "alaindustrial:tin_ingot"
               ],
               "result_id": "alaindustrial:battery",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "water_mill_wheel",
+          "title": "Water Wheel",
+          "icon": "alaindustrial:water_mill_wheel",
+          "block_id": "alaindustrial:water_mill_wheel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Water Wheel",
+              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Not consumed while in slot."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "#minecraft:planks",
+                "minecraft:stick",
+                "#minecraft:planks",
+                "minecraft:stick",
+                "alaindustrial:wooden_gear",
+                "minecraft:stick",
+                "#minecraft:planks",
+                "minecraft:stick",
+                "#minecraft:planks"
+              ],
+              "result_id": "alaindustrial:water_mill_wheel",
               "result_count": 1
             }
           ]
@@ -1481,7 +1595,7 @@
         {
           "id": "tempered_iron_tools",
           "title": "Outils en fer trempé",
-          "icon": "alaindustrial:tempered_iron_tools",
+          "icon": "alaindustrial:tempered_iron_axe",
           "block_id": "alaindustrial:tempered_iron_tools",
           "pages": [
             {
@@ -1501,7 +1615,7 @@
         {
           "id": "scythe",
           "title": "Faux",
-          "icon": "alaindustrial:scythe",
+          "icon": "alaindustrial:scythe_iron",
           "block_id": "alaindustrial:scythe",
           "pages": [
             {
@@ -1583,6 +1697,44 @@
                 "alaindustrial:copper_coil"
               ],
               "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electromagnet",
+          "title": "Électroaimant",
+          "icon": "alaindustrial:electromagnet",
+          "block_id": "alaindustrial:electromagnet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Électroaimant",
+              "text": "Un objet rechargeable en EU dans n'importe quel emplacement d'inventaire qui attire vers le joueur les objets au sol à proximité, en dépensant de l'EU par objet."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Tampon : 5 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:redstone",
+                "",
+                "minecraft:lapis_lazuli",
+                "minecraft:iron_ingot",
+                "alaindustrial:copper_coil",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electromagnet",
               "result_count": 1
             }
           ]

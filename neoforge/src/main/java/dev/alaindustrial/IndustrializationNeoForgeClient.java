@@ -55,11 +55,40 @@ import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 @Mod(value = Industrialization.MOD_ID, dist = {Dist.CLIENT})
 public final class IndustrializationNeoForgeClient {
 
+	/**
+	 * MOD-137: the constructor is a table of contents. {@link #registerClientEvents} keeps every
+	 * listener registration in one method rather than splitting mod-bus from game-bus, because the
+	 * original order interleaves the two buses and reordering across that boundary is avoided.
+	 */
 	public IndustrializationNeoForgeClient(IEventBus modBus, ModContainer container) {
+		initClientConfig(container);
+		registerClientEvents(modBus);
+		// MOD-133: client dashboard reads the local player's synced stats attachment through the seam.
+		dev.alaindustrial.stats.PlayerStatsClientCache.bind(() -> {
+			net.minecraft.client.player.LocalPlayer p = net.minecraft.client.Minecraft.getInstance().player;
+			return p == null ? dev.alaindustrial.stats.PlayerModStats.EMPTY
+					: p.getData(dev.alaindustrial.registry.neoforge.ModAttachmentsNeoForge.PLAYER_STATS);
+		});
+
+		Industrialization.LOGGER.info("Industrialization (NeoForge client) initialized.");
+	}
+
+	/** Initialises the client config screen state, the fluid-tank item tint source, and the config-screen factory. */
+	private void initClientConfig(ModContainer container) {
 		AlaClientConfig.init(FMLPaths.CONFIGDIR.get());
 		dev.alaindustrial.client.FluidTankItemTintSource.register();
 		container.registerExtensionPoint(IConfigScreenFactory.class,
 				(modContainer, parent) -> new AlaConfigScreen(parent));
+	}
+
+	/**
+	 * Registers every client-side listener in the original order. The order interleaves mod-bus
+	 * registrations (menu screens, particle providers, tooltip factories, renderers, layer definitions,
+	 * key mappings, GUI layers) with game-bus registrations (item tooltips, world overlays, client tick,
+	 * disconnect cleanup) and the two static client hooks (machine hum, tooltip keys); it is kept as one
+	 * method to preserve that order (MOD-137).
+	 */
+	private void registerClientEvents(IEventBus modBus) {
 		modBus.addListener(this::registerMenuScreens);
 		// MOD-085: green flame particle provider for the Enriched Uranium Torch. registerSpriteSet =
 		// json-backed particle (assets/alaindustrial/particles/enriched_uranium_flame.json); reuses the
@@ -105,6 +134,7 @@ public final class IndustrializationNeoForgeClient {
 		modBus.addListener((RegisterKeyMappingsEvent event) -> {
 			event.register(ModKeyMappings.TOGGLE_ENERGY_HUD);
 			event.register(ModKeyMappings.TOGGLE_DRILL_HUD);
+			event.register(ModKeyMappings.OPEN_PROFILE); // MOD-133 player dashboard
 		});
 		modBus.addListener((RegisterGuiLayersEvent event) -> {
 			// Teleport screen fade (MOD-106) — counterpart to the Fabric HudElementRegistry entry; the
@@ -118,12 +148,18 @@ public final class IndustrializationNeoForgeClient {
 					dev.alaindustrial.client.ElectricDrillHud::render);
 		});
 		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> ModKeyMappings.handleInput());
+		// MOD-133: add the profile button to the survival inventory screen (creative is a different screen
+		// class, excluded by this instanceof). No injected mixin — a NeoForge screen-init event.
+		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.client.event.ScreenEvent.Init.Post event) -> {
+			if (event.getScreen() instanceof net.minecraft.client.gui.screens.inventory.InventoryScreen) {
+				event.addListener(dev.alaindustrial.client.dashboard.InventoryProfileButton.install(event.getScreen()));
+			}
+		});
 		// Leaving a world drops any fade in flight, so it cannot bleed into the next one (MOD-106) —
 		// the Fabric counterpart hangs off ClientPlayConnectionEvents.DISCONNECT.
 		NeoForge.EVENT_BUS.addListener(
 				(net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent.LoggingOut event) ->
 						dev.alaindustrial.client.TeleportFadeHud.reset());
-		Industrialization.LOGGER.info("Industrialization (NeoForge client) initialized.");
 	}
 
 	/**

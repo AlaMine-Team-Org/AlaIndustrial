@@ -35,6 +35,19 @@ dependencies {
     // L1 unit tests (docs/testing/AUTOMATION-STANDARDS.md).
     testImplementation("org.junit.jupiter:junit-jupiter:${junit_version}")
     testRuntimeOnly('org.junit.platform:junit-platform-launcher')
+    // Property-based testing (jqwik 1.9.3, MOD-pitest-coverage). Generative @Property tests produce
+    // hundreds of randomised inputs per invariant — they catch mutants that point tests miss (e.g. a
+    // `min→max` flip only fails on inputs where the two args differ; jqwik's arbitraries guarantee
+    // such inputs are tried). Auto-discovered by the JUnit Platform via junit-platform-launcher above.
+    //
+    // VERSION PIN: deliberately 1.9.3, NOT 1.10.x. jqwik 1.10.0 (2026-05-25) and 1.10.1 contain
+    // protestware: a hidden payload (obfuscated via ANSI escape sequences) inside the test executor
+    // that injects destructive instructions into automated tooling reading the test output. Any
+    // pipeline that parses this project's test output is therefore exposed on 1.10.x. 1.9.3
+    // is the last clean release before the protestware (verified 2026-07-19 against Maven Central +
+    // jqwik release notes; compatible with our JUnit Platform 1.10.2 since jqwik ≥1.9.0 requires only
+    // Platform ≥1.7.0). DO NOT upgrade above 1.9.x without auditing the source for injection payloads.
+    testImplementation('net.jqwik:jqwik:1.9.3')
     // Config lives in common and its config-file load/write (Config.loadFrom) references Gson, so
     // linking Config on the L1 test classpath needs Gson at runtime even though the balance tests
     // only read static fields. Gson is a transitive of Minecraft (MC 26.2 bundles 2.14.0); the L1
@@ -122,7 +135,33 @@ pitest {
             'dev.alaindustrial.core.PipeFaceMode',
             'dev.alaindustrial.core.SolarSky',
             'dev.alaindustrial.core.WindMillClearance',
-            'dev.alaindustrial.core.WindMillInterference'
+            'dev.alaindustrial.core.WindMillInterference',
+            // MOD-144: four additional MC-coupled classes that previously showed as 59 NO_COVERAGE
+            // mutations (37 FluidTank + 8 FluidMover + 8 GuideBookState + 6 GuideBookGiver). They have
+            // ZERO L1-testable bytecode: their transfer/refund/codec flow is gated on types that
+            // cannot be constructed in :common's MC-free test runtime. Excluded so the pitest kill rate
+            // reflects only what the L1 suite CAN catch — and so the ratchet floor is a meaningful
+            // signal of test-quality regressions, not a count of MC-only classes that gained a branch.
+            //   - FluidTank: its insert/extract take a FluidHolder argument. FluidHolder's constructor
+            //     wraps net.minecraft.world.level.material.Fluid (see FluidHolder.of(Fluid fluid) and
+            //     the static EMPTY = new FluidHolder(Fluids.EMPTY)), so a tank cannot be exercised
+            //     from L1. Its pure arithmetic was already extracted to TankMath (100% killed); what
+            //     remains is the decision-flow (single-variant refusal, predicate gates, deferred
+            //     fluid-clear) which requires a live FluidHolder. Behaviour is covered by Fabric L2
+            //     FluidGameTest / FluidTankGameTest / GeothermalLavaInputGameTest.
+            //   - FluidMover: same shape — its move() signature takes FluidPort + FluidHolder. The
+            //     refund arithmetic was extracted to FluidMoverMath (100% killed); what remains is the
+            //     null-guard / extract-then-insert control flow that needs live ports.
+            //   - GuideBookState: extends net.minecraft SavedData + uses UUIDUtil codec — 4 direct
+            //     net.minecraft imports, MC-only by construction.
+            //   - guide.GuideBookGiver: mutates a player Inventory (net.minecraft.world.entity.player)
+            //     and queries MinecraftServer — 4 direct net.minecraft imports, MC-only.
+            // These belong to the future NeoForge L1.5 pitest lane (MOD-110 follow-up) which DOES have
+            // the MC jar on its test classpath.
+            'dev.alaindustrial.core.FluidTank',
+            'dev.alaindustrial.core.FluidMover',
+            'dev.alaindustrial.core.GuideBookState',
+            'dev.alaindustrial.core.guide.GuideBookGiver'
     ]
 
     // Curated mutator set tuned for the math-heavy core (see docs/tasks/MOD-XXX for rationale).

@@ -5,6 +5,7 @@ import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
 import dev.alaindustrial.item.HintItem;
 import dev.alaindustrial.item.FluidTankBlockItem;
+import dev.alaindustrial.item.MagnetItem;
 import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
@@ -122,6 +123,8 @@ public final class ModItems {
 	public static final Item ENERGY_PACK = energyPack("energy_pack");
 	// Electric Drill (MOD-079): first powered hand tool — a diamond-tier pickaxe that runs on EU.
 	public static final Item ELECTRIC_DRILL = electricDrill("electric_drill");
+	// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
+	public static final Item ELECTROMAGNET = magnet("electromagnet");
 	// Vacuum Capsule (MOD-063): empty (×64) + filled (×16, fluid in the capsule_fluid component).
 	public static final Item VACUUM_CAPSULE = vacuumCapsule("vacuum_capsule");
 	public static final Item FILLED_VACUUM_CAPSULE = filledCapsule("filled_vacuum_capsule");
@@ -264,6 +267,14 @@ public final class ModItems {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
 				new ElectricDrillItem(ElectricDrillItem.electricDrillProperties(new Item.Properties().setId(key))));
+	}
+
+	// Electromagnet (MOD-132). A plain-Item subclass; stacksTo(1) because it carries per-item state
+	// (EU + on/off). No pouch_energy default — ItemEnergy reads an absent component as 0 EU.
+	private static Item magnet(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new MagnetItem(new Item.Properties().setId(key).stacksTo(1)));
 	}
 
 	// Vacuum Capsule (MOD-063). Empty capsule stacks to the vanilla default (64); no fluid component
@@ -422,6 +433,7 @@ public final class ModItems {
 					output.accept(ModContent.BATTERY_POUCH.get());
 					output.accept(ModContent.ENERGY_PACK.get());
 					output.accept(ModContent.ELECTRIC_DRILL.get());
+					output.accept(ModContent.ELECTROMAGNET.get());
 				});
 		CreativeModeTabEvents.modifyOutputEvent(VanillaCreativeTabs.INGREDIENTS)
 				.register(output -> CreativeTabContent.ingredients(output::accept));
@@ -490,6 +502,7 @@ public final class ModItems {
 		ModContent.BATTERY = () -> BATTERY;
 		ModContent.ENERGY_PACK = () -> ENERGY_PACK;
 		ModContent.ELECTRIC_DRILL = () -> ELECTRIC_DRILL;
+		ModContent.ELECTROMAGNET = () -> ELECTROMAGNET;
 		ModContent.VACUUM_CAPSULE = () -> VACUUM_CAPSULE;
 		ModContent.FILLED_VACUUM_CAPSULE = () -> FILLED_VACUUM_CAPSULE;
 		ModContent.STOCK_DISPLAY_FRAME_ITEM = () -> STOCK_DISPLAY_FRAME;

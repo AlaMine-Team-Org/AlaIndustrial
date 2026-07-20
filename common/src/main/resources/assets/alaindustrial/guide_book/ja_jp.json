@@ -373,7 +373,8 @@
               "type": "stats",
               "title": "ステータス",
               "lines": [
-                "エネルギー: ≤32 EU/パケット"
+                "エネルギー: ≤32 EU/パケット",
+                "Buffer: 12 EU"
               ]
             },
             {
@@ -898,6 +899,88 @@
           ]
         },
         {
+          "id": "gold_chest",
+          "title": "Gold Chest",
+          "icon": "alaindustrial:gold_chest",
+          "block_id": "alaindustrial:gold_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gold Chest",
+              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "alaindustrial:silver_chest",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot"
+              ],
+              "result_id": "alaindustrial:gold_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "guide_book",
+          "title": "Guide Book",
+          "icon": "alaindustrial:guide_book",
+          "block_id": "alaindustrial:guide_book",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Guide Book",
+              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "minecraft:book",
+                "alaindustrial:wooden_gear",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "player_profile",
+          "title": "プレイヤープロフィール",
+          "icon": "alaindustrial:guide_book",
+          "block_id": "alaindustrial:player_profile",
+          "pages": [
+            {
+              "type": "text",
+              "title": "プレイヤープロフィール",
+              "text": "MODのキャリア統計と熟練の進行（40レベル、8つの称号）を表示するプロフィール画面。熟練は機械の稼働で上がり、発電機の出力ではずっとゆっくり上がります。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 機械の稼働 1 000 EU = 熟練ポイント 1"
+              ]
+            }
+          ]
+        },
+        {
           "id": "enriched_uranium_torch",
           "title": "濃縮ウランの松明",
           "icon": "alaindustrial:enriched_uranium_torch",
@@ -1062,6 +1145,37 @@
                 "alaindustrial:tin_ingot"
               ],
               "result_id": "alaindustrial:battery",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "water_mill_wheel",
+          "title": "Water Wheel",
+          "icon": "alaindustrial:water_mill_wheel",
+          "block_id": "alaindustrial:water_mill_wheel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Water Wheel",
+              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Not consumed while in slot."
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "#minecraft:planks",
+                "minecraft:stick",
+                "#minecraft:planks",
+                "minecraft:stick",
+                "alaindustrial:wooden_gear",
+                "minecraft:stick",
+                "#minecraft:planks",
+                "minecraft:stick",
+                "#minecraft:planks"
+              ],
+              "result_id": "alaindustrial:water_mill_wheel",
               "result_count": 1
             }
           ]
@@ -1481,7 +1595,7 @@
         {
           "id": "tempered_iron_tools",
           "title": "調質鉄の道具",
-          "icon": "alaindustrial:tempered_iron_tools",
+          "icon": "alaindustrial:tempered_iron_axe",
           "block_id": "alaindustrial:tempered_iron_tools",
           "pages": [
             {
@@ -1501,7 +1615,7 @@
         {
           "id": "scythe",
           "title": "大鎌",
-          "icon": "alaindustrial:scythe",
+          "icon": "alaindustrial:scythe_iron",
           "block_id": "alaindustrial:scythe",
           "pages": [
             {
@@ -1583,6 +1697,44 @@
                 "alaindustrial:copper_coil"
               ],
               "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electromagnet",
+          "title": "電磁石",
+          "icon": "alaindustrial:electromagnet",
+          "block_id": "alaindustrial:electromagnet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "電磁石",
+              "text": "任意のインベントリスロットに置いておくとEUで充電できるアイテムで、近くの落ちているドロップをプレイヤーへ引き寄せ、アイテムごとにEUを消費します。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "バッファ: 5 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:redstone",
+                "",
+                "minecraft:lapis_lazuli",
+                "minecraft:iron_ingot",
+                "alaindustrial:copper_coil",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electromagnet",
               "result_count": 1
             }
           ]

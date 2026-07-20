@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"key": {
+		"I": "minecraft:iron_ingot",
+		"C": "alaindustrial:copper_coil",
+		"E": "alaindustrial:electronic_circuit",
+		"R": "minecraft:redstone",
+		"L": "minecraft:lapis_lazuli"
+	},
+	"pattern": [
+		"R L",
+		"ICI",
+		"IEI"
+	],
+	"result": { "id": "alaindustrial:electromagnet" }
+}

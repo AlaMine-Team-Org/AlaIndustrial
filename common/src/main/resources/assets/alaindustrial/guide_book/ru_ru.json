@@ -373,7 +373,8 @@
               "type": "stats",
               "title": "Характеристики",
               "lines": [
-                "Энергия: ≤32 EU/пакет"
+                "Энергия: ≤32 EU/пакет",
+                "Буфер: 12 EU"
               ]
             },
             {
@@ -898,6 +899,88 @@
           ]
         },
         {
+          "id": "gold_chest",
+          "title": "Золотой сундук",
+          "icon": "alaindustrial:gold_chest",
+          "block_id": "alaindustrial:gold_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Золотой сундук",
+              "text": "Сундук на 54 слота — тир выше серебряного (на ряд больше), с объёмной 3D-моделью и анимированной крышкой. Энергии не требует."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "alaindustrial:silver_chest",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot"
+              ],
+              "result_id": "alaindustrial:gold_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "guide_book",
+          "title": "Книга-путеводитель",
+          "icon": "alaindustrial:guide_book",
+          "block_id": "alaindustrial:guide_book",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Книга-путеводитель",
+              "text": "Внутриигровой туториал-книга по всем механикам мода — выдаётся автоматически при первом входе в мир, открывается по правому клику; вкладки, страницы, ссылки. Энергии не требует."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Бесформенный крафт",
+              "grid": [
+                "minecraft:book",
+                "alaindustrial:wooden_gear",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "player_profile",
+          "title": "Личный кабинет игрока",
+          "icon": "alaindustrial:guide_book",
+          "block_id": "alaindustrial:player_profile",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Личный кабинет игрока",
+              "text": "Экран-профиль с карьерной статистикой мода и прогрессией мастерства (40 уровней, 8 званий), которая качается от работы машин и, слабее, от производства генераторов."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 1 000 EU работы машин = 1 очко мастерства"
+              ]
+            }
+          ]
+        },
+        {
           "id": "enriched_uranium_torch",
           "title": "Обогащённый урановый факел",
           "icon": "alaindustrial:enriched_uranium_torch",
@@ -1062,6 +1145,37 @@
                 "alaindustrial:tin_ingot"
               ],
               "result_id": "alaindustrial:battery",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "water_mill_wheel",
+          "title": "Водяное колесо",
+          "icon": "alaindustrial:water_mill_wheel",
+          "block_id": "alaindustrial:water_mill_wheel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Водяное колесо",
+              "text": "Колесо водяной мельницы — ставится в слот колеса водяной мельницы; без него генерации нет. В слоте не расходуется."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "#minecraft:planks",
+                "minecraft:stick",
+                "#minecraft:planks",
+                "minecraft:stick",
+                "alaindustrial:wooden_gear",
+                "minecraft:stick",
+                "#minecraft:planks",
+                "minecraft:stick",
+                "#minecraft:planks"
+              ],
+              "result_id": "alaindustrial:water_mill_wheel",
               "result_count": 1
             }
           ]
@@ -1480,13 +1594,13 @@
         },
         {
           "id": "tempered_iron_tools",
-          "title": "Tempered Iron Tools",
-          "icon": "alaindustrial:tempered_iron_tools",
+          "title": "Инструменты из закалённого железа",
+          "icon": "alaindustrial:tempered_iron_axe",
           "block_id": "alaindustrial:tempered_iron_tools",
           "pages": [
             {
               "type": "text",
-              "title": "Tempered Iron Tools",
+              "title": "Инструменты из закалённого железа",
               "text": "Набор из пяти ручных инструментов из закалённого железа — кирка, топор, мотыга, лопата и меч; чуть лучше ванильных железных, но алмазные блоки не копают."
             },
             {
@@ -1500,13 +1614,13 @@
         },
         {
           "id": "scythe",
-          "title": "Scythe",
-          "icon": "alaindustrial:scythe",
+          "title": "Коса",
+          "icon": "alaindustrial:scythe_iron",
           "block_id": "alaindustrial:scythe",
           "pages": [
             {
               "type": "text",
-              "title": "Scythe",
+              "title": "Коса",
               "text": "Инструмент для массового скашивания листвы, травы, цветов и прочей декоративной растительности одним взмахом по области, а с зажатым Shift — сбор созревшего урожая по области. Восемь уровней от дерева до незерита."
             },
             {
@@ -1583,6 +1697,44 @@
                 "alaindustrial:copper_coil"
               ],
               "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electromagnet",
+          "title": "Электромагнит",
+          "icon": "alaindustrial:electromagnet",
+          "block_id": "alaindustrial:electromagnet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Электромагнит",
+              "text": "Заряжаемый на EU предмет в любом слоте инвентаря — притягивает лежащие рядом выпавшие предметы к игроку, тратя EU за каждый."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 5 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "minecraft:redstone",
+                "",
+                "minecraft:lapis_lazuli",
+                "minecraft:iron_ingot",
+                "alaindustrial:copper_coil",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electromagnet",
               "result_count": 1
             }
           ]

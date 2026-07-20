@@ -46,6 +46,7 @@ public final class ModDataComponents {
 	public static final Identifier TELEPORTER_OWNER_ID = Industrialization.id("teleporter_owner");
 	public static final Identifier TELEPORTER_POINTS_ID = Industrialization.id("teleporter_points");
 	public static final Identifier FLUID_TANK_CONTENTS_ID = Industrialization.id("fluid_tank_contents");
+	public static final Identifier MAGNET_ENABLED_ID = Industrialization.id("magnet_enabled");
 
 	/** Buffered EU carried on a storage block's item form. Bound once per loader before first access. */
 	public static Supplier<DataComponentType<Long>> STORED_ENERGY = () -> {
@@ -122,6 +123,23 @@ public final class ModDataComponents {
 	public static Supplier<DataComponentType<TeleportPoints>> TELEPORTER_POINTS = () -> {
 		throw new IllegalStateException("ModDataComponents.TELEPORTER_POINTS read before its loader bound it");
 	};
+
+	/**
+	 * Electromagnet on/off flag (MOD-132), toggled by shift-right-click. Absent = on, so a crafted-fresh
+	 * magnet works out of the box and a switched-on magnet stays component-identical to a fresh one;
+	 * disabling stores {@code false}. Read/written only via {@link dev.alaindustrial.item.MagnetItem}.
+	 */
+	public static Supplier<DataComponentType<Boolean>> MAGNET_ENABLED = () -> {
+		throw new IllegalStateException("ModDataComponents.MAGNET_ENABLED read before its loader bound it");
+	};
+
+	/** Build the {@code magnet_enabled} type both loaders register (MOD-132). */
+	public static DataComponentType<Boolean> createMagnetEnabled() {
+		return DataComponentType.<Boolean>builder()
+				.persistent(Codec.BOOL)
+				.networkSynchronized(ByteBufCodecs.BOOL)
+				.build();
+	}
 
 	/** Build the {@code teleporter_owner} type both loaders register (MOD-092). */
 	public static DataComponentType<UUID> createTeleporterOwner() {

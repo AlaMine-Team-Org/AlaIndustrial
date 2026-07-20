@@ -71,8 +71,8 @@ loom {
 // The L2 driver is Fabric-specific: the @GameTest annotation and the fabric.mod.json entrypoints
 // are Fabric infrastructure. The pure-logic invariants they assert stay in common as L1 JUnit
 // (common/src/test). NeoForge has its own lanes wired since MOD-022: a headless JUnit adapter
-// (:neoforge:test) + a world gameTestServer lane (:neoforge:runGameTests, 102 scenarios sharing
-// loader-neutral bodies in common/.../gametest/*Scenarios). See docs/BUILD.md.
+// (:neoforge:test) + a world gameTestServer lane (:neoforge:runGameTests, scenarios sharing
+// loader-neutral bodies in common/.../gametest/*Scenarios). See docs/BUILD.md; counts in docs/testing/COVERAGE.md.
 fabricApi {
     configureTests {
         createSourceSet = true

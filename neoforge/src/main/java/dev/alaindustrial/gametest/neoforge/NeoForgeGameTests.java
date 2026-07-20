@@ -7,6 +7,7 @@ import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.CapsuleScenarios;
 import dev.alaindustrial.gametest.GeothermalLavaInputScenarios;
 import dev.alaindustrial.gametest.ElectricDrillScenarios;
+import dev.alaindustrial.gametest.MagnetScenarios;
 import dev.alaindustrial.gametest.EnergyPackScenarios;
 import dev.alaindustrial.gametest.GuideBookGiverScenarios;
 import dev.alaindustrial.gametest.PouchScenarios;
@@ -98,6 +99,19 @@ public final class NeoForgeGameTests {
 				CoreEnergyScenarios::generatorDeliversDownCable);
 		registerTest(event, "return_round_robin_no_leak", 40, true,
 				CoreEnergyScenarios::returnRoundRobinNoLeak);
+		// MOD-070 segment-to-segment flow: accumulation in intermediate cables + retention on break.
+		registerTest(event, "line_accumulates_in_segments", 80, true,
+				CoreEnergyScenarios::lineAccumulatesInSegments);
+		registerTest(event, "break_retains_at_source", 100, true,
+				CoreEnergyScenarios::breakRetainsAtSource);
+		registerTest(event, "storage_does_not_charge_storage", 60, true,
+				CoreEnergyScenarios::storageDoesNotChargeStorage);
+		registerTest(event, "source_fills_cable_without_consumer", 40, true,
+				CoreEnergyScenarios::sourceFillsCableWithoutConsumer);
+		registerTest(event, "storage_charges_through_line", 100, true,
+				CoreEnergyScenarios::storageChargesThroughLine);
+		registerTest(event, "lone_storage_source_sleeps", 40, true,
+				CoreEnergyScenarios::loneStorageSourceSleeps);
 		registerTest(event, "mod009_battery_box_charges_to_full", 80, true,
 				CoreEnergyScenarios::mod009BatteryBoxChargesToFull);
 		// MOD-021 cable-loss on NeoForge: REQUIRED regression guard. This world lane surfaced (and the
@@ -394,6 +408,15 @@ public final class NeoForgeGameTests {
 		// MOD-097 (TC-DRILL-001-NEG01): a drill below the torch cost refuses to place instead of a freebie.
 		registerTest(event, "drill_torch_refused_below_cost", 40, true, ElectricDrillScenarios::neg01TorchRefusedBelowCost);
 
+		// MOD-132 Electromagnet (suite TC-MAGNET-001) — same neutral bodies as the Fabric MagnetGameTest.
+		registerTest(event, "magnet_pulls_nearby_drop", 40, true, MagnetScenarios::fun01PullsNearbyDrop);
+		registerTest(event, "magnet_flat_inert", 40, true, MagnetScenarios::fun02FlatMagnetInert);
+		registerTest(event, "magnet_disabled_inert", 40, true, MagnetScenarios::fun03DisabledMagnetInert);
+		registerTest(event, "magnet_respects_pickup_delay", 40, true, MagnetScenarios::fun04RespectsPickupDelay);
+		registerTest(event, "magnet_out_of_range_ignored", 40, true, MagnetScenarios::fun05OutOfRangeIgnored);
+		registerTest(event, "magnet_toggle_via_use", 40, true, MagnetScenarios::fun06ToggleViaUse);
+		registerTest(event, "magnet_toggle_round_trip", 40, true, MagnetScenarios::per01ToggleRoundTrip);
+
 		// MOD-063 Vacuum Capsule (suite TC-CAPS-001) — same neutral bodies as the Fabric CapsuleGameTest.
 		registerTest(event, "capsule_component_round_trip", 40, true, CapsuleScenarios::per01ComponentRoundTrip);
 		registerTest(event, "capsule_stacking_by_fluid", 40, true, CapsuleScenarios::fun01StackingByFluid);
@@ -447,6 +470,33 @@ public final class NeoForgeGameTests {
 		registerTest(event, "item_pipe_vanilla_chests", 40, true, ItemPipeScenarios::transfersBetweenVanillaChests);
 		// MOD-108: shift-click with the wrench dismantles our blocks and leaves foreign ones alone.
 		registerTest(event, "wrench_dismantles_own_blocks", 40, true, ItemPipeScenarios::wrenchDismantlesOwnBlocks);
+		// MOD-133 player-stats attribution — same bodies as the Fabric PlayerStatsGameTest lane. These
+		// pin the machine-XP rule, the anti-AFK abort guard, creative/ownerless exclusions, and generator
+		// production attribution.
+		registerTest(event, "player_stats_xp_from_completed_work", 500, true,
+				dev.alaindustrial.gametest.PlayerStatsScenarios::xpFromCompletedWork);
+		registerTest(event, "player_stats_no_xp_from_aborted_work", 60, true,
+				dev.alaindustrial.gametest.PlayerStatsScenarios::noXpFromAbortedWork);
+		registerTest(event, "player_stats_no_xp_for_creative_owner", 500, true,
+				dev.alaindustrial.gametest.PlayerStatsScenarios::noXpForCreativeOwner);
+		registerTest(event, "player_stats_no_stats_for_null_owner", 500, true,
+				dev.alaindustrial.gametest.PlayerStatsScenarios::noStatsForNullOwner);
+		registerTest(event, "player_stats_no_stats_for_offline_owner", 500, true,
+				dev.alaindustrial.gametest.PlayerStatsScenarios::noStatsForOfflineOwner);
+		registerTest(event, "player_stats_generator_production_attributed", 500, true,
+				dev.alaindustrial.gametest.PlayerStatsScenarios::generatorProductionAttributedToOwner);
+		registerTest(event, "player_stats_buffer_cap_limits_attribution", 300, true,
+				dev.alaindustrial.gametest.PlayerStatsScenarios::bufferCapLimitsAttributedProduction);
+		// MOD-156: mode-transition and lifecycle coverage — a creative pass neither wipes nor resumes-wrong,
+		// a disconnect flushes the pending tail, and activeTicks does not scale with generator count.
+		registerTest(event, "player_stats_mode_transitions_preserve_and_resume", 1400, true,
+				dev.alaindustrial.gametest.PlayerStatsScenarios::modeTransitionsPreserveAndResumeAccrual);
+		registerTest(event, "player_stats_flush_player_saves_tail_on_logout", 500, true,
+				dev.alaindustrial.gametest.PlayerStatsScenarios::flushPlayerSavesTailOnLogout);
+		registerTest(event, "player_stats_active_ticks_not_scaled_by_generator_count", 60, true,
+				dev.alaindustrial.gametest.PlayerStatsScenarios::activeTicksNotScaledByGeneratorCount);
+		registerTest(event, "player_stats_active_time_accrues_with_full_buffer", 60, true,
+				dev.alaindustrial.gametest.PlayerStatsScenarios::activeTimeAccruesWithFullBuffer);
 	}
 
 	/** Register one code-body scenario under the alaindustrial namespace with a sane maxTicks. */

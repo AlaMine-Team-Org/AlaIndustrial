@@ -160,6 +160,7 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 				acquiredFrom = acquireFluid(level, pos, state);
 				if (acquiredFrom != null) {
 					energy.amount -= euPerBucket;
+					creditUsefulWork(level, euPerBucket); // MOD-133: one bucket pumped = useful work → XP
 					worked = true;
 					scanCooldown = 20; // 1 second cooldown on success to balance speed and reduce BFS frequency
 				} else {

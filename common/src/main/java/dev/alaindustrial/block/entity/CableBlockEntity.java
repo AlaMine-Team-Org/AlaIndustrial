@@ -37,8 +37,21 @@ public class CableBlockEntity extends MachineBlockEntity {
 	private boolean shapeValidated;
 
 	public CableBlockEntity(BlockPos pos, BlockState state) {
+		// capacity = Config.cableBuffer (the live per-segment buffer, e.g. 12 EU). maxInsert/maxExtract =
+		// LV.maxVoltage() (32) are set for symmetry, but on a cable they are effectively no-ops: since
+		// capacity (12) < 32, EnergyBuffer's min(maxInsert, capacity - amount) is always dominated by the
+		// capacity term. The REAL per-cable throughput is the buffer size (MOD-070: energy flows through
+		// the segment buffer, so a cable carries cableBuffer EU/tick), and the tier packet cap is applied
+		// separately in EnergyNetwork.tick(). A future MV/HV cable should raise Config's buffer, not assume
+		// these rate fields gate throughput.
 		super(ModContent.COPPER_CABLE_BE.get(), pos, state, EnergyTier.LV, 0,
 				Config.cableBuffer, EnergyTier.LV.maxVoltage(), EnergyTier.LV.maxVoltage());
+	}
+
+	/** Transport, not a working machine (MOD-133): no owner, no player stats, no per-segment UUID ballast. */
+	@Override
+	public boolean tracksOwner() {
+		return false;
 	}
 
 	@Override

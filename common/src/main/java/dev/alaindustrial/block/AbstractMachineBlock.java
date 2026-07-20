@@ -71,6 +71,12 @@ public abstract class AbstractMachineBlock extends BaseEntityBlock {
 	public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.setPlacedBy(level, pos, state, placer, stack);
 		if (level instanceof ServerLevel serverLevel && placer instanceof ServerPlayer player) {
+			// MOD-133: record the placer as owner for per-player stats/XP. Re-assigned on every place
+			// (does not ride the dropped item); transport blocks opt out via tracksOwner(). This is the
+			// single ownership seam the teleporter station now inherits instead of setting its own.
+			if (level.getBlockEntity(pos) instanceof MachineBlockEntity machine && machine.tracksOwner()) {
+				machine.setOwner(player.getUUID(), player.getGameProfile().name());
+			}
 			ModCriteria.tryFireNetworkEnergized(serverLevel, pos, player);
 		}
 	}

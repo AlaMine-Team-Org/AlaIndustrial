@@ -59,6 +59,7 @@ public final class ModCreativeTabEventsNeoForge {
 			event.accept(ModContent.BATTERY_POUCH.get());
 			event.accept(ModContent.ENERGY_PACK.get());
 			event.accept(ModContent.ELECTRIC_DRILL.get());
+			event.accept(ModContent.ELECTROMAGNET.get());
 		} else if (event.getTabKey().equals(VanillaCreativeTabs.INGREDIENTS)) {
 			CreativeTabContent.ingredients(event::accept);
 		} else if (event.getTabKey().equals(VanillaCreativeTabs.BUILDING_BLOCKS)) {

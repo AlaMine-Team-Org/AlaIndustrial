@@ -6,10 +6,8 @@ import dev.alaindustrial.menu.TeleporterStationMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -45,27 +43,10 @@ public class TeleporterBlock extends HorizontalMachineBlock {
 		return new TeleporterBlockEntity(pos, state);
 	}
 
-	/**
-	 * Ownership is decided here, at placement, and belongs to whoever placed the block — every time.
-	 * It deliberately does NOT ride along on the dropped item (unlike the EU buffer and the privacy
-	 * flag, which do): a station handed to a friend, or looted from someone's base, becomes the new
-	 * placer's. Carrying the owner on the item would make a gifted station permanently unusable by
-	 * its new holder, and re-assigning on place is the same rule players already know from the
-	 * battery box keeping its charge but not its history.
-	 *
-	 * <p>The name snapshot is taken here too, so the MOD-093 GUI can show "owner: Steve" without a
-	 * UUID→name lookup that is unreliable for offline players.
-	 */
-	@Override
-	public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		super.setPlacedBy(level, pos, state, placer, stack);
-		if (level.isClientSide() || !(placer instanceof net.minecraft.world.entity.player.Player player)) {
-			return;
-		}
-		if (level.getBlockEntity(pos) instanceof TeleporterBlockEntity station) {
-			station.setOwner(player.getUUID(), player.getGameProfile().name());
-		}
-	}
+	// Ownership is set generically by AbstractMachineBlock#setPlacedBy (MOD-133): the placer becomes
+	// the owner on every place, and the name snapshot is taken there — the station no longer needs its
+	// own setPlacedBy override. Owner deliberately does NOT ride the dropped item (it is re-assigned on
+	// place), unlike the EU buffer and privacy flag, which do (see collectImplicitComponents).
 
 	/**
 	 * Right-click opens the station's screen (MOD-093).
