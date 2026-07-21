@@ -6,6 +6,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
+import java.util.function.DoubleSupplier;
+import java.util.function.IntConsumer;
+import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -91,6 +99,13 @@ public final class Config {
 	 * minutes, ≈3 in-game days accounting for weather/night gaps.
 	 */
 	public static int solarEvolveTicks = 33_600;
+	/**
+	 * How often (ticks) a solar panel re-samples sky access + weather; the verdict is cached between
+	 * samples to avoid scanning the column above the panel every tick. Mirrors {@link #windMillSampleTicks};
+	 * 40 ticks (2 s) is imperceptible against the day/night and weather transitions a panel reacts to,
+	 * and at 100 panels cuts the per-tick column-scan cost from 100/tick to ~2/tick on average.
+	 */
+	public static int solarSkySampleTicks = 40;
 
 	// --- Pump (LV, EU-powered fluid mover) ---
 	/** EU spent per bucket of fluid the pump moves (extract + push). The pump is one of the most
@@ -159,7 +174,7 @@ public final class Config {
 	 * Deliberately tiny so a wall of cables can never be used as bulk storage — the balance ceiling is
 	 * {@code cableBuffer × realistic-network-size ≪ batteryBoxBuffer}: a 1000-cable network holds
 	 * 12 000 EU &lt; one Battery Box ({@link #batteryBoxBuffer} = 20 000). Kept separate from
-	 * {@link dev.alaindustrial.core.EnergyTier#capacity()} (the machine buffer, 10 000 EU for LV) on
+	 * {@link dev.alaindustrial.core.energy.EnergyTier#capacity()} (the machine buffer, 10 000 EU for LV) on
 	 * purpose. Applies to newly placed cables ({@code EnergyBuffer.capacity} is final per block entity).
 	 */
 	public static int cableBuffer = 12;
@@ -236,9 +251,9 @@ public final class Config {
 	public static int magnetBuffer = 5_000;
 	/** Max EU/tick the magnet accepts while sitting in a charge slot (LV ceiling, like the drill). */
 	public static int magnetInputRate = 32;
-	/** Pull radius in blocks around the carrier (a sphere — up, down and sideways). Tier 1 is a modest 3
+	/** Pull radius in blocks around the carrier (a sphere — up, down and sideways). Tier 1 covers 5
 	 * blocks; higher tiers (larger radius) are a later task. */
-	public static int magnetRange = 3;
+	public static int magnetRange = 5;
 	/** EU spent per item actually pulled, each tick it is being drawn in. An idle scan (nothing in range)
 	 * is free, so the magnet is a consumable and not a free vacuum. Small next to the large buffer. */
 	public static int magnetEuPerItem = 2;
@@ -280,6 +295,25 @@ public final class Config {
 	/** How often (server ticks) in-memory player stats are folded into the attachment and synced. */
 	public static int statsFlushTicks = 100;
 
+	// --- Energy tiers: per-tick voltage cap + default buffer capacity, configurable per tier ---
+	/**
+	 * Max packet voltage (EU) and per-tick transfer cap for the LV tier. Applies to every LV block
+	 * (cable, generator, machine, storage) — i.e. the most-used tier in the mod. The other LV-rate
+	 * fields (cableBuffer, generatorBuffer, …) are per-block overrides; this is the universal tier ceiling.
+	 * Mirrored into {@link dev.alaindustrial.core.energy.EnergyTier#LV} at class init.
+	 */
+	public static int tierLvVoltage = 32;
+	/** Max packet voltage for the MV tier. 4× LV by convention. Mirrored into EnergyTier.MV. */
+	public static int tierMvVoltage = 128;
+	/** Max packet voltage for the HV tier. 4× MV by convention. Mirrored into EnergyTier.HV. */
+	public static int tierHvVoltage = 512;
+	/** Default internal buffer capacity for LV machines that do not override it. Mirrored into EnergyTier.LV. */
+	public static int tierLvCapacity = 10_000;
+	/** Default internal buffer capacity for MV machines. Mirrored into EnergyTier.MV. */
+	public static int tierMvCapacity = 40_000;
+	/** Default internal buffer capacity for HV machines. Mirrored into EnergyTier.HV. */
+	public static int tierHvCapacity = 160_000;
+
 	// --- Cable ---
 	/**
 	 * Fraction of throughput lost per cable block traversed (copper LV). Resistive/proportional model
@@ -318,6 +352,198 @@ public final class Config {
 	 * loot condition.
 	 */
 	public static boolean bonusChestEnabled = true;
+
+	/**
+	 * Declarative description of every tunable above: json key, doc text, and how the value is read,
+	 * validated and written back. {@link #loadFrom} and {@link #snapshot} walk this list instead of
+	 * repeating each field five times (declaration, staged read, clamp, commit, serialize) — adding a
+	 * knob is now one declaration plus one entry here.
+	 *
+	 * <p><b>Order is load-bearing:</b> entries are serialized in list order and each field's
+	 * {@code _comment_} renders immediately before it, so this list must stay in the same order the
+	 * fields are declared above. It must also stay textually BELOW the declarations: each entry
+	 * captures its fallback by reading the field itself, and Java runs static initializers in source
+	 * order, so a list moved above them would capture zeroes.
+	 *
+	 * <p>Fields whose declared default IS the recovery value pass no explicit fallback — the value is
+	 * derived from the field, which is what removes the old "same literal typed twice" drift risk. The
+	 * four fields that deliberately clamp to a range boundary rather than restore their default
+	 * (euPerXp, euPerXpGenerated, xpLevelOneCost floor at 1; copperCableLossPerBlock floors at 0.0)
+	 * pass that boundary explicitly, so the exception is visible rather than implied.
+	 */
+	private static final List<ConfigField> FIELDS = List.of(
+			new FloatField("globalEuRateMultiplier", "Multiplier on EVERY generator's EU/t output. 1.0 = unchanged; 2.0 = twice the generation server-wide.",
+				() -> globalEuRateMultiplier, v -> globalEuRateMultiplier = v, 0.0f),
+			new FloatField("globalMachineSpeedMultiplier", "Machine speed multiplier (energy-neutral): higher = machines draw more EU/t but finish proportionally faster. 1.0 = unchanged.",
+				() -> globalMachineSpeedMultiplier, v -> globalMachineSpeedMultiplier = v, 0.0f),
+			new IntField("solarEuPerTick", "Solar panel output in EU/t under clear daytime sky. The energy system's baseline (1).",
+				() -> solarEuPerTick, v -> solarEuPerTick = v, 0),
+			new IntField("daylightEuPerTick", "Evolved daylight-panel output in EU/t during the day.",
+				() -> daylightEuPerTick, v -> daylightEuPerTick = v, 0),
+			new IntField("moonlitEuPerTick", "Evolved moonlit-panel output in EU/t at night under clear sky.",
+				() -> moonlitEuPerTick, v -> moonlitEuPerTick = v, 0),
+			new IntField("moonlitWeatherEuPerTick", "Moonlit-panel EU/t at night during rain/thunder (a weather trickle).",
+				() -> moonlitWeatherEuPerTick, v -> moonlitWeatherEuPerTick = v, 0),
+			new IntField("fuelEuPerTick", "Fuel (solid-burnable) generator output in EU/t while burning.",
+				() -> fuelEuPerTick, v -> fuelEuPerTick = v, 0),
+			new IntField("geothermalEuPerTick", "Geothermal (lava) generator output in EU/t while burning lava.",
+				() -> geothermalEuPerTick, v -> geothermalEuPerTick = v, 0),
+			new IntField("geothermalBurnTicks", "Ticks of burn a geothermal generator gets per bucket of lava (20 ticks = 1 second).",
+				() -> geothermalBurnTicks, v -> geothermalBurnTicks = v, 1),
+			new IntField("waterMillEuPerTick", "Water mill EU/t per adjacent water block on its four sides (0..4 EU/t total).",
+				() -> waterMillEuPerTick, v -> waterMillEuPerTick = v, 0),
+			new IntField("windMillMaxBaseEuPerTick", "Wind mill clear-sky height cap in EU/t (base grows with altitude up to this).",
+				() -> windMillMaxBaseEuPerTick, v -> windMillMaxBaseEuPerTick = v, 0),
+			new IntField("windMillMaxEuPerTick", "Hard cap on wind mill EU/t after the weather multiplier.",
+				() -> windMillMaxEuPerTick, v -> windMillMaxEuPerTick = v, 0),
+			new FloatField("windMillRainFactor", "Wind mill output multiplier while it is raining (not thundering).",
+				() -> windMillRainFactor, v -> windMillRainFactor = v, 0.0f),
+			new FloatField("windMillThunderFactor", "Wind mill output multiplier while it is thundering.",
+				() -> windMillThunderFactor, v -> windMillThunderFactor = v, 0.0f),
+			new IntField("windMillSampleTicks", "How often (ticks) a wind mill re-samples height/sky/weather; rate is cached in between.",
+				() -> windMillSampleTicks, v -> windMillSampleTicks = v, 1),
+			new IntField("windMillEvolveTicks", "Active open-sky ticks (with rotor + evolution chip) to evolve a base wind mill into its T2 branch.",
+				() -> windMillEvolveTicks, v -> windMillEvolveTicks = v, 1),
+			new IntField("highAltWindMillMaxBaseEuPerTick", "High-altitude wind mill (T2) clear-sky height cap in EU/t.",
+				() -> highAltWindMillMaxBaseEuPerTick, v -> highAltWindMillMaxBaseEuPerTick = v, 0),
+			new IntField("highAltWindMillBlocksPerBase", "Blocks of height above sea level per +1 EU/t of base on the high-altitude T2 variant.",
+				() -> highAltWindMillBlocksPerBase, v -> highAltWindMillBlocksPerBase = v, 1),
+			new IntField("highAltWindMillMaxEuPerTick", "Hard cap on high-altitude T2 wind mill EU/t after the weather multiplier.",
+				() -> highAltWindMillMaxEuPerTick, v -> highAltWindMillMaxEuPerTick = v, 0),
+			new IntField("stormWindMillMaxBaseEuPerTick", "Storm wind mill (T2) clear-sky height cap in EU/t before the weather multiplier.",
+				() -> stormWindMillMaxBaseEuPerTick, v -> stormWindMillMaxBaseEuPerTick = v, 0),
+			new FloatField("stormWindMillRainFactor", "Storm T2 wind mill output multiplier while it is raining.",
+				() -> stormWindMillRainFactor, v -> stormWindMillRainFactor = v, 0.0f),
+			new FloatField("stormWindMillThunderFactor", "Storm T2 wind mill output multiplier while it is thundering.",
+				() -> stormWindMillThunderFactor, v -> stormWindMillThunderFactor = v, 0.0f),
+			new IntField("stormWindMillMaxEuPerTick", "Hard cap on storm T2 wind mill EU/t after the weather multiplier.",
+				() -> stormWindMillMaxEuPerTick, v -> stormWindMillMaxEuPerTick = v, 0),
+			new FloatField("solarTransparentFactor", "Output multiplier when a solar panel sees sky through a translucent block (leaves, cobweb).",
+				() -> solarTransparentFactor, v -> solarTransparentFactor = v, 0.0f),
+			new FloatField("solarSnowFactor", "Output multiplier under snow (a snow layer above, or snowfall in a cold biome).",
+				() -> solarSnowFactor, v -> solarSnowFactor = v, 0.0f),
+			new IntField("solarEvolveTicks", "Active sky-time ticks needed to evolve a base solar panel into its T2 branch.",
+				() -> solarEvolveTicks, v -> solarEvolveTicks = v, 1),
+			new IntField("solarSkySampleTicks", "How often (ticks) a solar panel re-samples sky access + weather; verdict is cached between samples.",
+				() -> solarSkySampleTicks, v -> solarSkySampleTicks = v, 1),
+			new IntField("pumpEuPerBucket", "EU the pump spends per bucket of fluid it moves (extract + push).",
+				() -> pumpEuPerBucket, v -> pumpEuPerBucket = v, 0),
+			new IntField("fluidTankCapacity", "Portable fluid tank capacity in mB (1000 mB = 1 bucket). Applies to newly placed tanks.",
+				() -> fluidTankCapacity, v -> fluidTankCapacity = v, 1),
+			new IntField("teleporterBuffer", "Teleporter station EU buffer. Applies to newly placed stations.",
+				() -> teleporterBuffer, v -> teleporterBuffer = v, 1),
+			new IntField("teleporterBaseCost", "Flat EU part of a jump's price (paid even for a short hop).",
+				() -> teleporterBaseCost, v -> teleporterBaseCost = v, 0),
+			new IntField("teleporterCostPerBlock", "Added EU per block of straight-line distance to the target station.",
+				() -> teleporterCostPerBlock, v -> teleporterCostPerBlock = v, 0),
+			new IntField("teleporterWarmupTicks", "Warmup before a jump fires (20 ticks = 1 second). Cancelled by damage.",
+				() -> teleporterWarmupTicks, v -> teleporterWarmupTicks = v, 0),
+			new IntField("teleporterCooldownTicks", "Per-player anti-spam lockout after landing (ticks).",
+				() -> teleporterCooldownTicks, v -> teleporterCooldownTicks = v, 0),
+			new IntField("teleporterWarmupCancelRadius", "Moving further than this many blocks from where warmup started cancels the jump.",
+				() -> teleporterWarmupCancelRadius, v -> teleporterWarmupCancelRadius = v, 1),
+			new IntField("teleporterMaxPoints", "Max stations one teleport remote can hold.",
+				() -> teleporterMaxPoints, v -> teleporterMaxPoints = v, 1),
+			new IntField("batteryBoxBuffer", "Battery Box EU buffer. Applies to newly placed blocks (already-placed keep their capacity until the chunk reloads).",
+				() -> batteryBoxBuffer, v -> batteryBoxBuffer = v, 1),
+			new IntField("maceratorBuffer", "Macerator EU buffer. Applies to newly placed blocks.",
+				() -> maceratorBuffer, v -> maceratorBuffer = v, 1),
+			new IntField("machineBuffer", "Shared EU buffer for electric furnace / compressor / extractor. Applies to newly placed blocks.",
+				() -> machineBuffer, v -> machineBuffer = v, 1),
+			new IntField("pumpBuffer", "Pump EU buffer. Applies to newly placed blocks.",
+				() -> pumpBuffer, v -> pumpBuffer = v, 1),
+			new IntField("generatorBuffer", "Fuel generator EU buffer. Applies to newly placed blocks.",
+				() -> generatorBuffer, v -> generatorBuffer = v, 1),
+			new IntField("geothermalBuffer", "Geothermal generator EU buffer. Applies to newly placed blocks.",
+				() -> geothermalBuffer, v -> geothermalBuffer = v, 1),
+			new IntField("waterMillBuffer", "Water mill EU buffer. Applies to newly placed blocks.",
+				() -> waterMillBuffer, v -> waterMillBuffer = v, 1),
+			new IntField("windMillBuffer", "Wind mill (T1) EU buffer. Applies to newly placed blocks.",
+				() -> windMillBuffer, v -> windMillBuffer = v, 1),
+			new IntField("t2WindMillBuffer", "Shared EU buffer for both T2 wind mills (high-altitude + storm). Applies to newly placed blocks.",
+				() -> t2WindMillBuffer, v -> t2WindMillBuffer = v, 1),
+			new IntField("solarBuffer", "Solar panel EU buffer. Applies to newly placed blocks.",
+				() -> solarBuffer, v -> solarBuffer = v, 1),
+			new IntField("cableBuffer", "Per-cable working EU buffer — the live transport-segment buffer (MOD-070). Tiny by design so a wall of cables can't be used as bulk storage. Applies to newly placed cables.",
+				() -> cableBuffer, v -> cableBuffer = v, 1),
+			new IntField("itemPipeItemsPerTransfer", "Items an item-pipe network moves per transfer. With the interval below this sets throughput.",
+				() -> itemPipeItemsPerTransfer, v -> itemPipeItemsPerTransfer = v, 1),
+			new IntField("itemPipeTransferIntervalTicks", "Server ticks between item-pipe transfers (20 = once per second).",
+				() -> itemPipeTransferIntervalTicks, v -> itemPipeTransferIntervalTicks = v, 1),
+			new IntField("lvPouchCapacity", "Battery Pouch item-storage capacity in weight units (one ordinary item = 1).",
+				() -> lvPouchCapacity, v -> lvPouchCapacity = v, 1),
+			new IntField("lvPouchBuffer", "Battery Pouch EU buffer.",
+				() -> lvPouchBuffer, v -> lvPouchBuffer = v, 1),
+			new IntField("lvPouchDrainPerSecond", "EU the pouch drains per second while carried and holding items (locks at 0 EU until recharged).",
+				() -> lvPouchDrainPerSecond, v -> lvPouchDrainPerSecond = v, 0),
+			new IntField("energyPackBuffer", "Energy Pack (worn) EU buffer.",
+				() -> energyPackBuffer, v -> energyPackBuffer = v, 1),
+			new IntField("energyPackInputRate", "Max EU/t the Energy Pack accepts while charging in a slot.",
+				() -> energyPackInputRate, v -> energyPackInputRate = v, 1),
+			new IntField("energyPackOutputRate", "Max EU/t the worn Energy Pack hands out to powered items in the inventory.",
+				() -> energyPackOutputRate, v -> energyPackOutputRate = v, 1),
+			new IntField("electricDrillBuffer", "Electric Drill EU buffer.",
+				() -> electricDrillBuffer, v -> electricDrillBuffer = v, 1),
+			new IntField("electricDrillEuPerBlock", "EU the drill spends per block mined at powered speed (below this it mines at hand speed for free).",
+				() -> electricDrillEuPerBlock, v -> electricDrillEuPerBlock = v, 1),
+			new IntField("electricDrillInputRate", "Max EU/t the drill accepts while charging in a slot.",
+				() -> electricDrillInputRate, v -> electricDrillInputRate = v, 1),
+			new IntField("electricDrillTorchEuCost", "EU the drill spends to place a torch on right-click.",
+				() -> electricDrillTorchEuCost, v -> electricDrillTorchEuCost = v, 0),
+			new IntField("magnetBuffer", "Electromagnet EU buffer.",
+				() -> magnetBuffer, v -> magnetBuffer = v, 1),
+			new IntField("magnetInputRate", "Max EU/t the electromagnet accepts while charging in a slot.",
+				() -> magnetInputRate, v -> magnetInputRate = v, 1),
+			new IntField("magnetRange", "Electromagnet pull radius in blocks around the carrier.",
+				() -> magnetRange, v -> magnetRange = v, 1),
+			new IntField("magnetEuPerItem", "EU the electromagnet spends per item pulled each scan tick (an idle scan is free).",
+				() -> magnetEuPerItem, v -> magnetEuPerItem = v, 1),
+			new IntField("magnetScanIntervalTicks", "How often (ticks) the electromagnet scans for and pulls nearby drops.",
+				() -> magnetScanIntervalTicks, v -> magnetScanIntervalTicks = v, 1),
+			new IntField("stockFrameScanIntervalTicks", "How often (ticks) a Stock Display Frame rescans the container behind it.",
+				() -> stockFrameScanIntervalTicks, v -> stockFrameScanIntervalTicks = v, 1),
+			new IntField("machineEuPerTick", "Base EU/t a processing machine draws while running (energy per operation = this x its duration).",
+				() -> machineEuPerTick, v -> machineEuPerTick = v, 1),
+			new IntField("maceratorDuration", "Ticks a macerator takes per operation at 1.0 speed.",
+				() -> maceratorDuration, v -> maceratorDuration = v, 1),
+			new IntField("electricFurnaceDuration", "Ticks an electric furnace takes per smelt at 1.0 speed.",
+				() -> electricFurnaceDuration, v -> electricFurnaceDuration = v, 1),
+			new IntField("compressorDuration", "Ticks a compressor takes per operation at 1.0 speed.",
+				() -> compressorDuration, v -> compressorDuration = v, 1),
+			new IntField("extractorDuration", "Ticks an extractor takes per operation at 1.0 speed.",
+				() -> extractorDuration, v -> extractorDuration = v, 1),
+			new IntField("ironFurnaceCookTime", "Ticks the (fuel-based) iron furnace takes to smelt one item. Vanilla furnace = 200.",
+				() -> ironFurnaceCookTime, v -> ironFurnaceCookTime = v, 1),
+			new IntField("euPerXp", "MOD-133 player profile: useful EU (from completed machine operations) per 1 point of mod XP. Higher = slower progression. Starting value, tune after playtest.",
+				() -> euPerXp, v -> euPerXp = v, 1, 1),
+			new IntField("euPerXpGenerated", "MOD-133 player profile: produced EU (actually credited into a generator buffer, never idle overflow) per 1 point of mod XP. Much higher than euPerXp on purpose - a generator runs unattended, so it only trickles. Starting value, tune after playtest.",
+				() -> euPerXpGenerated, v -> euPerXpGenerated = v, 1, 1),
+			new IntField("xpLevelOneCost", "MOD-133: XP cost of the first level (1->2); each later level costs levelXpMultiplier x the previous. Starting value.",
+				() -> xpLevelOneCost, v -> xpLevelOneCost = v, 1, 1),
+			new FloatField("levelXpMultiplier", "MOD-133: per-level XP cost multiplier (exponential curve over 40 levels). Must be > 1.0.",
+				() -> levelXpMultiplier, v -> levelXpMultiplier = v, 1.0f),
+			new IntField("statsFlushTicks", "MOD-133: how often (server ticks) in-memory player stats fold into the attachment and sync. 100 = every 5s.",
+				() -> statsFlushTicks, v -> statsFlushTicks = v, 1),
+			new IntField("tierLvVoltage", "Max packet voltage (EU) and per-tick transfer cap for the LV tier (cable, generator, machine, storage). Mirrored into EnergyTier.LV.",
+				() -> tierLvVoltage, v -> tierLvVoltage = v, 1),
+			new IntField("tierMvVoltage", "Max packet voltage for the MV tier (4x LV by convention). Mirrored into EnergyTier.MV.",
+				() -> tierMvVoltage, v -> tierMvVoltage = v, 1),
+			new IntField("tierHvVoltage", "Max packet voltage for the HV tier (4x MV by convention). Mirrored into EnergyTier.HV.",
+				() -> tierHvVoltage, v -> tierHvVoltage = v, 1),
+			new IntField("tierLvCapacity", "Default internal buffer capacity for LV machines that do not override it. Mirrored into EnergyTier.LV.",
+				() -> tierLvCapacity, v -> tierLvCapacity = v, 1),
+			new IntField("tierMvCapacity", "Default internal buffer capacity for MV machines. Mirrored into EnergyTier.MV.",
+				() -> tierMvCapacity, v -> tierMvCapacity = v, 1),
+			new IntField("tierHvCapacity", "Default internal buffer capacity for HV machines. Mirrored into EnergyTier.HV.",
+				() -> tierHvCapacity, v -> tierHvCapacity = v, 1),
+			new DoubleField("copperCableLossPerBlock", "Fraction of throughput lost per copper cable block traversed (0.02 = 2% per block).",
+				() -> copperCableLossPerBlock, v -> copperCableLossPerBlock = v, 0.0, 0.0),
+			new IntField("networksPerTick", "Max awake energy networks processed per server tick; the rest are deferred round-robin.",
+				() -> networksPerTick, v -> networksPerTick = v, 1),
+			new IntField("networkAnalyzerMaxTraversedNetworks", "Cap on networks the Network Analyzer's Traverse mode walks (visualization only, never affects energy).",
+				() -> networkAnalyzerMaxTraversedNetworks, v -> networkAnalyzerMaxTraversedNetworks = v, 1),
+			new BoolField("bonusChestEnabled", "When true, mod starter items are injected into the vanilla bonus chest at world creation (vanilla loot kept). false = purely vanilla bonus chest.",
+				() -> bonusChestEnabled, v -> bonusChestEnabled = v));
 
 	/** Effective machine drain per tick after the speed multiplier (E_op stays ~constant). */
 	public static int machineEuPerTickEffective() {
@@ -389,297 +615,17 @@ public final class Config {
 			String raw = Files.readString(path);
 			JsonObject o = JsonParser.parseString(raw).getAsJsonObject();
 
-			// --- staging: read + validate every field into locals; a present-but-wrong-type key throws here,
-			//     before any static field is touched (atomic all-or-nothing apply below). ---
-			float sGlobalEuRateMultiplier = getFloat(o, "globalEuRateMultiplier", globalEuRateMultiplier);
-			if (sGlobalEuRateMultiplier <= 0) {
-				sGlobalEuRateMultiplier = 1.0f;
+			// --- staging: parse + validate every field into pending commits; a present-but-wrong-type
+			//     key throws here, before any static field is touched (atomic all-or-nothing apply below). ---
+			List<Runnable> pending = new ArrayList<>(FIELDS.size());
+			for (ConfigField field : FIELDS) {
+				pending.add(field.stage(o));
 			}
-			float sGlobalMachineSpeedMultiplier = getFloat(o, "globalMachineSpeedMultiplier", globalMachineSpeedMultiplier);
-			if (sGlobalMachineSpeedMultiplier <= 0) {
-				sGlobalMachineSpeedMultiplier = 1.0f;
-			}
-			int sSolarEuPerTick = getInt(o, "solarEuPerTick", solarEuPerTick);
-			int sDaylightEuPerTick = getInt(o, "daylightEuPerTick", daylightEuPerTick);
-			int sMoonlitEuPerTick = getInt(o, "moonlitEuPerTick", moonlitEuPerTick);
-			int sMoonlitWeatherEuPerTick = getInt(o, "moonlitWeatherEuPerTick", moonlitWeatherEuPerTick);
-			int sFuelEuPerTick = getInt(o, "fuelEuPerTick", fuelEuPerTick);
-			int sGeothermalEuPerTick = getInt(o, "geothermalEuPerTick", geothermalEuPerTick);
-			int sGeothermalBurnTicks = getInt(o, "geothermalBurnTicks", geothermalBurnTicks);
-			int sWaterMillEuPerTick = getInt(o, "waterMillEuPerTick", waterMillEuPerTick);
-			int sWindMillMaxBaseEuPerTick = getInt(o, "windMillMaxBaseEuPerTick", windMillMaxBaseEuPerTick);
-			int sWindMillMaxEuPerTick = getInt(o, "windMillMaxEuPerTick", windMillMaxEuPerTick);
-			float sWindMillRainFactor = getFloat(o, "windMillRainFactor", windMillRainFactor);
-			float sWindMillThunderFactor = getFloat(o, "windMillThunderFactor", windMillThunderFactor);
-			int sWindMillSampleTicks = getInt(o, "windMillSampleTicks", windMillSampleTicks);
-			if (sWindMillSampleTicks <= 0) {
-				sWindMillSampleTicks = 40;
-			}
-			int sWindMillEvolveTicks = getInt(o, "windMillEvolveTicks", windMillEvolveTicks);
-			if (sWindMillEvolveTicks <= 0) {
-				sWindMillEvolveTicks = 33_600;
-			}
-			int sHighAltWindMillMaxBaseEuPerTick = getInt(o, "highAltWindMillMaxBaseEuPerTick", highAltWindMillMaxBaseEuPerTick);
-			int sHighAltWindMillBlocksPerBase = getInt(o, "highAltWindMillBlocksPerBase", highAltWindMillBlocksPerBase);
-			if (sHighAltWindMillBlocksPerBase <= 0) {
-				sHighAltWindMillBlocksPerBase = 8;
-			}
-			int sHighAltWindMillMaxEuPerTick = getInt(o, "highAltWindMillMaxEuPerTick", highAltWindMillMaxEuPerTick);
-			int sStormWindMillMaxBaseEuPerTick = getInt(o, "stormWindMillMaxBaseEuPerTick", stormWindMillMaxBaseEuPerTick);
-			float sStormWindMillRainFactor = getFloat(o, "stormWindMillRainFactor", stormWindMillRainFactor);
-			float sStormWindMillThunderFactor = getFloat(o, "stormWindMillThunderFactor", stormWindMillThunderFactor);
-			int sStormWindMillMaxEuPerTick = getInt(o, "stormWindMillMaxEuPerTick", stormWindMillMaxEuPerTick);
-			float sSolarTransparentFactor = getFloat(o, "solarTransparentFactor", solarTransparentFactor);
-			float sSolarSnowFactor = getFloat(o, "solarSnowFactor", solarSnowFactor);
-			int sSolarEvolveTicks = getInt(o, "solarEvolveTicks", solarEvolveTicks);
-			if (sSolarEvolveTicks <= 0) {
-				sSolarEvolveTicks = 33_600;
-			}
-			int sPumpEuPerBucket = getInt(o, "pumpEuPerBucket", pumpEuPerBucket);
-			int sFluidTankCapacity = getInt(o, "fluidTankCapacity", fluidTankCapacity);
-			if (sFluidTankCapacity <= 0) {
-				sFluidTankCapacity = 8000;
-			}
-			int sTeleporterBuffer = getInt(o, "teleporterBuffer", teleporterBuffer);
-			if (sTeleporterBuffer <= 0) {
-				sTeleporterBuffer = 500_000;
-			}
-			int sTeleporterBaseCost = getInt(o, "teleporterBaseCost", teleporterBaseCost);
-			if (sTeleporterBaseCost < 0) {
-				sTeleporterBaseCost = 5000;
-			}
-			int sTeleporterCostPerBlock = getInt(o, "teleporterCostPerBlock", teleporterCostPerBlock);
-			if (sTeleporterCostPerBlock < 0) {
-				sTeleporterCostPerBlock = 5;
-			}
-			int sTeleporterWarmupTicks = getInt(o, "teleporterWarmupTicks", teleporterWarmupTicks);
-			if (sTeleporterWarmupTicks < 0) {
-				sTeleporterWarmupTicks = 100;
-			}
-			int sTeleporterCooldownTicks = getInt(o, "teleporterCooldownTicks", teleporterCooldownTicks);
-			if (sTeleporterCooldownTicks < 0) {
-				sTeleporterCooldownTicks = 1200;
-			}
-			int sTeleporterWarmupCancelRadius = getInt(o, "teleporterWarmupCancelRadius", teleporterWarmupCancelRadius);
-			if (sTeleporterWarmupCancelRadius <= 0) {
-				sTeleporterWarmupCancelRadius = 2;
-			}
-			int sTeleporterMaxPoints = getInt(o, "teleporterMaxPoints", teleporterMaxPoints);
-			if (sTeleporterMaxPoints <= 0) {
-				sTeleporterMaxPoints = 16;
-			}
-			int sBatteryBoxBuffer = getInt(o, "batteryBoxBuffer", batteryBoxBuffer);
-			int sMaceratorBuffer = getInt(o, "maceratorBuffer", maceratorBuffer);
-			int sMachineBuffer = getInt(o, "machineBuffer", machineBuffer);
-			int sPumpBuffer = getInt(o, "pumpBuffer", pumpBuffer);
-			int sGeneratorBuffer = getInt(o, "generatorBuffer", generatorBuffer);
-			int sGeothermalBuffer = getInt(o, "geothermalBuffer", geothermalBuffer);
-			int sWaterMillBuffer = getInt(o, "waterMillBuffer", waterMillBuffer);
-			int sWindMillBuffer = getInt(o, "windMillBuffer", windMillBuffer);
-			int sT2WindMillBuffer = getInt(o, "t2WindMillBuffer", t2WindMillBuffer);
-			int sSolarBuffer = getInt(o, "solarBuffer", solarBuffer);
-			int sCableBuffer = getInt(o, "cableBuffer", cableBuffer);
-			// MOD-108 renamed the pipe throughput keys (itemPipeItemsPerTick → PerTransfer + an
-			// interval). The old key is deliberately NOT read: it meant "per tick", and silently
-			// reusing that number as a per-transfer batch would keep an existing config at the very
-			// speed this rebalance removes. An old config simply falls back to the new defaults.
-			int sItemPipeItemsPerTransfer = getInt(o, "itemPipeItemsPerTransfer", itemPipeItemsPerTransfer);
-			if (sItemPipeItemsPerTransfer <= 0) {
-				sItemPipeItemsPerTransfer = 2;
-			}
-			int sItemPipeTransferIntervalTicks = getInt(o, "itemPipeTransferIntervalTicks", itemPipeTransferIntervalTicks);
-			if (sItemPipeTransferIntervalTicks <= 0) {
-				sItemPipeTransferIntervalTicks = 20;
-			}
-			int sLvPouchCapacity = getInt(o, "lvPouchCapacity", lvPouchCapacity);
-			if (sLvPouchCapacity <= 0) {
-				sLvPouchCapacity = 128;
-			}
-			int sLvPouchBuffer = getInt(o, "lvPouchBuffer", lvPouchBuffer);
-			if (sLvPouchBuffer <= 0) {
-				sLvPouchBuffer = 2000;
-			}
-			int sLvPouchDrainPerSecond = getInt(o, "lvPouchDrainPerSecond", lvPouchDrainPerSecond);
-			if (sLvPouchDrainPerSecond < 0) {
-				sLvPouchDrainPerSecond = 1;
-			}
-			int sEnergyPackBuffer = getInt(o, "energyPackBuffer", energyPackBuffer);
-			if (sEnergyPackBuffer <= 0) {
-				sEnergyPackBuffer = 20_000;
-			}
-			int sEnergyPackInputRate = getInt(o, "energyPackInputRate", energyPackInputRate);
-			if (sEnergyPackInputRate <= 0) {
-				sEnergyPackInputRate = 32;
-			}
-			int sEnergyPackOutputRate = getInt(o, "energyPackOutputRate", energyPackOutputRate);
-			if (sEnergyPackOutputRate <= 0) {
-				sEnergyPackOutputRate = 32;
-			}
-			int sElectricDrillBuffer = getInt(o, "electricDrillBuffer", electricDrillBuffer);
-			if (sElectricDrillBuffer <= 0) {
-				sElectricDrillBuffer = 10_000;
-			}
-			int sElectricDrillEuPerBlock = getInt(o, "electricDrillEuPerBlock", electricDrillEuPerBlock);
-			if (sElectricDrillEuPerBlock <= 0) {
-				sElectricDrillEuPerBlock = 50;
-			}
-			int sElectricDrillInputRate = getInt(o, "electricDrillInputRate", electricDrillInputRate);
-			if (sElectricDrillInputRate <= 0) {
-				sElectricDrillInputRate = 32;
-			}
-			int sElectricDrillTorchEuCost = getInt(o, "electricDrillTorchEuCost", electricDrillTorchEuCost);
-			if (sElectricDrillTorchEuCost < 0) {
-				sElectricDrillTorchEuCost = 5;
-			}
-			int sMagnetBuffer = getInt(o, "magnetBuffer", magnetBuffer);
-			if (sMagnetBuffer <= 0) {
-				sMagnetBuffer = 5_000;
-			}
-			int sMagnetInputRate = getInt(o, "magnetInputRate", magnetInputRate);
-			if (sMagnetInputRate <= 0) {
-				sMagnetInputRate = 32;
-			}
-			int sMagnetRange = getInt(o, "magnetRange", magnetRange);
-			if (sMagnetRange <= 0) {
-				sMagnetRange = 3;
-			}
-			int sMagnetEuPerItem = getInt(o, "magnetEuPerItem", magnetEuPerItem);
-			if (sMagnetEuPerItem <= 0) {
-				sMagnetEuPerItem = 2;
-			}
-			int sMagnetScanIntervalTicks = getInt(o, "magnetScanIntervalTicks", magnetScanIntervalTicks);
-			if (sMagnetScanIntervalTicks <= 0) {
-				sMagnetScanIntervalTicks = 1;
-			}
-			int sStockFrameScanIntervalTicks = getInt(o, "stockFrameScanIntervalTicks", stockFrameScanIntervalTicks);
-			if (sStockFrameScanIntervalTicks <= 0) {
-				sStockFrameScanIntervalTicks = 20;
-			}
-			int sMachineEuPerTick = getInt(o, "machineEuPerTick", machineEuPerTick);
-			int sMaceratorDuration = getInt(o, "maceratorDuration", maceratorDuration);
-			int sElectricFurnaceDuration = getInt(o, "electricFurnaceDuration", electricFurnaceDuration);
-			int sCompressorDuration = getInt(o, "compressorDuration", compressorDuration);
-			int sExtractorDuration = getInt(o, "extractorDuration", extractorDuration);
-			int sIronFurnaceCookTime = getInt(o, "ironFurnaceCookTime", ironFurnaceCookTime);
-			if (sIronFurnaceCookTime <= 0) {
-				sIronFurnaceCookTime = 150;
-			}
-			// MOD-133 player-stats / XP with guards (avoid divide-by-zero and a flat/never-flushing curve).
-			int sEuPerXp = getInt(o, "euPerXp", euPerXp);
-			if (sEuPerXp < 1) {
-				sEuPerXp = 1;
-			}
-			int sEuPerXpGenerated = getInt(o, "euPerXpGenerated", euPerXpGenerated);
-			if (sEuPerXpGenerated < 1) {
-				sEuPerXpGenerated = 1;
-			}
-			int sXpLevelOneCost = getInt(o, "xpLevelOneCost", xpLevelOneCost);
-			if (sXpLevelOneCost < 1) {
-				sXpLevelOneCost = 1;
-			}
-			float sLevelXpMultiplier = getFloat(o, "levelXpMultiplier", levelXpMultiplier);
-			if (sLevelXpMultiplier <= 1.0f) {
-				sLevelXpMultiplier = 1.18f;
-			}
-			int sStatsFlushTicks = getInt(o, "statsFlushTicks", statsFlushTicks);
-			if (sStatsFlushTicks < 1) {
-				sStatsFlushTicks = 100;
-			}
-			double sCopperCableLossPerBlock = getFloat(o, "copperCableLossPerBlock", (float) copperCableLossPerBlock);
-			if (sCopperCableLossPerBlock < 0) {
-				sCopperCableLossPerBlock = 0.0;
-			}
-			int sNetworksPerTick = getInt(o, "networksPerTick", networksPerTick);
-			if (sNetworksPerTick <= 0) {
-				sNetworksPerTick = 512;
-			}
-			int sNetworkAnalyzerMaxTraversedNetworks = getInt(o, "networkAnalyzerMaxTraversedNetworks",
-					networkAnalyzerMaxTraversedNetworks);
-			if (sNetworkAnalyzerMaxTraversedNetworks < 1) {
-				sNetworkAnalyzerMaxTraversedNetworks = 32;
-			}
-			boolean sBonusChestEnabled = getBool(o, "bonusChestEnabled", bonusChestEnabled);
 
 			// --- commit: apply all staged values at once (nothing above threw, so this is all-or-nothing). ---
-			globalEuRateMultiplier = sGlobalEuRateMultiplier;
-			globalMachineSpeedMultiplier = sGlobalMachineSpeedMultiplier;
-			solarEuPerTick = sSolarEuPerTick;
-			daylightEuPerTick = sDaylightEuPerTick;
-			moonlitEuPerTick = sMoonlitEuPerTick;
-			moonlitWeatherEuPerTick = sMoonlitWeatherEuPerTick;
-			fuelEuPerTick = sFuelEuPerTick;
-			geothermalEuPerTick = sGeothermalEuPerTick;
-			geothermalBurnTicks = sGeothermalBurnTicks;
-			waterMillEuPerTick = sWaterMillEuPerTick;
-			windMillMaxBaseEuPerTick = sWindMillMaxBaseEuPerTick;
-			windMillMaxEuPerTick = sWindMillMaxEuPerTick;
-			windMillRainFactor = sWindMillRainFactor;
-			windMillThunderFactor = sWindMillThunderFactor;
-			windMillSampleTicks = sWindMillSampleTicks;
-			windMillEvolveTicks = sWindMillEvolveTicks;
-			highAltWindMillMaxBaseEuPerTick = sHighAltWindMillMaxBaseEuPerTick;
-			highAltWindMillBlocksPerBase = sHighAltWindMillBlocksPerBase;
-			highAltWindMillMaxEuPerTick = sHighAltWindMillMaxEuPerTick;
-			stormWindMillMaxBaseEuPerTick = sStormWindMillMaxBaseEuPerTick;
-			stormWindMillRainFactor = sStormWindMillRainFactor;
-			stormWindMillThunderFactor = sStormWindMillThunderFactor;
-			stormWindMillMaxEuPerTick = sStormWindMillMaxEuPerTick;
-			solarTransparentFactor = sSolarTransparentFactor;
-			solarSnowFactor = sSolarSnowFactor;
-			solarEvolveTicks = sSolarEvolveTicks;
-			pumpEuPerBucket = sPumpEuPerBucket;
-			fluidTankCapacity = sFluidTankCapacity;
-			teleporterBuffer = sTeleporterBuffer;
-			teleporterBaseCost = sTeleporterBaseCost;
-			teleporterCostPerBlock = sTeleporterCostPerBlock;
-			teleporterWarmupTicks = sTeleporterWarmupTicks;
-			teleporterCooldownTicks = sTeleporterCooldownTicks;
-			teleporterWarmupCancelRadius = sTeleporterWarmupCancelRadius;
-			teleporterMaxPoints = sTeleporterMaxPoints;
-			batteryBoxBuffer = sBatteryBoxBuffer;
-			maceratorBuffer = sMaceratorBuffer;
-			machineBuffer = sMachineBuffer;
-			pumpBuffer = sPumpBuffer;
-			generatorBuffer = sGeneratorBuffer;
-			geothermalBuffer = sGeothermalBuffer;
-			waterMillBuffer = sWaterMillBuffer;
-			windMillBuffer = sWindMillBuffer;
-			t2WindMillBuffer = sT2WindMillBuffer;
-			solarBuffer = sSolarBuffer;
-			cableBuffer = sCableBuffer;
-			itemPipeItemsPerTransfer = sItemPipeItemsPerTransfer;
-			itemPipeTransferIntervalTicks = sItemPipeTransferIntervalTicks;
-			lvPouchCapacity = sLvPouchCapacity;
-			lvPouchBuffer = sLvPouchBuffer;
-			lvPouchDrainPerSecond = sLvPouchDrainPerSecond;
-			energyPackBuffer = sEnergyPackBuffer;
-			energyPackInputRate = sEnergyPackInputRate;
-			energyPackOutputRate = sEnergyPackOutputRate;
-			electricDrillBuffer = sElectricDrillBuffer;
-			electricDrillEuPerBlock = sElectricDrillEuPerBlock;
-			electricDrillInputRate = sElectricDrillInputRate;
-			electricDrillTorchEuCost = sElectricDrillTorchEuCost;
-			magnetBuffer = sMagnetBuffer;
-			magnetInputRate = sMagnetInputRate;
-			magnetRange = sMagnetRange;
-			magnetEuPerItem = sMagnetEuPerItem;
-			magnetScanIntervalTicks = sMagnetScanIntervalTicks;
-			stockFrameScanIntervalTicks = sStockFrameScanIntervalTicks;
-			machineEuPerTick = sMachineEuPerTick;
-			maceratorDuration = sMaceratorDuration;
-			electricFurnaceDuration = sElectricFurnaceDuration;
-			compressorDuration = sCompressorDuration;
-			extractorDuration = sExtractorDuration;
-			ironFurnaceCookTime = sIronFurnaceCookTime;
-			euPerXp = sEuPerXp;
-			euPerXpGenerated = sEuPerXpGenerated;
-			xpLevelOneCost = sXpLevelOneCost;
-			levelXpMultiplier = sLevelXpMultiplier;
-			statsFlushTicks = sStatsFlushTicks;
-			copperCableLossPerBlock = sCopperCableLossPerBlock;
-			networksPerTick = sNetworksPerTick;
-			networkAnalyzerMaxTraversedNetworks = sNetworkAnalyzerMaxTraversedNetworks;
-			bonusChestEnabled = sBonusChestEnabled;
+			for (Runnable commit : pending) {
+				commit.run();
+			}
 			Industrialization.LOGGER.info("[config] loaded {}", path);
 
 			// --- self-heal: rewrite in canonical form (comments + new fields) only when content differs. This
@@ -740,6 +686,23 @@ public final class Config {
 		throw new IllegalArgumentException("config key '" + key + "' must be a number, got " + e);
 	}
 
+	/**
+	 * Double counterpart of {@link #getInt} — same absent-default / wrong-type-throws contract. Reads at
+	 * double precision on purpose: the previous code funnelled the one double knob through
+	 * {@link #getFloat}, so a file holding {@code 0.02} was widened back as {@code 0.019999999552965164}
+	 * and the self-heal then rewrote the file with that noise.
+	 */
+	private static double getDouble(JsonObject o, String key, double def) {
+		JsonElement e = o.get(key);
+		if (e == null || e.isJsonNull()) {
+			return def;
+		}
+		if (e.isJsonPrimitive() && e.getAsJsonPrimitive().isNumber()) {
+			return e.getAsDouble();
+		}
+		throw new IllegalArgumentException("config key '" + key + "' must be a number, got " + e);
+	}
+
 	/** Boolean counterpart of {@link #getInt} — same absent-default / wrong-type-throws contract. */
 	private static boolean getBool(JsonObject o, String key, boolean def) {
 		JsonElement e = o.get(key);
@@ -754,164 +717,9 @@ public final class Config {
 
 	private static JsonObject snapshot() {
 		JsonObject o = new JsonObject();
-		c(o, "globalEuRateMultiplier", "Multiplier on EVERY generator's EU/t output. 1.0 = unchanged; 2.0 = twice the generation server-wide.");
-		o.addProperty("globalEuRateMultiplier", globalEuRateMultiplier);
-		c(o, "globalMachineSpeedMultiplier", "Machine speed multiplier (energy-neutral): higher = machines draw more EU/t but finish proportionally faster. 1.0 = unchanged.");
-		o.addProperty("globalMachineSpeedMultiplier", globalMachineSpeedMultiplier);
-		c(o, "solarEuPerTick", "Solar panel output in EU/t under clear daytime sky. The energy system's baseline (1).");
-		o.addProperty("solarEuPerTick", solarEuPerTick);
-		c(o, "daylightEuPerTick", "Evolved daylight-panel output in EU/t during the day.");
-		o.addProperty("daylightEuPerTick", daylightEuPerTick);
-		c(o, "moonlitEuPerTick", "Evolved moonlit-panel output in EU/t at night under clear sky.");
-		o.addProperty("moonlitEuPerTick", moonlitEuPerTick);
-		c(o, "moonlitWeatherEuPerTick", "Moonlit-panel EU/t at night during rain/thunder (a weather trickle).");
-		o.addProperty("moonlitWeatherEuPerTick", moonlitWeatherEuPerTick);
-		c(o, "fuelEuPerTick", "Fuel (solid-burnable) generator output in EU/t while burning.");
-		o.addProperty("fuelEuPerTick", fuelEuPerTick);
-		c(o, "geothermalEuPerTick", "Geothermal (lava) generator output in EU/t while burning lava.");
-		o.addProperty("geothermalEuPerTick", geothermalEuPerTick);
-		c(o, "geothermalBurnTicks", "Ticks of burn a geothermal generator gets per bucket of lava (20 ticks = 1 second).");
-		o.addProperty("geothermalBurnTicks", geothermalBurnTicks);
-		c(o, "waterMillEuPerTick", "Water mill EU/t per adjacent water block on its four sides (0..4 EU/t total).");
-		o.addProperty("waterMillEuPerTick", waterMillEuPerTick);
-		c(o, "windMillMaxBaseEuPerTick", "Wind mill clear-sky height cap in EU/t (base grows with altitude up to this).");
-		o.addProperty("windMillMaxBaseEuPerTick", windMillMaxBaseEuPerTick);
-		c(o, "windMillMaxEuPerTick", "Hard cap on wind mill EU/t after the weather multiplier.");
-		o.addProperty("windMillMaxEuPerTick", windMillMaxEuPerTick);
-		c(o, "windMillRainFactor", "Wind mill output multiplier while it is raining (not thundering).");
-		o.addProperty("windMillRainFactor", windMillRainFactor);
-		c(o, "windMillThunderFactor", "Wind mill output multiplier while it is thundering.");
-		o.addProperty("windMillThunderFactor", windMillThunderFactor);
-		c(o, "windMillSampleTicks", "How often (ticks) a wind mill re-samples height/sky/weather; rate is cached in between.");
-		o.addProperty("windMillSampleTicks", windMillSampleTicks);
-		c(o, "windMillEvolveTicks", "Active open-sky ticks (with rotor + evolution chip) to evolve a base wind mill into its T2 branch.");
-		o.addProperty("windMillEvolveTicks", windMillEvolveTicks);
-		c(o, "highAltWindMillMaxBaseEuPerTick", "High-altitude wind mill (T2) clear-sky height cap in EU/t.");
-		o.addProperty("highAltWindMillMaxBaseEuPerTick", highAltWindMillMaxBaseEuPerTick);
-		c(o, "highAltWindMillBlocksPerBase", "Blocks of height above sea level per +1 EU/t of base on the high-altitude T2 variant.");
-		o.addProperty("highAltWindMillBlocksPerBase", highAltWindMillBlocksPerBase);
-		c(o, "highAltWindMillMaxEuPerTick", "Hard cap on high-altitude T2 wind mill EU/t after the weather multiplier.");
-		o.addProperty("highAltWindMillMaxEuPerTick", highAltWindMillMaxEuPerTick);
-		c(o, "stormWindMillMaxBaseEuPerTick", "Storm wind mill (T2) clear-sky height cap in EU/t before the weather multiplier.");
-		o.addProperty("stormWindMillMaxBaseEuPerTick", stormWindMillMaxBaseEuPerTick);
-		c(o, "stormWindMillRainFactor", "Storm T2 wind mill output multiplier while it is raining.");
-		o.addProperty("stormWindMillRainFactor", stormWindMillRainFactor);
-		c(o, "stormWindMillThunderFactor", "Storm T2 wind mill output multiplier while it is thundering.");
-		o.addProperty("stormWindMillThunderFactor", stormWindMillThunderFactor);
-		c(o, "stormWindMillMaxEuPerTick", "Hard cap on storm T2 wind mill EU/t after the weather multiplier.");
-		o.addProperty("stormWindMillMaxEuPerTick", stormWindMillMaxEuPerTick);
-		c(o, "solarTransparentFactor", "Output multiplier when a solar panel sees sky through a translucent block (leaves, cobweb).");
-		o.addProperty("solarTransparentFactor", solarTransparentFactor);
-		c(o, "solarSnowFactor", "Output multiplier under snow (a snow layer above, or snowfall in a cold biome).");
-		o.addProperty("solarSnowFactor", solarSnowFactor);
-		c(o, "solarEvolveTicks", "Active sky-time ticks needed to evolve a base solar panel into its T2 branch.");
-		o.addProperty("solarEvolveTicks", solarEvolveTicks);
-		c(o, "pumpEuPerBucket", "EU the pump spends per bucket of fluid it moves (extract + push).");
-		o.addProperty("pumpEuPerBucket", pumpEuPerBucket);
-		c(o, "fluidTankCapacity", "Portable fluid tank capacity in mB (1000 mB = 1 bucket). Applies to newly placed tanks.");
-		o.addProperty("fluidTankCapacity", fluidTankCapacity);
-		c(o, "teleporterBuffer", "Teleporter station EU buffer. Applies to newly placed stations.");
-		o.addProperty("teleporterBuffer", teleporterBuffer);
-		c(o, "teleporterBaseCost", "Flat EU part of a jump's price (paid even for a short hop).");
-		o.addProperty("teleporterBaseCost", teleporterBaseCost);
-		c(o, "teleporterCostPerBlock", "Added EU per block of straight-line distance to the target station.");
-		o.addProperty("teleporterCostPerBlock", teleporterCostPerBlock);
-		c(o, "teleporterWarmupTicks", "Warmup before a jump fires (20 ticks = 1 second). Cancelled by damage.");
-		o.addProperty("teleporterWarmupTicks", teleporterWarmupTicks);
-		c(o, "teleporterCooldownTicks", "Per-player anti-spam lockout after landing (ticks).");
-		o.addProperty("teleporterCooldownTicks", teleporterCooldownTicks);
-		c(o, "teleporterWarmupCancelRadius", "Moving further than this many blocks from where warmup started cancels the jump.");
-		o.addProperty("teleporterWarmupCancelRadius", teleporterWarmupCancelRadius);
-		c(o, "teleporterMaxPoints", "Max stations one teleport remote can hold.");
-		o.addProperty("teleporterMaxPoints", teleporterMaxPoints);
-		c(o, "batteryBoxBuffer", "Battery Box EU buffer. Applies to newly placed blocks (already-placed keep their capacity until the chunk reloads).");
-		o.addProperty("batteryBoxBuffer", batteryBoxBuffer);
-		c(o, "maceratorBuffer", "Macerator EU buffer. Applies to newly placed blocks.");
-		o.addProperty("maceratorBuffer", maceratorBuffer);
-		c(o, "machineBuffer", "Shared EU buffer for electric furnace / compressor / extractor. Applies to newly placed blocks.");
-		o.addProperty("machineBuffer", machineBuffer);
-		c(o, "pumpBuffer", "Pump EU buffer. Applies to newly placed blocks.");
-		o.addProperty("pumpBuffer", pumpBuffer);
-		c(o, "generatorBuffer", "Fuel generator EU buffer. Applies to newly placed blocks.");
-		o.addProperty("generatorBuffer", generatorBuffer);
-		c(o, "geothermalBuffer", "Geothermal generator EU buffer. Applies to newly placed blocks.");
-		o.addProperty("geothermalBuffer", geothermalBuffer);
-		c(o, "waterMillBuffer", "Water mill EU buffer. Applies to newly placed blocks.");
-		o.addProperty("waterMillBuffer", waterMillBuffer);
-		c(o, "windMillBuffer", "Wind mill (T1) EU buffer. Applies to newly placed blocks.");
-		o.addProperty("windMillBuffer", windMillBuffer);
-		c(o, "t2WindMillBuffer", "Shared EU buffer for both T2 wind mills (high-altitude + storm). Applies to newly placed blocks.");
-		o.addProperty("t2WindMillBuffer", t2WindMillBuffer);
-		c(o, "solarBuffer", "Solar panel EU buffer. Applies to newly placed blocks.");
-		o.addProperty("solarBuffer", solarBuffer);
-		c(o, "cableBuffer", "Per-cable working EU buffer — the live transport-segment buffer (MOD-070). Tiny by design so a wall of cables can't be used as bulk storage. Applies to newly placed cables.");
-		o.addProperty("cableBuffer", cableBuffer);
-		c(o, "itemPipeItemsPerTransfer", "Items an item-pipe network moves per transfer. With the interval below this sets throughput.");
-		o.addProperty("itemPipeItemsPerTransfer", itemPipeItemsPerTransfer);
-		c(o, "itemPipeTransferIntervalTicks", "Server ticks between item-pipe transfers (20 = once per second).");
-		o.addProperty("itemPipeTransferIntervalTicks", itemPipeTransferIntervalTicks);
-		c(o, "lvPouchCapacity", "Battery Pouch item-storage capacity in weight units (one ordinary item = 1).");
-		o.addProperty("lvPouchCapacity", lvPouchCapacity);
-		c(o, "lvPouchBuffer", "Battery Pouch EU buffer.");
-		o.addProperty("lvPouchBuffer", lvPouchBuffer);
-		c(o, "lvPouchDrainPerSecond", "EU the pouch drains per second while carried and holding items (locks at 0 EU until recharged).");
-		o.addProperty("lvPouchDrainPerSecond", lvPouchDrainPerSecond);
-		c(o, "energyPackBuffer", "Energy Pack (worn) EU buffer.");
-		o.addProperty("energyPackBuffer", energyPackBuffer);
-		c(o, "energyPackInputRate", "Max EU/t the Energy Pack accepts while charging in a slot.");
-		o.addProperty("energyPackInputRate", energyPackInputRate);
-		c(o, "energyPackOutputRate", "Max EU/t the worn Energy Pack hands out to powered items in the inventory.");
-		o.addProperty("energyPackOutputRate", energyPackOutputRate);
-		c(o, "electricDrillBuffer", "Electric Drill EU buffer.");
-		o.addProperty("electricDrillBuffer", electricDrillBuffer);
-		c(o, "electricDrillEuPerBlock", "EU the drill spends per block mined at powered speed (below this it mines at hand speed for free).");
-		o.addProperty("electricDrillEuPerBlock", electricDrillEuPerBlock);
-		c(o, "electricDrillInputRate", "Max EU/t the drill accepts while charging in a slot.");
-		o.addProperty("electricDrillInputRate", electricDrillInputRate);
-		c(o, "electricDrillTorchEuCost", "EU the drill spends to place a torch on right-click.");
-		o.addProperty("electricDrillTorchEuCost", electricDrillTorchEuCost);
-		c(o, "magnetBuffer", "Electromagnet EU buffer.");
-		o.addProperty("magnetBuffer", magnetBuffer);
-		c(o, "magnetInputRate", "Max EU/t the electromagnet accepts while charging in a slot.");
-		o.addProperty("magnetInputRate", magnetInputRate);
-		c(o, "magnetRange", "Electromagnet pull radius in blocks around the carrier.");
-		o.addProperty("magnetRange", magnetRange);
-		c(o, "magnetEuPerItem", "EU the electromagnet spends per item pulled each scan tick (an idle scan is free).");
-		o.addProperty("magnetEuPerItem", magnetEuPerItem);
-		c(o, "magnetScanIntervalTicks", "How often (ticks) the electromagnet scans for and pulls nearby drops.");
-		o.addProperty("magnetScanIntervalTicks", magnetScanIntervalTicks);
-		c(o, "stockFrameScanIntervalTicks", "How often (ticks) a Stock Display Frame rescans the container behind it.");
-		o.addProperty("stockFrameScanIntervalTicks", stockFrameScanIntervalTicks);
-		c(o, "machineEuPerTick", "Base EU/t a processing machine draws while running (energy per operation = this x its duration).");
-		o.addProperty("machineEuPerTick", machineEuPerTick);
-		c(o, "maceratorDuration", "Ticks a macerator takes per operation at 1.0 speed.");
-		o.addProperty("maceratorDuration", maceratorDuration);
-		c(o, "electricFurnaceDuration", "Ticks an electric furnace takes per smelt at 1.0 speed.");
-		o.addProperty("electricFurnaceDuration", electricFurnaceDuration);
-		c(o, "compressorDuration", "Ticks a compressor takes per operation at 1.0 speed.");
-		o.addProperty("compressorDuration", compressorDuration);
-		c(o, "extractorDuration", "Ticks an extractor takes per operation at 1.0 speed.");
-		o.addProperty("extractorDuration", extractorDuration);
-		c(o, "ironFurnaceCookTime", "Ticks the (fuel-based) iron furnace takes to smelt one item. Vanilla furnace = 200.");
-		o.addProperty("ironFurnaceCookTime", ironFurnaceCookTime);
-		c(o, "euPerXp", "MOD-133 player profile: useful EU (from completed machine operations) per 1 point of mod XP. Higher = slower progression. Starting value, tune after playtest.");
-		o.addProperty("euPerXp", euPerXp);
-		c(o, "euPerXpGenerated", "MOD-133 player profile: produced EU (actually credited into a generator buffer, never idle overflow) per 1 point of mod XP. Much higher than euPerXp on purpose - a generator runs unattended, so it only trickles. Starting value, tune after playtest.");
-		o.addProperty("euPerXpGenerated", euPerXpGenerated);
-		c(o, "xpLevelOneCost", "MOD-133: XP cost of the first level (1->2); each later level costs levelXpMultiplier x the previous. Starting value.");
-		o.addProperty("xpLevelOneCost", xpLevelOneCost);
-		c(o, "levelXpMultiplier", "MOD-133: per-level XP cost multiplier (exponential curve over 40 levels). Must be > 1.0.");
-		o.addProperty("levelXpMultiplier", levelXpMultiplier);
-		c(o, "statsFlushTicks", "MOD-133: how often (server ticks) in-memory player stats fold into the attachment and sync. 100 = every 5s.");
-		o.addProperty("statsFlushTicks", statsFlushTicks);
-		c(o, "copperCableLossPerBlock", "Fraction of throughput lost per copper cable block traversed (0.02 = 2% per block).");
-		o.addProperty("copperCableLossPerBlock", copperCableLossPerBlock);
-		c(o, "networksPerTick", "Max awake energy networks processed per server tick; the rest are deferred round-robin.");
-		o.addProperty("networksPerTick", networksPerTick);
-		c(o, "networkAnalyzerMaxTraversedNetworks", "Cap on networks the Network Analyzer's Traverse mode walks (visualization only, never affects energy).");
-		o.addProperty("networkAnalyzerMaxTraversedNetworks", networkAnalyzerMaxTraversedNetworks);
-		c(o, "bonusChestEnabled", "When true, mod starter items are injected into the vanilla bonus chest at world creation (vanilla loot kept). false = purely vanilla bonus chest.");
-		o.addProperty("bonusChestEnabled", bonusChestEnabled);
+		for (ConfigField field : FIELDS) {
+			field.write(o);
+		}
 		return o;
 	}
 
@@ -921,4 +729,174 @@ public final class Config {
 	private static void c(JsonObject o, String field, String text) {
 		o.addProperty("_comment_" + field, text);
 	}
+
+	/**
+	 * One tunable's read/validate/write behaviour. Subclasses exist per primitive type so the
+	 * serialized json keeps the exact numeric form it had when every field was written out by hand
+	 * (an int must not start rendering as a double).
+	 */
+	private abstract static class ConfigField {
+		final String key;
+		final String doc;
+
+		ConfigField(String key, String doc) {
+			this.key = key;
+			this.doc = doc;
+		}
+
+		/**
+		 * Parse and validate this field out of {@code file}, returning the action that commits it.
+		 * Throws if the key is present with a wrong type — that is what aborts the whole load before
+		 * any field is applied, keeping {@link #loadFrom} all-or-nothing.
+		 */
+		abstract Runnable stage(JsonObject file);
+
+		/** Append the current live value (and its doc comment) to the canonical snapshot. */
+		abstract void write(JsonObject out);
+	}
+
+	private static final class IntField extends ConfigField {
+		private final IntSupplier getter;
+		private final IntConsumer setter;
+		private final int fallback;
+		private final Integer minimum;
+		private final Integer floorTo;
+
+		IntField(String key, String doc, IntSupplier getter, IntConsumer setter) {
+			this(key, doc, getter, setter, null, null);
+		}
+
+		IntField(String key, String doc, IntSupplier getter, IntConsumer setter, Integer minimum) {
+			this(key, doc, getter, setter, minimum, null);
+		}
+
+		IntField(String key, String doc, IntSupplier getter, IntConsumer setter, Integer minimum,
+				Integer floorTo) {
+			super(key, doc);
+			this.getter = getter;
+			this.setter = setter;
+			this.fallback = getter.getAsInt();
+			this.minimum = minimum;
+			this.floorTo = floorTo;
+		}
+
+		@Override
+		Runnable stage(JsonObject file) {
+			int v = getInt(file, key, getter.getAsInt());
+			if (minimum != null && v < minimum) {
+				v = floorTo != null ? floorTo : fallback;
+			}
+			int applied = v;
+			return () -> setter.accept(applied);
+		}
+
+		@Override
+		void write(JsonObject out) {
+			c(out, key, doc);
+			out.addProperty(key, getter.getAsInt());
+		}
+	}
+
+	private static final class FloatField extends ConfigField {
+		private final FloatSupplier getter;
+		private final FloatConsumer setter;
+		private final float fallback;
+		private final Float minimumExclusive;
+
+		FloatField(String key, String doc, FloatSupplier getter, FloatConsumer setter) {
+			this(key, doc, getter, setter, null);
+		}
+
+		FloatField(String key, String doc, FloatSupplier getter, FloatConsumer setter,
+				Float minimumExclusive) {
+			super(key, doc);
+			this.getter = getter;
+			this.setter = setter;
+			this.fallback = getter.get();
+			this.minimumExclusive = minimumExclusive;
+		}
+
+		@Override
+		Runnable stage(JsonObject file) {
+			float v = getFloat(file, key, getter.get());
+			if (minimumExclusive != null && v <= minimumExclusive) {
+				v = fallback;
+			}
+			float applied = v;
+			return () -> setter.accept(applied);
+		}
+
+		@Override
+		void write(JsonObject out) {
+			c(out, key, doc);
+			out.addProperty(key, getter.get());
+		}
+	}
+
+	private static final class DoubleField extends ConfigField {
+		private final DoubleSupplier getter;
+		private final DoubleConsumer setter;
+		private final double minimum;
+		private final double floorTo;
+
+		DoubleField(String key, String doc, DoubleSupplier getter, DoubleConsumer setter,
+				double minimum, double floorTo) {
+			super(key, doc);
+			this.getter = getter;
+			this.setter = setter;
+			this.minimum = minimum;
+			this.floorTo = floorTo;
+		}
+
+		@Override
+		Runnable stage(JsonObject file) {
+			double v = getDouble(file, key, getter.getAsDouble());
+			if (v < minimum) {
+				v = floorTo;
+			}
+			double applied = v;
+			return () -> setter.accept(applied);
+		}
+
+		@Override
+		void write(JsonObject out) {
+			c(out, key, doc);
+			out.addProperty(key, getter.getAsDouble());
+		}
+	}
+
+	private static final class BoolField extends ConfigField {
+		private final BooleanSupplier getter;
+		private final Consumer<Boolean> setter;
+
+		BoolField(String key, String doc, BooleanSupplier getter, Consumer<Boolean> setter) {
+			super(key, doc);
+			this.getter = getter;
+			this.setter = setter;
+		}
+
+		@Override
+		Runnable stage(JsonObject file) {
+			boolean applied = getBool(file, key, getter.getAsBoolean());
+			return () -> setter.accept(applied);
+		}
+
+		@Override
+		void write(JsonObject out) {
+			c(out, key, doc);
+			out.addProperty(key, getter.getAsBoolean());
+		}
+	}
+
+	/** {@code java.util.function} has no float primitive pair; these avoid boxing every float knob. */
+	@FunctionalInterface
+	private interface FloatSupplier {
+		float get();
+	}
+
+	@FunctionalInterface
+	private interface FloatConsumer {
+		void accept(float value);
+	}
+
 }

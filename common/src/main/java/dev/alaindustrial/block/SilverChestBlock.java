@@ -25,7 +25,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * state, no server processing ticker).
  *
  * <p>Rendering: same 3D chest model + animated lid as the iron chest (see
- * {@code SilverChestBlockEntityRenderer}), textured with {@code entity/chest/silver.png}. The block
+ * {@code ChestBlockEntityRenderer}), textured with {@code entity/chest/silver.png}. The block
  * model is a particle-only shell, so only the 3D BER geometry is seen.
  *
  * <p>Crafted by surrounding an iron chest with silver ingots (see {@code recipe/silver_chest.json}),

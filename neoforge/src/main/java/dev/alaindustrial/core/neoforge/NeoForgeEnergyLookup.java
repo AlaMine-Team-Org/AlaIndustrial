@@ -1,9 +1,9 @@
 package dev.alaindustrial.core.neoforge;
 
-import dev.alaindustrial.core.EnergyLookup;
-import dev.alaindustrial.core.EnergyPort;
-import dev.alaindustrial.core.EnergyPortHost;
-import dev.alaindustrial.core.EnergyRole;
+import dev.alaindustrial.core.energy.EnergyLookup;
+import dev.alaindustrial.core.energy.EnergyPort;
+import dev.alaindustrial.core.energy.EnergyPortHost;
+import dev.alaindustrial.core.energy.EnergyRole;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;

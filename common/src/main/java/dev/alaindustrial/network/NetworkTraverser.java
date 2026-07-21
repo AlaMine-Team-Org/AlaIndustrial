@@ -1,8 +1,9 @@
 package dev.alaindustrial.network;
 
 import dev.alaindustrial.block.entity.MachineBlockEntity;
-import dev.alaindustrial.core.EnergyNetwork;
-import dev.alaindustrial.core.NetworkManager;
+import dev.alaindustrial.core.energy.EnergyNetwork;
+import dev.alaindustrial.core.energy.EnergyNetworkDiagnostics;
+import dev.alaindustrial.core.energy.NetworkManager;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -56,17 +57,18 @@ public final class NetworkTraverser {
 
 	/** One-network snapshot for STOP_AT_STORAGE: cables + producers + consumers, sinks stay as consumers. */
 	private static TraversalResult collectSingle(EnergyNetwork net) {
+		EnergyNetworkDiagnostics d = net.diagnostics();
 		Set<BlockPos> cables = new LinkedHashSet<>(net.cables());
-		Set<BlockPos> producers = new LinkedHashSet<>(net.producerPositions());
-		Set<BlockPos> consumers = new LinkedHashSet<>(net.consumerPositions());
+		Set<BlockPos> producers = new LinkedHashSet<>(d.producerPositions());
+		Set<BlockPos> consumers = new LinkedHashSet<>(d.consumerPositions());
 		return new TraversalResult(
 				cables,
 				producers,
 				consumers,
 				Set.of(), // no separate storage list in stop-at-storage mode
-				net.producerSupplyEstimate(),
-				net.consumerDemandEstimate(),
-				net.lastTickMoved(),
+				d.producerSupplyEstimate(),
+				d.consumerDemandEstimate(),
+				d.lastTickMoved(),
 				false);
 	}
 
@@ -91,15 +93,16 @@ public final class NetworkTraverser {
 
 		while (!queue.isEmpty()) {
 			EnergyNetwork net = queue.poll();
+			EnergyNetworkDiagnostics d = net.diagnostics();
 			cables.addAll(net.cables());
-			supply += net.producerSupplyEstimate();
-			demand += net.consumerDemandEstimate();
-			moved += net.lastTickMoved();
+			supply += d.producerSupplyEstimate();
+			demand += d.consumerDemandEstimate();
+			moved += d.lastTickMoved();
 
 			// Partition this network's endpoints: storage sinks go to their own bucket (they render as
 			// bridge nodes), everything else stays a producer/consumer.
 			Set<BlockPos> netSinks = new HashSet<>();
-			for (BlockPos pos : net.producerPositions()) {
+			for (BlockPos pos : d.producerPositions()) {
 				if (isStorageSink(level, pos)) {
 					storageSinks.add(pos);
 					netSinks.add(pos);
@@ -107,7 +110,7 @@ public final class NetworkTraverser {
 					producers.add(pos);
 				}
 			}
-			for (BlockPos pos : net.consumerPositions()) {
+			for (BlockPos pos : d.consumerPositions()) {
 				if (isStorageSink(level, pos)) {
 					storageSinks.add(pos);
 					netSinks.add(pos);

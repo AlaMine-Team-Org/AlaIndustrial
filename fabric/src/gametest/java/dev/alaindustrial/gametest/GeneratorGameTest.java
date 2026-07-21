@@ -18,7 +18,7 @@ import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.AABB;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
-import dev.alaindustrial.core.NetworkManager;
+import dev.alaindustrial.core.energy.NetworkManager;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -218,7 +218,7 @@ public class GeneratorGameTest {
 	/**
 	 * @implements TC-GEN-001-NEG05 — a generator whose only adjacent neighbour is FULL must not lose EU
 	 *     (MOD-022 Phase-2 EnergyMover guard). The cable-less push runs through
-	 *     {@code EnergyNet.distribute -> EnergyMover.probe/commit}: {@code probe} dry-runs the transfer, so
+	 *     {@code DirectAdjacencyDistributor.distribute -> EnergyMover.probe/commit}: {@code probe} dry-runs the transfer, so
 	 *     against a full neighbour it moves 0 and nothing is extracted. The naive "extract, then refund the
 	 *     surplus via insert" shape would instead pull from the generator and fail to refund it — a
 	 *     generator publishes {@code maxInsert == 0}, so the rate-capped refund returns 0 and the extracted
@@ -433,9 +433,9 @@ public class GeneratorGameTest {
 		}
 		battery_box.getEnergyStorage().amount = 0;
 
-		drive(gen, helper, 1); // single tick -> EnergyNet.distribute, capped at srcTier.maxVoltage()=32
+		drive(gen, helper, 1); // single tick -> DirectAdjacencyDistributor.distribute, capped at srcTier.maxVoltage()=32
 
-		long lvCap = dev.alaindustrial.core.EnergyTier.LV.maxVoltage();
+		long lvCap = dev.alaindustrial.core.energy.EnergyTier.LV.maxVoltage();
 		long gained = battery_box.getEnergyStorage().getAmount();
 		if (!(gained > 0 && gained <= lvCap)) {
 			helper.fail("LV transfer must be in (0," + lvCap + "] EU per tick but moved " + gained);

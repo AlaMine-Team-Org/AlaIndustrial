@@ -1,7 +1,7 @@
 package dev.alaindustrial.compat.rei;
 
-import dev.alaindustrial.client.RecipeViewerInfo;
-import dev.alaindustrial.client.RecipeViewerInfo.Entry;
+import dev.alaindustrial.client.compat.RecipeViewerInfo;
+import dev.alaindustrial.client.compat.RecipeViewerInfo.Entry;
 import java.util.List;
 import java.util.Optional;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;

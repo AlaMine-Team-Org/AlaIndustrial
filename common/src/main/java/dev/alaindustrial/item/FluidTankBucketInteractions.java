@@ -1,9 +1,9 @@
 package dev.alaindustrial.item;
 
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
-import dev.alaindustrial.core.EnergyTransactions;
-import dev.alaindustrial.core.FluidAmounts;
-import dev.alaindustrial.core.FluidHolder;
+import dev.alaindustrial.core.energy.EnergyTransactions;
+import dev.alaindustrial.core.fluid.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

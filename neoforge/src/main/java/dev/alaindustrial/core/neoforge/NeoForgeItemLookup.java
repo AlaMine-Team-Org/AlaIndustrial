@@ -1,7 +1,7 @@
 package dev.alaindustrial.core.neoforge;
 
-import dev.alaindustrial.core.ItemLookup;
-import dev.alaindustrial.core.ItemPort;
+import dev.alaindustrial.core.item.ItemLookup;
+import dev.alaindustrial.core.item.ItemPort;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;

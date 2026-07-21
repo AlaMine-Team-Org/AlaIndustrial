@@ -9,6 +9,7 @@ import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.energy.ItemAccessEnergyHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
+import dev.alaindustrial.core.energy.EnergyUnits;
 
 /**
  * NeoForge item-side energy capability for the mod's powered items (MOD-084) — the item counterpart of

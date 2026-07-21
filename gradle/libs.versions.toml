@@ -1,0 +1,57 @@
+# =============================================================================
+# AlaIndustrial — Gradle version catalog (MOD-158).
+#
+# Single place for build-time library and plugin versions, so updating a
+# dependency means editing one file instead of hunting literals across
+# common/, fabric/ and neoforge/ build scripts.
+#
+# WHAT LIVES HERE: versions used only to resolve a dependency or a plugin.
+#
+# WHAT DELIBERATELY STAYS IN gradle.properties: anything the mod metadata needs.
+# processResources in build-logic/src/main/groovy/multiloader-common.gradle
+# expands minecraft_version, fabric_version, fabric_loader_version,
+# neoforge_version and friends into fabric.mod.json and neoforge.mods.toml.
+# A version catalog is not readable from that expansion, so those must remain
+# gradle.properties entries — duplicating them here would create exactly the
+# two-sources-of-truth drift this catalog exists to remove.
+# =============================================================================
+
+[versions]
+# Mixin toolchain — compile-only, mixins are applied by each loader at runtime.
+sponge-mixin = "0.17.3+mixin.0.8.7"
+mixinextras = "0.5.4"
+
+# L1 unit-test stack (docs/testing/AUTOMATION-STANDARDS.md). The common suite runs
+# without the Minecraft jar, so it brings its own gson/slf4j at test runtime.
+jqwik = "1.9.3"
+gson = "2.14.0"
+slf4j = "2.0.9"
+
+# Fabric-only compile-time helpers pulled in by optional integrations.
+cloth-basic-math = "0.6.1"
+architectury = "21.0.2"
+
+# Build plugins.
+fabric-loom = "1.17.12"
+neoforge-moddev = "2.0.141"
+pitest-plugin = "1.19.0"
+
+# Mutation-testing tool versions consumed by the pitest extension itself (not the
+# plugin): pitest-junit5-plugin wires the JUnit 5 platform, pitest is the engine.
+pitest-junit5 = "1.2.3"
+pitest-core = "1.25.7"
+
+[libraries]
+sponge-mixin = { module = "net.fabricmc:sponge-mixin", version.ref = "sponge-mixin" }
+mixinextras-common = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }
+jqwik = { module = "net.jqwik:jqwik", version.ref = "jqwik" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+slf4j-nop = { module = "org.slf4j:slf4j-nop", version.ref = "slf4j" }
+cloth-basic-math = { module = "me.shedaniel.cloth:basic-math", version.ref = "cloth-basic-math" }
+architectury-fabric = { module = "dev.architectury:architectury-fabric", version.ref = "architectury" }
+
+[plugins]
+fabric-loom = { id = "net.fabricmc.fabric-loom", version.ref = "fabric-loom" }
+neoforge-moddev = { id = "net.neoforged.moddev", version.ref = "neoforge-moddev" }
+pitest = { id = "info.solidsoft.pitest", version.ref = "pitest-plugin" }

@@ -7,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
-import dev.alaindustrial.core.FluidAmounts;
-import dev.alaindustrial.core.FluidHolder;
-import dev.alaindustrial.core.FluidPort;
-import dev.alaindustrial.core.FluidTank;
+import dev.alaindustrial.core.fluid.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.fluid.FluidPort;
+import dev.alaindustrial.core.fluid.FluidTank;
 import dev.alaindustrial.core.neoforge.NeoForgeEnergyPort;
 import dev.alaindustrial.core.neoforge.NeoForgeFluidPort;
 import dev.alaindustrial.core.neoforge.TankAsResourceHandler;
@@ -34,7 +34,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * <p><b>Why this test exists.</b> {@code CoreFluidScenarios.sourceToPumpToGeoToEu} (the only NeoForge fluid
  * gametest) places two of our own {@code FluidPortHost} blocks (pump + geothermal generator) next to each
  * other. {@code NeoForgeFluidLookup.find} takes a host-direct shortcut for any block that implements
- * {@link dev.alaindustrial.core.FluidPortHost} ({@code host.fluidPort(side)}), bypassing
+ * {@link dev.alaindustrial.core.fluid.FluidPortHost} ({@code host.fluidPort(side)}), bypassing
  * {@code Capabilities.Fluid.BLOCK} entirely — so that gametest never routes through
  * {@link TankAsResourceHandler} or {@link NeoForgeFluidPort}, the actual capability adapters a real
  * foreign/other-mod fluid tank would be exposed through or read as. (Fabric has no such shortcut —

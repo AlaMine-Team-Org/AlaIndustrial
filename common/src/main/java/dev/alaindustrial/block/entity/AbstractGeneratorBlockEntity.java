@@ -1,16 +1,19 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.EnergyNet;
-import dev.alaindustrial.core.EnergyRole;
-import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.block.HorizontalMachineBlock;
+import dev.alaindustrial.core.energy.DirectAdjacencyDistributor;
+import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.stats.PlayerStatsTracker;
+import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -67,7 +70,7 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 		}
 		// Direct push to a cable-less adjacent machine. The cabled path is owned by the EnergyNetwork
 		// (which pulls from this generator's buffer), so skip cable neighbours to avoid double delivery.
-		EnergyNet.distribute(level, pos, this, true);
+		DirectAdjacencyDistributor.distribute(level, pos, this, true);
 		updateLit(made > 0);
 		if (changed) {
 			setChanged();
@@ -75,5 +78,48 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 		// Generators never sleep: production depends on world state (sunlight, fuel, lava) with no
 		// wake event, and they must keep pushing to neighbours/network every tick (R-29).
 		return 0;
+	}
+
+	/**
+	 * Replace this generator with its evolved branch — shared by the solar panel and wind mill
+	 * evolution paths. Carries stored EU (clamped to the evolved block's capacity), preserves the
+	 * FACING blockstate when both the old and new blocks have one, and consumes the chip slot (the
+	 * caller passes a {@code slotClearer} that does both jobs specific to this generator's slot
+	 * layout — e.g. clearing {@code CHIP_SLOT} on both, and snapshotting the wind-mill rotor so it
+	 * can be re-placed on the evolved mill).
+	 *
+	 * @param target the block to evolve into (e.g. {@code ModContent.DAYLIGHT_SOLAR_PANEL.get()})
+	 * @param slotOverrides additional slots to copy from this generator into the evolved block BEFORE
+	 *     the energy transfer (e.g. the wind mill's rotor slot). Map of slot index → stack to place.
+	 *     Empty for the solar panel.
+	 */
+	protected void evolveInto(Level level, BlockPos pos, Block target, Map<Integer, net.minecraft.world.item.ItemStack> slotOverrides) {
+		long saved = energy.amount;
+		for (Map.Entry<Integer, net.minecraft.world.item.ItemStack> entry : slotOverrides.entrySet()) {
+			// Caller has already snapshotted these into the overrides map; clear the source slot so the
+			// block's inventory reads empty before the swap (the chip slot is always cleared here too —
+			// see callers).
+			items.set(entry.getKey(), net.minecraft.world.item.ItemStack.EMPTY);
+		}
+		BlockState oldState = getBlockState();
+		BlockState newState = target.defaultBlockState();
+		// Preserve FACING when both old and new blocks have it (wind mill family); the solar panels
+		// have no FACING, so this is a no-op for them.
+		if (oldState.hasProperty(HorizontalMachineBlock.FACING)
+				&& newState.hasProperty(HorizontalMachineBlock.FACING)) {
+			newState = newState.setValue(HorizontalMachineBlock.FACING, oldState.getValue(HorizontalMachineBlock.FACING));
+		}
+		level.setBlockAndUpdate(pos, newState);
+		if (level.getBlockEntity(pos) instanceof MachineBlockEntity evolved) {
+			evolved.getEnergyStorage().amount = Math.min(saved, evolved.getEnergyStorage().getCapacity());
+			for (Map.Entry<Integer, net.minecraft.world.item.ItemStack> entry : slotOverrides.entrySet()) {
+				int slot = entry.getKey();
+				net.minecraft.world.item.ItemStack stack = entry.getValue();
+				if (!stack.isEmpty() && slot >= 0 && slot < evolved.getContainerSize()) {
+					evolved.setItem(slot, stack);
+				}
+			}
+			evolved.setChanged();
+		}
 	}
 }

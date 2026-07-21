@@ -2,12 +2,12 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
-import dev.alaindustrial.core.EnergyRole;
-import dev.alaindustrial.core.EnergyTier;
-import dev.alaindustrial.core.SolarSky;
-import dev.alaindustrial.core.WindMillClearance;
-import dev.alaindustrial.core.WindMillInterference;
-import dev.alaindustrial.core.WindMillOutput;
+import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.SolarSky;
+import dev.alaindustrial.core.environment.WindMillClearance;
+import dev.alaindustrial.core.environment.WindMillInterference;
+import dev.alaindustrial.core.environment.WindMillOutput;
 import dev.alaindustrial.menu.WindMillMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -224,25 +224,14 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 		return MODE_BREEZE;
 	}
 
-	/** Replace this mill with its evolved branch, carrying stored energy; the chip is consumed. */
+	/** Replace this mill with its evolved branch, carrying stored energy and the rotor; the chip is consumed. */
 	private void evolveInto(Level level, BlockPos pos, Block target) {
-		long saved = energy.amount;
-		ItemStack rotor = items.get(ROTOR_SLOT).copy();
-		items.set(CHIP_SLOT, ItemStack.EMPTY);
-		BlockState oldState = getBlockState();
-		BlockState newState = target.defaultBlockState();
-		if (oldState.hasProperty(HorizontalMachineBlock.FACING)
-				&& newState.hasProperty(HorizontalMachineBlock.FACING)) {
-			newState = newState.setValue(HorizontalMachineBlock.FACING, oldState.getValue(HorizontalMachineBlock.FACING));
-		}
-		level.setBlockAndUpdate(pos, newState);
-		if (level.getBlockEntity(pos) instanceof MachineBlockEntity evolved) {
-			evolved.getEnergyStorage().amount = Math.min(saved, evolved.getEnergyStorage().getCapacity());
-			if (!rotor.isEmpty() && evolved.getContainerSize() > ROTOR_SLOT) {
-				evolved.setItem(ROTOR_SLOT, rotor);
-			}
-			evolved.setChanged();
-		}
+		// Snapshot the rotor so the shared helper can re-place it on the evolved mill; the chip slot is
+		// cleared (passed as EMPTY), the rotor is copied through. FACING is preserved by the helper.
+		ItemStack rotorSnapshot = items.get(ROTOR_SLOT).copy();
+		evolveInto(level, pos, target, java.util.Map.of(
+				CHIP_SLOT, ItemStack.EMPTY,
+				ROTOR_SLOT, rotorSnapshot));
 	}
 
 	@Override
@@ -312,12 +301,12 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		output.putInt("EvolveProgress", evolveProgress);
+		saveEvolve(output, evolveProgress);
 	}
 
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		evolveProgress = input.getIntOr("EvolveProgress", 0);
+		evolveProgress = loadEvolve(input);
 	}
 }

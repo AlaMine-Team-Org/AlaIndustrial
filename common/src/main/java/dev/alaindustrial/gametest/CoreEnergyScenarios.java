@@ -8,10 +8,10 @@ import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
-import dev.alaindustrial.core.EnergyNetwork;
-import dev.alaindustrial.core.EnergyRole;
-import dev.alaindustrial.core.EnergyTier;
-import dev.alaindustrial.core.NetworkManager;
+import dev.alaindustrial.core.energy.EnergyNetwork;
+import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.core.BlockPos;
@@ -914,7 +914,7 @@ public final class CoreEnergyScenarios {
 	/**
 	 * The battery box's energy buffer publishes per-tick rate caps of EXACTLY
 	 * {@code EnergyTier.LV.maxVoltage()} for both insert and extract. Asserting the canonical
-	 * {@link dev.alaindustrial.core.EnergyBuffer#maxInsert}/{@code maxExtract} fields directly (loader-neutral —
+	 * {@link dev.alaindustrial.core.energy.EnergyBuffer#maxInsert}/{@code maxExtract} fields directly (loader-neutral —
 	 * the buffer is shared common code; each loader only wraps it) catches both a dead port
 	 * ({@code maxInsert == 0}) and a missing cap (unlimited insert) — either regression would pass a
 	 * weaker "{@code <= lvCap}" upper-bound check. Complements the Fabric lane's
@@ -926,7 +926,7 @@ public final class CoreEnergyScenarios {
 		helper.setBlock(DROP, ModContent.BATTERY_BOX.get());
 		if (be(helper, DROP) instanceof BatteryBoxBlockEntity bb) {
 			long lvCap = EnergyTier.LV.maxVoltage();
-			dev.alaindustrial.core.EnergyBuffer buf = bb.getEnergyStorage();
+			dev.alaindustrial.core.energy.EnergyBuffer buf = bb.getEnergyStorage();
 			if (buf.maxInsert != lvCap) {
 				helper.fail("battery box maxInsert=" + buf.maxInsert + " EU, expected exactly LV.maxVoltage()="
 						+ lvCap + " (maxInsert==0 = dead port; > lvCap = uncapped — both are bugs)");

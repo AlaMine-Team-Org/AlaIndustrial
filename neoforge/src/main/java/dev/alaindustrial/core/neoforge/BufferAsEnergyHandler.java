@@ -1,13 +1,13 @@
 package dev.alaindustrial.core.neoforge;
 
 import com.google.common.primitives.Ints;
-import dev.alaindustrial.core.EnergyPort;
+import dev.alaindustrial.core.energy.EnergyPort;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 /**
  * Reverse adapter (MOD-022 Phase 2): exposes a neutral {@link EnergyPort} (a machine's common
- * {@link dev.alaindustrial.core.EnergyBuffer}, face-role wrapped) as a NeoForge {@link EnergyHandler},
+ * {@link dev.alaindustrial.core.energy.EnergyBuffer}, face-role wrapped) as a NeoForge {@link EnergyHandler},
  * so it can be published through {@code Capabilities.Energy.BLOCK} in
  * {@code RegisterCapabilitiesEvent}. The capability contract is the per-loader binding seam; the buffer
  * itself is loader-neutral.

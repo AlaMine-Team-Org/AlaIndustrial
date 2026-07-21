@@ -1,6 +1,6 @@
 package dev.alaindustrial.client.neoforge;
 
-import dev.alaindustrial.client.NetworkOverlayRenderer;
+import dev.alaindustrial.client.render.NetworkOverlayRenderer;
 import dev.alaindustrial.network.neoforge.NeoForgeNetworkClient;
 import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
 

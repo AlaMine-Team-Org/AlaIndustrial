@@ -1,12 +1,12 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.block.HorizontalMachineBlock;
-import dev.alaindustrial.core.EnergyBuffer;
-import dev.alaindustrial.core.EnergyPort;
-import dev.alaindustrial.core.EnergyPortHost;
-import dev.alaindustrial.core.EnergyRole;
-import dev.alaindustrial.core.EnergyTier;
-import dev.alaindustrial.core.FaceEnergyPort;
+import dev.alaindustrial.core.energy.EnergyBuffer;
+import dev.alaindustrial.core.energy.EnergyPort;
+import dev.alaindustrial.core.energy.EnergyPortHost;
+import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.energy.FaceEnergyPort;
 import dev.alaindustrial.registry.ModContent;
 // MOD-022 Phase 2: the energy spine now runs on the common EnergyPort/EnergyBuffer abstraction — no
 // loader energy API is imported here, so this base class (and its content subclasses) can live in
@@ -164,7 +164,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 
 	/**
 	 * True if this block is a pure energy <em>store</em> (e.g. BatteryBox) rather than a working machine.
-	 * The {@link dev.alaindustrial.core.EnergyNetwork} serves working machines before storage sinks so
+	 * The {@link dev.alaindustrial.core.energy.EnergyNetwork} serves working machines before storage sinks so
 	 * a large buffer can't starve them, and never charges a sink from itself (MOD-009). Default false.
 	 */
 	public boolean isEnergyStorageSink() {
@@ -305,7 +305,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		output.putLong("Energy", energy.amount);
+		saveEnergyOnly(output);
 		output.putInt("Progress", progress);
 		output.putInt("MaxProgress", maxProgress);
 		ContainerHelper.saveAllItems(output, items);
@@ -318,10 +318,20 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		}
 	}
 
+	/**
+	 * Write only the energy buffer under the canonical {@code "Energy"} key. Exposed so transport
+	 * blocks (cable, item pipe) that have nothing but a buffer can avoid persisting the always-zero
+	 * {@code Progress}/{@code MaxProgress} and an empty items list that the full machine path would
+	 * otherwise write. Key name is unchanged for save-format compatibility.
+	 */
+	protected void saveEnergyOnly(ValueOutput output) {
+		output.putLong("Energy", energy.amount);
+	}
+
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		energy.amount = input.getLongOr("Energy", 0L);
+		loadEnergyOnly(input);
 		progress = input.getIntOr("Progress", 0);
 		maxProgress = input.getIntOr("MaxProgress", 0);
 		items.clear();
@@ -330,6 +340,35 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 			owner = input.read("Owner", UUIDUtil.CODEC).orElse(null);
 			ownerName = input.getStringOr("OwnerName", "");
 		}
+	}
+
+	/**
+	 * Read only the energy buffer written by {@link #saveEnergyOnly}. Symmetric counterpart for
+	 * transport blocks; the machine-specific keys are left untouched on the input (the cable never
+	 * wrote them, so absent reads as the default {@code 0L}).
+	 */
+	protected void loadEnergyOnly(ValueInput input) {
+		energy.amount = input.getLongOr("Energy", 0L);
+	}
+
+	// --- Evolvable persistence helper (shared by SolarPanelBlockEntity + WindMillBlockEntity) ---
+
+	/**
+	 * Write the evolution counter under the canonical NBT key. Both base-tier evolvable generators
+	 * (solar panel, wind mill) persist their chip progress identically; centralising the literal here
+	 * keeps the save format consistent and makes a future rename a one-line change. The key stays
+	 * {@code "EvolveProgress"} for backwards compatibility with existing single-player saves.
+	 */
+	protected static void saveEvolve(ValueOutput output, int evolveProgress) {
+		output.putInt("EvolveProgress", evolveProgress);
+	}
+
+	/**
+	 * Read the evolution counter written by {@link #saveEvolve}; {@code 0} when the key is absent
+	 * (pre-evolution save, or a freshly placed block).
+	 */
+	protected static int loadEvolve(ValueInput input) {
+		return input.getIntOr("EvolveProgress", 0);
 	}
 
 	// --- Container over `items` ---

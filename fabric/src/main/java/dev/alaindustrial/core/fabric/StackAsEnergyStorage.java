@@ -11,6 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.DelegatingEnergyStorage;
+import dev.alaindustrial.core.energy.EnergyUnits;
 
 /**
  * Fabric item-side energy capability for the mod's powered items (MOD-084) — the item counterpart of the

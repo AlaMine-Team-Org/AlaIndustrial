@@ -3,7 +3,7 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
-import dev.alaindustrial.core.WindMillOutput;
+import dev.alaindustrial.core.environment.WindMillOutput;
 import dev.alaindustrial.registry.ModBlocks;
 import dev.alaindustrial.registry.ModItems;
 import net.minecraft.world.item.ItemStack;
@@ -587,8 +587,22 @@ public class WindMillGameTest {
 		var evolvedMill = helper.getBlockEntity(POS, dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity.class);
 		if (evolvedMill == null) {
 			helper.fail("evolved block is not a HighAltitudeWindMillBlockEntity");
-		} else if (evolvedMill.getEnergyStorage().getAmount() != 1500) {
+			return;
+		}
+		if (evolvedMill.getEnergyStorage().getAmount() != 1500) {
 			helper.fail("evolved mill did not carry EU: expected 1500, got " + evolvedMill.getEnergyStorage().getAmount());
+			return;
+		}
+		// MOD-166 (#4): the shared evolveInto helper also carries the rotor (slot override) and
+		// consumes the chip. Pin both so a regression in the slot-overrides map of the helper
+		// does not silently drop the rotor or leave the chip behind.
+		if (!evolvedMill.getItem(WindMillBlockEntity.ROTOR_SLOT).is(dev.alaindustrial.registry.ModContent.WINDMILL_ROTOR.get())) {
+			helper.fail("evolved mill did not carry the installed rotor");
+			return;
+		}
+		if (!evolvedMill.getItem(WindMillBlockEntity.CHIP_SLOT).isEmpty()) {
+			helper.fail("evolved mill did not consume the chip slot");
+			return;
 		}
 		helper.succeed();
 	}

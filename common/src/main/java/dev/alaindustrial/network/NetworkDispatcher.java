@@ -22,8 +22,8 @@ import net.minecraft.server.level.ServerPlayer;
  *
  * <p>The active implementation is installed once at mod init by each loader's entrypoint via
  * {@link #install(NetworkDispatcher)}; common code reaches it through {@link #get()}. This mirrors
- * the set-once service-locator used for {@link dev.alaindustrial.core.EnergyTransactions} and
- * {@link dev.alaindustrial.core.EnergyLookup}.
+ * the set-once service-locator used for {@link dev.alaindustrial.core.energy.EnergyTransactions} and
+ * {@link dev.alaindustrial.core.energy.EnergyLookup}.
  */
 public interface NetworkDispatcher {
 

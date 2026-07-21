@@ -3,7 +3,7 @@ package dev.alaindustrial.client.sound;
 /**
  * Pure teleport detection for the machine-hum manager (MOD-129). Kept free of any {@code net.minecraft}
  * reference so it loads — and is unit-testable — without a client on the classpath (mirrors
- * {@link dev.alaindustrial.client.HudSmoother}). {@link MachineHumClientHook} owns the listener-continuity
+ * {@link dev.alaindustrial.client.hud.HudSmoother}). {@link MachineHumClientHook} owns the listener-continuity
  * state and feeds it here each tick.
  *
  * <p>After a teleport the listener stops moving continuously and the sound engine leaves each hum loop in

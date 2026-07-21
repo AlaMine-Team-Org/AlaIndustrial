@@ -52,6 +52,7 @@
 			,"dev.alaindustrial.gametest.PlayerStatsGameTest"
 			,"dev.alaindustrial.gametest.PlayerStatsAttachmentGameTest"
 			,"dev.alaindustrial.gametest.EnrichedUraniumTorchGameTest"
+			,"dev.alaindustrial.gametest.RecipeCoverageGameTest"
 		]
 	}
 }

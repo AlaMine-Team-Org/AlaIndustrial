@@ -58,7 +58,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
  * in a loader's {@code init()} — would only surface at the first {@code .get()}, mid-gameplay. Call
  * {@link #verifyAllBound()} at the end of each loader's init sequence (after every {@code Mod*.init()})
  * to catch incomplete bindings loudly at startup instead. This mirrors the set-once service-locator used
- * for {@link dev.alaindustrial.core.EnergyTransactions} /
+ * for {@link dev.alaindustrial.core.energy.EnergyTransactions} /
  * {@link dev.alaindustrial.network.NetworkDispatcher}.
  */
 public final class ModContent {

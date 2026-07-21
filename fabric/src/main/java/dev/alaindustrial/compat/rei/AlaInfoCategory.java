@@ -28,7 +28,7 @@ import net.minecraft.network.chat.Style;
  *
  * <p>One category serves every informational display (all {@link AlaInfoDisplay}s share the id
  * {@link AlaInfoDisplay#CATEGORY}); the title and text come from the display itself, so adding a new
- * evolution line is a new {@link dev.alaindustrial.client.RecipeViewerInfo.Entry}, not a new category.
+ * evolution line is a new {@link dev.alaindustrial.client.compat.RecipeViewerInfo.Entry}, not a new category.
  */
 public final class AlaInfoCategory implements DisplayCategory<AlaInfoDisplay> {
 	private static final int PADDING_X = 6;

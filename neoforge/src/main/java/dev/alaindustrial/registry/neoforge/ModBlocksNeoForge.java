@@ -15,7 +15,6 @@ import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
 import dev.alaindustrial.block.IronChestBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.SilverChestBlock;
 import dev.alaindustrial.block.GoldChestBlock;
@@ -27,6 +26,7 @@ import dev.alaindustrial.block.WaterMillBlock;
 import dev.alaindustrial.block.WindMillBlock;
 import dev.alaindustrial.block.HighAltitudeWindMillBlock;
 import dev.alaindustrial.block.StormWindMillBlock;
+import dev.alaindustrial.registry.ModBlockProperties;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModParticles;
 import java.util.function.Supplier;
@@ -34,7 +34,6 @@ import java.util.function.UnaryOperator;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -66,7 +65,9 @@ public final class ModBlocksNeoForge {
 
 	// --- Machines (energy core + processing) ---
 	public static final DeferredBlock<GeneratorBlock> GENERATOR =
-			BLOCKS.registerBlock("generator", GeneratorBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+			BLOCKS.registerBlock("generator", GeneratorBlock::new,
+					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+							.lightLevel(ModBlockProperties::litLight)));
 	public static final DeferredBlock<SolarPanelBlock> SOLAR_PANEL =
 			BLOCKS.registerBlock("solar_panel", SolarPanelBlock::new, machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.GLASS).noOcclusion()));
 	public static final DeferredBlock<MoonlitSolarPanelBlock> MOONLIT_SOLAR_PANEL =
@@ -88,13 +89,15 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<IronFurnaceBlock> IRON_FURNACE =
 			BLOCKS.registerBlock("iron_furnace", IronFurnaceBlock::new,
 					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.METAL)
-							.lightLevel(state -> state.getValue(BlockStateProperties.LIT) ? 13 : 0)));
+							.lightLevel(ModBlockProperties::litLight)));
 	public static final DeferredBlock<ExtractorBlock> EXTRACTOR =
 			BLOCKS.registerBlock("extractor", ExtractorBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
 	public static final DeferredBlock<CompressorBlock> COMPRESSOR =
 			BLOCKS.registerBlock("compressor", CompressorBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
 	public static final DeferredBlock<GeothermalGeneratorBlock> GEOTHERMAL_GENERATOR =
-			BLOCKS.registerBlock("geothermal_generator", GeothermalGeneratorBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+			BLOCKS.registerBlock("geothermal_generator", GeothermalGeneratorBlock::new,
+					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+							.lightLevel(ModBlockProperties::litLight)));
 	public static final DeferredBlock<PumpBlock> PUMP =
 			BLOCKS.registerBlock("pump", PumpBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
 	public static final DeferredBlock<FluidTankBlock> FLUID_TANK =
@@ -169,7 +172,7 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<EnrichedUraniumWallTorchBlock> ENRICHED_URANIUM_WALL_TORCH =
 			BLOCKS.registerBlock("enriched_uranium_wall_torch",
 					p -> new EnrichedUraniumWallTorchBlock(ModParticles.ENRICHED_URANIUM_FLAME, p),
-					() -> torchProps()
+					() -> ModBlockProperties.torchBase()
 							.overrideLootTable(ENRICHED_URANIUM_TORCH.get().getLootTable())
 							.overrideDescription(ENRICHED_URANIUM_TORCH.get().getDescriptionId()));
 
@@ -191,15 +194,11 @@ public final class ModBlocksNeoForge {
 	 * {@code ModBlocks#torchProps} helper and vanilla {@code Blocks.TORCH}: no collision, instant break
 	 * (breaks by hand — so NO {@code requiresCorrectToolForDrops} and NO {@code mineable/pickaxe} entry,
 	 * unlike {@link #machine}), light 14 (identical to the vanilla torch), WOOD sound, {@code DESTROY} push
-	 * reaction, {@code noOcclusion()}. {@code setId} is applied by {@code registerBlock} from the deferred key.
+	 * reaction, {@code noOcclusion()}. {@code setId} is applied by {@code registerBlock} from the deferred
+	 * key. The chain itself is shared with the Fabric side via {@link ModBlockProperties#torchBase()}.
 	 */
 	private static Supplier<BlockBehaviour.Properties> torch() {
-		return ModBlocksNeoForge::torchProps;
-	}
-
-	private static BlockBehaviour.Properties torchProps() {
-		return BlockBehaviour.Properties.of().noCollision().instabreak()
-				.lightLevel(state -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY).noOcclusion();
+		return ModBlockProperties::torchBase;
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package dev.alaindustrial.client.dashboard;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.client.GuiStyle;
+import dev.alaindustrial.client.screen.GuiStyle;
 import dev.alaindustrial.stats.LevelMath;
 import dev.alaindustrial.stats.PlayerModStats;
 import dev.alaindustrial.stats.PlayerStatsClientCache;

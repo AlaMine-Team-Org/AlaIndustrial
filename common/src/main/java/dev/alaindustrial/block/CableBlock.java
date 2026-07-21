@@ -2,7 +2,7 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.CableBlockEntity;
-import dev.alaindustrial.core.NetworkManager;
+import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.registry.ModCriteria;
 import java.util.EnumMap;
 import java.util.Map;
@@ -164,7 +164,7 @@ public class CableBlock extends AbstractMachineBlock {
 
 	/**
 	 * A neighbour block changed next to this cable (e.g. a machine was placed or broken adjacent to
-	 * it without touching a cable). Mark the owning {@link dev.alaindustrial.core.EnergyNetwork}
+	 * it without touching a cable). Mark the owning {@link dev.alaindustrial.core.energy.EnergyNetwork}
 	 * dirty so it re-discovers its producer/consumer endpoints on the next tick — otherwise a newly
 	 * placed machine is never picked up (an asleep network stays asleep; an awake one ignores it).
 	 */

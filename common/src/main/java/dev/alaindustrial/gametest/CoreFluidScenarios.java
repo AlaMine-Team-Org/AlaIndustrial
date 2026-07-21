@@ -109,17 +109,17 @@ public final class CoreFluidScenarios {
 		}
 		long geoEnergyAfter = geo.getEnergyStorage().getAmount();
 
-		long expectedGeoTankPeak = dev.alaindustrial.core.FluidAmounts.BUCKET;
+		long expectedGeoTankPeak = dev.alaindustrial.core.fluid.FluidAmounts.BUCKET;
 		long expectedEuGain = (long) burnTicks * Config.geothermalEuPerTick;
 		long actualEuGain = geoEnergyAfter - geoEnergyBefore;
 
-		boolean pumpAcquiredExactlyOneBucket = pumpTankPeak == dev.alaindustrial.core.FluidAmounts.BUCKET;
+		boolean pumpAcquiredExactlyOneBucket = pumpTankPeak == dev.alaindustrial.core.fluid.FluidAmounts.BUCKET;
 		boolean geoReceivedExactlyOneBucket = geoTankPeak == expectedGeoTankPeak;
 		boolean producedExactEu = actualEuGain == expectedEuGain;
 
 		if (!(sourceGone && pumpAcquiredExactlyOneBucket && geoReceivedExactlyOneBucket && producedExactEu)) {
 			helper.fail("fluid pump (NeoForge): sourceGone=" + sourceGone
-					+ " pumpTankPeak=" + pumpTankPeak + " (expected " + dev.alaindustrial.core.FluidAmounts.BUCKET + ")"
+					+ " pumpTankPeak=" + pumpTankPeak + " (expected " + dev.alaindustrial.core.fluid.FluidAmounts.BUCKET + ")"
 					+ " geoTankPeak=" + geoTankPeak + " (expected " + expectedGeoTankPeak + ")"
 					+ " euGain=" + actualEuGain + " (expected " + expectedEuGain + ")");
 			return;

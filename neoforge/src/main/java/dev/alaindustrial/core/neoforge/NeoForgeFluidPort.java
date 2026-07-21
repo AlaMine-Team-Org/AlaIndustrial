@@ -1,11 +1,12 @@
 package dev.alaindustrial.core.neoforge;
 
-import dev.alaindustrial.core.EnergyPort;
-import dev.alaindustrial.core.FluidHolder;
-import dev.alaindustrial.core.FluidPort;
+import dev.alaindustrial.core.energy.EnergyPort;
+import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.fluid.FluidPort;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
+import dev.alaindustrial.core.fluid.FluidTank;
 
 /**
  * NeoForge implementation of the platform-neutral {@link FluidPort} (MOD-028): an adapter over a NeoForge

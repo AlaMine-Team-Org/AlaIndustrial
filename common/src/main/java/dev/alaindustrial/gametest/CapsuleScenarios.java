@@ -1,9 +1,9 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.entity.PumpBlockEntity;
-import dev.alaindustrial.core.EnergyTransactions;
-import dev.alaindustrial.core.FluidAmounts;
-import dev.alaindustrial.core.FluidHolder;
+import dev.alaindustrial.core.energy.EnergyTransactions;
+import dev.alaindustrial.core.fluid.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.item.ItemFluid;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.registry.ModContent;

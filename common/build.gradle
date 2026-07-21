@@ -10,7 +10,7 @@ plugins {
     // 1.22.1). Runs only against `common/` — this subproject has no Minecraft jar on its test
     // classpath (the moddev `neoFormVersion` line only pulls mappings metadata), so PIT sees a
     // plain Java library layout and none of the Loom/MC classpath failure modes apply.
-    id 'info.solidsoft.pitest' version '1.19.0'
+    alias(libs.plugins.pitest)
 }
 
 neoForge {
@@ -27,10 +27,13 @@ dependencies {
     // Version cross-checked against both loaders' gradle.properties (MOD-022):
     //   https://github.com/neoforged/NeoForge/blob/26.2.x/gradle.properties
     //   https://github.com/FabricMC/fabric-loader/blob/master/gradle.properties
-    compileOnly('net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7')
+    compileOnly(libs.sponge.mixin)
     // Fabric and NeoForge both bundle MixinExtras. NeoForge 26.2 bundles 0.5.4;
     // aligned up from the template's 0.5.3 (MOD-022).
-    compileOnly(annotationProcessor('io.github.llamalad7:mixinextras-common:0.5.4'))
+    // Declared twice on purpose: the catalog accessor is a Provider, and the nested
+    // `compileOnly(annotationProcessor(...))` form only accepts a plain notation.
+    compileOnly(libs.mixinextras.common)
+    annotationProcessor(libs.mixinextras.common)
 
     // L1 unit tests (docs/testing/AUTOMATION-STANDARDS.md).
     testImplementation("org.junit.jupiter:junit-jupiter:${junit_version}")
@@ -47,17 +50,17 @@ dependencies {
     // is the last clean release before the protestware (verified 2026-07-19 against Maven Central +
     // jqwik release notes; compatible with our JUnit Platform 1.10.2 since jqwik ≥1.9.0 requires only
     // Platform ≥1.7.0). DO NOT upgrade above 1.9.x without auditing the source for injection payloads.
-    testImplementation('net.jqwik:jqwik:1.9.3')
+    testImplementation(libs.jqwik)
     // Config lives in common and its config-file load/write (Config.loadFrom) references Gson, so
     // linking Config on the L1 test classpath needs Gson at runtime even though the balance tests
     // only read static fields. Gson is a transitive of Minecraft (MC 26.2 bundles 2.14.0); the L1
     // suite runs without the Minecraft jar, so pin it explicitly here (MOD-022 Phase 1).
-    testRuntimeOnly('com.google.code.gson:gson:2.14.0')
+    testRuntimeOnly(libs.gson)
     // Config.loadFrom logs via Industrialization.LOGGER (SLF4J). Exercising loadFrom in the L1 suite
     // (MOD-100 config file tests) loads Industrialization, so SLF4J must be on the test classpath; like
     // Gson it is a Minecraft transitive absent from the MC-free L1 run, so pin it explicitly.
-    testRuntimeOnly('org.slf4j:slf4j-api:2.0.9')
-    testRuntimeOnly('org.slf4j:slf4j-nop:2.0.9')
+    testRuntimeOnly(libs.slf4j.api)
+    testRuntimeOnly(libs.slf4j.nop)
 }
 
 tasks.named('test', Test) {
@@ -90,14 +93,14 @@ jacocoTestReport {
 pitest {
     // JUnit 5 platform wiring — `junit5PluginVersion` both adds the pitest-junit5-plugin
     // dependency and sets testPlugin = "junit5".
-    junit5PluginVersion = '1.2.3'
+    junit5PluginVersion = libs.versions.pitest.junit5.get()
 
     // Override the plugin's default PIT core (1.22.1) up to 1.25.7 — its ASM 9.10.1 reads Java 25
     // bytecode (class file 69) cleanly. On JDK 25 the 1.22.1 default's coverage minion exited
     // abnormally during `InstrumentationImpl.transform` (a classfile-version-read symptom); 1.25.7
     // is the current Central release (2026-07-08) and is confirmed to support Java 25/26 upstream
     // (hcoles/pitest#1439). gradle-pitest-plugin 1.19.0 drives it transparently via this property.
-    pitestVersion = '1.25.7'
+    pitestVersion = libs.versions.pitest.core.get()
 
     // Scope mutations to the loader-neutral core. The default "${project.group}.*" would also pull
     // in client/mixin/menu packages whose behaviour is only exercised by L2 gametests and that
@@ -112,30 +115,47 @@ pitest {
     // NetworkManager, ItemNetwork, SolarSky, PipeFaceMode, FluidHolder, ...); their behaviour is
     // covered by the Fabric L2 @GameTest + NeoForge world-scenario suites instead. These belong to
     // a future NeoForge L1.5 pitest lane (which DOES have the MC jar), tracked separately.
-    targetClasses = ['dev.alaindustrial.core.*']
+    targetClasses = ['dev.alaindustrial.core.*', 'dev.alaindustrial.core.energy.*',
+                     'dev.alaindustrial.core.fluid.*', 'dev.alaindustrial.core.item.*',
+                     'dev.alaindustrial.core.environment.*']
     // The 15 MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
     // JUnit discovery also walks every class under `targetTests` via reflection to find @Test
     // methods — and reflection on e.g. `EnergyNet` triggers `NoClassDefFoundError:
     // net/minecraft/world/level/Level` because the Minecraft jar is not on `common/`'s classpath.
     // So `targetTests` is pinned to ONLY the actual L1 test classes (the *Test suffix), keeping
     // discovery away from the MC-coupled main classes entirely.
-    targetTests = ['dev.alaindustrial.core.*Test']
+    targetTests = ['dev.alaindustrial.core.*Test', 'dev.alaindustrial.core.energy.*Test',
+                   'dev.alaindustrial.core.fluid.*Test', 'dev.alaindustrial.core.item.*Test',
+                   'dev.alaindustrial.core.environment.*Test']
     excludedClasses = [
-            'dev.alaindustrial.core.EnergyLookup',
-            'dev.alaindustrial.core.EnergyNet',
-            'dev.alaindustrial.core.EnergyNetwork',
-            'dev.alaindustrial.core.EnergyPortHost',
-            'dev.alaindustrial.core.FluidHolder',
-            'dev.alaindustrial.core.FluidLookup',
-            'dev.alaindustrial.core.FluidPortHost',
-            'dev.alaindustrial.core.ItemLookup',
-            'dev.alaindustrial.core.ItemNetwork',
-            'dev.alaindustrial.core.ItemNetworkManager',
-            'dev.alaindustrial.core.NetworkManager',
-            'dev.alaindustrial.core.PipeFaceMode',
-            'dev.alaindustrial.core.SolarSky',
-            'dev.alaindustrial.core.WindMillClearance',
-            'dev.alaindustrial.core.WindMillInterference',
+            'dev.alaindustrial.core.energy.EnergyLookup',
+            'dev.alaindustrial.core.energy.DirectAdjacencyDistributor', // was EnergyNet (renamed MOD-168 #7)
+            'dev.alaindustrial.core.energy.EnergyNetwork',
+            'dev.alaindustrial.core.energy.EnergyPortHost',
+            'dev.alaindustrial.core.fluid.FluidHolder',
+            'dev.alaindustrial.core.fluid.FluidLookup',
+            'dev.alaindustrial.core.fluid.FluidPortHost',
+            'dev.alaindustrial.core.item.ItemLookup',
+            'dev.alaindustrial.core.item.ItemNetwork',
+            'dev.alaindustrial.core.item.ItemNetworkManager',
+            'dev.alaindustrial.core.energy.NetworkManager',
+            'dev.alaindustrial.core.item.PipeFaceMode',
+            'dev.alaindustrial.core.environment.SolarSky',
+            'dev.alaindustrial.core.environment.WindMillClearance',
+            'dev.alaindustrial.core.environment.WindMillInterference',
+            // Refactor pass round 2 (2026-07): three MC-coupled classes extracted from EnergyNetwork
+            // (#7) + a new sky cache (#13). Same shape as the entries above — they reference
+            // Level/BlockPos/Direction and cannot be instantiated in :common's MC-free pitest runtime.
+            // Their behaviour is covered by :neoforge:test (L1.5 EnergyLineDistributorTest) and the
+            // Fabric L2 gametests (NetworkGameTest, SolarPanelGameTest).
+            'dev.alaindustrial.core.energy.EnergyTopologyCache',
+            'dev.alaindustrial.core.energy.EnergyLineDistributor',
+            'dev.alaindustrial.core.environment.SolarSkyCache',
+            // Extracted from EnergyNetwork in the round-3 audit pass (#10): a read-only introspection
+            // view that only delegates to the MC-coupled EnergyNetwork (List<BlockPos> accessors). Same
+            // shape as the siblings above — no L1-testable bytecode of its own; excluded to keep the
+            // ratchet floor free of its NO_COVERAGE mutations.
+            'dev.alaindustrial.core.energy.EnergyNetworkDiagnostics',
             // MOD-144: four additional MC-coupled classes that previously showed as 59 NO_COVERAGE
             // mutations (37 FluidTank + 8 FluidMover + 8 GuideBookState + 6 GuideBookGiver). They have
             // ZERO L1-testable bytecode: their transfer/refund/codec flow is gated on types that
@@ -158,8 +178,8 @@ pitest {
             //     and queries MinecraftServer — 4 direct net.minecraft imports, MC-only.
             // These belong to the future NeoForge L1.5 pitest lane (MOD-110 follow-up) which DOES have
             // the MC jar on its test classpath.
-            'dev.alaindustrial.core.FluidTank',
-            'dev.alaindustrial.core.FluidMover',
+            'dev.alaindustrial.core.fluid.FluidTank',
+            'dev.alaindustrial.core.fluid.FluidMover',
             'dev.alaindustrial.core.GuideBookState',
             'dev.alaindustrial.core.guide.GuideBookGiver'
     ]

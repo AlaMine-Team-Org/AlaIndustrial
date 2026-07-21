@@ -1,8 +1,8 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.EnergyRole;
-import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
@@ -69,14 +69,14 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 	 *
 	 * <p>This is not a formality — it is what stops the station from starving the rest of the base.
 	 * Every other consumer in the mod is LV and asks for at most 32 EU/t; the station is the first
-	 * HV block and asks for 512. {@link dev.alaindustrial.core.EnergyShare#split} divides the supply
+	 * HV block and asks for 512. {@link dev.alaindustrial.core.energy.EnergyShare#split} divides the supply
 	 * <em>proportionally to demand</em>, so as a plain machine the station would win a 512:32 split
 	 * and take ~94 % of a shared grid — the player would plug in a teleporter and watch every
 	 * macerator stall. As a sink it charges from the surplus instead, which also matches what it is:
 	 * a fund that banks EU, not a machine that does work. It still fills fine — a jump costs
 	 * ~10–20 k EU against a 500 k buffer, and a player who wants it charged now can put a generator
 	 * or a battery box flush against it (the direct, cable-less path in
-	 * {@link dev.alaindustrial.core.EnergyNet#distribute} ignores this flag entirely).
+	 * {@link dev.alaindustrial.core.energy.DirectAdjacencyDistributor#distribute} ignores this flag entirely).
 	 */
 	@Override
 	public boolean isEnergyStorageSink() {

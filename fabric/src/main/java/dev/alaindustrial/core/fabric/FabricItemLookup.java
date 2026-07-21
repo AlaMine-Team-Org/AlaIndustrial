@@ -1,7 +1,7 @@
 package dev.alaindustrial.core.fabric;
 
-import dev.alaindustrial.core.ItemLookup;
-import dev.alaindustrial.core.ItemPort;
+import dev.alaindustrial.core.item.ItemLookup;
+import dev.alaindustrial.core.item.ItemPort;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

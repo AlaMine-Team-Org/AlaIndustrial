@@ -10,7 +10,7 @@ import dev.alaindustrial.BuildInfo;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.command.demo.DemoStand;
-import dev.alaindustrial.core.NetworkManager;
+import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.stats.LevelMath;
 import dev.alaindustrial.stats.PlayerModStats;
 import dev.alaindustrial.stats.PlayerStatsStore;

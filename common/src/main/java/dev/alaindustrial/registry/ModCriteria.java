@@ -2,8 +2,8 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.advancement.NetworkEnergizedTrigger;
-import dev.alaindustrial.core.EnergyNetwork;
-import dev.alaindustrial.core.NetworkManager;
+import dev.alaindustrial.core.energy.EnergyNetwork;
+import dev.alaindustrial.core.energy.NetworkManager;
 import java.util.function.Supplier;
 import net.minecraft.advancements.triggers.CriterionTrigger;
 import net.minecraft.core.BlockPos;

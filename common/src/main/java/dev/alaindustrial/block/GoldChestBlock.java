@@ -24,7 +24,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * right-click-to-open-menu behaviour; it is <em>not</em> a machine (no energy, no {@code lit} state).
  *
  * <p>Rendering: same 3D chest model + animated lid as the iron/silver chests (see
- * {@code GoldChestBlockEntityRenderer}), textured with {@code entity/chest/gold.png}.
+ * {@code ChestBlockEntityRenderer}), textured with {@code entity/chest/gold.png}.
  *
  * <p>Crafted by surrounding a silver chest with gold ingots (see {@code recipe/gold_chest.json}),
  * mirroring the established "previous tier + 8 ingots" recipe pattern.

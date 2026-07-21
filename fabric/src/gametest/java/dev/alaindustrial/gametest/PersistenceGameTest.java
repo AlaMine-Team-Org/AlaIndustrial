@@ -1,6 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.ExtractorBlockEntity;
@@ -8,7 +9,7 @@ import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
-import dev.alaindustrial.core.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.registry.ModBlocks;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
@@ -124,7 +125,7 @@ public class PersistenceGameTest {
 		long lava0 = FluidAmounts.BUCKET * 3;
 		src.getEnergyStorage().amount = energy0;
 		src.fluidTank.amount = lava0;
-		src.fluidTank.fluid = dev.alaindustrial.core.FluidHolder.of(Fluids.LAVA);
+		src.fluidTank.fluid = dev.alaindustrial.core.fluid.FluidHolder.of(Fluids.LAVA);
 
 		CompoundTag tag = src.saveCustomOnly(registries);
 		GeothermalGeneratorBlockEntity restored = new GeothermalGeneratorBlockEntity(abs, level.getBlockState(abs));
@@ -315,7 +316,7 @@ public class PersistenceGameTest {
 
 		long lava0 = FluidAmounts.BUCKET * 2;
 		src.fluidTank.amount = lava0;
-		src.fluidTank.fluid = dev.alaindustrial.core.FluidHolder.of(Fluids.LAVA);
+		src.fluidTank.fluid = dev.alaindustrial.core.fluid.FluidHolder.of(Fluids.LAVA);
 
 		CompoundTag tag = src.saveCustomOnly(registries);
 		PumpBlockEntity restored = new PumpBlockEntity(abs, level.getBlockState(abs));
@@ -352,6 +353,88 @@ public class PersistenceGameTest {
 		boolean isBlank = restored.fluidTank.fluid.isEmpty();
 		if (lava1 != 0L || !isBlank) {
 			helper.fail("pump empty-tank round-trip mismatch: amount=" + lava1 + " blank=" + isBlank);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-CABLE-001-PER01 — cable NBT round-trip preserves the live segment buffer.
+	 *     The cable's persistence path is a SLIM ONE: since MOD-166 (#8) it overrides
+	 *     {@code saveAdditional}/{@code loadAdditional} to write ONLY the {@code "Energy"} key,
+	 *     skipping the machine-path {@code Progress}/{@code MaxProgress}/{@code items} keys that are
+	 *     always empty/zero on a transport segment. This test pins that the slim path round-trips a
+	 *     non-zero cable buffer cleanly (the canonical case — a charged segment between a generator
+	 *     and a consumer carries cableBuffer EU in transit).
+	 * @covers R-PER-01
+	 */
+	@GameTest
+	public void tcCable001Per01_bufferNbtRoundTrip(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		RegistryAccess registries = level.registryAccess();
+		BlockPos abs = helper.absolutePos(POS);
+		helper.setBlock(POS, ModBlocks.COPPER_CABLE);
+		CableBlockEntity src = helper.getBlockEntity(POS, CableBlockEntity.class);
+
+		long energy0 = 7L; // a partially-filled segment (cableBuffer = 12)
+		src.getEnergyStorage().amount = energy0;
+
+		CompoundTag tag = src.saveCustomOnly(registries);
+		CableBlockEntity restored = new CableBlockEntity(abs, level.getBlockState(abs));
+		restored.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
+
+		long energy1 = restored.getEnergyStorage().getAmount();
+		if (energy0 != energy1) {
+			helper.fail("cable round-trip mismatch: energy " + energy0 + "->" + energy1);
+		}
+		// Slim path means the tag must NOT carry the machine-path keys Progress/MaxProgress
+		// (cable progress is always 0 — the slim path correctly omits them).
+		if (tag.contains("Progress") || tag.contains("MaxProgress")) {
+			helper.fail("cable slim NBT must not carry Progress/MaxProgress, but tag = " + tag);
+		}
+		if (!tag.contains("Energy")) {
+			helper.fail("cable slim NBT must carry the Energy key, but tag = " + tag);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-CABLE-001-PER02 — legacy cable NBT (with Progress/MaxProgress keys) loads cleanly.
+	 *     A player who saved the world before MOD-166 (#8) has cables whose NBT carries
+	 *     {@code Progress}/{@code MaxProgress} from the old machine-path persistence. The slim
+	 *     {@code loadAdditional} no longer reads those keys — this test injects NON-ZERO legacy values
+	 *     and pins that loading such a tag does not throw, the buffer round-trips, and the keys are
+	 *     actually dropped (progress stays at its default 0, the right value for a transport segment).
+	 * @covers R-PER-01
+	 */
+	@GameTest
+	public void tcCable001Per02_legacyMachineKeysIgnoredOnLoad(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		RegistryAccess registries = level.registryAccess();
+		BlockPos abs = helper.absolutePos(POS);
+		helper.setBlock(POS, ModBlocks.COPPER_CABLE);
+		CableBlockEntity src = helper.getBlockEntity(POS, CableBlockEntity.class);
+
+		// Save a real tag (slim path), then inject the legacy keys by hand.
+		src.getEnergyStorage().amount = 5L;
+		CompoundTag tag = src.saveCustomOnly(registries);
+		// Inject a NON-ZERO legacy progress: a slim load must IGNORE it (progress stays 0). If a future
+		// change reverts the slim loadAdditional back to reading these keys, restored progress becomes 7
+		// and this test fails — pinning that the keys are actually dropped, not merely absent.
+		tag.putInt("Progress", 7);
+		tag.putInt("MaxProgress", 200);
+
+		CableBlockEntity restored = new CableBlockEntity(abs, level.getBlockState(abs));
+		restored.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
+
+		long energy1 = restored.getEnergyStorage().getAmount();
+		// The cable's dataAccess exposes progress on index 2 — it must stay 0 (slim load ignores the
+		// injected legacy key above, and the cable never writes a non-zero progress).
+		int progress1 = restored.getDataAccess().get(2);
+		if (energy1 != 5L) {
+			helper.fail("legacy cable load mismatch: energy 5->" + energy1);
+		}
+		if (progress1 != 0) {
+			helper.fail("legacy cable load mismatch: Progress key must be ignored, but progress = " + progress1);
 		}
 		helper.succeed();
 	}

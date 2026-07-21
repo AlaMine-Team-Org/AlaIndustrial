@@ -2,9 +2,9 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
-import dev.alaindustrial.core.ItemLookup;
-import dev.alaindustrial.core.ItemNetworkManager;
-import dev.alaindustrial.core.PipeFaceMode;
+import dev.alaindustrial.core.item.ItemLookup;
+import dev.alaindustrial.core.item.ItemNetworkManager;
+import dev.alaindustrial.core.item.PipeFaceMode;
 import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;

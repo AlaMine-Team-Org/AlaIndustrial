@@ -2,8 +2,8 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.CableBlock;
-import dev.alaindustrial.core.EnergyTier;
-import dev.alaindustrial.core.NetworkManager;
+import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,9 +13,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 /**
- * LV copper cable: a transport segment of a logical {@link dev.alaindustrial.core.EnergyNetwork}.
+ * LV copper cable: a transport segment of a logical {@link dev.alaindustrial.core.energy.EnergyNetwork}.
  * The cable no longer pushes energy itself — the network owns transport and ticks once per server
  * tick via {@link NetworkManager}. The cable's job is lifecycle: it registers itself with the
  * {@link NetworkManager} on first server tick (after its level + neighbours are loaded) and
@@ -31,10 +33,35 @@ public class CableBlockEntity extends MachineBlockEntity {
 	 * {@code isCableConnectable} semantics since it was loaded. {@code transient} on purpose — it
 	 * must NOT persist: a freshly loaded cable starts {@code false}, re-derives its flags once on the
 	 * first server tick, then stays {@code true} only in memory. Mirrors the {@link #registered}
-	 * flag's lifecycle (also transient: this entity overrides neither {@code saveAdditional} nor
-	 * {@code loadAdditional}). See {@link #validateShape(Level, BlockPos, BlockState)}.
+	 * flag's lifecycle (also transient — see the persistence overrides below, which save energy only).
+	 * See {@link #validateShape(Level, BlockPos, BlockState)}.
 	 */
 	private boolean shapeValidated;
+
+	/**
+	 * Persist only the cable-segment buffer — NOT the full machine-path keys. The cable has no
+	 * inventory (0 slots), no processing state (progress is always 0) and no owner (transport, not
+	 * a working machine), so the base class's {@code Progress}/{@code MaxProgress}/{@code items} keys
+	 * would all be empty/zero. Skipping them keeps per-cable NBT minimal — meaningful on a base with
+	 * hundreds of cable segments — and also avoids a redundant duplicate {@code "Energy"} write that
+	 * a {@code super} call would perform before {@link #saveEnergyOnly} wrote it again.
+	 *
+	 * <p>Backward-compat: existing player saves that DO carry the legacy {@code Progress}/
+	 * {@code MaxProgress} keys (always 0 on a cable) round-trip cleanly — they are simply ignored on
+	 * load (defaults remain 0, which is the correct value for a transport segment that never
+	 * processes anything).
+	 */
+	@Override
+	protected void saveAdditional(ValueOutput output) {
+		// Intentionally NOT calling super.saveAdditional — we want the slim path, not the machine path.
+		saveEnergyOnly(output);
+	}
+
+	@Override
+	protected void loadAdditional(ValueInput input) {
+		// Intentionally NOT calling super.loadAdditional — see saveAdditional above.
+		loadEnergyOnly(input);
+	}
 
 	public CableBlockEntity(BlockPos pos, BlockState state) {
 		// capacity = Config.cableBuffer (the live per-segment buffer, e.g. 12 EU). maxInsert/maxExtract =
@@ -103,7 +130,8 @@ public class CableBlockEntity extends MachineBlockEntity {
 	 * {@code (flags & 16) == 0 && limit > 0}, {@code limit = 512}) — that is desired and safe: it
 	 * lets the neighbours re-derive their own flags from this cable's unchanged presence.
 	 *
-	 * <p>Energy-routing is unaffected: {@link dev.alaindustrial.core.EnergyNetwork#refreshEndpoints}
+	 * <p>Energy-routing is unaffected: endpoint discovery (in the topology cache behind
+	 * {@link dev.alaindustrial.core.energy.EnergyNetwork})
 	 * queries energy capabilities through the loader adapters (Fabric {@code EnergyStorage.SIDED.find}
 	 * / NeoForge {@code Capabilities.Energy.BLOCK}), never reads {@code PROPERTY_BY_DIRECTION} — so
 	 * the flags are write-only relative to routing and this re-shape is energy-safe on both loaders.

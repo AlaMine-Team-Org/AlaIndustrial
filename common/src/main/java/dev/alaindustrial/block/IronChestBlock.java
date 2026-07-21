@@ -24,7 +24,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * no {@code lit} state and no server processing ticker.
  *
  * <p>Rendering: unlike a plain cube machine, the iron chest renders as a real 3D chest model with
- * an animated lid (see {@code IronChestBlockEntityRenderer}). On 26.2 the chest block keeps the
+ * an animated lid (see {@code ChestBlockEntityRenderer}). On 26.2 the chest block keeps the
  * default {@code MODEL} render shape (matching vanilla {@code ChestBlock}, which no longer returns
  * {@code INVISIBLE} — the BER is layered on top of the block pass, not in place of it). The block
  * model itself is a particle-only shell (no visible cube faces), so only the 3D BER geometry is

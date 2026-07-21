@@ -1,7 +1,7 @@
 package dev.alaindustrial.core.fabric;
 
-import dev.alaindustrial.core.FluidLookup;
-import dev.alaindustrial.core.FluidPort;
+import dev.alaindustrial.core.fluid.FluidLookup;
+import dev.alaindustrial.core.fluid.FluidPort;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

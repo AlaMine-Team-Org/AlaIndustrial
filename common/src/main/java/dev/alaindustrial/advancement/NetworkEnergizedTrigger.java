@@ -10,7 +10,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 /**
  * Fires the first time a player places a cable that leaves the resulting
- * {@code dev.alaindustrial.core.EnergyNetwork} awake (a producer and a consumer are both reachable).
+ * {@code dev.alaindustrial.core.energy.EnergyNetwork} awake (a producer and a consumer are both reachable).
  * No vanilla trigger observes mod-internal network state, so this is the one custom criterion the
  * progression advancements need — see task MOD-015 and {@code dev.alaindustrial.block.CableBlock}.
  */

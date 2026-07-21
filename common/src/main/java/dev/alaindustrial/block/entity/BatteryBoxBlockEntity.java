@@ -2,9 +2,9 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
-import dev.alaindustrial.core.EnergyNet;
-import dev.alaindustrial.core.EnergyRole;
-import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.core.energy.DirectAdjacencyDistributor;
+import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.ItemEnergy;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -45,7 +45,7 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
 		// Direct push to cable-less adjacent machines only; the cabled path is owned by the
 		// EnergyNetwork, which treats the battery_box as both a producer and a consumer endpoint.
-		EnergyNet.distribute(level, pos, this, true);
+		DirectAdjacencyDistributor.distribute(level, pos, this, true);
 		chargePouch();
 		// Storage keeps pushing every tick (a neighbour may appear with no wake event), so never sleeps.
 		return 0;

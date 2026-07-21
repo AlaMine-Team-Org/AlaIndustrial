@@ -20,7 +20,7 @@ import dev.alaindustrial.registry.ModRecipes;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import team.reborn.energy.api.EnergyStorage;
-import dev.alaindustrial.core.EnergyPort;
+import dev.alaindustrial.core.energy.EnergyPort;
 import dev.alaindustrial.core.fabric.FabricEnergyPort;
 
 /**

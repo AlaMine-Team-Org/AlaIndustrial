@@ -1,8 +1,10 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.EnergyRole;
-import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.SolarSky;
+import dev.alaindustrial.core.environment.SolarSkyCache;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -32,6 +34,9 @@ import net.minecraft.world.level.block.state.BlockState;
 public class MoonlitSolarPanelBlockEntity extends AbstractGeneratorBlockEntity implements MenuProvider {
 	private static final int MAX_EXTRACT = 20;
 
+	/** Caches the sky/weather verdict for {@link Config#solarSkySampleTicks} ticks to avoid a per-tick column scan. */
+	private final SolarSkyCache skyCache = new SolarSkyCache();
+
 	/** Mode codes shared with the screen. */
 	public static final int MODE_DAY = 0;
 	public static final int MODE_NIGHT = 1;
@@ -55,15 +60,18 @@ public class MoonlitSolarPanelBlockEntity extends AbstractGeneratorBlockEntity i
 
 	@Override
 	protected int produce(Level level, BlockPos pos, BlockState state) {
+		// Sample sky access + weather on a cadence (Config.solarSkySampleTicks); cached to avoid the
+		// per-tick column scan above the panel.
+		skyCache.sample(level, pos);
 		int production = 0;
 		int mode = MODE_DAY;
-		dev.alaindustrial.core.SolarSky.Access sky = level.dimension().equals(Level.OVERWORLD)
-				? dev.alaindustrial.core.SolarSky.classify(level, pos)
-				: dev.alaindustrial.core.SolarSky.Access.BLOCKED;
-		if (sky != dev.alaindustrial.core.SolarSky.Access.BLOCKED && !level.isBrightOutside()) {
+		SolarSky.Access sky = level.dimension().equals(Level.OVERWORLD)
+				? skyCache.sky()
+				: SolarSky.Access.BLOCKED;
+		if (sky != SolarSky.Access.BLOCKED && !level.isBrightOutside()) {
 			production = Config.moonlitEuPerTick;
 			mode = MODE_NIGHT;
-			switch (dev.alaindustrial.core.SolarSky.classifyWeather(level, pos)) {
+			switch (skyCache.weather()) {
 				case RAIN -> {
 					// Unlike the day panels, the moonlit panel keeps a small weather trickle in rain/thunder
 					// instead of going dark — the moon is still faintly effective.
@@ -76,7 +84,7 @@ public class MoonlitSolarPanelBlockEntity extends AbstractGeneratorBlockEntity i
 					mode = MODE_NIGHT_SNOW;
 				}
 				case NONE -> {
-					if (sky == dev.alaindustrial.core.SolarSky.Access.PARTIAL) {
+					if (sky == SolarSky.Access.PARTIAL) {
 						// Moonlight filtered through a translucent block (leaves, cobweb): reduced output (MOD-004).
 						production = Math.round(production * Config.solarTransparentFactor);
 						mode = MODE_NIGHT_PARTIAL;

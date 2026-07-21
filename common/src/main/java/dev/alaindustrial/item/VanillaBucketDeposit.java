@@ -1,10 +1,10 @@
 package dev.alaindustrial.item;
 
-import dev.alaindustrial.core.EnergyTransactions;
-import dev.alaindustrial.core.FluidAmounts;
-import dev.alaindustrial.core.FluidHolder;
-import dev.alaindustrial.core.FluidLookup;
-import dev.alaindustrial.core.FluidPort;
+import dev.alaindustrial.core.energy.EnergyTransactions;
+import dev.alaindustrial.core.fluid.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.fluid.FluidLookup;
+import dev.alaindustrial.core.fluid.FluidPort;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;

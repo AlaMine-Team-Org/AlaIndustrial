@@ -1,11 +1,13 @@
 package dev.alaindustrial.core.neoforge;
 
-import dev.alaindustrial.core.EnergyPort;
-import dev.alaindustrial.core.EnergyTransactions;
+import dev.alaindustrial.core.energy.EnergyPort;
+import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.neoforge.NeoForgeEnergyPort.NeoForgeTxn;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import dev.alaindustrial.core.item.ItemMover;
+import dev.alaindustrial.core.item.ItemNetwork;
 
 /**
  * NeoForge implementation of the neutral {@link EnergyTransactions} SPI (MOD-022 Phase 2). Opens a

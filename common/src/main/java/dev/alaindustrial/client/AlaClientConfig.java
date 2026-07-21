@@ -158,7 +158,7 @@ public final class AlaClientConfig {
 		return Math.max(min, Math.min(max, value));
 	}
 
-	static int nextNetworkColor(int color) {
+	public static int nextNetworkColor(int color) {
 		int rgb = color & 0x00FFFFFF;
 		for (int i = 0; i < NETWORK_COLOR_PRESETS.length; i++) {
 			if ((NETWORK_COLOR_PRESETS[i] & 0x00FFFFFF) == rgb) {

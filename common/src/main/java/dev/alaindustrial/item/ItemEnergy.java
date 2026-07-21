@@ -1,7 +1,7 @@
 package dev.alaindustrial.item;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;

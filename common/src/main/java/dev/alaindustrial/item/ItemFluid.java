@@ -1,6 +1,6 @@
 package dev.alaindustrial.item;
 
-import dev.alaindustrial.core.FluidHolder;
+import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +26,7 @@ public final class ItemFluid {
 
 	/** The capacity of one capsule: exactly one bucket. Amount is implicit (a capsule is all-or-nothing). */
 	public static long capacityMillibuckets() {
-		return dev.alaindustrial.core.FluidAmounts.BUCKET;
+		return dev.alaindustrial.core.fluid.FluidAmounts.BUCKET;
 	}
 
 	/** The fluid this stack holds, or {@link Fluids#EMPTY} if the component is absent. */

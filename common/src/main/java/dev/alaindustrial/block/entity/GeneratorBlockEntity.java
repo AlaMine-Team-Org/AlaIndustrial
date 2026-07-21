@@ -1,7 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.menu.GeneratorMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;

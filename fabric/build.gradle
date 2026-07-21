@@ -29,8 +29,8 @@ dependencies {
     // REI's GUI API exposes me.shedaniel.math (Point/Rectangle) via this helper lib, and its display
     // registry pulls dev.architectury types — both needed on the compile classpath for the category
     // widgets. (Loom 1.17 here is not split-client, so these map to compileOnly, not clientCompileOnly.)
-    compileOnly("me.shedaniel.cloth:basic-math:0.6.1")
-    compileOnly("dev.architectury:architectury-fabric:21.0.2")
+    compileOnly(libs.cloth.basic.math)
+    compileOnly(libs.architectury.fabric)
     runtimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
 
     compileOnly("com.terraformersmc:modmenu:${modmenu_version}")

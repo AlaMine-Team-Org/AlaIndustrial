@@ -2,8 +2,8 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
-import dev.alaindustrial.core.FluidAmounts;
-import dev.alaindustrial.core.FluidHolder;
+import dev.alaindustrial.core.fluid.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.item.FluidTankContents;
 import dev.alaindustrial.item.ItemFluid;
 import dev.alaindustrial.registry.ModBlocks;

@@ -1,6 +1,6 @@
 package dev.alaindustrial.compat.rei;
 
-import dev.alaindustrial.client.MachineScreen;
+import dev.alaindustrial.client.screen.MachineScreen;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

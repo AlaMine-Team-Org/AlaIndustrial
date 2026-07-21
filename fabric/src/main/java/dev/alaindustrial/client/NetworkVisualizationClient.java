@@ -4,6 +4,7 @@ import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
+import dev.alaindustrial.client.render.NetworkOverlayRenderer;
 
 /**
  * Fabric adapter for the loader-neutral Network Analyzer highlight (MOD-016, MOD-033): registers the

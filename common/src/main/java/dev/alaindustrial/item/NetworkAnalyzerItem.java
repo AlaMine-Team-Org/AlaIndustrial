@@ -1,8 +1,8 @@
 package dev.alaindustrial.item;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.EnergyNetwork;
-import dev.alaindustrial.core.NetworkManager;
+import dev.alaindustrial.core.energy.EnergyNetwork;
+import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.network.NetworkTraverser;

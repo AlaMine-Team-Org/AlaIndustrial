@@ -1,6 +1,6 @@
 package dev.alaindustrial.compat.jei;
 
-import dev.alaindustrial.client.MachineScreen;
+import dev.alaindustrial.client.screen.MachineScreen;
 import java.util.List;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import net.minecraft.client.renderer.Rect2i;

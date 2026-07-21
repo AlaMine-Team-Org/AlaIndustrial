@@ -6,6 +6,8 @@ import dev.alaindustrial.item.EnergyPackItem;
 import dev.alaindustrial.item.HintItem;
 import dev.alaindustrial.item.FluidTankBlockItem;
 import dev.alaindustrial.item.ModArmorMaterials;
+import dev.alaindustrial.item.ScytheTier;
+import dev.alaindustrial.item.ScytheTiers;
 import dev.alaindustrial.item.ModToolMaterials;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import dev.alaindustrial.item.TeleporterRemoteItem;
@@ -168,46 +170,30 @@ public final class ModItemsNeoForge {
 							ModEntitiesNeoForge.STOCK_DISPLAY_FRAME.get(), p),
 					Item.Properties::new);
 
-	// Scythe (MOD-068): six AOE foliage tiers. The factory builds a ScytheItem (its own AOE useOn);
+	// Scythe (MOD-068): eight AOE foliage tiers. The factory builds a ScytheItem (its own AOE useOn);
 	// the properties operator applies .hoe(material, ...) for the tool component + enchantability,
 	// exactly like the Fabric ModItems#scythe helper. NeoForge applies setId from the deferred key.
-	// The first .hoe float is per-tier attackDamage: displayed damage = 1 + attackDamage +
-	// material.attackDamageBonus, so wood/stone/copper/gold (whose bonus alone renders 0) are lifted
-	// to 1; iron and up keep -2.0f. Keep these values in sync with the Fabric ModItems#scythe helper.
-	public static final DeferredItem<ScytheItem> SCYTHE_WOOD =
-			ITEMS.registerItem("scythe_wood",
-					p -> new ScytheItem(new ScytheItem.Profile(3, 2, 12), p),
-					p -> p.hoe(ToolMaterial.WOOD, 0.0f, -1.0f));
-	public static final DeferredItem<ScytheItem> SCYTHE_STONE =
-			ITEMS.registerItem("scythe_stone",
-					p -> new ScytheItem(new ScytheItem.Profile(3, 3, 18), p),
-					p -> p.hoe(ToolMaterial.STONE, -1.0f, -1.0f));
-	public static final DeferredItem<ScytheItem> SCYTHE_COPPER =
-			ITEMS.registerItem("scythe_copper",
-					p -> new ScytheItem(new ScytheItem.Profile(3, 3, 24), p),
-					p -> p.hoe(ToolMaterial.COPPER, -1.0f, -1.0f));
-	public static final DeferredItem<ScytheItem> SCYTHE_IRON =
-			ITEMS.registerItem("scythe_iron",
-					p -> new ScytheItem(new ScytheItem.Profile(5, 3, 30), p),
-					p -> p.hoe(ToolMaterial.IRON, -2.0f, -1.0f));
-	// Gold: iron-sized area, fragile + highly enchantable (vanilla gold philosophy). See Fabric ModItems.
-	public static final DeferredItem<ScytheItem> SCYTHE_GOLD =
-			ITEMS.registerItem("scythe_gold",
-					p -> new ScytheItem(new ScytheItem.Profile(5, 3, 30), p),
-					p -> p.hoe(ToolMaterial.GOLD, 0.0f, -1.0f));
-	public static final DeferredItem<ScytheItem> SCYTHE_TEMPERED_IRON =
-			ITEMS.registerItem("scythe_tempered_iron",
-					p -> new ScytheItem(new ScytheItem.Profile(5, 4, 40), p),
-					p -> p.hoe(ModToolMaterials.TEMPERED_IRON, -2.0f, -1.0f));
-	public static final DeferredItem<ScytheItem> SCYTHE_DIAMOND =
-			ITEMS.registerItem("scythe_diamond",
-					p -> new ScytheItem(new ScytheItem.Profile(5, 5, 50), p),
-					p -> p.hoe(ToolMaterial.DIAMOND, -2.0f, -1.0f));
-	// Netherite tier is fire-resistant like all vanilla netherite gear (survives lava/fire).
-	public static final DeferredItem<ScytheItem> SCYTHE_NETHERITE =
-			ITEMS.registerItem("scythe_netherite",
-					p -> new ScytheItem(new ScytheItem.Profile(7, 5, 70), p),
-					p -> p.hoe(ToolMaterial.NETHERITE, -2.0f, -1.0f).fireResistant());
+	// The tier tuple (material + AOE profile + attack bias + fire-resistance) is declared once in the
+	// loader-neutral dev.alaindustrial.item.ScytheTiers — both loaders register from the same list,
+	// so the Fabric and NeoForge builds cannot drift (the comment-as-contract this used to rely on).
+	public static final DeferredItem<ScytheItem> SCYTHE_WOOD = scythe(ScytheTiers.WOOD);
+	public static final DeferredItem<ScytheItem> SCYTHE_STONE = scythe(ScytheTiers.STONE);
+	public static final DeferredItem<ScytheItem> SCYTHE_COPPER = scythe(ScytheTiers.COPPER);
+	public static final DeferredItem<ScytheItem> SCYTHE_IRON = scythe(ScytheTiers.IRON);
+	public static final DeferredItem<ScytheItem> SCYTHE_GOLD = scythe(ScytheTiers.GOLD);
+	public static final DeferredItem<ScytheItem> SCYTHE_TEMPERED_IRON = scythe(ScytheTiers.TEMPERED_IRON);
+	public static final DeferredItem<ScytheItem> SCYTHE_DIAMOND = scythe(ScytheTiers.DIAMOND);
+	public static final DeferredItem<ScytheItem> SCYTHE_NETHERITE = scythe(ScytheTiers.NETHERITE);
+
+	/** Scythe factory driven by a loader-neutral {@link ScytheTier} — single source of truth for stats. */
+	private static DeferredItem<ScytheItem> scythe(ScytheTier tier) {
+		return ITEMS.registerItem(tier.id(),
+				p -> new ScytheItem(tier.profile(), p),
+				p -> {
+					Item.Properties props = p.hoe(tier.material(), tier.attackDamage(), -1.0f);
+					return tier.fireResistant() ? props.fireResistant() : props;
+				});
+	}
 
 	// --- Block items ---
 	public static final DeferredItem<BlockItem> GENERATOR_ITEM =

@@ -1,26 +1,26 @@
 package dev.alaindustrial;
 
 import dev.alaindustrial.client.AlaClientConfig;
-import dev.alaindustrial.client.AlaConfigScreen;
-import dev.alaindustrial.client.BatteryBoxScreen;
-import dev.alaindustrial.client.CompressorScreen;
-import dev.alaindustrial.client.DaylightSolarPanelScreen;
-import dev.alaindustrial.client.ElectricFurnaceScreen;
-import dev.alaindustrial.client.EnergyPackHud;
-import dev.alaindustrial.client.ExtractorScreen;
+import dev.alaindustrial.client.screen.AlaConfigScreen;
+import dev.alaindustrial.client.screen.BatteryBoxScreen;
+import dev.alaindustrial.client.screen.CompressorScreen;
+import dev.alaindustrial.client.screen.DaylightSolarPanelScreen;
+import dev.alaindustrial.client.screen.ElectricFurnaceScreen;
+import dev.alaindustrial.client.hud.EnergyPackHud;
+import dev.alaindustrial.client.screen.ExtractorScreen;
 import dev.alaindustrial.client.ModKeyMappings;
-import dev.alaindustrial.client.GeneratorScreen;
-import dev.alaindustrial.client.GeothermalGeneratorScreen;
-import dev.alaindustrial.client.IronChestBlockEntityRenderer;
-import dev.alaindustrial.client.MaceratorScreen;
-import dev.alaindustrial.client.PumpScreen;
-import dev.alaindustrial.client.MachineTooltips;
-import dev.alaindustrial.client.MoonlitSolarPanelScreen;
-import dev.alaindustrial.client.SolarPanelScreen;
-import dev.alaindustrial.client.WaterMillScreen;
-import dev.alaindustrial.client.WaterMillWheelBlockEntityRenderer;
-import dev.alaindustrial.client.WindMillScreen;
-import dev.alaindustrial.client.WindMillRotorBlockEntityRenderer;
+import dev.alaindustrial.client.screen.GeneratorScreen;
+import dev.alaindustrial.client.screen.GeothermalGeneratorScreen;
+import dev.alaindustrial.client.render.ChestBlockEntityRenderer;
+import dev.alaindustrial.client.screen.MaceratorScreen;
+import dev.alaindustrial.client.screen.PumpScreen;
+import dev.alaindustrial.client.tooltip.MachineTooltips;
+import dev.alaindustrial.client.screen.MoonlitSolarPanelScreen;
+import dev.alaindustrial.client.screen.SolarPanelScreen;
+import dev.alaindustrial.client.screen.WaterMillScreen;
+import dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer;
+import dev.alaindustrial.client.screen.WindMillScreen;
+import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
 import dev.alaindustrial.client.neoforge.NeoForgeCableGhost;
 import dev.alaindustrial.client.neoforge.NeoForgeNetworkVisualization;
 import dev.alaindustrial.registry.neoforge.ModBlockEntitiesNeoForge;
@@ -76,7 +76,7 @@ public final class IndustrializationNeoForgeClient {
 	/** Initialises the client config screen state, the fluid-tank item tint source, and the config-screen factory. */
 	private void initClientConfig(ModContainer container) {
 		AlaClientConfig.init(FMLPaths.CONFIGDIR.get());
-		dev.alaindustrial.client.FluidTankItemTintSource.register();
+		dev.alaindustrial.client.render.FluidTankItemTintSource.register();
 		container.registerExtensionPoint(IConfigScreenFactory.class,
 				(modContainer, parent) -> new AlaConfigScreen(parent));
 	}
@@ -100,7 +100,7 @@ public final class IndustrializationNeoForgeClient {
 		// ClientTooltipComponentCallback mapping in IndustrializationClient.
 		modBus.addListener((net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent event) ->
 				event.register(dev.alaindustrial.item.PouchTooltip.class,
-						dev.alaindustrial.client.PouchClientTooltip::new));
+						dev.alaindustrial.client.tooltip.PouchClientTooltip::new));
 		// Iron chest: 3D model + animated lid. Register the BlockEntityRenderer + bake the chest
 		// model layer (vanilla single-body chest geometry), the NeoForge counterpart to the Fabric
 		// BlockEntityRendererRegistry + ModelLayerRegistry calls in IndustrializationClient.
@@ -110,7 +110,7 @@ public final class IndustrializationNeoForgeClient {
 		// IndustrializationClient call; this @Mod class is dist=CLIENT, so it runs only on the physical client.
 		dev.alaindustrial.client.sound.MachineHumClientHook.register();
 		// MOD-108: answers "is Shift held" for item tooltips (the pipe shows its numbers behind Shift).
-		dev.alaindustrial.client.TooltipKeysClientHook.register();
+		dev.alaindustrial.client.tooltip.TooltipKeysClientHook.register();
 		// Hover tooltips for machine block items + the Network Analyzer. Counterpart to the Fabric
 		// ItemTooltipCallback in IndustrializationClient; the content is loader-neutral in MachineTooltips.
 		// ItemTooltipEvent fires on the game bus (client only), so it goes on NeoForge.EVENT_BUS.
@@ -141,11 +141,11 @@ public final class IndustrializationNeoForgeClient {
 			// drawing itself is loader-neutral (TeleportFadeHud). Registered before the readouts so they
 			// stay legible over it.
 			event.registerAboveAll(Industrialization.id("teleport_fade"),
-					dev.alaindustrial.client.TeleportFadeHud::render);
+					dev.alaindustrial.client.hud.TeleportFadeHud::render);
 			event.registerAboveAll(Industrialization.id("energy_pack_hud"), EnergyPackHud::render);
 			// Electric Drill charge readout (MOD-079) — same toggle/key as the pack, stacks below it.
 			event.registerAboveAll(Industrialization.id("electric_drill_hud"),
-					dev.alaindustrial.client.ElectricDrillHud::render);
+					dev.alaindustrial.client.hud.ElectricDrillHud::render);
 		});
 		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> ModKeyMappings.handleInput());
 		// MOD-133: add the profile button to the survival inventory screen (creative is a different screen
@@ -159,7 +159,7 @@ public final class IndustrializationNeoForgeClient {
 		// the Fabric counterpart hangs off ClientPlayConnectionEvents.DISCONNECT.
 		NeoForge.EVENT_BUS.addListener(
 				(net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent.LoggingOut event) ->
-						dev.alaindustrial.client.TeleportFadeHud.reset());
+						dev.alaindustrial.client.hud.TeleportFadeHud.reset());
 	}
 
 	/**
@@ -179,19 +179,19 @@ public final class IndustrializationNeoForgeClient {
 		event.register(ModMenusNeoForge.COMPRESSOR.get(), CompressorScreen::new);
 		event.register(ModMenusNeoForge.BATTERY_BOX.get(), BatteryBoxScreen::new);
 		event.register(ModMenusNeoForge.TELEPORTER_STATION.get(),
-				dev.alaindustrial.client.TeleporterStationScreen::new);
+				dev.alaindustrial.client.screen.TeleporterStationScreen::new);
 		event.register(ModMenusNeoForge.TELEPORTER_REMOTE.get(),
-				dev.alaindustrial.client.TeleporterRemoteScreen::new);
+				dev.alaindustrial.client.screen.TeleporterRemoteScreen::new);
 		event.register(ModMenusNeoForge.DAYLIGHT_SOLAR_PANEL.get(), DaylightSolarPanelScreen::new);
 		event.register(ModMenusNeoForge.GEOTHERMAL_GENERATOR.get(), GeothermalGeneratorScreen::new);
 		event.register(ModMenusNeoForge.PUMP.get(), PumpScreen::new);
 		event.register(ModMenusNeoForge.WATER_MILL.get(), WaterMillScreen::new);
 		event.register(ModMenusNeoForge.WIND_MILL.get(), WindMillScreen::new);
-		event.register(ModMenusNeoForge.HIGH_ALTITUDE_WIND_MILL.get(), dev.alaindustrial.client.HighAltitudeWindMillScreen::new);
-		event.register(ModMenusNeoForge.STORM_WIND_MILL.get(), dev.alaindustrial.client.StormWindMillScreen::new);
-		event.register(ModMenusNeoForge.IRON_CHEST.get(), dev.alaindustrial.client.IronChestScreen::new);
-		event.register(ModMenusNeoForge.SILVER_CHEST.get(), dev.alaindustrial.client.SilverChestScreen::new);
-		event.register(ModMenusNeoForge.GOLD_CHEST.get(), dev.alaindustrial.client.GoldChestScreen::new);
+		event.register(ModMenusNeoForge.HIGH_ALTITUDE_WIND_MILL.get(), dev.alaindustrial.client.screen.HighAltitudeWindMillScreen::new);
+		event.register(ModMenusNeoForge.STORM_WIND_MILL.get(), dev.alaindustrial.client.screen.StormWindMillScreen::new);
+		event.register(ModMenusNeoForge.IRON_CHEST.get(), dev.alaindustrial.client.screen.IronChestScreen::new);
+		event.register(ModMenusNeoForge.SILVER_CHEST.get(), dev.alaindustrial.client.screen.SilverChestScreen::new);
+		event.register(ModMenusNeoForge.GOLD_CHEST.get(), dev.alaindustrial.client.screen.GoldChestScreen::new);
 	}
 
 	/**
@@ -202,11 +202,11 @@ public final class IndustrializationNeoForgeClient {
 	 */
 	private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.IRON_CHEST.get(),
-				IronChestBlockEntityRenderer::new);
+				ChestBlockEntityRenderer::iron);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.SILVER_CHEST.get(),
-				dev.alaindustrial.client.SilverChestBlockEntityRenderer::new);
+				ChestBlockEntityRenderer::silver);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.GOLD_CHEST.get(),
-				dev.alaindustrial.client.GoldChestBlockEntityRenderer::new);
+				ChestBlockEntityRenderer::gold);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.WATER_MILL.get(),
 				WaterMillWheelBlockEntityRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.WIND_MILL.get(),
@@ -216,12 +216,12 @@ public final class IndustrializationNeoForgeClient {
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.STORM_WIND_MILL.get(),
 				WindMillRotorBlockEntityRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.FLUID_TANK.get(),
-				dev.alaindustrial.client.FluidTankBlockEntityRenderer::new);
+				dev.alaindustrial.client.render.FluidTankBlockEntityRenderer::new);
 		// Stock Display Frame (MOD-066): the mod's first entity renderer — NeoForge counterpart to
 		// the Fabric EntityRenderers.register call in IndustrializationClient.
 		event.registerEntityRenderer(
 				dev.alaindustrial.registry.neoforge.ModEntitiesNeoForge.STOCK_DISPLAY_FRAME.get(),
-				dev.alaindustrial.client.StockDisplayFrameRenderer::new);
+				dev.alaindustrial.client.render.StockDisplayFrameRenderer::new);
 	}
 
 	/**
@@ -230,11 +230,11 @@ public final class IndustrializationNeoForgeClient {
 	 * the Fabric {@code ModelLayerRegistry.registerModelLayer} call.
 	 */
 	private void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-		event.registerLayerDefinition(IronChestBlockEntityRenderer.IRON_CHEST_LAYER,
+		event.registerLayerDefinition(ChestBlockEntityRenderer.IRON_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
-		event.registerLayerDefinition(dev.alaindustrial.client.SilverChestBlockEntityRenderer.SILVER_CHEST_LAYER,
+		event.registerLayerDefinition(ChestBlockEntityRenderer.SILVER_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
-		event.registerLayerDefinition(dev.alaindustrial.client.GoldChestBlockEntityRenderer.GOLD_CHEST_LAYER,
+		event.registerLayerDefinition(ChestBlockEntityRenderer.GOLD_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
 		event.registerLayerDefinition(WaterMillWheelBlockEntityRenderer.MODEL_LAYER,
 				WaterMillWheelBlockEntityRenderer::createLayer);

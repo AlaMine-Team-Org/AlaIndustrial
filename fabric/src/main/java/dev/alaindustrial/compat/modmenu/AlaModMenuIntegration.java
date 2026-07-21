@@ -2,7 +2,7 @@ package dev.alaindustrial.compat.modmenu;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import dev.alaindustrial.client.AlaConfigScreen;
+import dev.alaindustrial.client.screen.AlaConfigScreen;
 
 /** Optional Fabric Mod Menu bridge. Loaded only when Mod Menu is installed. */
 public final class AlaModMenuIntegration implements ModMenuApi {

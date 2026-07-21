@@ -2,12 +2,12 @@ package dev.alaindustrial;
 
 import dev.alaindustrial.command.AlaCommand;
 import dev.alaindustrial.loot.BonusChest;
-import dev.alaindustrial.core.EnergyLookup;
-import dev.alaindustrial.core.EnergyTransactions;
-import dev.alaindustrial.core.FluidLookup;
-import dev.alaindustrial.core.ItemLookup;
-import dev.alaindustrial.core.NetworkManager;
-import dev.alaindustrial.core.ItemNetworkManager;
+import dev.alaindustrial.core.energy.EnergyLookup;
+import dev.alaindustrial.core.energy.EnergyTransactions;
+import dev.alaindustrial.core.fluid.FluidLookup;
+import dev.alaindustrial.core.item.ItemLookup;
+import dev.alaindustrial.core.energy.NetworkManager;
+import dev.alaindustrial.core.item.ItemNetworkManager;
 import dev.alaindustrial.core.fabric.FabricEnergyLookup;
 import dev.alaindustrial.core.fabric.FabricEnergyTransactions;
 import dev.alaindustrial.core.fabric.FabricFluidLookup;

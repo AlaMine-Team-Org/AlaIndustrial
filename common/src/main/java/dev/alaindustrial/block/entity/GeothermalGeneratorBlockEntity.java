@@ -1,13 +1,13 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.EnergyPort;
-import dev.alaindustrial.core.EnergyTier;
-import dev.alaindustrial.core.FluidAmounts;
-import dev.alaindustrial.core.FluidHolder;
-import dev.alaindustrial.core.FluidPort;
-import dev.alaindustrial.core.FluidPortHost;
-import dev.alaindustrial.core.FluidTank;
+import dev.alaindustrial.core.energy.EnergyPort;
+import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.fluid.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.fluid.FluidPort;
+import dev.alaindustrial.core.fluid.FluidPortHost;
+import dev.alaindustrial.core.fluid.FluidTank;
 import dev.alaindustrial.menu.GeothermalGeneratorMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;

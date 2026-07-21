@@ -1,7 +1,7 @@
 package dev.alaindustrial.item;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.ChatFormatting;

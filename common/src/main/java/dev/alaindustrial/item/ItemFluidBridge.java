@@ -1,6 +1,6 @@
 package dev.alaindustrial.item;
 
-import dev.alaindustrial.core.FluidPort;
+import dev.alaindustrial.core.fluid.FluidPort;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
  * Platform-neutral bridge to fluid containers held in a machine's own slots (MOD-107): moves one bucket
  * between a container item and a {@link FluidPort}, through whatever item fluid API the running loader
  * speaks — Fabric {@code FluidStorage.ITEM} versus NeoForge {@code Capabilities.Fluid.ITEM}. This is the
- * item-side counterpart of {@link dev.alaindustrial.core.FluidLookup} (which only resolves blocks), and the
+ * item-side counterpart of {@link dev.alaindustrial.core.fluid.FluidLookup} (which only resolves blocks), and the
  * slot-side counterpart of {@link ItemEnergyBridge} (which only reaches a player's inventory).
  *
  * <p><b>Why a capability and not a list of known items?</b> Both loaders publish this capability for vanilla
@@ -80,7 +80,7 @@ public interface ItemFluidBridge {
 
 	/**
 	 * The installed loader implementation, or {@link #NONE} if none is installed yet. Like
-	 * {@link ItemEnergyBridge#get()} and unlike {@link dev.alaindustrial.core.FluidLookup#get()}, this does
+	 * {@link ItemEnergyBridge#get()} and unlike {@link dev.alaindustrial.core.fluid.FluidLookup#get()}, this does
 	 * not throw: a missing bridge only means "no container exchange in slots", which is exactly what
 	 * {@link #NONE} does — a common-side unit test must not have to stand up a loader to tick a pump.
 	 */

@@ -1,7 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
-import dev.alaindustrial.core.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.item.ItemFluid;
 import dev.alaindustrial.item.VanillaBucketDeposit;
 import dev.alaindustrial.registry.ModContent;
@@ -119,7 +119,7 @@ public final class GeothermalLavaInputScenarios {
 			return;
 		}
 		// Fill the tank to capacity so there is no room for another bucket.
-		geo.fluidTank.fluid = dev.alaindustrial.core.FluidHolder.of(Fluids.LAVA);
+		geo.fluidTank.fluid = dev.alaindustrial.core.fluid.FluidHolder.of(Fluids.LAVA);
 		geo.fluidTank.amount = geo.fluidTank.capacity;
 		Player player = sneakingPlayer(helper, new ItemStack(Items.LAVA_BUCKET));
 		InteractionResult result = VanillaBucketDeposit.tryDeposit(

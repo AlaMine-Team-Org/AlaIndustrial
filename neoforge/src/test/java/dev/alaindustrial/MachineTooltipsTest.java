@@ -3,7 +3,7 @@ package dev.alaindustrial;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.alaindustrial.client.MachineTooltips;
+import dev.alaindustrial.client.tooltip.MachineTooltips;
 import dev.alaindustrial.registry.ModContent;
 import java.util.ArrayList;
 import java.util.List;

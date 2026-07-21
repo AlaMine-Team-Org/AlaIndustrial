@@ -1,6 +1,6 @@
 package dev.alaindustrial.core.fabric;
 
-import dev.alaindustrial.core.EnergyPort;
+import dev.alaindustrial.core.energy.EnergyPort;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -14,7 +14,7 @@ import team.reborn.energy.api.EnergyStorage;
  *
  * <p>Team Reborn's API is already {@code long}-based, so amounts pass through unchanged. The neutral
  * {@link EnergyPort.Txn} handle wraps Fabric's {@link TransactionContext} ({@link FabricTxn}); this
- * adapter unwraps it before delegating. The common {@link dev.alaindustrial.core.EnergyBuffer} enlists
+ * adapter unwraps it before delegating. The common {@link dev.alaindustrial.core.energy.EnergyBuffer} enlists
  * itself with the {@link EnergyPort.Txn}; {@link FabricTxn} bridges that enlistment onto a Fabric
  * {@link SnapshotParticipant} so the buffer's snapshot / final-commit hooks run on Fabric's native
  * transaction journal.

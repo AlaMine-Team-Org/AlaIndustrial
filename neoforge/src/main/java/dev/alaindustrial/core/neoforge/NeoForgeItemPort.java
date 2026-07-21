@@ -1,7 +1,7 @@
 package dev.alaindustrial.core.neoforge;
 
-import dev.alaindustrial.core.EnergyPort;
-import dev.alaindustrial.core.ItemPort;
+import dev.alaindustrial.core.energy.EnergyPort;
+import dev.alaindustrial.core.item.ItemPort;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;

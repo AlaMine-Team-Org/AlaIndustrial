@@ -1,8 +1,8 @@
 package dev.alaindustrial.network.neoforge;
 
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.client.TeleportFadeHud;
-import dev.alaindustrial.client.TeleportNotice;
+import dev.alaindustrial.client.hud.TeleportFadeHud;
+import dev.alaindustrial.client.hud.TeleportNotice;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.TeleportFadePayload;
 import dev.alaindustrial.network.TeleportNoticePayload;

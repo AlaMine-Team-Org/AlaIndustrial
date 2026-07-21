@@ -5,6 +5,7 @@ import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
 import dev.alaindustrial.item.HintItem;
 import dev.alaindustrial.item.FluidTankBlockItem;
+import dev.alaindustrial.item.ScytheTiers;
 import dev.alaindustrial.item.MagnetItem;
 import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
@@ -134,28 +135,17 @@ public final class ModItems {
 	// Scythe (MOD-068): six material tiers, each an AOE foliage clearer. Registered like a hoe
 	// (.hoe(material, attackDamage, -1.0f) attaches the tool component + enchantability) but as
 	// ScytheItem, not HoeItem — the scythe must not till dirt on right-click, it clears its area
-	// instead. attackDamage is per-tier so every scythe shows at least 1 attack damage: wood/stone/
-	// copper/gold, whose material bonus alone would render as 0, are lifted to 1; iron and up keep
-	// -2.0f and rely on the material bonus (iron 1, diamond 2, netherite 3).
-	public static final Item SCYTHE_WOOD =
-			scythe("scythe_wood", ToolMaterial.WOOD, 0.0f, new ScytheItem.Profile(3, 2, 12), false);
-	public static final Item SCYTHE_STONE =
-			scythe("scythe_stone", ToolMaterial.STONE, -1.0f, new ScytheItem.Profile(3, 3, 18), false);
-	public static final Item SCYTHE_COPPER =
-			scythe("scythe_copper", ToolMaterial.COPPER, -1.0f, new ScytheItem.Profile(3, 3, 24), false);
-	public static final Item SCYTHE_IRON =
-			scythe("scythe_iron", ToolMaterial.IRON, -2.0f, new ScytheItem.Profile(5, 3, 30), false);
-	// Gold: iron-sized area but fragile (gold durability) and highly enchantable — the vanilla gold
-	// philosophy (cheap, weak, enchant-hungry), a side-grade rather than a strict step up.
-	public static final Item SCYTHE_GOLD =
-			scythe("scythe_gold", ToolMaterial.GOLD, 0.0f, new ScytheItem.Profile(5, 3, 30), false);
-	public static final Item SCYTHE_TEMPERED_IRON =
-			scythe("scythe_tempered_iron", ModToolMaterials.TEMPERED_IRON, -2.0f, new ScytheItem.Profile(5, 4, 40), false);
-	public static final Item SCYTHE_DIAMOND =
-			scythe("scythe_diamond", ToolMaterial.DIAMOND, -2.0f, new ScytheItem.Profile(5, 5, 50), false);
-	// Netherite tier is fire-resistant like all vanilla netherite gear (survives lava/fire).
-	public static final Item SCYTHE_NETHERITE =
-			scythe("scythe_netherite", ToolMaterial.NETHERITE, -2.0f, new ScytheItem.Profile(7, 5, 70), true);
+	// instead. The eight tiers (material + AOE profile + attack bias) are declared once in the
+	// loader-neutral dev.alaindustrial.item.ScytheTiers — both loaders register from the same list,
+	// so a balance tweak cannot drift between Fabric and NeoForge.
+	public static final Item SCYTHE_WOOD = scythe(ScytheTiers.WOOD);
+	public static final Item SCYTHE_STONE = scythe(ScytheTiers.STONE);
+	public static final Item SCYTHE_COPPER = scythe(ScytheTiers.COPPER);
+	public static final Item SCYTHE_IRON = scythe(ScytheTiers.IRON);
+	public static final Item SCYTHE_GOLD = scythe(ScytheTiers.GOLD);
+	public static final Item SCYTHE_TEMPERED_IRON = scythe(ScytheTiers.TEMPERED_IRON);
+	public static final Item SCYTHE_DIAMOND = scythe(ScytheTiers.DIAMOND);
+	public static final Item SCYTHE_NETHERITE = scythe(ScytheTiers.NETHERITE);
 
 	// Block items.
 	public static final BlockItem GENERATOR_ITEM = blockItem("generator", ModBlocks.GENERATOR);
@@ -334,6 +324,10 @@ public final class ModItems {
 	// is per-tier: displayed damage = 1 (player base) + attackDamage + material.attackDamageBonus, so
 	// the low tiers whose bonus alone would show 0 (wood/stone/copper/gold) pass a higher value to
 	// reach the 1-damage floor; iron and up keep -2.0f and let the material bonus carry them.
+	private static Item scythe(dev.alaindustrial.item.ScytheTier tier) {
+		return scythe(tier.id(), tier.material(), tier.attackDamage(), tier.profile(), tier.fireResistant());
+	}
+
 	private static Item scythe(String path, ToolMaterial material, float attackDamage, ScytheItem.Profile profile, boolean fireResistant) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		Item.Properties props = new Item.Properties().hoe(material, attackDamage, -1.0f);

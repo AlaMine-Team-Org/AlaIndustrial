@@ -26,6 +26,7 @@ import dev.alaindustrial.block.HighAltitudeWindMillBlock;
 import dev.alaindustrial.block.StormWindMillBlock;
 import dev.alaindustrial.block.SilverChestBlock;
 import dev.alaindustrial.block.GoldChestBlock;
+import dev.alaindustrial.registry.ModBlockProperties;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -33,9 +34,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.PushReaction;
 
 /**
  * Central registration for all Industrialization blocks: the Phase 1 energy-core set
@@ -48,7 +46,7 @@ public final class ModBlocks {
 	public static final ResourceKey<Block> GENERATOR_KEY = key("generator");
 	public static final Block GENERATOR = register(GENERATOR_KEY,
 			new GeneratorBlock(props(GENERATOR_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL)
-					.lightLevel(ModBlocks::litLight)));
+					.lightLevel(ModBlockProperties::litLight)));
 
 	public static final ResourceKey<Block> SOLAR_PANEL_KEY = key("solar_panel");
 	public static final Block SOLAR_PANEL = register(SOLAR_PANEL_KEY,
@@ -65,7 +63,7 @@ public final class ModBlocks {
 	public static final ResourceKey<Block> GEOTHERMAL_GENERATOR_KEY = key("geothermal_generator");
 	public static final Block GEOTHERMAL_GENERATOR = register(GEOTHERMAL_GENERATOR_KEY,
 			new GeothermalGeneratorBlock(props(GEOTHERMAL_GENERATOR_KEY).strength(3.0f, 6.0f).sound(SoundType.METAL)
-					.lightLevel(ModBlocks::litLight)));
+					.lightLevel(ModBlockProperties::litLight)));
 
 	public static final ResourceKey<Block> WATER_MILL_KEY = key("water_mill");
 	public static final Block WATER_MILL = register(WATER_MILL_KEY,
@@ -133,7 +131,7 @@ public final class ModBlocks {
 	public static final ResourceKey<Block> IRON_FURNACE_KEY = key("iron_furnace");
 	public static final Block IRON_FURNACE = register(IRON_FURNACE_KEY,
 			new IronFurnaceBlock(props(IRON_FURNACE_KEY).strength(3.5f, 6.0f).sound(SoundType.METAL)
-					.lightLevel(ModBlocks::litLight)));
+					.lightLevel(ModBlockProperties::litLight)));
 
 	public static final ResourceKey<Block> EXTRACTOR_KEY = key("extractor");
 	public static final Block EXTRACTOR = register(EXTRACTOR_KEY,
@@ -219,28 +217,17 @@ public final class ModBlocks {
 	}
 
 	/**
-	 * Per-state light emission for fuel-burning generators (MOD-013): a working generator
-	 * ({@code lit=true}) glows at light level 13 like a lit vanilla furnace; idle ({@code lit=false})
-	 * emits none. Applied only to {@code generator} and {@code geothermal_generator} — the EU-powered
-	 * processing machines (macerator/furnace/extractor/compressor) share the {@code lit} state but do
-	 * not burn fuel, so they stay dark.
-	 */
-	private static int litLight(BlockState state) {
-		return state.getValue(BlockStateProperties.LIT) ? 13 : 0;
-	}
-
-	/**
 	 * Vanilla torch property chain (MOD-085), mirroring {@code Blocks.TORCH} exactly: no collision, instant
 	 * break (breaks by hand, no tool gate — so the torch is NOT in {@code minecraft:mineable/pickaxe} and NOT
 	 * {@code requiresCorrectToolForDrops}, unlike the {@link #props} machines/ores), light level 14 (same as
 	 * the vanilla torch — kept identical to avoid any behavioural surprises; the torch's "enriched" identity
 	 * comes from the green flame, richer particles and underwater burning, not from +1 light), WOOD sound,
 	 * and {@code DESTROY} push reaction (a piston breaks it). {@code noOcclusion()} keeps the block-standards
-	 * occlusion invariant happy (non-full-cube ⇒ must not occlude).
+	 * occlusion invariant happy (non-full-cube ⇒ must not occlude). The chain itself is shared with the
+	 * NeoForge side via {@link ModBlockProperties#torchBase()}; only {@code setId} is Fabric-specific.
 	 */
 	private static BlockBehaviour.Properties torchProps(ResourceKey<Block> key) {
-		return BlockBehaviour.Properties.of().setId(key).noCollision().instabreak()
-				.lightLevel(state -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY).noOcclusion();
+		return ModBlockProperties.torchBase().setId(key);
 	}
 
 	private static BlockBehaviour.Properties props(ResourceKey<Block> key) {

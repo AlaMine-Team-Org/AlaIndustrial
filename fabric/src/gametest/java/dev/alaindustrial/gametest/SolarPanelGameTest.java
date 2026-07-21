@@ -141,13 +141,17 @@ public class SolarPanelGameTest {
 		helper.succeed();
 	}
 
-	/** @implements TC-SOLAR-001-FUN02 — a day evolution chip evolves the panel into the daylight panel. */
+	/** @implements TC-SOLAR-001-FUN02 — a day evolution chip evolves the panel into the daylight panel,
+	 *     carrying the stored EU and consuming the chip (the shared evolveInto helper, MOD-166 #4). */
 	@GameTest(skyAccess = true, maxTicks = 40)
 	public void tcSolar001Fun02_dayChipEvolvesToDaylight(GameTestHelper helper) {
 		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
 		panel.setItem(SolarPanelBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_DAY));
+		// Pre-charge the buffer so the carry-EU assertion is meaningful (default placement leaves 0).
+		long energy0 = 1500L;
+		panel.getEnergyStorage().amount = energy0;
 		BlockPos abs = panel.getBlockPos();
 		// Brightness is settled now; synchronous driving keeps it constant (no world tick between calls).
 		for (int i = 0; i <= Config.solarEvolveTicks
@@ -156,6 +160,20 @@ public class SolarPanelGameTest {
 		}
 		if (helper.getLevel().getBlockState(abs).getBlock() != ModBlocks.DAYLIGHT_SOLAR_PANEL) {
 			helper.fail("day chip did not evolve panel into the daylight panel");
+		}
+		// The shared evolveInto helper must carry the stored EU (clamped to the target capacity) and
+		// consume the chip — pin both so a regression in AbstractGeneratorBlockEntity.evolveInto
+		// (e.g. wrong slot override map) does not silently land.
+		if (!(helper.getLevel().getBlockEntity(abs) instanceof dev.alaindustrial.block.entity.MachineBlockEntity evolved)) {
+			helper.fail("evolved daylight panel has no MachineBlockEntity");
+			return;
+		}
+		long energy1 = evolved.getEnergyStorage().getAmount();
+		if (energy1 < energy0) {
+			helper.fail("evolution lost stored EU: " + energy0 + " -> " + energy1);
+		}
+		if (!evolved.getItem(SolarPanelBlockEntity.CHIP_SLOT).isEmpty()) {
+			helper.fail("evolution did not consume the chip slot");
 		}
 		helper.succeed();
 	}
@@ -201,7 +219,7 @@ public class SolarPanelGameTest {
 	 * @implements TC-SOLAR-001-NEG03 — an opaque block above cancels sky access → 0 EU.
 	 *
 	 * <p>Since MOD-004 the panel classifies sky access by scanning the column above it directly
-	 * ({@link dev.alaindustrial.core.SolarSky}), not via {@code canSeeSkyFromBelowWater} — so a solid
+	 * ({@link dev.alaindustrial.core.environment.SolarSky}), not via {@code canSeeSkyFromBelowWater} — so a solid
 	 * roof is detected even in the deep gametest region (the old heightmap/below-sea quirk that forced
 	 * this case to MANUAL/L3 no longer applies).
 	 *
@@ -604,13 +622,16 @@ public class SolarPanelGameTest {
 		helper.succeed();
 	}
 
-	/** @implements TC-SOLAR-001-FUN03 — a night evolution chip evolves the base panel into the moonlit panel. */
+	/** @implements TC-SOLAR-001-FUN03 — a night evolution chip evolves the base panel into the moonlit
+	 *     panel, carrying the stored EU and consuming the chip (shared evolveInto, MOD-166 #4). */
 	@GameTest(skyAccess = true, maxTicks = 40)
 	public void tcSolar001Fun03_nightChipEvolvesToMoonlit(GameTestHelper helper) {
 		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
 		setNight(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
 		panel.setItem(SolarPanelBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_NIGHT));
+		long energy0 = 1500L;
+		panel.getEnergyStorage().amount = energy0;
 		BlockPos abs = panel.getBlockPos();
 		for (int i = 0; i <= Config.solarEvolveTicks
 				&& helper.getLevel().getBlockState(abs).getBlock() == ModBlocks.SOLAR_PANEL; i++) {
@@ -618,6 +639,17 @@ public class SolarPanelGameTest {
 		}
 		if (helper.getLevel().getBlockState(abs).getBlock() != ModBlocks.MOONLIT_SOLAR_PANEL) {
 			helper.fail("night chip did not evolve panel into the moonlit panel");
+		}
+		if (!(helper.getLevel().getBlockEntity(abs) instanceof dev.alaindustrial.block.entity.MachineBlockEntity evolved)) {
+			helper.fail("evolved moonlit panel has no MachineBlockEntity");
+			return;
+		}
+		long energy1 = evolved.getEnergyStorage().getAmount();
+		if (energy1 < energy0) {
+			helper.fail("evolution lost stored EU: " + energy0 + " -> " + energy1);
+		}
+		if (!evolved.getItem(SolarPanelBlockEntity.CHIP_SLOT).isEmpty()) {
+			helper.fail("evolution did not consume the chip slot");
 		}
 		helper.succeed();
 	}
@@ -807,7 +839,7 @@ public class SolarPanelGameTest {
 	 * @implements TC-SOLAR-001-STA13 — an ice block above the base panel classifies PARTIAL, not
 	 *     BLOCKED. {@code Blocks.ICE} is registered with {@code .noOcclusion()}
 	 *     ({@code canOcclude()=false}) and its default full-cube shape makes
-	 *     {@code propagatesSkylightDown()} false too, so {@link dev.alaindustrial.core.SolarSky#classify}
+	 *     {@code propagatesSkylightDown()} false too, so {@link dev.alaindustrial.core.environment.SolarSky#classify}
 	 *     falls through both the "skip" and "BLOCKED" branches to {@code Access.PARTIAL} — the same
 	 *     bucket as leaves/cobweb (MOD-004): reduced output via {@code Config.solarTransparentFactor},
 	 *     not zero. (An earlier version of this test assumed ice was occlusion-opaque like stone; it is

@@ -2,7 +2,7 @@ package dev.alaindustrial.item;
 
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
-import dev.alaindustrial.core.PipeFaceMode;
+import dev.alaindustrial.core.item.PipeFaceMode;
 import net.minecraft.core.Direction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

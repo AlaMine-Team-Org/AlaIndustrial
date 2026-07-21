@@ -1,7 +1,7 @@
 package dev.alaindustrial.core.fabric;
 
-import dev.alaindustrial.core.EnergyPort;
-import dev.alaindustrial.core.EnergyTransactions;
+import dev.alaindustrial.core.energy.EnergyPort;
+import dev.alaindustrial.core.energy.EnergyTransactions;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;

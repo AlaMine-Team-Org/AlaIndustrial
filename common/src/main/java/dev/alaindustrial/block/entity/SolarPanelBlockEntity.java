@@ -1,8 +1,10 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.EnergyRole;
-import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.SolarSky;
+import dev.alaindustrial.core.environment.SolarSkyCache;
 import net.minecraft.core.Direction;
 import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -38,6 +40,9 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 	public static final int CHIP_SLOT = 0;
 	private static final int MAX_EXTRACT = 20;
 
+	/** Caches the sky/weather verdict for {@link Config#solarSkySampleTicks} ticks to avoid a per-tick column scan. */
+	private final SolarSkyCache skyCache = new SolarSkyCache();
+
 	/** Mode codes shared with the screen. */
 	public static final int MODE_NIGHT = 0;
 	public static final int MODE_DAY = 1;
@@ -63,10 +68,14 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 
 	@Override
 	protected int produce(Level level, BlockPos pos, BlockState state) {
-		dev.alaindustrial.core.SolarSky.Access sky = level.dimension().equals(Level.OVERWORLD)
-				? dev.alaindustrial.core.SolarSky.classify(level, pos)
-				: dev.alaindustrial.core.SolarSky.Access.BLOCKED;
-		boolean overworldSky = sky != dev.alaindustrial.core.SolarSky.Access.BLOCKED;
+		// Sample sky access + weather on a cadence (Config.solarSkySampleTicks); both are cached
+		// together so the column scan (SolarSky.classify) and the biome-precipitation lookup
+		// (SolarSky.classifyWeather) each run once per cadence window, not once per tick per panel.
+		skyCache.sample(level, pos);
+		SolarSky.Access sky = level.dimension().equals(Level.OVERWORLD)
+				? skyCache.sky()
+				: SolarSky.Access.BLOCKED;
+		boolean overworldSky = sky != SolarSky.Access.BLOCKED;
 		boolean bright = level.isBrightOutside();
 
 		// --- Evolution: advance while the right chip sees the right sky-time. ---
@@ -88,7 +97,7 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 		if (overworldSky && bright) {
 			production = Config.solarEuPerTick;
 			mode = MODE_DAY;
-			switch (dev.alaindustrial.core.SolarSky.classifyWeather(level, pos)) {
+			switch (skyCache.weather()) {
 				case RAIN -> {
 					// Rain/thunder blocks direct sunlight: no generation (MOD-003). Mode flag kept for GUI.
 					production = 0;
@@ -101,7 +110,7 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 					mode = MODE_SNOW;
 				}
 				case NONE -> {
-					if (sky == dev.alaindustrial.core.SolarSky.Access.PARTIAL) {
+					if (sky == SolarSky.Access.PARTIAL) {
 						// Light filtered through a translucent block (leaves, cobweb): reduced output (MOD-004).
 						production = Math.round(production * Config.solarTransparentFactor);
 						mode = MODE_PARTIAL;
@@ -116,13 +125,9 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 
 	/** Replace this panel with its evolved branch, carrying stored energy; the chip is consumed. */
 	private void evolveInto(Level level, BlockPos pos, Block target) {
-		long saved = energy.amount;
-		items.set(CHIP_SLOT, ItemStack.EMPTY);
-		level.setBlockAndUpdate(pos, target.defaultBlockState());
-		if (level.getBlockEntity(pos) instanceof MachineBlockEntity evolved) {
-			evolved.getEnergyStorage().amount = Math.min(saved, evolved.getEnergyStorage().getCapacity());
-			evolved.setChanged();
-		}
+		// The chip slot is cleared by the shared helper (it appears in the overrides map as EMPTY);
+		// no other slots need to transfer — the panel has no rotor.
+		evolveInto(level, pos, target, java.util.Map.of(CHIP_SLOT, ItemStack.EMPTY));
 	}
 
 	@Override
@@ -201,12 +206,12 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		output.putInt("EvolveProgress", evolveProgress);
+		saveEvolve(output, evolveProgress);
 	}
 
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		evolveProgress = input.getIntOr("EvolveProgress", 0);
+		evolveProgress = loadEvolve(input);
 	}
 }

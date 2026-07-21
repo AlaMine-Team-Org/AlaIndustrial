@@ -1,12 +1,13 @@
 package dev.alaindustrial.core.neoforge;
 
-import dev.alaindustrial.core.EnergyPort;
-import dev.alaindustrial.core.EnergyRole;
+import dev.alaindustrial.core.energy.EnergyPort;
+import dev.alaindustrial.core.energy.EnergyRole;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
+import dev.alaindustrial.core.energy.EnergyBuffer;
 
 /**
  * NeoForge implementation of the platform-neutral {@link EnergyPort} (MOD-022 Phase 2): an adapter over
@@ -113,7 +114,7 @@ public final class NeoForgeEnergyPort implements EnergyPort {
 	/**
 	 * NeoForge-side {@link EnergyPort.Txn} carrying the loader's {@link TransactionContext}. Bridges the
 	 * neutral {@link EnergyPort.Participant} enlistment onto NeoForge {@link SnapshotJournal}s so a common
-	 * {@link dev.alaindustrial.core.EnergyBuffer} that participates in a move gets its snapshot / final
+	 * {@link dev.alaindustrial.core.energy.EnergyBuffer} that participates in a move gets its snapshot / final
 	 * commit hooks driven by NeoForge's native journal. One handle is shared per {@link TransactionContext}
 	 * (keyed by identity, evicted on close) so repeated enlists dedupe through {@code updateSnapshots}.
 	 */

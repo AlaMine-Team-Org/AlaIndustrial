@@ -9,10 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
-import dev.alaindustrial.core.EnergyBuffer;
-import dev.alaindustrial.core.EnergyRole;
-import dev.alaindustrial.core.EnergyTier;
-import dev.alaindustrial.core.FaceEnergyPort;
+import dev.alaindustrial.core.energy.EnergyBuffer;
+import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.energy.FaceEnergyPort;
 import dev.alaindustrial.core.neoforge.BufferAsEnergyHandler;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -55,7 +55,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * registry/datapack/capability context but never runs a ticking chunk loop (its
  * {@code JUnitServer.initServer()} skips {@code MinecraftServer#createLevels()}; calling it reflectively
  * fails in {@code setInitialSpawn} — "No chunk holder after ticket has been added"). World placement +
- * {@code EnergyNet.distribute} + position-keyed {@code Capabilities.Energy.BLOCK} lookup belong to the
+ * {@code DirectAdjacencyDistributor.distribute} + position-keyed {@code Capabilities.Energy.BLOCK} lookup belong to the
  * gametest server, not this passive JUnit server. These tests validate the adapter + transaction
  * machinery — the part MOD-022 could only compile-check.
  */

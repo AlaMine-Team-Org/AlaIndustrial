@@ -1,15 +1,15 @@
 package dev.alaindustrial;
 
 import dev.alaindustrial.client.AlaClientConfig;
-import dev.alaindustrial.client.CompressorScreen;
-import dev.alaindustrial.client.ElectricFurnaceScreen;
-import dev.alaindustrial.client.EnergyPackHud;
-import dev.alaindustrial.client.IronChestBlockEntityRenderer;
-import dev.alaindustrial.client.MachineTooltips;
+import dev.alaindustrial.client.screen.CompressorScreen;
+import dev.alaindustrial.client.screen.ElectricFurnaceScreen;
+import dev.alaindustrial.client.hud.EnergyPackHud;
+import dev.alaindustrial.client.render.ChestBlockEntityRenderer;
+import dev.alaindustrial.client.tooltip.MachineTooltips;
 import dev.alaindustrial.client.ModKeyMappings;
-import dev.alaindustrial.client.SolarPanelScreen;
-import dev.alaindustrial.client.WaterMillWheelBlockEntityRenderer;
-import dev.alaindustrial.client.WindMillRotorBlockEntityRenderer;
+import dev.alaindustrial.client.screen.SolarPanelScreen;
+import dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer;
+import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
 import dev.alaindustrial.registry.ModBlockEntities;
 import dev.alaindustrial.registry.ModMenus;
 import net.fabricmc.api.ClientModInitializer;
@@ -56,53 +56,53 @@ public class IndustrializationClient implements ClientModInitializer {
 	/** Initialises the client config screen state and the fluid-tank item tint source. */
 	private void initClientConfig() {
 		AlaClientConfig.init(FabricLoader.getInstance().getConfigDir());
-		dev.alaindustrial.client.FluidTankItemTintSource.register();
+		dev.alaindustrial.client.render.FluidTankItemTintSource.register();
 	}
 
 	/** Binds each machine {@code MenuType} to its {@code Screen}. */
 	private void registerMenuScreens() {
-		MenuScreens.<dev.alaindustrial.menu.GeneratorMenu, dev.alaindustrial.client.GeneratorScreen>register(
-				ModMenus.GENERATOR, dev.alaindustrial.client.GeneratorScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.MaceratorMenu, dev.alaindustrial.client.MaceratorScreen>register(
-				ModMenus.MACERATOR, dev.alaindustrial.client.MaceratorScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.GeneratorMenu, dev.alaindustrial.client.screen.GeneratorScreen>register(
+				ModMenus.GENERATOR, dev.alaindustrial.client.screen.GeneratorScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.MaceratorMenu, dev.alaindustrial.client.screen.MaceratorScreen>register(
+				ModMenus.MACERATOR, dev.alaindustrial.client.screen.MaceratorScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.ElectricFurnaceMenu, ElectricFurnaceScreen>register(
 				ModMenus.ELECTRIC_FURNACE, ElectricFurnaceScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.ExtractorMenu, dev.alaindustrial.client.ExtractorScreen>register(
-				ModMenus.EXTRACTOR, dev.alaindustrial.client.ExtractorScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.ExtractorMenu, dev.alaindustrial.client.screen.ExtractorScreen>register(
+				ModMenus.EXTRACTOR, dev.alaindustrial.client.screen.ExtractorScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.CompressorMenu, CompressorScreen>register(
 				ModMenus.COMPRESSOR, CompressorScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.SolarPanelMenu, SolarPanelScreen>register(
 				ModMenus.SOLAR_PANEL, SolarPanelScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.MoonlitSolarPanelMenu, dev.alaindustrial.client.MoonlitSolarPanelScreen>register(
-				ModMenus.MOONLIT_SOLAR_PANEL, dev.alaindustrial.client.MoonlitSolarPanelScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.BatteryBoxMenu, dev.alaindustrial.client.BatteryBoxScreen>register(
-				ModMenus.BATTERY_BOX, dev.alaindustrial.client.BatteryBoxScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.MoonlitSolarPanelMenu, dev.alaindustrial.client.screen.MoonlitSolarPanelScreen>register(
+				ModMenus.MOONLIT_SOLAR_PANEL, dev.alaindustrial.client.screen.MoonlitSolarPanelScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.BatteryBoxMenu, dev.alaindustrial.client.screen.BatteryBoxScreen>register(
+				ModMenus.BATTERY_BOX, dev.alaindustrial.client.screen.BatteryBoxScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.TeleporterStationMenu,
-				dev.alaindustrial.client.TeleporterStationScreen>register(
-				ModMenus.TELEPORTER_STATION, dev.alaindustrial.client.TeleporterStationScreen::new);
+				dev.alaindustrial.client.screen.TeleporterStationScreen>register(
+				ModMenus.TELEPORTER_STATION, dev.alaindustrial.client.screen.TeleporterStationScreen::new);
 		MenuScreens.<dev.alaindustrial.menu.TeleporterRemoteMenu,
-				dev.alaindustrial.client.TeleporterRemoteScreen>register(
-				ModMenus.TELEPORTER_REMOTE, dev.alaindustrial.client.TeleporterRemoteScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.DaylightSolarPanelMenu, dev.alaindustrial.client.DaylightSolarPanelScreen>register(
-				ModMenus.DAYLIGHT_SOLAR_PANEL, dev.alaindustrial.client.DaylightSolarPanelScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.GeothermalGeneratorMenu, dev.alaindustrial.client.GeothermalGeneratorScreen>register(
-				ModMenus.GEOTHERMAL_GENERATOR, dev.alaindustrial.client.GeothermalGeneratorScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.PumpMenu, dev.alaindustrial.client.PumpScreen>register(
-				ModMenus.PUMP, dev.alaindustrial.client.PumpScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.WaterMillMenu, dev.alaindustrial.client.WaterMillScreen>register(
-				ModMenus.WATER_MILL, dev.alaindustrial.client.WaterMillScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.WindMillMenu, dev.alaindustrial.client.WindMillScreen>register(
-				ModMenus.WIND_MILL, dev.alaindustrial.client.WindMillScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.HighAltitudeWindMillMenu, dev.alaindustrial.client.HighAltitudeWindMillScreen>register(
-				ModMenus.HIGH_ALTITUDE_WIND_MILL, dev.alaindustrial.client.HighAltitudeWindMillScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.StormWindMillMenu, dev.alaindustrial.client.StormWindMillScreen>register(
-				ModMenus.STORM_WIND_MILL, dev.alaindustrial.client.StormWindMillScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.IronChestMenu, dev.alaindustrial.client.IronChestScreen>register(
-				ModMenus.IRON_CHEST, dev.alaindustrial.client.IronChestScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.SilverChestMenu, dev.alaindustrial.client.SilverChestScreen>register(
-				ModMenus.SILVER_CHEST, dev.alaindustrial.client.SilverChestScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.GoldChestMenu, dev.alaindustrial.client.GoldChestScreen>register(
-				ModMenus.GOLD_CHEST, dev.alaindustrial.client.GoldChestScreen::new);
+				dev.alaindustrial.client.screen.TeleporterRemoteScreen>register(
+				ModMenus.TELEPORTER_REMOTE, dev.alaindustrial.client.screen.TeleporterRemoteScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.DaylightSolarPanelMenu, dev.alaindustrial.client.screen.DaylightSolarPanelScreen>register(
+				ModMenus.DAYLIGHT_SOLAR_PANEL, dev.alaindustrial.client.screen.DaylightSolarPanelScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.GeothermalGeneratorMenu, dev.alaindustrial.client.screen.GeothermalGeneratorScreen>register(
+				ModMenus.GEOTHERMAL_GENERATOR, dev.alaindustrial.client.screen.GeothermalGeneratorScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.PumpMenu, dev.alaindustrial.client.screen.PumpScreen>register(
+				ModMenus.PUMP, dev.alaindustrial.client.screen.PumpScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.WaterMillMenu, dev.alaindustrial.client.screen.WaterMillScreen>register(
+				ModMenus.WATER_MILL, dev.alaindustrial.client.screen.WaterMillScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.WindMillMenu, dev.alaindustrial.client.screen.WindMillScreen>register(
+				ModMenus.WIND_MILL, dev.alaindustrial.client.screen.WindMillScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.HighAltitudeWindMillMenu, dev.alaindustrial.client.screen.HighAltitudeWindMillScreen>register(
+				ModMenus.HIGH_ALTITUDE_WIND_MILL, dev.alaindustrial.client.screen.HighAltitudeWindMillScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.StormWindMillMenu, dev.alaindustrial.client.screen.StormWindMillScreen>register(
+				ModMenus.STORM_WIND_MILL, dev.alaindustrial.client.screen.StormWindMillScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.IronChestMenu, dev.alaindustrial.client.screen.IronChestScreen>register(
+				ModMenus.IRON_CHEST, dev.alaindustrial.client.screen.IronChestScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.SilverChestMenu, dev.alaindustrial.client.screen.SilverChestScreen>register(
+				ModMenus.SILVER_CHEST, dev.alaindustrial.client.screen.SilverChestScreen::new);
+		MenuScreens.<dev.alaindustrial.menu.GoldChestMenu, dev.alaindustrial.client.screen.GoldChestScreen>register(
+				ModMenus.GOLD_CHEST, dev.alaindustrial.client.screen.GoldChestScreen::new);
 	}
 
 	/** Registers the machine hover-tooltip provider and the Battery Pouch bundle-style tooltip renderer. */
@@ -112,7 +112,7 @@ public class IndustrializationClient implements ClientModInitializer {
 		// Battery Pouch bundle-style tooltip (MOD-052): map the neutral TooltipComponent to its renderer.
 		net.fabricmc.fabric.api.client.rendering.v1.ClientTooltipComponentCallback.EVENT.register(component ->
 				component instanceof dev.alaindustrial.item.PouchTooltip pouch
-						? new dev.alaindustrial.client.PouchClientTooltip(pouch)
+						? new dev.alaindustrial.client.tooltip.PouchClientTooltip(pouch)
 						: null);
 	}
 
@@ -131,22 +131,22 @@ public class IndustrializationClient implements ClientModInitializer {
 		// Teleport screen fade (MOD-106). Registered first so the readouts below stay legible over it —
 		// and addLast keeps it under vanilla's own overlays, which a jump has no business hiding.
 		HudElementRegistry.addLast(Industrialization.id("teleport_fade"),
-				dev.alaindustrial.client.TeleportFadeHud::render);
+				dev.alaindustrial.client.hud.TeleportFadeHud::render);
 		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
 				dev.alaindustrial.network.TeleportFadePayload.TYPE,
 				(payload, context) -> context.client().execute(
-						() -> dev.alaindustrial.client.TeleportFadeHud.receive(payload.strength())));
+						() -> dev.alaindustrial.client.hud.TeleportFadeHud.receive(payload.strength())));
 		net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents.DISCONNECT.register(
-				(handler, client) -> dev.alaindustrial.client.TeleportFadeHud.reset());
+				(handler, client) -> dev.alaindustrial.client.hud.TeleportFadeHud.reset());
 		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
 				dev.alaindustrial.network.TeleportNoticePayload.TYPE,
 				(payload, context) -> context.client().execute(
-						() -> dev.alaindustrial.client.TeleportNotice.receive(payload.message())));
+						() -> dev.alaindustrial.client.hud.TeleportNotice.receive(payload.message())));
 
 		HudElementRegistry.addLast(Industrialization.id("energy_pack_hud"), EnergyPackHud::render);
 		// Electric Drill charge readout (MOD-079) — same toggle/key as the pack, stacks below it.
 		HudElementRegistry.addLast(Industrialization.id("electric_drill_hud"),
-				dev.alaindustrial.client.ElectricDrillHud::render);
+				dev.alaindustrial.client.hud.ElectricDrillHud::render);
 	}
 
 	/** Registers the green-flame particle provider for the Enriched Uranium Torch (MOD-085). */
@@ -165,7 +165,7 @@ public class IndustrializationClient implements ClientModInitializer {
 		dev.alaindustrial.client.CablePlacementPreview.init();
 		dev.alaindustrial.client.sound.MachineHumClientHook.register();
 		// MOD-108: answers "is Shift held" for item tooltips (the pipe shows its numbers behind Shift).
-		dev.alaindustrial.client.TooltipKeysClientHook.register();
+		dev.alaindustrial.client.tooltip.TooltipKeysClientHook.register();
 		// MOD-133: add the profile button to the survival inventory screen (creative uses a different
 		// screen class, so this instanceof already excludes it). No injected mixin — a Fabric screen event.
 		net.fabricmc.fabric.api.client.screen.v1.ScreenEvents.AFTER_INIT.register((client, screen, w, h) -> {
@@ -178,18 +178,17 @@ public class IndustrializationClient implements ClientModInitializer {
 
 	/** Registers the block-entity / entity renderers and bakes their model layers. */
 	private void registerBlockEntityRenderers() {
-		// Iron chest: 3D model + animated lid. Register the BlockEntityRenderer against the iron
-		// chest BE type, and bake the chest model layer (vanilla single-body chest geometry).
-		BlockEntityRendererRegistry.register(ModBlockEntities.IRON_CHEST, IronChestBlockEntityRenderer::new);
-		ModelLayerRegistry.registerModelLayer(IronChestBlockEntityRenderer.IRON_CHEST_LAYER,
+		// Storage chests: 3D model + animated lid, one shared renderer per tier texture. Register the
+		// BlockEntityRenderer against each chest BE type, and bake the chest model layer (vanilla
+		// single-body chest geometry).
+		BlockEntityRendererRegistry.register(ModBlockEntities.IRON_CHEST, ChestBlockEntityRenderer::iron);
+		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.IRON_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
-		// Silver chest (MOD-087): same 3D chest model + animated lid, textured with entity/chest/silver.
-		BlockEntityRendererRegistry.register(ModBlockEntities.SILVER_CHEST, dev.alaindustrial.client.SilverChestBlockEntityRenderer::new);
-		ModelLayerRegistry.registerModelLayer(dev.alaindustrial.client.SilverChestBlockEntityRenderer.SILVER_CHEST_LAYER,
+		BlockEntityRendererRegistry.register(ModBlockEntities.SILVER_CHEST, ChestBlockEntityRenderer::silver);
+		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.SILVER_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
-		// Gold chest (MOD-088): same 3D chest model + animated lid, textured with entity/chest/gold.
-		BlockEntityRendererRegistry.register(ModBlockEntities.GOLD_CHEST, dev.alaindustrial.client.GoldChestBlockEntityRenderer::new);
-		ModelLayerRegistry.registerModelLayer(dev.alaindustrial.client.GoldChestBlockEntityRenderer.GOLD_CHEST_LAYER,
+		BlockEntityRendererRegistry.register(ModBlockEntities.GOLD_CHEST, ChestBlockEntityRenderer::gold);
+		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.GOLD_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
 		ModelLayerRegistry.registerModelLayer(WaterMillWheelBlockEntityRenderer.MODEL_LAYER,
 				WaterMillWheelBlockEntityRenderer::createLayer);
@@ -198,12 +197,12 @@ public class IndustrializationClient implements ClientModInitializer {
 		BlockEntityRendererRegistry.register(ModBlockEntities.HIGH_ALTITUDE_WIND_MILL, WindMillRotorBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.STORM_WIND_MILL, WindMillRotorBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.FLUID_TANK,
-				dev.alaindustrial.client.FluidTankBlockEntityRenderer::new);
+				dev.alaindustrial.client.render.FluidTankBlockEntityRenderer::new);
 
 		// Stock Display Frame (MOD-066): the mod's first entity renderer. Vanilla EntityRenderers.register
 		// is the path Fabric's own docs recommend (their EntityRendererRegistry is a thin legacy wrapper).
 		net.minecraft.client.renderer.entity.EntityRenderers.register(
 				dev.alaindustrial.registry.ModEntities.STOCK_DISPLAY_FRAME,
-				dev.alaindustrial.client.StockDisplayFrameRenderer::new);
+				dev.alaindustrial.client.render.StockDisplayFrameRenderer::new);
 	}
 }

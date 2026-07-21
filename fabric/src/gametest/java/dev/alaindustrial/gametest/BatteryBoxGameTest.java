@@ -7,8 +7,8 @@ import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
-import dev.alaindustrial.core.EnergyTier;
-import dev.alaindustrial.core.NetworkManager;
+import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.registry.ModBlocks;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
@@ -27,6 +27,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.TagValueInput;
 import team.reborn.energy.api.EnergyStorage;
 import dev.alaindustrial.core.fabric.FabricEnergyPort;
+import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModItems;
+import java.util.List;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 
 /**
  * L2 functional suite for the BatteryBox (LV energy storage). Unlike machines/generators it has no
@@ -619,6 +628,37 @@ public class BatteryBoxGameTest {
 		}
 		if (bat.getEnergyStorage().getAmount() != 0) {
 			helper.fail("empty battery_box amount changed: " + bat.getEnergyStorage().getAmount());
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-BATTERYBOX-001-RECIPE01 — the shaped crafting recipe resolves and yields a
+	 *     battery_box (MOD-152: pattern is {@code PBP/CRC/PBP}, with two {@code alaindustrial:battery}
+	 *     items in the middle of the top and bottom rows). Guards against a silently skipped recipe.
+	 */
+	@GameTest
+	public void tcBatteryBox001Recipe01_craftingRecipeResolves(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		RecipeManager recipes = level.getServer().getRecipeManager();
+
+		ItemStack planks = new ItemStack(Items.OAK_PLANKS);
+		ItemStack cable = new ItemStack(ModItems.COPPER_CABLE_ITEM);
+		ItemStack redstone = new ItemStack(Items.REDSTONE);
+		ItemStack battery = new ItemStack(ModContent.BATTERY.get());
+		CraftingInput input = CraftingInput.of(3, 3, List.of(
+				planks, battery, planks,
+				cable, redstone, cable,
+				planks, battery, planks));
+		RecipeHolder<CraftingRecipe> recipe =
+				recipes.getRecipeFor(RecipeType.CRAFTING, input, level).orElse(null);
+		if (recipe == null) {
+			helper.fail("battery_box crafting recipe did not resolve (expected pattern PBP/CRC/PBP)");
+			return;
+		}
+		ItemStack out = recipe.value().assemble(input);
+		if (!out.is(ModContent.BATTERY_BOX_ITEM.get())) {
+			helper.fail("battery_box recipe produced " + out + " (expected battery_box)");
 		}
 		helper.succeed();
 	}

@@ -11,9 +11,9 @@ import net.minecraft.world.item.Items;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
-import dev.alaindustrial.core.EnergyTransactions;
-import dev.alaindustrial.core.FluidAmounts;
-import dev.alaindustrial.core.FluidHolder;
+import dev.alaindustrial.core.energy.EnergyTransactions;
+import dev.alaindustrial.core.fluid.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidHolder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -170,7 +170,7 @@ public class FluidGameTest {
 		// CoreFluidScenarios.sourceToPumpToGeoToEu (NeoForge), which asserts the same expected values
 		// derived from the same Config constants: a conversion-factor slip (e.g. a fraction-of-a-bucket
 		// or fraction-of-the-EU total) would fail here even if it happened to pass a loose '>' check.
-		long expectedBucket = dev.alaindustrial.core.FluidAmounts.BUCKET;
+		long expectedBucket = dev.alaindustrial.core.fluid.FluidAmounts.BUCKET;
 		long expectedEuGain = 40L * Config.geothermalEuPerTick;
 		long actualEuGain = geoEnergyAfter - geoEnergyBefore;
 		boolean lavaMoved = lavaConsumed && pumpTankPeak == expectedBucket && geoTankPeak - geoTankBefore == expectedBucket;
@@ -512,7 +512,7 @@ public class FluidGameTest {
 
 		drive(geo, helper, 1);
 
-		long lvCap = dev.alaindustrial.core.EnergyTier.LV.maxVoltage();
+		long lvCap = dev.alaindustrial.core.energy.EnergyTier.LV.maxVoltage();
 		long gained = batteryBox.getEnergyStorage().getAmount();
 		if (!(gained > 0 && gained <= lvCap)) {
 			helper.fail("LV transfer must be in (0," + lvCap + "] EU per tick but moved " + gained);
@@ -1060,18 +1060,18 @@ public class FluidGameTest {
 	/** @implements FluidTank transaction rollback restores a positive amount without losing fluid identity. */
 	@GameTest
 	public void fluidTank_rollbackToPositiveAmountKeepsFluidIdentity(GameTestHelper helper) {
-		dev.alaindustrial.core.FluidTank tank = new dev.alaindustrial.core.FluidTank(
-				dev.alaindustrial.core.FluidAmounts.BUCKET * 4,
+		dev.alaindustrial.core.fluid.FluidTank tank = new dev.alaindustrial.core.fluid.FluidTank(
+				dev.alaindustrial.core.fluid.FluidAmounts.BUCKET * 4,
 				f -> f.is(Fluids.LAVA), f -> true, () -> {
 				});
-		dev.alaindustrial.core.EnergyTransactions.get().runCommitting(txn ->
-				tank.insert(dev.alaindustrial.core.FluidHolder.of(Fluids.LAVA),
-						dev.alaindustrial.core.FluidAmounts.BUCKET, txn));
+		dev.alaindustrial.core.energy.EnergyTransactions.get().runCommitting(txn ->
+				tank.insert(dev.alaindustrial.core.fluid.FluidHolder.of(Fluids.LAVA),
+						dev.alaindustrial.core.fluid.FluidAmounts.BUCKET, txn));
 		long before = tank.amount;
 		try {
-			dev.alaindustrial.core.EnergyTransactions.get().runCommitting(txn -> {
-				tank.extract(dev.alaindustrial.core.FluidHolder.of(Fluids.LAVA),
-						dev.alaindustrial.core.FluidAmounts.BUCKET / 2, txn);
+			dev.alaindustrial.core.energy.EnergyTransactions.get().runCommitting(txn -> {
+				tank.extract(dev.alaindustrial.core.fluid.FluidHolder.of(Fluids.LAVA),
+						dev.alaindustrial.core.fluid.FluidAmounts.BUCKET / 2, txn);
 				throw new RuntimeException("force rollback");
 			});
 		} catch (RuntimeException expected) {
@@ -1096,20 +1096,20 @@ public class FluidGameTest {
 	 */
 	@GameTest
 	public void fluidTank_fullDrainThenRollbackKeepsFluidIdentity(GameTestHelper helper) {
-		dev.alaindustrial.core.FluidTank tank = new dev.alaindustrial.core.FluidTank(
-				dev.alaindustrial.core.FluidAmounts.BUCKET * 4,
+		dev.alaindustrial.core.fluid.FluidTank tank = new dev.alaindustrial.core.fluid.FluidTank(
+				dev.alaindustrial.core.fluid.FluidAmounts.BUCKET * 4,
 				f -> f.is(Fluids.LAVA), f -> true, () -> {
 				});
-		dev.alaindustrial.core.EnergyTransactions.get().runCommitting(txn ->
-				tank.insert(dev.alaindustrial.core.FluidHolder.of(Fluids.LAVA),
-						dev.alaindustrial.core.FluidAmounts.BUCKET, txn));
+		dev.alaindustrial.core.energy.EnergyTransactions.get().runCommitting(txn ->
+				tank.insert(dev.alaindustrial.core.fluid.FluidHolder.of(Fluids.LAVA),
+						dev.alaindustrial.core.fluid.FluidAmounts.BUCKET, txn));
 		long before = tank.amount; // 1 bucket
 		try {
 			// FULL drain (the exact amount stored) drives amount to 0 inside the transaction, then the
 			// throw aborts it — forcing a rollback to the pre-drain state (amount AND fluid).
-			dev.alaindustrial.core.EnergyTransactions.get().runCommitting(txn -> {
-				tank.extract(dev.alaindustrial.core.FluidHolder.of(Fluids.LAVA),
-						dev.alaindustrial.core.FluidAmounts.BUCKET, txn);
+			dev.alaindustrial.core.energy.EnergyTransactions.get().runCommitting(txn -> {
+				tank.extract(dev.alaindustrial.core.fluid.FluidHolder.of(Fluids.LAVA),
+						dev.alaindustrial.core.fluid.FluidAmounts.BUCKET, txn);
 				throw new RuntimeException("force rollback");
 			});
 		} catch (RuntimeException expected) {
@@ -1148,7 +1148,7 @@ public class FluidGameTest {
 		restored.loadWithComponents(net.minecraft.world.level.storage.TagValueInput.create(
 				net.minecraft.util.ProblemReporter.DISCARDING, registries, tag));
 
-		long expectedMb = dev.alaindustrial.core.FluidAmounts.BUCKET * 3;
+		long expectedMb = dev.alaindustrial.core.fluid.FluidAmounts.BUCKET * 3;
 		if (restored.fluidTank.amount != expectedMb || !restored.fluidTank.fluid().is(Fluids.LAVA)) {
 			helper.fail("legacy droplet migration mismatch: expected " + expectedMb + " mB lava, got "
 					+ restored.fluidTank.amount + " fluid=" + restored.fluidTank.fluid());
@@ -1170,14 +1170,14 @@ public class FluidGameTest {
 		GeothermalGeneratorBlockEntity src = helper.getBlockEntity(POS, GeothermalGeneratorBlockEntity.class);
 
 		net.minecraft.nbt.CompoundTag tag = src.saveCustomOnly(registries);
-		tag.putLong("FluidTankMb", dev.alaindustrial.core.FluidAmounts.BUCKET * 5); // authoritative
+		tag.putLong("FluidTankMb", dev.alaindustrial.core.fluid.FluidAmounts.BUCKET * 5); // authoritative
 		tag.putLong("FluidTank", 81_000L * 9); // stale legacy value that must be ignored
 
 		GeothermalGeneratorBlockEntity restored = new GeothermalGeneratorBlockEntity(abs, level.getBlockState(abs));
 		restored.loadWithComponents(net.minecraft.world.level.storage.TagValueInput.create(
 				net.minecraft.util.ProblemReporter.DISCARDING, registries, tag));
 
-		long expectedMb = dev.alaindustrial.core.FluidAmounts.BUCKET * 5;
+		long expectedMb = dev.alaindustrial.core.fluid.FluidAmounts.BUCKET * 5;
 		if (restored.fluidTank.amount != expectedMb) {
 			helper.fail("new FluidTankMb key must win over legacy FluidTank: expected " + expectedMb
 					+ " mB, got " + restored.fluidTank.amount);

@@ -2,7 +2,7 @@ package dev.alaindustrial.item;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.registry.ModTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;

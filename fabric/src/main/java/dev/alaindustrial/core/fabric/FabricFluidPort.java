@@ -1,9 +1,9 @@
 package dev.alaindustrial.core.fabric;
 
-import dev.alaindustrial.core.EnergyPort;
-import dev.alaindustrial.core.FluidAmounts;
-import dev.alaindustrial.core.FluidHolder;
-import dev.alaindustrial.core.FluidPort;
+import dev.alaindustrial.core.energy.EnergyPort;
+import dev.alaindustrial.core.fluid.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.fluid.FluidPort;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;

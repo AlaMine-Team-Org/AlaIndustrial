@@ -1,7 +1,7 @@
 package dev.alaindustrial.core.fabric;
 
-import dev.alaindustrial.core.EnergyPort;
-import dev.alaindustrial.core.ItemPort;
+import dev.alaindustrial.core.energy.EnergyPort;
+import dev.alaindustrial.core.item.ItemPort;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;

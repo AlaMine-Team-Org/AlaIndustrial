@@ -1,7 +1,7 @@
 package dev.alaindustrial.item;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;

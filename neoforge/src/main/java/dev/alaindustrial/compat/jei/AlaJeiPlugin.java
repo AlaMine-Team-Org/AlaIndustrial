@@ -1,9 +1,9 @@
 package dev.alaindustrial.compat.jei;
 
-import dev.alaindustrial.client.MachineScreen;
+import dev.alaindustrial.client.screen.MachineScreen;
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.client.MachineRecipeViewerTargets;
-import dev.alaindustrial.client.RecipeViewerInfo;
+import dev.alaindustrial.client.compat.MachineRecipeViewerTargets;
+import dev.alaindustrial.client.compat.RecipeViewerInfo;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.VanillaSmeltingMirror;
 import dev.alaindustrial.registry.ModRecipes;

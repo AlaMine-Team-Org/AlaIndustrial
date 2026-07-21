@@ -1,8 +1,8 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.EnergyTier;
-import dev.alaindustrial.core.WaterMillOutput;
+import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.WaterMillOutput;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;

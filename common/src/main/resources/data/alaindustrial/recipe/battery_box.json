@@ -1,7 +1,7 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"category": "redstone",
-	"key": { "P": "minecraft:oak_planks", "C": "alaindustrial:copper_cable", "R": "minecraft:redstone" },
-	"pattern": ["PPP","CRC","PPP"],
+	"key": { "P": "minecraft:oak_planks", "B": "alaindustrial:battery", "C": "alaindustrial:copper_cable", "R": "minecraft:redstone" },
+	"pattern": ["PBP","CRC","PBP"],
 	"result": { "id": "alaindustrial:battery_box" }
 }

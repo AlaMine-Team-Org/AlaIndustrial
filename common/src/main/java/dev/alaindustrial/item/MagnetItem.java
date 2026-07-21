@@ -1,7 +1,7 @@
 package dev.alaindustrial.item;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.registry.ModDataComponents;
 import java.util.List;
 import java.util.function.Consumer;

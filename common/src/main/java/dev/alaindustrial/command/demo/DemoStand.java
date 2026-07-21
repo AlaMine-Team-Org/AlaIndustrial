@@ -2,7 +2,7 @@ package dev.alaindustrial.command.demo;
 
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
-import dev.alaindustrial.core.FluidHolder;
+import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.core.BlockPos;

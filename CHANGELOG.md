@@ -1,20 +1,24 @@
-## 0.1.38
+## 0.1.39
 
-<p><img alt="Ala Industrial player dashboard showing mastery rank, energy totals and output per generator" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.38/release-media/v0.1.38/changelog.webp" width="720"></p>
+<p><img alt="Ala Industrial electromagnet pulling dropped items toward the player" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.39/release-media/v0.1.39/changelog.png" width="720"></p>
 
-Track your industrial career on a brand-new profile screen, and stop chasing dropped ore around the mine.
-
-### New
-
-- **Player dashboard.** Press **K** — or the button in the corner of your inventory — to see your character, your rank and your career: energy produced, energy usefully spent, how long your setup has been running, and a breakdown of output per generator.
-- **Mastery ranks.** A progression of its own, separate from vanilla levels: 40 levels across 8 titles, Apprentice through Legend. Points come from real machine work — every finished macerator, furnace, compressor, extractor or pump operation counts. Generators pay too, but far slower, so idling your way to Legend is not a thing.
-- **Electromagnet.** A chargeable gadget that sits in your inventory and pulls nearby dropped items straight to you, up to 3 blocks in every direction. Shift-right-click switches it off, so you can carry it past farms and sorters without draining them.
+A technical update: the item magnet reaches further, plus a big round of stability, balance and bug fixes across the whole mod.
 
 ### Improved
 
-- **Cables are real pipes now.** Energy used to jump from generator to machine in a single tick. Every cable now holds a small buffer and passes power along segment by segment, so a working line has inertia and a cut leaves the remainder sitting in the wires. The buffer is deliberately tiny — 12 EU per cable — so you cannot build a battery out of cable.
+- **The item magnet reaches further.** Your electromagnet now pulls dropped items in from **5 blocks** away, up from 3 — enough to actually clear a mining trip. It still charges from EU and toggles off with shift-right-click.
 
 ### Fixed
 
-- **The activity timer froze on a busy base.** Once your grid filled up, the dashboard's activity clock stopped counting. Time and energy are now tracked separately, so the clock keeps running even when there is nowhere left to put the power.
-- **Two guide book entries** — tempered iron tools and the scythe — showed no icon and kept an untranslated title.
+- **A bad config value no longer crashes the world.** A wrong number in the settings file — a negative buffer, a zero rate — now falls back to a safe default instead of crashing the game.
+- **Running generators light up again.** A generator that is producing power now glows the way it should.
+- **The generator hum no longer clicks.** Removed a repeating tick at the loop point of the running-generator sound.
+- **Machine output no longer overfills.** The furnace, macerator, compressor and extractor now respect an item's real stack limit when adding results.
+
+### Changed
+
+- **Energy Storage costs a bit more to craft.** The battery box now takes two batteries in its recipe instead of a cheap plank shell — a fairer price for a starter energy buffer, and it ties into the ore-to-battery chain.
+
+### Behind the scenes
+
+- **Large stability pass.** A broad round of internal cleanup and hardening across the mod — no gameplay change, just fewer edge-case bugs and a more solid base for what comes next.

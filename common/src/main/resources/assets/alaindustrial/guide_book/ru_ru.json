@@ -304,13 +304,13 @@
               "recipe_type": "Крафт на верстаке",
               "grid": [
                 "minecraft:oak_planks",
-                "minecraft:oak_planks",
+                "alaindustrial:battery",
                 "minecraft:oak_planks",
                 "alaindustrial:copper_cable",
                 "minecraft:redstone",
                 "alaindustrial:copper_cable",
                 "minecraft:oak_planks",
-                "minecraft:oak_planks",
+                "alaindustrial:battery",
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:battery_box",

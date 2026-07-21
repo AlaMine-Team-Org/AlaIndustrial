@@ -1,7 +1,7 @@
 package dev.alaindustrial.core.fabric;
 
-import dev.alaindustrial.core.EnergyLookup;
-import dev.alaindustrial.core.EnergyPort;
+import dev.alaindustrial.core.energy.EnergyLookup;
+import dev.alaindustrial.core.energy.EnergyPort;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;

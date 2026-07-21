@@ -1,10 +1,10 @@
 package dev.alaindustrial;
 
-import dev.alaindustrial.core.EnergyLookup;
+import dev.alaindustrial.core.energy.EnergyLookup;
 import dev.alaindustrial.item.ItemEnergyBridge;
-import dev.alaindustrial.core.EnergyTransactions;
-import dev.alaindustrial.core.FluidLookup;
-import dev.alaindustrial.core.ItemLookup;
+import dev.alaindustrial.core.energy.EnergyTransactions;
+import dev.alaindustrial.core.fluid.FluidLookup;
+import dev.alaindustrial.core.item.ItemLookup;
 import dev.alaindustrial.core.neoforge.BufferAsEnergyHandler;
 import dev.alaindustrial.core.neoforge.NeoForgeEnergyLookup;
 import dev.alaindustrial.core.neoforge.NeoForgeEnergyTransactions;
@@ -21,15 +21,18 @@ import dev.alaindustrial.registry.neoforge.ModBlocksNeoForge;
 import dev.alaindustrial.registry.neoforge.ModItemsNeoForge;
 import dev.alaindustrial.registry.neoforge.ModMenusNeoForge;
 import java.util.List;
+import java.util.function.Supplier;
+import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.command.AlaCommandCommon;
-import dev.alaindustrial.core.NetworkManager;
-import dev.alaindustrial.core.ItemNetworkManager;
+import dev.alaindustrial.core.energy.NetworkManager;
+import dev.alaindustrial.core.item.ItemNetworkManager;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.minecraft.world.InteractionResult;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -171,18 +174,24 @@ public final class IndustrializationNeoForge {
 		dev.alaindustrial.registry.neoforge.ModCreativeTabEventsNeoForge.register(modBus);
 	}
 
-	/** Reports (does not abort on) any {@code ModContent} handle still unbound during the NeoForge migration. */
+	/**
+	 * Fails loudly at init if any {@code ModContent} handle is still unbound, mirroring the Fabric
+	 * side. Both loaders bind every handle, so an unbound one is a registration bug, not an expected
+	 * migration gap.
+	 *
+	 * <p>Crashes in BOTH dev and production (matches Fabric). Previously a shipped jar only warned:
+	 * "degrading to one missing block beats refusing to load a player's world" — but the cost was
+	 * asymmetry with Fabric, where the same gap crashes the game at startup. A NeoForge-only regression
+	 * that adds a {@code ModContent} field but forgets the {@code ModItemsNeoForge.init()} line would
+	 * ship silently broken (a {@code Supplier} that throws at first {@code .get()}, mid-gameplay) —
+	 * the exact failure {@code verifyAllBound()} exists to prevent. A loud crash on a known regression
+	 * is a better trade than a mid-game {@code IllegalStateException} the player cannot recover from.
+	 *
+	 * <p>If a graceful-degradation escape hatch ever becomes necessary again (hot-fix ship), gate it
+	 * on a system property rather than the dev/prod split, so dev and prod stay symmetric by default.
+	 */
 	private void verifyContentBound() {
-		// Verify the facade is bound. NeoForge is still mid-migration (Phase 4 populates every registry), so
-		// most handles remain on their ModContent placeholder — report the gap loudly instead of aborting load,
-		// unlike the Fabric side (which binds everything and calls the strict ModContent.verifyAllBound()). Flip
-		// this to ModContent.verifyAllBound() once Phase 4 binds all handles on NeoForge.
-		List<String> unbound = ModContent.unboundHandles();
-		if (!unbound.isEmpty()) {
-			Industrialization.LOGGER.warn(
-					"ModContent has {} handle(s) not yet bound on NeoForge (Phase 4 per-machine migration "
-							+ "pending): {}", unbound.size(), unbound);
-		}
+		ModContent.verifyAllBound();
 	}
 
 	/** Registers the mod-bus listeners (capabilities, S2C payload, world gametests). */
@@ -319,50 +328,59 @@ public final class IndustrializationNeoForge {
 	 * the exact NeoForge counterpart to the Fabric {@code FluidStorage.SIDED.registerForBlockEntity((be,
 	 * dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), TYPE)} lines in {@code ModBlockEntities#init()}.
 	 */
+	/**
+	 * Every block entity that exposes an energy port. All of them extend {@link MachineBlockEntity}
+	 * (generators through {@code AbstractGeneratorBlockEntity}, the cable directly), which is both a
+	 * {@code BlockEntity} and an {@code EnergyPortHost} — that shared supertype is what lets the
+	 * registration below be a loop instead of one hand-written pair of lines per machine.
+	 *
+	 * <p><b>Note:</b> this list is inline rather than shared loader-neutral one. A common/ list would
+	 * route through {@code ModContent} handles, but those handles are only bound by each loader's
+	 * {@code Mod*.init()} — which on NeoForge runs AFTER this class's static init (the
+	 * {@code ENERGY_BLOCK_ENTITIES = ...} line resolves at class load, during
+	 * {@code DeferredRegister.register(modBus)} in the constructor). Reading {@code ModContent} here
+	 * would hit the throwing placeholder. So the list references the local
+	 * {@code ModBlockEntitiesNeoForge} {@code DeferredHolder} fields directly. (A shared list was tried
+	 * and reverted for this ordering reason: the shared list's static init read ModContent handles
+	 * before the loaders bound them and crashed the runtime.)
+	 *
+	 * <p>A new powered machine is added here, not in the registration body: forgetting it leaves the
+	 * machine silently without energy, which is exactly the failure this list is meant to make obvious.
+	 */
+	private static final List<Supplier<? extends BlockEntityType<? extends MachineBlockEntity>>>
+			ENERGY_BLOCK_ENTITIES = List.of(
+					ModBlockEntitiesNeoForge.GENERATOR,
+					ModBlockEntitiesNeoForge.SOLAR_PANEL,
+					ModBlockEntitiesNeoForge.MOONLIT_SOLAR_PANEL,
+					ModBlockEntitiesNeoForge.DAYLIGHT_SOLAR_PANEL,
+					ModBlockEntitiesNeoForge.COPPER_CABLE,
+					ModBlockEntitiesNeoForge.MACERATOR,
+					ModBlockEntitiesNeoForge.BATTERY_BOX,
+					ModBlockEntitiesNeoForge.TELEPORTER,
+					ModBlockEntitiesNeoForge.ELECTRIC_FURNACE,
+					ModBlockEntitiesNeoForge.EXTRACTOR,
+					ModBlockEntitiesNeoForge.COMPRESSOR,
+					ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR,
+					ModBlockEntitiesNeoForge.PUMP,
+					ModBlockEntitiesNeoForge.WATER_MILL,
+					ModBlockEntitiesNeoForge.WIND_MILL,
+					ModBlockEntitiesNeoForge.HIGH_ALTITUDE_WIND_MILL,
+					ModBlockEntitiesNeoForge.STORM_WIND_MILL);
+
 	private void registerCapabilities(RegisterCapabilitiesEvent event) {
 		BlockCapability<EnergyHandler, Direction> cap = Capabilities.Energy.BLOCK;
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.GENERATOR.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.SOLAR_PANEL.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.MOONLIT_SOLAR_PANEL.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.DAYLIGHT_SOLAR_PANEL.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.COPPER_CABLE.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.MACERATOR.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.BATTERY_BOX.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.TELEPORTER.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.ELECTRIC_FURNACE.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.EXTRACTOR.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.COMPRESSOR.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.PUMP.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.WATER_MILL.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.WIND_MILL.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.HIGH_ALTITUDE_WIND_MILL.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
-		event.registerBlockEntity(cap, ModBlockEntitiesNeoForge.STORM_WIND_MILL.get(),
-				(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
+		for (Supplier<? extends BlockEntityType<? extends MachineBlockEntity>> type : ENERGY_BLOCK_ENTITIES) {
+			event.registerBlockEntity(cap, type.get(),
+					(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
+		}
 
+		// Only three fluid hosts, and they share no BlockEntity supertype (the fluid tank is a plain
+		// BlockEntity, not a MachineBlockEntity), so these stay explicit — a generic helper carries the
+		// BlockEntity & FluidPortHost bound that a wildcard list cannot express.
 		BlockCapability<ResourceHandler<FluidResource>, Direction> fluidCap = Capabilities.Fluid.BLOCK;
-		event.registerBlockEntity(fluidCap, ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR.get(),
-				(be, side) -> TankAsResourceHandler.of(be.fluidPort(side)));
-		event.registerBlockEntity(fluidCap, ModBlockEntitiesNeoForge.PUMP.get(),
-				(be, side) -> TankAsResourceHandler.of(be.fluidPort(side)));
-		event.registerBlockEntity(fluidCap, ModBlockEntitiesNeoForge.FLUID_TANK.get(),
-				(be, side) -> TankAsResourceHandler.of(be.fluidPort(side)));
+		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR);
+		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.PUMP);
+		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.FLUID_TANK);
 
 		// MOD-104: publish transactional, side-aware item views for mod containers. This is required
 		// because a vanilla Container is not automatically a 26.2 ResourceHandler on NeoForge.
@@ -395,6 +413,13 @@ public final class IndustrializationNeoForge {
 		// MOD-084: a fake "other mod" energy item, so the gametests can prove the pack charges foreign
 		// items. Dev/gametest only — inert in a shipped jar (see the class doc).
 		dev.alaindustrial.gametest.neoforge.ForeignEnergyItemStandIn.register(event);
+	}
+
+	/** Carries the {@code BlockEntity & FluidPortHost} bound a wildcard list cannot express. */
+	private static <T extends BlockEntity & dev.alaindustrial.core.fluid.FluidPortHost> void registerFluidPort(
+			RegisterCapabilitiesEvent event, BlockCapability<ResourceHandler<FluidResource>, Direction> cap,
+			Supplier<? extends BlockEntityType<T>> type) {
+		event.registerBlockEntity(cap, type.get(), (be, side) -> TankAsResourceHandler.of(be.fluidPort(side)));
 	}
 
 	private static <T extends BlockEntity & net.minecraft.world.Container> void registerItemContainer(

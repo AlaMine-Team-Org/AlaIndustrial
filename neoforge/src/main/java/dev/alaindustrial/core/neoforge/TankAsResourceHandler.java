@@ -1,16 +1,17 @@
 package dev.alaindustrial.core.neoforge;
 
 import com.google.common.primitives.Ints;
-import dev.alaindustrial.core.FluidHolder;
-import dev.alaindustrial.core.FluidPort;
+import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.fluid.FluidPort;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.TransferPreconditions;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
+import dev.alaindustrial.core.energy.EnergyPort;
 
 /**
  * Reverse adapter (MOD-028): exposes a neutral {@link FluidPort} (a machine's common
- * {@link dev.alaindustrial.core.FluidTank}) as a NeoForge {@code ResourceHandler<FluidResource>}, so it
+ * {@link dev.alaindustrial.core.fluid.FluidTank}) as a NeoForge {@code ResourceHandler<FluidResource>}, so it
  * can be published through {@code Capabilities.Fluid.BLOCK} in {@code RegisterCapabilitiesEvent}. The
  * capability contract is the per-loader binding seam; the tank itself is loader-neutral. Mirrors
  * {@link BufferAsEnergyHandler}.

@@ -13,7 +13,7 @@ import net.minecraft.util.StringRepresentable;
  * <ul>
  *   <li><b>TRAVERSE</b> (default) — a storage sink (BatteryBox) is treated as part of the network:
  *       the analyzer walks through it and highlights every adjacent cable segment beyond it, even
- *       though those are separate {@link dev.alaindustrial.core.EnergyNetwork} instances.</li>
+ *       though those are separate {@link dev.alaindustrial.core.energy.EnergyNetwork} instances.</li>
  *   <li><b>STOP_AT_STORAGE</b> — the analyzer shows exactly the one {@code EnergyNetwork} the
  *       clicked cable belongs to and stops at the first storage sink (the original MOD-016
  *       behaviour), useful for segment-local diagnostics.</li>

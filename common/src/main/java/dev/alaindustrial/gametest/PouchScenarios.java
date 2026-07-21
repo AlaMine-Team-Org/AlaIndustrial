@@ -2,7 +2,7 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
-import dev.alaindustrial.core.EnergyTier;
+import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.ItemEnergy;
 import dev.alaindustrial.item.PouchContents;
 import dev.alaindustrial.item.PouchItem;

@@ -2,16 +2,16 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
-import dev.alaindustrial.core.EnergyRole;
-import dev.alaindustrial.core.EnergyTier;
-import dev.alaindustrial.core.EnergyTransactions;
-import dev.alaindustrial.core.FluidAmounts;
-import dev.alaindustrial.core.FluidHolder;
-import dev.alaindustrial.core.FluidLookup;
-import dev.alaindustrial.core.FluidMover;
-import dev.alaindustrial.core.FluidPort;
-import dev.alaindustrial.core.FluidPortHost;
-import dev.alaindustrial.core.FluidTank;
+import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.energy.EnergyTransactions;
+import dev.alaindustrial.core.fluid.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.fluid.FluidLookup;
+import dev.alaindustrial.core.fluid.FluidMover;
+import dev.alaindustrial.core.fluid.FluidPort;
+import dev.alaindustrial.core.fluid.FluidPortHost;
+import dev.alaindustrial.core.fluid.FluidTank;
 import dev.alaindustrial.item.ItemFluidBridge;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -63,8 +63,8 @@ import net.minecraft.world.level.storage.ValueOutput;
  * fluid-type id) so the client can render the right colour without a custom packet.
  *
  * <p>Draws EU from the energy network like other machines: it exposes a neutral
- * {@link dev.alaindustrial.core.EnergyPort} with {@code maxInsert > 0}, so the
- * {@link dev.alaindustrial.core.EnergyNetwork} discovers it as a consumer automatically.
+ * {@link dev.alaindustrial.core.energy.EnergyPort} with {@code maxInsert > 0}, so the
+ * {@link dev.alaindustrial.core.energy.EnergyNetwork} discovers it as a consumer automatically.
  *
  * <p><b>MOD-028 multiloader migration.</b> Lives in {@code common}: the loader-specific fluid APIs are
  * replaced by the neutral {@link FluidTank}/{@link FluidPort}/{@link FluidLookup}/

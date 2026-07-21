@@ -1,6 +1,6 @@
 package dev.alaindustrial.client.guide;
 
-import dev.alaindustrial.client.GuiStyle;
+import dev.alaindustrial.client.screen.GuiStyle;
 import dev.alaindustrial.client.guide.GuideContent.Book;
 import dev.alaindustrial.client.guide.GuideContent.Entry;
 import dev.alaindustrial.client.guide.GuideContent.Page;

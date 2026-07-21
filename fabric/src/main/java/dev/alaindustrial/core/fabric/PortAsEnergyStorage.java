@@ -1,6 +1,6 @@
 package dev.alaindustrial.core.fabric;
 
-import dev.alaindustrial.core.EnergyPort;
+import dev.alaindustrial.core.energy.EnergyPort;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import team.reborn.energy.api.EnergyStorage;
 

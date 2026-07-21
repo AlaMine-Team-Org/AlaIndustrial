@@ -2,8 +2,8 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
-import dev.alaindustrial.core.ItemNetworkManager;
-import dev.alaindustrial.core.PipeFaceMode;
+import dev.alaindustrial.core.item.ItemNetworkManager;
+import dev.alaindustrial.core.item.PipeFaceMode;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

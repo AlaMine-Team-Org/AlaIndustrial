@@ -117,7 +117,7 @@ public abstract class AbstractMachineBlock extends BaseEntityBlock {
 	 *
 	 * <p>{@code side} is the <b>world face of this block</b> the cable touches (the direction from
 	 * this block toward the cable), matching the convention of
-	 * {@link dev.alaindustrial.core.EnergyPortHost#energyPort(Direction)}. The decision is made purely
+	 * {@link dev.alaindustrial.core.energy.EnergyPortHost#energyPort(Direction)}. The decision is made purely
 	 * from the {@link BlockState} (e.g. {@code FACING}) — no block entity — for the same no-load-race
 	 * reason as the face-agnostic marker. Default delegates to {@link #isCableConnectable()} so blocks
 	 * with a uniform per-face role (every machine, cable, storage, the iron chest) keep their current

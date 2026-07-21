@@ -2,12 +2,12 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
-import dev.alaindustrial.core.EnergyRole;
-import dev.alaindustrial.core.EnergyTier;
-import dev.alaindustrial.core.SolarSky;
-import dev.alaindustrial.core.WindMillClearance;
-import dev.alaindustrial.core.WindMillInterference;
-import dev.alaindustrial.core.WindMillOutput;
+import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.SolarSky;
+import dev.alaindustrial.core.environment.WindMillClearance;
+import dev.alaindustrial.core.environment.WindMillInterference;
+import dev.alaindustrial.core.environment.WindMillOutput;
 import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
