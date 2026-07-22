@@ -120,6 +120,7 @@
 	"gui.alaindustrial.wind_mill.mode.roofed": "Bị che mái",
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Bị chặn",
 	"gui.alaindustrial.wind_mill.mode.interference": "Nhiễu",
+	"gui.alaindustrial.water_mill.mode.interference": "Nhiễu",
 	"gui.alaindustrial.wind_mill.mode.calm": "Yên tĩnh",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Gió nhẹ",
 	"gui.alaindustrial.wind_mill.mode.gale": "Gió mạnh",

@@ -120,6 +120,7 @@
 	"gui.alaindustrial.wind_mill.mode.roofed": "ছাদের নিচে",
 	"gui.alaindustrial.wind_mill.mode.obstructed": "বাধাগ্রস্ত",
 	"gui.alaindustrial.wind_mill.mode.interference": "হস্তক্ষেপ",
+	"gui.alaindustrial.water_mill.mode.interference": "হস্তক্ষেপ",
 	"gui.alaindustrial.wind_mill.mode.calm": "শান্ত",
 	"gui.alaindustrial.wind_mill.mode.breeze": "হালকা বাতাস",
 	"gui.alaindustrial.wind_mill.mode.gale": "তীব্র বাতাস",

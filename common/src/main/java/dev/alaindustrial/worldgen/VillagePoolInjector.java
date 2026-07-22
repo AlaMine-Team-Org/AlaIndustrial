@@ -47,9 +47,25 @@ public final class VillagePoolInjector {
 		for (String biome : VILLAGE_BIOMES) {
 			Identifier poolId = Identifier.withDefaultNamespace("village/" + biome + "/houses");
 			pools.getOptional(poolId).ifPresentOrElse(
-					pool -> injectInto(pool, poolId),
+					pool -> injectIntoSafely(pool, poolId),
 					() -> Industrialization.LOGGER.warn(
 							"[MOD-062] village pool {} not found; Industrialist house not injected there", poolId));
+		}
+	}
+
+	/**
+	 * MOD-176: injection is best-effort. The accessor mixin is optional (another mod may have
+	 * prevented it from applying), and another mod may have swapped the pool's template list for an
+	 * immutable/foreign implementation — either way a failed injection into one pool must degrade to
+	 * "no Industrialist house there", never abort server start for the whole modpack.
+	 */
+	private static void injectIntoSafely(StructureTemplatePool pool, Identifier poolId) {
+		try {
+			injectInto(pool, poolId);
+		} catch (RuntimeException e) {
+			Industrialization.LOGGER.warn(
+					"[MOD-062] could not inject the Industrialist house into {} (another mod likely altered the pool); skipping: {}",
+					poolId, e.toString());
 		}
 	}
 
@@ -94,6 +110,16 @@ public final class VillagePoolInjector {
 			}
 		}
 		return filtered;
+	}
+
+	/** True when the candidate list carries at least one copy of our house (mixin fast-path guard). */
+	public static boolean containsHouse(List<StructurePoolElement> candidates) {
+		for (StructurePoolElement element : candidates) {
+			if (isHouse(element)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** Gametest seam: how many copies of the house an element list carries. */

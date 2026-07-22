@@ -2,13 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "pattern": [
-    "PPP",
-    "PCP",
-    "PPP"
+    "PUP",
+    "CGC",
+    "PUP"
   ],
   "key": {
     "P": "#minecraft:planks",
-    "C": "alaindustrial:copper_cable"
+    "U": "minecraft:copper_ingot",
+    "C": "alaindustrial:copper_cable",
+    "G": "alaindustrial:wooden_gear"
   },
   "result": {
     "id": "alaindustrial:water_mill"

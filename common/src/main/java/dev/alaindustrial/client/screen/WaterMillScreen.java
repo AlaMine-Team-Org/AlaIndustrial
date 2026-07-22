@@ -1,6 +1,7 @@
 package dev.alaindustrial.client.screen;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.menu.WaterMillMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -23,6 +24,9 @@ public class WaterMillScreen extends MachineScreen<WaterMillMenu> {
 	private static final int STATUS_FRAME_H = 16;
 	private static final float STATUS_UV_X = 176.0F;
 	private static final float STATUS_UV_Y = 0.0F;
+
+	/** Baseline (relative to topPos) of the centered status label shown on wheel interference. */
+	private static final int STATUS_TEXT_Y = 44;
 
 	public WaterMillScreen(WaterMillMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title, IMAGE_WIDTH, IMAGE_HEIGHT);
@@ -50,6 +54,14 @@ public class WaterMillScreen extends MachineScreen<WaterMillMenu> {
 					STATUS_UV_X, STATUS_UV_Y,
 					STATUS_FRAME_W, STATUS_FRAME_H,
 					TEX_SIZE, TEX_SIZE);
+		}
+
+		// MOD-175: when this mill's wheel overlaps a neighbouring mill's, the wheel is hidden in-world
+		// (no z-fighting) and generation stops. Show the reason so the player understands why it idled.
+		if (this.menu.getMode() == WaterMillBlockEntity.MODE_INTERFERENCE) {
+			Component label = Component.translatable("gui.alaindustrial.water_mill.mode.interference");
+			int tx = this.leftPos + (this.imageWidth - this.font.width(label)) / 2;
+			graphics.text(this.font, label, tx, this.topPos + STATUS_TEXT_Y, GuiStyle.TEXT_DIM, false);
 		}
 	}
 

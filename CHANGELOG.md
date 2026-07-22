@@ -1,21 +1,15 @@
-## 0.1.40
+## 0.1.41
 
-<p><img alt="Ala Industrial Industrialist villager standing by a workbench" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.40/release-media/v0.1.40/changelog.png" width="720"></p>
+Compatibility hotfix: the mod no longer conflicts with other installed mods at startup, plus a batch of water mill and jetpack fixes.
 
-A new villager settles in your villages and buys your ores for emeralds, alongside a round of improvements and fixes.
+### Fixed
 
-### New
+- **Better compatibility with other mods.** The village tweaks added in the last update are now fully optional under the hood — if another installed mod changes the same vanilla worldgen code, the game keeps loading normally instead of crashing at startup.
+- **Water mill wheel spins again.** The outer wheel now rotates while the mill is generating energy, and spins faster the more water touches the mill.
+- **Jetpack glow no longer creates water.** Flying up a waterfall with the jetpack used to leave columns of still water behind.
+- **Jetpack glow no longer leaves a stray light** in the world if the server stops mid-flight.
 
-- **The Industrialist villager.** A new village profession. Sell your ores, dusts and ingots for
-  emeralds — every Industrialist offers a different set of trades — and buy circuits and coils back
-  once they reach master level. They work at a craftable Industrial Workbench, and their house can
-  generate in villages of any biome.
+### Changed
 
-### Improved
-
-- **Much bigger advancement tree.** Grew from 19 to 31 advancements — new lines for tempered iron
-  gear, chests, fluids, portable power, teleporting and scythes.
-- **Guide book shows the Electromagnet's radius.** The stats page now lists the 5-block pickup range
-  next to the buffer.
-- **Server tuning for the Pump.** Scan cooldown, search range and per-scan block limit are now
-  configurable.
+- **Water mills need breathing room.** Two mills placed too close now hide their wheels, pause generation and show a "wheel interference" status — leave a 2-block gap side-by-side, back-to-back is fine.
+- **Water mill crafting got pricier.** The mill and its wheel are now built with copper, cables and a gear, matching the wind mill tier. Energy output is unchanged.

@@ -39,6 +39,7 @@
 	},
 	"mixins": [
 		"alaindustrial.mixins.json",
+		"alaindustrial.worldgen.mixins.json",
 		{
 			"config": "alaindustrial.client.mixins.json",
 			"environment": "client"

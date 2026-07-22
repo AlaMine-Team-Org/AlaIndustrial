@@ -284,8 +284,12 @@ public final class IndustrializationNeoForge {
 		});
 		// MOD-133: fold every pending delta before players are saved. ServerStoppingEvent runs before the
 		// player save; ServerStoppedEvent is too late and would lose the last flush window's tail.
-		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppingEvent event) ->
-				dev.alaindustrial.stats.PlayerStatsTracker.get().flush(event.getServer()));
+		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppingEvent event) -> {
+			dev.alaindustrial.stats.PlayerStatsTracker.get().flush(event.getServer());
+			// MOD-176: clear a mid-flight glow light before the level save — the per-tick sweep no
+			// longer runs, and a saved minecraft:light block would survive as an invisible orphan.
+			dev.alaindustrial.item.JetpackLight.shutdown(event.getServer());
+		});
 		NeoForge.EVENT_BUS.addListener((ServerStoppedEvent event) -> {
 			NetworkManager.clearAll();
 			ItemNetworkManager.clearAll();

@@ -114,6 +114,7 @@
 	"gui.alaindustrial.wind_mill.mode.roofed": "Coberto",
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Bloqueado",
 	"gui.alaindustrial.wind_mill.mode.interference": "Interferência",
+	"gui.alaindustrial.water_mill.mode.interference": "Interferência",
 	"gui.alaindustrial.wind_mill.mode.calm": "Calmaria",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Brisa",
 	"gui.alaindustrial.wind_mill.mode.gale": "Vendaval",

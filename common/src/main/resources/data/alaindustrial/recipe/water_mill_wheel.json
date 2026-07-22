@@ -2,12 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "pattern": [
-    "PSP",
+    "PUP",
     "SGS",
-    "PSP"
+    "PUP"
   ],
   "key": {
     "P": "#minecraft:planks",
+    "U": "minecraft:copper_ingot",
     "S": "minecraft:stick",
     "G": "alaindustrial:wooden_gear"
   },

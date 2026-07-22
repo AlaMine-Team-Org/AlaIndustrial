@@ -114,6 +114,7 @@
 	"gui.alaindustrial.wind_mill.mode.roofed": "Çatılı",
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Engelli",
 	"gui.alaindustrial.wind_mill.mode.interference": "Rotor çakışması",
+	"gui.alaindustrial.water_mill.mode.interference": "Rotor çakışması",
 	"gui.alaindustrial.wind_mill.mode.calm": "Durgun",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Esinti",
 	"gui.alaindustrial.wind_mill.mode.gale": "Fırtına",

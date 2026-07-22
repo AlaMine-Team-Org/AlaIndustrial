@@ -343,8 +343,12 @@ public class IndustrializationFabric implements ModInitializer {
 				dev.alaindustrial.worldgen.VillagePoolInjector::inject);
 		// MOD-133: fold every pending delta before the world saves players. STOPPING runs before
 		// PlayerList#saveAll; STOPPED would be too late and lose the last flush window's tail.
-		ServerLifecycleEvents.SERVER_STOPPING.register(server ->
-				dev.alaindustrial.stats.PlayerStatsTracker.get().flush(server));
+		ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+			dev.alaindustrial.stats.PlayerStatsTracker.get().flush(server);
+			// MOD-176: clear a mid-flight glow light before the level save — the per-tick sweep no
+			// longer runs, and a saved minecraft:light block would survive as an invisible orphan.
+			dev.alaindustrial.item.JetpackLight.shutdown(server);
+		});
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
 			NetworkManager.clearAll();
 			ItemNetworkManager.clearAll();

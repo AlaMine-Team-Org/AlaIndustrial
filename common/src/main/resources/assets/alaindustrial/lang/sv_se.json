@@ -114,6 +114,7 @@
 	"gui.alaindustrial.wind_mill.mode.roofed": "Taktäckt",
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Blockerad",
 	"gui.alaindustrial.wind_mill.mode.interference": "Interferens",
+	"gui.alaindustrial.water_mill.mode.interference": "Interferens",
 	"gui.alaindustrial.wind_mill.mode.calm": "Vindstilla",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Bris",
 	"gui.alaindustrial.wind_mill.mode.gale": "Kuling",

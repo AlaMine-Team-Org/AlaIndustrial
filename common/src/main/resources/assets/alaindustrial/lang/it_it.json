@@ -114,6 +114,7 @@
 	"gui.alaindustrial.wind_mill.mode.roofed": "Al coperto",
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Ostruito",
 	"gui.alaindustrial.wind_mill.mode.interference": "Interferenza",
+	"gui.alaindustrial.water_mill.mode.interference": "Interferenza",
 	"gui.alaindustrial.wind_mill.mode.calm": "Calma",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Brezza",
 	"gui.alaindustrial.wind_mill.mode.gale": "Burrasca",

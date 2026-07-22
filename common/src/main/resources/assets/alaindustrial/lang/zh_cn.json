@@ -114,6 +114,7 @@
 	"gui.alaindustrial.wind_mill.mode.roofed": "在屋顶下",
 	"gui.alaindustrial.wind_mill.mode.obstructed": "受阻",
 	"gui.alaindustrial.wind_mill.mode.interference": "转子干扰",
+	"gui.alaindustrial.water_mill.mode.interference": "转子干扰",
 	"gui.alaindustrial.wind_mill.mode.calm": "无风",
 	"gui.alaindustrial.wind_mill.mode.breeze": "微风",
 	"gui.alaindustrial.wind_mill.mode.gale": "大风",

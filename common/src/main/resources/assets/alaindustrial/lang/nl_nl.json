@@ -114,6 +114,7 @@
 	"gui.alaindustrial.wind_mill.mode.roofed": "Overdekt",
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Geblokkeerd",
 	"gui.alaindustrial.wind_mill.mode.interference": "Interferentie",
+	"gui.alaindustrial.water_mill.mode.interference": "Interferentie",
 	"gui.alaindustrial.wind_mill.mode.calm": "Windstil",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Bries",
 	"gui.alaindustrial.wind_mill.mode.gale": "Storm",

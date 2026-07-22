@@ -151,6 +151,9 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 				: Direction.NORTH;
 		state.production = entity.getDataAccess().get(2);
 		state.installed = !entity.getItem(WaterMillBlockEntity.WHEEL_SLOT).isEmpty();
+		// MOD-175: when this mill's wheel overlaps a neighbour's, hide it entirely instead of drawing
+		// two intersecting, z-fighting wheels. The mode rides the maxProgress sync channel (slot 3).
+		state.interfered = entity.getDataAccess().get(3) == WaterMillBlockEntity.MODE_INTERFERENCE;
 		state.angle = state.production <= 0 ? 0.0F : rotationAngle(entity, partialTicks, state.production);
 		Level level = entity.getLevel();
 		if (level != null) {
@@ -162,7 +165,7 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 	@Override
 	public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector,
 			CameraRenderState camera) {
-		if (!state.installed) {
+		if (!state.installed || state.interfered) {
 			return;
 		}
 		poseStack.pushPose();
@@ -337,6 +340,7 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 	public static final class State extends BlockEntityRenderState {
 		private Direction facing = Direction.NORTH;
 		private int production;
+		private boolean interfered;
 		private float angle;
 		private boolean installed;
 	}

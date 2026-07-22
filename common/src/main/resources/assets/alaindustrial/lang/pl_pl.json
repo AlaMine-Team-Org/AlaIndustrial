@@ -114,6 +114,7 @@
 	"gui.alaindustrial.wind_mill.mode.roofed": "Pod dachem",
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Zablokowany",
 	"gui.alaindustrial.wind_mill.mode.interference": "Interferencja",
+	"gui.alaindustrial.water_mill.mode.interference": "Interferencja",
 	"gui.alaindustrial.wind_mill.mode.calm": "Bezwietrznie",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Bryza",
 	"gui.alaindustrial.wind_mill.mode.gale": "Szkwał",

@@ -22,6 +22,15 @@ public class WaterMillMenu extends MachineMenu {
 				new net.minecraft.world.inventory.SimpleContainerData(4), ContainerLevelAccess.NULL, ModContent.WATER_MILL.get());
 	}
 
+	/**
+	 * Status mode carried by the {@code maxProgress} sync channel (slot 3):
+	 * {@link WaterMillBlockEntity#MODE_OK} or {@link WaterMillBlockEntity#MODE_INTERFERENCE}. The screen
+	 * uses it to show the "wheels clash" label.
+	 */
+	public int getMode() {
+		return getMaxProgress();
+	}
+
 	@Override
 	protected void addMachineSlots() {
 		addSlot(new Slot(machine, WaterMillBlockEntity.WHEEL_SLOT, 84, 23) {

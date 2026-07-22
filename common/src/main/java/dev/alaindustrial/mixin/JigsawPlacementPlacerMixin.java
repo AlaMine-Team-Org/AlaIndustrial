@@ -27,7 +27,12 @@ import org.spongepowered.asm.mixin.injection.At;
  * decision itself lives in {@link VillagePoolInjector#withoutHouseIfPresent} (unit-tested).
  *
  * <p>Loader-neutral: this common mixin is loaded on both Fabric and NeoForge via the shared
- * {@code alaindustrial.mixins.json}; MixinExtras ({@code @WrapOperation}) is bundled by both.
+ * {@code alaindustrial.worldgen.mixins.json}; MixinExtras ({@code @WrapOperation}) is bundled by both.
+ *
+ * <p>Best-effort by design (MOD-176): the config is {@code required: false} with
+ * {@code defaultRequire: 0}, so if another mod transforms {@code tryPlacingChildren} and this wrap
+ * cannot bind, the game keeps loading and only the one-house-per-village cap degrades — a hard
+ * startup crash for the whole modpack is never an acceptable cost of a cosmetic cap.
  */
 @Mixin(targets = "net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement$Placer")
 public abstract class JigsawPlacementPlacerMixin {
@@ -46,7 +51,14 @@ public abstract class JigsawPlacementPlacerMixin {
 					target = "Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool;getShuffledTemplates(Lnet/minecraft/util/RandomSource;)Ljava/util/List;"))
 	private List<StructurePoolElement> alaindustrial$capIndustrialistHouse(
 			StructureTemplatePool pool, RandomSource random, Operation<List<StructurePoolElement>> original) {
-		return VillagePoolInjector.withoutHouseIfPresent(original.call(pool, random), alaindustrial$housePlaced());
+		List<StructurePoolElement> candidates = original.call(pool, random);
+		// This wrap fires for EVERY jigsaw structure of every mod; only the five vanilla village
+		// house pools ever carry our element. Skip the placed-pieces scan for everything else so
+		// foreign structures pay one cheap candidate-list check, not O(pieces) per expansion step.
+		if (!VillagePoolInjector.containsHouse(candidates)) {
+			return candidates;
+		}
+		return VillagePoolInjector.withoutHouseIfPresent(candidates, alaindustrial$housePlaced());
 	}
 
 	private boolean alaindustrial$housePlaced() {

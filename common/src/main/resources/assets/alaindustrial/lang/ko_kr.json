@@ -114,6 +114,7 @@
 	"gui.alaindustrial.wind_mill.mode.roofed": "지붕 아래",
 	"gui.alaindustrial.wind_mill.mode.obstructed": "방해물",
 	"gui.alaindustrial.wind_mill.mode.interference": "간섭",
+	"gui.alaindustrial.water_mill.mode.interference": "간섭",
 	"gui.alaindustrial.wind_mill.mode.calm": "무풍",
 	"gui.alaindustrial.wind_mill.mode.breeze": "산들바람",
 	"gui.alaindustrial.wind_mill.mode.gale": "강풍",

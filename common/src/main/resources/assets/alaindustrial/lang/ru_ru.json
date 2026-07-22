@@ -137,6 +137,7 @@
 	"gui.alaindustrial.wind_mill.mode.roofed": "Под крышей",
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Помеха",
 	"gui.alaindustrial.wind_mill.mode.interference": "Помехи ротора",
+	"gui.alaindustrial.water_mill.mode.interference": "Помехи колеса",
 	"gui.alaindustrial.wind_mill.mode.calm": "Штиль",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Ветерок",
 	"gui.alaindustrial.wind_mill.mode.gale": "Сильный ветер",

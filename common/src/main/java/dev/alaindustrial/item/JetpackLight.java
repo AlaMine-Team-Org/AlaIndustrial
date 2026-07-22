@@ -103,10 +103,25 @@ public final class JetpackLight {
 		});
 	}
 
+	/**
+	 * Clear every remaining light before the world saves on shutdown (MOD-176). The per-tick sweep
+	 * keeps a live thrust's light for exactly one tick — if the server stops during that tick, the
+	 * light would be saved into the chunk while {@code LIGHTS} (in-memory only) forgets it on
+	 * restart, leaving an invisible permanent light source in the world. Called from the
+	 * server-stopping hook of both loaders, before the level save.
+	 */
+	public static void shutdown(MinecraftServer server) {
+		LIGHTS.values().forEach(placed -> clearBlock(server, placed));
+		LIGHTS.clear();
+	}
+
 	/** Place the light (waterlogged inside a water source), reporting whether the spot allowed it. */
 	private static boolean placeLight(ServerLevel level, BlockPos pos, int lightLevel) {
 		BlockState target = level.getBlockState(pos);
-		boolean water = target.is(Blocks.WATER);
+		// Source blocks only (MOD-176): WATERLOGGED is a boolean, so a flowing block's level would be
+		// lost and clearBlock would revert it to defaultBlockState() = a new SOURCE — flying up a
+		// waterfall must not fabricate infinite-water columns. Flowing water simply gets no light.
+		boolean water = target.is(Blocks.WATER) && target.getFluidState().isSource();
 		if (!target.isAir() && !water) {
 			return false;
 		}

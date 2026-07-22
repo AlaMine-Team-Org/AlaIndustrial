@@ -118,6 +118,24 @@
                 "Energi: 0–4 EU/t",
                 "Buffert: 4000 EU"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "#minecraft:planks",
+                "minecraft:copper_ingot",
+                "#minecraft:planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "#minecraft:planks",
+                "minecraft:copper_ingot",
+                "#minecraft:planks"
+              ],
+              "result_id": "alaindustrial:water_mill",
+              "result_count": 1
             }
           ]
         },
@@ -858,8 +876,39 @@
     {
       "id": "other",
       "title": "Övrigt",
-      "icon": "alaindustrial:iron_chest",
+      "icon": "alaindustrial:industrial_workbench",
       "entries": [
+        {
+          "id": "industrial_workbench",
+          "title": "Industrial Workbench",
+          "icon": "alaindustrial:industrial_workbench",
+          "block_id": "alaindustrial:industrial_workbench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Industrial Workbench",
+              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "#minecraft:planks",
+                "#minecraft:planks",
+                "",
+                "#minecraft:planks",
+                "#minecraft:planks",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "iron_chest",
           "title": "Järnkista",
@@ -1166,13 +1215,13 @@
               "recipe_type": "Formad tillverkning",
               "grid": [
                 "#minecraft:planks",
-                "minecraft:stick",
+                "minecraft:copper_ingot",
                 "#minecraft:planks",
                 "minecraft:stick",
                 "alaindustrial:wooden_gear",
                 "minecraft:stick",
                 "#minecraft:planks",
-                "minecraft:stick",
+                "minecraft:copper_ingot",
                 "#minecraft:planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",

@@ -114,6 +114,7 @@
 	"gui.alaindustrial.wind_mill.mode.roofed": "Під дахом",
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Перешкода",
 	"gui.alaindustrial.wind_mill.mode.interference": "Завади ротора",
+	"gui.alaindustrial.water_mill.mode.interference": "Завади колеса",
 	"gui.alaindustrial.wind_mill.mode.calm": "Штиль",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Бриз",
 	"gui.alaindustrial.wind_mill.mode.gale": "Шквал",

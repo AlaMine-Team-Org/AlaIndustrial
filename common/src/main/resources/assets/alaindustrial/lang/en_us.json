@@ -143,6 +143,7 @@
 	"gui.alaindustrial.wind_mill.mode.roofed": "Roofed",
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Blocked",
 	"gui.alaindustrial.wind_mill.mode.interference": "Interference",
+	"gui.alaindustrial.water_mill.mode.interference": "Wheel interference",
 	"gui.alaindustrial.wind_mill.mode.calm": "Calm",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Breeze",
 	"gui.alaindustrial.wind_mill.mode.gale": "Gale",
