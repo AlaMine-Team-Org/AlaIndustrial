@@ -4,12 +4,17 @@ plugins {
 }
 
 repositories {
-    // Mod Menu optional integration (MOD-030): compile bridge + dev-run button only.
-    maven { url = 'https://maven.terraformersmc.com/' }
     // REI (recipe viewer) + Cloth Config (MOD-018).
     maven { url = 'https://maven.shedaniel.me/' }
     // Architectury API — transitive runtime dependency of REI on Fabric.
     maven { url = 'https://maven.architectury.dev/' }
+    // Mod Menu optional integration (MOD-030): pulled from Modrinth's maven instead of
+    // maven.terraformersmc.com. That host is a single point of failure — it 502'd for the entire
+    // 0.1.40 release build (Mod Menu had no mirror), so the build now avoids it. Same jar/version.
+    maven {
+        url = 'https://api.modrinth.com/maven'
+        content { includeGroup 'maven.modrinth' }
+    }
 }
 
 dependencies {
@@ -33,8 +38,11 @@ dependencies {
     compileOnly(libs.architectury.fabric)
     runtimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
 
-    compileOnly("com.terraformersmc:modmenu:${modmenu_version}")
-    runtimeOnly("com.terraformersmc:modmenu:${modmenu_version}")
+    // Mod Menu via Modrinth maven (project id mOgUt4GM). Coordinates differ from the terraformersmc
+    // maven (com.terraformersmc:modmenu) but it is the same jar — the package com.terraformersmc.modmenu
+    // is unchanged, so the compat bridge and dev-run button work identically.
+    compileOnly("maven.modrinth:mOgUt4GM:${modmenu_version}")
+    runtimeOnly("maven.modrinth:mOgUt4GM:${modmenu_version}")
 }
 
 loom {
