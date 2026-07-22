@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "Moulin à eau",
-              "text": "Un générateur LV passif — produit des EU à partir de l'eau autour du bloc, sans carburant ni réservoirs."
+              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
             },
             {
               "type": "stats",
@@ -1012,7 +1012,7 @@
         {
           "id": "player_profile",
           "title": "Profil du joueur",
-          "icon": "alaindustrial:guide_book",
+          "icon": "minecraft:player_head",
           "block_id": "alaindustrial:player_profile",
           "pages": [
             {

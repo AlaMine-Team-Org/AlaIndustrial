@@ -45,6 +45,14 @@ public final class DirectAdjacencyDistributor {
 		EnergyTier srcTier = source.getTier();
 		EnergyLookup lookup = EnergyLookup.get();
 		for (Direction dir : Direction.values()) {
+			// Honor the SOURCE's per-face role (R-NRG-03, MOD-179): a face that cannot extract (the
+			// FACING facade of generators, the wind/water mill's non-back faces, the BatteryBox's IN
+			// faces) must not leak energy through the direct cable-less push either. Before MOD-179
+			// only the target side was filtered (via supportsInsertion), so a battery box placed
+			// against a role-NONE face still charged — bypassing the documented face contract.
+			if (!source.energyRoleForFace(dir).canExtract()) {
+				continue;
+			}
 			BlockPos np = pos.relative(dir);
 			if (skipCables && level.getBlockEntity(np) instanceof CableBlockEntity) {
 				continue;

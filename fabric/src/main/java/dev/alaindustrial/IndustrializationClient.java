@@ -42,6 +42,7 @@ public class IndustrializationClient implements ClientModInitializer {
 		registerParticleProviders();
 		registerClientHooks();
 		registerBlockEntityRenderers();
+		registerDevWindowTitle();
 		// MOD-133: client dashboard reads the local player's synced stats attachment through the seam.
 		dev.alaindustrial.stats.PlayerStatsClientCache.bind(() -> {
 			net.minecraft.client.player.LocalPlayer p = net.minecraft.client.Minecraft.getInstance().player;
@@ -51,6 +52,31 @@ public class IndustrializationClient implements ClientModInitializer {
 		});
 
 		Industrialization.LOGGER.info("Industrialization client initialized.");
+	}
+
+	/**
+	 * Dev-only tester hint: when {@code -Dalaindustrial.devtitle=...} is set (wired from the
+	 * {@code -Pdevtitle} Gradle hook in {@code fabric/build.gradle}), stamp the tested task onto the
+	 * game window title — so the tester can tell at a glance which task this client is for.
+	 *
+	 * <p>No-op in production: the property is never set for the shipped jar, so the release client
+	 * keeps the vanilla title. Mirrors the {@code alaindustrial.guionly} dev gate.
+	 */
+	private void registerDevWindowTitle() {
+		String tag = System.getProperty("alaindustrial.devtitle");
+		if (tag == null || tag.isBlank()) {
+			return;
+		}
+		final String title = "AlaIndustrial DEV — " + tag.trim();
+		// Re-apply each client tick: vanilla rewrites the window title on world load / screen change,
+		// so a one-shot set would not survive. setTitle is a cheap GLFW call and the gate above keeps
+		// this off entirely in production.
+		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			if (client.getWindow() != null) {
+				client.getWindow().setTitle(title);
+			}
+		});
+		Industrialization.LOGGER.info("Dev window title set: {}", title);
 	}
 
 	/** Initialises the client config screen state and the fluid-tank item tint source. */

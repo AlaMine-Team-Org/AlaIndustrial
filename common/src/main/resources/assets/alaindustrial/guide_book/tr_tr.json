@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "Su Değirmeni",
-              "text": "Pasif bir LV jeneratör — yakıt veya tank olmadan bloğun çevresindeki sudan EU üretir."
+              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
             },
             {
               "type": "stats",
@@ -1012,7 +1012,7 @@
         {
           "id": "player_profile",
           "title": "Oyuncu Profili",
-          "icon": "alaindustrial:guide_book",
+          "icon": "minecraft:player_head",
           "block_id": "alaindustrial:player_profile",
           "pages": [
             {

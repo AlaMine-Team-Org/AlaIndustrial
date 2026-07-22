@@ -115,6 +115,8 @@
 	"gui.alaindustrial.wind_mill.mode.obstructed": "방해물",
 	"gui.alaindustrial.wind_mill.mode.interference": "간섭",
 	"gui.alaindustrial.water_mill.mode.interference": "간섭",
+	"gui.alaindustrial.water_mill.mode.obstructed": "방해물",
+	"gui.alaindustrial.water_mill.mode.no_water": "물 없음",
 	"gui.alaindustrial.wind_mill.mode.calm": "무풍",
 	"gui.alaindustrial.wind_mill.mode.breeze": "산들바람",
 	"gui.alaindustrial.wind_mill.mode.gale": "강풍",

@@ -68,6 +68,13 @@ loom {
             if (project.findProperty("guionly") != null) {
                 vmArg("-Dalaindustrial.guionly=1")
             }
+            // Dev window-title tester hint (see IndustrializationClient#registerDevWindowTitle):
+            //   ./gradlew :fabric:runClient -Pdevtitle="MOD-078 hammer art"
+            // Passed as a single JVM arg — spaces inside the value are preserved.
+            def devTitle = project.findProperty("devtitle")
+            if (devTitle != null && !devTitle.toString().isBlank()) {
+                vmArg("-Dalaindustrial.devtitle=${devTitle}")
+            }
         }
     }
 }

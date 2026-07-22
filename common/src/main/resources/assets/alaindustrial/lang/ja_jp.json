@@ -115,6 +115,8 @@
 	"gui.alaindustrial.wind_mill.mode.obstructed": "障害物あり",
 	"gui.alaindustrial.wind_mill.mode.interference": "干渉",
 	"gui.alaindustrial.water_mill.mode.interference": "干渉",
+	"gui.alaindustrial.water_mill.mode.obstructed": "障害物あり",
+	"gui.alaindustrial.water_mill.mode.no_water": "水がありません",
 	"gui.alaindustrial.wind_mill.mode.calm": "無風",
 	"gui.alaindustrial.wind_mill.mode.breeze": "そよ風",
 	"gui.alaindustrial.wind_mill.mode.gale": "強風",

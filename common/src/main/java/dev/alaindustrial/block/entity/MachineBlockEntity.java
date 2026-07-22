@@ -492,8 +492,19 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		return false;
 	}
 
+	/** Shared empty answer for faces automation must not touch (the FACING face, MOD-179). */
+	private static final int[] NO_AUTOMATION_SLOTS = new int[0];
+
 	@Override
 	public int[] getSlotsForFace(Direction side) {
+		// The front (FACING) face is the machine's working face and is inert for automation, matching
+		// the energy side (facingAwareRole) and the block specs ("hoppers do not work through it").
+		// Before MOD-179 this method ignored `side`, so a hopper aimed at the front face could insert.
+		BlockState state = getBlockState();
+		if (state.hasProperty(HorizontalMachineBlock.FACING)
+				&& side == state.getValue(HorizontalMachineBlock.FACING)) {
+			return NO_AUTOMATION_SLOTS;
+		}
 		// Automation sees machine slots only; upgrade slots (MOD-080) are GUI-only and excluded here
 		// so hoppers/pipes can neither fill nor drain them, on either loader.
 		int[] slots = new int[baseSlots];

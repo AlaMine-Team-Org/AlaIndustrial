@@ -150,10 +150,16 @@ public final class NeoForgeGameTests {
 		registerTest(event, "ring_network_merges_on_close", 200, true,
 				CoreEnergyScenarios::ringNetworkMergesOnClose);
 		// Phase-03 LV expansion: wind mill world-tested on NeoForge (passive LV generator, cable-less
-		// push path). Loader-neutral body in common/.../CoreEnergyScenarios. (Water-mill scenarios removed:
-		// block is hidden/not ready — tests deleted until it ships.)
+		// push path). Loader-neutral body in common/.../CoreEnergyScenarios.
 		registerTest(event, "wind_mill_charges_adjacent_box", 40, true,
 				CoreEnergyScenarios::windMillChargesAdjacentBox);
+		// MOD-179: water mill on the NeoForge lane — the wheel gate and the clearance stall for two
+		// mills placed face-to-face with no gap (the audit-found AABB blind spot). Deep per-case
+		// coverage stays on the Fabric lane (WaterMillWheelGameTest); these prove loader parity.
+		registerTest(event, "water_mill_wheel_gate", 40, true,
+				CoreEnergyScenarios::waterMillWheelGate);
+		registerTest(event, "water_mill_adjacent_face_to_face_stalls", 40, true,
+				CoreEnergyScenarios::waterMillAdjacentFaceToFaceStalls);
 
 		// MOD-028: fluid multiloader — proves the FluidPort/FluidTank abstraction works end to end on
 		// NeoForge (Capabilities.Fluid.BLOCK resolves, transactions commit, lava becomes EU).

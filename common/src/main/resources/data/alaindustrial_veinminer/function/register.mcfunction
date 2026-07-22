@@ -28,4 +28,4 @@ function svm:add_block {namespace:"alaindustrial",id:"uranium_ore",category:"pic
 function svm:add_block {namespace:"alaindustrial",id:"deepslate_uranium_ore",category:"pickaxe"}
 
 scoreboard players set done ala_vm.state 1
-tellraw @a {"text":"[Ala Industrial] Ores registered with Ore Vein Miner.","color":"dark_green"}
+tellraw @a ["",{"text":"[Ala Industrial]","color":"gold"},{"text":" Ores registered with Ore Vein Miner.","color":"dark_green"}]

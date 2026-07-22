@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "Водяная мельница",
-              "text": "Пассивный LV-генератор — вырабатывает EU от воды вокруг блока, без топлива и баков."
+              "text": "Пассивный LV-генератор — вырабатывает EU от текущей воды (потока) рядом, без топлива и баков."
             },
             {
               "type": "stats",
@@ -1012,7 +1012,7 @@
         {
           "id": "player_profile",
           "title": "Личный кабинет игрока",
-          "icon": "alaindustrial:guide_book",
+          "icon": "minecraft:player_head",
           "block_id": "alaindustrial:player_profile",
           "pages": [
             {

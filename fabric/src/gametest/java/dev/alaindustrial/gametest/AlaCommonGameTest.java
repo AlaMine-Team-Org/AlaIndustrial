@@ -1,6 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.core.NetworkTickGuard;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -55,6 +56,40 @@ public class AlaCommonGameTest {
 			helper.assertBlockPresent(block, PROBE);
 			helper.setBlock(PROBE, Blocks.AIR);
 			helper.assertBlockNotPresent(block, PROBE);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-186: {@link NetworkTickGuard} isolates a throwing network tick so a neighbouring mod's
+	 * capability throw cannot crash the server tick. Regression gate — if the guard's {@code try/catch}
+	 * is removed, the thrown exception propagates out of {@code tickIsolated}/{@code runIsolated} into this
+	 * test and fails it. Also asserts the guard is transparent on the happy path (returns the body's value).
+	 */
+	@GameTest
+	public void networkTickGuardIsolatesThrows(GameTestHelper helper) {
+		// A throwing EU-tick body is swallowed and reports 0 EU moved (not propagated).
+		long moved = NetworkTickGuard.tickIsolated("test", () -> {
+			throw new RuntimeException("foreign capability boom at BlockPos{x=1, y=2, z=3}");
+		});
+		if (moved != 0L) {
+			helper.fail("tickIsolated must return 0 when the body throws, got " + moved);
+			return;
+		}
+		// A throwing void tick body (item pipe) is swallowed too.
+		try {
+			NetworkTickGuard.runIsolated("test", () -> {
+				throw new IllegalStateException("foreign item capability boom");
+			});
+		} catch (Throwable t) {
+			helper.fail("runIsolated must swallow the throw, but it propagated: " + t);
+			return;
+		}
+		// Transparent on success: the body's value passes through unchanged.
+		long ok = NetworkTickGuard.tickIsolated("test", () -> 42L);
+		if (ok != 42L) {
+			helper.fail("tickIsolated must return the body's value on success, got " + ok);
+			return;
 		}
 		helper.succeed();
 	}

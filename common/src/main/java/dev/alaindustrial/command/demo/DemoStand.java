@@ -148,15 +148,28 @@ public final class DemoStand {
 			x += 3;
 		}
 
-		// Water mill sunk to floor level so its horizontal faces touch water; the water cells
-		// replace floor blocks and are contained laterally by the floor and below by stone.
+		// Water mill driven by a real CURRENT (MOD-188): only FLOWING water turns the wheel — a still
+		// source powers nothing. A water source boxed one block above the wheel's front cell (facing
+		// NORTH → front cell at z=3) falls straight down into it, so the mill's north face sees flowing
+		// (falling) water. Floors hold the flow; the wheel-clearance cells (front, front-above, front
+		// sides) stay non-solid so the wheel does not stall (MOD-179).
+		set(level, origin, 16, -1, 3, FLOOR);
+		set(level, origin, 17, -1, 3, FLOOR); // riverbed under the flow (holds the water)
+		set(level, origin, 18, -1, 3, FLOOR);
 		set(level, origin, 17, -1, 4, FLOOR);
-		set(level, origin, 16, -1, 4, FLOOR);
-		set(level, origin, 18, -1, 4, FLOOR);
+		// Clearance cells at hub height — non-solid; the falling column spreads into them (flowing).
+		set(level, origin, 16, 0, 3, Blocks.AIR);
+		set(level, origin, 17, 0, 3, Blocks.AIR); // front cell — the waterfall lands here
+		set(level, origin, 18, 0, 3, Blocks.AIR);
+		// Box the source at y=1 so it only falls down onto the front cell (walls on all four sides).
+		set(level, origin, 16, 1, 3, FLOOR);
+		set(level, origin, 18, 1, 3, FLOOR);
+		set(level, origin, 17, 1, 2, FLOOR);
+		set(level, origin, 17, 1, 4, FLOOR);
+		set(level, origin, 17, 1, 3, Blocks.WATER); // source → falls into the front cell as flowing water
+		// The mill and its battery box behind it (south = the back/OUT face).
 		set(level, origin, 17, 0, 4, ModContent.WATER_MILL.get());
 		fillSlot(level, origin, 17, 0, 4, 0, new ItemStack(ModContent.WATER_MILL_WHEEL.get()));
-		set(level, origin, 16, 0, 4, Blocks.WATER);
-		set(level, origin, 18, 0, 4, Blocks.WATER);
 		set(level, origin, 17, -1, 5, FLOOR);
 		set(level, origin, 17, 0, 5, ModContent.BATTERY_BOX.get());
 	}

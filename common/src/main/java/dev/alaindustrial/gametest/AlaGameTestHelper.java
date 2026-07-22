@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.Block;
 /**
  * Shared loader-neutral gametest helpers, extracted to kill the {@code place}/{@code drive} boilerplate
  * that was copy-pasted across the Fabric {@code @GameTest} classes ({@code MachineGameTest},
- * {@code GeneratorGameTest}, {@code BatteryBoxGameTest}, {@code WaterMillGameTest},
+ * {@code GeneratorGameTest}, {@code BatteryBoxGameTest}, {@code WaterMillWheelGameTest},
  * {@code WindMillGameTest}, {@code FluidGameTest}, {@code SolarPanelGameTest}, …).
  *
  * <p>Every ticking block entity in the mod is a {@link MachineBlockEntity} descendant (machines,

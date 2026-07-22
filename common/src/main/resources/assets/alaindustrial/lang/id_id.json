@@ -115,6 +115,8 @@
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Terhalang",
 	"gui.alaindustrial.wind_mill.mode.interference": "Interferensi",
 	"gui.alaindustrial.water_mill.mode.interference": "Interferensi",
+	"gui.alaindustrial.water_mill.mode.obstructed": "Terhalang",
+	"gui.alaindustrial.water_mill.mode.no_water": "Tidak ada air",
 	"gui.alaindustrial.wind_mill.mode.calm": "Tenang",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Angin sepoi",
 	"gui.alaindustrial.wind_mill.mode.gale": "Angin kencang",

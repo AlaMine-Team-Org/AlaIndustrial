@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "Mulino ad acqua",
-              "text": "Un generatore LV passivo — produce EU dall'acqua attorno al blocco, senza combustibile né serbatoi."
+              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
             },
             {
               "type": "stats",
@@ -1012,7 +1012,7 @@
         {
           "id": "player_profile",
           "title": "Profilo del giocatore",
-          "icon": "alaindustrial:guide_book",
+          "icon": "minecraft:player_head",
           "block_id": "alaindustrial:player_profile",
           "pages": [
             {

@@ -217,7 +217,9 @@ public final class NetworkManager {
 			i++;
 			processed++;
 			if (net.isAwake()) {
-				movedEu += net.tick();
+				// Isolate the tick: a neighbouring mod's capability throwing must not crash the server tick
+				// (MOD-186). On a throw the network is skipped this tick (0 EU) and retried next tick.
+				movedEu += dev.alaindustrial.core.NetworkTickGuard.tickIsolated("energy", net::tick);
 				ticked++;
 				budget--;
 			}

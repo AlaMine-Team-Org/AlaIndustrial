@@ -2,7 +2,9 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
+import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.WaterMillClearance;
 import dev.alaindustrial.core.environment.WaterMillInterference;
 import dev.alaindustrial.core.environment.WaterMillOutput;
 import dev.alaindustrial.menu.WaterMillMenu;
@@ -19,11 +21,12 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 
 /**
  * LV water mill (spec: alaindustrial:water_mill) — a passive, fuel-free generator. Each tick it counts
- * vanilla water (source or flowing) on its four horizontal faces (N/S/E/W) and produces
- * {@link Config#waterMillEuPerTick} EU/t per water face: 0–4 EU/t, continuous. A crafted
+ * <b>flowing</b> water (a current — not a still source, MOD-188) on its four horizontal faces (N/S/E/W)
+ * and produces {@link Config#waterMillEuPerTick} EU/t per flowing face: 0–4 EU/t, continuous. A crafted
  * {@code water_mill_wheel} must be installed in the single component slot; it is not consumed.
  * The remaining production calculation is a stateless world read. Buffer
  * {@link Config#waterMillBuffer}, LV output.
@@ -36,11 +39,20 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 
 	/**
 	 * Status carried by the {@code maxProgress} sync channel (slot 3) — the wheel renderer hides the
-	 * wheel on {@link #MODE_INTERFERENCE} and the GUI shows the matching label. Kept minimal: the water
-	 * mill has none of the wind mill's weather/altitude modes, only "running normally" vs "wheels clash".
+	 * wheel on any non-{@link #MODE_OK} mode and the GUI shows the matching label. Kept minimal: the
+	 * water mill has none of the wind mill's weather/altitude modes, only "running normally", "wheels
+	 * clash" and "wheel blocked by a solid block" (MOD-179). Obstruction masks interference (mirrors
+	 * the wind mill's priority order): clear the solid block first, then worry about spacing.
 	 */
 	public static final int MODE_OK = 0;
 	public static final int MODE_INTERFERENCE = 1;
+	public static final int MODE_OBSTRUCTED = 2;
+	/**
+	 * Wheel installed and free to spin, but no water on any horizontal face — the player-facing hint
+	 * "place water next to the mill" (MOD-179 feedback). Unlike interference/obstruction this does NOT
+	 * hide the wheel: a dry wheel stands still but stays rendered.
+	 */
+	public static final int MODE_NO_WATER = 3;
 
 	/** LV output packet cap (32 EU/t), shared with the other LV generators. */
 	private static final int MAX_EXTRACT = 32;
@@ -59,11 +71,19 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 		super(ModContent.WATER_MILL_BE.get(), pos, state, EnergyTier.LV, 1, Config.waterMillBuffer, MAX_EXTRACT);
 	}
 
-	/** Count the four horizontal faces (N/S/E/W) whose neighbour is vanilla water (source or flowing). */
+	/**
+	 * Count the four horizontal faces (N/S/E/W) whose neighbour is <b>flowing</b> water (MOD-188). A
+	 * real water wheel is driven by a current, so a still source block ({@link FluidState#isSource()})
+	 * does NOT count — only flowing/falling water ({@code isSource() == false}, i.e. a stream or a
+	 * waterfall) turns the wheel. This closes the "drop it in a still pool and it powers itself" exploit.
+	 * Note: vanilla river/ocean water is mostly source blocks, so the player must supply an actual
+	 * current (a source feeding a channel with a drain, or a waterfall).
+	 */
 	private static int waterSides(Level level, BlockPos pos) {
 		int sides = 0;
 		for (Direction dir : Direction.Plane.HORIZONTAL) {
-			if (level.getFluidState(pos.relative(dir)).is(FluidTags.WATER)) {
+			FluidState fluid = level.getFluidState(pos.relative(dir));
+			if (fluid.is(FluidTags.WATER) && !fluid.isSource()) {
 				sides++;
 			}
 		}
@@ -79,25 +99,57 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 			setState(0, MODE_OK);
 			return 0;
 		}
+		Direction facing = state.hasProperty(HorizontalMachineBlock.FACING)
+				? state.getValue(HorizontalMachineBlock.FACING)
+				: Direction.NORTH;
+		// Wheel clearance (MOD-179): a solid block in the swept area makes the wheel clip through it.
+		// Cheap (6 block reads), so checked every tick like the wind mill's blade clearance. Also closes
+		// the face-to-face-with-no-gap blind spot of the AABB interference test: the neighbour mill's
+		// casing sits in our front cell.
+		boolean obstructed = WaterMillClearance.hasObstruction(level, pos, facing);
 		// Wheel interference (MOD-175): a neighbouring mill's wheel overlapping ours makes both look
 		// broken (z-fighting) and stalls both. The 7×7×7 scan is too heavy per tick — sample it on a
-		// cadence and cache between. Only meaningful once a wheel is installed (checked above).
+		// cadence and cache between. Only meaningful once a wheel is installed (checked above), and
+		// masked by an obstruction (blocked wheels cannot clash — fix the wall first).
 		if (scanCounter % SCAN_INTERVAL == 0) {
-			Direction facing = state.hasProperty(HorizontalMachineBlock.FACING)
-					? state.getValue(HorizontalMachineBlock.FACING)
-					: Direction.NORTH;
-			cachedInterfered = WaterMillInterference.hasInterference(level, pos, facing);
+			cachedInterfered = !obstructed && WaterMillInterference.hasInterference(level, pos, facing);
 		}
 		scanCounter++;
+		if (obstructed) {
+			// Wheel hidden by the renderer, generation halted until the blocking block is removed.
+			setState(0, MODE_OBSTRUCTED);
+			return 0;
+		}
 		if (cachedInterfered) {
 			// Wheel hidden by the renderer, generation halted — both interfering mills stall (symmetric).
 			setState(0, MODE_INTERFERENCE);
 			return 0;
 		}
 		int sides = waterSides(level, pos);
+		if (sides == 0) {
+			// Wheel present and free, but dry: show the "no water" hint instead of a silent idle
+			// (MOD-179 feedback) — the player sees exactly what is missing.
+			setState(0, MODE_NO_WATER);
+			return 0;
+		}
 		int made = WaterMillOutput.euFor(sides, Config.waterMillEuPerTick);
 		setState(sides, MODE_OK);
 		return made;
+	}
+
+	/**
+	 * Unlike the default generator (5-face output), the water mill emits EU only from its back face
+	 * (opposite of FACING) — the same single-output contract as the wind mill (R-NRG-03). The front
+	 * carries the wheel and stays inert; the four sides stand in the water and are inert too, so a
+	 * cable (or a battery box) must connect to the back — the face with the output-port texture.
+	 */
+	@Override
+	public EnergyRole energyRoleForFace(Direction worldFace) {
+		Direction facing = getBlockState().getValue(HorizontalMachineBlock.FACING);
+		if (worldFace == facing.getOpposite()) {
+			return EnergyRole.OUT;
+		}
+		return EnergyRole.NONE;
 	}
 
 	/**
@@ -122,6 +174,17 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
 		return slot == WHEEL_SLOT && stack.is(ModContent.WATER_MILL_WHEEL.get());
+	}
+
+	/**
+	 * Automation may only insert a wheel while the slot is empty (MOD-179). The "one wheel" limit
+	 * otherwise lives solely in the GUI slot's {@code getMaxStackSize} — a hopper bypasses the menu and
+	 * would happily top the slot up to a full stack of wheels. Manual GUI placement is unaffected
+	 * ({@code canPlaceItem}), so swapping a wheel by hand still works.
+	 */
+	@Override
+	public boolean canPlaceItemThroughFace(int slot, ItemStack stack, Direction side) {
+		return super.canPlaceItemThroughFace(slot, stack, side) && items.get(WHEEL_SLOT).isEmpty();
 	}
 
 	@Override

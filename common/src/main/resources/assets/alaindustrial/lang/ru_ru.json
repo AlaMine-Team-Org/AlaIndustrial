@@ -138,6 +138,8 @@
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Помеха",
 	"gui.alaindustrial.wind_mill.mode.interference": "Помехи ротора",
 	"gui.alaindustrial.water_mill.mode.interference": "Помехи колеса",
+	"gui.alaindustrial.water_mill.mode.obstructed": "Помеха",
+	"gui.alaindustrial.water_mill.mode.no_water": "Нет воды",
 	"gui.alaindustrial.wind_mill.mode.calm": "Штиль",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Ветерок",
 	"gui.alaindustrial.wind_mill.mode.gale": "Сильный ветер",

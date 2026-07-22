@@ -115,6 +115,8 @@
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Bloqueado",
 	"gui.alaindustrial.wind_mill.mode.interference": "Interferência",
 	"gui.alaindustrial.water_mill.mode.interference": "Interferência",
+	"gui.alaindustrial.water_mill.mode.obstructed": "Bloqueado",
+	"gui.alaindustrial.water_mill.mode.no_water": "Sem água",
 	"gui.alaindustrial.wind_mill.mode.calm": "Calmaria",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Brisa",
 	"gui.alaindustrial.wind_mill.mode.gale": "Vendaval",

@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "Водяний млин",
-              "text": "Пасивний генератор LV — виробляє EU від води навколо блока, без палива й баків."
+              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
             },
             {
               "type": "stats",
@@ -1012,7 +1012,7 @@
         {
           "id": "player_profile",
           "title": "Профіль гравця",
-          "icon": "alaindustrial:guide_book",
+          "icon": "minecraft:player_head",
           "block_id": "alaindustrial:player_profile",
           "pages": [
             {

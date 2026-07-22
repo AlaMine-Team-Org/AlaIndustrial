@@ -7,6 +7,7 @@ import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
+import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.EnergyRole;
@@ -796,9 +797,12 @@ public final class CoreEnergyScenarios {
 		}
 		mill.getEnergyStorage().amount = mill.getEnergyStorage().getCapacity(); // ample supply to push
 		mill.setChanged();
-		BlockPos sink = millPos.east(); // mill sits on the box's WEST side
+		// The wind mill emits only from its BACK face (opposite of FACING = NORTH → SOUTH), and since
+		// MOD-179 the direct push honors that role too — so the box must sit behind the mill with its
+		// input (FACING) face towards it. Mirrors the Fabric tcWindmill001Con01 placement.
+		BlockPos sink = millPos.south();
 		helper.setBlock(sink, ModContent.BATTERY_BOX.get().defaultBlockState()
-				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+				.setValue(HorizontalMachineBlock.FACING, Direction.NORTH));
 		BatteryBoxBlockEntity box = helper.getBlockEntity(sink, BatteryBoxBlockEntity.class);
 		if (box == null) {
 			helper.fail("battery box missing after placement");
@@ -809,6 +813,79 @@ public final class CoreEnergyScenarios {
 		}
 		if (box.getEnergyStorage().getAmount() <= 0) {
 			helper.fail("adjacent battery box received no EU from the wind mill");
+		}
+		helper.succeed();
+	}
+
+	// ── scenario 6b: water mill — wheel gate + clearance parity on the NeoForge lane (MOD-179) ─────
+
+	/**
+	 * Water mill wheel gate on the NeoForge lane: adjacent water alone produces nothing until the
+	 * water wheel is installed, then EU flows. Loader-neutral body — the deep per-case coverage
+	 * (faces, interference geometry, cache cadence) lives in the Fabric {@code WaterMillWheelGameTest};
+	 * this proves the shared produce() path and slot gating work end to end on NeoForge too.
+	 * Mirrors: WaterMillWheelGameTest.waterMillWheel_missingWheelStopsGeneration / installedWheelEnablesGeneration
+	 */
+	public static void waterMillWheelGate(GameTestHelper helper) {
+		BlockPos millPos = new BlockPos(1, 2, 1);
+		helper.setBlock(millPos, ModContent.WATER_MILL.get());
+		WaterMillBlockEntity mill = helper.getBlockEntity(millPos, WaterMillBlockEntity.class);
+		if (mill == null) {
+			helper.fail("water mill block entity missing after placement");
+		}
+		// MOD-188: the mill counts only FLOWING water — a still source powers nothing. Place a static
+		// flowing block (LEVEL 1); tick() drives only the mill's serverTick, so it does not dissipate.
+		helper.setBlock(millPos.east(), Blocks.WATER.defaultBlockState()
+				.setValue(net.minecraft.world.level.block.LiquidBlock.LEVEL, 1));
+		for (int i = 0; i < 5; i++) {
+			tick(helper, mill);
+		}
+		if (mill.getEnergyStorage().getAmount() != 0) {
+			helper.fail("water mill generated EU without an installed wheel");
+		}
+		mill.setItem(WaterMillBlockEntity.WHEEL_SLOT, new ItemStack(ModContent.WATER_MILL_WHEEL.get()));
+		for (int i = 0; i < 5; i++) {
+			tick(helper, mill);
+		}
+		if (mill.getEnergyStorage().getAmount() <= 0) {
+			helper.fail("water mill with water and wheel generated no EU");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Two water mills face to face with no gap stall symmetrically on the NeoForge lane: each wheel
+	 * would clip through the other mill's casing, so the clearance check (MOD-179) reports
+	 * MODE_OBSTRUCTED on both and neither produces. This is the exact audit-found blind spot of the
+	 * AABB interference test, proven loader-neutral.
+	 * Mirrors: WaterMillWheelGameTest.waterMill_faceToFaceAdjacentObstructed
+	 */
+	public static void waterMillAdjacentFaceToFaceStalls(GameTestHelper helper) {
+		BlockPos aPos = new BlockPos(1, 2, 1);
+		BlockPos bPos = aPos.east();
+		helper.setBlock(aPos, ModContent.WATER_MILL.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
+		helper.setBlock(bPos, ModContent.WATER_MILL.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		WaterMillBlockEntity a = helper.getBlockEntity(aPos, WaterMillBlockEntity.class);
+		WaterMillBlockEntity b = helper.getBlockEntity(bPos, WaterMillBlockEntity.class);
+		if (a == null || b == null) {
+			helper.fail("water mill block entity missing after placement");
+		}
+		a.setItem(WaterMillBlockEntity.WHEEL_SLOT, new ItemStack(ModContent.WATER_MILL_WHEEL.get()));
+		b.setItem(WaterMillBlockEntity.WHEEL_SLOT, new ItemStack(ModContent.WATER_MILL_WHEEL.get()));
+		helper.setBlock(aPos.north(), Blocks.WATER); // a water face for A: obstruction must still win
+		for (int i = 0; i < 3; i++) {
+			tick(helper, a);
+			tick(helper, b);
+		}
+		if (a.getDataAccess().get(3) != WaterMillBlockEntity.MODE_OBSTRUCTED
+				|| b.getDataAccess().get(3) != WaterMillBlockEntity.MODE_OBSTRUCTED) {
+			helper.fail("adjacent face-to-face mills not both MODE_OBSTRUCTED: A="
+					+ a.getDataAccess().get(3) + " B=" + b.getDataAccess().get(3));
+		}
+		if (a.getEnergyStorage().getAmount() != 0) {
+			helper.fail("obstructed water mill A generated EU");
 		}
 		helper.succeed();
 	}

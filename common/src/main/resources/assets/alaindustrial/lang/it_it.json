@@ -115,6 +115,8 @@
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Ostruito",
 	"gui.alaindustrial.wind_mill.mode.interference": "Interferenza",
 	"gui.alaindustrial.water_mill.mode.interference": "Interferenza",
+	"gui.alaindustrial.water_mill.mode.obstructed": "Ostruito",
+	"gui.alaindustrial.water_mill.mode.no_water": "Niente acqua",
 	"gui.alaindustrial.wind_mill.mode.calm": "Calma",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Brezza",
 	"gui.alaindustrial.wind_mill.mode.gale": "Burrasca",

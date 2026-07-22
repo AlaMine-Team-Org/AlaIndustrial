@@ -15,15 +15,18 @@ import net.minecraft.world.level.block.state.BlockState;
  * front of its {@code FACING} face (centre ~1.02 blocks from the mill's own centre along
  * {@code FACING} — the renderer's {@code translate(0, 0, -1.02)}, see
  * {@code WaterMillWheelBlockEntityRenderer}). The wheel is markedly bigger than the wind-mill rotor
- * (rim radius {@value #DISC_HALF_SIZE} vs 1.0), so two mills placed close together look broken: the
- * wheels intersect and z-fight (the caged screenshot). {@code WaterMillBlockEntity} has no {@code lit}
- * or clearance concept for this — the neighbour's wheel is a client-side render, not a block.
+ * (rim radius {@value WaterMillWheelGeometry#DISC_HALF_SIZE} vs 1.0), so two mills placed close
+ * together look broken: the wheels intersect and z-fight (the caged screenshot).
+ * {@code WaterMillBlockEntity} handles the solid-block case separately via {@code WaterMillClearance}
+ * (MOD-179) — the neighbour's wheel is a client-side render, not a block.
  *
- * <p>The check models each wheel as an axis-aligned box: ±{@link #DISC_HALF_SIZE} along the two axes
- * of the rotation plane, ±{@link #DISC_HALF_DEPTH} along {@code FACING}. Two mills interfere when
- * their boxes overlap with positive volume — touching edge-to-edge is <b>not</b> interference.
- * Interference is symmetric, so <b>both</b> mills stall (no tie-break). Because the wheel is larger,
- * mills need a wider gap than wind mills: two empty blocks side-by-side or face-to-face.
+ * <p>The AABB model and the overlap predicate live in {@link WaterMillWheelGeometry} (Minecraft-free,
+ * unit-tested at L1). Two mills interfere when their wheel boxes overlap with positive volume —
+ * touching edge-to-edge is <b>not</b> interference. Interference is symmetric, so <b>both</b> mills
+ * stall (no tie-break). Because the wheel is larger, mills need a wider gap than wind mills: two
+ * empty blocks side-by-side or face-to-face. Face-to-face with NO gap is geometrically invisible to
+ * this test (each wheel box sits inside the other mill's solid casing) and is caught by
+ * {@code WaterMillClearance} instead.
  *
  * <p>A neighbour counts only when it has a wheel installed (slot {@code WHEEL_SLOT} = 0 of its block
  * entity): a bare mill renders no wheel. Even a stalled neighbour's wheel counts — a static wheel
@@ -31,12 +34,6 @@ import net.minecraft.world.level.block.state.BlockState;
  * reads as wheel-less; the next scan after the chunk loads corrects the state.
  */
 public final class WaterMillInterference {
-	/** Half-extent of the wheel in its rotation plane — the rim outer radius {@code RIM_OUTER}. */
-	private static final double DISC_HALF_SIZE = 1.32;
-	/** Half-thickness of the wheel box along {@code FACING} — the rim depth {@code RIM_BACK}. */
-	private static final double DISC_HALF_DEPTH = 0.4375;
-	/** Distance from the mill's block centre to the wheel centre along {@code FACING} (renderer push). */
-	private static final double DISC_PUSH = 1.02;
 	/**
 	 * Chebyshev scan radius around the mill's own position. Each wheel box reaches at most
 	 * {@code DISC_HALF_SIZE} ≈ 1.32 in its plane and {@code DISC_PUSH + DISC_HALF_DEPTH} ≈ 1.46 along
@@ -44,8 +41,6 @@ public final class WaterMillInterference {
 	 * overlap; radius 3 covers every reachable candidate.
 	 */
 	private static final int SCAN_RADIUS = 3;
-	/** Interval-overlap slack so wheels meeting exactly edge-to-edge do not count as overlapping. */
-	private static final double EPSILON = 1.0E-4;
 
 	private WaterMillInterference() {
 	}
@@ -60,7 +55,6 @@ public final class WaterMillInterference {
 	 * @return {@code true} if at least one neighbouring wheel overlaps this mill's wheel
 	 */
 	public static boolean hasInterference(Level level, BlockPos pos, Direction facing) {
-		double[] own = discBox(pos, facing);
 		BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
 		for (int dx = -SCAN_RADIUS; dx <= SCAN_RADIUS; dx++) {
 			for (int dy = -SCAN_RADIUS; dy <= SCAN_RADIUS; dy++) {
@@ -77,8 +71,7 @@ public final class WaterMillInterference {
 					if (!hasWheelInstalled(level, cursor)) {
 						continue;
 					}
-					double[] other = discBox(cursor, state.getValue(HorizontalMachineBlock.FACING));
-					if (boxesOverlap(own, other)) {
+					if (wheelsOverlap(pos, facing, cursor, state.getValue(HorizontalMachineBlock.FACING))) {
 						return true;
 					}
 				}
@@ -88,34 +81,23 @@ public final class WaterMillInterference {
 	}
 
 	/**
+	 * Wheel-vs-wheel geometry: whether the wheel of a mill at {@code a} facing {@code aFacing}
+	 * overlaps the wheel of a mill at {@code b} facing {@code bFacing}. Thin adapter over the
+	 * L1-tested {@link WaterMillWheelGeometry#wheelsOverlap} — the scan above evaluates exactly this
+	 * predicate per candidate neighbour.
+	 */
+	public static boolean wheelsOverlap(BlockPos a, Direction aFacing, BlockPos b, Direction bFacing) {
+		return WaterMillWheelGeometry.wheelsOverlap(
+				a.getX(), a.getY(), a.getZ(), aFacing.getStepX(), aFacing.getStepY(), aFacing.getStepZ(),
+				b.getX(), b.getY(), b.getZ(), bFacing.getStepX(), bFacing.getStepY(), bFacing.getStepZ());
+	}
+
+	/**
 	 * True when the mill at {@code at} has a wheel in slot 0 ({@code WHEEL_SLOT}). No block entity
 	 * (unloaded chunk, race during placement) reads as "no wheel": no wheel is rendered from an
 	 * unloaded chunk anyway.
 	 */
 	private static boolean hasWheelInstalled(Level level, BlockPos at) {
 		return level.getBlockEntity(at) instanceof Container container && !container.getItem(0).isEmpty();
-	}
-
-	/**
-	 * Axis-aligned box of the wheel for a mill at {@code pos} facing {@code facing}, as
-	 * {@code {minX, minY, minZ, maxX, maxY, maxZ}}: wheel centre pushed {@link #DISC_PUSH} from the
-	 * block centre along {@code facing}, ±{@link #DISC_HALF_DEPTH} along the facing axis and
-	 * ±{@link #DISC_HALF_SIZE} along the two plane axes.
-	 */
-	private static double[] discBox(BlockPos pos, Direction facing) {
-		double cx = pos.getX() + 0.5 + facing.getStepX() * DISC_PUSH;
-		double cy = pos.getY() + 0.5 + facing.getStepY() * DISC_PUSH;
-		double cz = pos.getZ() + 0.5 + facing.getStepZ() * DISC_PUSH;
-		double hx = facing.getAxis() == Direction.Axis.X ? DISC_HALF_DEPTH : DISC_HALF_SIZE;
-		double hy = facing.getAxis() == Direction.Axis.Y ? DISC_HALF_DEPTH : DISC_HALF_SIZE;
-		double hz = facing.getAxis() == Direction.Axis.Z ? DISC_HALF_DEPTH : DISC_HALF_SIZE;
-		return new double[] {cx - hx, cy - hy, cz - hz, cx + hx, cy + hy, cz + hz};
-	}
-
-	/** Positive-volume overlap on all three axes; edge contact (within {@link #EPSILON}) is not overlap. */
-	private static boolean boxesOverlap(double[] a, double[] b) {
-		return a[0] < b[3] - EPSILON && b[0] < a[3] - EPSILON
-				&& a[1] < b[4] - EPSILON && b[1] < a[4] - EPSILON
-				&& a[2] < b[5] - EPSILON && b[2] < a[5] - EPSILON;
 	}
 }

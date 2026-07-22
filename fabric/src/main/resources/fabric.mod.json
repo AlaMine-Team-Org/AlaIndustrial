@@ -40,6 +40,7 @@
 	"mixins": [
 		"alaindustrial.mixins.json",
 		"alaindustrial.worldgen.mixins.json",
+		"alaindustrial.compat-optional.mixins.json",
 		{
 			"config": "alaindustrial.client.mixins.json",
 			"environment": "client"

@@ -21,7 +21,7 @@ import team.reborn.energy.api.EnergyStorage;
 
 /**
  * L2 functional suite for the wind mill — the passive height/sky/weather-driven LV generator. Mirrors the
- * structure of {@link WaterMillGameTest} / {@link SolarPanelGameTest}: each method is one case, traced via
+ * structure of {@link WaterMillWheelGameTest} / {@link SolarPanelGameTest}: each method is one case, traced via
  * {@code @implements}, driving {@code serverTick} directly (deterministic, no waiting).
  *
  * <p><b>Height note.</b> A Fabric gametest structure sits near world Y = 0, well below sea level

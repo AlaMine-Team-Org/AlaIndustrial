@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "물레방아",
-              "text": "수동형 LV 발전기 — 연료나 탱크 없이 블록 주변의 물에서 EU를 생산합니다."
+              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
             },
             {
               "type": "stats",
@@ -1012,7 +1012,7 @@
         {
           "id": "player_profile",
           "title": "플레이어 프로필",
-          "icon": "alaindustrial:guide_book",
+          "icon": "minecraft:player_head",
           "block_id": "alaindustrial:player_profile",
           "pages": [
             {

@@ -107,7 +107,11 @@ public final class ItemNetworkManager {
 		if (state.tickCursor >= all.size()) state.tickCursor = 0;
 		for (int i = 0; i < all.size(); i++) {
 			ItemNetwork network = all.get((state.tickCursor + i) % all.size());
-			if (network.isAwake()) network.tick();
+			// Isolate the tick: a neighbouring mod's item capability throwing must not crash the server
+			// tick (MOD-186). On a throw this network is skipped this tick and retried next tick.
+			if (network.isAwake()) {
+				dev.alaindustrial.core.NetworkTickGuard.runIsolated("item", network::tick);
+			}
 		}
 		state.tickCursor = (state.tickCursor + 1) % all.size();
 	}

@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "水车",
-              "text": "被动式 LV 发电机——从方块周围的水中产生 EU，无需燃料或储罐。"
+              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
             },
             {
               "type": "stats",
@@ -1012,7 +1012,7 @@
         {
           "id": "player_profile",
           "title": "玩家档案",
-          "icon": "alaindustrial:guide_book",
+          "icon": "minecraft:player_head",
           "block_id": "alaindustrial:player_profile",
           "pages": [
             {

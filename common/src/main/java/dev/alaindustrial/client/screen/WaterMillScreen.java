@@ -56,10 +56,17 @@ public class WaterMillScreen extends MachineScreen<WaterMillMenu> {
 					TEX_SIZE, TEX_SIZE);
 		}
 
-		// MOD-175: when this mill's wheel overlaps a neighbouring mill's, the wheel is hidden in-world
-		// (no z-fighting) and generation stops. Show the reason so the player understands why it idled.
-		if (this.menu.getMode() == WaterMillBlockEntity.MODE_INTERFERENCE) {
-			Component label = Component.translatable("gui.alaindustrial.water_mill.mode.interference");
+		// MOD-175/MOD-179: explain every idle state — wheel clash, wheel blocked by a solid block, or
+		// simply no water around the mill — so the player sees exactly what is missing.
+		String modeKey = switch (this.menu.getMode()) {
+			case WaterMillBlockEntity.MODE_INTERFERENCE -> "gui.alaindustrial.water_mill.mode.interference";
+			case WaterMillBlockEntity.MODE_OBSTRUCTED -> "gui.alaindustrial.water_mill.mode.obstructed";
+			case WaterMillBlockEntity.MODE_NO_WATER ->
+					this.menu.getSlot(0).hasItem() ? "gui.alaindustrial.water_mill.mode.no_water" : null;
+			default -> null;
+		};
+		if (modeKey != null) {
+			Component label = Component.translatable(modeKey);
 			int tx = this.leftPos + (this.imageWidth - this.font.width(label)) / 2;
 			graphics.text(this.font, label, tx, this.topPos + STATUS_TEXT_Y, GuiStyle.TEXT_DIM, false);
 		}

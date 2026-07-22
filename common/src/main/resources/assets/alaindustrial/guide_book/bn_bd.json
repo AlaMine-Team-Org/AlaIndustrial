@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "জলচক্র",
-              "text": "একটি প্যাসিভ LV জেনারেটর — জ্বালানি বা ট্যাংক ছাড়াই ব্লকের চারপাশের জল থেকে EU উৎপাদন করে।"
+              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
             },
             {
               "type": "stats",
@@ -1012,7 +1012,7 @@
         {
           "id": "player_profile",
           "title": "প্লেয়ার প্রোফাইল",
-          "icon": "alaindustrial:guide_book",
+          "icon": "minecraft:player_head",
           "block_id": "alaindustrial:player_profile",
           "pages": [
             {

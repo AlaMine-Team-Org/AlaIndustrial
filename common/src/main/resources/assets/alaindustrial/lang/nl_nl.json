@@ -115,6 +115,8 @@
 	"gui.alaindustrial.wind_mill.mode.obstructed": "Geblokkeerd",
 	"gui.alaindustrial.wind_mill.mode.interference": "Interferentie",
 	"gui.alaindustrial.water_mill.mode.interference": "Interferentie",
+	"gui.alaindustrial.water_mill.mode.obstructed": "Geblokkeerd",
+	"gui.alaindustrial.water_mill.mode.no_water": "Geen water",
 	"gui.alaindustrial.wind_mill.mode.calm": "Windstil",
 	"gui.alaindustrial.wind_mill.mode.breeze": "Bries",
 	"gui.alaindustrial.wind_mill.mode.gale": "Storm",

@@ -115,6 +115,8 @@
 	"gui.alaindustrial.wind_mill.mode.obstructed": "बाधित",
 	"gui.alaindustrial.wind_mill.mode.interference": "रोटर हस्तक्षेप",
 	"gui.alaindustrial.water_mill.mode.interference": "रोटर हस्तक्षेप",
+	"gui.alaindustrial.water_mill.mode.obstructed": "बाधित",
+	"gui.alaindustrial.water_mill.mode.no_water": "पानी नहीं है",
 	"gui.alaindustrial.wind_mill.mode.calm": "शांत",
 	"gui.alaindustrial.wind_mill.mode.breeze": "हल्की हवा",
 	"gui.alaindustrial.wind_mill.mode.gale": "तेज़ हवा",
