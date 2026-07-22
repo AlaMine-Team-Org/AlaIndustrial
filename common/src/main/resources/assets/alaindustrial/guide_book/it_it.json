@@ -304,13 +304,13 @@
               "recipe_type": "Fabbricazione sagomata",
               "grid": [
                 "minecraft:oak_planks",
-                "minecraft:oak_planks",
+                "alaindustrial:battery",
                 "minecraft:oak_planks",
                 "alaindustrial:copper_cable",
                 "minecraft:redstone",
                 "alaindustrial:copper_cable",
                 "minecraft:oak_planks",
-                "minecraft:oak_planks",
+                "alaindustrial:battery",
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:battery_box",
@@ -1562,6 +1562,44 @@
           ]
         },
         {
+          "id": "jetpack",
+          "title": "Jetpack",
+          "icon": "alaindustrial:jetpack",
+          "block_id": "alaindustrial:jetpack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Jetpack",
+              "text": "Un dispositivo di volo a EU per lo slot del torace — spinta finché salto è premuto, planata dolce senza energia quando è scarico."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Buffer: 30 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "alaindustrial:energy_pack",
+                "alaindustrial:battery",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_coil",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:jetpack",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron_pickaxe",
           "title": "Piccone in ferro temperato",
           "icon": "alaindustrial:tempered_iron_pickaxe",
@@ -1716,7 +1754,8 @@
               "type": "stats",
               "title": "Statistiche",
               "lines": [
-                "Buffer: 5 000 EU"
+                "Buffer: 5 000 EU",
+                "Raggio: 5 blocchi"
               ]
             },
             {

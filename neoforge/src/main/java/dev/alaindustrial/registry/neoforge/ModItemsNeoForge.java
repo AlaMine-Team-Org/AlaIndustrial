@@ -3,9 +3,7 @@ package dev.alaindustrial.registry.neoforge;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
-import dev.alaindustrial.item.HintItem;
 import dev.alaindustrial.item.FluidTankBlockItem;
-import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ScytheTier;
 import dev.alaindustrial.item.ScytheTiers;
 import dev.alaindustrial.item.ModToolMaterials;
@@ -48,10 +46,10 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> ALIGNMENT_CHIP_DAY = ITEMS.registerItem("alignment_chip_day", Item::new);
 	public static final DeferredItem<Item> ALIGNMENT_CHIP_NIGHT = ITEMS.registerItem("alignment_chip_night", Item::new);
 	// Upgrade chips (MOD-080): empty blank + the mute upgrade. Each shows a gray hint line.
-	public static final DeferredItem<Item> EMPTY_CHIP = ITEMS.registerItem("empty_chip",
-			p -> new HintItem(p, "item.alaindustrial.empty_chip.hint", "item.alaindustrial.empty_chip.hint2"));
-	public static final DeferredItem<Item> MUTE_CHIP = ITEMS.registerItem("mute_chip",
-			p -> new HintItem(p, "item.alaindustrial.mute_chip.hint", "item.alaindustrial.mute_chip.hint2"));
+	public static final DeferredItem<Item> EMPTY_CHIP =
+			ITEMS.registerItem("empty_chip", ItemBuildersNeoForge.hint("empty_chip"));
+	public static final DeferredItem<Item> MUTE_CHIP =
+			ITEMS.registerItem("mute_chip", ItemBuildersNeoForge.hint("mute_chip"));
 	public static final DeferredItem<Item> WINDMILL_ROTOR = ITEMS.registerItem("windmill_rotor", Item::new);
 	public static final DeferredItem<Item> WATER_MILL_WHEEL = ITEMS.registerItem("water_mill_wheel", Item::new);
 	public static final DeferredItem<Item> WOODEN_GEAR = ITEMS.registerItem("wooden_gear", Item::new);
@@ -94,17 +92,13 @@ public final class ModItemsNeoForge {
 	// 26.2 jar; it is how vanilla Items.IRON_HELMET is built). setId is applied automatically by
 	// NeoForge, matching the Fabric helper.
 	public static final DeferredItem<Item> TEMPERED_IRON_HELMET =
-			ITEMS.registerItem("tempered_iron_helmet", Item::new,
-					p -> p.humanoidArmor(ModArmorMaterials.TEMPERED_IRON, ArmorType.HELMET));
+			ITEMS.registerItem("tempered_iron_helmet", Item::new, ItemBuildersNeoForge.temperedArmor(ArmorType.HELMET));
 	public static final DeferredItem<Item> TEMPERED_IRON_CHESTPLATE =
-			ITEMS.registerItem("tempered_iron_chestplate", Item::new,
-					p -> p.humanoidArmor(ModArmorMaterials.TEMPERED_IRON, ArmorType.CHESTPLATE));
+			ITEMS.registerItem("tempered_iron_chestplate", Item::new, ItemBuildersNeoForge.temperedArmor(ArmorType.CHESTPLATE));
 	public static final DeferredItem<Item> TEMPERED_IRON_LEGGINGS =
-			ITEMS.registerItem("tempered_iron_leggings", Item::new,
-					p -> p.humanoidArmor(ModArmorMaterials.TEMPERED_IRON, ArmorType.LEGGINGS));
+			ITEMS.registerItem("tempered_iron_leggings", Item::new, ItemBuildersNeoForge.temperedArmor(ArmorType.LEGGINGS));
 	public static final DeferredItem<Item> TEMPERED_IRON_BOOTS =
-			ITEMS.registerItem("tempered_iron_boots", Item::new,
-					p -> p.humanoidArmor(ModArmorMaterials.TEMPERED_IRON, ArmorType.BOOTS));
+			ITEMS.registerItem("tempered_iron_boots", Item::new, ItemBuildersNeoForge.temperedArmor(ArmorType.BOOTS));
 	public static final DeferredItem<Item> IRON_DUST = ITEMS.registerItem("iron_dust", Item::new);
 	public static final DeferredItem<Item> COPPER_DUST = ITEMS.registerItem("copper_dust", Item::new);
 	public static final DeferredItem<Item> GOLD_DUST = ITEMS.registerItem("gold_dust", Item::new);
@@ -150,25 +144,25 @@ public final class ModItemsNeoForge {
 	// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
 	public static final DeferredItem<dev.alaindustrial.item.MagnetItem> ELECTROMAGNET =
 			ITEMS.registerItem("electromagnet", dev.alaindustrial.item.MagnetItem::new, p -> p.stacksTo(1));
+	// Jetpack (MOD-148): worn EU flight — thrust on held jump, powerless glide when drained. Equipment
+	// properties (EQUIPPABLE + 5 armor points, no ArmorMaterial) come from the common helper.
+	public static final DeferredItem<dev.alaindustrial.item.JetpackItem> JETPACK =
+			ITEMS.registerItem("jetpack", dev.alaindustrial.item.JetpackItem::new,
+					dev.alaindustrial.item.JetpackItem::equipmentProperties);
 	// Vacuum Capsule (MOD-063): empty stacks to the vanilla default (64), filled to STACK_SIZE (16).
 	public static final DeferredItem<dev.alaindustrial.item.VacuumCapsuleItem> VACUUM_CAPSULE =
 			ITEMS.registerItem("vacuum_capsule", dev.alaindustrial.item.VacuumCapsuleItem::new);
+	// MOD-077 craftRemainder (empty capsule) comes from ItemBuildersNeoForge#filledCapsuleProperties.
+	// VACUUM_CAPSULE is an earlier entry in this DeferredRegister, so it is resolved by the time the
+	// properties operator runs during the item RegisterEvent.
 	public static final DeferredItem<dev.alaindustrial.item.FilledCapsuleItem> FILLED_VACUUM_CAPSULE =
 			ITEMS.registerItem("filled_vacuum_capsule", dev.alaindustrial.item.FilledCapsuleItem::new,
-					// MOD-077: craftRemainder = empty capsule, so a lava capsule burnt in a vanilla furnace
-					// returns an empty capsule (fuel remainder), like a lava bucket returns an empty bucket.
-					// VACUUM_CAPSULE is an earlier entry in this DeferredRegister, so it is resolved by the
-					// time this properties lambda runs during the item RegisterEvent.
-					p -> p.stacksTo(dev.alaindustrial.item.FilledCapsuleItem.STACK_SIZE)
-							.craftRemainder(VACUUM_CAPSULE.get()));
+					ItemBuildersNeoForge.filledCapsuleProperties(VACUUM_CAPSULE));
 	// Stock Display Frame (MOD-066). The factory lambda runs during the ITEM RegisterEvent, by which
 	// point the ENTITY_TYPE register has already fired (vanilla registry order) — so resolving the
 	// entity-type holder here is safe, and never at static-init time.
 	public static final DeferredItem<dev.alaindustrial.item.StockDisplayFrameItem> STOCK_DISPLAY_FRAME_ITEM =
-			ITEMS.registerItem("stock_display_frame",
-					p -> new dev.alaindustrial.item.StockDisplayFrameItem(
-							ModEntitiesNeoForge.STOCK_DISPLAY_FRAME.get(), p),
-					Item.Properties::new);
+			ITEMS.registerItem("stock_display_frame", ItemBuildersNeoForge.stockDisplayFrame(), Item.Properties::new);
 
 	// Scythe (MOD-068): eight AOE foliage tiers. The factory builds a ScytheItem (its own AOE useOn);
 	// the properties operator applies .hoe(material, ...) for the tool component + enchantability,
@@ -224,9 +218,7 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<BlockItem> PUMP_ITEM =
 			ITEMS.registerSimpleBlockItem("pump", ModBlocksNeoForge.PUMP);
 	public static final DeferredItem<FluidTankBlockItem> FLUID_TANK_ITEM =
-			ITEMS.registerItem("fluid_tank",
-					p -> new FluidTankBlockItem(ModBlocksNeoForge.FLUID_TANK.get(),
-							p.useBlockDescriptionPrefix()));
+			ITEMS.registerItem("fluid_tank", ItemBuildersNeoForge.fluidTankBlockItem(ModBlocksNeoForge.FLUID_TANK));
 	public static final DeferredItem<BlockItem> WATER_MILL_ITEM =
 			ITEMS.registerSimpleBlockItem("water_mill", ModBlocksNeoForge.WATER_MILL);
 	public static final DeferredItem<BlockItem> WIND_MILL_ITEM =
@@ -245,9 +237,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("insulated_tin_cable", ModBlocksNeoForge.INSULATED_TIN_CABLE);
 	// MOD-108: not registerSimpleBlockItem — the pipe needs its own BlockItem subclass to carry a
 	// tooltip (plain hint + Shift for the throughput numbers).
-	public static final DeferredItem<BlockItem> ITEM_PIPE_ITEM = ITEMS.registerItem("item_pipe",
-			properties -> new dev.alaindustrial.item.ItemPipeBlockItem(
-					ModBlocksNeoForge.ITEM_PIPE.get(), properties.useBlockDescriptionPrefix()));
+	public static final DeferredItem<BlockItem> ITEM_PIPE_ITEM =
+			ITEMS.registerItem("item_pipe", ItemBuildersNeoForge.pipeItem(ModBlocksNeoForge.ITEM_PIPE));
 	public static final DeferredItem<BlockItem> TIN_ORE_ITEM =
 			ITEMS.registerSimpleBlockItem("tin_ore", ModBlocksNeoForge.TIN_ORE);
 	public static final DeferredItem<BlockItem> DEEPSLATE_TIN_ORE_ITEM =
@@ -274,6 +265,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("gold_chest", ModBlocksNeoForge.GOLD_CHEST);
 	public static final DeferredItem<BlockItem> TEMPERED_IRON_BLOCK_ITEM =
 			ITEMS.registerSimpleBlockItem("tempered_iron_block", ModBlocksNeoForge.TEMPERED_IRON_BLOCK);
+	public static final DeferredItem<BlockItem> INDUSTRIAL_WORKBENCH_ITEM =
+			ITEMS.registerSimpleBlockItem("industrial_workbench", ModBlocksNeoForge.INDUSTRIAL_WORKBENCH);
 	// Enriched Uranium Torch (MOD-085): a StandingAndWallBlockItem (like vanilla Items.TORCH) — floor use
 	// places the standing block, wall use the wall block. Maps to both blocks; the wall block has no item
 	// of its own. registerItem (not registerSimpleBlockItem) so we control the factory; useBlockDescriptionPrefix
@@ -281,11 +274,9 @@ public final class ModItemsNeoForge {
 	// RegisterEvent (blocks already registered).
 	public static final DeferredItem<BlockItem> ENRICHED_URANIUM_TORCH_ITEM =
 			ITEMS.registerItem("enriched_uranium_torch",
-					p -> new net.minecraft.world.item.StandingAndWallBlockItem(
-							ModBlocksNeoForge.ENRICHED_URANIUM_TORCH.get(),
-							ModBlocksNeoForge.ENRICHED_URANIUM_WALL_TORCH.get(),
-							net.minecraft.core.Direction.DOWN, p),
-					() -> new Item.Properties().useBlockDescriptionPrefix());
+					ItemBuildersNeoForge.standingAndWallBlockItem(
+							ModBlocksNeoForge.ENRICHED_URANIUM_TORCH, ModBlocksNeoForge.ENRICHED_URANIUM_WALL_TORCH),
+					ItemBuildersNeoForge.blockItemProperties());
 
 	private ModItemsNeoForge() {
 	}
@@ -354,6 +345,7 @@ public final class ModItemsNeoForge {
 		// DeferredItem<ElectricDrillItem> into a Supplier<Item> slot — bind via ::get (invariant generics).
 		ModContent.ELECTRIC_DRILL = ELECTRIC_DRILL::get;
 		ModContent.ELECTROMAGNET = ELECTROMAGNET::get;
+		ModContent.JETPACK = JETPACK::get;
 		ModContent.VACUUM_CAPSULE = VACUUM_CAPSULE::get;
 		ModContent.FILLED_VACUUM_CAPSULE = FILLED_VACUUM_CAPSULE::get;
 		ModContent.STOCK_DISPLAY_FRAME_ITEM = STOCK_DISPLAY_FRAME_ITEM::get;
@@ -402,6 +394,7 @@ public final class ModItemsNeoForge {
 		ModContent.SILVER_CHEST_ITEM = SILVER_CHEST_ITEM;
 		ModContent.GOLD_CHEST_ITEM = GOLD_CHEST_ITEM;
 		ModContent.TEMPERED_IRON_BLOCK_ITEM = TEMPERED_IRON_BLOCK_ITEM;
+		ModContent.INDUSTRIAL_WORKBENCH_ITEM = INDUSTRIAL_WORKBENCH_ITEM;
 		ModContent.ENRICHED_URANIUM_TORCH_ITEM = ENRICHED_URANIUM_TORCH_ITEM;
 	}
 }

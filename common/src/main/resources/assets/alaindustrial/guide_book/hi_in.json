@@ -304,13 +304,13 @@
               "recipe_type": "आकारित क्राफ्टिंग",
               "grid": [
                 "minecraft:oak_planks",
-                "minecraft:oak_planks",
+                "alaindustrial:battery",
                 "minecraft:oak_planks",
                 "alaindustrial:copper_cable",
                 "minecraft:redstone",
                 "alaindustrial:copper_cable",
                 "minecraft:oak_planks",
-                "minecraft:oak_planks",
+                "alaindustrial:battery",
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:battery_box",
@@ -1562,6 +1562,44 @@
           ]
         },
         {
+          "id": "jetpack",
+          "title": "जेटपैक",
+          "icon": "alaindustrial:jetpack",
+          "block_id": "alaindustrial:jetpack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "जेटपैक",
+              "text": "छाती स्लॉट के लिए EU उड़ान उपकरण — कूद दबाए रखने पर थ्रस्ट, चार्ज खत्म होने पर धीमी बिना-शक्ति ग्लाइड।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 30 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "alaindustrial:energy_pack",
+                "alaindustrial:battery",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_coil",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:jetpack",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron_pickaxe",
           "title": "टेम्पर्ड आयरन फावड़ा",
           "icon": "alaindustrial:tempered_iron_pickaxe",
@@ -1716,7 +1754,8 @@
               "type": "stats",
               "title": "आँकड़े",
               "lines": [
-                "बफ़र: 5 000 EU"
+                "बफ़र: 5 000 EU",
+                "त्रिज्या: 5 ब्लॉक"
               ]
             },
             {

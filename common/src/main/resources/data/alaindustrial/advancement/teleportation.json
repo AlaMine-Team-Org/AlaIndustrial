@@ -1,0 +1,16 @@
+{
+  "parent": "alaindustrial:energized_network",
+  "display": {
+    "icon": { "id": "alaindustrial:teleporter" },
+    "title": { "translate": "advancements.alaindustrial.teleportation.title" },
+    "description": { "translate": "advancements.alaindustrial.teleportation.description" },
+    "frame": "goal"
+  },
+  "criteria": {
+    "teleporter": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:teleporter" }] }
+    }
+  },
+  "requirements": [["teleporter"]]
+}

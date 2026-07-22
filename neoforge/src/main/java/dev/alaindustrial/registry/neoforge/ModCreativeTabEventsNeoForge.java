@@ -32,6 +32,9 @@ public final class ModCreativeTabEventsNeoForge {
 			// The Energy Pack is worn in the chest slot, so a player looking for chest gear finds it here
 			// too — it also sits with the other powered items under Tools & Utilities below.
 			insertAfter(event, boots, ModContent.ENERGY_PACK.get().getDefaultInstance());
+			// The Jetpack is chest gear too (MOD-148) — it sits right after the pack here.
+			insertAfter(event, ModContent.ENERGY_PACK.get().getDefaultInstance(),
+					ModContent.JETPACK.get().getDefaultInstance());
 		} else if (event.getTabKey().equals(VanillaCreativeTabs.TOOLS_AND_UTILITIES)) {
 			ItemStack pickaxe = ModContent.TEMPERED_IRON_PICKAXE.get().getDefaultInstance();
 			ItemStack axe = ModContent.TEMPERED_IRON_AXE.get().getDefaultInstance();
@@ -60,6 +63,7 @@ public final class ModCreativeTabEventsNeoForge {
 			event.accept(ModContent.ENERGY_PACK.get());
 			event.accept(ModContent.ELECTRIC_DRILL.get());
 			event.accept(ModContent.ELECTROMAGNET.get());
+			event.accept(ModContent.JETPACK.get());
 		} else if (event.getTabKey().equals(VanillaCreativeTabs.INGREDIENTS)) {
 			CreativeTabContent.ingredients(event::accept);
 		} else if (event.getTabKey().equals(VanillaCreativeTabs.BUILDING_BLOCKS)) {

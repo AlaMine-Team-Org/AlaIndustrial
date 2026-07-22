@@ -25,6 +25,11 @@ public final class CreativeTabContent {
 		oresAndMaterials(out);
 		components(out);
 		utility(out);
+		// The Industrial Workbench is a decorative building block (MOD-062 villager POI). It already
+		// shows in the vanilla Building Blocks tab via buildingBlocks(); list it in the mod tab too so
+		// players browsing Ala Industrial content find it here as well (same pattern as the tempered
+		// iron block, which lives in both the mod tab and vanilla Building Blocks).
+		out.accept(ModContent.INDUSTRIAL_WORKBENCH_ITEM.get());
 		temperedIron(out);
 		scythes(out);
 	}
@@ -98,6 +103,7 @@ public final class CreativeTabContent {
 
 	public static void buildingBlocks(Sink out) {
 		out.accept(ModContent.TEMPERED_IRON_BLOCK_ITEM.get());
+		out.accept(ModContent.INDUSTRIAL_WORKBENCH_ITEM.get());
 	}
 
 	public static void naturalBlocks(Sink out) {
@@ -129,6 +135,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.MOONLIT_SOLAR_PANEL_ITEM.get());
 		out.accept(ModContent.GENERATOR_ITEM.get());
 		out.accept(ModContent.GEOTHERMAL_GENERATOR_ITEM.get());
+		out.accept(ModContent.WATER_MILL_ITEM.get());
 		out.accept(ModContent.WIND_MILL_ITEM.get());
 	}
 
@@ -203,6 +210,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.ENERGY_PACK.get());
 		out.accept(ModContent.ELECTRIC_DRILL.get());
 		out.accept(ModContent.ELECTROMAGNET.get());
+		out.accept(ModContent.JETPACK.get());
 		out.accept(ModContent.TELEPORTER_REMOTE.get());
 		// Empty capsule only — the filled form (MOD-063) is obtained by using it on a fluid.
 		out.accept(ModContent.VACUUM_CAPSULE.get());

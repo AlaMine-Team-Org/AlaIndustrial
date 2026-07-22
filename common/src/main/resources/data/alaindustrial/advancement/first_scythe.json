@@ -1,0 +1,43 @@
+{
+  "parent": "alaindustrial:root",
+  "display": {
+    "icon": { "id": "alaindustrial:scythe_iron" },
+    "title": { "translate": "advancements.alaindustrial.first_scythe.title" },
+    "description": { "translate": "advancements.alaindustrial.first_scythe.description" }
+  },
+  "criteria": {
+    "scythe_wood": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:scythe_wood" }] }
+    },
+    "scythe_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:scythe_stone" }] }
+    },
+    "scythe_copper": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:scythe_copper" }] }
+    },
+    "scythe_iron": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:scythe_iron" }] }
+    },
+    "scythe_gold": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:scythe_gold" }] }
+    },
+    "scythe_tempered_iron": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:scythe_tempered_iron" }] }
+    },
+    "scythe_diamond": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:scythe_diamond" }] }
+    },
+    "scythe_netherite": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:scythe_netherite" }] }
+    }
+  },
+  "requirements": [["scythe_wood", "scythe_stone", "scythe_copper", "scythe_iron", "scythe_gold", "scythe_tempered_iron", "scythe_diamond", "scythe_netherite"]]
+}

@@ -150,6 +150,9 @@ public final class IndustrializationNeoForge {
 		// MOD-119: the alaindustrial:bonus_chest_enabled loot condition gates the bonus-chest
 		// Global Loot Modifier (data/alaindustrial/loot_modifiers/bonus_chest_inject.json) on the config flag.
 		dev.alaindustrial.registry.neoforge.ModLootConditionsNeoForge.LOOT_CONDITION_TYPES.register(modBus);
+		// MOD-062: Industrialist POI + profession (frozen registries → DeferredRegister only).
+		dev.alaindustrial.registry.neoforge.ModProfessionsNeoForge.POI_TYPES.register(modBus);
+		dev.alaindustrial.registry.neoforge.ModProfessionsNeoForge.PROFESSIONS.register(modBus);
 		// Register the alaindustrial:code gametest-instance type so the TEST_INSTANCE registry encodes cleanly
 		// during the client known-packs handshake (fixes a ClassCastException that broke NeoForge world load).
 		dev.alaindustrial.gametest.neoforge.NeoForgeGameTests.INSTANCE_TYPES.register(modBus);
@@ -226,6 +229,10 @@ public final class IndustrializationNeoForge {
 		// Energy networks: tick every per-level NetworkManager once per server tick. WITHOUT this, cables
 		// never transfer EU on NeoForge (the single most important gameplay seam). Drop a level's transient
 		// state on unload and all of it on server stop so per-level networks never leak across reloads.
+		// MOD-062: inject the Industrialist house into the vanilla village pools. ServerAboutToStart
+		// fires before any level/worldgen exists — required (pool maxSize memoizes on first use).
+		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerAboutToStartEvent event) ->
+				dev.alaindustrial.worldgen.VillagePoolInjector.inject(event.getServer()));
 		NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post event) -> {
 			for (ServerLevel lvl : event.getServer().getAllLevels()) {
 				NetworkManager.tickAll(lvl);
@@ -235,6 +242,9 @@ public final class IndustrializationNeoForge {
 			dev.alaindustrial.teleporter.TeleportWarmupManager.tickAll(event.getServer());
 			// MOD-133: fold pending per-player stat deltas into attachments on the configured cadence.
 			dev.alaindustrial.stats.PlayerStatsTracker.get().onServerTick(event.getServer());
+			// MOD-148: clear any jetpack flight-glow light block whose flight ended (land, logout,
+			// death, unequip) — the one cleanup path for every exit (see JetpackLight).
+			dev.alaindustrial.item.JetpackLight.sweep(event.getServer(), event.getServer().getTickCount());
 		});
 		// Teleport warmup cancellation (MOD-092). Three hooks, not two: LivingDamageEvent.Post does
 		// not fire for a killing blow, and death does not disconnect the player.
@@ -408,7 +418,8 @@ public final class IndustrializationNeoForge {
 		event.registerItem(Capabilities.Energy.ITEM,
 				(stack, access) -> new dev.alaindustrial.core.neoforge.StackAsEnergyHandler(access),
 				ModItemsNeoForge.BATTERY_POUCH.get(), ModItemsNeoForge.ENERGY_PACK.get(),
-				ModItemsNeoForge.ELECTRIC_DRILL.get(), ModItemsNeoForge.ELECTROMAGNET.get());
+				ModItemsNeoForge.ELECTRIC_DRILL.get(), ModItemsNeoForge.ELECTROMAGNET.get(),
+				ModItemsNeoForge.JETPACK.get());
 
 		// MOD-084: a fake "other mod" energy item, so the gametests can prove the pack charges foreign
 		// items. Dev/gametest only — inert in a shipped jar (see the class doc).

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": "alaindustrial:tin_ingot",
+    "P": "#minecraft:planks"
+  },
+  "pattern": [
+    "TT",
+    "PP",
+    "PP"
+  ],
+  "result": {
+    "id": "alaindustrial:industrial_workbench"
+  }
+}

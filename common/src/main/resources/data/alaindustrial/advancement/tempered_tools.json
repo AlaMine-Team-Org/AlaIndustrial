@@ -1,0 +1,31 @@
+{
+  "parent": "alaindustrial:tempered_alloy",
+  "display": {
+    "icon": { "id": "alaindustrial:tempered_iron_pickaxe" },
+    "title": { "translate": "advancements.alaindustrial.tempered_tools.title" },
+    "description": { "translate": "advancements.alaindustrial.tempered_tools.description" }
+  },
+  "criteria": {
+    "tempered_iron_pickaxe": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:tempered_iron_pickaxe" }] }
+    },
+    "tempered_iron_axe": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:tempered_iron_axe" }] }
+    },
+    "tempered_iron_shovel": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:tempered_iron_shovel" }] }
+    },
+    "tempered_iron_hoe": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:tempered_iron_hoe" }] }
+    },
+    "tempered_iron_sword": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:tempered_iron_sword" }] }
+    }
+  },
+  "requirements": [["tempered_iron_pickaxe", "tempered_iron_axe", "tempered_iron_shovel", "tempered_iron_hoe", "tempered_iron_sword"]]
+}

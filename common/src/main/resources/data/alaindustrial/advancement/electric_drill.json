@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:portable_power",
+  "display": {
+    "icon": { "id": "alaindustrial:electric_drill" },
+    "title": { "translate": "advancements.alaindustrial.electric_drill.title" },
+    "description": { "translate": "advancements.alaindustrial.electric_drill.description" }
+  },
+  "criteria": {
+    "electric_drill": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:electric_drill" }] }
+    }
+  },
+  "requirements": [["electric_drill"]]
+}

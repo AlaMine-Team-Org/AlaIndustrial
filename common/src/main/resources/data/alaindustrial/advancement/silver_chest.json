@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:iron_chest",
+  "display": {
+    "icon": { "id": "alaindustrial:silver_chest" },
+    "title": { "translate": "advancements.alaindustrial.silver_chest.title" },
+    "description": { "translate": "advancements.alaindustrial.silver_chest.description" }
+  },
+  "criteria": {
+    "silver_chest": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:silver_chest" }] }
+    }
+  },
+  "requirements": [["silver_chest"]]
+}

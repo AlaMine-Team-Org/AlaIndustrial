@@ -148,6 +148,8 @@ public final class IndustrializationNeoForgeClient {
 					dev.alaindustrial.client.hud.ElectricDrillHud::render);
 		});
 		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> ModKeyMappings.handleInput());
+		// Jetpack thrust/glide (MOD-148) — counterpart of the Fabric END_CLIENT_TICK registration.
+		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> dev.alaindustrial.client.JetpackFlight.clientTick());
 		// MOD-133: add the profile button to the survival inventory screen (creative is a different screen
 		// class, excluded by this instanceof). No injected mixin — a NeoForge screen-init event.
 		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.client.event.ScreenEvent.Init.Post event) -> {

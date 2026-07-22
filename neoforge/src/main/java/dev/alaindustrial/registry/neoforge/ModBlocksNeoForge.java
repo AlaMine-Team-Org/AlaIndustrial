@@ -159,6 +159,11 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<Block> TEMPERED_IRON_BLOCK =
 			BLOCKS.registerBlock("tempered_iron_block", Block::new, machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)));
 
+	// Industrial Workbench (MOD-062) — the Industrialist villager's job-site block; plain decorative
+	// full cube, no BlockEntity (see the Fabric ModBlocks comment).
+	public static final DeferredBlock<Block> INDUSTRIAL_WORKBENCH =
+			BLOCKS.registerBlock("industrial_workbench", Block::new, machine(p -> p.strength(2.5f, 6.0f).sound(SoundType.METAL)));
+
 	// Enriched Uranium Torch (MOD-085) — vanilla-behaviour torch, light 15, green flame. Uses torch()
 	// (vanilla TORCH properties), NOT machine() — a torch breaks by hand, so no requiresCorrectToolForDrops
 	// and no mineable/pickaxe tag entry. The particle comes from the eager ModParticles facade object.
@@ -254,6 +259,7 @@ public final class ModBlocksNeoForge {
 		ModContent.SILVER_CHEST = SILVER_CHEST::get;
 		ModContent.GOLD_CHEST = GOLD_CHEST::get;
 		ModContent.TEMPERED_IRON_BLOCK = TEMPERED_IRON_BLOCK::get;
+		ModContent.INDUSTRIAL_WORKBENCH = INDUSTRIAL_WORKBENCH::get;
 		ModContent.ENRICHED_URANIUM_TORCH = ENRICHED_URANIUM_TORCH::get;
 		ModContent.ENRICHED_URANIUM_WALL_TORCH = ENRICHED_URANIUM_WALL_TORCH::get;
 	}

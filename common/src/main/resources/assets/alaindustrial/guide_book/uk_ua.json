@@ -304,13 +304,13 @@
               "recipe_type": "Крафт за формою",
               "grid": [
                 "minecraft:oak_planks",
-                "minecraft:oak_planks",
+                "alaindustrial:battery",
                 "minecraft:oak_planks",
                 "alaindustrial:copper_cable",
                 "minecraft:redstone",
                 "alaindustrial:copper_cable",
                 "minecraft:oak_planks",
-                "minecraft:oak_planks",
+                "alaindustrial:battery",
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:battery_box",
@@ -1562,6 +1562,44 @@
           ]
         },
         {
+          "id": "jetpack",
+          "title": "Джетпак",
+          "icon": "alaindustrial:jetpack",
+          "block_id": "alaindustrial:jetpack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Джетпак",
+              "text": "EU-пристрій для польоту в слоті нагрудника — тяга при затиснутому стрибку, м'яке безмоторне планерування при розряді."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 30 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "alaindustrial:energy_pack",
+                "alaindustrial:battery",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_coil",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:jetpack",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron_pickaxe",
           "title": "Загартоване залізне кайло",
           "icon": "alaindustrial:tempered_iron_pickaxe",
@@ -1716,7 +1754,8 @@
               "type": "stats",
               "title": "Характеристики",
               "lines": [
-                "Буфер: 5 000 EU"
+                "Буфер: 5 000 EU",
+                "Радіус: 5 бл"
               ]
             },
             {

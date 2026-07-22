@@ -2,6 +2,7 @@ package dev.alaindustrial.client.hud;
 
 import dev.alaindustrial.item.EnergyPackItem;
 import dev.alaindustrial.item.ItemEnergy;
+import dev.alaindustrial.item.JetpackItem;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -119,10 +120,11 @@ public final class EnergyPackHud {
 		return AlaClientConfig.energyHudEnabled && isWorn(player);
 	}
 
-	/** Whether a usable Energy Pack is on the player's chest. */
+	/** Whether a usable chest-slot EU device (Energy Pack, or the Jetpack since MOD-148) is worn. */
 	static boolean isWorn(Player player) {
 		ItemStack pack = player.getItemBySlot(EquipmentSlot.CHEST);
-		return pack.getItem() instanceof EnergyPackItem && ItemEnergy.capacity(pack) > 0;
+		return (pack.getItem() instanceof EnergyPackItem || pack.getItem() instanceof JetpackItem)
+				&& ItemEnergy.capacity(pack) > 0;
 	}
 
 	/** Green while comfortable, gold when it is worth noticing, red when the pack is nearly dead. */

@@ -257,6 +257,8 @@ public final class DemoStand {
 		set(level, origin, 31, 1, 10, ModContent.SILVER_CHEST.get());
 		set(level, origin, 32, 1, 10, ModContent.GOLD_CHEST.get());
 		set(level, origin, 33, 1, 10, ModContent.TEMPERED_IRON_BLOCK.get());
+		// Industrial Workbench (MOD-062): the Industrialist villager's job-site block on display.
+		set(level, origin, 33, 2, 10, ModContent.INDUSTRIAL_WORKBENCH.get());
 		set(level, origin, 34, -1, 10, FLOOR);
 		set(level, origin, 34, 0, 10, Blocks.LAVA);
 		set(level, origin, 34, 1, 10, ModContent.PUMP.get());

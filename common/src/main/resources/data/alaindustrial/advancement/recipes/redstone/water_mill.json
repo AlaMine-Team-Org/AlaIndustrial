@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_copper_cable": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:copper_cable"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_copper_cable"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:water_mill"
+    ]
+  }
+}

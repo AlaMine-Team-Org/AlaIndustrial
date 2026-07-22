@@ -112,6 +112,12 @@ public final class Config {
 	 * energy-hungry machines — at 1000 EU/bucket it is a noticeable consumer, while a bucket of lava
 	 * still yields 16 000 EU in the geothermal generator (16× payback on the pump's own tax). */
 	public static int pumpEuPerBucket = 1000;
+	/** How many ticks the pump waits after a BFS scan before scanning again. */
+	public static int pumpScanCooldownTicks = 20;
+	/** Max Manhattan distance the pump BFS searches for a fluid source. */
+	public static int pumpScanMaxDistance = 32;
+	/** Max blocks the pump BFS visits per scan, caps lag. */
+	public static int pumpScanMaxVisited = 512;
 
 	/** Portable passive tank capacity (MOD-111): 8 buckets, intentionally below machine tanks (10). */
 	public static int fluidTankCapacity = 8000;
@@ -260,6 +266,23 @@ public final class Config {
 	/** How often (ticks) the magnet scans for and pulls nearby drops. 1 = every tick, for a smooth, fast
 	 * XP-orb-like pull that visibly flies items in (a coarser interval read as "barely pulling"). */
 	public static int magnetScanIntervalTicks = 1;
+
+	// --- Jetpack (MOD-148, worn EU flight) ---
+	/** Jetpack EU buffer — 1.5 Energy Packs. At {@link #jetpackEuPerTick} per tick of thrust this is
+	 * ~30 s of continuous flight; charging at the LV ceiling (32 EU/t) refills it in ~938 ticks (~47 s). */
+	public static int jetpackBuffer = 30_000;
+	/** EU burned per tick the jetpack engine actually thrusts (jump held while airborne, charge left).
+	 * Matches the drill's per-block cost: a second of flight ≈ 20 mined blocks' worth of EU. */
+	public static int jetpackEuPerTick = 50;
+	/** Max EU/tick the jetpack accepts while sitting in a charge slot (LV ceiling, like the pack). */
+	public static int jetpackInputRate = 32;
+	/** Altitude ceiling (block Y) above which the engine refuses to thrust — the jetpack glides
+	 * instead. 320 = the overworld build limit; server owners can lower it. */
+	public static int jetpackMaxY = 320;
+	/** Light level (0–15) of the torch-like glow a thrusting jetpack casts around the flyer — a
+	 * moving {@code minecraft:light} block (see JetpackLight). 0 disables the effect entirely; 10 is
+	 * a bit under a torch (14), a "small glow". Values above 15 are clamped. */
+	public static int jetpackFlightLightLevel = 10;
 
 	// --- Stock Display Frame (MOD-066, no energy) ---
 	/** How often (ticks) a stock display frame rescans the container behind it. 20 = once a second;
@@ -428,6 +451,12 @@ public final class Config {
 				() -> solarSkySampleTicks, v -> solarSkySampleTicks = v, 1),
 			new IntField("pumpEuPerBucket", "EU the pump spends per bucket of fluid it moves (extract + push).",
 				() -> pumpEuPerBucket, v -> pumpEuPerBucket = v, 0),
+			new IntField("pumpScanCooldownTicks", "How many ticks the pump waits after a BFS scan before scanning again.",
+				() -> pumpScanCooldownTicks, v -> pumpScanCooldownTicks = v, 1),
+			new IntField("pumpScanMaxDistance", "Max Manhattan distance the pump BFS searches for a fluid source.",
+				() -> pumpScanMaxDistance, v -> pumpScanMaxDistance = v, 1),
+			new IntField("pumpScanMaxVisited", "Max blocks the pump BFS visits per scan, caps lag.",
+				() -> pumpScanMaxVisited, v -> pumpScanMaxVisited = v, 1),
 			new IntField("fluidTankCapacity", "Portable fluid tank capacity in mB (1000 mB = 1 bucket). Applies to newly placed tanks.",
 				() -> fluidTankCapacity, v -> fluidTankCapacity = v, 1),
 			new IntField("teleporterBuffer", "Teleporter station EU buffer. Applies to newly placed stations.",
@@ -490,6 +519,16 @@ public final class Config {
 				() -> electricDrillInputRate, v -> electricDrillInputRate = v, 1),
 			new IntField("electricDrillTorchEuCost", "EU the drill spends to place a torch on right-click.",
 				() -> electricDrillTorchEuCost, v -> electricDrillTorchEuCost = v, 0),
+			new IntField("jetpackBuffer", "Jetpack EU buffer.",
+				() -> jetpackBuffer, v -> jetpackBuffer = v, 1),
+			new IntField("jetpackEuPerTick", "EU the jetpack burns per tick of thrust (jump held while airborne).",
+				() -> jetpackEuPerTick, v -> jetpackEuPerTick = v, 1),
+			new IntField("jetpackInputRate", "Max EU/t the jetpack accepts while charging in a slot.",
+				() -> jetpackInputRate, v -> jetpackInputRate = v, 1),
+			new IntField("jetpackMaxY", "Altitude ceiling (block Y) above which the jetpack engine refuses to thrust.",
+				() -> jetpackMaxY, v -> jetpackMaxY = v, 1),
+			new IntField("jetpackFlightLightLevel", "Light level (0-15) a thrusting jetpack casts around the flyer; 0 disables the glow.",
+				() -> jetpackFlightLightLevel, v -> jetpackFlightLightLevel = v, 0),
 			new IntField("magnetBuffer", "Electromagnet EU buffer.",
 				() -> magnetBuffer, v -> magnetBuffer = v, 1),
 			new IntField("magnetInputRate", "Max EU/t the electromagnet accepts while charging in a slot.",

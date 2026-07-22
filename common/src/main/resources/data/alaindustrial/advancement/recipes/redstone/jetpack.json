@@ -1,0 +1,15 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_1": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "minecraft:iron_ingot" } ] } },
+    "has_item_2": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:tin_ingot" } ] } },
+    "has_item_3": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:electronic_circuit" } ] } },
+    "has_item_4": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:battery" } ] } },
+    "has_item_5": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:copper_coil" } ] } },
+    "has_item_6": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:energy_pack" } ] } }
+  },
+  "requirements": [ [ "has_item_1" ], [ "has_item_2" ], [ "has_item_3" ], [ "has_item_4" ], [ "has_item_5" ], [ "has_item_6" ] ],
+  "rewards": {
+    "recipes": [ "alaindustrial:jetpack" ]
+  }
+}

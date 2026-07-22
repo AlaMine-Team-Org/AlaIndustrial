@@ -1,0 +1,12 @@
+{
+  "wants": {
+    "id": "alaindustrial:gold_dust",
+    "count": 4.0
+  },
+  "gives": {
+    "id": "minecraft:emerald"
+  },
+  "max_uses": 12.0,
+  "xp": 20.0,
+  "reputation_discount": 0.05
+}

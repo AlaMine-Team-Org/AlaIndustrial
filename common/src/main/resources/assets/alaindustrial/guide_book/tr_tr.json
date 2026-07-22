@@ -304,13 +304,13 @@
               "recipe_type": "Şekilli Üretim",
               "grid": [
                 "minecraft:oak_planks",
-                "minecraft:oak_planks",
+                "alaindustrial:battery",
                 "minecraft:oak_planks",
                 "alaindustrial:copper_cable",
                 "minecraft:redstone",
                 "alaindustrial:copper_cable",
                 "minecraft:oak_planks",
-                "minecraft:oak_planks",
+                "alaindustrial:battery",
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:battery_box",
@@ -1562,6 +1562,44 @@
           ]
         },
         {
+          "id": "jetpack",
+          "title": "Jet çantası",
+          "icon": "alaindustrial:jetpack",
+          "block_id": "alaindustrial:jetpack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Jet çantası",
+              "text": "Göğüs yuvası için EU'lu bir uçuş cihazı — zıplama basılı tutulurken itiş, şarj bitince yumuşak motorsuz süzülme."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 30 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "alaindustrial:energy_pack",
+                "alaindustrial:battery",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_coil",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:jetpack",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron_pickaxe",
           "title": "Menevişlenmiş Demir Kazma",
           "icon": "alaindustrial:tempered_iron_pickaxe",
@@ -1716,7 +1754,8 @@
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Tampon: 5 000 EU"
+                "Tampon: 5 000 EU",
+                "Yarıçap: 5 blok"
               ]
             },
             {

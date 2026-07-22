@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"key": {
+		"I": "minecraft:iron_ingot",
+		"E": "alaindustrial:electronic_circuit",
+		"B": "alaindustrial:battery",
+		"P": "alaindustrial:energy_pack",
+		"T": "alaindustrial:tin_ingot",
+		"C": "alaindustrial:copper_coil"
+	},
+	"pattern": [
+		"IEI",
+		"BPB",
+		"TCT"
+	],
+	"result": {
+		"id": "alaindustrial:jetpack",
+		"count": 1
+	}
+}

@@ -3,6 +3,7 @@ package dev.alaindustrial.registry;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
+import dev.alaindustrial.item.JetpackItem;
 import dev.alaindustrial.item.HintItem;
 import dev.alaindustrial.item.FluidTankBlockItem;
 import dev.alaindustrial.item.ScytheTiers;
@@ -126,6 +127,8 @@ public final class ModItems {
 	public static final Item ELECTRIC_DRILL = electricDrill("electric_drill");
 	// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
 	public static final Item ELECTROMAGNET = magnet("electromagnet");
+	// Jetpack (MOD-148): worn EU flight — thrust on held jump, powerless glide when drained.
+	public static final Item JETPACK = jetpack("jetpack");
 	// Vacuum Capsule (MOD-063): empty (×64) + filled (×16, fluid in the capsule_fluid component).
 	public static final Item VACUUM_CAPSULE = vacuumCapsule("vacuum_capsule");
 	public static final Item FILLED_VACUUM_CAPSULE = filledCapsule("filled_vacuum_capsule");
@@ -185,6 +188,7 @@ public final class ModItems {
 	public static final BlockItem SILVER_CHEST_ITEM = blockItem("silver_chest", ModBlocks.SILVER_CHEST);
 	public static final BlockItem GOLD_CHEST_ITEM = blockItem("gold_chest", ModBlocks.GOLD_CHEST);
 	public static final BlockItem TEMPERED_IRON_BLOCK_ITEM = blockItem("tempered_iron_block", ModBlocks.TEMPERED_IRON_BLOCK);
+	public static final BlockItem INDUSTRIAL_WORKBENCH_ITEM = blockItem("industrial_workbench", ModBlocks.INDUSTRIAL_WORKBENCH);
 	// Enriched Uranium Torch (MOD-085): a StandingAndWallBlockItem (like vanilla Items.TORCH) so using it
 	// on a wall places the wall variant and on the floor the standing variant. The wall block has no item
 	// of its own — this item maps to both blocks (StandingAndWallBlockItem#registerBlocks).
@@ -265,6 +269,15 @@ public final class ModItems {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
 				new MagnetItem(new Item.Properties().setId(key).stacksTo(1)));
+	}
+
+	// Jetpack (MOD-148). Equipment properties come from the common helper (EQUIPPABLE + 5 armor points
+	// via attribute, no ArmorMaterial — see JetpackItem.equipmentProperties); like the pack, no
+	// pouch_energy default is preset, ItemEnergy reads an absent component as 0 EU.
+	private static Item jetpack(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new JetpackItem(JetpackItem.equipmentProperties(new Item.Properties().setId(key))));
 	}
 
 	// Vacuum Capsule (MOD-063). Empty capsule stacks to the vanilla default (64); no fluid component
@@ -402,6 +415,8 @@ public final class ModItems {
 					// The Energy Pack is worn in the chest slot, so a player looking for chest gear finds it
 					// here too — it also sits with the other powered items under Tools & Utilities below.
 					output.insertAfter(ModContent.TEMPERED_IRON_BOOTS.get(), ModContent.ENERGY_PACK.get());
+					// The Jetpack is chest gear too (MOD-148) — it sits right after the pack here.
+					output.insertAfter(ModContent.ENERGY_PACK.get(), ModContent.JETPACK.get());
 				});
 		CreativeModeTabEvents.modifyOutputEvent(VanillaCreativeTabs.TOOLS_AND_UTILITIES)
 				.register(output -> {
@@ -428,6 +443,7 @@ public final class ModItems {
 					output.accept(ModContent.ENERGY_PACK.get());
 					output.accept(ModContent.ELECTRIC_DRILL.get());
 					output.accept(ModContent.ELECTROMAGNET.get());
+					output.accept(ModContent.JETPACK.get());
 				});
 		CreativeModeTabEvents.modifyOutputEvent(VanillaCreativeTabs.INGREDIENTS)
 				.register(output -> CreativeTabContent.ingredients(output::accept));
@@ -497,6 +513,7 @@ public final class ModItems {
 		ModContent.ENERGY_PACK = () -> ENERGY_PACK;
 		ModContent.ELECTRIC_DRILL = () -> ELECTRIC_DRILL;
 		ModContent.ELECTROMAGNET = () -> ELECTROMAGNET;
+		ModContent.JETPACK = () -> JETPACK;
 		ModContent.VACUUM_CAPSULE = () -> VACUUM_CAPSULE;
 		ModContent.FILLED_VACUUM_CAPSULE = () -> FILLED_VACUUM_CAPSULE;
 		ModContent.STOCK_DISPLAY_FRAME_ITEM = () -> STOCK_DISPLAY_FRAME;
@@ -544,6 +561,7 @@ public final class ModItems {
 		ModContent.SILVER_CHEST_ITEM = () -> SILVER_CHEST_ITEM;
 		ModContent.GOLD_CHEST_ITEM = () -> GOLD_CHEST_ITEM;
 		ModContent.TEMPERED_IRON_BLOCK_ITEM = () -> TEMPERED_IRON_BLOCK_ITEM;
+		ModContent.INDUSTRIAL_WORKBENCH_ITEM = () -> INDUSTRIAL_WORKBENCH_ITEM;
 		ModContent.ENRICHED_URANIUM_TORCH_ITEM = () -> ENRICHED_URANIUM_TORCH_ITEM;
 	}
 }

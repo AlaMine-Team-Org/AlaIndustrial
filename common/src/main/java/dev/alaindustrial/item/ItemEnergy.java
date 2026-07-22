@@ -41,6 +41,9 @@ public final class ItemEnergy {
 		if (stack.getItem() instanceof MagnetItem) {
 			return Config.magnetBuffer;
 		}
+		if (stack.getItem() instanceof JetpackItem) {
+			return Config.jetpackBuffer;
+		}
 		return 0L;
 	}
 
@@ -61,6 +64,9 @@ public final class ItemEnergy {
 		}
 		if (stack.getItem() instanceof MagnetItem) {
 			return Config.magnetInputRate;
+		}
+		if (stack.getItem() instanceof JetpackItem) {
+			return Config.jetpackInputRate;
 		}
 		return 0L;
 	}
@@ -86,6 +92,10 @@ public final class ItemEnergy {
 			// The pack looks different when dead (red light, pale cells), and the worn model is chosen by
 			// its EQUIPPABLE asset — so the visual follows the charge from the one place charge changes.
 			EnergyPackItem.refreshWornAsset(stack, clamped);
+		}
+		if (stack.getItem() instanceof JetpackItem) {
+			// Same contract as the pack: the worn model follows the charge from the single write point.
+			JetpackItem.refreshWornAsset(stack, clamped);
 		}
 	}
 

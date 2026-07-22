@@ -24,7 +24,7 @@ public class WaterMillMenu extends MachineMenu {
 
 	@Override
 	protected void addMachineSlots() {
-		addSlot(new Slot(machine, WaterMillBlockEntity.WHEEL_SLOT, 79, 35) {
+		addSlot(new Slot(machine, WaterMillBlockEntity.WHEEL_SLOT, 84, 23) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return machine.canPlaceItem(WaterMillBlockEntity.WHEEL_SLOT, stack);
@@ -35,5 +35,15 @@ public class WaterMillMenu extends MachineMenu {
 				return 1;
 			}
 		});
+	}
+
+	@Override
+	protected int playerInventoryY() {
+		return 96;
+	}
+
+	@Override
+	protected int hotbarY() {
+		return 154;
 	}
 }

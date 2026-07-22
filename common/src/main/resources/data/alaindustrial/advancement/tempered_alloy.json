@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:smelter",
+  "display": {
+    "icon": { "id": "alaindustrial:tempered_iron" },
+    "title": { "translate": "advancements.alaindustrial.tempered_alloy.title" },
+    "description": { "translate": "advancements.alaindustrial.tempered_alloy.description" }
+  },
+  "criteria": {
+    "tempered_iron": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:tempered_iron" }] }
+    }
+  },
+  "requirements": [["tempered_iron"]]
+}

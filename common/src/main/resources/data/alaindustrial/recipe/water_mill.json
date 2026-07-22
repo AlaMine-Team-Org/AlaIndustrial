@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "PPP",
+    "PCP",
+    "PPP"
+  ],
+  "key": {
+    "P": "#minecraft:planks",
+    "C": "alaindustrial:copper_cable"
+  },
+  "result": {
+    "id": "alaindustrial:water_mill"
+  }
+}

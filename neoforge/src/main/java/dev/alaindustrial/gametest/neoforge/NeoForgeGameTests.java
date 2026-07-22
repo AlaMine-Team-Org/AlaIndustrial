@@ -9,6 +9,7 @@ import dev.alaindustrial.gametest.GeothermalLavaInputScenarios;
 import dev.alaindustrial.gametest.ElectricDrillScenarios;
 import dev.alaindustrial.gametest.MagnetScenarios;
 import dev.alaindustrial.gametest.EnergyPackScenarios;
+import dev.alaindustrial.gametest.JetpackScenarios;
 import dev.alaindustrial.gametest.GuideBookGiverScenarios;
 import dev.alaindustrial.gametest.PouchScenarios;
 import dev.alaindustrial.gametest.ScytheScenarios;
@@ -79,6 +80,18 @@ public final class NeoForgeGameTests {
 		// MOD-022 recipe seam: proves the machine RecipeType/RecipeSerializer register + resolve on NeoForge
 		// (the frozen-registry fix — ModRecipesNeoForge). Fabric covers this via MachineGameTest; this is the
 		// NeoForge world lane's first recipe-processing case.
+		// MOD-062 Industrialist: the per-loader seams (POI state map via registry callback, the
+		// profession's data-driven trade sets, the server-start village pool injection).
+		registerTest(event, "industrialist_workbench_poi_mapping", 40, true,
+				dev.alaindustrial.gametest.IndustrialistScenarios::workbenchStateMapsToPoi);
+		registerTest(event, "industrialist_trade_sets_resolve", 40, true,
+				dev.alaindustrial.gametest.IndustrialistScenarios::tradeSetsResolvePerLevel);
+		registerTest(event, "industrialist_pool_injection_idempotent", 40, true,
+				dev.alaindustrial.gametest.IndustrialistScenarios::poolInjectionIsIdempotent);
+		registerTest(event, "industrialist_house_cap_filter", 40, true,
+				dev.alaindustrial.gametest.IndustrialistScenarios::houseCapFilter);
+		registerTest(event, "industrialist_house_structure_loads", 40, true,
+				dev.alaindustrial.gametest.IndustrialistScenarios::houseStructureLoads);
 		registerTest(event, "macerator_processes_recipe", 420, true,
 				CoreEnergyScenarios::maceratorProcessesRecipe);
 		// MOD-022 data-component seam: a charged battery box carries STORED_ENERGY on drop (frozen-registry
@@ -371,6 +384,21 @@ public final class NeoForgeGameTests {
 		registerTest(event, "pack_budget_split", 40, true, EnergyPackScenarios::fun03BudgetSplitAcrossConsumers);
 		registerTest(event, "pack_charge_in_battery_box", 80, true, EnergyPackScenarios::fun04ChargeInBatteryBox);
 		registerTest(event, "pack_does_not_charge_pack", 40, true, EnergyPackScenarios::fun05PackDoesNotChargePack);
+		// Jetpack (MOD-148, TC-JET-001) — same loader-neutral bodies as the Fabric JetpackGameTest
+		// suite: EU burn per thrust tick, the powerless glide, the grounded/ceiling gates, charging.
+		registerTest(event, "jetpack_thrust_burns_eu", 40, true, JetpackScenarios::fun01ThrustBurnsEuAndZeroesFall);
+		registerTest(event, "jetpack_released_jump_burns_nothing", 40, true, JetpackScenarios::fun02ReleasedJumpBurnsNothing);
+		registerTest(event, "jetpack_drained_glide", 40, true, JetpackScenarios::fun03DrainedGlideStillZeroesFall);
+		registerTest(event, "jetpack_charge_in_battery_box", 80, true, JetpackScenarios::fun04ChargeInBatteryBox);
+		registerTest(event, "jetpack_worn_pack_charges_jetpack", 40, true, JetpackScenarios::fun05WornPackChargesJetpack);
+		registerTest(event, "jetpack_worn_asset_follows_charge", 40, true, JetpackScenarios::fun06WornAssetFollowsCharge);
+		registerTest(event, "jetpack_creative_burns_nothing", 40, true, JetpackScenarios::neg01CreativeBurnsNothing);
+		registerTest(event, "jetpack_on_ground_burns_nothing", 40, true, JetpackScenarios::neg02OnGroundBurnsNothing);
+		registerTest(event, "jetpack_above_ceiling_refuses_thrust", 40, true, JetpackScenarios::neg03AboveCeilingRefusesThrust);
+		registerTest(event, "jetpack_tail_charge_drains_to_zero", 40, true, JetpackScenarios::fun07TailChargeDrainsToZero);
+		registerTest(event, "jetpack_empty_falls_normally", 40, true, JetpackScenarios::neg04EmptyJetpackFallsNormally);
+		registerTest(event, "jetpack_flight_glow_placed_and_swept", 40, true, JetpackScenarios::fun08FlightGlowPlacedAndSwept);
+
 		// MOD-084: the NeoForge half of the cross-mod bridge. Loader-specific bodies (they call
 		// Capabilities.Energy.ITEM), mirroring the Fabric lane's ItemEnergyCapabilityGameTest.
 		registerTest(event, "xmod_foreign_charger_fills_pouch", 40, true,

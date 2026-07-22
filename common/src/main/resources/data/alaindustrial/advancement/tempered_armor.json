@@ -1,0 +1,28 @@
+{
+  "parent": "alaindustrial:tempered_alloy",
+  "display": {
+    "icon": { "id": "alaindustrial:tempered_iron_chestplate" },
+    "title": { "translate": "advancements.alaindustrial.tempered_armor.title" },
+    "description": { "translate": "advancements.alaindustrial.tempered_armor.description" },
+    "frame": "goal"
+  },
+  "criteria": {
+    "tempered_iron_helmet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:tempered_iron_helmet" }] }
+    },
+    "tempered_iron_chestplate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:tempered_iron_chestplate" }] }
+    },
+    "tempered_iron_leggings": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:tempered_iron_leggings" }] }
+    },
+    "tempered_iron_boots": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:tempered_iron_boots" }] }
+    }
+  },
+  "requirements": [["tempered_iron_helmet"], ["tempered_iron_chestplate"], ["tempered_iron_leggings"], ["tempered_iron_boots"]]
+}

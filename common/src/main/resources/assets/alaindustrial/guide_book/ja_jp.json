@@ -304,13 +304,13 @@
               "recipe_type": "定形クラフト",
               "grid": [
                 "minecraft:oak_planks",
-                "minecraft:oak_planks",
+                "alaindustrial:battery",
                 "minecraft:oak_planks",
                 "alaindustrial:copper_cable",
                 "minecraft:redstone",
                 "alaindustrial:copper_cable",
                 "minecraft:oak_planks",
-                "minecraft:oak_planks",
+                "alaindustrial:battery",
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:battery_box",
@@ -1562,6 +1562,44 @@
           ]
         },
         {
+          "id": "jetpack",
+          "title": "ジェットパック",
+          "icon": "alaindustrial:jetpack",
+          "block_id": "alaindustrial:jetpack",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ジェットパック",
+              "text": "チェストスロット用のEU飛行装置 — ジャンプ長押しで推進、充電切れ時はゆるやかな無動力滑空。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "バッファ: 30 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "alaindustrial:energy_pack",
+                "alaindustrial:battery",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:copper_coil",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:jetpack",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron_pickaxe",
           "title": "調質鉄のツルハシ",
           "icon": "alaindustrial:tempered_iron_pickaxe",
@@ -1716,7 +1754,8 @@
               "type": "stats",
               "title": "ステータス",
               "lines": [
-                "バッファ: 5 000 EU"
+                "バッファ: 5 000 EU",
+                "半径: 5 ブロック"
               ]
             },
             {

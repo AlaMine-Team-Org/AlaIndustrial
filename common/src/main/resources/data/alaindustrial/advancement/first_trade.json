@@ -1,0 +1,23 @@
+{
+  "parent": "alaindustrial:ore_hunter",
+  "display": {
+    "icon": { "id": "minecraft:emerald" },
+    "title": { "translate": "advancements.alaindustrial.first_trade.title" },
+    "description": { "translate": "advancements.alaindustrial.first_trade.description" },
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "criteria": {
+    "traded_with_industrialist": {
+      "trigger": "minecraft:villager_trade",
+      "conditions": {
+        "villager": {
+          "nbt": "{VillagerData:{profession:\"alaindustrial:industrialist\"}}"
+        }
+      }
+    }
+  },
+  "requirements": [
+    ["traded_with_industrialist"]
+  ]
+}

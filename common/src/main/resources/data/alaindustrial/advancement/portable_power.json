@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:first_storage",
+  "display": {
+    "icon": { "id": "alaindustrial:battery" },
+    "title": { "translate": "advancements.alaindustrial.portable_power.title" },
+    "description": { "translate": "advancements.alaindustrial.portable_power.description" }
+  },
+  "criteria": {
+    "battery": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:battery" }] }
+    }
+  },
+  "requirements": [["battery"]]
+}

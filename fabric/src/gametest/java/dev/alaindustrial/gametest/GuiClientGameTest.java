@@ -81,9 +81,9 @@ public class GuiClientGameTest implements FabricClientGameTest {
 
     /**
      * R-GUI-04: Opens the real {@link AdvancementsScreen} and photographs our advancement tab, a
-     * vanilla tab, and the return to our tab. The tab icons (raw_tin on ore_hunter/root, solar_panel
-     * on solar_power, copper_cable on first_wire/energized_network, battery_box on first_storage,
-     * daylight_solar_panel on solar_evolution) are rendered by {@code AdvancementWidget} in
+     * vanilla tab, and the return to our tab. The tab icons (raw_tin on ore_hunter, solar_panel
+     * on root/solar_power, copper_cable on first_wire/energized_network, battery_box on
+     * first_storage, electronic_circuit on first_circuit) are rendered by {@code AdvancementWidget} in
      * {@code ItemDisplayContext.GUI} —
      * the exact path the {@code minecraft:select} gui-icon fix targets. A white square or an
      * off-centre icon here is the regression this suite exists to catch.

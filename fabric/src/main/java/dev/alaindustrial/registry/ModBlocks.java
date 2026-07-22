@@ -195,6 +195,13 @@ public final class ModBlocks {
 	public static final Block TEMPERED_IRON_BLOCK = register(TEMPERED_IRON_BLOCK_KEY,
 			new Block(props(TEMPERED_IRON_BLOCK_KEY).strength(5.0f, 6.0f).sound(SoundType.METAL)));
 
+	// Industrial Workbench (MOD-062) — the Industrialist villager's job-site block. A plain decorative
+	// full cube (smithing-table-like: canOcclude stays true, so no noOcclusion), no BlockEntity; its
+	// gameplay meaning comes from the PoiType/profession registered over it, not from block logic.
+	public static final ResourceKey<Block> INDUSTRIAL_WORKBENCH_KEY = key("industrial_workbench");
+	public static final Block INDUSTRIAL_WORKBENCH = register(INDUSTRIAL_WORKBENCH_KEY,
+			new Block(props(INDUSTRIAL_WORKBENCH_KEY).strength(2.5f, 6.0f).sound(SoundType.METAL)));
+
 	// Enriched Uranium Torch (MOD-085) — vanilla-behaviour torch, light 15, green flame. NOT built via
 	// props() (that adds requiresCorrectToolForDrops, non-vanilla for a torch): torchProps() mirrors the
 	// vanilla TORCH property chain (no collision, instabreak, WOOD, DESTROY push reaction) exactly.
@@ -287,6 +294,7 @@ public final class ModBlocks {
 		ModContent.SILVER_CHEST = () -> SILVER_CHEST;
 		ModContent.GOLD_CHEST = () -> GOLD_CHEST;
 		ModContent.TEMPERED_IRON_BLOCK = () -> TEMPERED_IRON_BLOCK;
+		ModContent.INDUSTRIAL_WORKBENCH = () -> INDUSTRIAL_WORKBENCH;
 		ModContent.ENRICHED_URANIUM_TORCH = () -> ENRICHED_URANIUM_TORCH;
 		ModContent.ENRICHED_URANIUM_WALL_TORCH = () -> ENRICHED_URANIUM_WALL_TORCH;
 	}

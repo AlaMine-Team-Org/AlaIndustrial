@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:smelter",
+  "display": {
+    "icon": { "id": "alaindustrial:iron_chest" },
+    "title": { "translate": "advancements.alaindustrial.iron_chest.title" },
+    "description": { "translate": "advancements.alaindustrial.iron_chest.description" }
+  },
+  "criteria": {
+    "iron_chest": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:iron_chest" }] }
+    }
+  },
+  "requirements": [["iron_chest"]]
+}

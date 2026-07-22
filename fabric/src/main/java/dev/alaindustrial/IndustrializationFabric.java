@@ -193,6 +193,27 @@ public class IndustrializationFabric implements ModInitializer {
 		ModRecipes.init();
 		ModCriteria.init();
 		ModWorldGen.init();
+		// MOD-062: villager profession + its POI (needs the workbench block registered by ModBlocks
+		// above). Fabric keeps both registries writable during init, so this is eager like the rest.
+		registerVillagerProfession();
+	}
+
+	/**
+	 * Registers the Industrialist POI + profession (MOD-062). PoiHelper both registers the PoiType
+	 * and fills the internal blockstate→POI map the acquisition system queries (a bare
+	 * Registry.register would leave that map empty — verified 26.2). The profession record itself is
+	 * loader-neutral ({@link dev.alaindustrial.registry.ModProfessions#createIndustrialist()}).
+	 */
+	private void registerVillagerProfession() {
+		net.fabricmc.fabric.api.object.builder.v1.world.poi.PoiHelper.register(
+				dev.alaindustrial.registry.ModProfessions.INDUSTRIALIST_POI.identifier(),
+				dev.alaindustrial.registry.ModProfessions.POI_MAX_TICKETS,
+				dev.alaindustrial.registry.ModProfessions.POI_VALID_RANGE,
+				ModBlocks.INDUSTRIAL_WORKBENCH);
+		Registry.register(
+				net.minecraft.core.registries.BuiltInRegistries.VILLAGER_PROFESSION,
+				dev.alaindustrial.registry.ModProfessions.INDUSTRIALIST,
+				dev.alaindustrial.registry.ModProfessions.createIndustrialist());
 	}
 
 	/** Eagerly registers the mod's sound events (Fabric keeps the SOUND_EVENT registry writable). */
@@ -283,6 +304,9 @@ public class IndustrializationFabric implements ModInitializer {
 			dev.alaindustrial.teleporter.TeleportWarmupManager.tickAll(server);
 			// MOD-133: fold pending per-player stat deltas into attachments on the configured cadence.
 			dev.alaindustrial.stats.PlayerStatsTracker.get().onServerTick(server);
+			// MOD-148: clear any jetpack flight-glow light block whose flight ended (land, logout,
+			// death, unequip) — the one cleanup path for every exit (see JetpackLight).
+			dev.alaindustrial.item.JetpackLight.sweep(server, server.getTickCount());
 		});
 		// Teleport warmup cancellation (MOD-092) — the mod's first player-event listeners. Three
 		// separate hooks are needed, not two: AFTER_DAMAGE does NOT fire for a killing blow, and
@@ -313,6 +337,10 @@ public class IndustrializationFabric implements ModInitializer {
 			NetworkManager.clear(level);
 			ItemNetworkManager.clear(level);
 		});
+		// MOD-062: inject the Industrialist house into the vanilla village pools. SERVER_STARTING
+		// fires before any level/worldgen exists — required (pool maxSize memoizes on first use).
+		ServerLifecycleEvents.SERVER_STARTING.register(
+				dev.alaindustrial.worldgen.VillagePoolInjector::inject);
 		// MOD-133: fold every pending delta before the world saves players. STOPPING runs before
 		// PlayerList#saveAll; STOPPED would be too late and lose the last flush window's tail.
 		ServerLifecycleEvents.SERVER_STOPPING.register(server ->

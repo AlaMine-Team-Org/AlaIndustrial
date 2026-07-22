@@ -11,6 +11,7 @@ import dev.alaindustrial.core.fluid.FluidLookup;
 import dev.alaindustrial.core.fluid.FluidMover;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.fluid.FluidPortHost;
+import dev.alaindustrial.core.fluid.FluidSourceFinder;
 import dev.alaindustrial.core.fluid.FluidTank;
 import dev.alaindustrial.item.ItemFluidBridge;
 import dev.alaindustrial.menu.PumpMenu;
@@ -162,9 +163,9 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 					energy.amount -= euPerBucket;
 					creditUsefulWork(level, euPerBucket); // MOD-133: one bucket pumped = useful work → XP
 					worked = true;
-					scanCooldown = 20; // 1 second cooldown on success to balance speed and reduce BFS frequency
+					scanCooldown = Config.pumpScanCooldownTicks; // cooldown on success to balance speed and reduce BFS frequency
 				} else {
-					scanCooldown = 20; // 1 second cooldown on failure to avoid ticking BFS
+					scanCooldown = Config.pumpScanCooldownTicks; // cooldown on failure to avoid ticking BFS
 				}
 			}
 		}
@@ -244,7 +245,8 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 				// Dry-run type match check (prevent BFS if tank already holds a different fluid)
 				if (fluidTank.fluid.isEmpty() || fluidTank.fluid.equals(holder)) {
 					// Perform BFS to find the closest source block
-					BlockPos sourcePos = findClosestSource(level, pos, np, sourceFluid);
+					BlockPos sourcePos = FluidSourceFinder.findClosestSource(
+							level, pos, np, sourceFluid, Config.pumpScanMaxDistance, Config.pumpScanMaxVisited);
 					if (sourcePos != null) {
 						boolean[] acquired = {false};
 						EnergyTransactions.get().runCommitting(txn -> {
@@ -279,72 +281,6 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Finds the closest source block of targetSourceFluid connected to startPos using Breadth-First Search (BFS).
-	 * Restricts search to loaded chunks, Manhattan distance <= 32, and visits at most 512 blocks.
-	 *
-	 * @param level              the level to search in
-	 * @param pumpPos            the position of the pump block (used for distance constraint)
-	 * @param startPos           the initial block position in front of the pump to start searching from
-	 * @param targetSourceFluid the source representation of the fluid we are looking for
-	 * @return the BlockPos of the closest source block, or null if none found
-	 */
-	private static BlockPos findClosestSource(Level level, BlockPos pumpPos, BlockPos startPos, Fluid targetSourceFluid) {
-		java.util.Queue<BlockPos> queue = new java.util.ArrayDeque<>();
-		java.util.Set<BlockPos> visited = new java.util.HashSet<>();
-
-		queue.add(startPos);
-		visited.add(startPos);
-
-		try {
-			while (!queue.isEmpty()) {
-				BlockPos current = queue.poll();
-				FluidState currentState = level.getFluidState(current);
-				if (currentState.isEmpty()) {
-					continue;
-				}
-
-				Fluid currentFluid = currentState.getType();
-				if (isSameFluid(currentFluid, targetSourceFluid)) {
-					if (currentState.isSource()) {
-						return current;
-					}
-
-					for (Direction dir : Direction.values()) {
-						BlockPos next = current.relative(dir);
-						if (!visited.contains(next)) {
-							// Distance check: Manhattan distance to pumpPos must be <= 32 blocks
-							if (next.distManhattan(pumpPos) <= 32) {
-								// Limit max visited blocks to 512 to avoid lag spikes
-								if (visited.size() < 512) {
-									visited.add(next);
-									queue.add(next);
-								}
-							}
-						}
-					}
-				}
-			}
-		} catch (Exception exception) {
-			// Catch any exceptions to prevent server crashes, returning null
-			return null;
-		}
-		return null;
-	}
-
-	/**
-	 * Helper to check if two fluids share the same source type.
-	 *
-	 * @param a first fluid to compare
-	 * @param b second fluid to compare
-	 * @return true if both fluids share the same source type
-	 */
-	private static boolean isSameFluid(Fluid a, Fluid b) {
-		Fluid aSource = (a instanceof FlowingFluid flowing) ? flowing.getSource() : a;
-		Fluid bSource = (b instanceof FlowingFluid flowing) ? flowing.getSource() : b;
-		return aSource == bSource;
 	}
 
 	/** Push tank fluid into any adjacent insertable fluid port (except the FACING face and {@code excludePos}). */

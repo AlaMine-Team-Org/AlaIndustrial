@@ -128,6 +128,9 @@ public class IndustrializationClient implements ClientModInitializer {
 		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_DRILL_HUD);
 		KeyMappingHelper.registerKeyMapping(ModKeyMappings.OPEN_PROFILE); // MOD-133 player dashboard
 		ClientTickEvents.END_CLIENT_TICK.register(client -> ModKeyMappings.handleInput());
+		// Jetpack thrust/glide (MOD-148) — player motion is client-authoritative, so the velocity
+		// change lives in this end-of-tick step; the server burns the EU on its own input view.
+		ClientTickEvents.END_CLIENT_TICK.register(client -> dev.alaindustrial.client.JetpackFlight.clientTick());
 		// Teleport screen fade (MOD-106). Registered first so the readouts below stay legible over it —
 		// and addLast keeps it under vanilla's own overlays, which a jump has no business hiding.
 		HudElementRegistry.addLast(Industrialization.id("teleport_fade"),

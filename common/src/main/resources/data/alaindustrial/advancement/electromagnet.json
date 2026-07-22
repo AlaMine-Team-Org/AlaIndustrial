@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:portable_power",
+  "display": {
+    "icon": { "id": "alaindustrial:electromagnet" },
+    "title": { "translate": "advancements.alaindustrial.electromagnet.title" },
+    "description": { "translate": "advancements.alaindustrial.electromagnet.description" }
+  },
+  "criteria": {
+    "electromagnet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:electromagnet" }] }
+    }
+  },
+  "requirements": [["electromagnet"]]
+}

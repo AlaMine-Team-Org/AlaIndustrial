@@ -6,7 +6,9 @@
   "mixins": [
     "FuelValuesMixin",
     "FurnaceFuelSlotMixin",
+    "JigsawPlacementPlacerMixin",
     "SkeletonSpawnEquipmentMixin",
+    "StructureTemplatePoolAccessor",
     "ZombieSpawnEquipmentMixin"
   ],
   "client": [

@@ -17,6 +17,7 @@ import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.item.AnalyzerMode;
 import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
+import dev.alaindustrial.item.JetpackItem;
 import dev.alaindustrial.item.ItemEnergy;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import dev.alaindustrial.item.NetworkScanData;
@@ -60,6 +61,10 @@ public final class MachineTooltips {
 		}
 		if (stack.getItem() instanceof ElectricDrillItem) {
 			addElectricDrillTooltip(stack, lines);
+			return;
+		}
+		if (stack.getItem() instanceof JetpackItem) {
+			addJetpackTooltip(stack, lines);
 			return;
 		}
 		// Plain-item components (not BlockItem) — the windmill rotor is the only such item with a
@@ -209,6 +214,27 @@ public final class MachineTooltips {
 					.withStyle(ChatFormatting.RED));
 		} else {
 			lines.add(Component.translatable("tooltip.alaindustrial.energy_pack.charge", eu, cap)
+					.withStyle(ChatFormatting.GOLD));
+		}
+	}
+
+	/**
+	 * Tooltip for the Jetpack (MOD-148): how to fly, then its EU charge — same shape as the Energy
+	 * Pack tooltip (gold charge line, red DEPLETED at 0). One usage line: hold jump in the air to
+	 * fly. The former "keep holding to glide when drained" line was removed — the glide is only a
+	 * mid-flight safety net now (an empty jetpack falls normally), so advertising it as a feature
+	 * misled players.
+	 */
+	private static void addJetpackTooltip(ItemStack stack, List<Component> lines) {
+		lines.add(Component.translatable("tooltip.alaindustrial.jetpack.usage")
+				.withStyle(ChatFormatting.GRAY));
+		long eu = ItemEnergy.get(stack);
+		long cap = ItemEnergy.capacity(stack);
+		if (eu <= 0) {
+			lines.add(Component.translatable("tooltip.alaindustrial.jetpack.depleted")
+					.withStyle(ChatFormatting.RED));
+		} else {
+			lines.add(Component.translatable("tooltip.alaindustrial.jetpack.charge", eu, cap)
 					.withStyle(ChatFormatting.GOLD));
 		}
 	}

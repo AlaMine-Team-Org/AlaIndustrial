@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:first_circuit",
+  "display": {
+    "icon": { "id": "alaindustrial:pump" },
+    "title": { "translate": "advancements.alaindustrial.first_pump.title" },
+    "description": { "translate": "advancements.alaindustrial.first_pump.description" }
+  },
+  "criteria": {
+    "pump": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:pump" }] }
+    }
+  },
+  "requirements": [["pump"]]
+}

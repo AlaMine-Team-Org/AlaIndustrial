@@ -37,6 +37,7 @@
 			"dev.alaindustrial.gametest.EnergyPackGameTest",
 			"dev.alaindustrial.gametest.ElectricDrillGameTest",
 			"dev.alaindustrial.gametest.MagnetGameTest",
+			"dev.alaindustrial.gametest.JetpackGameTest",
 			"dev.alaindustrial.gametest.ItemEnergyCapabilityGameTest",
 			"dev.alaindustrial.gametest.CapsuleGameTest",
 			"dev.alaindustrial.gametest.GeothermalLavaInputGameTest",
@@ -53,6 +54,7 @@
 			,"dev.alaindustrial.gametest.PlayerStatsAttachmentGameTest"
 			,"dev.alaindustrial.gametest.EnrichedUraniumTorchGameTest"
 			,"dev.alaindustrial.gametest.RecipeCoverageGameTest"
+			,"dev.alaindustrial.gametest.IndustrialistVillagerGameTest"
 		]
 	}
 }

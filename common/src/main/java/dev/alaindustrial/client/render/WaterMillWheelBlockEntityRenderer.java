@@ -34,13 +34,13 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Closed, baked 3D water-wheel model for the LV water mill.
+ * Open, baked 3D water-wheel model for the LV water mill.
  *
- * <p>The wheel is a hierarchy of solid cuboids baked once through Minecraft's
- * {@link ModelPart} pipeline. A single wide rim replaces the old pair of disconnected
- * side rings, each spoke is one full-depth timber, and every paddle is a thick closed
- * board sunk into the rim. The pieces overlap by one model unit at their joints, hiding
- * sub-pixel cracks without coplanar exterior faces. Per frame, only the root pose rotates.</p>
+ * <p>The wheel combines a continuous annular prism with solid cuboids baked once through
+ * Minecraft's {@link ModelPart} pipeline. Full-depth spokes connect the hub to the rim, and
+ * compact L-shaped buckets stay inside the round silhouette. The pieces overlap only inside
+ * their joints, hiding sub-pixel cracks without coplanar exterior faces. Per frame, only the
+ * root pose rotates.</p>
  */
 public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEntity>
 		implements BlockEntityRenderer<T, WaterMillWheelBlockEntityRenderer.State> {

@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:fluid_storage",
+  "display": {
+    "icon": { "id": "alaindustrial:filled_vacuum_capsule" },
+    "title": { "translate": "advancements.alaindustrial.filled_capsule.title" },
+    "description": { "translate": "advancements.alaindustrial.filled_capsule.description" }
+  },
+  "criteria": {
+    "filled_vacuum_capsule": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:filled_vacuum_capsule" }] }
+    }
+  },
+  "requirements": [["filled_vacuum_capsule"]]
+}

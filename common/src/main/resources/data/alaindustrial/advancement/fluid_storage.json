@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:first_pump",
+  "display": {
+    "icon": { "id": "alaindustrial:fluid_tank" },
+    "title": { "translate": "advancements.alaindustrial.fluid_storage.title" },
+    "description": { "translate": "advancements.alaindustrial.fluid_storage.description" }
+  },
+  "criteria": {
+    "fluid_tank": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:fluid_tank" }] }
+    }
+  },
+  "requirements": [["fluid_tank"]]
+}

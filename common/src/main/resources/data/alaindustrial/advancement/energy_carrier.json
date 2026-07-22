@@ -1,0 +1,19 @@
+{
+  "parent": "alaindustrial:portable_power",
+  "display": {
+    "icon": { "id": "alaindustrial:energy_pack" },
+    "title": { "translate": "advancements.alaindustrial.energy_carrier.title" },
+    "description": { "translate": "advancements.alaindustrial.energy_carrier.description" }
+  },
+  "criteria": {
+    "energy_pack": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:energy_pack" }] }
+    },
+    "battery_pouch": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:battery_pouch" }] }
+    }
+  },
+  "requirements": [["energy_pack", "battery_pouch"]]
+}
