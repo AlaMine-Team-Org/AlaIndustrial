@@ -1,12 +1,17 @@
-## 0.1.43
+## 0.1.44
 
-<p><img alt="Ala Industrial 0.1.43 fix and patch update banner" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.43/release-media/v0.1.43/changelog.jpeg" width="720"></p>
+<p><img alt="Ala Industrial 0.1.44 jetpack flight preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.44/release-media/v0.1.44/changelog.webp" width="720"></p>
 
-A bug-fix release: the guide book now shows every recipe correctly, and a long-session memory leak is gone.
+This update adds jetpack flight and gives four once-silent machines their own sounds.
 
-### Fixed
+### New
 
-- **Guide book recipes now show every ingredient.** Tag ingredients like planks, wool and coal now display a real item icon instead of a blank slot — recipes (mute chip, water wheel, wind rotor, uranium torch, wind mill, water mill) no longer look cut off.
-- **Guide book: no more duplicate entries.** Turning the page on the Energy tab no longer repeats the previous page's last rows, so each block is listed exactly once.
-- **Guide book: multi-variant crafts now cycle through their tiers.** The scythe and tempered-iron tools show every tier once per second, the uranium torch shows both crafting methods, and the chests in the Other tab are grouped iron → silver → gold.
-- **Fixed a slow memory leak.** In long play sessions, another mod reading energy or fluid from the mod's machines could slowly leak memory. Not anymore.
+- **Jetpack — gear up and fly.** Wear it in your chest slot and hold jump in mid-air to soar on stored power (about 30 seconds of flight on a full charge). Run out up high? Keep holding jump for a safe, damage-free glide back down. Recharge it in a Battery Box or straight from a Battery Pouch in your inventory, and it doubles as light chest armor.
+
+### Improved
+
+- **Machines now have a voice.** Four blocks that used to run in total silence finally make sound:
+  - **Extractor** hums while it grinds.
+  - **Water Mill** splashes while its wheel turns.
+  - **Wind Mill** rustles its sails in the breeze.
+  - **Iron Furnace** crackles while it's lit.

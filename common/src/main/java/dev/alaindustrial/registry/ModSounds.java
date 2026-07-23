@@ -110,6 +110,54 @@ public final class ModSounds {
 		return SoundEvent.createVariableRangeEvent(SCYTHE_SWING_ID);
 	}
 
+	/** The registry id for the extractor working loop (MOD-143) — a single lit machine, pattern A. */
+	public static final Identifier EXTRACTOR_HUM_ID = Industrialization.id("extractor_hum");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> EXTRACTOR_HUM = () -> {
+		throw new IllegalStateException("ModSounds.EXTRACTOR_HUM read before its loader bound it");
+	};
+
+	/** Build the extractor-hum event instance both loaders register (variable range, like the macerator). */
+	public static SoundEvent createExtractorHum() {
+		return SoundEvent.createVariableRangeEvent(EXTRACTOR_HUM_ID);
+	}
+
+	/** The registry id for the water-mill working loop (MOD-143) — lit-less passive generator, pattern C. */
+	public static final Identifier WATER_MILL_HUM_ID = Industrialization.id("water_mill_hum");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> WATER_MILL_HUM = () -> {
+		throw new IllegalStateException("ModSounds.WATER_MILL_HUM read before its loader bound it");
+	};
+
+	/**
+	 * Build the water-mill-hum event instance both loaders register. Fixed 12-block audible range (like
+	 * the solar panel's, not the generator's variable {@code /16}): water mills are passive generators
+	 * players line up in rows along a channel, so each is tuned to a short fixed range to keep a mill row
+	 * from becoming a wall of sound. Per-block {@code humVolume()} sets the loudness.
+	 */
+	public static SoundEvent createWaterMillHum() {
+		return SoundEvent.createFixedRangeEvent(WATER_MILL_HUM_ID, 12.0f);
+	}
+
+	/** The registry id for the wind-mill working loop (MOD-143) — lit-less passive generator, pattern C. */
+	public static final Identifier WIND_MILL_HUM_ID = Industrialization.id("wind_mill_hum");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> WIND_MILL_HUM = () -> {
+		throw new IllegalStateException("ModSounds.WIND_MILL_HUM read before its loader bound it");
+	};
+
+	/**
+	 * Build the wind-mill-hum event instance both loaders register. Fixed 12-block audible range, same
+	 * reasoning as the water mill: wind farms stack many rotors close together, so each is tuned to a
+	 * short fixed range rather than the lone generator's variable radius.
+	 */
+	public static SoundEvent createWindMillHum() {
+		return SoundEvent.createFixedRangeEvent(WIND_MILL_HUM_ID, 12.0f);
+	}
+
 	private ModSounds() {
 	}
 }

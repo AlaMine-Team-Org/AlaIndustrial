@@ -61,5 +61,32 @@
         "stream": false
       }
     ]
+  },
+  "extractor_hum": {
+    "subtitle": "subtitles.alaindustrial.extractor_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:extractor_hum",
+        "stream": false
+      }
+    ]
+  },
+  "water_mill_hum": {
+    "subtitle": "subtitles.alaindustrial.water_mill_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:water_mill_hum",
+        "stream": false
+      }
+    ]
+  },
+  "wind_mill_hum": {
+    "subtitle": "subtitles.alaindustrial.wind_mill_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:wind_mill_hum",
+        "stream": false
+      }
+    ]
   }
 }

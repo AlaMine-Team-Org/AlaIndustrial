@@ -38,6 +38,15 @@ public final class ModSoundsNeoForge {
 	public static final DeferredHolder<SoundEvent, SoundEvent> SCYTHE_SWING =
 			SOUNDS.register("scythe_swing", ModSounds::createScytheSwing);
 
+	public static final DeferredHolder<SoundEvent, SoundEvent> EXTRACTOR_HUM =
+			SOUNDS.register("extractor_hum", ModSounds::createExtractorHum);
+
+	public static final DeferredHolder<SoundEvent, SoundEvent> WATER_MILL_HUM =
+			SOUNDS.register("water_mill_hum", ModSounds::createWaterMillHum);
+
+	public static final DeferredHolder<SoundEvent, SoundEvent> WIND_MILL_HUM =
+			SOUNDS.register("wind_mill_hum", ModSounds::createWindMillHum);
+
 	/** Bind the neutral handles to the deferred holders. Called from the {@code @Mod} ctor after register. */
 	public static void init() {
 		ModSounds.MACERATOR_GRIND = MACERATOR_GRIND;
@@ -47,6 +56,9 @@ public final class ModSoundsNeoForge {
 		ModSounds.IRON_CHEST_OPEN = IRON_CHEST_OPEN;
 		ModSounds.IRON_CHEST_CLOSE = IRON_CHEST_CLOSE;
 		ModSounds.SCYTHE_SWING = SCYTHE_SWING;
+		ModSounds.EXTRACTOR_HUM = EXTRACTOR_HUM;
+		ModSounds.WATER_MILL_HUM = WATER_MILL_HUM;
+		ModSounds.WIND_MILL_HUM = WIND_MILL_HUM;
 	}
 
 	private ModSoundsNeoForge() {

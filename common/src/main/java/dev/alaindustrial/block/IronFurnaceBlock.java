@@ -4,6 +4,9 @@ import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
@@ -41,6 +44,25 @@ public class IronFurnaceBlock extends AbstractFurnaceBlock {
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new IronFurnaceBlockEntity(pos, state);
+	}
+
+	/**
+	 * Ambient fire crackle while burning (MOD-143). {@link AbstractFurnaceBlock} — which this block
+	 * extends directly rather than through vanilla {@code FurnaceBlock} — carries no {@code animateTick},
+	 * so the iron furnace was the only lit machine in the mod that burned in total silence. Reinstate the
+	 * exact vanilla furnace ambience: the {@code SoundEvents.FURNACE_FIRE_CRACKLE} one-shot at the vanilla
+	 * ~10 %/tick cadence while {@code lit}. Client-only (called from {@code animateTick}); intentionally a
+	 * randomised one-shot, not the {@code MachineHumProvider} loop, because a real furnace crackles
+	 * irregularly rather than droning. Particles are left to vanilla defaults — this restores the sound only.
+	 */
+	@Override
+	public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+		if (state.getValue(LIT) && random.nextDouble() < 0.1) {
+			// Vanilla plays the crackle at volume 1.0; dialled to 0.6 so the iron furnace sits a touch
+			// under the ordinary furnace and matches the quieter machine loops in this mod (MOD-143).
+			level.playLocalSound(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5,
+					SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 0.6F, 1.0F, false);
+		}
 	}
 
 	@Override

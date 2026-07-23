@@ -235,6 +235,12 @@ public class IndustrializationFabric implements ModInitializer {
 				ModSounds.IRON_CHEST_CLOSE_ID, ModSounds.createIronChestClose());
 		ModSounds.SCYTHE_SWING = registerSound(
 				ModSounds.SCYTHE_SWING_ID, ModSounds.createScytheSwing());
+		ModSounds.EXTRACTOR_HUM = registerSound(
+				ModSounds.EXTRACTOR_HUM_ID, ModSounds.createExtractorHum());
+		ModSounds.WATER_MILL_HUM = registerSound(
+				ModSounds.WATER_MILL_HUM_ID, ModSounds.createWaterMillHum());
+		ModSounds.WIND_MILL_HUM = registerSound(
+				ModSounds.WIND_MILL_HUM_ID, ModSounds.createWindMillHum());
 	}
 
 	/**
