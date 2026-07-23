@@ -160,6 +160,10 @@ public final class NeoForgeGameTests {
 				CoreEnergyScenarios::waterMillWheelGate);
 		registerTest(event, "water_mill_adjacent_face_to_face_stalls", 40, true,
 				CoreEnergyScenarios::waterMillAdjacentFaceToFaceStalls);
+		// MOD-189: wheel wear — a producing mill breaks a spent wheel (loader-parity smoke; also asserts
+		// the NeoForge-registered water_mill_wheel is a durability item). Deep coverage on the Fabric lane.
+		registerTest(event, "water_mill_wheel_wears_out", 40, true,
+				CoreEnergyScenarios::waterMillWheelWearsOut);
 
 		// MOD-028: fluid multiloader — proves the FluidPort/FluidTank abstraction works end to end on
 		// NeoForge (Capabilities.Fluid.BLOCK resolves, transactions commit, lava becomes EU).

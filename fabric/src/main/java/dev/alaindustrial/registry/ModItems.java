@@ -1,5 +1,6 @@
 package dev.alaindustrial.registry;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
@@ -60,8 +61,10 @@ public final class ModItems {
 	// Upgrade chips (MOD-080): empty blank + the mute upgrade. Each shows a gray hint line.
 	public static final Item EMPTY_CHIP = hintItem("empty_chip");
 	public static final Item MUTE_CHIP = hintItem("mute_chip");
-	public static final Item WINDMILL_ROTOR = item("windmill_rotor");
-	public static final Item WATER_MILL_WHEEL = item("water_mill_wheel");
+	// Rotor / wheel (MOD-189): durability components — wear shows as a vanilla durability bar and, being
+	// damageable, they are automatically non-stackable. maxDamage from Config (registration-time).
+	public static final Item WINDMILL_ROTOR = durableComponent("windmill_rotor", Config.windMillRotorMaxDamage);
+	public static final Item WATER_MILL_WHEEL = durableComponent("water_mill_wheel", Config.waterMillWheelMaxDamage);
 	public static final Item WOODEN_GEAR = item("wooden_gear");
 	// Metal gears (MOD-105): crafting components for machinery still to come.
 	public static final Item STONE_GEAR = item("stone_gear");
@@ -198,6 +201,18 @@ public final class ModItems {
 	private static Item item(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key, new Item(new Item.Properties().setId(key)));
+	}
+
+	/**
+	 * A crafted machine component with durability (MOD-189): {@code Item.Properties.durability(max)} sets the
+	 * vanilla {@code max_damage} component (so wear renders as the standard durability bar) and makes the
+	 * item non-stackable. {@code maxDamage} is read from {@link Config} here at registration — see the field
+	 * docs, a change to it needs a restart; the wear RATE is read live in the block entity each tick.
+	 */
+	private static Item durableComponent(String path, int maxDamage) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new Item(new Item.Properties().durability(maxDamage).setId(key)));
 	}
 
 	/** A plain item with two gray hint lines (keys {@code item.alaindustrial.<path>.hint}/{@code .hint2}). */

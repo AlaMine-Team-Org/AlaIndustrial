@@ -1,5 +1,6 @@
 package dev.alaindustrial.gametest;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.registry.ModBlocks;
@@ -541,5 +542,70 @@ public class WaterMillWheelGameTest {
 			helper.fail("automation could insert a second wheel into an occupied slot");
 		}
 		helper.succeed();
+	}
+
+	// ── MOD-189: wheel wear — the wheel is a durability component that wears out and breaks ───────────
+
+	/**
+	 * A producing water mill wears its wheel down and, once its durability is spent, breaks it: the slot
+	 * empties and generation halts. Uses a Config override (1 EU per durability point) so wear is fast and
+	 * deterministic — the wear RATE is read live every tick — plus a wheel pre-damaged to one point from
+	 * death, so a single active tick finishes it off. Regression guard: without the wear code the wheel
+	 * never breaks and the first assertion fails.
+	 */
+	@GameTest
+	public void waterMillWheel_wearsOutAndBreaks(GameTestHelper helper) {
+		int savedRate = Config.waterMillWheelEuPerDamage;
+		try {
+			Config.waterMillWheelEuPerDamage = 1; // 1 EU of production spends 1 durability point
+			WaterMillBlockEntity mill = placeWithWater(helper); // one flowing face → 1 EU/t
+			ItemStack wheel = new ItemStack(ModContent.WATER_MILL_WHEEL.get());
+			wheel.setDamageValue(wheel.getMaxDamage() - 1); // one active tick from breaking
+			mill.setItem(WaterMillBlockEntity.WHEEL_SLOT, wheel);
+			AlaGameTestHelper.drive(mill, helper, 3);
+			if (!mill.getItem(WaterMillBlockEntity.WHEEL_SLOT).isEmpty()) {
+				helper.fail("worn-out water wheel was not removed from the slot; damage="
+						+ mill.getItem(WaterMillBlockEntity.WHEEL_SLOT).getDamageValue());
+			}
+			mill.getEnergyStorage().amount = 0;
+			AlaGameTestHelper.drive(mill, helper, 3);
+			if (mill.getEnergyStorage().getAmount() != 0) {
+				helper.fail("water mill kept generating after its wheel broke");
+			}
+			helper.succeed();
+		} finally {
+			Config.waterMillWheelEuPerDamage = savedRate;
+		}
+	}
+
+	/**
+	 * A wheel in an idle mill (no water → produces 0 EU) does NOT wear, even at the aggressive 1-EU-per-point
+	 * rate: wear accrues only while the mill actually produces EU. The wheel is pre-damaged to one point from
+	 * death, so any spurious wear would break it — it must survive untouched.
+	 */
+	@GameTest
+	public void waterMillWheel_noWearWhileDry(GameTestHelper helper) {
+		int savedRate = Config.waterMillWheelEuPerDamage;
+		try {
+			Config.waterMillWheelEuPerDamage = 1;
+			WaterMillBlockEntity mill = AlaGameTestHelper.place(helper, POS, ModBlocks.WATER_MILL,
+					WaterMillBlockEntity.class); // no water → MODE_NO_WATER, 0 EU
+			ItemStack wheel = new ItemStack(ModContent.WATER_MILL_WHEEL.get());
+			int seeded = wheel.getMaxDamage() - 1;
+			wheel.setDamageValue(seeded);
+			mill.setItem(WaterMillBlockEntity.WHEEL_SLOT, wheel);
+			AlaGameTestHelper.drive(mill, helper, 10);
+			ItemStack after = mill.getItem(WaterMillBlockEntity.WHEEL_SLOT);
+			if (after.isEmpty()) {
+				helper.fail("idle (dry) water mill wore out its wheel — wear must only accrue while producing EU");
+			}
+			if (after.getDamageValue() != seeded) {
+				helper.fail("idle water mill changed wheel damage from " + seeded + " to " + after.getDamageValue()
+						+ "; expected no wear while dry");
+			}
+			helper.succeed();
+		} finally {
+			Config.waterMillWheelEuPerDamage = savedRate;
+		}
 	}
 }

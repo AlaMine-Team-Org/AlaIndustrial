@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Storm wind mill (T2, LV) — the weather-focused evolution of {@link WindMillBlockEntity}.
- * Same base shape as T1 ({@link Config#stormWindMillMaxBaseEuPerTick} = 4, step 16) but stronger
+ * Same height step as T1 (step 16) but a higher base cap ({@link Config#stormWindMillMaxBaseEuPerTick} = 6) and stronger
  * weather multipliers ({@link Config#stormWindMillRainFactor} = 2.0,
  * {@link Config#stormWindMillThunderFactor} = 3.0) and a higher cap
  * ({@link Config#stormWindMillMaxEuPerTick} = 16). In clear weather it barely beats T1; in a
@@ -97,6 +97,13 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 	protected int produce(Level level, BlockPos pos, BlockState state) {
 		ItemStack rotor = items.get(ROTOR_SLOT);
 		if (rotor.isEmpty()) {
+			// Force a client sync when the mill drops to no-rotor so watchers see production fall to 0:
+			// the rotor renderer (blade visibility) and the hum sound loop (MOD-143) both read the synced
+			// production channel, NOT the inventory. Without this the T2 mill kept humming after the rotor
+			// was pulled — the channel stayed at its last non-zero value client-side. Mirrors WindMillBlockEntity.
+			if (this.progress != 0 || this.maxProgress != WindMillBlockEntity.MODE_NO_ROTOR) {
+				syncBlockEntityToClient();
+			}
 			cachedRate = 0;
 			cachedMode = WindMillBlockEntity.MODE_NO_ROTOR;
 			sampleCounter = 0;
@@ -128,6 +135,12 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 		sampleCounter++;
 		this.progress = cachedRate;
 		this.maxProgress = cachedMode;
+		// Rotor wear (MOD-189): same wear path as the T1 mill — proportional to output (so a thunderstorm's
+		// high output wears the rotor fast) with the shared storm-weather stress multiplier on top.
+		if (cachedRate > 0) {
+			float weather = (level.isThundering() || level.isRaining()) ? Config.windMillStormWearFactor : 1.0f;
+			wearComponent(level, pos, ROTOR_SLOT, cachedRate, weather, Config.windMillRotorEuPerDamage);
+		}
 		return cachedRate;
 	}
 

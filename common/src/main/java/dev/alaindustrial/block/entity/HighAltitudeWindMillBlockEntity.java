@@ -98,6 +98,13 @@ public class HighAltitudeWindMillBlockEntity extends AbstractGeneratorBlockEntit
 	protected int produce(Level level, BlockPos pos, BlockState state) {
 		ItemStack rotor = items.get(ROTOR_SLOT);
 		if (rotor.isEmpty()) {
+			// Force a client sync when the mill drops to no-rotor so watchers see production fall to 0:
+			// the rotor renderer (blade visibility) and the hum sound loop (MOD-143) both read the synced
+			// production channel, NOT the inventory. Without this the T2 mill kept humming after the rotor
+			// was pulled — the channel stayed at its last non-zero value client-side. Mirrors WindMillBlockEntity.
+			if (this.progress != 0 || this.maxProgress != WindMillBlockEntity.MODE_NO_ROTOR) {
+				syncBlockEntityToClient();
+			}
 			cachedRate = 0;
 			cachedMode = WindMillBlockEntity.MODE_NO_ROTOR;
 			sampleCounter = 0;
@@ -129,6 +136,12 @@ public class HighAltitudeWindMillBlockEntity extends AbstractGeneratorBlockEntit
 		sampleCounter++;
 		this.progress = cachedRate;
 		this.maxProgress = cachedMode;
+		// Rotor wear (MOD-189): same wear path as the T1 mill — proportional to output (so a tall,
+		// high-output tower wears its rotor faster) with the shared storm-weather stress multiplier.
+		if (cachedRate > 0) {
+			float weather = (level.isThundering() || level.isRaining()) ? Config.windMillStormWearFactor : 1.0f;
+			wearComponent(level, pos, ROTOR_SLOT, cachedRate, weather, Config.windMillRotorEuPerDamage);
+		}
 		return cachedRate;
 	}
 

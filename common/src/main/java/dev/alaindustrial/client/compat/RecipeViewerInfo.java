@@ -50,16 +50,14 @@ public final class RecipeViewerInfo {
 	 * they have no {@code output.accept(...)} entry). They are also removed from the recipe viewer
 	 * (REI on Fabric, JEI on NeoForge) so the player never sees them before they ship.
 	 *
-	 * <p>Today: the non-copper cables (tin / insulated copper / insulated tin) and the
-	 * high-altitude/storm windmills. The base {@code water_mill}, {@code wind_mill} and {@code copper_cable}
-	 * stay visible. Each entry is the same {@code Supplier<? extends ItemLike>} used everywhere else
-	 * in the mod, so the Fabric and NeoForge recipe viewers read one source and cannot drift.
+	 * <p>Today: the non-copper cables (tin / insulated copper / insulated tin) and the recipe-less
+	 * filled vacuum capsule. The base {@code water_mill}, {@code wind_mill}, both T2 wind mills
+	 * (restored in MOD-172 — recipe-less, obtained by evolution) and {@code copper_cable} stay visible.
+	 * Each entry is the same {@code Supplier<? extends ItemLike>} used everywhere else in the mod, so
+	 * the Fabric and NeoForge recipe viewers read one source and cannot drift.
 	 */
 	public static List<Supplier<? extends ItemLike>> hiddenFromRecipeViewerItems() {
 		return List.of(
-				// Generators (no recipe yet; hidden from creative tab too).
-				ModContent.HIGH_ALTITUDE_WIND_MILL,
-				ModContent.STORM_WIND_MILL,
 				// Cables — only copper_cable ships in v1.0.
 				ModContent.TIN_CABLE,
 				ModContent.INSULATED_COPPER_CABLE,

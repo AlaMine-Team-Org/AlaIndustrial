@@ -1,5 +1,6 @@
 package dev.alaindustrial.registry.neoforge;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
@@ -50,8 +51,12 @@ public final class ModItemsNeoForge {
 			ITEMS.registerItem("empty_chip", ItemBuildersNeoForge.hint("empty_chip"));
 	public static final DeferredItem<Item> MUTE_CHIP =
 			ITEMS.registerItem("mute_chip", ItemBuildersNeoForge.hint("mute_chip"));
-	public static final DeferredItem<Item> WINDMILL_ROTOR = ITEMS.registerItem("windmill_rotor", Item::new);
-	public static final DeferredItem<Item> WATER_MILL_WHEEL = ITEMS.registerItem("water_mill_wheel", Item::new);
+	// Rotor / wheel (MOD-189): durability components — wear shows as a vanilla durability bar and, being
+	// damageable, they are automatically non-stackable. maxDamage from Config (registration-time).
+	public static final DeferredItem<Item> WINDMILL_ROTOR =
+			ITEMS.registerItem("windmill_rotor", Item::new, p -> p.durability(Config.windMillRotorMaxDamage));
+	public static final DeferredItem<Item> WATER_MILL_WHEEL =
+			ITEMS.registerItem("water_mill_wheel", Item::new, p -> p.durability(Config.waterMillWheelMaxDamage));
 	public static final DeferredItem<Item> WOODEN_GEAR = ITEMS.registerItem("wooden_gear", Item::new);
 	// Metal gears (MOD-105): crafting components for machinery still to come.
 	public static final DeferredItem<Item> STONE_GEAR = ITEMS.registerItem("stone_gear", Item::new);

@@ -88,6 +88,38 @@ public final class Config {
 	public static float stormWindMillThunderFactor = 3.0f;
 	/** Hard cap on storm wind-mill EU/t after the weather multiplier. */
 	public static int stormWindMillMaxEuPerTick = 16;
+	// --- Rotor / wheel wear (MOD-189) — the wind mill rotor and water mill wheel are consumables ---
+	/**
+	 * Wind mill rotor max durability (wear shown as a vanilla durability bar). Total rotor life is
+	 * {@code windMillRotorMaxDamage × windMillRotorEuPerDamage} EU of production. NOTE: the max_damage
+	 * component is baked when the item is registered, so a change here takes effect only after a restart
+	 * (and only on newly obtained rotors); tune the calendar life through the EU-per-damage rate below,
+	 * which is read live every tick. Shared by all three wind mills (T1 + both T2 branches).
+	 */
+	public static int windMillRotorMaxDamage = 1000;
+	/**
+	 * EU of production per one durability point of the wind mill rotor. Default 480: with the 1000-point
+	 * bar that is 480 000 EU of life ≈ 5 in-game days at a typical 4 EU/t T1 mill (faster on a stronger
+	 * high-altitude/storm mill — wear is proportional to output). Read live every tick.
+	 */
+	public static int windMillRotorEuPerDamage = 480;
+	/**
+	 * Extra rotor-wear multiplier while a wind mill runs in rain or thunder — mechanical stress on top of
+	 * the already-higher storm output. 1.0 disables the weather bonus. Applies to all three wind mills.
+	 */
+	public static float windMillStormWearFactor = 1.5f;
+	/**
+	 * Water mill wheel max durability (durability bar). Total wheel life is
+	 * {@code waterMillWheelMaxDamage × waterMillWheelEuPerDamage} EU. Like the rotor the max_damage
+	 * component is registration-time (restart to change); tune life via the rate below.
+	 */
+	public static int waterMillWheelMaxDamage = 1000;
+	/**
+	 * EU of production per one durability point of the water mill wheel. Default 320: 320 000 EU of life
+	 * ≈ 6–7 in-game days at a typical 2 EU/t setup (the wheel runs 24/7 but at a lower rate than the
+	 * weather-dependent rotor, so a slightly longer calendar life). Read live every tick.
+	 */
+	public static int waterMillWheelEuPerDamage = 320;
 	/** Output multiplier when a solar panel sees the sky through a translucent block (leaves, cobweb). MOD-004. */
 	public static float solarTransparentFactor = 0.5f;
 	/** Output multiplier under snow: a snow layer above the panel, or snowfall in a cold biome — MODE_SNOW. */
@@ -441,6 +473,16 @@ public final class Config {
 				() -> stormWindMillThunderFactor, v -> stormWindMillThunderFactor = v, 0.0f),
 			new IntField("stormWindMillMaxEuPerTick", "Hard cap on storm T2 wind mill EU/t after the weather multiplier.",
 				() -> stormWindMillMaxEuPerTick, v -> stormWindMillMaxEuPerTick = v, 0),
+			new IntField("windMillRotorMaxDamage", "Wind mill rotor max durability (bar). Applies at registration (restart); tune life via the EU-per-damage rate. Shared by all three wind mills.",
+				() -> windMillRotorMaxDamage, v -> windMillRotorMaxDamage = v, 1),
+			new IntField("windMillRotorEuPerDamage", "EU of production per 1 durability point of the wind mill rotor (life = maxDamage × this). Read live every tick.",
+				() -> windMillRotorEuPerDamage, v -> windMillRotorEuPerDamage = v, 1),
+			new FloatField("windMillStormWearFactor", "Extra rotor wear multiplier while running in rain/thunder (1.0 = off). Applies to all three wind mills.",
+				() -> windMillStormWearFactor, v -> windMillStormWearFactor = v, 1.0f),
+			new IntField("waterMillWheelMaxDamage", "Water mill wheel max durability (bar). Applies at registration (restart); tune life via the EU-per-damage rate.",
+				() -> waterMillWheelMaxDamage, v -> waterMillWheelMaxDamage = v, 1),
+			new IntField("waterMillWheelEuPerDamage", "EU of production per 1 durability point of the water mill wheel (life = maxDamage × this). Read live every tick.",
+				() -> waterMillWheelEuPerDamage, v -> waterMillWheelEuPerDamage = v, 1),
 			new FloatField("solarTransparentFactor", "Output multiplier when a solar panel sees sky through a translucent block (leaves, cobweb).",
 				() -> solarTransparentFactor, v -> solarTransparentFactor = v, 0.0f),
 			new FloatField("solarSnowFactor", "Output multiplier under snow (a snow layer above, or snowfall in a cold biome).",

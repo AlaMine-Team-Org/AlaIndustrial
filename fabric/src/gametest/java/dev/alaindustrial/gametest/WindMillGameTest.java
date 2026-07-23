@@ -606,4 +606,238 @@ public class WindMillGameTest {
 		}
 		helper.succeed();
 	}
+
+	/**
+	 * @implements TC-WINDMILL-001-FUN05 — with a night (storm) chip and a rotor installed, the evolve
+	 *     counter advances one tick per server-tick under open sky; once {@link Config#windMillEvolveTicks}
+	 *     is reached the block transforms into {@code storm_wind_mill} carrying its stored EU and rotor,
+	 *     and consuming the chip. Mirror of {@link #tcWindmill001Fun03_dayChipEvolvesToHighAltitude} for
+	 *     the night branch — closes the Tempest-evolution test gap identified in MOD-172.
+	 * @covers R-NRG-04
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Fun05_nightChipEvolvesToStorm(GameTestHelper helper) {
+		WindMillBlockEntity mill = place(helper); // rotor installed
+		setClear(helper);
+		mill.setItem(WindMillBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_NIGHT));
+		mill.getEnergyStorage().amount = 1500; // seed EU to verify it carries across the transform
+		// MOD-133 regression: seed an owner so the test can assert evolution carries it. The evolved block
+		// is created via setBlockAndUpdate (no setPlacedBy), so without the evolveInto owner-transfer the
+		// evolved mill's owner would be null and its production would never reach the player's profile.
+		java.util.UUID ownerId = new java.util.UUID(0x51A2B3C4D5E6F708L, 0x1122334455667788L);
+		mill.setOwner(ownerId, "TestPlayer");
+		mill.setEvolveProgressTicks(Config.windMillEvolveTicks - 1); // one tick short of evolution
+		drive(mill, helper, 1); // the next tick trips the threshold
+		// The block should have transformed — the old BE is no longer the block entity at POS.
+		var evolved = helper.getLevel().getBlockEntity(helper.absolutePos(POS));
+		if (evolved == null || evolved.getType() != dev.alaindustrial.registry.ModContent.STORM_WIND_MILL_BE.get()) {
+			helper.fail("wind mill did not evolve into storm_wind_mill; got: " + evolved);
+		}
+		var evolvedMill = helper.getBlockEntity(POS, dev.alaindustrial.block.entity.StormWindMillBlockEntity.class);
+		if (evolvedMill == null) {
+			helper.fail("evolved block is not a StormWindMillBlockEntity");
+			return;
+		}
+		if (evolvedMill.getEnergyStorage().getAmount() != 1500) {
+			helper.fail("evolved mill did not carry EU: expected 1500, got " + evolvedMill.getEnergyStorage().getAmount());
+			return;
+		}
+		// MOD-166 (#4): the shared evolveInto helper also carries the rotor (slot override) and
+		// consumes the chip. Pin both so a regression in the slot-overrides map of the helper
+		// does not silently drop the rotor or leave the chip behind.
+		if (!evolvedMill.getItem(WindMillBlockEntity.ROTOR_SLOT).is(dev.alaindustrial.registry.ModContent.WINDMILL_ROTOR.get())) {
+			helper.fail("evolved mill did not carry the installed rotor");
+			return;
+		}
+		if (!evolvedMill.getItem(WindMillBlockEntity.CHIP_SLOT).isEmpty()) {
+			helper.fail("evolved mill did not consume the chip slot");
+			return;
+		}
+		// MOD-133: the evolved mill must keep the owner so its production stays attributed to the player
+		// (the per-generator breakdown in the profile). Guards the evolveInto owner-transfer fix.
+		if (!ownerId.equals(evolvedMill.getOwner())) {
+			helper.fail("evolved mill did not carry the owner: expected " + ownerId + ", got " + evolvedMill.getOwner());
+			return;
+		}
+		helper.succeed();
+	}
+
+	// ── MOD-189: rotor wear — the rotor is a durability component that wears out and breaks ───────────
+
+	/** Build a glass pillar and place an evolved mill at {@link #RAISED_POS} with a rotor installed. */
+	private static dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity placeRaisedHighAltitude(
+			GameTestHelper helper) {
+		for (int y = POS.getY(); y < RAISED_POS.getY(); y++) {
+			helper.setBlock(new BlockPos(RAISED_POS.getX(), y, RAISED_POS.getZ()), Blocks.GLASS);
+		}
+		helper.setBlock(RAISED_POS, ModBlocks.HIGH_ALTITUDE_WIND_MILL);
+		var be = helper.getBlockEntity(RAISED_POS,
+				dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity.class);
+		if (be == null) {
+			helper.fail("raised high-altitude wind mill block entity missing after placement");
+		}
+		be.setItem(WindMillBlockEntity.ROTOR_SLOT, new ItemStack(ModItems.WINDMILL_ROTOR));
+		return be;
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-WEAR01 — a producing T1 wind mill wears its rotor down and, once its
+	 *     durability is spent, breaks it: the slot empties, generation halts and the mode drops to
+	 *     MODE_NO_ROTOR. Config override (1 EU per durability point) makes wear fast and deterministic —
+	 *     the wear RATE is read live — plus a rotor pre-damaged to one point from death. Regression guard:
+	 *     without the wear code the rotor never breaks and the first assertion fails.
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Wear01_rotorWearsOutAndBreaks(GameTestHelper helper) {
+		int savedRate = Config.windMillRotorEuPerDamage;
+		try {
+			Config.windMillRotorEuPerDamage = 1; // 1 EU of production spends 1 durability point
+			WindMillBlockEntity mill = placeRaised(helper); // base >= 1 → real production under open sky
+			requirePositiveHeightBase(helper, RAISED_POS);
+			setClear(helper);
+			ItemStack rotor = new ItemStack(ModItems.WINDMILL_ROTOR);
+			rotor.setDamageValue(rotor.getMaxDamage() - 1); // one active tick from breaking
+			mill.setItem(WindMillBlockEntity.ROTOR_SLOT, rotor);
+			drive(mill, helper, Config.windMillSampleTicks + 2); // sample so rate>0 is cached, then wear
+			if (!mill.getItem(WindMillBlockEntity.ROTOR_SLOT).isEmpty()) {
+				helper.fail("worn-out rotor was not removed from the slot; damage="
+						+ mill.getItem(WindMillBlockEntity.ROTOR_SLOT).getDamageValue()
+						+ " rate=" + mill.getDataAccess().get(2));
+			}
+			mill.getEnergyStorage().amount = 0;
+			drive(mill, helper, Config.windMillSampleTicks + 1);
+			if (mill.getEnergyStorage().getAmount() != 0) {
+				helper.fail("wind mill kept generating after its rotor broke");
+			}
+			assertMode(helper, mill, "broken-rotor mill", WindMillBlockEntity.MODE_NO_ROTOR);
+			helper.succeed();
+		} finally {
+			Config.windMillRotorEuPerDamage = savedRate;
+		}
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-WEAR02 — the rotor wear path is the SHARED
+	 *     {@code AbstractGeneratorBlockEntity#wearComponent}, so it fires on the T2 evolutions too: a
+	 *     producing high-altitude mill breaks a spent rotor exactly like the T1 mill (the storm mill uses
+	 *     the identical shared call). Proves the wear call site in the T2 {@code produce()}.
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Wear02_t2HighAltitudeRotorBreaks(GameTestHelper helper) {
+		int savedRate = Config.windMillRotorEuPerDamage;
+		try {
+			Config.windMillRotorEuPerDamage = 1;
+			var mill = placeRaisedHighAltitude(helper); // base >= 1 for the T2 formula → real production
+			setClear(helper);
+			ItemStack rotor = new ItemStack(ModItems.WINDMILL_ROTOR);
+			rotor.setDamageValue(rotor.getMaxDamage() - 1);
+			mill.setItem(WindMillBlockEntity.ROTOR_SLOT, rotor);
+			AlaGameTestHelper.drive(mill, helper, Config.windMillSampleTicks + 2);
+			if (!mill.getItem(WindMillBlockEntity.ROTOR_SLOT).isEmpty()) {
+				helper.fail("high-altitude T2 rotor did not break when spent; damage="
+						+ mill.getItem(WindMillBlockEntity.ROTOR_SLOT).getDamageValue()
+						+ " rate=" + mill.getDataAccess().get(2));
+			}
+			helper.succeed();
+		} finally {
+			Config.windMillRotorEuPerDamage = savedRate;
+		}
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-WEAR03 — a rotor in an idle mill (region base 0 → produces 0 EU) does
+	 *     NOT wear even at the aggressive 1-EU-per-point rate: wear accrues only while the mill produces EU.
+	 *     The rotor is pre-damaged to one point from death, so any spurious idle wear would break it.
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Wear03_noWearWhileIdle(GameTestHelper helper) {
+		int savedRate = Config.windMillRotorEuPerDamage;
+		try {
+			Config.windMillRotorEuPerDamage = 1;
+			WindMillBlockEntity mill = placeWithoutRotor(helper); // at POS: base 0 → rate 0 even under open sky
+			setClear(helper);
+			ItemStack rotor = new ItemStack(ModItems.WINDMILL_ROTOR);
+			int seeded = rotor.getMaxDamage() - 1;
+			rotor.setDamageValue(seeded);
+			mill.setItem(WindMillBlockEntity.ROTOR_SLOT, rotor);
+			drive(mill, helper, Config.windMillSampleTicks * 2 + 5);
+			ItemStack after = mill.getItem(WindMillBlockEntity.ROTOR_SLOT);
+			if (after.isEmpty()) {
+				helper.fail("idle wind mill (rate 0) wore out its rotor — wear must only accrue while producing EU");
+			}
+			if (after.getDamageValue() != seeded) {
+				helper.fail("idle wind mill changed rotor damage from " + seeded + " to " + after.getDamageValue()
+						+ "; expected no wear at rate 0");
+			}
+			helper.succeed();
+		} finally {
+			Config.windMillRotorEuPerDamage = savedRate;
+		}
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-WEAR04 — evolution must NOT repair the rotor: a partially-worn rotor keeps
+	 *     its exact damage when the mill evolves T1 → T2 (the shared {@code evolveInto} copies the stack). A
+	 *     free repair on evolution would break the wear economy. Uses the low-Y region (rate 0) so no wear
+	 *     accrues during the single evolution tick and the damage assertion is exact.
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Wear04_wearSurvivesEvolution(GameTestHelper helper) {
+		WindMillBlockEntity mill = place(helper); // rotor installed at POS (base 0 → no wear)
+		setClear(helper);
+		ItemStack rotor = new ItemStack(ModItems.WINDMILL_ROTOR);
+		int worn = rotor.getMaxDamage() / 2; // half-worn
+		rotor.setDamageValue(worn);
+		mill.setItem(WindMillBlockEntity.ROTOR_SLOT, rotor);
+		mill.setItem(WindMillBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_DAY));
+		mill.setEvolveProgressTicks(Config.windMillEvolveTicks - 1); // one tick short of evolution
+		drive(mill, helper, 1); // trips the transform
+		var evolvedMill = helper.getBlockEntity(POS,
+				dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity.class);
+		if (evolvedMill == null) {
+			helper.fail("wind mill did not evolve into high_altitude_wind_mill");
+			return;
+		}
+		ItemStack carried = evolvedMill.getItem(WindMillBlockEntity.ROTOR_SLOT);
+		if (!carried.is(dev.alaindustrial.registry.ModContent.WINDMILL_ROTOR.get())) {
+			helper.fail("evolved mill lost the rotor");
+			return;
+		}
+		if (carried.getDamageValue() != worn) {
+			helper.fail("rotor wear was reset by evolution: expected damage " + worn + ", got "
+					+ carried.getDamageValue() + " — evolution must not repair the rotor");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-WINDMILL-001-WEAR05 — wear tracks mechanical spinning, NOT delivered EU: a mill with a
+	 *     FULL buffer and no downstream consumer still wears its rotor (the blades turn in the wind whether or
+	 *     not the EU is stored). Pins the deliberate design decision (wear is not gated on the buffer-room
+	 *     check) — a buffer-gated wear model would leave the rotor at full durability here and this test would
+	 *     fail. Mirrors the "active tick = rate > 0" definition, distinct from the fuel generator's R-NRG-11
+	 *     "full buffer pauses burn" (fuel is a consumed input; the free wind is not).
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void tcWindmill001Wear05_wearsAtFullBufferWithNoConsumer(GameTestHelper helper) {
+		int savedRate = Config.windMillRotorEuPerDamage;
+		try {
+			Config.windMillRotorEuPerDamage = 1;
+			WindMillBlockEntity mill = placeRaised(helper); // base >= 1 → rate > 0 under open sky
+			requirePositiveHeightBase(helper, RAISED_POS);
+			setClear(helper);
+			mill.getEnergyStorage().amount = mill.getEnergyStorage().getCapacity(); // FULL buffer, nothing draws it
+			ItemStack rotor = new ItemStack(ModItems.WINDMILL_ROTOR);
+			rotor.setDamageValue(rotor.getMaxDamage() - 1);
+			mill.setItem(WindMillBlockEntity.ROTOR_SLOT, rotor);
+			drive(mill, helper, Config.windMillSampleTicks + 2);
+			if (!mill.getItem(WindMillBlockEntity.ROTOR_SLOT).isEmpty()) {
+				helper.fail("rotor did not wear at a full buffer — wear must track the spinning blades, not "
+						+ "delivered EU; damage=" + mill.getItem(WindMillBlockEntity.ROTOR_SLOT).getDamageValue());
+			}
+			helper.succeed();
+		} finally {
+			Config.windMillRotorEuPerDamage = savedRate;
+		}
+	}
 }

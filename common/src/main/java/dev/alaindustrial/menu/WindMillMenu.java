@@ -28,9 +28,9 @@ public class WindMillMenu extends MachineMenu {
 
 	@Override
 	protected void addMachineSlots() {
-		// Rotor slot (center) — only a windmill_rotor may be inserted, one at a time. The rotor is a
-		// single installed component (spec: stack size 1); it may still stack to 64 in the player's
-		// inventory for transport, but only one mounts into the mill.
+		// Rotor slot (center) — only a windmill_rotor may be inserted, one at a time. Since MOD-189 the
+		// rotor is a durability component (non-stackable), so its wear shows as the vanilla durability bar
+		// right here in the slot; the getMaxStackSize=1 below is redundant with that but kept explicit.
 		addSlot(new Slot(machine, WindMillBlockEntity.ROTOR_SLOT, 84, 23) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {

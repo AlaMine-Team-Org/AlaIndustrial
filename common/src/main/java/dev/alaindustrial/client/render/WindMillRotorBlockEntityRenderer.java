@@ -54,9 +54,13 @@ public final class WindMillRotorBlockEntityRenderer<T extends MachineBlockEntity
 		// mills stall and hide their blades — rendering two overlapping coplanar quads would clip
 		// and z-fight. Channel 3 is the synced mode code shared by the whole wind mill family.
 		boolean interfered = entity.getDataAccess().get(3) == WindMillBlockEntity.MODE_INTERFERENCE;
-		state.visible = !interfered
-				&& (!(entity instanceof WindMillBlockEntity windMill)
-						|| !windMill.getItem(WindMillBlockEntity.ROTOR_SLOT).isEmpty());
+		// The rotor lives in slot 0 (ROTOR_SLOT) on every wind mill — the T1 WindMillBlockEntity AND the
+		// two T2 branches (high-altitude / storm), which extend AbstractGeneratorBlockEntity rather than
+		// WindMillBlockEntity. This renderer is only bound to those three block entities, so reading slot 0
+		// directly is safe and gates the blades on ALL of them. (The old `instanceof WindMillBlockEntity`
+		// check silently exempted both T2 mills — they rendered blades even with an empty rotor slot.)
+		boolean hasRotor = !entity.getItem(WindMillBlockEntity.ROTOR_SLOT).isEmpty();
+		state.visible = !interfered && hasRotor;
 
 		int production = entity.getDataAccess().get(2);
 		state.angle = production <= 0 ? 0.0F : rotationAngle(entity, partialTicks, production);

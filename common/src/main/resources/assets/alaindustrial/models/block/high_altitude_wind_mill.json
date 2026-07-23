@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
-    "particle": "alaindustrial:block/wind_mill_side",
-    "down": "alaindustrial:block/wind_mill_bottom",
-    "up": "alaindustrial:block/wind_mill_top",
+    "particle": "alaindustrial:block/high_altitude_wind_mill_side",
+    "down": "alaindustrial:block/high_altitude_wind_mill_side",
+    "up": "alaindustrial:block/high_altitude_wind_mill_side",
     "north": "alaindustrial:block/high_altitude_wind_mill_front",
-    "east": "alaindustrial:block/wind_mill_side",
-    "south": "alaindustrial:block/battery_box_front",
-    "west": "alaindustrial:block/wind_mill_side"
+    "east": "alaindustrial:block/high_altitude_wind_mill_side",
+    "south": "alaindustrial:block/high_altitude_wind_mill_back",
+    "west": "alaindustrial:block/high_altitude_wind_mill_side"
   }
 }

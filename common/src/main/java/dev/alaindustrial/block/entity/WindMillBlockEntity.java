@@ -39,8 +39,10 @@ import net.minecraft.world.level.storage.ValueOutput;
  * in any of those positions stalls the blades → 0 ({@link WindMillClearance}). A roof above is already
  * caught by {@code openSky}, so it is not re-checked here.
  *
- * <p><b>Rotor gate.</b> A {@code windmill_rotor} must be installed in {@link #ROTOR_SLOT} or the mill
- * produces nothing — the rotor is a progression gate (and a hook for future wear). It does not decay.
+ * <p><b>Rotor gate + wear.</b> A {@code windmill_rotor} must be installed in {@link #ROTOR_SLOT} or the
+ * mill produces nothing. The rotor is a durability component (MOD-189): it wears out only while the mill
+ * actually generates EU (wear proportional to output, extra in storm weather), and breaks when its
+ * durability runs out — see {@link AbstractGeneratorBlockEntity#wearComponent}.
  *
  * <p><b>Evolution.</b> The wind mill shares the solar-panel evolution chips: an
  * {@linkplain ModContent#ALIGNMENT_CHIP_DAY day chip} evolves it into the high-altitude branch, a
@@ -191,6 +193,12 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 		}
 		this.progress = cachedRate;
 		this.maxProgress = cachedMode;
+		// Rotor wear (MOD-189): wear accrues only while the mill actually produces EU. In rain/thunder the
+		// blades take extra mechanical stress (windMillStormWearFactor) on top of the higher storm output.
+		if (cachedRate > 0) {
+			float weather = (level.isThundering() || level.isRaining()) ? Config.windMillStormWearFactor : 1.0f;
+			wearComponent(level, pos, ROTOR_SLOT, cachedRate, weather, Config.windMillRotorEuPerDamage);
+		}
 		return cachedRate;
 	}
 

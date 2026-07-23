@@ -1,17 +1,19 @@
-## 0.1.44
+## 0.1.45
 
-<p><img alt="Ala Industrial 0.1.44 jetpack flight preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.44/release-media/v0.1.44/changelog.webp" width="720"></p>
+<p><img alt="Ala Industrial 0.1.45 Sky and Tempest wind mills preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.45/release-media/v0.1.45/changelog.png" width="720"></p>
 
-This update adds jetpack flight and gives four once-silent machines their own sounds.
+The two advanced wind mills are back, and rotors and wheels now wear out.
 
 ### New
 
-- **Jetpack — gear up and fly.** Wear it in your chest slot and hold jump in mid-air to soar on stored power (about 30 seconds of flight on a full charge). Run out up high? Keep holding jump for a safe, damage-free glide back down. Recharge it in a Battery Box or straight from a Battery Pouch in your inventory, and it doubles as light chest armor.
+- **Sky Mill and Tempest Mill are back.** Upgrade a Wind Turbine with a day or night chip. Sky Mill likes height, Tempest Mill likes storms. Both got new textures.
 
-### Improved
+### Changed
 
-- **Machines now have a voice.** Four blocks that used to run in total silence finally make sound:
-  - **Extractor** hums while it grinds.
-  - **Water Mill** splashes while its wheel turns.
-  - **Wind Mill** rustles its sails in the breeze.
-  - **Iron Furnace** crackles while it's lit.
+- **Rotors and water wheels wear out.** They wear only while making power, then break — swap in a new one. A durability bar shows what's left. Old parts keep working, starting at zero wear.
+
+### Fixed
+
+- **Blades no longer spin without a rotor.**
+- **Advanced wind mills now have sound, and go quiet when the rotor is out.**
+- **Evolved generators count toward your stats again.** Re-place ones built before this fix.

@@ -1241,7 +1241,7 @@
             {
               "type": "text",
               "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Not consumed while in slot."
+              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
             },
             {
               "type": "recipe",
@@ -1396,7 +1396,7 @@
             {
               "type": "text",
               "title": "Wooden Rotor",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Not consumed while in slot."
+              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
             },
             {
               "type": "recipe",

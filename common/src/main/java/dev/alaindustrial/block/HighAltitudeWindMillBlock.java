@@ -2,8 +2,11 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
+import dev.alaindustrial.registry.ModSounds;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * top and bottom are also inert). Same physical block shape and placement rules as
  * {@link WindMillBlock}; only the entity (generation formula) and the front texture differ.
  */
-public class HighAltitudeWindMillBlock extends HorizontalMachineBlock {
+public class HighAltitudeWindMillBlock extends HorizontalMachineBlock implements MachineHumProvider {
 	public static final MapCodec<HighAltitudeWindMillBlock> CODEC = simpleCodec(HighAltitudeWindMillBlock::new);
 
 	public HighAltitudeWindMillBlock(Properties properties) {
@@ -49,6 +52,31 @@ public class HighAltitudeWindMillBlock extends HorizontalMachineBlock {
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
-		return machineTicker(level);
+		// Hum ticker: the client loop starts/stops with isWorking() below (pattern C — no lit state). MOD-143.
+		return humMachineTicker(level);
+	}
+
+	/** Shares the T1 wind mill's rotor sound (MOD-143) — the same rotor turns after evolution. */
+	@Override
+	public Supplier<SoundEvent> humSound() {
+		return ModSounds.WIND_MILL_HUM;
+	}
+
+	@Override
+	public float humVolume() {
+		// Same quiet level as the T1 mill: wind farms stack many rotors.
+		return 0.22f;
+	}
+
+	/**
+	 * Pattern C working predicate (MOD-143): no {@code lit} state, so derive "working" from the same
+	 * client-synced production channel the rotor renderer spins on — slot 2 ({@code progress} = EU/t).
+	 * {@code > 0} only when the rotor is installed and actually turning, so the loop is silent exactly
+	 * when the blades stand still. Mirrors {@link WindMillBlock#isWorking}.
+	 */
+	@Override
+	public boolean isWorking(Level level, BlockPos pos, BlockState state) {
+		return level.getBlockEntity(pos) instanceof HighAltitudeWindMillBlockEntity mill
+				&& mill.getDataAccess().get(2) > 0;
 	}
 }

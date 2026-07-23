@@ -5,6 +5,7 @@ import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.core.energy.DirectAdjacencyDistributor;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.machine.ComponentWear;
 import dev.alaindustrial.stats.PlayerStatsTracker;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
@@ -12,6 +13,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -28,8 +32,71 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 		super(type, pos, state, tier, slots, capacity, 0L, maxExtract);
 	}
 
+	/**
+	 * Transient sub-point wear progress (MOD-189): EU counted toward the next durability point of the
+	 * installed consumable (rotor / wheel). The bulk wear lives on the {@code ItemStack}'s damage
+	 * component (persisted with the inventory); only this fractional remainder is kept here, and it resets
+	 * to 0 on chunk unload — an always-lenient rounding worth far less than one durability point, negligible
+	 * against a component's multi-hundred-thousand-EU life. Never serialised.
+	 */
+	private int wearAccumulatorEu;
+
 	/** EU generated this tick (before buffer capping). Subclasses may also update progress here. */
 	protected abstract int produce(Level level, BlockPos pos, BlockState state);
+
+	/**
+	 * Wear the consumable component in {@code slot} by one active tick (MOD-189) — call only when the
+	 * generator actually produced EU this tick ({@code producedEu > 0}). Wear is proportional to the EU
+	 * produced (times {@code weatherFactor} for adverse-weather stress); each {@link Config} EU-per-damage
+	 * of accumulated production spends one durability point, and when the component hits its max durability
+	 * it breaks: the slot is emptied, the vanilla item-break sound plays at the block, and the next tick's
+	 * "no component" branch halts generation.
+	 *
+	 * <p><b>"Produced EU" == generation rate, not delivered EU.</b> {@code producedEu} is the rate the
+	 * generator's {@code produce()} computed for this tick (blades/wheel genuinely turning); wear is charged
+	 * on that mechanical work, so a mill with a FULL buffer or no downstream consumer still wears — its rotor
+	 * spins in the wind regardless of whether the EU is stored or discarded. This matches the task's
+	 * definition of an "active tick" (rotor + open sky + no obstruction + wind → rate > 0) and the
+	 * "generators never sleep" model; it is deliberately NOT gated on the buffer-room check in
+	 * {@link #onServerTick}. Note the rate is the value before {@link Config#globalEuRateMultiplier} is
+	 * applied (that multiplier is a global EU-economy knob applied later, not mechanical output).
+	 *
+	 * <p><b>Soft migration.</b> An old rotor/wheel saved before MOD-189 re-resolves to the now-durable item
+	 * on load (durability is a property of the item type, not the stack), so it reads as damage 0 (fully
+	 * intact) and wears normally from then on — never retroactively broken. The {@code !isDamageableItem()}
+	 * guard below only skips a genuinely non-damageable stack (e.g. a {@code max_damage=0} override) or a
+	 * mis-configured {@code euPerDamage <= 0}.
+	 *
+	 * @param slot the component slot (rotor / wheel)
+	 * @param producedEu EU produced this tick (> 0)
+	 * @param weatherFactor adverse-weather wear multiplier (>= 1.0; 1.0 = none)
+	 * @param euPerDamage EU of production per one durability point (from {@link Config}; guarded > 0)
+	 */
+	protected void wearComponent(Level level, BlockPos pos, int slot, int producedEu, float weatherFactor,
+			int euPerDamage) {
+		if (producedEu <= 0 || euPerDamage <= 0) {
+			return;
+		}
+		ItemStack stack = items.get(slot);
+		if (stack.isEmpty() || !stack.isDamageableItem()) {
+			return; // only a genuinely non-damageable stack is skipped (see "Soft migration" above)
+		}
+		ComponentWear.Result result = ComponentWear.step(wearAccumulatorEu, producedEu, weatherFactor,
+				euPerDamage, stack.getDamageValue(), stack.getMaxDamage());
+		wearAccumulatorEu = result.accumulatorEu();
+		if (result.broken()) {
+			items.set(slot, ItemStack.EMPTY);
+			if (level instanceof ServerLevel) {
+				level.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+						SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 0.8f, 0.9f);
+			}
+			setChanged();
+			syncBlockEntityToClient();
+		} else if (result.newDamage() != stack.getDamageValue()) {
+			stack.setDamageValue(result.newDamage());
+			setChanged();
+		}
+	}
 
 	/**
 	 * Generators are producers: every face but FACING emits, none accepts (R-NRG-03). FACING is
@@ -95,6 +162,12 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 	 */
 	protected void evolveInto(Level level, BlockPos pos, Block target, Map<Integer, net.minecraft.world.item.ItemStack> slotOverrides) {
 		long saved = energy.amount;
+		// Carry ownership across the evolution. The evolved block is created via setBlockAndUpdate — NOT a
+		// player placement — so setPlacedBy never runs and the new block entity would default to a null
+		// owner. Without this, an evolved T2 generator (wind mills, solar panels) attributes none of its
+		// production to the player: it silently vanished from the profile's per-generator breakdown (MOD-133).
+		java.util.UUID savedOwner = getOwner();
+		String savedOwnerName = getOwnerName();
 		for (Map.Entry<Integer, net.minecraft.world.item.ItemStack> entry : slotOverrides.entrySet()) {
 			// Caller has already snapshotted these into the overrides map; clear the source slot so the
 			// block's inventory reads empty before the swap (the chip slot is always cleared here too —
@@ -111,6 +184,7 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 		}
 		level.setBlockAndUpdate(pos, newState);
 		if (level.getBlockEntity(pos) instanceof MachineBlockEntity evolved) {
+			evolved.setOwner(savedOwner, savedOwnerName);
 			evolved.getEnergyStorage().amount = Math.min(saved, evolved.getEnergyStorage().getCapacity());
 			for (Map.Entry<Integer, net.minecraft.world.item.ItemStack> entry : slotOverrides.entrySet()) {
 				int slot = entry.getKey();

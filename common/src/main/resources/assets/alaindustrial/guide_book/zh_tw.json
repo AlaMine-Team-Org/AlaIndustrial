@@ -86,13 +86,13 @@
               "recipe_type": "有序合成",
               "grid": [
                 "minecraft:copper_ingot",
-                "#minecraft:planks",
+                "minecraft:oak_planks",
                 "minecraft:copper_ingot",
                 "alaindustrial:copper_cable",
                 "alaindustrial:wooden_gear",
                 "alaindustrial:copper_cable",
                 "minecraft:copper_ingot",
-                "#minecraft:planks",
+                "minecraft:oak_planks",
                 "minecraft:copper_ingot"
               ],
               "result_id": "alaindustrial:wind_mill",
@@ -124,15 +124,15 @@
               "title": "配方",
               "recipe_type": "有序合成",
               "grid": [
-                "#minecraft:planks",
+                "minecraft:oak_planks",
                 "minecraft:copper_ingot",
-                "#minecraft:planks",
+                "minecraft:oak_planks",
                 "alaindustrial:copper_cable",
                 "alaindustrial:wooden_gear",
                 "alaindustrial:copper_cable",
-                "#minecraft:planks",
+                "minecraft:oak_planks",
                 "minecraft:copper_ingot",
-                "#minecraft:planks"
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill",
               "result_count": 1
@@ -876,39 +876,8 @@
     {
       "id": "other",
       "title": "其他",
-      "icon": "alaindustrial:industrial_workbench",
+      "icon": "alaindustrial:iron_chest",
       "entries": [
-        {
-          "id": "industrial_workbench",
-          "title": "Industrial Workbench",
-          "icon": "alaindustrial:industrial_workbench",
-          "block_id": "alaindustrial:industrial_workbench",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
-            },
-            {
-              "type": "recipe",
-              "title": "配方",
-              "recipe_type": "有序合成",
-              "grid": [
-                "alaindustrial:tin_ingot",
-                "alaindustrial:tin_ingot",
-                "",
-                "#minecraft:planks",
-                "#minecraft:planks",
-                "",
-                "#minecraft:planks",
-                "#minecraft:planks",
-                ""
-              ],
-              "result_id": "alaindustrial:industrial_workbench",
-              "result_count": 1
-            }
-          ]
-        },
         {
           "id": "iron_chest",
           "title": "鐵箱子",
@@ -936,13 +905,51 @@
                 "minecraft:iron_ingot",
                 "minecraft:iron_ingot",
                 "minecraft:iron_ingot",
-                "#minecraft:copper_chests",
+                "minecraft:copper_chest",
                 "minecraft:iron_ingot",
                 "minecraft:iron_ingot",
                 "minecraft:iron_ingot",
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:iron_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "silver_chest",
+          "title": "銀箱子",
+          "icon": "alaindustrial:silver_chest",
+          "block_id": "alaindustrial:silver_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "銀箱子",
+              "text": "45 格的箱子——比鐵箱子高一階（多一排），具有 3D 模型與開蓋動畫。不需要能量。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：45 格"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:iron_chest",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:silver_chest",
               "result_count": 1
             }
           ]
@@ -974,6 +981,37 @@
                 "minecraft:gold_ingot"
               ],
               "result_id": "alaindustrial:gold_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_workbench",
+          "title": "Industrial Workbench",
+          "icon": "alaindustrial:industrial_workbench",
+          "block_id": "alaindustrial:industrial_workbench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Industrial Workbench",
+              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
             }
           ]
@@ -1048,7 +1086,7 @@
                 "alaindustrial:uranium_dust",
                 "",
                 "",
-                "#minecraft:coals",
+                "minecraft:coal",
                 "",
                 "",
                 "minecraft:stick",
@@ -1056,7 +1094,41 @@
                 ""
               ],
               "result_id": "alaindustrial:enriched_uranium_torch",
-              "result_count": 4
+              "result_count": 4,
+              "variants": [
+                {
+                  "grid": [
+                    "alaindustrial:uranium_dust",
+                    "",
+                    "",
+                    "minecraft:coal",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:enriched_uranium_torch",
+                  "result_count": 4
+                },
+                {
+                  "grid": [
+                    "minecraft:torch",
+                    "alaindustrial:uranium_dust",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    ""
+                  ],
+                  "recipe_type": "Shapeless Crafting",
+                  "result_id": "alaindustrial:enriched_uranium_torch",
+                  "result_count": 1
+                }
+              ]
             }
           ]
         },
@@ -1090,44 +1162,6 @@
               "result_count": 1
             }
           ]
-        },
-        {
-          "id": "silver_chest",
-          "title": "銀箱子",
-          "icon": "alaindustrial:silver_chest",
-          "block_id": "alaindustrial:silver_chest",
-          "pages": [
-            {
-              "type": "text",
-              "title": "銀箱子",
-              "text": "45 格的箱子——比鐵箱子高一階（多一排），具有 3D 模型與開蓋動畫。不需要能量。"
-            },
-            {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "能量：45 格"
-              ]
-            },
-            {
-              "type": "recipe",
-              "title": "配方",
-              "recipe_type": "有序合成",
-              "grid": [
-                "alaindustrial:silver_ingot",
-                "alaindustrial:silver_ingot",
-                "alaindustrial:silver_ingot",
-                "alaindustrial:silver_ingot",
-                "alaindustrial:iron_chest",
-                "alaindustrial:silver_ingot",
-                "alaindustrial:silver_ingot",
-                "alaindustrial:silver_ingot",
-                "alaindustrial:silver_ingot"
-              ],
-              "result_id": "alaindustrial:silver_chest",
-              "result_count": 1
-            }
-          ]
         }
       ]
     },
@@ -1152,15 +1186,15 @@
               "title": "配方",
               "recipe_type": "有序合成",
               "grid": [
-                "#minecraft:wool",
-                "#minecraft:wool",
-                "#minecraft:wool",
-                "#minecraft:wool",
+                "minecraft:white_wool",
+                "minecraft:white_wool",
+                "minecraft:white_wool",
+                "minecraft:white_wool",
                 "alaindustrial:empty_chip",
-                "#minecraft:wool",
-                "#minecraft:wool",
-                "#minecraft:wool",
-                "#minecraft:wool"
+                "minecraft:white_wool",
+                "minecraft:white_wool",
+                "minecraft:white_wool",
+                "minecraft:white_wool"
               ],
               "result_id": "alaindustrial:mute_chip",
               "result_count": 1
@@ -1207,22 +1241,22 @@
             {
               "type": "text",
               "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Not consumed while in slot."
+              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
             },
             {
               "type": "recipe",
               "title": "配方",
               "recipe_type": "有序合成",
               "grid": [
-                "#minecraft:planks",
+                "minecraft:oak_planks",
                 "minecraft:copper_ingot",
-                "#minecraft:planks",
+                "minecraft:oak_planks",
                 "minecraft:stick",
                 "alaindustrial:wooden_gear",
                 "minecraft:stick",
-                "#minecraft:planks",
+                "minecraft:oak_planks",
                 "minecraft:copper_ingot",
-                "#minecraft:planks"
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:water_mill_wheel",
               "result_count": 1
@@ -1239,6 +1273,24 @@
               "type": "text",
               "title": "回火鐵",
               "text": "由原版鐵錠冶煉而成的錠——模組工具、盔甲與方塊的基礎材料。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "alaindustrial:tempered_iron_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron",
+              "result_count": 9
             }
           ]
         },
@@ -1344,22 +1396,22 @@
             {
               "type": "text",
               "title": "木製轉子",
-              "text": "風力渦輪機的葉片——放入任何 T1/T2 風車的轉子槽中；沒有它就無法發電。放在槽中不會被消耗。"
+              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
             },
             {
               "type": "recipe",
               "title": "配方",
               "recipe_type": "有序合成",
               "grid": [
-                "#minecraft:planks",
+                "minecraft:oak_planks",
                 "minecraft:iron_ingot",
-                "#minecraft:planks",
+                "minecraft:oak_planks",
                 "alaindustrial:copper_cable",
                 "alaindustrial:wooden_gear",
                 "alaindustrial:copper_cable",
-                "#minecraft:planks",
+                "minecraft:oak_planks",
                 "minecraft:iron_ingot",
-                "#minecraft:planks"
+                "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:windmill_rotor",
               "result_count": 1
@@ -1696,6 +1748,106 @@
               "lines": [
                 "能量：5 件"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "minecraft:stick",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_pickaxe",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "minecraft:stick",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:tempered_iron_pickaxe",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "alaindustrial:tempered_iron",
+                    "minecraft:stick",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:tempered_iron_axe",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:tempered_iron_hoe",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:tempered_iron_shovel",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:tempered_iron_sword",
+                  "result_count": 1
+                }
+              ]
             }
           ]
         },
@@ -1715,6 +1867,154 @@
               "title": "數據",
               "lines": [
                 "能量：8 階"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "",
+                "",
+                "minecraft:stick",
+                "minecraft:oak_planks",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:scythe_wood",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:oak_planks",
+                    "minecraft:oak_planks",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "minecraft:oak_planks",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:scythe_wood",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:cobblestone",
+                    "minecraft:cobblestone",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "minecraft:cobblestone",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:scythe_stone",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:copper_ingot",
+                    "minecraft:copper_ingot",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "minecraft:copper_ingot",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:scythe_copper",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:iron_ingot",
+                    "minecraft:iron_ingot",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "minecraft:iron_ingot",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:scythe_iron",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:gold_ingot",
+                    "minecraft:gold_ingot",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "minecraft:gold_ingot",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:scythe_gold",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:scythe_tempered_iron",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:diamond",
+                    "minecraft:diamond",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "minecraft:diamond",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:scythe_diamond",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:netherite_ingot",
+                    "minecraft:netherite_ingot",
+                    "",
+                    "",
+                    "minecraft:stick",
+                    "minecraft:netherite_ingot",
+                    "",
+                    "minecraft:stick",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:scythe_netherite",
+                  "result_count": 1
+                }
               ]
             }
           ]

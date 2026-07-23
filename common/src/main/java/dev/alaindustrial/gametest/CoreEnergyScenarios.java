@@ -854,6 +854,58 @@ public final class CoreEnergyScenarios {
 	}
 
 	/**
+	 * Water mill wheel wear (MOD-189) on the NeoForge lane: a producing mill wears its wheel down and, once
+	 * spent, breaks it — the slot empties and generation stops. Also proves the NeoForge-registered
+	 * {@code water_mill_wheel} is actually a durability item (wear bails on a non-damageable stack, so a
+	 * mis-registration would silently make the wheel eternal). Deep wear coverage (rates, idle no-wear,
+	 * evolution) lives on the Fabric lane; this is the loader-parity smoke. A Config override (1 EU per
+	 * durability point — the RATE is read live) plus a wheel pre-damaged to one point from death keep it
+	 * fast and deterministic.
+	 * Mirrors: WaterMillWheelGameTest.waterMillWheel_wearsOutAndBreaks
+	 */
+	public static void waterMillWheelWearsOut(GameTestHelper helper) {
+		int savedRate = Config.waterMillWheelEuPerDamage;
+		try {
+			Config.waterMillWheelEuPerDamage = 1; // 1 EU of production spends 1 durability point
+			BlockPos millPos = new BlockPos(1, 2, 1);
+			helper.setBlock(millPos, ModContent.WATER_MILL.get());
+			WaterMillBlockEntity mill = helper.getBlockEntity(millPos, WaterMillBlockEntity.class);
+			if (mill == null) {
+				helper.fail("water mill block entity missing after placement");
+				return;
+			}
+			helper.setBlock(millPos.east(), Blocks.WATER.defaultBlockState()
+					.setValue(net.minecraft.world.level.block.LiquidBlock.LEVEL, 1)); // one flowing face → 1 EU/t
+			ItemStack wheel = new ItemStack(ModContent.WATER_MILL_WHEEL.get());
+			if (!wheel.isDamageableItem()) {
+				helper.fail("water_mill_wheel is not a durability item on NeoForge — wear can never apply");
+				return;
+			}
+			wheel.setDamageValue(wheel.getMaxDamage() - 1); // one active tick from breaking
+			mill.setItem(WaterMillBlockEntity.WHEEL_SLOT, wheel);
+			for (int i = 0; i < 4; i++) {
+				tick(helper, mill);
+			}
+			if (!mill.getItem(WaterMillBlockEntity.WHEEL_SLOT).isEmpty()) {
+				helper.fail("worn-out water wheel not removed on NeoForge; damage="
+						+ mill.getItem(WaterMillBlockEntity.WHEEL_SLOT).getDamageValue());
+				return;
+			}
+			mill.getEnergyStorage().amount = 0;
+			for (int i = 0; i < 4; i++) {
+				tick(helper, mill);
+			}
+			if (mill.getEnergyStorage().getAmount() != 0) {
+				helper.fail("water mill kept generating after its wheel broke");
+				return;
+			}
+			helper.succeed();
+		} finally {
+			Config.waterMillWheelEuPerDamage = savedRate;
+		}
+	}
+
+	/**
 	 * Two water mills face to face with no gap stall symmetrically on the NeoForge lane: each wheel
 	 * would clip through the other mill's casing, so the clearance check (MOD-179) reports
 	 * MODE_OBSTRUCTED on both and neither produces. This is the exact audit-found blind spot of the

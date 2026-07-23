@@ -6,8 +6,8 @@ import net.minecraft.world.level.ItemLike;
  * Loader-neutral source of truth for public creative-inventory visibility.
  *
  * <p>This deliberately lists only player-visible MVP content. Registered-hidden entries
- * such as non-copper cables and deferred wind/water variants stay out of both the mod tab
- * and the vanilla tabs until their progression path is restored.
+ * such as non-copper cables stay out of both the mod tab and the vanilla tabs until their
+ * progression path is restored. (The T2 wind mills were restored to the player in MOD-172.)
  */
 public final class CreativeTabContent {
 	private CreativeTabContent() {
@@ -137,6 +137,11 @@ public final class CreativeTabContent {
 		out.accept(ModContent.GEOTHERMAL_GENERATOR_ITEM.get());
 		out.accept(ModContent.WATER_MILL_ITEM.get());
 		out.accept(ModContent.WIND_MILL_ITEM.get());
+		// T2 wind mills (MOD-172): the height-focused Sky Mill and the weather-focused Tempest Mill.
+		// Obtained only by evolving the T1 wind mill with a day/night alignment chip (no direct recipe),
+		// so they are listed right after the T1 mill as the visible tail of the wind progression.
+		out.accept(ModContent.HIGH_ALTITUDE_WIND_MILL_ITEM.get());
+		out.accept(ModContent.STORM_WIND_MILL_ITEM.get());
 	}
 
 	private static void machines(Sink out) {

@@ -27,7 +27,9 @@ import net.minecraft.world.level.material.FluidState;
  * LV water mill (spec: alaindustrial:water_mill) — a passive, fuel-free generator. Each tick it counts
  * <b>flowing</b> water (a current — not a still source, MOD-188) on its four horizontal faces (N/S/E/W)
  * and produces {@link Config#waterMillEuPerTick} EU/t per flowing face: 0–4 EU/t, continuous. A crafted
- * {@code water_mill_wheel} must be installed in the single component slot; it is not consumed.
+ * {@code water_mill_wheel} must be installed in the single component slot. Since MOD-189 the
+ * wheel is a durability component: it wears out only while the mill produces EU (wear proportional to
+ * output) and breaks when spent — see {@link AbstractGeneratorBlockEntity#wearComponent}.
  * The remaining production calculation is a stateless world read. Buffer
  * {@link Config#waterMillBuffer}, LV output.
  *
@@ -134,6 +136,9 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 		}
 		int made = WaterMillOutput.euFor(sides, Config.waterMillEuPerTick);
 		setState(sides, MODE_OK);
+		// Wheel wear (MOD-189): wear accrues only while the wheel actually turns water into EU (made > 0).
+		// No weather stress on the water mill, so the multiplier is a flat 1.0.
+		wearComponent(level, pos, WHEEL_SLOT, made, 1.0f, Config.waterMillWheelEuPerDamage);
 		return made;
 	}
 
