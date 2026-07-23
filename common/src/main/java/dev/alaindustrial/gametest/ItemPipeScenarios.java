@@ -327,6 +327,83 @@ public final class ItemPipeScenarios {
 		helper.succeed();
 	}
 
+	/**
+	 * MOD-178 repro (player report): one EXTRACT source feeds THREE INSERT chests, where the first two (in
+	 * the network's round-robin order) are already FULL of the item being pushed and only the third is free.
+	 * The player saw the pipe "stop" on the full chests instead of skipping to the free one.
+	 *
+	 * <p>Discriminating layout: the two FULL chests are placed so they sort BEFORE the empty chest in the
+	 * stable {@code (BlockPos, side)} endpoint order (both at x=2, the free one at x=3). The tick therefore
+	 * visits {@code full → full → free}; a bug that let a full target abort the distribution pass would
+	 * leave the free chest starving. Asserts the free chest receives exactly one batch within a single
+	 * interval, and neither full chest gains or loses items.
+	 */
+	public static void skipsFullTargetsAndFillsFreeOne(GameTestHelper helper) {
+		BlockPos pipePos = new BlockPos(2, 2, 2);
+		BlockPos sourcePos = new BlockPos(1, 2, 2); // WEST  — extract
+		BlockPos fullNorth = new BlockPos(2, 2, 1); // NORTH — insert, pre-filled (sorts first)
+		BlockPos fullSouth = new BlockPos(2, 2, 3); // SOUTH — insert, pre-filled (sorts second)
+		BlockPos freeEast = new BlockPos(3, 2, 2);  // EAST  — insert, empty (x=3 sorts last)
+		helper.setBlock(sourcePos, ModContent.IRON_CHEST.get());
+		helper.setBlock(pipePos, ModContent.ITEM_PIPE.get());
+		helper.setBlock(fullNorth, ModContent.IRON_CHEST.get());
+		helper.setBlock(fullSouth, ModContent.IRON_CHEST.get());
+		helper.setBlock(freeEast, ModContent.IRON_CHEST.get());
+		Container source = container(helper, sourcePos);
+		ItemPipeBlockEntity pipe = pipe(helper, pipePos);
+		Container full1 = container(helper, fullNorth);
+		Container full2 = container(helper, fullSouth);
+		Container free = container(helper, freeEast);
+		if (source == null || pipe == null || full1 == null || full2 == null || free == null) {
+			helper.fail("MOD-178 skip-full rig block entity missing");
+			return;
+		}
+		source.setItem(0, new ItemStack(Items.RAW_IRON, 64));
+		fillWith(full1, Items.RAW_IRON);
+		fillWith(full2, Items.RAW_IRON);
+		pipe.setFaceMode(Direction.WEST, PipeFaceMode.EXTRACT);
+		pipe.setFaceMode(Direction.NORTH, PipeFaceMode.INSERT);
+		pipe.setFaceMode(Direction.SOUTH, PipeFaceMode.INSERT);
+		pipe.setFaceMode(Direction.EAST, PipeFaceMode.INSERT);
+		pipe.serverTick(helper.getLevel(), pipe.getBlockPos(), pipe.getBlockState());
+		// One interval: the first tick runs the whole distribution pass, the rest sit on cooldown.
+		int interval = Math.max(1, Config.itemPipeTransferIntervalTicks);
+		for (int i = 0; i < interval; i++) {
+			ItemNetworkManager.tickAll(helper.getLevel());
+		}
+		int expected = Math.min(64, Config.itemPipeItemsPerTransfer);
+		int delivered = free.getItem(0).getCount();
+		int fullCapacity = full1.getContainerSize() * 64;
+		int full1Count = countOf(full1, Items.RAW_IRON);
+		int full2Count = countOf(full2, Items.RAW_IRON);
+		if (delivered != expected) {
+			helper.fail("MOD-178 free chest got " + delivered + " raw iron (expected " + expected
+					+ ") — the pipe must skip the two full chests and fill the free one, not stop");
+			return;
+		}
+		if (full1Count != fullCapacity || full2Count != fullCapacity) {
+			helper.fail("MOD-178 full chest changed: full1=" + full1Count + " full2=" + full2Count
+					+ " (expected " + fullCapacity + " each; a full target must neither gain nor lose items)");
+			return;
+		}
+		helper.succeed();
+	}
+
+	private static void fillWith(Container container, net.minecraft.world.item.Item item) {
+		for (int slot = 0; slot < container.getContainerSize(); slot++) {
+			container.setItem(slot, new ItemStack(item, 64));
+		}
+	}
+
+	private static int countOf(Container container, net.minecraft.world.item.Item item) {
+		int total = 0;
+		for (int slot = 0; slot < container.getContainerSize(); slot++) {
+			ItemStack stack = container.getItem(slot);
+			if (stack.is(item)) total += stack.getCount();
+		}
+		return total;
+	}
+
 	/** MOD-104: a disabled side disconnects the endpoint and moves nothing. */
 	public static void disabledFaceBlocksTransfer(GameTestHelper helper) {
 		if (!build(helper)) return;

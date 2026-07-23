@@ -54,6 +54,21 @@ public final class GuideContent {
 		public String resultId = "";
 		@SerializedName("result_count")
 		public int resultCount = 1;
+		// Cycling recipe alternatives (e.g. the eight scythe tiers, or a from-scratch vs upgrade craft).
+		// When present with more than one entry, the recipe view rotates through them once per second;
+		// the single-recipe fields above stay filled with the first variant for back-compat.
+		public List<RecipeVariant> variants = List.of();
+	}
+
+	/** One alternative in a cycling recipe page (see {@link Page#variants}). */
+	public static final class RecipeVariant {
+		public List<String> grid = List.of();
+		@SerializedName("recipe_type")
+		public String recipeType = "";
+		@SerializedName("result_id")
+		public String resultId = "";
+		@SerializedName("result_count")
+		public int resultCount = 1;
 	}
 
 	private GuideContent() {

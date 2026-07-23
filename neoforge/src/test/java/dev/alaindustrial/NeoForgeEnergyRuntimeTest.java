@@ -14,6 +14,7 @@ import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.energy.FaceEnergyPort;
 import dev.alaindustrial.core.neoforge.BufferAsEnergyHandler;
+import dev.alaindustrial.core.neoforge.NeoForgeEnergyPort;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -287,5 +288,72 @@ class NeoForgeEnergyRuntimeTest {
 		}
 		assertEquals(0, overfill, "a full buffer must accept 0 more EU");
 		assertEquals(cap, h.getAmountAsLong(), "capacity must be unchanged after a rejected overfill");
+	}
+
+	/**
+	 * MOD-185 regression — the reverse adapter ({@link BufferAsEnergyHandler}, the shape published through
+	 * {@code Capabilities.Energy.BLOCK} for other mods) must not leak a cached transaction handle after a
+	 * FOREIGN transaction closes, and its cache must survive multiple enlists of the same buffer within one
+	 * transaction. Two mutating inserts on ONE buffer inside a {@code Transaction.openRoot()} that is then
+	 * ABORTED must:
+	 * <ul>
+	 *   <li>roll the buffer fully back — proving exactly ONE {@code ParticipantJournal} drove the buffer, not
+	 *       two (a fresh-per-call handle would create a second journal and, on abort, revert them in order
+	 *       leaving the buffer at the intermediate value — silent EU dup/loss); and</li>
+	 *   <li>leave the per-thread {@code NeoForgeTxn} cache at its baseline — proving self-eviction (a
+	 *       cache-without-evict handle would leak one entry, whose {@code journals} map grows per buffer for
+	 *       the life of the session).</li>
+	 * </ul>
+	 * This fails on BOTH rejected designs (fresh-per-call: rollback arm; cache-without-evict: baseline arm)
+	 * and passes only on the self-evicting cache.
+	 */
+	@Test
+	void mod185_foreignAbortRollsBackAndSelfEvicts() {
+		int baseline = NeoForgeEnergyPort.NeoForgeTxn.activeCacheSize();
+
+		EnergyBuffer b = buffer(10_000, 32, 5_000);
+		EnergyHandler h = BufferAsEnergyHandler.of(b);
+		long original = h.getAmountAsLong();
+
+		try (Transaction tx = Transaction.openRoot()) {
+			int first = h.insert(32, tx);
+			int second = h.insert(32, tx);
+			assertTrue(first > 0 && second > 0,
+					"both inserts must mutate the buffer to exercise two enlists; first=" + first + " second=" + second);
+			assertEquals(original + first + second, h.getAmountAsLong(),
+					"mid-transaction amount should reflect both inserts");
+			assertTrue(NeoForgeEnergyPort.NeoForgeTxn.activeCacheSize() > baseline,
+					"an open foreign transaction must hold a cached handle");
+			// no tx.commit() -> try-with-resources aborts on close
+		}
+
+		assertEquals(original, h.getAmountAsLong(),
+				"aborted foreign transaction must roll the buffer fully back (single journal, not two)");
+		assertEquals(baseline, NeoForgeEnergyPort.NeoForgeTxn.activeCacheSize(),
+				"foreign transaction cache must self-evict on abort — no leaked handle");
+	}
+
+	/**
+	 * MOD-185 regression — self-eviction on the COMMIT path. After a committed foreign transaction the
+	 * per-thread cache must be back at baseline (the leak is symmetric: without eviction the entry survives a
+	 * commit too). The two committed inserts also apply, confirming eviction is post-commit and does not
+	 * disturb the buffer's own commit.
+	 */
+	@Test
+	void mod185_foreignCommitSelfEvicts() {
+		int baseline = NeoForgeEnergyPort.NeoForgeTxn.activeCacheSize();
+
+		EnergyBuffer b = buffer(10_000, 32, 5_000);
+		EnergyHandler h = BufferAsEnergyHandler.of(b);
+
+		try (Transaction tx = Transaction.openRoot()) {
+			h.insert(32, tx);
+			h.insert(32, tx);
+			tx.commit();
+		}
+
+		assertEquals(5_064L, h.getAmountAsLong(), "committed foreign inserts must apply (2 x 32 EU)");
+		assertEquals(baseline, NeoForgeEnergyPort.NeoForgeTxn.activeCacheSize(),
+				"foreign transaction cache must self-evict on commit — no leaked handle");
 	}
 }

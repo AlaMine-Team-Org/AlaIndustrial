@@ -25,10 +25,10 @@ import dev.alaindustrial.core.energy.EnergyPort;
  * {@code Integer.MAX_VALUE} for a tank sized in single-digit buckets, mirrors {@link BufferAsEnergyHandler}'s
  * EU↔FE saturation).
  *
- * <p>NeoForge passes a {@link TransactionContext}; this adapter wraps it as a neutral
- * {@code EnergyPort.Txn} ({@link NeoForgeEnergyPort#wrap}) so the tank's transaction enlistment reaches
- * NeoForge's native snapshot journal — the same transaction bridge the energy adapter uses (see
- * {@link FluidPort} class doc for why fluid reuses it).
+ * <p>NeoForge passes a {@link TransactionContext} it owns; this adapter wraps it as a neutral
+ * {@code EnergyPort.Txn} ({@link NeoForgeEnergyPort#wrapForeign}) so the tank's transaction enlistment
+ * reaches NeoForge's native snapshot journal — the same self-evicting foreign bridge the energy adapter
+ * uses (MOD-185; see {@link FluidPort} class doc for why fluid reuses it).
  */
 public final class TankAsResourceHandler implements ResourceHandler<FluidResource> {
 	private static final int INDEX = 0;
@@ -87,7 +87,7 @@ public final class TankAsResourceHandler implements ResourceHandler<FluidResourc
 	public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
 		checkIndex(index);
 		TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
-		long inserted = port.insert(FluidHolder.of(resource.getFluid()), amount, NeoForgeEnergyPort.wrap(transaction));
+		long inserted = port.insert(FluidHolder.of(resource.getFluid()), amount, NeoForgeEnergyPort.wrapForeign(transaction));
 		return Ints.saturatedCast(inserted);
 	}
 
@@ -95,7 +95,7 @@ public final class TankAsResourceHandler implements ResourceHandler<FluidResourc
 	public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
 		checkIndex(index);
 		TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
-		long extracted = port.extract(FluidHolder.of(resource.getFluid()), amount, NeoForgeEnergyPort.wrap(transaction));
+		long extracted = port.extract(FluidHolder.of(resource.getFluid()), amount, NeoForgeEnergyPort.wrapForeign(transaction));
 		return Ints.saturatedCast(extracted);
 	}
 

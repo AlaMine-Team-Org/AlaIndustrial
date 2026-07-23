@@ -43,6 +43,12 @@ public final class ItemPipeGameTest {
 	public void mod115FeedsBothFurnacesWithinOneInterval(GameTestHelper helper) {
 		ItemPipeScenarios.feedsBothFurnacesWithinOneInterval(helper);
 	}
+	/** MOD-178 repro: source → three insert chests, first two full — the pipe must skip to the free one. */
+	@GameTest
+	public void mod178SkipsFullTargetsAndFillsFreeOne(GameTestHelper helper) {
+		ItemPipeScenarios.skipsFullTargetsAndFillsFreeOne(helper);
+	}
+
 	@GameTest
 	public void mod104TransfersBetweenChests(GameTestHelper helper) {
 		ItemPipeScenarios.transfersBetweenChests(helper);

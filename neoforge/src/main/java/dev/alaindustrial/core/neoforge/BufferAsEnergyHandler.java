@@ -19,9 +19,10 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
  * tier packet cap, far below {@code Integer.MAX_VALUE}). The getters report the buffer's true
  * {@code long} amount/capacity.
  *
- * <p>NeoForge passes a {@link TransactionContext}; this adapter wraps it as a neutral
- * {@link EnergyPort.Txn} ({@link NeoForgeEnergyPort#wrap}) so the buffer's transaction enlistment reaches
- * NeoForge's native snapshot journal.
+ * <p>NeoForge passes a {@link TransactionContext} it owns; this adapter wraps it as a neutral
+ * {@link EnergyPort.Txn} ({@link NeoForgeEnergyPort#wrapForeign}) so the buffer's transaction enlistment
+ * reaches NeoForge's native snapshot journal, and the cached bridge handle self-evicts when the foreign
+ * transaction closes (MOD-185) rather than leaking for the session.
  */
 public final class BufferAsEnergyHandler implements EnergyHandler {
 	private final EnergyPort port;
@@ -50,11 +51,11 @@ public final class BufferAsEnergyHandler implements EnergyHandler {
 	// safe int→int no-op in practice and never loses EU — the cast just satisfies the int return type.
 	@Override
 	public int insert(int amount, TransactionContext transaction) {
-		return Ints.saturatedCast(port.insert(amount, NeoForgeEnergyPort.wrap(transaction)));
+		return Ints.saturatedCast(port.insert(amount, NeoForgeEnergyPort.wrapForeign(transaction)));
 	}
 
 	@Override
 	public int extract(int amount, TransactionContext transaction) {
-		return Ints.saturatedCast(port.extract(amount, NeoForgeEnergyPort.wrap(transaction)));
+		return Ints.saturatedCast(port.extract(amount, NeoForgeEnergyPort.wrapForeign(transaction)));
 	}
 }

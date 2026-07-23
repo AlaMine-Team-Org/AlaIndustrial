@@ -116,25 +116,30 @@ public final class GuideBookScreen extends Screen {
 	}
 
 	private void buildList(Tab cur) {
+		int count = cur.entries.size();
 		int avail = contentBottom - contentTop - 4;
 		perPage = Math.max(1, avail / ROW);
-		boolean needNav = cur.entries.size() > perPage;
+		boolean needNav = count > perPage;
 		if (needNav) {
 			perPage = Math.max(1, (avail - ROW) / ROW);
 		}
-		int maxOffset = Math.max(0, cur.entries.size() - perPage);
-		listOffset = Math.max(0, Math.min(listOffset, maxOffset));
-		int shown = Math.min(perPage, cur.entries.size() - listOffset);
+		// Scroll in whole pages: snap the offset to a page boundary so the last page never overlaps the
+		// previous one (MOD-180). See GuidePaginator for the page math (unit-tested on L1).
+		int start = GuidePaginator.pageStart(listOffset, perPage, count);
+		listOffset = start;
+		int shown = GuidePaginator.shownCount(listOffset, perPage, count);
 		for (int k = 0; k < shown; k++) {
-			int ei = listOffset + k;
+			int ei = start + k;
 			int rowY = contentTop + k * ROW;
 			addRenderableWidget(Button.builder(Component.literal(cur.entries.get(ei).title), p -> openEntry(ei))
 					.bounds(contentX + GUTTER, rowY, contentW - GUTTER, TAB_H).build());
 			listIcons.add(new int[]{ei, rowY + 1});
 		}
 		if (needNav) {
+			int curPage = GuidePaginator.currentPage(listOffset, perPage, count);
+			int pageCount = GuidePaginator.pageCount(count, perPage);
 			int navY = contentTop + perPage * ROW + 2;
-			addNav(contentX + GUTTER, navY, listOffset > 0, listOffset + perPage < cur.entries.size(),
+			addNav(contentX + GUTTER, navY, curPage > 0, curPage < pageCount - 1,
 					() -> { listOffset = Math.max(0, listOffset - perPage); rebuildWidgets(); },
 					() -> { listOffset += perPage; rebuildWidgets(); });
 		}
@@ -221,11 +226,9 @@ public final class GuideBookScreen extends Screen {
 					}
 				}
 				case "recipe" -> {
-					if (!p.recipeType.isEmpty()) {
-						rows.add(new Row(Kind.HEADER, Component.literal(p.recipeType).getVisualOrderText(),
-								GuiStyle.TEXT_DIM, null, lh + 2));
-					}
-					rows.add(new Row(Kind.RECIPE, null, 0, p, 3 * CELL + 4));
+					// The type label is drawn inside drawRecipe (not a static header row) so it can
+					// cycle together with the grid on multi-variant pages (scythe tiers, torch crafts).
+					rows.add(new Row(Kind.RECIPE, null, 0, p, lh + 4 + 3 * CELL + 4));
 				}
 				default -> {
 					if (!p.title.isEmpty() && !p.title.equals(e.title)) {
@@ -357,23 +360,47 @@ public final class GuideBookScreen extends Screen {
 	}
 
 	private void drawRecipe(GuiGraphicsExtractor g, Page p, int x, int y) {
-		for (int i = 0; i < 9 && i < p.grid.size(); i++) {
+		// Multi-variant recipes (scythe tiers, torch from-scratch/upgrade) rotate once per second;
+		// otherwise fall back to the single baked recipe stored on the page.
+		List<String> grid = p.grid;
+		String type = p.recipeType;
+		String resultId = p.resultId;
+		int resultCount = p.resultCount;
+		int vCount = p.variants == null ? 0 : p.variants.size();
+		int vIdx = 0;
+		if (vCount > 1) {
+			vIdx = (int) ((Util.getMillis() / 1000L) % vCount);
+			GuideContent.RecipeVariant v = p.variants.get(vIdx);
+			grid = v.grid;
+			type = v.recipeType;
+			resultId = v.resultId;
+			resultCount = v.resultCount;
+		}
+		int lh = this.font.lineHeight;
+		if (type != null && !type.isEmpty()) {
+			Component label = vCount > 1
+					? Component.literal(type + "   " + (vIdx + 1) + "/" + vCount)
+					: Component.literal(type);
+			g.text(this.font, label, x, y, GuiStyle.TEXT_DIM, false);
+		}
+		int gy = y + lh + 4;
+		for (int i = 0; i < 9 && i < grid.size(); i++) {
 			int cx = x + (i % 3) * CELL;
-			int cy = y + (i / 3) * CELL;
+			int cy = gy + (i / 3) * CELL;
 			GuiStyle.slot(g, cx, cy);
-			ItemStack st = stackFromId(p.grid.get(i));
+			ItemStack st = stackFromId(grid.get(i));
 			if (!st.isEmpty()) {
 				g.item(st, cx + 1, cy + 1);
 			}
 		}
 		int arrowX = x + 3 * CELL + 6;
-		int midY = y + CELL;
+		int midY = gy + CELL;
 		g.text(this.font, Component.literal("→"), arrowX, midY + 4, GuiStyle.TEXT);
 		int rx = arrowX + 16;
 		GuiStyle.slot(g, rx, midY);
-		ItemStack result = stackFromId(p.resultId);
+		ItemStack result = stackFromId(resultId);
 		if (!result.isEmpty()) {
-			result.setCount(Math.max(1, p.resultCount));
+			result.setCount(Math.max(1, resultCount));
 			g.item(result, rx + 1, midY + 1);
 			g.itemDecorations(this.font, result, rx + 1, midY + 1);
 		}

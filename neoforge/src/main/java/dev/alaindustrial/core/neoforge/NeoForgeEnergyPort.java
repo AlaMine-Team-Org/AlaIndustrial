@@ -97,18 +97,36 @@ public final class NeoForgeEnergyPort implements EnergyPort {
 	}
 
 	/**
-	 * Wrap a NeoForge {@link TransactionContext} as a neutral {@link EnergyPort.Txn}.
+	 * Wrap a NeoForge {@link TransactionContext} we OWN as a neutral {@link EnergyPort.Txn}.
 	 *
 	 * <p><b>Caller must evict.</b> The wrapped handle is cached per-thread keyed by
 	 * {@link TransactionContext} identity. Unlike Fabric, NeoForge's {@link TransactionContext} is a sealed
 	 * interface exposing only {@code depth()} — it has no close-callback API (verified against
 	 * 26.2.0.8-beta), so this method cannot auto-evict on close. Every caller MUST call
 	 * {@link NeoForgeTxn#evict(TransactionContext)} after the transaction closes, or the thread-local cache
-	 * leaks one entry per transaction. The {@link NeoForgeEnergyTransactions} SPI does this in a
-	 * {@code finally} block; any other seam that calls {@code wrap} directly is bound by the same contract.
+	 * leaks one entry per transaction. The {@link NeoForgeEnergyTransactions} SPI (the sole owner path) does
+	 * this in a {@code finally} block. For a transaction we do NOT own — a reverse-adapter capability call
+	 * whose lifecycle belongs to a foreign mod — use {@link #wrapForeign} instead, which self-evicts.
 	 */
 	public static Txn wrap(TransactionContext ctx) {
 		return NeoForgeTxn.forContext(ctx);
+	}
+
+	/**
+	 * Wrap a FOREIGN NeoForge {@link TransactionContext} — one whose open/commit/close lifecycle we do not
+	 * own — as a neutral {@link EnergyPort.Txn}, for the reverse adapters ({@link BufferAsEnergyHandler},
+	 * {@link TankAsResourceHandler}) that publish our buffers/tanks through {@code Capabilities.*.BLOCK}.
+	 *
+	 * <p>Unlike {@link #wrap}, there is no {@code finally} we can hang an {@code evict} on: the foreign mod
+	 * opened the transaction and will close it out of our sight. So on cache miss this installs a
+	 * self-evicting housekeeping journal bound to the transaction's root (MOD-185); the cached handle — and
+	 * the {@code journals} map it accumulates across the {@link TransactionContext} identities NeoForge
+	 * reuses between successive root transactions — is dropped from the per-thread cache when the foreign
+	 * transaction closes (root commit or root abort), instead of leaking one journal entry per foreign
+	 * buffer/tank touched for the life of the session.
+	 */
+	public static Txn wrapForeign(TransactionContext ctx) {
+		return NeoForgeTxn.forForeignContext(ctx);
 	}
 
 	/**
@@ -131,8 +149,8 @@ public final class NeoForgeEnergyPort implements EnergyPort {
 		}
 
 		/**
-		 * The shared {@link NeoForgeTxn} for {@code ctx}. NeoForge's {@link TransactionContext} exposes no
-		 * close callback, so the handle is created for the root and evicted by
+		 * The shared {@link NeoForgeTxn} for an OWNED {@code ctx}. NeoForge's {@link TransactionContext}
+		 * exposes no close callback, so the handle is created for the root and evicted by
 		 * {@link NeoForgeEnergyTransactions} after the transaction closes (single owner). For the common
 		 * case there is exactly one root transaction in flight per move.
 		 */
@@ -140,9 +158,38 @@ public final class NeoForgeEnergyPort implements EnergyPort {
 			return ACTIVE.get().computeIfAbsent(ctx, NeoForgeTxn::new);
 		}
 
+		/**
+		 * The shared {@link NeoForgeTxn} for a FOREIGN {@code ctx} (a reverse-adapter capability call).
+		 * Identical to {@link #forContext} except that a fresh entry also gets a self-evicting
+		 * {@link EvictionJournal}, so the foreign mod's close — which we never see directly — drops the entry
+		 * (MOD-185). Registered once per entry: a second capability call inside the SAME foreign transaction
+		 * hits the cache and reuses the handle, so repeated buffer enlists still dedupe through the single
+		 * cached {@code journals} map (one {@link ParticipantJournal} per buffer → correct rollback ordering;
+		 * a fresh-per-call handle would spawn a second journal and silently dup/lose EU on abort).
+		 */
+		public static NeoForgeTxn forForeignContext(TransactionContext ctx) {
+			Map<TransactionContext, NeoForgeTxn> active = ACTIVE.get();
+			NeoForgeTxn cached = active.get(ctx);
+			if (cached != null) {
+				return cached;
+			}
+			NeoForgeTxn created = new NeoForgeTxn(ctx);
+			// Publish the entry BEFORE registering the hook so the buffer's own enlist, which runs later in
+			// the same insert/extract call, shares this handle. updateSnapshots must run while ctx is open —
+			// it is: we are inside the foreign mod's insert/extract, so its transaction has not closed yet.
+			active.put(ctx, created);
+			new EvictionJournal(ctx).updateSnapshots(ctx);
+			return created;
+		}
+
 		/** Drop the cached handle for {@code ctx} once its transaction has closed. */
 		public static void evict(TransactionContext ctx) {
 			ACTIVE.get().remove(ctx);
+		}
+
+		/** Visible for tests only: size of the per-thread {@link #ACTIVE} cache, for leak-detection asserts. */
+		public static int activeCacheSize() {
+			return ACTIVE.get().size();
 		}
 
 		public TransactionContext ctx() {
@@ -152,6 +199,56 @@ public final class NeoForgeEnergyPort implements EnergyPort {
 		@Override
 		public void enlist(EnergyPort.Participant participant) {
 			journals.computeIfAbsent(participant, ParticipantJournal::new).updateSnapshots(ctx);
+		}
+	}
+
+	/**
+	 * A stateless {@link SnapshotJournal} whose only job is to evict a foreign {@link NeoForgeTxn} from
+	 * {@link NeoForgeTxn#ACTIVE} when the foreign transaction closes (MOD-185). NeoForge exposes no close
+	 * callback on {@link TransactionContext}, but a journal enlisted via {@link #updateSnapshots} IS notified
+	 * on close through {@link #revertToSnapshot} (abort) and {@link #onRootCommit} (commit) — the only
+	 * overridable close seams, since {@code SnapshotJournal.onClose} is package-private.
+	 *
+	 * <p><b>Root-close only.</b> We evict solely when the transaction's ROOT resolves:
+	 * {@link #onRootCommit} fires exclusively at root commit (NeoForge schedules it only for {@code depth<=0}),
+	 * and {@link #revertToSnapshot} is gated to {@code depth()==0}. Evicting on a NESTED close (depth&gt;0)
+	 * would drop the entry mid-transaction; a subsequent enlist of the same buffer would then spawn a SECOND
+	 * {@link ParticipantJournal}, and on the eventual abort NeoForge would revert them in registration order
+	 * (snapshot-before-first, then snapshot-after-first) — leaving the buffer at the intermediate value:
+	 * silent EU/mB dup or loss. That is exactly the fresh-per-call regression MOD-185 rejected, so the cache
+	 * (one journal per buffer) is load-bearing for rollback correctness, and eviction must wait for the root.
+	 *
+	 * <p>The journal carries no state — its snapshot is a constant token — so it never mutates game state; it
+	 * is pure per-thread-cache housekeeping.
+	 */
+	private static final class EvictionJournal extends SnapshotJournal<Object> {
+		private static final Object TOKEN = new Object();
+
+		private final TransactionContext ctx;
+
+		EvictionJournal(TransactionContext ctx) {
+			this.ctx = ctx;
+		}
+
+		@Override
+		protected Object createSnapshot() {
+			return TOKEN; // non-null required by SnapshotJournal; carries no state
+		}
+
+		@Override
+		protected void revertToSnapshot(Object snapshot) {
+			// Root abort only. A journal enlisted at depth 0 reverts solely when the root aborts; the
+			// depth()==0 gate additionally suppresses eviction on a nested foreign abort (depth>0), where
+			// dropping the entry could resurrect the multi-journal bug (see class doc).
+			if (ctx.depth() == 0) {
+				NeoForgeTxn.evict(ctx);
+			}
+		}
+
+		@Override
+		protected void onRootCommit(Object originalState) {
+			// Fires once, after the root transaction committed and closed — always the root, always safe.
+			NeoForgeTxn.evict(ctx);
 		}
 	}
 

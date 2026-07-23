@@ -497,6 +497,8 @@ public final class NeoForgeGameTests {
 				ItemPipeScenarios::disabledPipeLinkBlocksTransfer);
 		// MOD-108: chest → pipe → MACHINE. The chest-to-chest cases above never touch a machine's
 		// automation gate (canPlaceItemThroughFace), which is exactly the path players build.
+		// MOD-178: source → three insert chests, first two full — the pipe must skip to the free one.
+		registerTest(event, "item_pipe_skips_full_targets", 40, true, ItemPipeScenarios::skipsFullTargetsAndFillsFreeOne);
 		registerTest(event, "item_pipe_inserts_into_machine", 40, true, ItemPipeScenarios::insertsIntoMachine);
 		// MOD-108 balance guard: one batch per interval, not per tick (MOD-104 shipped 20 items/s).
 		registerTest(event, "item_pipe_respects_transfer_interval", 40, true, ItemPipeScenarios::respectsTransferInterval);
