@@ -53,10 +53,11 @@ public class AlaReiPlugin implements REIClientPlugin {
 			machine(ModRecipes.SMELTING, ModBlocks.ELECTRIC_FURNACE),
 			machine(ModRecipes.COMPRESSING, ModBlocks.COMPRESSOR),
 			machine(ModRecipes.EXTRACTING, ModBlocks.EXTRACTOR),
-			// Sawmill (MOD-150) contributed four mode families here. MOD-209 hides the unfinished machine
-			// from players, so neither its categories nor the sawmill workstation are registered; the block
-			// itself is also pulled from the item grid via RecipeViewerInfo.hiddenFromRecipeViewerItems().
-			// The 39 sawing recipes stay in data — with no category they are simply not displayed.
+			// Sawmill (MOD-150): four mode families, all worked at the same sawmill block.
+			machine(ModRecipes.SAWING_PLANKS, ModBlocks.SAWMILL),
+			machine(ModRecipes.SAWING_STICKS, ModBlocks.SAWMILL),
+			machine(ModRecipes.SAWING_SLABS, ModBlocks.SAWMILL),
+			machine(ModRecipes.SAWING_STAIRS, ModBlocks.SAWMILL),
 	};
 
 	@Override
@@ -117,6 +118,12 @@ public class AlaReiPlugin implements REIClientPlugin {
 				registerClickArea(registry, target.screenClass(), rect,
 						categoryId(target.kind()),
 						CategoryIdentifier.of("minecraft", "plugins/smelting"));
+			} else if (MachineRecipeViewerTargets.isSawmill(target.kind())) {
+				// MOD-150: the sawmill's arrow opens all four mode categories at once.
+				CategoryIdentifier<?>[] ids = MachineRecipeViewerTargets.SAWMILL_KINDS.stream()
+						.map(AlaReiPlugin::categoryId)
+						.toArray(CategoryIdentifier[]::new);
+				registerClickArea(registry, target.screenClass(), rect, ids);
 			} else {
 				registerClickArea(registry, target.screenClass(), rect, categoryId(target.kind()));
 			}

@@ -218,12 +218,13 @@ public final class DemoStand {
 	}
 
 	/**
-	 * Zone <b>cables</b> (rows z=14/16/18/20, one per cable type): a fully charged battery box
+	 * Zone <b>cables</b> (rows z=14/16/18/20/22, one per cable type): a fully charged battery box
 	 * feeds a 6-cable run into an electric furnace with input — a live network per row, so the
 	 * energy visibly flows (and the resistive loss of each material is observable in the GUI).
 	 */
 	private static void buildCableRuns(ServerLevel level, BlockPos origin) {
 		Block[] cables = {ModContent.COPPER_CABLE.get(), ModContent.TIN_CABLE.get(),
+				ModContent.GOLD_CABLE.get(),
 				ModContent.INSULATED_COPPER_CABLE.get(), ModContent.INSULATED_TIN_CABLE.get()};
 		int z = 14;
 		for (Block cable : cables) {
@@ -244,10 +245,12 @@ public final class DemoStand {
 		}
 		// MOD-104: a short item-pipe run between two chests. The two end faces remain neutral
 		// in the stand; the wrench is used by the player to demonstrate extract/insert arrows.
-		set(level, origin, 16, 1, 22, ModContent.IRON_CHEST.get());
-		fillSlot(level, origin, 16, 1, 22, 0, new ItemStack(Items.IRON_INGOT, 32));
-		for (int x = 17; x <= 21; x++) set(level, origin, x, 1, 22, ModContent.ITEM_PIPE.get());
-		set(level, origin, 22, 1, 22, ModContent.IRON_CHEST.get());
+		// Sits at z=24, one row past the last cable row: the gold cable (MOD-219) made the cable
+		// loop reach z=22, which this row used to occupy.
+		set(level, origin, 16, 1, 24, ModContent.IRON_CHEST.get());
+		fillSlot(level, origin, 16, 1, 24, 0, new ItemStack(Items.IRON_INGOT, 32));
+		for (int x = 17; x <= 21; x++) set(level, origin, x, 1, 24, ModContent.ITEM_PIPE.get());
+		set(level, origin, 22, 1, 24, ModContent.IRON_CHEST.get());
 	}
 
 	/** Zone <b>ores</b>: a 4×2 wall at z=4 — stone variants on top, deepslate variants below. */

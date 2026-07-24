@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "Кабелі",
-              "text": "Кабелі з’єднують блоки в енергомережу та передають EU. Мідний кабель втрачає енергію на відстані — що довша лінія, то більше втрат. Тримайте лінії короткими або ставте сховище ближче до споживача."
+              "text": "Кабелі з’єднують блоки в енергомережу й передають EU. Будь-який кабель втрачає енергію на відстані — що довша лінія, то більше втрат.\n\nСортів три, і вони різні:\n• Олов’яний — вузький (8 EU/т), але майже без втрат: для сонячних ферм\n• Мідний — універсальний робочий (12 EU/т)\n• Золотий — найширший (48 EU/т), але й втрати вищі\n\nНе змішуйте сорти в одній лінії: уся мережа працює за найсильнішим кабелем у ній, включно з його втратами."
             }
           ]
         }
@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "Водяний млин",
-              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
+              "text": "Пасивний генератор LV — виробляє EU від проточної води (течії) поряд, без палива й баків."
             },
             {
               "type": "stats",
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "Ізольований мідний кабель",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Ізольований мідний кабель",
-              "text": "Мідний кабель LV, обгорнутий вовною, — для безпечного сусідства та щільної проводки впритул до машин."
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "Характеристики",
               "lines": [
-                "Енергія: ≤32 EU/пакет"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "Ізольований олов’яний кабель",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Ізольований олов’яний кабель",
-              "text": "Олов’яний кабель LV, обгорнутий вовною, — найдешевший ізольований провід для безпечного сусідства."
             },
             {
-              "type": "stats",
-              "title": "Характеристики",
-              "lines": [
-                "Енергія: ≤32 EU/пакет"
-              ]
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "Характеристики",
               "lines": [
                 "Енергія: ≤32 EU/пакет",
-                "Buffer: 12 EU"
+                "Буфер: 12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "Олов’яний кабель",
-              "text": "Найдешевший кабель LV — для тонких малопотужних ліній до окремих машин і слабких генераторів."
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "Характеристики",
               "lines": [
-                "Енергія: ≤32 EU/пакет"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "Лісопилка",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Лісопилка",
+              "text": "Розпилює будь-яку деревину на дошки, палиці, плити або сходи з вищим виходом, ніж ручний крафт. Чотири перемикані режими, живиться EU."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 160 EU/оп",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -956,14 +1016,14 @@
         },
         {
           "id": "gold_chest",
-          "title": "Gold Chest",
+          "title": "Золота скриня",
           "icon": "alaindustrial:gold_chest",
           "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Chest",
-              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+              "title": "Золота скриня",
+              "text": "Скриня на 54 слоти — тір вище за срібну (на ряд більша), з 3D-моделлю та анімованою кришкою. Енергії не потребує."
             },
             {
               "type": "recipe",
@@ -987,14 +1047,14 @@
         },
         {
           "id": "industrial_workbench",
-          "title": "Industrial Workbench",
+          "title": "Верстат індустріаліста",
           "icon": "alaindustrial:industrial_workbench",
           "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+              "title": "Верстат індустріаліста",
+              "text": "Блок робочого місця селянина-індустріаліста — скуповує ресурси мода за смарагди. Постав його біля безробітного селянина, і той опанує професію."
             },
             {
               "type": "recipe",
@@ -1018,19 +1078,19 @@
         },
         {
           "id": "guide_book",
-          "title": "Guide Book",
+          "title": "Книга-путівник",
           "icon": "alaindustrial:guide_book",
           "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Guide Book",
-              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+              "title": "Книга-путівник",
+              "text": "Внутрішньоігрова книга-підручник, що охоплює всі механіки мода — видається автоматично при першому вході й відкривається правим кліком; вкладки, сторінки, посилання. Енергії не потребує."
             },
             {
               "type": "recipe",
               "title": "Рецепт",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Крафт без форми",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -1234,14 +1294,14 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Water Wheel",
+          "title": "Водяне колесо",
           "icon": "alaindustrial:water_mill_wheel",
           "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "title": "Водяне колесо",
+              "text": "Колесо водяного млина — ставиться в слот колеса водяного млина; без нього генерації немає. Зношується під час генерації."
             },
             {
               "type": "recipe",
@@ -1277,7 +1337,7 @@
             {
               "type": "recipe",
               "title": "Рецепт",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Крафт без форми",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "Ротор вітряка",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "Лопаті вітротурбіни — ставляться в слот ротора будь-якого вітряка T1/T2; без нього генерації немає. Зношуються під час генерації."
             },
             {
               "type": "recipe",

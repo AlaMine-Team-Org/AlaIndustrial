@@ -93,7 +93,8 @@ public final class ModBlockEntities {
 				new BlockEntityType<>(DaylightSolarPanelBlockEntity::new, Set.of(ModBlocks.DAYLIGHT_SOLAR_PANEL)));
 		COPPER_CABLE = register("copper_cable",
 				new BlockEntityType<>(CableBlockEntity::new, Set.of(ModBlocks.COPPER_CABLE,
-						ModBlocks.TIN_CABLE, ModBlocks.INSULATED_COPPER_CABLE, ModBlocks.INSULATED_TIN_CABLE)));
+						ModBlocks.TIN_CABLE, ModBlocks.GOLD_CABLE,
+						ModBlocks.INSULATED_COPPER_CABLE, ModBlocks.INSULATED_TIN_CABLE)));
 		ITEM_PIPE = register("item_pipe", new BlockEntityType<>(ItemPipeBlockEntity::new, Set.of(ModBlocks.ITEM_PIPE)));
 		MACERATOR = register("macerator",
 				new BlockEntityType<>(MaceratorBlockEntity::new, Set.of(ModBlocks.MACERATOR)));

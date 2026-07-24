@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "Kablolar",
-              "text": "Kablolar blokları bir güç ağına bağlar ve EU taşır. Bakır kablo mesafeyle enerji kaybeder — hat ne kadar uzunsa o kadar çok kaybolur. Hatları kısa tutun veya depolamayı tüketiciye yakın yerleştirin."
+              "text": "Kablolar blokları bir enerji ağına bağlar ve EU taşır. Her kablo mesafeyle enerji kaybeder — hat ne kadar uzunsa kayıp o kadar artar.\n\nÜç tür vardır ve birbirlerinden farklıdır:\n• Kalay — dar (8 EU/t) ama neredeyse kayıpsız: güneş çiftlikleri için\n• Bakır — evrensel iş gücü (12 EU/t)\n• Altın — en geniş (48 EU/t), daha yüksek kayıpla\n\nTürleri tek bir hatta karıştırmayın: tüm ağ, içindeki en güçlü kabloya göre çalışır, onun kaybı dahil."
             }
           ]
         }
@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "Su Değirmeni",
-              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
+              "text": "Pasif bir LV jeneratör — yakıt veya tank olmadan yanındaki akan sudan (bir akıntıdan) EU üretir."
             },
             {
               "type": "stats",
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "Yalıtımlı Bakır Kablo",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Yalıtımlı Bakır Kablo",
-              "text": "Yünle sarılmış bakır LV kablo — güvenli komşuluk ve makinelerin yanında sıkı kablolama için."
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Enerji: ≤32 EU/paket"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "Yalıtımlı Kalay Kablo",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Yalıtımlı Kalay Kablo",
-              "text": "Yünle sarılmış kalay LV kablo — güvenli komşuluk için en ucuz yalıtımlı kablo."
             },
             {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Enerji: ≤32 EU/paket"
-              ]
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "İstatistikler",
               "lines": [
                 "Enerji: ≤32 EU/paket",
-                "Buffer: 12 EU"
+                "Tampon: 12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "Kalay Kablo",
-              "text": "En ucuz LV kablo — tek makinelere ve zayıf jeneratörlere giden ince, düşük güçlü hatlar için."
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Enerji: ≤32 EU/paket"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "Hızar",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Hızar",
+              "text": "Her türlü odunu tahtaya, çubuğa, basamağa veya merdivene biçer; verim el ile üretimden yüksektir. Dört değiştirilebilir mod, EU ile çalışır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 160 EU/işlem",
+                "Tampon: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -956,14 +1016,14 @@
         },
         {
           "id": "gold_chest",
-          "title": "Gold Chest",
+          "title": "Altın Sandık",
           "icon": "alaindustrial:gold_chest",
           "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Chest",
-              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+              "title": "Altın Sandık",
+              "text": "54 yuvalı bir sandık — gümüşün bir üst kademesi (bir sıra fazla), 3D model ve animasyonlu kapakla. Enerji gerektirmez."
             },
             {
               "type": "recipe",
@@ -987,14 +1047,14 @@
         },
         {
           "id": "industrial_workbench",
-          "title": "Industrial Workbench",
+          "title": "Endüstriyel Tezgah",
           "icon": "alaindustrial:industrial_workbench",
           "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+              "title": "Endüstriyel Tezgah",
+              "text": "Sanayici köylünün iş yeri bloğu — modun kaynaklarını zümrüt karşılığında satın alır. İşsiz bir köylünün yanına koyun, mesleği edinsin."
             },
             {
               "type": "recipe",
@@ -1018,19 +1078,19 @@
         },
         {
           "id": "guide_book",
-          "title": "Guide Book",
+          "title": "Kılavuz",
           "icon": "alaindustrial:guide_book",
           "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Guide Book",
-              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+              "title": "Kılavuz",
+              "text": "Modun tüm mekaniklerini anlatan oyun içi bir kılavuz kitap — oyuncu ilk kez girdiğinde otomatik verilir, sağ tıkla açılır; sekmeler, sayfalar, bağlantılar. Enerji gerektirmez."
             },
             {
               "type": "recipe",
               "title": "Tarif",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Şekilsiz Üretim",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -1234,14 +1294,14 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Water Wheel",
+          "title": "Su çarkı",
           "icon": "alaindustrial:water_mill_wheel",
           "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "title": "Su çarkı",
+              "text": "Su değirmeni çarkı — bir su değirmeninin çark yuvasına takılır; onsuz üretim olmaz. Üretim sırasında aşınır."
             },
             {
               "type": "recipe",
@@ -1277,7 +1337,7 @@
             {
               "type": "recipe",
               "title": "Tarif",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Şekilsiz Üretim",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "Ahşap Rotor",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "Rüzgar türbini kanatları — herhangi bir T1/T2 rüzgar türbininin rotor yuvasına takılır; onsuz üretim olmaz. Üretim sırasında aşınır."
             },
             {
               "type": "recipe",

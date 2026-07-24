@@ -75,20 +75,8 @@ public final class SawmillBlockEntity extends AbstractProcessingMachineBlockEnti
 		}
 	};
 
-	/**
-	 * Fallback duration for a cut, in ticks at 1.0 speed.
-	 *
-	 * <p>Not a config knob (MOD-209): while the machine is hidden from players, a
-	 * {@code sawmillDuration} key would appear in every player's {@code alaindustrial.json} — the last
-	 * place the hidden machine was still named in player-reachable text, and its doc comment described
-	 * the four modes on top of that. The knob was also inert: every shipped sawing recipe carries an
-	 * explicit {@code energy}, and the core derives the duration from that, so this value is only ever
-	 * the no-recipe fallback. Restore it to {@code Config} when the machine returns to players.
-	 */
-	public static final int DEFAULT_DURATION = 80;
-
 	public SawmillBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.SAWMILL_BE.get(), pos, state, EnergyTier.LV, Config.machineBuffer, DEFAULT_DURATION);
+		super(ModContent.SAWMILL_BE.get(), pos, state, EnergyTier.LV, Config.machineBuffer, Config.sawmillDuration);
 	}
 
 	@SuppressWarnings("unchecked")

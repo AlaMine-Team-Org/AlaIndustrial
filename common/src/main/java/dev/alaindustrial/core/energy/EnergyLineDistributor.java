@@ -1,6 +1,5 @@
 package dev.alaindustrial.core.energy;
 
-import dev.alaindustrial.Config;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -83,10 +82,14 @@ final class EnergyLineDistributor {
 	 * Returns the EU delivered. Both machines and storage sinks route through here (MOD-070): all
 	 * transfer flows through the wires, so any active cable shows its buffered energy.
 	 *
+	 * @param lossPerBlock the network's resistive loss per cable block, taken from its strongest cable
+	 *     grade (MOD-219). Passed in rather than read from {@link dev.alaindustrial.Config} so the rate can
+	 *     differ per network — before that it was hardcoded to copper's knob for every cable in the game.
 	 * @param producerCursor the round-robin rotation offset for {@link #serveClass}'s pull across the
 	 *     line supply pool; bounded by the pool size, re-applied modulo inside.
 	 */
-	long serveConsumersFromLine(List<LiveConsumer> consumers, long packetCap, EnergyPort.Txn tx, int producerCursor) {
+	long serveConsumersFromLine(List<LiveConsumer> consumers, long packetCap, double lossPerBlock,
+			EnergyPort.Txn tx, int producerCursor) {
 		if (consumers.isEmpty()) {
 			return 0L;
 		}
@@ -116,7 +119,7 @@ final class EnergyLineDistributor {
 		if (lineSupply.isEmpty()) {
 			return 0L;
 		}
-		return serveClass(consumers, lineSupply, lineTotal, packetCap, tx, producerCursor);
+		return serveClass(consumers, lineSupply, lineTotal, packetCap, lossPerBlock, tx, producerCursor);
 	}
 
 	/**
@@ -241,7 +244,7 @@ final class EnergyLineDistributor {
 	 * @param producerCursor the round-robin rotation offset; bounded by the producer pool size.
 	 */
 	private long serveClass(List<LiveConsumer> cls, List<LiveProducer> liveProducers,
-			long[] remainingSupply, long packetCap, EnergyPort.Txn tx, int producerCursor) {
+			long[] remainingSupply, long packetCap, double lossPerBlock, EnergyPort.Txn tx, int producerCursor) {
 		if (cls.isEmpty() || remainingSupply[0] <= 0) {
 			return 0L;
 		}
@@ -274,7 +277,7 @@ final class EnergyLineDistributor {
 			// covered by the L1 suite + pitest. The runtime math is the pure extract path; this kernel
 			// (MC-coupled) is the consumer of those pure helpers.
 			int distance = consumerDistance.apply(c.pos());
-			long loss = EnergyShare.cableLoss(pulled, Config.copperCableLossPerBlock, distance);
+			long loss = EnergyShare.cableLoss(pulled, lossPerBlock, distance);
 			long toDeliver = EnergyServe.deliverAfterLoss(pulled, loss);
 			long inserted = toDeliver > 0 ? c.storage().insert(toDeliver, tx) : 0;
 			long surplus = EnergyServe.surplus(toDeliver, inserted);

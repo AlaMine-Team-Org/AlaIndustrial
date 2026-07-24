@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.BatteryBoxBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
+import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.SawmillBlock;
@@ -98,14 +99,21 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("storm_wind_mill", StormWindMillBlock::new, props("storm_wind_mill"));
 
 	// --- Cables ---
+	// Each grade passes its CableType (MOD-219) — the mirror of the Fabric side, which loader_parity_check
+	// enforces. The insulated pair reuses copper's/tin's numbers: still hidden (MOD-010), and their niche is
+	// water resistance rather than throughput.
 	public static final DeferredBlock<CableBlock> COPPER_CABLE =
-			BLOCKS.registerBlock("copper_cable", CableBlock::new, props("copper_cable"));
+			BLOCKS.registerBlock("copper_cable", p -> new CableBlock(CableType.COPPER, p), props("copper_cable"));
 	public static final DeferredBlock<CableBlock> TIN_CABLE =
-			BLOCKS.registerBlock("tin_cable", CableBlock::new, props("tin_cable"));
+			BLOCKS.registerBlock("tin_cable", p -> new CableBlock(CableType.TIN, p), props("tin_cable"));
+	public static final DeferredBlock<CableBlock> GOLD_CABLE =
+			BLOCKS.registerBlock("gold_cable", p -> new CableBlock(CableType.GOLD, p), props("gold_cable"));
 	public static final DeferredBlock<CableBlock> INSULATED_COPPER_CABLE =
-			BLOCKS.registerBlock("insulated_copper_cable", CableBlock::new, props("insulated_copper_cable"));
+			BLOCKS.registerBlock("insulated_copper_cable", p -> new CableBlock(CableType.COPPER, p),
+					props("insulated_copper_cable"));
 	public static final DeferredBlock<CableBlock> INSULATED_TIN_CABLE =
-			BLOCKS.registerBlock("insulated_tin_cable", CableBlock::new, props("insulated_tin_cable"));
+			BLOCKS.registerBlock("insulated_tin_cable", p -> new CableBlock(CableType.TIN, p),
+					props("insulated_tin_cable"));
 	public static final DeferredBlock<ItemPipeBlock> ITEM_PIPE =
 			BLOCKS.registerBlock("item_pipe", ItemPipeBlock::new, props("item_pipe"));
 
@@ -204,6 +212,7 @@ public final class ModBlocksNeoForge {
 		ModContent.STORM_WIND_MILL = STORM_WIND_MILL::get;
 		ModContent.COPPER_CABLE = COPPER_CABLE::get;
 		ModContent.TIN_CABLE = TIN_CABLE::get;
+		ModContent.GOLD_CABLE = GOLD_CABLE::get;
 		ModContent.INSULATED_COPPER_CABLE = INSULATED_COPPER_CABLE::get;
 		ModContent.INSULATED_TIN_CABLE = INSULATED_TIN_CABLE::get;
 		ModContent.ITEM_PIPE = ITEM_PIPE::get;

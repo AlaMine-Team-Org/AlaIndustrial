@@ -150,9 +150,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.IRON_FURNACE_ITEM.get());
 		out.accept(ModContent.EXTRACTOR_ITEM.get());
 		out.accept(ModContent.COMPRESSOR_ITEM.get());
-		// Sawmill (MOD-150) is deliberately absent — MOD-209 hides the unfinished machine from players
-		// until it is done. It never shipped in a public release, so no world can already contain it.
-		// The block stays registered (reachable only via /give); restoring it = reverting MOD-209.
+		out.accept(ModContent.SAWMILL_ITEM.get());
 		out.accept(ModContent.PUMP_ITEM.get());
 	}
 
@@ -169,7 +167,12 @@ public final class CreativeTabContent {
 		out.accept(ModContent.SILVER_CHEST_ITEM.get());
 		out.accept(ModContent.GOLD_CHEST_ITEM.get());
 		out.accept(ModContent.STOCK_DISPLAY_FRAME_ITEM.get());
+		// The three shipped cable grades, in ladder order (MOD-219): tin is the cheap near-lossless wire for
+		// solar farms, copper the universal workhorse, gold the wide MV pipe. The insulated pair stays out —
+		// its niche (water resistance) is not implemented yet.
+		out.accept(ModContent.TIN_CABLE_ITEM.get());
 		out.accept(ModContent.COPPER_CABLE_ITEM.get());
+		out.accept(ModContent.GOLD_CABLE_ITEM.get());
 		out.accept(ModContent.ITEM_PIPE_ITEM.get());
 	}
 

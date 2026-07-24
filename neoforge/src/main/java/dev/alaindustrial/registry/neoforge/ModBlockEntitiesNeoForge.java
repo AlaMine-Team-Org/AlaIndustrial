@@ -70,7 +70,7 @@ public final class ModBlockEntitiesNeoForge {
 			register("daylight_solar_panel", DaylightSolarPanelBlockEntity::new, ModBlocksNeoForge.DAYLIGHT_SOLAR_PANEL);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CableBlockEntity>> COPPER_CABLE =
 			register("copper_cable", CableBlockEntity::new,
-					ModBlocksNeoForge.COPPER_CABLE, ModBlocksNeoForge.TIN_CABLE,
+					ModBlocksNeoForge.COPPER_CABLE, ModBlocksNeoForge.TIN_CABLE, ModBlocksNeoForge.GOLD_CABLE,
 					ModBlocksNeoForge.INSULATED_COPPER_CABLE, ModBlocksNeoForge.INSULATED_TIN_CABLE);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ItemPipeBlockEntity>> ITEM_PIPE =
 			register("item_pipe", ItemPipeBlockEntity::new, ModBlocksNeoForge.ITEM_PIPE);

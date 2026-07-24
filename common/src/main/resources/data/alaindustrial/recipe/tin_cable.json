@@ -1,0 +1,7 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": { "C": "alaindustrial:tin_ingot" },
+	"pattern": ["CCC"],
+	"result": { "id": "alaindustrial:tin_cable", "count": 3 }
+}

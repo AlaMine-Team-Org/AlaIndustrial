@@ -239,6 +239,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("copper_cable", ModBlocksNeoForge.COPPER_CABLE);
 	public static final DeferredItem<BlockItem> TIN_CABLE_ITEM =
 			ITEMS.registerSimpleBlockItem("tin_cable", ModBlocksNeoForge.TIN_CABLE);
+	public static final DeferredItem<BlockItem> GOLD_CABLE_ITEM =
+			ITEMS.registerSimpleBlockItem("gold_cable", ModBlocksNeoForge.GOLD_CABLE);
 	public static final DeferredItem<BlockItem> INSULATED_COPPER_CABLE_ITEM =
 			ITEMS.registerSimpleBlockItem("insulated_copper_cable", ModBlocksNeoForge.INSULATED_COPPER_CABLE);
 	public static final DeferredItem<BlockItem> INSULATED_TIN_CABLE_ITEM =
@@ -388,6 +390,7 @@ public final class ModItemsNeoForge {
 		ModContent.STORM_WIND_MILL_ITEM = STORM_WIND_MILL_ITEM;
 		ModContent.COPPER_CABLE_ITEM = COPPER_CABLE_ITEM;
 		ModContent.TIN_CABLE_ITEM = TIN_CABLE_ITEM;
+		ModContent.GOLD_CABLE_ITEM = GOLD_CABLE_ITEM;
 		ModContent.INSULATED_COPPER_CABLE_ITEM = INSULATED_COPPER_CABLE_ITEM;
 		ModContent.INSULATED_TIN_CABLE_ITEM = INSULATED_TIN_CABLE_ITEM;
 		ModContent.ITEM_PIPE_ITEM = ITEM_PIPE_ITEM;

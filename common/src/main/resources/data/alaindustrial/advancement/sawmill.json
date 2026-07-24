@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:first_circuit",
+  "display": {
+    "icon": { "id": "alaindustrial:sawmill" },
+    "title": { "translate": "advancements.alaindustrial.sawmill.title" },
+    "description": { "translate": "advancements.alaindustrial.sawmill.description" }
+  },
+  "criteria": {
+    "sawmill": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [ { "condition": "minecraft:block_state_property", "block": "alaindustrial:sawmill" } ] }
+    }
+  },
+  "requirements": [ [ "sawmill" ] ]
+}

@@ -604,6 +604,21 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 ModContent.ELECTRIC_FURNACE_MENU.get(), "Electric Furnace",
                 CAP, CAP, BURN, BURN);
 
+        // ── Sawmill (MOD-215) — three states ─────────────────────────────────────────
+        // The machine has its own atlas, its own saw-blade progress sprite and a row of mode buttons
+        // under the slots, so it is the one GUI in the mod where the layout itself is the feature —
+        // these shots are the regression guard for it (the buttons are drawn in code, not the atlas).
+        final int SAW = 80;   // Config.sawmillDuration — one cut at 1.0 speed
+        shootMenuWithState(context, "gui_sawmill_empty",
+                ModContent.SAWMILL_MENU.get(), "Sawmill",
+                0, CAP, 0, SAW);
+        shootMenuWithState(context, "gui_sawmill_sawing",
+                ModContent.SAWMILL_MENU.get(), "Sawmill",
+                CAP * 3 / 4, CAP, SAW / 2, SAW);
+        shootMenuWithState(context, "gui_sawmill_full",
+                ModContent.SAWMILL_MENU.get(), "Sawmill",
+                CAP, CAP, SAW, SAW);
+
         // ── BatteryBox — three states ─────────────────────────────────────────────────────
         shootMenuWithState(context, "gui_battery_box_empty",
                 ModContent.BATTERY_BOX_MENU.get(), "BatteryBox",

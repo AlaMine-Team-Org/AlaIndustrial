@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "ケーブル",
-              "text": "ケーブルはブロックをつないで電力網を作り、EUを運びます。銅ケーブルは距離に応じてエネルギーを失います — 配線が長いほど損失が増えます。配線は短く保つか、消費先の近くに貯蔵庫を置きましょう。"
+              "text": "ケーブルはブロックをつないで送電網を作り、EUを運びます。どのケーブルも距離に応じて損失が出ます——線が長いほど失われる量は増えます。\n\n種類は3つあり、それぞれ異なります：\n• スズ——細い（8 EU/t）がほぼ無損失。ソーラーファーム向け\n• 銅——万能の主力（12 EU/t）\n• 金——最も太い（48 EU/t）が、損失も大きい\n\n1本の線で種類を混ぜないでください。ネットワーク全体が、その中で最も強いケーブルに従います——損失も含めて。"
             }
           ]
         }
@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "水車",
-              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
+              "text": "パッシブなLV発電機 — 燃料もタンクも不要で、隣を流れる水（流水）からEUを生み出します。"
             },
             {
               "type": "stats",
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "絶縁銅ケーブル",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "絶縁銅ケーブル",
-              "text": "羊毛で包んだ銅LVケーブル — 隣接しても安全で、機械のそばの狭い配線に向いています。"
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "ステータス",
               "lines": [
-                "エネルギー: ≤32 EU/パケット"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "絶縁スズケーブル",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "絶縁スズケーブル",
-              "text": "羊毛で包んだスズLVケーブル — 隣接安全な絶縁ケーブルの中で最も安価です。"
             },
             {
-              "type": "stats",
-              "title": "ステータス",
-              "lines": [
-                "エネルギー: ≤32 EU/パケット"
-              ]
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "ステータス",
               "lines": [
                 "エネルギー: ≤32 EU/パケット",
-                "Buffer: 12 EU"
+                "バッファ: 12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "スズケーブル",
-              "text": "最も安価なLVケーブル — 単体の機械や非力な発電機へつなぐ、細い低出力の配線用です。"
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "ステータス",
               "lines": [
-                "エネルギー: ≤32 EU/パケット"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "製材機",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "製材機",
+              "text": "あらゆる木材を板材・棒・ハーフブロック・階段に製材し、手作業のクラフトより多く得られます。切り替え可能な4つのモードがあり、EUで動きます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 160 EU/処理",
+                "バッファ: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -956,14 +1016,14 @@
         },
         {
           "id": "gold_chest",
-          "title": "Gold Chest",
+          "title": "金のチェスト",
           "icon": "alaindustrial:gold_chest",
           "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Chest",
-              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+              "title": "金のチェスト",
+              "text": "54スロットのチェスト — 銀の1つ上のティア（1列多い）で、3Dモデルと開閉アニメーションつき。エネルギーは不要です。"
             },
             {
               "type": "recipe",
@@ -987,14 +1047,14 @@
         },
         {
           "id": "industrial_workbench",
-          "title": "Industrial Workbench",
+          "title": "工業作業台",
           "icon": "alaindustrial:industrial_workbench",
           "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+              "title": "工業作業台",
+              "text": "村人「実業家」の職業ブロック — MODの資源をエメラルドで買い取ります。就業していない村人の近くに置くと、その職業に就きます。"
             },
             {
               "type": "recipe",
@@ -1018,19 +1078,19 @@
         },
         {
           "id": "guide_book",
-          "title": "Guide Book",
+          "title": "ガイドブック",
           "icon": "alaindustrial:guide_book",
           "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Guide Book",
-              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+              "title": "ガイドブック",
+              "text": "MODのあらゆる仕組みを解説するゲーム内のガイドブック — 初参加時に自動で配られ、右クリックで開きます。タブ、ページ、リンクつき。エネルギーは不要です。"
             },
             {
               "type": "recipe",
               "title": "レシピ",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "不定形クラフト",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -1234,14 +1294,14 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Water Wheel",
+          "title": "水車",
           "icon": "alaindustrial:water_mill_wheel",
           "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "title": "水車",
+              "text": "水車の車輪 — 水車の車輪スロットに設置します。これがないと発電しません。発電中に摩耗します。"
             },
             {
               "type": "recipe",
@@ -1277,7 +1337,7 @@
             {
               "type": "recipe",
               "title": "レシピ",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "不定形クラフト",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "風力タービンのローター",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "風力タービンの羽根 — T1/T2の風力タービンのロータースロットに設置します。これがないと発電しません。発電中に摩耗します。"
             },
             {
               "type": "recipe",

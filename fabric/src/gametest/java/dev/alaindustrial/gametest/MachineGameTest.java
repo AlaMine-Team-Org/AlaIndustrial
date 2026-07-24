@@ -962,7 +962,7 @@ public class MachineGameTest {
 		be.getEnergyStorage().amount = AMPLE_EU;
 		int startCount = input.getCount();
 		be.setItem(0, input.copy());
-		drive(be, helper, SawmillBlockEntity.DEFAULT_DURATION);
+		drive(be, helper, Config.sawmillDuration);
 		ItemStack out = be.getItem(1);
 		if (out.isEmpty() || !out.is(expected) || out.getCount() != count) {
 			helper.fail("sawmill[" + mode + "]: expected exactly " + count + "× " + expected + " but got "
@@ -988,16 +988,18 @@ public class MachineGameTest {
 		assertSawsInMode(helper, SawmillMode.PLANKS, new ItemStack(Items.BAMBOO_BLOCK, 4), Items.BAMBOO_PLANKS, 3);
 	}
 
-	/** @implements TC-SAW-001-FUN03 — STICKS mode: oak log (#minecraft:logs) → 12 sticks. */
+	/** @implements TC-SAW-001-FUN03 — STICKS mode: oak log (#minecraft:logs) → 18 sticks (MOD-215: 1.5× the 12 a
+	 * player gets free from PLANKS mode + a workbench, so the mode is worth its own operation). */
 	@GameTest
 	public void tcSaw001Fun03_sticksMode(GameTestHelper helper) {
-		assertSawsInMode(helper, SawmillMode.STICKS, new ItemStack(Items.OAK_LOG, 4), Items.STICK, 12);
+		assertSawsInMode(helper, SawmillMode.STICKS, new ItemStack(Items.OAK_LOG, 4), Items.STICK, 18);
 	}
 
-	/** @implements TC-SAW-001-FUN04 — SLABS mode: oak log → 12 oak slabs. */
+	/** @implements TC-SAW-001-FUN04 — SLABS mode: oak log → 18 oak slabs (MOD-215: 1.5× the 12 from PLANKS
+	 * mode + a workbench). */
 	@GameTest
 	public void tcSaw001Fun04_slabsMode(GameTestHelper helper) {
-		assertSawsInMode(helper, SawmillMode.SLABS, new ItemStack(Items.OAK_LOG, 4), Items.OAK_SLAB, 12);
+		assertSawsInMode(helper, SawmillMode.SLABS, new ItemStack(Items.OAK_LOG, 4), Items.OAK_SLAB, 18);
 	}
 
 	/** @implements TC-SAW-001-FUN05 — STAIRS mode: oak log → 6 oak stairs. */
@@ -1062,7 +1064,7 @@ public class MachineGameTest {
 		saw.setMode(SawmillMode.PLANKS);
 		be.getEnergyStorage().amount = AMPLE_EU;
 		be.setItem(0, new ItemStack(Items.OAK_LOG, 4));
-		drive(be, helper, SawmillBlockEntity.DEFAULT_DURATION / 2);
+		drive(be, helper, Config.sawmillDuration / 2);
 		if (be.getDataAccess().get(2) <= 0) {
 			helper.fail("sawmill made no progress before the mode switch");
 		}

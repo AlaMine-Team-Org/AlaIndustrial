@@ -51,10 +51,11 @@ public final class AlaJeiPlugin implements IModPlugin {
 			machine(ModRecipes.SMELTING, ModBlocksNeoForge.ELECTRIC_FURNACE::get),
 			machine(ModRecipes.COMPRESSING, ModBlocksNeoForge.COMPRESSOR::get),
 			machine(ModRecipes.EXTRACTING, ModBlocksNeoForge.EXTRACTOR::get),
-			// Sawmill (MOD-150) contributed four mode families here. MOD-209 hides the unfinished machine
-			// from players, so neither its categories nor the sawmill catalyst are registered; the block
-			// itself is also pulled from the item grid via RecipeViewerInfo.hiddenFromRecipeViewerItems().
-			// The 39 sawing recipes stay in data — with no category they are simply not displayed.
+			// Sawmill (MOD-150): four mode families, all worked at the same sawmill block.
+			machine(ModRecipes.SAWING_PLANKS, ModBlocksNeoForge.SAWMILL::get),
+			machine(ModRecipes.SAWING_STICKS, ModBlocksNeoForge.SAWMILL::get),
+			machine(ModRecipes.SAWING_SLABS, ModBlocksNeoForge.SAWMILL::get),
+			machine(ModRecipes.SAWING_STAIRS, ModBlocksNeoForge.SAWMILL::get),
 	};
 
 	private static Machine machine(ModRecipes.Kind kind, Supplier<? extends Block> block) {
@@ -136,6 +137,16 @@ public final class AlaJeiPlugin implements IModPlugin {
 						rect.x(), rect.y(), rect.width(), rect.height(),
 						AlaJeiRecipeTypes.byKind(target.kind()),
 						RecipeTypes.SMELTING);
+			} else if (MachineRecipeViewerTargets.isSawmill(target.kind())) {
+				// MOD-150: the sawmill's arrow opens all four mode categories at once. addRecipeClickArea
+				// takes IRecipeType<?>...; IRecipeHolderType extends IRecipeType, so the four fit one call.
+				mezz.jei.api.recipe.types.IRecipeType<?>[] types = MachineRecipeViewerTargets.SAWMILL_KINDS.stream()
+						.map(AlaJeiRecipeTypes::byKind)
+						.toArray(mezz.jei.api.recipe.types.IRecipeType[]::new);
+				registration.addRecipeClickArea(
+						target.screenClass(),
+						rect.x(), rect.y(), rect.width(), rect.height(),
+						types);
 			} else {
 				registration.addRecipeClickArea(
 						target.screenClass(),

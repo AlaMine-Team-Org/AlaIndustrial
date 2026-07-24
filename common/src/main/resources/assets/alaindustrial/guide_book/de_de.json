@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "Kabel",
-              "text": "Kabel verbinden Blöcke zu einem Stromnetz und leiten EU. Das Kupferkabel verliert Energie über die Distanz — je länger die Leitung, desto mehr geht verloren. Halte Leitungen kurz oder platziere Speicher näher am Verbraucher."
+              "text": "Kabel verbinden Blöcke zu einem Stromnetz und leiten EU. Jedes Kabel verliert Energie über die Strecke — je länger die Leitung, desto mehr geht verloren.\n\nEs gibt drei Sorten, und sie unterscheiden sich:\n• Zinn — schmal (8 EU/t), aber nahezu verlustfrei: für Solarfarmen\n• Kupfer — das universelle Arbeitstier (12 EU/t)\n• Gold — das breiteste (48 EU/t), bei höherem Verlust\n\nMische keine Sorten in einer Leitung: Das gesamte Netz richtet sich nach dem stärksten Kabel darin, samt dessen Verlust."
             }
           ]
         }
@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "Wassermühle",
-              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
+              "text": "Ein passiver LV-Generator — erzeugt EU aus fließendem Wasser (einer Strömung) daneben, ohne Brennstoff oder Tanks."
             },
             {
               "type": "stats",
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "Isoliertes Kupferkabel",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Isoliertes Kupferkabel",
-              "text": "Ein LV-Kupferkabel, ummantelt mit Wolle — für sichere Nachbarschaft und enge Verkabelung neben Maschinen."
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "Werte",
               "lines": [
-                "Energie: ≤32 EU/Paket"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "Isoliertes Zinnkabel",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Isoliertes Zinnkabel",
-              "text": "Ein LV-Zinnkabel, ummantelt mit Wolle — das günstigste isolierte Kabel für sichere Nachbarschaft."
             },
             {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Energie: ≤32 EU/Paket"
-              ]
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "Werte",
               "lines": [
                 "Energie: ≤32 EU/Paket",
-                "Buffer: 12 EU"
+                "Puffer: 12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "Zinnkabel",
-              "text": "Das günstigste LV-Kabel — für dünne, schwache Leitungen zu einzelnen Maschinen und schwachen Generatoren."
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "Werte",
               "lines": [
-                "Energie: ≤32 EU/Paket"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "Sägewerk",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sägewerk",
+              "text": "Sägt jedes Holz zu Brettern, Stöcken, Stufen oder Treppen — mit höherer Ausbeute als von Hand. Vier umschaltbare Modi, läuft mit EU."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 160 EU/Vorgang",
+                "Puffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -956,14 +1016,14 @@
         },
         {
           "id": "gold_chest",
-          "title": "Gold Chest",
+          "title": "Goldtruhe",
           "icon": "alaindustrial:gold_chest",
           "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Chest",
-              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+              "title": "Goldtruhe",
+              "text": "Eine Truhe mit 54 Plätzen — die Stufe über Silber (eine Reihe mehr), mit 3D-Modell und animiertem Deckel. Benötigt keine Energie."
             },
             {
               "type": "recipe",
@@ -987,14 +1047,14 @@
         },
         {
           "id": "industrial_workbench",
-          "title": "Industrial Workbench",
+          "title": "Industrielle Werkbank",
           "icon": "alaindustrial:industrial_workbench",
           "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+              "title": "Industrielle Werkbank",
+              "text": "Der Arbeitsplatzblock des Dorfbewohners „Industrieller“ — kauft die Ressourcen des Mods gegen Smaragde. Platziere ihn neben einem arbeitslosen Dorfbewohner, und er ergreift den Beruf."
             },
             {
               "type": "recipe",
@@ -1018,19 +1078,19 @@
         },
         {
           "id": "guide_book",
-          "title": "Guide Book",
+          "title": "Handbuch",
           "icon": "alaindustrial:guide_book",
           "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Guide Book",
-              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+              "title": "Handbuch",
+              "text": "Ein Handbuch im Spiel, das jede Mechanik des Mods erklärt — wird beim ersten Betreten automatisch vergeben und mit Rechtsklick geöffnet; Reiter, Seiten, Links. Keine Energie."
             },
             {
               "type": "recipe",
               "title": "Rezept",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Formloses Handwerk",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -1234,14 +1294,14 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Water Wheel",
+          "title": "Wasserrad",
           "icon": "alaindustrial:water_mill_wheel",
           "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "title": "Wasserrad",
+              "text": "Das Rad einer Wassermühle — wird in den Radslot der Wassermühle eingesetzt; ohne es keine Erzeugung. Nutzt sich beim Erzeugen ab."
             },
             {
               "type": "recipe",
@@ -1277,7 +1337,7 @@
             {
               "type": "recipe",
               "title": "Rezept",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Formloses Handwerk",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "Windturbinenrotor",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "Windturbinenblätter — werden in den Rotor-Slot jeder T1/T2-Windturbine eingesetzt; ohne sie keine Erzeugung. Nutzen sich beim Erzeugen ab."
             },
             {
               "type": "recipe",

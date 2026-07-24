@@ -40,6 +40,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(EphemeralTestServerProvider.class)
 class EnergyLineDistributorTest {
 
+	/**
+	 * The loss rate these fixtures run at. Every case here is a copper line, and the distributor now takes
+	 * the rate as an argument rather than reading Config (MOD-219) — pinning the literal keeps the existing
+	 * expectations meaningful instead of silently tracking whatever the config default becomes.
+	 */
+	private static final double COPPER_LOSS = 0.02;
+
 	/** A fake EnergyTransactions that runs body callbacks synchronously against a shared fake txn. */
 	private static final class FakeTransactions implements EnergyTransactions {
 		final FakeTxn txn = new FakeTxn();
@@ -182,7 +189,7 @@ class EnergyLineDistributorTest {
 				new EnergyLineDistributor.LiveConsumer(consumerPos, consumer, 1000));
 
 		EnergyLineDistributor d = line.distributor(Map.of(consumerPos, 1));
-		long moved = d.serveConsumersFromLine(consumers, 32, txns.txn, 0);
+		long moved = d.serveConsumersFromLine(consumers, 32, COPPER_LOSS, txns.txn, 0);
 
 		// packetCap = 32 caps each consumer's per-tick draw, so the consumer takes 32 of cableA's 50.
 		assertEquals(32, moved, "consumer pulled up to packetCap (32) from cableA");
@@ -202,7 +209,7 @@ class EnergyLineDistributorTest {
 				new EnergyLineDistributor.LiveConsumer(consumerPos, consumer, 1000));
 
 		EnergyLineDistributor d = line.distributor(Map.of(consumerPos, 1));
-		assertEquals(0, d.serveConsumersFromLine(consumers, 32, txns.txn, 0));
+		assertEquals(0, d.serveConsumersFromLine(consumers, 32, COPPER_LOSS, txns.txn, 0));
 	}
 
 	@Test
@@ -210,7 +217,7 @@ class EnergyLineDistributorTest {
 		LineFixture line = new LineFixture();
 		line.cable(new BlockPos(0, 0, 0), 1, 100, 50);
 		EnergyLineDistributor d = line.distributor(Map.of());
-		assertEquals(0, d.serveConsumersFromLine(List.of(), 32, txns.txn, 0));
+		assertEquals(0, d.serveConsumersFromLine(List.of(), 32, COPPER_LOSS, txns.txn, 0));
 	}
 
 	// --- chargeAndPropagateLine: producer/storage partitioning (MOD-070) ---

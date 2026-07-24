@@ -3,7 +3,7 @@
   "ingredient": "#minecraft:bamboo_blocks",
   "result": {
     "id": "minecraft:stick",
-    "count": 6
+    "count": 9
   },
   "energy": 160
 }

@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "Cáp",
-              "text": "Cáp nối các khối thành một lưới điện và truyền EU. Cáp Đồng hao tổn năng lượng theo khoảng cách — đường dây càng dài, hao tổn càng nhiều. Hãy giữ đường dây ngắn, hoặc đặt kho lưu trữ gần thiết bị tiêu thụ hơn."
+              "text": "Cáp nối các khối thành lưới điện và truyền EU. Mọi loại cáp đều hao hụt theo khoảng cách — đường càng dài, hao hụt càng nhiều.\n\nCó ba loại, và chúng khác nhau:\n• Thiếc — hẹp (8 EU/t) nhưng gần như không hao: cho trang trại pin mặt trời\n• Đồng — loại phổ thông (12 EU/t)\n• Vàng — rộng nhất (48 EU/t), nhưng hao hụt cao hơn\n\nĐừng trộn các loại trên cùng một đường: cả mạng chạy theo loại cáp mạnh nhất trong đó, kể cả mức hao hụt của nó."
             }
           ]
         }
@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "Cối nước",
-              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
+              "text": "Máy phát điện LV thụ động — tạo EU từ dòng nước chảy (một dòng chảy) bên cạnh, không cần nhiên liệu hay bồn chứa."
             },
             {
               "type": "stats",
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "Cáp Đồng cách điện",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Cáp Đồng cách điện",
-              "text": "Cáp Đồng LV bọc len — để đặt kề an toàn và đi dây sát máy móc."
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "Thông số",
               "lines": [
-                "Năng lượng: ≤32 EU/gói"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "Cáp Thiếc cách điện",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Cáp Thiếc cách điện",
-              "text": "Cáp Thiếc LV bọc len — dây cách điện rẻ nhất để đặt kề an toàn."
             },
             {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Năng lượng: ≤32 EU/gói"
-              ]
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "Thông số",
               "lines": [
                 "Năng lượng: ≤32 EU/gói",
-                "Buffer: 12 EU"
+                "Bộ đệm: 12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "Cáp Thiếc",
-              "text": "Cáp LV rẻ nhất — cho những đường dây mảnh, công suất thấp tới từng máy đơn lẻ và máy phát yếu."
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "Thông số",
               "lines": [
-                "Năng lượng: ≤32 EU/gói"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "Máy cưa gỗ",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy cưa gỗ",
+              "text": "Cưa mọi loại gỗ thành ván, gậy, phiến hoặc cầu thang với sản lượng cao hơn chế tạo thủ công. Bốn chế độ chuyển đổi được, chạy bằng EU."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 160 EU/thao tác",
+                "Bộ đệm: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -956,14 +1016,14 @@
         },
         {
           "id": "gold_chest",
-          "title": "Gold Chest",
+          "title": "Rương Vàng",
           "icon": "alaindustrial:gold_chest",
           "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Chest",
-              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+              "title": "Rương Vàng",
+              "text": "Rương 54 ô — cấp trên Rương Bạc (thêm một hàng), có mô hình 3D và nắp động. Không cần năng lượng."
             },
             {
               "type": "recipe",
@@ -987,14 +1047,14 @@
         },
         {
           "id": "industrial_workbench",
-          "title": "Industrial Workbench",
+          "title": "Bàn chế tạo công nghiệp",
           "icon": "alaindustrial:industrial_workbench",
           "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+              "title": "Bàn chế tạo công nghiệp",
+              "text": "Khối nơi làm việc của dân làng Nhà công nghiệp — thu mua tài nguyên của mod bằng ngọc lục bảo. Đặt gần một dân làng chưa có nghề, người đó sẽ nhận nghề này."
             },
             {
               "type": "recipe",
@@ -1018,19 +1078,19 @@
         },
         {
           "id": "guide_book",
-          "title": "Guide Book",
+          "title": "Sách Hướng Dẫn",
           "icon": "alaindustrial:guide_book",
           "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Guide Book",
-              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+              "title": "Sách Hướng Dẫn",
+              "text": "Sách hướng dẫn trong trò chơi bao quát mọi cơ chế của mod — tự động trao cho người chơi ở lần vào đầu tiên, mở bằng chuột phải; có thẻ, trang và liên kết. Không cần năng lượng."
             },
             {
               "type": "recipe",
               "title": "Công thức",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Chế tạo không định hình",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -1234,14 +1294,14 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Water Wheel",
+          "title": "Bánh xe nước",
           "icon": "alaindustrial:water_mill_wheel",
           "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "title": "Bánh xe nước",
+              "text": "Bánh xe của cối nước — lắp vào ô bánh xe của cối nước; thiếu nó thì không phát điện. Bị hao mòn khi phát điện."
             },
             {
               "type": "recipe",
@@ -1277,7 +1337,7 @@
             {
               "type": "recipe",
               "title": "Công thức",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Chế tạo không định hình",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "Rotor gỗ",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "Cánh tuabin gió — lắp vào ô rotor của bất kỳ cối gió T1/T2 nào; thiếu nó thì không phát điện. Bị hao mòn khi phát điện."
             },
             {
               "type": "recipe",

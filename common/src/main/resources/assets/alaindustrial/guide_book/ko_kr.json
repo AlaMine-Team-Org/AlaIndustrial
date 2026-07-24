@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "케이블",
-              "text": "케이블은 블록을 전력망으로 연결하고 EU를 운반합니다. 구리 케이블은 거리에 따라 에너지를 잃습니다 — 배선이 길수록 손실이 커집니다. 배선을 짧게 유지하거나 소비자 가까이에 저장 블록을 두세요."
+              "text": "케이블은 블록을 전력망으로 연결하고 EU를 운반합니다. 모든 케이블은 거리에 따라 에너지를 잃습니다 — 선이 길수록 손실이 커집니다.\n\n등급은 세 가지이며 서로 다릅니다:\n• 주석 — 좁지만(8 EU/t) 손실이 거의 없음: 태양광 농장용\n• 구리 — 만능 주력(12 EU/t)\n• 금 — 가장 넓지만(48 EU/t) 손실이 더 큼\n\n한 라인에 등급을 섞지 마세요: 네트워크 전체가 그 안의 가장 강한 케이블을 따릅니다 — 손실까지 포함해서."
             }
           ]
         }
@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "물레방아",
-              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
+              "text": "수동형 LV 발전기 — 연료나 탱크 없이 옆으로 흐르는 물(물살)에서 EU를 생산합니다."
             },
             {
               "type": "stats",
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "절연 구리 케이블",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "절연 구리 케이블",
-              "text": "양털로 감싼 구리 LV 케이블 — 안전한 인접 배치와 기계 옆 촘촘한 배선에 사용합니다."
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "정보",
               "lines": [
-                "에너지: ≤32 EU/패킷"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "절연 주석 케이블",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "절연 주석 케이블",
-              "text": "양털로 감싼 주석 LV 케이블 — 안전한 인접 배치를 위한 가장 저렴한 절연 배선입니다."
             },
             {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "에너지: ≤32 EU/패킷"
-              ]
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "정보",
               "lines": [
                 "에너지: ≤32 EU/패킷",
-                "Buffer: 12 EU"
+                "버퍼: 12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "주석 케이블",
-              "text": "가장 저렴한 LV 케이블 — 단일 기계와 약한 발전기로 이어지는 가늘고 저전력인 배선에 사용합니다."
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "정보",
               "lines": [
-                "에너지: ≤32 EU/패킷"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "제재기",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "제재기",
+              "text": "어떤 목재든 판자, 막대기, 반 블록, 계단으로 켜며 손으로 제작할 때보다 수확량이 많습니다. 전환 가능한 네 가지 모드가 있고 EU로 작동합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 160 EU/작업",
+                "버퍼: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -956,14 +1016,14 @@
         },
         {
           "id": "gold_chest",
-          "title": "Gold Chest",
+          "title": "금 상자",
           "icon": "alaindustrial:gold_chest",
           "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Chest",
-              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+              "title": "금 상자",
+              "text": "54칸 상자 — 은보다 한 단계 위(한 줄 더 많음)이며, 3D 모델과 애니메이션 뚜껑을 갖췄습니다. 에너지가 필요 없습니다."
             },
             {
               "type": "recipe",
@@ -987,14 +1047,14 @@
         },
         {
           "id": "industrial_workbench",
-          "title": "Industrial Workbench",
+          "title": "산업 작업대",
           "icon": "alaindustrial:industrial_workbench",
           "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+              "title": "산업 작업대",
+              "text": "'실업가' 주민의 직업 블록 — 모드의 자원을 에메랄드로 사들입니다. 직업이 없는 주민 근처에 놓으면 그 직업을 갖습니다."
             },
             {
               "type": "recipe",
@@ -1018,19 +1078,19 @@
         },
         {
           "id": "guide_book",
-          "title": "Guide Book",
+          "title": "가이드북",
           "icon": "alaindustrial:guide_book",
           "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Guide Book",
-              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+              "title": "가이드북",
+              "text": "모드의 모든 메커니즘을 다루는 게임 내 안내서 — 첫 접속 시 자동으로 지급되며 우클릭으로 펼칩니다. 탭, 페이지, 링크를 갖췄습니다. 에너지가 필요 없습니다."
             },
             {
               "type": "recipe",
               "title": "레시피",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "무정형 제작",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -1234,14 +1294,14 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Water Wheel",
+          "title": "물레방아",
           "icon": "alaindustrial:water_mill_wheel",
           "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "title": "물레방아",
+              "text": "물레방아의 바퀴 — 물레방아의 바퀴 칸에 넣습니다; 없으면 발전하지 않습니다. 발전하는 동안 마모됩니다."
             },
             {
               "type": "recipe",
@@ -1277,7 +1337,7 @@
             {
               "type": "recipe",
               "title": "레시피",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "무정형 제작",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "나무 회전날",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "풍력 터빈 날개 — 모든 T1/T2 풍력 터빈의 회전날 칸에 넣습니다; 없으면 발전하지 않습니다. 발전하는 동안 마모됩니다."
             },
             {
               "type": "recipe",

@@ -1203,6 +1203,43 @@ public class NetworkGameTest {
 		helper.succeed();
 	}
 
+	/**
+	 * @implements TC-CABLE-001-NRG08 — MOD-219 per-grade throughput: gold carries strictly more EU per
+	 *     tick than copper, and tin strictly less. Since a cable's segment buffer IS its throughput
+	 *     (MOD-070), this drives the same line three times — once per grade — and compares the live EU
+	 *     buffered mid-line. Regression guard for the "recoloured copper" class: before per-cable
+	 *     parameters every grade was built with the one shared {@code cableBuffer}, so all three lines
+	 *     settled at the same number and both inequalities failed. @covers PERFORMANCE.md
+	 */
+	@GameTest(maxTicks = 260)
+	public void tcCable001Nrg08_cableGradesCarryTheirOwnBuffer(GameTestHelper helper) {
+		CoreEnergyScenarios.cableGradesCarryTheirOwnBuffer(helper);
+	}
+
+	/**
+	 * @implements TC-CABLE-003-PHY01 — MOD-219 in-place grade swap: replacing a copper cable with a gold
+	 *     one via setBlock (no break first) must rebuild the segment. All cable blocks share one
+	 *     BlockEntityType, so vanilla keeps the old entity across the swap; without the reconcile the
+	 *     segment keeps copper's tier AND copper's 12 EU buffer while everything else reports gold.
+	 *     @covers R-NRG-14
+	 */
+	@GameTest(maxTicks = 40)
+	public void tcCable003Phy01_inPlaceGradeSwapRebuildsSegment(GameTestHelper helper) {
+		CoreEnergyScenarios.inPlaceGradeSwapRebuildsSegment(helper);
+	}
+
+	/**
+	 * @implements TC-CABLE-003-NRG06 — MOD-219 mixed network: splicing ONE gold segment into an otherwise
+	 *     copper 10-cable line makes the whole line pay gold's higher loss (0.03 vs copper's 0.02), so the
+	 *     same run banks strictly less EU than the all-copper baseline. Unlike the unit tests, which rank
+	 *     the grades in isolation, this exercises the real path topology-cache → network → loss term and
+	 *     fails if the cache ever stops consulting the strongest cable. @covers R-NRG-14
+	 */
+	@GameTest(maxTicks = 220)
+	public void tcCable003Nrg06_mixedNetworkTakesLossFromStrongestCable(GameTestHelper helper) {
+		CoreEnergyScenarios.mixedNetworkTakesLossFromStrongestCable(helper);
+	}
+
 	// ── MOD-070: a storage source never charges another storage sink (no battery↔battery wash) ─────
 
 	// Both boxes FACING WEST: BB_SRC's OUT (east/back) feeds the cable; BB_DST's IN (west/front) draws it.

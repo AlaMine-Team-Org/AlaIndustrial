@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "纜線",
-              "text": "纜線將方塊連接成電網並傳輸 EU。銅纜線會隨距離損耗能量——線路越長，損耗越多。盡量縮短線路，或將儲能裝置放在用電裝置附近。"
+              "text": "纜線將方塊連成電網並輸送 EU。任何纜線都會隨距離損耗——線路越長，損失越多。\n\n共有三種，各不相同：\n• 錫纜——較窄（8 EU/t）但幾乎無損耗，適合太陽能農場\n• 銅纜——萬用主力（12 EU/t）\n• 金纜——最寬（48 EU/t），但損耗更高\n\n同一條線路不要混用：整個電網都按其中最強的纜線運行，損耗也一樣。"
             }
           ]
         }
@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "水車",
-              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
+              "text": "被動式 LV 發電機——利用旁邊流動的水（水流）產生 EU，無需燃料或儲罐。"
             },
             {
               "type": "stats",
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "絕緣銅纜線",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "絕緣銅纜線",
-              "text": "以羊毛包覆的銅 LV 纜線——可安全緊貼機器並密集佈線。"
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "數據",
               "lines": [
-                "能量：≤32 EU/封包"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "絕緣錫纜線",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "絕緣錫纜線",
-              "text": "以羊毛包覆的錫 LV 纜線——最便宜的絕緣線，可安全緊貼佈線。"
             },
             {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "能量：≤32 EU/封包"
-              ]
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "數據",
               "lines": [
                 "能量：≤32 EU/封包",
-                "Buffer: 12 EU"
+                "緩衝：12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "錫纜線",
-              "text": "最便宜的 LV 纜線——適合連接單一機器與弱發電機的細小低功率線路。"
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "數據",
               "lines": [
-                "能量：≤32 EU/封包"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "鋸木機",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "鋸木機",
+              "text": "可將任何木頭鋸成木材、木棒、半磚或階梯，產量高於手工合成。四種可切換模式，以 EU 運作。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：160 EU/操作",
+                "緩衝：800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -956,14 +1016,14 @@
         },
         {
           "id": "gold_chest",
-          "title": "Gold Chest",
+          "title": "金箱子",
           "icon": "alaindustrial:gold_chest",
           "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Chest",
-              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+              "title": "金箱子",
+              "text": "54 格的箱子——比銀箱子高一階（多一排），具有 3D 模型與開蓋動畫。不需要能量。"
             },
             {
               "type": "recipe",
@@ -987,14 +1047,14 @@
         },
         {
           "id": "industrial_workbench",
-          "title": "Industrial Workbench",
+          "title": "工業工作台",
           "icon": "alaindustrial:industrial_workbench",
           "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+              "title": "工業工作台",
+              "text": "「實業家」村民的工作方塊——以綠寶石收購模組的資源。將它放在無業村民附近，他便會從事該職業。"
             },
             {
               "type": "recipe",
@@ -1018,19 +1078,19 @@
         },
         {
           "id": "guide_book",
-          "title": "Guide Book",
+          "title": "指南書",
           "icon": "alaindustrial:guide_book",
           "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Guide Book",
-              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+              "title": "指南書",
+              "text": "涵蓋模組所有機制的遊戲內教學書——玩家首次進入時自動取得，右鍵開啟；含分頁、頁面與連結。不需要能量。"
             },
             {
               "type": "recipe",
               "title": "配方",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "無序合成",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -1234,14 +1294,14 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Water Wheel",
+          "title": "水輪",
           "icon": "alaindustrial:water_mill_wheel",
           "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "title": "水輪",
+              "text": "水車的水輪——放入水車的水輪槽中；沒有它就無法發電。發電時會磨損。"
             },
             {
               "type": "recipe",
@@ -1277,7 +1337,7 @@
             {
               "type": "recipe",
               "title": "配方",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "無序合成",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "木製轉子",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "風力渦輪機的葉片——放入任何 T1/T2 風車的轉子槽中；沒有它就無法發電。發電時會磨損。"
             },
             {
               "type": "recipe",

@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.BatteryBoxBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
+import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
 import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
@@ -86,18 +87,26 @@ public final class ModBlocks {
 	public static final Block FLUID_TANK = register(FLUID_TANK_KEY, new FluidTankBlock(props(FLUID_TANK_KEY)));
 
 	public static final ResourceKey<Block> COPPER_CABLE_KEY = key("copper_cable");
-	public static final Block COPPER_CABLE = register(COPPER_CABLE_KEY, new CableBlock(props(COPPER_CABLE_KEY)));
+	public static final Block COPPER_CABLE =
+			register(COPPER_CABLE_KEY, new CableBlock(CableType.COPPER, props(COPPER_CABLE_KEY)));
 
 	public static final ResourceKey<Block> TIN_CABLE_KEY = key("tin_cable");
-	public static final Block TIN_CABLE = register(TIN_CABLE_KEY, new CableBlock(props(TIN_CABLE_KEY)));
+	public static final Block TIN_CABLE =
+			register(TIN_CABLE_KEY, new CableBlock(CableType.TIN, props(TIN_CABLE_KEY)));
 
+	public static final ResourceKey<Block> GOLD_CABLE_KEY = key("gold_cable");
+	public static final Block GOLD_CABLE =
+			register(GOLD_CABLE_KEY, new CableBlock(CableType.GOLD, props(GOLD_CABLE_KEY)));
+
+	// The insulated pair stays on copper's numbers: they are still hidden (MOD-010) and their niche is
+	// water resistance, not throughput — see docs/research/cable-balance-model.md §4.
 	public static final ResourceKey<Block> INSULATED_COPPER_CABLE_KEY = key("insulated_copper_cable");
 	public static final Block INSULATED_COPPER_CABLE =
-			register(INSULATED_COPPER_CABLE_KEY, new CableBlock(props(INSULATED_COPPER_CABLE_KEY)));
+			register(INSULATED_COPPER_CABLE_KEY, new CableBlock(CableType.COPPER, props(INSULATED_COPPER_CABLE_KEY)));
 
 	public static final ResourceKey<Block> INSULATED_TIN_CABLE_KEY = key("insulated_tin_cable");
 	public static final Block INSULATED_TIN_CABLE =
-			register(INSULATED_TIN_CABLE_KEY, new CableBlock(props(INSULATED_TIN_CABLE_KEY)));
+			register(INSULATED_TIN_CABLE_KEY, new CableBlock(CableType.TIN, props(INSULATED_TIN_CABLE_KEY)));
 
 	public static final ResourceKey<Block> ITEM_PIPE_KEY = key("item_pipe");
 	public static final Block ITEM_PIPE = register(ITEM_PIPE_KEY, new ItemPipeBlock(props(ITEM_PIPE_KEY)));
@@ -238,6 +247,7 @@ public final class ModBlocks {
 		ModContent.FLUID_TANK = () -> FLUID_TANK;
 		ModContent.COPPER_CABLE = () -> COPPER_CABLE;
 		ModContent.TIN_CABLE = () -> TIN_CABLE;
+		ModContent.GOLD_CABLE = () -> GOLD_CABLE;
 		ModContent.INSULATED_COPPER_CABLE = () -> INSULATED_COPPER_CABLE;
 		ModContent.INSULATED_TIN_CABLE = () -> INSULATED_TIN_CABLE;
 		ModContent.ITEM_PIPE = () -> ITEM_PIPE;

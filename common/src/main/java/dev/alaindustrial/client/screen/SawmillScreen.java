@@ -10,27 +10,30 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 /**
- * Texture-backed screen for the LV sawmill (MOD-150). Reuses the electric-furnace GUI atlas (same
- * frame, energy bar and left-to-right progress arrow — {@link ProgressMachineScreen}) and adds a row
- * of four {@link SawmillMode} buttons above the slots. Clicking a button rides the vanilla
- * container-button channel ({@code handleInventoryButtonClick}) to switch the machine's mode; the
- * active button is highlighted, and each shows a ghost item + tooltip.
+ * Texture-backed screen for the LV sawmill (MOD-150/MOD-215). Draws its own GUI atlas — same frame
+ * and energy bar as the other processing machines, but the progress sprite is a saw blade cutting
+ * left-to-right ({@link ProgressMachineScreen}) — and adds a row of four {@link SawmillMode} buttons
+ * below the slots. Clicking a button rides the vanilla container-button channel
+ * ({@code handleInventoryButtonClick}) to switch the machine's mode; the active button is
+ * highlighted, and each shows a ghost item + tooltip.
  *
- * <p>Button placement here is a first pass (MOD-150 open question — final layout to be tuned from
- * screenshots): a centered horizontal row in the empty band above the input/arrow/output slots.
+ * <p>Layout (MOD-215, closing the MOD-150 open question): the input/saw/output row sits high in the
+ * frame (slots at y=19, see {@link SawmillMenu#addMachineSlots}), which frees the band beneath it for
+ * a centered row of mode buttons — they no longer compete with the slots for the top of the panel.
  */
 public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 	private static final Identifier TEXTURE = Industrialization.id("textures/gui/container/sawmill.png");
 
-	// Reuse the electric furnace's golden progress-arrow sprite geometry (same atlas layout).
+	// Saw-blade progress sprite: the atlas holds the lit version in the service area, the unlit track
+	// is baked into the frame at the same size, on the slot row itself — between input and output.
 	private static final ProgressSpec PROGRESS = new ProgressSpec(
-			176, 44, 25, 9,  // sprite u/v/w/h
-			82, 38,           // dest x/y in the 176×166 frame
+			192, 1, 22, 12,  // sprite u/v/w/h
+			82, 20,           // dest x/y in the 176×166 frame
 			false);           // no min-1px
 
-	// Four 18×18 mode buttons in a centered row above the slots (relative to leftPos/topPos).
+	// Four 18×18 mode buttons in a centered row below the slots (relative to leftPos/topPos).
 	private static final int BUTTON_SIZE = 18;
-	private static final int BUTTON_Y = 16;
+	private static final int BUTTON_Y = 48;
 	private static final int BUTTON_X0 = 52;
 
 	private static final int COLOR_BG = 0xFF2B2B2B;

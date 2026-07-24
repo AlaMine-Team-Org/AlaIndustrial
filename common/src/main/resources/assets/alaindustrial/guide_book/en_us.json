@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "Cables",
-              "text": "Cables join blocks into a power grid and carry EU. The copper cable loses energy over distance — the longer the run, the more is lost. Keep runs short, or place storage closer to the consumer."
+              "text": "Cables join blocks into a power grid and carry EU. Every cable loses energy over distance — the longer the run, the more is lost.\n\nThere are three grades, and they differ:\n• Tin — narrow (8 EU/t) but nearly lossless: for solar farms\n• Copper — the universal workhorse (12 EU/t)\n• Gold — the widest (48 EU/t), at a higher loss\n\nDo not mix grades on one line: the whole network runs on the strongest cable in it, including its loss."
             }
           ]
         }
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "Insulated Copper Cable",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Insulated Copper Cable",
-              "text": "A copper LV cable wrapped in wool — for safe adjacency and tight wiring next to machines."
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "Stats",
               "lines": [
-                "Energy: ≤32 EU/packet"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "Insulated Tin Cable",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Insulated Tin Cable",
-              "text": "A tin LV cable wrapped in wool — the cheapest insulated wire for safe adjacency."
             },
             {
-              "type": "stats",
-              "title": "Stats",
-              "lines": [
-                "Energy: ≤32 EU/packet"
-              ]
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "Stats",
               "lines": [
                 "Energy: ≤32 EU/packet",
-                "Buffer: 12 EU"
+                "Buffer: 12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "Tin Cable",
-              "text": "The cheapest LV cable — for thin, low-power lines to single machines and weak generators."
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "Stats",
               "lines": [
-                "Energy: ≤32 EU/packet"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "Sawmill",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sawmill",
+              "text": "Saws any wood into planks, sticks, slabs or stairs at a higher yield than hand-crafting. Four switchable modes, runs on EU."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 160 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -1241,7 +1301,7 @@
             {
               "type": "text",
               "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating."
             },
             {
               "type": "recipe",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "Wooden Rotor",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating."
             },
             {
               "type": "recipe",

@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "Kable",
-              "text": "Kable łączą bloki w sieć energetyczną i przesyłają EU. Kabel miedziany traci energię na dystansie — im dłuższa trasa, tym większa strata. Prowadź krótkie trasy albo stawiaj magazyn bliżej odbiorcy."
+              "text": "Kable łączą bloki w sieć energetyczną i przesyłają EU. Każdy kabel traci energię na dystansie — im dłuższa linia, tym większe straty.\n\nSą trzy rodzaje i różnią się:\n• Cynowy — wąski (8 EU/t), ale niemal bezstratny: do farm słonecznych\n• Miedziany — uniwersalny roboczy (12 EU/t)\n• Złoty — najszerszy (48 EU/t), ale o większych stratach\n\nNie mieszaj rodzajów w jednej linii: cała sieć działa według najmocniejszego kabla w niej, wraz z jego stratami."
             }
           ]
         }
@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "Młyn wodny",
-              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
+              "text": "Pasywny generator LV — wytwarza EU z płynącej wody (nurtu) obok, bez paliwa i zbiorników."
             },
             {
               "type": "stats",
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "Izolowany kabel miedziany",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Izolowany kabel miedziany",
-              "text": "Miedziany kabel LV owinięty wełną — do bezpiecznego sąsiedztwa i ciasnego okablowania przy maszynach."
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: ≤32 EU/pakiet"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "Izolowany kabel cynowy",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Izolowany kabel cynowy",
-              "text": "Cynowy kabel LV owinięty wełną — najtańszy izolowany przewód do bezpiecznego sąsiedztwa."
             },
             {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Energia: ≤32 EU/pakiet"
-              ]
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "Statystyki",
               "lines": [
                 "Energia: ≤32 EU/pakiet",
-                "Buffer: 12 EU"
+                "Bufor: 12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "Kabel cynowy",
-              "text": "Najtańszy kabel LV — do cienkich, słabych linii do pojedynczych maszyn i słabych generatorów."
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Energia: ≤32 EU/pakiet"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "Tartak",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tartak",
+              "text": "Tnie dowolne drewno na deski, patyki, płyty lub schody z wydajnością wyższą niż wyrób ręczny. Cztery przełączane tryby, działa na EU."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 160 EU/op",
+                "Bufor: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -956,14 +1016,14 @@
         },
         {
           "id": "gold_chest",
-          "title": "Gold Chest",
+          "title": "Złota skrzynia",
           "icon": "alaindustrial:gold_chest",
           "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Chest",
-              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+              "title": "Złota skrzynia",
+              "text": "Skrzynia na 54 sloty — poziom wyżej niż srebrna (o rząd większa), z modelem 3D i animowanym wiekiem. Nie wymaga energii."
             },
             {
               "type": "recipe",
@@ -987,14 +1047,14 @@
         },
         {
           "id": "industrial_workbench",
-          "title": "Industrial Workbench",
+          "title": "Warsztat przemysłowy",
           "icon": "alaindustrial:industrial_workbench",
           "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+              "title": "Warsztat przemysłowy",
+              "text": "Blok miejsca pracy osadnika Przemysłowca — skupuje surowce moda za szmaragdy. Postaw go obok bezrobotnego osadnika, a ten przyjmie zawód."
             },
             {
               "type": "recipe",
@@ -1018,19 +1078,19 @@
         },
         {
           "id": "guide_book",
-          "title": "Guide Book",
+          "title": "Przewodnik",
           "icon": "alaindustrial:guide_book",
           "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Guide Book",
-              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+              "title": "Przewodnik",
+              "text": "Poradnik w grze omawiający każdą mechanikę moda — przyznawany automatycznie przy pierwszym wejściu, otwierany prawym przyciskiem; zakładki, strony, odnośniki. Bez energii."
             },
             {
               "type": "recipe",
               "title": "Przepis",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Wytwarzanie bez wzoru",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -1234,14 +1294,14 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Water Wheel",
+          "title": "Koło wodne",
           "icon": "alaindustrial:water_mill_wheel",
           "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "title": "Koło wodne",
+              "text": "Koło młyna wodnego — wkładane do slotu koła w młynie wodnym; bez niego nie ma produkcji. Zużywa się podczas produkcji."
             },
             {
               "type": "recipe",
@@ -1277,7 +1337,7 @@
             {
               "type": "recipe",
               "title": "Przepis",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Wytwarzanie bez wzoru",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "Wirnik wiatraka",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "Łopaty wiatraka — umieszczane w slocie wirnika dowolnego wiatraka T1/T2; bez nich nie ma produkcji. Zużywają się podczas produkcji."
             },
             {
               "type": "recipe",

@@ -1,7 +1,10 @@
 package dev.alaindustrial.block;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.alaindustrial.block.entity.CableBlockEntity;
+import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.registry.ModCriteria;
 import java.util.EnumMap;
@@ -45,7 +48,28 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * specific block type, so any future half-block machine connects the same way.
  */
 public class CableBlock extends AbstractMachineBlock {
-	public static final MapCodec<CableBlock> CODEC = simpleCodec(CableBlock::new);
+	/**
+	 * Carries the grade's balance numbers (throughput/packet cap/loss) — see {@link CableType}. Cannot use
+	 * {@code simpleCodec} like the other blocks, because that requires a lone {@code (Properties)}
+	 * constructor; the extra field takes the same {@code RecordCodecBuilder} + {@code propertiesCodec()}
+	 * shape already used by {@link EnrichedUraniumTorchBlock}.
+	 */
+	private static final Codec<CableType> TYPE_CODEC = Codec.STRING.xmap(
+			s -> {
+				for (CableType t : CableType.values()) {
+					if (t.serializedName().equals(s)) {
+						return t;
+					}
+				}
+				return CableType.COPPER;
+			},
+			CableType::serializedName);
+
+	public static final MapCodec<CableBlock> CODEC = RecordCodecBuilder.mapCodec(
+			i -> i.group(TYPE_CODEC.fieldOf("cable_type").forGetter(CableBlock::type), propertiesCodec())
+					.apply(i, CableBlock::new));
+
+	private final CableType type;
 
 	/** Collision/outline that matches the model: a 6px core plus an arm toward each connection. */
 	private static final VoxelShape CORE = Block.box(5, 5, 5, 11, 11, 11);
@@ -108,8 +132,9 @@ public class CableBlock extends AbstractMachineBlock {
 		return LOW_FLAGS.get(dir);
 	}
 
-	public CableBlock(Properties properties) {
+	public CableBlock(CableType type, Properties properties) {
 		super(properties);
+		this.type = type;
 		BlockState state = stateDefinition.any();
 		for (BooleanProperty prop : PipeBlock.PROPERTY_BY_DIRECTION.values()) {
 			state = state.setValue(prop, false);
@@ -123,6 +148,26 @@ public class CableBlock extends AbstractMachineBlock {
 	@Override
 	protected MapCodec<? extends BaseEntityBlock> codec() {
 		return CODEC;
+	}
+
+	/**
+	 * This cable's grade — the single place its throughput/packet cap/loss come from. Read by
+	 * {@link CableBlockEntity} at construction (via {@link #typeOf(BlockState)}) so the block entity is
+	 * built with the right buffer and tier, and by {@code MachineTooltips} to show per-grade numbers.
+	 */
+	public CableType type() {
+		return type;
+	}
+
+	/**
+	 * The cable grade of the block in {@code state}, or {@link CableType#COPPER} when {@code state} is not
+	 * a cable. The fallback is not expected in practice — {@link CableBlockEntity} is only ever created by
+	 * {@link #newBlockEntity} — but a block entity must never fail to construct: a
+	 * corrupted/mismatched chunk palette entry would otherwise throw during world load. Copper is the
+	 * right fallback because it is the historical behaviour every cable had before MOD-219.
+	 */
+	public static CableType typeOf(BlockState state) {
+		return state.getBlock() instanceof CableBlock cable ? cable.type : CableType.COPPER;
 	}
 
 	@Override

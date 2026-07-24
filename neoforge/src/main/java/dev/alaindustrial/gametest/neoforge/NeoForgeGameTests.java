@@ -120,6 +120,13 @@ public final class NeoForgeGameTests {
 				CoreEnergyScenarios::lineAccumulatesInSegments);
 		registerTest(event, "break_retains_at_source", 100, true,
 				CoreEnergyScenarios::breakRetainsAtSource);
+		// MOD-219: each cable grade carries its own segment buffer, so gold > copper > tin in throughput.
+		registerTest(event, "cable_grades_carry_their_own_buffer", 260, true,
+				CoreEnergyScenarios::cableGradesCarryTheirOwnBuffer);
+		registerTest(event, "mixed_network_takes_loss_from_strongest_cable", 220, true,
+				CoreEnergyScenarios::mixedNetworkTakesLossFromStrongestCable);
+		registerTest(event, "in_place_grade_swap_rebuilds_segment", 40, true,
+				CoreEnergyScenarios::inPlaceGradeSwapRebuildsSegment);
 		registerTest(event, "storage_does_not_charge_storage", 60, true,
 				CoreEnergyScenarios::storageDoesNotChargeStorage);
 		registerTest(event, "source_fills_cable_without_consumer", 40, true,

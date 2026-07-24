@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "केबल",
-              "text": "केबल ब्लॉकों को एक पावर ग्रिड में जोड़ती हैं और EU ले जाती हैं। तांबे की केबल दूरी के साथ ऊर्जा खोती है — लाइन जितनी लंबी, उतनी अधिक हानि। लाइनें छोटी रखें, या भंडारण को उपभोक्ता के पास रखें।"
+              "text": "केबल ब्लॉकों को बिजली के नेटवर्क में जोड़ती हैं और EU पहुँचाती हैं। हर केबल दूरी के साथ ऊर्जा खोती है — लाइन जितनी लंबी, नुकसान उतना ज़्यादा।\n\nतीन श्रेणियाँ हैं, और वे अलग-अलग हैं:\n• टिन — पतली (8 EU/t) पर लगभग हानिरहित: सौर फ़ार्म के लिए\n• तांबा — सर्वोपयोगी (12 EU/t)\n• सोना — सबसे चौड़ी (48 EU/t), पर हानि अधिक\n\nएक ही लाइन में श्रेणियाँ न मिलाएँ: पूरा नेटवर्क उसमें मौजूद सबसे मज़बूत केबल के अनुसार चलता है — उसकी हानि सहित।"
             }
           ]
         }
@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "जल चक्की",
-              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
+              "text": "एक निष्क्रिय LV जेनरेटर — बगल में बहते पानी (धारा) से EU बनाता है, बिना ईंधन या टैंक के।"
             },
             {
               "type": "stats",
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "रोधित तांबे की केबल",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "रोधित तांबे की केबल",
-              "text": "ऊन में लिपटी तांबे की LV केबल — सुरक्षित निकटता और मशीनों के पास सघन वायरिंग के लिए।"
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "आँकड़े",
               "lines": [
-                "ऊर्जा: ≤32 EU/पैकेट"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "रोधित टिन की केबल",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "रोधित टिन की केबल",
-              "text": "ऊन में लिपटी टिन की LV केबल — सुरक्षित निकटता के लिए सबसे सस्ता रोधित तार।"
             },
             {
-              "type": "stats",
-              "title": "आँकड़े",
-              "lines": [
-                "ऊर्जा: ≤32 EU/पैकेट"
-              ]
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "आँकड़े",
               "lines": [
                 "ऊर्जा: ≤32 EU/पैकेट",
-                "Buffer: 12 EU"
+                "बफ़र: 12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "टिन की केबल",
-              "text": "सबसे सस्ती LV केबल — एकल मशीनों और कमज़ोर जेनरेटरों तक पतली, कम-शक्ति वाली लाइनों के लिए।"
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "आँकड़े",
               "lines": [
-                "ऊर्जा: ≤32 EU/पैकेट"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "आरा मशीन",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "आरा मशीन",
+              "text": "किसी भी लकड़ी को तख्तों, डंडों, पटियों या सीढ़ियों में चीरती है, वह भी हाथ से बनाने की तुलना में अधिक उपज के साथ। चार बदले जा सकने वाले मोड, EU पर चलती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 160 EU/संचालन",
+                "बफ़र: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -956,14 +1016,14 @@
         },
         {
           "id": "gold_chest",
-          "title": "Gold Chest",
+          "title": "गोल्ड चेस्ट",
           "icon": "alaindustrial:gold_chest",
           "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Chest",
-              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+              "title": "गोल्ड चेस्ट",
+              "text": "एक 54-स्लॉट संदूक — चाँदी से ऊपर की श्रेणी (एक पंक्ति अधिक), 3D मॉडल और एनिमेटेड ढक्कन के साथ। कोई ऊर्जा नहीं चाहिए।"
             },
             {
               "type": "recipe",
@@ -987,14 +1047,14 @@
         },
         {
           "id": "industrial_workbench",
-          "title": "Industrial Workbench",
+          "title": "औद्योगिक कार्यमेज़",
           "icon": "alaindustrial:industrial_workbench",
           "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+              "title": "औद्योगिक कार्यमेज़",
+              "text": "उद्योगपति ग्रामवासी का कार्यस्थल ब्लॉक — मॉड के संसाधनों को पन्ने देकर खरीदता है। इसे किसी बेरोज़गार ग्रामवासी के पास रखें और वह यह पेशा अपना लेगा।"
             },
             {
               "type": "recipe",
@@ -1018,19 +1078,19 @@
         },
         {
           "id": "guide_book",
-          "title": "Guide Book",
+          "title": "गाइड बुक",
           "icon": "alaindustrial:guide_book",
           "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Guide Book",
-              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+              "title": "गाइड बुक",
+              "text": "मॉड की हर क्रियाविधि समझाने वाली इन-गेम मार्गदर्शक पुस्तक — खिलाड़ी के पहली बार शामिल होने पर अपने आप मिलती है और दाएँ क्लिक से खुलती है; टैब, पृष्ठ, कड़ियाँ। कोई ऊर्जा नहीं।"
             },
             {
               "type": "recipe",
               "title": "रेसिपी",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -1234,14 +1294,14 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Water Wheel",
+          "title": "जलचक्र",
           "icon": "alaindustrial:water_mill_wheel",
           "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "title": "जलचक्र",
+              "text": "जल चक्की का पहिया — जल चक्की के पहिया स्लॉट में रखा जाता है; इसके बिना कोई उत्पादन नहीं। उत्पादन के दौरान घिसता है।"
             },
             {
               "type": "recipe",
@@ -1277,7 +1337,7 @@
             {
               "type": "recipe",
               "title": "रेसिपी",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "लकड़ी का रोटर",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "पवन चक्की के ब्लेड — किसी भी T1/T2 पवन चक्की के रोटर स्लॉट में रखे जाते हैं; इसके बिना कोई उत्पादन नहीं। उत्पादन के दौरान घिसते हैं।"
             },
             {
               "type": "recipe",

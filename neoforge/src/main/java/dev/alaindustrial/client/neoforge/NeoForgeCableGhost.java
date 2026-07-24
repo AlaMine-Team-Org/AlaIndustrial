@@ -61,6 +61,28 @@ public final class NeoForgeCableGhost {
 		ARMS.put(Direction.EAST, new AABB(11 / 16.0, 5 / 16.0, 5 / 16.0, 1.0, 11 / 16.0, 11 / 16.0));
 	}
 
+	/**
+	 * Low-arm boxes for a horizontal connection to a half-block neighbour, matching
+	 * {@code CableBlock.ARMS_LOW} exactly (two boxes each: the bridge at cable height plus the drop that
+	 * hugs the slab's side). Without these the ghost drew the centred arm floating over a solar panel and
+	 * the block then snapped to the low shape once placed — the very mismatch MOD-195 fixed in the models.
+	 */
+	private static final Map<Direction, AABB[]> ARMS_LOW = new EnumMap<>(Direction.class);
+	static {
+		ARMS_LOW.put(Direction.NORTH, new AABB[] {
+			new AABB(5 / 16.0, 5 / 16.0, 2 / 16.0, 11 / 16.0, 11 / 16.0, 5 / 16.0),
+			new AABB(5 / 16.0, 2 / 16.0, 0, 11 / 16.0, 8 / 16.0, 2 / 16.0)});
+		ARMS_LOW.put(Direction.SOUTH, new AABB[] {
+			new AABB(5 / 16.0, 5 / 16.0, 11 / 16.0, 11 / 16.0, 11 / 16.0, 14 / 16.0),
+			new AABB(5 / 16.0, 2 / 16.0, 14 / 16.0, 11 / 16.0, 8 / 16.0, 1.0)});
+		ARMS_LOW.put(Direction.WEST, new AABB[] {
+			new AABB(2 / 16.0, 5 / 16.0, 5 / 16.0, 5 / 16.0, 11 / 16.0, 11 / 16.0),
+			new AABB(0, 2 / 16.0, 5 / 16.0, 2 / 16.0, 8 / 16.0, 11 / 16.0)});
+		ARMS_LOW.put(Direction.EAST, new AABB[] {
+			new AABB(11 / 16.0, 5 / 16.0, 5 / 16.0, 14 / 16.0, 11 / 16.0, 11 / 16.0),
+			new AABB(14 / 16.0, 2 / 16.0, 5 / 16.0, 1.0, 8 / 16.0, 11 / 16.0)});
+	}
+
 	private NeoForgeCableGhost() {
 	}
 
@@ -105,7 +127,16 @@ public final class NeoForgeCableGhost {
 			for (Direction dir : Direction.values()) {
 				BooleanProperty prop = PipeBlock.PROPERTY_BY_DIRECTION.get(dir);
 				if (ghost.getValue(prop)) {
-					Gizmos.cuboid(ARMS.get(dir).move(pos), STYLE);
+					// Mirror the block's own shape choice: a horizontal arm toward a half-block neighbour
+					// drops to ARMS_LOW, so the ghost must too (MOD-195/MOD-219).
+					BooleanProperty lowProp = CableBlock.lowFlagFor(dir);
+					if (lowProp != null && ghost.getValue(lowProp)) {
+						for (AABB low : ARMS_LOW.get(dir)) {
+							Gizmos.cuboid(low.move(pos), STYLE);
+						}
+					} else {
+						Gizmos.cuboid(ARMS.get(dir).move(pos), STYLE);
+					}
 				}
 			}
 		}

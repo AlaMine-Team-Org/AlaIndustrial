@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
+import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
@@ -303,9 +304,13 @@ public final class CoreEnergyScenarios {
 	private static final BlockPos FLOW_MAC = new BlockPos(7, 2, 1);
 
 	private static void buildFlowLine(GameTestHelper helper) {
+		buildFlowLine(helper, ModContent.COPPER_CABLE.get());
+	}
+
+	private static void buildFlowLine(GameTestHelper helper, net.minecraft.world.level.block.Block cable) {
 		helper.setBlock(FLOW_GEN, ModContent.GENERATOR.get());
 		for (BlockPos c : FLOW_CABLES) {
-			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+			helper.setBlock(c, cable);
 		}
 		helper.setBlock(FLOW_MAC, ModContent.MACERATOR.get());
 		if (be(helper, FLOW_GEN) instanceof GeneratorBlockEntity gen) {
@@ -357,6 +362,71 @@ public final class CoreEnergyScenarios {
 			}
 		}
 		helper.succeed();
+	}
+
+	/**
+	 * MOD-219 per-grade throughput: a gold line genuinely carries more per tick than a copper one, and a
+	 * tin line carries less. The cable's segment buffer IS its throughput (MOD-070), so this asserts the
+	 * live buffered EU mid-line — the thing a player feels as "thicker wire" — rather than the packet cap,
+	 * which would have stayed a paper number.
+	 *
+	 * <p>Regression guard for the "recoloured copper" bug class: before per-cable parameters, all three
+	 * grades were built with {@code Config.cableBuffer}, so every line here would settle at the same 12 EU
+	 * and the two inequalities below would both fail.
+	 */
+	public static void cableGradesCarryTheirOwnBuffer(GameTestHelper helper) {
+		long gold = fillAndReadMidCable(helper, ModContent.GOLD_CABLE.get());
+		long copper = fillAndReadMidCable(helper, ModContent.COPPER_CABLE.get());
+		long tin = fillAndReadMidCable(helper, ModContent.TIN_CABLE.get());
+
+		if (gold <= copper) {
+			helper.fail("gold cable buffered " + gold + " EU vs copper's " + copper
+					+ " — the MV cable must carry strictly more, otherwise its niche is fiction");
+		}
+		if (tin >= copper) {
+			helper.fail("tin cable buffered " + tin + " EU vs copper's " + copper
+					+ " — tin is meant to be the narrow grade");
+		}
+		// Each grade must also respect its own per-segment ceiling, not some shared one.
+		if (gold > CableType.GOLD.segmentBuffer() || copper > CableType.COPPER.segmentBuffer()
+				|| tin > CableType.TIN.segmentBuffer()) {
+			helper.fail("a cable exceeded its grade's segment buffer (gold=" + gold + "/"
+					+ CableType.GOLD.segmentBuffer() + ", copper=" + copper + "/"
+					+ CableType.COPPER.segmentBuffer() + ", tin=" + tin + "/"
+					+ CableType.TIN.segmentBuffer() + ")");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Build a generator + cable line out of {@code cable} with NO consumer, run it to saturation, and read
+	 * the middle segment.
+	 *
+	 * <p>The missing consumer is the point: a generator fills the wires to capacity even with nothing
+	 * downstream, so the segment settles at the grade's own buffer. With a macerator on the end every
+	 * grade instead settles at the generator's 8 EU/t output — measuring the source, not the wire.
+	 */
+	private static long fillAndReadMidCable(GameTestHelper helper, net.minecraft.world.level.block.Block cable) {
+		helper.setBlock(FLOW_GEN, ModContent.GENERATOR.get());
+		for (BlockPos c : FLOW_CABLES) {
+			helper.setBlock(c, cable);
+		}
+		if (be(helper, FLOW_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+		}
+		// Enough ticks to both burn the EU (8 EU/t) and walk it down the line (~1 hop/tick): the widest
+		// grade needs 5 segments × 48 EU = 240 EU to saturate.
+		driveFlow(helper, 120);
+		long mid = cableAmount(helper, FLOW_CABLES[2]);
+		// Tear the line down so the next grade starts from a clean network rather than inheriting this
+		// one's cables (the topology cache keys off the block entities that are actually present).
+		helper.setBlock(FLOW_GEN, Blocks.AIR);
+		for (BlockPos c : FLOW_CABLES) {
+			helper.setBlock(c, Blocks.AIR);
+		}
+		helper.setBlock(FLOW_MAC, Blocks.AIR);
+		NetworkManager.tickAll(helper.getLevel());
+		return mid;
 	}
 
 	/**
@@ -742,6 +812,127 @@ public final class CoreEnergyScenarios {
 			helper.fail("delivered EU does not match the loss model: expected ~" + expected + ", got " + got);
 		}
 		helper.succeed();
+	}
+
+	/**
+	 * MOD-219 in-place grade swap: replacing a copper cable with a gold one WITHOUT breaking it first
+	 * (a {@code /setblock}, {@code /fill}, structure or third-party world edit) must leave a segment that
+	 * actually behaves as gold.
+	 *
+	 * <p>All five cable blocks share one {@code BlockEntityType}, which raises the question of whether the
+	 * old entity survives such a swap and keeps the previous grade's numbers. Measured on 26.2 it does
+	 * NOT: the entity is rebuilt and the segment reports gold's buffer immediately. This test pins that
+	 * down — it is a guard on behaviour the cable ladder depends on but does not itself control, so it
+	 * fails loudly if a future version (or a change to how these blocks are registered) starts reusing the
+	 * entity and silently leaves a gold cable transporting on copper's throughput.
+	 */
+	public static void inPlaceGradeSwapRebuildsSegment(GameTestHelper helper) {
+		BlockPos pos = new BlockPos(2, 2, 1);
+		helper.setBlock(pos, ModContent.COPPER_CABLE.get());
+		tick(helper, be(helper, pos));
+		NetworkManager.tickAll(helper.getLevel());
+		long copperCapacity = be(helper, pos) instanceof CableBlockEntity c
+				? c.getEnergyStorage().getCapacity() : -1;
+
+		// Swap the block in place — no break, no air in between.
+		helper.setBlock(pos, ModContent.GOLD_CABLE.get());
+		tick(helper, be(helper, pos));
+		NetworkManager.tickAll(helper.getLevel());
+
+		if (!(be(helper, pos) instanceof CableBlockEntity swapped)) {
+			helper.fail("no cable block entity after the in-place swap");
+			return;
+		}
+		if (swapped.cableType() != CableType.GOLD) {
+			helper.fail("after swapping copper -> gold in place the segment still reports "
+					+ swapped.cableType() + " — the network would transport on the wrong grade");
+		}
+		long goldCapacity = swapped.getEnergyStorage().getCapacity();
+		if (goldCapacity != CableType.GOLD.segmentBuffer()) {
+			helper.fail("segment buffer stayed at " + goldCapacity + " EU after the swap (copper was "
+					+ copperCapacity + ", gold must be " + CableType.GOLD.segmentBuffer()
+					+ ") — the cable looks gold but still carries copper's throughput");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-219 mixed network: a single gold segment spliced into an otherwise copper line re-tariffs the
+	 * WHOLE network — it is governed by the strongest cable present, not by the majority or by the
+	 * segments the consumer happens to touch.
+	 *
+	 * <p><b>Observable effect: delivery goes DOWN.</b> The strongest cable supplies both numbers and they
+	 * pull in opposite directions — gold raises the packet cap (32 → 128 EU/t) but also raises the loss
+	 * (0.02 → 0.03/block). Measured end-to-end over ten cables the higher toll wins: the spliced line
+	 * banks ~10% less than the all-copper baseline (400 → 360 EU on both loaders). The raised cap buys
+	 * nothing here because the flow is already bounded by the copper segments' 12 EU buffers, not by the
+	 * cap — which is exactly why a player must run gold end-to-end rather than splice one segment in.
+	 *
+	 * <p>This is the scenario the unit tests cannot reach: {@code CableTypeTest} only ranks the grades in
+	 * isolation and would stay green even if {@code EnergyTopologyCache} stopped consulting
+	 * {@link CableType#strongerThan} altogether. Here the whole path — topology cache → network → packet
+	 * cap — is under test: if the network ignored the gold segment, both lines would deliver exactly the
+	 * same amount, which is precisely how this test fails when the rule is reverted.
+	 */
+	public static void mixedNetworkTakesLossFromStrongestCable(GameTestHelper helper) {
+		// Both lines are built in cells no other scenario touches, at two distinct heights well above the
+		// shared y=2 working plane. Two reasons, both learned the hard way here:
+		//   1. Rebuilding the second line in the SAME cells left NeoForge still seeing the first network
+		//      (identical delivery both runs) — block-entity removal and the topology rebuild do not settle
+		//      inside this synthetic tick loop.
+		//   2. Reusing the standard LOSS_* plane made the baseline flap between 400 and 200 EU on NeoForge,
+		//      where every scenario shares one ServerLevel and mod021LossOverTenCables owns those very cells.
+		long allCopper = runLossLine(helper, 28, -1);
+		long withOneGold = runLossLine(helper, 32, LOSS_CABLES.length / 2);
+
+		if (allCopper <= 0 || withOneGold <= 0) {
+			helper.fail("no EU delivered (copper=" + allCopper + ", mixed=" + withOneGold
+					+ ") — the fixture is broken, not the strongest-cable rule");
+		}
+		if (withOneGold >= allCopper) {
+			helper.fail("one gold segment did not govern the line: copper-only delivered " + allCopper
+					+ " EU, the mixed line delivered " + withOneGold
+					+ " — expected strictly less, since the network must take the strongest cable's loss"
+					+ " (0.03 vs 0.02). Equal numbers mean the gold segment was ignored entirely.");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Build the 10-cable loss line {@code dy} blocks above the standard one, drive it for a fixed number of
+	 * ticks and return the EU banked by its box. {@code goldIndex} &gt;= 0 makes that one cable gold; -1
+	 * keeps the line all copper. Each call must use a distinct {@code dy} — see the caller for why.
+	 */
+	private static long runLossLine(GameTestHelper helper, int dy, int goldIndex) {
+		BlockPos gen = LOSS_GEN.above(dy);
+		BlockPos box = LOSS_BOX.above(dy);
+		BlockPos[] cables = new BlockPos[LOSS_CABLES.length];
+		for (int i = 0; i < LOSS_CABLES.length; i++) {
+			cables[i] = LOSS_CABLES[i].above(dy);
+		}
+		helper.setBlock(gen, ModContent.GENERATOR.get());
+		for (int i = 0; i < cables.length; i++) {
+			helper.setBlock(cables[i],
+					i == goldIndex ? ModContent.GOLD_CABLE.get() : ModContent.COPPER_CABLE.get());
+		}
+		helper.setBlock(box, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.NORTH));
+		// Over-charge the generator and empty the box so the flow is bounded by the line, not the source.
+		if (be(helper, gen) instanceof GeneratorBlockEntity g) {
+			g.getEnergyStorage().amount = EnergyTier.LV.maxVoltage() * 200;
+		}
+		if (be(helper, box) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().amount = 0;
+		}
+		for (int i = 0; i < 50; i++) {
+			tick(helper, be(helper, gen));
+			for (BlockPos c : cables) {
+				tick(helper, be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, box));
+		}
+		return be(helper, box) instanceof BatteryBoxBlockEntity bb ? bb.getEnergyStorage().getAmount() : -1;
 	}
 
 	// ── scenario 4b: ring network — two arms joined by a closing cable merge on tick 0 (MOD-025) ────

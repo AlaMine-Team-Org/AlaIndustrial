@@ -162,6 +162,7 @@ public final class ModItems {
 	public static final BlockItem DAYLIGHT_SOLAR_PANEL_ITEM = blockItem("daylight_solar_panel", ModBlocks.DAYLIGHT_SOLAR_PANEL);
 	public static final BlockItem COPPER_CABLE_ITEM = blockItem("copper_cable", ModBlocks.COPPER_CABLE);
 	public static final BlockItem TIN_CABLE_ITEM = blockItem("tin_cable", ModBlocks.TIN_CABLE);
+	public static final BlockItem GOLD_CABLE_ITEM = blockItem("gold_cable", ModBlocks.GOLD_CABLE);
 	public static final BlockItem INSULATED_COPPER_CABLE_ITEM = blockItem("insulated_copper_cable", ModBlocks.INSULATED_COPPER_CABLE);
 	public static final BlockItem INSULATED_TIN_CABLE_ITEM = blockItem("insulated_tin_cable", ModBlocks.INSULATED_TIN_CABLE);
 	// MOD-108: its own BlockItem subclass so the pipe can carry a tooltip (plain hint + Shift for the
@@ -554,6 +555,7 @@ public final class ModItems {
 		ModContent.DAYLIGHT_SOLAR_PANEL_ITEM = () -> DAYLIGHT_SOLAR_PANEL_ITEM;
 		ModContent.COPPER_CABLE_ITEM = () -> COPPER_CABLE_ITEM;
 		ModContent.TIN_CABLE_ITEM = () -> TIN_CABLE_ITEM;
+		ModContent.GOLD_CABLE_ITEM = () -> GOLD_CABLE_ITEM;
 		ModContent.INSULATED_COPPER_CABLE_ITEM = () -> INSULATED_COPPER_CABLE_ITEM;
 		ModContent.INSULATED_TIN_CABLE_ITEM = () -> INSULATED_TIN_CABLE_ITEM;
 		ModContent.ITEM_PIPE_ITEM = () -> ITEM_PIPE_ITEM;

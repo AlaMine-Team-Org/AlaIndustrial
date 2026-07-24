@@ -109,8 +109,8 @@ public final class MachineTooltips {
 			lines.add(tierHv());
 			lines.add(Component.translatable("tooltip.alaindustrial.teleporter_io")
 					.withStyle(ChatFormatting.GRAY));
-		} else if (block instanceof CableBlock) {
-			lines.add(tier());
+		} else if (block instanceof CableBlock cable) {
+			lines.add(cableTier(cable));
 		} else if (block instanceof SolarPanelBlock) {
 			lines.add(tier());
 			lines.add(Component.translatable("tooltip.alaindustrial.solar_chip_hint")
@@ -324,7 +324,7 @@ public final class MachineTooltips {
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.compressorDuration)));
 		} else if (block instanceof SawmillBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
-			lines.add(tt("duration_ticks", Config.scaledDuration(SawmillBlockEntity.DEFAULT_DURATION)));
+			lines.add(tt("duration_ticks", Config.scaledDuration(Config.sawmillDuration)));
 		} else if (block instanceof ExtractorBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.extractorDuration)));
@@ -333,9 +333,9 @@ public final class MachineTooltips {
 		} else if (block instanceof BatteryBoxBlock) {
 			lines.add(tt("capacity", Config.batteryBoxBuffer));
 			lines.add(tier());
-		} else if (block instanceof CableBlock) {
-			lines.add(tier());
-			lines.add(tt("buffer", Config.cableBuffer));
+		} else if (block instanceof CableBlock cable) {
+			lines.add(cableTier(cable));
+			lines.add(tt("buffer", cable.type().segmentBuffer()));
 		}
 	}
 
@@ -378,7 +378,7 @@ public final class MachineTooltips {
 			lines.add(tier());
 			lines.add(tt("buffer", Config.machineBuffer));
 			lines.add(tt("energy_per_op",
-					Config.machineEuPerTickEffective() * Config.scaledDuration(SawmillBlockEntity.DEFAULT_DURATION)));
+					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.sawmillDuration)));
 		} else if (block instanceof ExtractorBlock) {
 			lines.add(tier());
 			lines.add(tt("buffer", Config.machineBuffer));
@@ -394,8 +394,8 @@ public final class MachineTooltips {
 			lines.add(tt("buffer", Config.teleporterBuffer));
 			lines.add(Component.translatable("tooltip.alaindustrial.teleporter_io")
 					.withStyle(ChatFormatting.GRAY));
-		} else if (block instanceof CableBlock) {
-			lines.add(tt("cable_loss", cableLossPercent()));
+		} else if (block instanceof CableBlock cable) {
+			lines.add(tt("cable_loss", cableLossPercent(cable)));
 		}
 	}
 
@@ -405,11 +405,12 @@ public final class MachineTooltips {
 	}
 
 	/**
-	 * Copper-cable loss as a percent-per-block string, sourced live from {@link Config#copperCableLossPerBlock}
-	 * so the tooltip can never drift from the actual model. Locale.ROOT + trailing-zero trim yields "2".
+	 * This cable grade's loss as a percent-per-block string, sourced live from its {@link CableType} so the
+	 * tooltip can never drift from the actual model. Locale.ROOT + trailing-zero trim yields "2" for copper
+	 * and "0.6" for tin (which is why the format keeps three decimals before trimming).
 	 */
-	private static String cableLossPercent() {
-		double pct = Config.copperCableLossPerBlock * 100.0;
+	private static String cableLossPercent(CableBlock cable) {
+		double pct = cable.type().lossPerBlock() * 100.0;
 		String s = String.format(java.util.Locale.ROOT, "%.3f", pct);
 		if (s.contains(".")) {
 			s = s.replaceAll("0+$", "").replaceAll("\\.$", "");
@@ -420,6 +421,18 @@ public final class MachineTooltips {
 	private static Component tier() {
 		return Component.translatable("tooltip.alaindustrial.tier_lv")
 				.withStyle(ChatFormatting.GREEN);
+	}
+
+	/**
+	 * Tier line for a cable, taken from its own grade rather than assumed LV — the gold cable is MV, so the
+	 * blanket {@link #tier()} used by every other block would misreport it (MOD-219).
+	 */
+	private static Component cableTier(CableBlock cable) {
+		return switch (cable.type().tier()) {
+			case LV -> tier();
+			case MV -> Component.translatable("tooltip.alaindustrial.tier_mv").withStyle(ChatFormatting.GREEN);
+			case HV -> tierHv();
+		};
 	}
 
 	/** HV tier line — the teleporter station is the mod's only HV block (MOD-091). */

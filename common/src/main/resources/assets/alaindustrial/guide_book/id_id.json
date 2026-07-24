@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "Kabel",
-              "text": "Kabel menyatukan blok menjadi jaringan listrik dan mengalirkan EU. Kabel tembaga kehilangan energi seiring jarak — makin panjang jalurnya, makin banyak yang hilang. Buat jalur tetap pendek, atau letakkan penyimpanan lebih dekat ke konsumen."
+              "text": "Kabel menghubungkan blok menjadi jaringan listrik dan mengalirkan EU. Setiap kabel kehilangan energi seiring jarak — makin panjang jalurnya, makin besar kehilangannya.\n\nAda tiga jenis, dan semuanya berbeda:\n• Timah — sempit (8 EU/t) tetapi nyaris tanpa rugi: untuk ladang surya\n• Tembaga — andalan serbaguna (12 EU/t)\n• Emas — paling lebar (48 EU/t), dengan kerugian lebih tinggi\n\nJangan campur jenis dalam satu jalur: seluruh jaringan mengikuti kabel terkuat di dalamnya, termasuk kerugiannya."
             }
           ]
         }
@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "Kincir Air",
-              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
+              "text": "Generator LV pasif — menghasilkan EU dari air mengalir (arus) di sebelahnya, tanpa bahan bakar atau tangki."
             },
             {
               "type": "stats",
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "Kabel Tembaga Berinsulasi",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Kabel Tembaga Berinsulasi",
-              "text": "Kabel tembaga LV yang dibungkus wol — untuk kedekatan yang aman dan pengkabelan rapat di samping mesin."
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "Statistik",
               "lines": [
-                "Energi: ≤32 EU/paket"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "Kabel Timah Berinsulasi",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Kabel Timah Berinsulasi",
-              "text": "Kabel timah LV yang dibungkus wol — kawat berinsulasi termurah untuk kedekatan yang aman."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Energi: ≤32 EU/paket"
-              ]
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "Statistik",
               "lines": [
                 "Energi: ≤32 EU/paket",
-                "Buffer: 12 EU"
+                "Bufer: 12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "Kabel Timah",
-              "text": "Kabel LV termurah — untuk jalur tipis berdaya rendah menuju mesin tunggal dan generator lemah."
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "Statistik",
               "lines": [
-                "Energi: ≤32 EU/paket"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "Penggergaji Kayu",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Penggergaji Kayu",
+              "text": "Menggergaji kayu apa pun menjadi papan, batang kayu, lempeng, atau tangga dengan hasil lebih banyak daripada pembuatan manual. Empat mode yang bisa diganti, berjalan dengan EU."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 160 EU/op",
+                "Bufer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -956,14 +1016,14 @@
         },
         {
           "id": "gold_chest",
-          "title": "Gold Chest",
+          "title": "Peti Emas",
           "icon": "alaindustrial:gold_chest",
           "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Chest",
-              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+              "title": "Peti Emas",
+              "text": "Peti 54 slot — tingkat di atas perak (satu baris lebih banyak), dengan model 3D dan tutup beranimasi. Tidak butuh energi."
             },
             {
               "type": "recipe",
@@ -987,14 +1047,14 @@
         },
         {
           "id": "industrial_workbench",
-          "title": "Industrial Workbench",
+          "title": "Meja Kerja Industri",
           "icon": "alaindustrial:industrial_workbench",
           "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+              "title": "Meja Kerja Industri",
+              "text": "Blok tempat kerja penduduk Industrialis — membeli sumber daya mod dengan bayaran zamrud. Letakkan di dekat penduduk yang belum bekerja, dan ia akan mengambil profesi itu."
             },
             {
               "type": "recipe",
@@ -1018,19 +1078,19 @@
         },
         {
           "id": "guide_book",
-          "title": "Guide Book",
+          "title": "Buku Panduan",
           "icon": "alaindustrial:guide_book",
           "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Guide Book",
-              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+              "title": "Buku Panduan",
+              "text": "Buku panduan dalam gim yang membahas seluruh mekanika mod — diberikan otomatis saat pemain pertama kali masuk dan dibuka dengan klik kanan; tab, halaman, tautan. Tanpa energi."
             },
             {
               "type": "recipe",
               "title": "Resep",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Pembuatan Tanpa Pola",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -1234,14 +1294,14 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Water Wheel",
+          "title": "Roda air",
           "icon": "alaindustrial:water_mill_wheel",
           "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "title": "Roda air",
+              "text": "Roda kincir air — dipasang di slot roda kincir air; tanpanya, tidak ada pembangkitan. Aus selama membangkitkan listrik."
             },
             {
               "type": "recipe",
@@ -1277,7 +1337,7 @@
             {
               "type": "recipe",
               "title": "Resep",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Pembuatan Tanpa Pola",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "Rotor Kayu",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "Bilah kincir angin — dipasang di slot rotor kincir angin T1/T2 mana pun; tanpanya, tidak ada pembangkitan. Aus selama membangkitkan listrik."
             },
             {
               "type": "recipe",

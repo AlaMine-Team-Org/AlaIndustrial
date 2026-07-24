@@ -270,10 +270,14 @@ public final class EnergyNetwork {
 		}
 		List<EnergyTopologyCache.Endpoint> consumers = topology.consumers();
 
-		// The cable-graph packet cap is the network's highest cable tier (so a future HV cable segment
-		// lifts the whole line to HV throughput, while a network of all-LV cables stays at 32 EU/t — the
-		// historical behaviour before this was derived from the cables rather than hardcoded as LV).
-		long packetCap = topology.maxCableTier().maxVoltage();
+		// Both transport numbers come from the network's strongest cable grade (MOD-219): the packet cap
+		// (a gold segment lifts the whole line to 128 EU/t) and the resistive loss rate (that same segment
+		// also moves the line to gold's higher 0.03 loss). An all-copper network resolves to exactly the
+		// historical 32 EU/t + 0.02 pair. Note the grade's OTHER number — its segment buffer, i.e. the real
+		// throughput — is not read here: it lives per-segment in each cable's own EnergyBuffer.
+		CableType strongestCable = topology.strongestCable();
+		long packetCap = strongestCable.packetCap();
+		double lossPerBlock = strongestCable.lossPerBlock();
 
 		// --- dry-run supply, partitioned by source priority (MOD-070): pure generators vs storage
 		// sources (dual-role BatteryBox with a cabled OUT face). Generators feed the line and charge
@@ -354,8 +358,8 @@ public final class EnergyNetwork {
 			// Both drain the cable buffers they touch, so a cable between a source and ANY consumer
 			// (a machine OR a BatteryBox) genuinely carries and displays the energy in transit, instead
 			// of the storage charge bypassing the wires.
-			movedEu[0] += distributor.serveConsumersFromLine(machines, packetCap, tx, producerCursor);
-			movedEu[0] += distributor.serveConsumersFromLine(sinks, packetCap, tx, producerCursor);
+			movedEu[0] += distributor.serveConsumersFromLine(machines, packetCap, lossPerBlock, tx, producerCursor);
+			movedEu[0] += distributor.serveConsumersFromLine(sinks, packetCap, lossPerBlock, tx, producerCursor);
 			// Replenish the line for next tick: generators fill it freely (inertia + a visible buffer);
 			// a storage source discharges into the line ONLY to cover the machine demand generators fall
 			// short of (backup power), never to hoard buffers or wash into another battery. With no

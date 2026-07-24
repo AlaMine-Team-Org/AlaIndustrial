@@ -40,10 +40,11 @@ public class SawmillMenu extends MachineMenu {
 
 	@Override
 	protected void addMachineSlots() {
-		// Slot positions aligned to the shared machine GUI atlas (reused from electric_furnace.png).
-		addSlot(new Slot(machine, 0, 56, 35));
+		// Slot positions aligned to the sawmill's own GUI atlas: the input/saw/output row sits high in
+		// the frame so the band underneath is free for the four mode buttons (see SawmillScreen).
+		addSlot(new Slot(machine, 0, 55, 19));
 		// Output slot: result only, no manual insertion (spec).
-		addSlot(new Slot(machine, 1, 117, 35) {
+		addSlot(new Slot(machine, 1, 116, 19) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return false;

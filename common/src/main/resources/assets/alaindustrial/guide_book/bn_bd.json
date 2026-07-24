@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "কেবল",
-              "text": "কেবল ব্লকগুলোকে একটি পাওয়ার গ্রিডে জুড়ে দেয় এবং EU বহন করে। তামার কেবল দূরত্বের সাথে শক্তি হারায় — লাইন যত লম্বা, তত বেশি ক্ষয়। লাইন ছোট রাখুন, অথবা ভোক্তার কাছাকাছি সংরক্ষণাগার রাখুন।"
+              "text": "কেবল ব্লকগুলোকে বিদ্যুৎ নেটওয়ার্কে যুক্ত করে এবং EU বহন করে। প্রতিটি কেবলই দূরত্বে শক্তি হারায় — লাইন যত লম্বা, ক্ষতি তত বেশি।\n\nতিনটি ধরন আছে, এবং সেগুলো আলাদা:\n• টিন — সরু (8 EU/t) কিন্তু প্রায় ক্ষতিহীন: সৌর খামারের জন্য\n• তামা — সর্বজনীন কর্মী (12 EU/t)\n• সোনা — সবচেয়ে চওড়া (48 EU/t), তবে ক্ষতি বেশি\n\nএকই লাইনে ধরন মেশাবেন না: পুরো নেটওয়ার্ক তার ভেতরের সবচেয়ে শক্তিশালী কেবল অনুযায়ী চলে — তার ক্ষতিসহ।"
             }
           ]
         }
@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "জলচক্র",
-              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
+              "text": "একটি প্যাসিভ LV জেনারেটর — জ্বালানি বা ট্যাংক ছাড়াই পাশে বয়ে চলা জল (স্রোত) থেকে EU উৎপাদন করে।"
             },
             {
               "type": "stats",
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "অন্তরিত তামার কেবল",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "অন্তরিত তামার কেবল",
-              "text": "উলে মোড়ানো একটি তামার LV কেবল — যন্ত্রের পাশে নিরাপদ সংলগ্নতা ও ঘন ওয়্যারিং-এর জন্য।"
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "পরিসংখ্যান",
               "lines": [
-                "শক্তি: ≤32 EU/packet"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "অন্তরিত টিনের কেবল",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "অন্তরিত টিনের কেবল",
-              "text": "উলে মোড়ানো একটি টিনের LV কেবল — নিরাপদ সংলগ্নতার জন্য সবচেয়ে সস্তা অন্তরিত তার।"
             },
             {
-              "type": "stats",
-              "title": "পরিসংখ্যান",
-              "lines": [
-                "শক্তি: ≤32 EU/packet"
-              ]
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "পরিসংখ্যান",
               "lines": [
                 "শক্তি: ≤32 EU/packet",
-                "Buffer: 12 EU"
+                "বাফার: 12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "টিনের কেবল",
-              "text": "সবচেয়ে সস্তা LV কেবল — একক যন্ত্র ও দুর্বল জেনারেটরের জন্য পাতলা, কম-শক্তির লাইনে।"
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "পরিসংখ্যান",
               "lines": [
-                "শক্তি: ≤32 EU/packet"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "করাত কল",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "করাত কল",
+              "text": "যেকোনো কাঠ কেটে তক্তা, লাঠি, স্ল্যাব বা সিঁড়ি বানায়, হাতে তৈরির চেয়ে বেশি ফলনে। চারটি বদলানো যায় এমন মোড, EU-তে চলে।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 160 EU/ক্রিয়া",
+                "বাফার: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -956,14 +1016,14 @@
         },
         {
           "id": "gold_chest",
-          "title": "Gold Chest",
+          "title": "সোনার চেস্ট",
           "icon": "alaindustrial:gold_chest",
           "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Chest",
-              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+              "title": "সোনার চেস্ট",
+              "text": "একটি 54-স্লট চেস্ট — রূপার ওপরের স্তর (আরও এক সারি), একটি 3D মডেল ও অ্যানিমেটেড ঢাকনাসহ। কোনো শক্তির দরকার নেই।"
             },
             {
               "type": "recipe",
@@ -987,14 +1047,14 @@
         },
         {
           "id": "industrial_workbench",
-          "title": "Industrial Workbench",
+          "title": "শিল্প কর্মটেবিল",
           "icon": "alaindustrial:industrial_workbench",
           "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+              "title": "শিল্প কর্মটেবিল",
+              "text": "শিল্পপতি গ্রামবাসীর কর্মস্থল ব্লক — মডের সম্পদ পান্না দিয়ে কিনে নেয়। বেকার কোনো গ্রামবাসীর পাশে রাখলে সে এই পেশা নেয়।"
             },
             {
               "type": "recipe",
@@ -1018,19 +1078,19 @@
         },
         {
           "id": "guide_book",
-          "title": "Guide Book",
+          "title": "গাইড বই",
           "icon": "alaindustrial:guide_book",
           "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Guide Book",
-              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+              "title": "গাইড বই",
+              "text": "মডের প্রতিটি কৌশল ব্যাখ্যা করা একটি ইন-গেম নির্দেশিকা বই — খেলোয়াড় প্রথমবার যোগ দিলে স্বয়ংক্রিয়ভাবে দেওয়া হয়, ডান-ক্লিকে খোলে; ট্যাব, পাতা, লিঙ্ক। কোনো শক্তির দরকার নেই।"
             },
             {
               "type": "recipe",
               "title": "রেসিপি",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "আকৃতিহীন ক্রাফটিং",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -1234,14 +1294,14 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Water Wheel",
+          "title": "জলচাকা",
           "icon": "alaindustrial:water_mill_wheel",
           "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "title": "জলচাকা",
+              "text": "জলচক্রের চাকা — জলচক্রের চাকা স্লটে বসে; এটি ছাড়া কোনো উৎপাদন নেই। উৎপাদনের সময় ক্ষয় হয়।"
             },
             {
               "type": "recipe",
@@ -1277,7 +1337,7 @@
             {
               "type": "recipe",
               "title": "রেসিপি",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "আকৃতিহীন ক্রাফটিং",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "কাঠের রোটর",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "বায়ু টারবাইনের পাখা — যেকোনো T1/T2 বায়ু চক্রের রোটর স্লটে বসে; এটি ছাড়া কোনো উৎপাদন নেই। উৎপাদনের সময় ক্ষয় হয়।"
             },
             {
               "type": "recipe",

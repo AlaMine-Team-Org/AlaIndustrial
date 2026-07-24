@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "Câbles",
-              "text": "Les câbles relient les blocs en un réseau électrique et transportent les EU. Le câble en cuivre perd de l'énergie sur la distance — plus le trajet est long, plus les pertes sont grandes. Gardez des trajets courts, ou placez le stockage plus près du consommateur."
+              "text": "Les câbles relient les blocs en un réseau électrique et transportent l’EU. Tout câble perd de l’énergie sur la distance : plus la ligne est longue, plus la perte est grande.\n\nIl existe trois types, et ils diffèrent :\n• Étain — étroit (8 EU/t) mais presque sans perte : pour les fermes solaires\n• Cuivre — le polyvalent (12 EU/t)\n• Or — le plus large (48 EU/t), mais plus déperditif\n\nNe mélangez pas les types sur une même ligne : tout le réseau suit le câble le plus puissant qu’il contient, pertes comprises."
             }
           ]
         }
@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "Moulin à eau",
-              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
+              "text": "Un générateur LV passif — produit des EU à partir de l'eau courante (un courant) située à côté, sans carburant ni réservoirs."
             },
             {
               "type": "stats",
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "Câble en cuivre isolé",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Câble en cuivre isolé",
-              "text": "Un câble LV en cuivre enveloppé de laine — pour une proximité sûre et un câblage serré près des machines."
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : ≤32 EU/paquet"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "Câble en étain isolé",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Câble en étain isolé",
-              "text": "Un câble LV en étain enveloppé de laine — le fil isolé le moins cher pour une proximité sûre."
             },
             {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Énergie : ≤32 EU/paquet"
-              ]
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "Statistiques",
               "lines": [
                 "Énergie : ≤32 EU/paquet",
-                "Buffer: 12 EU"
+                "Tampon : 12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "Câble en étain",
-              "text": "Le câble LV le moins cher — pour des lignes fines et peu puissantes vers des machines isolées et des générateurs faibles."
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "Statistiques",
               "lines": [
-                "Énergie : ≤32 EU/paquet"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "Scierie",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Scierie",
+              "text": "Scie n'importe quel bois en planches, bâtons, dalles ou escaliers avec un meilleur rendement qu'à la main. Quatre modes commutables, fonctionne aux EU."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 160 EU/op",
+                "Tampon : 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -956,14 +1016,14 @@
         },
         {
           "id": "gold_chest",
-          "title": "Gold Chest",
+          "title": "Coffre en or",
           "icon": "alaindustrial:gold_chest",
           "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Chest",
-              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+              "title": "Coffre en or",
+              "text": "Un coffre de 54 emplacements — le palier au-dessus de l'argent (une rangée de plus), avec un modèle 3D et un couvercle animé. Ne nécessite aucune énergie."
             },
             {
               "type": "recipe",
@@ -987,14 +1047,14 @@
         },
         {
           "id": "industrial_workbench",
-          "title": "Industrial Workbench",
+          "title": "Établi industriel",
           "icon": "alaindustrial:industrial_workbench",
           "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+              "title": "Établi industriel",
+              "text": "Le bloc de poste de travail du villageois Industriel — il achète les ressources du mod contre des émeraudes. Placez-le près d'un villageois sans emploi et il adoptera le métier."
             },
             {
               "type": "recipe",
@@ -1018,19 +1078,19 @@
         },
         {
           "id": "guide_book",
-          "title": "Guide Book",
+          "title": "Guide",
           "icon": "alaindustrial:guide_book",
           "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Guide Book",
-              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+              "title": "Guide",
+              "text": "Un livre-tutoriel en jeu qui couvre toutes les mécaniques du mod — remis automatiquement à la première connexion et ouvert d'un clic droit ; onglets, pages, liens. Aucune énergie."
             },
             {
               "type": "recipe",
               "title": "Recette",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Fabrication non façonnée",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -1234,14 +1294,14 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Water Wheel",
+          "title": "Roue à eau",
           "icon": "alaindustrial:water_mill_wheel",
           "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "title": "Roue à eau",
+              "text": "La roue d'un moulin à eau — placée dans l'emplacement de roue du moulin à eau ; sans elle, aucune production. S'use pendant la production."
             },
             {
               "type": "recipe",
@@ -1277,7 +1337,7 @@
             {
               "type": "recipe",
               "title": "Recette",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Fabrication non façonnée",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "Rotor en bois",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "Les pales d'éolienne — placées dans l'emplacement de rotor de tout moulin à vent T1/T2 ; sans lui, aucune production. S'usent pendant la production."
             },
             {
               "type": "recipe",

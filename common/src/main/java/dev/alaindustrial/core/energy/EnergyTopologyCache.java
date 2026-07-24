@@ -58,12 +58,12 @@ final class EnergyTopologyCache {
 	 */
 	private final List<BlockPos> propagationOrder = new ArrayList<>();
 	/**
-	 * The highest cable tier in the network, recomputed with the endpoint lists in {@link
-	 * #refreshIfDirty()} (a cable's tier is fixed at construction, so it only changes when the cable set
-	 * does). Cached so {@link #maxCableTier()} — read once per tick as the packet cap — is O(1) and does
-	 * not rescan every cable's block entity every tick.
+	 * The strongest cable grade in the network, recomputed with the endpoint lists in {@link
+	 * #refreshIfDirty()} (a cable's grade is fixed at construction, so it only changes when the cable set
+	 * does). Cached so {@link #strongestCable()} — read once per tick for the packet cap AND the loss
+	 * rate — is O(1) and does not rescan every cable's block entity every tick.
 	 */
-	private EnergyTier cachedMaxTier = EnergyTier.LV;
+	private CableType cachedStrongestCable = CableType.COPPER;
 	private boolean endpointsDirty = true;
 
 	EnergyTopologyCache(ServerLevel level) {
@@ -178,19 +178,24 @@ final class EnergyTopologyCache {
 	}
 
 	/**
-	 * The highest cable tier present in this network, used as the per-tick packet cap for cable
-	 * transport. A mixed-tier network is governed by its strongest cable (a single HV segment lets the
-	 * whole line carry HV packets); an empty network falls back to LV (the historical default before
-	 * this was derived — every cable in the mod today is LV, so observable behaviour is unchanged).
+	 * The strongest cable grade present in this network — the one with the highest packet cap. It governs
+	 * BOTH the per-tick packet cap and the per-block loss rate of the whole line: splice one gold segment
+	 * into a copper run and the entire network moves to gold's 128 EU/t cap <b>and</b> to gold's 0.03
+	 * loss. That is the deliberate extension of the tier rule established in MOD-101 — taking the cap from
+	 * the strongest cable but the loss from the weakest (or from copper always) would let a player buy a
+	 * high cap at a cheap cable's loss with a single spliced segment.
+	 *
+	 * <p>An empty network falls back to {@link CableType#COPPER}, which reproduces the historical LV/32 +
+	 * 0.02 behaviour exactly.
 	 *
 	 * <p>Returns the value cached by {@link #refreshIfDirty()} — the O(cables) {@code
 	 * level.getBlockEntity} scan runs only when the cache rebuilds (on a topology change), not per tick.
-	 * The tier of a {@link dev.alaindustrial.block.entity.CableBlockEntity} is fixed at construction, so
+	 * The grade of a {@link dev.alaindustrial.block.entity.CableBlockEntity} is fixed at construction, so
 	 * the result is stable between topology changes.
 	 */
-	EnergyTier maxCableTier() {
+	CableType strongestCable() {
 		refreshIfDirty();
-		return cachedMaxTier;
+		return cachedStrongestCable;
 	}
 
 	/** Rebuild the cached producer/consumer endpoint lists from the cables' non-cable neighbours. */
@@ -200,14 +205,17 @@ final class EnergyTopologyCache {
 		}
 		producers.clear();
 		consumers.clear();
-		EnergyTier maxTier = EnergyTier.LV;
+		// Starts null, NOT at COPPER: seeding with copper would make an all-tin network (whose packet cap,
+		// 8, is below copper's 32) silently keep copper's numbers — the exact "recoloured copper" bug this
+		// whole change exists to kill. Only a network with no loadable cable at all falls back to copper.
+		CableType strongest = null;
 		Set<BlockPos> seenProducer = new HashSet<>();
 		Set<BlockPos> seenConsumer = new HashSet<>();
 		EnergyLookup lookup = EnergyLookup.get();
 		for (BlockPos cable : cables) {
 			if (level.getBlockEntity(cable) instanceof dev.alaindustrial.block.entity.CableBlockEntity ce
-					&& ce.getTier().ordinal() > maxTier.ordinal()) {
-				maxTier = ce.getTier();
+					&& (strongest == null || ce.cableType().strongerThan(strongest))) {
+				strongest = ce.cableType();
 			}
 			for (Direction dir : DIRECTIONS) {
 				BlockPos np = cable.relative(dir);
@@ -226,7 +234,7 @@ final class EnergyTopologyCache {
 				}
 			}
 		}
-		cachedMaxTier = maxTier;
+		cachedStrongestCable = strongest != null ? strongest : CableType.COPPER;
 		endpointsDirty = false;
 		computeConsumerDistances();
 	}

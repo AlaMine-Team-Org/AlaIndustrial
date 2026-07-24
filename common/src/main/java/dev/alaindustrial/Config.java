@@ -329,6 +329,7 @@ public final class Config {
 	public static int extractorDuration = 120;
 	/** Sawmill (MOD-150): ticks per cut at 1.0 speed. 80 → 160 EU/op — the cheapest machine op (wood
 	 * saws easier than ore mills): furnace 100, extractor 120, compressor 130, macerator 150. */
+	public static int sawmillDuration = 80;
 
 	// --- Iron Furnace (fuel-based, MOD-115): ticks to smelt one item. Vanilla furnace = 200. ---
 	/** Ticks the iron furnace needs to smelt one item on fuel. Between vanilla (200) and the
@@ -388,6 +389,45 @@ public final class Config {
 	 * gives a real upgrade path).
 	 */
 	public static double copperCableLossPerBlock = 0.02;
+
+	// --- Cable grades: tin (cheap/narrow) and gold (MV/wide), see core.energy.CableType (MOD-219) ---
+	/**
+	 * Per-segment buffer of a tin cable — and therefore its real throughput (MOD-070: a cable carries its
+	 * buffer per tick). 8 EU/t is deliberately below copper's 12: tin is the cheap wire, narrower than
+	 * copper but far cheaper to lose energy in. Comfortably above a solar farm's needs (one panel is
+	 * {@link #solarEuPerTick} = 1 EU/t) and below a fuel generator's 8 EU/t burst, so the choice
+	 * tin-vs-copper is a real one.
+	 */
+	public static int tinCableBuffer = 8;
+	/**
+	 * Per-tick ceiling on EU drawn from one source through a tin cable. Matches its buffer (8): unlike
+	 * copper — whose LV tier voltage (32) sits well above its 12 EU buffer — tin is capped by design, so
+	 * it cannot be used as a cheap stand-in for a full LV line. There is no sub-LV entry in
+	 * {@link dev.alaindustrial.core.energy.EnergyTier}; tin is an LV cable with its own lower cap.
+	 */
+	public static int tinCablePacketCap = 8;
+	/**
+	 * Fraction of throughput lost per tin cable block traversed. {@code 0.006} (research §3) is ~3.3×
+	 * gentler than copper's 0.02 — this is tin's whole point: a 1 EU/t solar trickle floors to
+	 * {@code floor(1 × 0.006 × d) = 0} loss at ANY distance, so a sprawling panel farm loses nothing,
+	 * while copper's 0.02 would still be the better pick for a dense, high-flow line.
+	 */
+	public static double tinCableLossPerBlock = 0.006;
+	/**
+	 * Per-segment buffer of a gold cable — its real throughput. 48 EU/t is 4× copper's 12, mirroring the
+	 * ×4 LV→MV voltage step, so the MV cable is felt as a genuinely wider pipe rather than a recoloured
+	 * copper one. Note the "no battery from wires" ceiling is a copper-scale invariant
+	 * ({@link #cableBuffer} × 1000 &lt; {@link #batteryBoxBuffer}); gold's cost (gold ingots) is what keeps
+	 * a 1000-segment gold grid out of reach rather than the buffer size.
+	 */
+	public static int goldCableBuffer = 48;
+	/**
+	 * Fraction of throughput lost per gold cable block traversed. {@code 0.03} is deliberately WORSE than
+	 * copper's 0.02 (research §3, IC2 canon): gold buys throughput (4× buffer, 128 EU/t packet cap) and
+	 * pays for it in distance, making the choice "wide pipe up close" vs "thin pipe far away" instead of
+	 * a strict upgrade. Its packet cap is the shared {@link #tierMvVoltage}, not a private knob.
+	 */
+	public static double goldCableLossPerBlock = 0.03;
 
 	// --- Energy network ---
 	/** Max awake energy networks processed per server tick; the rest are deferred round-robin. */
@@ -595,6 +635,8 @@ public final class Config {
 				() -> compressorDuration, v -> compressorDuration = v, 1),
 			new IntField("extractorDuration", "Ticks an extractor takes per operation at 1.0 speed.",
 				() -> extractorDuration, v -> extractorDuration = v, 1),
+			new IntField("sawmillDuration", "Ticks a sawmill takes per cut at 1.0 speed (all four modes).",
+				() -> sawmillDuration, v -> sawmillDuration = v, 1),
 			new IntField("ironFurnaceCookTime", "Ticks the (fuel-based) iron furnace takes to smelt one item. Vanilla furnace = 200.",
 				() -> ironFurnaceCookTime, v -> ironFurnaceCookTime = v, 1),
 			new IntField("euPerXp", "MOD-133 player profile: useful EU (from completed machine operations) per 1 point of mod XP. Higher = slower progression. Starting value, tune after playtest.",
@@ -621,6 +663,16 @@ public final class Config {
 				() -> tierHvCapacity, v -> tierHvCapacity = v, 1),
 			new DoubleField("copperCableLossPerBlock", "Fraction of throughput lost per copper cable block traversed (0.02 = 2% per block).",
 				() -> copperCableLossPerBlock, v -> copperCableLossPerBlock = v, 0.0, 0.0),
+			new IntField("tinCableBuffer", "Per-segment working EU buffer of a tin cable = its real throughput (8 EU/t, narrower than copper's 12).",
+				() -> tinCableBuffer, v -> tinCableBuffer = v, 1),
+			new IntField("tinCablePacketCap", "Per-tick ceiling on EU drawn from one source through a tin cable (8 EU/t, below the LV tier voltage by design).",
+				() -> tinCablePacketCap, v -> tinCablePacketCap = v, 1),
+			new DoubleField("tinCableLossPerBlock", "Fraction of throughput lost per tin cable block traversed (0.006 = 0.6% per block; a 1 EU/t solar trickle floors to zero loss).",
+				() -> tinCableLossPerBlock, v -> tinCableLossPerBlock = v, 0.0, 0.0),
+			new IntField("goldCableBuffer", "Per-segment working EU buffer of a gold (MV) cable = its real throughput (48 EU/t, 4x copper).",
+				() -> goldCableBuffer, v -> goldCableBuffer = v, 1),
+			new DoubleField("goldCableLossPerBlock", "Fraction of throughput lost per gold cable block traversed (0.03 = 3% per block; worse than copper by design - gold buys throughput, not distance).",
+				() -> goldCableLossPerBlock, v -> goldCableLossPerBlock = v, 0.0, 0.0),
 			new IntField("networksPerTick", "Max awake energy networks processed per server tick; the rest are deferred round-robin.",
 				() -> networksPerTick, v -> networksPerTick = v, 1),
 			new IntField("networkAnalyzerMaxTraversedNetworks", "Cap on networks the Network Analyzer's Traverse mode walks (visualization only, never affects energy).",

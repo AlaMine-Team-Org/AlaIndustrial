@@ -1,7 +1,7 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.CableBlock;
+import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.registry.ModContent;
@@ -64,15 +64,47 @@ public class CableBlockEntity extends MachineBlockEntity {
 	}
 
 	public CableBlockEntity(BlockPos pos, BlockState state) {
-		// capacity = Config.cableBuffer (the live per-segment buffer, e.g. 12 EU). maxInsert/maxExtract =
-		// LV.maxVoltage() (32) are set for symmetry, but on a cable they are effectively no-ops: since
-		// capacity (12) < 32, EnergyBuffer's min(maxInsert, capacity - amount) is always dominated by the
-		// capacity term. The REAL per-cable throughput is the buffer size (MOD-070: energy flows through
-		// the segment buffer, so a cable carries cableBuffer EU/tick), and the tier packet cap is applied
-		// separately in EnergyNetwork.tick(). A future MV/HV cable should raise Config's buffer, not assume
-		// these rate fields gate throughput.
-		super(ModContent.COPPER_CABLE_BE.get(), pos, state, EnergyTier.LV, 0,
-				Config.cableBuffer, EnergyTier.LV.maxVoltage(), EnergyTier.LV.maxVoltage());
+		// Every knob comes from the block's CableType (MOD-219) — before that, all four cable blocks shared
+		// this one hardcoded LV/cableBuffer line and were therefore identical.
+		//
+		// capacity = the grade's segment buffer (copper 12, tin 8, gold 48 EU). This is the REAL throughput:
+		// energy flows through the segment buffer (MOD-070), so a cable carries segmentBuffer EU/tick.
+		// maxInsert/maxExtract = the grade's packetCap, set for symmetry but effectively no-ops on every
+		// current grade: capacity < packetCap, so EnergyBuffer's min(maxInsert, capacity - amount) is always
+		// dominated by the capacity term. The packet cap that actually bites is applied network-wide in
+		// EnergyNetwork.tick(). A new grade must therefore raise its BUFFER to be felt as a wider pipe —
+		// raising only its packet cap changes nothing.
+		//
+		// The state's block is read before the super() call (legal: it is derived from a constructor
+		// parameter), which is what lets one BlockEntityType back three differently-tuned blocks.
+		super(ModContent.COPPER_CABLE_BE.get(), pos, state, CableBlock.typeOf(state).tier(), 0,
+				CableBlock.typeOf(state).segmentBuffer(), CableBlock.typeOf(state).packetCap(),
+				CableBlock.typeOf(state).packetCap());
+	}
+
+	/**
+	 * The tier this segment reports to the network — taken from the LIVE grade, not from the value frozen
+	 * in the base class at construction, for the same in-place-swap reason as {@link #cableType()}.
+	 */
+	@Override
+	public EnergyTier getTier() {
+		return cableType().tier();
+	}
+
+	/**
+	 * This segment's grade — the source of its packet cap, loss and tier. Resolved from the LIVE block
+	 * state on every call rather than cached at construction.
+	 *
+	 * <p>All five cable blocks share ONE {@code BlockEntityType}, so an in-place grade swap
+	 * ({@code /setblock} or {@code /fill} over an existing cable, a structure, a world edit) is a case
+	 * worth being explicit about. Measured on 26.2: vanilla DOES rebuild the entity there — a cable
+	 * swapped copper→gold comes back with gold's buffer immediately, and
+	 * {@code tcCable003Phy01_inPlaceGradeSwapRebuildsSegment} guards that. Reading the grade off the live
+	 * state rather than caching it costs nothing and keeps this method correct without depending on that
+	 * vanilla detail staying the way it is.
+	 */
+	public CableType cableType() {
+		return CableBlock.typeOf(getBlockState());
 	}
 
 	/** Transport, not a working machine (MOD-133): no owner, no player stats, no per-segment UUID ballast. */

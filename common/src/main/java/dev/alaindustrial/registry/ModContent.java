@@ -100,6 +100,7 @@ public final class ModContent {
 	public static Supplier<Block> FLUID_TANK = unbound("FLUID_TANK");
 	public static Supplier<Block> COPPER_CABLE = unbound("COPPER_CABLE");
 	public static Supplier<Block> TIN_CABLE = unbound("TIN_CABLE");
+	public static Supplier<Block> GOLD_CABLE = unbound("GOLD_CABLE");
 	public static Supplier<Block> INSULATED_COPPER_CABLE = unbound("INSULATED_COPPER_CABLE");
 	public static Supplier<Block> INSULATED_TIN_CABLE = unbound("INSULATED_TIN_CABLE");
 	public static Supplier<Block> ITEM_PIPE = unbound("ITEM_PIPE");
@@ -239,6 +240,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> DAYLIGHT_SOLAR_PANEL_ITEM = unbound("DAYLIGHT_SOLAR_PANEL_ITEM");
 	public static Supplier<BlockItem> COPPER_CABLE_ITEM = unbound("COPPER_CABLE_ITEM");
 	public static Supplier<BlockItem> TIN_CABLE_ITEM = unbound("TIN_CABLE_ITEM");
+	public static Supplier<BlockItem> GOLD_CABLE_ITEM = unbound("GOLD_CABLE_ITEM");
 	public static Supplier<BlockItem> INSULATED_COPPER_CABLE_ITEM = unbound("INSULATED_COPPER_CABLE_ITEM");
 	public static Supplier<BlockItem> INSULATED_TIN_CABLE_ITEM = unbound("INSULATED_TIN_CABLE_ITEM");
 	public static Supplier<BlockItem> ITEM_PIPE_ITEM = unbound("ITEM_PIPE_ITEM");

@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "Kabels",
-              "text": "Kabels verbinden blokken tot een stroomnet en vervoeren EU. De koperen kabel verliest energie over afstand — hoe langer de leiding, hoe meer verlies. Houd leidingen kort of plaats opslag dichter bij de verbruiker."
+              "text": "Kabels verbinden blokken tot een stroomnet en vervoeren EU. Elke kabel verliest energie over afstand — hoe langer de lijn, hoe meer verloren gaat.\n\nEr zijn drie soorten, en ze verschillen:\n• Tin — smal (8 EU/t) maar vrijwel verliesvrij: voor zonneparken\n• Koper — het universele werkpaard (12 EU/t)\n• Goud — de breedste (48 EU/t), met meer verlies\n\nMeng geen soorten in één lijn: het hele netwerk volgt de sterkste kabel erin, inclusief diens verlies."
             }
           ]
         }
@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "Watermolen",
-              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
+              "text": "Een passieve LV-generator — produceert EU uit stromend water (een stroming) ernaast, zonder brandstof of tanks."
             },
             {
               "type": "stats",
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "Geïsoleerde koperen kabel",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Geïsoleerde koperen kabel",
-              "text": "Een koperen LV-kabel omwikkeld met wol — voor veilige plaatsing naast blokken en strakke bedrading bij machines."
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "Statistieken",
               "lines": [
-                "Energie: ≤32 EU/pakket"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "Geïsoleerde tinnen kabel",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Geïsoleerde tinnen kabel",
-              "text": "Een tinnen LV-kabel omwikkeld met wol — de goedkoopste geïsoleerde kabel voor veilige plaatsing naast blokken."
             },
             {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Energie: ≤32 EU/pakket"
-              ]
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "Statistieken",
               "lines": [
                 "Energie: ≤32 EU/pakket",
-                "Buffer: 12 EU"
+                "Buffer: 12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "Tinnen kabel",
-              "text": "De goedkoopste LV-kabel — voor dunne, energiezuinige lijnen naar losse machines en zwakke generatoren."
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "Statistieken",
               "lines": [
-                "Energie: ≤32 EU/pakket"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "Houtzagerij",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Houtzagerij",
+              "text": "Zaagt elk hout tot planken, stokken, platen of trappen met een hogere opbrengst dan handmatig vervaardigen. Vier omschakelbare standen, werkt op EU."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 160 EU/bew.",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -956,14 +1016,14 @@
         },
         {
           "id": "gold_chest",
-          "title": "Gold Chest",
+          "title": "Gouden kist",
           "icon": "alaindustrial:gold_chest",
           "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Chest",
-              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+              "title": "Gouden kist",
+              "text": "Een kist met 54 sleuven — het niveau boven zilver (één rij meer), met een 3D-model en geanimeerd deksel. Heeft geen energie nodig."
             },
             {
               "type": "recipe",
@@ -987,14 +1047,14 @@
         },
         {
           "id": "industrial_workbench",
-          "title": "Industrial Workbench",
+          "title": "Industriële werkbank",
           "icon": "alaindustrial:industrial_workbench",
           "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+              "title": "Industriële werkbank",
+              "text": "Het werkplekblok van de dorpeling Industrieel — koopt de grondstoffen van de mod voor smaragden. Plaats het bij een werkloze dorpeling en hij neemt het beroep aan."
             },
             {
               "type": "recipe",
@@ -1018,19 +1078,19 @@
         },
         {
           "id": "guide_book",
-          "title": "Guide Book",
+          "title": "Handleiding",
           "icon": "alaindustrial:guide_book",
           "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Guide Book",
-              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+              "title": "Handleiding",
+              "text": "Een handleiding in het spel die elke mechaniek van de mod behandelt — wordt automatisch gegeven bij de eerste keer spelen en met rechtsklik geopend; tabbladen, pagina's, links. Geen energie."
             },
             {
               "type": "recipe",
               "title": "Recept",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Vormloos vervaardigen",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -1234,14 +1294,14 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Water Wheel",
+          "title": "Waterrad",
           "icon": "alaindustrial:water_mill_wheel",
           "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "title": "Waterrad",
+              "text": "Het rad van een watermolen — geplaatst in de radsleuf van de watermolen; zonder rad geen opwekking. Slijt tijdens het opwekken."
             },
             {
               "type": "recipe",
@@ -1277,7 +1337,7 @@
             {
               "type": "recipe",
               "title": "Recept",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Vormloos vervaardigen",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "Molenrotor",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "Windturbinebladen — geplaatst in de rotorsleuf van elke T1/T2-windmolen; zonder rotor geen opwekking. Slijten tijdens het opwekken."
             },
             {
               "type": "recipe",

@@ -50,7 +50,7 @@
             {
               "type": "text",
               "title": "Cabos",
-              "text": "Os cabos unem blocos em uma rede elétrica e transportam EU. O cabo de cobre perde energia com a distância — quanto mais longo o trajeto, mais se perde. Mantenha os trajetos curtos ou coloque o armazenamento mais perto do consumidor."
+              "text": "Os cabos ligam blocos em uma rede de energia e transportam EU. Todo cabo perde energia com a distância: quanto mais longo o trecho, maior a perda.\n\nSão três tipos, e eles diferem:\n• Estanho — estreito (8 EU/t), mas quase sem perdas: para fazendas solares\n• Cobre — o universal de trabalho (12 EU/t)\n• Ouro — o mais largo (48 EU/t), com perdas maiores\n\nNão misture tipos na mesma linha: toda a rede segue o cabo mais forte que houver nela, incluindo suas perdas."
             }
           ]
         }
@@ -109,7 +109,7 @@
             {
               "type": "text",
               "title": "Moinho de Água",
-              "text": "A passive LV generator — produces EU from flowing water (a current) beside it, no fuel or tanks."
+              "text": "Um gerador LV passivo — produz EU a partir da água corrente (uma correnteza) ao lado, sem combustível nem tanques."
             },
             {
               "type": "stats",
@@ -337,42 +337,42 @@
           ]
         },
         {
-          "id": "insulated_copper_cable",
-          "title": "Cabo de Cobre Isolado",
-          "icon": "alaindustrial:insulated_copper_cable",
-          "block_id": "alaindustrial:insulated_copper_cable",
+          "id": "gold_cable",
+          "title": "Gold Cable",
+          "icon": "alaindustrial:gold_cable",
+          "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Cabo de Cobre Isolado",
-              "text": "Um cabo de cobre LV envolto em lã — para adjacência segura e fiação compacta ao lado das máquinas."
+              "title": "Gold Cable",
+              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
             },
             {
               "type": "stats",
               "title": "Estatísticas",
               "lines": [
-                "Energia: ≤32 EU/pacote"
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU",
+                "Loss: 0.03 per block"
               ]
-            }
-          ]
-        },
-        {
-          "id": "insulated_tin_cable",
-          "title": "Cabo de Estanho Isolado",
-          "icon": "alaindustrial:insulated_tin_cable",
-          "block_id": "alaindustrial:insulated_tin_cable",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Cabo de Estanho Isolado",
-              "text": "Um cabo de estanho LV envolto em lã — o fio isolado mais barato para adjacência segura."
             },
             {
-              "type": "stats",
-              "title": "Estatísticas",
-              "lines": [
-                "Energia: ≤32 EU/pacote"
-              ]
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "minecraft:gold_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:gold_cable",
+              "result_count": 3
             }
           ]
         },
@@ -392,7 +392,8 @@
               "title": "Estatísticas",
               "lines": [
                 "Energia: ≤32 EU/pacote",
-                "Buffer: 12 EU"
+                "Buffer: 12 EU",
+                "Loss: 0.02 per block"
               ]
             },
             {
@@ -424,14 +425,34 @@
             {
               "type": "text",
               "title": "Cabo de Estanho",
-              "text": "O cabo LV mais barato — para linhas finas e de baixa potência até máquinas isoladas e geradores fracos."
+              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
             },
             {
               "type": "stats",
               "title": "Estatísticas",
               "lines": [
-                "Energia: ≤32 EU/pacote"
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU",
+                "Loss: 0.006 per block"
               ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
             }
           ]
         }
@@ -547,6 +568,45 @@
                 "minecraft:stone"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "sawmill",
+          "title": "Serraria",
+          "icon": "alaindustrial:sawmill",
+          "block_id": "alaindustrial:sawmill",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Serraria",
+              "text": "Serra qualquer madeira em tábuas, gravetos, lajes ou escadas com rendimento maior que a fabricação manual. Quatro modos alternáveis, funciona com EU."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 160 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:electronic_circuit",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:silver_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:sawmill",
               "result_count": 1
             }
           ]
@@ -956,14 +1016,14 @@
         },
         {
           "id": "gold_chest",
-          "title": "Gold Chest",
+          "title": "Baú de Ouro",
           "icon": "alaindustrial:gold_chest",
           "block_id": "alaindustrial:gold_chest",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Chest",
-              "text": "A 54-slot chest — the tier above silver (one more row), with a 3D model and animated lid. Needs no energy."
+              "title": "Baú de Ouro",
+              "text": "Um baú de 54 espaços — o nível acima do de prata (uma fileira a mais), com modelo 3D e tampa animada. Não precisa de energia."
             },
             {
               "type": "recipe",
@@ -987,14 +1047,14 @@
         },
         {
           "id": "industrial_workbench",
-          "title": "Industrial Workbench",
+          "title": "Bancada industrial",
           "icon": "alaindustrial:industrial_workbench",
           "block_id": "alaindustrial:industrial_workbench",
           "pages": [
             {
               "type": "text",
-              "title": "Industrial Workbench",
-              "text": "The Industrialist villager's job-site block — a buyer of the mod's resources for emeralds. Place it near an unemployed villager and he takes the profession."
+              "title": "Bancada industrial",
+              "text": "O bloco de trabalho do aldeão Industrial — compra os recursos do mod em troca de esmeraldas. Coloque-o perto de um aldeão desempregado e ele assumirá a profissão."
             },
             {
               "type": "recipe",
@@ -1018,19 +1078,19 @@
         },
         {
           "id": "guide_book",
-          "title": "Guide Book",
+          "title": "Guia",
           "icon": "alaindustrial:guide_book",
           "block_id": "alaindustrial:guide_book",
           "pages": [
             {
               "type": "text",
-              "title": "Guide Book",
-              "text": "An in-game tutorial book covering every mechanic of the mod — auto-given on a player's first join, opened with a right-click; tabs, pages, links. No energy."
+              "title": "Guia",
+              "text": "Um livro-tutorial dentro do jogo que cobre todas as mecânicas do mod — entregue automaticamente no primeiro acesso do jogador e aberto com clique direito; abas, páginas, links. Sem energia."
             },
             {
               "type": "recipe",
               "title": "Receita",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Fabricação sem forma",
               "grid": [
                 "minecraft:book",
                 "alaindustrial:wooden_gear",
@@ -1234,14 +1294,14 @@
         },
         {
           "id": "water_mill_wheel",
-          "title": "Water Wheel",
+          "title": "Roda d'água",
           "icon": "alaindustrial:water_mill_wheel",
           "block_id": "alaindustrial:water_mill_wheel",
           "pages": [
             {
               "type": "text",
-              "title": "Water Wheel",
-              "text": "Water mill wheel — placed in the wheel slot of a water mill; without it, no generation. Wears out while generating (MOD-189)."
+              "title": "Roda d'água",
+              "text": "A roda de um moinho de água — colocada no espaço de roda do moinho de água; sem ela, não há geração. Desgasta-se enquanto gera."
             },
             {
               "type": "recipe",
@@ -1277,7 +1337,7 @@
             {
               "type": "recipe",
               "title": "Receita",
-              "recipe_type": "Shapeless Crafting",
+              "recipe_type": "Fabricação sem forma",
               "grid": [
                 "alaindustrial:tempered_iron_block",
                 "",
@@ -1396,7 +1456,7 @@
             {
               "type": "text",
               "title": "Rotor de Madeira",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating (MOD-189)."
+              "text": "As pás da turbina eólica — colocadas no espaço de rotor de qualquer moinho de vento T1/T2; sem ela, não há geração. Desgastam-se enquanto geram."
             },
             {
               "type": "recipe",
