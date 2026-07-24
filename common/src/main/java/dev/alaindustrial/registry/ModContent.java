@@ -1,5 +1,26 @@
 package dev.alaindustrial.registry;
 
+import dev.alaindustrial.menu.BatteryBoxMenu;
+import dev.alaindustrial.menu.CompressorMenu;
+import dev.alaindustrial.menu.DaylightSolarPanelMenu;
+import dev.alaindustrial.menu.ElectricFurnaceMenu;
+import dev.alaindustrial.menu.ExtractorMenu;
+import dev.alaindustrial.menu.GeneratorMenu;
+import dev.alaindustrial.menu.GeothermalGeneratorMenu;
+import dev.alaindustrial.menu.GoldChestMenu;
+import dev.alaindustrial.menu.HighAltitudeWindMillMenu;
+import dev.alaindustrial.menu.IronChestMenu;
+import dev.alaindustrial.menu.MaceratorMenu;
+import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
+import dev.alaindustrial.menu.PumpMenu;
+import dev.alaindustrial.menu.SawmillMenu;
+import dev.alaindustrial.menu.SilverChestMenu;
+import dev.alaindustrial.menu.SolarPanelMenu;
+import dev.alaindustrial.menu.StormWindMillMenu;
+import dev.alaindustrial.menu.TeleporterRemoteMenu;
+import dev.alaindustrial.menu.TeleporterStationMenu;
+import dev.alaindustrial.menu.WaterMillMenu;
+import dev.alaindustrial.menu.WindMillMenu;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -89,6 +110,7 @@ public final class ModContent {
 	public static Supplier<Block> ELECTRIC_FURNACE = unbound("ELECTRIC_FURNACE");
 	public static Supplier<Block> EXTRACTOR = unbound("EXTRACTOR");
 	public static Supplier<Block> COMPRESSOR = unbound("COMPRESSOR");
+	public static Supplier<Block> SAWMILL = unbound("SAWMILL");
 	public static Supplier<Block> TIN_ORE = unbound("TIN_ORE");
 	public static Supplier<Block> DEEPSLATE_TIN_ORE = unbound("DEEPSLATE_TIN_ORE");
 	public static Supplier<Block> SILVER_ORE = unbound("SILVER_ORE");
@@ -226,6 +248,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> ELECTRIC_FURNACE_ITEM = unbound("ELECTRIC_FURNACE_ITEM");
 	public static Supplier<BlockItem> EXTRACTOR_ITEM = unbound("EXTRACTOR_ITEM");
 	public static Supplier<BlockItem> COMPRESSOR_ITEM = unbound("COMPRESSOR_ITEM");
+	public static Supplier<BlockItem> SAWMILL_ITEM = unbound("SAWMILL_ITEM");
 	public static Supplier<BlockItem> PUMP_ITEM = unbound("PUMP_ITEM");
 	public static Supplier<BlockItem> FLUID_TANK_ITEM = unbound("FLUID_TANK_ITEM");
 	public static Supplier<BlockItem> TIN_ORE_ITEM = unbound("TIN_ORE_ITEM");
@@ -264,6 +287,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> ELECTRIC_FURNACE_BE = unbound("ELECTRIC_FURNACE_BE");
 	public static Supplier<BlockEntityType<?>> EXTRACTOR_BE = unbound("EXTRACTOR_BE");
 	public static Supplier<BlockEntityType<?>> COMPRESSOR_BE = unbound("COMPRESSOR_BE");
+	public static Supplier<BlockEntityType<?>> SAWMILL_BE = unbound("SAWMILL_BE");
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
 	public static Supplier<BlockEntityType<?>> FLUID_TANK_BE = unbound("FLUID_TANK_BE");
 	public static Supplier<BlockEntityType<?>> IRON_CHEST_BE = unbound("IRON_CHEST_BE");
@@ -272,28 +296,42 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> GOLD_CHEST_BE = unbound("GOLD_CHEST_BE");
 
 	// --- Menu types ---
-	public static Supplier<MenuType<?>> GENERATOR_MENU = unbound("GENERATOR_MENU");
-	public static Supplier<MenuType<?>> MACERATOR_MENU = unbound("MACERATOR_MENU");
-	public static Supplier<MenuType<?>> SOLAR_PANEL_MENU = unbound("SOLAR_PANEL_MENU");
-	public static Supplier<MenuType<?>> MOONLIT_SOLAR_PANEL_MENU = unbound("MOONLIT_SOLAR_PANEL_MENU");
-	public static Supplier<MenuType<?>> ELECTRIC_FURNACE_MENU = unbound("ELECTRIC_FURNACE_MENU");
-	public static Supplier<MenuType<?>> EXTRACTOR_MENU = unbound("EXTRACTOR_MENU");
-	public static Supplier<MenuType<?>> COMPRESSOR_MENU = unbound("COMPRESSOR_MENU");
-	public static Supplier<MenuType<?>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");
+	// Each slot carries its concrete menu class (MOD-198), not MenuType<?>. That generic is what ties a
+	// menu to its screen: ContentManifest.MenuDef binds into these slots with T inferred from the menu
+	// factory, and MenuScreenManifest.screen(...) reads them with M inferred from the screen — so a
+	// mismatched pair in EITHER manifest is a compile error instead of a ClassCastException at GUI-open.
+	// A wildcard here defeats both: with Supplier<MenuType<?>> the lambda `() -> X_MENU.get()` yields a
+	// fresh capture that cannot satisfy the invariant Supplier<MenuType<M>>, so the typed form does not
+	// compile at all — not even for correct pairs.
+	public static Supplier<MenuType<GeneratorMenu>> GENERATOR_MENU = unbound("GENERATOR_MENU");
+	public static Supplier<MenuType<MaceratorMenu>> MACERATOR_MENU = unbound("MACERATOR_MENU");
+	public static Supplier<MenuType<SolarPanelMenu>> SOLAR_PANEL_MENU = unbound("SOLAR_PANEL_MENU");
+	public static Supplier<MenuType<MoonlitSolarPanelMenu>> MOONLIT_SOLAR_PANEL_MENU =
+			unbound("MOONLIT_SOLAR_PANEL_MENU");
+	public static Supplier<MenuType<ElectricFurnaceMenu>> ELECTRIC_FURNACE_MENU = unbound("ELECTRIC_FURNACE_MENU");
+	public static Supplier<MenuType<ExtractorMenu>> EXTRACTOR_MENU = unbound("EXTRACTOR_MENU");
+	public static Supplier<MenuType<CompressorMenu>> COMPRESSOR_MENU = unbound("COMPRESSOR_MENU");
+	public static Supplier<MenuType<SawmillMenu>> SAWMILL_MENU = unbound("SAWMILL_MENU");
+	public static Supplier<MenuType<BatteryBoxMenu>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");
 	/** Teleporter station screen (MOD-093): EU bar, owner, private/public toggle. */
-	public static Supplier<MenuType<?>> TELEPORTER_STATION_MENU = unbound("TELEPORTER_STATION_MENU");
+	public static Supplier<MenuType<TeleporterStationMenu>> TELEPORTER_STATION_MENU =
+			unbound("TELEPORTER_STATION_MENU");
 	/** Teleporter remote screen (MOD-093): the named point list. */
-	public static Supplier<MenuType<?>> TELEPORTER_REMOTE_MENU = unbound("TELEPORTER_REMOTE_MENU");
-	public static Supplier<MenuType<?>> DAYLIGHT_SOLAR_PANEL_MENU = unbound("DAYLIGHT_SOLAR_PANEL_MENU");
-	public static Supplier<MenuType<?>> GEOTHERMAL_GENERATOR_MENU = unbound("GEOTHERMAL_GENERATOR_MENU");
-	public static Supplier<MenuType<?>> PUMP_MENU = unbound("PUMP_MENU");
-	public static Supplier<MenuType<?>> WATER_MILL_MENU = unbound("WATER_MILL_MENU");
-	public static Supplier<MenuType<?>> WIND_MILL_MENU = unbound("WIND_MILL_MENU");
-	public static Supplier<MenuType<?>> HIGH_ALTITUDE_WIND_MILL_MENU = unbound("HIGH_ALTITUDE_WIND_MILL_MENU");
-	public static Supplier<MenuType<?>> STORM_WIND_MILL_MENU = unbound("STORM_WIND_MILL_MENU");
-	public static Supplier<MenuType<?>> IRON_CHEST_MENU = unbound("IRON_CHEST_MENU");
-	public static Supplier<MenuType<?>> SILVER_CHEST_MENU = unbound("SILVER_CHEST_MENU");
-	public static Supplier<MenuType<?>> GOLD_CHEST_MENU = unbound("GOLD_CHEST_MENU");
+	public static Supplier<MenuType<TeleporterRemoteMenu>> TELEPORTER_REMOTE_MENU =
+			unbound("TELEPORTER_REMOTE_MENU");
+	public static Supplier<MenuType<DaylightSolarPanelMenu>> DAYLIGHT_SOLAR_PANEL_MENU =
+			unbound("DAYLIGHT_SOLAR_PANEL_MENU");
+	public static Supplier<MenuType<GeothermalGeneratorMenu>> GEOTHERMAL_GENERATOR_MENU =
+			unbound("GEOTHERMAL_GENERATOR_MENU");
+	public static Supplier<MenuType<PumpMenu>> PUMP_MENU = unbound("PUMP_MENU");
+	public static Supplier<MenuType<WaterMillMenu>> WATER_MILL_MENU = unbound("WATER_MILL_MENU");
+	public static Supplier<MenuType<WindMillMenu>> WIND_MILL_MENU = unbound("WIND_MILL_MENU");
+	public static Supplier<MenuType<HighAltitudeWindMillMenu>> HIGH_ALTITUDE_WIND_MILL_MENU =
+			unbound("HIGH_ALTITUDE_WIND_MILL_MENU");
+	public static Supplier<MenuType<StormWindMillMenu>> STORM_WIND_MILL_MENU = unbound("STORM_WIND_MILL_MENU");
+	public static Supplier<MenuType<IronChestMenu>> IRON_CHEST_MENU = unbound("IRON_CHEST_MENU");
+	public static Supplier<MenuType<SilverChestMenu>> SILVER_CHEST_MENU = unbound("SILVER_CHEST_MENU");
+	public static Supplier<MenuType<GoldChestMenu>> GOLD_CHEST_MENU = unbound("GOLD_CHEST_MENU");
 
 	/** A placeholder handle that throws if read before the loader populated it. */
 	private static <T> Supplier<T> unbound(String name) {

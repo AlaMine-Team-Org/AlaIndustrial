@@ -608,6 +608,51 @@ public class WindMillGameTest {
 	}
 
 	/**
+	 * MOD-211 — automation may insert a chip only while the slot is EMPTY. The container declares no
+	 * max stack size and the chip is a plain 64-stack item, so before the guard a hopper or item pipe
+	 * fed the slot one chip at a time up to 64. Regression guard: without the {@code isEmpty()} check
+	 * in {@code WindMillBlockEntity.canPlaceItem} the second assertion fails.
+	 */
+	@GameTest
+	public void windMill_automationCannotStackSecondChip(GameTestHelper helper) {
+		WindMillBlockEntity mill = place(helper);
+		ItemStack chip = new ItemStack(ModItems.ALIGNMENT_CHIP_DAY);
+		if (!mill.canPlaceItemThroughFace(WindMillBlockEntity.CHIP_SLOT, chip, Direction.UP)) {
+			helper.fail("automation could not insert a chip into an empty slot");
+		}
+		mill.setItem(WindMillBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_DAY));
+		if (mill.canPlaceItemThroughFace(WindMillBlockEntity.CHIP_SLOT, chip, Direction.UP)) {
+			helper.fail("automation could insert a second chip into an occupied slot");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-211 — evolution consumes exactly ONE chip and carries the rest across. A world saved before
+	 * the guard above can still hold a stack here, and the old code handed the shared helper a bare
+	 * EMPTY, destroying all 64. Regression guard: without the {@code shrink(1)} the evolved mill's chip
+	 * slot comes out empty and the count assertion fails.
+	 */
+	@GameTest(skyAccess = true, maxTicks = 120)
+	public void windMill_evolutionConsumesOneChipNotTheStack(GameTestHelper helper) {
+		WindMillBlockEntity mill = place(helper);
+		setClear(helper);
+		mill.setItem(WindMillBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_DAY, 8));
+		mill.setEvolveProgressTicks(Config.windMillEvolveTicks - 1);
+		drive(mill, helper, 1);
+		var evolved = helper.getBlockEntity(POS, dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity.class);
+		if (evolved == null) {
+			helper.fail("mill did not evolve");
+			return;
+		}
+		ItemStack left = evolved.getItem(WindMillBlockEntity.CHIP_SLOT);
+		if (left.getCount() != 7 || !left.is(ModItems.ALIGNMENT_CHIP_DAY)) {
+			helper.fail("evolution destroyed the chip stack: expected 7 chips left, got " + left);
+		}
+		helper.succeed();
+	}
+
+	/**
 	 * @implements TC-WINDMILL-001-FUN05 — with a night (storm) chip and a rotor installed, the evolve
 	 *     counter advances one tick per server-tick under open sky; once {@link Config#windMillEvolveTicks}
 	 *     is reached the block transforms into {@code storm_wind_mill} carrying its stored EU and rotor,

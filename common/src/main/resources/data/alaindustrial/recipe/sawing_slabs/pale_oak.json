@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_slabs",
+  "ingredient": "#minecraft:pale_oak_logs",
+  "result": {
+    "id": "minecraft:pale_oak_slab",
+    "count": 12
+  },
+  "energy": 160
+}

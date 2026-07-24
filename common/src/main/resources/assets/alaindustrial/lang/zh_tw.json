@@ -401,5 +401,12 @@
 	"block.alaindustrial.industrial_workbench": "工業工作台",
 	"entity.alaindustrial.villager.industrialist": "實業家",
 	"advancements.alaindustrial.first_trade.title": "生意夥伴",
-	"advancements.alaindustrial.first_trade.description": "與實業家交易"
+	"advancements.alaindustrial.first_trade.description": "與實業家交易",
+	"block.alaindustrial.sawmill": "Sawmill",
+	"gui.alaindustrial.sawmill.mode.planks": "Planks",
+	"gui.alaindustrial.sawmill.mode.sticks": "Sticks",
+	"gui.alaindustrial.sawmill.mode.slabs": "Slabs",
+	"gui.alaindustrial.sawmill.mode.stairs": "Stairs",
+	"advancements.alaindustrial.sawmill.title": "Sawmill",
+	"advancements.alaindustrial.sawmill.description": "Place a Sawmill and cut wood with a higher yield"
 }

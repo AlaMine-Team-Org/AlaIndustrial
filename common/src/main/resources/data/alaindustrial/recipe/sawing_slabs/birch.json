@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_slabs",
+  "ingredient": "#minecraft:birch_logs",
+  "result": {
+    "id": "minecraft:birch_slab",
+    "count": 12
+  },
+  "energy": 160
+}

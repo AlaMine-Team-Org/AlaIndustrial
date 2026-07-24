@@ -401,5 +401,12 @@
 	"block.alaindustrial.industrial_workbench": "Endüstriyel Tezgah",
 	"entity.alaindustrial.villager.industrialist": "Sanayici",
 	"advancements.alaindustrial.first_trade.title": "İş Ortağı",
-	"advancements.alaindustrial.first_trade.description": "Sanayiciyle ticaret yap"
+	"advancements.alaindustrial.first_trade.description": "Sanayiciyle ticaret yap",
+	"block.alaindustrial.sawmill": "Sawmill",
+	"gui.alaindustrial.sawmill.mode.planks": "Planks",
+	"gui.alaindustrial.sawmill.mode.sticks": "Sticks",
+	"gui.alaindustrial.sawmill.mode.slabs": "Slabs",
+	"gui.alaindustrial.sawmill.mode.stairs": "Stairs",
+	"advancements.alaindustrial.sawmill.title": "Sawmill",
+	"advancements.alaindustrial.sawmill.description": "Place a Sawmill and cut wood with a higher yield"
 }

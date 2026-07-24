@@ -178,6 +178,56 @@ public class SolarPanelGameTest {
 		helper.succeed();
 	}
 
+	/**
+	 * MOD-211 — automation may insert a chip only while the slot is EMPTY. The panel has no FACING, so
+	 * {@code getSlotsForFace} exposes the chip slot on every face, the container declares no max stack
+	 * size and the chip is a plain 64-stack item: before the guard a hopper fed the slot up to 64.
+	 * Regression guard: without the {@code isEmpty()} check in {@code SolarPanelBlockEntity.canPlaceItem}
+	 * the second assertion fails.
+	 */
+	@GameTest
+	public void solarPanel_automationCannotStackSecondChip(GameTestHelper helper) {
+		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
+		SolarPanelBlockEntity panel = panelAt(helper);
+		ItemStack chip = new ItemStack(ModItems.ALIGNMENT_CHIP_DAY);
+		if (!panel.canPlaceItemThroughFace(SolarPanelBlockEntity.CHIP_SLOT, chip, Direction.UP)) {
+			helper.fail("automation could not insert a chip into an empty slot");
+		}
+		panel.setItem(SolarPanelBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_DAY));
+		if (panel.canPlaceItemThroughFace(SolarPanelBlockEntity.CHIP_SLOT, chip, Direction.UP)) {
+			helper.fail("automation could insert a second chip into an occupied slot");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-211 — evolution consumes exactly ONE chip and carries the rest across. A world saved before
+	 * the guard above can still hold a stack here, and the old code handed the shared helper a bare
+	 * EMPTY, destroying all 64. Regression guard: without the {@code shrink(1)} the evolved panel's chip
+	 * slot comes out empty and the count assertion fails.
+	 */
+	@GameTest(skyAccess = true, maxTicks = 40)
+	public void solarPanel_evolutionConsumesOneChipNotTheStack(GameTestHelper helper) {
+		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
+		setClearDay(helper);
+		SolarPanelBlockEntity panel = panelAt(helper);
+		panel.setItem(SolarPanelBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_DAY, 8));
+		BlockPos abs = panel.getBlockPos();
+		for (int i = 0; i <= Config.solarEvolveTicks
+				&& helper.getLevel().getBlockState(abs).getBlock() == ModBlocks.SOLAR_PANEL; i++) {
+			panel.serverTick(helper.getLevel(), abs, helper.getLevel().getBlockState(abs));
+		}
+		if (!(helper.getLevel().getBlockEntity(abs) instanceof dev.alaindustrial.block.entity.MachineBlockEntity evolved)) {
+			helper.fail("panel did not evolve");
+			return;
+		}
+		ItemStack left = evolved.getItem(SolarPanelBlockEntity.CHIP_SLOT);
+		if (left.getCount() != 7 || !left.is(ModItems.ALIGNMENT_CHIP_DAY)) {
+			helper.fail("evolution destroyed the chip stack: expected 7 chips left, got " + left);
+		}
+		helper.succeed();
+	}
+
 	// ── NEG: base panel must produce 0 EU when sky/time conditions are wrong ─────────
 
 	/** @implements TC-SOLAR-001-NEG01 — base panel generates 0 EU at night (day-only). @covers R-NRG-15 */

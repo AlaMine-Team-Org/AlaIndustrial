@@ -208,6 +208,8 @@ public final class DemoStand {
 		placeWorkingMachine(level, origin, 8, 10, ModContent.COMPRESSOR.get(),
 				new ItemStack(ModContent.IRON_DUST.get(), 64));
 		placeWorkingMachine(level, origin, 11, 10, ModContent.EXTRACTOR.get(), new ItemStack(Items.GRAVEL, 64));
+		// Sawmill (MOD-150): pre-charged + a stack of logs → visibly sawing (default PLANKS mode).
+		placeWorkingMachine(level, origin, 17, 10, ModContent.SAWMILL.get(), new ItemStack(Items.OAK_LOG, 64));
 		// Iron furnace (MOD-115): fuel-burning, not EU — so it is loaded with input + coal instead of a
 		// pre-charged buffer, and lights itself on the first tick like a vanilla furnace.
 		set(level, origin, 14, 1, 10, ModContent.IRON_FURNACE.get());

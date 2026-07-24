@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_stairs",
+  "ingredient": "#minecraft:cherry_logs",
+  "result": {
+    "id": "minecraft:cherry_stairs",
+    "count": 6
+  },
+  "energy": 160
+}

@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_planks",
+  "ingredient": "#minecraft:oak_logs",
+  "result": {
+    "id": "minecraft:oak_planks",
+    "count": 6
+  },
+  "energy": 160
+}

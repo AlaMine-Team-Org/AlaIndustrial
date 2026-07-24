@@ -11,6 +11,7 @@ import dev.alaindustrial.item.ScytheTiers;
 import dev.alaindustrial.item.MagnetItem;
 import dev.alaindustrial.item.ModArmorMaterials;
 import dev.alaindustrial.item.ModToolMaterials;
+import dev.alaindustrial.item.TemperedIronToolStats;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import dev.alaindustrial.item.PouchItem;
 import dev.alaindustrial.item.ScytheItem;
@@ -73,18 +74,18 @@ public final class ModItems {
 	public static final Item SILVER_GEAR = item("silver_gear");
 	public static final Item TEMPERED_IRON = item("tempered_iron");
 	public static final Item TEMPERED_IRON_PICKAXE =
-			temperedIronTool("tempered_iron_pickaxe", p -> p.pickaxe(ModToolMaterials.TEMPERED_IRON, 1.0f, -2.8f));
+			temperedIronTool("tempered_iron_pickaxe", p -> p.pickaxe(ModToolMaterials.TEMPERED_IRON, TemperedIronToolStats.PICKAXE.attackDamage(), TemperedIronToolStats.PICKAXE.attackSpeed()));
 	// Axe/Hoe/Shovel extend their vanilla subclasses so useOn (stripping/tilling/path) works —
 	// in 26.2 these subclasses still exist and carry that behavior; PickaxeItem/SwordItem were
 	// removed, so pickaxe/sword stay plain Item with .pickaxe()/.sword().
 	public static final Item TEMPERED_IRON_AXE =
-			temperedIronSubclass("tempered_iron_axe", p -> new AxeItem(ModToolMaterials.TEMPERED_IRON, 6.0f, -3.1f, p));
+			temperedIronSubclass("tempered_iron_axe", p -> new AxeItem(ModToolMaterials.TEMPERED_IRON, TemperedIronToolStats.AXE.attackDamage(), TemperedIronToolStats.AXE.attackSpeed(), p));
 	public static final Item TEMPERED_IRON_HOE =
-			temperedIronSubclass("tempered_iron_hoe", p -> new HoeItem(ModToolMaterials.TEMPERED_IRON, -2.0f, -1.0f, p));
+			temperedIronSubclass("tempered_iron_hoe", p -> new HoeItem(ModToolMaterials.TEMPERED_IRON, TemperedIronToolStats.HOE.attackDamage(), TemperedIronToolStats.HOE.attackSpeed(), p));
 	public static final Item TEMPERED_IRON_SHOVEL =
-			temperedIronSubclass("tempered_iron_shovel", p -> new ShovelItem(ModToolMaterials.TEMPERED_IRON, 1.5f, -3.0f, p));
+			temperedIronSubclass("tempered_iron_shovel", p -> new ShovelItem(ModToolMaterials.TEMPERED_IRON, TemperedIronToolStats.SHOVEL.attackDamage(), TemperedIronToolStats.SHOVEL.attackSpeed(), p));
 	public static final Item TEMPERED_IRON_SWORD =
-			temperedIronTool("tempered_iron_sword", p -> p.sword(ModToolMaterials.TEMPERED_IRON, 3.0f, -2.4f));
+			temperedIronTool("tempered_iron_sword", p -> p.sword(ModToolMaterials.TEMPERED_IRON, TemperedIronToolStats.SWORD.attackDamage(), TemperedIronToolStats.SWORD.attackSpeed()));
 	// Tempered-iron armor (MOD-056). MC 26.2 has no ArmorItem: each piece is a plain Item whose
 	// equipment properties are attached via Item.Properties.humanoidArmor(ArmorMaterial, ArmorType).
 	// That helper chains durability, attributes, enchantability, the EQUIPPABLE component (with the
@@ -172,6 +173,7 @@ public final class ModItems {
 	public static final BlockItem ELECTRIC_FURNACE_ITEM = blockItem("electric_furnace", ModBlocks.ELECTRIC_FURNACE);
 	public static final BlockItem EXTRACTOR_ITEM = blockItem("extractor", ModBlocks.EXTRACTOR);
 	public static final BlockItem COMPRESSOR_ITEM = blockItem("compressor", ModBlocks.COMPRESSOR);
+	public static final BlockItem SAWMILL_ITEM = blockItem("sawmill", ModBlocks.SAWMILL);
 	public static final BlockItem PUMP_ITEM = blockItem("pump", ModBlocks.PUMP);
 	public static final BlockItem FLUID_TANK_ITEM = fluidTankBlockItem("fluid_tank", ModBlocks.FLUID_TANK);
 	public static final BlockItem WATER_MILL_ITEM = blockItem("water_mill", ModBlocks.WATER_MILL);
@@ -561,6 +563,7 @@ public final class ModItems {
 		ModContent.ELECTRIC_FURNACE_ITEM = () -> ELECTRIC_FURNACE_ITEM;
 		ModContent.EXTRACTOR_ITEM = () -> EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = () -> COMPRESSOR_ITEM;
+		ModContent.SAWMILL_ITEM = () -> SAWMILL_ITEM;
 		ModContent.PUMP_ITEM = () -> PUMP_ITEM;
 		ModContent.FLUID_TANK_ITEM = () -> FLUID_TANK_ITEM;
 		ModContent.TIN_ORE_ITEM = () -> TIN_ORE_ITEM;

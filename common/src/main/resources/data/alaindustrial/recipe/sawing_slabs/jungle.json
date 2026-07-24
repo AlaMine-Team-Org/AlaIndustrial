@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_slabs",
+  "ingredient": "#minecraft:jungle_logs",
+  "result": {
+    "id": "minecraft:jungle_slab",
+    "count": 12
+  },
+  "energy": 160
+}

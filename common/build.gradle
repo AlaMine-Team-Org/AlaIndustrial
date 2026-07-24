@@ -102,31 +102,51 @@ pitest {
     // (hcoles/pitest#1439). gradle-pitest-plugin 1.19.0 drives it transparently via this property.
     pitestVersion = libs.versions.pitest.core.get()
 
-    // Scope mutations to the loader-neutral core. The default "${project.group}.*" would also pull
-    // in client/mixin/menu packages whose behaviour is only exercised by L2 gametests and that
-    // depend on the Minecraft jar — not unit-testable. core.* is exactly the surface the L1 suite
-    // targets (EnergyBuffer, EnergyShare, EnergyTier, GraphComponents, WindMillOutput, FaceEnergyPort,
-    // ...). The `excludedClasses` list below drops the core classes that nonetheless reference
-    // `net.minecraft.*` types: `common/` has NO Minecraft jar on its test classpath by design
-    // (moddev only pulls NeoForm mappings metadata), so PIT's coverage minion cannot resolve those
-    // types while computing stack-map frames and crashes with
-    // "Could not find class definition for net/minecraft/...". The 15 excluded classes are the
+    // Scope mutations to the code the L1 suite can actually reach. The default "${project.group}.*"
+    // would also pull in client/mixin/menu packages whose behaviour is only exercised by L2 gametests
+    // and that depend on the Minecraft jar — not unit-testable. The `excludedClasses` list below drops
+    // the classes that nonetheless reference `net.minecraft.*` types: `common/` has NO Minecraft jar on
+    // its test classpath by design (moddev only pulls NeoForm mappings metadata), so PIT's coverage
+    // minion cannot resolve those types while computing stack-map frames and crashes with
+    // "Could not find class definition for net/minecraft/...". The excluded classes are the
     // Level/BlockPos/Direction/Fluid/StringRepresentable-coupled ones (EnergyNetwork, EnergyNet,
     // NetworkManager, ItemNetwork, SolarSky, PipeFaceMode, FluidHolder, ...); their behaviour is
     // covered by the Fabric L2 @GameTest + NeoForge world-scenario suites instead. These belong to
     // a future NeoForge L1.5 pitest lane (which DOES have the MC jar), tracked separately.
-    targetClasses = ['dev.alaindustrial.core.*', 'dev.alaindustrial.core.energy.*',
-                     'dev.alaindustrial.core.fluid.*', 'dev.alaindustrial.core.item.*',
-                     'dev.alaindustrial.core.environment.*']
-    // The 15 MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
+    //
+    // MOD-200 — glob semantics, verified, NOT folklore. PIT compiles `*` to the regex `.*`
+    // (org.pitest.util.Glob#convertGlobToRegex, case '*', confirmed by javap on pitest-1.25.7.jar), and
+    // `.*` MATCHES DOTS. So `dev.alaindustrial.core.*` already covers every sub-package —
+    // `core.machine.ComponentWear` was being mutated all along. The per-sub-package entries that used to
+    // sit here (`core.energy.*`, `core.fluid.*`, ...) were pure redundancy born of the opposite belief;
+    // they are dropped. Only `**.` means "zero or more packages" as a distinct marker — plain `*` is
+    // already greedy across dots. Do not "restore" the sub-package list: `core.*` is complete, and
+    // `pitest_check.py --targets` now proves it on every run.
+    //
+    // The explicit non-core entries below are the ONLY MC-free classes outside `core/` (six of them,
+    // enumerated by pitest_check.py --targets). They carry real L1 suites — LevelMathTest,
+    // XpDerivationTest, GuidePaginatorTest, HudSmootherTest, TemperedGearRollTest — that PIT never ran
+    // before MOD-200, because no glob here reached them. Listing them by FQCN rather than by package
+    // glob keeps their ~50 MC-coupled package siblings out without a matching wall of exclusions.
+    targetClasses = ['dev.alaindustrial.core.*',
+                     'dev.alaindustrial.stats.LevelMath',
+                     'dev.alaindustrial.client.guide.GuidePaginator',
+                     'dev.alaindustrial.client.hud.HudSmoother',
+                     'dev.alaindustrial.client.sound.HumTeleportDetector',
+                     'dev.alaindustrial.entity.TemperedGearRoll',
+                     'dev.alaindustrial.item.TemperedIronToolStats',
+                     'dev.alaindustrial.item.TooltipKeys']
+    // The MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
     // JUnit discovery also walks every class under `targetTests` via reflection to find @Test
     // methods — and reflection on e.g. `EnergyNet` triggers `NoClassDefFoundError:
     // net/minecraft/world/level/Level` because the Minecraft jar is not on `common/`'s classpath.
     // So `targetTests` is pinned to ONLY the actual L1 test classes (the *Test suffix), keeping
-    // discovery away from the MC-coupled main classes entirely.
-    targetTests = ['dev.alaindustrial.core.*Test', 'dev.alaindustrial.core.energy.*Test',
-                   'dev.alaindustrial.core.fluid.*Test', 'dev.alaindustrial.core.item.*Test',
-                   'dev.alaindustrial.core.environment.*Test']
+    // discovery away from the MC-coupled main classes entirely. One glob is enough and cannot rot:
+    // `*` spans dots (see the note above), and no class under `common/src/main` ends in `Test`, so
+    // this reaches every L1 suite in every package — present and future — while still excluding
+    // every main class by name. It replaces the per-package list that made MOD-200's suites
+    // (HudSmootherTest, LevelMathTest, GuidePaginatorTest, TemperedGearRollTest) invisible to PIT.
+    targetTests = ['dev.alaindustrial.*Test']
     excludedClasses = [
             'dev.alaindustrial.core.energy.EnergyLookup',
             'dev.alaindustrial.core.energy.DirectAdjacencyDistributor', // was EnergyNet (renamed MOD-168 #7)
@@ -181,7 +201,34 @@ pitest {
             'dev.alaindustrial.core.fluid.FluidTank',
             'dev.alaindustrial.core.fluid.FluidMover',
             'dev.alaindustrial.core.GuideBookState',
-            'dev.alaindustrial.core.guide.GuideBookGiver'
+            'dev.alaindustrial.core.guide.GuideBookGiver',
+            // MOD-200: three classes of exactly the same shape as the siblings above that were added
+            // AFTER the last edit of this list and never appended to it (MOD-175 / MOD-179 / the pump
+            // work). They are Level/BlockPos/Direction/FluidState-coupled, so the L1 suite cannot reach
+            // a single line of them — they contributed 44 NO_COVERAGE mutations (23 + 7 + 14) and alone
+            // dragged the gate from a passing rate down to 67.21 %, i.e. the mutation lane on `main` was
+            // RED and stayed red. This is the real "code added, list not updated" defect MOD-200 was
+            // filed for — the list that rotted was `excludedClasses`, not `targetClasses`.
+            // Their behaviour is covered by the Fabric L2 water-mill/pump gametests.
+            'dev.alaindustrial.core.environment.WaterMillInterference',
+            'dev.alaindustrial.core.environment.WaterMillClearance',
+            'dev.alaindustrial.core.fluid.FluidSourceFinder',
+            // MOD-200: MC-coupled TRANSITIVELY, which the "does the file mention net.minecraft"
+            // heuristic used for every entry above cannot see. PlayerStatsClientCache imports nothing
+            // from Minecraft itself, but every one of its members is typed `PlayerModStats` — and THAT
+            // is an MC-coupled record. Touching the cache from L1 loads it and dies on the MC types.
+            // Listed here (rather than simply left out of targetClasses) so `pitest_check.py --targets`
+            // sees a deliberate decision instead of a fresh blind spot and keeps passing.
+            'dev.alaindustrial.stats.PlayerStatsClientCache',
+            // MOD-200 / MOD-204: the one entry here that is NOT a technical exclusion. `Config` is
+            // plain-Gson and perfectly mutable — PIT generates 135 mutants for it and the existing
+            // suites kill only 35, leaving 99 SURVIVED. (Not the same thing as MOD-203, which is
+            // closed: that one fixed two specific degenerate assertions; this is the rest of the
+            // class.) Writing that suite is MOD-204's job, not MOD-200's, so the class is parked here
+            // rather than silently dropped: `pitest_check.py` requires every MC-free entry in this
+            // list to name its tracking task (DEFERRED_COVERAGE) and prints it loudly on every run.
+            // Remove this line the moment MOD-204 lands.
+            'dev.alaindustrial.Config'
     ]
 
     // Curated mutator set tuned for the math-heavy core (see docs/tasks/MOD-XXX for rationale).

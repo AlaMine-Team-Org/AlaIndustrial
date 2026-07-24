@@ -165,35 +165,29 @@ public final class IndustrializationNeoForgeClient {
 	}
 
 	/**
-	 * Binds each machine {@code MenuType} to its {@code Screen}. Verified pattern (neoforge-26.2.0.8-beta):
-	 * {@code event.register(menuType, MyScreen::new)} where the constructor matches
-	 * {@code MenuScreens.ScreenConstructor<M, U>} — i.e. {@code (M menu, Inventory, Component)}, exactly the
-	 * common {@code Screen} constructors. This is the NeoForge counterpart to the Fabric
-	 * {@code MenuScreens.register(menuType, Screen::new)} calls in {@code IndustrializationClient}.
+	 * Binds each machine {@code MenuType} to its {@code Screen} (MOD-190: from the shared manifest).
+	 * Verified pattern (neoforge-26.2.0.8-beta): {@code event.register(menuType, screen::create)} where
+	 * the screen constructor matches {@code MenuScreens.ScreenConstructor<M, U>} — i.e.
+	 * {@code (M menu, Inventory, Component)}, exactly the common {@code Screen} constructors. The pair
+	 * stays typed end to end through {@code ScreenRegistrar}, so no cast is involved (MOD-198). This is
+	 * the NeoForge counterpart to {@code registerMenuScreens} in {@code IndustrializationClient}.
 	 */
 	private void registerMenuScreens(RegisterMenuScreensEvent event) {
-		event.register(ModMenusNeoForge.GENERATOR.get(), GeneratorScreen::new);
-		event.register(ModMenusNeoForge.MACERATOR.get(), MaceratorScreen::new);
-		event.register(ModMenusNeoForge.SOLAR_PANEL.get(), SolarPanelScreen::new);
-		event.register(ModMenusNeoForge.MOONLIT_SOLAR_PANEL.get(), MoonlitSolarPanelScreen::new);
-		event.register(ModMenusNeoForge.ELECTRIC_FURNACE.get(), ElectricFurnaceScreen::new);
-		event.register(ModMenusNeoForge.EXTRACTOR.get(), ExtractorScreen::new);
-		event.register(ModMenusNeoForge.COMPRESSOR.get(), CompressorScreen::new);
-		event.register(ModMenusNeoForge.BATTERY_BOX.get(), BatteryBoxScreen::new);
-		event.register(ModMenusNeoForge.TELEPORTER_STATION.get(),
-				dev.alaindustrial.client.screen.TeleporterStationScreen::new);
-		event.register(ModMenusNeoForge.TELEPORTER_REMOTE.get(),
-				dev.alaindustrial.client.screen.TeleporterRemoteScreen::new);
-		event.register(ModMenusNeoForge.DAYLIGHT_SOLAR_PANEL.get(), DaylightSolarPanelScreen::new);
-		event.register(ModMenusNeoForge.GEOTHERMAL_GENERATOR.get(), GeothermalGeneratorScreen::new);
-		event.register(ModMenusNeoForge.PUMP.get(), PumpScreen::new);
-		event.register(ModMenusNeoForge.WATER_MILL.get(), WaterMillScreen::new);
-		event.register(ModMenusNeoForge.WIND_MILL.get(), WindMillScreen::new);
-		event.register(ModMenusNeoForge.HIGH_ALTITUDE_WIND_MILL.get(), dev.alaindustrial.client.screen.HighAltitudeWindMillScreen::new);
-		event.register(ModMenusNeoForge.STORM_WIND_MILL.get(), dev.alaindustrial.client.screen.StormWindMillScreen::new);
-		event.register(ModMenusNeoForge.IRON_CHEST.get(), dev.alaindustrial.client.screen.IronChestScreen::new);
-		event.register(ModMenusNeoForge.SILVER_CHEST.get(), dev.alaindustrial.client.screen.SilverChestScreen::new);
-		event.register(ModMenusNeoForge.GOLD_CHEST.get(), dev.alaindustrial.client.screen.GoldChestScreen::new);
+		dev.alaindustrial.client.screen.MenuScreenManifest.ScreenRegistrar registrar =
+				new dev.alaindustrial.client.screen.MenuScreenManifest.ScreenRegistrar() {
+					@Override
+					public <M extends net.minecraft.world.inventory.AbstractContainerMenu,
+							U extends net.minecraft.client.gui.screens.Screen
+								& net.minecraft.client.gui.screens.inventory.MenuAccess<M>> void register(
+							net.minecraft.world.inventory.MenuType<M> menuType,
+							dev.alaindustrial.client.screen.MenuScreenManifest.ScreenFactory<M, U> screen) {
+						event.register(menuType, screen::create);
+					}
+				};
+		for (dev.alaindustrial.client.screen.MenuScreenManifest.ScreenDef<?, ?> def
+				: dev.alaindustrial.client.screen.MenuScreenManifest.SCREENS) {
+			def.bindTo(registrar);
+		}
 	}
 
 	/**

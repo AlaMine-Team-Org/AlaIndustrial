@@ -51,6 +51,10 @@ public final class AlaJeiPlugin implements IModPlugin {
 			machine(ModRecipes.SMELTING, ModBlocksNeoForge.ELECTRIC_FURNACE::get),
 			machine(ModRecipes.COMPRESSING, ModBlocksNeoForge.COMPRESSOR::get),
 			machine(ModRecipes.EXTRACTING, ModBlocksNeoForge.EXTRACTOR::get),
+			// Sawmill (MOD-150) contributed four mode families here. MOD-209 hides the unfinished machine
+			// from players, so neither its categories nor the sawmill catalyst are registered; the block
+			// itself is also pulled from the item grid via RecipeViewerInfo.hiddenFromRecipeViewerItems().
+			// The 39 sawing recipes stay in data — with no category they are simply not displayed.
 	};
 
 	private static Machine machine(ModRecipes.Kind kind, Supplier<? extends Block> block) {

@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_slabs",
+  "ingredient": "#minecraft:crimson_stems",
+  "result": {
+    "id": "minecraft:crimson_slab",
+    "count": 12
+  },
+  "energy": 160
+}

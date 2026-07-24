@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_planks",
+  "ingredient": "#minecraft:jungle_logs",
+  "result": {
+    "id": "minecraft:jungle_planks",
+    "count": 6
+  },
+  "energy": 160
+}

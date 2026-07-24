@@ -229,6 +229,52 @@ public class CablePlacementGameTest {
 	}
 
 	/**
+	 * @implements TC-WATERMILL-CONNECT — the same single back-face contract as the wind mill, applied to
+	 *     the water mill (MOD-194). {@code WaterMillBlockEntity#energyRoleForFace} emits EU only from the
+	 *     face opposite {@code FACING}; the front carries the wheel and the four sides stand in the water,
+	 *     all inert. The block, however, had no {@code isCableConnectable} override and inherited
+	 *     {@link HorizontalMachineBlock}'s "everything except FACING connects", so a cable drew a
+	 *     misleading arm toward the two sides, the top and the bottom — four faces through which no EU
+	 *     can ever flow. Same defect class as MOD-038 (iron chest) and the wind mill fix above; MOD-179
+	 *     corrected the block entity's face roles but left the block behind.
+	 *
+	 * <p>Layout mirrors {@code cableConnectsOnlyToWindMillBackFace} exactly: mill at (2,2,2) with default
+	 * {@code FACING=NORTH}, so the output face is SOUTH (+Z). One cable per face, mill placed LAST so each
+	 * cable gets a neighbour-changed update and recomputes its connection flag. The +Z cable is the
+	 * positive control proving {@code updateShape} ran at all; the other five must stay unconnected.
+	 *
+	 * @covers R-NRG-03 (water mill single back-face output), docs/blocks/generators/water_mill.md §Energy
+	 */
+	@GameTest
+	public void cableConnectsOnlyToWaterMillBackFace(GameTestHelper helper) {
+		BlockPos mill = new BlockPos(2, 2, 2); // FACING=NORTH → back/output face is SOUTH (+Z)
+		record CableFace(BlockPos cablePos, Direction dirToMill, boolean expectArm) {
+		}
+		List<CableFace> rig = List.of(
+				new CableFace(new BlockPos(2, 2, 3), Direction.NORTH, true),  // +Z side → mill's SOUTH/output face
+				new CableFace(new BlockPos(2, 2, 1), Direction.SOUTH, false), // −Z side → mill's NORTH/front (wheel)
+				new CableFace(new BlockPos(3, 2, 2), Direction.WEST, false),  // +X side → mill's EAST side
+				new CableFace(new BlockPos(1, 2, 2), Direction.EAST, false),  // −X side → mill's WEST side
+				new CableFace(new BlockPos(2, 3, 2), Direction.DOWN, false),  // +Y side → mill's top
+				new CableFace(new BlockPos(2, 1, 2), Direction.UP, false));   // −Y side → mill's bottom
+
+		for (CableFace cf : rig) {
+			helper.setBlock(cf.cablePos(), ModBlocks.COPPER_CABLE);
+		}
+		helper.setBlock(mill, ModBlocks.WATER_MILL);
+
+		for (CableFace cf : rig) {
+			BlockState cableState = helper.getLevel().getBlockState(helper.absolutePos(cf.cablePos()));
+			boolean arm = cableState.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(cf.dirToMill()));
+			if (arm != cf.expectArm()) {
+				helper.fail("Water mill cable arm toward mill (" + cf.dirToMill() + ") = " + arm
+						+ ", expected " + cf.expectArm() + " (only the +Z/output face connects); TC-WATERMILL-CONNECT");
+			}
+		}
+		helper.succeed();
+	}
+
+	/**
 	 * @implements TC-BATTERYBOX-CONNECT — a copper cable must draw a connection arm <b>only</b> toward the
 	 *     battery box's two IO faces: the front ({@code FACING}, charge input) and the back
 	 *     ({@code FACING.getOpposite()}, discharge output). The four sides, top and bottom are inert —
@@ -494,5 +540,18 @@ public class CablePlacementGameTest {
 	@GameTest
 	public void mod071_cableDoesNotArmToMoonlitSolarPanelUp(GameTestHelper helper) {
 		assertArmsAroundPanel(helper, ModBlocks.MOONLIT_SOLAR_PANEL);
+	}
+
+	/**
+	 * @implements TC-CABLE-FACE-PARITY — the class-wide guard (MOD-199). Every per-block test above
+	 *     was written by hand, which is exactly why the water mill slipped through until MOD-194:
+	 *     a new block simply never got one. This sweeps the block registry instead, so coverage no
+	 *     longer depends on anyone remembering. Body lives in {@code common} and runs on both
+	 *     loaders.
+	 * @covers R-NRG-03 (inert faces stay inert), MOD-038 / MOD-061 / MOD-194 defect class
+	 */
+	@GameTest
+	public void mod199_inertFacesRejectCableArms(GameTestHelper helper) {
+		CableFaceParityScenarios.inertFacesRejectCableArms(helper);
 	}
 }

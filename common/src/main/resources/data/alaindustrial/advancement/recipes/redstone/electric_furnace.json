@@ -1,11 +1,10 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_item_1": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:silver_ingot" } ] } },
-    "has_item_2": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "minecraft:furnace" } ] } },
-    "has_item_3": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:electronic_circuit" } ] } }
+    "has_ingredient": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:battery" } ] } },
+    "has_the_recipe": { "trigger": "minecraft:recipe_unlocked", "conditions": { "recipe": "alaindustrial:electric_furnace" } }
   },
-  "requirements": [ [ "has_item_1" ], [ "has_item_2" ], [ "has_item_3" ] ],
+  "requirements": [ [ "has_the_recipe", "has_ingredient" ] ],
   "rewards": {
     "recipes": [ "alaindustrial:electric_furnace" ]
   }

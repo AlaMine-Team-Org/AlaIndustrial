@@ -11,7 +11,6 @@ import dev.alaindustrial.client.screen.SolarPanelScreen;
 import dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer;
 import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
 import dev.alaindustrial.registry.ModBlockEntities;
-import dev.alaindustrial.registry.ModMenus;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
@@ -85,50 +84,26 @@ public class IndustrializationClient implements ClientModInitializer {
 		dev.alaindustrial.client.render.FluidTankItemTintSource.register();
 	}
 
-	/** Binds each machine {@code MenuType} to its {@code Screen}. */
+	/**
+	 * Binds each machine {@code MenuType} to its {@code Screen} (MOD-190: from the shared manifest).
+	 * The pair stays typed end to end through {@code ScreenRegistrar}, so no cast is involved (MOD-198).
+	 */
 	private void registerMenuScreens() {
-		MenuScreens.<dev.alaindustrial.menu.GeneratorMenu, dev.alaindustrial.client.screen.GeneratorScreen>register(
-				ModMenus.GENERATOR, dev.alaindustrial.client.screen.GeneratorScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.MaceratorMenu, dev.alaindustrial.client.screen.MaceratorScreen>register(
-				ModMenus.MACERATOR, dev.alaindustrial.client.screen.MaceratorScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.ElectricFurnaceMenu, ElectricFurnaceScreen>register(
-				ModMenus.ELECTRIC_FURNACE, ElectricFurnaceScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.ExtractorMenu, dev.alaindustrial.client.screen.ExtractorScreen>register(
-				ModMenus.EXTRACTOR, dev.alaindustrial.client.screen.ExtractorScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.CompressorMenu, CompressorScreen>register(
-				ModMenus.COMPRESSOR, CompressorScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.SolarPanelMenu, SolarPanelScreen>register(
-				ModMenus.SOLAR_PANEL, SolarPanelScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.MoonlitSolarPanelMenu, dev.alaindustrial.client.screen.MoonlitSolarPanelScreen>register(
-				ModMenus.MOONLIT_SOLAR_PANEL, dev.alaindustrial.client.screen.MoonlitSolarPanelScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.BatteryBoxMenu, dev.alaindustrial.client.screen.BatteryBoxScreen>register(
-				ModMenus.BATTERY_BOX, dev.alaindustrial.client.screen.BatteryBoxScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.TeleporterStationMenu,
-				dev.alaindustrial.client.screen.TeleporterStationScreen>register(
-				ModMenus.TELEPORTER_STATION, dev.alaindustrial.client.screen.TeleporterStationScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.TeleporterRemoteMenu,
-				dev.alaindustrial.client.screen.TeleporterRemoteScreen>register(
-				ModMenus.TELEPORTER_REMOTE, dev.alaindustrial.client.screen.TeleporterRemoteScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.DaylightSolarPanelMenu, dev.alaindustrial.client.screen.DaylightSolarPanelScreen>register(
-				ModMenus.DAYLIGHT_SOLAR_PANEL, dev.alaindustrial.client.screen.DaylightSolarPanelScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.GeothermalGeneratorMenu, dev.alaindustrial.client.screen.GeothermalGeneratorScreen>register(
-				ModMenus.GEOTHERMAL_GENERATOR, dev.alaindustrial.client.screen.GeothermalGeneratorScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.PumpMenu, dev.alaindustrial.client.screen.PumpScreen>register(
-				ModMenus.PUMP, dev.alaindustrial.client.screen.PumpScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.WaterMillMenu, dev.alaindustrial.client.screen.WaterMillScreen>register(
-				ModMenus.WATER_MILL, dev.alaindustrial.client.screen.WaterMillScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.WindMillMenu, dev.alaindustrial.client.screen.WindMillScreen>register(
-				ModMenus.WIND_MILL, dev.alaindustrial.client.screen.WindMillScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.HighAltitudeWindMillMenu, dev.alaindustrial.client.screen.HighAltitudeWindMillScreen>register(
-				ModMenus.HIGH_ALTITUDE_WIND_MILL, dev.alaindustrial.client.screen.HighAltitudeWindMillScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.StormWindMillMenu, dev.alaindustrial.client.screen.StormWindMillScreen>register(
-				ModMenus.STORM_WIND_MILL, dev.alaindustrial.client.screen.StormWindMillScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.IronChestMenu, dev.alaindustrial.client.screen.IronChestScreen>register(
-				ModMenus.IRON_CHEST, dev.alaindustrial.client.screen.IronChestScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.SilverChestMenu, dev.alaindustrial.client.screen.SilverChestScreen>register(
-				ModMenus.SILVER_CHEST, dev.alaindustrial.client.screen.SilverChestScreen::new);
-		MenuScreens.<dev.alaindustrial.menu.GoldChestMenu, dev.alaindustrial.client.screen.GoldChestScreen>register(
-				ModMenus.GOLD_CHEST, dev.alaindustrial.client.screen.GoldChestScreen::new);
+		dev.alaindustrial.client.screen.MenuScreenManifest.ScreenRegistrar registrar =
+				new dev.alaindustrial.client.screen.MenuScreenManifest.ScreenRegistrar() {
+					@Override
+					public <M extends net.minecraft.world.inventory.AbstractContainerMenu,
+							U extends net.minecraft.client.gui.screens.Screen
+								& net.minecraft.client.gui.screens.inventory.MenuAccess<M>> void register(
+							net.minecraft.world.inventory.MenuType<M> menuType,
+							dev.alaindustrial.client.screen.MenuScreenManifest.ScreenFactory<M, U> screen) {
+						MenuScreens.register(menuType, screen::create);
+					}
+				};
+		for (dev.alaindustrial.client.screen.MenuScreenManifest.ScreenDef<?, ?> def
+				: dev.alaindustrial.client.screen.MenuScreenManifest.SCREENS) {
+			def.bindTo(registrar);
+		}
 	}
 
 	/** Registers the machine hover-tooltip provider and the Battery Pouch bundle-style tooltip renderer. */

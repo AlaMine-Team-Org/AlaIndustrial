@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_planks",
+  "ingredient": "#minecraft:bamboo_blocks",
+  "result": {
+    "id": "minecraft:bamboo_planks",
+    "count": 3
+  },
+  "energy": 160
+}

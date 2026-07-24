@@ -327,6 +327,8 @@ public final class Config {
 	public static int electricFurnaceDuration = 100;
 	public static int compressorDuration = 130;
 	public static int extractorDuration = 120;
+	/** Sawmill (MOD-150): ticks per cut at 1.0 speed. 80 → 160 EU/op — the cheapest machine op (wood
+	 * saws easier than ore mills): furnace 100, extractor 120, compressor 130, macerator 150. */
 
 	// --- Iron Furnace (fuel-based, MOD-115): ticks to smelt one item. Vanilla furnace = 200. ---
 	/** Ticks the iron furnace needs to smelt one item on fuel. Between vanilla (200) and the

@@ -234,11 +234,14 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 
 	/** Replace this mill with its evolved branch, carrying stored energy and the rotor; the chip is consumed. */
 	private void evolveInto(Level level, BlockPos pos, Block target) {
-		// Snapshot the rotor so the shared helper can re-place it on the evolved mill; the chip slot is
-		// cleared (passed as EMPTY), the rotor is copied through. FACING is preserved by the helper.
+		// Snapshot the rotor so the shared helper can re-place it on the evolved mill; the rotor is copied
+		// through. FACING is preserved by the helper. ONE chip is consumed and the rest carried over
+		// (MOD-211) — this used to pass a bare EMPTY, destroying the whole stack.
 		ItemStack rotorSnapshot = items.get(ROTOR_SLOT).copy();
+		ItemStack chipRemainder = items.get(CHIP_SLOT).copy();
+		chipRemainder.shrink(1);
 		evolveInto(level, pos, target, java.util.Map.of(
-				CHIP_SLOT, ItemStack.EMPTY,
+				CHIP_SLOT, chipRemainder,
 				ROTOR_SLOT, rotorSnapshot));
 	}
 
@@ -246,8 +249,14 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	public boolean canPlaceItem(int slot, ItemStack stack) {
 		return switch (slot) {
 			case ROTOR_SLOT -> stack.is(ModContent.WINDMILL_ROTOR.get());
-			case CHIP_SLOT -> stack.is(ModContent.ALIGNMENT_CHIP_DAY.get())
-					|| stack.is(ModContent.ALIGNMENT_CHIP_NIGHT.get());
+			// MOD-211: the chip slot must be EMPTY to accept. Without this, automation stacks chips one at
+			// a time up to 64 (the container sets no max stack size) and the evolution then consumed one
+			// while wiping the rest. Same shape as the MOD-179 wheel-slot guard in WaterMillBlockEntity.
+			// The rotor slot needs no such guard: the rotor is a durableComponent, so it stacks to 1
+			// anyway, and guarding it would stop a worn rotor being swapped out in one click.
+			case CHIP_SLOT -> items.get(CHIP_SLOT).isEmpty()
+					&& (stack.is(ModContent.ALIGNMENT_CHIP_DAY.get())
+							|| stack.is(ModContent.ALIGNMENT_CHIP_NIGHT.get()));
 			default -> false;
 		};
 	}

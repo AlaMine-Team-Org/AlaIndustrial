@@ -4,8 +4,8 @@
     "particle": "alaindustrial:block/battery_box_side",
     "down": "alaindustrial:block/battery_box_bottom",
     "up": "alaindustrial:block/battery_box_top",
-    "north": "alaindustrial:block/battery_box_output",
-    "south": "alaindustrial:block/battery_box_front",
+    "north": "alaindustrial:block/energy_port_in",
+    "south": "alaindustrial:block/energy_port_out",
     "east": "alaindustrial:block/battery_box_side",
     "west": "alaindustrial:block/battery_box_side"
   }

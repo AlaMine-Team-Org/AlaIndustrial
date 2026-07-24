@@ -374,6 +374,7 @@ public final class IndustrializationNeoForge {
 					ModBlockEntitiesNeoForge.ELECTRIC_FURNACE,
 					ModBlockEntitiesNeoForge.EXTRACTOR,
 					ModBlockEntitiesNeoForge.COMPRESSOR,
+					ModBlockEntitiesNeoForge.SAWMILL,
 					ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR,
 					ModBlockEntitiesNeoForge.PUMP,
 					ModBlockEntitiesNeoForge.WATER_MILL,
@@ -405,11 +406,29 @@ public final class IndustrializationNeoForge {
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.ELECTRIC_FURNACE);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.EXTRACTOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.COMPRESSOR);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SAWMILL);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.PUMP);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.IRON_CHEST);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SILVER_CHEST);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GOLD_CHEST);
+		// MOD-193: the six containers MOD-104 missed. Fabric never showed the gap — ItemStorage.SIDED
+		// wraps any Container through a global fallback, so every machine is visible to the pipe there
+		// for free. Here the capability is per block entity, so anything absent from this list is
+		// invisible to the pipe and to other mods' item transport, while a vanilla hopper still works
+		// on it — an inconsistency visible only on this loader. MachineBlockEntity#getSlotsForFace
+		// states the intended contract: "hoppers/pipes ... on either loader".
+		//
+		// Only containers that actually own slots are listed. Registering a zero-slot block entity
+		// (moonlit/daylight panel, teleporter, item pipe, cable) would make ItemPipeBlock treat its
+		// face as an endpoint and draw a connection arm that can never move an item — the same
+		// misleading-joint defect as MOD-038/MOD-194. FluidTank is not a Container at all.
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.IRON_FURNACE);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SOLAR_PANEL);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.WATER_MILL);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.WIND_MILL);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.HIGH_ALTITUDE_WIND_MILL);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.STORM_WIND_MILL);
 
 		// MOD-063: item-side fluid capability for the Vacuum Capsule, so other mods' pipes/tanks can fill
 		// or drain a capsule sitting in a slot. One CapsuleResourceHandler per stack access, both items.

@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_stairs",
+  "ingredient": "#minecraft:bamboo_blocks",
+  "result": {
+    "id": "minecraft:bamboo_stairs",
+    "count": 3
+  },
+  "energy": 160
+}

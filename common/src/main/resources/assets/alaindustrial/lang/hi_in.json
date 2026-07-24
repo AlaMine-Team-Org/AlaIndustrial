@@ -401,5 +401,12 @@
 	"block.alaindustrial.industrial_workbench": "औद्योगिक कार्यमेज़",
 	"entity.alaindustrial.villager.industrialist": "उद्योगपति",
 	"advancements.alaindustrial.first_trade.title": "व्यापार साझेदार",
-	"advancements.alaindustrial.first_trade.description": "उद्योगपति से व्यापार करें"
+	"advancements.alaindustrial.first_trade.description": "उद्योगपति से व्यापार करें",
+	"block.alaindustrial.sawmill": "Sawmill",
+	"gui.alaindustrial.sawmill.mode.planks": "Planks",
+	"gui.alaindustrial.sawmill.mode.sticks": "Sticks",
+	"gui.alaindustrial.sawmill.mode.slabs": "Slabs",
+	"gui.alaindustrial.sawmill.mode.stairs": "Stairs",
+	"advancements.alaindustrial.sawmill.title": "Sawmill",
+	"advancements.alaindustrial.sawmill.description": "Place a Sawmill and cut wood with a higher yield"
 }

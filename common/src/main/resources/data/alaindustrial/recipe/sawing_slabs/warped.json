@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_slabs",
+  "ingredient": "#minecraft:warped_stems",
+  "result": {
+    "id": "minecraft:warped_slab",
+    "count": 12
+  },
+  "energy": 160
+}

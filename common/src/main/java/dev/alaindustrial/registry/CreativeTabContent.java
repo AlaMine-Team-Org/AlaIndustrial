@@ -150,6 +150,9 @@ public final class CreativeTabContent {
 		out.accept(ModContent.IRON_FURNACE_ITEM.get());
 		out.accept(ModContent.EXTRACTOR_ITEM.get());
 		out.accept(ModContent.COMPRESSOR_ITEM.get());
+		// Sawmill (MOD-150) is deliberately absent — MOD-209 hides the unfinished machine from players
+		// until it is done. It never shipped in a public release, so no world can already contain it.
+		// The block stays registered (reachable only via /give); restoring it = reverting MOD-209.
 		out.accept(ModContent.PUMP_ITEM.get());
 	}
 

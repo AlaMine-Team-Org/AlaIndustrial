@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_slabs",
+  "ingredient": "#minecraft:bamboo_blocks",
+  "result": {
+    "id": "minecraft:bamboo_slab",
+    "count": 6
+  },
+  "energy": 160
+}

@@ -64,7 +64,12 @@ public final class RecipeViewerInfo {
 				ModContent.INSULATED_TIN_CABLE,
 				// Filled capsule (MOD-063) has no recipe — it is obtained by filling an empty capsule, so it
 				// would otherwise show as a recipe-less entry. Empty vacuum_capsule stays visible (craftable).
-				ModContent.FILLED_VACUUM_CAPSULE);
+				ModContent.FILLED_VACUUM_CAPSULE,
+				// Sawmill (MOD-209): the machine is unfinished and hidden from players until it is done.
+				// It keeps its registration (so no world breaks and dev work can continue), but it must not
+				// appear in the viewer grid — it has no creative-tab entry, no crafting recipe and no
+				// categories of its own any more.
+				ModContent.SAWMILL_ITEM);
 	}
 
 	/**

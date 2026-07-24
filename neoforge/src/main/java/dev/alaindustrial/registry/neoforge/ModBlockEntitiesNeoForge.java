@@ -6,6 +6,7 @@ import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
+import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.ExtractorBlockEntity;
@@ -88,6 +89,8 @@ public final class ModBlockEntitiesNeoForge {
 			register("extractor", ExtractorBlockEntity::new, ModBlocksNeoForge.EXTRACTOR);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CompressorBlockEntity>> COMPRESSOR =
 			register("compressor", CompressorBlockEntity::new, ModBlocksNeoForge.COMPRESSOR);
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SawmillBlockEntity>> SAWMILL =
+			register("sawmill", SawmillBlockEntity::new, ModBlocksNeoForge.SAWMILL);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeothermalGeneratorBlockEntity>> GEOTHERMAL_GENERATOR =
 			register("geothermal_generator", GeothermalGeneratorBlockEntity::new, ModBlocksNeoForge.GEOTHERMAL_GENERATOR);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PumpBlockEntity>> PUMP =
@@ -140,6 +143,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.IRON_FURNACE_BE = IRON_FURNACE::get;
 		ModContent.EXTRACTOR_BE = EXTRACTOR::get;
 		ModContent.COMPRESSOR_BE = COMPRESSOR::get;
+		ModContent.SAWMILL_BE = SAWMILL::get;
 		ModContent.GEOTHERMAL_GENERATOR_BE = GEOTHERMAL_GENERATOR::get;
 		ModContent.PUMP_BE = PUMP::get;
 		ModContent.FLUID_TANK_BE = FLUID_TANK::get;

@@ -401,5 +401,12 @@
 	"block.alaindustrial.industrial_workbench": "Верстат індустріаліста",
 	"entity.alaindustrial.villager.industrialist": "Індустріаліст",
 	"advancements.alaindustrial.first_trade.title": "Діловий партнер",
-	"advancements.alaindustrial.first_trade.description": "Здійсніть угоду з Індустріалістом"
+	"advancements.alaindustrial.first_trade.description": "Здійсніть угоду з Індустріалістом",
+	"block.alaindustrial.sawmill": "Лісопилка",
+	"gui.alaindustrial.sawmill.mode.planks": "Дошки",
+	"gui.alaindustrial.sawmill.mode.sticks": "Палиці",
+	"gui.alaindustrial.sawmill.mode.slabs": "Плити",
+	"gui.alaindustrial.sawmill.mode.stairs": "Сходи",
+	"advancements.alaindustrial.sawmill.title": "Лісопилка",
+	"advancements.alaindustrial.sawmill.description": "Встановіть лісопилку та розпилюйте деревину з підвищеним виходом"
 }

@@ -401,5 +401,12 @@
 	"block.alaindustrial.industrial_workbench": "Mesa de trabajo industrial",
 	"entity.alaindustrial.villager.industrialist": "Industrial",
 	"advancements.alaindustrial.first_trade.title": "Socio comercial",
-	"advancements.alaindustrial.first_trade.description": "Comercia con el Industrial"
+	"advancements.alaindustrial.first_trade.description": "Comercia con el Industrial",
+	"block.alaindustrial.sawmill": "Sawmill",
+	"gui.alaindustrial.sawmill.mode.planks": "Planks",
+	"gui.alaindustrial.sawmill.mode.sticks": "Sticks",
+	"gui.alaindustrial.sawmill.mode.slabs": "Slabs",
+	"gui.alaindustrial.sawmill.mode.stairs": "Stairs",
+	"advancements.alaindustrial.sawmill.title": "Sawmill",
+	"advancements.alaindustrial.sawmill.description": "Place a Sawmill and cut wood with a higher yield"
 }

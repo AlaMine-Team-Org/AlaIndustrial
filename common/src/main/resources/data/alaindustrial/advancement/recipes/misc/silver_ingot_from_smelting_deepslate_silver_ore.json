@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ingredient": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:deepslate_silver_ore" } ] } },
+    "has_the_recipe": { "trigger": "minecraft:recipe_unlocked", "conditions": { "recipe": "alaindustrial:silver_ingot_from_smelting_deepslate_silver_ore" } }
+  },
+  "requirements": [ [ "has_the_recipe", "has_ingredient" ] ],
+  "rewards": {
+    "recipes": [ "alaindustrial:silver_ingot_from_smelting_deepslate_silver_ore" ]
+  }
+}

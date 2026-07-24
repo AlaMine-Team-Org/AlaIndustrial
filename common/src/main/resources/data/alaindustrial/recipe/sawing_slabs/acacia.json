@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_slabs",
+  "ingredient": "#minecraft:acacia_logs",
+  "result": {
+    "id": "minecraft:acacia_slab",
+    "count": 12
+  },
+  "energy": 160
+}

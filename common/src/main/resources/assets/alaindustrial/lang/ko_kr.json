@@ -401,5 +401,12 @@
 	"block.alaindustrial.industrial_workbench": "산업 작업대",
 	"entity.alaindustrial.villager.industrialist": "실업가",
 	"advancements.alaindustrial.first_trade.title": "사업 파트너",
-	"advancements.alaindustrial.first_trade.description": "실업가와 거래하기"
+	"advancements.alaindustrial.first_trade.description": "실업가와 거래하기",
+	"block.alaindustrial.sawmill": "Sawmill",
+	"gui.alaindustrial.sawmill.mode.planks": "Planks",
+	"gui.alaindustrial.sawmill.mode.sticks": "Sticks",
+	"gui.alaindustrial.sawmill.mode.slabs": "Slabs",
+	"gui.alaindustrial.sawmill.mode.stairs": "Stairs",
+	"advancements.alaindustrial.sawmill.title": "Sawmill",
+	"advancements.alaindustrial.sawmill.description": "Place a Sawmill and cut wood with a higher yield"
 }

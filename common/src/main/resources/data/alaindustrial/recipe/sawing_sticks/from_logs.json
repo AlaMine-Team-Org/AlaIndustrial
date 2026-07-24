@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_sticks",
+  "ingredient": "#minecraft:logs",
+  "result": {
+    "id": "minecraft:stick",
+    "count": 12
+  },
+  "energy": 160
+}

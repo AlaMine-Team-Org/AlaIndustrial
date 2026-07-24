@@ -8,6 +8,7 @@ import dev.alaindustrial.item.FluidTankBlockItem;
 import dev.alaindustrial.item.ScytheTier;
 import dev.alaindustrial.item.ScytheTiers;
 import dev.alaindustrial.item.ModToolMaterials;
+import dev.alaindustrial.item.TemperedIronToolStats;
 import dev.alaindustrial.item.NetworkAnalyzerItem;
 import dev.alaindustrial.item.TeleporterRemoteItem;
 import dev.alaindustrial.item.PouchItem;
@@ -70,7 +71,7 @@ public final class ModItemsNeoForge {
 	// damage/enchant). setId is applied automatically by NeoForge, matching the Fabric helper.
 	public static final DeferredItem<Item> TEMPERED_IRON_PICKAXE =
 			ITEMS.registerItem("tempered_iron_pickaxe", Item::new,
-					p -> p.pickaxe(ModToolMaterials.TEMPERED_IRON, 1.0f, -2.8f));
+					p -> p.pickaxe(ModToolMaterials.TEMPERED_IRON, TemperedIronToolStats.PICKAXE.attackDamage(), TemperedIronToolStats.PICKAXE.attackSpeed()));
 	// Tempered-iron tool line (MOD-054): axe/hoe/shovel/sword. Pickaxe/sword are plain Item (their
 	// 26.2 subclasses were removed). Axe/Hoe/Shovel extend their vanilla subclasses so useOn works
 	// (log stripping / dirt tilling / grass path) — those ctors call props.{axe,hoe,shovel}() and
@@ -78,19 +79,19 @@ public final class ModItemsNeoForge {
 	// mirror vanilla iron equivalents (javap-verified).
 	public static final DeferredItem<Item> TEMPERED_IRON_AXE =
 			ITEMS.registerItem("tempered_iron_axe",
-					p -> new net.minecraft.world.item.AxeItem(ModToolMaterials.TEMPERED_IRON, 6.0f, -3.1f, p),
+					p -> new net.minecraft.world.item.AxeItem(ModToolMaterials.TEMPERED_IRON, TemperedIronToolStats.AXE.attackDamage(), TemperedIronToolStats.AXE.attackSpeed(), p),
 					Item.Properties::new);
 	public static final DeferredItem<Item> TEMPERED_IRON_HOE =
 			ITEMS.registerItem("tempered_iron_hoe",
-					p -> new net.minecraft.world.item.HoeItem(ModToolMaterials.TEMPERED_IRON, -2.0f, -1.0f, p),
+					p -> new net.minecraft.world.item.HoeItem(ModToolMaterials.TEMPERED_IRON, TemperedIronToolStats.HOE.attackDamage(), TemperedIronToolStats.HOE.attackSpeed(), p),
 					Item.Properties::new);
 	public static final DeferredItem<Item> TEMPERED_IRON_SHOVEL =
 			ITEMS.registerItem("tempered_iron_shovel",
-					p -> new net.minecraft.world.item.ShovelItem(ModToolMaterials.TEMPERED_IRON, 1.5f, -3.0f, p),
+					p -> new net.minecraft.world.item.ShovelItem(ModToolMaterials.TEMPERED_IRON, TemperedIronToolStats.SHOVEL.attackDamage(), TemperedIronToolStats.SHOVEL.attackSpeed(), p),
 					Item.Properties::new);
 	public static final DeferredItem<Item> TEMPERED_IRON_SWORD =
 			ITEMS.registerItem("tempered_iron_sword", Item::new,
-					p -> p.sword(ModToolMaterials.TEMPERED_IRON, 3.0f, -2.4f));
+					p -> p.sword(ModToolMaterials.TEMPERED_IRON, TemperedIronToolStats.SWORD.attackDamage(), TemperedIronToolStats.SWORD.attackSpeed()));
 	// Tempered-iron armor line (MOD-056): helmet/chestplate/leggings/boots. MC 26.2 has no ArmorItem
 	// class — each piece is a plain Item whose equipment properties are attached via the single
 	// Item.Properties.humanoidArmor(ArmorMaterial, ArmorType) helper (javap-verified against the
@@ -218,6 +219,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("extractor", ModBlocksNeoForge.EXTRACTOR);
 	public static final DeferredItem<BlockItem> COMPRESSOR_ITEM =
 			ITEMS.registerSimpleBlockItem("compressor", ModBlocksNeoForge.COMPRESSOR);
+	public static final DeferredItem<BlockItem> SAWMILL_ITEM =
+			ITEMS.registerSimpleBlockItem("sawmill", ModBlocksNeoForge.SAWMILL);
 	public static final DeferredItem<BlockItem> GEOTHERMAL_GENERATOR_ITEM =
 			ITEMS.registerSimpleBlockItem("geothermal_generator", ModBlocksNeoForge.GEOTHERMAL_GENERATOR);
 	public static final DeferredItem<BlockItem> PUMP_ITEM =
@@ -375,6 +378,7 @@ public final class ModItemsNeoForge {
 		ModContent.IRON_FURNACE_ITEM = IRON_FURNACE_ITEM;
 		ModContent.EXTRACTOR_ITEM = EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = COMPRESSOR_ITEM;
+		ModContent.SAWMILL_ITEM = SAWMILL_ITEM;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = GEOTHERMAL_GENERATOR_ITEM;
 		ModContent.PUMP_ITEM = PUMP_ITEM;
 		ModContent.FLUID_TANK_ITEM = FLUID_TANK_ITEM::get;

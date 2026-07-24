@@ -14,11 +14,14 @@ import net.minecraft.world.level.material.PushReaction;
  * neutral fragments here makes that drift class of bug impossible by construction: there is one
  * place to edit, visible to both loaders.
  *
- * <p>What does <b>not</b> live here: the per-block {@code strength/sound/noOcclusion} chains. Those
- * stay per-loader because they are paired with the registration call ({@code setId} on Fabric,
- * {@code DeferredRegister} on NeoForge), and a shared {@code UnaryOperator<Properties>} helper would
- * still need to be applied by each loader — a cosmetic win only. The fragments below are the ones
- * that are genuinely loader-neutral AND were the actual drift source.
+ * <p><b>Per-block {@code strength/sound/noOcclusion} chains (MOD-190).</b> These used to be inlined
+ * per loader, deemed a "cosmetic" duplication not worth centralising. MOD-190 revisits that: the same
+ * drift that left a lit generator dark on NeoForge (MOD-157, a {@code litLight} chain divergence) can
+ * silently hit any {@code strength}/{@code sound} value too, and {@code loader_parity_check} exists
+ * only to catch it after the fact. So the per-block chains now live once in
+ * {@link ContentManifest#BLOCK_PROPS}, applied by both loaders via {@link #applyTorch} / the map
+ * operators — closing the drift class for the whole block definition, not just the light helper.
+ * {@code setId} (Fabric) and {@code requiresCorrectToolForDrops} base still layer per loader.
  */
 public final class ModBlockProperties {
 	private ModBlockProperties() {
@@ -40,16 +43,19 @@ public final class ModBlockProperties {
 	}
 
 	/**
-	 * The vanilla-torch property chain (MOD-085), mirroring {@code Blocks.TORCH} exactly. Loader-neutral
-	 * fragments only — does NOT call {@code setId} (the Fabric side adds it from its key; NeoForge's
-	 * {@code DeferredRegister} applies it from the deferred key). Both loaders call this and then layer
-	 * their own {@code setId} on top.
+	 * The vanilla-torch chain (MOD-085) as an operator over an existing {@code Properties} (MOD-190), so
+	 * {@link ContentManifest#BLOCK_PROPS} can apply it to the loader-provided base (Fabric passes a base
+	 * carrying {@code setId}; NeoForge a bare one). Mirrors {@code Blocks.TORCH} exactly and stays
+	 * loader-neutral — it does NOT call {@code setId}.
 	 *
 	 * <p>No collision, instant break (breaks by hand, no tool gate), light level 14 (identical to the
 	 * vanilla torch), WOOD sound, {@code DESTROY} push reaction (a piston breaks it), no occlusion.
+	 *
+	 * <p>Superseded {@code torchBase()}, removed in MOD-191: once both loaders went through
+	 * {@code BLOCK_PROPS} it had no callers left anywhere in the repo.
 	 */
-	public static BlockBehaviour.Properties torchBase() {
-		return BlockBehaviour.Properties.of().noCollision().instabreak()
-				.lightLevel(state -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY).noOcclusion();
+	public static BlockBehaviour.Properties applyTorch(BlockBehaviour.Properties p) {
+		return p.noCollision().instabreak().lightLevel(state -> 14).sound(SoundType.WOOD)
+				.pushReaction(PushReaction.DESTROY).noOcclusion();
 	}
 }

@@ -32,4 +32,7 @@ public final class MachineRecipeViewerTargets {
 			new Target(ElectricFurnaceScreen.class, ModRecipes.SMELTING, new GuiRect(82, 38, 25, 9)),
 			new Target(CompressorScreen.class, ModRecipes.COMPRESSING, new GuiRect(81, 34, 25, 18)),
 			new Target(ExtractorScreen.class, ModRecipes.EXTRACTING, new GuiRect(80, 37, 29, 10)));
+	// Sawmill (MOD-150) had a target here that opened all four mode categories from one arrow. MOD-209
+	// hides the unfinished machine from players: with no REI/JEI categories left to open, the target and
+	// its SAWMILL_KINDS fan-out are gone too. Restoring the machine = reverting MOD-209.
 }

@@ -30,6 +30,14 @@ public class SolarPanelMenu extends MachineMenu {
 			public boolean mayPlace(ItemStack stack) {
 				return machine.canPlaceItem(0, stack);
 			}
+
+			// MOD-211: one chip at a time, mirroring WindMillMenu. The block entity's emptiness guard stops
+			// automation stacking, but a player can drop a whole held stack into an EMPTY slot in one click
+			// — that path is limited here, and only here.
+			@Override
+			public int getMaxStackSize(ItemStack stack) {
+				return 1;
+			}
 		});
 	}
 

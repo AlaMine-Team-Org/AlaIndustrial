@@ -4,7 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.menu.MachineMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.registry.ModItems;
-import dev.alaindustrial.registry.ModMenus;
+import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
@@ -581,38 +581,38 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 ModItems.ALIGNMENT_CHIP_NIGHT);
 
         // ── Machines without custom screens (one shot each) ──────────────────────────
-        shootMenu(context, "gui_moonlit_solar_panel", ModMenus.MOONLIT_SOLAR_PANEL, "Moonlit Solar Panel");
+        shootMenu(context, "gui_moonlit_solar_panel", ModContent.MOONLIT_SOLAR_PANEL_MENU.get(), "Moonlit Solar Panel");
 
         // ── MOD-080: upgrade panel open — gear tab + cross panel + mute chip in the active slot ──
-        shootMenuWithPanelOpen(context, "gui_macerator_upgrades_open", ModMenus.MACERATOR, "Macerator", CAP, CAP, 0, 0);
+        shootMenuWithPanelOpen(context, "gui_macerator_upgrades_open", ModContent.MACERATOR_MENU.get(), "Macerator", CAP, CAP, 0, 0);
         // Dragged over the GUI: proves the panel is a top overlay (GUI slots/text do not bleed over it).
-        shootMenuWithPanelOpen(context, "gui_macerator_upgrades_dragged", ModMenus.MACERATOR, "Macerator", CAP, CAP, -120, 60);
+        shootMenuWithPanelOpen(context, "gui_macerator_upgrades_dragged", ModContent.MACERATOR_MENU.get(), "Macerator", CAP, CAP, -120, 60);
 
         // ── Electric Furnace — three states ──────────────────────────────────────────
         // State 1: empty — no fuel, no energy
         shootMenuWithState(context, "gui_electric_furnace_empty",
-                ModMenus.ELECTRIC_FURNACE, "Electric Furnace",
+                ModContent.ELECTRIC_FURNACE_MENU.get(), "Electric Furnace",
                 0, CAP, 0, BURN);
 
         // State 2: smelting — 50 % through, energy at 75 %
         shootMenuWithState(context, "gui_electric_furnace_smelting",
-                ModMenus.ELECTRIC_FURNACE, "Electric Furnace",
+                ModContent.ELECTRIC_FURNACE_MENU.get(), "Electric Furnace",
                 CAP * 3 / 4, CAP, BURN / 2, BURN);
 
         // State 3: full — full energy, arrow at max
         shootMenuWithState(context, "gui_electric_furnace_full",
-                ModMenus.ELECTRIC_FURNACE, "Electric Furnace",
+                ModContent.ELECTRIC_FURNACE_MENU.get(), "Electric Furnace",
                 CAP, CAP, BURN, BURN);
 
         // ── BatteryBox — three states ─────────────────────────────────────────────────────
         shootMenuWithState(context, "gui_battery_box_empty",
-                ModMenus.BATTERY_BOX, "BatteryBox",
+                ModContent.BATTERY_BOX_MENU.get(), "BatteryBox",
                 0, CAP, 0, 0);
         shootMenuWithState(context, "gui_battery_box_half",
-                ModMenus.BATTERY_BOX, "BatteryBox",
+                ModContent.BATTERY_BOX_MENU.get(), "BatteryBox",
                 CAP / 2, CAP, 0, 0);
         shootMenuWithState(context, "gui_battery_box_full",
-                ModMenus.BATTERY_BOX, "BatteryBox",
+                ModContent.BATTERY_BOX_MENU.get(), "BatteryBox",
                 CAP, CAP, 0, 0);
         // MOD-052: fourth state — a half-charged Battery Pouch sitting in the new charge slot, so the
         // reviewer sees the slot niche, the pouch icon and its EU item bar together.
@@ -622,81 +622,81 @@ public class GuiClientGameTest implements FabricClientGameTest {
         // ── LV Generator — three states ──────────────────────────────────────────────
         // State 1: empty — no fuel, no energy
         shootMenuWithState(context, "gui_generator_empty",
-                ModMenus.GENERATOR, "LV Generator",
+                ModContent.GENERATOR_MENU.get(), "LV Generator",
                 0, CAP, 0, BURN);
 
         // State 2: burning — 50 % fuel remaining, energy building to 50 %
         shootMenuWithState(context, "gui_generator_burning",
-                ModMenus.GENERATOR, "LV Generator",
+                ModContent.GENERATOR_MENU.get(), "LV Generator",
                 CAP / 2, CAP, BURN / 2, BURN);
 
         // State 3: full energy — buffer saturated, no active burn
         shootMenuWithState(context, "gui_generator_full",
-                ModMenus.GENERATOR, "LV Generator",
+                ModContent.GENERATOR_MENU.get(), "LV Generator",
                 CAP, CAP, 0, BURN);
 
         // ── Geothermal Generator — three states ──────────────────────────────────────
         // State 1: empty — no lava in tank, no energy
         shootMenuWithState(context, "gui_geothermal_empty",
-                ModMenus.GEOTHERMAL_GENERATOR, "Geothermal Generator",
+                ModContent.GEOTHERMAL_GENERATOR_MENU.get(), "Geothermal Generator",
                 0, CAP, 0, TANK);
 
         // State 2: lava tank ~70 %, energy building (~40 %)
         shootMenuWithState(context, "gui_geothermal_mid",
-                ModMenus.GEOTHERMAL_GENERATOR, "Geothermal Generator",
+                ModContent.GEOTHERMAL_GENERATOR_MENU.get(), "Geothermal Generator",
                 CAP * 2 / 5, CAP, TANK * 7 / 10, TANK);
 
         // State 3: full lava tank, full energy buffer
         shootMenuWithState(context, "gui_geothermal_full",
-                ModMenus.GEOTHERMAL_GENERATOR, "Geothermal Generator",
+                ModContent.GEOTHERMAL_GENERATOR_MENU.get(), "Geothermal Generator",
                 CAP, CAP, TANK, TANK);
 
         // ── Macerator — three states ─────────────────────────────────────────────────
         // State 1: empty — no input, no energy
         shootMenuWithState(context, "gui_macerator_empty",
-                ModMenus.MACERATOR, "Macerator",
+                ModContent.MACERATOR_MENU.get(), "Macerator",
                 0, CAP, 0, BURN);
 
         // State 2: processing — 60 % through, moderate energy
         shootMenuWithState(context, "gui_macerator_processing",
-                ModMenus.MACERATOR, "Macerator",
+                ModContent.MACERATOR_MENU.get(), "Macerator",
                 CAP * 3 / 4, CAP, BURN * 3 / 5, BURN);
 
         // State 3: done — full energy, arrow at max
         shootMenuWithState(context, "gui_macerator_full",
-                ModMenus.MACERATOR, "Macerator",
+                ModContent.MACERATOR_MENU.get(), "Macerator",
                 CAP, CAP, BURN, BURN);
 
         // ── Extractor — three states ─────────────────────────────────────────────
         // State 1: empty — no input, no energy, chevrons dark
         shootMenuWithState(context, "gui_extractor_empty",
-                ModMenus.EXTRACTOR, "Extractor",
+                ModContent.EXTRACTOR_MENU.get(), "Extractor",
                 0, CAP, 0, BURN);
 
         // State 2: extracting — 60 % through, energy at 75 % (cyan chevrons mid-fill)
         shootMenuWithState(context, "gui_extractor_processing",
-                ModMenus.EXTRACTOR, "Extractor",
+                ModContent.EXTRACTOR_MENU.get(), "Extractor",
                 CAP * 3 / 4, CAP, BURN * 3 / 5, BURN);
 
         // State 3: done — full energy, chevrons fully lit
         shootMenuWithState(context, "gui_extractor_full",
-                ModMenus.EXTRACTOR, "Extractor",
+                ModContent.EXTRACTOR_MENU.get(), "Extractor",
                 CAP, CAP, BURN, BURN);
 
         // ── Compressor — three states ────────────────────────────────────────────
         // State 1: idle — no energy, no active compression
         shootMenuWithState(context, "gui_compressor_idle",
-                ModMenus.COMPRESSOR, "Compressor",
+                ModContent.COMPRESSOR_MENU.get(), "Compressor",
                 0, CAP, 0, BURN);
 
         // State 2: compressing — 50 % through, energy at 75 % (arrows mid-way toward center)
         shootMenuWithState(context, "gui_compressor_mid",
-                ModMenus.COMPRESSOR, "Compressor",
+                ModContent.COMPRESSOR_MENU.get(), "Compressor",
                 CAP * 3 / 4, CAP, BURN / 2, BURN);
 
         // State 3: done — full energy, arrows fully converged at center
         shootMenuWithState(context, "gui_compressor_done",
-                ModMenus.COMPRESSOR, "Compressor",
+                ModContent.COMPRESSOR_MENU.get(), "Compressor",
                 CAP, CAP, BURN, BURN);
     }
 
@@ -710,7 +710,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                                                  int energy, int capacity) {
         LOG.info("[GUITEST] opening {} (pouch in charge slot)", name);
         context.runOnClient(mc -> {
-            MenuScreens.create(ModMenus.BATTERY_BOX, mc, 0, Component.literal("BatteryBox"));
+            MenuScreens.create(ModContent.BATTERY_BOX_MENU.get(), mc, 0, Component.literal("BatteryBox"));
             if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
                     && acs.getMenu() instanceof MachineMenu menu) {
                 menu.injectTestData(energy, capacity, 0, 0);
@@ -733,7 +733,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                                                 int energy, int capacity) {
         LOG.info("[GUITEST] opening {} (energy pack in charge slot)", name);
         context.runOnClient(mc -> {
-            MenuScreens.create(ModMenus.BATTERY_BOX, mc, 0, Component.literal("BatteryBox"));
+            MenuScreens.create(ModContent.BATTERY_BOX_MENU.get(), mc, 0, Component.literal("BatteryBox"));
             if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
                     && acs.getMenu() instanceof MachineMenu menu) {
                 menu.injectTestData(energy, capacity, 0, 0);
@@ -847,7 +847,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 name, energy, capacity, production, mode, evolveProgress, evolveMax,
                 chipItem != null ? chipItem.getDescriptionId() : "none");
         context.runOnClient(mc -> {
-            MenuScreens.create(ModMenus.SOLAR_PANEL, mc, 0, Component.literal("Solar Panel"));
+            MenuScreens.create(ModContent.SOLAR_PANEL_MENU.get(), mc, 0, Component.literal("Solar Panel"));
             if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
                     && acs.getMenu() instanceof SolarPanelMenu menu) {
                 menu.injectSolarTestData(energy, capacity, production, mode, evolveProgress, evolveMax);

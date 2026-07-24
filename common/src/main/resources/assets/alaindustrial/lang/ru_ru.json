@@ -401,5 +401,12 @@
 	"block.alaindustrial.industrial_workbench": "Верстак индустриалиста",
 	"entity.alaindustrial.villager.industrialist": "Индустриалист",
 	"advancements.alaindustrial.first_trade.title": "Деловой партнёр",
-	"advancements.alaindustrial.first_trade.description": "Совершите сделку с Индустриалистом"
+	"advancements.alaindustrial.first_trade.description": "Совершите сделку с Индустриалистом",
+	"block.alaindustrial.sawmill": "Лесопилка",
+	"gui.alaindustrial.sawmill.mode.planks": "Доски",
+	"gui.alaindustrial.sawmill.mode.sticks": "Палки",
+	"gui.alaindustrial.sawmill.mode.slabs": "Полублоки",
+	"gui.alaindustrial.sawmill.mode.stairs": "Ступени",
+	"advancements.alaindustrial.sawmill.title": "Лесопилка",
+	"advancements.alaindustrial.sawmill.description": "Поставьте лесопилку и распускайте древесину с повышенным выходом"
 }

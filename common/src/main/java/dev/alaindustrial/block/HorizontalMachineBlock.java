@@ -47,9 +47,16 @@ public abstract class HorizontalMachineBlock extends AbstractMachineBlock {
 	 * {@link #isCableConnectable()}, never hardcode {@code true}: that delegation is what keeps
 	 * {@link IronChestBlock} (which overrides the no-arg form to {@code false}) inert on all six
 	 * faces. Hardcoding {@code true} here would silently re-expose its five non-front faces to a
-	 * cable arm. If your subclass exposes energy on {@code FACING} (the pump does — its front is the
-	 * fluid-intake + energy-IN face), override this method back to {@code super} or to
-	 * {@code isCableConnectable()} so the arm reaches all six faces.
+	 * cable arm. If a subclass ever exposes energy on {@code FACING}, override this method back to
+	 * {@code super} or to {@code isCableConnectable()} so the arm reaches all six faces.
+	 *
+	 * <p><b>The pump is NOT such a subclass</b> — this used to say it was (MOD-202). Its front is the
+	 * fluid-intake face, but its <i>energy</i> role there is {@code NONE}:
+	 * {@link dev.alaindustrial.block.entity.PumpBlockEntity#energyRoleForFace} routes through
+	 * {@code facingAwareRole}, which returns {@code NONE} for {@code FACING} and {@code IN} for the
+	 * other five. {@code PumpBlock} therefore correctly overrides nothing, and "fixing" it by adding
+	 * the override would put a cable arm on an energy-inert face — the exact defect class of
+	 * MOD-038 / MOD-061 / MOD-194.
 	 *
 	 * <p>{@code side} is the world face of this block the cable touches (direction from this block
 	 * toward the cable), matching the convention documented on

@@ -84,8 +84,15 @@ public final class ModRecipes {
 	public static final Kind SMELTING = new Kind("smelting", 200);
 	public static final Kind COMPRESSING = new Kind("compressing", 260);
 	public static final Kind EXTRACTING = new Kind("extracting", 240);
+	// Sawmill (MOD-150): one Kind per cutting mode (planks/sticks/slabs/stairs). defaultEnergy 160 =
+	// sawmillDuration (80) × machineEuPerTick (2); every shipped sawing JSON sets energy: 160 explicitly.
+	public static final Kind SAWING_PLANKS = new Kind("sawing_planks", 160);
+	public static final Kind SAWING_STICKS = new Kind("sawing_sticks", 160);
+	public static final Kind SAWING_SLABS = new Kind("sawing_slabs", 160);
+	public static final Kind SAWING_STAIRS = new Kind("sawing_stairs", 160);
 
-	private static final Kind[] ALL = {MACERATION, SMELTING, COMPRESSING, EXTRACTING};
+	private static final Kind[] ALL = {MACERATION, SMELTING, COMPRESSING, EXTRACTING,
+			SAWING_PLANKS, SAWING_STICKS, SAWING_SLABS, SAWING_STAIRS};
 
 	/** All recipe families, in registration order (used by both loaders' registration). */
 	public static Kind[] kinds() {

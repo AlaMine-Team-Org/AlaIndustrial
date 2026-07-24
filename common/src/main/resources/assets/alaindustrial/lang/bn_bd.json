@@ -401,5 +401,12 @@
 	"block.alaindustrial.industrial_workbench": "শিল্প কর্মটেবিল",
 	"entity.alaindustrial.villager.industrialist": "শিল্পপতি",
 	"advancements.alaindustrial.first_trade.title": "ব্যবসায়িক অংশীদার",
-	"advancements.alaindustrial.first_trade.description": "শিল্পপতির সাথে বাণিজ্য করুন"
+	"advancements.alaindustrial.first_trade.description": "শিল্পপতির সাথে বাণিজ্য করুন",
+	"block.alaindustrial.sawmill": "Sawmill",
+	"gui.alaindustrial.sawmill.mode.planks": "Planks",
+	"gui.alaindustrial.sawmill.mode.sticks": "Sticks",
+	"gui.alaindustrial.sawmill.mode.slabs": "Slabs",
+	"gui.alaindustrial.sawmill.mode.stairs": "Stairs",
+	"advancements.alaindustrial.sawmill.title": "Sawmill",
+	"advancements.alaindustrial.sawmill.description": "Place a Sawmill and cut wood with a higher yield"
 }

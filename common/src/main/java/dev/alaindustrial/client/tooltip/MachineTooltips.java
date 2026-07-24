@@ -5,6 +5,8 @@ import dev.alaindustrial.block.BatteryBoxBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.CompressorBlock;
+import dev.alaindustrial.block.SawmillBlock;
+import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
 import dev.alaindustrial.block.ElectricFurnaceBlock;
 import dev.alaindustrial.block.ExtractorBlock;
@@ -288,6 +290,7 @@ public final class MachineTooltips {
 				|| block instanceof MaceratorBlock
 				|| block instanceof ElectricFurnaceBlock
 				|| block instanceof CompressorBlock
+				|| block instanceof SawmillBlock
 				|| block instanceof ExtractorBlock
 				|| block instanceof PumpBlock
 				|| block instanceof BatteryBoxBlock
@@ -319,6 +322,9 @@ public final class MachineTooltips {
 		} else if (block instanceof CompressorBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.compressorDuration)));
+		} else if (block instanceof SawmillBlock) {
+			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
+			lines.add(tt("duration_ticks", Config.scaledDuration(SawmillBlockEntity.DEFAULT_DURATION)));
 		} else if (block instanceof ExtractorBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.extractorDuration)));
@@ -368,6 +374,11 @@ public final class MachineTooltips {
 			lines.add(tt("buffer", Config.machineBuffer));
 			lines.add(tt("energy_per_op",
 					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.compressorDuration)));
+		} else if (block instanceof SawmillBlock) {
+			lines.add(tier());
+			lines.add(tt("buffer", Config.machineBuffer));
+			lines.add(tt("energy_per_op",
+					Config.machineEuPerTickEffective() * Config.scaledDuration(SawmillBlockEntity.DEFAULT_DURATION)));
 		} else if (block instanceof ExtractorBlock) {
 			lines.add(tier());
 			lines.add(tt("buffer", Config.machineBuffer));

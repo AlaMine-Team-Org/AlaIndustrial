@@ -39,18 +39,61 @@ class ConfigBalanceTest {
 	}
 
 	/**
-	 * MOD-086: the vanilla-smelt cost quoted in the electric furnace's recipe-viewer category must be
-	 * what the machine really drains — scaled duration × effective per-tick draw, the same pair
-	 * {@code ElectricFurnaceBlockEntity} ticks away. Each factor rounds on its own, so multiplying the
-	 * raw config fields would agree only at the default multiplier.
+	 * MOD-203: the multiplier used to be exercised at 1.0 only, where it is a no-op by definition —
+	 * so the direction of the scaling was pinned by nothing. A mutant swapping {@code /} for
+	 * {@code *} in {@link Config#scaledDuration} survived the whole suite. Faster machine means
+	 * FEWER ticks and MORE EU per tick; both literals below are hand-computed from the shipped
+	 * defaults (100 t, 2 EU/t), never from the production formula.
 	 */
 	@Test
-	void electricFurnaceVanillaSmeltEu_matchesRuntimeSpend() {
-		assertEquals(Config.scaledDuration(Config.electricFurnaceDuration) * Config.machineEuPerTickEffective(),
-				Config.electricFurnaceVanillaSmeltEu(),
-				"quoted vanilla smelt cost must equal what the furnace actually drains");
+	void speedMultiplier_scalesDurationDownAndDrawUp() {
+		float saved = Config.globalMachineSpeedMultiplier;
+		try {
+			Config.globalMachineSpeedMultiplier = 2.0f;
+			assertEquals(50, Config.scaledDuration(100),
+					"x2 speed must halve the duration (100 t -> 50 t), not double it");
+			assertEquals(4, Config.machineEuPerTickEffective(),
+					"x2 speed must double the per-tick draw (2 -> 4 EU/t)");
+
+			Config.globalMachineSpeedMultiplier = 0.5f;
+			assertEquals(200, Config.scaledDuration(100),
+					"half speed must double the duration (100 t -> 200 t)");
+			assertEquals(1, Config.machineEuPerTickEffective(),
+					"half speed must halve the per-tick draw (2 -> 1 EU/t)");
+		} finally {
+			Config.globalMachineSpeedMultiplier = saved;
+		}
+	}
+
+	/**
+	 * MOD-086: the vanilla-smelt cost quoted in the electric furnace's recipe-viewer category must be
+	 * what the machine really drains — scaled duration × effective per-tick draw. Each factor rounds
+	 * on its own, so multiplying the raw config fields agrees only at the default multiplier.
+	 *
+	 * <p>MOD-203: the first assertion here used to compare
+	 * {@code scaledDuration(dur) * machineEuPerTickEffective()} against
+	 * {@link Config#electricFurnaceVanillaSmeltEu()} — which IS that expression, so it held no matter
+	 * what the production code did. Both cases are now pinned by hand-computed literals, and the x3
+	 * case is the one that matters: separate rounding makes it 33 × 6 = 198, a number the naive
+	 * "100 × 2 × 1" reading cannot produce.
+	 */
+	@Test
+	void electricFurnaceVanillaSmeltEu_roundsEachFactorSeparately() {
 		assertEquals(200, Config.electricFurnaceVanillaSmeltEu(),
 				"canonical vanilla smelt cost on the shipped defaults (100 t x 2 EU/t)");
+
+		float saved = Config.globalMachineSpeedMultiplier;
+		try {
+			Config.globalMachineSpeedMultiplier = 3.0f;
+			assertEquals(33, Config.scaledDuration(Config.electricFurnaceDuration),
+					"x3: round(100 / 3) = 33 ticks");
+			assertEquals(6, Config.machineEuPerTickEffective(),
+					"x3: round(2 * 3) = 6 EU/t");
+			assertEquals(198, Config.electricFurnaceVanillaSmeltEu(),
+					"x3 costs 33 t x 6 EU/t = 198 EU, not the 200 a raw-field multiply would quote");
+		} finally {
+			Config.globalMachineSpeedMultiplier = saved;
+		}
 	}
 
 	@Test

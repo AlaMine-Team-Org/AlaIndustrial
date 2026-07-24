@@ -1,12 +1,10 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_item_1": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "minecraft:oak_planks" } ] } },
-    "has_item_2": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "minecraft:copper_ingot" } ] } },
-    "has_item_3": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:tin_ingot" } ] } },
-    "has_item_4": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:copper_cable" } ] } }
+    "has_ingredient": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:wooden_gear" } ] } },
+    "has_the_recipe": { "trigger": "minecraft:recipe_unlocked", "conditions": { "recipe": "alaindustrial:wind_mill" } }
   },
-  "requirements": [ [ "has_item_1" ], [ "has_item_2" ], [ "has_item_3" ], [ "has_item_4" ] ],
+  "requirements": [ [ "has_the_recipe", "has_ingredient" ] ],
   "rewards": {
     "recipes": [ "alaindustrial:wind_mill" ]
   }

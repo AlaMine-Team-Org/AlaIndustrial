@@ -6,6 +6,7 @@ import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.CompressorBlock;
+import dev.alaindustrial.block.SawmillBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
 import dev.alaindustrial.block.ElectricFurnaceBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
@@ -26,38 +27,28 @@ import dev.alaindustrial.block.WaterMillBlock;
 import dev.alaindustrial.block.WindMillBlock;
 import dev.alaindustrial.block.HighAltitudeWindMillBlock;
 import dev.alaindustrial.block.StormWindMillBlock;
-import dev.alaindustrial.registry.ModBlockProperties;
+import dev.alaindustrial.registry.ContentManifest;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModParticles;
 import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
  * NeoForge block registration (MOD-022 registration-facade). Mirrors the Fabric
- * {@code dev.alaindustrial.registry.ModBlocks} set 1:1 (same ids, same block subclasses, same
- * {@code BlockBehaviour.Properties}) using NeoForge's {@link DeferredRegister.Blocks} — the real
- * content classes from {@code common}, not stubs.
+ * {@code dev.alaindustrial.registry.ModBlocks} set 1:1 (same ids, same block subclasses) using
+ * NeoForge's {@link DeferredRegister.Blocks} with the real content classes from {@code common}.
  *
- * <p><b>Geothermal generator and pump (MOD-028).</b> Both now live in {@code common} — their block
- * entities moved off the Fabric fluid Transfer API onto the neutral {@code FluidPort}/{@code FluidTank}
- * abstraction, so they are registered here like every other machine.
+ * <p><b>MOD-190.</b> The per-block {@code BlockBehaviour.Properties} chain now lives once in
+ * {@link ContentManifest#BLOCK_PROPS}; {@link #props} looks it up by id and wraps it in the property
+ * {@code Supplier} {@code registerBlock} wants. The Fabric side applies the same map entries, so the
+ * two loaders cannot drift (the MOD-157 bug class). {@code setId} is applied by {@code registerBlock}
+ * from the deferred key; {@code requiresCorrectToolForDrops} is baked into the machine map entries.
  *
  * <p><b>Split constraint (verified 26.2 API):</b> the {@code DeferredRegister} object and its
  * {@code register(modBus)} call must live on the {@code neoforge} side.
- *
- * <p><b>Verified against neoforge-26.2.0.8-beta.</b> {@code DeferredRegister.Blocks#registerBlock(
- * String, Function&lt;Properties, ? extends B&gt;, Supplier&lt;Properties&gt;)} applies
- * {@code Properties.setId(...)} automatically from the deferred key, so the factory takes bare
- * {@code Properties} — exactly the {@code (Properties)} constructor each block subclass exposes. The
- * Fabric side calls {@code Properties.of().setId(key)...} explicitly; here {@code setId} is applied by
- * the register, so the property {@link Supplier} below only carries the behaviour (strength/sound/etc.),
- * matching the Fabric {@code props()} helper (which adds {@code requiresCorrectToolForDrops()} to every
- * block).
  */
 public final class ModBlocksNeoForge {
 	public static final DeferredRegister.Blocks BLOCKS =
@@ -65,119 +56,109 @@ public final class ModBlocksNeoForge {
 
 	// --- Machines (energy core + processing) ---
 	public static final DeferredBlock<GeneratorBlock> GENERATOR =
-			BLOCKS.registerBlock("generator", GeneratorBlock::new,
-					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
-							.lightLevel(ModBlockProperties::litLight)));
+			BLOCKS.registerBlock("generator", GeneratorBlock::new, props("generator"));
 	public static final DeferredBlock<SolarPanelBlock> SOLAR_PANEL =
-			BLOCKS.registerBlock("solar_panel", SolarPanelBlock::new, machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.GLASS).noOcclusion()));
+			BLOCKS.registerBlock("solar_panel", SolarPanelBlock::new, props("solar_panel"));
 	public static final DeferredBlock<MoonlitSolarPanelBlock> MOONLIT_SOLAR_PANEL =
-			BLOCKS.registerBlock("moonlit_solar_panel", MoonlitSolarPanelBlock::new, machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.GLASS).noOcclusion()));
+			BLOCKS.registerBlock("moonlit_solar_panel", MoonlitSolarPanelBlock::new, props("moonlit_solar_panel"));
 	public static final DeferredBlock<DaylightSolarPanelBlock> DAYLIGHT_SOLAR_PANEL =
-			BLOCKS.registerBlock("daylight_solar_panel", DaylightSolarPanelBlock::new, machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.GLASS).noOcclusion()));
+			BLOCKS.registerBlock("daylight_solar_panel", DaylightSolarPanelBlock::new, props("daylight_solar_panel"));
 	public static final DeferredBlock<MaceratorBlock> MACERATOR =
-			BLOCKS.registerBlock("macerator", MaceratorBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+			BLOCKS.registerBlock("macerator", MaceratorBlock::new, props("macerator"));
 	public static final DeferredBlock<BatteryBoxBlock> BATTERY_BOX =
-			BLOCKS.registerBlock("battery_box", BatteryBoxBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.WOOD)));
+			BLOCKS.registerBlock("battery_box", BatteryBoxBlock::new, props("battery_box"));
 
-	// Teleporter station (MOD-091). Registered but kept out of the creative tab and recipe set until
-	// the feature is complete (MOD-093) — see CreativeTabContent.
+	// Teleporter station (MOD-091); visible since MOD-093.
 	public static final DeferredBlock<TeleporterBlock> TELEPORTER =
-			BLOCKS.registerBlock("teleporter", TeleporterBlock::new, machine(p -> p.strength(5.0f, 12.0f).sound(SoundType.METAL)));
+			BLOCKS.registerBlock("teleporter", TeleporterBlock::new, props("teleporter"));
 	public static final DeferredBlock<ElectricFurnaceBlock> ELECTRIC_FURNACE =
-			BLOCKS.registerBlock("electric_furnace", ElectricFurnaceBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+			BLOCKS.registerBlock("electric_furnace", ElectricFurnaceBlock::new, props("electric_furnace"));
 	// Iron Furnace (MOD-115) — fuel-burning smelter between stone and electric; lit glows (light 13).
 	public static final DeferredBlock<IronFurnaceBlock> IRON_FURNACE =
-			BLOCKS.registerBlock("iron_furnace", IronFurnaceBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.METAL)
-							.lightLevel(ModBlockProperties::litLight)));
+			BLOCKS.registerBlock("iron_furnace", IronFurnaceBlock::new, props("iron_furnace"));
 	public static final DeferredBlock<ExtractorBlock> EXTRACTOR =
-			BLOCKS.registerBlock("extractor", ExtractorBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+			BLOCKS.registerBlock("extractor", ExtractorBlock::new, props("extractor"));
 	public static final DeferredBlock<CompressorBlock> COMPRESSOR =
-			BLOCKS.registerBlock("compressor", CompressorBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+			BLOCKS.registerBlock("compressor", CompressorBlock::new, props("compressor"));
+	public static final DeferredBlock<SawmillBlock> SAWMILL =
+			BLOCKS.registerBlock("sawmill", SawmillBlock::new, props("sawmill"));
 	public static final DeferredBlock<GeothermalGeneratorBlock> GEOTHERMAL_GENERATOR =
-			BLOCKS.registerBlock("geothermal_generator", GeothermalGeneratorBlock::new,
-					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
-							.lightLevel(ModBlockProperties::litLight)));
+			BLOCKS.registerBlock("geothermal_generator", GeothermalGeneratorBlock::new, props("geothermal_generator"));
 	public static final DeferredBlock<PumpBlock> PUMP =
-			BLOCKS.registerBlock("pump", PumpBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+			BLOCKS.registerBlock("pump", PumpBlock::new, props("pump"));
 	public static final DeferredBlock<FluidTankBlock> FLUID_TANK =
-			BLOCKS.registerBlock("fluid_tank", FluidTankBlock::new,
-					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()));
+			BLOCKS.registerBlock("fluid_tank", FluidTankBlock::new, props("fluid_tank"));
 	public static final DeferredBlock<WaterMillBlock> WATER_MILL =
-			BLOCKS.registerBlock("water_mill", WaterMillBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+			BLOCKS.registerBlock("water_mill", WaterMillBlock::new, props("water_mill"));
 	public static final DeferredBlock<WindMillBlock> WIND_MILL =
-			BLOCKS.registerBlock("wind_mill", WindMillBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+			BLOCKS.registerBlock("wind_mill", WindMillBlock::new, props("wind_mill"));
 	public static final DeferredBlock<HighAltitudeWindMillBlock> HIGH_ALTITUDE_WIND_MILL =
-			BLOCKS.registerBlock("high_altitude_wind_mill", HighAltitudeWindMillBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+			BLOCKS.registerBlock("high_altitude_wind_mill", HighAltitudeWindMillBlock::new, props("high_altitude_wind_mill"));
 	public static final DeferredBlock<StormWindMillBlock> STORM_WIND_MILL =
-			BLOCKS.registerBlock("storm_wind_mill", StormWindMillBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)));
+			BLOCKS.registerBlock("storm_wind_mill", StormWindMillBlock::new, props("storm_wind_mill"));
 
 	// --- Cables ---
 	public static final DeferredBlock<CableBlock> COPPER_CABLE =
-			BLOCKS.registerBlock("copper_cable", CableBlock::new, machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()));
+			BLOCKS.registerBlock("copper_cable", CableBlock::new, props("copper_cable"));
 	public static final DeferredBlock<CableBlock> TIN_CABLE =
-			BLOCKS.registerBlock("tin_cable", CableBlock::new, machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()));
+			BLOCKS.registerBlock("tin_cable", CableBlock::new, props("tin_cable"));
 	public static final DeferredBlock<CableBlock> INSULATED_COPPER_CABLE =
-			BLOCKS.registerBlock("insulated_copper_cable", CableBlock::new, machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion()));
+			BLOCKS.registerBlock("insulated_copper_cable", CableBlock::new, props("insulated_copper_cable"));
 	public static final DeferredBlock<CableBlock> INSULATED_TIN_CABLE =
-			BLOCKS.registerBlock("insulated_tin_cable", CableBlock::new, machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion()));
+			BLOCKS.registerBlock("insulated_tin_cable", CableBlock::new, props("insulated_tin_cable"));
 	public static final DeferredBlock<ItemPipeBlock> ITEM_PIPE =
-			BLOCKS.registerBlock("item_pipe", ItemPipeBlock::new, machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()));
+			BLOCKS.registerBlock("item_pipe", ItemPipeBlock::new, props("item_pipe"));
 
-	// --- Ores (plain Block, harvest tier is tag-driven — see ModBlocks#props) ---
+	// --- Ores (plain Block, harvest tier is tag-driven) ---
 	public static final DeferredBlock<Block> TIN_ORE =
-			BLOCKS.registerBlock("tin_ore", Block::new, machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE)));
+			BLOCKS.registerBlock("tin_ore", Block::new, props("tin_ore"));
 	public static final DeferredBlock<Block> DEEPSLATE_TIN_ORE =
-			BLOCKS.registerBlock("deepslate_tin_ore", Block::new, machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)));
+			BLOCKS.registerBlock("deepslate_tin_ore", Block::new, props("deepslate_tin_ore"));
 	public static final DeferredBlock<Block> SILVER_ORE =
-			BLOCKS.registerBlock("silver_ore", Block::new, machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE)));
+			BLOCKS.registerBlock("silver_ore", Block::new, props("silver_ore"));
 	public static final DeferredBlock<Block> DEEPSLATE_SILVER_ORE =
-			BLOCKS.registerBlock("deepslate_silver_ore", Block::new, machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)));
+			BLOCKS.registerBlock("deepslate_silver_ore", Block::new, props("deepslate_silver_ore"));
 	public static final DeferredBlock<Block> NICKEL_ORE =
-			BLOCKS.registerBlock("nickel_ore", Block::new, machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE)));
+			BLOCKS.registerBlock("nickel_ore", Block::new, props("nickel_ore"));
 	public static final DeferredBlock<Block> DEEPSLATE_NICKEL_ORE =
-			BLOCKS.registerBlock("deepslate_nickel_ore", Block::new, machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)));
+			BLOCKS.registerBlock("deepslate_nickel_ore", Block::new, props("deepslate_nickel_ore"));
 	public static final DeferredBlock<Block> URANIUM_ORE =
-			BLOCKS.registerBlock("uranium_ore", Block::new, machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE)));
+			BLOCKS.registerBlock("uranium_ore", Block::new, props("uranium_ore"));
 	public static final DeferredBlock<Block> DEEPSLATE_URANIUM_ORE =
-			BLOCKS.registerBlock("deepslate_uranium_ore", Block::new, machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)));
+			BLOCKS.registerBlock("deepslate_uranium_ore", Block::new, props("deepslate_uranium_ore"));
 
 	// --- Storage (pure container, no energy) ---
 	public static final DeferredBlock<IronChestBlock> IRON_CHEST =
-			BLOCKS.registerBlock("iron_chest", IronChestBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()));
-	// Silver Chest (MOD-087) — the tier above the iron chest: 45 slots (5×9). Same block stats as the
-	// iron chest (same chest shape: strength 3.0/6.0, METAL, noOcclusion).
+			BLOCKS.registerBlock("iron_chest", IronChestBlock::new, props("iron_chest"));
 	public static final DeferredBlock<SilverChestBlock> SILVER_CHEST =
-			BLOCKS.registerBlock("silver_chest", SilverChestBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()));
-	// Gold Chest (MOD-088) — the tier above the silver chest: 54 slots (6×9). Same block stats.
+			BLOCKS.registerBlock("silver_chest", SilverChestBlock::new, props("silver_chest"));
 	public static final DeferredBlock<GoldChestBlock> GOLD_CHEST =
-			BLOCKS.registerBlock("gold_chest", GoldChestBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()));
+			BLOCKS.registerBlock("gold_chest", GoldChestBlock::new, props("gold_chest"));
 
-	// Tempered Iron Block — "block of X" material block (9 ingots ↔ 1 block), like
-	// vanilla iron block. Plain Block, cube_all model, single texture on all 6 faces.
-	// Strength/sound mirror vanilla iron_block (5.0 / 6.0, METAL).
+	// Tempered Iron Block — "block of X" material block; plain Block, cube_all, single texture.
 	public static final DeferredBlock<Block> TEMPERED_IRON_BLOCK =
-			BLOCKS.registerBlock("tempered_iron_block", Block::new, machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)));
+			BLOCKS.registerBlock("tempered_iron_block", Block::new, props("tempered_iron_block"));
 
-	// Industrial Workbench (MOD-062) — the Industrialist villager's job-site block; plain decorative
-	// full cube, no BlockEntity (see the Fabric ModBlocks comment).
+	// Industrial Workbench (MOD-062) — the Industrialist villager's job-site block; plain decorative cube.
 	public static final DeferredBlock<Block> INDUSTRIAL_WORKBENCH =
-			BLOCKS.registerBlock("industrial_workbench", Block::new, machine(p -> p.strength(2.5f, 6.0f).sound(SoundType.METAL)));
+			BLOCKS.registerBlock("industrial_workbench", Block::new, props("industrial_workbench"));
 
-	// Enriched Uranium Torch (MOD-085) — vanilla-behaviour torch, light 15, green flame. Uses torch()
-	// (vanilla TORCH properties), NOT machine() — a torch breaks by hand, so no requiresCorrectToolForDrops
-	// and no mineable/pickaxe tag entry. The particle comes from the eager ModParticles facade object.
+	// Enriched Uranium Torch (MOD-085) — vanilla-behaviour torch, light 14, green flame. Its props entry
+	// is the vanilla TORCH chain (no requiresCorrectToolForDrops), applied by props() like every block.
 	public static final DeferredBlock<EnrichedUraniumTorchBlock> ENRICHED_URANIUM_TORCH =
 			BLOCKS.registerBlock("enriched_uranium_torch",
-					p -> new EnrichedUraniumTorchBlock(ModParticles.ENRICHED_URANIUM_FLAME, p), torch());
+					p -> new EnrichedUraniumTorchBlock(ModParticles.ENRICHED_URANIUM_FLAME, p),
+					props("enriched_uranium_torch"));
 
-	// Wall variant: drops/names from the standing torch (vanilla wallVariant). The property supplier runs
-	// during the block RegisterEvent, by which point the earlier ENRICHED_URANIUM_TORCH entry is resolved
-	// (same ordering the FILLED_VACUUM_CAPSULE craftRemainder relies on).
+	// Wall variant: drops/names from the standing torch (vanilla wallVariant). The override is
+	// loader-specific (reads the just-registered standing torch), so it layers on top of the shared torch
+	// props here. The property supplier runs during the block RegisterEvent, by which point the earlier
+	// ENRICHED_URANIUM_TORCH entry is resolved.
 	public static final DeferredBlock<EnrichedUraniumWallTorchBlock> ENRICHED_URANIUM_WALL_TORCH =
 			BLOCKS.registerBlock("enriched_uranium_wall_torch",
 					p -> new EnrichedUraniumWallTorchBlock(ModParticles.ENRICHED_URANIUM_FLAME, p),
-					() -> ModBlockProperties.torchBase()
+					() -> ContentManifest.blockProps("enriched_uranium_wall_torch")
+							.apply(BlockBehaviour.Properties.of())
 							.overrideLootTable(ENRICHED_URANIUM_TORCH.get().getLootTable())
 							.overrideDescription(ENRICHED_URANIUM_TORCH.get().getDescriptionId()));
 
@@ -185,43 +166,21 @@ public final class ModBlocksNeoForge {
 	}
 
 	/**
-	 * Property {@link Supplier} matching the Fabric {@code ModBlocks#props()} helper: every block
-	 * {@code requiresCorrectToolForDrops()} (pickaxe needed to drop; tier gate is tag-driven), plus the
-	 * per-block behaviour applied by {@code extra}. {@code setId} is NOT set here — the NeoForge
-	 * {@code registerBlock(...)} applies it from the deferred key (verified 26.2.0.8-beta).
+	 * The property {@link Supplier} {@code registerBlock} wants: the shared per-block chain from
+	 * {@link ContentManifest#BLOCK_PROPS} (looked up by id) applied to a bare {@code Properties.of()}.
+	 * {@code setId} is applied by {@code registerBlock} from the deferred key; the machine map entries
+	 * already carry {@code requiresCorrectToolForDrops}, and torch entries deliberately do not.
 	 */
-	private static Supplier<BlockBehaviour.Properties> machine(UnaryOperator<BlockBehaviour.Properties> extra) {
-		return () -> extra.apply(BlockBehaviour.Properties.of().requiresCorrectToolForDrops());
-	}
-
-	/**
-	 * Property {@link Supplier} for the Enriched Uranium Torch (MOD-085), mirroring the Fabric
-	 * {@code ModBlocks#torchProps} helper and vanilla {@code Blocks.TORCH}: no collision, instant break
-	 * (breaks by hand — so NO {@code requiresCorrectToolForDrops} and NO {@code mineable/pickaxe} entry,
-	 * unlike {@link #machine}), light 14 (identical to the vanilla torch), WOOD sound, {@code DESTROY} push
-	 * reaction, {@code noOcclusion()}. {@code setId} is applied by {@code registerBlock} from the deferred
-	 * key. The chain itself is shared with the Fabric side via {@link ModBlockProperties#torchBase()}.
-	 */
-	private static Supplier<BlockBehaviour.Properties> torch() {
-		return ModBlockProperties::torchBase;
+	private static Supplier<BlockBehaviour.Properties> props(String id) {
+		return () -> ContentManifest.blockProps(id).apply(BlockBehaviour.Properties.of());
 	}
 
 	/**
 	 * Bind each block {@code DeferredBlock} into the loader-neutral {@link ModContent} facade, mirroring
-	 * {@code dev.alaindustrial.registry.ModBlocks#init()} on the Fabric side. A {@code DeferredBlock}
-	 * <b>is</b> a {@code Supplier<Block>} ({@code DeferredBlock<T> extends DeferredHolder<Block, T>
-	 * implements Supplier<T>}, verified against neoforge-26.2.0.8-beta), so it is assigned directly — no
-	 * {@code () -> value} wrapper, unlike Fabric — and resolves lazily after this register's
-	 * {@code RegisterEvent} fires. Called from the {@code @Mod} constructor after
-	 * {@code BLOCKS.register(modBus)}; assigning the lazy handle before the event fires is intentional.
-	 *
-	 * <p><b>Why {@code HOLDER::get}, not the holder directly.</b> A {@code DeferredBlock<GeneratorBlock>}
-	 * is a {@code Supplier<GeneratorBlock>}, but the {@link ModContent} slot is {@code Supplier<Block>};
-	 * Java generics are invariant, so the holder cannot be assigned straight in. The method reference
-	 * {@code HOLDER::get} is a {@code Supplier<Block>} (its {@code get()} returns the subtype, widened by
-	 * the target type) and is just as lazy — it still resolves only when invoked at runtime, after the
-	 * {@code RegisterEvent} fires. It is not the throwing {@code Unbound} placeholder, so
-	 * {@code verifyAllBound()} correctly counts the slot as bound.
+	 * {@code dev.alaindustrial.registry.ModBlocks#init()} on the Fabric side. A {@code DeferredBlock} is a
+	 * {@code Supplier<Block>}, so it is bound via {@code HOLDER::get} (widening the subtype to the slot's
+	 * {@code Supplier<Block>}); it resolves lazily after this register's {@code RegisterEvent}. Called from
+	 * the {@code @Mod} constructor after {@code BLOCKS.register(modBus)}.
 	 */
 	public static void init() {
 		ModContent.GENERATOR = GENERATOR::get;
@@ -235,6 +194,7 @@ public final class ModBlocksNeoForge {
 		ModContent.IRON_FURNACE = IRON_FURNACE::get;
 		ModContent.EXTRACTOR = EXTRACTOR::get;
 		ModContent.COMPRESSOR = COMPRESSOR::get;
+		ModContent.SAWMILL = SAWMILL::get;
 		ModContent.GEOTHERMAL_GENERATOR = GEOTHERMAL_GENERATOR::get;
 		ModContent.PUMP = PUMP::get;
 		ModContent.FLUID_TANK = FLUID_TANK::get;

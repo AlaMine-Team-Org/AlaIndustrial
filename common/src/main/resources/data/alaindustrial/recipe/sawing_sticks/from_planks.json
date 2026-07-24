@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_sticks",
+  "ingredient": "#minecraft:planks",
+  "result": {
+    "id": "minecraft:stick",
+    "count": 3
+  },
+  "energy": 160
+}

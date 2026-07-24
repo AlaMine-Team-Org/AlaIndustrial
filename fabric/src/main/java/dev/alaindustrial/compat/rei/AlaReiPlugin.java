@@ -53,6 +53,10 @@ public class AlaReiPlugin implements REIClientPlugin {
 			machine(ModRecipes.SMELTING, ModBlocks.ELECTRIC_FURNACE),
 			machine(ModRecipes.COMPRESSING, ModBlocks.COMPRESSOR),
 			machine(ModRecipes.EXTRACTING, ModBlocks.EXTRACTOR),
+			// Sawmill (MOD-150) contributed four mode families here. MOD-209 hides the unfinished machine
+			// from players, so neither its categories nor the sawmill workstation are registered; the block
+			// itself is also pulled from the item grid via RecipeViewerInfo.hiddenFromRecipeViewerItems().
+			// The 39 sawing recipes stay in data — with no category they are simply not displayed.
 	};
 
 	@Override

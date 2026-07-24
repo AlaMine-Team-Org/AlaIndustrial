@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ingredient": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:electronic_circuit" } ] } },
+    "has_the_recipe": { "trigger": "minecraft:recipe_unlocked", "conditions": { "recipe": "alaindustrial:electromagnet" } }
+  },
+  "requirements": [ [ "has_the_recipe", "has_ingredient" ] ],
+  "rewards": {
+    "recipes": [ "alaindustrial:electromagnet" ]
+  }
+}

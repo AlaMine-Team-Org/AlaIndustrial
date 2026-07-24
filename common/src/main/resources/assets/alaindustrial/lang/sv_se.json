@@ -401,5 +401,12 @@
 	"block.alaindustrial.industrial_workbench": "Industriell arbetsbänk",
 	"entity.alaindustrial.villager.industrialist": "Industrialist",
 	"advancements.alaindustrial.first_trade.title": "Affärspartner",
-	"advancements.alaindustrial.first_trade.description": "Handla med industrialisten"
+	"advancements.alaindustrial.first_trade.description": "Handla med industrialisten",
+	"block.alaindustrial.sawmill": "Sawmill",
+	"gui.alaindustrial.sawmill.mode.planks": "Planks",
+	"gui.alaindustrial.sawmill.mode.sticks": "Sticks",
+	"gui.alaindustrial.sawmill.mode.slabs": "Slabs",
+	"gui.alaindustrial.sawmill.mode.stairs": "Stairs",
+	"advancements.alaindustrial.sawmill.title": "Sawmill",
+	"advancements.alaindustrial.sawmill.description": "Place a Sawmill and cut wood with a higher yield"
 }

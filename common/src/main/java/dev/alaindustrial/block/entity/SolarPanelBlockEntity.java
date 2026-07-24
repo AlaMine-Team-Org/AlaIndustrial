@@ -123,16 +123,24 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 		return production;
 	}
 
-	/** Replace this panel with its evolved branch, carrying stored energy; the chip is consumed. */
+	/** Replace this panel with its evolved branch, carrying stored energy; ONE chip is consumed. */
 	private void evolveInto(Level level, BlockPos pos, Block target) {
-		// The chip slot is cleared by the shared helper (it appears in the overrides map as EMPTY);
-		// no other slots need to transfer — the panel has no rotor.
-		evolveInto(level, pos, target, java.util.Map.of(CHIP_SLOT, ItemStack.EMPTY));
+		// Consume a single chip and carry the rest over (MOD-211). This used to hand the helper a bare
+		// EMPTY, which destroyed the whole stack — a world saved before the canPlaceItem guard can still
+		// hold up to 64 chips here, so the remainder has to survive the transform.
+		ItemStack remainder = items.get(CHIP_SLOT).copy();
+		remainder.shrink(1);
+		evolveInto(level, pos, target, java.util.Map.of(CHIP_SLOT, remainder));
 	}
 
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
-		return slot == CHIP_SLOT
+		// MOD-211: the slot must be EMPTY. Without this, automation stacks chips one at a time up to 64
+		// (the container sets no max stack size and the panel has no FACING, so getSlotsForFace exposes
+		// the chip slot on every face) and the evolution then consumed one while wiping the rest.
+		// Same shape as the MOD-179 wheel-slot guard in WaterMillBlockEntity.
+		return items.get(CHIP_SLOT).isEmpty()
+				&& slot == CHIP_SLOT
 				&& (stack.is(ModContent.ALIGNMENT_CHIP_DAY.get()) || stack.is(ModContent.ALIGNMENT_CHIP_NIGHT.get()));
 	}
 

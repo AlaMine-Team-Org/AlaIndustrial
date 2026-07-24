@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest.neoforge;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.gametest.CableFaceParityScenarios;
 import dev.alaindustrial.gametest.CoreEnergyScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.CapsuleScenarios;
@@ -16,6 +17,7 @@ import dev.alaindustrial.gametest.ScytheScenarios;
 import dev.alaindustrial.gametest.StockDisplayFrameScenarios;
 import dev.alaindustrial.gametest.TemperedIronToolScenarios;
 import dev.alaindustrial.gametest.ItemPipeScenarios;
+import dev.alaindustrial.registry.ModContent;
 import java.util.function.Consumer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -24,6 +26,7 @@ import net.minecraft.gametest.framework.GameTestInstance;
 import net.minecraft.gametest.framework.TestData;
 import net.minecraft.gametest.framework.TestEnvironmentDefinition;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.event.RegisterGameTestsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -510,6 +513,30 @@ public final class NeoForgeGameTests {
 		registerTest(event, "item_pipe_vanilla_chests", 40, true, ItemPipeScenarios::transfersBetweenVanillaChests);
 		// MOD-108: shift-click with the wrench dismantles our blocks and leaves foreign ones alone.
 		registerTest(event, "wrench_dismantles_own_blocks", 40, true, ItemPipeScenarios::wrenchDismantlesOwnBlocks);
+		// MOD-193: the MOD-115 furnace family, which ran on Fabric only. The sided WorldlyContainer path
+		// (top=input, side=fuel, bottom=result) is exactly where this loader differed: Fabric's
+		// ItemStorage.SIDED falls back to any Container, NeoForge publishes the capability per block
+		// entity — so a mod machine missing from that list is invisible to the pipe here and nowhere
+		// else. The iron-furnace cases below are the guards for that; the vanilla-furnace ones pin the
+		// round-robin itself (vanilla publishes its own capability, so they pass either way).
+		registerTest(event, "item_pipe_vanilla_furnace_bottom_extract", 60, true,
+				h -> ItemPipeScenarios.extractsFurnaceResultFromBottom(h, Blocks.FURNACE, "vanilla furnace bottom extract"));
+		registerTest(event, "item_pipe_iron_furnace_bottom_extract", 60, true,
+				h -> ItemPipeScenarios.extractsFurnaceResultFromBottom(h, ModContent.IRON_FURNACE.get(),
+						"iron furnace bottom extract"));
+		registerTest(event, "item_pipe_distributes_one_source_to_two_furnaces", 60, true,
+				ItemPipeScenarios::distributesOneSourceToTwoFurnaces);
+		registerTest(event, "item_pipe_distributes_across_rebuilds", 60, true,
+				ItemPipeScenarios::distributesToTwoFurnacesAcrossRebuilds);
+		registerTest(event, "item_pipe_ore_and_coal_to_two_iron_furnaces", 60, true,
+				ItemPipeScenarios::distributesOreAndCoalToTwoIronFurnaces);
+		registerTest(event, "item_pipe_feeds_both_furnaces_in_one_interval", 60, true,
+				ItemPipeScenarios::feedsBothFurnacesWithinOneInterval);
+		// MOD-199: class-wide guard against a cable arm on an energy-inert face. Sweeps the block
+		// registry rather than naming blocks, so a block added later is covered without anyone
+		// writing a test for it — the gap that let MOD-194 (water mill) ship.
+		registerTest(event, "cable_face_parity_inert_faces_reject_arms", 60, true,
+				CableFaceParityScenarios::inertFacesRejectCableArms);
 		// MOD-133 player-stats attribution — same bodies as the Fabric PlayerStatsGameTest lane. These
 		// pin the machine-XP rule, the anti-AFK abort guard, creative/ownerless exclusions, and generator
 		// production attribution.

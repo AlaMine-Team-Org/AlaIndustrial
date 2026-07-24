@@ -49,4 +49,86 @@ class HudSmootherTest {
 		}
 		assertEquals(0, last);
 	}
+
+	// --- MOD-200: the mid-range path (easing, snap, hysteresis) --------------------------------
+	// Everything above only pins the 0 % / 100 % edges, which the two early returns handle. The
+	// whole body between them — the snap test, the exponential step, the deadband — had no L1
+	// coverage at all: this class only entered the mutation lane in MOD-200, and its first run
+	// left 18 of its mutants SURVIVED. Every expectation below is a literal computed by hand from
+	// the documented constants (TAU=10 ticks, SNAP=0.25, DEADBAND=1.5), never by re-running the
+	// formula the test is meant to police.
+
+	/** The very first frame has nothing to ease from, so it snaps straight onto the target. */
+	@Test
+	void firstFrameSnapsOntoTarget() {
+		HudSmoother s = new HudSmoother();
+		assertEquals(42, s.displayPercent(0.42f, 0.0f));
+	}
+
+	/**
+	 * A jump larger than the snap threshold is a real event (item swap, big drain) and must show at
+	 * once. Easing 0.20 → 0.80 over one tick would read 26 %, not 80 %.
+	 */
+	@Test
+	void largeJumpSnapsInsteadOfEasing() {
+		HudSmoother s = new HudSmoother();
+		assertEquals(20, s.displayPercent(0.20f, 1.0f));
+		assertEquals(80, s.displayPercent(0.80f, 1.0f));
+	}
+
+	/**
+	 * A jump of exactly the threshold is NOT a snap — the guard is a strict {@code >}. Easing
+	 * 0.50 → 0.75 over 10 ticks (one full time constant, k = 1-e⁻¹) lands on 0.65803 → 66 %.
+	 * Were the comparison {@code >=}, this would snap and read 75 %.
+	 */
+	@Test
+	void jumpExactlyAtThresholdEasesNotSnaps() {
+		HudSmoother s = new HudSmoother();
+		assertEquals(50, s.displayPercent(0.50f, 1.0f));
+		assertEquals(66, s.displayPercent(0.75f, 10.0f));
+	}
+
+	/**
+	 * The step is driven by elapsed time, not by frame count: the same 0.50 → 0.62 move reads 55 %
+	 * after 5 ticks and 62 % after 40. A HUD at 30 fps and one at 240 fps must agree.
+	 */
+	@Test
+	void easingIsFramerateIndependent() {
+		HudSmoother slow = new HudSmoother();
+		slow.displayPercent(0.50f, 1.0f);
+		HudSmoother fast = new HudSmoother();
+		fast.displayPercent(0.50f, 1.0f);
+
+		assertEquals(55, slow.displayPercent(0.62f, 5.0f));
+		assertEquals(62, fast.displayPercent(0.62f, 40.0f));
+	}
+
+	/** A negative frame delta cannot rewind the smoothing — the step is clamped to zero. */
+	@Test
+	void negativeDeltaDoesNotMoveTheReading() {
+		HudSmoother s = new HudSmoother();
+		assertEquals(50, s.displayPercent(0.50f, 1.0f));
+		// Unclamped this would ease *away* from the target (k < 0) and read 42 %.
+		assertEquals(50, s.displayPercent(0.62f, -5.0f));
+	}
+
+	/**
+	 * The hysteresis itself: a settled move to exactly one point away is inside the 1.5-point
+	 * deadband, so the shown number holds. This is the ripple suppression the class exists for.
+	 */
+	@Test
+	void onePointRippleIsHeldByTheDeadband() {
+		HudSmoother s = new HudSmoother();
+		assertEquals(50, s.displayPercent(0.50f, 1.0f));
+		assertEquals(50, s.displayPercent(0.51f, 100.0f));
+	}
+
+	/** …but the deadband only holds; it never sticks. Past 1.5 points the number moves again. */
+	@Test
+	void movePastTheDeadbandUpdatesTheReading() {
+		HudSmoother s = new HudSmoother();
+		assertEquals(50, s.displayPercent(0.50f, 1.0f));
+		assertEquals(50, s.displayPercent(0.51f, 100.0f));   // held
+		assertEquals(53, s.displayPercent(0.53f, 100.0f));   // 3 points away — released
+	}
 }

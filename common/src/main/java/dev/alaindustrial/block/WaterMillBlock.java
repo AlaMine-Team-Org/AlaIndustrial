@@ -5,6 +5,7 @@ import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -14,11 +15,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Water mill block — a full-cube LV generator that faces the player on placement. The {@code facing}
- * front is energy-inert (via {@link dev.alaindustrial.block.entity.AbstractGeneratorBlockEntity}); the
- * other five faces emit EU. No {@code lit} state (production is passive, not fuel-driven), so it extends
- * {@link HorizontalMachineBlock} rather than {@link LitMachineBlock}. The default full-cube shape is
- * inherited (no {@code getShape} override).
+ * Water mill block — a full-cube LV generator that faces the player on placement. EU leaves through the
+ * back face alone (opposite {@code FACING}); the front carries the wheel and the four sides stand in the
+ * water, all energy-inert — see {@link WaterMillBlockEntity#energyRoleForFace} (MOD-179). No {@code lit}
+ * state (production is passive, not fuel-driven), so it extends {@link HorizontalMachineBlock} rather
+ * than {@link LitMachineBlock}. The default full-cube shape is inherited (no {@code getShape} override).
  */
 public class WaterMillBlock extends HorizontalMachineBlock implements MachineHumProvider {
 	public static final MapCodec<WaterMillBlock> CODEC = simpleCodec(WaterMillBlock::new);
@@ -35,6 +36,22 @@ public class WaterMillBlock extends HorizontalMachineBlock implements MachineHum
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new WaterMillBlockEntity(pos, state);
+	}
+
+	/**
+	 * Restricts the cable arm to the back face alone, matching the single back-face output of
+	 * {@link WaterMillBlockEntity#energyRoleForFace}: a cable may draw power only from the face
+	 * opposite {@code FACING} (the energy port). The front (wheel) face, the four sides and the
+	 * top/bottom are energy-inert, so a cable there would draw a misleading "energy goes here" arm
+	 * without any EU ever flowing — the iron-chest defect (MOD-038) applied per face, same as the
+	 * wind mill. MOD-179 narrowed the block entity's face roles but left this override missing, so
+	 * four dead faces kept accepting an arm until MOD-194. Decided from {@code FACING} alone (a
+	 * blockstate property) so it is correct the instant the block is placed, with no block-entity
+	 * load race.
+	 */
+	@Override
+	public boolean isCableConnectable(BlockState state, Direction side) {
+		return side == state.getValue(HorizontalMachineBlock.FACING).getOpposite();
 	}
 
 	@Override
