@@ -126,6 +126,10 @@ public final class NeoForgeGameTests {
 				CoreEnergyScenarios::sourceFillsCableWithoutConsumer);
 		registerTest(event, "storage_charges_through_line", 100, true,
 				CoreEnergyScenarios::storageChargesThroughLine);
+		registerTest(event, "storage_charges_with_cabled_output_face", 100, true,
+				CoreEnergyScenarios::storageChargesWithCabledOutputFace);
+		registerTest(event, "storage_charges_past_idle_producer", 200, true,
+				CoreEnergyScenarios::storageChargesPastIdleProducer);
 		registerTest(event, "lone_storage_source_sleeps", 40, true,
 				CoreEnergyScenarios::loneStorageSourceSleeps);
 		registerTest(event, "mod009_battery_box_charges_to_full", 80, true,

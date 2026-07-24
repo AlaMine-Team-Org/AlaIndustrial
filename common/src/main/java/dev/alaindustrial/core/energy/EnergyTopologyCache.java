@@ -117,6 +117,31 @@ final class EnergyTopologyCache {
 		return endpointsDirty;
 	}
 
+	/**
+	 * Producers that actually held EU on the most recent tick (MOD-214). The distance field is seeded
+	 * from THESE, not from every extraction-capable face: {@code producers} is a capability list, so an
+	 * idle source — a moonlit solar panel in daylight, an unfuelled generator, a water mill in still
+	 * water — used to seed distance 1 all along its stretch of bus. Two adjacent cables at equal distance
+	 * cannot exchange, so the fill front died at that seam and everything past it (a Battery Box at the
+	 * end of the run) stayed at 0 EU forever while the cables by the working generator read full.
+	 * Empty means "no live supply known" — then the field falls back to all producers, which keeps a
+	 * producer-only line filling exactly as before.
+	 */
+	private Set<BlockPos> supplyingProducers = Set.of();
+
+	/**
+	 * Publish this tick's live-supply set. Recomputes the distance field only when the set actually
+	 * changed — it changes on day/night, fuel running out, a battery emptying: rare next to every tick.
+	 */
+	void updateSupplyingProducers(Set<BlockPos> supplying) {
+		refreshIfDirty();
+		if (supplyingProducers.equals(supplying)) {
+			return;
+		}
+		supplyingProducers = Set.copyOf(supplying);
+		computeConsumerDistances();
+	}
+
 	List<Endpoint> producers() {
 		refreshIfDirty();
 		return producers;
@@ -225,7 +250,12 @@ final class EnergyTopologyCache {
 		}
 		Map<BlockPos, Integer> cableDist = cableDistance;
 		Queue<BlockPos> queue = new ArrayDeque<>();
-		for (Endpoint producer : producers) {
+		// MOD-214: seed from producers that actually supply. Falling back to all of them when nothing is
+		// known keeps the very first tick (and a producer-only line) behaving exactly as before.
+		List<Endpoint> seeds = producers.stream()
+				.filter(p -> supplyingProducers.isEmpty() || supplyingProducers.contains(p.pos()))
+				.toList();
+		for (Endpoint producer : seeds) {
 			for (Direction dir : DIRECTIONS) {
 				BlockPos cable = producer.pos().relative(dir);
 				if (cables.contains(cable) && cableDist.putIfAbsent(cable, 1) == null) {

@@ -190,6 +190,10 @@ final class EnergyLineDistributor {
 	 * strictly-upstream neighbours makes each unit advance at most one hop per tick — the "fill front"
 	 * that gives the line its inertia. Bounded by the tier throughput ({@code packetCap}) and each
 	 * cable's free space.
+	 *
+	 * <p>"Upstream" is meaningful only because {@link EnergyTopologyCache} seeds the distance field from
+	 * producers that actually hold EU this tick (MOD-214) — seeding it from every extraction-capable face
+	 * made an idle producer flatten its stretch of bus to distance 1, and the front died at that seam.
 	 */
 	private void propagateLineOneHop(long packetCap, EnergyPort.Txn tx) {
 		if (propagationOrder.isEmpty()) {
@@ -200,7 +204,11 @@ final class EnergyLineDistributor {
 			if (to == null) {
 				continue;
 			}
-			int dTo = cableDistance.apply(pos);
+			Integer dToBoxed = cableDistance.apply(pos);
+			if (dToBoxed == null) {
+				continue;
+			}
+			int dTo = dToBoxed;
 			for (Direction dir : DIRECTIONS) {
 				long free = to.getCapacity() - to.amount;
 				if (free <= 0) {
@@ -209,7 +217,7 @@ final class EnergyLineDistributor {
 				BlockPos np = pos.relative(dir);
 				Integer dFrom = cableDistance.apply(np);
 				if (dFrom == null || dFrom >= dTo) {
-					continue; // only pull from strictly upstream (closer to a producer)
+					continue; // only pull from strictly upstream (closer to a supplying producer)
 				}
 				EnergyBuffer from = cableBufferAt.apply(np);
 				if (from == null || from.amount <= 0) {

@@ -280,6 +280,7 @@ public final class EnergyNetwork {
 		// storage; storage only discharges into the line as backup (machine deficit), and NEVER sources
 		// for another storage sink — so batteries can't wash energy through the wires or into each other. ---
 		long genSupply = 0;
+		java.util.Set<BlockPos> supplyingProducers = new java.util.HashSet<>();
 		List<EnergyLineDistributor.LiveProducer> generators = new ArrayList<>(producers.size());
 		List<EnergyLineDistributor.LiveProducer> storageSources = new ArrayList<>();
 		for (EnergyTopologyCache.Endpoint ep : producers) {
@@ -291,7 +292,14 @@ public final class EnergyNetwork {
 				storageSources.add(new EnergyLineDistributor.LiveProducer(ep.pos(), st));
 			} else {
 				generators.add(new EnergyLineDistributor.LiveProducer(ep.pos(), st));
-				genSupply += EnergyTransactions.get().simulate(sim -> st.extract(Long.MAX_VALUE, sim));
+				long supply = EnergyTransactions.get().simulate(sim -> st.extract(Long.MAX_VALUE, sim));
+				genSupply += supply;
+				// MOD-214: which producers actually hold EU this tick, decided HERE — outside the
+				// committing transaction opened below. The line kernel needs it to tell a cable that is
+				// genuinely starved from one that is simply about to be refilled by its generator.
+				if (supply > 0) {
+					supplyingProducers.add(ep.pos());
+				}
 			}
 		}
 		int liveProducerCount = generators.size() + storageSources.size();
@@ -329,6 +337,11 @@ public final class EnergyNetwork {
 		// Note: no early-out when machines and sinks are both empty. A producer-only network (a source
 		// wired to cables with no consumer) still runs the charge stage below to fill the line to its
 		// buffer capacity — the wire holds and shows the energy even with nowhere to deliver it (MOD-070).
+
+		// MOD-214: the distance field must describe distance from a producer that actually supplies, not
+		// from any face capable of extraction. Published before the distributor reads propagationOrder /
+		// cableDistance, and outside the committing transaction opened below.
+		topology.updateSupplyingProducers(supplyingProducers);
 
 		EnergyLineDistributor distributor = new EnergyLineDistributor(
 				topology, this::cableBufferAt,

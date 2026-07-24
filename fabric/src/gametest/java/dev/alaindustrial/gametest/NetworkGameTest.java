@@ -1268,6 +1268,29 @@ public class NetworkGameTest {
 	};
 	private static final BlockPos STO_BOX = new BlockPos(5, 2, 1);
 
+
+	/**
+	 * MOD-214 — an idle producer on the bus must not starve everything past it. Reported in game:
+	 * moonlit panels (which give nothing in daylight) sat along the line, and the Battery Box at its end
+	 * charged nothing while the cables by the working panels read full. Body is loader-neutral so
+	 * NeoForge runs the same scenario.
+	 */
+	@GameTest(maxTicks = 200)
+	public void mod214_storageChargesPastIdleProducer(GameTestHelper helper) {
+		CoreEnergyScenarios.storageChargesPastIdleProducer(helper);
+	}
+
+	/**
+	 * MOD-214 — a BatteryBox whose OUT face also touches a cable must still charge from its IN face.
+	 * The reported in-game layout: a cable bus that runs past the box (or two boxes in a row) makes the
+	 * box a producer endpoint, and the distance seeding ignored which face produces — poisoning the
+	 * cable on its INPUT face and freezing the fill front. Body is loader-neutral so NeoForge runs it too.
+	 */
+	@GameTest(maxTicks = 100)
+	public void mod214_storageChargesWithCabledOutputFace(GameTestHelper helper) {
+		CoreEnergyScenarios.storageChargesWithCabledOutputFace(helper);
+	}
+
 	/**
 	 * @implements TC-CABLE-001-NRG07 — MOD-070 storage-through-line: a BatteryBox charged over a
 	 *     multi-cable line pulls its EU THROUGH the wires (not a bypass) — the intermediate cable holds

@@ -432,6 +432,55 @@ public final class CoreEnergyScenarios {
 	};
 	private static final BlockPos STO_BOX = new BlockPos(5, 2, 1);
 
+	// MOD-214: same line as above, plus ONE cable past the box — on its OUT face. That is what a player
+	// builds when the bus continues past the battery box, or when two boxes sit in a row.
+	private static final BlockPos BOTH_GEN = new BlockPos(1, 2, 3);
+	private static final BlockPos[] BOTH_CABLES = {
+		new BlockPos(2, 2, 3), new BlockPos(3, 2, 3), new BlockPos(4, 2, 3),
+	};
+	private static final BlockPos BOTH_BOX = new BlockPos(5, 2, 3);
+	private static final BlockPos BOTH_TAIL_CABLE = new BlockPos(6, 2, 3);
+
+	/**
+	 * Layout cover — a BatteryBox whose OUT face also touches a cable still charges from its IN face
+	 * (a bus that runs past the box, or two boxes in a row). Not the MOD-214 guard: this layout was
+	 * already correct before that fix — see {@link #storageChargesPastIdleProducer}.
+	 *
+	 */
+	public static void storageChargesWithCabledOutputFace(GameTestHelper helper) {
+		helper.setBlock(BOTH_GEN, ModContent.GENERATOR.get());
+		for (BlockPos c : BOTH_CABLES) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		// FACING = WEST → IN faces the cable line at x=4, OUT faces the tail cable at x=6.
+		helper.setBlock(BOTH_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		helper.setBlock(BOTH_TAIL_CABLE, ModContent.COPPER_CABLE.get());
+		if (be(helper, BOTH_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+		}
+		if (be(helper, BOTH_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().amount = 0L;
+		}
+		for (int i = 0; i < 40; i++) {
+			tick(helper, be(helper, BOTH_GEN));
+			for (BlockPos c : BOTH_CABLES) {
+				tick(helper, be(helper, c));
+			}
+			tick(helper, be(helper, BOTH_TAIL_CABLE));
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, BOTH_BOX));
+		}
+		long boxEnergy = be(helper, BOTH_BOX) instanceof BatteryBoxBlockEntity b ? b.getEnergyStorage().getAmount() : -1;
+		long inputCable = be(helper, BOTH_CABLES[2]) instanceof CableBlockEntity c ? c.getEnergyStorage().getAmount() : -1;
+		if (boxEnergy <= 0) {
+			helper.fail("BatteryBox with a cabled OUT face never charged: " + boxEnergy
+					+ " EU — its own producer role poisoned the distance of the cable on its INPUT face,"
+					+ " so the fill front could never reach it (input cable held " + inputCable + " EU)");
+		}
+		helper.succeed();
+	}
+
 	/**
 	 * MOD-070 storage-through-line: a BatteryBox charged over a multi-cable line pulls its EU THROUGH the
 	 * wires — the intermediate cable holds real EU while the box fills (direct regression for the in-game
@@ -467,6 +516,65 @@ public final class CoreEnergyScenarios {
 		if (midCable <= 0) {
 			helper.fail("intermediate cable held no EU while charging a BatteryBox — storage charge bypassed "
 					+ "the wire instead of flowing through it (the in-game bug)");
+		}
+		helper.succeed();
+	}
+
+	private static final BlockPos IDLE_LIVE_GEN = new BlockPos(1, 2, 5);
+	private static final BlockPos[] IDLE_CABLES = {
+		new BlockPos(2, 2, 5), new BlockPos(3, 2, 5), new BlockPos(4, 2, 5),
+		new BlockPos(5, 2, 5), new BlockPos(6, 2, 5),
+	};
+	private static final BlockPos IDLE_DEAD_GEN = new BlockPos(5, 2, 4);
+	private static final BlockPos IDLE_BOX = new BlockPos(7, 2, 5);
+
+	/**
+	 * MOD-214 — an idle producer standing along the bus must not stop energy reaching what is past it.
+	 *
+	 * <p>Reported in game on 0.1.46: a row of solar panels feeding a Battery Box charged nothing, the
+	 * cables by the working panels read full and the ones by the box read 0. The line held moonlit panels,
+	 * which produce nothing in daylight. A producer endpoint is collected by face-role capability, not by
+	 * output, so those panels still seeded the distance field at 1 all along their stretch; two adjacent
+	 * cables at equal distance cannot exchange under the strictly-upstream rule, so the fill front died at
+	 * that seam and everything past it starved forever. The player confirmed it from the other side:
+	 * removing the moonlit panel made the same build charge immediately.
+	 *
+	 * <p>Modelled here with an unfuelled generator — same shape, no dependence on world time or sky.
+	 * Regression guard: before the fix the box ends at 0 EU and every cable past the idle generator is
+	 * empty while the ones next to the live generator sit at their full 12.
+	 */
+	public static void storageChargesPastIdleProducer(GameTestHelper helper) {
+		helper.setBlock(IDLE_LIVE_GEN, ModContent.GENERATOR.get());
+		if (be(helper, IDLE_LIVE_GEN) instanceof GeneratorBlockEntity g) {
+			g.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+		}
+		for (BlockPos c : IDLE_CABLES) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		helper.setBlock(IDLE_DEAD_GEN, ModContent.GENERATOR.get()); // no fuel: a producer that never supplies
+		helper.setBlock(IDLE_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		if (be(helper, IDLE_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().amount = 0L;
+		}
+		for (int i = 0; i < 150; i++) {
+			tick(helper, be(helper, IDLE_LIVE_GEN));
+			tick(helper, be(helper, IDLE_DEAD_GEN));
+			for (BlockPos c : IDLE_CABLES) {
+				tick(helper, be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, IDLE_BOX));
+		}
+		long box = be(helper, IDLE_BOX) instanceof BatteryBoxBlockEntity b ? b.getEnergyStorage().getAmount() : -1;
+		if (box <= 0) {
+			helper.fail("BatteryBox past an idle producer never charged: " + box
+					+ " EU — the idle producer seeded the distance field and froze the fill front");
+		}
+		long lastCable = be(helper, IDLE_CABLES[4]) instanceof CableBlockEntity c ? c.getEnergyStorage().getAmount() : -1;
+		if (lastCable <= 0) {
+			helper.fail("the cable past the idle producer held no EU (" + lastCable
+					+ ") — energy reached the box without flowing through the line");
 		}
 		helper.succeed();
 	}
