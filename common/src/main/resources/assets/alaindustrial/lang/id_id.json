@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "Lempeng",
 	"gui.alaindustrial.sawmill.mode.stairs": "Tangga",
 	"advancements.alaindustrial.sawmill.title": "Penggergaji Kayu",
-	"advancements.alaindustrial.sawmill.description": "Pasang Penggergaji Kayu dan potong kayu dengan hasil lebih banyak"
+	"advancements.alaindustrial.sawmill.description": "Pasang Penggergaji Kayu dan potong kayu dengan hasil lebih banyak",
+	"item.alaindustrial.copper_plate": "Pelat Tembaga",
+	"item.alaindustrial.gold_plate": "Pelat Emas",
+	"item.alaindustrial.iron_plate": "Pelat Besi",
+	"item.alaindustrial.tin_plate": "Pelat Timah",
+	"item.alaindustrial.silver_plate": "Pelat Perak",
+	"item.alaindustrial.nickel_plate": "Pelat Nikel",
+	"item.alaindustrial.uranium_plate": "Pelat Uranium",
+	"item.alaindustrial.tempered_iron_plate": "Pelat Besi Temper",
+	"item.alaindustrial.forge_hammer": "Palu Tempa",
+	"block.alaindustrial.machine_casing": "Rangka Mesin",
+	"block.alaindustrial.silver_plate_block": "Pelapis Perak",
+	"block.alaindustrial.tempered_iron_plate_block": "Pelapis Besi Temper"
 }

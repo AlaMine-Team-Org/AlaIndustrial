@@ -338,22 +338,22 @@
         },
         {
           "id": "gold_cable",
-          "title": "Gold Cable",
+          "title": "Cabo de Ouro",
           "icon": "alaindustrial:gold_cable",
           "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Cable",
-              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
+              "title": "Cabo de Ouro",
+              "text": "O cabo MV: quatro vezes mais largo que o cobre, mas com mais perdas: um cano largo de perto contra um fino de longe."
             },
             {
               "type": "stats",
               "title": "Estatísticas",
               "lines": [
-                "Energy: ≤128 EU/packet",
+                "Energia: ≤128 EU/pacote",
                 "Buffer: 48 EU",
-                "Loss: 0.03 per block"
+                "Perda: 0.03 por bloco"
               ]
             },
             {
@@ -393,7 +393,7 @@
               "lines": [
                 "Energia: ≤32 EU/pacote",
                 "Buffer: 12 EU",
-                "Loss: 0.02 per block"
+                "Perda: 0.02 por bloco"
               ]
             },
             {
@@ -425,15 +425,15 @@
             {
               "type": "text",
               "title": "Cabo de Estanho",
-              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
+              "text": "O cabo LV mais barato: estreito, mas quase sem perdas, ideal para fazendas solares."
             },
             {
               "type": "stats",
               "title": "Estatísticas",
               "lines": [
-                "Energy: ≤8 EU/packet",
+                "Energia: ≤8 EU/pacote",
                 "Buffer: 8 EU",
-                "Loss: 0.006 per block"
+                "Perda: 0.006 por bloco"
               ]
             },
             {
@@ -490,12 +490,12 @@
                 "minecraft:flint",
                 "minecraft:flint",
                 "minecraft:flint",
-                "minecraft:cobblestone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
-                "alaindustrial:silver_ingot",
-                "minecraft:cobblestone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:macerator",
               "result_count": 1
@@ -557,15 +557,15 @@
               "title": "Receita",
               "recipe_type": "Fabricação com forma",
               "grid": [
-                "minecraft:stone",
-                "minecraft:stone",
-                "minecraft:stone",
                 "minecraft:piston",
+                "minecraft:iron_ingot",
+                "minecraft:piston",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:piston",
-                "minecraft:stone",
-                "alaindustrial:silver_ingot",
-                "minecraft:stone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:compressor",
               "result_count": 1
@@ -635,15 +635,15 @@
               "title": "Receita",
               "recipe_type": "Fabricação com forma",
               "grid": [
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
                 "minecraft:hopper",
+                "minecraft:iron_ingot",
+                "minecraft:hopper",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:hopper",
-                "minecraft:cobblestone",
-                "alaindustrial:silver_ingot",
-                "minecraft:cobblestone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
               "result_count": 1
@@ -855,6 +855,37 @@
           ]
         },
         {
+          "id": "tempered_iron_plate_block",
+          "title": "Revestimento de Ferro Temperado",
+          "icon": "alaindustrial:tempered_iron_plate_block",
+          "block_id": "alaindustrial:tempered_iron_plate_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Revestimento de Ferro Temperado",
+              "text": "Um bloco decorativo de 4 placas de ferro temperado — um painel tecnológico com tela e linhas; feito e desfeito na bancada sem perda."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_plate_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tin_ore",
           "title": "Minério de Estanho",
           "icon": "alaindustrial:tin_ore",
@@ -864,6 +895,37 @@
               "type": "text",
               "title": "Minério de Estanho",
               "text": "Um metal inicial do mod — minério no mundo e a cadeia bruto → pó → lingote; o material base para fios e circuitos LV."
+            }
+          ]
+        },
+        {
+          "id": "silver_plate_block",
+          "title": "Revestimento de Prata",
+          "icon": "alaindustrial:silver_plate_block",
+          "block_id": "alaindustrial:silver_plate_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Revestimento de Prata",
+              "text": "Um bloco decorativo de 4 placas de prata — um azulejo metálico aparafusado 2×2; feito e desfeito na bancada sem perda."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "alaindustrial:silver_plate",
+                "",
+                "alaindustrial:silver_plate",
+                "alaindustrial:silver_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:silver_plate_block",
+              "result_count": 1
             }
           ]
         },
@@ -1351,6 +1413,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "machine_casing",
+          "title": "Estrutura de Máquina",
+          "icon": "alaindustrial:machine_casing",
+          "block_id": "alaindustrial:machine_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Estrutura de Máquina",
+              "text": "Um bloco base de cubo completo para construir máquinas — de 8 placas de ferro. As máquinas LV (triturador, extrator, compressor) são feitas sobre ele."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:machine_casing",
+              "result_count": 1
             }
           ]
         },
@@ -2076,6 +2169,37 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "forge_hammer",
+          "title": "Martelo de Forja",
+          "icon": "alaindustrial:forge_hammer",
+          "block_id": "alaindustrial:forge_hammer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Martelo de Forja",
+              "text": "Uma ferramenta manual anterior às máquinas: coloque o martelo e um lingote na grade de fabricação para obter uma placa de metal. O martelo permanece na grade e perde 1 de durabilidade por placa."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:forge_hammer",
+              "result_count": 1
             }
           ]
         },

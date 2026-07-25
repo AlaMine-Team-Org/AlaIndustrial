@@ -338,22 +338,22 @@
         },
         {
           "id": "gold_cable",
-          "title": "Gold Cable",
+          "title": "सोने की केबल",
           "icon": "alaindustrial:gold_cable",
           "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Cable",
-              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
+              "title": "सोने की केबल",
+              "text": "MV केबल — तांबे से चार गुना चौड़ा पर ज़्यादा रिसाव वाला: पास में चौड़ा पाइप, दूर में पतला।"
             },
             {
               "type": "stats",
               "title": "आँकड़े",
               "lines": [
-                "Energy: ≤128 EU/packet",
-                "Buffer: 48 EU",
-                "Loss: 0.03 per block"
+                "ऊर्जा: ≤128 EU/पैकेट",
+                "बफ़र: 48 EU",
+                "हानि: 0.03 प्रति ब्लॉक"
               ]
             },
             {
@@ -393,7 +393,7 @@
               "lines": [
                 "ऊर्जा: ≤32 EU/पैकेट",
                 "बफ़र: 12 EU",
-                "Loss: 0.02 per block"
+                "हानि: 0.02 प्रति ब्लॉक"
               ]
             },
             {
@@ -425,15 +425,15 @@
             {
               "type": "text",
               "title": "टिन की केबल",
-              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
+              "text": "सबसे सस्ती LV केबल — पतली पर लगभग बिना हानि के, सौर फार्मों के लिए आदर्श।"
             },
             {
               "type": "stats",
               "title": "आँकड़े",
               "lines": [
-                "Energy: ≤8 EU/packet",
-                "Buffer: 8 EU",
-                "Loss: 0.006 per block"
+                "ऊर्जा: ≤8 EU/पैकेट",
+                "बफ़र: 8 EU",
+                "हानि: 0.006 प्रति ब्लॉक"
               ]
             },
             {
@@ -490,12 +490,12 @@
                 "minecraft:flint",
                 "minecraft:flint",
                 "minecraft:flint",
-                "minecraft:cobblestone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
-                "alaindustrial:silver_ingot",
-                "minecraft:cobblestone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:macerator",
               "result_count": 1
@@ -557,15 +557,15 @@
               "title": "रेसिपी",
               "recipe_type": "आकारित क्राफ्टिंग",
               "grid": [
-                "minecraft:stone",
-                "minecraft:stone",
-                "minecraft:stone",
                 "minecraft:piston",
+                "minecraft:iron_ingot",
+                "minecraft:piston",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:piston",
-                "minecraft:stone",
-                "alaindustrial:silver_ingot",
-                "minecraft:stone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:compressor",
               "result_count": 1
@@ -635,15 +635,15 @@
               "title": "रेसिपी",
               "recipe_type": "आकारित क्राफ्टिंग",
               "grid": [
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
                 "minecraft:hopper",
+                "minecraft:iron_ingot",
+                "minecraft:hopper",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:hopper",
-                "minecraft:cobblestone",
-                "alaindustrial:silver_ingot",
-                "minecraft:cobblestone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
               "result_count": 1
@@ -855,6 +855,37 @@
           ]
         },
         {
+          "id": "tempered_iron_plate_block",
+          "title": "टेम्पर्ड लोहे की परत",
+          "icon": "alaindustrial:tempered_iron_plate_block",
+          "block_id": "alaindustrial:tempered_iron_plate_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "टेम्पर्ड लोहे की परत",
+              "text": "टेम्पर्ड लोहे की 4 प्लेटों से बना एक सजावटी ब्लॉक — स्क्रीन और रेखाओं वाला टेक पैनल; कार्यक्षेत्र पर बिना हानि के बनता और खुलता है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_plate_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tin_ore",
           "title": "टिन का अयस्क",
           "icon": "alaindustrial:tin_ore",
@@ -864,6 +895,37 @@
               "type": "text",
               "title": "टिन का अयस्क",
               "text": "एक शुरुआती मॉड धातु — दुनिया में अयस्क और कच्चा → चूरा → पिंड श्रृंखला; LV तारों और सर्किटों की आधार सामग्री।"
+            }
+          ]
+        },
+        {
+          "id": "silver_plate_block",
+          "title": "चांदी की परत",
+          "icon": "alaindustrial:silver_plate_block",
+          "block_id": "alaindustrial:silver_plate_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "चांदी की परत",
+              "text": "4 चांदी की प्लेटों से बना एक सजावटी ब्लॉक — बोल्ट लगी 2×2 धातु टाइल; कार्यक्षेत्र पर बिना हानि के बनता और खुलता है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "alaindustrial:silver_plate",
+                "",
+                "alaindustrial:silver_plate",
+                "alaindustrial:silver_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:silver_plate_block",
+              "result_count": 1
             }
           ]
         },
@@ -1351,6 +1413,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "machine_casing",
+          "title": "मशीन केसिंग",
+          "icon": "alaindustrial:machine_casing",
+          "block_id": "alaindustrial:machine_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "मशीन केसिंग",
+              "text": "मशीनें बनाने के लिए पूर्ण-घन आधार ब्लॉक — 8 लोहे की प्लेटों से। LV मशीनें (मैसरेटर, एक्सट्रैक्टर, कंप्रेसर) इसी के ऊपर बनती हैं।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:machine_casing",
+              "result_count": 1
             }
           ]
         },
@@ -2076,6 +2169,37 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "forge_hammer",
+          "title": "लोहार का हथौड़ा",
+          "icon": "alaindustrial:forge_hammer",
+          "block_id": "alaindustrial:forge_hammer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "लोहार का हथौड़ा",
+              "text": "मशीनों से पहले का हाथ का औज़ार: हथौड़ा और एक पिंड क्राफ्टिंग ग्रिड में रखें और एक धातु की प्लेट पाएं। हथौड़ा ग्रिड में रहता है और हर प्लेट पर 1 टिकाऊपन खोता है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:forge_hammer",
+              "result_count": 1
             }
           ]
         },

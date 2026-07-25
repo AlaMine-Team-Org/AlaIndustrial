@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_tempered_iron_plate_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:tempered_iron_plate_block"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_tempered_iron_plate_block"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:tempered_iron_plate_from_block"
+    ]
+  }
+}

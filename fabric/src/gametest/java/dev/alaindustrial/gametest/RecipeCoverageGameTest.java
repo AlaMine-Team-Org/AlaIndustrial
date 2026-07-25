@@ -1,15 +1,21 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
+import java.util.List;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.ItemLike;
 
 /**
  * L2 sanity suite that covers EVERY mod processing recipe JSON in one shot. Replaces the per-recipe
@@ -51,6 +57,89 @@ public class RecipeCoverageGameTest {
 	@GameTest
 	public void tcRecie04_extractingRecipesAllLoad(GameTestHelper helper) {
 		assertAllRecipesLoad(helper, ModRecipes.EXTRACTING, "extracting");
+	}
+
+	// --- Crafting-recipe resolve guards (MOD-225): the four processing scans above cover machine
+	// PROCESSING recipes; these cover the crafting_shaped/shapeless recipes for the machine casing,
+	// the retrofitted machine crafts and the plate blocks — a typo in an item id there loads no
+	// recipe and is caught by neither recipeCheck nor recipeAdvancementCheck. Each builds the exact
+	// grid and asserts the recipe resolves to the expected result. ---
+
+	/** @implements TC-RECIE-005 — machine_casing crafts from an 8-iron-plate ring. */
+	@GameTest
+	public void tcRecie05_machineCasingResolves(GameTestHelper helper) {
+		ItemStack p = s(ModContent.IRON_PLATE.get());
+		assertCraftResolves(helper, 3, 3,
+				List.of(p, p, p, p, ItemStack.EMPTY, p, p, p, p),
+				ModContent.MACHINE_CASING_ITEM.get(), "machine_casing");
+	}
+
+	/** @implements TC-RECIE-006 — macerator crafts on the casing (FFF/IMI/IEI, retrofit). */
+	@GameTest
+	public void tcRecie06_maceratorResolves(GameTestHelper helper) {
+		assertCraftResolves(helper, 3, 3, machineGrid(s(Items.FLINT), s(Items.FLINT), s(Items.FLINT)),
+				ModContent.MACERATOR_ITEM.get(), "macerator");
+	}
+
+	/** @implements TC-RECIE-007 — extractor crafts on the casing (HIH/IMI/IEI, retrofit). */
+	@GameTest
+	public void tcRecie07_extractorResolves(GameTestHelper helper) {
+		assertCraftResolves(helper, 3, 3, machineGrid(s(Items.HOPPER), s(Items.IRON_INGOT), s(Items.HOPPER)),
+				ModContent.EXTRACTOR_ITEM.get(), "extractor");
+	}
+
+	/** @implements TC-RECIE-008 — compressor crafts on the casing (PIP/IMI/IEI, retrofit). */
+	@GameTest
+	public void tcRecie08_compressorResolves(GameTestHelper helper) {
+		assertCraftResolves(helper, 3, 3, machineGrid(s(Items.PISTON), s(Items.IRON_INGOT), s(Items.PISTON)),
+				ModContent.COMPRESSOR_ITEM.get(), "compressor");
+	}
+
+	/** @implements TC-RECIE-009 — silver_plate_block crafts from 4 silver plates (2x2). */
+	@GameTest
+	public void tcRecie09_silverPlateBlockResolves(GameTestHelper helper) {
+		ItemStack p = s(ModContent.SILVER_PLATE.get());
+		assertCraftResolves(helper, 2, 2, List.of(p, p, p, p),
+				ModContent.SILVER_PLATE_BLOCK_ITEM.get(), "silver_plate_block");
+	}
+
+	/** @implements TC-RECIE-010 — tempered_iron_plate_block crafts from 4 tempered-iron plates (2x2). */
+	@GameTest
+	public void tcRecie10_temperedIronPlateBlockResolves(GameTestHelper helper) {
+		ItemStack p = s(ModContent.TEMPERED_IRON_PLATE.get());
+		assertCraftResolves(helper, 2, 2, List.of(p, p, p, p),
+				ModContent.TEMPERED_IRON_PLATE_BLOCK_ITEM.get(), "tempered_iron_plate_block");
+	}
+
+	private static ItemStack s(ItemLike item) {
+		return new ItemStack(item);
+	}
+
+	/** The shared retrofit grid: top row = the machine's defining part; iron frame; casing body; circuit. */
+	private static List<ItemStack> machineGrid(ItemStack topLeft, ItemStack topMid, ItemStack topRight) {
+		ItemStack i = s(Items.IRON_INGOT);
+		return List.of(
+				topLeft, topMid, topRight,
+				i, s(ModContent.MACHINE_CASING_ITEM.get()), i,
+				i, s(ModContent.ELECTRONIC_CIRCUIT.get()), i);
+	}
+
+	private static void assertCraftResolves(GameTestHelper helper, int width, int height,
+			List<ItemStack> grid, ItemLike expected, String name) {
+		ServerLevel level = helper.getLevel();
+		CraftingInput input = CraftingInput.of(width, height, grid);
+		RecipeHolder<CraftingRecipe> recipe =
+				level.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, level).orElse(null);
+		if (recipe == null) {
+			helper.fail(name + " crafting recipe did not resolve — check pattern/key item ids in recipe/" + name + ".json");
+			return;
+		}
+		ItemStack out = recipe.value().assemble(input);
+		if (!out.is(expected.asItem())) {
+			helper.fail(name + " recipe produced " + out + " (expected " + expected.asItem() + ")");
+			return;
+		}
+		helper.succeed();
 	}
 
 	/**

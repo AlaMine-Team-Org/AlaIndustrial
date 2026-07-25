@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "Lastre",
 	"gui.alaindustrial.sawmill.mode.stairs": "Scalini",
 	"advancements.alaindustrial.sawmill.title": "Segheria",
-	"advancements.alaindustrial.sawmill.description": "Piazza una segheria e taglia il legno con una resa maggiore"
+	"advancements.alaindustrial.sawmill.description": "Piazza una segheria e taglia il legno con una resa maggiore",
+	"item.alaindustrial.copper_plate": "Piastra di rame",
+	"item.alaindustrial.gold_plate": "Piastra d'oro",
+	"item.alaindustrial.iron_plate": "Piastra di ferro",
+	"item.alaindustrial.tin_plate": "Piastra di stagno",
+	"item.alaindustrial.silver_plate": "Piastra d'argento",
+	"item.alaindustrial.nickel_plate": "Piastra di nichel",
+	"item.alaindustrial.uranium_plate": "Piastra di uranio",
+	"item.alaindustrial.tempered_iron_plate": "Piastra di ferro temprato",
+	"item.alaindustrial.forge_hammer": "Martello da fucina",
+	"block.alaindustrial.machine_casing": "Telaio della macchina",
+	"block.alaindustrial.silver_plate_block": "Rivestimento d'argento",
+	"block.alaindustrial.tempered_iron_plate_block": "Rivestimento di ferro temprato"
 }

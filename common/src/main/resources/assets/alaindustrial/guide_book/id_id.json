@@ -338,22 +338,22 @@
         },
         {
           "id": "gold_cable",
-          "title": "Gold Cable",
+          "title": "Kabel Emas",
           "icon": "alaindustrial:gold_cable",
           "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Cable",
-              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
+              "title": "Kabel Emas",
+              "text": "Kabel MV — empat kali lebih lebar dari tembaga tapi lebih boros: pipa lebar dari dekat versus pipa tipis dari jauh."
             },
             {
               "type": "stats",
               "title": "Statistik",
               "lines": [
-                "Energy: ≤128 EU/packet",
-                "Buffer: 48 EU",
-                "Loss: 0.03 per block"
+                "Energi: ≤128 EU/paket",
+                "Bufer: 48 EU",
+                "Kerugian: 0.03 per blok"
               ]
             },
             {
@@ -393,7 +393,7 @@
               "lines": [
                 "Energi: ≤32 EU/paket",
                 "Bufer: 12 EU",
-                "Loss: 0.02 per block"
+                "Kerugian: 0.02 per blok"
               ]
             },
             {
@@ -425,15 +425,15 @@
             {
               "type": "text",
               "title": "Kabel Timah",
-              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
+              "text": "Kabel LV termurah — sempit tapi hampir tanpa kehilangan, ideal untuk ladang surya."
             },
             {
               "type": "stats",
               "title": "Statistik",
               "lines": [
-                "Energy: ≤8 EU/packet",
-                "Buffer: 8 EU",
-                "Loss: 0.006 per block"
+                "Energi: ≤8 EU/paket",
+                "Bufer: 8 EU",
+                "Kerugian: 0.006 per blok"
               ]
             },
             {
@@ -490,12 +490,12 @@
                 "minecraft:flint",
                 "minecraft:flint",
                 "minecraft:flint",
-                "minecraft:cobblestone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
-                "alaindustrial:silver_ingot",
-                "minecraft:cobblestone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:macerator",
               "result_count": 1
@@ -557,15 +557,15 @@
               "title": "Resep",
               "recipe_type": "Pembuatan Berpola",
               "grid": [
-                "minecraft:stone",
-                "minecraft:stone",
-                "minecraft:stone",
                 "minecraft:piston",
+                "minecraft:iron_ingot",
+                "minecraft:piston",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:piston",
-                "minecraft:stone",
-                "alaindustrial:silver_ingot",
-                "minecraft:stone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:compressor",
               "result_count": 1
@@ -635,15 +635,15 @@
               "title": "Resep",
               "recipe_type": "Pembuatan Berpola",
               "grid": [
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
                 "minecraft:hopper",
+                "minecraft:iron_ingot",
+                "minecraft:hopper",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:hopper",
-                "minecraft:cobblestone",
-                "alaindustrial:silver_ingot",
-                "minecraft:cobblestone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
               "result_count": 1
@@ -855,6 +855,37 @@
           ]
         },
         {
+          "id": "tempered_iron_plate_block",
+          "title": "Pelapis Besi Temper",
+          "icon": "alaindustrial:tempered_iron_plate_block",
+          "block_id": "alaindustrial:tempered_iron_plate_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pelapis Besi Temper",
+              "text": "Blok dekoratif dari 4 pelat besi temper — panel teknologi dengan layar dan garis; dibuat dan dibongkar di meja kerja tanpa kehilangan."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_plate_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tin_ore",
           "title": "Bijih Timah",
           "icon": "alaindustrial:tin_ore",
@@ -864,6 +895,37 @@
               "type": "text",
               "title": "Bijih Timah",
               "text": "Logam mod tahap awal — bijih di dunia serta rantai mentah → bubuk → batangan; bahan dasar untuk kawat dan sirkuit LV."
+            }
+          ]
+        },
+        {
+          "id": "silver_plate_block",
+          "title": "Pelapis Perak",
+          "icon": "alaindustrial:silver_plate_block",
+          "block_id": "alaindustrial:silver_plate_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pelapis Perak",
+              "text": "Blok dekoratif dari 4 pelat perak — ubin logam berbaut 2×2; dibuat dan dibongkar di meja kerja tanpa kehilangan."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "alaindustrial:silver_plate",
+                "",
+                "alaindustrial:silver_plate",
+                "alaindustrial:silver_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:silver_plate_block",
+              "result_count": 1
             }
           ]
         },
@@ -1351,6 +1413,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "machine_casing",
+          "title": "Rangka Mesin",
+          "icon": "alaindustrial:machine_casing",
+          "block_id": "alaindustrial:machine_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rangka Mesin",
+              "text": "Blok dasar kubus penuh untuk membangun mesin — dari 8 pelat besi. Mesin LV (penggiling, ekstraktor, kompresor) dibuat di atasnya."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:machine_casing",
+              "result_count": 1
             }
           ]
         },
@@ -2076,6 +2169,37 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "forge_hammer",
+          "title": "Palu Tempa",
+          "icon": "alaindustrial:forge_hammer",
+          "block_id": "alaindustrial:forge_hammer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Palu Tempa",
+              "text": "Alat tangan pra-mesin: letakkan palu dan satu batangan di kisi pembuatan untuk mendapatkan pelat logam. Palu tetap di kisi dan kehilangan 1 daya tahan per pelat."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:forge_hammer",
+              "result_count": 1
             }
           ]
         },

@@ -338,22 +338,22 @@
         },
         {
           "id": "gold_cable",
-          "title": "Gold Cable",
+          "title": "금 케이블",
           "icon": "alaindustrial:gold_cable",
           "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Cable",
-              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
+              "title": "금 케이블",
+              "text": "MV 케이블입니다. 구리보다 네 배 넓지만 손실이 큽니다. 가까이서는 굵은 관, 멀리서는 가는 관인 셈입니다."
             },
             {
               "type": "stats",
               "title": "정보",
               "lines": [
-                "Energy: ≤128 EU/packet",
-                "Buffer: 48 EU",
-                "Loss: 0.03 per block"
+                "에너지: ≤128 EU/패킷",
+                "버퍼: 48 EU",
+                "손실: 0.03/블록"
               ]
             },
             {
@@ -393,7 +393,7 @@
               "lines": [
                 "에너지: ≤32 EU/패킷",
                 "버퍼: 12 EU",
-                "Loss: 0.02 per block"
+                "손실: 0.02/블록"
               ]
             },
             {
@@ -425,15 +425,15 @@
             {
               "type": "text",
               "title": "주석 케이블",
-              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
+              "text": "가장 저렴한 LV 케이블입니다. 좁지만 거의 손실이 없어 태양광 발전 단지에 이상적입니다."
             },
             {
               "type": "stats",
               "title": "정보",
               "lines": [
-                "Energy: ≤8 EU/packet",
-                "Buffer: 8 EU",
-                "Loss: 0.006 per block"
+                "에너지: ≤8 EU/패킷",
+                "버퍼: 8 EU",
+                "손실: 0.006/블록"
               ]
             },
             {
@@ -490,12 +490,12 @@
                 "minecraft:flint",
                 "minecraft:flint",
                 "minecraft:flint",
-                "minecraft:cobblestone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
-                "alaindustrial:silver_ingot",
-                "minecraft:cobblestone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:macerator",
               "result_count": 1
@@ -557,15 +557,15 @@
               "title": "레시피",
               "recipe_type": "정형 제작",
               "grid": [
-                "minecraft:stone",
-                "minecraft:stone",
-                "minecraft:stone",
                 "minecraft:piston",
+                "minecraft:iron_ingot",
+                "minecraft:piston",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:piston",
-                "minecraft:stone",
-                "alaindustrial:silver_ingot",
-                "minecraft:stone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:compressor",
               "result_count": 1
@@ -635,15 +635,15 @@
               "title": "레시피",
               "recipe_type": "정형 제작",
               "grid": [
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
                 "minecraft:hopper",
+                "minecraft:iron_ingot",
+                "minecraft:hopper",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:hopper",
-                "minecraft:cobblestone",
-                "alaindustrial:silver_ingot",
-                "minecraft:cobblestone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
               "result_count": 1
@@ -855,6 +855,37 @@
           ]
         },
         {
+          "id": "tempered_iron_plate_block",
+          "title": "담금질된 철 판 블록",
+          "icon": "alaindustrial:tempered_iron_plate_block",
+          "block_id": "alaindustrial:tempered_iron_plate_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "담금질된 철 판 블록",
+              "text": "담금질된 철판 4장으로 만든 장식 블록입니다. 화면과 선이 있는 테크 패널이며, 작업대에서 손실 없이 만들고 되돌릴 수 있습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_plate_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tin_ore",
           "title": "주석 광석",
           "icon": "alaindustrial:tin_ore",
@@ -864,6 +895,37 @@
               "type": "text",
               "title": "주석 광석",
               "text": "초반 모드 금속 — 월드의 광석과 원석 → 가루 → 주괴 사슬; LV 배선과 회로의 기본 재료입니다."
+            }
+          ]
+        },
+        {
+          "id": "silver_plate_block",
+          "title": "은 판 블록",
+          "icon": "alaindustrial:silver_plate_block",
+          "block_id": "alaindustrial:silver_plate_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "은 판 블록",
+              "text": "은 판 4장으로 만든 장식 블록입니다. 볼트로 고정된 2×2 금속 타일이며, 작업대에서 손실 없이 만들고 되돌릴 수 있습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "alaindustrial:silver_plate",
+                "",
+                "alaindustrial:silver_plate",
+                "alaindustrial:silver_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:silver_plate_block",
+              "result_count": 1
             }
           ]
         },
@@ -1351,6 +1413,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "machine_casing",
+          "title": "기계 케이스",
+          "icon": "alaindustrial:machine_casing",
+          "block_id": "alaindustrial:machine_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "기계 케이스",
+              "text": "기계 제작의 토대가 되는 완전한 정육면체 블록입니다. 철판 8장으로 만듭니다. LV 기계(분쇄기, 추출기, 압축기)를 이 위에 만듭니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:machine_casing",
+              "result_count": 1
             }
           ]
         },
@@ -2076,6 +2169,37 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "forge_hammer",
+          "title": "대장장이 망치",
+          "icon": "alaindustrial:forge_hammer",
+          "block_id": "alaindustrial:forge_hammer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "대장장이 망치",
+              "text": "기계 이전의 수공구입니다. 제작 격자에 망치와 주괴를 놓으면 금속판이 나옵니다. 망치는 격자에 남고 판 하나당 내구도가 1 줄어듭니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:forge_hammer",
+              "result_count": 1
             }
           ]
         },

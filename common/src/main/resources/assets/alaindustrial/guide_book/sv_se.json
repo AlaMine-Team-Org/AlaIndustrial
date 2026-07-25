@@ -338,22 +338,22 @@
         },
         {
           "id": "gold_cable",
-          "title": "Gold Cable",
+          "title": "Guldkabel",
           "icon": "alaindustrial:gold_cable",
           "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Cable",
-              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
+              "title": "Guldkabel",
+              "text": "MV-kabeln — fyra gånger bredare än koppar men läcker mer: ett brett rör på nära håll mot ett tunt på långt håll."
             },
             {
               "type": "stats",
               "title": "Statistik",
               "lines": [
-                "Energy: ≤128 EU/packet",
-                "Buffer: 48 EU",
-                "Loss: 0.03 per block"
+                "Energi: ≤128 EU/paket",
+                "Buffert: 48 EU",
+                "Förlust: 0.03 per block"
               ]
             },
             {
@@ -393,7 +393,7 @@
               "lines": [
                 "Energi: ≤32 EU/paket",
                 "Buffert: 12 EU",
-                "Loss: 0.02 per block"
+                "Förlust: 0.02 per block"
               ]
             },
             {
@@ -425,15 +425,15 @@
             {
               "type": "text",
               "title": "Tennkabel",
-              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
+              "text": "Den billigaste LV-kabeln — smal men nästan förlustfri, idealisk för solcellsparker."
             },
             {
               "type": "stats",
               "title": "Statistik",
               "lines": [
-                "Energy: ≤8 EU/packet",
-                "Buffer: 8 EU",
-                "Loss: 0.006 per block"
+                "Energi: ≤8 EU/paket",
+                "Buffert: 8 EU",
+                "Förlust: 0.006 per block"
               ]
             },
             {
@@ -490,12 +490,12 @@
                 "minecraft:flint",
                 "minecraft:flint",
                 "minecraft:flint",
-                "minecraft:cobblestone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
-                "alaindustrial:silver_ingot",
-                "minecraft:cobblestone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:macerator",
               "result_count": 1
@@ -557,15 +557,15 @@
               "title": "Recept",
               "recipe_type": "Formad tillverkning",
               "grid": [
-                "minecraft:stone",
-                "minecraft:stone",
-                "minecraft:stone",
                 "minecraft:piston",
+                "minecraft:iron_ingot",
+                "minecraft:piston",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:piston",
-                "minecraft:stone",
-                "alaindustrial:silver_ingot",
-                "minecraft:stone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:compressor",
               "result_count": 1
@@ -635,15 +635,15 @@
               "title": "Recept",
               "recipe_type": "Formad tillverkning",
               "grid": [
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
                 "minecraft:hopper",
+                "minecraft:iron_ingot",
+                "minecraft:hopper",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:hopper",
-                "minecraft:cobblestone",
-                "alaindustrial:silver_ingot",
-                "minecraft:cobblestone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
               "result_count": 1
@@ -855,6 +855,37 @@
           ]
         },
         {
+          "id": "tempered_iron_plate_block",
+          "title": "Beklädnad av härdat järn",
+          "icon": "alaindustrial:tempered_iron_plate_block",
+          "block_id": "alaindustrial:tempered_iron_plate_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Beklädnad av härdat järn",
+              "text": "Ett dekorativt block av 4 plåtar härdat järn — en teknikpanel med skärm och linjer; tillverkas och plockas isär vid arbetsbänken utan förlust."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_plate_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tin_ore",
           "title": "Tennmalm",
           "icon": "alaindustrial:tin_ore",
@@ -864,6 +895,37 @@
               "type": "text",
               "title": "Tennmalm",
               "text": "En tidig moddmetall — malm i världen och kedjan rå → damm → tacka; basmaterialet för LV-ledningar och kretsar."
+            }
+          ]
+        },
+        {
+          "id": "silver_plate_block",
+          "title": "Silverbeklädnad",
+          "icon": "alaindustrial:silver_plate_block",
+          "block_id": "alaindustrial:silver_plate_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Silverbeklädnad",
+              "text": "Ett dekorativt block av 4 silverplåtar — en skruvad 2×2 metallplatta; tillverkas och plockas isär vid arbetsbänken utan förlust."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "alaindustrial:silver_plate",
+                "",
+                "alaindustrial:silver_plate",
+                "alaindustrial:silver_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:silver_plate_block",
+              "result_count": 1
             }
           ]
         },
@@ -1351,6 +1413,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "machine_casing",
+          "title": "Maskinhölje",
+          "icon": "alaindustrial:machine_casing",
+          "block_id": "alaindustrial:machine_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Maskinhölje",
+              "text": "Ett helt kubformat basblock för att bygga maskiner — av 8 järnplåtar. LV-maskiner (krossare, extraktor, kompressor) byggs på det."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:machine_casing",
+              "result_count": 1
             }
           ]
         },
@@ -2076,6 +2169,37 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "forge_hammer",
+          "title": "Smideshammare",
+          "icon": "alaindustrial:forge_hammer",
+          "block_id": "alaindustrial:forge_hammer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Smideshammare",
+              "text": "Ett handverktyg före maskinerna: lägg hammaren och en tacka i tillverkningsrutnätet för att få en metallplåt. Hammaren stannar i rutnätet och förlorar 1 hållbarhet per plåt."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:forge_hammer",
+              "result_count": 1
             }
           ]
         },

@@ -338,22 +338,22 @@
         },
         {
           "id": "gold_cable",
-          "title": "Gold Cable",
+          "title": "সোনার কেবল",
           "icon": "alaindustrial:gold_cable",
           "block_id": "alaindustrial:gold_cable",
           "pages": [
             {
               "type": "text",
-              "title": "Gold Cable",
-              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
+              "title": "সোনার কেবল",
+              "text": "MV কেবল — তামার চেয়ে চার গুণ চওড়া কিন্তু বেশি ক্ষতিপ্রবণ: কাছে চওড়া নল, দূরে সরু নল।"
             },
             {
               "type": "stats",
               "title": "পরিসংখ্যান",
               "lines": [
-                "Energy: ≤128 EU/packet",
-                "Buffer: 48 EU",
-                "Loss: 0.03 per block"
+                "শক্তি: ≤128 EU/packet",
+                "বাফার: 48 EU",
+                "ক্ষতি: 0.03 প্রতি ব্লক"
               ]
             },
             {
@@ -393,7 +393,7 @@
               "lines": [
                 "শক্তি: ≤32 EU/packet",
                 "বাফার: 12 EU",
-                "Loss: 0.02 per block"
+                "ক্ষতি: 0.02 প্রতি ব্লক"
               ]
             },
             {
@@ -425,15 +425,15 @@
             {
               "type": "text",
               "title": "টিনের কেবল",
-              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
+              "text": "সবচেয়ে সস্তা LV কেবল — সরু কিন্তু প্রায় ক্ষতিহীন, সৌর খামারের জন্য আদর্শ।"
             },
             {
               "type": "stats",
               "title": "পরিসংখ্যান",
               "lines": [
-                "Energy: ≤8 EU/packet",
-                "Buffer: 8 EU",
-                "Loss: 0.006 per block"
+                "শক্তি: ≤8 EU/packet",
+                "বাফার: 8 EU",
+                "ক্ষতি: 0.006 প্রতি ব্লক"
               ]
             },
             {
@@ -490,12 +490,12 @@
                 "minecraft:flint",
                 "minecraft:flint",
                 "minecraft:flint",
-                "minecraft:cobblestone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
-                "alaindustrial:silver_ingot",
-                "minecraft:cobblestone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:macerator",
               "result_count": 1
@@ -557,15 +557,15 @@
               "title": "রেসিপি",
               "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
               "grid": [
-                "minecraft:stone",
-                "minecraft:stone",
-                "minecraft:stone",
                 "minecraft:piston",
+                "minecraft:iron_ingot",
+                "minecraft:piston",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:piston",
-                "minecraft:stone",
-                "alaindustrial:silver_ingot",
-                "minecraft:stone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:compressor",
               "result_count": 1
@@ -635,15 +635,15 @@
               "title": "রেসিপি",
               "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
               "grid": [
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
-                "minecraft:cobblestone",
                 "minecraft:hopper",
+                "minecraft:iron_ingot",
+                "minecraft:hopper",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
                 "alaindustrial:electronic_circuit",
-                "minecraft:hopper",
-                "minecraft:cobblestone",
-                "alaindustrial:silver_ingot",
-                "minecraft:cobblestone"
+                "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
               "result_count": 1
@@ -855,6 +855,37 @@
           ]
         },
         {
+          "id": "tempered_iron_plate_block",
+          "title": "টেম্পার্ড লোহার আবরণ",
+          "icon": "alaindustrial:tempered_iron_plate_block",
+          "block_id": "alaindustrial:tempered_iron_plate_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "টেম্পার্ড লোহার আবরণ",
+              "text": "টেম্পার্ড লোহার ৪টি পাত দিয়ে তৈরি একটি সাজসজ্জার ব্লক — স্ক্রিন ও রেখাযুক্ত একটি টেক প্যানেল; কর্মটেবিলে কোনো ক্ষতি ছাড়াই তৈরি ও খোলা যায়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_plate_block",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tin_ore",
           "title": "টিন আকরিক",
           "icon": "alaindustrial:tin_ore",
@@ -864,6 +895,37 @@
               "type": "text",
               "title": "টিন আকরিক",
               "text": "একটি প্রাথমিক মড ধাতু — জগতে আকরিক এবং কাঁচা → গুঁড়ো → পিণ্ড শৃঙ্খল; LV তার ও সার্কিটের ভিত্তি উপাদান।"
+            }
+          ]
+        },
+        {
+          "id": "silver_plate_block",
+          "title": "রূপার আবরণ",
+          "icon": "alaindustrial:silver_plate_block",
+          "block_id": "alaindustrial:silver_plate_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "রূপার আবরণ",
+              "text": "৪টি রূপার পাত দিয়ে তৈরি একটি সাজসজ্জার ব্লক — বোল্ট লাগানো ২×২ ধাতব টাইল; কর্মটেবিলে কোনো ক্ষতি ছাড়াই তৈরি ও খোলা যায়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "alaindustrial:silver_plate",
+                "",
+                "alaindustrial:silver_plate",
+                "alaindustrial:silver_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:silver_plate_block",
+              "result_count": 1
             }
           ]
         },
@@ -1351,6 +1413,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "machine_casing",
+          "title": "মেশিন কেসিং",
+          "icon": "alaindustrial:machine_casing",
+          "block_id": "alaindustrial:machine_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "মেশিন কেসিং",
+              "text": "মেশিন তৈরির জন্য একটি পূর্ণ-ঘন ভিত্তি ব্লক — ৮টি লোহার পাত থেকে। LV মেশিন (ম্যাসারেটর, এক্সট্র্যাক্টর, কম্প্রেসর) এর উপরই তৈরি হয়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:machine_casing",
+              "result_count": 1
             }
           ]
         },
@@ -2076,6 +2169,37 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "forge_hammer",
+          "title": "কামারের হাতুড়ি",
+          "icon": "alaindustrial:forge_hammer",
+          "block_id": "alaindustrial:forge_hammer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "কামারের হাতুড়ি",
+              "text": "মেশিন-পূর্ব একটি হাতিয়ার: হাতুড়ি ও একটি পিণ্ড ক্রাফটিং গ্রিডে রাখলে একটি ধাতব পাত পাওয়া যায়। হাতুড়ি গ্রিডে থেকে যায় এবং প্রতি পাতে ১ টেকসইতা হারায়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "",
+                "minecraft:stick",
+                ""
+              ],
+              "result_id": "alaindustrial:forge_hammer",
+              "result_count": 1
             }
           ]
         },

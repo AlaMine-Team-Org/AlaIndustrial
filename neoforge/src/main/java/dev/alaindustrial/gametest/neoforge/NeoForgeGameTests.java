@@ -13,6 +13,7 @@ import dev.alaindustrial.gametest.EnergyPackScenarios;
 import dev.alaindustrial.gametest.JetpackScenarios;
 import dev.alaindustrial.gametest.GuideBookGiverScenarios;
 import dev.alaindustrial.gametest.PouchScenarios;
+import dev.alaindustrial.gametest.HammerScenarios;
 import dev.alaindustrial.gametest.ScytheScenarios;
 import dev.alaindustrial.gametest.StockDisplayFrameScenarios;
 import dev.alaindustrial.gametest.TemperedIronToolScenarios;
@@ -575,6 +576,12 @@ public final class NeoForgeGameTests {
 				dev.alaindustrial.gametest.PlayerStatsScenarios::activeTicksNotScaledByGeneratorCount);
 		registerTest(event, "player_stats_active_time_accrues_with_full_buffer", 60, true,
 				dev.alaindustrial.gametest.PlayerStatsScenarios::activeTimeAccruesWithFullBuffer);
+		// Forge Hammer (MOD-078): craft-remainder mechanic on the NeoForge lane — the hammer stays in the
+		// grid, one durability per plate, breaks on its last point. Loader-neutral bodies in HammerScenarios.
+		registerTest(event, "hammer_stays_with_one_damage", 40, true, HammerScenarios::fun01HammerStaysWithOneDamage);
+		registerTest(event, "hammer_exactly_one_damage_per_plate", 40, true, HammerScenarios::prf01ExactlyOneDamagePerPlate);
+		registerTest(event, "hammer_last_durability_breaks", 40, true, HammerScenarios::neg01LastDurabilityBreaks);
+		registerTest(event, "hammer_durability_128", 40, true, HammerScenarios::con01Durability128);
 	}
 
 	/** Register one code-body scenario under the alaindustrial namespace with a sane maxTicks. */

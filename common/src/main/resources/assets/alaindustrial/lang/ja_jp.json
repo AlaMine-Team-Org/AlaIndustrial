@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "ハーフブロック",
 	"gui.alaindustrial.sawmill.mode.stairs": "階段",
 	"advancements.alaindustrial.sawmill.title": "製材機",
-	"advancements.alaindustrial.sawmill.description": "製材機を設置して、木材をより多く切り出そう"
+	"advancements.alaindustrial.sawmill.description": "製材機を設置して、木材をより多く切り出そう",
+	"item.alaindustrial.copper_plate": "銅板",
+	"item.alaindustrial.gold_plate": "金板",
+	"item.alaindustrial.iron_plate": "鉄板",
+	"item.alaindustrial.tin_plate": "スズ板",
+	"item.alaindustrial.silver_plate": "銀板",
+	"item.alaindustrial.nickel_plate": "ニッケル板",
+	"item.alaindustrial.uranium_plate": "ウラン板",
+	"item.alaindustrial.tempered_iron_plate": "焼き入れ鉄板",
+	"item.alaindustrial.forge_hammer": "鍛冶ハンマー",
+	"block.alaindustrial.machine_casing": "マシンケース",
+	"block.alaindustrial.silver_plate_block": "銀の外装板",
+	"block.alaindustrial.tempered_iron_plate_block": "焼き入れ鉄の外装板"
 }

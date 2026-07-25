@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_silver_plate_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:silver_plate_block"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_silver_plate_block"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:silver_plate_from_block"
+    ]
+  }
+}

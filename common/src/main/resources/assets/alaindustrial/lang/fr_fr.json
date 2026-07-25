@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "Dalles",
 	"gui.alaindustrial.sawmill.mode.stairs": "Escaliers",
 	"advancements.alaindustrial.sawmill.title": "Scierie",
-	"advancements.alaindustrial.sawmill.description": "Placez une scierie et sciez du bois avec un meilleur rendement"
+	"advancements.alaindustrial.sawmill.description": "Placez une scierie et sciez du bois avec un meilleur rendement",
+	"item.alaindustrial.copper_plate": "Plaque de cuivre",
+	"item.alaindustrial.gold_plate": "Plaque d'or",
+	"item.alaindustrial.iron_plate": "Plaque de fer",
+	"item.alaindustrial.tin_plate": "Plaque d'étain",
+	"item.alaindustrial.silver_plate": "Plaque d'argent",
+	"item.alaindustrial.nickel_plate": "Plaque de nickel",
+	"item.alaindustrial.uranium_plate": "Plaque d'uranium",
+	"item.alaindustrial.tempered_iron_plate": "Plaque de fer trempé",
+	"item.alaindustrial.forge_hammer": "Marteau de forge",
+	"block.alaindustrial.machine_casing": "Châssis de machine",
+	"block.alaindustrial.silver_plate_block": "Bardage d'argent",
+	"block.alaindustrial.tempered_iron_plate_block": "Bardage en fer trempé"
 }

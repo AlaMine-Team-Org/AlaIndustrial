@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "minecraft:copper_ingot",
+  "result": {
+    "id": "alaindustrial:copper_plate",
+    "count": 1
+  },
+  "energy": 260
+}

@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "Phiến gỗ",
 	"gui.alaindustrial.sawmill.mode.stairs": "Cầu thang gỗ",
 	"advancements.alaindustrial.sawmill.title": "Máy cưa gỗ",
-	"advancements.alaindustrial.sawmill.description": "Đặt Máy cưa gỗ và cưa gỗ với sản lượng cao hơn"
+	"advancements.alaindustrial.sawmill.description": "Đặt Máy cưa gỗ và cưa gỗ với sản lượng cao hơn",
+	"item.alaindustrial.copper_plate": "Tấm Đồng",
+	"item.alaindustrial.gold_plate": "Tấm Vàng",
+	"item.alaindustrial.iron_plate": "Tấm Sắt",
+	"item.alaindustrial.tin_plate": "Tấm Thiếc",
+	"item.alaindustrial.silver_plate": "Tấm Bạc",
+	"item.alaindustrial.nickel_plate": "Tấm Niken",
+	"item.alaindustrial.uranium_plate": "Tấm Uranium",
+	"item.alaindustrial.tempered_iron_plate": "Tấm Sắt Tôi",
+	"item.alaindustrial.forge_hammer": "Búa Rèn",
+	"block.alaindustrial.machine_casing": "Khung Máy",
+	"block.alaindustrial.silver_plate_block": "Ốp Bạc",
+	"block.alaindustrial.tempered_iron_plate_block": "Ốp Sắt Tôi"
 }

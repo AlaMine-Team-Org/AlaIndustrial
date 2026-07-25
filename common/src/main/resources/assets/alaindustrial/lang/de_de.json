@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "Holzstufen",
 	"gui.alaindustrial.sawmill.mode.stairs": "Holztreppen",
 	"advancements.alaindustrial.sawmill.title": "Sägewerk",
-	"advancements.alaindustrial.sawmill.description": "Platziere ein Sägewerk und zersäge Holz mit höherer Ausbeute"
+	"advancements.alaindustrial.sawmill.description": "Platziere ein Sägewerk und zersäge Holz mit höherer Ausbeute",
+	"item.alaindustrial.copper_plate": "Kupferplatte",
+	"item.alaindustrial.gold_plate": "Goldplatte",
+	"item.alaindustrial.iron_plate": "Eisenplatte",
+	"item.alaindustrial.tin_plate": "Zinnplatte",
+	"item.alaindustrial.silver_plate": "Silberplatte",
+	"item.alaindustrial.nickel_plate": "Nickelplatte",
+	"item.alaindustrial.uranium_plate": "Uranplatte",
+	"item.alaindustrial.tempered_iron_plate": "Platte aus gehärtetem Eisen",
+	"item.alaindustrial.forge_hammer": "Schmiedehammer",
+	"block.alaindustrial.machine_casing": "Maschinengehäuse",
+	"block.alaindustrial.silver_plate_block": "Silberverkleidung",
+	"block.alaindustrial.tempered_iron_plate_block": "Verkleidung aus gehärtetem Eisen"
 }

@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "alaindustrial:tempered_iron",
+  "result": {
+    "id": "alaindustrial:tempered_iron_plate",
+    "count": 1
+  },
+  "energy": 260
+}

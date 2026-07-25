@@ -133,6 +133,10 @@ public final class ModContent {
 	// Tempered Iron Block — a "block of X" material block (9 ingots ↔ 1 block), like
 	// vanilla iron block. Pure material/decorative block, no BE, single texture on all 6 faces.
 	public static Supplier<Block> TEMPERED_IRON_BLOCK = unbound("TEMPERED_IRON_BLOCK");
+	// MOD-225: machine casing (crafting base for machines) + two decorative plate blocks.
+	public static Supplier<Block> MACHINE_CASING = unbound("MACHINE_CASING");
+	public static Supplier<Block> SILVER_PLATE_BLOCK = unbound("SILVER_PLATE_BLOCK");
+	public static Supplier<Block> TEMPERED_IRON_PLATE_BLOCK = unbound("TEMPERED_IRON_PLATE_BLOCK");
 	public static Supplier<Block> INDUSTRIAL_WORKBENCH = unbound("INDUSTRIAL_WORKBENCH");
 	// Enriched Uranium Torch (MOD-085) — a vanilla-behaviour torch (light 15, green flame) in two
 	// blocks: standing + wall. The wall variant has NO block item; it drops/names from the standing
@@ -222,6 +226,21 @@ public final class ModContent {
 	public static Supplier<Item> SCYTHE_TEMPERED_IRON = unbound("SCYTHE_TEMPERED_IRON");
 	public static Supplier<Item> SCYTHE_DIAMOND = unbound("SCYTHE_DIAMOND");
 	public static Supplier<Item> SCYTHE_NETHERITE = unbound("SCYTHE_NETHERITE");
+	// Metal plates (MOD-078) — ingot form pressed/hammered from an ingot; feeds LV machine and
+	// circuit recipes. Eight metals; no tempered_iron dust exists, so tempered_iron_plate has no
+	// maceration recycle. See docs/blocks/components/material_forms.md.
+	public static Supplier<Item> COPPER_PLATE = unbound("COPPER_PLATE");
+	public static Supplier<Item> GOLD_PLATE = unbound("GOLD_PLATE");
+	public static Supplier<Item> IRON_PLATE = unbound("IRON_PLATE");
+	public static Supplier<Item> TIN_PLATE = unbound("TIN_PLATE");
+	public static Supplier<Item> SILVER_PLATE = unbound("SILVER_PLATE");
+	public static Supplier<Item> NICKEL_PLATE = unbound("NICKEL_PLATE");
+	public static Supplier<Item> URANIUM_PLATE = unbound("URANIUM_PLATE");
+	public static Supplier<Item> TEMPERED_IRON_PLATE = unbound("TEMPERED_IRON_PLATE");
+	// Forge Hammer (MOD-078) — pre-machine hand tool: ingot + hammer on the grid → plate; the hammer
+	// stays and loses 1 durability per plate. Behaviour lives in dev.alaindustrial.item.HammerItem
+	// (common) + a loader subclass for the craft-remainder hook.
+	public static Supplier<Item> FORGE_HAMMER = unbound("FORGE_HAMMER");
 
 	// --- Entity types ---
 	// Stock Display Frame (MOD-066) — the mod's first entity: an ItemFrame subclass that counts the
@@ -266,6 +285,10 @@ public final class ModContent {
 	public static Supplier<BlockItem> SILVER_CHEST_ITEM = unbound("SILVER_CHEST_ITEM");
 	public static Supplier<BlockItem> GOLD_CHEST_ITEM = unbound("GOLD_CHEST_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_BLOCK_ITEM = unbound("TEMPERED_IRON_BLOCK_ITEM");
+	// MOD-225 block-items.
+	public static Supplier<BlockItem> MACHINE_CASING_ITEM = unbound("MACHINE_CASING_ITEM");
+	public static Supplier<BlockItem> SILVER_PLATE_BLOCK_ITEM = unbound("SILVER_PLATE_BLOCK_ITEM");
+	public static Supplier<BlockItem> TEMPERED_IRON_PLATE_BLOCK_ITEM = unbound("TEMPERED_IRON_PLATE_BLOCK_ITEM");
 	public static Supplier<BlockItem> INDUSTRIAL_WORKBENCH_ITEM = unbound("INDUSTRIAL_WORKBENCH_ITEM");
 	// Enriched Uranium Torch (MOD-085) — only the STANDING torch has a block item; the wall variant
 	// drops this item via its overrideLootTable, so it needs no item of its own.

@@ -275,6 +275,10 @@ public final class DemoStand {
 		set(level, origin, 31, 1, 10, ModContent.SILVER_CHEST.get());
 		set(level, origin, 32, 1, 10, ModContent.GOLD_CHEST.get());
 		set(level, origin, 33, 1, 10, ModContent.TEMPERED_IRON_BLOCK.get());
+		// Plate blocks (MOD-225): machine casing + two decorative plate panels, on the shelf above the chests.
+		set(level, origin, 30, 2, 10, ModContent.MACHINE_CASING.get());
+		set(level, origin, 31, 2, 10, ModContent.SILVER_PLATE_BLOCK.get());
+		set(level, origin, 32, 2, 10, ModContent.TEMPERED_IRON_PLATE_BLOCK.get());
 		// Industrial Workbench (MOD-062): the Industrialist villager's job-site block on display.
 		set(level, origin, 33, 2, 10, ModContent.INDUSTRIAL_WORKBENCH.get());
 		set(level, origin, 34, -1, 10, FLOOR);

@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "স্ল্যাব",
 	"gui.alaindustrial.sawmill.mode.stairs": "সিঁড়ি",
 	"advancements.alaindustrial.sawmill.title": "করাত কল",
-	"advancements.alaindustrial.sawmill.description": "একটি করাত কল স্থাপন করে বেশি ফলনে কাঠ কাটুন"
+	"advancements.alaindustrial.sawmill.description": "একটি করাত কল স্থাপন করে বেশি ফলনে কাঠ কাটুন",
+	"item.alaindustrial.copper_plate": "তামার পাত",
+	"item.alaindustrial.gold_plate": "সোনার পাত",
+	"item.alaindustrial.iron_plate": "লোহার পাত",
+	"item.alaindustrial.tin_plate": "টিনের পাত",
+	"item.alaindustrial.silver_plate": "রূপার পাত",
+	"item.alaindustrial.nickel_plate": "নিকেলের পাত",
+	"item.alaindustrial.uranium_plate": "ইউরেনিয়ামের পাত",
+	"item.alaindustrial.tempered_iron_plate": "টেম্পার্ড লোহার পাত",
+	"item.alaindustrial.forge_hammer": "কামারের হাতুড়ি",
+	"block.alaindustrial.machine_casing": "মেশিন কেসিং",
+	"block.alaindustrial.silver_plate_block": "রূপার আবরণ",
+	"block.alaindustrial.tempered_iron_plate_block": "টেম্পার্ড লোহার আবরণ"
 }

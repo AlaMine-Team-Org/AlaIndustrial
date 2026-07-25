@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "Плити",
 	"gui.alaindustrial.sawmill.mode.stairs": "Сходи",
 	"advancements.alaindustrial.sawmill.title": "Лісопилка",
-	"advancements.alaindustrial.sawmill.description": "Встановіть лісопилку та розпилюйте деревину з підвищеним виходом"
+	"advancements.alaindustrial.sawmill.description": "Встановіть лісопилку та розпилюйте деревину з підвищеним виходом",
+	"item.alaindustrial.copper_plate": "Мідна пластина",
+	"item.alaindustrial.gold_plate": "Золота пластина",
+	"item.alaindustrial.iron_plate": "Залізна пластина",
+	"item.alaindustrial.tin_plate": "Олов'яна пластина",
+	"item.alaindustrial.silver_plate": "Срібна пластина",
+	"item.alaindustrial.nickel_plate": "Нікелева пластина",
+	"item.alaindustrial.uranium_plate": "Уранова пластина",
+	"item.alaindustrial.tempered_iron_plate": "Пластина із загартованого заліза",
+	"item.alaindustrial.forge_hammer": "Ковальський молот",
+	"block.alaindustrial.machine_casing": "Машинний корпус",
+	"block.alaindustrial.silver_plate_block": "Срібна обшивка",
+	"block.alaindustrial.tempered_iron_plate_block": "Обшивка із загартованого заліза"
 }

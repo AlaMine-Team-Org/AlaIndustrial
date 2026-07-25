@@ -23,6 +23,8 @@ public final class CreativeTabContent {
 		machines(out);
 		storageAndCables(out);
 		oresAndMaterials(out);
+		plates(out);
+		plateBlocks(out);
 		components(out);
 		utility(out);
 		// The Industrial Workbench is a decorative building block (MOD-062 villager POI). It already
@@ -51,6 +53,26 @@ public final class CreativeTabContent {
 		out.accept(ModContent.NETWORK_ANALYZER.get());
 		out.accept(ModContent.TELEPORTER_REMOTE.get());
 		out.accept(ModContent.WRENCH.get());
+		out.accept(ModContent.FORGE_HAMMER.get());
+	}
+
+	/** The eight metal plates (MOD-078), in the mod's canonical metal order. */
+	public static void plates(Sink out) {
+		out.accept(ModContent.COPPER_PLATE.get());
+		out.accept(ModContent.GOLD_PLATE.get());
+		out.accept(ModContent.IRON_PLATE.get());
+		out.accept(ModContent.TIN_PLATE.get());
+		out.accept(ModContent.SILVER_PLATE.get());
+		out.accept(ModContent.NICKEL_PLATE.get());
+		out.accept(ModContent.URANIUM_PLATE.get());
+		out.accept(ModContent.TEMPERED_IRON_PLATE.get());
+	}
+
+	/** Blocks made from plates (MOD-225): the machine casing and two decorative panels. */
+	public static void plateBlocks(Sink out) {
+		out.accept(ModContent.MACHINE_CASING_ITEM.get());
+		out.accept(ModContent.SILVER_PLATE_BLOCK_ITEM.get());
+		out.accept(ModContent.TEMPERED_IRON_PLATE_BLOCK_ITEM.get());
 	}
 
 	/** The six scythe tiers (MOD-068), wood → netherite, as one continuous row. */
@@ -86,6 +108,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.SILVER_DUST.get());
 		out.accept(ModContent.NICKEL_DUST.get());
 		out.accept(ModContent.URANIUM_DUST.get());
+		plates(out);
 		out.accept(ModContent.ELECTRONIC_CIRCUIT.get());
 		out.accept(ModContent.COPPER_COIL.get());
 		out.accept(ModContent.ALIGNMENT_CHIP_DAY.get());
@@ -103,6 +126,9 @@ public final class CreativeTabContent {
 
 	public static void buildingBlocks(Sink out) {
 		out.accept(ModContent.TEMPERED_IRON_BLOCK_ITEM.get());
+		out.accept(ModContent.MACHINE_CASING_ITEM.get());
+		out.accept(ModContent.SILVER_PLATE_BLOCK_ITEM.get());
+		out.accept(ModContent.TEMPERED_IRON_PLATE_BLOCK_ITEM.get());
 		out.accept(ModContent.INDUSTRIAL_WORKBENCH_ITEM.get());
 	}
 
@@ -215,6 +241,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.LAPIS_DUST.get());
 		out.accept(ModContent.NETWORK_ANALYZER.get());
 		out.accept(ModContent.WRENCH.get());
+		out.accept(ModContent.FORGE_HAMMER.get());
 		out.accept(ModContent.GUIDE_BOOK.get());
 		out.accept(ModContent.BATTERY_POUCH.get());
 		out.accept(ModContent.BATTERY.get());

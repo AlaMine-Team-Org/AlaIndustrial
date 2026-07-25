@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "Plattor",
 	"gui.alaindustrial.sawmill.mode.stairs": "Trappor",
 	"advancements.alaindustrial.sawmill.title": "Sågverk",
-	"advancements.alaindustrial.sawmill.description": "Placera ett sågverk och såga trä med högre utbyte"
+	"advancements.alaindustrial.sawmill.description": "Placera ett sågverk och såga trä med högre utbyte",
+	"item.alaindustrial.copper_plate": "Kopparplåt",
+	"item.alaindustrial.gold_plate": "Guldplåt",
+	"item.alaindustrial.iron_plate": "Järnplåt",
+	"item.alaindustrial.tin_plate": "Tennplåt",
+	"item.alaindustrial.silver_plate": "Silverplåt",
+	"item.alaindustrial.nickel_plate": "Nickelplåt",
+	"item.alaindustrial.uranium_plate": "Uranplåt",
+	"item.alaindustrial.tempered_iron_plate": "Plåt av härdat järn",
+	"item.alaindustrial.forge_hammer": "Smideshammare",
+	"block.alaindustrial.machine_casing": "Maskinhölje",
+	"block.alaindustrial.silver_plate_block": "Silverbeklädnad",
+	"block.alaindustrial.tempered_iron_plate_block": "Beklädnad av härdat järn"
 }

@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "Płyty",
 	"gui.alaindustrial.sawmill.mode.stairs": "Schody",
 	"advancements.alaindustrial.sawmill.title": "Tartak",
-	"advancements.alaindustrial.sawmill.description": "Umieść tartak i tnij drewno z większą wydajnością"
+	"advancements.alaindustrial.sawmill.description": "Umieść tartak i tnij drewno z większą wydajnością",
+	"item.alaindustrial.copper_plate": "Płyta miedzi",
+	"item.alaindustrial.gold_plate": "Płyta złota",
+	"item.alaindustrial.iron_plate": "Płyta żelaza",
+	"item.alaindustrial.tin_plate": "Płyta cyny",
+	"item.alaindustrial.silver_plate": "Płyta srebra",
+	"item.alaindustrial.nickel_plate": "Płyta niklu",
+	"item.alaindustrial.uranium_plate": "Płyta uranu",
+	"item.alaindustrial.tempered_iron_plate": "Płyta z hartowanego żelaza",
+	"item.alaindustrial.forge_hammer": "Młot kowalski",
+	"block.alaindustrial.machine_casing": "Obudowa maszyny",
+	"block.alaindustrial.silver_plate_block": "Poszycie ze srebra",
+	"block.alaindustrial.tempered_iron_plate_block": "Poszycie z hartowanego żelaza"
 }

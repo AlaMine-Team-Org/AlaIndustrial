@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "alaindustrial:forge_hammer",
+    "alaindustrial:tin_ingot"
+  ],
+  "result": {
+    "id": "alaindustrial:tin_plate",
+    "count": 1
+  }
+}

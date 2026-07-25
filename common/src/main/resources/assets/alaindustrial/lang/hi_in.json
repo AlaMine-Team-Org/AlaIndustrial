@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "पटियाँ",
 	"gui.alaindustrial.sawmill.mode.stairs": "सीढ़ियाँ",
 	"advancements.alaindustrial.sawmill.title": "आरा मशीन",
-	"advancements.alaindustrial.sawmill.description": "एक आरा मशीन रखें और अधिक उपज के साथ लकड़ी काटें"
+	"advancements.alaindustrial.sawmill.description": "एक आरा मशीन रखें और अधिक उपज के साथ लकड़ी काटें",
+	"item.alaindustrial.copper_plate": "तांबे की प्लेट",
+	"item.alaindustrial.gold_plate": "सोने की प्लेट",
+	"item.alaindustrial.iron_plate": "लोहे की प्लेट",
+	"item.alaindustrial.tin_plate": "टिन की प्लेट",
+	"item.alaindustrial.silver_plate": "चांदी की प्लेट",
+	"item.alaindustrial.nickel_plate": "निकल की प्लेट",
+	"item.alaindustrial.uranium_plate": "यूरेनियम की प्लेट",
+	"item.alaindustrial.tempered_iron_plate": "टेम्पर्ड लोहे की प्लेट",
+	"item.alaindustrial.forge_hammer": "लोहार का हथौड़ा",
+	"block.alaindustrial.machine_casing": "मशीन केसिंग",
+	"block.alaindustrial.silver_plate_block": "चांदी की परत",
+	"block.alaindustrial.tempered_iron_plate_block": "टेम्पर्ड लोहे की परत"
 }

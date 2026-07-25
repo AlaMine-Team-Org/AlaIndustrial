@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "alaindustrial:gold_plate",
+  "result": {
+    "id": "alaindustrial:gold_dust",
+    "count": 1
+  },
+  "energy": 300
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PP",
+    "PP"
+  ],
+  "key": {
+    "P": "alaindustrial:silver_plate"
+  },
+  "result": {
+    "id": "alaindustrial:silver_plate_block",
+    "count": 1
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "alaindustrial:tin_ingot",
+  "result": {
+    "id": "alaindustrial:tin_plate",
+    "count": 1
+  },
+  "energy": 260
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "alaindustrial:forge_hammer",
+    "minecraft:copper_ingot"
+  ],
+  "result": {
+    "id": "alaindustrial:copper_plate",
+    "count": 1
+  }
+}

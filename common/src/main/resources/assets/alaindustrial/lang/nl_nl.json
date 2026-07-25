@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "Houten platen",
 	"gui.alaindustrial.sawmill.mode.stairs": "Houten trappen",
 	"advancements.alaindustrial.sawmill.title": "Houtzagerij",
-	"advancements.alaindustrial.sawmill.description": "Plaats een houtzagerij en zaag hout met een hogere opbrengst"
+	"advancements.alaindustrial.sawmill.description": "Plaats een houtzagerij en zaag hout met een hogere opbrengst",
+	"item.alaindustrial.copper_plate": "Koperplaat",
+	"item.alaindustrial.gold_plate": "Goudplaat",
+	"item.alaindustrial.iron_plate": "IJzerplaat",
+	"item.alaindustrial.tin_plate": "Tinplaat",
+	"item.alaindustrial.silver_plate": "Zilverplaat",
+	"item.alaindustrial.nickel_plate": "Nikkelplaat",
+	"item.alaindustrial.uranium_plate": "Uraniumplaat",
+	"item.alaindustrial.tempered_iron_plate": "Plaat van gehard ijzer",
+	"item.alaindustrial.forge_hammer": "Smeedhamer",
+	"block.alaindustrial.machine_casing": "Machinebehuizing",
+	"block.alaindustrial.silver_plate_block": "Zilveren beplating",
+	"block.alaindustrial.tempered_iron_plate_block": "Beplating van gehard ijzer"
 }

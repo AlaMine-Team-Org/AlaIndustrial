@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "alaindustrial:tempered_iron_plate_block"
+  ],
+  "result": {
+    "id": "alaindustrial:tempered_iron_plate",
+    "count": 4
+  }
+}

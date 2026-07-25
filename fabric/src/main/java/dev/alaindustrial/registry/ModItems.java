@@ -153,6 +153,19 @@ public final class ModItems {
 	public static final Item SCYTHE_TEMPERED_IRON = scythe(ScytheTiers.TEMPERED_IRON);
 	public static final Item SCYTHE_DIAMOND = scythe(ScytheTiers.DIAMOND);
 	public static final Item SCYTHE_NETHERITE = scythe(ScytheTiers.NETHERITE);
+	// Metal plates (MOD-078): plain ingredient items, ingot form. Made by the Forge Hammer (by hand)
+	// or the Compressor; recycled back to dust by the Macerator (except tempered_iron — no dust).
+	public static final Item COPPER_PLATE = item("copper_plate");
+	public static final Item GOLD_PLATE = item("gold_plate");
+	public static final Item IRON_PLATE = item("iron_plate");
+	public static final Item TIN_PLATE = item("tin_plate");
+	public static final Item SILVER_PLATE = item("silver_plate");
+	public static final Item NICKEL_PLATE = item("nickel_plate");
+	public static final Item URANIUM_PLATE = item("uranium_plate");
+	public static final Item TEMPERED_IRON_PLATE = item("tempered_iron_plate");
+	// Forge Hammer (MOD-078): pre-machine hand tool — ingot + hammer on the grid → plate; the hammer
+	// stays and loses 1 durability per plate via the Fabric craft-remainder hook (HammerItemFabric).
+	public static final Item FORGE_HAMMER = forgeHammer("forge_hammer");
 
 	// Block items.
 	public static final BlockItem GENERATOR_ITEM = blockItem("generator", ModBlocks.GENERATOR);
@@ -194,6 +207,10 @@ public final class ModItems {
 	public static final BlockItem SILVER_CHEST_ITEM = blockItem("silver_chest", ModBlocks.SILVER_CHEST);
 	public static final BlockItem GOLD_CHEST_ITEM = blockItem("gold_chest", ModBlocks.GOLD_CHEST);
 	public static final BlockItem TEMPERED_IRON_BLOCK_ITEM = blockItem("tempered_iron_block", ModBlocks.TEMPERED_IRON_BLOCK);
+	// MOD-225 block-items.
+	public static final BlockItem MACHINE_CASING_ITEM = blockItem("machine_casing", ModBlocks.MACHINE_CASING);
+	public static final BlockItem SILVER_PLATE_BLOCK_ITEM = blockItem("silver_plate_block", ModBlocks.SILVER_PLATE_BLOCK);
+	public static final BlockItem TEMPERED_IRON_PLATE_BLOCK_ITEM = blockItem("tempered_iron_plate_block", ModBlocks.TEMPERED_IRON_PLATE_BLOCK);
 	public static final BlockItem INDUSTRIAL_WORKBENCH_ITEM = blockItem("industrial_workbench", ModBlocks.INDUSTRIAL_WORKBENCH);
 	// Enriched Uranium Torch (MOD-085): a StandingAndWallBlockItem (like vanilla Items.TORCH) so using it
 	// on a wall places the wall variant and on the floor the standing variant. The wall block has no item
@@ -252,6 +269,16 @@ public final class ModItems {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
 				new dev.alaindustrial.item.GuideBookItem(new Item.Properties().setId(key).stacksTo(1)));
+	}
+
+	// Forge Hammer (MOD-078). durability(128) sets max_damage (non-stackable, standard durability bar);
+	// repairable(IRON_INGOT) allows anvil repair with iron. Deliberately NOT enchantable and NOT in any
+	// tool tag — Unbreaking cannot work through the craft-remainder hook (no Level/Player there), so the
+	// hammer is honestly non-enchantable rather than carrying a no-op enchant. See MOD-078 task log.
+	private static Item forgeHammer(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new dev.alaindustrial.item.HammerItemFabric(new Item.Properties().setId(key).durability(128).repairable(Items.IRON_INGOT)));
 	}
 
 	private static Item pouch(String path) {
@@ -543,6 +570,15 @@ public final class ModItems {
 		ModContent.SCYTHE_TEMPERED_IRON = () -> SCYTHE_TEMPERED_IRON;
 		ModContent.SCYTHE_DIAMOND = () -> SCYTHE_DIAMOND;
 		ModContent.SCYTHE_NETHERITE = () -> SCYTHE_NETHERITE;
+		ModContent.COPPER_PLATE = () -> COPPER_PLATE;
+		ModContent.GOLD_PLATE = () -> GOLD_PLATE;
+		ModContent.IRON_PLATE = () -> IRON_PLATE;
+		ModContent.TIN_PLATE = () -> TIN_PLATE;
+		ModContent.SILVER_PLATE = () -> SILVER_PLATE;
+		ModContent.NICKEL_PLATE = () -> NICKEL_PLATE;
+		ModContent.URANIUM_PLATE = () -> URANIUM_PLATE;
+		ModContent.TEMPERED_IRON_PLATE = () -> TEMPERED_IRON_PLATE;
+		ModContent.FORGE_HAMMER = () -> FORGE_HAMMER;
 
 		ModContent.GENERATOR_ITEM = () -> GENERATOR_ITEM;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = () -> GEOTHERMAL_GENERATOR_ITEM;
@@ -581,6 +617,9 @@ public final class ModItems {
 		ModContent.SILVER_CHEST_ITEM = () -> SILVER_CHEST_ITEM;
 		ModContent.GOLD_CHEST_ITEM = () -> GOLD_CHEST_ITEM;
 		ModContent.TEMPERED_IRON_BLOCK_ITEM = () -> TEMPERED_IRON_BLOCK_ITEM;
+		ModContent.MACHINE_CASING_ITEM = () -> MACHINE_CASING_ITEM;
+		ModContent.SILVER_PLATE_BLOCK_ITEM = () -> SILVER_PLATE_BLOCK_ITEM;
+		ModContent.TEMPERED_IRON_PLATE_BLOCK_ITEM = () -> TEMPERED_IRON_PLATE_BLOCK_ITEM;
 		ModContent.INDUSTRIAL_WORKBENCH_ITEM = () -> INDUSTRIAL_WORKBENCH_ITEM;
 		ModContent.ENRICHED_URANIUM_TORCH_ITEM = () -> ENRICHED_URANIUM_TORCH_ITEM;
 	}

@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "반 블록",
 	"gui.alaindustrial.sawmill.mode.stairs": "계단",
 	"advancements.alaindustrial.sawmill.title": "제재기",
-	"advancements.alaindustrial.sawmill.description": "제재기를 설치하고 더 많은 수량으로 목재를 자르세요"
+	"advancements.alaindustrial.sawmill.description": "제재기를 설치하고 더 많은 수량으로 목재를 자르세요",
+	"item.alaindustrial.copper_plate": "구리 판",
+	"item.alaindustrial.gold_plate": "금 판",
+	"item.alaindustrial.iron_plate": "철 판",
+	"item.alaindustrial.tin_plate": "주석 판",
+	"item.alaindustrial.silver_plate": "은 판",
+	"item.alaindustrial.nickel_plate": "니켈 판",
+	"item.alaindustrial.uranium_plate": "우라늄 판",
+	"item.alaindustrial.tempered_iron_plate": "담금질된 철 판",
+	"item.alaindustrial.forge_hammer": "대장장이 망치",
+	"block.alaindustrial.machine_casing": "기계 케이스",
+	"block.alaindustrial.silver_plate_block": "은 판 블록",
+	"block.alaindustrial.tempered_iron_plate_block": "담금질된 철 판 블록"
 }

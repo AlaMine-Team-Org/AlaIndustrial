@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "Slabs",
 	"gui.alaindustrial.sawmill.mode.stairs": "Stairs",
 	"advancements.alaindustrial.sawmill.title": "Sawmill",
-	"advancements.alaindustrial.sawmill.description": "Place a Sawmill and cut wood with a higher yield"
+	"advancements.alaindustrial.sawmill.description": "Place a Sawmill and cut wood with a higher yield",
+	"item.alaindustrial.copper_plate": "Copper Plate",
+	"item.alaindustrial.gold_plate": "Gold Plate",
+	"item.alaindustrial.iron_plate": "Iron Plate",
+	"item.alaindustrial.tin_plate": "Tin Plate",
+	"item.alaindustrial.silver_plate": "Silver Plate",
+	"item.alaindustrial.nickel_plate": "Nickel Plate",
+	"item.alaindustrial.uranium_plate": "Uranium Plate",
+	"item.alaindustrial.tempered_iron_plate": "Tempered Iron Plate",
+	"item.alaindustrial.forge_hammer": "Forge Hammer",
+	"block.alaindustrial.machine_casing": "Machine Casing",
+	"block.alaindustrial.silver_plate_block": "Silver Plating",
+	"block.alaindustrial.tempered_iron_plate_block": "Tempered Iron Plating"
 }

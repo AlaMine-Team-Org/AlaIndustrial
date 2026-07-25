@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "Lajes",
 	"gui.alaindustrial.sawmill.mode.stairs": "Escadas",
 	"advancements.alaindustrial.sawmill.title": "Serraria",
-	"advancements.alaindustrial.sawmill.description": "Coloque uma Serraria e corte madeira com maior rendimento"
+	"advancements.alaindustrial.sawmill.description": "Coloque uma Serraria e corte madeira com maior rendimento",
+	"item.alaindustrial.copper_plate": "Placa de Cobre",
+	"item.alaindustrial.gold_plate": "Placa de Ouro",
+	"item.alaindustrial.iron_plate": "Placa de Ferro",
+	"item.alaindustrial.tin_plate": "Placa de Estanho",
+	"item.alaindustrial.silver_plate": "Placa de Prata",
+	"item.alaindustrial.nickel_plate": "Placa de Níquel",
+	"item.alaindustrial.uranium_plate": "Placa de Urânio",
+	"item.alaindustrial.tempered_iron_plate": "Placa de Ferro Temperado",
+	"item.alaindustrial.forge_hammer": "Martelo de Forja",
+	"block.alaindustrial.machine_casing": "Estrutura de Máquina",
+	"block.alaindustrial.silver_plate_block": "Revestimento de Prata",
+	"block.alaindustrial.tempered_iron_plate_block": "Revestimento de Ferro Temperado"
 }

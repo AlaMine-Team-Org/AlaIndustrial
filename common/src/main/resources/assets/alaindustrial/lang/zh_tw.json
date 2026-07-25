@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "半磚",
 	"gui.alaindustrial.sawmill.mode.stairs": "階梯",
 	"advancements.alaindustrial.sawmill.title": "鋸木機",
-	"advancements.alaindustrial.sawmill.description": "放置一台鋸木機，以更高的產出切割木材"
+	"advancements.alaindustrial.sawmill.description": "放置一台鋸木機，以更高的產出切割木材",
+	"item.alaindustrial.copper_plate": "銅板",
+	"item.alaindustrial.gold_plate": "金板",
+	"item.alaindustrial.iron_plate": "鐵板",
+	"item.alaindustrial.tin_plate": "錫板",
+	"item.alaindustrial.silver_plate": "銀板",
+	"item.alaindustrial.nickel_plate": "鎳板",
+	"item.alaindustrial.uranium_plate": "鈾板",
+	"item.alaindustrial.tempered_iron_plate": "回火鐵板",
+	"item.alaindustrial.forge_hammer": "鍛造錘",
+	"block.alaindustrial.machine_casing": "機器外殼",
+	"block.alaindustrial.silver_plate_block": "銀板方塊",
+	"block.alaindustrial.tempered_iron_plate_block": "回火鐵板方塊"
 }

@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "Losas",
 	"gui.alaindustrial.sawmill.mode.stairs": "Escaleras",
 	"advancements.alaindustrial.sawmill.title": "Aserradero",
-	"advancements.alaindustrial.sawmill.description": "Coloca un aserradero y corta madera con mayor rendimiento"
+	"advancements.alaindustrial.sawmill.description": "Coloca un aserradero y corta madera con mayor rendimiento",
+	"item.alaindustrial.copper_plate": "Placa de cobre",
+	"item.alaindustrial.gold_plate": "Placa de oro",
+	"item.alaindustrial.iron_plate": "Placa de hierro",
+	"item.alaindustrial.tin_plate": "Placa de estaño",
+	"item.alaindustrial.silver_plate": "Placa de plata",
+	"item.alaindustrial.nickel_plate": "Placa de níquel",
+	"item.alaindustrial.uranium_plate": "Placa de uranio",
+	"item.alaindustrial.tempered_iron_plate": "Placa de hierro templado",
+	"item.alaindustrial.forge_hammer": "Martillo de forja",
+	"block.alaindustrial.machine_casing": "Carcasa de máquina",
+	"block.alaindustrial.silver_plate_block": "Revestimiento de plata",
+	"block.alaindustrial.tempered_iron_plate_block": "Revestimiento de hierro templado"
 }

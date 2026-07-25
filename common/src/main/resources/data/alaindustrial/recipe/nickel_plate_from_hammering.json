@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "alaindustrial:forge_hammer",
+    "alaindustrial:nickel_ingot"
+  ],
+  "result": {
+    "id": "alaindustrial:nickel_plate",
+    "count": 1
+  }
+}

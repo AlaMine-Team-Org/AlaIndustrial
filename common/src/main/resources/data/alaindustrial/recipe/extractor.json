@@ -1,12 +1,18 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"category": "redstone",
-	"key": {
-		"C": "minecraft:cobblestone",
-		"H": "minecraft:hopper",
-		"E": "alaindustrial:electronic_circuit",
-		"A": "alaindustrial:silver_ingot"
-	},
-	"pattern": ["CCC", "HEH", "CAC"],
-	"result": { "id": "alaindustrial:extractor" }
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "H": "minecraft:hopper",
+    "I": "minecraft:iron_ingot",
+    "M": "alaindustrial:machine_casing",
+    "E": "alaindustrial:electronic_circuit"
+  },
+  "pattern": [
+    "HIH",
+    "IMI",
+    "IEI"
+  ],
+  "result": {
+    "id": "alaindustrial:extractor"
+  }
 }

@@ -1,7 +1,18 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"category": "redstone",
-	"key": { "F": "minecraft:flint", "C": "minecraft:cobblestone", "E": "alaindustrial:electronic_circuit", "A": "alaindustrial:silver_ingot" },
-	"pattern": ["FFF","CEC","CAC"],
-	"result": { "id": "alaindustrial:macerator" }
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "F": "minecraft:flint",
+    "I": "minecraft:iron_ingot",
+    "M": "alaindustrial:machine_casing",
+    "E": "alaindustrial:electronic_circuit"
+  },
+  "pattern": [
+    "FFF",
+    "IMI",
+    "IEI"
+  ],
+  "result": {
+    "id": "alaindustrial:macerator"
+  }
 }

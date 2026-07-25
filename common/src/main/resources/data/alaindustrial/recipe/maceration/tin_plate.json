@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "alaindustrial:tin_plate",
+  "result": {
+    "id": "alaindustrial:tin_dust",
+    "count": 1
+  },
+  "energy": 300
+}

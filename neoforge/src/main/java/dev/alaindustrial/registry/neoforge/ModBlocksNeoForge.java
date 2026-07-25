@@ -146,6 +146,13 @@ public final class ModBlocksNeoForge {
 	// Tempered Iron Block — "block of X" material block; plain Block, cube_all, single texture.
 	public static final DeferredBlock<Block> TEMPERED_IRON_BLOCK =
 			BLOCKS.registerBlock("tempered_iron_block", Block::new, props("tempered_iron_block"));
+	// MOD-225 — machine casing + two decorative plate blocks (plain full cubes).
+	public static final DeferredBlock<Block> MACHINE_CASING =
+			BLOCKS.registerBlock("machine_casing", Block::new, props("machine_casing"));
+	public static final DeferredBlock<Block> SILVER_PLATE_BLOCK =
+			BLOCKS.registerBlock("silver_plate_block", Block::new, props("silver_plate_block"));
+	public static final DeferredBlock<Block> TEMPERED_IRON_PLATE_BLOCK =
+			BLOCKS.registerBlock("tempered_iron_plate_block", Block::new, props("tempered_iron_plate_block"));
 
 	// Industrial Workbench (MOD-062) — the Industrialist villager's job-site block; plain decorative cube.
 	public static final DeferredBlock<Block> INDUSTRIAL_WORKBENCH =
@@ -228,6 +235,9 @@ public final class ModBlocksNeoForge {
 		ModContent.SILVER_CHEST = SILVER_CHEST::get;
 		ModContent.GOLD_CHEST = GOLD_CHEST::get;
 		ModContent.TEMPERED_IRON_BLOCK = TEMPERED_IRON_BLOCK::get;
+		ModContent.MACHINE_CASING = MACHINE_CASING::get;
+		ModContent.SILVER_PLATE_BLOCK = SILVER_PLATE_BLOCK::get;
+		ModContent.TEMPERED_IRON_PLATE_BLOCK = TEMPERED_IRON_PLATE_BLOCK::get;
 		ModContent.INDUSTRIAL_WORKBENCH = INDUSTRIAL_WORKBENCH::get;
 		ModContent.ENRICHED_URANIUM_TORCH = ENRICHED_URANIUM_TORCH::get;
 		ModContent.ENRICHED_URANIUM_WALL_TORCH = ENRICHED_URANIUM_WALL_TORCH::get;

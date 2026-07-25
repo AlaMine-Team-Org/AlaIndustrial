@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "alaindustrial:silver_plate_block"
+  ],
+  "result": {
+    "id": "alaindustrial:silver_plate",
+    "count": 4
+  }
+}

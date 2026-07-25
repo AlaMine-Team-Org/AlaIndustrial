@@ -410,5 +410,17 @@
 	"gui.alaindustrial.sawmill.mode.slabs": "Basamaklar",
 	"gui.alaindustrial.sawmill.mode.stairs": "Merdivenler",
 	"advancements.alaindustrial.sawmill.title": "Hızar",
-	"advancements.alaindustrial.sawmill.description": "Bir Hızar yerleştir ve odunu daha yüksek verimle kes"
+	"advancements.alaindustrial.sawmill.description": "Bir Hızar yerleştir ve odunu daha yüksek verimle kes",
+	"item.alaindustrial.copper_plate": "Bakır Levhası",
+	"item.alaindustrial.gold_plate": "Altın Levhası",
+	"item.alaindustrial.iron_plate": "Demir Levhası",
+	"item.alaindustrial.tin_plate": "Kalay Levhası",
+	"item.alaindustrial.silver_plate": "Gümüş Levhası",
+	"item.alaindustrial.nickel_plate": "Nikel Levhası",
+	"item.alaindustrial.uranium_plate": "Uranyum Levhası",
+	"item.alaindustrial.tempered_iron_plate": "Su Verilmiş Demir Levhası",
+	"item.alaindustrial.forge_hammer": "Demirci Çekici",
+	"block.alaindustrial.machine_casing": "Makine Gövdesi",
+	"block.alaindustrial.silver_plate_block": "Gümüş Kaplama",
+	"block.alaindustrial.tempered_iron_plate_block": "Su Verilmiş Demir Kaplama"
 }

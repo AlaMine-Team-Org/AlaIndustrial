@@ -13,9 +13,11 @@ import dev.alaindustrial.item.NetworkAnalyzerItem;
 import dev.alaindustrial.item.TeleporterRemoteItem;
 import dev.alaindustrial.item.PouchItem;
 import dev.alaindustrial.item.ScytheItem;
+import dev.alaindustrial.item.neoforge.HammerItemNeoForge;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -195,6 +197,25 @@ public final class ModItemsNeoForge {
 				});
 	}
 
+	// Metal plates (MOD-078): plain ingredient items (ingot form). Made by the Forge Hammer (by hand)
+	// or the Compressor; recycled back to dust by the Macerator (except tempered_iron — no dust).
+	public static final DeferredItem<Item> COPPER_PLATE = ITEMS.registerItem("copper_plate", Item::new);
+	public static final DeferredItem<Item> GOLD_PLATE = ITEMS.registerItem("gold_plate", Item::new);
+	public static final DeferredItem<Item> IRON_PLATE = ITEMS.registerItem("iron_plate", Item::new);
+	public static final DeferredItem<Item> TIN_PLATE = ITEMS.registerItem("tin_plate", Item::new);
+	public static final DeferredItem<Item> SILVER_PLATE = ITEMS.registerItem("silver_plate", Item::new);
+	public static final DeferredItem<Item> NICKEL_PLATE = ITEMS.registerItem("nickel_plate", Item::new);
+	public static final DeferredItem<Item> URANIUM_PLATE = ITEMS.registerItem("uranium_plate", Item::new);
+	public static final DeferredItem<Item> TEMPERED_IRON_PLATE = ITEMS.registerItem("tempered_iron_plate", Item::new);
+
+	// Forge Hammer (MOD-078): pre-machine hand tool — ingot + hammer on the grid → plate; the hammer
+	// stays and loses 1 durability per plate via the NeoForge craft-remainder hook (HammerItemNeoForge).
+	// durability(128) → non-stackable + standard durability bar; repairable(IRON_INGOT) → anvil repair.
+	// Deliberately NOT enchantable / NOT tool-tagged: Unbreaking cannot work through the craft-remainder
+	// hook (no Level/Player there), so the hammer is honestly non-enchantable. See MOD-078 task log.
+	public static final DeferredItem<HammerItemNeoForge> FORGE_HAMMER = ITEMS.registerItem("forge_hammer",
+			HammerItemNeoForge::new, p -> p.durability(128).repairable(Items.IRON_INGOT));
+
 	// --- Block items ---
 	public static final DeferredItem<BlockItem> GENERATOR_ITEM =
 			ITEMS.registerSimpleBlockItem("generator", ModBlocksNeoForge.GENERATOR);
@@ -275,6 +296,13 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("gold_chest", ModBlocksNeoForge.GOLD_CHEST);
 	public static final DeferredItem<BlockItem> TEMPERED_IRON_BLOCK_ITEM =
 			ITEMS.registerSimpleBlockItem("tempered_iron_block", ModBlocksNeoForge.TEMPERED_IRON_BLOCK);
+	// MOD-225 block-items.
+	public static final DeferredItem<BlockItem> MACHINE_CASING_ITEM =
+			ITEMS.registerSimpleBlockItem("machine_casing", ModBlocksNeoForge.MACHINE_CASING);
+	public static final DeferredItem<BlockItem> SILVER_PLATE_BLOCK_ITEM =
+			ITEMS.registerSimpleBlockItem("silver_plate_block", ModBlocksNeoForge.SILVER_PLATE_BLOCK);
+	public static final DeferredItem<BlockItem> TEMPERED_IRON_PLATE_BLOCK_ITEM =
+			ITEMS.registerSimpleBlockItem("tempered_iron_plate_block", ModBlocksNeoForge.TEMPERED_IRON_PLATE_BLOCK);
 	public static final DeferredItem<BlockItem> INDUSTRIAL_WORKBENCH_ITEM =
 			ITEMS.registerSimpleBlockItem("industrial_workbench", ModBlocksNeoForge.INDUSTRIAL_WORKBENCH);
 	// Enriched Uranium Torch (MOD-085): a StandingAndWallBlockItem (like vanilla Items.TORCH) — floor use
@@ -368,6 +396,17 @@ public final class ModItemsNeoForge {
 		ModContent.SCYTHE_TEMPERED_IRON = SCYTHE_TEMPERED_IRON::get;
 		ModContent.SCYTHE_DIAMOND = SCYTHE_DIAMOND::get;
 		ModContent.SCYTHE_NETHERITE = SCYTHE_NETHERITE::get;
+		// Plates are DeferredItem<Item> → bind directly; the hammer is DeferredItem<HammerItemNeoForge>,
+		// so it binds via ::get (invariant generics, same story as the scythes above).
+		ModContent.COPPER_PLATE = COPPER_PLATE;
+		ModContent.GOLD_PLATE = GOLD_PLATE;
+		ModContent.IRON_PLATE = IRON_PLATE;
+		ModContent.TIN_PLATE = TIN_PLATE;
+		ModContent.SILVER_PLATE = SILVER_PLATE;
+		ModContent.NICKEL_PLATE = NICKEL_PLATE;
+		ModContent.URANIUM_PLATE = URANIUM_PLATE;
+		ModContent.TEMPERED_IRON_PLATE = TEMPERED_IRON_PLATE;
+		ModContent.FORGE_HAMMER = FORGE_HAMMER::get;
 
 		ModContent.GENERATOR_ITEM = GENERATOR_ITEM;
 		ModContent.SOLAR_PANEL_ITEM = SOLAR_PANEL_ITEM;
@@ -406,6 +445,9 @@ public final class ModItemsNeoForge {
 		ModContent.SILVER_CHEST_ITEM = SILVER_CHEST_ITEM;
 		ModContent.GOLD_CHEST_ITEM = GOLD_CHEST_ITEM;
 		ModContent.TEMPERED_IRON_BLOCK_ITEM = TEMPERED_IRON_BLOCK_ITEM;
+		ModContent.MACHINE_CASING_ITEM = MACHINE_CASING_ITEM;
+		ModContent.SILVER_PLATE_BLOCK_ITEM = SILVER_PLATE_BLOCK_ITEM;
+		ModContent.TEMPERED_IRON_PLATE_BLOCK_ITEM = TEMPERED_IRON_PLATE_BLOCK_ITEM;
 		ModContent.INDUSTRIAL_WORKBENCH_ITEM = INDUSTRIAL_WORKBENCH_ITEM;
 		ModContent.ENRICHED_URANIUM_TORCH_ITEM = ENRICHED_URANIUM_TORCH_ITEM;
 	}

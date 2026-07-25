@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "alaindustrial:silver_ingot",
+  "result": {
+    "id": "alaindustrial:silver_plate",
+    "count": 1
+  },
+  "energy": 260
+}

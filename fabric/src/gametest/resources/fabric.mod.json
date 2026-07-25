@@ -55,6 +55,7 @@
 			,"dev.alaindustrial.gametest.EnrichedUraniumTorchGameTest"
 			,"dev.alaindustrial.gametest.RecipeCoverageGameTest"
 			,"dev.alaindustrial.gametest.IndustrialistVillagerGameTest"
+			,"dev.alaindustrial.gametest.HammerGameTest"
 		]
 	}
 }

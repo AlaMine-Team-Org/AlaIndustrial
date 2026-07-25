@@ -183,6 +183,18 @@ public final class ModBlocks {
 	public static final Block TEMPERED_IRON_BLOCK =
 			register(TEMPERED_IRON_BLOCK_KEY, new Block(props(TEMPERED_IRON_BLOCK_KEY)));
 
+	// MOD-225 — machine casing (crafting base for machines) + two decorative plate blocks. Plain
+	// full cubes, cube_all model, one texture per block. See docs/blocks.
+	public static final ResourceKey<Block> MACHINE_CASING_KEY = key("machine_casing");
+	public static final Block MACHINE_CASING =
+			register(MACHINE_CASING_KEY, new Block(props(MACHINE_CASING_KEY)));
+	public static final ResourceKey<Block> SILVER_PLATE_BLOCK_KEY = key("silver_plate_block");
+	public static final Block SILVER_PLATE_BLOCK =
+			register(SILVER_PLATE_BLOCK_KEY, new Block(props(SILVER_PLATE_BLOCK_KEY)));
+	public static final ResourceKey<Block> TEMPERED_IRON_PLATE_BLOCK_KEY = key("tempered_iron_plate_block");
+	public static final Block TEMPERED_IRON_PLATE_BLOCK =
+			register(TEMPERED_IRON_PLATE_BLOCK_KEY, new Block(props(TEMPERED_IRON_PLATE_BLOCK_KEY)));
+
 	// Industrial Workbench (MOD-062) — the Industrialist villager's job-site block. Plain decorative
 	// full cube (canOcclude stays true), no BlockEntity; meaning comes from the PoiType/profession.
 	public static final ResourceKey<Block> INDUSTRIAL_WORKBENCH_KEY = key("industrial_workbench");
@@ -271,6 +283,9 @@ public final class ModBlocks {
 		ModContent.SILVER_CHEST = () -> SILVER_CHEST;
 		ModContent.GOLD_CHEST = () -> GOLD_CHEST;
 		ModContent.TEMPERED_IRON_BLOCK = () -> TEMPERED_IRON_BLOCK;
+		ModContent.MACHINE_CASING = () -> MACHINE_CASING;
+		ModContent.SILVER_PLATE_BLOCK = () -> SILVER_PLATE_BLOCK;
+		ModContent.TEMPERED_IRON_PLATE_BLOCK = () -> TEMPERED_IRON_PLATE_BLOCK;
 		ModContent.INDUSTRIAL_WORKBENCH = () -> INDUSTRIAL_WORKBENCH;
 		ModContent.ENRICHED_URANIUM_TORCH = () -> ENRICHED_URANIUM_TORCH;
 		ModContent.ENRICHED_URANIUM_WALL_TORCH = () -> ENRICHED_URANIUM_WALL_TORCH;
