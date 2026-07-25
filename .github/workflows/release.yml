@@ -377,17 +377,17 @@ jobs:
           fi
           ICON="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/$TAG/common/src/main/resources/assets/alaindustrial/icon-128.png"
 
-          # Links. CurseForge has no clean per-loader URL without the file id (fragile on
-          # re-runs), so link the files page — the loader filter lives there. Modrinth
-          # version URLs are predictable; the GitHub Release carries both jars directly.
+          # Player-facing download links. CurseForge has no clean per-loader URL without the
+          # file id (fragile on re-runs), so link the files page — the loader filter lives
+          # there. Modrinth version URLs are predictable. The GitHub Release is the embed's
+          # title link, so it is intentionally NOT repeated in this list (project decision).
           CF="https://www.curseforge.com/minecraft/mc-mods/ala-industrial/files"
           MR_F="https://modrinth.com/mod/ala-industrial/version/${VERSION}+fabric"
           MR_N="https://modrinth.com/mod/ala-industrial/version/${VERSION}+neoforge"
           GH="https://github.com/AlaMine-Team-Org/AlaIndustrial/releases/tag/$TAG"
-          DL="$(printf '%s\n%s\n%s' \
+          DL="$(printf '%s\n%s' \
             "**CurseForge** — [Fabric & NeoForge]($CF)" \
-            "**Modrinth** — [Fabric]($MR_F) · [NeoForge]($MR_N)" \
-            "**GitHub** — [both jars]($GH)")"
+            "**Modrinth** — [Fabric]($MR_F) · [NeoForge]($MR_N)")"
 
           payload="$(jq -n \
             --arg username "Ala Industrial" \
