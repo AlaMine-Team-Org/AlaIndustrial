@@ -347,3 +347,71 @@ jobs:
           version-type: release
           changelog-file: CHANGELOG.md
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Announce the release in the community Discord (#releases) via webhook.
+      # Runs last and only on full success, so a broken publication never yields a
+      # "download here" post pointing at nothing. A failed announcement is a warning,
+      # not a release failure: the mod is already live on every platform by now.
+      # Webhook lives only in Secrets (DISCORD_RELEASES_WEBHOOK); GitHub masks it in logs.
+      - name: Announce release on Discord
+        if: success()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASES_WEBHOOK }}
+        run: |
+          [ -n "$DISCORD_WEBHOOK" ] || { echo "::warning::DISCORD_RELEASES_WEBHOOK not set — skipping Discord announce"; exit 0; }
+          TAG="$GITHUB_REF_NAME"          # e.g. v0.1.48
+          VERSION="${TAG#v}"              # e.g. 0.1.48
+
+          # Description = player-facing CHANGELOG.md minus the "## X.Y.Z" heading and the
+          # <p><img> line (embeds render Markdown, not HTML; the image goes in its own field),
+          # with leading blank lines stripped. Embed description limit is 4096 chars; the
+          # release skill keeps changelogs to about one screen, well under that.
+          DESC="$(grep -vE '^## |<p><img' CHANGELOG.md | sed '/./,$!d')"
+
+          # Release image, only if this version shipped one.
+          IMG=""
+          if [ -f "release-media/$TAG/changelog.png" ]; then
+            IMG="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/$TAG/release-media/$TAG/changelog.png"
+          fi
+
+          # Links. CurseForge has no clean per-loader URL without the file id (fragile on
+          # re-runs), so link the files page — the loader filter lives there. Modrinth
+          # version URLs are predictable; the GitHub Release carries both jars directly.
+          CF="https://www.curseforge.com/minecraft/mc-mods/ala-industrial/files"
+          MR_F="https://modrinth.com/mod/ala-industrial/version/${VERSION}+fabric"
+          MR_N="https://modrinth.com/mod/ala-industrial/version/${VERSION}+neoforge"
+          GH="https://github.com/AlaMine-Team-Org/AlaIndustrial/releases/tag/$TAG"
+          DL="$(printf '%s\n%s\n%s' \
+            "**CurseForge** — [Fabric & NeoForge]($CF)" \
+            "**Modrinth** — [Fabric]($MR_F) · [NeoForge]($MR_N)" \
+            "**GitHub** — [both jars]($GH)")"
+
+          payload="$(jq -n \
+            --arg title "Ala Industrial $TAG" \
+            --arg url "$GH" \
+            --arg desc "$DESC" \
+            --arg dl "$DL" \
+            --arg img "$IMG" \
+            '{
+               embeds: [ (
+                 { title: $title, url: $url, description: $desc, color: 12088115,
+                   fields: [ { name: "⬇️ Downloads", value: $dl } ] }
+                 + (if $img != "" then { image: { url: $img } } else {} end)
+               ) ]
+             }')"
+
+          for attempt in 1 2 3; do
+            code=$(curl -sS --connect-timeout 20 --max-time 60 -o disc_resp.json -w '%{http_code}' \
+              -H "Content-Type: application/json" -X POST "$DISCORD_WEBHOOK" -d "$payload")
+            if [ "$code" -ge 200 ] && [ "$code" -lt 300 ]; then
+              echo "Discord announce OK (HTTP $code)"; exit 0
+            fi
+            echo "::warning::Discord announce attempt $attempt failed (HTTP $code); body:"; cat disc_resp.json || true
+            if [ "$code" = "429" ]; then
+              ra=$(jq -r '.retry_after // 3' disc_resp.json 2>/dev/null || echo 3); sleep "$ra"
+            else
+              sleep 5
+            fi
+          done
+          echo "::warning::Discord announce failed after 3 attempts (last HTTP $code) — the release itself is fine."
+          exit 0
