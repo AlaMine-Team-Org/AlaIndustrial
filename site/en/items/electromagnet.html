@@ -16,8 +16,13 @@
     gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
   .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
   .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
-  .recipe-body { display:grid; grid-template-columns:auto 22px minmax(96px,1fr); align-items:center; gap:10px; }
-  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px); gap:2px; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
     text-align:center; line-height:1; }
   .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
@@ -51,8 +56,8 @@
   .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
   .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
   .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
-    color:var(--muted); padding:4px 9px; font-family:'Press Start 2P',monospace;
-    font-size:7px; cursor:pointer; image-rendering:pixelated; }
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
   .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
   .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
   .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
@@ -292,6 +297,8 @@
     
     overflow:hidden;
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
   .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
   .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
     padding:1px 5px; background:var(--bg2); color:var(--muted);
@@ -323,6 +330,7 @@
     <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
     <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
     <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
   </div>
   <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../../ru/items/electromagnet.html">RU</a></div></details>
 </nav>
@@ -332,30 +340,32 @@
 <div class="group-title">Browse</div>
 <a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>Getting Started</span></a>
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
-<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="7 pages">7</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="9 pages">9</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="11 pages">11</span></a>
-<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="12 pages">12</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../items/index.html">Items</a><span class="sep">/</span><span>Electromagnet</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/item/electromagnet.png" alt="Electromagnet" width="64" height="64">
+    <img class="icon" src="../assets/item/electromagnet_3d.png" alt="Electromagnet" width="64" height="64">
     <div class="info">
       <h1>Electromagnet</h1>
       <div class="block-id">alaindustrial:electromagnet</div>
@@ -364,7 +374,7 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Electromagnet</strong> is an EU/FE-rechargeable convenience item: it sits in <strong>any</strong> inventory slot (hotbar / main / off-hand) and automatically <strong>draws</strong> loose dropped items (<code>ItemEntity</code>) toward the player — ore drops in a mine, scattered pieces after an explosion, unclaimed drops. This is <strong>tier 1</strong>: a spherical radius of <strong>3 blocks</strong> (up, down and sideways); each item actually pulled costs <strong>2 EU/FE</strong> (<code>magnetEuPerItem</code>). An idle scan, with nothing in range, is free. Pickup stays vanilla: every tick the magnet <strong>sets</strong> each item's velocity straight at the player (a seek, so items fly in from any direction — a drop below rises to you), and the player collects the item once it arrives. When flat the magnet simply goes quiet (like a drained <a href="electric_drill.html">Electric Drill</a> mining at hand speed) until recharged. It charges wherever the mod's whole powered family does — the <a href="../energy-storage/battery_box.html">Battery Box</a> charge slot and a worn <a href="energy_pack.html">Energy Pack</a>. <strong>Toggle (shift-right-click):</strong> the magnet can be switched off so you can carry it in your inventory next to farms, sorters and pipes without hoovering their items. A freshly crafted magnet is on.</p>
+<p>The <strong>Electromagnet</strong> is an EU/FE-rechargeable convenience item: it sits in <strong>any</strong> inventory slot (hotbar / main / off-hand) and automatically <strong>draws</strong> loose dropped items (<code>ItemEntity</code>) toward the player — ore drops in a mine, scattered pieces after an explosion, unclaimed drops. This is <strong>tier 1</strong>: a spherical radius of <strong>5 blocks</strong> (up, down and sideways); each item actually pulled costs <strong>2 EU/FE</strong> (<code>magnetEuPerItem</code>). An idle scan, with nothing in range, is free. Pickup stays vanilla: every tick the magnet <strong>sets</strong> each item's velocity straight at the player (a seek, so items fly in from any direction — a drop below rises to you), and the player collects the item once it arrives. When flat the magnet simply goes quiet (like a drained <a href="electric_drill.html">Electric Drill</a> mining at hand speed) until recharged. It charges wherever the mod's whole powered family does — the <a href="../energy-storage/battery_box.html">Battery Box</a> charge slot and a worn <a href="energy_pack.html">Energy Pack</a>. <strong>Toggle (shift-right-click):</strong> the magnet can be switched off so you can carry it in your inventory next to farms, sorters and pipes without hoovering their items. A freshly crafted magnet is on.</p>
 <h2>Energy</h2>
 <p>Its own EU/FE buffer, off the grid. Charged in the Battery Box slot and by a worn pack; spends charge per pulled item.</p>
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>convenience item with an EU/FE buffer: a consumer at a charger</td></tr><tr><td>Buffer</td><td>5,000 EU/FE (<code>magnetBuffer</code>)</td></tr><tr><td>Charging</td><td>Battery Box slot / worn pack, ≤ 32 EU/FE/tick (<code>magnetInputRate</code>, capped by the LV ceiling)</td></tr><tr><td>Draw</td><td>2 EU/FE per item pulled each scan tick (<code>magnetEuPerItem</code>); an idle scan is free</td></tr><tr><td>Passive drain</td><td>none (only for actual pulling)</td></tr><tr><td>Component</td><td>(Long, persistent + networkSynchronized) — the shared component of every powered item in the mod</td></tr></tbody></table>
@@ -386,12 +396,12 @@ IEI</code></pre>
 <h2>Compatibility</h2>
 <p>Viewers: JEI, REI, EMI (as an ordinary item). <strong>The magnet charges from third-party energy mods</strong> (like the <a href="electric_drill.html">Electric Drill</a>, it exposes its loader's item energy capability (Team Reborn Energy on Fabric, FE capability on NeoForge), so a foreign charger tops it up alongside the <a href="../energy-storage/battery_box.html">Battery Box</a>. The capability accepts only. <strong>Known limitations (deferred to post-MVP):</strong> <strong><code>PreventRemoteMovement</code></strong> — the magnet does not yet honour this convention (the NBT "do not pull" flag on items in other mods' pipes/conveyors): on Fabric vanilla has no per-entity persistent store, so a loader abstraction is needed. <strong><code>target</code>-UUID reservation</strong> — the magnet does not check an item's <code>target</code> field (a drop reserved to a specific player). This is a technical constraint: in vanilla 26.2 <code>ItemEntity</code> has a private <code>target</code> field and <code>setTarget(...)</code>, but <strong>no public <code>getTarget</code></strong> (that is a NeoForge addition), so it cannot be read cross-loader from <code>common/</code> without a loader-specific accessor / access widener. The practical harm is small: vanilla <code>playerTouch</code> still prevents another player from <em>collecting</em> a reserved item — the magnet can only drag it. Partly covered by respecting the pickup delay. A full guard is future polish (paired with <code>PreventRemoteMovement</code>). <strong>Drain on an unreachable item</strong> — the tariff is charged per item nudged each scan tick, so an item the magnet pulls but that can't arrive/be collected (behind a 1-block wall, or when the player's inventory is full) costs ~0.4 EU/FE/tick until it despawns (5 min). This is accepted MVP behaviour (as in most magnet mods): a cheap drain, self-limited by despawn. A line-of-sight check is deliberately NOT added — it would break the desired "loot in a hole/behind a wall comes to me" case.</p>
 <h2>Balance</h2>
-<table><thead><tr><th>Parameter</th><th>Value</th><th>Config key</th></tr></thead><tbody><tr><td>EU/FE buffer</td><td><strong>5,000</strong></td><td><code>magnetBuffer</code></td></tr><tr><td>Draw per item</td><td><strong>2</strong> EU/FE/tick</td><td><code>magnetEuPerItem</code></td></tr><tr><td>EU/FE intake</td><td><strong>32</strong> EU/FE/tick</td><td><code>magnetInputRate</code></td></tr><tr><td>Radius (tier 1)</td><td><strong>3</strong> blocks</td><td><code>magnetRange</code></td></tr><tr><td>Scan interval</td><td><strong>1</strong> tick</td><td><code>magnetScanIntervalTicks</code></td></tr><tr><td>Seek speed</td><td>0.55 blocks/tick</td><td>— (<code>SEEK_SPEED</code> constant)</td></tr><tr><td>Per-pass cap</td><td>64 items</td><td>— (<code>MAX_ITEMS_PER_SCAN</code> constant)</td></tr></tbody></table>
+<table><thead><tr><th>Parameter</th><th>Value</th><th>Config key</th></tr></thead><tbody><tr><td>EU/FE buffer</td><td><strong>5,000</strong></td><td><code>magnetBuffer</code></td></tr><tr><td>Draw per item</td><td><strong>2</strong> EU/FE/tick</td><td><code>magnetEuPerItem</code></td></tr><tr><td>EU/FE intake</td><td><strong>32</strong> EU/FE/tick</td><td><code>magnetInputRate</code></td></tr><tr><td>Radius (tier 1)</td><td><strong>5</strong> blocks</td><td><code>magnetRange</code></td></tr><tr><td>Scan interval</td><td><strong>1</strong> tick</td><td><code>magnetScanIntervalTicks</code></td></tr><tr><td>Seek speed</td><td>0.55 blocks/tick</td><td>— (<code>SEEK_SPEED</code> constant)</td></tr><tr><td>Per-pass cap</td><td>64 items</td><td>— (<code>MAX_ITEMS_PER_SCAN</code> constant)</td></tr></tbody></table>
 <p>5,000 EU/FE at 2 EU/FE/item·tick is hundreds of picked-up items per charge: a cheap, LV consumable.</p>
 <h2>Related</h2>
 <p><a href="electric_drill.html">Electric Drill</a> — the EU/FE-consumable precedent; a typical mine companion. <a href="energy_pack.html">Energy Pack</a> — charges the magnet in the inventory on the move. <a href="../energy-storage/battery_box.html">Battery Box</a> — charging the magnet (charge slot). <a href="../components/copper_coil.html">Copper Coil</a>, <a href="../components/electronic_circuit.html">Electronic Circuit</a> — crafting components.</p>
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="electromagnet alaindustrial:electromagnet" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Redstone"><img src="../assets/vanilla/item/redstone.png" alt="Redstone" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Lapis Lazuli"><img src="../assets/vanilla/item/lapis_lazuli.png" alt="Lapis Lazuli" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div></div><div class="arrow" aria-label="Craft">▶</div><div class="recipe-result"><div class="cell result" title="Electromagnet"><img src="../assets/item/electromagnet.png" alt="Electromagnet" width="32" height="32"></div><div class="result-name">Electromagnet</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="electromagnet alaindustrial:electromagnet" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Redstone"><img src="../assets/vanilla/item/redstone.png" alt="Redstone" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Lapis Lazuli"><img src="../assets/vanilla/item/lapis_lazuli.png" alt="Lapis Lazuli" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Iron Ingot" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Electromagnet"><img src="../assets/item/electromagnet.png" alt="Electromagnet" width="32" height="32"></div><div class="result-name">Electromagnet</div></div></div></div></div>
   </main>
 </div>
 

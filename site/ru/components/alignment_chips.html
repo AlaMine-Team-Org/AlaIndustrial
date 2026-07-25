@@ -16,8 +16,13 @@
     gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
   .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
   .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
-  .recipe-body { display:grid; grid-template-columns:auto 22px minmax(96px,1fr); align-items:center; gap:10px; }
-  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px); gap:2px; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
     text-align:center; line-height:1; }
   .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
@@ -51,8 +56,8 @@
   .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
   .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
   .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
-    color:var(--muted); padding:4px 9px; font-family:'Press Start 2P',monospace;
-    font-size:7px; cursor:pointer; image-rendering:pixelated; }
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
   .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
   .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
   .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
@@ -292,6 +297,8 @@
     
     overflow:hidden;
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
   .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
   .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
     padding:1px 5px; background:var(--bg2); color:var(--muted);
@@ -323,6 +330,7 @@
     <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
     <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
     <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
   </div>
   <details class="language-menu"><summary aria-label="Language">RU</summary><div class="language-popover"><span>RU</span><a href="../../en/components/alignment_chips.html">EN</a></div></details>
 </nav>
@@ -332,24 +340,26 @@
 <div class="group-title">Обзор</div>
 <a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>С чего начать</span></a>
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="5 страниц">5</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="5 страниц">5</span></a>
-<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="7 страниц">7</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="9 страниц">9</span></a>
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="11 страниц">11</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="12 страниц">12</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../components/index.html">Компоненты</a><span class="sep">/</span><span>Эволюционные чипы</span></div>
@@ -364,7 +374,7 @@
   </div>
 </div>
 <h2>Сводка</h2>
-<p><strong>Эволюционные чипы</strong> — крафт-компоненты, которые превращают базовые T1-формы в T2. Два варианта: <strong>Солнечный чип</strong> (день) — превращает базовую <a href="../generators/solar_panel.html">солнечную панель</a> в <a href="../generators/daylight_solar_panel.html">дневную T2</a>, а базовый <a href="../generators/wind_mill.html">ветряк</a> — в небесный T2. <strong>Лунный чип</strong> (ночь) — превращает базовую панель в <a href="../generators/moonlit_solar_panel.html">ночную T2</a>, а ветряк — в буревой T2. Эволюция переносит накопленную NBT-энергию: заряд базового блока не теряется при апгрейде. Сам чип расходуется в процессе.</p>
+<p><strong>Эволюционные чипы</strong> — крафт-компоненты, которые превращают базовые T1-формы в T2. Два варианта: <strong>Солнечный чип</strong> (день) — превращает базовую <a href="../generators/solar_panel.html">солнечную панель</a> в <a href="../generators/daylight_solar_panel.html">дневную T2</a>, а базовый <a href="../generators/wind_mill.html">ветряк</a> — в <a href="../generators/high_altitude_wind_mill.html">небесный T2</a>. <strong>Лунный чип</strong> (ночь) — превращает базовую панель в <a href="../generators/moonlit_solar_panel.html">ночную T2</a>, а ветряк — в <a href="../generators/storm_wind_mill.html">буревой T2</a>. Эволюция переносит накопленную NBT-энергию: заряд базового блока не теряется при апгрейде. Сам чип расходуется в процессе.</p>
 <blockquote><strong>Мини-пример:</strong> поставили солнечную панель, накопили EU/FE, скрафтили солнечный чип → эволюционировали</blockquote>
 <p>панель в T2 — заряд перенёсся, чип потрачен, дневная выработка выросла вчетверо.</p>
 <h2>Энергия</h2>
@@ -386,9 +396,9 @@ NLN</code></pre>
 <h2>Прогрессия</h2>
 <p>Компоненты без собственного тира. Открывают T2-эпоху солнечной и ветровой генерации. Никель + светокамень/лазурит — умеренный ранний гейт, доступен после первой экспедиции в Незер (светокамень) или глубоких пещер (лазурит).</p>
 <h2>Связанное</h2>
-<p><a href="../generators/solar_panel.html">Солнечная панель</a> и <a href="../generators/wind_mill.html">ветряк</a> — базовые T1. <a href="../generators/daylight_solar_panel.html">Дневная</a> / <a href="../generators/moonlit_solar_panel.html">ночная</a> панели T2 — результаты эволюции солнечным/лунным чипом. Небесный / буревой ветряки T2 — результаты эволюции. <a href="electronic_circuit.html">Электронная схема</a> — центральный компонент чипа. <a href="../materials/nickel.html">Никель</a> — углы чипа.</p>
+<p><a href="../generators/solar_panel.html">Солнечная панель</a> и <a href="../generators/wind_mill.html">ветряк</a> — базовые T1. <a href="../generators/daylight_solar_panel.html">Дневная</a> / <a href="../generators/moonlit_solar_panel.html">ночная</a> панели T2 — результаты эволюции солнечным/лунным чипом. <a href="../generators/high_altitude_wind_mill.html">Небесный</a> / <a href="../generators/storm_wind_mill.html">буревой</a> ветряки T2 — результаты эволюции. <a href="electronic_circuit.html">Электронная схема</a> — центральный компонент чипа. <a href="../materials/nickel.html">Никель</a> — углы чипа.</p>
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="солнечный эволюционный чип alaindustrial:alignment_chip_day" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Никелевый слиток"><img src="../assets/item/nickel_ingot.png" alt="Никелевый слиток" width="32" height="32"></div> <div class="cell" title="Светокамень"><img src="../assets/vanilla/block/glowstone.png" alt="Светокамень" width="32" height="32"></div> <div class="cell" title="Никелевый слиток"><img src="../assets/item/nickel_ingot.png" alt="Никелевый слиток" width="32" height="32"></div> <div class="cell" title="Светокамень"><img src="../assets/vanilla/block/glowstone.png" alt="Светокамень" width="32" height="32"></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Светокамень"><img src="../assets/vanilla/block/glowstone.png" alt="Светокамень" width="32" height="32"></div> <div class="cell" title="Никелевый слиток"><img src="../assets/item/nickel_ingot.png" alt="Никелевый слиток" width="32" height="32"></div> <div class="cell" title="Светокамень"><img src="../assets/vanilla/block/glowstone.png" alt="Светокамень" width="32" height="32"></div> <div class="cell" title="Никелевый слиток"><img src="../assets/item/nickel_ingot.png" alt="Никелевый слиток" width="32" height="32"></div></div><div class="arrow" aria-label="Крафт">▶</div><div class="recipe-result"><div class="cell result" title="Солнечный эволюционный чип"><img src="../assets/item/alignment_chip_day.png" alt="Солнечный эволюционный чип" width="32" height="32"></div><div class="result-name">Солнечный эволюционный чип</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="солнечный эволюционный чип alaindustrial:alignment_chip_day" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Никелевый слиток"><img src="../assets/item/nickel_ingot.png" alt="Никелевый слиток" width="32" height="32"></div> <div class="cell" title="Светокамень"><img src="../assets/vanilla/block/glowstone.png" alt="Светокамень" width="32" height="32"></div> <div class="cell" title="Никелевый слиток"><img src="../assets/item/nickel_ingot.png" alt="Никелевый слиток" width="32" height="32"></div> <div class="cell" title="Светокамень"><img src="../assets/vanilla/block/glowstone.png" alt="Светокамень" width="32" height="32"></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Светокамень"><img src="../assets/vanilla/block/glowstone.png" alt="Светокамень" width="32" height="32"></div> <div class="cell" title="Никелевый слиток"><img src="../assets/item/nickel_ingot.png" alt="Никелевый слиток" width="32" height="32"></div> <div class="cell" title="Светокамень"><img src="../assets/vanilla/block/glowstone.png" alt="Светокамень" width="32" height="32"></div> <div class="cell" title="Никелевый слиток"><img src="../assets/item/nickel_ingot.png" alt="Никелевый слиток" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Солнечный эволюционный чип"><img src="../assets/item/alignment_chip_day.png" alt="Солнечный эволюционный чип" width="32" height="32"></div><div class="result-name">Солнечный эволюционный чип</div></div></div></div></div>
   </main>
 </div>
 

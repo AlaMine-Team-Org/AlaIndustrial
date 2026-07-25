@@ -16,8 +16,13 @@
     gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
   .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
   .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
-  .recipe-body { display:grid; grid-template-columns:auto 22px minmax(96px,1fr); align-items:center; gap:10px; }
-  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px); gap:2px; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
     text-align:center; line-height:1; }
   .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
@@ -51,8 +56,8 @@
   .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
   .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
   .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
-    color:var(--muted); padding:4px 9px; font-family:'Press Start 2P',monospace;
-    font-size:7px; cursor:pointer; image-rendering:pixelated; }
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
   .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
   .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
   .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
@@ -292,6 +297,8 @@
     
     overflow:hidden;
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
   .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
   .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
     padding:1px 5px; background:var(--bg2); color:var(--muted);
@@ -323,6 +330,7 @@
     <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
     <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
     <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
   </div>
   <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../../ru/utility/guide_book.html">RU</a></div></details>
 </nav>
@@ -332,24 +340,26 @@
 <div class="group-title">Browse</div>
 <a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>Getting Started</span></a>
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="5 pages">5</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="5 pages">5</span></a>
-<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="7 pages">7</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="9 pages">9</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Components</span><span class="cat-count" aria-label="11 pages">11</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="12 pages">12</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../utility/index.html">Utility</a><span class="sep">/</span><span>Guide Book</span></div>
@@ -364,16 +374,16 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Guide Book</strong> is Ala Industrial's in-game manual. A new player lands in a world with non-trivial mechanics (EU/FE instead of FE, LV/MV/HV voltage tiers, cables with distance loss, machine face ports) and, with no built-in tutorial, is left to guess or read an external wiki. The book removes that entry barrier: the player <strong>receives it in their inventory automatically on first spawn</strong> (exactly once), <strong>opens it with a right-click</strong> — a full-screen view with tabs and page navigation — and works through the chapters up to a first working power grid and machine without leaving the game. The book <strong>needs no energy</strong> and does nothing mechanically — it is pure reading material. Its content is <strong>generated from the same OKF specs</strong> (<code>docs/blocks/</code>) as the mod's wiki site: one source of truth, so the numbers never drift from the game.</p>
+<p>The <strong>Guide Book</strong> is Ala Industrial's in-game manual. A new player lands in a world with non-trivial mechanics (EU/FE instead of FE, LV/MV/HV voltage tiers, cables with distance loss, machine face ports) and, with no built-in tutorial, is left to guess or read an external wiki. The book removes that entry barrier: the player <strong>receives it in their inventory automatically on first spawn</strong> (exactly once), <strong>opens it with a right-click</strong> — a full-screen view with tabs and page navigation — and works through the chapters up to a first working power grid and machine without leaving the game. The book <strong>needs no energy</strong> and does nothing mechanically — it is pure reading material. Its content is built from the same source as the mod's wiki site, so the numbers in the book never drift from the game.</p>
 <blockquote><strong>Mini-example:</strong> enter a new world → the "Guide Book" is in your inventory → right-click → a screen opens on the "Getting Started" tab → click the "Solar Panel" link → read how much EU/FE it makes and how to craft it.</blockquote>
 <h2>How you get it</h2>
 <p><strong>Auto-given on first join.</strong> The first time a player enters a world, the book is placed in their inventory <strong>exactly once</strong>. The "already given" ledger lives in <strong>per-world saved data</strong> (a <code>SavedData</code> holding a set of UUIDs) — it survives death/respawn/dimension changes and never double-gives on relog. <strong>Existing players get it once on a mod update</strong> too: their UUID isn't in the ledger yet, so the book is given on their first join after the update and the UUID is added. <strong>Recovery if lost</strong> — two safeguards, neither of which gates the auto-give: a <strong>craft</strong> (cheap, LV-accessible, not schematic-gated); the <strong><code>/alaindustrial guide</code></strong> command (reuses the existing <code>/ala</code> command; gives/opens the book). The player is never locked out of the tutorial. If the inventory is full during auto-give, the book drops at the player's feet (never lost).</p>
 <h2>Interface</h2>
-<p>Opened with a right-click — a <strong>full-screen <code>Screen</code></strong> (not a container: no slots, no server sync). It has: <strong>Tabs (top-level chapters)</strong> that mirror the wiki site's category grouping (<code>CATEGORY_GROUPS</code>) plus a leading onboarding section:</p>
+<p>Opened with a right-click — a <strong>full-screen window</strong> (not a chest: no slots, no inventory). It has: <strong>Tabs (top-level chapters)</strong> that mirror the wiki site's category grouping plus a leading onboarding section:</p>
 <ol><li><strong>Getting Started</strong> — hand-written onboarding: first generator → first cable → first machine;</li><li><strong>Energy</strong> — what EU/FE is, LV/MV/HV tiers, cables and distance loss, face ports;</li><li><strong>Generators</strong>, 4. <strong>Machines</strong>, 5. <strong>Storage</strong>, 6. <strong>Energy Transfer</strong>,</li><li><strong>Materials</strong>, 8. <strong>Items &amp; Tools</strong>, 9. <strong>Components</strong>, 10. <strong>Utilities</strong>.</li></ol>
-<p><strong>Entry list</strong> within a tab (one per block/item/mechanic), scrollable. <strong>Entry page</strong> — a spread with page navigation (next/prev) and a "back" button to the list. <strong>Clickable links</strong> inside the text — jump to another entry (and, in v1.1, to an anchor within it). <strong>Recipe widget</strong> on a page — a crafting/processing grid resolved <strong>by recipe ID</strong> from the recipe manager (draws ingredients + result; works without JEI/REI installed). Text is drawn <strong>word-wrapped</strong> (<code>textWithWordWrap</code>); long lists are scissor-clipped when scrolled. Visually it follows the mod style: the <code>GuiStyle</code> palette and helpers (bevel panels via <code>fill</code>, <code>GuiGraphicsExtractor</code>).</p>
+<p><strong>Entry list</strong> within a tab (one per block/item/mechanic), scrollable. <strong>Entry page</strong> — a spread with page navigation (next/prev) and a "back" button to the list. <strong>Clickable links</strong> inside the text — jump to another entry (and, in v1.1, to an anchor within it). <strong>Recipe widget</strong> on a page — a crafting/processing grid (draws ingredients + result; works without JEI/REI installed). Text is word-wrapped, and long lists scroll. Visually it follows the mod style — the same palette and bevel panels as the other interfaces.</p>
 <h2>Content</h2>
-<p><strong>Source of truth — the OKF specs</strong> in <code>docs/blocks/</code>. A new generator <code>docs/tools/gen_guide_book.py</code> reuses the existing parser (<code>guide_lib.py</code> / <code>okf_check.py</code>) and emits <strong>self-contained per-locale</strong> files (<code>en_us</code>, <code>ru_ru</code>) — each holds both the structure (<code>Book → Tab → Entry → Page[]</code>) and the text. The runtime loader then needs only one file per language, and the mod's 20 main lang files aren't polluted with machine-generated chapter text (the item name <code>item.alaindustrial.guide_book</code> stays in the main lang). The structure is identical across locales (generation is deterministic → no drift); a missing locale falls back to <code>en_us</code>. v1 page types: <code>text</code> (paragraphs from <code># Summary</code>), <code>stats</code> (tier/EU/FE/buffer), <code>recipe</code> (a <code>recipe_id</code> reference the widget resolves at runtime). Machine-readable fields (EU/FE/tier/buffer/recipe) come from OKF frontmatter and body tables; the descriptive intro comes from the spec's <code># Summary</code> section. The framing "Getting Started" tutorial is hand-written in lang keys. <strong>v1 coverage:</strong> every block/item with <code>lifecycle_status: implemented</code> plus the hand-written "Getting Started"/"Energy" sections. <code>planned</code>/<code>concept</code> blocks are NOT in v1 — the book must not promise what isn't in the game yet. <strong>Balance-drift guard:</strong> recipe numbers are referenced by ID (not retyped in prose); a <code>docs/tools/book_check.py</code> validator (in <code>checkAll</code>) cross-checks book numbers against</p>
+<p>The book covers every block and item already in the game: for each one, a short description, its stats (tier, EU/FE, buffer) and its crafting recipe. The numbers in the book (EU/FE, tiers, buffers, recipes) come from the same source as the wiki site, so they always match the game — no drift. Planned and not-yet-added blocks are left out: the book never promises what isn't in the game yet. The framing "Getting Started" and "Energy" chapters are written as an introductory tutorial for new players.</p>
 <h2>Block Properties</h2>
 <p>The book is an <strong>item</strong> (not a block): it can't be placed, stacks to 1, has no EU/FE buffer. Its "shape" is an ordinary item model (<code>models/item/guide_book.json</code> → <code>item/generated</code> with the <code>textures/item/guide_book.png</code> icon). Right-click opens the GUI (see "Interface"); no block is placed in the world, no collision.</p>
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Type</td><td>item, not a block</td></tr><tr><td>Stack</td><td>1</td></tr><tr><td>EU/FE buffer</td><td>none</td></tr><tr><td>Right-click</td><td>opens the book screen (client-side)</td></tr><tr><td>World placement</td><td>none</td></tr></tbody></table>
@@ -382,15 +392,15 @@
 <h2>Progression</h2>
 <p>Tier: none (a utility, not part of the energy chain). Available immediately — it's the entry point into progression, not a rung of it. It guides the player through the mod's real progression (ore → generator → cable → machine → tiers).</p>
 <h2>Localization</h2>
-<p><strong>v1: <code>en_us</code> + <code>ru_ru</code></strong> — full chapter content (<code>en_us</code> is the source, as everywhere in the mod). The other 18 locales get the item name (<code>item.alaindustrial.guide_book</code>) and <strong>fall back to <code>en_us</code></strong> for chapter content; a full translation is a later extension. All book text is via lang keys; no hardcoded strings (project rule).</p>
+<p><strong>v1: <code>en_us</code> + <code>ru_ru</code></strong> — full chapter content (<code>en_us</code> is the source, as everywhere in the mod). The other 18 languages get a translated item name, while chapter content is shown in English for now; a full chapter translation comes later. All book text is via lang keys; no hardcoded strings (project rule).</p>
 <h2>Compatibility</h2>
 <p><strong>Recipe viewers (JEI/REI/EMI):</strong> the book is self-contained (a built-in recipe widget by ID) and doesn't require them. A "open recipe in JEI/REI" deep-link is v2. <strong>Full-text search</strong> of the content is v2.</p>
 <h2>Balance</h2>
-<p>The book costs no EU/FE and doesn't touch the economy — zero balance risk. (DoD). Ensured by generating from OKF + <code>book_check.py</code>, not by hand-retyping.</p>
+<p>The book costs no EU/FE and doesn't touch the economy — zero balance risk. Its only obligation: the numbers in chapter text always match the game — they come from a shared source, not hand-retyped.</p>
 <h2>Related</h2>
-<p>Demo Stand — a showcase of every mod block (dev-only); the book is the player-facing "reader" counterpart. The book references every OKF spec in <code>docs/blocks/</code> as its content source (it is generated from them).</p>
+<p>The book is built from the same source as the mod's wiki site: the same content and the same numbers, but right in the player's hands.</p>
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="guide book alaindustrial:guide_book" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">Shapeless Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Book"><img src="../assets/vanilla/item/book.png" alt="Book" width="32" height="32"></div> <div class="cell" title="Wooden Gear"><img src="../assets/item/wooden_gear.png" alt="Wooden Gear" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="arrow" aria-label="Craft">▶</div><div class="recipe-result"><div class="cell result" title="Guide Book"><img src="../assets/item/guide_book.png" alt="Guide Book" width="32" height="32"></div><div class="result-name">Guide Book</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="guide book alaindustrial:guide_book" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">Shapeless Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Book"><img src="../assets/vanilla/item/book.png" alt="Book" width="32" height="32"></div> <div class="cell" title="Wooden Gear"><img src="../assets/item/wooden_gear.png" alt="Wooden Gear" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Guide Book"><img src="../assets/item/guide_book.png" alt="Guide Book" width="32" height="32"></div><div class="result-name">Guide Book</div></div></div></div></div>
   </main>
 </div>
 
