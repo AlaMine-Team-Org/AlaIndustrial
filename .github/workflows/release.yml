@@ -363,16 +363,19 @@ jobs:
           VERSION="${TAG#v}"              # e.g. 0.1.48
 
           # Description = player-facing CHANGELOG.md minus the "## X.Y.Z" heading and the
-          # <p><img> line (embeds render Markdown, not HTML; the image goes in its own field),
-          # with leading blank lines stripped. Embed description limit is 4096 chars; the
-          # release skill keeps changelogs to about one screen, well under that.
-          DESC="$(grep -vE '^## |<p><img' CHANGELOG.md | sed '/./,$!d')"
+          # <p><img> line (embeds render Markdown, not HTML; the image goes in its own field).
+          # "### Foo" is rewritten to bold: Markdown headers are unreliable inside embeds
+          # (dead in field values, inconsistent in descriptions), bold renders everywhere.
+          # Leading blank lines stripped. Embed description limit is 4096 chars; the release
+          # skill keeps changelogs to about one screen, well under that.
+          DESC="$(grep -vE '^## |<p><img' CHANGELOG.md | sed -E 's/^### (.*)$/**\1**/' | sed '/./,$!d')"
 
           # Release image, only if this version shipped one.
           IMG=""
           if [ -f "release-media/$TAG/changelog.png" ]; then
             IMG="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/$TAG/release-media/$TAG/changelog.png"
           fi
+          ICON="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/$TAG/common/src/main/resources/assets/alaindustrial/icon-128.png"
 
           # Links. CurseForge has no clean per-loader URL without the file id (fragile on
           # re-runs), so link the files page — the loader filter lives there. Modrinth
@@ -387,12 +390,16 @@ jobs:
             "**GitHub** — [both jars]($GH)")"
 
           payload="$(jq -n \
+            --arg username "Ala Industrial" \
+            --arg avatar "$ICON" \
             --arg title "Ala Industrial $TAG" \
             --arg url "$GH" \
             --arg desc "$DESC" \
             --arg dl "$DL" \
             --arg img "$IMG" \
             '{
+               username: $username,
+               avatar_url: $avatar,
                embeds: [ (
                  { title: $title, url: $url, description: $desc, color: 12088115,
                    fields: [ { name: "⬇️ Downloads", value: $dl } ] }
@@ -400,9 +407,13 @@ jobs:
                ) ]
              }')"
 
+          # Discord sits behind Cloudflare, which 403s (error 1010) requests with a
+          # default library User-Agent — a descriptive UA is required (verified in test).
           for attempt in 1 2 3; do
             code=$(curl -sS --connect-timeout 20 --max-time 60 -o disc_resp.json -w '%{http_code}' \
-              -H "Content-Type: application/json" -X POST "$DISCORD_WEBHOOK" -d "$payload")
+              -H "Content-Type: application/json" \
+              -H "User-Agent: AlaIndustrial-Release/1.0 (+https://github.com/AlaMine-Team-Org/AlaIndustrial)" \
+              -X POST "$DISCORD_WEBHOOK" -d "$payload")
             if [ "$code" -ge 200 ] && [ "$code" -lt 300 ]; then
               echo "Discord announce OK (HTTP $code)"; exit 0
             fi
