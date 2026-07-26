@@ -103,6 +103,13 @@ jobs:
                ) ]
              }')"
 
+          # The payload reaches curl through a FILE, never inline. In `-F name=value` curl treats
+          # `;` inside the value as the start of a field parameter (`;type=`, `;filename=`), so a
+          # changelog containing a semicolon — ours does — arrives at Discord as truncated JSON
+          # and is rejected: "Expected payload_json to be a valid JSON string" (HTTP 400, seen on
+          # the first attempt to attach 0.1.51's animation).
+          printf '%s' "$payload" > disc_payload.json
+
           if [ -n "$MEDIA" ]; then
             echo "Attaching release media: $MEDIA ($(du -h "$MEDIA" | cut -f1))"
           else
@@ -116,7 +123,7 @@ jobs:
             if [ -n "$MEDIA" ]; then
               code=$(curl -sS --connect-timeout 20 --max-time 120 -o disc_resp.json -w '%{http_code}' \
                 -H "User-Agent: AlaIndustrial-Release/1.0 (+https://github.com/AlaMine-Team-Org/AlaIndustrial)" \
-                -F "payload_json=$payload" \
+                -F "payload_json=<disc_payload.json;type=application/json" \
                 -F "files[0]=@$MEDIA" \
                 -X POST "$DISCORD_WEBHOOK")
             else
