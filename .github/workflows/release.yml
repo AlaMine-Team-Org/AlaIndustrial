@@ -348,81 +348,15 @@ jobs:
           changelog-file: CHANGELOG.md
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Announce the release in the community Discord (#releases) via webhook.
-      # Runs last and only on full success, so a broken publication never yields a
-      # "download here" post pointing at nothing. A failed announcement is a warning,
-      # not a release failure: the mod is already live on every platform by now.
-      # Webhook lives only in Secrets (DISCORD_RELEASES_WEBHOOK); GitHub masks it in logs.
-      - name: Announce release on Discord
-        if: success()
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASES_WEBHOOK }}
-        run: |
-          [ -n "$DISCORD_WEBHOOK" ] || { echo "::warning::DISCORD_RELEASES_WEBHOOK not set — skipping Discord announce"; exit 0; }
-          TAG="$GITHUB_REF_NAME"          # e.g. v0.1.48
-          VERSION="${TAG#v}"              # e.g. 0.1.48
-
-          # Description = player-facing CHANGELOG.md minus the "## X.Y.Z" heading and the
-          # <p><img> line (embeds render Markdown, not HTML; the image goes in its own field).
-          # "### Foo" is rewritten to bold: Markdown headers are unreliable inside embeds
-          # (dead in field values, inconsistent in descriptions), bold renders everywhere.
-          # Leading blank lines stripped. Embed description limit is 4096 chars; the release
-          # skill keeps changelogs to about one screen, well under that.
-          DESC="$(grep -vE '^## |<p><img' CHANGELOG.md | sed -E 's/^### (.*)$/**\1**/' | sed '/./,$!d')"
-
-          # Release image, only if this version shipped one.
-          IMG=""
-          if [ -f "release-media/$TAG/changelog.png" ]; then
-            IMG="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/$TAG/release-media/$TAG/changelog.png"
-          fi
-          ICON="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/$TAG/common/src/main/resources/assets/alaindustrial/icon-128.png"
-
-          # Player-facing download links. CurseForge has no clean per-loader URL without the
-          # file id (fragile on re-runs), so link the files page — the loader filter lives
-          # there. Modrinth version URLs are predictable. The GitHub Release is the embed's
-          # title link, so it is intentionally NOT repeated in this list (project decision).
-          CF="https://www.curseforge.com/minecraft/mc-mods/ala-industrial/files"
-          MR_F="https://modrinth.com/mod/ala-industrial/version/${VERSION}+fabric"
-          MR_N="https://modrinth.com/mod/ala-industrial/version/${VERSION}+neoforge"
-          GH="https://github.com/AlaMine-Team-Org/AlaIndustrial/releases/tag/$TAG"
-          DL="$(printf '%s\n%s' \
-            "**CurseForge** — [Fabric & NeoForge]($CF)" \
-            "**Modrinth** — [Fabric]($MR_F) · [NeoForge]($MR_N)")"
-
-          payload="$(jq -n \
-            --arg username "Ala Industrial" \
-            --arg avatar "$ICON" \
-            --arg title "Ala Industrial $TAG" \
-            --arg url "$GH" \
-            --arg desc "$DESC" \
-            --arg dl "$DL" \
-            --arg img "$IMG" \
-            '{
-               username: $username,
-               avatar_url: $avatar,
-               embeds: [ (
-                 { title: $title, url: $url, description: $desc, color: 12088115,
-                   fields: [ { name: "⬇️ Downloads", value: $dl } ] }
-                 + (if $img != "" then { image: { url: $img } } else {} end)
-               ) ]
-             }')"
-
-          # Discord sits behind Cloudflare, which 403s (error 1010) requests with a
-          # default library User-Agent — a descriptive UA is required (verified in test).
-          for attempt in 1 2 3; do
-            code=$(curl -sS --connect-timeout 20 --max-time 60 -o disc_resp.json -w '%{http_code}' \
-              -H "Content-Type: application/json" \
-              -H "User-Agent: AlaIndustrial-Release/1.0 (+https://github.com/AlaMine-Team-Org/AlaIndustrial)" \
-              -X POST "$DISCORD_WEBHOOK" -d "$payload")
-            if [ "$code" -ge 200 ] && [ "$code" -lt 300 ]; then
-              echo "Discord announce OK (HTTP $code)"; exit 0
-            fi
-            echo "::warning::Discord announce attempt $attempt failed (HTTP $code); body:"; cat disc_resp.json || true
-            if [ "$code" = "429" ]; then
-              ra=$(jq -r '.retry_after // 3' disc_resp.json 2>/dev/null || echo 3); sleep "$ra"
-            else
-              sleep 5
-            fi
-          done
-          echo "::warning::Discord announce failed after 3 attempts (last HTTP $code) — the release itself is fine."
-          exit 0
+  # The Discord announcement lives in its own reusable workflow so it can be replayed for an
+  # already-published tag without re-running this job's build and upload steps (announce.yml,
+  # `workflow_dispatch`). Runs only on full success, so a broken publication never yields a
+  # "download here" post pointing at nothing; a failed announcement stays a warning, because
+  # the mod is live on every platform by the time it runs.
+  announce:
+    needs: release
+    if: success()
+    uses: ./.github/workflows/announce.yml
+    with:
+      tag: ${{ github.ref_name }}
+    secrets: inherit

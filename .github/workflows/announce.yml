@@ -1,0 +1,139 @@
+# Installed into the PUBLIC repo at: .github/workflows/announce.yml
+#
+# Posts the release announcement to Discord. Lives on its own so it can be re-run for a tag that
+# is already published (`workflow_dispatch`) without touching the marketplace upload steps — the
+# release job is a single job, so re-running it to fix an announcement would replay the whole
+# build and publish path.
+#
+# Called by release.yml (`workflow_call`) at the end of a successful release, and runnable by hand
+# from the Actions tab when an announcement needs to be reposted.
+name: Announce
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+    secrets:
+      DISCORD_RELEASES_WEBHOOK:
+        required: false
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to announce, e.g. v0.1.51'
+        required: true
+        type: string
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+
+      - name: Announce release on Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASES_WEBHOOK }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          [ -n "$DISCORD_WEBHOOK" ] || { echo "::warning::DISCORD_RELEASES_WEBHOOK not set — skipping Discord announce"; exit 0; }
+          VERSION="${TAG#v}"
+
+          # Description = player-facing CHANGELOG.md minus the "## X.Y.Z" heading and the
+          # <p><img> line (embeds render Markdown, not HTML; the media is attached below).
+          # "### Foo" is rewritten to bold: Markdown headers are unreliable inside embeds
+          # (dead in field values, inconsistent in descriptions), bold renders everywhere.
+          # Leading blank lines stripped. Embed description limit is 4096 chars; the release
+          # skill keeps changelogs to about one screen, well under that.
+          DESC="$(grep -vE '^## |<p><img' CHANGELOG.md | sed -E 's/^### (.*)$/**\1**/' | sed '/./,$!d')"
+
+          # Release media. Two things used to go wrong here and both are fixed:
+          #
+          #  1. The extension was hardcoded to .png while prepare-release-image.sh accepts
+          #     png|jpg|jpeg|webp|gif — so 0.1.51, which shipped an animated .webp, announced
+          #     with no image at all. Any supported extension is picked up now.
+          #  2. The file was linked as `image.url` on the embed. Discord fetches those through
+          #     its media proxy, which is unreliable for animated formats. Uploading the file
+          #     with the webhook and pointing the embed at `attachment://<name>` keeps the same
+          #     look while giving Discord the real bytes to animate or play.
+          #
+          # `discord.<ext>` wins over `changelog.<ext>` when present: it is the escape hatch for
+          # a release whose changelog image is a still, or whose animation needs a different
+          # container for Discord specifically (mp4 plays with a scrubber, gif always animates).
+          MEDIA=""
+          for cand in "release-media/$TAG"/discord.* "release-media/$TAG"/changelog.*; do
+            case "${cand,,}" in
+              *.png|*.jpg|*.jpeg|*.webp|*.gif|*.mp4|*.webm)
+                [ -f "$cand" ] && { MEDIA="$cand"; break; } ;;
+            esac
+          done
+          ICON="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/$TAG/common/src/main/resources/assets/alaindustrial/icon-128.png"
+
+          # Player-facing download links. CurseForge has no clean per-loader URL without the
+          # file id (fragile on re-runs), so link the files page — the loader filter lives
+          # there. Modrinth version URLs are predictable. The GitHub Release is the embed's
+          # title link, so it is intentionally NOT repeated in this list (project decision).
+          CF="https://www.curseforge.com/minecraft/mc-mods/ala-industrial/files"
+          MR_F="https://modrinth.com/mod/ala-industrial/version/${VERSION}+fabric"
+          MR_N="https://modrinth.com/mod/ala-industrial/version/${VERSION}+neoforge"
+          GH="https://github.com/AlaMine-Team-Org/AlaIndustrial/releases/tag/$TAG"
+          DL="$(printf '%s\n%s' \
+            "**CurseForge** — [Fabric & NeoForge]($CF)" \
+            "**Modrinth** — [Fabric]($MR_F) · [NeoForge]($MR_N)")"
+
+          NAME=""
+          [ -n "$MEDIA" ] && NAME="$(basename "$MEDIA")"
+          payload="$(jq -n \
+            --arg username "Ala Industrial" \
+            --arg avatar "$ICON" \
+            --arg title "Ala Industrial $TAG" \
+            --arg url "$GH" \
+            --arg desc "$DESC" \
+            --arg dl "$DL" \
+            --arg name "$NAME" \
+            '{
+               username: $username,
+               avatar_url: $avatar,
+               embeds: [ (
+                 { title: $title, url: $url, description: $desc, color: 12088115,
+                   fields: [ { name: "⬇️ Downloads", value: $dl } ] }
+                 + (if $name != "" then { image: { url: ("attachment://" + $name) } } else {} end)
+               ) ]
+             }')"
+
+          if [ -n "$MEDIA" ]; then
+            echo "Attaching release media: $MEDIA ($(du -h "$MEDIA" | cut -f1))"
+          else
+            echo "::warning::no release media found under release-media/$TAG — announcing text only"
+          fi
+
+          # Discord sits behind Cloudflare, which 403s (error 1010) requests with a
+          # default library User-Agent — a descriptive UA is required (verified in test).
+          # Content-Type is NOT set by hand here: curl must pick the multipart boundary itself.
+          for attempt in 1 2 3; do
+            if [ -n "$MEDIA" ]; then
+              code=$(curl -sS --connect-timeout 20 --max-time 120 -o disc_resp.json -w '%{http_code}' \
+                -H "User-Agent: AlaIndustrial-Release/1.0 (+https://github.com/AlaMine-Team-Org/AlaIndustrial)" \
+                -F "payload_json=$payload" \
+                -F "files[0]=@$MEDIA" \
+                -X POST "$DISCORD_WEBHOOK")
+            else
+              code=$(curl -sS --connect-timeout 20 --max-time 60 -o disc_resp.json -w '%{http_code}' \
+                -H "Content-Type: application/json" \
+                -H "User-Agent: AlaIndustrial-Release/1.0 (+https://github.com/AlaMine-Team-Org/AlaIndustrial)" \
+                -X POST "$DISCORD_WEBHOOK" -d "$payload")
+            fi
+            if [ "$code" -ge 200 ] && [ "$code" -lt 300 ]; then
+              echo "Discord announce OK (HTTP $code)"; exit 0
+            fi
+            echo "::warning::Discord announce attempt $attempt failed (HTTP $code); body:"; cat disc_resp.json || true
+            if [ "$code" = "429" ]; then
+              ra=$(jq -r '.retry_after // 3' disc_resp.json 2>/dev/null || echo 3); sleep "$ra"
+            else
+              sleep 5
+            fi
+          done
+          echo "::warning::Discord announce failed after 3 attempts (last HTTP $code) — the release itself is fine."
+          exit 0
