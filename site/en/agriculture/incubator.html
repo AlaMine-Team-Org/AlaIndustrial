@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Incubator — Ala Industrial — Guide</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  .cell.empty { background:transparent; box-shadow:none; }
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
+    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
+    padding:1px 2px; line-height:1; border-radius:0; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="Open menu" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../../ru/agriculture/incubator.html">RU</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Browse</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>Getting Started</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
+<div class="group-title">Energy</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<div class="group-title">Processing</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
+<div class="group-title">Logistics</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
+<div class="group-title">World &amp; Automation</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="7 pages">7</span></a>
+<a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
+<div class="group-title">Other</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<div class="group-title">Items</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="12 pages">12</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="13 pages">13</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../agriculture/index.html">Agriculture</a><span class="sep">/</span><span>Incubator</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/item/incubator_3d.png" alt="Incubator" width="64" height="64">
+    <div class="info">
+      <h1>Incubator</h1>
+      <div class="block-id">alaindustrial:incubator</div>
+      <div class="tags"><span class="tag cat" style="background:#22c55e">Agriculture</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implemented</span><span class="tag">tier-lv</span><span class="tag">multiblock</span><span class="tag">mutation</span><span class="tag">uranium</span><span class="tag">agriculture</span><span class="tag">rarity</span></div>
+    </div>
+  </div>
+</div>
+<h2>Summary</h2>
+<p>The <strong>Incubator</strong> is the mod's first multiblock (after the <a href="../advanced-machines/teleporter.html">teleporter</a>) and its first agriculture machine. You place the base block — a <strong>squat mechanical unit</strong> with an emitter ring, cooling ports and a spinning rotor — and put <strong>any glass</strong> (the <code>c:glass</code> tag) on top. The pair assembles into a multiblock: the glass turns into a <strong>volumetric rounded dome</strong>, a translucent incubation chamber with the irradiated item floating and spinning inside. Not "two stacked cubes": the silhouette reads as a dome, with frame ribs and a glow rising from below. <strong>Hybrid cost + probabilistic outcome.</strong> An operation always spends EU/FE (LV) and an <strong>irradiation charge</strong>: one <code>uranium_ingot</code> is taken the moment it lands in the slot of an assembled machine (dome on; no chip or input required — the charge pips fill before your eyes) and provides a charge of <strong>3 attempts</strong>; once the charge is spent, the ingot <strong>burns out</strong> into, which settles in a separate ash slot (the 1 ingot → 1 depleted material balance is preserved). The mutation itself is <strong>probabilistic</strong> — success depends on the mutation kind (<code>duplicate</code> / <code>transform</code> / <code>create</code>) and can be overridden per recipe. On failure the input item is lost while the charge is still spent — that is the balance lever against a "free diamond farm". <strong>The mutation chip sets the mode.</strong> One item may have several mutation recipes (a diamond can both duplicate and turn into an irradiated diamond), so the mode is chosen by <strong>an item in a dedicated chip slot</strong> — modelled on the <a href="../generators/solar_panel.html">solar panel</a> and its alignment chips. Three chips — <strong>duplication / transformation / creation</strong>; whichever sits in the slot decides how the machine works. <strong>With no chip the Incubator does not run at all.</strong> The chip is not consumed it is a permanent module, not fuel; swapping it resets the operation in progress. <strong>Slag — the consolation outcome.</strong> A small share of attempts (5 %) ends not in nothing but in <strong>irradiated slag</strong>: the input is still lost, but the matter does not vanish without trace. Groundwork for the future — slag will become an input for reprocessing in later phases. <strong>Outcome rarity (the "card pack" model).</strong> Every mutation <strong>success</strong> rolls a second die — the <strong>outcome grade</strong>: Common (70 %) / Rare (20 %) / Epic (8 %) / Legendary (2 %). The grade is the item's "gene": a colored name, a lore line and a bonus to its further mutation chances — groundwork for the future nuclear and agriculture phases.</p>
+<blockquote><strong>Tool enhancement (affixes) is NOT part of this iteration.</strong> A fourth operation kind, <code>enhance</code> — upgrading powered items with Capacious / Efficient / Overclocked bonuses — is deferred to the second iteration. Reason: its scope (attributes, per-item injection points, a separate balance pass) rivals the Incubator itself. The MVP architecture leaves room for it: the <code>MutationKind</code> enum and the chip system are designed with a fourth value in mind.</blockquote>
+<table><thead><tr><th>What it does</th><th>How</th></tr></thead><tbody><tr><td>Forms the multiblock</td><td>mechanical base below + a glass block on top (<code>c:glass</code> tag) → a volumetric dome</td></tr><tr><td>Mutates items</td><td>EU/FE (LV) + an irradiation charge (1 <code>uranium_ingot</code> = 3 attempts → 1 <code>depleted_uranium</code>)</td></tr><tr><td>The chip sets the mode</td><td>chip slot: duplication / transformation / creation (modelled on the solar-panel chips)</td></tr><tr><td>Probabilistic outcome</td><td>success chance by <code>kind</code> (default in <code>C), per-recipe </code>chance` override</td></tr><tr><td>Mutation kinds</td><td>duplicate (×2), transform (A→B), create (A→new)</td></tr><tr><td>Rolls outcome rarity</td><td>Common / Rare / Epic / Legendary grade (70/20/8/2 %) on every success</td></tr><tr><td>Yields slag</td><td>5 % of attempts → <code>irradiated_slag</code> instead of an empty failure</td></tr><tr><td>Shows the item</td><td>the irradiated item floats and spins inside the dome, surrounded by particles</td></tr></tbody></table>
+<h2>Energy</h2>
+<p>Hybrid model: EU/FE from the grid (LV, like the other machines) <strong>plus</strong> uranium spent as the irradiation fuel. Uranium is not destroyed — it becomes <code>depleted_uranium</code>, so material balance is preserved and spent uranium accumulates as a feedstock for the future nuclear phase (see nuclear/index).</p>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>8000 EU/FE (<code>incubatorBuffer</code>) — holds the costliest <code>create</code> operation in full</td></tr><tr><td>Max input</td><td>32 EU/FE/tick (LV)</td></tr><tr><td>EU/FE/tick</td><td><strong>8 EU/FE/tick</strong> while running (<code>incubatorEuPerTick</code>) — four times the machine standard: irradiation costs more than grinding</td></tr><tr><td>Fuel</td><td>1 <code>uranium_ingot</code> = a 3-attempt charge (taken the moment it is inserted into an assembled machine); after the 3rd attempt → 1 <code>depleted_uranium</code> into the ash slot</td></tr></tbody></table>
+<p>An LV machine: up to 32 EU/FE per tick, nothing extra is pulled from the grid, nothing explodes. Without uranium in the fuel slot an operation will not start (EU/FE is spent only while a cycle runs).</p>
+<h2>Processing</h2>
+<p>Operation duration is <strong>tied to the mutation kind</strong>, not to the block. EU/FE cost = duration × <code>incubatorEuPerTick</code> (8 EU/FE/tick). The Incubator is the mod's <strong>most energy-hungry LV machine</strong>: a routine macerator/furnace operation costs 200–300 EU/FE, here the floor is <strong>2400 EU/FE</strong> and <code>create</code> runs at <strong>8000 EU/FE</strong>. That is deliberate — irradiating matter should not cost the same as sawing a plank.</p>
+<table><thead><tr><th><code>kind</code></th><th>Success chance (default)</th><th>Ticks</th><th>EU/FE/attempt</th><th>On failure</th></tr></thead><tbody><tr><td><code>transform</code></td><td>0.75</td><td>300 (15 s)</td><td><strong>2400</strong></td><td>input lost, −1 irradiation charge</td></tr><tr><td><code>duplicate</code></td><td>0.45</td><td>500 (25 s)</td><td><strong>4000</strong></td><td>input lost, −1 irradiation charge</td></tr><tr><td><code>create</code></td><td>0.25</td><td>1000 (50 s)</td><td><strong>8000</strong></td><td>input lost, −1 irradiation charge</td></tr></tbody></table>
+<p><strong>Three possible outcomes.</strong> The operation outcome is rolled first:</p>
+<table><thead><tr><th>Outcome</th><th>Probability</th><th>What happens</th></tr></thead><tbody><tr><td>Success</td><td>chance by class/<code>kind</code> (+ gene bonus, capped at 0.95)</td><td>the result goes to the output slot + a grade roll</td></tr><tr><td><strong>Slag</strong></td><td>5 p.p. (<code>mutationSlagChance</code>)</td><td>the input is lost, drops into the output</td></tr><tr><td>Empty failure</td><td>the remainder</td><td>the input is lost, the output is unchanged</td></tr></tbody></table>
+<p>Slag is <strong>subtracted from the failure</strong>, never from the success: the success chance stays as it is, while some of the misses now yield at least something. If success + 5 % would exceed 1.0, the slag share is trimmed to the remainder. No grade is rolled for slag — slag is always Common. <strong>The rule applies to all three modes.</strong> Slag can drop from any mutation — duplicate, transform or create alike; the chance is the same (<code>mutationSlagChance</code>), with no per-mode overrides. Slag also cuts through the gentle failure of the upper create tiers: the input normally comes back, but 5 % of attempts still turn it into slag.</p>
+<blockquote>A fourth <code>kind</code> — <code>enhance</code> (tool enhancement) — is reserved for the second iteration; it is neither specified nor implemented here.</blockquote>
+<p>On success the result goes to the output slot; on failure the output slot is unchanged. The roll is made <strong>at the end of the cycle</strong>, not at its start, and that matters: until the last tick the machine does not know the outcome, so it can neither be read from the outside (through the block's lit state) nor discarded by pulling the input and putting it back. An outcome already rolled is <strong>held</strong> until the output slot has room, and it survives a chunk unload — waiting never turns into a second chance. The seed is not persisted: over the long run the expected value converges on the stated chances. <strong>The second roll — the outcome grade.</strong> Every successful operation rolls a rarity grade: Common 70 % / Rare 20 % / Epic 8 % / Legendary 2 % (<code>level.random</code> as well, not persisted). A Common grade leaves no trace on the item — no component is written, so stacking with vanilla items is preserved. Rare and above writes the <code>mutation_grade</code> component and the vanilla <code>minecraft:rarity</code> (name color: yellow / aqua / light purple). <strong>The input gene burns into a bonus.</strong> The input item's grade grants its chance bonus (+5/+10/+15 p.p., the total chance is capped at 0.95 — there are no guarantees) and <strong>burns away</strong>: the result always gets a fresh grade roll. A Legendary cannot be multiplied via duplicate — only spent for the higher chance (anti-ratchet). Both copies of a duplicate share <strong>one common</strong> grade roll per operation. <strong>Output-slot rule:</strong> an operation will not start if its result cannot merge with what already sits in the output slot — and items of different grades do not stack. This is the standard machine behaviour (<code>canOutput</code>), not a bug: take out the rare result and the line keeps running.</p>
+<h2>Inventory</h2>
+<p>Five slots: the mode chip, fuel (uranium), the item to mutate, the result, and ash (spent uranium). The result and ash slots are read-only for the player; automation into the ash slot is pull-only.</p>
+<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th><th>Behaviour</th></tr></thead><tbody><tr><td>Chip</td><td>only <code>#</code> (the 3 mode chips)</td><td><strong>1 item</strong></td><td>not consumed; sets the mode; an empty slot means the machine will not run; <strong>automation cannot take it out</strong></td></tr><tr><td>Fuel</td><td>only <code>#</code> (=)</td><td>1 stack</td><td>1 ingot is taken the moment it is inserted (dome on); a charge = 3 attempts</td></tr><tr><td>Input</td><td>items with an recipe in the selected mode</td><td>1 stack</td><td>consumes 1/attempt (lost on failure)</td></tr><tr><td>Result</td><td>the mutation result or <code>irradiated_slag</code> (insertion forbidden)</td><td>1 stack</td><td>fill-only</td></tr><tr><td>Ash</td><td>only (insertion forbidden)</td><td>1 stack</td><td>+1 per exhausted ingot (after 3 attempts; push-forbidden, pull-only)</td></tr></tbody></table>
+<h2>Interface</h2>
+<p>The Incubator screen shows: EU/FE storage, cycle progress, the <strong>irradiation charge (0–3)</strong>, the five slots (chip/fuel/input/result/ash), and a <strong>formed</strong> indicator (dome present on top) — without it an operation will not run even at full fuel and EU/FE. The screen is 14 pixels taller than the machine standard (176×180): the extra height is the clear band between the slot rows where the status line is printed. The energy bar runs down the left edge, and the irradiation charge is a vertical column of pips right of the fuel slot that fills from the bottom up, like a level gauge. Top row: chip, input, progress arrow, result; bottom row: fuel and ash. <strong>The chip slot</strong> is the top left one; while it is empty the status line names what the machine is missing ("Needs glass on top" → "Needs a chip"). The installed chip determines the mode, and the status line shows its name. Swapping the chip <strong>resets the progress</strong> of the current operation. The mode is not stored as a separate field — it is <strong>derived from the item in the slot</strong>, so it persists together with the inventory. <strong>Both halves of the multiblock are clickable.</strong> Right-clicking the dome opens the same menu as clicking the base: the dome is the half a player sees and reaches for, while the base is often sunk into the floor or walled in by hoppers.</p>
+<h2>Block Properties</h2>
+<p>A two-tier multiblock with deliberately <strong>different silhouettes</strong>: a heavy mechanical bottom and a light rounded top. "Two cubes stacked on top of each other" is explicitly not the goal. <strong>Lower tier — the base.</strong> A full 16³ cube (needed for collision, automation and the machine standard), but visually dense: a recessed front panel with indicators, an emitter ring along the top face, cooling ports on the sides. While an operation runs, the adds a <strong>spinning ring</strong> above the top face and an emitter glow — the volume comes from rendering on top of the cube, without breaking collision. <strong>Upper tier — the dome.</strong> The player places <strong>any glass</strong> (the <code>c:glass</code> tag) and, as the structure forms, it is <strong>replaced</strong> by the mod block with its own <strong>volumetric rounded model</strong>: an octagonal chamber tapering upwards, with frame ribs and a spire. The original glass type is remembered in the base's block entity, so: dismantling the multiblock returns <strong>exactly the player's glass</strong> (nothing is lost); <strong>stained glass tints the dome</strong> — 17 chamber colors without a single extra recipe: the 16 stained-glass dyes plus an uncolored variant (plain and tinted glass carry no dye, so a dome built from either stays uncolored); only the glass faces take the color, the frame and the spire always stay the casing's dark metal; the player never crafts a separate dome block — entering the mechanic stays simple.</p>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Base shape</td><td>full 16³ cube + a decorative overlay via the (ring, glow)</td></tr><tr><td>Dome shape</td><td>a volumetric rounded model inscribed in 16³;, <code>RenderType.translucent</code></td></tr><tr><td>Dome top</td><td>— placed automatically from any <code>c:glass</code> block, tinted by its color</td></tr><tr><td>Collision</td><td>base — full cube; dome — a simplified VoxelShape following the silhouette</td></tr><tr><td>Footprint</td><td>one base block + one dome (1×1×2)</td></tr><tr><td>Dome contents</td><td>the irradiated item floats at the center and slowly spins (base); while running — irradiation particles and a pulsing glow</td></tr></tbody></table>
+<h2>Recipes</h2>
+<p><strong>Crafting the base block</strong> follows the machine-assembly standard and fills the whole 3×3 grid: <strong>1 machine casing + 2 uranium plates + 3 glass + 1 electronic circuit + 2 iron plates</strong>. The profile part is uranium plates (the irradiation theme): entering the mechanic is gated behind an established uranium chain (iron pickaxe → ore → ingot → plate). <strong>Crafting the mutation chips.</strong> The three chips are made from (already in the mod) plus a thematic filling, modelled on the alignment chips. Cost rises with the "complexity" of the mode:</p>
+<table><thead><tr><th>Chip</th><th>Recipe</th><th>Role</th></tr></thead><tbody><tr><td><code>mutation_chip_duplicate</code></td><td>empty chip + 2 amethyst shards + uranium plate</td><td>duplication mode (amethyst grows by itself — the doubling theme)</td></tr><tr><td><code>mutation_chip_transform</code></td><td>empty chip + redstone + lapis + uranium plate</td><td>transformation mode (two "opposite" minerals — the exchange theme)</td></tr><tr><td><code>mutation_chip_create</code></td><td>empty chip + diamond + echo shard + uranium plate</td><td>creation mode (the costliest — the theme of new matter)</td></tr></tbody></table>
+<p>The uranium plate in every recipe is the shared "irradiating" element; the chips are useless without the Incubator and vice versa. <strong>The mutation recipe type</strong> is. Each JSON describes: 2 inputs (fuel + item to mutate) → 1 output + a mutation <code>kind</code> + an optional <code>chance</code> (override). <strong>Three mutation kinds (the chip modes):</strong></p>
+<table><thead><tr><th><code>kind</code></th><th>What it does</th><th>Example (from the MVP)</th></tr></thead><tbody><tr><td><code>duplicate</code></td><td>1 item → 2 of the same (chance-gated)</td><td><code>minecraft:diamond</code> → ×2 (chance 0.45)</td></tr><tr><td><code>transform</code></td><td>A → B (a different existing item)</td><td><code>minecraft:lapis_lazuli</code> → <code>minecraft:redstone</code> (chance 0.75)</td></tr><tr><td><code>create</code></td><td>ordinary item → a new mod item</td><td><code>minecraft:diamond</code> → (chance 0.25)</td></tr></tbody></table>
+<p>One item may have recipes in several modes (a diamond: <code>duplicate</code> ×2 and <code>create</code> → irradiated diamond; lapis: <code>transform</code> → redstone and <code>create</code> → mutagen dust). What actually happens is <strong>decided by the inserted chip</strong> — the machine never picks for the player.</p>
+<h3>The Duplicate mode — four value classes</h3>
+<p>The cost of an attempt is fixed (⅓ of an ingot + 4000 EU/FE + 25 s) and <strong>does not depend on the item's value</strong>, so the only balance lever inside the mode is the <strong>success chance: the more valuable the item, the lower the chance</strong>. Classes set the default chance; <code>chance</code> is written explicitly in JSON for every class except gems (which use the shared <code>mutationChanceDuplicate</code> default).</p>
+<table><thead><tr><th>Class</th><th>Chance</th><th>Items (25 recipes)</th></tr></thead><tbody><tr><td><strong>Gems and precious ingots</strong></td><td>0.45</td><td><code>diamond</code>, <code>emerald</code>, <code>amethyst_shard</code>, <code>gold_ingot</code>, <code>silver_ingot</code>, <code>nickel_ingot</code></td></tr><tr><td><strong>Minerals and common ingots</strong></td><td>0.55</td><td><code>coal</code>, <code>redstone</code>, <code>lapis_lazuli</code>, <code>quartz</code>, <code>glowstone_dust</code>, <code>iron_ingot</code>, <code>copper_ingot</code>, <code>tin_ingot</code></td></tr><tr><td><strong>Rare organics</strong></td><td>0.60</td><td><code>nether_wart</code>, <code>cocoa_beans</code>, <code>glow_berries</code>, <code>torchflower_seeds</code>, <code>pitcher_pod</code></td></tr><tr><td><strong>Basic crops</strong></td><td>0.85</td><td><code>wheat_seeds</code>, <code>beetroot_seeds</code>, <code>melon_seeds</code>, <code>pumpkin_seeds</code>, <code>carrot</code>, <code>potato</code></td></tr></tbody></table>
+<blockquote><strong>The cheap classes are deliberately "training wheels".</strong> Spending rare uranium on seeds is not profitable (⅓ of an ingot ≈ ⅙ of a uranium ore for +0.85 of a seed) — and that is fine: they give the player a cheap way to learn the mechanic and catch their first grades and advancements without risking a diamond. The mode's real economic value lies in gems. Batch processing of cheap items (16 → 32 per attempt) was considered and <strong>rejected</strong> as needless complexity.</blockquote>
+<p><strong>Ingots yes, processed parts no.</strong> The line runs between "raw material" and "product": <strong>Duplicated:</strong> vanilla and mod <strong>ingots</strong> — <code>iron</code>, <code>copper</code>, <code>gold</code>, <code>tin</code>, <code>silver</code>, <code>nickel</code>. These are base materials, a natural entry point for a miner; the mod's rare ores (silver, nickel) gain a legal way to top up after an unlucky world generation. <strong>Not duplicated:</strong> everything <strong>processed</strong> — dusts, plates, machine casings, electronic circuits, chips, cables, as well as raw ore and ore blocks. Reason: the mod already doubles raw material through the <a href="../machines/macerator.html">macerator</a> (ore → 2 dusts); duplicating the processed products on top of that would devalue the whole crafting chain. Processed parts are cheaper to assemble from duplicated ingots. <strong>Uranium is not duplicated</strong> — there is no recipe and none is needed: the operation is unprofitable by construction (EV 0.45 + gene ≤ 0.60 &lt; 1 ingot, while ⅓ of an ingot is burnt as fuel).</p>
+<h3>The Transform mode — a horizontal exchange</h3>
+<p>The principle: <strong>like is traded for like</strong>. Transformation never turns cheap into expensive — it grants <strong>logistical freedom</strong>: getting what your biome or world lacks without mounting an expedition. Upgrading by value (iron → gold, coal → diamond) is <strong>forbidden</strong> — it would kill the point of exploring and mining. All 27 recipes share the 0.75 chance, a 300-tick duration and a 2400 EU/FE price. <strong>The choice problem and its solution — rings.</strong> The chip picks the mode, not a <em>specific</em> recipe, so within one mode an item cannot have two recipes. For families with many members (saplings, flowers, soils) this is solved with a <strong>ring chain</strong>: each item turns into the next one around the circle. Need a particular variant — spin the ring until you reach it. That costs more than a single step, yet still less than a trip across half the world, and it keeps the mechanic deterministic. <strong>Minerals (6 recipes)</strong> — trading working resources:</p>
+<table><thead><tr><th>input</th><th>output</th><th>Reverse</th></tr></thead><tbody><tr><td><code>lapis_lazuli</code></td><td>×1 <code>redstone</code></td><td>yes, 1:1</td></tr><tr><td><code>quartz</code></td><td>×1 <code>glowstone_dust</code></td><td>yes, 1:1</td></tr><tr><td><code>coal</code></td><td>×1 <code>charcoal</code></td><td>yes, 1:1</td></tr></tbody></table>
+<p><strong>Saplings (8 recipes)</strong> — a ring: oak → birch → spruce → jungle → acacia → dark oak → cherry → mangrove propagule → oak. Solves the common pain of "the tree I need is nowhere near my base". <strong>Flowers (8 recipes)</strong> — a ring: dandelion → poppy → blue orchid → allium → azure bluet → cornflower → lily of the valley → oxeye daisy → dandelion. Access to any dye without hunting biomes. <strong>Soils (5 recipes)</strong> — a ring dirt → podzol → mycelium → dirt (3) and the pair sand ↔ red sand (2). Terraforming and decoration without long expeditions.</p>
+<blockquote><strong>Duplication check.</strong> Every transform step is strictly 1:1, the quartz ↔ glowstone dust pair included: no recipe of this mode yields more than one item. It could not be otherwise — an attempt takes exactly one item off the input, so the machine has no way to ask for more of it back, and any multiplier on the output would immediately turn a closed ring into an endless source of material. On top of that the 0.75 chance burns a quarter of the material at every step: a two-step ring returns 0.5625 of what went in, a three-step one 0.42, an eight-step one 0.10. "Spinning for profit" cannot work in principle.  Side effect of <code>coal ↔ charcoal</code>: charcoal is renewable, which makes coal renewable too. The two are already interchangeable in practice (fuel, torches) — the only difference is the coal block — so this was deemed acceptable.</blockquote>
+<h3>The Create mode — evolution ladders</h3>
+<p>The Incubator's most expensive and most interesting mechanic: an ordinary item <strong>evolves</strong> into a unique mod material, and that one evolves further along a three-tier ladder. The higher the tier, the lower the chance and the costlier the operation; on upper tiers the player already risks a rare item, so the failure rules there are gentler. <strong>Four evolution branches:</strong></p>
+<table><thead><tr><th>Branch</th><th>Tier 1 (from vanilla)</th><th>Tier 2</th><th>Tier 3</th></tr></thead><tbody><tr><td><strong>Diamond</strong> — energy density</td><td><code>diamond</code> → irradiated diamond</td><td>→ diamond matrix</td><td>→ singularity core</td></tr><tr><td><strong>Crystal</strong> — optics</td><td><code>amethyst_shard</code> → resonant shard</td><td>→ focusing lens</td><td>→ prismatic core</td></tr><tr><td><strong>Biological</strong> — agriculture</td><td><code>lapis_lazuli</code> → mutagen dust</td><td>→ living mutagen</td><td>→ gene matrix</td></tr><tr><td><strong>Nuclear</strong> — fuel</td><td><code>depleted_uranium</code> → unstable isotope</td><td>→ enriched core</td><td>→ isotope concentrate</td></tr></tbody></table>
+<blockquote>The nuclear branch starts not from a vanilla item but from the Incubator's own <strong>ash</strong>: the spent uranium piling up from every operation stops being waste and becomes the entry to a chain.</blockquote>
+<p><strong>Cost and risk per tier:</strong></p>
+<table><thead><tr><th>Tier</th><th>Chance</th><th>Ticks</th><th>EU/FE</th><th>On failure</th></tr></thead><tbody><tr><td>1 (vanilla → mod material)</td><td>0.25</td><td>1000</td><td>8000</td><td>the input is lost (the general rule)</td></tr><tr><td>2</td><td>0.15</td><td>1500</td><td>12000</td><td><strong>the input is returned intact</strong></td></tr><tr><td>3</td><td>0.08</td><td>2000</td><td>16000</td><td><strong>the input is returned intact</strong></td></tr></tbody></table>
+<p><strong>Why failure is gentle on tiers 2–3.</strong> The input there is already an expensive item earned through 8000 EU/FE and a streak of misses. Losing it outright would mean no player ever risks climbing past tier 1. So from tier 2 onward only the irradiation charge and the energy burn, while the item stays in the slot — you can try again. <strong>The exception is slag:</strong> 5 % of attempts turn the input into <code>irradiated_slag</code> on any tier, upper ones included. Even a gentle failure has a price. The maths of tier 3: an 8 % chance with no input loss → about <strong>12–13 attempts</strong> and roughly <strong>200 000 EU/FE</strong> per top-tier item. A genuine endgame grind, but without the risk of losing what you have accumulated. <strong>The payoff — machine upgrade chips.</strong> Upper-tier materials are not dead weight: they craft into chips for the <strong>already existing upgrade slots</strong> of machines (4 per machine, the infrastructure is in place — see the <a href="../upgrades/mute_chip.html">mute chip</a>): speed, energy efficiency, a larger buffer, and a "luck chip" for the Incubator itself. The loop closes inside the mod.</p>
+<blockquote><strong>Implementation order.</strong> Only <strong>tier 1</strong> ships in the first iteration — four new materials, one per branch. Tiers 2–3 and the upgrade chips are deferred to a separate task: 8 items + 4 chips is a scope comparable to the Incubator itself. The recipe format needs no changes: the <code>energy</code> and <code>chance</code> fields already express any tier in a single JSON.</blockquote>
+<p><strong>The Create mode — MVP (4 recipes, tier 1):</strong></p>
+<table><thead><tr><th>#</th><th>input</th><th>output</th><th>kind</th><th>chance</th></tr></thead><tbody><tr><td>1</td><td><code>minecraft:diamond</code></td><td>×1</td><td>create</td><td><em>(default 0.25)</em></td></tr><tr><td>2</td><td><code>minecraft:amethyst_shard</code></td><td>×1</td><td>create</td><td><em>(default 0.25)</em></td></tr><tr><td>3</td><td><code>minecraft:lapis_lazuli</code></td><td>×1</td><td>create</td><td><em>(default 0.25)</em></td></tr><tr><td>4</td><td></td><td>create</td><td><em>(default 0.25)</em></td></tr></tbody></table>
+<p><strong>56 mutation recipes in total</strong> (25 duplicate + 27 transform + 4 create) <strong>plus 3 chip crafts</strong>. The overlaps between modes are deliberate — they are what justifies the chip system: lapis is available in <strong>all three</strong> modes (duplicate / turn into redstone / create mutagen dust), diamond in two (duplicate / create an irradiated diamond), quartz in two (duplicate / turn into glowstone dust). The same item yields a different result depending on the chip you insert. <strong>What never mutates.</strong> The system is a <strong>white-list</strong>: only items with a JSON recipe mutate. Everything else is simply rejected by the input slot — so duplicating items with contents (shulker boxes, bundles) or with durability/enchantments (tools, armor, enchanted books) is <strong>impossible by construction</strong>, not by prohibition. A rule for recipe authors: inputs are declared with <strong>explicit IDs, never broad tags</strong> (<code>#c:ingots</code> would drag in other mods' items). The list below is what we do not write recipes for, even when expanding:</p>
+<blockquote><strong>Black-list (explicit):</strong> <code>netherite_scrap</code> / <code>netherite_ingot</code> / <code>ancient_debris</code> / <code>dragon_breath</code> / <code>end_crystal</code> / <code>dragon_egg</code> / <code>shulker_shell</code> / <code>elytra</code> / <code>totem_of_undying</code> / <code>enchanted_book</code> — they break vanilla endgame progression or are unique. Plus anything carrying durability, contents or unique components.</blockquote>
+<p>The result is taken <strong>clean from the recipe</strong> (<code>ItemStackTemplate</code>): a diamond renamed on an anvil duplicates into a plain, unnamed diamond.</p>
+<h2>Progression</h2>
+<p>Tier: LV. Best built after the first machines (macerator/extractor), once you have a stable uranium vein and an EU/FE grid. Introduces three new resources: (spent uranium) — settles in the ash slot every attempt; a feedstock for the future nuclear phase (MOX/isotopes/RTG, see nuclear/index). — a feedstock for future agriculture/tech recipes. — the biological branch, tier 1. — the crystal branch, tier 1. — the nuclear branch, tier 1; it makes the Incubator's own ash useful. — a by-product of 5 % of attempts; <strong>no consumers in the MVP</strong>, it simply accumulates as groundwork for future reprocessing (smelting, building blocks, the nuclear phase). Junk with a promise, not dead weight. Introduces three new module items: <code>mutation_chip_duplicate</code> / <code>_transform</code> / <code>_create</code> — crafted from an empty chip, they select the machine's mode. <strong>Grade "genes" on materials — groundwork:</strong> future consumers (anomalous uranium in the nuclear phase, legendary seeds in agriculture machines) will read <code>mutation_grade</code> in their recipes and bonuses. The gene already matters in this release: a colored name, a lore line, and a bonus to the item's further mutation chances (+5 / +10 / +15 p.p. for Rare / Epic / Legendary). A mutation advancement branch: first mutation, first <code>create</code>, first Legendary outcome. <strong>Second iteration:</strong> the <code>enhance</code> mode (affixes for powered items) is added on top of this block with no world migration — a new kind, a fourth chip, a new component; existing Incubators simply gain another mode. Does not evolve within v0.1 — an MV version of the Incubator is not planned.</p>
+<h2>Compatibility</h2>
+<p>JEI/REI/EMI: its own <code>mutation</code> category with two inputs (fuel + item) and a success-chance indicator; chance-rendering details — see "Open questions". Plus an info page about rarity grades (modelled on the solar-evolution category). Item tooltip: a "Mutation grade: …" line — via the shared dual-loader tooltip channel. Jade/The One Probe: cycle progress, EU/FE storage, mutation mode, multiblock status (formed/broken), ash-slot fill. Automation: hoppers/pipes work with the base (5 slots: chip — push only, fuel — push, input — push, result — pull, ash — pull); the dome is a purely structural block with no inventory. <strong>No face lets automation pull the chip</strong>: any drain hung on the machine walked off with it and the incubator stalled in silence. The price is that the mode can no longer be switched by automation — it is a build-time choice. An item pipe may return the result into the same machine's input, which is how repeat processing is automated.</p>
+<h2>Balance</h2>
+<table><thead><tr><th>Parameter</th><th>Value</th><th>Rationale</th></tr></thead><tbody><tr><td>EU/FE/tick</td><td><strong>8</strong> (<code>incubatorEuPerTick</code>)</td><td>×4 the machine standard — a premium block; irradiation costs more than grinding</td></tr><tr><td>EU/FE buffer</td><td><strong>8000</strong></td><td>holds the costliest operation (<code>create</code>) in full</td></tr><tr><td><code>transform</code> duration</td><td>300 ticks (≈15 s) → 2400 EU/FE</td><td>×8 the former price: a mid-tier operation, not a routine machine</td></tr><tr><td><code>duplicate</code> duration</td><td>500 ticks (≈25 s) → 4000 EU/FE</td><td>pricier than transform — it creates matter</td></tr><tr><td><code>create</code> duration</td><td>1000 ticks (≈50 s) → 8000 EU/FE</td><td>the mod's most expensive operation</td></tr><tr><td><code>transform</code> chance</td><td>0.75</td><td>frequent success, low leverage</td></tr><tr><td><code>duplicate</code> chance</td><td>0.45</td><td>balanced against the diamond/emerald economy</td></tr><tr><td><code>create</code> chance</td><td>0.25</td><td>rare success, high reward</td></tr><tr><td>Outcome grades</td><td>70 / 20 / 8 / 2 %</td><td>the "card pack" model; Legendary ≈ 1 in 50 successes</td></tr><tr><td>Gene chance bonus</td><td>+5 / +10 / +15 p.p. (the gene burns)</td><td>a Rare/Epic/Legendary input mutates more willingly</td></tr><tr><td>Chance cap</td><td>0.95</td><td>no guaranteed mutations, even with a Legendary gene</td></tr><tr><td>Slag chance</td><td>0.05 (<code>mutationSlagChance</code>)</td><td>subtracted from the failure, not the success; a miss is no longer entirely empty</td></tr><tr><td>Uranium cost</td><td>1 ingot = 3 attempts → 1 <code>depleted_uranium</code></td><td>uranium is ×7 rarer than diamond — the ×3 charge makes mutations worthwhile without making them free; the 1 ingot → 1 depleted balance is preserved</td></tr></tbody></table>
+<p><strong>Duplication economy (sanity check):</strong> 1 uranium ore → macerator → 2 dust → smelter → 2 ingots = <strong>6 attempts</strong>. A diamond duplicate: EV +0.45/attempt → <strong>+1.35 diamond per ingot, +2.7 per ore</strong>. Uranium is ×7 rarer than diamond, so raw diamond mining is still more efficient — the Incubator earns its keep through <strong>passivity</strong> (it works while you mine), automation and grades, not raw speed. An emerald duplicate: 1.35/ingot versus 0.5/ingot from the trader (2 uranium → 1 emerald) — the machine beats the trade ×2.7; the trade remains the early, deterministic outlet before an EU/FE grid exists. <strong>Conclusion:</strong> uranium is the real limiter; an auto-farm does not break vanilla progression. <strong>Rarity economy (sanity check):</strong> the grade changes only <em>quality</em>, never quantity — the material expected value does not grow (the input gene burns and the result is rolled fresh, so Legendaries cannot be multiplied). A Legendary outcome on a diamond duplicate: 0.45 × 0.02 ≈ 1 in ~110 attempts ≈ <strong>37 ingots ≈ 19 uranium ores</strong> — genuine "booster pack" rarity on top of a ×7-rare ore.</p>
+<h2>Open questions</h2>
+<p><strong>Exact sounds</strong> for start/success/failure (<code>ModSounds</code>) — original recordings needed (rule 3 of AGENTS.md), to be decided before <code>spec</code>. Plus a dedicated "jackpot" sound for a Legendary outcome. <strong>The exact dome model</strong> — silhouette (a tapering octagon? a ribbed hemisphere?), palette and frame thickness. A sketch/reference is needed before <code>spec</code>. Tinting is no longer part of this question: the glass faces of the dome model carry <code>tintindex: 0</code> and take the dye color of the glass remembered in the base, while the frame and the spire keep the casing's dark metal. <strong>Base decoration</strong> — what exactly the draws over the cube (emitter ring, spin, glow) and where the "block model vs render" line falls. Before <code>spec</code>. <strong>Rendering the item inside the dome</strong> — resolving <code>ItemStack → ItemStackRenderState</code> from a has no precedent in the codebase; verify the 26.2 signatures before <code>spec</code>. <strong>Replacing the glass with the dome</strong> — confirm that remembering the original glass in the block entity and returning it on dismantling does not clash with vanilla drops; check explosions, pistons and lava. <strong>JEI/REI category</strong> — how to render the chance and two inputs (chance number on the result icon?); how to present grades (an info page vs percentages in every recipe) and modes. <strong>Idle <code>uranium_ingot → depleted_uranium</code> recipe</strong> — redundant under the "ash" model (depleted already drips from every operation). Decision: <strong>do not add</strong>; revisit only if a dedicated ash farm is ever needed. <strong><code>lifecycle_status: concept → spec</code></strong> — the core design forks (probabilistic model, 5 slots, chip-selected modes, local multiblock, MVP recipes, 7 new items) are resolved; the move to <code>spec</code> follows once the sound and the dome model are fixed.</p>
+<h2>Related</h2>
+<p><a href="../materials/uranium.html">Uranium</a> — the fuel ingot. Nuclear theme — where <code>depleted_uranium</code> goes. <a href="../advanced-machines/teleporter.html">Teleporter multiblock</a> — a sibling structural task. <a href="../machines/sawmill.html">Sawmill</a> — the reference machine with switchable working modes. <a href="../generators/solar_panel.html">Solar panel</a> — the reference for a chip slot driving machine behaviour.</p>
+<h2>Crafting</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="incubator alaindustrial:incubator" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="incubator_dome_glass (tag)" aria-label="incubator_dome_glass (tag)"><span>incuba</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="incubator_dome_glass (tag)" aria-label="incubator_dome_glass (tag)"><span>incuba</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="incubator_dome_glass (tag)" aria-label="incubator_dome_glass (tag)"><span>incuba</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Uranium Plate"><img src="../assets/item/uranium_plate.png" alt="Uranium Plate" width="32" height="32"></div> <div class="cell" title="Machine Casing"><img src="../assets/block/machine_casing.png" alt="Machine Casing" width="32" height="32"></div> <div class="cell" title="Uranium Plate"><img src="../assets/item/uranium_plate.png" alt="Uranium Plate" width="32" height="32"></div> <div class="cell" title="Iron Plate"><img src="../assets/item/iron_plate.png" alt="Iron Plate" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Iron Plate"><img src="../assets/item/iron_plate.png" alt="Iron Plate" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Incubator"><img src="../assets/block/incubator_top.png" alt="Incubator" width="32" height="32"></div><div class="result-name">Incubator</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>
