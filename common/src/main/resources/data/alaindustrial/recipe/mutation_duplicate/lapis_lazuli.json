@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:lapis_lazuli",
+	"result": {
+		"id": "minecraft:lapis_lazuli",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.55
+}

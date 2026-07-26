@@ -145,6 +145,12 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 	}
 
 	/**
+	 * Six-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so {@code SolarPanelBlockEntity.DATA_COUNT}
+	 * names this machine's width for the bridge below and for {@code SolarPanelMenu}'s client stub (MOD-235).
+	 */
+	public static final int DATA_COUNT = 6;
+
+	/**
 	 * Six-wide data: base 0..3 plus evolution progress (4) and denominator (5).
 	 *
 	 * <p>The evolution channels are scaled to <b>permille (0..1000)</b>, not raw ticks. Vanilla
@@ -177,7 +183,7 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 
 		@Override
 		public int getCount() {
-			return 6;
+			return DATA_COUNT;
 		}
 	};
 

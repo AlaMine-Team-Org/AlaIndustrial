@@ -2,7 +2,9 @@ package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.item.ElectricDrillItem;
+import dev.alaindustrial.item.MutationChipItem;
 import dev.alaindustrial.item.EnergyPackItem;
 import dev.alaindustrial.item.FluidTankBlockItem;
 import dev.alaindustrial.item.ScytheTier;
@@ -54,6 +56,26 @@ public final class ModItemsNeoForge {
 			ITEMS.registerItem("empty_chip", ItemBuildersNeoForge.hint("empty_chip"));
 	public static final DeferredItem<Item> MUTE_CHIP =
 			ITEMS.registerItem("mute_chip", ItemBuildersNeoForge.hint("mute_chip"));
+
+	// Incubator (MOD-118): mode chips, by-products and the tier-1 evolution materials.
+	public static final DeferredItem<Item> MUTATION_CHIP_TRANSFORM =
+			ITEMS.registerItem("mutation_chip_transform", p -> new MutationChipItem(p, IncubatorMode.TRANSFORM));
+	public static final DeferredItem<Item> MUTATION_CHIP_DUPLICATE =
+			ITEMS.registerItem("mutation_chip_duplicate", p -> new MutationChipItem(p, IncubatorMode.DUPLICATE));
+	public static final DeferredItem<Item> MUTATION_CHIP_CREATE =
+			ITEMS.registerItem("mutation_chip_create", p -> new MutationChipItem(p, IncubatorMode.CREATE));
+	public static final DeferredItem<Item> DEPLETED_URANIUM =
+			ITEMS.registerItem("depleted_uranium", Item::new);
+	public static final DeferredItem<Item> IRRADIATED_SLAG =
+			ITEMS.registerItem("irradiated_slag", Item::new);
+	public static final DeferredItem<Item> IRRADIATED_DIAMOND =
+			ITEMS.registerItem("irradiated_diamond", Item::new);
+	public static final DeferredItem<Item> RESONANT_SHARD =
+			ITEMS.registerItem("resonant_shard", Item::new);
+	public static final DeferredItem<Item> MUTAGEN_DUST =
+			ITEMS.registerItem("mutagen_dust", Item::new);
+	public static final DeferredItem<Item> UNSTABLE_ISOTOPE =
+			ITEMS.registerItem("unstable_isotope", Item::new);
 	// Rotor / wheel (MOD-189): durability components — wear shows as a vanilla durability bar and, being
 	// damageable, they are automatically non-stackable. maxDamage from Config (registration-time).
 	public static final DeferredItem<Item> WINDMILL_ROTOR =
@@ -242,6 +264,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("compressor", ModBlocksNeoForge.COMPRESSOR);
 	public static final DeferredItem<BlockItem> SAWMILL_ITEM =
 			ITEMS.registerSimpleBlockItem("sawmill", ModBlocksNeoForge.SAWMILL);
+	public static final DeferredItem<BlockItem> INCUBATOR_ITEM =
+			ITEMS.registerSimpleBlockItem("incubator", ModBlocksNeoForge.INCUBATOR);
 	public static final DeferredItem<BlockItem> GEOTHERMAL_GENERATOR_ITEM =
 			ITEMS.registerSimpleBlockItem("geothermal_generator", ModBlocksNeoForge.GEOTHERMAL_GENERATOR);
 	public static final DeferredItem<BlockItem> PUMP_ITEM =
@@ -420,6 +444,16 @@ public final class ModItemsNeoForge {
 		ModContent.EXTRACTOR_ITEM = EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = COMPRESSOR_ITEM;
 		ModContent.SAWMILL_ITEM = SAWMILL_ITEM;
+		ModContent.INCUBATOR_ITEM = INCUBATOR_ITEM;
+		ModContent.MUTATION_CHIP_TRANSFORM = MUTATION_CHIP_TRANSFORM;
+		ModContent.MUTATION_CHIP_DUPLICATE = MUTATION_CHIP_DUPLICATE;
+		ModContent.MUTATION_CHIP_CREATE = MUTATION_CHIP_CREATE;
+		ModContent.DEPLETED_URANIUM = DEPLETED_URANIUM;
+		ModContent.IRRADIATED_SLAG = IRRADIATED_SLAG;
+		ModContent.IRRADIATED_DIAMOND = IRRADIATED_DIAMOND;
+		ModContent.RESONANT_SHARD = RESONANT_SHARD;
+		ModContent.MUTAGEN_DUST = MUTAGEN_DUST;
+		ModContent.UNSTABLE_ISOTOPE = UNSTABLE_ISOTOPE;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = GEOTHERMAL_GENERATOR_ITEM;
 		ModContent.PUMP_ITEM = PUMP_ITEM;
 		ModContent.FLUID_TANK_ITEM = FLUID_TANK_ITEM::get;

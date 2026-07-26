@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:cherry_sapling",
+	"result": {
+		"id": "minecraft:mangrove_propagule",
+		"count": 1
+	},
+	"energy": 2400
+}

@@ -1,0 +1,28 @@
+{
+  "parent": "alaindustrial:first_mutation",
+  "display": {
+    "icon": {
+      "id": "alaindustrial:mutagen_dust"
+    },
+    "title": {
+      "translate": "advancements.alaindustrial.legendary_mutation.title"
+    },
+    "description": {
+      "translate": "advancements.alaindustrial.legendary_mutation.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "legendary": {
+      "trigger": "alaindustrial:mutation_completed",
+      "conditions": {
+        "grade": "legendary"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "legendary"
+    ]
+  ]
+}

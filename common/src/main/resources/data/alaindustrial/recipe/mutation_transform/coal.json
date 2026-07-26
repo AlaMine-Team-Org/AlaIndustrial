@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:coal",
+	"result": {
+		"id": "minecraft:charcoal",
+		"count": 1
+	},
+	"energy": 2400
+}

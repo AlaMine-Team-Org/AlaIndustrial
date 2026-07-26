@@ -19,7 +19,7 @@ public class GeothermalGeneratorMenu extends MachineMenu {
 	/** Client side. */
 	public GeothermalGeneratorMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.GEOTHERMAL_GENERATOR_MENU.get(), syncId, playerInventory, new SimpleContainer(2 + UPGRADE_SLOT_COUNT),
-				new net.minecraft.world.inventory.SimpleContainerData(4), ContainerLevelAccess.NULL,
+				new net.minecraft.world.inventory.SimpleContainerData(MachineBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
 				ModContent.GEOTHERMAL_GENERATOR.get());
 	}
 

@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:mangrove_propagule",
+	"result": {
+		"id": "minecraft:oak_sapling",
+		"count": 1
+	},
+	"energy": 2400
+}

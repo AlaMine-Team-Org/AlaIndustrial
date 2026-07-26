@@ -1,7 +1,9 @@
 package dev.alaindustrial.registry;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,6 +37,8 @@ public final class ModRecipes {
 	public static final class Kind {
 		private final String id;
 		private final int defaultEnergy;
+		/** Read lazily: Config values are reloadable, so a captured int would go stale. */
+		private final IntSupplier euPerTick;
 		private Supplier<RecipeType<AlaProcessingRecipe>> type = () -> {
 			throw new IllegalStateException("ModRecipes.Kind type read before its loader bound it");
 		};
@@ -43,8 +47,13 @@ public final class ModRecipes {
 		};
 
 		private Kind(String id, int defaultEnergy) {
+			this(id, defaultEnergy, () -> Config.machineEuPerTick);
+		}
+
+		private Kind(String id, int defaultEnergy, IntSupplier euPerTick) {
 			this.id = id;
 			this.defaultEnergy = defaultEnergy;
+			this.euPerTick = euPerTick;
 		}
 
 		public String id() {
@@ -53,6 +62,22 @@ public final class ModRecipes {
 
 		public int defaultEnergy() {
 			return defaultEnergy;
+		}
+
+		/** What the machine working this family draws per tick. Almost every machine shares one rate. */
+		public int euPerTick() {
+			return Math.max(1, euPerTick.getAsInt());
+		}
+
+		/**
+		 * Base processing time of a recipe of this family costing {@code energy} EU — the number the
+		 * recipe viewers print. It has to divide by <em>this family's</em> rate: the incubator draws
+		 * four times what the other machines do, and the shared rate made its 15 seconds read as 60.
+		 * The global speed multiplier is a runtime balance knob and deliberately not applied — the
+		 * viewer shows the recipe's intrinsic time.
+		 */
+		public int ticksFor(int energy) {
+			return Math.max(1, energy / euPerTick());
 		}
 
 		public RecipeType<AlaProcessingRecipe> type() {
@@ -91,8 +116,21 @@ public final class ModRecipes {
 	public static final Kind SAWING_SLABS = new Kind("sawing_slabs", 160);
 	public static final Kind SAWING_STAIRS = new Kind("sawing_stairs", 160);
 
+	// Incubator (MOD-118): one kind per mutation mode, selected by the chip in the machine.
+	// Splitting by type (rather than a "kind" field inside one type) matches how the sawmill models
+	// its cutting modes, and it comes with per-mode recipe-viewer categories for free.
+	// The incubator is the one machine with its own draw (8 EU/t against the shared 2), so these three
+	// carry it: energy / euPerTick is what the recipe viewers show as the operation's length.
+	public static final Kind MUTATION_TRANSFORM =
+			new Kind("mutation_transform", 2400, () -> Config.incubatorEuPerTick);
+	public static final Kind MUTATION_DUPLICATE =
+			new Kind("mutation_duplicate", 4000, () -> Config.incubatorEuPerTick);
+	public static final Kind MUTATION_CREATE =
+			new Kind("mutation_create", 8000, () -> Config.incubatorEuPerTick);
+
 	private static final Kind[] ALL = {MACERATION, SMELTING, COMPRESSING, EXTRACTING,
-			SAWING_PLANKS, SAWING_STICKS, SAWING_SLABS, SAWING_STAIRS};
+			SAWING_PLANKS, SAWING_STICKS, SAWING_SLABS, SAWING_STAIRS,
+			MUTATION_TRANSFORM, MUTATION_DUPLICATE, MUTATION_CREATE};
 
 	/** All recipe families, in registration order (used by both loaders' registration). */
 	public static Kind[] kinds() {

@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:allium",
+	"result": {
+		"id": "minecraft:azure_bluet",
+		"count": 1
+	},
+	"energy": 2400
+}

@@ -12,10 +12,13 @@ import dev.alaindustrial.block.ElectricFurnaceBlock;
 import dev.alaindustrial.block.ExtractorBlock;
 import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
+import dev.alaindustrial.block.IncubatorBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
+import dev.alaindustrial.item.MutationGrades;
+import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.item.AnalyzerMode;
 import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
@@ -27,6 +30,7 @@ import dev.alaindustrial.item.PouchContents;
 import dev.alaindustrial.item.PouchItem;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
+import dev.alaindustrial.registry.ModRecipes;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -48,6 +52,13 @@ public final class MachineTooltips {
 
 	/** Append Ala Industrial tooltip lines for {@code stack} (machine stats or analyzer reading). */
 	public static void append(ItemStack stack, List<Component> lines, boolean shiftDown) {
+		// A mutated stack carries its grade regardless of what item it is, so this runs before the
+		// mod-item branches below (a graded vanilla ingot would never reach them).
+		MutationGrade grade = MutationGrades.get(stack);
+		if (grade.isMarked()) {
+			lines.add(Component.translatable(grade.translationKey())
+					.withStyle(MutationGrades.vanillaRarity(grade).color()));
+		}
 		boolean detailed = shiftDown || AlaClientConfig.alwaysDetailedTooltips;
 		if (stack.getItem() instanceof NetworkAnalyzerItem) {
 			addNetworkAnalyzerTooltip(stack, lines, detailed);
@@ -123,6 +134,7 @@ public final class MachineTooltips {
 				|| block instanceof ElectricFurnaceBlock
 				|| block instanceof CompressorBlock
 				|| block instanceof ExtractorBlock
+				|| block instanceof IncubatorBlock
 				|| block instanceof PumpBlock) {
 			lines.add(tier());
 		}
@@ -292,6 +304,7 @@ public final class MachineTooltips {
 				|| block instanceof CompressorBlock
 				|| block instanceof SawmillBlock
 				|| block instanceof ExtractorBlock
+				|| block instanceof IncubatorBlock
 				|| block instanceof PumpBlock
 				|| block instanceof BatteryBoxBlock
 				|| block instanceof CableBlock;
@@ -328,6 +341,12 @@ public final class MachineTooltips {
 		} else if (block instanceof ExtractorBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.extractorDuration)));
+		} else if (block instanceof IncubatorBlock) {
+			// The incubator does NOT run on machineEuPerTick — it has its own, four times higher draw,
+			// and three durations instead of one (the mutation chip picks the mode). So the basic line
+			// carries the draw and the buffer; the per-mode timings live under [SHIFT].
+			lines.add(tt("energy_input", incubatorEuPerTick()));
+			lines.add(tt("capacity", Config.incubatorBuffer));
 		} else if (block instanceof PumpBlock) {
 			lines.add(tt("pump_cost", Config.pumpEuPerBucket));
 		} else if (block instanceof BatteryBoxBlock) {
@@ -384,6 +403,12 @@ public final class MachineTooltips {
 			lines.add(tt("buffer", Config.machineBuffer));
 			lines.add(tt("energy_per_op",
 					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.extractorDuration)));
+		} else if (block instanceof IncubatorBlock) {
+			lines.add(tier());
+			lines.add(tt("buffer", Config.incubatorBuffer));
+			lines.add(incubatorMode("transform", ModRecipes.MUTATION_TRANSFORM));
+			lines.add(incubatorMode("duplicate", ModRecipes.MUTATION_DUPLICATE));
+			lines.add(incubatorMode("create", ModRecipes.MUTATION_CREATE));
 		} else if (block instanceof PumpBlock) {
 			lines.add(tier());
 		} else if (block instanceof BatteryBoxBlock) {
@@ -401,6 +426,35 @@ public final class MachineTooltips {
 
 	private static Component tt(String key, Object value) {
 		return Component.translatable("tooltip.alaindustrial." + key, value)
+				.withStyle(ChatFormatting.GRAY);
+	}
+
+	/**
+	 * The incubator's draw, mirroring {@code IncubatorBlockEntity#euPerTick()}. It has its own
+	 * {@link Config#incubatorEuPerTick} (four times the machine standard), so
+	 * {@link Config#machineEuPerTickEffective()} would understate it.
+	 */
+	private static int incubatorEuPerTick() {
+		return Math.max(1, Math.round(Config.incubatorEuPerTick * Config.globalMachineSpeedMultiplier));
+	}
+
+	/**
+	 * One "Mode - Duration: N ticks" line for the incubator. The mode picks the duration, so three bare
+	 * duration lines would be unreadable; both halves reuse strings that already exist in all 20 locales
+	 * (the GUI mode label and the shared duration line), so no new lang key is introduced. The separator
+	 * is an escaped em dash, so the literal itself stays ASCII and cannot be mangled by a source-encoding
+	 * mismatch (a comment can survive that, a shipped string cannot).
+	 *
+	 * <p>The number comes from the recipe family, the same way the machine and the recipe viewers get
+	 * it: {@code energy / incubatorEuPerTick}. Reading {@code Config.mutationDuration*} here printed a
+	 * figure nothing else used \u2014 every shipped recipe states its energy, so the machine never consults
+	 * those keys, and raising the machine's draw halved the real cycle while the tooltip stood still.
+	 */
+	private static Component incubatorMode(String mode, ModRecipes.Kind kind) {
+		return Component.translatable("gui.alaindustrial.incubator.mode." + mode)
+				.append(" \u2014 ")
+				.append(Component.translatable("tooltip.alaindustrial.duration_ticks",
+						Config.scaledDuration(kind.ticksFor(kind.defaultEnergy()))))
 				.withStyle(ChatFormatting.GRAY);
 	}
 

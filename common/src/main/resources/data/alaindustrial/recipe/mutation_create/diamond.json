@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_create",
+	"ingredient": "minecraft:diamond",
+	"result": {
+		"id": "alaindustrial:irradiated_diamond",
+		"count": 1
+	},
+	"energy": 8000
+}

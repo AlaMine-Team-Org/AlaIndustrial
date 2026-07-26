@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_create",
+	"ingredient": "alaindustrial:depleted_uranium",
+	"result": {
+		"id": "alaindustrial:unstable_isotope",
+		"count": 1
+	},
+	"energy": 8000
+}

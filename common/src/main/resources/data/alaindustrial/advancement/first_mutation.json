@@ -1,0 +1,24 @@
+{
+  "parent": "alaindustrial:first_machine",
+  "display": {
+    "icon": {
+      "id": "alaindustrial:mutation_chip_transform"
+    },
+    "title": {
+      "translate": "advancements.alaindustrial.first_mutation.title"
+    },
+    "description": {
+      "translate": "advancements.alaindustrial.first_mutation.description"
+    }
+  },
+  "criteria": {
+    "mutated": {
+      "trigger": "alaindustrial:mutation_completed"
+    }
+  },
+  "requirements": [
+    [
+      "mutated"
+    ]
+  ]
+}

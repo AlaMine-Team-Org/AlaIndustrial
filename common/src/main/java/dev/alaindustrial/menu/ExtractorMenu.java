@@ -19,7 +19,7 @@ public class ExtractorMenu extends MachineMenu {
 	/** Client side. */
 	public ExtractorMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.EXTRACTOR_MENU.get(), syncId, playerInventory, new SimpleContainer(2 + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(4), ContainerLevelAccess.NULL, ModContent.EXTRACTOR.get());
+				new SimpleContainerData(MachineBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.EXTRACTOR.get());
 	}
 
 	@Override

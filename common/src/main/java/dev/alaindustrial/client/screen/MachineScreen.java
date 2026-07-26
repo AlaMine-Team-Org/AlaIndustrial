@@ -120,6 +120,8 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		public static final EnergyBarSpec RIGHT = new EnergyBarSpec(149, 64, 176, 0);
 		/** The left bar offset into the windmill atlas (taller 178-tall GUI → service fill starts at UV 48). */
 		public static final EnergyBarSpec LEFT_WINDMILL = new EnergyBarSpec(17, 76, 176, 48);
+		/** The incubator's own bar: hard against the left edge of its taller 176×180 atlas. */
+		public static final EnergyBarSpec INCUBATOR = new EnergyBarSpec(9, 68, 176, 0);
 
 		/** Bar inner size — constant across every machine (the orange segmented fill is a 10×44 sprite). */
 		public static final int WIDTH = 10;

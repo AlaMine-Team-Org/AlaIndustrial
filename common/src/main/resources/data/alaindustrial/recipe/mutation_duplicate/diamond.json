@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:diamond",
+	"result": {
+		"id": "minecraft:diamond",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.45
+}

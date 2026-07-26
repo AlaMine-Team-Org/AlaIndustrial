@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:dandelion",
+	"result": {
+		"id": "minecraft:poppy",
+		"count": 1
+	},
+	"energy": 2400
+}

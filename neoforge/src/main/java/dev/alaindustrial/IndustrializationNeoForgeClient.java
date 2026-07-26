@@ -96,6 +96,15 @@ public final class IndustrializationNeoForgeClient {
 		modBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) ->
 				event.registerSpriteSet(dev.alaindustrial.registry.ModParticles.ENRICHED_URANIUM_FLAME,
 						net.minecraft.client.particle.FlameParticle.Provider::new));
+		// MOD-118: the incubator dome takes the colour of the glass it was built from — the mod's
+		// first block colour provider. Verified pattern (neoforge-26.2.0.8-beta):
+		// RegisterColorHandlersEvent.BlockTintSources#register(List<BlockTintSource>, Block...), the
+		// same signature as the Fabric BlockColorRegistry call in IndustrializationClient, with the
+		// list index being the model's tintindex. 26.2 dropped BlockColor: a tint layer is a
+		// BlockTintSource and the in-world hook is colorInWorld(state, level, pos).
+		modBus.addListener((net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.BlockTintSources event) ->
+				event.register(java.util.List.of(dev.alaindustrial.client.render.IncubatorDomeTint.INSTANCE),
+						dev.alaindustrial.registry.ModContent.INCUBATOR_DOME.get()));
 		// Battery Pouch bundle-style tooltip (MOD-052) — NeoForge counterpart to the Fabric
 		// ClientTooltipComponentCallback mapping in IndustrializationClient.
 		modBus.addListener((net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent event) ->
@@ -213,6 +222,9 @@ public final class IndustrializationNeoForgeClient {
 				WindMillRotorBlockEntityRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.FLUID_TANK.get(),
 				dev.alaindustrial.client.render.FluidTankBlockEntityRenderer::new);
+		// Incubator (MOD-118): bound to the base, draws into the dome chamber above it.
+		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.INCUBATOR.get(),
+				dev.alaindustrial.client.render.IncubatorBlockEntityRenderer::new);
 		// Stock Display Frame (MOD-066): the mod's first entity renderer — NeoForge counterpart to
 		// the Fabric EntityRenderers.register call in IndustrializationClient.
 		event.registerEntityRenderer(

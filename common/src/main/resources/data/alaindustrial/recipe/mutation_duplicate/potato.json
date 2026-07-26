@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:potato",
+	"result": {
+		"id": "minecraft:potato",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.85
+}

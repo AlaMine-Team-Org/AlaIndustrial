@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:iron_ingot",
+	"result": {
+		"id": "minecraft:iron_ingot",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.55
+}

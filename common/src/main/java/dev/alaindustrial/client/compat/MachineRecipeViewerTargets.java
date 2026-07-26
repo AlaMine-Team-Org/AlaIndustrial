@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import dev.alaindustrial.client.screen.CompressorScreen;
 import dev.alaindustrial.client.screen.ElectricFurnaceScreen;
 import dev.alaindustrial.client.screen.ExtractorScreen;
+import dev.alaindustrial.client.screen.IncubatorScreen;
 import dev.alaindustrial.client.screen.MaceratorScreen;
 import dev.alaindustrial.client.screen.SawmillScreen;
 
@@ -39,14 +40,27 @@ public final class MachineRecipeViewerTargets {
 			// SMELTING special-case). The target's own kind is the "primary" (planks) for iteration.
 			// The rect is the saw blade from the machine's own atlas (MOD-215), not the shared arrow —
 			// it must track SawmillScreen.PROGRESS, or the click-area drifts off the sprite.
-			new Target(SawmillScreen.class, ModRecipes.SAWING_PLANKS, new GuiRect(82, 20, 22, 12)));
+			new Target(SawmillScreen.class, ModRecipes.SAWING_PLANKS, new GuiRect(82, 20, 22, 12)),
+			// Incubator (MOD-118): like the sawmill, one screen with several recipe families — here the
+			// mode comes from the inserted chip rather than a button, but the arrow opens all three the
+			// same way. The rect tracks IncubatorScreen.ARROW_*.
+			new Target(IncubatorScreen.class, ModRecipes.MUTATION_TRANSFORM, new GuiRect(112, 20, 24, 16)));
 
 	/** The four sawmill recipe families, in button order — used by REI/JEI to open every mode from the sprite. */
 	public static final List<ModRecipes.Kind> SAWMILL_KINDS = List.of(
 			ModRecipes.SAWING_PLANKS, ModRecipes.SAWING_STICKS, ModRecipes.SAWING_SLABS, ModRecipes.SAWING_STAIRS);
 
+	/** The three incubator mutation families, in chip order. */
+	public static final List<ModRecipes.Kind> MUTATION_KINDS = List.of(
+			ModRecipes.MUTATION_TRANSFORM, ModRecipes.MUTATION_DUPLICATE, ModRecipes.MUTATION_CREATE);
+
 	/** True when {@code kind} is one of the sawmill's four mode families. */
 	public static boolean isSawmill(ModRecipes.Kind kind) {
 		return SAWMILL_KINDS.contains(kind);
+	}
+
+	/** True when {@code kind} is one of the incubator's three mutation families. */
+	public static boolean isMutation(ModRecipes.Kind kind) {
+		return MUTATION_KINDS.contains(kind);
 	}
 }

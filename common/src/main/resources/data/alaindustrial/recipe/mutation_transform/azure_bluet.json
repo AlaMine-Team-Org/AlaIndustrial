@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:azure_bluet",
+	"result": {
+		"id": "minecraft:cornflower",
+		"count": 1
+	},
+	"energy": 2400
+}

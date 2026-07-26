@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:glow_berries",
+	"result": {
+		"id": "minecraft:glow_berries",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.6
+}

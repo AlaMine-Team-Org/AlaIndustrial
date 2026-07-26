@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:cocoa_beans",
+	"result": {
+		"id": "minecraft:cocoa_beans",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.6
+}

@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"U": "alaindustrial:uranium_plate",
+		"G": "#alaindustrial:incubator_dome_glass",
+		"M": "alaindustrial:machine_casing",
+		"C": "alaindustrial:electronic_circuit",
+		"I": "alaindustrial:iron_plate"
+	},
+	"pattern": [
+		"GGG",
+		"UMU",
+		"ICI"
+	],
+	"result": {
+		"id": "alaindustrial:incubator"
+	}
+}

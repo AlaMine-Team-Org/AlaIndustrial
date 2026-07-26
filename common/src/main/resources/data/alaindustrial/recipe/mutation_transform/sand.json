@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:sand",
+	"result": {
+		"id": "minecraft:red_sand",
+		"count": 1
+	},
+	"energy": 2400
+}

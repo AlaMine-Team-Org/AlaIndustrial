@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.advancement.MutationCompletedTrigger;
 import dev.alaindustrial.advancement.NetworkEnergizedTrigger;
 import dev.alaindustrial.registry.ModCriteria;
 import net.minecraft.advancements.triggers.CriterionTrigger;
@@ -21,9 +22,13 @@ public final class ModCriteriaNeoForge {
 	public static final DeferredHolder<CriterionTrigger<?>, NetworkEnergizedTrigger> NETWORK_ENERGIZED =
 			TRIGGERS.register("network_energized", ModCriteria::createNetworkEnergized);
 
-	/** Bind the neutral handle to the deferred holder. Called from the {@code @Mod} ctor after register. */
+	public static final DeferredHolder<CriterionTrigger<?>, MutationCompletedTrigger> MUTATION_COMPLETED =
+			TRIGGERS.register("mutation_completed", ModCriteria::createMutationCompleted);
+
+	/** Bind the neutral handles to the deferred holders. Called from the {@code @Mod} ctor after register. */
 	public static void init() {
 		ModCriteria.NETWORK_ENERGIZED = NETWORK_ENERGIZED::get;
+		ModCriteria.MUTATION_COMPLETED = MUTATION_COMPLETED::get;
 	}
 
 	private ModCriteriaNeoForge() {

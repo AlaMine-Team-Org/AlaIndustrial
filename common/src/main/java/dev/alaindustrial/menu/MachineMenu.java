@@ -142,6 +142,18 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 		return 142;
 	}
 
+	/**
+	 * How many sync channels this menu is bound to. The <b>client</b> constructor of every machine menu
+	 * sizes its {@code SimpleContainerData} from the block entity's {@code DATA_COUNT}, so this must equal
+	 * {@code MachineBlockEntity#getDataAccess().getCount()} for the machine the menu belongs to; a stub
+	 * narrower than the block entity throws when the screen reads the missing channel (the MOD-234 crash),
+	 * a wider one silently reads stale zeros. Asserted for every menu by {@code MenuDataWidthScenarios}
+	 * (MOD-235).
+	 */
+	public final int getDataChannelCount() {
+		return data.getCount();
+	}
+
 	public int getEnergy() {
 		return data.get(0);
 	}
@@ -167,6 +179,14 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 		data.set(1, capacity);
 		data.set(2, progress);
 		data.set(3, maxProgress);
+	}
+
+	/**
+	 * Test-only companion to {@link #injectTestData}: sets one channel past the shared four, for the
+	 * machines that add their own (the incubator's mode, charge and multiblock flag).
+	 */
+	public void injectTestChannel(int index, int value) {
+		data.set(index, value);
 	}
 
 	@Override

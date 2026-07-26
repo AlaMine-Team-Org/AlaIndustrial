@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"E": "alaindustrial:empty_chip",
+		"R": "minecraft:redstone",
+		"L": "minecraft:lapis_lazuli",
+		"U": "alaindustrial:uranium_plate"
+	},
+	"pattern": [
+		"REL",
+		" U "
+	],
+	"result": {
+		"id": "alaindustrial:mutation_chip_transform"
+	}
+}

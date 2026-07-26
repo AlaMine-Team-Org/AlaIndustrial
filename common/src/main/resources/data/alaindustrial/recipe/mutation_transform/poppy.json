@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:poppy",
+	"result": {
+		"id": "minecraft:blue_orchid",
+		"count": 1
+	},
+	"energy": 2400
+}

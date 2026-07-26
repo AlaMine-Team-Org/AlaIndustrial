@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:jungle_sapling",
+	"result": {
+		"id": "minecraft:acacia_sapling",
+		"count": 1
+	},
+	"energy": 2400
+}

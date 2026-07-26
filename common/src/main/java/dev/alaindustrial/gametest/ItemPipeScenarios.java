@@ -2,6 +2,10 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
+import dev.alaindustrial.block.HorizontalMachineBlock;
+import dev.alaindustrial.block.ItemPipeBlock;
+import dev.alaindustrial.block.entity.IncubatorBlockEntity;
+import net.minecraft.server.level.ServerLevel;
 import dev.alaindustrial.core.item.ItemNetworkManager;
 import dev.alaindustrial.core.item.PipeFaceMode;
 import dev.alaindustrial.registry.ModContent;
@@ -587,6 +591,39 @@ public final class ItemPipeScenarios {
 					+ " items, expected exactly one batch of " + oneBatch
 					+ " (a per-tick pipe would deliver ~" + ticks * oneBatch + ")");
 			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A pipe must not connect to a face that can move nothing (MOD-234).
+	 *
+	 * <p>Every machine in the mod keeps its front face inert to automation, yet the inventory behind it
+	 * is still a valid port — so the pipe connected, rendered its terminal, registered an endpoint and
+	 * moved nothing for ever. From the outside the build looked right, which cost the owner a session
+	 * of debugging. The geometry has to tell the truth: no slots on that face, no connection.
+	 */
+	public static void frontFaceIsNotAnEndpoint(GameTestHelper helper) {
+		BlockPos machine = new BlockPos(1, 2, 1);
+		IncubatorBlockEntity be = AlaGameTestHelper.place(helper, machine, ModContent.INCUBATOR.get(),
+				IncubatorBlockEntity.class);
+		Direction facing = be.getBlockState().getValue(HorizontalMachineBlock.FACING);
+		ServerLevel level = helper.getLevel();
+		BlockPos abs = helper.absolutePos(machine);
+
+		// The inert front face: a pipe there must not join it.
+		if (ItemPipeBlock.hasEndpointCandidate(level, abs.relative(facing), facing.getOpposite())) {
+			helper.fail("a pipe still connects to the machine's " + facing
+					+ " face, which hands automation no slots at all");
+		}
+		// Every other face still works, or the fix would have cut off automation entirely.
+		for (Direction side : Direction.values()) {
+			if (side == facing) {
+				continue;
+			}
+			if (!ItemPipeBlock.hasEndpointCandidate(level, abs.relative(side), side.getOpposite())) {
+				helper.fail("the machine's " + side + " face stopped accepting a pipe");
+			}
 		}
 		helper.succeed();
 	}

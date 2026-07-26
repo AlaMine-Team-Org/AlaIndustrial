@@ -262,6 +262,12 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	}
 
 	/**
+	 * Six-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so {@code WindMillBlockEntity.DATA_COUNT}
+	 * names this machine's width for the bridge below and for {@code WindMillMenu}'s client stub (MOD-235).
+	 */
+	public static final int DATA_COUNT = 6;
+
+	/**
 	 * Six-wide data: base 0..3 plus evolution progress (4) and denominator (5), mirroring
 	 * SolarPanelBlockEntity. The evolution channels are scaled to <b>permille (0..1000)</b> to stay
 	 * 16-bit-DataSlot-safe.
@@ -286,7 +292,7 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 
 		@Override
 		public int getCount() {
-			return 6;
+			return DATA_COUNT;
 		}
 	};
 

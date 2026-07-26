@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:gold_ingot",
+	"result": {
+		"id": "minecraft:gold_ingot",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.45
+}

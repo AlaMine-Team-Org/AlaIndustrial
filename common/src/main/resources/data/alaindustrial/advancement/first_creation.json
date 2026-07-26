@@ -1,0 +1,30 @@
+{
+  "parent": "alaindustrial:first_mutation",
+  "display": {
+    "icon": {
+      "id": "alaindustrial:irradiated_diamond"
+    },
+    "title": {
+      "translate": "advancements.alaindustrial.first_creation.title"
+    },
+    "description": {
+      "translate": "advancements.alaindustrial.first_creation.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "created": {
+      "trigger": "alaindustrial:mutation_completed",
+      "conditions": {
+        "item": {
+          "items": "#alaindustrial:mutation_created"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "created"
+    ]
+  ]
+}

@@ -1,0 +1,8 @@
+{
+	"replace": false,
+	"values": [
+		"alaindustrial:mutation_chip_transform",
+		"alaindustrial:mutation_chip_duplicate",
+		"alaindustrial:mutation_chip_create"
+	]
+}

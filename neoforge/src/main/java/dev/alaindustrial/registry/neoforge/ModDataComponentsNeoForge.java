@@ -6,6 +6,7 @@ import dev.alaindustrial.item.NetworkScanData;
 import dev.alaindustrial.item.PouchContents;
 import dev.alaindustrial.item.TeleportPoints;
 import dev.alaindustrial.item.FluidTankContents;
+import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.registry.ModDataComponents;
 import java.util.UUID;
 import net.minecraft.core.Holder;
@@ -58,6 +59,9 @@ public final class ModDataComponentsNeoForge {
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> MAGNET_ENABLED =
 			DATA_COMPONENTS.register("magnet_enabled", ModDataComponents::createMagnetEnabled);
 
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<MutationGrade>> MUTATION_GRADE =
+			DATA_COMPONENTS.register("mutation_grade", ModDataComponents::createMutationGrade);
+
 	/** Bind the neutral handles to the deferred holders. Called from the {@code @Mod} ctor after register. */
 	public static void init() {
 		ModDataComponents.STORED_ENERGY = STORED_ENERGY;
@@ -71,6 +75,7 @@ public final class ModDataComponentsNeoForge {
 		ModDataComponents.TELEPORTER_OWNER = TELEPORTER_OWNER;
 		ModDataComponents.TELEPORTER_POINTS = TELEPORTER_POINTS;
 		ModDataComponents.MAGNET_ENABLED = MAGNET_ENABLED;
+		ModDataComponents.MUTATION_GRADE = MUTATION_GRADE;
 	}
 
 	private ModDataComponentsNeoForge() {

@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -101,11 +102,26 @@ public final class ItemPipeBlock extends BaseEntityBlock {
 	 * True when a face touches a configurable inventory or pipe, independent of its current mode.
 	 * The wrench uses this to restore a disabled, visually hidden endpoint from a click on the
 	 * exposed side of the pipe.
+	 *
+	 * <p>A face that offers no slots is <b>not</b> a candidate (MOD-234). Every machine in the mod keeps
+	 * its front face inert to automation, but the inventory behind it is still a valid port — so a pipe
+	 * laid against that face connected, rendered its terminal, registered as an endpoint, and then moved
+	 * nothing for ever with no hint anywhere. A player wiring a machine's front to a chest sees a
+	 * correct-looking build that does nothing (owner report, 2026-07-26). Refusing the connection makes
+	 * the geometry tell the truth: the pipe does not join that face, so the mistake is visible the
+	 * moment it is made. Both the rendered connection and the transfer endpoints resolve through here,
+	 * so the two cannot disagree.
 	 */
 	public static boolean hasEndpointCandidate(LevelReader level, BlockPos pos, Direction direction) {
 		BlockPos neighbour = pos.relative(direction);
 		if (level.getBlockState(neighbour).getBlock() instanceof ItemPipeBlock) return true;
-		return level instanceof Level world && ItemLookup.get().find(world, neighbour, direction.getOpposite()) != null;
+		Direction faceTowardsPipe = direction.getOpposite();
+		if (level.getBlockEntity(neighbour) instanceof WorldlyContainer sided
+				&& sided.getSlotsForFace(faceTowardsPipe).length == 0) {
+			return false;
+		}
+		return level instanceof Level world
+				&& ItemLookup.get().find(world, neighbour, faceTowardsPipe) != null;
 	}
 
 	private static PipeFaceMode faceMode(LevelReader level, BlockPos pos, Direction direction) {

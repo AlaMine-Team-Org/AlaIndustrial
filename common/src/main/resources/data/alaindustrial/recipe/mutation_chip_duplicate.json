@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"E": "alaindustrial:empty_chip",
+		"A": "minecraft:amethyst_shard",
+		"U": "alaindustrial:uranium_plate"
+	},
+	"pattern": [
+		"AEA",
+		" U "
+	],
+	"result": {
+		"id": "alaindustrial:mutation_chip_duplicate"
+	}
+}

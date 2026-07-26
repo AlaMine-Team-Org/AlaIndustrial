@@ -1,6 +1,7 @@
 package dev.alaindustrial.menu;
 
 import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,10 +21,8 @@ public class PumpMenu extends MachineMenu {
 
 	/** Client side. */
 	public PumpMenu(int syncId, Inventory playerInventory) {
-		// SimpleContainerData width must match PumpBlockEntity.getDataAccess() (7: 4 base + tank
-		// permille/denominator/fluid-registry-id).
 		super(ModContent.PUMP_MENU.get(), syncId, playerInventory, new SimpleContainer(4 + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(7), ContainerLevelAccess.NULL, ModContent.PUMP.get());
+				new SimpleContainerData(PumpBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.PUMP.get());
 	}
 
 	@Override
@@ -55,12 +54,4 @@ public class PumpMenu extends MachineMenu {
 		return data.get(6);
 	}
 
-	/**
-	 * How many sync channels this menu is bound to. Lets a test assert the client stub's width matches what
-	 * {@code PumpBlockEntity.getDataAccess()} projects — a mismatch only surfaces on a real client, where a
-	 * too-narrow stub throws and a too-wide one reads stale zeros.
-	 */
-	public int getDataChannelCount() {
-		return data.getCount();
-	}
 }

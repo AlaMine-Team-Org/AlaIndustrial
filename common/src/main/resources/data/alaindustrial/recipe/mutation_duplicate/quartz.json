@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:quartz",
+	"result": {
+		"id": "minecraft:quartz",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.55
+}

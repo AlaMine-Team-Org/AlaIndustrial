@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"E": "alaindustrial:empty_chip",
+		"D": "minecraft:diamond",
+		"H": "minecraft:echo_shard",
+		"U": "alaindustrial:uranium_plate"
+	},
+	"pattern": [
+		"DEH",
+		" U "
+	],
+	"result": {
+		"id": "alaindustrial:mutation_chip_create"
+	}
+}

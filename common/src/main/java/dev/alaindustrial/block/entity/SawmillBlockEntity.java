@@ -43,6 +43,12 @@ public final class SawmillBlockEntity extends AbstractProcessingMachineBlockEnti
 	/** ContainerData index carrying the active {@link SawmillMode} ordinal (0..3), appended after the base 0..3. */
 	public static final int DATA_MODE = 4;
 
+	/**
+	 * Five-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so {@code SawmillBlockEntity.DATA_COUNT}
+	 * names this machine's width for the bridge below and for {@link SawmillMenu}'s client stub (MOD-235).
+	 */
+	public static final int DATA_COUNT = 5;
+
 	// One cached lookup per mode: resolveInput uses the active mode's, canPlaceInput scans all four.
 	private final RecipeManager.CachedCheck<SingleRecipeInput, AlaProcessingRecipe>[] checks = newChecks();
 
@@ -71,7 +77,7 @@ public final class SawmillBlockEntity extends AbstractProcessingMachineBlockEnti
 
 		@Override
 		public int getCount() {
-			return 5;
+			return DATA_COUNT;
 		}
 	};
 

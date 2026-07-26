@@ -22,6 +22,12 @@ final class AlaJeiRecipeTypes {
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.SAWING_SLABS.id()));
 	static final IRecipeHolderType<AlaProcessingRecipe> SAWING_STAIRS =
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.SAWING_STAIRS.id()));
+	static final IRecipeHolderType<AlaProcessingRecipe> MUTATION_TRANSFORM =
+			IRecipeHolderType.create(Industrialization.id(ModRecipes.MUTATION_TRANSFORM.id()));
+	static final IRecipeHolderType<AlaProcessingRecipe> MUTATION_DUPLICATE =
+			IRecipeHolderType.create(Industrialization.id(ModRecipes.MUTATION_DUPLICATE.id()));
+	static final IRecipeHolderType<AlaProcessingRecipe> MUTATION_CREATE =
+			IRecipeHolderType.create(Industrialization.id(ModRecipes.MUTATION_CREATE.id()));
 
 	private AlaJeiRecipeTypes() {
 	}
@@ -50,6 +56,15 @@ final class AlaJeiRecipeTypes {
 		}
 		if (kind == ModRecipes.SAWING_STAIRS) {
 			return SAWING_STAIRS;
+		}
+		if (kind == ModRecipes.MUTATION_TRANSFORM) {
+			return MUTATION_TRANSFORM;
+		}
+		if (kind == ModRecipes.MUTATION_DUPLICATE) {
+			return MUTATION_DUPLICATE;
+		}
+		if (kind == ModRecipes.MUTATION_CREATE) {
+			return MUTATION_CREATE;
 		}
 		throw new IllegalArgumentException("Unknown Ala processing recipe kind: " + kind.id());
 	}

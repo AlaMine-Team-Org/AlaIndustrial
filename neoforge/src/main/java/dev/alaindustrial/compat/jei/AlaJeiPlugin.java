@@ -1,5 +1,6 @@
 package dev.alaindustrial.compat.jei;
 
+import dev.alaindustrial.client.compat.RecipeCategoryTitle;
 import dev.alaindustrial.client.screen.MachineScreen;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.compat.MachineRecipeViewerTargets;
@@ -56,6 +57,10 @@ public final class AlaJeiPlugin implements IModPlugin {
 			machine(ModRecipes.SAWING_STICKS, ModBlocksNeoForge.SAWMILL::get),
 			machine(ModRecipes.SAWING_SLABS, ModBlocksNeoForge.SAWMILL::get),
 			machine(ModRecipes.SAWING_STAIRS, ModBlocksNeoForge.SAWMILL::get),
+			// Incubator (MOD-118): three mutation families, all worked at the same incubator block.
+			machine(ModRecipes.MUTATION_TRANSFORM, ModBlocksNeoForge.INCUBATOR::get),
+			machine(ModRecipes.MUTATION_DUPLICATE, ModBlocksNeoForge.INCUBATOR::get),
+			machine(ModRecipes.MUTATION_CREATE, ModBlocksNeoForge.INCUBATOR::get),
 	};
 
 	private static Machine machine(ModRecipes.Kind kind, Supplier<? extends Block> block) {
@@ -71,7 +76,9 @@ public final class AlaJeiPlugin implements IModPlugin {
 	public void registerCategories(IRecipeCategoryRegistration registration) {
 		IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
 		for (Machine machine : MACHINES) {
-			registration.addRecipeCategories(new AlaProcessingJeiCategory(machine.type(), machine.block().get(), guiHelper));
+			Block block = machine.block().get();
+			registration.addRecipeCategories(new AlaProcessingJeiCategory(machine.type(), block,
+					RecipeCategoryTitle.of(machine.kind(), block.getName()), guiHelper));
 		}
 	}
 
@@ -94,6 +101,16 @@ public final class AlaJeiPlugin implements IModPlugin {
 		// evolution line today — JEI's built-in ingredient info gives a paginated, auto-wrapping page.
 		// Title + lines come from the same loader-neutral source the Fabric REI integration uses.
 		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.solarEvolutionEntries()) {
+			List<Component> description = new ArrayList<>();
+			description.add(RecipeViewerInfo.title(entry));
+			description.addAll(RecipeViewerInfo.buildLines(entry));
+			registration.addIngredientInfo((net.minecraft.world.level.ItemLike) entry.owner().get(),
+					description.toArray(new Component[0]));
+		}
+
+		// MOD-118: the incubator's rarity grades — a second roll on top of every success, which no
+		// recipe card has room for.
+		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.mutationGradeEntries()) {
 			List<Component> description = new ArrayList<>();
 			description.add(RecipeViewerInfo.title(entry));
 			description.addAll(RecipeViewerInfo.buildLines(entry));
@@ -141,6 +158,15 @@ public final class AlaJeiPlugin implements IModPlugin {
 				// MOD-150: the sawmill's arrow opens all four mode categories at once. addRecipeClickArea
 				// takes IRecipeType<?>...; IRecipeHolderType extends IRecipeType, so the four fit one call.
 				mezz.jei.api.recipe.types.IRecipeType<?>[] types = MachineRecipeViewerTargets.SAWMILL_KINDS.stream()
+						.map(AlaJeiRecipeTypes::byKind)
+						.toArray(mezz.jei.api.recipe.types.IRecipeType[]::new);
+				registration.addRecipeClickArea(
+						target.screenClass(),
+						rect.x(), rect.y(), rect.width(), rect.height(),
+						types);
+			} else if (MachineRecipeViewerTargets.isMutation(target.kind())) {
+				// MOD-118: likewise for the incubator's three chip modes.
+				mezz.jei.api.recipe.types.IRecipeType<?>[] types = MachineRecipeViewerTargets.MUTATION_KINDS.stream()
 						.map(AlaJeiRecipeTypes::byKind)
 						.toArray(mezz.jei.api.recipe.types.IRecipeType[]::new);
 				registration.addRecipeClickArea(

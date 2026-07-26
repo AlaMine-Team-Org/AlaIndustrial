@@ -34,7 +34,7 @@ public class SawmillMenu extends MachineMenu {
 	/** Client side — 5-wide data (energy/capacity/progress/maxProgress + mode) matches the server bridge. */
 	public SawmillMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.SAWMILL_MENU.get(), syncId, playerInventory, new SimpleContainer(2 + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(5), ContainerLevelAccess.NULL, ModContent.SAWMILL.get());
+				new SimpleContainerData(SawmillBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.SAWMILL.get());
 		this.sawmill = null;
 	}
 

@@ -3,6 +3,7 @@ package dev.alaindustrial.command.demo;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -210,6 +211,18 @@ public final class DemoStand {
 		placeWorkingMachine(level, origin, 11, 10, ModContent.EXTRACTOR.get(), new ItemStack(Items.GRAVEL, 64));
 		// Sawmill (MOD-150): pre-charged + a stack of logs → visibly sawing (default PLANKS mode).
 		placeWorkingMachine(level, origin, 17, 10, ModContent.SAWMILL.get(), new ItemStack(Items.OAK_LOG, 64));
+		// Incubator (MOD-118): the 1x2 multiblock. Glass goes on top so the base assembles it into the
+		// dome; the slots are filled by hand rather than via placeWorkingMachine because the chip picks
+		// the mode and the uranium is a separate fuel slot.
+		set(level, origin, 20, 1, 10, ModContent.INCUBATOR.get());
+		set(level, origin, 20, 2, 10, ModContent.INCUBATOR_DOME.get());
+		chargeBuffer(level, origin, 20, 1, 10);
+		fillSlot(level, origin, 20, 1, 10, IncubatorBlockEntity.CHIP_SLOT,
+				new ItemStack(ModContent.MUTATION_CHIP_DUPLICATE.get()));
+		fillSlot(level, origin, 20, 1, 10, IncubatorBlockEntity.FUEL_SLOT,
+				new ItemStack(ModContent.URANIUM_INGOT.get(), 16));
+		fillSlot(level, origin, 20, 1, 10, IncubatorBlockEntity.INPUT_SLOT,
+				new ItemStack(Items.DIAMOND, 64));
 		// Iron furnace (MOD-115): fuel-burning, not EU — so it is loaded with input + coal instead of a
 		// pre-charged buffer, and lights itself on the first tick like a vanilla furnace.
 		set(level, origin, 14, 1, 10, ModContent.IRON_FURNACE.get());

@@ -22,7 +22,7 @@ public class MoonlitSolarPanelMenu extends MachineMenu {
 	/** Client side. */
 	public MoonlitSolarPanelMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.MOONLIT_SOLAR_PANEL_MENU.get(), syncId, playerInventory, new SimpleContainer(0 + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(4), ContainerLevelAccess.NULL, ModContent.MOONLIT_SOLAR_PANEL.get());
+				new SimpleContainerData(MachineBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.MOONLIT_SOLAR_PANEL.get());
 	}
 
 	@Override

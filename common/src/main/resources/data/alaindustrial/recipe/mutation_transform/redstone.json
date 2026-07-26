@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:redstone",
+	"result": {
+		"id": "minecraft:lapis_lazuli",
+		"count": 1
+	},
+	"energy": 2400
+}

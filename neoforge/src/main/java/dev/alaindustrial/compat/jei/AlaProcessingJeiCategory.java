@@ -1,6 +1,6 @@
 package dev.alaindustrial.compat.jei;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import java.util.Locale;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -26,9 +26,11 @@ final class AlaProcessingJeiCategory implements IRecipeCategory<RecipeHolder<Ala
 	private final IDrawable icon;
 	private final IDrawable arrow;
 
-	AlaProcessingJeiCategory(IRecipeHolderType<AlaProcessingRecipe> recipeType, Block iconBlock, IGuiHelper guiHelper) {
+	AlaProcessingJeiCategory(IRecipeHolderType<AlaProcessingRecipe> recipeType, Block iconBlock,
+			Component title, IGuiHelper guiHelper) {
 		this.recipeType = recipeType;
-		this.title = iconBlock.getName();
+		// Composed by the caller from already-localised parts (block name + mode) — no new lang keys.
+		this.title = title;
 		this.icon = guiHelper.createDrawableItemLike(iconBlock);
 		this.arrow = guiHelper.getRecipeArrow();
 	}
@@ -70,7 +72,10 @@ final class AlaProcessingJeiCategory implements IRecipeCategory<RecipeHolder<Ala
 			double mouseX, double mouseY) {
 		AlaProcessingRecipe recipe = holder.value();
 		arrow.draw(graphics, 47, 7);
-		String cost = recipe.energy() + " EU / " + formatSeconds(processingTicks(recipe));
+		// The chance suffix only appears where the operation is a gamble (the incubator); without it a
+		// duplicate recipe reads as a guaranteed doubling. Symbols, so no lang key — as with EU and s.
+		String cost = recipe.energy() + " EU / " + formatSeconds(processingTicks(recipe))
+				+ formatChance(IncubatorMode.chanceOf(recipe.kind(), recipe.chance()));
 		int x = (WIDTH - Minecraft.getInstance().font.width(cost)) / 2;
 		graphics.text(Minecraft.getInstance().font, Component.literal(cost), x, 34, 0xFF404040, false);
 	}
@@ -80,8 +85,20 @@ final class AlaProcessingJeiCategory implements IRecipeCategory<RecipeHolder<Ala
 		return holder.id().identifier();
 	}
 
+	/**
+	 * From the recipe family's own EU rate — see {@link dev.alaindustrial.registry.ModRecipes.Kind#ticksFor(int)}.
+	 * Dividing by the shared machine rate here used to print the incubator's operations four times too long.
+	 */
 	private static int processingTicks(AlaProcessingRecipe recipe) {
-		return Math.max(1, recipe.energy() / Config.machineEuPerTick);
+		return recipe.kind().ticksFor(recipe.energy());
+	}
+
+	/** Chance → " / 45 %", or nothing at all for the machines that always deliver. */
+	private static String formatChance(double chance) {
+		if (chance <= 0.0) {
+			return "";
+		}
+		return " / " + Math.round(chance * 100.0) + " %";
 	}
 
 	private static String formatSeconds(int ticks) {

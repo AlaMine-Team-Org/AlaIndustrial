@@ -19,7 +19,7 @@ public class DaylightSolarPanelMenu extends MachineMenu {
 	/** Client side. */
 	public DaylightSolarPanelMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.DAYLIGHT_SOLAR_PANEL_MENU.get(), syncId, playerInventory, new SimpleContainer(0 + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(4), ContainerLevelAccess.NULL, ModContent.DAYLIGHT_SOLAR_PANEL.get());
+				new SimpleContainerData(MachineBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.DAYLIGHT_SOLAR_PANEL.get());
 	}
 
 	@Override

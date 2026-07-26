@@ -9,6 +9,8 @@ import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
 import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
 import dev.alaindustrial.block.CompressorBlock;
+import dev.alaindustrial.block.IncubatorBlock;
+import dev.alaindustrial.block.IncubatorDomeBlock;
 import dev.alaindustrial.block.SawmillBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
 import dev.alaindustrial.block.ElectricFurnaceBlock;
@@ -138,6 +140,12 @@ public final class ModBlocks {
 
 	public static final ResourceKey<Block> SAWMILL_KEY = key("sawmill");
 	public static final Block SAWMILL = register(SAWMILL_KEY, new SawmillBlock(props(SAWMILL_KEY)));
+
+	public static final ResourceKey<Block> INCUBATOR_KEY = key("incubator");
+	public static final Block INCUBATOR = register(INCUBATOR_KEY, new IncubatorBlock(props(INCUBATOR_KEY)));
+	public static final ResourceKey<Block> INCUBATOR_DOME_KEY = key("incubator_dome");
+	public static final Block INCUBATOR_DOME =
+			register(INCUBATOR_DOME_KEY, new IncubatorDomeBlock(props(INCUBATOR_DOME_KEY)));
 
 	public static final ResourceKey<Block> TIN_ORE_KEY = key("tin_ore");
 	public static final Block TIN_ORE = register(TIN_ORE_KEY, new Block(props(TIN_ORE_KEY)));
@@ -270,6 +278,8 @@ public final class ModBlocks {
 		ModContent.EXTRACTOR = () -> EXTRACTOR;
 		ModContent.COMPRESSOR = () -> COMPRESSOR;
 		ModContent.SAWMILL = () -> SAWMILL;
+		ModContent.INCUBATOR = () -> INCUBATOR;
+		ModContent.INCUBATOR_DOME = () -> INCUBATOR_DOME;
 		ModContent.TIN_ORE = () -> TIN_ORE;
 		ModContent.DEEPSLATE_TIN_ORE = () -> DEEPSLATE_TIN_ORE;
 		ModContent.SILVER_ORE = () -> SILVER_ORE;

@@ -19,6 +19,7 @@
 			"dev.alaindustrial.gametest.OreGameTest",
 			"dev.alaindustrial.gametest.GeneratorGameTest",
 			"dev.alaindustrial.gametest.MachineGameTest",
+			"dev.alaindustrial.gametest.IncubatorGameTest",
 			"dev.alaindustrial.gametest.SolarPanelGameTest",
 			"dev.alaindustrial.gametest.BatteryBoxGameTest",
 			"dev.alaindustrial.gametest.TeleporterStationGameTest",

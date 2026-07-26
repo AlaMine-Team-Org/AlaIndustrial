@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:beetroot_seeds",
+	"result": {
+		"id": "minecraft:beetroot_seeds",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.85
+}

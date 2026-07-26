@@ -39,6 +39,7 @@ public class IndustrializationClient implements ClientModInitializer {
 		registerTooltips();
 		registerHudAndKeys();
 		registerParticleProviders();
+		registerBlockColors();
 		registerClientHooks();
 		registerBlockEntityRenderers();
 		registerDevWindowTitle();
@@ -163,6 +164,22 @@ public class IndustrializationClient implements ClientModInitializer {
 				net.minecraft.client.particle.FlameParticle.Provider::new);
 	}
 
+	/**
+	 * Registers the mod's block tint sources — the incubator dome takes the colour of the glass it
+	 * was built from (MOD-118), the mod's first block colour provider.
+	 *
+	 * <p>Verified against fabric-rendering-v1 25.2.0+2b0d8a229e (the module bundled in fabric-api
+	 * {@code 0.153.0+26.2}): {@code BlockColorRegistry.register(List<BlockTintSource>, Block...)},
+	 * where the list index is the model's {@code tintindex}. Note that 26.2 has no {@code BlockColor}
+	 * / {@code ColorProviderRegistry} any more — a tint layer is a {@code BlockTintSource} and the
+	 * in-world hook is {@code colorInWorld(state, level, pos)}, with no tint-index argument.
+	 */
+	private void registerBlockColors() {
+		net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry.register(
+				java.util.List.of(dev.alaindustrial.client.render.IncubatorDomeTint.INSTANCE),
+				dev.alaindustrial.registry.ModContent.INCUBATOR_DOME.get());
+	}
+
 	/** Installs the world-overlay / client-hook singletons (network viz, cable preview, hum, tooltip keys). */
 	private void registerClientHooks() {
 		dev.alaindustrial.client.NetworkVisualizationClient.init();
@@ -202,6 +219,9 @@ public class IndustrializationClient implements ClientModInitializer {
 		BlockEntityRendererRegistry.register(ModBlockEntities.STORM_WIND_MILL, WindMillRotorBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.FLUID_TANK,
 				dev.alaindustrial.client.render.FluidTankBlockEntityRenderer::new);
+		// Incubator (MOD-118): bound to the base, draws into the dome chamber above it.
+		BlockEntityRendererRegistry.register(ModBlockEntities.INCUBATOR,
+				dev.alaindustrial.client.render.IncubatorBlockEntityRenderer::new);
 
 		// Stock Display Frame (MOD-066): the mod's first entity renderer. Vanilla EntityRenderers.register
 		// is the path Fabric's own docs recommend (their EntityRendererRegistry is a thin legacy wrapper).

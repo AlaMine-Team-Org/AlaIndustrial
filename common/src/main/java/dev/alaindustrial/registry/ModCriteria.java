@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.advancement.MutationCompletedTrigger;
 import dev.alaindustrial.advancement.NetworkEnergizedTrigger;
 import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.NetworkManager;
@@ -40,6 +41,18 @@ public final class ModCriteria {
 		return new NetworkEnergizedTrigger();
 	}
 
+	/** The registry id of the incubator's criterion (MOD-118), shared by both loaders. */
+	public static final Identifier MUTATION_COMPLETED_ID = Industrialization.id("mutation_completed");
+
+	/** Bound once per loader before first fire; unbound = loud failure, never a silent NPE. */
+	public static Supplier<MutationCompletedTrigger> MUTATION_COMPLETED = () -> {
+		throw new IllegalStateException("ModCriteria.MUTATION_COMPLETED read before its loader bound it");
+	};
+
+	public static MutationCompletedTrigger createMutationCompleted() {
+		return new MutationCompletedTrigger();
+	}
+
 	/**
 	 * Fabric registration: the {@code TRIGGER_TYPES} registry stays writable during init, so register the
 	 * trigger eagerly and bind it to a constant supplier. NeoForge instead uses a {@code DeferredRegister}
@@ -50,6 +63,12 @@ public final class ModCriteria {
 		NetworkEnergizedTrigger trigger =
 				Registry.register(BuiltInRegistries.TRIGGER_TYPES, key, createNetworkEnergized());
 		NETWORK_ENERGIZED = () -> trigger;
+
+		ResourceKey<CriterionTrigger<?>> mutationKey =
+				ResourceKey.create(Registries.TRIGGER_TYPE, MUTATION_COMPLETED_ID);
+		MutationCompletedTrigger mutation =
+				Registry.register(BuiltInRegistries.TRIGGER_TYPES, mutationKey, createMutationCompleted());
+		MUTATION_COMPLETED = () -> mutation;
 	}
 
 	/**

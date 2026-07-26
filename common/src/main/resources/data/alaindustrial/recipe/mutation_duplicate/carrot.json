@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:carrot",
+	"result": {
+		"id": "minecraft:carrot",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.85
+}

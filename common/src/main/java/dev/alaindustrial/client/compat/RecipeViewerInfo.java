@@ -1,6 +1,7 @@
 package dev.alaindustrial.client.compat;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.registry.ModContent;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +87,36 @@ public final class RecipeViewerInfo {
 						new Line("jei.alaindustrial.moonlit_solar_panel.line2", List.of(
 								() -> Config.moonlitEuPerTick, () -> Config.moonlitWeatherEuPerTick)),
 						Line.of("jei.alaindustrial.moonlit_solar_panel.line3"))));
+	}
+
+	/**
+	 * The incubator's rarity grades (MOD-118). A recipe card can show the chance of an operation
+	 * succeeding, but not what happens on top of a success — the second roll that decides how good the
+	 * result is. There is no recipe to hang that on, so it lives here, on the machine itself.
+	 *
+	 * <p>The odds are read live from {@link Config}, as percentages, so a server that retunes them does
+	 * not leave the page lying.
+	 */
+	public static List<Entry> mutationGradeEntries() {
+		return List.of(new Entry(ModContent.INCUBATOR, "jei.alaindustrial.mutation_grades.title", List.of(
+				Line.of("jei.alaindustrial.mutation_grades.line1"),
+				new Line("jei.alaindustrial.mutation_grades.line2", List.of(
+						() -> percent(1.0 - Config.mutationGradeRare - Config.mutationGradeEpic
+								- Config.mutationGradeLegendary),
+						() -> percent(Config.mutationGradeRare),
+						() -> percent(Config.mutationGradeEpic),
+						() -> percent(Config.mutationGradeLegendary))),
+				new Line("jei.alaindustrial.mutation_grades.line3", List.of(
+						() -> percent(MutationGrade.RARE.geneBonus()),
+						() -> percent(MutationGrade.EPIC.geneBonus()),
+						() -> percent(MutationGrade.LEGENDARY.geneBonus()),
+						() -> percent(Config.mutationChanceCap))),
+				Line.of("jei.alaindustrial.mutation_grades.line4"))));
+	}
+
+	/** A 0..1 share as whole percent — the unit every number on the grade page is written in. */
+	private static int percent(double share) {
+		return (int) Math.round(share * 100.0);
 	}
 
 	/** The localised title for an entry. */

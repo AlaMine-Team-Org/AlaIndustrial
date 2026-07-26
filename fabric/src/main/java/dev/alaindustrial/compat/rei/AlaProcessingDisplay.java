@@ -1,8 +1,8 @@
 package dev.alaindustrial.compat.rei;
 
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.registry.ModRecipes;
 import java.util.List;
@@ -28,19 +28,34 @@ import net.minecraft.network.codec.StreamCodec;
 public class AlaProcessingDisplay extends BasicDisplay {
 	private final ModRecipes.Kind kind;
 	private final int energy;
+	private final double chance;
 
 	/** Build a display from a live recipe (the common case, used by the server-side filler). */
 	public AlaProcessingDisplay(AlaProcessingRecipe recipe) {
 		this(List.of(EntryIngredients.ofIngredient(recipe.ingredient())),
 				List.of(EntryIngredients.of(recipe.result())),
-				recipe.kind(), recipe.energy());
+				recipe.kind(), recipe.energy(), recipe.chance());
 	}
 
 	private AlaProcessingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs,
-			ModRecipes.Kind kind, int energy) {
+			ModRecipes.Kind kind, int energy, double chance) {
 		super(inputs, outputs);
 		this.kind = kind;
 		this.energy = energy;
+		this.chance = chance;
+	}
+
+	/**
+	 * Success chance of one attempt, or 0 for the machines that always deliver.
+	 *
+	 * <p>What travels in the display is the recipe's own {@code chance} — unset stays unset — and the
+	 * mode default is applied here, on the client. Resolving it server-side would have been more
+	 * correct in isolation, but JEI has no server-side display pass and reads Config locally, so the
+	 * two loaders printed different numbers against a server with a non-default config. Same source on
+	 * both is worth more than being right on one of them.
+	 */
+	public double chance() {
+		return IncubatorMode.chanceOf(kind, chance);
 	}
 
 	/** Total EU spent to complete one operation (the recipe's nominal cost). */
@@ -49,13 +64,12 @@ public class AlaProcessingDisplay extends BasicDisplay {
 	}
 
 	/**
-	 * Base processing time in ticks. Mirrors the machine's own formula
-	 * ({@code MaceratorBlockEntity#onServerTick}): {@code max(1, energy / machineEuPerTick)}. The
-	 * global speed multiplier ({@code scaledDuration}) is a runtime balance knob and intentionally
-	 * not applied here — the viewer shows the recipe's intrinsic time.
+	 * Base processing time in ticks, from the recipe family's own EU rate — see
+	 * {@link ModRecipes.Kind#ticksFor(int)}. Dividing by the shared machine rate here used to print the
+	 * incubator's operations four times too long.
 	 */
 	public int processingTicks() {
-		return Math.max(1, energy / Config.machineEuPerTick);
+		return kind.ticksFor(energy);
 	}
 
 	@Override
@@ -70,23 +84,30 @@ public class AlaProcessingDisplay extends BasicDisplay {
 		return SERIALIZER;
 	}
 
-	/** Round-trips a display as {inputs, outputs, kind id, energy}; kind resolves back via id. */
+	/** Round-trips a display as {inputs, outputs, kind id, energy, chance}; kind resolves back via id. */
 	public static final DisplaySerializer<AlaProcessingDisplay> SERIALIZER = DisplaySerializer.of(
 			RecordCodecBuilder.mapCodec(instance -> instance.group(
 					EntryIngredient.codec().listOf().fieldOf("inputs").forGetter(BasicDisplay::getInputEntries),
 					EntryIngredient.codec().listOf().fieldOf("outputs").forGetter(BasicDisplay::getOutputEntries),
 					com.mojang.serialization.Codec.STRING.fieldOf("kind").forGetter(d -> d.kind.id()),
-					com.mojang.serialization.Codec.INT.fieldOf("energy").forGetter(d -> d.energy)
+					com.mojang.serialization.Codec.INT.fieldOf("energy").forGetter(d -> d.energy),
+					// Optional with the recipe's own signal value: a display serialised before this field
+					// existed must still load, and "unset" has to survive the round trip so the mode
+					// default is applied to it rather than a hard zero.
+					com.mojang.serialization.Codec.DOUBLE
+							.optionalFieldOf("chance", AlaProcessingRecipe.CHANCE_UNSET)
+							.forGetter(d -> d.chance)
 			).apply(instance, AlaProcessingDisplay::fromParts)),
 			StreamCodec.composite(
 					EntryIngredient.streamCodec().apply(ByteBufCodecs.list()), BasicDisplay::getInputEntries,
 					EntryIngredient.streamCodec().apply(ByteBufCodecs.list()), BasicDisplay::getOutputEntries,
 					ByteBufCodecs.STRING_UTF8, d -> d.kind.id(),
 					ByteBufCodecs.INT, d -> d.energy,
+					ByteBufCodecs.DOUBLE, d -> d.chance,
 					AlaProcessingDisplay::fromParts));
 
 	private static AlaProcessingDisplay fromParts(List<EntryIngredient> inputs, List<EntryIngredient> outputs,
-			String kindId, int energy) {
-		return new AlaProcessingDisplay(inputs, outputs, ModRecipes.byId(kindId), energy);
+			String kindId, int energy, double chance) {
+		return new AlaProcessingDisplay(inputs, outputs, ModRecipes.byId(kindId), energy, chance);
 	}
 }

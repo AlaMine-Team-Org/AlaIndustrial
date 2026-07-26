@@ -331,6 +331,40 @@ public final class Config {
 	 * saws easier than ore mills): furnace 100, extractor 120, compressor 130, macerator 150. */
 	public static int sawmillDuration = 80;
 
+	// --- Incubator (MOD-118): the mod's most energy-hungry LV machine. ---
+	/**
+	 * EU/t the incubator draws while running — four times the machine standard. Irradiating matter is
+	 * deliberately far pricier than grinding it: a routine macerator op costs 300 EU, the cheapest
+	 * incubator op costs 2400.
+	 */
+	public static int incubatorEuPerTick = 8;
+	/** Internal EU buffer; holds the costliest operation (create, 8000 EU) in full. */
+	public static int incubatorBuffer = 8000;
+	/** Ticks per transform attempt at 1.0 speed (300 x 8 EU/t = 2400 EU). */
+	public static int mutationDurationTransform = 300;
+	/** Ticks per duplicate attempt at 1.0 speed (500 x 8 EU/t = 4000 EU). */
+	public static int mutationDurationDuplicate = 500;
+	/** Ticks per create attempt at 1.0 speed (1000 x 8 EU/t = 8000 EU). */
+	public static int mutationDurationCreate = 1000;
+	/** Uranium ingots are spent as a charge: one ingot powers this many attempts, then becomes ash. */
+	public static int mutationAttemptsPerIngot = 3;
+	/** Base success chance of a transform mutation. */
+	public static double mutationChanceTransform = 0.75;
+	/** Base success chance of a duplicate mutation. */
+	public static double mutationChanceDuplicate = 0.45;
+	/** Base success chance of a create mutation. */
+	public static double mutationChanceCreate = 0.25;
+	/** Ceiling on the total success chance (base + gene bonus) — a mutation is never guaranteed. */
+	public static double mutationChanceCap = 0.95;
+	/** Share of attempts that yield irradiated slag; carved out of the failure share, not the success. */
+	public static double mutationSlagChance = 0.05;
+	/** Share of successes that roll the rare grade. */
+	public static double mutationGradeRare = 0.20;
+	/** Share of successes that roll the epic grade. */
+	public static double mutationGradeEpic = 0.08;
+	/** Share of successes that roll the legendary grade. */
+	public static double mutationGradeLegendary = 0.02;
+
 	// --- Iron Furnace (fuel-based, MOD-115): ticks to smelt one item. Vanilla furnace = 200. ---
 	/** Ticks the iron furnace needs to smelt one item on fuel. Between vanilla (200) and the
 	 * electric furnace, so it reads as "a bit faster than stone" without devaluing the electric tier. */
@@ -629,6 +663,34 @@ public final class Config {
 				() -> machineEuPerTick, v -> machineEuPerTick = v, 1),
 			new IntField("maceratorDuration", "Ticks a macerator takes per operation at 1.0 speed.",
 				() -> maceratorDuration, v -> maceratorDuration = v, 1),
+			new IntField("incubatorEuPerTick", "EU/t the incubator draws while running (4x the machine standard).",
+				() -> incubatorEuPerTick, v -> incubatorEuPerTick = v, 1),
+			new IntField("incubatorBuffer", "Incubator internal EU buffer.",
+				() -> incubatorBuffer, v -> incubatorBuffer = v, 1),
+			new IntField("mutationDurationTransform", "Ticks an incubator transform attempt takes at 1.0 speed.",
+				() -> mutationDurationTransform, v -> mutationDurationTransform = v, 1),
+			new IntField("mutationDurationDuplicate", "Ticks an incubator duplicate attempt takes at 1.0 speed.",
+				() -> mutationDurationDuplicate, v -> mutationDurationDuplicate = v, 1),
+			new IntField("mutationDurationCreate", "Ticks an incubator create attempt takes at 1.0 speed.",
+				() -> mutationDurationCreate, v -> mutationDurationCreate = v, 1),
+			new IntField("mutationAttemptsPerIngot", "Mutation attempts one uranium ingot powers before it burns to ash.",
+				() -> mutationAttemptsPerIngot, v -> mutationAttemptsPerIngot = v, 1),
+			new DoubleField("mutationChanceTransform", "Base success chance of a transform mutation (0..1).",
+				() -> mutationChanceTransform, v -> mutationChanceTransform = v, 0.0, 0.0),
+			new DoubleField("mutationChanceDuplicate", "Base success chance of a duplicate mutation (0..1).",
+				() -> mutationChanceDuplicate, v -> mutationChanceDuplicate = v, 0.0, 0.0),
+			new DoubleField("mutationChanceCreate", "Base success chance of a create mutation (0..1).",
+				() -> mutationChanceCreate, v -> mutationChanceCreate = v, 0.0, 0.0),
+			new DoubleField("mutationChanceCap", "Ceiling on the total mutation success chance (base + gene bonus).",
+				() -> mutationChanceCap, v -> mutationChanceCap = v, 0.0, 0.0),
+			new DoubleField("mutationSlagChance", "Share of attempts yielding irradiated slag instead of an empty miss.",
+				() -> mutationSlagChance, v -> mutationSlagChance = v, 0.0, 0.0),
+			new DoubleField("mutationGradeRare", "Share of successful mutations rolling the rare grade.",
+				() -> mutationGradeRare, v -> mutationGradeRare = v, 0.0, 0.0),
+			new DoubleField("mutationGradeEpic", "Share of successful mutations rolling the epic grade.",
+				() -> mutationGradeEpic, v -> mutationGradeEpic = v, 0.0, 0.0),
+			new DoubleField("mutationGradeLegendary", "Share of successful mutations rolling the legendary grade.",
+				() -> mutationGradeLegendary, v -> mutationGradeLegendary = v, 0.0, 0.0),
 			new IntField("electricFurnaceDuration", "Ticks an electric furnace takes per smelt at 1.0 speed.",
 				() -> electricFurnaceDuration, v -> electricFurnaceDuration = v, 1),
 			new IntField("compressorDuration", "Ticks a compressor takes per operation at 1.0 speed.",

@@ -7,6 +7,8 @@ import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.CompressorBlock;
+import dev.alaindustrial.block.IncubatorBlock;
+import dev.alaindustrial.block.IncubatorDomeBlock;
 import dev.alaindustrial.block.SawmillBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
 import dev.alaindustrial.block.ElectricFurnaceBlock;
@@ -83,6 +85,10 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("compressor", CompressorBlock::new, props("compressor"));
 	public static final DeferredBlock<SawmillBlock> SAWMILL =
 			BLOCKS.registerBlock("sawmill", SawmillBlock::new, props("sawmill"));
+	public static final DeferredBlock<IncubatorBlock> INCUBATOR =
+			BLOCKS.registerBlock("incubator", IncubatorBlock::new, props("incubator"));
+	public static final DeferredBlock<IncubatorDomeBlock> INCUBATOR_DOME =
+			BLOCKS.registerBlock("incubator_dome", IncubatorDomeBlock::new, props("incubator_dome"));
 	public static final DeferredBlock<GeothermalGeneratorBlock> GEOTHERMAL_GENERATOR =
 			BLOCKS.registerBlock("geothermal_generator", GeothermalGeneratorBlock::new, props("geothermal_generator"));
 	public static final DeferredBlock<PumpBlock> PUMP =
@@ -210,6 +216,8 @@ public final class ModBlocksNeoForge {
 		ModContent.EXTRACTOR = EXTRACTOR::get;
 		ModContent.COMPRESSOR = COMPRESSOR::get;
 		ModContent.SAWMILL = SAWMILL::get;
+		ModContent.INCUBATOR = INCUBATOR::get;
+		ModContent.INCUBATOR_DOME = INCUBATOR_DOME::get;
 		ModContent.GEOTHERMAL_GENERATOR = GEOTHERMAL_GENERATOR::get;
 		ModContent.PUMP = PUMP::get;
 		ModContent.FLUID_TANK = FLUID_TANK::get;

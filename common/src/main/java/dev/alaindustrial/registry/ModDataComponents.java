@@ -4,9 +4,11 @@ import com.mojang.serialization.Codec;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.AnalyzerMode;
 import dev.alaindustrial.item.FluidTankContents;
+import dev.alaindustrial.item.MutationGrades;
 import dev.alaindustrial.item.NetworkScanData;
 import dev.alaindustrial.item.PouchContents;
 import dev.alaindustrial.item.TeleportPoints;
+import dev.alaindustrial.mutation.MutationGrade;
 import java.util.UUID;
 import java.util.function.Supplier;
 import net.minecraft.core.Holder;
@@ -47,6 +49,9 @@ public final class ModDataComponents {
 	public static final Identifier TELEPORTER_POINTS_ID = Industrialization.id("teleporter_points");
 	public static final Identifier FLUID_TANK_CONTENTS_ID = Industrialization.id("fluid_tank_contents");
 	public static final Identifier MAGNET_ENABLED_ID = Industrialization.id("magnet_enabled");
+
+	/** Rarity grade rolled by the incubator on a successful mutation (MOD-118). */
+	public static final Identifier MUTATION_GRADE_ID = Industrialization.id("mutation_grade");
 
 	/** Buffered EU carried on a storage block's item form. Bound once per loader before first access. */
 	public static Supplier<DataComponentType<Long>> STORED_ENERGY = () -> {
@@ -138,6 +143,24 @@ public final class ModDataComponents {
 		return DataComponentType.<Boolean>builder()
 				.persistent(Codec.BOOL)
 				.networkSynchronized(ByteBufCodecs.BOOL)
+				.build();
+	}
+
+	/**
+	 * Rarity grade an item carries after a successful incubator mutation (MOD-118). Absent means the
+	 * ordinary outcome, so a common result stays component-identical to a plain vanilla item and keeps
+	 * stacking with it. Read/written only via {@link dev.alaindustrial.item.MutationGrades}, which also
+	 * keeps the vanilla rarity component in sync.
+	 */
+	public static Supplier<DataComponentType<MutationGrade>> MUTATION_GRADE = () -> {
+		throw new IllegalStateException("ModDataComponents.MUTATION_GRADE read before its loader bound it");
+	};
+
+	/** Build the {@code mutation_grade} type both loaders register (MOD-118). */
+	public static DataComponentType<MutationGrade> createMutationGrade() {
+		return DataComponentType.<MutationGrade>builder()
+				.persistent(MutationGrades.CODEC)
+				.networkSynchronized(MutationGrades.STREAM_CODEC)
 				.build();
 	}
 

@@ -318,6 +318,12 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 	}
 
 	/**
+	 * Seven-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so {@code PumpBlockEntity.DATA_COUNT}
+	 * names this machine's width for the bridge below and for {@code PumpMenu}'s client stub (MOD-235).
+	 */
+	public static final int DATA_COUNT = 7;
+
+	/**
 	 * Seven-wide sync bridge: base channels 0..3 (energy/capacity/progress/maxProgress) plus tank permille
 	 * (4), permille denominator 1000 (5), and the fluid's registry id (6). Channels 4..6 are derived,
 	 * server-authoritative projections of the tank — nothing writes them back.
@@ -355,7 +361,7 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 
 		@Override
 		public int getCount() {
-			return 7;
+			return DATA_COUNT;
 		}
 	};
 

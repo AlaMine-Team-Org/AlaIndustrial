@@ -177,6 +177,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.EXTRACTOR_ITEM.get());
 		out.accept(ModContent.COMPRESSOR_ITEM.get());
 		out.accept(ModContent.SAWMILL_ITEM.get());
+		out.accept(ModContent.INCUBATOR_ITEM.get());
 		out.accept(ModContent.PUMP_ITEM.get());
 	}
 
@@ -224,6 +225,15 @@ public final class CreativeTabContent {
 		out.accept(ModContent.ALIGNMENT_CHIP_DAY.get());
 		out.accept(ModContent.ALIGNMENT_CHIP_NIGHT.get());
 		out.accept(ModContent.EMPTY_CHIP.get());
+		out.accept(ModContent.MUTATION_CHIP_TRANSFORM.get());
+		out.accept(ModContent.MUTATION_CHIP_DUPLICATE.get());
+		out.accept(ModContent.MUTATION_CHIP_CREATE.get());
+		out.accept(ModContent.DEPLETED_URANIUM.get());
+		out.accept(ModContent.IRRADIATED_SLAG.get());
+		out.accept(ModContent.IRRADIATED_DIAMOND.get());
+		out.accept(ModContent.RESONANT_SHARD.get());
+		out.accept(ModContent.MUTAGEN_DUST.get());
+		out.accept(ModContent.UNSTABLE_ISOTOPE.get());
 		out.accept(ModContent.MUTE_CHIP.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
 		out.accept(ModContent.WATER_MILL_WHEEL.get());

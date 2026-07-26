@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:wheat_seeds",
+	"result": {
+		"id": "minecraft:wheat_seeds",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.85
+}

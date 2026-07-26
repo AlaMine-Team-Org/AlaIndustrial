@@ -145,6 +145,8 @@ public class IndustrializationFabric implements ModInitializer {
 				ModDataComponents.TELEPORTER_PRIVATE_ID, ModDataComponents.createTeleporterPrivate());
 		ModDataComponents.MAGNET_ENABLED = registerDataComponent(
 				ModDataComponents.MAGNET_ENABLED_ID, ModDataComponents.createMagnetEnabled());
+		ModDataComponents.MUTATION_GRADE = registerDataComponent(
+				ModDataComponents.MUTATION_GRADE_ID, ModDataComponents.createMutationGrade());
 		ModDataComponents.TELEPORTER_OWNER = registerDataComponent(
 				ModDataComponents.TELEPORTER_OWNER_ID, ModDataComponents.createTeleporterOwner());
 		ModDataComponents.TELEPORTER_POINTS = registerDataComponent(

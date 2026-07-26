@@ -1,6 +1,7 @@
 package dev.alaindustrial.menu;
 
 import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -19,7 +20,7 @@ public class SolarPanelMenu extends MachineMenu {
 	/** Client side. */
 	public SolarPanelMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.SOLAR_PANEL_MENU.get(), syncId, playerInventory, new SimpleContainer(1 + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(6), ContainerLevelAccess.NULL, ModContent.SOLAR_PANEL.get());
+				new SimpleContainerData(SolarPanelBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.SOLAR_PANEL.get());
 	}
 
 	@Override

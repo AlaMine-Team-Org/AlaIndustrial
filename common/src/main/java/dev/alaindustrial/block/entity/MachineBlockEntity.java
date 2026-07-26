@@ -270,6 +270,16 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		}
 	}
 
+	/**
+	 * How many sync channels {@link #getDataAccess()} projects — the single source of the width, read by
+	 * both sides (MOD-235). The block entity's {@code getCount()} returns it, and the machine's <b>client</b>
+	 * menu constructor sizes its {@code SimpleContainerData} from it, so the two can no longer drift: a
+	 * subclass that adds a channel bumps its own {@code DATA_COUNT} and the client stub follows. Before
+	 * MOD-235 the width was a literal on both sides, and adding a channel to the block entity alone threw
+	 * {@code ArrayIndexOutOfBoundsException} in the client render thread while every server test stayed green.
+	 */
+	public static final int DATA_COUNT = 4;
+
 	/** Index map for {@link #dataAccess}: 0 energy, 1 capacity, 2 progress, 3 maxProgress. */
 	public final ContainerData dataAccess = new ContainerData() {
 		@Override
@@ -296,7 +306,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 
 		@Override
 		public int getCount() {
-			return 4;
+			return DATA_COUNT;
 		}
 	};
 

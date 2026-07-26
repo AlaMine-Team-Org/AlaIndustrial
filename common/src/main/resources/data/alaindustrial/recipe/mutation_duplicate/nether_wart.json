@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:nether_wart",
+	"result": {
+		"id": "minecraft:nether_wart",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.6
+}

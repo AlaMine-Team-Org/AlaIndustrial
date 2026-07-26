@@ -21,7 +21,7 @@ public class StormWindMillMenu extends MachineMenu {
 	/** Client side. */
 	public StormWindMillMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.STORM_WIND_MILL_MENU.get(), syncId, playerInventory, new SimpleContainer(1 + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(4), ContainerLevelAccess.NULL, ModContent.STORM_WIND_MILL.get());
+				new SimpleContainerData(MachineBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.STORM_WIND_MILL.get());
 	}
 
 	@Override

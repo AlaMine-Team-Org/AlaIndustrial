@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_create",
+	"ingredient": "minecraft:amethyst_shard",
+	"result": {
+		"id": "alaindustrial:resonant_shard",
+		"count": 1
+	},
+	"energy": 8000
+}

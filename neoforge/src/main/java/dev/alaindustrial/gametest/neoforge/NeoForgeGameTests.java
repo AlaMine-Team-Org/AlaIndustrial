@@ -9,11 +9,13 @@ import dev.alaindustrial.gametest.CapsuleScenarios;
 import dev.alaindustrial.gametest.GeothermalLavaInputScenarios;
 import dev.alaindustrial.gametest.ElectricDrillScenarios;
 import dev.alaindustrial.gametest.MagnetScenarios;
+import dev.alaindustrial.gametest.MenuDataWidthScenarios;
 import dev.alaindustrial.gametest.EnergyPackScenarios;
 import dev.alaindustrial.gametest.JetpackScenarios;
 import dev.alaindustrial.gametest.GuideBookGiverScenarios;
 import dev.alaindustrial.gametest.PouchScenarios;
 import dev.alaindustrial.gametest.HammerScenarios;
+import dev.alaindustrial.gametest.IncubatorScenarios;
 import dev.alaindustrial.gametest.ScytheScenarios;
 import dev.alaindustrial.gametest.StockDisplayFrameScenarios;
 import dev.alaindustrial.gametest.TemperedIronToolScenarios;
@@ -482,6 +484,11 @@ public final class NeoForgeGameTests {
 		registerTest(event, "capsule_use_routing_offhand", 100, true, CapsuleScenarios::fun07UseRoutingOffHand);
 		registerTest(event, "pump_sync_channels_fit_short", 100, true, CapsuleScenarios::fun08SyncChannelsFitShort);
 		registerTest(event, "pump_menu_stub_width_matches", 100, true, CapsuleScenarios::fun09MenuStubWidthMatches);
+		// MOD-235 (TC-CMN-001-REG02): the same client-stub-width check, swept over EVERY machine menu in
+		// ContentManifest.MENUS — the pump's FUN09 above only ever covered the pump. Longer timeout: the
+		// body places 17 machines and builds 22 menus.
+		registerTest(event, "menu_data_width_matches_block_entity", 200, true,
+				MenuDataWidthScenarios::reg02ClientMenuWidthMatchesBlockEntity);
 		// MOD-107: the pump's slots exchange with fluid containers through the loader's item fluid
 		// capability. FUN10/FUN11 guard the vanilla-bucket behaviour the bridge replaced (previously
 		// untested); FUN12/FUN13 cover the capsule the player found inert in the slot.
@@ -582,6 +589,54 @@ public final class NeoForgeGameTests {
 		registerTest(event, "hammer_exactly_one_damage_per_plate", 40, true, HammerScenarios::prf01ExactlyOneDamagePerPlate);
 		registerTest(event, "hammer_last_durability_breaks", 40, true, HammerScenarios::neg01LastDurabilityBreaks);
 		registerTest(event, "hammer_durability_128", 40, true, HammerScenarios::con01Durability128);
+		// Incubator (MOD-118, suite TC-INCU-001): the multiblock gate, the chip-driven mode, the uranium
+		// charge and — the regressions worth a second loader — the output slot never eating a result.
+		registerTest(event, "incubator_glass_forms_dome", 40, true,
+				IncubatorScenarios::fun01GlassOnTopFormsTheDome);
+		registerTest(event, "incubator_dome_returns_glass", 40, true,
+				IncubatorScenarios::fun02RemovingTheDomeReturnsTheOriginalGlass);
+		registerTest(event, "incubator_transform_yields_mineral", 40, true,
+				IncubatorScenarios::fun03TransformYieldsTheOtherMineral);
+		registerTest(event, "incubator_ingot_powers_attempts", 40, true,
+				IncubatorScenarios::fun04OneIngotPowersSeveralAttempts);
+		registerTest(event, "incubator_non_player_break_returns_glass", 40, true,
+				IncubatorScenarios::fun05NonPlayerBreakStillReturnsTheGlass);
+		registerTest(event, "incubator_base_break_keeps_coloured_glass", 40, true,
+				IncubatorScenarios::fun06BreakingTheBaseKeepsTheColouredGlass);
+		registerTest(event, "incubator_automation_takes_products_only", 40, true,
+				IncubatorScenarios::fun07AutomationTakesOnlyTheProducts);
+		registerTest(event, "incubator_dome_click_opens_menu", 40, true,
+				IncubatorScenarios::fun08ClickingTheDomeOpensTheMenu);
+		registerTest(event, "incubator_advancements_awarded", 40, true,
+				IncubatorScenarios::fun09TakingTheResultAwardsTheAdvancements);
+		registerTest(event, "incubator_ingot_commits_on_insertion", 40, true,
+				IncubatorScenarios::fun10IngotCommitsOnInsertion);
+		registerTest(event, "incubator_no_dome_no_output", 40, true,
+				IncubatorScenarios::neg01NoDomeNoOutput);
+		registerTest(event, "incubator_no_chip_no_output", 40, true,
+				IncubatorScenarios::neg02NoChipNoOutput);
+		registerTest(event, "incubator_creative_break_drops_nothing", 40, true,
+				IncubatorScenarios::neg03CreativeBreakDropsNoGlass);
+		registerTest(event, "incubator_dome_blocks_pistons", 40, true,
+				IncubatorScenarios::con01DomeBlocksPistons);
+		registerTest(event, "incubator_graded_result_not_destroyed", 40, true,
+				IncubatorScenarios::reg01GradedResultNeverDestroysTheOutput);
+		registerTest(event, "incubator_slag_not_destroyed", 40, true,
+				IncubatorScenarios::reg02SlagNeverDestroysTheOutput);
+		registerTest(event, "incubator_no_free_reroll", 40, true,
+				IncubatorScenarios::reg03NoFreeRerollBeforeTheCycleIsPaid);
+		registerTest(event, "incubator_hopper_cannot_steal_chip", 40, true,
+				IncubatorScenarios::reg04HopperBelowCannotStealTheChip);
+		registerTest(event, "incubator_status_explains_every_stall", 40, true,
+				IncubatorScenarios::reg05StatusExplainsEveryStall);
+		registerTest(event, "incubator_pipe_returns_result_to_input", 40, true,
+				IncubatorScenarios::reg06PipeReturnsTheResultToTheInput);
+		registerTest(event, "incubator_client_menu_data_width", 40, true,
+				IncubatorScenarios::reg07ClientMenuCoversEveryDataChannel);
+		registerTest(event, "incubator_pipe_drains_products", 40, true,
+				IncubatorScenarios::reg08PipeDrainsProductsIntoAChest);
+		registerTest(event, "pipe_front_face_not_an_endpoint", 40, true,
+				ItemPipeScenarios::frontFaceIsNotAnEndpoint);
 	}
 
 	/** Register one code-body scenario under the alaindustrial namespace with a sane maxTicks. */

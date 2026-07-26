@@ -6,6 +6,7 @@ import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
+import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
@@ -67,6 +68,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<ExtractorBlockEntity> EXTRACTOR;
 	public static BlockEntityType<CompressorBlockEntity> COMPRESSOR;
 	public static BlockEntityType<SawmillBlockEntity> SAWMILL;
+	public static BlockEntityType<IncubatorBlockEntity> INCUBATOR;
 	public static BlockEntityType<PumpBlockEntity> PUMP;
 	public static BlockEntityType<FluidTankBlockEntity> FLUID_TANK;
 	public static BlockEntityType<WaterMillBlockEntity> WATER_MILL;
@@ -112,6 +114,8 @@ public final class ModBlockEntities {
 				new BlockEntityType<>(CompressorBlockEntity::new, Set.of(ModBlocks.COMPRESSOR)));
 		SAWMILL = register("sawmill",
 				new BlockEntityType<>(SawmillBlockEntity::new, Set.of(ModBlocks.SAWMILL)));
+		INCUBATOR = register("incubator",
+				new BlockEntityType<>(IncubatorBlockEntity::new, Set.of(ModBlocks.INCUBATOR)));
 		PUMP = register("pump",
 				new BlockEntityType<>(PumpBlockEntity::new, Set.of(ModBlocks.PUMP)));
 		FLUID_TANK = register("fluid_tank",
@@ -152,6 +156,7 @@ public final class ModBlockEntities {
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),EXTRACTOR);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),COMPRESSOR);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),SAWMILL);
+			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),INCUBATOR);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),PUMP);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),WATER_MILL);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),WIND_MILL);
@@ -176,6 +181,7 @@ public final class ModBlockEntities {
 		ModContent.EXTRACTOR_BE = () -> EXTRACTOR;
 		ModContent.COMPRESSOR_BE = () -> COMPRESSOR;
 		ModContent.SAWMILL_BE = () -> SAWMILL;
+		ModContent.INCUBATOR_BE = () -> INCUBATOR;
 		ModContent.PUMP_BE = () -> PUMP;
 		ModContent.FLUID_TANK_BE = () -> FLUID_TANK;
 		ModContent.WATER_MILL_BE = () -> WATER_MILL;

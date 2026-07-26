@@ -87,4 +87,10 @@ public final class ItemPipeGameTest {
 	public void mod108WrenchDismantlesOwnBlocks(GameTestHelper helper) {
 		ItemPipeScenarios.wrenchDismantlesOwnBlocks(helper);
 	}
+
+	/** @implements TC-PIPE-001-REG05 — a pipe refuses a machine face that offers no slots. */
+	@GameTest
+	public void mod234FrontFaceIsNotAnEndpoint(GameTestHelper helper) {
+		ItemPipeScenarios.frontFaceIsNotAnEndpoint(helper);
+	}
 }

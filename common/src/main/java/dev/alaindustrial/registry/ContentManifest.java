@@ -13,6 +13,7 @@ import dev.alaindustrial.menu.IronChestMenu;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.PumpMenu;
+import dev.alaindustrial.menu.IncubatorMenu;
 import dev.alaindustrial.menu.SawmillMenu;
 import dev.alaindustrial.menu.SilverChestMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
@@ -31,6 +32,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.PushReaction;
 
 /**
  * Loader-neutral content manifest (MOD-190). The single ordered list of the mod's registrable content,
@@ -102,6 +104,7 @@ public final class ContentManifest {
 			menu("extractor", ExtractorMenu::new, s -> ModContent.EXTRACTOR_MENU = s),
 			menu("compressor", CompressorMenu::new, s -> ModContent.COMPRESSOR_MENU = s),
 			menu("sawmill", SawmillMenu::new, s -> ModContent.SAWMILL_MENU = s),
+			menu("incubator", IncubatorMenu::new, s -> ModContent.INCUBATOR_MENU = s),
 			menu("battery_box", BatteryBoxMenu::new, s -> ModContent.BATTERY_BOX_MENU = s),
 			menu("teleporter_station", TeleporterStationMenu::new, s -> ModContent.TELEPORTER_STATION_MENU = s),
 			menu("teleporter_remote", TeleporterRemoteMenu::new, s -> ModContent.TELEPORTER_REMOTE_MENU = s),
@@ -164,6 +167,14 @@ public final class ContentManifest {
 			Map.entry("extractor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("compressor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("sawmill", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			// The emitter ring lights the chamber while an operation runs, so the block emits too.
+			Map.entry("incubator", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.lightLevel(ModBlockProperties::litLight))),
+			// The dome is see-through: noOcclusion keeps the chamber (and the item inside) visible.
+			// A piston must not take it: the dome is half of a multiblock and its glass is remembered
+			// by the base below, so moving it away from its base would strand both.
+			Map.entry("incubator_dome", machine(p -> p.strength(1.0f, 2.0f).sound(SoundType.GLASS)
+					.noOcclusion().pushReaction(PushReaction.BLOCK))),
 			Map.entry("tin_ore", machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE))),
 			Map.entry("deepslate_tin_ore", machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE))),
 			Map.entry("silver_ore", machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE))),

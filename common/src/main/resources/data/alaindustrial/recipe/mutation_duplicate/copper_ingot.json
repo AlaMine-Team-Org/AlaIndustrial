@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:copper_ingot",
+	"result": {
+		"id": "minecraft:copper_ingot",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.55
+}

@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:pitcher_pod",
+	"result": {
+		"id": "minecraft:pitcher_pod",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.6
+}

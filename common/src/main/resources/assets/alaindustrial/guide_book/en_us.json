@@ -956,6 +956,44 @@
           ]
         },
         {
+          "id": "incubator",
+          "title": "Incubator",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Incubator",
+              "text": "1×2 multiblock (machine base + a volumetric glass dome) that mutates items via uranium irradiation and EU at the LV tier; the mutation mode is set by a mutation chip, success chance per mutation kind, four outcome-rarity grades, spent uranium settles in the ash slot."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Buffer: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "Teleporter",
           "icon": "alaindustrial:teleporter",

@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:glowstone_dust",
+	"result": {
+		"id": "minecraft:glowstone_dust",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.55
+}

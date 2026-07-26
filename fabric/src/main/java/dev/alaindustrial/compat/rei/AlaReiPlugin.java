@@ -1,5 +1,6 @@
 package dev.alaindustrial.compat.rei;
 
+import dev.alaindustrial.client.compat.RecipeCategoryTitle;
 import dev.alaindustrial.client.screen.MachineScreen;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.compat.MachineRecipeViewerTargets;
@@ -58,12 +59,17 @@ public class AlaReiPlugin implements REIClientPlugin {
 			machine(ModRecipes.SAWING_STICKS, ModBlocks.SAWMILL),
 			machine(ModRecipes.SAWING_SLABS, ModBlocks.SAWMILL),
 			machine(ModRecipes.SAWING_STAIRS, ModBlocks.SAWMILL),
+			// Incubator (MOD-118): three mutation families, all worked at the same incubator block.
+			machine(ModRecipes.MUTATION_TRANSFORM, ModBlocks.INCUBATOR),
+			machine(ModRecipes.MUTATION_DUPLICATE, ModBlocks.INCUBATOR),
+			machine(ModRecipes.MUTATION_CREATE, ModBlocks.INCUBATOR),
 	};
 
 	@Override
 	public void registerCategories(CategoryRegistry registry) {
 		for (Machine m : MACHINES) {
-			registry.add(new AlaProcessingCategory(m.id(), m.block()));
+			registry.add(new AlaProcessingCategory(m.id(), m.block(),
+					RecipeCategoryTitle.of(m.kind(), m.block().getName())));
 			// Clicking the machine block in REI opens its recipes.
 			registry.addWorkstations(m.id(), EntryStacks.of(m.block()));
 		}
@@ -94,6 +100,11 @@ public class AlaReiPlugin implements REIClientPlugin {
 		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.solarEvolutionEntries()) {
 			registry.add(new AlaInfoDisplay(entry));
 		}
+		// MOD-118: the incubator's rarity grades — a second roll on top of every success, which no
+		// recipe card has room for.
+		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.mutationGradeEntries()) {
+			registry.add(new AlaInfoDisplay(entry));
+		}
 	}
 
 	@Override
@@ -121,6 +132,12 @@ public class AlaReiPlugin implements REIClientPlugin {
 			} else if (MachineRecipeViewerTargets.isSawmill(target.kind())) {
 				// MOD-150: the sawmill's arrow opens all four mode categories at once.
 				CategoryIdentifier<?>[] ids = MachineRecipeViewerTargets.SAWMILL_KINDS.stream()
+						.map(AlaReiPlugin::categoryId)
+						.toArray(CategoryIdentifier[]::new);
+				registerClickArea(registry, target.screenClass(), rect, ids);
+			} else if (MachineRecipeViewerTargets.isMutation(target.kind())) {
+				// MOD-118: likewise for the incubator's three chip modes.
+				CategoryIdentifier<?>[] ids = MachineRecipeViewerTargets.MUTATION_KINDS.stream()
 						.map(AlaReiPlugin::categoryId)
 						.toArray(CategoryIdentifier[]::new);
 				registerClickArea(registry, target.screenClass(), rect, ids);

@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:spruce_sapling",
+	"result": {
+		"id": "minecraft:jungle_sapling",
+		"count": 1
+	},
+	"energy": 2400
+}

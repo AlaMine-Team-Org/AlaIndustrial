@@ -5,7 +5,9 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.ElectricDrillItem;
 import dev.alaindustrial.item.EnergyPackItem;
 import dev.alaindustrial.item.JetpackItem;
+import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.item.HintItem;
+import dev.alaindustrial.item.MutationChipItem;
 import dev.alaindustrial.item.FluidTankBlockItem;
 import dev.alaindustrial.item.ScytheTiers;
 import dev.alaindustrial.item.MagnetItem;
@@ -61,6 +63,17 @@ public final class ModItems {
 	public static final Item ALIGNMENT_CHIP_NIGHT = item("alignment_chip_night");
 	// Upgrade chips (MOD-080): empty blank + the mute upgrade. Each shows a gray hint line.
 	public static final Item EMPTY_CHIP = hintItem("empty_chip");
+
+	// Incubator (MOD-118): mode chips, by-products and the tier-1 evolution materials.
+	public static final Item MUTATION_CHIP_TRANSFORM = mutationChip("mutation_chip_transform", IncubatorMode.TRANSFORM);
+	public static final Item MUTATION_CHIP_DUPLICATE = mutationChip("mutation_chip_duplicate", IncubatorMode.DUPLICATE);
+	public static final Item MUTATION_CHIP_CREATE = mutationChip("mutation_chip_create", IncubatorMode.CREATE);
+	public static final Item DEPLETED_URANIUM = item("depleted_uranium");
+	public static final Item IRRADIATED_SLAG = item("irradiated_slag");
+	public static final Item IRRADIATED_DIAMOND = item("irradiated_diamond");
+	public static final Item RESONANT_SHARD = item("resonant_shard");
+	public static final Item MUTAGEN_DUST = item("mutagen_dust");
+	public static final Item UNSTABLE_ISOTOPE = item("unstable_isotope");
 	public static final Item MUTE_CHIP = hintItem("mute_chip");
 	// Rotor / wheel (MOD-189): durability components — wear shows as a vanilla durability bar and, being
 	// damageable, they are automatically non-stackable. maxDamage from Config (registration-time).
@@ -188,6 +201,7 @@ public final class ModItems {
 	public static final BlockItem EXTRACTOR_ITEM = blockItem("extractor", ModBlocks.EXTRACTOR);
 	public static final BlockItem COMPRESSOR_ITEM = blockItem("compressor", ModBlocks.COMPRESSOR);
 	public static final BlockItem SAWMILL_ITEM = blockItem("sawmill", ModBlocks.SAWMILL);
+	public static final BlockItem INCUBATOR_ITEM = blockItem("incubator", ModBlocks.INCUBATOR);
 	public static final BlockItem PUMP_ITEM = blockItem("pump", ModBlocks.PUMP);
 	public static final BlockItem FLUID_TANK_ITEM = fluidTankBlockItem("fluid_tank", ModBlocks.FLUID_TANK);
 	public static final BlockItem WATER_MILL_ITEM = blockItem("water_mill", ModBlocks.WATER_MILL);
@@ -233,6 +247,13 @@ public final class ModItems {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
 				new Item(new Item.Properties().durability(maxDamage).setId(key)));
+	}
+
+	/** A mutation chip (MOD-118): the two-layer mode tooltip; the mode binding lives in the item. */
+	private static Item mutationChip(String path, IncubatorMode mode) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new MutationChipItem(new Item.Properties().setId(key), mode));
 	}
 
 	/** A plain item with two gray hint lines (keys {@code item.alaindustrial.<path>.hint}/{@code .hint2}). */
@@ -602,6 +623,16 @@ public final class ModItems {
 		ModContent.EXTRACTOR_ITEM = () -> EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = () -> COMPRESSOR_ITEM;
 		ModContent.SAWMILL_ITEM = () -> SAWMILL_ITEM;
+		ModContent.INCUBATOR_ITEM = () -> INCUBATOR_ITEM;
+		ModContent.MUTATION_CHIP_TRANSFORM = () -> MUTATION_CHIP_TRANSFORM;
+		ModContent.MUTATION_CHIP_DUPLICATE = () -> MUTATION_CHIP_DUPLICATE;
+		ModContent.MUTATION_CHIP_CREATE = () -> MUTATION_CHIP_CREATE;
+		ModContent.DEPLETED_URANIUM = () -> DEPLETED_URANIUM;
+		ModContent.IRRADIATED_SLAG = () -> IRRADIATED_SLAG;
+		ModContent.IRRADIATED_DIAMOND = () -> IRRADIATED_DIAMOND;
+		ModContent.RESONANT_SHARD = () -> RESONANT_SHARD;
+		ModContent.MUTAGEN_DUST = () -> MUTAGEN_DUST;
+		ModContent.UNSTABLE_ISOTOPE = () -> UNSTABLE_ISOTOPE;
 		ModContent.PUMP_ITEM = () -> PUMP_ITEM;
 		ModContent.FLUID_TANK_ITEM = () -> FLUID_TANK_ITEM;
 		ModContent.TIN_ORE_ITEM = () -> TIN_ORE_ITEM;

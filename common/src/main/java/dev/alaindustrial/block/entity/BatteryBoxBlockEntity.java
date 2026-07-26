@@ -131,6 +131,13 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 		energy.amount = Math.min(getter.getOrDefault(ModDataComponents.STORED_ENERGY.get(), 0L), energy.getCapacity());
 	}
 
+	/**
+	 * Five-wide data — hides {@link MachineBlockEntity#DATA_COUNT} on purpose so
+	 * {@code BatteryBoxBlockEntity.DATA_COUNT} always names <em>this</em> machine's width, for the block
+	 * entity below and for {@code BatteryBoxMenu}'s client stub (MOD-235).
+	 */
+	public static final int DATA_COUNT = 5;
+
 	/** Five-wide data: base 0..3 plus the per-tick output cap (4) for the GUI readout. */
 	private final ContainerData batteryBoxData = new ContainerData() {
 		@Override
@@ -149,7 +156,7 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 
 		@Override
 		public int getCount() {
-			return 5;
+			return DATA_COUNT;
 		}
 	};
 

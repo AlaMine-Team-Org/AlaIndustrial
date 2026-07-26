@@ -29,6 +29,9 @@ public final class ModTags {
 		 */
 		public static final TagKey<Block> SCYTHE_HARVESTABLE = key("scythe_harvestable");
 
+		/** Glass the incubator accepts as its dome (MOD-118); any modded glass joins via c:glass_blocks. */
+		public static final TagKey<Block> INCUBATOR_DOME_GLASS = key("incubator_dome_glass");
+
 		/**
 		 * Crops the scythe (MOD-068) harvests in its <b>crop</b> mode (shift + right-click, MOD-098):
 		 * {@code #minecraft:crops} plus {@code sweet_berry_bush}, {@code cactus} and {@code sugar_cane}
@@ -60,6 +63,12 @@ public final class ModTags {
 		 * that takes a charge) while letting packs exclude a foreign charger without a code change.
 		 */
 		public static final TagKey<Item> NO_AUTO_CHARGE = key("no_auto_charge");
+
+		/** What the incubator accepts as irradiation fuel (MOD-118) — uranium ingots today. */
+		public static final TagKey<Item> INCUBATOR_FUEL = key("incubator_fuel");
+
+		/** The three mutation chips that select the incubator's mode (MOD-118). */
+		public static final TagKey<Item> MUTATION_CHIP = key("mutation_chip");
 
 		private static TagKey<Item> key(String path) {
 			return TagKey.create(Registries.ITEM, Industrialization.id(path));

@@ -13,6 +13,7 @@ import dev.alaindustrial.menu.IronChestMenu;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.PumpMenu;
+import dev.alaindustrial.menu.IncubatorMenu;
 import dev.alaindustrial.menu.SawmillMenu;
 import dev.alaindustrial.menu.SilverChestMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
@@ -112,6 +113,8 @@ public final class ModContent {
 	public static Supplier<Block> EXTRACTOR = unbound("EXTRACTOR");
 	public static Supplier<Block> COMPRESSOR = unbound("COMPRESSOR");
 	public static Supplier<Block> SAWMILL = unbound("SAWMILL");
+	public static Supplier<Block> INCUBATOR = unbound("INCUBATOR");
+	public static Supplier<Block> INCUBATOR_DOME = unbound("INCUBATOR_DOME");
 	public static Supplier<Block> TIN_ORE = unbound("TIN_ORE");
 	public static Supplier<Block> DEEPSLATE_TIN_ORE = unbound("DEEPSLATE_TIN_ORE");
 	public static Supplier<Block> SILVER_ORE = unbound("SILVER_ORE");
@@ -153,6 +156,17 @@ public final class ModContent {
 	// Upgrade chips (MOD-080): EMPTY_CHIP is the inert blank/base; MUTE_CHIP is the first functional
 	// upgrade — dropped into a machine's active upgrade slot it silences the block (see isMuted()).
 	public static Supplier<Item> EMPTY_CHIP = unbound("EMPTY_CHIP");
+
+	// Incubator (MOD-118): three mode chips, the mutation by-products and the tier-1 materials.
+	public static Supplier<Item> MUTATION_CHIP_TRANSFORM = unbound("MUTATION_CHIP_TRANSFORM");
+	public static Supplier<Item> MUTATION_CHIP_DUPLICATE = unbound("MUTATION_CHIP_DUPLICATE");
+	public static Supplier<Item> MUTATION_CHIP_CREATE = unbound("MUTATION_CHIP_CREATE");
+	public static Supplier<Item> DEPLETED_URANIUM = unbound("DEPLETED_URANIUM");
+	public static Supplier<Item> IRRADIATED_SLAG = unbound("IRRADIATED_SLAG");
+	public static Supplier<Item> IRRADIATED_DIAMOND = unbound("IRRADIATED_DIAMOND");
+	public static Supplier<Item> RESONANT_SHARD = unbound("RESONANT_SHARD");
+	public static Supplier<Item> MUTAGEN_DUST = unbound("MUTAGEN_DUST");
+	public static Supplier<Item> UNSTABLE_ISOTOPE = unbound("UNSTABLE_ISOTOPE");
 	public static Supplier<Item> MUTE_CHIP = unbound("MUTE_CHIP");
 	public static Supplier<Item> WINDMILL_ROTOR = unbound("WINDMILL_ROTOR");
 	public static Supplier<Item> WATER_MILL_WHEEL = unbound("WATER_MILL_WHEEL");
@@ -270,6 +284,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> EXTRACTOR_ITEM = unbound("EXTRACTOR_ITEM");
 	public static Supplier<BlockItem> COMPRESSOR_ITEM = unbound("COMPRESSOR_ITEM");
 	public static Supplier<BlockItem> SAWMILL_ITEM = unbound("SAWMILL_ITEM");
+	public static Supplier<BlockItem> INCUBATOR_ITEM = unbound("INCUBATOR_ITEM");
 	public static Supplier<BlockItem> PUMP_ITEM = unbound("PUMP_ITEM");
 	public static Supplier<BlockItem> FLUID_TANK_ITEM = unbound("FLUID_TANK_ITEM");
 	public static Supplier<BlockItem> TIN_ORE_ITEM = unbound("TIN_ORE_ITEM");
@@ -313,6 +328,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> EXTRACTOR_BE = unbound("EXTRACTOR_BE");
 	public static Supplier<BlockEntityType<?>> COMPRESSOR_BE = unbound("COMPRESSOR_BE");
 	public static Supplier<BlockEntityType<?>> SAWMILL_BE = unbound("SAWMILL_BE");
+	public static Supplier<BlockEntityType<?>> INCUBATOR_BE = unbound("INCUBATOR_BE");
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
 	public static Supplier<BlockEntityType<?>> FLUID_TANK_BE = unbound("FLUID_TANK_BE");
 	public static Supplier<BlockEntityType<?>> IRON_CHEST_BE = unbound("IRON_CHEST_BE");
@@ -337,6 +353,7 @@ public final class ModContent {
 	public static Supplier<MenuType<ExtractorMenu>> EXTRACTOR_MENU = unbound("EXTRACTOR_MENU");
 	public static Supplier<MenuType<CompressorMenu>> COMPRESSOR_MENU = unbound("COMPRESSOR_MENU");
 	public static Supplier<MenuType<SawmillMenu>> SAWMILL_MENU = unbound("SAWMILL_MENU");
+	public static Supplier<MenuType<IncubatorMenu>> INCUBATOR_MENU = unbound("INCUBATOR_MENU");
 	public static Supplier<MenuType<BatteryBoxMenu>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");
 	/** Teleporter station screen (MOD-093): EU bar, owner, private/public toggle. */
 	public static Supplier<MenuType<TeleporterStationMenu>> TELEPORTER_STATION_MENU =

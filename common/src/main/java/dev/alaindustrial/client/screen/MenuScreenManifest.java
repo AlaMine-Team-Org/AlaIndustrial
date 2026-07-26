@@ -101,6 +101,7 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.EXTRACTOR_MENU.get(), ExtractorScreen::new),
 			screen(() -> ModContent.COMPRESSOR_MENU.get(), CompressorScreen::new),
 			screen(() -> ModContent.SAWMILL_MENU.get(), SawmillScreen::new),
+			screen(() -> ModContent.INCUBATOR_MENU.get(), IncubatorScreen::new),
 			screen(() -> ModContent.BATTERY_BOX_MENU.get(), BatteryBoxScreen::new),
 			screen(() -> ModContent.TELEPORTER_STATION_MENU.get(), TeleporterStationScreen::new),
 			screen(() -> ModContent.TELEPORTER_REMOTE_MENU.get(), TeleporterRemoteScreen::new),

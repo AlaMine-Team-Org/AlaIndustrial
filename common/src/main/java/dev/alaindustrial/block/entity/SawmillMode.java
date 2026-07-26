@@ -4,6 +4,7 @@ import dev.alaindustrial.registry.ModRecipes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The four cutting modes of the {@link SawmillBlockEntity} (MOD-150). Each mode is backed by its own
@@ -45,6 +46,22 @@ public enum SawmillMode {
 	/** Lang key suffix for the button tooltip: {@code gui.alaindustrial.sawmill.mode.<name>}. */
 	public String translationKey() {
 		return "gui.alaindustrial.sawmill.mode." + name().toLowerCase(java.util.Locale.ROOT);
+	}
+
+	/**
+	 * The mode that works this recipe family, or {@code null} for a family the sawmill does not saw.
+	 * Used to name that family's recipe-viewer category — see
+	 * {@link dev.alaindustrial.client.compat.RecipeCategoryTitle}, which owns the composition so the
+	 * sawmill and the incubator cannot title their tabs two different ways.
+	 */
+	@Nullable
+	public static SawmillMode forKind(ModRecipes.Kind kind) {
+		for (SawmillMode mode : VALUES) {
+			if (mode.kind == kind) {
+				return mode;
+			}
+		}
+		return null;
 	}
 
 	/** Ordinal-safe lookup used when decoding a synced/persisted mode; out-of-range falls back to {@link #PLANKS}. */

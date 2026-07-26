@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:dirt",
+	"result": {
+		"id": "minecraft:podzol",
+		"count": 1
+	},
+	"energy": 2400
+}

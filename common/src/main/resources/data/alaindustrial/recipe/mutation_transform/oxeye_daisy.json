@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:oxeye_daisy",
+	"result": {
+		"id": "minecraft:dandelion",
+		"count": 1
+	},
+	"energy": 2400
+}

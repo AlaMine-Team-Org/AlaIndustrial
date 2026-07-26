@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:cornflower",
+	"result": {
+		"id": "minecraft:lily_of_the_valley",
+		"count": 1
+	},
+	"energy": 2400
+}

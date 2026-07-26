@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "alaindustrial:nickel_ingot",
+	"result": {
+		"id": "alaindustrial:nickel_ingot",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.45
+}

@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:mutation_transform",
+	"ingredient": "minecraft:lily_of_the_valley",
+	"result": {
+		"id": "minecraft:oxeye_daisy",
+		"count": 1
+	},
+	"energy": 2400
+}

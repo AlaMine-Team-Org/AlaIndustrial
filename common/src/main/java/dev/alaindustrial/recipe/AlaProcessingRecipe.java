@@ -36,9 +36,24 @@ import net.minecraft.world.level.Level;
  *                   live {@link ItemStack} so the result codec is safe during early datapack loading
  *                   (a raw {@code ItemStack.CODEC} throws "item does not have components yet" there).
  * @param energy     total EU spent to complete one operation
+ * @param chance     probability the operation actually yields its result (MOD-118), or
+ *                   {@link #CHANCE_UNSET} when the recipe does not state one and the machine should
+ *                   fall back to its own default. Only the incubator reads this; every other machine
+ *                   is deterministic and ignores it.
  */
-public record AlaProcessingRecipe(ModRecipes.Kind kind, Ingredient ingredient, ItemStackTemplate result, int energy)
-		implements Recipe<SingleRecipeInput> {
+public record AlaProcessingRecipe(ModRecipes.Kind kind, Ingredient ingredient, ItemStackTemplate result,
+		int energy, double chance) implements Recipe<SingleRecipeInput> {
+
+	/**
+	 * Sentinel for "this recipe does not state a chance". A machine that cares (the incubator) then
+	 * uses its own per-mode default from Config; the deterministic machines never read the field.
+	 */
+	public static final double CHANCE_UNSET = -1.0;
+
+	/** A recipe with no stated chance — the form every machine but the incubator uses. */
+	public AlaProcessingRecipe(ModRecipes.Kind kind, Ingredient ingredient, ItemStackTemplate result, int energy) {
+		this(kind, ingredient, result, energy, CHANCE_UNSET);
+	}
 
 	@Override
 	public boolean matches(SingleRecipeInput input, Level level) {
@@ -86,13 +101,15 @@ public record AlaProcessingRecipe(ModRecipes.Kind kind, Ingredient ingredient, I
 		return RecipeBookCategories.CRAFTING_MISC;
 	}
 
-	/** MapCodec for a machine kind's JSON form: {@code {ingredient, result, energy?}}. */
+	/** MapCodec for a machine kind's JSON form: {@code {ingredient, result, energy?, chance?}}. */
 	public static MapCodec<AlaProcessingRecipe> mapCodec(ModRecipes.Kind kind) {
 		return RecordCodecBuilder.mapCodec(instance -> instance.group(
 				Ingredient.CODEC.fieldOf("ingredient").forGetter(AlaProcessingRecipe::ingredient),
 				ItemStackTemplate.CODEC.fieldOf("result").forGetter(AlaProcessingRecipe::result),
-				Codec.INT.optionalFieldOf("energy", kind.defaultEnergy()).forGetter(AlaProcessingRecipe::energy)
-		).apply(instance, (ingredient, result, energy) -> new AlaProcessingRecipe(kind, ingredient, result, energy)));
+				Codec.INT.optionalFieldOf("energy", kind.defaultEnergy()).forGetter(AlaProcessingRecipe::energy),
+				Codec.DOUBLE.optionalFieldOf("chance", CHANCE_UNSET).forGetter(AlaProcessingRecipe::chance)
+		).apply(instance, (ingredient, result, energy, chance) ->
+				new AlaProcessingRecipe(kind, ingredient, result, energy, chance)));
 	}
 
 	/** Network sync codec for a machine kind. */
@@ -101,6 +118,8 @@ public record AlaProcessingRecipe(ModRecipes.Kind kind, Ingredient ingredient, I
 				Ingredient.CONTENTS_STREAM_CODEC, AlaProcessingRecipe::ingredient,
 				ItemStackTemplate.STREAM_CODEC, AlaProcessingRecipe::result,
 				ByteBufCodecs.INT, AlaProcessingRecipe::energy,
-				(ingredient, result, energy) -> new AlaProcessingRecipe(kind, ingredient, result, energy));
+				ByteBufCodecs.DOUBLE, AlaProcessingRecipe::chance,
+				(ingredient, result, energy, chance) ->
+						new AlaProcessingRecipe(kind, ingredient, result, energy, chance));
 	}
 }

@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "minecraft:torchflower_seeds",
+	"result": {
+		"id": "minecraft:torchflower_seeds",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.6
+}

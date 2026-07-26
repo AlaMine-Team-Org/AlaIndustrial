@@ -23,11 +23,12 @@ public class AlaProcessingCategory implements DisplayCategory<AlaProcessingDispl
 	private final Component title;
 	private final Block icon;
 
-	public AlaProcessingCategory(CategoryIdentifier<AlaProcessingDisplay> identifier, Block icon) {
+	public AlaProcessingCategory(CategoryIdentifier<AlaProcessingDisplay> identifier, Block icon,
+			Component title) {
 		this.identifier = identifier;
 		this.icon = icon;
-		// Reuse the machine block's own (already-localised) name — no new lang keys needed.
-		this.title = icon.getName();
+		// Composed by the caller from already-localised parts (block name + mode) — no new lang keys.
+		this.title = title;
 	}
 
 	@Override
@@ -69,12 +70,22 @@ public class AlaProcessingCategory implements DisplayCategory<AlaProcessingDispl
 			widgets.add(Widgets.createSlot(output).entries(display.getOutputEntries().get(0)).markOutput());
 		}
 
-		// EU cost + intrinsic time. Units (EU / s) are symbols — literal, no lang keys.
-		String cost = display.energy() + " EU · " + formatSeconds(display.processingTicks());
+		// EU cost + intrinsic time, and the success chance where the operation is a gamble (the
+		// incubator). Units (EU / s / %) are symbols — literal, no lang keys.
+		String cost = display.energy() + " EU · " + formatSeconds(display.processingTicks())
+				+ formatChance(display.chance());
 		widgets.add(Widgets.createLabel(new Point(centerX, bounds.getMaxY() - 12), Component.literal(cost))
 				.noShadow().color(0xFF404040, 0xFFBBBBBB));
 
 		return widgets;
+	}
+
+	/** Chance → " · 45 %", or nothing at all for the machines that always deliver. */
+	static String formatChance(double chance) {
+		if (chance <= 0.0) {
+			return "";
+		}
+		return " · " + Math.round(chance * 100.0) + " %";
 	}
 
 	/** Ticks → "N.N s" (20 ticks = 1 s), trimming a trailing ".0". */

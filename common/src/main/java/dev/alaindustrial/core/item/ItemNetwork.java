@@ -11,6 +11,8 @@ import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.item.ItemStack;
 
 /** One connected component of item-pipe segments, ticked once by {@link ItemNetworkManager}. */
 public final class ItemNetwork {
@@ -86,7 +88,7 @@ public final class ItemNetwork {
 			if (to == null) continue;
 			for (int s = 0; s < sourceCount; s++) {
 				Endpoint source = sources.get((sourceCursor + s) % sourceCount);
-				if (source.pos().equals(target.pos())) continue; // never churn an endpoint into itself
+				if (!mayFeed(source, target)) continue;
 				ItemPort from = ItemLookup.get().find(level, source.pos(), source.side());
 				if (from == null) continue;
 				int moved = ItemMover.move(from, to, per);
@@ -102,6 +104,44 @@ public final class ItemNetwork {
 			transferCooldown = Math.max(0, Config.itemPipeTransferIntervalTicks - 1);
 		}
 		return totalMoved;
+	}
+
+	/**
+	 * Whether items may flow from {@code source} to {@code target}.
+	 *
+	 * <p>Different blocks: always. The same block is the interesting case (MOD-234). A chest drawn
+	 * from and pushed into by the same network would shuffle items between its own slots forever and
+	 * burn the network's whole throughput on nothing, which is why this used to be refused outright.
+	 * But a <b>machine</b> keeps its slots in separate roles, and "take the result, put it back in the
+	 * input" is exactly how a player automates repeat processing — feeding duplicated diamonds back
+	 * into the incubator, say. So the same block is allowed only when it sorts its slots by face and
+	 * the slots it will hand out do not overlap the slots it will accept: that holds for a machine and
+	 * fails for a chest, with no block-specific knowledge in the pipe.
+	 *
+	 * <p>The rule is deliberately generic, so any machine that sorts slots by face can now feed itself
+	 * — a macerator wired output-to-input will push its own dust back in and sit there with a full
+	 * input slot. That takes a player wiring a pipe from a machine back to the same machine on purpose;
+	 * nothing is duplicated or lost, so it is left as the player's choice rather than special-cased.
+	 */
+	private boolean mayFeed(Endpoint source, Endpoint target) {
+		if (!source.pos().equals(target.pos())) {
+			return true;
+		}
+		if (!(level.getBlockEntity(source.pos()) instanceof WorldlyContainer sided)) {
+			return false;
+		}
+		for (int slot : sided.getSlotsForFace(source.side())) {
+			ItemStack held = sided.getItem(slot);
+			if (!sided.canTakeItemThroughFace(slot, held, source.side())) {
+				continue;
+			}
+			// A slot this face gives away that the other face would also take back: that is the churn
+			// loop, and one shared slot is enough to refuse the pair.
+			if (sided.canPlaceItemThroughFace(slot, held, target.side())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private void refreshEndpoints() {
