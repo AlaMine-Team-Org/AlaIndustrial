@@ -330,6 +330,10 @@ public final class Config {
 	/** Sawmill (MOD-150): ticks per cut at 1.0 speed. 80 → 160 EU/op — the cheapest machine op (wood
 	 * saws easier than ore mills): furnace 100, extractor 120, compressor 130, macerator 150. */
 	public static int sawmillDuration = 80;
+	/** Polymerizer (MOD-019): ticks per bucket of oil at 1.0 speed. 200 → 400 EU/op — the most expensive
+	 * op of the LV processing family, because rubber is the material gate into MV and a bucket of oil is
+	 * a whole pumping cycle's worth of input, not a single ore. */
+	public static int polymerizerDuration = 200;
 
 	// --- Incubator (MOD-118): the mod's most energy-hungry LV machine. ---
 	/**
@@ -483,6 +487,12 @@ public final class Config {
 	 * loot condition.
 	 */
 	public static boolean bonusChestEnabled = true;
+
+	/**
+	 * MOD-238: when {@code true}, oil blocks ignite from adjacent fire/soul fire/lava and the burn
+	 * spreads across the pool (see {@code OilLiquidBlock}). Set {@code false} to make oil inert.
+	 */
+	public static boolean oilBurns = true;
 
 	/**
 	 * Declarative description of every tunable above: json key, doc text, and how the value is read,
@@ -699,6 +709,8 @@ public final class Config {
 				() -> extractorDuration, v -> extractorDuration = v, 1),
 			new IntField("sawmillDuration", "Ticks a sawmill takes per cut at 1.0 speed (all four modes).",
 				() -> sawmillDuration, v -> sawmillDuration = v, 1),
+			new IntField("polymerizerDuration", "Ticks a polymerizer takes to turn one bucket of oil into raw rubber at 1.0 speed.",
+				() -> polymerizerDuration, v -> polymerizerDuration = v, 1),
 			new IntField("ironFurnaceCookTime", "Ticks the (fuel-based) iron furnace takes to smelt one item. Vanilla furnace = 200.",
 				() -> ironFurnaceCookTime, v -> ironFurnaceCookTime = v, 1),
 			new IntField("euPerXp", "MOD-133 player profile: useful EU (from completed machine operations) per 1 point of mod XP. Higher = slower progression. Starting value, tune after playtest.",
@@ -740,7 +752,9 @@ public final class Config {
 			new IntField("networkAnalyzerMaxTraversedNetworks", "Cap on networks the Network Analyzer's Traverse mode walks (visualization only, never affects energy).",
 				() -> networkAnalyzerMaxTraversedNetworks, v -> networkAnalyzerMaxTraversedNetworks = v, 1),
 			new BoolField("bonusChestEnabled", "When true, mod starter items are injected into the vanilla bonus chest at world creation (vanilla loot kept). false = purely vanilla bonus chest.",
-				() -> bonusChestEnabled, v -> bonusChestEnabled = v));
+				() -> bonusChestEnabled, v -> bonusChestEnabled = v),
+			new BoolField("oilBurns", "When true, oil ignites from adjacent fire/lava and the burn spreads across the pool. false = oil is inert.",
+				() -> oilBurns, v -> oilBurns = v));
 
 	/** Effective machine drain per tick after the speed multiplier (E_op stays ~constant). */
 	public static int machineEuPerTickEffective() {

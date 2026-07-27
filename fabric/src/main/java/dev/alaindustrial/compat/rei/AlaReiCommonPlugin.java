@@ -2,6 +2,7 @@ package dev.alaindustrial.compat.rei;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.PolymerizingRecipe;
 import dev.alaindustrial.recipe.VanillaSmeltingMirror;
 import java.util.List;
 import me.shedaniel.rei.api.common.display.DisplaySerializerRegistry;
@@ -30,6 +31,9 @@ public class AlaReiCommonPlugin implements REICommonPlugin {
 	public void registerDisplaySerializer(DisplaySerializerRegistry registry) {
 		// Single serializer for all four machine families (the display carries its own kind).
 		registry.register(Industrialization.id("processing"), AlaProcessingDisplay.SERIALIZER);
+		// MOD-019: the Polymerizer's fluid → item card is a different display type (fluid input), so it
+		// carries its own serializer.
+		registry.register(Industrialization.id("polymerizing"), PolymerizingDisplay.SERIALIZER);
 	}
 
 	@Override
@@ -51,5 +55,8 @@ public class AlaReiCommonPlugin implements REICommonPlugin {
 					AlaProcessingRecipe mirror = VanillaSmeltingMirror.mirror(holder.value());
 					return mirror == null ? List.of() : List.of(new AlaProcessingDisplay(mirror));
 				});
+		// MOD-019: the Polymerizer's own recipe family — a fluid volume in, an item out.
+		registry.beginRecipeFiller(PolymerizingRecipe.class)
+				.fill(holder -> new PolymerizingDisplay(holder.value()));
 	}
 }

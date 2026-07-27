@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"B": "minecraft:bucket",
+		"I": "minecraft:iron_ingot",
+		"M": "alaindustrial:machine_casing",
+		"E": "alaindustrial:electronic_circuit"
+	},
+	"pattern": [
+		"IBI",
+		"IMI",
+		"IEI"
+	],
+	"result": {
+		"id": "alaindustrial:polymerizer"
+	}
+}

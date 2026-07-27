@@ -2,12 +2,12 @@ package dev.alaindustrial.registry;
 
 import com.mojang.serialization.Codec;
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.item.AnalyzerMode;
-import dev.alaindustrial.item.FluidTankContents;
-import dev.alaindustrial.item.MutationGrades;
-import dev.alaindustrial.item.NetworkScanData;
-import dev.alaindustrial.item.PouchContents;
-import dev.alaindustrial.item.TeleportPoints;
+import dev.alaindustrial.item.tool.AnalyzerMode;
+import dev.alaindustrial.item.fluid.FluidTankContents;
+import dev.alaindustrial.item.misc.MutationGrades;
+import dev.alaindustrial.item.tool.NetworkScanData;
+import dev.alaindustrial.item.energy.PouchContents;
+import dev.alaindustrial.item.teleport.TeleportPoints;
 import dev.alaindustrial.mutation.MutationGrade;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -71,7 +71,7 @@ public final class ModDataComponents {
 	/**
 	 * Battery Pouch EU buffer (MOD-052) — the item-in-inventory charge, distinct from {@link #STORED_ENERGY}
 	 * (which carries a <em>block's</em> buffer across break/place). Read/written only via
-	 * {@link dev.alaindustrial.item.ItemEnergy}: absent = 0 EU, writes clamp to the item's capacity.
+	 * {@link dev.alaindustrial.item.energy.ItemEnergy}: absent = 0 EU, writes clamp to the item's capacity.
 	 */
 	public static Supplier<DataComponentType<Long>> POUCH_ENERGY = () -> {
 		throw new IllegalStateException("ModDataComponents.POUCH_ENERGY read before its loader bound it");
@@ -85,9 +85,9 @@ public final class ModDataComponents {
 	/**
 	 * Vacuum Capsule contents (MOD-063) — the single {@link Fluid} a filled capsule holds, stored as a
 	 * {@link Holder Holder&lt;Fluid&gt;} (like vanilla {@code break_sound} carries a {@code Holder<SoundEvent>}).
-	 * Read/written only via {@link dev.alaindustrial.item.ItemFluid}: absent = empty capsule. A registry
+	 * Read/written only via {@link dev.alaindustrial.item.fluid.ItemFluid}: absent = empty capsule. A registry
 	 * holder's identity is stable per fluid, so two filled capsules of the same fluid share one component
-	 * value and stack automatically (up to {@link dev.alaindustrial.item.FilledCapsuleItem#STACK_SIZE});
+	 * value and stack automatically (up to {@link dev.alaindustrial.item.fluid.FilledCapsuleItem#STACK_SIZE});
 	 * different fluids never merge.
 	 */
 	public static Supplier<DataComponentType<Holder<Fluid>>> CAPSULE_FLUID = () -> {
@@ -132,7 +132,7 @@ public final class ModDataComponents {
 	/**
 	 * Electromagnet on/off flag (MOD-132), toggled by shift-right-click. Absent = on, so a crafted-fresh
 	 * magnet works out of the box and a switched-on magnet stays component-identical to a fresh one;
-	 * disabling stores {@code false}. Read/written only via {@link dev.alaindustrial.item.MagnetItem}.
+	 * disabling stores {@code false}. Read/written only via {@link dev.alaindustrial.item.tool.MagnetItem}.
 	 */
 	public static Supplier<DataComponentType<Boolean>> MAGNET_ENABLED = () -> {
 		throw new IllegalStateException("ModDataComponents.MAGNET_ENABLED read before its loader bound it");
@@ -149,7 +149,7 @@ public final class ModDataComponents {
 	/**
 	 * Rarity grade an item carries after a successful incubator mutation (MOD-118). Absent means the
 	 * ordinary outcome, so a common result stays component-identical to a plain vanilla item and keeps
-	 * stacking with it. Read/written only via {@link dev.alaindustrial.item.MutationGrades}, which also
+	 * stacking with it. Read/written only via {@link dev.alaindustrial.item.misc.MutationGrades}, which also
 	 * keeps the vanilla rarity component in sync.
 	 */
 	public static Supplier<DataComponentType<MutationGrade>> MUTATION_GRADE = () -> {

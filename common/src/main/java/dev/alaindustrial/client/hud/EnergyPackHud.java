@@ -1,8 +1,8 @@
 package dev.alaindustrial.client.hud;
 
-import dev.alaindustrial.item.EnergyPackItem;
-import dev.alaindustrial.item.ItemEnergy;
-import dev.alaindustrial.item.JetpackItem;
+import dev.alaindustrial.item.wearable.EnergyPackItem;
+import dev.alaindustrial.item.energy.ItemEnergy;
+import dev.alaindustrial.item.wearable.JetpackItem;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;

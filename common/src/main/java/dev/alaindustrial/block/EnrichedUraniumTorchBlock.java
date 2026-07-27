@@ -12,7 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.TorchBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,21 +19,21 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 
 /**
  * Standing Enriched Uranium Torch (MOD-085): a vanilla-behaviour torch (thin shape, no collision,
  * instabreak, light level 14 — identical to the vanilla torch) that spawns the mod's green flame plus a
- * richer particle burst (see {@link #spawnFx}), and — unlike a vanilla torch — is <b>waterloggable</b>:
- * it can be placed underwater and keeps burning ("sealed uranium" perk).
+ * richer particle burst (see {@link #spawnFx}), and — unlike a vanilla torch — can be
+ * <b>logged with water or with oil</b>: it can be placed submerged and keeps burning ("sealed uranium"
+ * perk), and the fluid renders through its cell instead of leaving a hole in the pool (MOD-250).
  *
  * <p>Behaviour is inherited from {@link TorchBlock}/{@code BaseTorchBlock}; this subclass adds its own
- * {@link MapCodec}, the enhanced {@code animateTick}, and the {@link SimpleWaterloggedBlock} wiring
- * (WATERLOGGED property + fluid state + placement/updateShape), following the vanilla {@code LadderBlock}
- * pattern. The particle is supplied at construction from the loader-neutral
+ * {@link MapCodec}, the enhanced {@code animateTick}, and the {@link OilLoggedBlock} wiring
+ * (WATERLOGGED + OILLOGGED properties, fluid state, placement/updateShape), following the vanilla
+ * {@code LadderBlock} pattern. The particle is supplied at construction from the loader-neutral
  * {@code ModParticles.ENRICHED_URANIUM_FLAME} facade by each loader's registry.
  */
-public class EnrichedUraniumTorchBlock extends TorchBlock implements SimpleWaterloggedBlock {
+public class EnrichedUraniumTorchBlock extends TorchBlock implements OilLoggedBlock {
 
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -44,7 +43,8 @@ public class EnrichedUraniumTorchBlock extends TorchBlock implements SimpleWater
 
 	public EnrichedUraniumTorchBlock(SimpleParticleType flameParticle, BlockBehaviour.Properties properties) {
 		super(flameParticle, properties);
-		this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false));
+		this.registerDefaultState(this.stateDefinition.any()
+				.setValue(WATERLOGGED, false).setValue(OILLOGGED, false));
 	}
 
 	@Override
@@ -54,26 +54,24 @@ public class EnrichedUraniumTorchBlock extends TorchBlock implements SimpleWater
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(WATERLOGGED);
+		builder.add(WATERLOGGED, OILLOGGED);
 	}
 
 	@Override
 	protected FluidState getFluidState(BlockState state) {
-		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+		return OilLoggedBlock.fluidState(state, super.getFluidState(state));
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		FluidState fluid = context.getLevel().getFluidState(context.getClickedPos());
-		return this.defaultBlockState().setValue(WATERLOGGED, fluid.is(Fluids.WATER));
+		return OilLoggedBlock.loggedForPlacement(this.defaultBlockState(), fluid);
 	}
 
 	@Override
 	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
 			Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
-		if (state.getValue(WATERLOGGED)) {
-			ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-		}
+		OilLoggedBlock.scheduleFluidTick(state, level, ticks, pos);
 		// super (BaseTorchBlock) still pops the torch off when its floor support is removed.
 		return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
 	}

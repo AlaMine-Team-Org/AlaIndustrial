@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "Minyak bumi",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "Minyak bumi dari nol",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Di mana mencarinya",
+              "text": "Minyak bumi tidak bisa dibuat maupun dilebur — ia hanya bisa ditemukan, di mana saja di Overworld. Deposit hadir dalam empat ukuran:\n\n• Bercak permukaan — satu per 150 chunk, sekadar cicipan\n• Danau lubang tambang — Y -40..-8, sekitar satu dari lima chunk: sumber utamamu\n• Reservoir dalam — Y -50..-30, satu per 20 chunk, tiga kali lebih lebar\n• Urat minyak — satu per 600 chunk, terlihat dari permukaan\n\nMinyak tidak pernah muncul di dalam desa, lubang tambang, benteng, atau Kota Kuno."
+            },
+            {
+              "type": "text",
+              "title": "Deposit itu terbatas",
+              "text": "Balok minyak yang kamu ciduk hilang selamanya — tidak seperti air, deposit tidak terisi ulang.\n\nDanau biasa berisi 20-60 ember, reservoir dalam jauh lebih banyak, dan kubah sebuah urat beberapa ribu. Habiskan satu, kamu harus mencari yang berikutnya — jadi tandai tempatnya begitu ketemu.\n\nMenciduk dengan ember makan waktu: letakkan Pompa di sebelahnya dan ia akan menguras seluruh deposit ke tangki sendirian."
+            },
+            {
+              "type": "text",
+              "title": "Di dalam minyak",
+              "text": "Minyak itu kental — kamu terbenam di dalamnya alih-alih berenang, dan gerakan melambat drastis.\n\n• Tahan tombol lompat untuk naik, sekitar satu balok per detik — lebih lambat daripada air, bahkan daripada lava\n• Kamu tidak bisa bernapas: dengan kepala terendam, udara habis seperti di dalam air, lalu kerusakan menyusul\n• Kerusakan jatuh dibatalkan sepenuhnya selama kamu berada di dalam minyak\n• Penglihatan terganggu: lapisan gelap di layar, lewat sembilan balok tidak ada yang terlihat\n\nRencanakan turunmu ke poros sebuah urat berdasarkan sisa udara, bukan berdasarkan kedalamannya."
+            },
+            {
+              "type": "text",
+              "title": "Ia terbakar",
+              "text": "Minyak menyala dengan mudah: api cukup berada di dekatnya — bahkan menyerong di bawahnya. Dari situ nyala berjalan menyusuri genangan balok demi balok sampai habis semua, termasuk balok sumbernya. Pemantik Api menyulut deposit seketika, selalu.\n\nLava TIDAK menyalakan minyak — itu disengaja: danau bawah tanah sering muncul persis bersebelahan dengan danau lava.\n\nApi tidak akan melewati dinding padat setebal satu balok. Dan kalau kamu butuh minyak berdiri aman di sebelah pabrik, matikan pengaturan oilBurns milik mod ini dan minyak menjadi benar-benar lembam."
+            },
+            {
+              "type": "text",
+              "title": "Menjadi apa",
+              "text": "Minyak bumi adalah awal dari rantai karet.\n\n1. Kumpulkan — dengan ember, Kapsul Vakum, atau Pompa\n2. Polimerisator: 1000 mB minyak dan 400 EU menghasilkan karet mentah\n3. Tungku atau Tungku Listrik: karet mentah matang menjadi karet\n\nKaret belum dipakai untuk apa pun — penggunanya, kabel berinsulasi dan komponen MV, datang pada fase berikutnya. Timbun saja dulu."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "Energi",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "Polimerisator",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Polimerisator",
+              "text": "Mendidihkan minyak bumi menjadi karet mentah — tangki 10 ember, satu ember per proses. Karet mentah lalu dibakar di tungku dan menjadi karet."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 400 EU/op",
+                "Bufer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Ekstraktor",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "Minyak bumi",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Minyak bumi",
+              "text": "Sumber daya fosil cair — danau terbatas di dunia, dikumpulkan dengan ember, kapsul, atau pompa; kental, mudah terbakar, dan awal dari rantai karet."
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "Bijih Nikel",
           "icon": "alaindustrial:nickel_ore",
@@ -952,6 +1043,44 @@
               "type": "text",
               "title": "Bijih Uranium",
               "text": "Bijih paling langka dari mod ini — ditambang dengan beliung besi, diolah menjadi bubuk dan batangan; disiapkan untuk mesin nuklir mendatang."
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "Inkubator",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Inkubator",
+              "text": "Multiblok 1×2 — basis mekanis ditambah kubah kaca. Memutasi benda dengan iradiasi uranium dan EU: menggandakannya, mengubahnya, atau menciptakan yang baru. Mode ditentukan oleh cip, hasilnya bersifat peluang dengan empat tingkat kelangkaan."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Bufer: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
             }
           ]
         },
@@ -1537,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "Karet",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Karet",
+              "text": "Bahan yang dibuat dari minyak bumi — Polimerisator mengubah minyak menjadi karet mentah, tungku membakarnya menjadi karet. Dasar dari kabel berinsulasi dan komponen MV mendatang."
             }
           ]
         },

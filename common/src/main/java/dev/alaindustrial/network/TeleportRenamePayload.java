@@ -1,7 +1,7 @@
 package dev.alaindustrial.network;
 
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.item.TeleportPoint;
+import dev.alaindustrial.item.teleport.TeleportPoint;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;

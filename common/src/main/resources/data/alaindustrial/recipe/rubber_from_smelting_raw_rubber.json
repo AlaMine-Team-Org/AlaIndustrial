@@ -1,0 +1,10 @@
+{
+	"type": "minecraft:smelting",
+	"category": "misc",
+	"experience": 0.3,
+	"group": "rubber",
+	"ingredient": "alaindustrial:raw_rubber",
+	"result": {
+		"id": "alaindustrial:rubber"
+	}
+}

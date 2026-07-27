@@ -3,6 +3,8 @@ package dev.alaindustrial.registry;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.FluidRecipeInput;
+import dev.alaindustrial.recipe.PolymerizingRecipe;
 import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 import net.minecraft.core.Registry;
@@ -137,6 +139,87 @@ public final class ModRecipes {
 		return ALL;
 	}
 
+	/**
+	 * The Polymerizer's recipe family (MOD-019). Separate from {@link Kind} because its recipes are
+	 * {@link PolymerizingRecipe}s — a fluid volume in, an item out — not {@link AlaProcessingRecipe}s, so
+	 * the two cannot share a typed {@code RecipeType}/{@code RecipeSerializer} pair. Everything else about
+	 * it (lazy per-loader binding, an EU rate, "how long does this cost print as") is the same, and the
+	 * two are registered side by side in {@link #init()} and its NeoForge counterpart.
+	 *
+	 * <p>Not generified over the recipe class: with exactly one fluid family, one more type parameter on
+	 * every accessor buys nothing a second copy of six short methods does not.
+	 */
+	public static final class FluidKind {
+		private final String id;
+		private final int defaultEnergy;
+		private Supplier<RecipeType<PolymerizingRecipe>> type = () -> {
+			throw new IllegalStateException("ModRecipes.FluidKind type read before its loader bound it");
+		};
+		private Supplier<RecipeSerializer<PolymerizingRecipe>> serializer = () -> {
+			throw new IllegalStateException("ModRecipes.FluidKind serializer read before its loader bound it");
+		};
+
+		private FluidKind(String id, int defaultEnergy) {
+			this.id = id;
+			this.defaultEnergy = defaultEnergy;
+		}
+
+		public String id() {
+			return id;
+		}
+
+		public int defaultEnergy() {
+			return defaultEnergy;
+		}
+
+		/** What the machine working this family draws per tick — the shared processing-machine rate. */
+		public int euPerTick() {
+			return Math.max(1, Config.machineEuPerTick);
+		}
+
+		/** Base processing time of a recipe costing {@code energy} EU — the number the recipe viewers print. */
+		public int ticksFor(int energy) {
+			return Math.max(1, energy / euPerTick());
+		}
+
+		public RecipeType<PolymerizingRecipe> type() {
+			return type.get();
+		}
+
+		public RecipeSerializer<PolymerizingRecipe> serializer() {
+			return serializer.get();
+		}
+
+		/** Bind this family's type + serializer suppliers. Called once per loader during its registration. */
+		public void bind(Supplier<RecipeType<PolymerizingRecipe>> typeSupplier,
+				Supplier<RecipeSerializer<PolymerizingRecipe>> serializerSupplier) {
+			this.type = typeSupplier;
+			this.serializer = serializerSupplier;
+		}
+
+		/** A cached lookup for the machine (mirrors {@link Kind#newCheck()}). */
+		public RecipeManager.CachedCheck<FluidRecipeInput, PolymerizingRecipe> newCheck() {
+			return RecipeManager.createCheck(type.get());
+		}
+	}
+
+	// defaultEnergy 400 = polymerizerDuration (200) × machineEuPerTick (2); the shipped JSON states it
+	// explicitly, so this fallback is never active — it is kept in step with the real cost on purpose so
+	// recipe_check.py does not flag a stale-looking default (MOD-134).
+	//
+	// NOTE: PolymerizingRecipe's static codecs read this field's defaultEnergy(), so this class's own
+	// static init must never touch PolymerizingRecipe's statics — that would be a re-entrant clinit and
+	// the codec would see a null field. Today it does not (only Kind/FluidKind objects and arrays are
+	// built here); keep it that way when adding statics above this line.
+	public static final FluidKind POLYMERIZING = new FluidKind("polymerizing", 400);
+
+	private static final FluidKind[] FLUID_ALL = {POLYMERIZING};
+
+	/** All fluid-input recipe families, in registration order (used by both loaders' registration). */
+	public static FluidKind[] fluidKinds() {
+		return FLUID_ALL;
+	}
+
 	/** Resolve a {@link Kind} back from its string id, or {@code null} if unknown. Used by the REI
 	 *  display serializer to rebuild a display's kind from its synced id (see {@code AlaProcessingDisplay}). */
 	public static Kind byId(String id) {
@@ -164,6 +247,35 @@ public final class ModRecipes {
 		return new RecipeSerializer<>(AlaProcessingRecipe.mapCodec(kind), AlaProcessingRecipe.streamCodec(kind));
 	}
 
+	/** Build the {@link RecipeType} instance both loaders register for {@code kind} (MOD-019). */
+	public static RecipeType<PolymerizingRecipe> createType(FluidKind kind) {
+		Identifier id = Industrialization.id(kind.id);
+		return new RecipeType<PolymerizingRecipe>() {
+			@Override
+			public String toString() {
+				return id.toString();
+			}
+		};
+	}
+
+	/**
+	 * Build the {@link RecipeSerializer} instance both loaders register for {@code kind} (MOD-019).
+	 *
+	 * <p>Unlike its {@link Kind} counterpart the codec is <b>not</b> per-family: {@link PolymerizingRecipe}
+	 * is one concrete class whose {@code getSerializer()} reads {@link #POLYMERIZING} directly, so a second
+	 * fluid family sharing this factory would serialise as a polymerizing recipe. That is a real trap and
+	 * not a theoretical one — {@code FUTURE_CONTENT.md} lists a fermenter, an electrolyzer and a bottling
+	 * machine, all fluid-fed. Whoever adds the second family must give it its own recipe class and codec;
+	 * until then this fails loudly rather than mis-serialising quietly.
+	 */
+	public static RecipeSerializer<PolymerizingRecipe> createSerializer(FluidKind kind) {
+		if (kind != POLYMERIZING) {
+			throw new IllegalArgumentException("FluidKind '" + kind.id() + "' has no recipe class of its own; "
+					+ "PolymerizingRecipe is hard-bound to ModRecipes.POLYMERIZING (see this method's doc)");
+		}
+		return new RecipeSerializer<>(PolymerizingRecipe.MAP_CODEC, PolymerizingRecipe.STREAM_CODEC);
+	}
+
 	/**
 	 * Fabric registration: the {@code RECIPE_TYPE}/{@code RECIPE_SERIALIZER} registries stay writable during
 	 * init, so register each kind eagerly and bind it to constant suppliers. NeoForge instead uses a
@@ -174,6 +286,13 @@ public final class ModRecipes {
 			Identifier id = Industrialization.id(kind.id);
 			RecipeType<AlaProcessingRecipe> type = Registry.register(BuiltInRegistries.RECIPE_TYPE, id, createType(kind));
 			RecipeSerializer<AlaProcessingRecipe> serializer =
+					Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, createSerializer(kind));
+			kind.bind(() -> type, () -> serializer);
+		}
+		for (FluidKind kind : FLUID_ALL) {
+			Identifier id = Industrialization.id(kind.id);
+			RecipeType<PolymerizingRecipe> type = Registry.register(BuiltInRegistries.RECIPE_TYPE, id, createType(kind));
+			RecipeSerializer<PolymerizingRecipe> serializer =
 					Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, createSerializer(kind));
 			kind.bind(() -> type, () -> serializer);
 		}

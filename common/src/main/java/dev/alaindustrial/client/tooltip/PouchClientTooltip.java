@@ -1,8 +1,8 @@
 package dev.alaindustrial.client.tooltip;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.item.PouchContents;
-import dev.alaindustrial.item.PouchTooltip;
+import dev.alaindustrial.item.energy.PouchContents;
+import dev.alaindustrial.item.energy.PouchTooltip;
 import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;

@@ -1213,7 +1213,7 @@ public class NetworkGameTest {
 	 */
 	@GameTest(maxTicks = 260)
 	public void tcCable001Nrg08_cableGradesCarryTheirOwnBuffer(GameTestHelper helper) {
-		CoreEnergyScenarios.cableGradesCarryTheirOwnBuffer(helper);
+		CableEnergyScenarios.cableGradesCarryTheirOwnBuffer(helper);
 	}
 
 	/**
@@ -1225,7 +1225,7 @@ public class NetworkGameTest {
 	 */
 	@GameTest(maxTicks = 40)
 	public void tcCable003Phy01_inPlaceGradeSwapRebuildsSegment(GameTestHelper helper) {
-		CoreEnergyScenarios.inPlaceGradeSwapRebuildsSegment(helper);
+		CableEnergyScenarios.inPlaceGradeSwapRebuildsSegment(helper);
 	}
 
 	/**
@@ -1237,7 +1237,7 @@ public class NetworkGameTest {
 	 */
 	@GameTest(maxTicks = 220)
 	public void tcCable003Nrg06_mixedNetworkTakesLossFromStrongestCable(GameTestHelper helper) {
-		CoreEnergyScenarios.mixedNetworkTakesLossFromStrongestCable(helper);
+		CableEnergyScenarios.mixedNetworkTakesLossFromStrongestCable(helper);
 	}
 
 	// ── MOD-070: a storage source never charges another storage sink (no battery↔battery wash) ─────
@@ -1314,7 +1314,7 @@ public class NetworkGameTest {
 	 */
 	@GameTest(maxTicks = 200)
 	public void mod214_storageChargesPastIdleProducer(GameTestHelper helper) {
-		CoreEnergyScenarios.storageChargesPastIdleProducer(helper);
+		StorageEnergyScenarios.storageChargesPastIdleProducer(helper);
 	}
 
 	/**
@@ -1325,7 +1325,7 @@ public class NetworkGameTest {
 	 */
 	@GameTest(maxTicks = 100)
 	public void mod214_storageChargesWithCabledOutputFace(GameTestHelper helper) {
-		CoreEnergyScenarios.storageChargesWithCabledOutputFace(helper);
+		StorageEnergyScenarios.storageChargesWithCabledOutputFace(helper);
 	}
 
 	/**

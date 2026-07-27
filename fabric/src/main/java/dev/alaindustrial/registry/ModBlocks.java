@@ -21,6 +21,7 @@ import dev.alaindustrial.block.IronChestBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
+import dev.alaindustrial.block.PolymerizerBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.FluidTankBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
@@ -30,6 +31,7 @@ import dev.alaindustrial.block.HighAltitudeWindMillBlock;
 import dev.alaindustrial.block.StormWindMillBlock;
 import dev.alaindustrial.block.SilverChestBlock;
 import dev.alaindustrial.block.GoldChestBlock;
+import dev.alaindustrial.block.OilLiquidBlock;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -48,6 +50,17 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
  */
 public final class ModBlocks {
 	private ModBlocks() {
+	}
+
+	static {
+		// Bind the fluid handles before ANY block field below is initialised (MOD-250).
+		// A Block constructor builds its state cache, and that cache calls getFluidState on every
+		// state — so an oil-loggable block (the enriched uranium torches) reads ModContent.OIL while
+		// it is being constructed. The oil block's own field already forces ModFluids to load, but it
+		// sits further down the file, and "the torch happens to be declared after the oil" is not an
+		// invariant anyone would think to preserve. This is; static blocks and field initialisers run
+		// in textual order, and ModFluids.init() is idempotent.
+		ModFluids.init();
 	}
 
 	public static final ResourceKey<Block> GENERATOR_KEY = key("generator");
@@ -140,6 +153,8 @@ public final class ModBlocks {
 
 	public static final ResourceKey<Block> SAWMILL_KEY = key("sawmill");
 	public static final Block SAWMILL = register(SAWMILL_KEY, new SawmillBlock(props(SAWMILL_KEY)));
+	public static final ResourceKey<Block> POLYMERIZER_KEY = key("polymerizer");
+	public static final Block POLYMERIZER = register(POLYMERIZER_KEY, new PolymerizerBlock(props(POLYMERIZER_KEY)));
 
 	public static final ResourceKey<Block> INCUBATOR_KEY = key("incubator");
 	public static final Block INCUBATOR = register(INCUBATOR_KEY, new IncubatorBlock(props(INCUBATOR_KEY)));
@@ -227,6 +242,12 @@ public final class ModBlocks {
 							.overrideLootTable(ENRICHED_URANIUM_TORCH.getLootTable())
 							.overrideDescription(ENRICHED_URANIUM_TORCH.getDescriptionId())));
 
+	// Oil (MOD-238): the in-world liquid block. Referencing ModFluids.OIL here also guarantees the
+	// fluids are registered (class load) before this block builds its fluid-state cache. NO BlockItem —
+	// a liquid block is never held; the hand-carried form is the oil bucket in ModItems.
+	public static final ResourceKey<Block> OIL_KEY = key("oil");
+	public static final Block OIL = register(OIL_KEY, new OilLiquidBlock(ModFluids.OIL, props(OIL_KEY)));
+
 	private static ResourceKey<Block> key(String path) {
 		return ResourceKey.create(Registries.BLOCK, Industrialization.id(path));
 	}
@@ -278,6 +299,7 @@ public final class ModBlocks {
 		ModContent.EXTRACTOR = () -> EXTRACTOR;
 		ModContent.COMPRESSOR = () -> COMPRESSOR;
 		ModContent.SAWMILL = () -> SAWMILL;
+		ModContent.POLYMERIZER = () -> POLYMERIZER;
 		ModContent.INCUBATOR = () -> INCUBATOR;
 		ModContent.INCUBATOR_DOME = () -> INCUBATOR_DOME;
 		ModContent.TIN_ORE = () -> TIN_ORE;
@@ -299,5 +321,6 @@ public final class ModBlocks {
 		ModContent.INDUSTRIAL_WORKBENCH = () -> INDUSTRIAL_WORKBENCH;
 		ModContent.ENRICHED_URANIUM_TORCH = () -> ENRICHED_URANIUM_TORCH;
 		ModContent.ENRICHED_URANIUM_WALL_TORCH = () -> ENRICHED_URANIUM_WALL_TORCH;
+		ModContent.OIL_BLOCK = () -> OIL;
 	}
 }

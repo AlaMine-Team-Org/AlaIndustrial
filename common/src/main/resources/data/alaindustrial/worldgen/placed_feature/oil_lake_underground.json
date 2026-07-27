@@ -1,0 +1,64 @@
+{
+  "feature": "alaindustrial:oil_lake_medium",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 50
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": {
+          "absolute": -40
+        },
+        "max_inclusive": {
+          "absolute": -8
+        }
+      }
+    },
+    {
+      "type": "minecraft:environment_scan",
+      "direction_of_search": "down",
+      "max_steps": 32,
+      "target_condition": {
+        "type": "minecraft:all_of",
+        "predicates": [
+          {
+            "type": "minecraft:not",
+            "predicate": {
+              "type": "minecraft:matching_block_tag",
+              "tag": "minecraft:air"
+            }
+          },
+          {
+            "type": "minecraft:inside_world_bounds",
+            "offset": [
+              0,
+              -5,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "minecraft:surface_relative_threshold_filter",
+      "heightmap": "OCEAN_FLOOR_WG",
+      "max_inclusive": -5
+    },
+    {
+      "type": "minecraft:biome"
+    },
+    {
+      "type": "alaindustrial:oil_lake_filter",
+      "horizontal_radius": 9,
+      "min_y_offset": -5,
+      "max_y_offset": 5,
+      "y_step": 4
+    }
+  ]
+}

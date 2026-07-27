@@ -2,22 +2,22 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.item.ElectricDrillItem;
-import dev.alaindustrial.item.EnergyPackItem;
-import dev.alaindustrial.item.JetpackItem;
+import dev.alaindustrial.item.tool.ElectricDrillItem;
+import dev.alaindustrial.item.wearable.EnergyPackItem;
+import dev.alaindustrial.item.wearable.JetpackItem;
 import dev.alaindustrial.block.entity.IncubatorMode;
-import dev.alaindustrial.item.HintItem;
-import dev.alaindustrial.item.MutationChipItem;
-import dev.alaindustrial.item.FluidTankBlockItem;
-import dev.alaindustrial.item.ScytheTiers;
-import dev.alaindustrial.item.MagnetItem;
-import dev.alaindustrial.item.ModArmorMaterials;
-import dev.alaindustrial.item.ModToolMaterials;
-import dev.alaindustrial.item.TemperedIronToolStats;
-import dev.alaindustrial.item.NetworkAnalyzerItem;
-import dev.alaindustrial.item.PouchItem;
-import dev.alaindustrial.item.ScytheItem;
-import dev.alaindustrial.item.TeleporterRemoteItem;
+import dev.alaindustrial.item.misc.HintItem;
+import dev.alaindustrial.item.misc.MutationChipItem;
+import dev.alaindustrial.item.fluid.FluidTankBlockItem;
+import dev.alaindustrial.item.tool.ScytheTiers;
+import dev.alaindustrial.item.tool.MagnetItem;
+import dev.alaindustrial.item.material.ModArmorMaterials;
+import dev.alaindustrial.item.material.ModToolMaterials;
+import dev.alaindustrial.item.material.TemperedIronToolStats;
+import dev.alaindustrial.item.tool.NetworkAnalyzerItem;
+import dev.alaindustrial.item.energy.PouchItem;
+import dev.alaindustrial.item.tool.ScytheItem;
+import dev.alaindustrial.item.teleport.TeleporterRemoteItem;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.core.Registry;
@@ -73,6 +73,9 @@ public final class ModItems {
 	public static final Item IRRADIATED_DIAMOND = item("irradiated_diamond");
 	public static final Item RESONANT_SHARD = item("resonant_shard");
 	public static final Item MUTAGEN_DUST = item("mutagen_dust");
+	// Oil → rubber chain (MOD-019): the polymerizer's product, and what a furnace cures it into.
+	public static final Item RAW_RUBBER = item("raw_rubber");
+	public static final Item RUBBER = item("rubber");
 	public static final Item UNSTABLE_ISOTOPE = item("unstable_isotope");
 	public static final Item MUTE_CHIP = hintItem("mute_chip");
 	// Rotor / wheel (MOD-189): durability components — wear shows as a vanilla durability bar and, being
@@ -156,7 +159,7 @@ public final class ModItems {
 	// (.hoe(material, attackDamage, -1.0f) attaches the tool component + enchantability) but as
 	// ScytheItem, not HoeItem — the scythe must not till dirt on right-click, it clears its area
 	// instead. The eight tiers (material + AOE profile + attack bias) are declared once in the
-	// loader-neutral dev.alaindustrial.item.ScytheTiers — both loaders register from the same list,
+	// loader-neutral dev.alaindustrial.item.tool.ScytheTiers — both loaders register from the same list,
 	// so a balance tweak cannot drift between Fabric and NeoForge.
 	public static final Item SCYTHE_WOOD = scythe(ScytheTiers.WOOD);
 	public static final Item SCYTHE_STONE = scythe(ScytheTiers.STONE);
@@ -179,6 +182,9 @@ public final class ModItems {
 	// Forge Hammer (MOD-078): pre-machine hand tool — ingot + hammer on the grid → plate; the hammer
 	// stays and loses 1 durability per plate via the Fabric craft-remainder hook (HammerItemFabric).
 	public static final Item FORGE_HAMMER = forgeHammer("forge_hammer");
+	// Oil Bucket (MOD-238): the vanilla WATER_BUCKET pattern — BucketItem(fluid, props with
+	// craftRemainder(BUCKET).stacksTo(1)). Referencing ModFluids.OIL keeps fluid-before-item order.
+	public static final Item OIL_BUCKET = oilBucket("oil_bucket");
 
 	// Block items.
 	public static final BlockItem GENERATOR_ITEM = blockItem("generator", ModBlocks.GENERATOR);
@@ -201,6 +207,7 @@ public final class ModItems {
 	public static final BlockItem EXTRACTOR_ITEM = blockItem("extractor", ModBlocks.EXTRACTOR);
 	public static final BlockItem COMPRESSOR_ITEM = blockItem("compressor", ModBlocks.COMPRESSOR);
 	public static final BlockItem SAWMILL_ITEM = blockItem("sawmill", ModBlocks.SAWMILL);
+	public static final BlockItem POLYMERIZER_ITEM = blockItem("polymerizer", ModBlocks.POLYMERIZER);
 	public static final BlockItem INCUBATOR_ITEM = blockItem("incubator", ModBlocks.INCUBATOR);
 	public static final BlockItem PUMP_ITEM = blockItem("pump", ModBlocks.PUMP);
 	public static final BlockItem FLUID_TANK_ITEM = fluidTankBlockItem("fluid_tank", ModBlocks.FLUID_TANK);
@@ -283,13 +290,13 @@ public final class ModItems {
 	private static Item wrench(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
-				new dev.alaindustrial.item.WrenchItem(new Item.Properties().setId(key).stacksTo(1)));
+				new dev.alaindustrial.item.tool.WrenchItem(new Item.Properties().setId(key).stacksTo(1)));
 	}
 
 	private static Item guideBook(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
-				new dev.alaindustrial.item.GuideBookItem(new Item.Properties().setId(key).stacksTo(1)));
+				new dev.alaindustrial.item.misc.GuideBookItem(new Item.Properties().setId(key).stacksTo(1)));
 	}
 
 	// Forge Hammer (MOD-078). durability(128) sets max_damage (non-stackable, standard durability bar);
@@ -299,7 +306,7 @@ public final class ModItems {
 	private static Item forgeHammer(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
-				new dev.alaindustrial.item.HammerItemFabric(new Item.Properties().setId(key).durability(128).repairable(Items.IRON_INGOT)));
+				new dev.alaindustrial.item.tool.HammerItemFabric(new Item.Properties().setId(key).durability(128).repairable(Items.IRON_INGOT)));
 	}
 
 	private static Item pouch(String path) {
@@ -351,7 +358,7 @@ public final class ModItems {
 	private static Item vacuumCapsule(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
-				new dev.alaindustrial.item.VacuumCapsuleItem(new Item.Properties().setId(key)));
+				new dev.alaindustrial.item.fluid.VacuumCapsuleItem(new Item.Properties().setId(key)));
 	}
 
 	// Filled capsule: one bucket of a single fluid, stacking to FilledCapsuleItem.STACK_SIZE (16).
@@ -361,8 +368,8 @@ public final class ModItems {
 	private static Item filledCapsule(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
-				new dev.alaindustrial.item.FilledCapsuleItem(
-						new Item.Properties().setId(key).stacksTo(dev.alaindustrial.item.FilledCapsuleItem.STACK_SIZE)
+				new dev.alaindustrial.item.fluid.FilledCapsuleItem(
+						new Item.Properties().setId(key).stacksTo(dev.alaindustrial.item.fluid.FilledCapsuleItem.STACK_SIZE)
 								.craftRemainder(VACUUM_CAPSULE)));
 	}
 
@@ -403,7 +410,7 @@ public final class ModItems {
 	// is per-tier: displayed damage = 1 (player base) + attackDamage + material.attackDamageBonus, so
 	// the low tiers whose bonus alone would show 0 (wood/stone/copper/gold) pass a higher value to
 	// reach the 1-damage floor; iron and up keep -2.0f and let the material bonus carry them.
-	private static Item scythe(dev.alaindustrial.item.ScytheTier tier) {
+	private static Item scythe(dev.alaindustrial.item.tool.ScytheTier tier) {
 		return scythe(tier.id(), tier.material(), tier.attackDamage(), tier.profile(), tier.fireResistant());
 	}
 
@@ -419,8 +426,16 @@ public final class ModItems {
 	private static Item stockDisplayFrame(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
-				new dev.alaindustrial.item.StockDisplayFrameItem(ModEntities.STOCK_DISPLAY_FRAME,
+				new dev.alaindustrial.item.misc.StockDisplayFrameItem(ModEntities.STOCK_DISPLAY_FRAME,
 						new Item.Properties().setId(key)));
+	}
+
+	/** The oil bucket (MOD-238) — built exactly like vanilla {@code Items.WATER_BUCKET}. */
+	private static Item oilBucket(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new net.minecraft.world.item.BucketItem(ModFluids.OIL,
+						new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).setId(key)));
 	}
 
 	private static BlockItem blockItem(String path, Block block) {
@@ -432,7 +447,7 @@ public final class ModItems {
 	/** {@link #blockItem} for the item pipe, whose block item carries a tooltip (MOD-108). */
 	private static BlockItem pipeItem(String path, Block block) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
-		BlockItem item = new dev.alaindustrial.item.ItemPipeBlockItem(block,
+		BlockItem item = new dev.alaindustrial.item.misc.ItemPipeBlockItem(block,
 				new Item.Properties().useBlockDescriptionPrefix().setId(key));
 		return Registry.register(BuiltInRegistries.ITEM, key, item);
 	}
@@ -600,6 +615,7 @@ public final class ModItems {
 		ModContent.URANIUM_PLATE = () -> URANIUM_PLATE;
 		ModContent.TEMPERED_IRON_PLATE = () -> TEMPERED_IRON_PLATE;
 		ModContent.FORGE_HAMMER = () -> FORGE_HAMMER;
+		ModContent.OIL_BUCKET = () -> OIL_BUCKET;
 
 		ModContent.GENERATOR_ITEM = () -> GENERATOR_ITEM;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = () -> GEOTHERMAL_GENERATOR_ITEM;
@@ -623,6 +639,7 @@ public final class ModItems {
 		ModContent.EXTRACTOR_ITEM = () -> EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = () -> COMPRESSOR_ITEM;
 		ModContent.SAWMILL_ITEM = () -> SAWMILL_ITEM;
+		ModContent.POLYMERIZER_ITEM = () -> POLYMERIZER_ITEM;
 		ModContent.INCUBATOR_ITEM = () -> INCUBATOR_ITEM;
 		ModContent.MUTATION_CHIP_TRANSFORM = () -> MUTATION_CHIP_TRANSFORM;
 		ModContent.MUTATION_CHIP_DUPLICATE = () -> MUTATION_CHIP_DUPLICATE;
@@ -632,6 +649,8 @@ public final class ModItems {
 		ModContent.IRRADIATED_DIAMOND = () -> IRRADIATED_DIAMOND;
 		ModContent.RESONANT_SHARD = () -> RESONANT_SHARD;
 		ModContent.MUTAGEN_DUST = () -> MUTAGEN_DUST;
+		ModContent.RAW_RUBBER = () -> RAW_RUBBER;
+		ModContent.RUBBER = () -> RUBBER;
 		ModContent.UNSTABLE_ISOTOPE = () -> UNSTABLE_ISOTOPE;
 		ModContent.PUMP_ITEM = () -> PUMP_ITEM;
 		ModContent.FLUID_TANK_ITEM = () -> FLUID_TANK_ITEM;

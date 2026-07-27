@@ -98,6 +98,26 @@ fabricApi {
     }
 }
 
+// MOD-242 — pull the shared scenario bodies (common/src/gametest/java) into the loom-created
+// `gametest` source set instead of `main`. Same mechanism as commonJava in multiloader-loader.gradle,
+// but scoped to compileGametestJava only: the release jar packs `main`, so the scenarios no longer
+// ship. javadoc/sourcesJar source configurations.commonJava only and are untouched.
+configurations {
+    commonGametestJava {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+dependencies {
+    commonGametestJava(project(path: ':common', configuration: 'commonGametestJava'))
+}
+
+tasks.named('compileGametestJava', JavaCompile) {
+    dependsOn(configurations.commonGametestJava)
+    source(configurations.commonGametestJava)
+}
+
 // Implement mcgradleconventions loader attribute.
 // NOTE: our Loom 1.17.12 does not create the template's `includeInternal` /
 // `modCompileClasspath` configurations, so tag only variants that exist.

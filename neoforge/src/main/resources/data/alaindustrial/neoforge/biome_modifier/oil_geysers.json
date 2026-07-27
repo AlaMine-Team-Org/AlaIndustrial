@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#alaindustrial:has_oil_geysers",
+  "features": [
+    "alaindustrial:oil_geyser"
+  ],
+  "step": "lakes"
+}

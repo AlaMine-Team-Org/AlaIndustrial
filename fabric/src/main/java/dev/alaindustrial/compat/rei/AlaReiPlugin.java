@@ -9,12 +9,14 @@ import dev.alaindustrial.registry.ModBlocks;
 import dev.alaindustrial.registry.ModRecipes;
 import java.util.function.Supplier;
 import me.shedaniel.math.Rectangle;
+import me.shedaniel.rei.api.client.entry.renderer.EntryRendererRegistry;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
+import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.level.ItemLike;
@@ -65,6 +67,16 @@ public class AlaReiPlugin implements REIClientPlugin {
 			machine(ModRecipes.MUTATION_CREATE, ModBlocks.INCUBATOR),
 	};
 
+	/**
+	 * Gives fluid entries a texture (MOD-250). REI 26.2.820 ships a fluid renderer whose drawing code is
+	 * commented out, so without this every fluid in REI — ours and vanilla's alike — is an empty slot.
+	 * See {@link ReiFluidEntryRenderer}; the previous renderer is kept for the tooltip.
+	 */
+	@Override
+	public void registerEntryRenderers(EntryRendererRegistry registry) {
+		registry.register(VanillaEntryTypes.FLUID, (entry, last) -> new ReiFluidEntryRenderer(last));
+	}
+
 	@Override
 	public void registerCategories(CategoryRegistry registry) {
 		for (Machine m : MACHINES) {
@@ -86,6 +98,9 @@ public class AlaReiPlugin implements REIClientPlugin {
 		registry.addWorkstations(
 				CategoryIdentifier.of("minecraft", "plugins/smelting"),
 				EntryStacks.of(ModBlocks.IRON_FURNACE));
+		// MOD-019: the Polymerizer's fluid → item family. One category, its own display type.
+		registry.add(new PolymerizingCategory(ModBlocks.POLYMERIZER, ModBlocks.POLYMERIZER.getName()));
+		registry.addWorkstations(PolymerizingDisplay.CATEGORY, EntryStacks.of(ModBlocks.POLYMERIZER));
 		// Informational category: the T2 solar branches (and future evolution lines) with no crafting
 		// recipe. The base solar_panel is craftable, so it is intentionally not linked here.
 		registry.add(new AlaInfoCategory());
@@ -144,6 +159,11 @@ public class AlaReiPlugin implements REIClientPlugin {
 			} else {
 				registerClickArea(registry, target.screenClass(), rect, categoryId(target.kind()));
 			}
+		}
+		// MOD-019: fluid-fed machines carry their own display type, so they list separately.
+		for (MachineRecipeViewerTargets.FluidTarget target : MachineRecipeViewerTargets.FLUID_ALL) {
+			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
+			registerClickArea(registry, target.screenClass(), rect, PolymerizingDisplay.CATEGORY);
 		}
 		// MOD-080: keep REI's item grid clear of the upgrade panel + gear tab on every machine screen.
 		registry.exclusionZones().register((Class) MachineScreen.class, new AlaReiExclusionZones());

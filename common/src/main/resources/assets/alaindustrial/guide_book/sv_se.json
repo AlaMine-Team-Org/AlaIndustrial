@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "Olja",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "Olja från grunden",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Var du ska leta",
+              "text": "Olja kan varken tillverkas eller smältas — den går bara att hitta, var som helst i Övervärlden. Fyndigheter finns i fyra storlekar:\n\n• Ytpöl — en per 150 chunks, bara en försmak\n• Gruvschaktssjö — Y -40..-8, ungefär var femte chunk: din huvudkälla\n• Djup reservoar — Y -50..-30, en per 20 chunks, tre gånger bredare\n• Oljeåder — en per 600 chunks, syns från ytan\n\nOlja bildas aldrig inuti byar, gruvschakt, fästningar eller Uråldriga staden."
+            },
+            {
+              "type": "text",
+              "title": "En fyndighet tar slut",
+              "text": "Ett oljeblock du öser upp är borta för gott — till skillnad från vatten fylls fyndigheten inte på igen.\n\nEn vanlig sjö ger 20-60 hinkar, en djup reservoar märkbart mer, kupolen i en åder flera tusen. När en är tömd får du leta upp nästa — markera därför platsen så fort du hittar en.\n\nAtt ösa med hink tar sin tid: ställ en Pump intill, så tömmer den hela fyndigheten i en tank på egen hand."
+            },
+            {
+              "type": "text",
+              "title": "Nere i oljan",
+              "text": "Olja är trögflytande — du vadar snarare än simmar, och rörelserna blir rejält långsamma.\n\n• Håll in hopp för att stiga, ungefär ett block i sekunden — långsammare än i vatten och till och med i lava\n• Du kan inte andas: med huvudet under tar luften slut precis som under vatten, och sedan kommer skadan\n• Fallskada tas bort helt så länge du är i oljan\n• Sikten blir lidande: en mörk hinna över skärmen, inget syns bortom nio block\n\nPlanera nedstigningen i en åders schakt efter ditt luftförråd, inte efter dess djup."
+            },
+            {
+              "type": "text",
+              "title": "Den brinner",
+              "text": "Olja fattar eld lätt: det räcker att en eld finns i närheten — till och med snett under. Därifrån vandrar lågan block för block genom pölen tills allt är borta, källblocken inräknade. Ett tändstål antänder alltid en fyndighet direkt.\n\nLava antänder INTE olja — det är med flit: underjordiska sjöar bildas ofta tätt intill lavasjöar.\n\nEn massiv vägg på ett block stoppar lågan. Och behöver du olja stående tryggt intill en fabrik: stäng av moddens inställning oilBurns, så blir den helt reaktionslös."
+            },
+            {
+              "type": "text",
+              "title": "Vad den blir",
+              "text": "Olja är början på gummikedjan.\n\n1. Samla in den — med hink, Vakuumkapsel eller Pump\n2. Polymerisator: 1000 mB olja och 400 EU ger rågummi\n3. Ugn eller Elektrisk ugn: rågummit härdar till gummi\n\nGummi förbrukas ännu inte av något — de som ska använda det, isolerade kablar och MV-komponenter, kommer med nästa fas. Lägg upp ett lager."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "Energi",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "Polymerisator",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Polymerisator",
+              "text": "Kokar ner olja till rågummi — en tank på 10 hinkar, en hink per körning. Rågummit bränns sedan i en ugn och blir gummi."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 400 EU/op",
+                "Buffert: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extraktor",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "Olja",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Olja",
+              "text": "En flytande fossil resurs — ändliga sjöar i världen som samlas med hink, kapsel eller pump; trögflytande, brännbar och början på gummikedjan."
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "Nickelmalm",
           "icon": "alaindustrial:nickel_ore",
@@ -952,6 +1043,44 @@
               "type": "text",
               "title": "Uranmalm",
               "text": "Moddens sällsyntaste malm — bryts med en järnhacka, bearbetas till damm och tacka; reserverad för framtida kärnkraftsmaskiner."
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "Inkubator",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Inkubator",
+              "text": "1×2-multiblock — mekanisk sockel plus en glaskupol. Muterar föremål med uranbestrålning och EU: dubblerar dem, förvandlar dem eller skapar nya. Läget ställs in med ett chip, utfallet är slumpmässigt med fyra sällsynthetsgrader."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Buffert: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
             }
           ]
         },
@@ -1537,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "Gummi",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gummi",
+              "text": "Ett material av olja — Polymerisatorn gör om olja till rågummi, en ugn bränner det till gummi. Grunden för kommande isolerade kablar och MV-komponenter."
             }
           ]
         },

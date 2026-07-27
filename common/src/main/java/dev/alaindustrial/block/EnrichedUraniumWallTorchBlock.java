@@ -11,7 +11,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,13 +18,12 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 
 /**
  * Wall-mounted Enriched Uranium Torch (MOD-085): the wall variant of {@link EnrichedUraniumTorchBlock},
  * inheriting {@link WallTorchBlock}'s behaviour (FACING, placement, survival, rotate/mirror) and adding
- * the same enriched flame particles and {@link SimpleWaterloggedBlock} underwater-burning as the standing
- * torch. It has no BlockItem of its own — its drop and display name come from the standing torch via the
+ * the same enriched flame particles and the same {@link OilLoggedBlock} water/oil logging as the
+ * standing torch. It has no BlockItem of its own — its drop and display name come from the standing torch via the
  * block {@code Properties.overrideLootTable(...)}/{@code overrideDescription(...)} set at registration.
  *
  * <p>The codec is typed {@code MapCodec<WallTorchBlock>} to satisfy the invariant return type of
@@ -33,7 +31,7 @@ import net.minecraft.world.level.material.Fluids;
  * {@code flameParticle} is {@code protected} in {@code TorchBlock} and this subclass lives in a different
  * package, so it may be read only through a reference of this class.
  */
-public class EnrichedUraniumWallTorchBlock extends WallTorchBlock implements SimpleWaterloggedBlock {
+public class EnrichedUraniumWallTorchBlock extends WallTorchBlock implements OilLoggedBlock {
 
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -44,7 +42,8 @@ public class EnrichedUraniumWallTorchBlock extends WallTorchBlock implements Sim
 
 	public EnrichedUraniumWallTorchBlock(SimpleParticleType flameParticle, BlockBehaviour.Properties properties) {
 		super(flameParticle, properties);
-		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
+		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
+				.setValue(WATERLOGGED, false).setValue(OILLOGGED, false));
 	}
 
 	@Override
@@ -55,12 +54,12 @@ public class EnrichedUraniumWallTorchBlock extends WallTorchBlock implements Sim
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder); // adds FACING
-		builder.add(WATERLOGGED);
+		builder.add(WATERLOGGED, OILLOGGED);
 	}
 
 	@Override
 	protected FluidState getFluidState(BlockState state) {
-		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+		return OilLoggedBlock.fluidState(state, super.getFluidState(state));
 	}
 
 	@Override
@@ -70,15 +69,13 @@ public class EnrichedUraniumWallTorchBlock extends WallTorchBlock implements Sim
 			return null;
 		}
 		FluidState fluid = context.getLevel().getFluidState(context.getClickedPos());
-		return state.setValue(WATERLOGGED, fluid.is(Fluids.WATER));
+		return OilLoggedBlock.loggedForPlacement(state, fluid);
 	}
 
 	@Override
 	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
 			Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
-		if (state.getValue(WATERLOGGED)) {
-			ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-		}
+		OilLoggedBlock.scheduleFluidTick(state, level, ticks, pos);
 		// super (WallTorchBlock) still pops the torch off when its wall support is removed.
 		return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
 	}

@@ -1,6 +1,6 @@
 package dev.alaindustrial.mixin;
 
-import dev.alaindustrial.item.CapsuleFuel;
+import dev.alaindustrial.item.fluid.CapsuleFuel;
 import net.minecraft.world.inventory.FurnaceFuelSlot;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * the fuel stack reaches zero; a capsule stacks to sixteen, so without this a stack of sixteen would burn and
  * return a single empty capsule, losing the other fifteen. Forcing the fuel-slot stack size to one — the same
  * fix vanilla applies to buckets in {@link FurnaceFuelSlot#getMaxStackSize} — makes each capsule return its own
- * empty container. Loader-neutral (config in {@code common/alaindustrial.mixins.json}).
+ * empty container. Loader-neutral (config in {@code common/alaindustrial.compat-optional.mixins.json}).
  */
 @Mixin(FurnaceFuelSlot.class)
 public abstract class FurnaceFuelSlotMixin {

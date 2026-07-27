@@ -3,7 +3,7 @@ package dev.alaindustrial.menu;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.block.entity.IncubatorStatus;
-import dev.alaindustrial.item.MutationGrades;
+import dev.alaindustrial.item.misc.MutationGrades;
 import dev.alaindustrial.registry.ModCriteria;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModTags;

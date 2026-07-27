@@ -14,8 +14,8 @@ import dev.alaindustrial.core.fabric.FabricFluidLookup;
 import dev.alaindustrial.core.fabric.FabricItemEnergyBridge;
 import dev.alaindustrial.core.fabric.FabricItemFluidBridge;
 import dev.alaindustrial.core.fabric.FabricItemLookup;
-import dev.alaindustrial.item.ItemEnergyBridge;
-import dev.alaindustrial.item.ItemFluidBridge;
+import dev.alaindustrial.item.energy.ItemEnergyBridge;
+import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.network.fabric.FabricNetworkDispatcher;
@@ -180,6 +180,9 @@ public class IndustrializationFabric implements ModInitializer {
 	 * criteria, worldgen) plus the item-side fluid/energy capabilities that need the items to exist.
 	 */
 	private void registerContent() {
+		// MOD-238: fluids strictly before blocks — the oil LiquidBlock's constructor reads the
+		// ModContent fluid handles that ModFluids.init() binds (see ModFluids class doc).
+		dev.alaindustrial.registry.ModFluids.init();
 		ModBlocks.init();
 		ModBlockEntities.init();
 		ModMenus.init();
@@ -192,12 +195,39 @@ public class IndustrializationFabric implements ModInitializer {
 		// MOD-084: item energy capability on the mod's powered items, so other mods' chargers can fill
 		// them (same ordering reason as the capsule — the items must exist first).
 		dev.alaindustrial.core.fabric.StackAsEnergyStorage.register();
+		// MOD-238: oil's Fabric transfer-API attributes (viscosity 3000, the NeoForge FluidType
+		// counterpart). Registered per fluid — still and flowing each get the handler.
+		registerOilFluidAttributes();
+		// MOD-238: dispenser support for the filled oil bucket (the empty-bucket pickup behaviour is
+		// generic in vanilla and already worked; emptying is registered per item and was missing).
+		dev.alaindustrial.item.fluid.OilBucketDispenseBehavior.register();
 		ModRecipes.init();
 		ModCriteria.init();
 		ModWorldGen.init();
 		// MOD-062: villager profession + its POI (needs the workbench block registered by ModBlocks
 		// above). Fabric keeps both registries writable during init, so this is eager like the rest.
 		registerVillagerProfession();
+	}
+
+	/**
+	 * Registers oil's {@code FluidVariantAttributes} handler (MOD-238): viscosity 3000 — the Fabric
+	 * transfer-API mirror of the NeoForge {@code FluidType} numbers, so cross-mod pipes/tanks see the
+	 * same thickness on both loaders. The handler is per-fluid, so still and flowing register
+	 * separately.
+	 */
+	private void registerOilFluidAttributes() {
+		net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributeHandler oilAttributes =
+				new net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributeHandler() {
+					@Override
+					public int getViscosity(net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant variant,
+							net.minecraft.world.level.Level level) {
+						return 3000;
+					}
+				};
+		net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes.register(
+				dev.alaindustrial.registry.ModFluids.OIL, oilAttributes);
+		net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes.register(
+				dev.alaindustrial.registry.ModFluids.FLOWING_OIL, oilAttributes);
 	}
 
 	/**
@@ -314,7 +344,7 @@ public class IndustrializationFabric implements ModInitializer {
 			dev.alaindustrial.stats.PlayerStatsTracker.get().onServerTick(server);
 			// MOD-148: clear any jetpack flight-glow light block whose flight ended (land, logout,
 			// death, unequip) — the one cleanup path for every exit (see JetpackLight).
-			dev.alaindustrial.item.JetpackLight.sweep(server, server.getTickCount());
+			dev.alaindustrial.item.wearable.JetpackLight.sweep(server, server.getTickCount());
 		});
 		// Teleport warmup cancellation (MOD-092) — the mod's first player-event listeners. Three
 		// separate hooks are needed, not two: AFTER_DAMAGE does NOT fire for a killing blow, and
@@ -355,7 +385,7 @@ public class IndustrializationFabric implements ModInitializer {
 			dev.alaindustrial.stats.PlayerStatsTracker.get().flush(server);
 			// MOD-176: clear a mid-flight glow light before the level save — the per-tick sweep no
 			// longer runs, and a saved minecraft:light block would survive as an invisible orphan.
-			dev.alaindustrial.item.JetpackLight.shutdown(server);
+			dev.alaindustrial.item.wearable.JetpackLight.shutdown(server);
 		});
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
 			NetworkManager.clearAll();
@@ -373,7 +403,13 @@ public class IndustrializationFabric implements ModInitializer {
 		// bucket loads the bucket into the tank instead of spilling it. UseBlockCallback fires early on both
 		// sides — before vanilla's sneak-bypass runs BucketItem#useOn — so it can intercept the spill.
 		UseBlockCallback.EVENT.register((player, level, hand, hit) ->
-				dev.alaindustrial.item.VanillaBucketDeposit.tryDeposit(level, player, hand, hit));
+				dev.alaindustrial.item.fluid.VanillaBucketDeposit.tryDeposit(level, player, hand, hit));
+
+		// MOD-238: flint and steel on an oil cell lights it. Same early seam and for the same reason:
+		// oil has an empty outline shape, so the click always lands on the block BEHIND it and vanilla
+		// FlintAndSteelItem#useOn then fails to place fire into the (non-air) oil block.
+		UseBlockCallback.EVENT.register((player, level, hand, hit) ->
+				dev.alaindustrial.block.OilLiquidBlock.tryLight(level, player, hand, hit));
 
 		// MOD-119: inject the mod's starter items into the vanilla bonus chest. Adds one pool that
 		// references the shared sub-table alaindustrial:inject/bonus_chest (item list + balance live there);

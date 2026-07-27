@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "Öl",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "Öl von Grund auf",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Wo du suchen musst",
+              "text": "Öl wird weder hergestellt noch geschmolzen — man findet es nur, überall in der Oberwelt. Vorkommen gibt es in vier Größen:\n\n• Oberflächenlache — eine pro 150 Chunks, nur ein Vorgeschmack\n• Minenschacht-See — Y -40..-8, etwa jeder fünfte Chunk: deine Hauptquelle\n• Tiefes Reservoir — Y -50..-30, eines pro 20 Chunks, dreimal so breit\n• Ölader — eine pro 600 Chunks, von der Oberfläche aus sichtbar\n\nÖl entsteht nie in Dörfern, Minenschächten, Festungen oder der Antiken Stadt."
+            },
+            {
+              "type": "text",
+              "title": "Ein Vorkommen ist endlich",
+              "text": "Ein abgeschöpfter Ölblock ist für immer weg — anders als Wasser füllt sich das Vorkommen nicht wieder auf.\n\nEin gewöhnlicher See gibt 20-60 Eimer, ein tiefes Reservoir deutlich mehr, die Kuppel einer Ader mehrere Tausend. Ist eines leer, suchst du das nächste — markiere dir also jeden Fundort.\n\nMit dem Eimer dauert das Abschöpfen: Stell eine Pumpe daneben, und sie leert das ganze Vorkommen von selbst in einen Tank."
+            },
+            {
+              "type": "text",
+              "title": "Im Öl",
+              "text": "Öl ist zäh — du watest hindurch, statt zu schwimmen, und wirst dabei stark ausgebremst.\n\n• Halte die Sprungtaste, um zu steigen: etwa ein Block pro Sekunde — langsamer als in Wasser und sogar als in Lava\n• Atmen geht nicht: Steckt dein Kopf darin, leert sich die Luft wie unter Wasser, danach kommt der Schaden\n• Fallschaden wird im Öl vollständig aufgehoben\n• Die Sicht leidet: ein dunkler Schleier auf dem Bildschirm, weiter als neun Blöcke siehst du nichts\n\nPlane den Abstieg durch den Schacht einer Ader nach deinem Luftvorrat, nicht nach seiner Tiefe."
+            },
+            {
+              "type": "text",
+              "title": "Es brennt",
+              "text": "Öl fängt leicht Feuer: Es genügt, dass Feuer in der Nähe ist — auch schräg darunter. Von dort wandert die Flamme Block für Block durch die Lache, bis alles weg ist, Quellblöcke inklusive. Ein Feuerzeug entzündet ein Vorkommen sofort, immer.\n\nLava entzündet Öl NICHT — das ist Absicht: Unterirdische Seen entstehen oft direkt an Lavaseen.\n\nEine massive Wand von einem Block Dicke hält die Flamme auf. Und wenn Öl sicher neben einer Fabrik liegen soll, schalte die Einstellung oilBurns des Mods ab — dann ist es völlig träge."
+            },
+            {
+              "type": "text",
+              "title": "Was daraus wird",
+              "text": "Öl ist der Anfang der Gummikette.\n\n1. Sammle es ein — mit Eimer, Vakuumkapsel oder Pumpe\n2. Polymerisator: 1000 mB Öl und 400 EU ergeben Rohkautschuk\n3. Ofen oder Elektroofen: Rohkautschuk härtet zu Gummi aus\n\nGummi wird noch nirgends verbraucht — seine Abnehmer, isolierte Kabel und MV-Bauteile, kommen mit der nächsten Phase. Leg dir einen Vorrat an."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "Energie",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "Polymerisator",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Polymerisator",
+              "text": "Kocht Öl zu Rohkautschuk ein — ein Tank für 10 Eimer, ein Eimer pro Durchlauf. Der Rohkautschuk wird anschließend im Ofen zu Gummi gebrannt."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 400 EU/Vorgang",
+                "Puffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extraktor",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "Öl",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Öl",
+              "text": "Ein flüssiger fossiler Rohstoff — endliche Seen in der Welt, mit Eimer, Kapsel oder Pumpe abgeschöpft; zäh, brennbar und der Anfang der Gummikette."
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "Nickelerz",
           "icon": "alaindustrial:nickel_ore",
@@ -952,6 +1043,44 @@
               "type": "text",
               "title": "Uranerz",
               "text": "Das seltenste Erz des Mods — mit einer Eisenspitzhacke abgebaut, zu Staub und Barren verarbeitet; reserviert für künftige Nuklearmaschinen."
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "Inkubator",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Inkubator",
+              "text": "1×2-Multiblock — Maschinensockel plus eine Glaskuppel. Mutiert Gegenstände durch Uranbestrahlung und EU: dupliziert sie, verwandelt sie oder erschafft neue. Der Modus wird per Chip gewählt, das Ergebnis ist zufallsbasiert mit vier Seltenheitsstufen."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
             }
           ]
         },
@@ -1537,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "Gummi",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gummi",
+              "text": "Ein Werkstoff aus Öl — der Polymerisator verarbeitet Öl zu Rohkautschuk, ein Ofen brennt ihn zu Gummi. Die Grundlage künftiger isolierter Kabel und MV-Komponenten."
             }
           ]
         },

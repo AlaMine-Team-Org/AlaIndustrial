@@ -3,19 +3,19 @@ package dev.alaindustrial.registry.neoforge;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.IncubatorMode;
-import dev.alaindustrial.item.ElectricDrillItem;
-import dev.alaindustrial.item.MutationChipItem;
-import dev.alaindustrial.item.EnergyPackItem;
-import dev.alaindustrial.item.FluidTankBlockItem;
-import dev.alaindustrial.item.ScytheTier;
-import dev.alaindustrial.item.ScytheTiers;
-import dev.alaindustrial.item.ModToolMaterials;
-import dev.alaindustrial.item.TemperedIronToolStats;
-import dev.alaindustrial.item.NetworkAnalyzerItem;
-import dev.alaindustrial.item.TeleporterRemoteItem;
-import dev.alaindustrial.item.PouchItem;
-import dev.alaindustrial.item.ScytheItem;
-import dev.alaindustrial.item.neoforge.HammerItemNeoForge;
+import dev.alaindustrial.item.tool.ElectricDrillItem;
+import dev.alaindustrial.item.misc.MutationChipItem;
+import dev.alaindustrial.item.wearable.EnergyPackItem;
+import dev.alaindustrial.item.fluid.FluidTankBlockItem;
+import dev.alaindustrial.item.tool.ScytheTier;
+import dev.alaindustrial.item.tool.ScytheTiers;
+import dev.alaindustrial.item.material.ModToolMaterials;
+import dev.alaindustrial.item.material.TemperedIronToolStats;
+import dev.alaindustrial.item.tool.NetworkAnalyzerItem;
+import dev.alaindustrial.item.teleport.TeleporterRemoteItem;
+import dev.alaindustrial.item.energy.PouchItem;
+import dev.alaindustrial.item.tool.ScytheItem;
+import dev.alaindustrial.item.tool.neoforge.HammerItemNeoForge;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -74,6 +74,11 @@ public final class ModItemsNeoForge {
 			ITEMS.registerItem("resonant_shard", Item::new);
 	public static final DeferredItem<Item> MUTAGEN_DUST =
 			ITEMS.registerItem("mutagen_dust", Item::new);
+	// Oil → rubber chain (MOD-019): the polymerizer's product, and what a furnace cures it into.
+	public static final DeferredItem<Item> RAW_RUBBER =
+			ITEMS.registerItem("raw_rubber", Item::new);
+	public static final DeferredItem<Item> RUBBER =
+			ITEMS.registerItem("rubber", Item::new);
 	public static final DeferredItem<Item> UNSTABLE_ISOTOPE =
 			ITEMS.registerItem("unstable_isotope", Item::new);
 	// Rotor / wheel (MOD-189): durability components — wear shows as a vanilla durability bar and, being
@@ -150,10 +155,10 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> URANIUM_INGOT = ITEMS.registerItem("uranium_ingot", Item::new);
 	public static final DeferredItem<NetworkAnalyzerItem> NETWORK_ANALYZER =
 			ITEMS.registerItem("network_analyzer", NetworkAnalyzerItem::new, p -> p.stacksTo(1));
-	public static final DeferredItem<dev.alaindustrial.item.WrenchItem> WRENCH =
-			ITEMS.registerItem("wrench", dev.alaindustrial.item.WrenchItem::new, p -> p.stacksTo(1));
-	public static final DeferredItem<dev.alaindustrial.item.GuideBookItem> GUIDE_BOOK =
-			ITEMS.registerItem("guide_book", dev.alaindustrial.item.GuideBookItem::new, p -> p.stacksTo(1));
+	public static final DeferredItem<dev.alaindustrial.item.tool.WrenchItem> WRENCH =
+			ITEMS.registerItem("wrench", dev.alaindustrial.item.tool.WrenchItem::new, p -> p.stacksTo(1));
+	public static final DeferredItem<dev.alaindustrial.item.misc.GuideBookItem> GUIDE_BOOK =
+			ITEMS.registerItem("guide_book", dev.alaindustrial.item.misc.GuideBookItem::new, p -> p.stacksTo(1));
 
 	// Teleporter Remote (MOD-092) — hidden from the creative tab until MOD-093 (see CreativeTabContent).
 	public static final DeferredItem<TeleporterRemoteItem> TELEPORTER_REMOTE =
@@ -172,33 +177,33 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<ElectricDrillItem> ELECTRIC_DRILL =
 			ITEMS.registerItem("electric_drill", ElectricDrillItem::new, ElectricDrillItem::electricDrillProperties);
 	// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
-	public static final DeferredItem<dev.alaindustrial.item.MagnetItem> ELECTROMAGNET =
-			ITEMS.registerItem("electromagnet", dev.alaindustrial.item.MagnetItem::new, p -> p.stacksTo(1));
+	public static final DeferredItem<dev.alaindustrial.item.tool.MagnetItem> ELECTROMAGNET =
+			ITEMS.registerItem("electromagnet", dev.alaindustrial.item.tool.MagnetItem::new, p -> p.stacksTo(1));
 	// Jetpack (MOD-148): worn EU flight — thrust on held jump, powerless glide when drained. Equipment
 	// properties (EQUIPPABLE + 5 armor points, no ArmorMaterial) come from the common helper.
-	public static final DeferredItem<dev.alaindustrial.item.JetpackItem> JETPACK =
-			ITEMS.registerItem("jetpack", dev.alaindustrial.item.JetpackItem::new,
-					dev.alaindustrial.item.JetpackItem::equipmentProperties);
+	public static final DeferredItem<dev.alaindustrial.item.wearable.JetpackItem> JETPACK =
+			ITEMS.registerItem("jetpack", dev.alaindustrial.item.wearable.JetpackItem::new,
+					dev.alaindustrial.item.wearable.JetpackItem::equipmentProperties);
 	// Vacuum Capsule (MOD-063): empty stacks to the vanilla default (64), filled to STACK_SIZE (16).
-	public static final DeferredItem<dev.alaindustrial.item.VacuumCapsuleItem> VACUUM_CAPSULE =
-			ITEMS.registerItem("vacuum_capsule", dev.alaindustrial.item.VacuumCapsuleItem::new);
+	public static final DeferredItem<dev.alaindustrial.item.fluid.VacuumCapsuleItem> VACUUM_CAPSULE =
+			ITEMS.registerItem("vacuum_capsule", dev.alaindustrial.item.fluid.VacuumCapsuleItem::new);
 	// MOD-077 craftRemainder (empty capsule) comes from ItemBuildersNeoForge#filledCapsuleProperties.
 	// VACUUM_CAPSULE is an earlier entry in this DeferredRegister, so it is resolved by the time the
 	// properties operator runs during the item RegisterEvent.
-	public static final DeferredItem<dev.alaindustrial.item.FilledCapsuleItem> FILLED_VACUUM_CAPSULE =
-			ITEMS.registerItem("filled_vacuum_capsule", dev.alaindustrial.item.FilledCapsuleItem::new,
+	public static final DeferredItem<dev.alaindustrial.item.fluid.FilledCapsuleItem> FILLED_VACUUM_CAPSULE =
+			ITEMS.registerItem("filled_vacuum_capsule", dev.alaindustrial.item.fluid.FilledCapsuleItem::new,
 					ItemBuildersNeoForge.filledCapsuleProperties(VACUUM_CAPSULE));
 	// Stock Display Frame (MOD-066). The factory lambda runs during the ITEM RegisterEvent, by which
 	// point the ENTITY_TYPE register has already fired (vanilla registry order) — so resolving the
 	// entity-type holder here is safe, and never at static-init time.
-	public static final DeferredItem<dev.alaindustrial.item.StockDisplayFrameItem> STOCK_DISPLAY_FRAME_ITEM =
+	public static final DeferredItem<dev.alaindustrial.item.misc.StockDisplayFrameItem> STOCK_DISPLAY_FRAME_ITEM =
 			ITEMS.registerItem("stock_display_frame", ItemBuildersNeoForge.stockDisplayFrame(), Item.Properties::new);
 
 	// Scythe (MOD-068): eight AOE foliage tiers. The factory builds a ScytheItem (its own AOE useOn);
 	// the properties operator applies .hoe(material, ...) for the tool component + enchantability,
 	// exactly like the Fabric ModItems#scythe helper. NeoForge applies setId from the deferred key.
 	// The tier tuple (material + AOE profile + attack bias + fire-resistance) is declared once in the
-	// loader-neutral dev.alaindustrial.item.ScytheTiers — both loaders register from the same list,
+	// loader-neutral dev.alaindustrial.item.tool.ScytheTiers — both loaders register from the same list,
 	// so the Fabric and NeoForge builds cannot drift (the comment-as-contract this used to rely on).
 	public static final DeferredItem<ScytheItem> SCYTHE_WOOD = scythe(ScytheTiers.WOOD);
 	public static final DeferredItem<ScytheItem> SCYTHE_STONE = scythe(ScytheTiers.STONE);
@@ -238,6 +243,13 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<HammerItemNeoForge> FORGE_HAMMER = ITEMS.registerItem("forge_hammer",
 			HammerItemNeoForge::new, p -> p.durability(128).repairable(Items.IRON_INGOT));
 
+	// Oil Bucket (MOD-238): the vanilla WATER_BUCKET pattern. The still fluid resolves eagerly in the
+	// item factory — safe, the FLUID RegisterEvent fires before ITEM (vanilla registration order).
+	public static final DeferredItem<Item> OIL_BUCKET =
+			ITEMS.registerItem("oil_bucket",
+					p -> new net.minecraft.world.item.BucketItem(ModFluidsNeoForge.OIL.get(), p),
+					p -> p.craftRemainder(Items.BUCKET).stacksTo(1));
+
 	// --- Block items ---
 	public static final DeferredItem<BlockItem> GENERATOR_ITEM =
 			ITEMS.registerSimpleBlockItem("generator", ModBlocksNeoForge.GENERATOR);
@@ -264,6 +276,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("compressor", ModBlocksNeoForge.COMPRESSOR);
 	public static final DeferredItem<BlockItem> SAWMILL_ITEM =
 			ITEMS.registerSimpleBlockItem("sawmill", ModBlocksNeoForge.SAWMILL);
+	public static final DeferredItem<BlockItem> POLYMERIZER_ITEM =
+			ITEMS.registerSimpleBlockItem("polymerizer", ModBlocksNeoForge.POLYMERIZER);
 	public static final DeferredItem<BlockItem> INCUBATOR_ITEM =
 			ITEMS.registerSimpleBlockItem("incubator", ModBlocksNeoForge.INCUBATOR);
 	public static final DeferredItem<BlockItem> GEOTHERMAL_GENERATOR_ITEM =
@@ -431,6 +445,7 @@ public final class ModItemsNeoForge {
 		ModContent.URANIUM_PLATE = URANIUM_PLATE;
 		ModContent.TEMPERED_IRON_PLATE = TEMPERED_IRON_PLATE;
 		ModContent.FORGE_HAMMER = FORGE_HAMMER::get;
+		ModContent.OIL_BUCKET = OIL_BUCKET::get;
 
 		ModContent.GENERATOR_ITEM = GENERATOR_ITEM;
 		ModContent.SOLAR_PANEL_ITEM = SOLAR_PANEL_ITEM;
@@ -444,6 +459,7 @@ public final class ModItemsNeoForge {
 		ModContent.EXTRACTOR_ITEM = EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = COMPRESSOR_ITEM;
 		ModContent.SAWMILL_ITEM = SAWMILL_ITEM;
+		ModContent.POLYMERIZER_ITEM = POLYMERIZER_ITEM;
 		ModContent.INCUBATOR_ITEM = INCUBATOR_ITEM;
 		ModContent.MUTATION_CHIP_TRANSFORM = MUTATION_CHIP_TRANSFORM;
 		ModContent.MUTATION_CHIP_DUPLICATE = MUTATION_CHIP_DUPLICATE;
@@ -453,6 +469,8 @@ public final class ModItemsNeoForge {
 		ModContent.IRRADIATED_DIAMOND = IRRADIATED_DIAMOND;
 		ModContent.RESONANT_SHARD = RESONANT_SHARD;
 		ModContent.MUTAGEN_DUST = MUTAGEN_DUST;
+		ModContent.RAW_RUBBER = RAW_RUBBER::get;
+		ModContent.RUBBER = RUBBER::get;
 		ModContent.UNSTABLE_ISOTOPE = UNSTABLE_ISOTOPE;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = GEOTHERMAL_GENERATOR_ITEM;
 		ModContent.PUMP_ITEM = PUMP_ITEM;

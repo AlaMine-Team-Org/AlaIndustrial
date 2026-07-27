@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "석유",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "석유, 처음부터",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "어디서 찾을까",
+              "text": "석유는 제작할 수도 제련할 수도 없습니다 — 오버월드 어디에서든 찾아내는 수밖에 없습니다. 매장지는 네 가지 크기로 나뉩니다:\n\n• 지표의 웅덩이 — 150청크당 하나, 맛보기 수준\n• 채굴 깊이의 호수 — Y -40..-8, 다섯 청크 중 하나꼴: 주요 공급원\n• 심층 저류지 — Y -50..-30, 20청크당 하나, 세 배 더 넓습니다\n• 석유 광맥 — 600청크당 하나, 지표에서도 보입니다\n\n석유는 마을, 폐광산, 요새, 고대 도시 안에서는 절대 생성되지 않습니다."
+            },
+            {
+              "type": "text",
+              "title": "매장지는 유한합니다",
+              "text": "퍼낸 석유 블록은 영영 사라집니다 — 물과 달리 매장지는 다시 차오르지 않습니다.\n\n평범한 호수는 양동이 20-60개, 심층 저류지는 눈에 띄게 더 많고, 광맥의 돔은 수천 개에 이릅니다. 하나를 비우면 다음을 찾아 나서야 하니, 발견하면 그 자리를 표시해 두세요.\n\n양동이로 퍼내면 오래 걸립니다: 옆에 펌프를 놓으면 매장지 전체를 알아서 탱크로 빼냅니다."
+            },
+            {
+              "type": "text",
+              "title": "석유 속에서",
+              "text": "석유는 걸쭉합니다 — 헤엄친다기보다 헤치고 나아가게 되며, 움직임이 크게 느려집니다.\n\n• 점프를 누르고 있으면 떠오릅니다, 초당 약 한 블록 — 물보다, 심지어 용암보다도 느립니다\n• 숨을 쉴 수 없습니다: 머리까지 잠기면 물속처럼 산소가 줄고, 이어서 피해를 입습니다\n• 석유 안에 있는 동안에는 낙하 피해가 완전히 사라집니다\n• 시야도 나빠집니다: 화면에 어두운 막이 끼고, 9블록 너머는 아무것도 보이지 않습니다\n\n광맥의 수직 통로를 내려갈 때는 깊이가 아니라 남은 산소를 기준으로 계획하세요."
+            },
+            {
+              "type": "text",
+              "title": "잘 탑니다",
+              "text": "석유는 쉽게 불붙습니다: 불이 근처에 있기만 해도 — 대각선 아래에 있어도 옮겨붙습니다. 그때부터 불길은 웅덩이를 블록 단위로 타고 번져 원천 블록까지 남김없이 태웁니다. 부싯돌과 부시로는 언제나 즉시 불을 붙일 수 있습니다.\n\n용암은 석유에 절대 불을 붙이지 않습니다 — 의도된 설계입니다: 지하 호수는 용암 호수 바로 옆에 생성되는 일이 많기 때문입니다.\n\n불길은 한 블록 두께의 막힌 벽을 넘지 못합니다. 공장 옆에 석유를 안전하게 두어야 한다면 모드의 oilBurns 설정을 끄세요. 그러면 완전히 불연성이 됩니다."
+            },
+            {
+              "type": "text",
+              "title": "무엇이 되는가",
+              "text": "석유는 고무 사슬의 출발점입니다.\n\n1. 모으기 — 양동이, 진공 캡슐 또는 펌프로\n2. 중합기: 석유 1000 mB와 400 EU로 생고무를 만듭니다\n3. 화로 또는 전기 화로: 생고무를 구우면 고무가 됩니다\n\n고무는 아직 어디에도 쓰이지 않습니다 — 소비처인 절연 케이블과 MV 부품은 다음 단계에 나옵니다. 미리 쌓아 두세요."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "에너지",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "중합기",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "중합기",
+              "text": "석유를 졸여 생고무로 만듭니다 — 양동이 10개 용량의 탱크로, 작업 한 번에 양동이 한 개를 씁니다. 생고무는 화로에서 구우면 고무가 됩니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 400 EU/작업",
+                "버퍼: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "추출기",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "석유",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "석유",
+              "text": "액체 화석 자원 — 세계에 있는 유한한 호수로, 양동이나 캡슐, 펌프로 모읍니다. 걸쭉하고 잘 타며, 고무 사슬의 출발점입니다."
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "니켈 광석",
           "icon": "alaindustrial:nickel_ore",
@@ -952,6 +1043,44 @@
               "type": "text",
               "title": "우라늄 광석",
               "text": "모드에서 가장 희귀한 광석 — 철 곡괭이로 채굴하며, 가루와 주괴로 가공됩니다; 미래의 원자력 기계용으로 예약되어 있습니다."
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "인큐베이터",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "인큐베이터",
+              "text": "1×2 멀티블록 — 기계 본체와 유리 돔. 우라늄 조사와 EU로 아이템을 변이시켜 복제하거나, 다른 것으로 바꾸거나, 새로 만들어 냅니다. 모드는 칩으로 정하고, 결과는 확률에 따라 정해지며 희귀도는 네 등급입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
             }
           ]
         },
@@ -1537,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "고무",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "고무",
+              "text": "석유로 만드는 재료 — 중합기가 석유를 생고무로 바꾸고, 화로가 그것을 구워 고무로 만듭니다. 앞으로 나올 절연 케이블과 MV 부품의 기반입니다."
             }
           ]
         },

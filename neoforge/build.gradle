@@ -8,6 +8,17 @@ repositories {
     maven { url = 'https://maven.blamejared.com/' }
 }
 
+// MOD-242 — world-gametest lane moved out of `main` (it used to ship in the release jar).
+// The `gametest` source set holds the NeoForge test glue (dev.alaindustrial.gametest.neoforge.*)
+// and additionally compiles the shared scenario bodies from common/src/gametest/java (wired below).
+// Declared before the neoForge block so `mods { ... sourceSet sourceSets.gametest }` can see it.
+sourceSets {
+    gametest {
+        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+    }
+}
+
 neoForge {
     version = neoforge_version
     // Automatically enable NeoForge AccessTransformers if the file exists.
@@ -48,6 +59,10 @@ neoForge {
     mods {
         "${mod_id}" {
             sourceSet sourceSets.main
+            // MOD-242: dev runs (client/server/gameTests) load the gametest classes as part of the
+            // mod, so the reflective NeoForgeGameTestBootstrap lookup in IndustrializationNeoForge
+            // finds them there — while `jar` still packs only `main`, keeping them out of the release.
+            sourceSet sourceSets.gametest
         }
     }
     // MOD-022 feasibility spike: JUnit-in-server runtime tests (ModDevGradle unitTest).
@@ -74,6 +89,25 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+// MOD-242 — compile the shared scenario bodies (common/src/gametest/java) into the gametest
+// source set, mirroring the fabric side. Same source-dir-artifact mechanism as commonJava in
+// multiloader-loader.gradle, but scoped so the scenarios never reach `main`/the shipped jar.
+configurations {
+    commonGametestJava {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+dependencies {
+    commonGametestJava(project(path: ':common', configuration: 'commonGametestJava'))
+}
+
+tasks.named('compileGametestJava', JavaCompile) {
+    dependsOn(configurations.commonGametestJava)
+    source(configurations.commonGametestJava)
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }

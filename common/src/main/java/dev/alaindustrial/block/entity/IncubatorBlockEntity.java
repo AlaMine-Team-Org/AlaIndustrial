@@ -4,7 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.IncubatorBlock;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
-import dev.alaindustrial.item.MutationGrades;
+import dev.alaindustrial.item.misc.MutationGrades;
 import dev.alaindustrial.menu.IncubatorMenu;
 import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.mutation.MutationRoll;

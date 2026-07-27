@@ -8,6 +8,7 @@ import dev.alaindustrial.client.screen.ElectricFurnaceScreen;
 import dev.alaindustrial.client.screen.ExtractorScreen;
 import dev.alaindustrial.client.screen.IncubatorScreen;
 import dev.alaindustrial.client.screen.MaceratorScreen;
+import dev.alaindustrial.client.screen.PolymerizerScreen;
 import dev.alaindustrial.client.screen.SawmillScreen;
 
 /**
@@ -45,6 +46,22 @@ public final class MachineRecipeViewerTargets {
 			// mode comes from the inserted chip rather than a button, but the arrow opens all three the
 			// same way. The rect tracks IncubatorScreen.ARROW_*.
 			new Target(IncubatorScreen.class, ModRecipes.MUTATION_TRANSFORM, new GuiRect(112, 20, 24, 16)));
+
+	/**
+	 * The same, for machines whose recipes are fluid-fed ({@link ModRecipes.FluidKind}). A separate list
+	 * rather than a wider {@link Target}: the two recipe families are different Java types, and widening
+	 * {@code Target#kind} to a common supertype would push an {@code instanceof} into every plugin call
+	 * site that reads it. One extra loop in each plugin is the cheaper half of that trade.
+	 */
+	public record FluidTarget(
+			Class<? extends AbstractContainerScreen<?>> screenClass,
+			ModRecipes.FluidKind kind,
+			GuiRect progressArea) {
+	}
+
+	/** Fluid-fed machines' click targets. The rect tracks {@code PolymerizerScreen.ARROW_*}. */
+	public static final List<FluidTarget> FLUID_ALL = List.of(
+			new FluidTarget(PolymerizerScreen.class, ModRecipes.POLYMERIZING, new GuiRect(79, 35, 24, 17)));
 
 	/** The four sawmill recipe families, in button order — used by REI/JEI to open every mode from the sprite. */
 	public static final List<ModRecipes.Kind> SAWMILL_KINDS = List.of(

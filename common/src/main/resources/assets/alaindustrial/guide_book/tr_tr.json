@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "Petrol",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "Sıfırdan petrol",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Nerede aranır",
+              "text": "Petrol ne üretilir ne de eritilir — yalnızca bulunur, hem de Ana Dünya'nın her yerinde. Yataklar dört boyutta gelir:\n\n• Yüzey lekesi — 150 chunk'ta bir, sadece tadımlık\n• Maden gölü — Y -40..-8, yaklaşık her beş chunk'tan birinde: ana kaynağınız\n• Derin rezervuar — Y -50..-30, 20 chunk'ta bir, üç kat daha geniş\n• Petrol damarı — 600 chunk'ta bir, yüzeyden görünür\n\nPetrol asla köylerin, terk edilmiş madenlerin, kalelerin veya Kadim Şehir'in içinde oluşmaz."
+            },
+            {
+              "type": "text",
+              "title": "Yatak tükenir",
+              "text": "Aldığınız her petrol bloğu temelli gider — sudan farklı olarak yatak kendini yenilemez.\n\nSıradan bir göl 20-60 kova eder, derin bir rezervuar belirgin biçimde daha fazla, bir damarın kubbesi ise birkaç bin. Birini boşalttınız mı sıra bir sonrakini aramaya gelir, o yüzden bulduğunuz yeri işaretleyin.\n\nKovayla toplamak zaman alır: yanına bir Pompa koyun, yatağın tamamını kendi başına bir tanka boşaltsın."
+            },
+            {
+              "type": "text",
+              "title": "Petrolün içinde",
+              "text": "Petrol koyudur — içinde yüzmez, güçlükle ilerlersiniz ve hareket iyice yavaşlar.\n\n• Yükselmek için zıplamayı basılı tutun, saniyede yaklaşık bir blok — sudan, hatta lavdan bile yavaş\n• Nefes alamazsınız: başınız altta kalınca hava tıpkı su altındaki gibi biter, ardından hasar başlar\n• Petrolün içindeyken düşme hasarı tamamen iptal olur\n• Görüş bozulur: ekranda koyu bir perde, 9 bloktan ötesi görünmez\n\nBir damarın kuyusuna inişi derinliğine göre değil, kalan havanıza göre planlayın."
+            },
+            {
+              "type": "text",
+              "title": "Yanar",
+              "text": "Petrol kolay tutuşur: ateşin yakınında olması yeter — hatta çapraz alttan bile. Oradan alev, kaynak bloklar dahil hepsi tükenene kadar birikintiyi blok blok dolaşır. Çakmaktaşı ve çelik bir yatağı her zaman anında tutuşturur.\n\nLav petrolü ASLA tutuşturmaz — bu bilinçli bir tercih: yeraltı gölleri sık sık lav göllerinin tam dibinde oluşur.\n\nAlev, bir blok kalınlığındaki dolu duvarı geçemez. Petrolün fabrikanızın yanında güvenle durmasını istiyorsanız modun oilBurns ayarını kapatın; petrol tamamen tepkisiz hâle gelir."
+            },
+            {
+              "type": "text",
+              "title": "Neye dönüşür",
+              "text": "Petrol, kauçuk zincirinin başlangıcıdır.\n\n1. Toplayın — kovayla, Vakum kapsülüyle veya Pompayla\n2. Polimerleştirici: 1000 mB petrol ve 400 EU ham kauçuk verir\n3. Fırın veya Elektrikli Fırın: ham kauçuk pişerek kauçuğa dönüşür\n\nKauçuğu şimdilik hiçbir şey tüketmiyor — onu kullanacak yalıtımlı kablolar ve MV bileşenleri bir sonraki aşamada geliyor. Şimdiden stoklayın."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "Enerji",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "Polimerleştirici",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Polimerleştirici",
+              "text": "Petrolü kaynatarak ham kauçuğa dönüştürür — 10 kovalık tank, işlem başına bir kova. Ham kauçuk daha sonra fırında pişirilerek kauçuk olur."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 400 EU/işlem",
+                "Tampon: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Çıkarıcı",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "Petrol",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Petrol",
+              "text": "Sıvı bir fosil kaynak — dünyada sınırlı göller halinde bulunur; kova, kapsül veya pompayla toplanır. Koyu kıvamlı, yanıcı ve kauçuk zincirinin başlangıcı."
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "Nikel Cevheri",
           "icon": "alaindustrial:nickel_ore",
@@ -952,6 +1043,44 @@
               "type": "text",
               "title": "Uranyum Cevheri",
               "text": "Modun en nadir cevheri — demir kazma ile kazılır, toz ve külçeye işlenir; gelecekteki nükleer makineler için ayrılmıştır."
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "Kuluçka",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kuluçka",
+              "text": "1×2 çok bloklu yapı — mekanik taban ve bir cam kubbe. Uranyum ışınlaması ve EU ile eşyaları mutasyona uğratır: onları çoğaltır, dönüştürür veya yenilerini yaratır. Mod bir çiple belirlenir, sonuç olasılığa dayalıdır ve dört nadirlik derecesi vardır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
             }
           ]
         },
@@ -1537,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "Kauçuk",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kauçuk",
+              "text": "Petrolden elde edilen bir malzeme — Polimerleştirici petrolü ham kauçuğa çevirir, fırın onu pişirerek kauçuğa dönüştürür. Gelecekteki yalıtımlı kabloların ve MV bileşenlerinin temeli."
             }
           ]
         },

@@ -1,8 +1,8 @@
 package dev.alaindustrial.menu;
 
-import dev.alaindustrial.item.TeleportPoint;
-import dev.alaindustrial.item.TeleportPoints;
-import dev.alaindustrial.item.TeleporterRemoteItem;
+import dev.alaindustrial.item.teleport.TeleportPoint;
+import dev.alaindustrial.item.teleport.TeleportPoints;
+import dev.alaindustrial.item.teleport.TeleporterRemoteItem;
 import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.network.TeleportNoticePayload;
 import dev.alaindustrial.registry.ModContent;

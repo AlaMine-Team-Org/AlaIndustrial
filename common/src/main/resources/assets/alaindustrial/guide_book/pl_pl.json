@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "Ropa naftowa",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "Ropa naftowa od podstaw",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gdzie szukać",
+              "text": "Ropy naftowej nie da się wytworzyć ani wytopić — można ją tylko znaleźć, w całym Świecie Podstawowym. Złoża mają cztery rozmiary:\n\n• Plama na powierzchni — jedna na 150 chunków, na spróbowanie\n• Jezioro w kopalni — Y -40..-8, mniej więcej co piąty chunk: twoje główne źródło\n• Głęboki zbiornik — Y -50..-30, jeden na 20 chunków, trzy razy szerszy\n• Żyła ropy — jedna na 600 chunków, widoczna z powierzchni\n\nRopa nigdy nie generuje się wewnątrz wiosek, kopalni, twierdz ani Pradawnego Miasta."
+            },
+            {
+              "type": "text",
+              "title": "Złoże jest skończone",
+              "text": "Blok ropy, który zaczerpniesz, znika na zawsze — w przeciwieństwie do wody złoże się nie uzupełnia.\n\nZwykłe jezioro to 20-60 wiader, głęboki zbiornik wyraźnie więcej, a kopuła żyły kilka tysięcy. Opróżnisz jedno — szukasz następnego, więc znalezione miejsce warto od razu oznaczyć.\n\nCzerpanie wiadrem trwa: postaw obok Pompę, a ona sama zleje całe złoże do zbiornika."
+            },
+            {
+              "type": "text",
+              "title": "Wewnątrz ropy",
+              "text": "Ropa jest gęsta — grzęźniesz w niej, a nie pływasz, i ruch mocno zwalnia.\n\n• Wynurzasz się przytrzymanym skokiem, mniej więcej blok na sekundę — wolniej niż w wodzie, a nawet w lawie\n• Nie da się oddychać: z głową w ropie powietrze ucieka jak pod wodą, a zaraz potem zaczynają się obrażenia\n• Obrażenia od upadku ropa gasi całkowicie\n• Widoczność cierpi: ciemna błona na ekranie, dalej niż dziewięć bloków nic nie widać\n\nZejście szybem żyły planuj według zapasu powietrza, a nie według jej głębokości."
+            },
+            {
+              "type": "text",
+              "title": "Pali się",
+              "text": "Ropa zajmuje się łatwo: wystarczy, że ogień znajdzie się obok — choćby ukośnie pod spodem. Dalej płomień idzie po kałuży blok po bloku, aż wypali się cała, razem ze źródłami. Krzesiwo podpala złoże natychmiast i zawsze.\n\nLawa NIE podpala ropy — to celowe: podziemne jeziora często generują się tuż przy lawowych.\n\nPrzez pełną ścianę o grubości jednego bloku płomień nie przejdzie. A jeśli ropa obok fabryki ma być bezpieczna — wyłącz w modzie ustawienie oilBurns, a stanie się całkowicie obojętna."
+            },
+            {
+              "type": "text",
+              "title": "W co się zmienia",
+              "text": "Ropa to początek łańcucha gumy.\n\n1. Zbierz ją — wiadrem, Kapsułą próżniową albo Pompą\n2. Polimeryzator: 1000 mB ropy i 400 EU dają surowy kauczuk\n3. Piec albo Piec elektryczny: surowy kauczuk wypala się na gumę\n\nGuma na razie nigdzie się nie zużywa — jej odbiorcy, izolowane kable i komponenty MV, przyjdą w następnej fazie. Odkładaj ją na zapas."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "Energia",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "Polimeryzator",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Polimeryzator",
+              "text": "Wygotowuje ropę naftową do surowego kauczuku — zbiornik na 10 wiader, jedno wiadro na cykl. Surowy kauczuk wypala się potem w piecu i staje się gumą."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 400 EU/op",
+                "Bufor: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Ekstraktor",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "Ropa naftowa",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ropa naftowa",
+              "text": "Płynny surowiec kopalny — skończone jeziora w świecie, zbierane wiadrem, kapsułą lub pompą; gęsty, łatwopalny i będący początkiem łańcucha gumy."
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "Złoże niklu",
           "icon": "alaindustrial:nickel_ore",
@@ -952,6 +1043,44 @@
               "type": "text",
               "title": "Złoże uranu",
               "text": "Najrzadsze złoże w modzie — wydobywane żelaznym kilofem, przetwarzane na pył i sztabkę; zarezerwowane dla przyszłych maszyn nuklearnych."
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "Inkubator",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Inkubator",
+              "text": "Multiblok 1×2 — mechaniczna podstawa i szklana kopuła. Mutuje przedmioty napromieniowaniem uranem i EU: powiela je, przekształca lub tworzy nowe. Tryb ustawia chip, a wynik jest losowy, w czterech stopniach rzadkości."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Bufor: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
             }
           ]
         },
@@ -1537,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "Guma",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Guma",
+              "text": "Materiał otrzymywany z ropy — Polimeryzator przerabia ropę na surowy kauczuk, a piec wypala go na gumę. Podstawa przyszłych izolowanych kabli i komponentów MV."
             }
           ]
         },

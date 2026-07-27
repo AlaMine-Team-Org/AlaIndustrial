@@ -12,6 +12,7 @@ import dev.alaindustrial.menu.HighAltitudeWindMillMenu;
 import dev.alaindustrial.menu.IronChestMenu;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
+import dev.alaindustrial.menu.PolymerizerMenu;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.menu.IncubatorMenu;
 import dev.alaindustrial.menu.SawmillMenu;
@@ -32,6 +33,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 
 /**
@@ -105,6 +107,7 @@ public final class ContentManifest {
 			menu("compressor", CompressorMenu::new, s -> ModContent.COMPRESSOR_MENU = s),
 			menu("sawmill", SawmillMenu::new, s -> ModContent.SAWMILL_MENU = s),
 			menu("incubator", IncubatorMenu::new, s -> ModContent.INCUBATOR_MENU = s),
+			menu("polymerizer", PolymerizerMenu::new, s -> ModContent.POLYMERIZER_MENU = s),
 			menu("battery_box", BatteryBoxMenu::new, s -> ModContent.BATTERY_BOX_MENU = s),
 			menu("teleporter_station", TeleporterStationMenu::new, s -> ModContent.TELEPORTER_STATION_MENU = s),
 			menu("teleporter_remote", TeleporterRemoteMenu::new, s -> ModContent.TELEPORTER_REMOTE_MENU = s),
@@ -167,6 +170,7 @@ public final class ContentManifest {
 			Map.entry("extractor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("compressor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("sawmill", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			Map.entry("polymerizer", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			// The emitter ring lights the chamber while an operation runs, so the block emits too.
 			Map.entry("incubator", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.lightLevel(ModBlockProperties::litLight))),
@@ -193,7 +197,12 @@ public final class ContentManifest {
 			Map.entry("tempered_iron_plate_block", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("industrial_workbench", machine(p -> p.strength(2.5f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("enriched_uranium_torch", ModBlockProperties::applyTorch),
-			Map.entry("enriched_uranium_wall_torch", ModBlockProperties::applyTorch));
+			Map.entry("enriched_uranium_wall_torch", ModBlockProperties::applyTorch),
+			// Oil (MOD-238): the vanilla liquid-block chain (see Blocks.WATER in 26.2), dark map colour.
+			// Not machine(...) - a liquid needs no tool and has no drops.
+			Map.entry("oil", p -> p.mapColor(MapColor.COLOR_BLACK).replaceable().noCollision()
+					.strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().liquid()
+					.sound(SoundType.EMPTY)));
 
 	/** The shared {@code Properties} chain for {@code id} (see {@link #BLOCK_PROPS}); throws if unknown. */
 	public static UnaryOperator<BlockBehaviour.Properties> blockProps(String id) {

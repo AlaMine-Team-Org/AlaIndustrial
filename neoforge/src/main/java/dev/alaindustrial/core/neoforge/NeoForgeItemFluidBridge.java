@@ -2,7 +2,7 @@ package dev.alaindustrial.core.neoforge;
 
 import com.google.common.primitives.Ints;
 import dev.alaindustrial.core.fluid.FluidPort;
-import dev.alaindustrial.item.ItemFluidBridge;
+import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;

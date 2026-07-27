@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "Petróleo",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "El petróleo desde cero",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Dónde buscarlo",
+              "text": "El petróleo no se fabrica ni se funde: solo se encuentra, en cualquier parte del Mundo Superior. Los yacimientos vienen en cuatro tamaños:\n\n• Mancha superficial: uno cada 150 chunks, apenas para probar\n• Lago de mina: Y -40..-8, alrededor de uno de cada cinco chunks; tu fuente principal\n• Yacimiento profundo: Y -50..-30, uno cada 20 chunks, tres veces más ancho\n• Veta de petróleo: una cada 600 chunks, visible desde la superficie\n\nEl petróleo nunca se genera dentro de aldeas, minas abandonadas, fortalezas ni la Ciudad Antigua."
+            },
+            {
+              "type": "text",
+              "title": "El yacimiento se agota",
+              "text": "Cada bloque de petróleo que recoges desaparece para siempre: a diferencia del agua, el yacimiento no se rellena.\n\nUn lago normal da entre 20 y 60 cubos, un yacimiento profundo bastante más, y la cúpula de una veta varios miles. Cuando vacías uno toca buscar el siguiente, así que marca el sitio en cuanto lo encuentres.\n\nRecogerlo a cubos lleva su tiempo: pon una bomba al lado y ella sola vaciará todo el yacimiento en un tanque."
+            },
+            {
+              "type": "text",
+              "title": "Dentro del petróleo",
+              "text": "El petróleo es denso: más que nadar, lo vadeas, y el movimiento se vuelve lentísimo.\n\n• Mantén el salto para subir, alrededor de un bloque por segundo: más lento que en el agua e incluso que en la lava\n• No puedes respirar: con la cabeza sumergida el aire se agota igual que bajo el agua, y luego llega el daño\n• El daño por caída se anula por completo mientras estás en el petróleo\n• La vista empeora: un velo oscuro en la pantalla y nada visible más allá de 9 bloques\n\nCalcula el descenso por el pozo de una veta según el aire que te queda, no según su profundidad."
+            },
+            {
+              "type": "text",
+              "title": "Arde",
+              "text": "El petróleo prende con facilidad: basta con que haya fuego cerca, incluso en diagonal por debajo. Desde ahí la llama recorre el charco bloque a bloque hasta consumirlo entero, fuentes incluidas. El mechero enciende un yacimiento al instante, siempre.\n\nLa lava NO prende el petróleo: es algo intencionado, porque los lagos subterráneos suelen generarse justo pegados a los de lava.\n\nLa llama no cruza una pared maciza de un bloque. Y si necesitas que el petróleo esté a salvo junto a tu fábrica, desactiva el ajuste oilBurns del mod y se volverá completamente inerte."
+            },
+            {
+              "type": "text",
+              "title": "En qué se convierte",
+              "text": "El petróleo es el comienzo de la cadena del caucho.\n\n1. Recógelo: con un cubo, una cápsula de vacío o una bomba\n2. Polimerizador: 1000 mB de petróleo y 400 EU dan caucho en bruto\n3. Horno u horno eléctrico: el caucho en bruto se cuece y se convierte en caucho\n\nDe momento nada consume caucho: sus usuarios, los cables aislados y los componentes MV, llegarán en la próxima fase. Ve acumulándolo."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "Energía",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "Polimerizador",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Polimerizador",
+              "text": "Destila el petróleo hasta convertirlo en caucho en bruto: un tanque de 10 cubos, un cubo por operación. Luego el caucho en bruto se cuece en un horno y se convierte en caucho."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 400 EU/op",
+                "Búfer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extractor",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "Petróleo",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Petróleo",
+              "text": "Un recurso fósil líquido: lagos finitos en el mundo, recogidos con un cubo, una cápsula o una bomba; denso, inflamable y el comienzo de la cadena del caucho."
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "Mena de níquel",
           "icon": "alaindustrial:nickel_ore",
@@ -952,6 +1043,44 @@
               "type": "text",
               "title": "Mena de uranio",
               "text": "La mena más rara del mod: se extrae con un pico de hierro, se procesa en polvo y lingote; reservada para futuras máquinas nucleares."
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "Incubadora",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Incubadora",
+              "text": "Multibloque de 1×2: base mecánica más una cúpula de vidrio. Muta objetos mediante irradiación de uranio y EU: los duplica, los transforma o crea otros nuevos. El modo se elige con un chip y el resultado es probabilístico, con cuatro grados de rareza."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Búfer: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
             }
           ]
         },
@@ -1537,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "Caucho",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Caucho",
+              "text": "Un material hecho de petróleo: el Polimerizador convierte el petróleo en caucho en bruto y un horno lo cuece hasta obtener caucho. La base de los futuros cables aislados y componentes MV."
             }
           ]
         },

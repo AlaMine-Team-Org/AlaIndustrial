@@ -1261,7 +1261,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                     && acs.getMenu() instanceof MachineMenu menu) {
                 menu.injectTestData(energy, capacity, 0, 0);
                 ItemStack pouch = new ItemStack(ModItems.BATTERY_POUCH);
-                dev.alaindustrial.item.ItemEnergy.set(pouch, dev.alaindustrial.Config.lvPouchBuffer / 2);
+                dev.alaindustrial.item.energy.ItemEnergy.set(pouch, dev.alaindustrial.Config.lvPouchBuffer / 2);
                 menu.getSlot(0).container.setItem(0, pouch);
             }
         });
@@ -1284,7 +1284,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                     && acs.getMenu() instanceof MachineMenu menu) {
                 menu.injectTestData(energy, capacity, 0, 0);
                 ItemStack pack = new ItemStack(ModItems.ENERGY_PACK);
-                dev.alaindustrial.item.ItemEnergy.set(pack, dev.alaindustrial.Config.energyPackBuffer / 2);
+                dev.alaindustrial.item.energy.ItemEnergy.set(pack, dev.alaindustrial.Config.energyPackBuffer / 2);
                 menu.getSlot(0).container.setItem(0, pack);
             }
         });

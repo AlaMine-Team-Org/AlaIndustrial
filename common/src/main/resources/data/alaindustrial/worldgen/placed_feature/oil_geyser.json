@@ -1,0 +1,37 @@
+{
+  "feature": "alaindustrial:oil_geyser",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 600
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "WORLD_SURFACE_WG"
+    },
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:solid",
+        "offset": [
+          0,
+          -1,
+          0
+        ]
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    },
+    {
+      "type": "alaindustrial:oil_lake_filter",
+      "horizontal_radius": 8,
+      "min_y_offset": -320,
+      "max_y_offset": 4,
+      "y_step": 8
+    }
+  ]
+}

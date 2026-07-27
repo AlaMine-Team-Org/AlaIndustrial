@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:ore_hunter",
+  "display": {
+    "icon": { "id": "alaindustrial:oil_bucket" },
+    "title": { "translate": "advancements.alaindustrial.first_oil.title" },
+    "description": { "translate": "advancements.alaindustrial.first_oil.description" }
+  },
+  "criteria": {
+    "oil_bucket": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:oil_bucket" }] }
+    }
+  },
+  "requirements": [["oil_bucket"]]
+}

@@ -1,6 +1,6 @@
 package dev.alaindustrial.core.fabric;
 
-import dev.alaindustrial.item.ItemEnergy;
+import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModItems;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;

@@ -2,7 +2,7 @@ package dev.alaindustrial.menu;
 
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
-import dev.alaindustrial.item.ItemEnergy;
+import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;

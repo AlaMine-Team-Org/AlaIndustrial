@@ -1,7 +1,7 @@
 package dev.alaindustrial.core.neoforge;
 
 import com.google.common.primitives.Ints;
-import dev.alaindustrial.item.ItemEnergyBridge;
+import dev.alaindustrial.item.energy.ItemEnergyBridge;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.access.ItemAccess;

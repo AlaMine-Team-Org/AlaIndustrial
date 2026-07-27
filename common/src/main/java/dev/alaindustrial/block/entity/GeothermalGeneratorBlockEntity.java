@@ -199,7 +199,7 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 		if (input.is(Items.LAVA_BUCKET)) {
 			return new ItemStack(Items.BUCKET);
 		}
-		if (dev.alaindustrial.item.CapsuleFuel.isLavaCapsule(input)) {
+		if (dev.alaindustrial.item.fluid.CapsuleFuel.isLavaCapsule(input)) {
 			return new ItemStack(ModContent.VACUUM_CAPSULE.get());
 		}
 		return ItemStack.EMPTY;
@@ -225,7 +225,7 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
 		return slot == INPUT_SLOT
-				&& (stack.is(Items.LAVA_BUCKET) || dev.alaindustrial.item.CapsuleFuel.isLavaCapsule(stack));
+				&& (stack.is(Items.LAVA_BUCKET) || dev.alaindustrial.item.fluid.CapsuleFuel.isLavaCapsule(stack));
 	}
 
 	@Override

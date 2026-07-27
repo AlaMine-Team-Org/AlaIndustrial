@@ -1,6 +1,6 @@
 package dev.alaindustrial.core.fabric;
 
-import dev.alaindustrial.item.ItemEnergyBridge;
+import dev.alaindustrial.item.energy.ItemEnergyBridge;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;

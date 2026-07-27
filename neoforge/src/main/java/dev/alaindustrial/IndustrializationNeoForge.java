@@ -1,7 +1,7 @@
 package dev.alaindustrial;
 
 import dev.alaindustrial.core.energy.EnergyLookup;
-import dev.alaindustrial.item.ItemEnergyBridge;
+import dev.alaindustrial.item.energy.ItemEnergyBridge;
 import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.fluid.FluidLookup;
 import dev.alaindustrial.core.item.ItemLookup;
@@ -119,7 +119,7 @@ public final class IndustrializationNeoForge {
 		// MOD-107: install the item-fluid bridge seam, so a machine's own slots can exchange a bucket with
 		// whatever fluid container sits in them — vanilla bucket, our capsule, or another mod's cell — via
 		// Capabilities.Fluid.ITEM, without common code importing NeoForge transfer types.
-		dev.alaindustrial.item.ItemFluidBridge.install(new dev.alaindustrial.core.neoforge.NeoForgeItemFluidBridge());
+		dev.alaindustrial.item.fluid.ItemFluidBridge.install(new dev.alaindustrial.core.neoforge.NeoForgeItemFluidBridge());
 
 		// MOD-022 Phase 3: install the NeoForge packet-send seam so content code dispatches through the
 		// neutral NetworkDispatcher instead of PacketDistributor directly.
@@ -131,6 +131,11 @@ public final class IndustrializationNeoForge {
 		// DeferredRegister objects must register on the mod bus here (verified split constraint). The
 		// Blocks register drives BlockItems/BlockEntityTypes/MenuTypes that depend on the blocks existing,
 		// so it goes first.
+		// MOD-238: fluids + fluid types. Declared before blocks for readability; the actual safety is
+		// the RegisterEvent order (FLUID before BLOCK), which lets the oil block factory resolve its
+		// still fluid eagerly.
+		dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLUID_TYPES.register(modBus);
+		dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLUIDS.register(modBus);
 		ModBlocksNeoForge.BLOCKS.register(modBus);
 		// Entity types before items only for readability — the frame item resolves its EntityType
 		// lazily inside the item RegisterEvent lambda, so no call-order dependency exists (MOD-066).
@@ -153,9 +158,44 @@ public final class IndustrializationNeoForge {
 		// MOD-062: Industrialist POI + profession (frozen registries → DeferredRegister only).
 		dev.alaindustrial.registry.neoforge.ModProfessionsNeoForge.POI_TYPES.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModProfessionsNeoForge.PROFESSIONS.register(modBus);
-		// Register the alaindustrial:code gametest-instance type so the TEST_INSTANCE registry encodes cleanly
-		// during the client known-packs handshake (fixes a ClassCastException that broke NeoForge world load).
-		dev.alaindustrial.gametest.neoforge.NeoForgeGameTests.INSTANCE_TYPES.register(modBus);
+		// MOD-238 audit: alaindustrial:oil_lake_filter. Must be registered before datapack load —
+		// the oil-lake placed features name it, and an unknown placement modifier type fails parsing.
+		dev.alaindustrial.registry.neoforge.ModWorldGenNeoForge.PLACEMENT_MODIFIER_TYPES.register(modBus);
+		// MOD-248: alaindustrial:oil_lake + alaindustrial:oil_geyser. Same deadline for the same
+		// reason — an unknown "type" in a configured feature fails the whole file.
+		dev.alaindustrial.registry.neoforge.ModWorldGenNeoForge.FEATURES.register(modBus);
+		// MOD-242: the world-gametest lane (instance-type DeferredRegister, RegisterGameTestsEvent listener,
+		// foreign-energy stand-in capability) lives in the `gametest` source set now — wired reflectively so
+		// production, which ships without those classes, has nothing to load. See bootstrapGameTests.
+		bootstrapGameTests(modBus);
+	}
+
+	/**
+	 * MOD-242 — reflective hook into the gametest source set. The gametest classes
+	 * ({@code dev.alaindustrial.gametest.neoforge.*}) are compiled into a separate {@code gametest}
+	 * source set that dev runs load as part of the mod (see {@code neoforge/build.gradle},
+	 * {@code mods} block) but the shipped jar does not contain. Production must therefore not
+	 * reference them directly — {@code Class.forName} keeps the dependency one-way.
+	 *
+	 * <p>In a dev run the bootstrap registers the {@code alaindustrial:code} gametest-instance type
+	 * (the fix for the ClassCastException in the client known-packs handshake — needed whenever
+	 * gametest instances can exist, i.e. only in dev where the listener below also runs), the
+	 * {@code RegisterGameTestsEvent} listener, and the MOD-084 foreign-energy stand-in capability.
+	 * In production the class is absent, no gametest instance is ever registered, so the codec type
+	 * is not needed either — the silent no-op is the correct behaviour, not a swallowed error.
+	 */
+	private static void bootstrapGameTests(IEventBus modBus) {
+		try {
+			Class.forName("dev.alaindustrial.gametest.neoforge.NeoForgeGameTestBootstrap")
+					.getMethod("init", IEventBus.class)
+					.invoke(null, modBus);
+		} catch (ClassNotFoundException e) {
+			// Shipped jar: the gametest source set is not packed — nothing to register.
+		} catch (ReflectiveOperationException e) {
+			// The class IS present (dev run) but the hook broke — that is a real wiring defect, not
+			// an expected environment difference. Fail loudly instead of silently losing the test lane.
+			throw new IllegalStateException("NeoForgeGameTestBootstrap present but failed to initialize", e);
+		}
 	}
 
 	/** Binds the registered {@code DeferredHolder}s into the loader-neutral {@code ModContent} facade. */
@@ -164,6 +204,7 @@ public final class IndustrializationNeoForge {
 		// ModBlocks/ModItems/ModBlockEntities/ModMenus.init() calls). A DeferredHolder is a Supplier, so it is
 		// assigned directly and resolves lazily after each RegisterEvent — assigning it here, before the events
 		// fire, is intentional (see ModContent). Must run after .register(modBus) above.
+		dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.init();
 		ModBlocksNeoForge.init();
 		dev.alaindustrial.registry.neoforge.ModEntitiesNeoForge.init();
 		ModItemsNeoForge.init();
@@ -197,16 +238,20 @@ public final class IndustrializationNeoForge {
 		ModContent.verifyAllBound();
 	}
 
-	/** Registers the mod-bus listeners (capabilities, S2C payload, world gametests). */
+	/** Registers the mod-bus listeners (capabilities, S2C payload). */
 	private void registerModBusEvents(IEventBus modBus) {
 		// Mod-bus events. Capability + payload registration both fire on the mod bus.
 		modBus.addListener(this::registerCapabilities);
 		// MOD-022 Phase 3: NeoForge payload registration (S2C Network Analyzer) — counterpart to the
 		// Fabric PayloadTypeRegistry call + client receiver.
 		modBus.addListener(NeoForgeNetwork::register);
-		// MOD-022 — NeoForge world gametest lane. RegisterGameTestsEvent fires only when
-		// GameTestHooks.isGametestEnabled() (dev/gameTestServer), so this is inert in production.
-		modBus.addListener(dev.alaindustrial.gametest.neoforge.NeoForgeGameTests::register);
+		// MOD-238: dispenser support for the filled oil bucket. DispenserBlock.registerBehavior writes a
+		// plain (unsynchronised) map and mod setup runs in parallel on NeoForge, so it must go through
+		// enqueueWork — the Fabric side registers it directly in its single-threaded mod init.
+		modBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event) ->
+				event.enqueueWork(dev.alaindustrial.item.fluid.OilBucketDispenseBehavior::register));
+		// MOD-022/MOD-242 — the world-gametest RegisterGameTestsEvent listener is added by
+		// NeoForgeGameTestBootstrap (gametest source set, dev runs only; see bootstrapGameTests).
 	}
 
 	/** Loads {@code config/alaindustrial.json} at startup (counterpart to {@code FabricConfigLoader}). */
@@ -244,7 +289,7 @@ public final class IndustrializationNeoForge {
 			dev.alaindustrial.stats.PlayerStatsTracker.get().onServerTick(event.getServer());
 			// MOD-148: clear any jetpack flight-glow light block whose flight ended (land, logout,
 			// death, unequip) — the one cleanup path for every exit (see JetpackLight).
-			dev.alaindustrial.item.JetpackLight.sweep(event.getServer(), event.getServer().getTickCount());
+			dev.alaindustrial.item.wearable.JetpackLight.sweep(event.getServer(), event.getServer().getTickCount());
 		});
 		// Teleport warmup cancellation (MOD-092). Three hooks, not two: LivingDamageEvent.Post does
 		// not fire for a killing blow, and death does not disconnect the player.
@@ -288,7 +333,7 @@ public final class IndustrializationNeoForge {
 			dev.alaindustrial.stats.PlayerStatsTracker.get().flush(event.getServer());
 			// MOD-176: clear a mid-flight glow light before the level save — the per-tick sweep no
 			// longer runs, and a saved minecraft:light block would survive as an invisible orphan.
-			dev.alaindustrial.item.JetpackLight.shutdown(event.getServer());
+			dev.alaindustrial.item.wearable.JetpackLight.shutdown(event.getServer());
 		});
 		NeoForge.EVENT_BUS.addListener((ServerStoppedEvent event) -> {
 			NetworkManager.clearAll();
@@ -308,7 +353,18 @@ public final class IndustrializationNeoForge {
 		// sides — before vanilla's sneak-bypass runs BucketItem#useOn — so it can intercept the spill. The
 		// neutral helper is shared with the Fabric UseBlockCallback registration.
 		NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock event) -> {
-			InteractionResult result = dev.alaindustrial.item.VanillaBucketDeposit.tryDeposit(
+			InteractionResult result = dev.alaindustrial.item.fluid.VanillaBucketDeposit.tryDeposit(
+					event.getLevel(), event.getEntity(), event.getHand(), event.getHitVec());
+			if (result != InteractionResult.PASS) {
+				event.setCancellationResult(result);
+				event.setCanceled(true);
+			}
+		});
+		// MOD-238: flint and steel on an oil cell lights it. Same early seam and for the same reason:
+		// oil has an empty outline shape, so the click always lands on the block BEHIND it and vanilla
+		// FlintAndSteelItem#useOn then fails to place fire into the (non-air) oil block.
+		NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock event) -> {
+			InteractionResult result = dev.alaindustrial.block.OilLiquidBlock.tryLight(
 					event.getLevel(), event.getEntity(), event.getHand(), event.getHitVec());
 			if (result != InteractionResult.PASS) {
 				event.setCancellationResult(result);
@@ -375,6 +431,7 @@ public final class IndustrializationNeoForge {
 					ModBlockEntitiesNeoForge.EXTRACTOR,
 					ModBlockEntitiesNeoForge.COMPRESSOR,
 					ModBlockEntitiesNeoForge.SAWMILL,
+					ModBlockEntitiesNeoForge.POLYMERIZER,
 					ModBlockEntitiesNeoForge.INCUBATOR,
 					ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR,
 					ModBlockEntitiesNeoForge.PUMP,
@@ -397,6 +454,7 @@ public final class IndustrializationNeoForge {
 		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR);
 		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.PUMP);
 		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.FLUID_TANK);
+		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.POLYMERIZER);
 
 		// MOD-104: publish transactional, side-aware item views for mod containers. This is required
 		// because a vanilla Container is not automatically a 26.2 ResourceHandler on NeoForge.
@@ -408,6 +466,7 @@ public final class IndustrializationNeoForge {
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.EXTRACTOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.COMPRESSOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SAWMILL);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.POLYMERIZER);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.INCUBATOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.PUMP);
@@ -446,9 +505,9 @@ public final class IndustrializationNeoForge {
 				ModItemsNeoForge.ELECTRIC_DRILL.get(), ModItemsNeoForge.ELECTROMAGNET.get(),
 				ModItemsNeoForge.JETPACK.get());
 
-		// MOD-084: a fake "other mod" energy item, so the gametests can prove the pack charges foreign
-		// items. Dev/gametest only — inert in a shipped jar (see the class doc).
-		dev.alaindustrial.gametest.neoforge.ForeignEnergyItemStandIn.register(event);
+		// MOD-084/MOD-242: the fake "other mod" energy item (ForeignEnergyItemStandIn) is registered by
+		// NeoForgeGameTestBootstrap via its own RegisterCapabilitiesEvent listener — gametest source
+		// set, dev runs only (see bootstrapGameTests).
 	}
 
 	/** Carries the {@code BlockEntity & FluidPortHost} bound a wildcard list cannot express. */

@@ -1,8 +1,8 @@
 package dev.alaindustrial.client.screen;
 
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.item.TeleportPoint;
-import dev.alaindustrial.item.TeleportPoints;
+import dev.alaindustrial.item.teleport.TeleportPoint;
+import dev.alaindustrial.item.teleport.TeleportPoints;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.network.TeleportRenamePayload;

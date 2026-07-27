@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:mutation_duplicate",
+	"ingredient": "alaindustrial:rubber",
+	"result": {
+		"id": "alaindustrial:rubber",
+		"count": 2
+	},
+	"energy": 4000,
+	"chance": 0.55
+}

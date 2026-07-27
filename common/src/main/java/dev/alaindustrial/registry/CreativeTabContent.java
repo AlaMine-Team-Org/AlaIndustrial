@@ -179,6 +179,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.SAWMILL_ITEM.get());
 		out.accept(ModContent.INCUBATOR_ITEM.get());
 		out.accept(ModContent.PUMP_ITEM.get());
+		out.accept(ModContent.POLYMERIZER_ITEM.get());
 	}
 
 	private static void storageAndCables(Sink out) {
@@ -234,6 +235,9 @@ public final class CreativeTabContent {
 		out.accept(ModContent.RESONANT_SHARD.get());
 		out.accept(ModContent.MUTAGEN_DUST.get());
 		out.accept(ModContent.UNSTABLE_ISOTOPE.get());
+		// Oil → rubber chain (MOD-019), in production order.
+		out.accept(ModContent.RAW_RUBBER.get());
+		out.accept(ModContent.RUBBER.get());
 		out.accept(ModContent.MUTE_CHIP.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
 		out.accept(ModContent.WATER_MILL_WHEEL.get());
@@ -262,6 +266,8 @@ public final class CreativeTabContent {
 		out.accept(ModContent.TELEPORTER_REMOTE.get());
 		// Empty capsule only — the filled form (MOD-063) is obtained by using it on a fluid.
 		out.accept(ModContent.VACUUM_CAPSULE.get());
+		// Oil Bucket (MOD-238) — the hand-carried form of the worldgen oil lakes.
+		out.accept(ModContent.OIL_BUCKET.get());
 	}
 
 	private static void temperedIron(Sink out) {

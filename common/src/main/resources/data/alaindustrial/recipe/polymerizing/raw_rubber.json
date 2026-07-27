@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:polymerizing",
+	"fluid": "#c:oil",
+	"amount": 1000,
+	"result": {
+		"id": "alaindustrial:raw_rubber",
+		"count": 1
+	},
+	"energy": 400
+}

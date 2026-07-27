@@ -1,6 +1,6 @@
 package dev.alaindustrial.core.neoforge;
 
-import dev.alaindustrial.item.ItemFluid;
+import dev.alaindustrial.item.fluid.ItemFluid;
 import dev.alaindustrial.registry.ModContent;
 import java.util.Objects;
 import net.minecraft.world.item.ItemStack;

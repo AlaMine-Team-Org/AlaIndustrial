@@ -5,7 +5,7 @@ import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.core.fluid.FluidTank;
-import dev.alaindustrial.item.FluidTankContents;
+import dev.alaindustrial.item.fluid.FluidTankContents;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.core.BlockPos;

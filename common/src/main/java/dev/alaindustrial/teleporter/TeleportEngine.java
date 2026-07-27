@@ -2,7 +2,7 @@ package dev.alaindustrial.teleporter;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
-import dev.alaindustrial.item.TeleportPoint;
+import dev.alaindustrial.item.teleport.TeleportPoint;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

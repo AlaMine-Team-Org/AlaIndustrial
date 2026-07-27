@@ -12,6 +12,7 @@ import dev.alaindustrial.menu.HighAltitudeWindMillMenu;
 import dev.alaindustrial.menu.IronChestMenu;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
+import dev.alaindustrial.menu.PolymerizerMenu;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.menu.IncubatorMenu;
 import dev.alaindustrial.menu.SawmillMenu;
@@ -33,6 +34,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.FlowingFluid;
 
 /**
  * Loader-neutral registration facade (MOD-022 registration-facade step). Content classes
@@ -113,6 +115,8 @@ public final class ModContent {
 	public static Supplier<Block> EXTRACTOR = unbound("EXTRACTOR");
 	public static Supplier<Block> COMPRESSOR = unbound("COMPRESSOR");
 	public static Supplier<Block> SAWMILL = unbound("SAWMILL");
+	/** Polymerizer (MOD-019) — the first machine fed by a fluid: oil in the tank, raw rubber out. */
+	public static Supplier<Block> POLYMERIZER = unbound("POLYMERIZER");
 	public static Supplier<Block> INCUBATOR = unbound("INCUBATOR");
 	public static Supplier<Block> INCUBATOR_DOME = unbound("INCUBATOR_DOME");
 	public static Supplier<Block> TIN_ORE = unbound("TIN_ORE");
@@ -146,6 +150,14 @@ public final class ModContent {
 	// torch via overrideLootTable/overrideDescription, exactly as vanilla WALL_TORCH mirrors TORCH.
 	public static Supplier<Block> ENRICHED_URANIUM_TORCH = unbound("ENRICHED_URANIUM_TORCH");
 	public static Supplier<Block> ENRICHED_URANIUM_WALL_TORCH = unbound("ENRICHED_URANIUM_WALL_TORCH");
+	// Oil (MOD-238): the in-world liquid block. No block item — a liquid block is never held.
+	public static Supplier<Block> OIL_BLOCK = unbound("OIL_BLOCK");
+
+	// --- Fluids ---
+	// Oil (MOD-238): still + flowing. OilFluid (common) reads these at runtime for its
+	// getSource()/getFlowing() cross-references; NeoForge binds FluidType-carrying subclasses.
+	public static Supplier<FlowingFluid> OIL = unbound("OIL");
+	public static Supplier<FlowingFluid> FLOWING_OIL = unbound("FLOWING_OIL");
 
 	// --- Items (crafting components + tools) ---
 	public static Supplier<Item> ELECTRONIC_CIRCUIT = unbound("ELECTRONIC_CIRCUIT");
@@ -231,7 +243,7 @@ public final class ModContent {
 	// Stock Display Frame (MOD-066) — placement item for the frame entity below.
 	public static Supplier<Item> STOCK_DISPLAY_FRAME_ITEM = unbound("STOCK_DISPLAY_FRAME_ITEM");
 	// Scythe (MOD-068) — AOE foliage-clearing tool, six material tiers. Behaviour lives in
-	// dev.alaindustrial.item.ScytheItem (common); each loader registers the six items.
+	// dev.alaindustrial.item.tool.ScytheItem (common); each loader registers the six items.
 	public static Supplier<Item> SCYTHE_WOOD = unbound("SCYTHE_WOOD");
 	public static Supplier<Item> SCYTHE_STONE = unbound("SCYTHE_STONE");
 	public static Supplier<Item> SCYTHE_COPPER = unbound("SCYTHE_COPPER");
@@ -252,9 +264,14 @@ public final class ModContent {
 	public static Supplier<Item> URANIUM_PLATE = unbound("URANIUM_PLATE");
 	public static Supplier<Item> TEMPERED_IRON_PLATE = unbound("TEMPERED_IRON_PLATE");
 	// Forge Hammer (MOD-078) — pre-machine hand tool: ingot + hammer on the grid → plate; the hammer
-	// stays and loses 1 durability per plate. Behaviour lives in dev.alaindustrial.item.HammerItem
+	// stays and loses 1 durability per plate. Behaviour lives in dev.alaindustrial.item.tool.HammerItem
 	// (common) + a loader subclass for the craft-remainder hook.
 	public static Supplier<Item> FORGE_HAMMER = unbound("FORGE_HAMMER");
+	// Oil Bucket (MOD-238): a vanilla-pattern BucketItem carrying the still oil fluid.
+	public static Supplier<Item> OIL_BUCKET = unbound("OIL_BUCKET");
+	// Oil → rubber chain (MOD-019): the polymerizer turns oil into raw rubber, a furnace cures it.
+	public static Supplier<Item> RAW_RUBBER = unbound("RAW_RUBBER");
+	public static Supplier<Item> RUBBER = unbound("RUBBER");
 
 	// --- Entity types ---
 	// Stock Display Frame (MOD-066) — the mod's first entity: an ItemFrame subclass that counts the
@@ -284,6 +301,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> EXTRACTOR_ITEM = unbound("EXTRACTOR_ITEM");
 	public static Supplier<BlockItem> COMPRESSOR_ITEM = unbound("COMPRESSOR_ITEM");
 	public static Supplier<BlockItem> SAWMILL_ITEM = unbound("SAWMILL_ITEM");
+	public static Supplier<BlockItem> POLYMERIZER_ITEM = unbound("POLYMERIZER_ITEM");
 	public static Supplier<BlockItem> INCUBATOR_ITEM = unbound("INCUBATOR_ITEM");
 	public static Supplier<BlockItem> PUMP_ITEM = unbound("PUMP_ITEM");
 	public static Supplier<BlockItem> FLUID_TANK_ITEM = unbound("FLUID_TANK_ITEM");
@@ -328,6 +346,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> EXTRACTOR_BE = unbound("EXTRACTOR_BE");
 	public static Supplier<BlockEntityType<?>> COMPRESSOR_BE = unbound("COMPRESSOR_BE");
 	public static Supplier<BlockEntityType<?>> SAWMILL_BE = unbound("SAWMILL_BE");
+	public static Supplier<BlockEntityType<?>> POLYMERIZER_BE = unbound("POLYMERIZER_BE");
 	public static Supplier<BlockEntityType<?>> INCUBATOR_BE = unbound("INCUBATOR_BE");
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
 	public static Supplier<BlockEntityType<?>> FLUID_TANK_BE = unbound("FLUID_TANK_BE");
@@ -353,6 +372,7 @@ public final class ModContent {
 	public static Supplier<MenuType<ExtractorMenu>> EXTRACTOR_MENU = unbound("EXTRACTOR_MENU");
 	public static Supplier<MenuType<CompressorMenu>> COMPRESSOR_MENU = unbound("COMPRESSOR_MENU");
 	public static Supplier<MenuType<SawmillMenu>> SAWMILL_MENU = unbound("SAWMILL_MENU");
+	public static Supplier<MenuType<PolymerizerMenu>> POLYMERIZER_MENU = unbound("POLYMERIZER_MENU");
 	public static Supplier<MenuType<IncubatorMenu>> INCUBATOR_MENU = unbound("INCUBATOR_MENU");
 	public static Supplier<MenuType<BatteryBoxMenu>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");
 	/** Teleporter station screen (MOD-093): EU bar, owner, private/public toggle. */

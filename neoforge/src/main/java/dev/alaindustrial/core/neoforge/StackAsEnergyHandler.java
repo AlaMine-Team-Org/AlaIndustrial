@@ -1,6 +1,6 @@
 package dev.alaindustrial.core.neoforge;
 
-import dev.alaindustrial.item.ItemEnergy;
+import dev.alaindustrial.item.energy.ItemEnergy;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.TransferPreconditions;

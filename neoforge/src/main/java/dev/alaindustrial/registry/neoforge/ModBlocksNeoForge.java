@@ -23,9 +23,11 @@ import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.SilverChestBlock;
 import dev.alaindustrial.block.GoldChestBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
+import dev.alaindustrial.block.PolymerizerBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.FluidTankBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
+import dev.alaindustrial.block.OilLiquidBlock;
 import dev.alaindustrial.block.WaterMillBlock;
 import dev.alaindustrial.block.WindMillBlock;
 import dev.alaindustrial.block.HighAltitudeWindMillBlock;
@@ -85,6 +87,8 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("compressor", CompressorBlock::new, props("compressor"));
 	public static final DeferredBlock<SawmillBlock> SAWMILL =
 			BLOCKS.registerBlock("sawmill", SawmillBlock::new, props("sawmill"));
+	public static final DeferredBlock<PolymerizerBlock> POLYMERIZER =
+			BLOCKS.registerBlock("polymerizer", PolymerizerBlock::new, props("polymerizer"));
 	public static final DeferredBlock<IncubatorBlock> INCUBATOR =
 			BLOCKS.registerBlock("incubator", IncubatorBlock::new, props("incubator"));
 	public static final DeferredBlock<IncubatorDomeBlock> INCUBATOR_DOME =
@@ -183,6 +187,12 @@ public final class ModBlocksNeoForge {
 							.overrideLootTable(ENRICHED_URANIUM_TORCH.get().getLootTable())
 							.overrideDescription(ENRICHED_URANIUM_TORCH.get().getDescriptionId()));
 
+	// Oil (MOD-238): the in-world liquid block. The factory resolves the still fluid eagerly — safe,
+	// because the FLUID RegisterEvent fires before BLOCK (vanilla registration order; see
+	// ModFluidsNeoForge). NO BlockItem — the hand-carried form is the oil bucket.
+	public static final DeferredBlock<OilLiquidBlock> OIL =
+			BLOCKS.registerBlock("oil", p -> new OilLiquidBlock(ModFluidsNeoForge.OIL.get(), p), props("oil"));
+
 	private ModBlocksNeoForge() {
 	}
 
@@ -216,6 +226,7 @@ public final class ModBlocksNeoForge {
 		ModContent.EXTRACTOR = EXTRACTOR::get;
 		ModContent.COMPRESSOR = COMPRESSOR::get;
 		ModContent.SAWMILL = SAWMILL::get;
+		ModContent.POLYMERIZER = POLYMERIZER::get;
 		ModContent.INCUBATOR = INCUBATOR::get;
 		ModContent.INCUBATOR_DOME = INCUBATOR_DOME::get;
 		ModContent.GEOTHERMAL_GENERATOR = GEOTHERMAL_GENERATOR::get;
@@ -249,5 +260,6 @@ public final class ModBlocksNeoForge {
 		ModContent.INDUSTRIAL_WORKBENCH = INDUSTRIAL_WORKBENCH::get;
 		ModContent.ENRICHED_URANIUM_TORCH = ENRICHED_URANIUM_TORCH::get;
 		ModContent.ENRICHED_URANIUM_WALL_TORCH = ENRICHED_URANIUM_WALL_TORCH::get;
+		ModContent.OIL_BLOCK = OIL::get;
 	}
 }

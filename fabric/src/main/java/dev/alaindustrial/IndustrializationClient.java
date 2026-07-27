@@ -35,6 +35,10 @@ public class IndustrializationClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		initClientConfig();
+		registerFluidRendering();
+		// MOD-248: the submerged-in-oil look. Loader-neutral (a client mixin + a vanilla fog
+		// environment in common/), so NeoForge calls the very same install().
+		dev.alaindustrial.client.OilFogEnvironment.install();
 		registerMenuScreens();
 		registerTooltips();
 		registerHudAndKeys();
@@ -79,6 +83,25 @@ public class IndustrializationClient implements ClientModInitializer {
 		Industrialization.LOGGER.info("Dev window title set: {}", title);
 	}
 
+	/**
+	 * Registers oil's fluid model (MOD-238). The vanilla {@code FluidStateModelSet} hard-codes
+	 * water/lava only, so a custom fluid supplies its own {@code FluidModel.Unbaked} per loader —
+	 * here through Fabric's {@code FluidRenderingRegistry}; NeoForge uses
+	 * {@code RegisterFluidModelsEvent}. Overlay and tint are {@code null} exactly like vanilla lava:
+	 * the oil textures carry their colour themselves.
+	 */
+	private void registerFluidRendering() {
+		net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderingRegistry.register(
+				dev.alaindustrial.registry.ModFluids.OIL,
+				dev.alaindustrial.registry.ModFluids.FLOWING_OIL,
+				new net.minecraft.client.renderer.block.FluidModel.Unbaked(
+						new net.minecraft.client.resources.model.sprite.Material(
+								Industrialization.id("block/oil_still")),
+						new net.minecraft.client.resources.model.sprite.Material(
+								Industrialization.id("block/oil_flow")),
+						null, null));
+	}
+
 	/** Initialises the client config screen state and the fluid-tank item tint source. */
 	private void initClientConfig() {
 		AlaClientConfig.init(FabricLoader.getInstance().getConfigDir());
@@ -113,7 +136,7 @@ public class IndustrializationClient implements ClientModInitializer {
 				MachineTooltips.append(stack, lines, Minecraft.getInstance().hasShiftDown()));
 		// Battery Pouch bundle-style tooltip (MOD-052): map the neutral TooltipComponent to its renderer.
 		net.fabricmc.fabric.api.client.rendering.v1.ClientTooltipComponentCallback.EVENT.register(component ->
-				component instanceof dev.alaindustrial.item.PouchTooltip pouch
+				component instanceof dev.alaindustrial.item.energy.PouchTooltip pouch
 						? new dev.alaindustrial.client.tooltip.PouchClientTooltip(pouch)
 						: null);
 	}

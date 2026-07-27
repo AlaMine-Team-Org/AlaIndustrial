@@ -134,8 +134,28 @@ pitest {
                      'dev.alaindustrial.client.hud.HudSmoother',
                      'dev.alaindustrial.client.sound.HumTeleportDetector',
                      'dev.alaindustrial.entity.TemperedGearRoll',
-                     'dev.alaindustrial.item.TemperedIronToolStats',
-                     'dev.alaindustrial.item.TooltipKeys']
+                     // MOD-238 shipped the oil-lake sampling geometry Minecraft-free precisely so it
+                     // could be unit-tested (OilLakeSamplesTest), then never added it here — the same
+                     // "code added, list not updated" defect as the incubator trio below.
+                     'dev.alaindustrial.worldgen.OilLakeSamples',
+                     // MOD-248: the oil-deposit blob grid, Minecraft-free for the same reason and
+                     // covered by OilLakeShapeTest. Added here with the class, not a release later.
+                     'dev.alaindustrial.worldgen.OilLakeShape',
+                     'dev.alaindustrial.item.material.TemperedIronToolStats',
+                     'dev.alaindustrial.item.misc.TooltipKeys',
+                     // MOD-247: the incubator's MC-free trio, added with MOD-118 (the dice) and
+                     // MOD-234 (the status line) and never appended here — the same "code added,
+                     // list not updated" defect MOD-200 filed the target gate for, only on the
+                     // targetClasses side this time. All three are deliberately Minecraft-free
+                     // (see MutationRoll's javadoc), so they belong in the run, not in
+                     // excludedClasses. Their L1 suites are MutationRollTest + IncubatorStatusTest.
+                     //
+                     // The two entries above kept main's post-MOD-243 package paths: this change was
+                     // branched before that split, and taking its side would have aimed pitest at
+                     // dev.alaindustrial.item.* classes that no longer live there.
+                     'dev.alaindustrial.block.entity.IncubatorStatus',
+                     'dev.alaindustrial.mutation.MutationGrade',
+                     'dev.alaindustrial.mutation.MutationRoll']
     // The MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
     // JUnit discovery also walks every class under `targetTests` via reflection to find @Test
     // methods — and reflection on e.g. `EnergyNet` triggers `NoClassDefFoundError:
@@ -280,6 +300,25 @@ pitest {
     // pitest_mutation_threshold in gradle.properties. MOD-136.
 }
 
+// MOD-242 — the world-gametest scenario bodies (dev.alaindustrial.gametest.*Scenarios +
+// AlaGameTestHelper) live in their own `gametest` source set so they never reach the loaders'
+// `main` source sets (and therefore never ship in the release jars — before this split every
+// scenario class was compiled into BOTH release jars via the commonJava source-dir artifact).
+// The set still compiles against the full main compile classpath + main classes, so the
+// scenarios keep type-checking inside :common on every build.
+sourceSets {
+    gametest {
+        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+    }
+}
+
+// Keep the gametest sources type-checked by the ordinary :common lifecycle — without this,
+// `./gradlew :common:build` would skip compileGametestJava and a broken scenario would only
+// surface when a loader's gametest lane compiles it.
+tasks.named('check') {
+    dependsOn tasks.named('compileGametestJava')
+}
+
 configurations {
     commonJava {
         canBeResolved = false
@@ -289,11 +328,19 @@ configurations {
         canBeResolved = false
         canBeConsumed = true
     }
+    // MOD-242: source-dir artifact for the gametest scenarios, consumed ONLY by the loaders'
+    // gametest source sets (fabric `gametest` via loom configureTests, neoforge `gametest`) —
+    // never by their main compile, so the scenarios stay out of the shipped jars.
+    commonGametestJava {
+        canBeResolved = false
+        canBeConsumed = true
+    }
 }
 
 artifacts {
     commonJava sourceSets.main.java.sourceDirectories.singleFile
     commonResources sourceSets.main.resources.sourceDirectories.singleFile
+    commonGametestJava sourceSets.gametest.java.sourceDirectories.singleFile
 }
 
 // Implement mcgradleconventions loader attribute.

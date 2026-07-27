@@ -2,7 +2,7 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
-import dev.alaindustrial.item.FluidTankBucketInteractions;
+import dev.alaindustrial.item.fluid.FluidTankBucketInteractions;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

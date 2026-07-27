@@ -2,7 +2,7 @@ package dev.alaindustrial.core.fabric;
 
 import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidPort;
-import dev.alaindustrial.item.ItemFluidBridge;
+import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import java.util.List;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;

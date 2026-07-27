@@ -30,7 +30,7 @@ import net.minecraft.server.level.ServerLevel;
  * repeats. The result is the union of cables, producers, consumers and storage sinks across all
  * connected networks, which the analyzer payload ships to the client as one picture.
  *
- * <p>{@link dev.alaindustrial.item.AnalyzerMode#STOP_AT_STORAGE} mode is just the single clicked
+ * <p>{@link dev.alaindustrial.item.tool.AnalyzerMode#STOP_AT_STORAGE} mode is just the single clicked
  * network (the original MOD-016 behaviour) — no bridging, no separate storage list.
  *
  * <p>Pure read-only: never mutates networks or touches {@link EnergyNetwork#tick()}. The traversal
@@ -47,8 +47,8 @@ public final class NetworkTraverser {
 	 * {@code maxNetworks} visited networks. The start network is always included even if the cap is 1.
 	 */
 	public static TraversalResult traverse(ServerLevel level, EnergyNetwork start,
-			dev.alaindustrial.item.AnalyzerMode mode, int maxNetworks) {
-		if (mode == dev.alaindustrial.item.AnalyzerMode.STOP_AT_STORAGE) {
+			dev.alaindustrial.item.tool.AnalyzerMode mode, int maxNetworks) {
+		if (mode == dev.alaindustrial.item.tool.AnalyzerMode.STOP_AT_STORAGE) {
 			// Original MOD-016 behaviour: one network, no storage highlight, no bridging.
 			return collectSingle(start);
 		}

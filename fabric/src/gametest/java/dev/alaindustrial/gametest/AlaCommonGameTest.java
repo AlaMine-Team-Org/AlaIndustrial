@@ -129,6 +129,12 @@ public class AlaCommonGameTest {
 				continue;
 			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);
+			// Liquid blocks (MOD-238 oil): like vanilla water/lava, the in-world block form of a fluid
+			// has no item and no loot — it is scooped with a bucket, never mined (LiquidBlock#getDrops
+			// is empty by design). The bucket round trip is covered by OilGameTest FUN01 instead.
+			if (block instanceof net.minecraft.world.level.block.LiquidBlock) {
+				continue;
+			}
 			helper.setBlock(PROBE, block);
 			List<ItemStack> drops = Block.getDrops(level.getBlockState(abs), level, abs,
 					level.getBlockEntity(abs), miner, pickaxe);
@@ -165,6 +171,12 @@ public class AlaCommonGameTest {
 				continue;
 			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);
+			// Liquid blocks (MOD-238 oil): fluids are never mined — not requiresCorrectToolForDrops,
+			// not in mineable/pickaxe, no drops at all (vanilla water/lava behave identically), so
+			// neither the hand-negative nor the pickaxe-positive applies.
+			if (block instanceof net.minecraft.world.level.block.LiquidBlock) {
+				continue;
+			}
 			helper.setBlock(PROBE, block);
 			var state = level.getBlockState(abs);
 			helper.setBlock(PROBE, Blocks.AIR);
@@ -223,18 +235,24 @@ public class AlaCommonGameTest {
 			Block block = BuiltInRegistries.BLOCK.getValue(id);
 			BlockState state = block.defaultBlockState();
 
+			// Liquid blocks (MOD-238 oil): the fluid's block form mirrors vanilla water/lava — no
+			// block item (the hand-carried form is the bucket) and no loot table (LiquidBlock#getDrops
+			// is empty), so those two invariants are waived. The occlusion invariant still applies
+			// below: a liquid is a non-full-cube non-occluder and must stay that way.
+			boolean liquid = block instanceof net.minecraft.world.level.block.LiquidBlock;
+
 			// 1. Occlusion <=> full collision cube.
 			boolean fullCube = state.isCollisionShapeFullBlock(level, probe)
 					&& Block.isShapeFullBlock(state.getCollisionShape(level, probe, CollisionContext.empty()));
 			boolean occludes = state.canOcclude();
 			boolean occlusionOk = (fullCube == occludes);
 
-			// 2. A BlockItem is registered under the same id.
-			boolean hasItem = BuiltInRegistries.ITEM.containsKey(id);
+			// 2. A BlockItem is registered under the same id (waived for liquids, see above).
+			boolean hasItem = liquid || BuiltInRegistries.ITEM.containsKey(id);
 
-			// 3. The loot-table datapack resource exists.
-			boolean hasLoot = false;
-			if (block.getLootTable().isPresent()) {
+			// 3. The loot-table datapack resource exists (waived for liquids, see above).
+			boolean hasLoot = liquid;
+			if (!liquid && block.getLootTable().isPresent()) {
 				Identifier lootId = block.getLootTable().get().identifier();
 				Identifier lootResource = Identifier.fromNamespaceAndPath(
 						lootId.getNamespace(), "loot_table/" + lootId.getPath() + ".json");

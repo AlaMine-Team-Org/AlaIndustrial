@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "Petróleo",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "Petróleo do zero",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Onde procurar",
+              "text": "O petróleo não é fabricado nem fundido — ele só é encontrado, em qualquer lugar do Overworld. As jazidas vêm em quatro tamanhos:\n\n• Mancha de superfície — uma a cada 150 chunks, só para provar\n• Lago de mina — Y -40..-8, cerca de um chunk em cada cinco: sua fonte principal\n• Reservatório profundo — Y -50..-30, um a cada 20 chunks, três vezes mais largo\n• Veio de petróleo — um a cada 600 chunks, visível da superfície\n\nO petróleo nunca gera dentro de aldeias, minas abandonadas, fortalezas ou da Cidade Antiga."
+            },
+            {
+              "type": "text",
+              "title": "A jazida é finita",
+              "text": "Cada bloco de petróleo que você tira some para sempre — ao contrário da água, a jazida não se reabastece.\n\nUm lago comum dá de 20 a 60 baldes, um reservatório profundo bem mais, e a cúpula de um veio vários milhares. Quando você esvazia um, é hora de procurar o próximo, então marque o lugar assim que encontrar.\n\nTirar de balde demora: coloque uma Bomba ao lado e ela sozinha drena a jazida inteira para um tanque."
+            },
+            {
+              "type": "text",
+              "title": "Dentro do petróleo",
+              "text": "O petróleo é denso — em vez de nadar, você se arrasta por dentro dele, e o movimento fica bem lento.\n\n• Segure o pulo para subir, cerca de um bloco por segundo — mais devagar que na água e até que na lava\n• Você não consegue respirar: com a cabeça submersa o ar acaba como debaixo d'água, e o dano vem em seguida\n• O dano de queda é anulado por completo enquanto você está no petróleo\n• A visão piora: um véu escuro na tela, nada visível além de 9 blocos\n\nPlaneje a descida pelo poço de um veio pelo ar que você tem, não pela profundidade dele."
+            },
+            {
+              "type": "text",
+              "title": "Ele pega fogo",
+              "text": "O petróleo pega fogo com facilidade: basta o fogo estar perto, mesmo na diagonal abaixo. Dali a chama percorre a poça bloco a bloco até consumir tudo, fontes incluídas. O isqueiro acende uma jazida na hora, sempre.\n\nA lava NÃO acende o petróleo — isso é proposital: lagos subterrâneos costumam gerar bem colados nos de lava.\n\nA chama não atravessa uma parede maciça de um bloco. E se você precisa do petróleo em segurança ao lado da fábrica, desligue a opção oilBurns do mod e ele fica completamente inerte."
+            },
+            {
+              "type": "text",
+              "title": "No que ele vira",
+              "text": "O petróleo é o começo da cadeia da borracha.\n\n1. Colete — com balde, Cápsula de vácuo ou Bomba\n2. Polimerizador: 1000 mB de petróleo e 400 EU dão borracha bruta\n3. Fornalha ou Fornalha Elétrica: a borracha bruta é queimada e vira borracha\n\nPor enquanto nada consome borracha — quem vai usá-la, os cabos isolados e os componentes MV, chega na próxima fase. Vá estocando."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "Energia",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "Polimerizador",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Polimerizador",
+              "text": "Ferve o petróleo até virar borracha bruta: um tanque de 10 baldes, um balde por operação. Depois a borracha bruta é queimada numa fornalha e vira borracha."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 400 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extrator",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "Petróleo",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Petróleo",
+              "text": "Um recurso fóssil líquido: lagos finitos no mundo, coletados com balde, cápsula ou bomba; viscoso, inflamável e o começo da cadeia da borracha."
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "Minério de Níquel",
           "icon": "alaindustrial:nickel_ore",
@@ -952,6 +1043,44 @@
               "type": "text",
               "title": "Minério de Urânio",
               "text": "O minério mais raro do mod — minerado com picareta de ferro, processado em pó e lingote; reservado para futuras máquinas nucleares."
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "Incubadora",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Incubadora",
+              "text": "Multibloco 1×2: base mecânica mais uma cúpula de vidro. Muta itens por irradiação de urânio e EU: duplica-os, transforma-os ou cria novos. O modo é definido por um chip e o resultado é probabilístico, com quatro graus de raridade."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Buffer: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
             }
           ]
         },
@@ -1537,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "Borracha",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Borracha",
+              "text": "Um material feito de petróleo: o Polimerizador transforma o petróleo em borracha bruta e uma fornalha a queima até virar borracha. A base dos futuros cabos isolados e componentes MV."
             }
           ]
         },

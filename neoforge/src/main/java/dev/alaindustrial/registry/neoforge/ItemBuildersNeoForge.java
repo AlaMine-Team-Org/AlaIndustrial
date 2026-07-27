@@ -1,11 +1,11 @@
 package dev.alaindustrial.registry.neoforge;
 
-import dev.alaindustrial.item.FilledCapsuleItem;
-import dev.alaindustrial.item.FluidTankBlockItem;
-import dev.alaindustrial.item.HintItem;
-import dev.alaindustrial.item.ItemPipeBlockItem;
-import dev.alaindustrial.item.ModArmorMaterials;
-import dev.alaindustrial.item.StockDisplayFrameItem;
+import dev.alaindustrial.item.fluid.FilledCapsuleItem;
+import dev.alaindustrial.item.fluid.FluidTankBlockItem;
+import dev.alaindustrial.item.misc.HintItem;
+import dev.alaindustrial.item.misc.ItemPipeBlockItem;
+import dev.alaindustrial.item.material.ModArmorMaterials;
+import dev.alaindustrial.item.misc.StockDisplayFrameItem;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;

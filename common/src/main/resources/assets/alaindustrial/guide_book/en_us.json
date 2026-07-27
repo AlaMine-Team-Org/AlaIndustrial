@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "Oil",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "Oil from scratch",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Where to look",
+              "text": "Oil is neither crafted nor smelted — it is only found, anywhere in the Overworld. Deposits come in four sizes:\n\n• Surface patch — one per 150 chunks, just a taster\n• Mining-depth lake — Y -40..-8, about one chunk in five: your main source\n• Deep reservoir — Y -50..-30, one per 20 chunks, three times wider\n• Oil vein — one per 600 chunks, visible from the surface\n\nOil never generates inside villages, mineshafts, strongholds or the Ancient City."
+            },
+            {
+              "type": "text",
+              "title": "A deposit is finite",
+              "text": "A block of oil you scoop out is gone for good — unlike water, the deposit does not refill.\n\nAn ordinary lake is 20-60 buckets, a deep reservoir noticeably more, a vein's dome several thousand. Drain one and you go looking for the next, so mark the spot when you find one.\n\nScooping by bucket takes a while: put a Pump next to it and it drains the whole deposit into a tank by itself."
+            },
+            {
+              "type": "text",
+              "title": "Inside the oil",
+              "text": "Oil is thick — you wade through it rather than swim, and movement slows right down.\n\n• Hold jump to rise, about a block per second — slower than water and even lava\n• You cannot breathe: with your head under, air drains as it does underwater, and damage follows\n• Fall damage is cancelled entirely while you are in oil\n• Vision suffers: a dark film on the screen, nothing visible past nine blocks\n\nPlan a descent down a vein's shaft by your air supply, not by its depth."
+            },
+            {
+              "type": "text",
+              "title": "It burns",
+              "text": "Oil catches easily: fire merely has to be near it — even diagonally below. From there flame walks the pool block by block until all of it is gone, sources included. Flint and steel lights a deposit instantly, always.\n\nLava does NOT ignite oil — that is deliberate: underground lakes often generate right against lava ones.\n\nFlame will not cross a solid one-block wall. And if you need oil to sit safely next to a factory, switch off the mod's oilBurns setting and it becomes completely inert."
+            },
+            {
+              "type": "text",
+              "title": "What it becomes",
+              "text": "Oil is the start of the rubber chain.\n\n1. Collect it — by bucket, Vacuum Capsule or Pump\n2. Polymerizer: 1000 mB of oil and 400 EU give raw rubber\n3. Furnace or Electric Furnace: raw rubber cures into rubber\n\nRubber is not consumed by anything yet — its users, insulated cables and MV components, arrive with the next phase. Stockpile it."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "Energy",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "Polymerizer",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Polymerizer",
+              "text": "Boils oil down into raw rubber — a ten-bucket tank, one bucket per run. The raw rubber is then fired in a furnace to become rubber."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 400 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extractor",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "Oil",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Oil",
+              "text": "A liquid fossil resource — finite lakes in the world, collected with a bucket, a capsule or a pump; viscous, flammable, and the start of the rubber chain."
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "Nickel Ore",
           "icon": "alaindustrial:nickel_ore",
@@ -964,7 +1055,7 @@
             {
               "type": "text",
               "title": "Incubator",
-              "text": "1×2 multiblock (machine base + a volumetric glass dome) that mutates items via uranium irradiation and EU at the LV tier; the mutation mode is set by a mutation chip, success chance per mutation kind, four outcome-rarity grades, spent uranium settles in the ash slot."
+              "text": "A 1×2 multiblock — mechanical base plus a glass dome. Mutates items by uranium irradiation and EU: duplicates, transforms or creates new ones. Mode set by a chip, outcome is probabilistic with four rarity grades."
             },
             {
               "type": "stats",
@@ -1575,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "Rubber",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rubber",
+              "text": "A material made from oil — the Polymerizer turns oil into raw rubber, a furnace fires it into rubber. The base of future insulated cables and MV components."
             }
           ]
         },

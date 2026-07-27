@@ -7,7 +7,7 @@ import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.NetworkManager;
-import dev.alaindustrial.item.AnalyzerMode;
+import dev.alaindustrial.item.tool.AnalyzerMode;
 import dev.alaindustrial.network.NetworkTraverser;
 import dev.alaindustrial.network.NetworkTraverser.TraversalResult;
 import dev.alaindustrial.registry.ModBlocks;

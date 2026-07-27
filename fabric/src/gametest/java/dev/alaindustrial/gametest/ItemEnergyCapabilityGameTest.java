@@ -1,8 +1,8 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.item.EnergyPackItem;
-import dev.alaindustrial.item.ItemEnergy;
+import dev.alaindustrial.item.wearable.EnergyPackItem;
+import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModItems;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;

@@ -1,8 +1,8 @@
 package dev.alaindustrial.teleporter;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.item.TeleportPoint;
-import dev.alaindustrial.item.TeleporterRemoteItem;
+import dev.alaindustrial.item.teleport.TeleportPoint;
+import dev.alaindustrial.item.teleport.TeleporterRemoteItem;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;

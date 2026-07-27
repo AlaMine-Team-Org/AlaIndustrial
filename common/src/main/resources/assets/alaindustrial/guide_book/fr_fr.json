@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "Pétrole",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "Le pétrole de A à Z",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Où chercher",
+              "text": "Le pétrole ne se fabrique ni ne se cuit — il se trouve, et c'est tout, partout à la Surface. Les gisements existent en quatre tailles :\n\n• Flaque de surface — une tous les 150 chunks, juste un avant-goût\n• Lac de mine — Y -40..-8, environ un chunk sur cinq : votre source principale\n• Réservoir profond — Y -50..-30, un tous les 20 chunks, trois fois plus large\n• Veine de pétrole — une tous les 600 chunks, visible depuis la surface\n\nLe pétrole ne se génère jamais dans les villages, les mines abandonnées, les forteresses ni la cité antique."
+            },
+            {
+              "type": "text",
+              "title": "Un gisement s'épuise",
+              "text": "Un bloc de pétrole que vous puisez est perdu pour de bon — contrairement à l'eau, le gisement ne se reforme pas.\n\nUn lac ordinaire donne 20-60 seaux, un réservoir profond nettement plus, le dôme d'une veine plusieurs milliers. Une fois l'un vidé, vous partez chercher le suivant : notez donc l'endroit dès que vous en trouvez un.\n\nPuiser au seau prend du temps : posez une Pompe à côté et elle vide tout le gisement dans un réservoir toute seule."
+            },
+            {
+              "type": "text",
+              "title": "Dans le pétrole",
+              "text": "Le pétrole est épais — vous y pataugez plutôt que vous n'y nagez, et vos déplacements ralentissent nettement.\n\n• Maintenez le saut pour remonter, environ un bloc par seconde — plus lent que dans l'eau, et même que dans la lave\n• Impossible de respirer : la tête immergée, votre air se vide comme sous l'eau, puis les dégâts arrivent\n• Les dégâts de chute sont entièrement annulés tant que vous êtes dans le pétrole\n• La vue en souffre : un voile sombre à l'écran, plus rien de visible au-delà de neuf blocs\n\nCalculez une descente dans le puits d'une veine sur votre réserve d'air, pas sur sa profondeur."
+            },
+            {
+              "type": "text",
+              "title": "Ça brûle",
+              "text": "Le pétrole s'enflamme facilement : il suffit qu'un feu se trouve à proximité — même en diagonale en dessous. De là, la flamme parcourt la nappe bloc par bloc jusqu'à ce que tout ait disparu, blocs sources compris. Le briquet enflamme un gisement instantanément, à tous les coups.\n\nLa lave, elle, n'enflamme PAS le pétrole — c'est voulu : les lacs souterrains se génèrent souvent juste contre des lacs de lave.\n\nUn mur plein d'un bloc d'épaisseur arrête la flamme. Et s'il vous faut du pétrole bien tranquille à côté d'une usine, désactivez le réglage oilBurns du mod : il devient alors totalement inerte."
+            },
+            {
+              "type": "text",
+              "title": "Ce qu'il devient",
+              "text": "Le pétrole est le début de la chaîne du caoutchouc.\n\n1. Récoltez-le — au seau, à la Capsule à vide ou à la Pompe\n2. Polymériseur : 1000 mB de pétrole et 400 EU donnent du caoutchouc brut\n3. Four ou Four électrique : le caoutchouc brut cuit et devient du caoutchouc\n\nLe caoutchouc n'est encore consommé par rien — ses utilisateurs, les câbles isolés et les composants MV, arriveront avec la prochaine phase. Faites-en des réserves."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "Énergie",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "Polymériseur",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Polymériseur",
+              "text": "Distille le pétrole en caoutchouc brut — un réservoir de 10 seaux, un seau par cycle. Le caoutchouc brut est ensuite cuit au four pour devenir du caoutchouc."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 400 EU/op",
+                "Tampon : 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extracteur",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "Pétrole",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pétrole",
+              "text": "Une ressource fossile liquide : des lacs finis dans le monde, récoltés au seau, à la capsule ou à la pompe ; visqueux, inflammable et le début de la chaîne du caoutchouc."
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "Minerai de nickel",
           "icon": "alaindustrial:nickel_ore",
@@ -952,6 +1043,44 @@
               "type": "text",
               "title": "Minerai d'uranium",
               "text": "Le minerai le plus rare du mod — extrait avec une pioche en fer, transformé en poudre et en lingot ; réservé aux futures machines nucléaires."
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "Incubateur",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Incubateur",
+              "text": "Multibloc 1×2 — un socle mécanique et un dôme de verre. Fait muter les objets par irradiation d'uranium et EU : il les duplique, les transforme ou en crée de nouveaux. Le mode se règle avec une puce, le résultat est probabiliste, avec quatre degrés de rareté."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Tampon : 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
             }
           ]
         },
@@ -1537,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "Caoutchouc",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Caoutchouc",
+              "text": "Un matériau tiré du pétrole — le Polymériseur transforme le pétrole en caoutchouc brut, un four le cuit en caoutchouc. La base des futurs câbles isolés et composants MV."
             }
           ]
         },

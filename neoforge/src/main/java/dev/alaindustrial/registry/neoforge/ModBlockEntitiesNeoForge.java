@@ -7,6 +7,7 @@ import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
+import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
@@ -92,6 +93,8 @@ public final class ModBlockEntitiesNeoForge {
 			register("compressor", CompressorBlockEntity::new, ModBlocksNeoForge.COMPRESSOR);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SawmillBlockEntity>> SAWMILL =
 			register("sawmill", SawmillBlockEntity::new, ModBlocksNeoForge.SAWMILL);
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PolymerizerBlockEntity>> POLYMERIZER =
+			register("polymerizer", PolymerizerBlockEntity::new, ModBlocksNeoForge.POLYMERIZER);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IncubatorBlockEntity>> INCUBATOR =
 			register("incubator", IncubatorBlockEntity::new, ModBlocksNeoForge.INCUBATOR);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeothermalGeneratorBlockEntity>> GEOTHERMAL_GENERATOR =
@@ -147,6 +150,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.EXTRACTOR_BE = EXTRACTOR::get;
 		ModContent.COMPRESSOR_BE = COMPRESSOR::get;
 		ModContent.SAWMILL_BE = SAWMILL::get;
+		ModContent.POLYMERIZER_BE = POLYMERIZER::get;
 		ModContent.INCUBATOR_BE = INCUBATOR::get;
 		ModContent.GEOTHERMAL_GENERATOR_BE = GEOTHERMAL_GENERATOR::get;
 		ModContent.PUMP_BE = PUMP::get;

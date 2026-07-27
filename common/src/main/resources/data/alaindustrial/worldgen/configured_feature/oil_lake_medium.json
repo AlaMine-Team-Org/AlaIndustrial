@@ -1,0 +1,52 @@
+{
+  "type": "alaindustrial:oil_lake",
+  "config": {
+    "barrier": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:stone"
+      }
+    },
+    "blob_count": {
+      "type": "minecraft:uniform",
+      "min_inclusive": 4,
+      "max_inclusive": 7
+    },
+    "can_place_feature": {
+      "type": "minecraft:true"
+    },
+    "can_replace_with_air_or_fluid": {
+      "type": "minecraft:not",
+      "predicate": {
+        "type": "minecraft:matching_block_tag",
+        "tag": "minecraft:features_cannot_replace"
+      }
+    },
+    "can_replace_with_barrier": {
+      "type": "minecraft:not",
+      "predicate": {
+        "type": "minecraft:matching_block_tag",
+        "tag": "minecraft:lava_pool_stone_cannot_replace"
+      }
+    },
+    "fluid": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "alaindustrial:oil",
+        "Properties": {
+          "level": "0"
+        }
+      }
+    },
+    "horizontal_radius": {
+      "type": "minecraft:uniform",
+      "min_inclusive": 6,
+      "max_inclusive": 9
+    },
+    "vertical_radius": {
+      "type": "minecraft:uniform",
+      "min_inclusive": 3,
+      "max_inclusive": 5
+    }
+  }
+}

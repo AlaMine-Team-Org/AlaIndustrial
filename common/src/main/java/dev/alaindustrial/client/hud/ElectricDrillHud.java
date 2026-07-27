@@ -1,7 +1,7 @@
 package dev.alaindustrial.client.hud;
 
-import dev.alaindustrial.item.ElectricDrillItem;
-import dev.alaindustrial.item.ItemEnergy;
+import dev.alaindustrial.item.tool.ElectricDrillItem;
+import dev.alaindustrial.item.energy.ItemEnergy;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;

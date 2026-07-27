@@ -1,6 +1,6 @@
 package dev.alaindustrial.core.fabric;
 
-import dev.alaindustrial.item.ItemFluid;
+import dev.alaindustrial.item.fluid.ItemFluid;
 import dev.alaindustrial.registry.ModItems;
 import java.util.Iterator;
 import java.util.List;

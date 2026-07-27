@@ -1,6 +1,6 @@
 package dev.alaindustrial.mixin;
 
-import dev.alaindustrial.item.CapsuleFuel;
+import dev.alaindustrial.item.fluid.CapsuleFuel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.FuelValues;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  *
  * <p>{@link FuelValues} is keyed by item type, so it cannot distinguish a lava capsule from a water one — a
  * plain item registration would (wrongly) turn every filled capsule into fuel. This stack-aware guard runs
- * on both loaders (the config lives in {@code common/alaindustrial.mixins.json}) and drives every furnace fuel
+ * on both loaders (the config lives in {@code common/alaindustrial.compat-optional.mixins.json}) and drives every furnace fuel
  * decision that routes through {@link FuelValues}: placement/ignition on Fabric via {@code isFuel} +
  * {@code burnDuration}, and on NeoForge via {@code ItemStack#getBurnTime} whose default delegates to
  * {@code burnDuration}. The empty-capsule remainder is handled separately by the item's {@code craftRemainder}

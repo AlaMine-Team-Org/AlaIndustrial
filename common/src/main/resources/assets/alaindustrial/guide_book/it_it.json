@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "Petrolio",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "Il petrolio da zero",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Dove cercarlo",
+              "text": "Il petrolio non si fabbrica né si fonde: si può solo trovare, ovunque nell'Overworld. I giacimenti hanno quattro dimensioni:\n\n• Chiazza in superficie — uno ogni 150 chunk, giusto un assaggio\n• Lago di miniera — Y -40..-8, circa un chunk su cinque: la tua fonte principale\n• Giacimento profondo — Y -50..-30, uno ogni 20 chunk, tre volte più ampio\n• Vena di petrolio — una ogni 600 chunk, visibile dalla superficie\n\nIl petrolio non si genera mai dentro villaggi, miniere abbandonate, roccaforti o la Città antica."
+            },
+            {
+              "type": "text",
+              "title": "Il giacimento si esaurisce",
+              "text": "Ogni blocco di petrolio che raccogli sparisce per sempre: a differenza dell'acqua, il giacimento non si ricarica.\n\nUn lago normale vale 20-60 secchi, un giacimento profondo parecchio di più, la cupola di una vena diverse migliaia. Quando ne svuoti uno tocca cercare il prossimo, quindi segna il punto appena lo trovi.\n\nRaccoglierlo a secchiate richiede tempo: piazzaci accanto una Pompa e svuoterà da sola l'intero giacimento in un serbatoio."
+            },
+            {
+              "type": "text",
+              "title": "Dentro il petrolio",
+              "text": "Il petrolio è denso: più che nuotare lo guadi, e il movimento rallenta parecchio.\n\n• Tieni premuto il salto per risalire, circa un blocco al secondo — più lento dell'acqua e persino della lava\n• Non puoi respirare: con la testa sotto, l'aria cala come sott'acqua e poi arrivano i danni\n• I danni da caduta sono annullati del tutto finché sei nel petrolio\n• La vista peggiora: un velo scuro sullo schermo, niente di visibile oltre 9 blocchi\n\nPianifica la discesa nel pozzo di una vena in base all'aria che ti resta, non alla sua profondità."
+            },
+            {
+              "type": "text",
+              "title": "Brucia",
+              "text": "Il petrolio prende fuoco facilmente: basta che il fuoco gli stia vicino, anche in diagonale al di sotto. Da lì la fiamma percorre la pozza blocco per blocco finché non è sparita tutta, sorgenti comprese. L'acciarino accende un giacimento all'istante, sempre.\n\nLa lava NON incendia il petrolio: è una scelta voluta, perché i laghi sotterranei si generano spesso proprio a ridosso di quelli di lava.\n\nLa fiamma non attraversa un muro pieno di un blocco. E se ti serve tenere il petrolio al sicuro accanto alla fabbrica, disattiva l'impostazione oilBurns della mod e diventerà del tutto inerte."
+            },
+            {
+              "type": "text",
+              "title": "In cosa si trasforma",
+              "text": "Il petrolio è l'inizio della filiera della gomma.\n\n1. Raccoglilo — con un secchio, una Capsula sottovuoto o una Pompa\n2. Polimerizzatore: 1000 mB di petrolio e 400 EU danno caucciù grezzo\n3. Fornace o Fornace elettrica: il caucciù grezzo si cuoce e diventa gomma\n\nPer ora la gomma non viene consumata da nulla — i suoi utilizzatori, i cavi isolati e i componenti MV, arriveranno con la prossima fase. Fanne scorta."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "Energia",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "Polimerizzatore",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Polimerizzatore",
+              "text": "Distilla il petrolio in caucciù grezzo: un serbatoio da 10 secchi, un secchio per ciclo. Il caucciù grezzo viene poi cotto in una fornace e diventa gomma."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: 400 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Estrattore",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "Petrolio",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Petrolio",
+              "text": "Una risorsa fossile liquida: laghi finiti nel mondo, raccolti con secchio, capsula o pompa; densa, infiammabile e inizio della filiera della gomma."
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "Minerale di nichel",
           "icon": "alaindustrial:nickel_ore",
@@ -952,6 +1043,44 @@
               "type": "text",
               "title": "Minerale di uranio",
               "text": "Il minerale più raro della mod — si estrae con un piccone di ferro, si lavora in polvere e lingotto; riservato alle future macchine nucleari."
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "Incubatrice",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Incubatrice",
+              "text": "Multiblocco 1×2: base meccanica più una cupola di vetro. Muta gli oggetti tramite irraggiamento di uranio ed EU: li duplica, li trasforma o ne crea di nuovi. La modalità si imposta con un chip, l'esito è probabilistico con quattro gradi di rarità."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Buffer: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
             }
           ]
         },
@@ -1537,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "Gomma",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gomma",
+              "text": "Un materiale ricavato dal petrolio: il Polimerizzatore trasforma il petrolio in caucciù grezzo, una fornace lo cuoce in gomma. La base dei futuri cavi isolati e dei componenti MV."
             }
           ]
         },

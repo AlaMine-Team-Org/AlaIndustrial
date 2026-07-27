@@ -13,7 +13,7 @@ import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.core.fluid.FluidSourceFinder;
 import dev.alaindustrial.core.fluid.FluidTank;
-import dev.alaindustrial.item.ItemFluidBridge;
+import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;

@@ -4,6 +4,7 @@ import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
+import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -223,6 +224,17 @@ public final class DemoStand {
 				new ItemStack(ModContent.URANIUM_INGOT.get(), 16));
 		fillSlot(level, origin, 20, 1, 10, IncubatorBlockEntity.INPUT_SLOT,
 				new ItemStack(Items.DIAMOND, 64));
+		// Polymerizer (MOD-019): the fluid-fed machine. placeWorkingMachine does not fit it — its slot 0
+		// takes a CONTAINER, not the feedstock, and one bucket would give the stand a single run before
+		// the machine went idle. The tank is stocked directly instead, so it runs for ten operations.
+		set(level, origin, 23, 1, 10, ModContent.POLYMERIZER.get());
+		chargeBuffer(level, origin, 23, 1, 10);
+		if (level.getBlockEntity(origin.offset(23, 1, 10)) instanceof PolymerizerBlockEntity polymerizer) {
+			polymerizer.fluidTank.fluid = FluidHolder.of(ModContent.OIL.get());
+			polymerizer.fluidTank.amount = PolymerizerBlockEntity.TANK_CAPACITY;
+			polymerizer.markDirtyAndSync();
+			polymerizer.wake();
+		}
 		// Iron furnace (MOD-115): fuel-burning, not EU — so it is loaded with input + coal instead of a
 		// pre-charged buffer, and lights itself on the first tick like a vanilla furnace.
 		set(level, origin, 14, 1, 10, ModContent.IRON_FURNACE.get());
@@ -296,6 +308,11 @@ public final class DemoStand {
 		set(level, origin, 33, 2, 10, ModContent.INDUSTRIAL_WORKBENCH.get());
 		set(level, origin, 34, -1, 10, FLOOR);
 		set(level, origin, 34, 0, 10, Blocks.LAVA);
+		// Oil (MOD-238): a sunken one-block oil pool, same pattern as the lava pool above. Kept
+		// non-adjacent to the lava/torches on purpose — a directly neighbouring igniter would set it
+		// on fire (OilLiquidBlock ignition mechanic) and the stand would showcase a fire block instead.
+		set(level, origin, 34, -1, 12, FLOOR);
+		set(level, origin, 34, 0, 12, ModContent.OIL_BLOCK.get());
 		set(level, origin, 34, 1, 10, ModContent.PUMP.get());
 		chargeBuffer(level, origin, 34, 1, 10);
 		set(level, origin, 35, 1, 10, ModContent.GEOTHERMAL_GENERATOR.get());

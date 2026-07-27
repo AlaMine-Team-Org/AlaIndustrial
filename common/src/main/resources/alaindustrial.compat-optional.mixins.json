@@ -6,10 +6,14 @@
   "mixins": [
     "FuelValuesMixin",
     "FurnaceFuelSlotMixin",
+    "LivingEntityOilDrowningMixin",
     "SkeletonSpawnEquipmentMixin",
     "ZombieSpawnEquipmentMixin"
   ],
-  "client": [],
+  "client": [
+    "client.FogRendererAccessor",
+    "client.ScreenEffectRendererMixin"
+  ],
   "server": [],
   "injectors": {
     "defaultRequire": 0

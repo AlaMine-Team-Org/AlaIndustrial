@@ -96,6 +96,22 @@ class MutationRollTest {
 		assertEquals(MutationGrade.COMMON, MutationRoll.rollGrade(0.20, 0.08, 0.02, script(0.999)));
 	}
 
+	/**
+	 * A roll landing exactly on a band edge belongs to the LOWER grade — the comparisons are
+	 * strict (MOD-244).
+	 *
+	 * <p>{@link #gradeBandsFollowTheConfiguredShares()} deliberately steps around the edges because
+	 * 0.02 + 0.08 + 0.20 is not exactly 0.30 in binary floating point. Quarter shares have no such
+	 * problem: 0.25, 0.50 and 0.75 are all exactly representable, so each edge can be asserted
+	 * literally and a comparison relaxed to {@code <=} is caught instead of hiding behind the ulps.
+	 */
+	@Test
+	void aRollExactlyOnABandEdgeTakesTheLowerGrade() {
+		assertEquals(MutationGrade.EPIC, MutationRoll.rollGrade(0.25, 0.25, 0.25, script(0.25)));
+		assertEquals(MutationGrade.RARE, MutationRoll.rollGrade(0.25, 0.25, 0.25, script(0.50)));
+		assertEquals(MutationGrade.COMMON, MutationRoll.rollGrade(0.25, 0.25, 0.25, script(0.75)));
+	}
+
 	@Test
 	void commonGradeLeavesNoTraceAndGrantsNoBonus() {
 		assertEquals(0.0, MutationGrade.COMMON.geneBonus(), 1e-9);
@@ -103,11 +119,29 @@ class MutationRollTest {
 		assertEquals(true, MutationGrade.RARE.isMarked());
 	}
 
+	/**
+	 * Serialized name and lang key of a grade (MOD-244). {@code serializedName()} is what goes into
+	 * the {@code alaindustrial:mutation_grade} data component, so a changed spelling silently
+	 * orphans every graded item already in a world; the key is what en_us.json ships.
+	 */
+	@Test
+	void gradeNamesAndKeysAreStable() {
+		assertEquals("rare", MutationGrade.RARE.serializedName());
+		assertEquals("legendary", MutationGrade.LEGENDARY.serializedName());
+		assertEquals("tooltip.alaindustrial.mutation_grade.rare", MutationGrade.RARE.translationKey());
+		assertEquals("tooltip.alaindustrial.mutation_grade.epic", MutationGrade.EPIC.translationKey());
+		assertEquals("tooltip.alaindustrial.mutation_grade.legendary",
+				MutationGrade.LEGENDARY.translationKey());
+	}
+
 	@Test
 	void byOrdinalAndByNameFallBackToCommon() {
 		assertEquals(MutationGrade.EPIC, MutationGrade.byOrdinal(2));
 		assertEquals(MutationGrade.COMMON, MutationGrade.byOrdinal(-1));
 		assertEquals(MutationGrade.COMMON, MutationGrade.byOrdinal(99));
+		// The first ordinal past the end: an off-by-one in the upper bound indexes the array and
+		// throws instead of falling back (MOD-244).
+		assertEquals(MutationGrade.COMMON, MutationGrade.byOrdinal(MutationGrade.values().length));
 		assertEquals(MutationGrade.LEGENDARY, MutationGrade.byName("legendary"));
 		assertEquals(MutationGrade.COMMON, MutationGrade.byName("nonsense"));
 		assertEquals(MutationGrade.COMMON, MutationGrade.byName(null));

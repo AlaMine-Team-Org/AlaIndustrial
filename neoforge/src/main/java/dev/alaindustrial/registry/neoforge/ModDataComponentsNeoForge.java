@@ -1,11 +1,11 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.item.AnalyzerMode;
-import dev.alaindustrial.item.NetworkScanData;
-import dev.alaindustrial.item.PouchContents;
-import dev.alaindustrial.item.TeleportPoints;
-import dev.alaindustrial.item.FluidTankContents;
+import dev.alaindustrial.item.tool.AnalyzerMode;
+import dev.alaindustrial.item.tool.NetworkScanData;
+import dev.alaindustrial.item.energy.PouchContents;
+import dev.alaindustrial.item.teleport.TeleportPoints;
+import dev.alaindustrial.item.fluid.FluidTankContents;
 import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.registry.ModDataComponents;
 import java.util.UUID;

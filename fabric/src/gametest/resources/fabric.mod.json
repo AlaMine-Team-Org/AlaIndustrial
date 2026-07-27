@@ -57,6 +57,8 @@
 			,"dev.alaindustrial.gametest.RecipeCoverageGameTest"
 			,"dev.alaindustrial.gametest.IndustrialistVillagerGameTest"
 			,"dev.alaindustrial.gametest.HammerGameTest"
+			,"dev.alaindustrial.gametest.OilGameTest"
+			,"dev.alaindustrial.gametest.PolymerizerGameTest"
 		]
 	}
 }

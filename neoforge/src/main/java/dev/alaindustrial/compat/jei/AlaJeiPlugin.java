@@ -6,6 +6,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.compat.MachineRecipeViewerTargets;
 import dev.alaindustrial.client.compat.RecipeViewerInfo;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.PolymerizingRecipe;
 import dev.alaindustrial.recipe.VanillaSmeltingMirror;
 import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.neoforge.ModBlocksNeoForge;
@@ -80,6 +81,10 @@ public final class AlaJeiPlugin implements IModPlugin {
 			registration.addRecipeCategories(new AlaProcessingJeiCategory(machine.type(), block,
 					RecipeCategoryTitle.of(machine.kind(), block.getName()), guiHelper));
 		}
+		// MOD-019: the Polymerizer's fluid → item family. A single family, so the plain block name titles it.
+		Block polymerizer = ModBlocksNeoForge.POLYMERIZER.get();
+		registration.addRecipeCategories(new PolymerizingJeiCategory(AlaJeiRecipeTypes.POLYMERIZING,
+				polymerizer, polymerizer.getName(), guiHelper));
 	}
 
 	@Override
@@ -97,6 +102,11 @@ public final class AlaJeiPlugin implements IModPlugin {
 					machine.kind().id());
 			registration.addRecipes(machine.type(), machineRecipes);
 		}
+		// MOD-019: the Polymerizer's recipes live in their own class, so they are collected separately.
+		List<RecipeHolder<PolymerizingRecipe>> polymerizing = polymerizingRecipes(recipes);
+		Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI recipe(s) for {}", polymerizing.size(),
+				ModRecipes.POLYMERIZING.id());
+		registration.addRecipes(AlaJeiRecipeTypes.POLYMERIZING, polymerizing);
 		// Informational pages (MOD-043): for blocks/items with no crafting recipe — the solar panel
 		// evolution line today — JEI's built-in ingredient info gives a paginated, auto-wrapping page.
 		// Title + lines come from the same loader-neutral source the Fabric REI integration uses.
@@ -124,6 +134,8 @@ public final class AlaJeiPlugin implements IModPlugin {
 		for (Machine machine : MACHINES) {
 			registration.addCraftingStation(machine.type(), (ItemLike) machine.block().get());
 		}
+		registration.addCraftingStation(AlaJeiRecipeTypes.POLYMERIZING,
+				(ItemLike) ModBlocksNeoForge.POLYMERIZER.get());
 		// MOD-076: the electric furnace also performs vanilla smelting — ElectricFurnaceBlockEntity
 		// falls back to RecipeType.SMELTING when no alaindustrial:smelting recipe matches — so it is a
 		// crafting station for JEI's built-in minecraft:smelting category too (ore smelting,
@@ -180,6 +192,14 @@ public final class AlaJeiPlugin implements IModPlugin {
 						AlaJeiRecipeTypes.byKind(target.kind()));
 			}
 		}
+		// MOD-019: fluid-fed machines carry their own recipe type, so they list separately.
+		for (MachineRecipeViewerTargets.FluidTarget target : MachineRecipeViewerTargets.FLUID_ALL) {
+			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
+			registration.addRecipeClickArea(
+					target.screenClass(),
+					rect.x(), rect.y(), rect.width(), rect.height(),
+					AlaJeiRecipeTypes.POLYMERIZING);
+		}
 		// MOD-080: keep JEI's item grid clear of the upgrade panel + gear tab on every machine screen.
 		registration.addGuiContainerHandler((Class) MachineScreen.class, new AlaJeiGuiExtraAreasHandler());
 	}
@@ -203,6 +223,18 @@ public final class AlaJeiPlugin implements IModPlugin {
 			if (holder.value() instanceof AlaProcessingRecipe recipe && recipe.kind() == kind) {
 				@SuppressWarnings("unchecked")
 				RecipeHolder<AlaProcessingRecipe> typed = (RecipeHolder<AlaProcessingRecipe>) holder;
+				result.add(typed);
+			}
+		}
+		return result;
+	}
+
+	private static List<RecipeHolder<PolymerizingRecipe>> polymerizingRecipes(RecipeMap recipes) {
+		List<RecipeHolder<PolymerizingRecipe>> result = new ArrayList<>();
+		for (RecipeHolder<?> holder : recipes.values()) {
+			if (holder.value() instanceof PolymerizingRecipe) {
+				@SuppressWarnings("unchecked")
+				RecipeHolder<PolymerizingRecipe> typed = (RecipeHolder<PolymerizingRecipe>) holder;
 				result.add(typed);
 			}
 		}

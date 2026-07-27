@@ -2,8 +2,8 @@ package dev.alaindustrial.client.render;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.item.FluidTankContents;
-import dev.alaindustrial.item.FluidTankVisuals;
+import dev.alaindustrial.item.fluid.FluidTankContents;
+import dev.alaindustrial.item.fluid.FluidTankVisuals;
 import dev.alaindustrial.mixin.client.ItemTintSourcesAccessor;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.client.Minecraft;

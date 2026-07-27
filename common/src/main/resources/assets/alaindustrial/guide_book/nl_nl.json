@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "Aardolie",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "Aardolie van de grond af",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Waar je moet zoeken",
+              "text": "Aardolie wordt niet gemaakt en niet gesmolten — je vindt het alleen, overal in de Bovenwereld. Voorkomens komen in vier maten:\n\n• Oppervlakteplas — één per 150 chunks, slechts een voorproefje\n• Meer op mijnschachtdiepte — Y -40..-8, ongeveer één op de vijf chunks: je belangrijkste bron\n• Diep reservoir — Y -50..-30, één per 20 chunks, drie keer zo breed\n• Aardolieader — één per 600 chunks, zichtbaar vanaf het oppervlak\n\nAardolie ontstaat nooit in dorpen, mijnschachten, vestingen of de Oude Stad."
+            },
+            {
+              "type": "text",
+              "title": "Een voorkomen is eindig",
+              "text": "Een blok aardolie dat je opschept is voorgoed weg — anders dan water vult het voorkomen zich niet opnieuw.\n\nEen gewoon meer levert 20-60 emmers, een diep reservoir merkbaar meer, de koepel van een ader enkele duizenden. Is er één leeg, dan zoek je het volgende — markeer dus elke vindplaats.\n\nMet de emmer scheppen duurt lang: zet er een Pomp naast en die leegt het hele voorkomen vanzelf in een tank."
+            },
+            {
+              "type": "text",
+              "title": "In de aardolie",
+              "text": "Aardolie is dik — je waadt er eerder doorheen dan dat je zwemt, en je beweegt flink trager.\n\n• Houd springen ingedrukt om te stijgen, ongeveer een blok per seconde — trager dan in water en zelfs dan in lava\n• Ademen kan niet: zit je hoofd eronder, dan loopt je lucht net zo leeg als onder water, en daarna volgt schade\n• Valschade wordt volledig opgeheven zolang je in de aardolie zit\n• Het zicht lijdt eronder: een donkere waas over het scherm, verder dan negen blokken zie je niets\n\nPlan een afdaling door de schacht van een ader op je luchtvoorraad, niet op de diepte ervan."
+            },
+            {
+              "type": "text",
+              "title": "Het brandt",
+              "text": "Aardolie vat makkelijk vlam: er hoeft alleen vuur in de buurt te zijn — zelfs schuin eronder. Van daaruit loopt de vlam blok voor blok door de plas tot alles op is, bronblokken inbegrepen. Vuursteen en staal steekt een voorkomen altijd meteen aan.\n\nLava steekt aardolie NIET aan — dat is met opzet: ondergrondse meren ontstaan vaak pal tegen lavameren aan.\n\nEen massieve muur van één blok houdt de vlam tegen. En moet aardolie veilig naast een fabriek liggen, zet dan de instelling oilBurns van de mod uit — dan is het volledig inert."
+            },
+            {
+              "type": "text",
+              "title": "Wat het wordt",
+              "text": "Aardolie is het begin van de rubberketen.\n\n1. Verzamel het — met een emmer, Vacuümcapsule of Pomp\n2. Polymerisator: 1000 mB aardolie en 400 EU leveren ruwe rubber\n3. Oven of Elektrische oven: ruwe rubber hardt uit tot rubber\n\nRubber wordt nog nergens voor verbruikt — de afnemers, geïsoleerde kabels en MV-onderdelen, komen met de volgende fase. Leg een voorraad aan."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "Energie",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "Polymerisator",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Polymerisator",
+              "text": "Kookt aardolie in tot ruwe rubber — een tank van 10 emmers, één emmer per bewerking. De ruwe rubber wordt daarna in een oven gebakken tot rubber."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 400 EU/bew.",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extractor",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "Aardolie",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Aardolie",
+              "text": "Een vloeibare fossiele grondstof — eindige meren in de wereld, op te scheppen met een emmer, capsule of pomp; dik, brandbaar en het begin van de rubberketen."
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "Nikkelerts",
           "icon": "alaindustrial:nickel_ore",
@@ -952,6 +1043,44 @@
               "type": "text",
               "title": "Uraniumerts",
               "text": "Het zeldzaamste erts van de mod — gedolven met een ijzeren houweel, verwerkt tot stof en staaf; gereserveerd voor toekomstige nucleaire machines."
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "Incubator",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Incubator",
+              "text": "1×2-multiblok — machinebasis plus een glazen koepel. Muteert voorwerpen met uraniumbestraling en EU: het dupliceert ze, verandert ze of maakt nieuwe. De modus wordt met een chip ingesteld, de uitkomst is kansgebaseerd met vier zeldzaamheidsgraden."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
             }
           ]
         },
@@ -1537,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "Rubber",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rubber",
+              "text": "Een materiaal uit aardolie — de Polymerisator maakt van olie ruwe rubber, een oven bakt die tot rubber. De basis van toekomstige geïsoleerde kabels en MV-onderdelen."
             }
           ]
         },

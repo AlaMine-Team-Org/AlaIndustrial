@@ -1,0 +1,8 @@
+{
+	"type": "neoforge:add_features",
+	"biomes": "#alaindustrial:has_surface_oil_lakes",
+	"features": [
+		"alaindustrial:oil_lake_surface"
+	],
+	"step": "lakes"
+}

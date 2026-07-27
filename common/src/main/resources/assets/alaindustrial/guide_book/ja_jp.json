@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "石油",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "石油をゼロから",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "どこで探すか",
+              "text": "石油はクラフトも精錬もできません — オーバーワールドのどこかで見つけるしかありません。鉱床の大きさは4種類:\n\n• 地表の染み — 150チャンクに1つ、ほんの味見程度\n• 採掘層の湖 — Y -40..-8、およそ5チャンクに1つ: 主な入手源\n• 深層の貯留層 — Y -50..-30、20チャンクに1つ、3倍の広さ\n• 石油の鉱脈 — 600チャンクに1つ、地表からでも見えます\n\n石油は村・廃坑・要塞・古代都市の中には決して生成されません。"
+            },
+            {
+              "type": "text",
+              "title": "鉱床は有限",
+              "text": "汲み上げた石油ブロックは永久に失われます — 水とは違い、鉱床は元に戻りません。\n\n普通の湖はバケツ20-60杯、深層の貯留層はさらに多く、鉱脈の巨大な溜まりは数千杯にもなります。汲み尽くしたら次を探すことになるので、見つけた場所には印を付けておきましょう。\n\nバケツで汲むのは時間がかかります: 隣にポンプを置けば、鉱床まるごと自動でタンクへ送り込んでくれます。"
+            },
+            {
+              "type": "text",
+              "title": "石油の中では",
+              "text": "石油はどろりと重く — 泳ぐというより沈み込むように進み、動きが大きく鈍ります。\n\n• ジャンプ長押しで浮上できますが、およそ秒速1ブロック — 水よりも、さらに溶岩よりも遅い\n• 呼吸はできません: 頭まで浸かると水中と同じように空気が減り、続いてダメージを受けます\n• 石油の中にいるあいだ、落下ダメージは完全に無効化されます\n• 視界も悪く: 画面に暗い膜がかかり、9ブロック先はまったく見えません\n\n鉱脈の縦坑を降りるときは、深さではなく空気の残量で計画を立てましょう。"
+            },
+            {
+              "type": "text",
+              "title": "よく燃える",
+              "text": "石油は簡単に燃え移ります: 火が近くにあるだけで十分で — 斜め下からでも着火します。そこから炎はブロックづたいに広がり、水源ブロックまで含めて残らず燃え尽きます。火打石と打ち金なら、いつでも即座に鉱床へ火が付きます。\n\n溶岩は石油を決して発火させません — これは意図的な仕様です: 地下の湖は溶岩湖と隣り合って生成されることが多いためです。\n\n炎は厚さ1ブロックの壁を越えられません。工場のそばに石油を安全に置きたいなら、MODの設定 oilBurns をオフにすれば完全に不活性になります。"
+            },
+            {
+              "type": "text",
+              "title": "何になるのか",
+              "text": "石油はゴムづくりの出発点です。\n\n1. 集める — バケツ、真空カプセル、またはポンプで\n2. 重合機: 石油1000 mBと400 EUで生ゴムができます\n3. かまど、または電気かまど: 生ゴムを焼くとゴムになります\n\nゴムはまだ何にも消費されません — その用途である絶縁ケーブルやMV部品は次のフェーズで来ます。今のうちに貯めておきましょう。"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "エネルギー",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "重合機",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "重合機",
+              "text": "石油を煮詰めて生ゴムにします — バケツ10杯分のタンクで、1回の処理につきバケツ1杯を使います。生ゴムはかまどで焼くとゴムになります。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 400 EU/処理",
+                "バッファ: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "抽出機",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "石油",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "石油",
+              "text": "液体の化石資源 — 世界にある有限の湖で、バケツ、カプセル、ポンプで採取します。粘り気があり、燃えやすく、ゴムづくりの出発点です。"
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "ニッケル鉱石",
           "icon": "alaindustrial:nickel_ore",
@@ -952,6 +1043,44 @@
               "type": "text",
               "title": "ウラン鉱石",
               "text": "MODで最も希少な鉱石 — 鉄のツルハシで採掘し、粉やインゴットに加工します。将来の原子力機械のために用意されています。"
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "インキュベーター",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "インキュベーター",
+              "text": "1×2のマルチブロック — 機械の土台とガラスドーム。ウラン照射とEUでアイテムを変異させ、複製したり、別のものに変えたり、新しいものを生み出したりします。モードはチップで決まり、結果は確率で決まる4段階のレア度に分かれます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "バッファ: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
             }
           ]
         },
@@ -1537,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "ゴム",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ゴム",
+              "text": "石油から作る素材 — 重合機が石油を生ゴムに変え、かまどがそれを焼いてゴムにします。今後の絶縁ケーブルやMV部品の基礎です。"
             }
           ]
         },

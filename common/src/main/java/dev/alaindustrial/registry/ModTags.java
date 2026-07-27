@@ -2,9 +2,11 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 
 /**
  * Loader-neutral {@link TagKey} constants for the mod's own datapack tags. The backing JSON lives in
@@ -73,5 +75,20 @@ public final class ModTags {
 		private static TagKey<Item> key(String path) {
 			return TagKey.create(Registries.ITEM, Industrialization.id(path));
 		}
+	}
+
+	/** Fluid tags. */
+	public static final class Fluids {
+		private Fluids() {
+		}
+
+		/**
+		 * The conventional cross-mod oil tag ({@code c:oil}, the de-facto standard used by Ad Astra /
+		 * GregTech-style mods). Backed by {@code data/c/tags/fluid/oil.json}, which lists both the
+		 * still and the flowing variant (MOD-238). Future recipes consume oil by this tag, not by id,
+		 * so another mod's oil is accepted for free.
+		 */
+		public static final TagKey<Fluid> C_OIL =
+				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "oil"));
 	}
 }

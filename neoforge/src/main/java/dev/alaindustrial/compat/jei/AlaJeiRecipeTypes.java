@@ -2,6 +2,7 @@ package dev.alaindustrial.compat.jei;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.PolymerizingRecipe;
 import dev.alaindustrial.registry.ModRecipes;
 import mezz.jei.api.recipe.types.IRecipeHolderType;
 
@@ -28,6 +29,10 @@ final class AlaJeiRecipeTypes {
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.MUTATION_DUPLICATE.id()));
 	static final IRecipeHolderType<AlaProcessingRecipe> MUTATION_CREATE =
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.MUTATION_CREATE.id()));
+
+	/** The Polymerizer's fluid → item family (MOD-019) — a different recipe class, so a separate type. */
+	static final IRecipeHolderType<PolymerizingRecipe> POLYMERIZING =
+			IRecipeHolderType.create(Industrialization.id(ModRecipes.POLYMERIZING.id()));
 
 	private AlaJeiRecipeTypes() {
 	}

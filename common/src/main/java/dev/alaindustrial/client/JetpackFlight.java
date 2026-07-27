@@ -1,6 +1,6 @@
 package dev.alaindustrial.client;
 
-import dev.alaindustrial.item.JetpackItem;
+import dev.alaindustrial.item.wearable.JetpackItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.EquipmentSlot;

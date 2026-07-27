@@ -2,8 +2,8 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
-import dev.alaindustrial.item.TeleportPoint;
-import dev.alaindustrial.item.TeleportPoints;
+import dev.alaindustrial.item.teleport.TeleportPoint;
+import dev.alaindustrial.item.teleport.TeleportPoints;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.registry.ModBlocks;
 import dev.alaindustrial.registry.ModContent;

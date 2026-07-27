@@ -1,0 +1,38 @@
+{
+  "type": "alaindustrial:oil_geyser",
+  "config": {
+    "barrier": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:stone"
+      }
+    },
+    "can_replace": {
+      "type": "minecraft:not",
+      "predicate": {
+        "type": "minecraft:matching_block_tag",
+        "tag": "minecraft:features_cannot_replace"
+      }
+    },
+    "dome_center_y": -45,
+    "dome_radius": {
+      "type": "minecraft:uniform",
+      "min_inclusive": 8,
+      "max_inclusive": 11
+    },
+    "fluid": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "alaindustrial:oil",
+        "Properties": {
+          "level": "0"
+        }
+      }
+    },
+    "spout_height": {
+      "type": "minecraft:uniform",
+      "min_inclusive": 1,
+      "max_inclusive": 3
+    }
+  }
+}

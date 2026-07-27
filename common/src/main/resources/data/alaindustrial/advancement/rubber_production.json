@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:first_oil",
+  "display": {
+    "icon": { "id": "alaindustrial:rubber" },
+    "title": { "translate": "advancements.alaindustrial.rubber_production.title" },
+    "description": { "translate": "advancements.alaindustrial.rubber_production.description" }
+  },
+  "criteria": {
+    "rubber": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": "alaindustrial:rubber" } ] }
+    }
+  },
+  "requirements": [["rubber"]]
+}

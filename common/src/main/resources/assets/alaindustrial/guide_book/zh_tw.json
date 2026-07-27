@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "石油",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "從零開始的石油",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "去哪裡找",
+              "text": "石油既不能合成也不能冶煉——只能在主世界各處找到它。礦藏共有四種規模：\n\n• 地表油斑——約每 150 區塊一處，只夠嚐個鮮\n• 礦層湖泊——Y -40..-8，約五個區塊就有一處：你的主要來源\n• 深層儲層——Y -50..-30，約每 20 區塊一處，寬度是前者的三倍\n• 石油礦脈——約每 600 區塊一處，從地表就能看見\n\n石油絕不會生成在村莊、廢棄礦坑、要塞或遠古城市內部。"
+            },
+            {
+              "type": "text",
+              "title": "礦藏是有限的",
+              "text": "舀走的每一格石油都永遠消失了——與水不同，礦藏不會重新填滿。\n\n普通湖泊約有 20-60 桶，深層儲層明顯更多，礦脈的穹頂則有數千桶。抽乾一處就得去找下一處，所以找到時記得標記位置。\n\n用桶一格格舀很費時間：在旁邊放一台抽水機，它會自己把整片礦藏抽進儲罐。"
+            },
+            {
+              "type": "text",
+              "title": "身處石油之中",
+              "text": "石油很黏稠——你不是在游泳，而是在裡面跋涉，移動會明顯變慢。\n\n• 按住跳躍可以上浮，每秒約一格——比水裡慢，甚至比岩漿裡還慢\n• 你無法呼吸：頭沒入石油後，氧氣會像在水下一樣耗盡，接著開始受傷\n• 只要人在石油裡，墜落傷害會被完全抵銷\n• 視野受損：畫面蒙上一層暗膜，9 格以外什麼都看不見\n\n沿礦脈豎井下潛時，要按氧氣存量來安排，而不是按深度。"
+            },
+            {
+              "type": "text",
+              "title": "它會燃燒",
+              "text": "石油極易被點燃：火只要在附近就夠了——哪怕是斜下方。之後火焰會沿著油面一格一格蔓延，直到連源方塊在內全部燒光。用打火石點，則永遠都是瞬間引燃整片礦藏。\n\n岩漿並不會點燃石油——這是刻意設計的：地下湖泊常常緊貼著岩漿湖生成。\n\n火焰無法越過一格厚的實心牆。如果你需要把石油安全地放在工廠旁邊，關掉模組的 oilBurns 設定，它就完全不會燃燒了。"
+            },
+            {
+              "type": "text",
+              "title": "它會變成什麼",
+              "text": "石油是橡膠產業鏈的起點。\n\n1. 收集它——用桶、真空膠囊或抽水機\n2. 聚合機：1000 mB 石油加 400 EU 產出生橡膠\n3. 熔爐或電力熔爐：生橡膠燒製成橡膠\n\n橡膠目前還沒有任何用途——它的使用者，絕緣纜線和 MV 元件，會隨下一階段到來。先囤起來吧。"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "能源",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "聚合機",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "聚合機",
+              "text": "將石油熬煮成生橡膠——儲罐容量 10 桶，每次操作消耗 1 桶。生橡膠再放進熔爐燒製，即可得到橡膠。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：400 EU/操作",
+                "緩衝：800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "萃取機",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "石油",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "石油",
+              "text": "一種液態化石資源——世界中有限的湖泊，可用桶、膠囊或抽水機收集；黏稠、易燃，也是橡膠產業鏈的起點。"
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "鎳礦石",
           "icon": "alaindustrial:nickel_ore",
@@ -952,6 +1043,44 @@
               "type": "text",
               "title": "鈾礦石",
               "text": "模組中最稀有的礦石——需用鐵鎬開採，可加工成粉末與錠；保留給未來的核能機器。"
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "培育艙",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "培育艙",
+              "text": "1×2 多方塊結構——機械底座加上一座玻璃穹頂。以鈾輻照與 EU 使物品發生突變：複製、轉化或創造出新物品。模式由晶片決定，結果依機率產生，共四個稀有度等級。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "緩衝：8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
             }
           ]
         },
@@ -1537,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "橡膠",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "橡膠",
+              "text": "由石油製成的材料——聚合機將石油煉成生橡膠，熔爐再將其燒製成橡膠。是未來絕緣纜線與 MV 元件的基礎。"
             }
           ]
         },

@@ -1,7 +1,7 @@
 package dev.alaindustrial.network;
 
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.item.AnalyzerMode;
+import dev.alaindustrial.item.tool.AnalyzerMode;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;

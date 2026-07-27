@@ -57,6 +57,45 @@
       ]
     },
     {
+      "id": "oil_basics",
+      "title": "Dầu mỏ",
+      "icon": "alaindustrial:oil_bucket",
+      "entries": [
+        {
+          "id": "oil_basics",
+          "title": "Dầu mỏ từ đầu",
+          "icon": "alaindustrial:oil_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tìm ở đâu",
+              "text": "Dầu mỏ không chế tạo được, cũng không nung ra được — chỉ có thể tìm thấy, ở bất cứ đâu trong Thế Giới Thường. Mỏ dầu có bốn cỡ:\n\n• Vũng trên mặt đất — một vũng mỗi 150 chunk, chỉ đủ nếm thử\n• Hồ trong hầm mỏ — Y -40..-8, khoảng một trong năm chunk: nguồn chính của bạn\n• Bể sâu — Y -50..-30, một bể mỗi 20 chunk, rộng gấp ba\n• Mạch dầu — một mạch mỗi 600 chunk, nhìn thấy được từ trên mặt đất\n\nDầu không bao giờ sinh ra bên trong làng, hầm mỏ, thành trì hay Thành phố Cổ đại."
+            },
+            {
+              "type": "text",
+              "title": "Mỏ dầu là hữu hạn",
+              "text": "Khối dầu bạn múc lên là mất hẳn — khác với nước, mỏ dầu không tự đầy lại.\n\nMột hồ thường được 20-60 xô, bể sâu nhiều hơn hẳn, còn vòm của mạch dầu thì vài nghìn. Hút cạn một chỗ là phải đi tìm chỗ kế tiếp, nên hãy đánh dấu vị trí ngay khi tìm được.\n\nMúc bằng xô khá lâu: đặt một Máy bơm bên cạnh, nó sẽ tự hút cả mỏ vào bồn."
+            },
+            {
+              "type": "text",
+              "title": "Bên trong dầu",
+              "text": "Dầu rất đặc — bạn lún trong đó chứ không bơi được, và di chuyển chậm hẳn đi.\n\n• Giữ phím nhảy để nổi lên, khoảng một khối mỗi giây — chậm hơn nước và cả dung nham\n• Bạn không thở được: khi đầu chìm trong dầu, dưỡng khí cạn dần như ở dưới nước, rồi bắt đầu mất máu\n• Sát thương rơi bị vô hiệu hoàn toàn khi bạn đang ở trong dầu\n• Tầm nhìn kém đi: một lớp màng tối trên màn hình, quá chín khối là không thấy gì\n\nHãy tính đường xuống giếng của mạch dầu theo lượng dưỡng khí, đừng tính theo độ sâu."
+            },
+            {
+              "type": "text",
+              "title": "Nó bắt lửa",
+              "text": "Dầu bắt lửa rất dễ: chỉ cần có lửa ở gần — kể cả chéo bên dưới. Từ đó ngọn lửa lan khắp vũng dầu từng khối một cho tới khi cháy sạch, kể cả khối nguồn. Bật lửa thì luôn châm cháy cả mỏ ngay lập tức.\n\nDung nham thì KHÔNG làm dầu bốc cháy — đó là chủ ý: hồ dầu ngầm rất hay sinh ra sát ngay hồ dung nham.\n\nLửa không vượt qua được bức tường đặc dày một khối. Còn nếu bạn cần dầu nằm an toàn cạnh nhà máy, hãy tắt tùy chọn oilBurns của mod và dầu trở nên hoàn toàn trơ."
+            },
+            {
+              "type": "text",
+              "title": "Nó biến thành gì",
+              "text": "Dầu mỏ là khởi đầu của chuỗi cao su.\n\n1. Thu dầu — bằng xô, Viên nang chân không hoặc Máy bơm\n2. Máy Trùng Hợp: 1000 mB dầu và 400 EU cho ra cao su thô\n3. Lò nung hoặc Lò điện: cao su thô chín thành cao su\n\nCao su hiện chưa bị tiêu thụ vào việc gì — nơi dùng nó, cáp cách điện và linh kiện MV, sẽ đến ở giai đoạn sau. Cứ tích trữ đi."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "energy",
       "title": "Năng lượng",
       "icon": "alaindustrial:wind_mill",
@@ -612,6 +651,45 @@
           ]
         },
         {
+          "id": "polymerizer",
+          "title": "Máy Trùng Hợp",
+          "icon": "alaindustrial:polymerizer",
+          "block_id": "alaindustrial:polymerizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy Trùng Hợp",
+              "text": "Chưng dầu mỏ thành cao su thô — bồn chứa 10 xô, mỗi lượt tốn một xô. Cao su thô sau đó được nung trong lò để thành cao su."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 400 EU/thao tác",
+                "Bộ đệm: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:bucket",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:polymerizer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Máy chiết xuất",
           "icon": "alaindustrial:extractor",
@@ -842,6 +920,19 @@
           ]
         },
         {
+          "id": "oil",
+          "title": "Dầu mỏ",
+          "icon": "alaindustrial:oil_bucket",
+          "block_id": "alaindustrial:oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Dầu mỏ",
+              "text": "Một tài nguyên hóa thạch dạng lỏng — các hồ hữu hạn trong thế giới, thu bằng xô, viên nang hoặc máy bơm; đặc quánh, dễ cháy, và là khởi đầu của chuỗi cao su."
+            }
+          ]
+        },
+        {
           "id": "nickel_ore",
           "title": "Quặng niken",
           "icon": "alaindustrial:nickel_ore",
@@ -952,6 +1043,44 @@
               "type": "text",
               "title": "Quặng uranium",
               "text": "Quặng hiếm nhất của mod — đào bằng cuốc sắt, chế biến thành bột và thỏi; dành cho các máy hạt nhân trong tương lai."
+            }
+          ]
+        },
+        {
+          "id": "incubator",
+          "title": "Lồng ấp",
+          "icon": "alaindustrial:incubator",
+          "block_id": "alaindustrial:incubator",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lồng ấp",
+              "text": "Khối ghép 1×2 — đế cơ khí cùng một mái vòm kính. Đột biến vật phẩm bằng chiếu xạ urani và EU: nhân bản, biến đổi hoặc tạo ra vật phẩm mới. Chế độ do chip quyết định, kết quả mang tính xác suất với bốn bậc độ hiếm."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 8000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "#alaindustrial:incubator_dome_glass",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:uranium_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:incubator",
+              "result_count": 1
             }
           ]
         },
@@ -1537,6 +1666,19 @@
               ],
               "result_id": "alaindustrial:empty_chip",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "rubber",
+          "title": "Cao su",
+          "icon": "alaindustrial:rubber",
+          "block_id": "alaindustrial:rubber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cao su",
+              "text": "Vật liệu làm từ dầu mỏ — Máy Trùng Hợp biến dầu thành cao su thô, lò nung nung nó thành cao su. Nền tảng cho cáp cách điện và linh kiện MV sau này."
             }
           ]
         },

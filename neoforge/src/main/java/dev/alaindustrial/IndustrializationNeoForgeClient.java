@@ -90,6 +90,24 @@ public final class IndustrializationNeoForgeClient {
 	 */
 	private void registerClientEvents(IEventBus modBus) {
 		modBus.addListener(this::registerMenuScreens);
+		// MOD-248: the submerged-in-oil look (screen overlay + near-black fog). Both halves live in
+		// common/ behind a client mixin, because NeoForge's own IClientFluidTypeExtensions overlay
+		// hooks are declared but never invoked in 26.2.0.8-beta — see OilScreenEffects.
+		dev.alaindustrial.client.OilFogEnvironment.install();
+		// MOD-238: oil's fluid model — the vanilla FluidStateModelSet hard-codes water/lava only, so a
+		// custom fluid registers its own FluidModel.Unbaked. NeoForge counterpart to the Fabric
+		// FluidRenderingRegistry call in IndustrializationClient; one model shared by still + flowing,
+		// overlay/tint null exactly like vanilla lava (the textures carry their colour).
+		modBus.addListener((net.neoforged.neoforge.client.event.RegisterFluidModelsEvent event) ->
+				event.register(
+						new net.minecraft.client.renderer.block.FluidModel.Unbaked(
+								new net.minecraft.client.resources.model.sprite.Material(
+										Industrialization.id("block/oil_still")),
+								new net.minecraft.client.resources.model.sprite.Material(
+										Industrialization.id("block/oil_flow")),
+								null, null),
+						dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.OIL,
+						dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLOWING_OIL));
 		// MOD-085: green flame particle provider for the Enriched Uranium Torch. registerSpriteSet =
 		// json-backed particle (assets/alaindustrial/particles/enriched_uranium_flame.json); reuses the
 		// vanilla FlameParticle provider (like soul_fire_flame), colour comes from the particle texture.
@@ -108,7 +126,7 @@ public final class IndustrializationNeoForgeClient {
 		// Battery Pouch bundle-style tooltip (MOD-052) — NeoForge counterpart to the Fabric
 		// ClientTooltipComponentCallback mapping in IndustrializationClient.
 		modBus.addListener((net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent event) ->
-				event.register(dev.alaindustrial.item.PouchTooltip.class,
+				event.register(dev.alaindustrial.item.energy.PouchTooltip.class,
 						dev.alaindustrial.client.tooltip.PouchClientTooltip::new));
 		// Iron chest: 3D model + animated lid. Register the BlockEntityRenderer + bake the chest
 		// model layer (vanilla single-body chest geometry), the NeoForge counterpart to the Fabric

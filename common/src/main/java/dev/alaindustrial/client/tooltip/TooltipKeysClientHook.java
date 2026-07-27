@@ -1,7 +1,7 @@
 package dev.alaindustrial.client.tooltip;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.alaindustrial.item.TooltipKeys;
+import dev.alaindustrial.item.misc.TooltipKeys;
 import net.minecraft.client.Minecraft;
 
 /**
