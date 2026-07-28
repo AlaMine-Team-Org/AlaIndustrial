@@ -381,10 +381,11 @@
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Capacity</td><td>20 000 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Max output</td><td>32 EU/FE/t (LV)</td></tr></tbody></table>
 <p>Both sides are LV. Under a larger inflow it only takes its own limit — the surplus doesn't pass through, nothing breaks. The output is always LV, so it's safe for any LV machine. It connects through <strong>two opposite faces only</strong>: one accepts energy (point it at your generator), the other emits it. The four side faces don't connect. You can wire the same network into both its input and its output face — it won't circle energy around and burn it on cable loss. While the machines need more than the generators produce, the storage <strong>only gives</strong>; it starts charging once the machines are satisfied or the generators cover their appetite. That's the same "machines before storage" priority the network uses to hand out energy.</p>
 <h2>Inventory</h2>
-<p>Two slots for portable EU/FE items (batteries):</p>
-<table><thead><tr><th>Slot</th><th>Does</th></tr></thead><tbody><tr><td>Charge</td><td>fills a battery from the buffer</td></tr><tr><td>Discharge</td><td>drains a battery back into the buffer</td></tr></tbody></table>
+<p>One slot for portable EU/FE items (battery pouch, energy pack):</p>
+<table><thead><tr><th>Slot</th><th>Does</th></tr></thead><tbody><tr><td>Charge</td><td>fills a portable EU/FE item from the buffer</td></tr></tbody></table>
+<p>The slot <strong>only charges</strong> — you can't drain a charge back into the box through it. Hoppers don't use it: it's a manual, GUI-only slot.</p>
 <h2>Interface</h2>
-<p>One screen: energy storage, in/out rate, charge and discharge slots.</p>
+<p>One screen: energy storage, in/out rate, charge slot.</p>
 <h2>Block Properties</h2>
 <p>An ordinary solid block. Any pickaxe breaks it, and <strong>it keeps its charge when broken</strong> — you don't lose energy by moving the box around.</p>
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge on break</td><td>yes</td></tr></tbody></table>

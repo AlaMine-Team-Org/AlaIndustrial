@@ -392,7 +392,7 @@ PUP</code></pre>
 <h2>Progression</h2>
 <p>A component with no tier of its own. Gates water generation: without a wheel, the mill stays silent. The wheel itself is crafted from early materials, so it's available alongside the first mill.</p>
 <h2>Related</h2>
-<p><a href="../generators/water_mill.html">Water Mill</a> — consumer of the wheel slot. <a href="windmill_rotor.html">Windmill Rotor</a> — the thematic counterpart for wind generation. <a href="metal_gears.html">Wooden Gear</a> — the central component of the wheel.</p>
+<p><a href="../generators/water_mill.html">Water Mill</a> — consumer of the wheel slot. <a href="windmill_rotor.html">Wooden Rotor</a> — the thematic counterpart for wind generation. <a href="metal_gears.html">Wooden Gear</a> — the central component of the wheel.</p>
 <h2>Implementation</h2>
 <p>Technical details for developers (not surfaced in the wiki). Durability ingredient item: <code>maxDamage</code> = <code>Config.waterMillWheelMaxDamage</code> (1000), so it is non-stackable (stack 1) with the vanilla wear bar. <code>block_id: </code>. Craft: — shaped 3×3. Viewers: JEI/REI/EMI see the item as an ingredient. Design goal: a thematic component tying the water mill to wood and gears, paired with the wind mill rotor, and a consumable — wear ∝ output (<code>Config.waterMillWheelEuPerDamage</code>), ~6–7 in-game days of life. The in-world 3D wheel render lives in the water mill's client renderer (see <code>water_mill.md</code>).</p>
 <h2>Crafting</h2>

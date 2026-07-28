@@ -394,7 +394,7 @@
 <h2>Energy</h2>
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer with a buffer (accepts EU/FE only)</td></tr><tr><td>Buffer (EU/FE)</td><td><strong>500,000</strong> — 25× the battery box</td></tr><tr><td>Max input (EU/FE/tick)</td><td>512 (HV)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>n/a (never gives EU/FE back)</td></tr><tr><td>EU/FE/tick</td><td>0 while idle; one lump sum per jump</td></tr></tbody></table>
 <p>The station is an ordinary HV consumer — the network finds it by itself. Idle, it costs nothing.</p>
-<blockquote><strong>It charges in minutes, not seconds.</strong> There is no HV infrastructure in the mod yet: copper cable tops out at 32 EU/FE/tick. A full buffer is <strong>~13 minutes</strong> at that ceiling, or <strong>~26 minutes</strong> from a single geothermal generator. That is the intent — the teleporter is slow-charging endgame gear.</blockquote>
+<blockquote><strong>It charges in minutes, not seconds.</strong> There is no HV infrastructure in the mod yet: a copper cable only carries 12 EU/FE/tick (its ceiling is the segment buffer, not the tier voltage), so a full buffer is <strong>~35 minutes</strong> over copper cable, or <strong>~26 minutes</strong> from a single geothermal generator. That is the intent — the teleporter is slow-charging endgame gear.</blockquote>
 <h2>Block properties</h2>
 <p>A full 16³ cube, broken with a pickaxe. It keeps its <strong>privacy flag and stored EU/FE</strong> when broken, but <strong>forgets its owner</strong> — replace the block and it is yours. The front face is inert; the other five accept EU/FE.</p>
 <h2>Recipes</h2>
