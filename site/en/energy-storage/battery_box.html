@@ -31,7 +31,7 @@
     display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
                 inset -2px -2px 0 0 rgba(0,0,0,0.50); }
-  .cell.empty { background:transparent; box-shadow:none; }
+  
   .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
     text-align:center; overflow:hidden; font-family:'VT323',monospace; }
   .cell img { width:32px; height:32px; image-rendering:pixelated; }
@@ -345,20 +345,20 @@
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="7 pages">7</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="7 pages">7</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="9 pages">9</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="12 pages">12</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="13 pages">13</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -379,7 +379,7 @@
 <p>It's a buffer, not a source — on its own it produces no EU/FE. Both its input and output are LV, so it can never overload the LV machines connected to it.</p>
 <h2>Energy</h2>
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Capacity</td><td>20 000 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Max output</td><td>32 EU/FE/t (LV)</td></tr></tbody></table>
-<p>Both sides are LV. Under a larger inflow it only takes its own limit — the surplus doesn't pass through, nothing breaks. The output is always LV, so it's safe for any LV machine. It connects through <strong>two opposite faces only</strong>: one accepts energy (point it at your generator), the other emits it. The four side faces don't connect.</p>
+<p>Both sides are LV. Under a larger inflow it only takes its own limit — the surplus doesn't pass through, nothing breaks. The output is always LV, so it's safe for any LV machine. It connects through <strong>two opposite faces only</strong>: one accepts energy (point it at your generator), the other emits it. The four side faces don't connect. You can wire the same network into both its input and its output face — it won't circle energy around and burn it on cable loss. While the machines need more than the generators produce, the storage <strong>only gives</strong>; it starts charging once the machines are satisfied or the generators cover their appetite. That's the same "machines before storage" priority the network uses to hand out energy.</p>
 <h2>Inventory</h2>
 <p>Two slots for portable EU/FE items (batteries):</p>
 <table><thead><tr><th>Slot</th><th>Does</th></tr></thead><tbody><tr><td>Charge</td><td>fills a battery from the buffer</td></tr><tr><td>Discharge</td><td>drains a battery back into the buffer</td></tr></tbody></table>
@@ -395,7 +395,7 @@
 <h2>Related</h2>
 <p><a href="../generators/generator.html">Generator</a> — the typical charge source. <a href="../generators/solar_panel.html">Solar Panel</a> — fills the box by day.</p>
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="battery box alaindustrial:battery_box" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Oak Planks"><img src="../assets/vanilla/block/oak_planks.png" alt="Oak Planks" width="32" height="32"></div> <div class="cell" title="Battery"><img src="../assets/item/battery.png" alt="Battery" width="32" height="32"></div> <div class="cell" title="Oak Planks"><img src="../assets/vanilla/block/oak_planks.png" alt="Oak Planks" width="32" height="32"></div> <div class="cell" title="Copper Cable"><img src="../assets/block/copper_cable.png" alt="Copper Cable" width="32" height="32"></div> <div class="cell" title="Redstone"><img src="../assets/vanilla/item/redstone.png" alt="Redstone" width="32" height="32"></div> <div class="cell" title="Copper Cable"><img src="../assets/block/copper_cable.png" alt="Copper Cable" width="32" height="32"></div> <div class="cell" title="Oak Planks"><img src="../assets/vanilla/block/oak_planks.png" alt="Oak Planks" width="32" height="32"></div> <div class="cell" title="Battery"><img src="../assets/item/battery.png" alt="Battery" width="32" height="32"></div> <div class="cell" title="Oak Planks"><img src="../assets/vanilla/block/oak_planks.png" alt="Oak Planks" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Battery Box"><img src="../assets/block/battery_box_top.png" alt="Battery Box" width="32" height="32"></div><div class="result-name">Battery Box</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="battery box alaindustrial:battery_box" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Oak Planks"><img src="../assets/item/oak_planks_3d.png" alt="Oak Planks" width="32" height="32"></div> <div class="cell" title="Battery"><img src="../assets/item/battery_3d.png" alt="Battery" width="32" height="32"></div> <div class="cell" title="Oak Planks"><img src="../assets/item/oak_planks_3d.png" alt="Oak Planks" width="32" height="32"></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="32" height="32"></div> <div class="cell" title="Redstone"><img src="../assets/vanilla/item/redstone.png" alt="Redstone" width="32" height="32"></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="32" height="32"></div> <div class="cell" title="Oak Planks"><img src="../assets/item/oak_planks_3d.png" alt="Oak Planks" width="32" height="32"></div> <div class="cell" title="Battery"><img src="../assets/item/battery_3d.png" alt="Battery" width="32" height="32"></div> <div class="cell" title="Oak Planks"><img src="../assets/item/oak_planks_3d.png" alt="Oak Planks" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Battery Box"><img src="../assets/item/battery_box_3d.png" alt="Battery Box" width="32" height="32"></div><div class="result-name">Battery Box</div></div></div></div></div>
   </main>
 </div>
 
