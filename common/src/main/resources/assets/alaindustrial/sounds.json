@@ -85,7 +85,8 @@
     "sounds": [
       {
         "name": "alaindustrial:wind_mill_hum",
-        "stream": false
+        "stream": false,
+        "preload": true
       }
     ]
   }

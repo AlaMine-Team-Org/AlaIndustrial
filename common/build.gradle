@@ -155,7 +155,12 @@ pitest {
                      // dev.alaindustrial.item.* classes that no longer live there.
                      'dev.alaindustrial.block.entity.IncubatorStatus',
                      'dev.alaindustrial.mutation.MutationGrade',
-                     'dev.alaindustrial.mutation.MutationRoll']
+                     'dev.alaindustrial.mutation.MutationRoll',
+                     // MOD-204: Config's full L1 suite (ConfigFileTest + ConfigBalanceTest +
+                     // ConfigSnapshotTest) now kills 157/157 mutants, so the class rejoins the
+                     // mutation run on equal footing with the rest of the core. It is plain-Gson and
+                     // Minecraft-free (MOD-100), so it belongs here rather than in excludedClasses.
+                     'dev.alaindustrial.Config']
     // The MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
     // JUnit discovery also walks every class under `targetTests` via reflection to find @Test
     // methods — and reflection on e.g. `EnergyNet` triggers `NoClassDefFoundError:
@@ -240,15 +245,11 @@ pitest {
             // Listed here (rather than simply left out of targetClasses) so `pitest_check.py --targets`
             // sees a deliberate decision instead of a fresh blind spot and keeps passing.
             'dev.alaindustrial.stats.PlayerStatsClientCache',
-            // MOD-200 / MOD-204: the one entry here that is NOT a technical exclusion. `Config` is
-            // plain-Gson and perfectly mutable — PIT generates 135 mutants for it and the existing
-            // suites kill only 35, leaving 99 SURVIVED. (Not the same thing as MOD-203, which is
-            // closed: that one fixed two specific degenerate assertions; this is the rest of the
-            // class.) Writing that suite is MOD-204's job, not MOD-200's, so the class is parked here
-            // rather than silently dropped: `pitest_check.py` requires every MC-free entry in this
-            // list to name its tracking task (DEFERRED_COVERAGE) and prints it loudly on every run.
-            // Remove this line the moment MOD-204 lands.
-            'dev.alaindustrial.Config'
+            // NOTE: `dev.alaindustrial.Config` lived here as a deferred-coverage parking spot from
+            // MOD-200 (135 mutants, only 35 killed) until MOD-204 wrote the full L1 suite
+            // (ConfigSnapshotTest) that kills all 157 mutants. It has moved to `targetClasses` above
+            // and out of `excludedClasses` + `DEFERRED_COVERAGE` — keeping it here would be a stale
+            // blind spot the `pitest_check.py --targets` gate exists to catch.
     ]
 
     // Curated mutator set tuned for the math-heavy core (see docs/tasks/MOD-XXX for rationale).
