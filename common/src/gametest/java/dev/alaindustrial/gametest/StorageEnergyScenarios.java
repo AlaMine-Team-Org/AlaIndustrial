@@ -258,6 +258,201 @@ public final class StorageEnergyScenarios {
 		helper.succeed();
 	}
 
+	// MOD-252 (D2): a base running off stored energy — charged box, a generator with no fuel standing on
+	// the bus, a machine at the far end. Own cell block (y=48) because the NeoForge lane shares one
+	// ServerLevel across scenarios.
+	private static final BlockPos BASE_BOX = new BlockPos(1, 48, 1);
+	private static final BlockPos[] BASE_CABLES = {
+		new BlockPos(2, 48, 1), new BlockPos(3, 48, 1), new BlockPos(4, 48, 1),
+		new BlockPos(5, 48, 1), new BlockPos(6, 48, 1),
+	};
+	private static final BlockPos BASE_DEAD_GEN = new BlockPos(4, 48, 2);
+	private static final BlockPos BASE_MAC = new BlockPos(7, 48, 1);
+
+	/**
+	 * MOD-252 (D2) — the hole MOD-214 left open: a network with NO live generator.
+	 *
+	 * <p>MOD-214 stopped idle sources from seeding the flow field, but its live-supply set was only ever
+	 * filled from the generator branch — a storage source never entered it. So on a base running off a
+	 * charged Battery Box the set was permanently empty, the fallback fired every tick, and an unfuelled
+	 * generator standing on the bus went straight back to seeding distance 1 and cutting the line in two.
+	 * Reported in game as: box at 19968/20000, macerator at 0/800, and nothing moving.
+	 *
+	 * <p>The fix removes the whole question — the direction is seeded from what WANTS energy, so a source
+	 * holding nothing simply has no say in it. Regression guard: before it, the macerator ends at 0 EU and
+	 * every cable past the dead generator is empty.
+	 */
+	public static void mod252BaseWithoutLiveGeneratorFeedsMachine(GameTestHelper helper) {
+		// FACING = WEST → IN face at (0,48,1) (air), OUT face on the bus at (2,48,1): a discharging base.
+		helper.setBlock(BASE_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		for (BlockPos c : BASE_CABLES) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		// No fuel, no EU: a source that never supplies. FACING = SOUTH so its front (energy-inert,
+		// R-NRG-03) points away from the bus and it really IS a producer endpoint on the cable it touches
+		// — otherwise this scenario would not reproduce the seam it exists to guard against.
+		helper.setBlock(BASE_DEAD_GEN, ModContent.GENERATOR.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.SOUTH));
+		helper.setBlock(BASE_MAC, ModContent.MACERATOR.get());
+		if (be(helper, BASE_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().amount = Config.batteryBoxBuffer;
+		}
+		if (be(helper, BASE_DEAD_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.getEnergyStorage().amount = 0L;
+		}
+		if (be(helper, BASE_MAC) instanceof dev.alaindustrial.block.entity.MaceratorBlockEntity mac) {
+			mac.getEnergyStorage().amount = 0L;
+			mac.setItem(dev.alaindustrial.block.entity.MaceratorBlockEntity.INPUT_SLOT,
+					new ItemStack(Items.RAW_IRON, 8));
+		}
+		for (int i = 0; i < 150; i++) {
+			tick(helper, be(helper, BASE_BOX));
+			tick(helper, be(helper, BASE_DEAD_GEN));
+			for (BlockPos c : BASE_CABLES) {
+				tick(helper, be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, BASE_MAC));
+		}
+		long lastCable = be(helper, BASE_CABLES[4]) instanceof CableBlockEntity c ? c.getEnergyStorage().getAmount() : -1;
+		long macEnergy = be(helper, BASE_MAC) instanceof dev.alaindustrial.block.entity.MaceratorBlockEntity m
+				? m.getEnergyStorage().getAmount() : -1;
+		if (lastCable <= 0) {
+			helper.fail("no EU reached the cable past the unfuelled generator (" + lastCable
+					+ ") — with no live generator anywhere, the idle one is seeding the flow field again"
+					+ " (MOD-214 regression through the storage-only hole)");
+			return;
+		}
+		if (macEnergy <= 0) {
+			helper.fail("the macerator got no EU (" + macEnergy + ") from a full Battery Box on the same bus");
+		}
+		helper.succeed();
+	}
+
+	// MOD-255: the layout the player actually built — a Battery Box wired on BOTH its faces, with the two
+	// sides joined into ONE network by a loop of cable around the box. That is what makes the box a source
+	// and a sink of the same line; a straight bus past the box leaves the two faces in separate networks and
+	// cannot reproduce the churn. Own cell block (y=52) because the NeoForge lane shares one ServerLevel.
+	private static final BlockPos CHURN_BOX = new BlockPos(2, 52, 2);
+	private static final BlockPos[] CHURN_CABLES = {
+		new BlockPos(1, 52, 2), // the box's IN face
+		new BlockPos(1, 52, 3), new BlockPos(2, 52, 3), new BlockPos(3, 52, 3), // the loop around it
+		new BlockPos(3, 52, 2), // the box's OUT face
+		new BlockPos(4, 52, 2), new BlockPos(5, 52, 2), // the bus onward
+	};
+	private static final BlockPos CHURN_MAC = new BlockPos(6, 52, 2);
+
+	/**
+	 * MOD-255 — a Battery Box must not drink back the EU it just pushed into the wire.
+	 *
+	 * <p>Reported in game on a base with no working generator: box at 19968/20000, macerator and electric
+	 * furnace both at 0 EU, nothing moving. The box is a dual-role endpoint — a source through its OUT face
+	 * and a sink through its IN face — and the line kernel's no-self-churn rule compared POSITIONS. On the
+	 * line path the supply pool is the touched cable buffers, and a cable is never at the box's position, so
+	 * that rule never fired once. The tick order closed the loop: sinks are served from the line before the
+	 * line is recharged, so every tick the box took back exactly what it had discharged a tick earlier and
+	 * the charge oscillated between the box and its own neighbouring cables forever.
+	 *
+	 * <p>Regression guard: before the fix the macerator ends at 0 EU and the far end of the bus is empty
+	 * while the box sits nearly full.
+	 */
+	public static void mod255DualRoleBatteryFeedsMachineThroughLine(GameTestHelper helper) {
+		// FACING = WEST → IN face on the cable at (1,52,2), OUT face on the cable at (3,52,2). The cable at
+		// (2,52,3) touches the box's south face, which is role NONE — it must never carry EU into or out of
+		// the box, only around it.
+		helper.setBlock(CHURN_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		for (BlockPos c : CHURN_CABLES) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		// FACING = EAST so the macerator's inert front points away from the bus and its west face is a real
+		// input (R-NRG-03) — otherwise it would not be a consumer endpoint at all and the test would pass
+		// vacuously.
+		helper.setBlock(CHURN_MAC, ModContent.MACERATOR.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
+		long boxStart = Config.batteryBoxBuffer / 100L * 99L; // the reported 99 %
+		if (be(helper, CHURN_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().amount = boxStart;
+		}
+		if (be(helper, CHURN_MAC) instanceof dev.alaindustrial.block.entity.MaceratorBlockEntity mac) {
+			mac.getEnergyStorage().amount = 0L; // no input item: the buffer only fills, never burns down
+		}
+		for (int i = 0; i < 150; i++) {
+			tick(helper, be(helper, CHURN_BOX));
+			for (BlockPos c : CHURN_CABLES) {
+				tick(helper, be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, CHURN_MAC));
+		}
+		long macEnergy = be(helper, CHURN_MAC) instanceof dev.alaindustrial.block.entity.MaceratorBlockEntity m
+				? m.getEnergyStorage().getAmount() : -1;
+		long farCable = be(helper, CHURN_CABLES[6]) instanceof CableBlockEntity c ? c.getEnergyStorage().getAmount() : -1;
+		long boxEnd = be(helper, CHURN_BOX) instanceof BatteryBoxBlockEntity b ? b.getEnergyStorage().getAmount() : -1;
+		if (macEnergy < Config.maceratorBuffer / 2L) {
+			helper.fail("the macerator got " + macEnergy + "/" + Config.maceratorBuffer
+					+ " EU over 150 ticks from a Battery Box at " + boxEnd + "/" + Config.batteryBoxBuffer
+					+ " on the same line (far cable held " + farCable + ") — the box is drinking back its own"
+					+ " discharge instead of letting it travel down the wire");
+			return;
+		}
+		if (boxEnd >= boxStart) {
+			helper.fail("the macerator charged but the Battery Box did not pay for it: " + boxEnd + " vs "
+					+ boxStart + " EU — the EU came from somewhere other than the box");
+			return;
+		}
+		helper.succeed();
+	}
+
+	// MOD-255 acceptance criterion 2: the same both-faces-wired box, but with nothing to feed. Same shape,
+	// own cell block (y=56).
+	private static final BlockPos IDLE_CHURN_BOX = new BlockPos(2, 56, 2);
+	private static final BlockPos[] IDLE_CHURN_CABLES = {
+		new BlockPos(1, 56, 2), new BlockPos(1, 56, 3), new BlockPos(2, 56, 3),
+		new BlockPos(3, 56, 3), new BlockPos(3, 56, 2),
+	};
+
+	/**
+	 * MOD-255 — a Battery Box wired on both faces with nothing to power must not circulate its own charge.
+	 * The player's words: it must not chase its EU around the loop and burn it on cable loss. With no
+	 * machine there is no deficit to back up, so the storage budget is zero and the box discharges nothing;
+	 * the ring must stay empty and the charge must be exactly what it started at.
+	 */
+	public static void mod255DualRoleBatteryHoldsChargeWithoutConsumers(GameTestHelper helper) {
+		helper.setBlock(IDLE_CHURN_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		for (BlockPos c : IDLE_CHURN_CABLES) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		long boxStart = Config.batteryBoxBuffer / 100L * 99L;
+		if (be(helper, IDLE_CHURN_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().amount = boxStart;
+		}
+		for (int i = 0; i < 60; i++) {
+			tick(helper, be(helper, IDLE_CHURN_BOX));
+			for (BlockPos c : IDLE_CHURN_CABLES) {
+				tick(helper, be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+		}
+		long boxEnd = be(helper, IDLE_CHURN_BOX) instanceof BatteryBoxBlockEntity b ? b.getEnergyStorage().getAmount() : -1;
+		if (boxEnd != boxStart) {
+			helper.fail("a Battery Box wired on both faces with no consumer changed charge: " + boxEnd
+					+ " vs " + boxStart + " EU — it is circulating its own energy through the ring");
+			return;
+		}
+		for (BlockPos c : IDLE_CHURN_CABLES) {
+			long amount = be(helper, c) instanceof CableBlockEntity cb ? cb.getEnergyStorage().getAmount() : -1;
+			if (amount != 0L) {
+				helper.fail("cable " + c + " holds " + amount + " EU — a storage source with no machine to back"
+						+ " up must not charge the wire (MOD-070)");
+				return;
+			}
+		}
+		helper.succeed();
+	}
+
 	private static final BlockPos LONE_BOX = new BlockPos(1, 2, 1);
 	private static final BlockPos LONE_CABLE = new BlockPos(2, 2, 1);
 

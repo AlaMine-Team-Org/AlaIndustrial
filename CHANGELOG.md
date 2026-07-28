@@ -1,14 +1,11 @@
-## 0.1.52
+## 0.1.53
 
-<p><img alt="A small oil lake on the surface next to a river" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.52/release-media/v0.1.52/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.53 bug fix patch" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.53/release-media/v0.1.53/changelog.jpeg" width="720"></p>
 
-Oil arrives — the mod's first liquid: hunt it down, refine it into rubber, and try not to drown in it.
+Power lines route more fairly now, and batteries stop leaking their own charge back into themselves.
 
-### New
+### Fixed
 
-- **Oil is out there.** Black pools on the surface, lakes underground, and rare geysers blasting it into the air. Every deposit runs dry — drain it and go find the next.
-- **A geyser is a way down.** A one-block shaft under the spout drops almost to bedrock, into a dome flooded with oil.
-- **Do not fall in.** You sink, you drown, the screen goes black with droplets. Hold jump to crawl back out.
-- **It burns.** One flame near a pool and the whole thing goes up. Lava next to it does nothing.
-- **Oil to rubber.** The new Polymerizer boils oil into raw rubber; any furnace smelts that into rubber.
-- **New advancement: "Black Gold"** — your first bucket of oil. The guide book has an Oil chapter to go with it.
+- **Power flows toward what needs it**, not just away from the source — a generator no longer walls off everything behind it on the same line, even when it's the only one running.
+- **A cable junction splits fairly** between both branches based on how much room each has, instead of always favoring whichever one gets served first.
+- **A battery wired in and out of the same network** no longer drinks back its own power — it charges what's downstream instead of leaking in a loop.

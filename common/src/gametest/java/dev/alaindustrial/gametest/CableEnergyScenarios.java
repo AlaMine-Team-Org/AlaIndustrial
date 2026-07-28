@@ -785,4 +785,432 @@ public final class CableEnergyScenarios {
 		}
 		helper.succeed();
 	}
+
+	// ── MOD-252: a source must not fence off the sources behind it (the "watershed" seam) ─────────
+
+	// The player's horizontal arm, reduced to its smallest reproducing shape. Both generators sit on the
+	// same bus; only genB's cable touches the consumer. genA is the "far" source — the one the seam used
+	// to lock out. Own cell block (y=40) because the NeoForge lane shares one ServerLevel across scenarios.
+	private static final BlockPos ARM_GEN_FAR = new BlockPos(1, 40, 1);
+	private static final BlockPos ARM_CABLE_FAR = new BlockPos(2, 40, 1);
+	private static final BlockPos ARM_CABLE_NEAR = new BlockPos(3, 40, 1);
+	private static final BlockPos ARM_GEN_NEAR = new BlockPos(4, 40, 1);
+	private static final BlockPos ARM_BOX = new BlockPos(3, 40, 2);
+
+	/**
+	 * MOD-252 — a generator standing between another generator and the consumer must not lock that other
+	 * generator out.
+	 *
+	 * <p>Found on a playtest: on a bus carrying nine wind mills the player saw four of them frozen at
+	 * 4000/4000 while their neighbours ran dry, and a battery box wired onto the arm drained the mills one
+	 * at a time rather than all at once. Cause: the flow field was a BFS from the SOURCES, so the midpoint
+	 * between two sources was a local maximum, and the strictly-downhill pull rule cannot cross a maximum.
+	 * The source behind the seam filled its own stretch of bus, hit a full buffer and stalled forever.
+	 *
+	 * <p>Reduced here to two generators on one bus. Both are pre-charged and UNFUELLED, so each one's
+	 * buffer is a one-way meter of what it actually contributed. The oracle is the far generator: with the
+	 * seam it gives up exactly {@code cableBuffer} EU — one fill of its own dead-end segment — and then
+	 * nothing, ever. Both must be draining for this to pass.
+	 */
+	public static void mod252FarSourceBehindNearSourceDischarges(GameTestHelper helper) {
+		helper.setBlock(ARM_GEN_FAR, ModContent.GENERATOR.get());
+		helper.setBlock(ARM_CABLE_FAR, ModContent.COPPER_CABLE.get());
+		helper.setBlock(ARM_CABLE_NEAR, ModContent.COPPER_CABLE.get());
+		helper.setBlock(ARM_GEN_NEAR, ModContent.GENERATOR.get());
+		// FACING = NORTH → the IN face is the cable at (3,40,1), i.e. only the NEAR cable touches the box.
+		helper.setBlock(ARM_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.NORTH));
+		long genStart = Config.generatorBuffer;
+		for (BlockPos g : new BlockPos[]{ARM_GEN_FAR, ARM_GEN_NEAR}) {
+			if (be(helper, g) instanceof GeneratorBlockEntity gen) {
+				gen.getEnergyStorage().amount = genStart; // no fuel: the buffer can only go down
+				gen.setChanged();
+			}
+		}
+		if (be(helper, ARM_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().amount = 0L;
+		}
+		for (int i = 0; i < 60; i++) {
+			tick(helper, be(helper, ARM_GEN_FAR));
+			tick(helper, be(helper, ARM_GEN_NEAR));
+			tick(helper, be(helper, ARM_CABLE_FAR));
+			tick(helper, be(helper, ARM_CABLE_NEAR));
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, ARM_BOX));
+		}
+		long farLeft = be(helper, ARM_GEN_FAR) instanceof GeneratorBlockEntity g ? g.getEnergyStorage().getAmount() : -1;
+		long nearLeft = be(helper, ARM_GEN_NEAR) instanceof GeneratorBlockEntity g ? g.getEnergyStorage().getAmount() : -1;
+		long farDrain = genStart - farLeft;
+		long nearDrain = genStart - nearLeft;
+		if (nearDrain <= 0) {
+			helper.fail("the generator next to the consumer gave nothing (" + nearDrain
+					+ " EU) — the fixture is broken, not the watershed rule");
+			return;
+		}
+		if (farDrain <= Config.cableBuffer) {
+			helper.fail("the far generator gave only " + farDrain + " EU over 60 ticks (one segment fill is "
+					+ Config.cableBuffer + ") — it is fenced off by the nearer generator: the flow field still"
+					+ " puts a local maximum between two sources, and energy cannot cross a maximum");
+			return;
+		}
+		helper.succeed();
+	}
+
+	// The same watershed, stood on end — the player's tower verbatim: a wind-mill group high up, a second
+	// group lower down the same trunk, and the base at the bottom. The cable graph has no notion of Y, so
+	// this is topologically the arm above; it is pinned separately because the reported case was vertical
+	// and "it is the same graph" is an argument, not a gate. Own cell block (y=72..80).
+	private static final BlockPos VERT_GEN_TOP = new BlockPos(1, 80, 1);
+	private static final BlockPos[] VERT_CABLES = {
+		new BlockPos(1, 79, 1), new BlockPos(1, 78, 1), new BlockPos(1, 77, 1),
+		new BlockPos(1, 76, 1), new BlockPos(1, 75, 1), new BlockPos(1, 74, 1),
+		new BlockPos(1, 73, 1), new BlockPos(1, 72, 1),
+	};
+	private static final BlockPos VERT_GEN_MID = new BlockPos(2, 76, 1);
+	private static final BlockPos VERT_BOX = new BlockPos(2, 72, 1);
+
+	/**
+	 * MOD-252 acceptance — two source groups at different heights on one trunk both discharge.
+	 *
+	 * <p>The top generator hangs off the dead end of the trunk and the mid generator sits between it and
+	 * the base, which is exactly the shape that used to lock the top group out: seeded from the sources,
+	 * the midpoint between the two was a local maximum, and the strictly-downhill pull rule cannot cross a
+	 * maximum. In game that read as four wind mills frozen at a full buffer while the group below them ran.
+	 *
+	 * <p>Same oracle as the arm case: neither generator has fuel, so its buffer is a one-way meter of what
+	 * it actually contributed. The far source giving up no more than one segment fill ({@code cableBuffer})
+	 * is the signature of the seam.
+	 */
+	public static void mod252VerticalSourceGroupsBothDischarge(GameTestHelper helper) {
+		helper.setBlock(VERT_GEN_TOP, ModContent.GENERATOR.get());
+		for (BlockPos c : VERT_CABLES) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		// FACING = EAST so the inert front (R-NRG-03) points away from the trunk and the west face — the
+		// one touching the cable at (1,76,1) — is a real output. The top generator needs no such care: it
+		// meets the trunk on its DOWN face, and FACING is horizontal.
+		helper.setBlock(VERT_GEN_MID, ModContent.GENERATOR.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
+		// FACING = WEST → the IN face is the cable at (1,72,1); the box is a pure sink at the foot.
+		helper.setBlock(VERT_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+
+		long genStart = Config.generatorBuffer;
+		for (BlockPos g : new BlockPos[]{VERT_GEN_TOP, VERT_GEN_MID}) {
+			if (be(helper, g) instanceof GeneratorBlockEntity gen) {
+				gen.getEnergyStorage().amount = genStart; // no fuel: the buffer can only go down
+				gen.setChanged();
+			}
+		}
+		if (be(helper, VERT_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().amount = 0L;
+		}
+		for (int i = 0; i < 120; i++) {
+			tick(helper, be(helper, VERT_GEN_TOP));
+			tick(helper, be(helper, VERT_GEN_MID));
+			for (BlockPos c : VERT_CABLES) {
+				tick(helper, be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, VERT_BOX));
+		}
+
+		long topLeft = be(helper, VERT_GEN_TOP) instanceof GeneratorBlockEntity g
+				? g.getEnergyStorage().getAmount() : -1;
+		long midLeft = be(helper, VERT_GEN_MID) instanceof GeneratorBlockEntity g
+				? g.getEnergyStorage().getAmount() : -1;
+		long topDrain = genStart - topLeft;
+		long midDrain = genStart - midLeft;
+		if (midDrain <= 0) {
+			helper.fail("the lower generator gave nothing (" + midDrain
+					+ " EU) — the fixture is broken, not the watershed rule");
+			return;
+		}
+		// A fenced-off source can still fill the pocket of cable on its own side of the seam, so the ceiling
+		// is the whole line's buffer capacity, not one segment: here the seam falls two cables up the trunk,
+		// which is 24 EU — a "> cableBuffer" oracle would pass while still fenced (it did, on first run).
+		// Anything above the entire line's capacity had to have been delivered, not merely parked in wire.
+		long fencedCeiling = (long) VERT_CABLES.length * Config.cableBuffer;
+		if (topDrain <= fencedCeiling) {
+			helper.fail("the top generator gave only " + topDrain + " EU over 120 ticks (the whole line holds "
+					+ fencedCeiling + ", so this never left the wire) — the group higher up the trunk is"
+					+ " fenced off by the group below it, the vertical form of the source-seeded watershed");
+			return;
+		}
+		helper.succeed();
+	}
+
+	// Two consumers on opposite sides of one source — the mirror case of the arm above, and the one that
+	// must NOT regress: a maximum sitting on the source's own cable is harmless only while both sides
+	// drain. Separate cell block (y=44) for the same shared-level reason.
+	private static final BlockPos SPLIT_BOX_WEST = new BlockPos(1, 44, 1);
+	private static final BlockPos[] SPLIT_CABLES = {
+		new BlockPos(2, 44, 1), new BlockPos(3, 44, 1), new BlockPos(4, 44, 1),
+		new BlockPos(5, 44, 1), new BlockPos(6, 44, 1),
+	};
+	private static final BlockPos SPLIT_GEN = new BlockPos(4, 44, 2);
+	private static final BlockPos SPLIT_BOX_EAST = new BlockPos(7, 44, 1);
+
+	/**
+	 * MOD-252 acceptance — two consumers on opposite sides of one generator both get served. With the
+	 * flow field seeded from demand, the generator's own cable becomes the local maximum; that seam is the
+	 * harmless kind, because something is drinking on either side of it. Cheap guard that the reversal did
+	 * not simply move the starvation to the other end of the line.
+	 */
+	public static void mod252TwoConsumersOnBothSidesOfSource(GameTestHelper helper) {
+		// FACING = EAST → IN face at (2,44,1); FACING = WEST → IN face at (6,44,1).
+		helper.setBlock(SPLIT_BOX_WEST, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
+		for (BlockPos c : SPLIT_CABLES) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		// FACING = SOUTH so the generator's front (energy-inert, R-NRG-03) points AWAY from the bus and its
+		// north face — the one touching the cable at (4,44,1) — is a real output.
+		helper.setBlock(SPLIT_GEN, ModContent.GENERATOR.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.SOUTH));
+		helper.setBlock(SPLIT_BOX_EAST, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		if (be(helper, SPLIT_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+			gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+		}
+		for (BlockPos b : new BlockPos[]{SPLIT_BOX_WEST, SPLIT_BOX_EAST}) {
+			if (be(helper, b) instanceof BatteryBoxBlockEntity bb) {
+				bb.getEnergyStorage().amount = 0L;
+			}
+		}
+		for (int i = 0; i < 120; i++) {
+			tick(helper, be(helper, SPLIT_GEN));
+			for (BlockPos c : SPLIT_CABLES) {
+				tick(helper, be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, SPLIT_BOX_WEST));
+			tick(helper, be(helper, SPLIT_BOX_EAST));
+		}
+		long west = be(helper, SPLIT_BOX_WEST) instanceof BatteryBoxBlockEntity b ? b.getEnergyStorage().getAmount() : -1;
+		long east = be(helper, SPLIT_BOX_EAST) instanceof BatteryBoxBlockEntity b ? b.getEnergyStorage().getAmount() : -1;
+		if (west <= 0 || east <= 0) {
+			helper.fail("both sides of the generator must be served: west=" + west + " EU, east=" + east
+					+ " EU — one side is fenced off from the source");
+		}
+		helper.succeed();
+	}
+
+	// A machine on one side of the source and a Battery Box on the other — the mixed-class version of the
+	// split rig above, and the one the review found broken. Own cell block (y=60) because the NeoForge lane
+	// shares one ServerLevel across scenarios.
+	private static final BlockPos MIXED_MAC = new BlockPos(1, 60, 1);
+	private static final BlockPos[] MIXED_CABLES = {
+		new BlockPos(2, 60, 1), new BlockPos(3, 60, 1), new BlockPos(4, 60, 1),
+		new BlockPos(5, 60, 1), new BlockPos(6, 60, 1),
+	};
+	private static final BlockPos MIXED_GEN = new BlockPos(4, 60, 2);
+	private static final BlockPos MIXED_BOX = new BlockPos(7, 60, 1);
+
+	/**
+	 * MOD-252 review guard — seeding the flow field is about REACHABILITY, not about priority.
+	 *
+	 * <p>The first cut of MOD-252 seeded the field from machines only, and fell back to storage sinks just
+	 * when no machine wanted anything. That reintroduced the very defect it was written to kill, mirrored to
+	 * the other side of the source: EU enters the line only at source-adjacent cables and the pull rule is
+	 * strictly downhill, so every cable whose potential sat above the source's own had no filling path at
+	 * all. Here the Battery Box is past the generator relative to the macerator, so with a machine-only seed
+	 * set the two cables east of the generator stay at 0 and the box never charges — while a single hungry
+	 * machine anywhere on the net keeps that state latched.
+	 *
+	 * <p>The macerator holds ore, so it consumes {@code 2} EU/t against the generator's {@code 8}: its room
+	 * is above zero on every tick (it is latched into the seed set, which is what makes this red without the
+	 * fix) yet it leaves a genuine surplus for the far side. Both ends must end with energy.
+	 */
+	public static void mod252MachineAndStorageOnBothSidesOfSource(GameTestHelper helper) {
+		helper.setBlock(MIXED_MAC, ModContent.MACERATOR.get());
+		for (BlockPos c : MIXED_CABLES) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		// FACING = SOUTH so the generator's front (energy-inert, R-NRG-03) points away from the bus and its
+		// north face — the one touching the cable at (4,60,1) — is a real output.
+		helper.setBlock(MIXED_GEN, ModContent.GENERATOR.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.SOUTH));
+		// FACING = WEST → IN face on the cable at (6,60,1); the box is a pure sink of this line.
+		helper.setBlock(MIXED_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		if (be(helper, MIXED_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+			gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+		}
+		if (be(helper, MIXED_MAC) instanceof MaceratorBlockEntity mac) {
+			mac.getEnergyStorage().amount = 0L;
+			mac.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON, 8));
+		}
+		if (be(helper, MIXED_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().amount = 0L;
+		}
+		for (int i = 0; i < 160; i++) {
+			tick(helper, be(helper, MIXED_GEN));
+			for (BlockPos c : MIXED_CABLES) {
+				tick(helper, be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, MIXED_MAC));
+			tick(helper, be(helper, MIXED_BOX));
+		}
+		long mac = be(helper, MIXED_MAC) instanceof MaceratorBlockEntity m ? m.getEnergyStorage().getAmount() : -1;
+		long box = be(helper, MIXED_BOX) instanceof BatteryBoxBlockEntity b ? b.getEnergyStorage().getAmount() : -1;
+		if (mac <= 0) {
+			// MOD-254: this branch is NOT a broken fixture, whatever it used to claim. The generator's own
+			// cable is the fork of this rig, and the sweep used to hand that whole buffer to whichever
+			// neighbour it visited first — so the machine's side of the bus could read a flat zero while
+			// the Box on the far side charged normally. Both cables west of the source are the tell.
+			helper.fail("the macerator next to the source got nothing (" + mac + " EU, cables toward it: "
+					+ cableAmount(helper, MIXED_CABLES[0]) + "/" + cableAmount(helper, MIXED_CABLES[1])
+					+ " EU) — the source's own segment is being drained whole by the other branch instead of"
+					+ " being split between the two");
+			return;
+		}
+		long farCable = cableAmount(helper, MIXED_CABLES[4]);
+		if (box <= 0) {
+			helper.fail("the Battery Box past the generator never charged (" + box + " EU, far cable "
+					+ farCable + " EU) — a hungry machine on the other side is fencing off the whole stretch"
+					+ " of bus behind the source: only machines seed the flow field, so nothing out here is"
+					+ " reachable");
+		}
+		helper.succeed();
+	}
+
+	// Two generators feeding ONE cable that a Battery Box keeps drained — the line is saturated in the
+	// sense that matters: the cable never has room for more than a single source's packet. Own cell block
+	// (y=64) because the NeoForge lane shares one ServerLevel across scenarios.
+	private static final BlockPos SAT_GEN_A = new BlockPos(1, 64, 1);
+	private static final BlockPos SAT_CABLE = new BlockPos(2, 64, 1);
+	private static final BlockPos SAT_GEN_B = new BlockPos(3, 64, 1);
+	private static final BlockPos SAT_BOX = new BlockPos(2, 64, 2);
+
+	/**
+	 * MOD-254 (D4) — every source on a saturated line gets to inject, not just the first one in the list.
+	 *
+	 * <p>The line charge walked its source list from index 0 on every single tick. The cable next to both
+	 * generators has room for exactly one packet (the Box drains one segment per tick), so the first source
+	 * in the list filled it and the second found {@code room == 0} — forever. The network's rotation cursor
+	 * existed but was taken modulo the producer count, which pins it to 0 on the single-producer networks it
+	 * was meant to help, and it was never handed to the charge pass at all.
+	 *
+	 * <p>Both generators are pre-charged and UNFUELLED, so each buffer is a one-way meter of what that
+	 * generator actually contributed. The oracle is the pair: each must have given more than one segment
+	 * fill, which no amount of first-tick luck can produce.
+	 */
+	public static void mod254EverySourceFeedsASaturatedLine(GameTestHelper helper) {
+		// Default FACING (north) keeps each generator's inert front off the bus: the cable is EAST of gen A
+		// and WEST of gen B, so both touch the line through a real output face.
+		helper.setBlock(SAT_GEN_A, ModContent.GENERATOR.get());
+		helper.setBlock(SAT_CABLE, ModContent.COPPER_CABLE.get());
+		helper.setBlock(SAT_GEN_B, ModContent.GENERATOR.get());
+		// FACING = NORTH → the IN face is the cable at (2,64,1); the box is a pure sink that keeps the
+		// single cable segment drained, so its room per tick is exactly one source's packet.
+		helper.setBlock(SAT_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.NORTH));
+		long genStart = Config.generatorBuffer;
+		for (BlockPos g : new BlockPos[]{SAT_GEN_A, SAT_GEN_B}) {
+			if (be(helper, g) instanceof GeneratorBlockEntity gen) {
+				gen.getEnergyStorage().amount = genStart; // no fuel: the buffer can only go down
+				gen.setChanged();
+			}
+		}
+		if (be(helper, SAT_BOX) instanceof BatteryBoxBlockEntity bb) {
+			bb.getEnergyStorage().amount = 0L;
+		}
+		for (int i = 0; i < 40; i++) {
+			tick(helper, be(helper, SAT_GEN_A));
+			tick(helper, be(helper, SAT_GEN_B));
+			tick(helper, be(helper, SAT_CABLE));
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, SAT_BOX));
+		}
+		long drainA = genStart - (be(helper, SAT_GEN_A) instanceof GeneratorBlockEntity g ? g.getEnergyStorage().getAmount() : -1);
+		long drainB = genStart - (be(helper, SAT_GEN_B) instanceof GeneratorBlockEntity g ? g.getEnergyStorage().getAmount() : -1);
+		long oneFill = Config.cableBuffer;
+		if (drainA <= oneFill || drainB <= oneFill) {
+			helper.fail("a source on a saturated line was starved over 40 ticks: gen A gave " + drainA
+					+ " EU, gen B gave " + drainB + " EU (one segment fill is " + oneFill + ") — the charge"
+					+ " sweep still starts at the same source every tick, so whoever is later in the list"
+					+ " only ever finds a full cable");
+		}
+		helper.succeed();
+	}
+
+	// A source in the middle of a bus with a consumer at each end — the fork the fair split exists for.
+	// Own cell block (y=68) for the same shared-level reason.
+	private static final BlockPos FORK_BOX_WEST = new BlockPos(1, 68, 1);
+	private static final BlockPos[] FORK_CABLES = {
+		new BlockPos(2, 68, 1), new BlockPos(3, 68, 1), new BlockPos(4, 68, 1),
+		new BlockPos(5, 68, 1), new BlockPos(6, 68, 1),
+	};
+	private static final BlockPos FORK_GEN = new BlockPos(4, 68, 2);
+	private static final BlockPos FORK_BOX_EAST = new BlockPos(7, 68, 1);
+
+	/**
+	 * MOD-254 (D3) — a forked buffer is SHARED between both branches, not taken whole by whichever branch
+	 * the iteration reached first.
+	 *
+	 * <p>Deliberately measures the CABLES, not the consumers. Two consumers of the same class pool their
+	 * touched cable buffers in the serve pass, so the west Battery Box can drink out of the east branch's
+	 * last segment: a "both boxes charged" oracle stays green even when nothing ever flows down the west
+	 * wire, which is why {@code mod252TwoConsumersOnBothSidesOfSource} could not catch this. Energy can only
+	 * reach the cable next to the fork by being handed down the gradient, so a branch whose first segment
+	 * never holds anything is a branch that was never served.
+	 *
+	 * <p>The oracle is the peak charge each branch's fork-side segment ever carried: with the buffer split
+	 * both peak at their share, while the losing branch of a winner-takes-all sweep reads a flat zero for
+	 * the whole run.
+	 */
+	public static void mod254ForkFeedsBothBranches(GameTestHelper helper) {
+		// FACING = EAST → IN face at (2,68,1); FACING = WEST → IN face at (6,68,1).
+		helper.setBlock(FORK_BOX_WEST, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
+		for (BlockPos c : FORK_CABLES) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		// FACING = SOUTH so the generator's inert front points away from the bus and its north face — the
+		// one touching the middle cable at (4,68,1) — is a real output. That middle cable is the fork.
+		helper.setBlock(FORK_GEN, ModContent.GENERATOR.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.SOUTH));
+		helper.setBlock(FORK_BOX_EAST, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		if (be(helper, FORK_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+			gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+		}
+		for (BlockPos b : new BlockPos[]{FORK_BOX_WEST, FORK_BOX_EAST}) {
+			if (be(helper, b) instanceof BatteryBoxBlockEntity bb) {
+				bb.getEnergyStorage().amount = 0L;
+			}
+		}
+		long peakWest = 0;
+		long peakEast = 0;
+		for (int i = 0; i < 120; i++) {
+			tick(helper, be(helper, FORK_GEN));
+			for (BlockPos c : FORK_CABLES) {
+				tick(helper, be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, FORK_BOX_WEST));
+			tick(helper, be(helper, FORK_BOX_EAST));
+			// FORK_CABLES[1] and [3] are the two segments flanking the fork at [2].
+			peakWest = Math.max(peakWest, cableAmount(helper, FORK_CABLES[1]));
+			peakEast = Math.max(peakEast, cableAmount(helper, FORK_CABLES[3]));
+		}
+		long fairShare = Config.cableBuffer / 2;
+		if (peakWest < fairShare || peakEast < fairShare) {
+			helper.fail("the fork did not share its buffer: the segment west of the source peaked at "
+					+ peakWest + " EU and the one east of it at " + peakEast + " EU, against a fair half"
+					+ " segment of " + fairShare + " — one branch is taking the source's whole output and"
+					+ " the other never carries anything");
+		}
+		long west = be(helper, FORK_BOX_WEST) instanceof BatteryBoxBlockEntity b ? b.getEnergyStorage().getAmount() : -1;
+		long east = be(helper, FORK_BOX_EAST) instanceof BatteryBoxBlockEntity b ? b.getEnergyStorage().getAmount() : -1;
+		if (west <= 0 || east <= 0) {
+			helper.fail("both consumers must end with energy: west=" + west + " EU, east=" + east + " EU");
+		}
+		helper.succeed();
+	}
 }

@@ -58,8 +58,16 @@ public final class EnergyNetwork {
 	 * Round-robin rotation offset for the distributor's pull. Advanced once per {@link #tick()} so the
 	 * pull does not always start at the same supply. NOTE (MOD-070): on the consumer→line path the supply
 	 * list is the touched <em>cable buffers</em>, not the network's producers, so this rotates over cables
-	 * there; it only rotates over real producers on the storage-sink paired path. Bounded by the live
-	 * producer count, and every use site re-applies {@code % list.size()}, so it never indexes out of range.
+	 * there; it only rotates over real producers on the storage-sink paired path. Every use site reduces it
+	 * with {@link Math#floorMod} against its own list size — plain {@code %} is NOT enough here, because the
+	 * counter runs free (see below) and {@code cursor + k} can overflow to a negative near
+	 * {@link Integer#MAX_VALUE}, which {@code %} would pass straight through to {@code List#get}.
+	 *
+	 * <p>MOD-254: a plain monotonic tick counter, NOT {@code % liveProducerCount} as it was. Taken modulo
+	 * the producer count it was pinned to 0 forever on a single-producer network — which is most of them —
+	 * so every list it is supposed to rotate was walked in the same order every tick and the later entries
+	 * starved. The counter now rotates the line-charge sweep too (source order and face order), where that
+	 * pinning is what left a source next to a saturated cable at a full buffer for good.
 	 */
 	private int producerCursor;
 	/** EU actually delivered by the most recent {@link #tick()} (0 if asleep/never ticked). */
@@ -254,6 +262,25 @@ public final class EnergyNetwork {
 	}
 
 	/**
+	 * Can the block at {@code pos} ACCEPT energy through the face pointing in {@code face} (MOD-255)? The
+	 * distributor finds an endpoint's cables by adjacency, which says nothing about the role of the face
+	 * they touch; this is the per-face permission behind that adjacency. Neutral on purpose — resolved
+	 * through {@link EnergyLookup}, so it reads the same role on both loaders (Fabric registers the port
+	 * per face, NeoForge asks the {@link EnergyPortHost}); a foreign block that exposes one undifferentiated
+	 * handler answers "yes", which is the pre-MOD-255 behaviour for everything that is not ours.
+	 */
+	private boolean faceAccepts(BlockPos pos, Direction face) {
+		EnergyPort port = EnergyLookup.get().find(topology.level(), pos, face);
+		return port != null && port.supportsInsertion();
+	}
+
+	/** Can the block at {@code pos} EMIT energy through {@code face}? Mirror of {@link #faceAccepts}. */
+	private boolean faceEmits(BlockPos pos, Direction face) {
+		EnergyPort port = EnergyLookup.get().find(topology.level(), pos, face);
+		return port != null && port.supportsExtraction();
+	}
+
+	/**
 	 * Run one distribution pass. Returns the EU actually delivered to consumers this tick (0 when
 	 * nothing moved). Safe to call on an asleep network (returns 0). All movement commits in a single
 	 * outer transaction. The returned amount feeds the {@link NetworkManager} telemetry counters.
@@ -287,6 +314,9 @@ public final class EnergyNetwork {
 		java.util.Set<BlockPos> supplyingProducers = new java.util.HashSet<>();
 		List<EnergyLineDistributor.LiveProducer> generators = new ArrayList<>(producers.size());
 		List<EnergyLineDistributor.LiveProducer> storageSources = new ArrayList<>();
+		// MOD-255: the positions of the dual-role nodes, so the sink pass below can tell a battery that is
+		// discharging into this very line from an ordinary consumer.
+		Set<BlockPos> storageSourcePositions = new HashSet<>();
 		for (EnergyTopologyCache.Endpoint ep : producers) {
 			EnergyPort st = storageAt(ep);
 			if (st == null || !st.supportsExtraction()) {
@@ -294,6 +324,7 @@ public final class EnergyNetwork {
 			}
 			if (isStorageSink(ep.pos())) {
 				storageSources.add(new EnergyLineDistributor.LiveProducer(ep.pos(), st));
+				storageSourcePositions.add(ep.pos());
 			} else {
 				generators.add(new EnergyLineDistributor.LiveProducer(ep.pos(), st));
 				long supply = EnergyTransactions.get().simulate(sim -> st.extract(Long.MAX_VALUE, sim));
@@ -342,14 +373,60 @@ public final class EnergyNetwork {
 		// wired to cables with no consumer) still runs the charge stage below to fill the line to its
 		// buffer capacity — the wire holds and shows the energy even with nowhere to deliver it (MOD-070).
 
-		// MOD-214: the distance field must describe distance from a producer that actually supplies, not
-		// from any face capable of extraction. Published before the distributor reads propagationOrder /
-		// cableDistance, and outside the committing transaction opened below.
-		topology.updateSupplyingProducers(supplyingProducers);
+		// MOD-255: a storage node that discharges into this line THIS tick must not also be served from it.
+		// The old no-self-churn rule compared positions, which is dead on the line path (the supply pool is
+		// cable buffers, and a cable is never at the battery's position), so a Battery Box wired on both its
+		// IN and its OUT face drank straight back the EU it had just pushed into the wire: the charge
+		// oscillated between the box and its neighbouring cables and never advanced down the line, leaving
+		// the machines at the far end on 0 EU next to a full battery.
+		//
+		// Discharging is exactly `storageBudget > 0` (see EnergyLineDistributor#chargeAndPropagateLine), so
+		// the two decisions read the same number from the same helper. When generators cover the machines —
+		// or there is no machine at all — the budget is 0, nothing is dropped, and a dual-role box charges
+		// from its input face as before (MOD-214's cabled-output-face layout). The consequence to know: while
+		// machines are hungry and generators fall short, a dual-role box only feeds and does not fill. That
+		// is MOD-009's "machines before storage" rule, now also applied to the battery's own second role.
+		long storageDischarge = EnergyLineDistributor.storageBudget(machineDemand, genSupply);
+		if (storageDischarge > 0 && !storageSourcePositions.isEmpty()) {
+			sinks.removeIf(c -> storageSourcePositions.contains(c.pos()));
+		}
+
+		// MOD-252: the flow direction is seeded from the endpoints that actually WANT energy this tick, so
+		// EU moves toward demand instead of away from whichever source happens to be nearest.
+		//
+		// EVERY waiting endpoint seeds it — machines AND storage sinks. Seeding is about REACHABILITY, not
+		// about priority: a cable is only ever filled from a source-adjacent cable, and the pull rule is
+		// strictly downhill, so a cable whose potential is above every source-adjacent one has no filling
+		// path at all. Letting machines alone seed the field therefore fenced off the whole stretch of bus
+		// lying past the source relative to the machine: a Battery Box out there read 0/20000 next to dead
+		// cable for as long as any machine anywhere on the net had room — the original MOD-252 symptom,
+		// simply relocated to the far side of the source. MOD-009's class priority is enforced where it
+		// belongs, in the SERVE order below (machines drink from the line before storage sinks do), not by
+		// bending the geometry.
+		//
+		// An empty set means nobody is waiting, which puts the network on the producer-seeded fallback
+		// field and reproduces MOD-070's producer-only line fill exactly.
+		Set<BlockPos> sinkSeeds = new HashSet<>();
+		Set<BlockPos> machineSeeds = new HashSet<>();
+		for (EnergyLineDistributor.LiveConsumer c : machines) {
+			sinkSeeds.add(c.pos());
+			machineSeeds.add(c.pos());
+		}
+		for (EnergyLineDistributor.LiveConsumer c : sinks) {
+			sinkSeeds.add(c.pos());
+		}
+		// MOD-214: the producer field must describe distance from a producer that actually supplies, not
+		// from any face capable of extraction. Both fields are published before the distributor reads
+		// propagationOrder / the flow potential, and outside the committing transaction opened below.
+		// MOD-254: the machine subset rides along as the fork tie-break seed set. It biases how a forked
+		// cable buffer is split (machines before storage, geometrically) and nothing else — the flow field
+		// above stays seeded from every waiting endpoint, so reachability is untouched.
+		topology.updateLiveEndpoints(supplyingProducers, sinkSeeds, machineSeeds);
 
 		EnergyLineDistributor distributor = new EnergyLineDistributor(
 				topology, this::cableBufferAt,
-				topology::consumerDistance, topology::cableDistanceOrNull, topology.propagationOrder());
+				topology::consumerDistance, topology::flowPotentialOrNull, topology::machinePotentialOrNull,
+				topology.propagationOrder(), this::faceAccepts, this::faceEmits);
 		long[] movedEu = {0L};
 		long finalMachineDemand = machineDemand;
 		long finalGenSupply = genSupply;
@@ -364,11 +441,12 @@ public final class EnergyNetwork {
 			// a storage source discharges into the line ONLY to cover the machine demand generators fall
 			// short of (backup power), never to hoard buffers or wash into another battery. With no
 			// generator present, storage discharges nothing, so two batteries can't drain each other.
-			distributor.chargeAndPropagateLine(generators, storageSources, finalMachineDemand, finalGenSupply, packetCap, tx);
+			distributor.chargeAndPropagateLine(generators, storageSources, finalMachineDemand, finalGenSupply,
+					packetCap, tx, producerCursor);
 		});
-		// Advance the producer cursor so the next tick starts at a different producer, bounded by the
-		// live producer count (its % use sites re-applies the modulus against their own list size).
-		producerCursor = (producerCursor + 1) % liveProducerCount;
+		// Advance the rotation cursor so the next tick starts at a different producer / face. Monotonic and
+		// masked non-negative (MOD-254); every use site re-applies the modulus against its own list size.
+		producerCursor = (producerCursor + 1) & Integer.MAX_VALUE;
 		lastTickMoved = movedEu[0];
 		// Refresh the cached line-full flag so the next isAwake() on a producer-only network can skip
 		// the O(cables) scan. Only meaningful on the no-consumer path (a consumer keeps the network

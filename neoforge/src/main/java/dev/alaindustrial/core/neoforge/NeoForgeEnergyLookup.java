@@ -22,7 +22,7 @@ import net.neoforged.neoforge.transfer.energy.EnergyHandler;
  * {@code supports*}. NeoForge's {@link EnergyHandler} has <em>no</em> {@code supports*} predicate, so routing
  * our own blocks through {@code Capabilities.Energy.BLOCK} would erase the per-face {@link EnergyRole} and
  * every face would read as {@link EnergyRole#BOTH} — the network would then treat every consumer as a
- * producer too, {@code computeConsumerDistances} would seed distance 1 everywhere, and MOD-021 cable loss
+ * producer too, {@code computeProducerField} would seed distance 1 everywhere, and MOD-021 cable loss
  * would floor to 0 (diverging from Fabric). Since all our machines implement {@link EnergyPortHost}, we take
  * the face-scoped {@link EnergyPort} straight from the block entity (role intact) and only fall back to the
  * capability — wrapped as {@link EnergyRole#BOTH}, the safe default for a foreign handler — for blocks that

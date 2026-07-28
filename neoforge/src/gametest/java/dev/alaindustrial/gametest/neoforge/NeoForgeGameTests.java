@@ -146,6 +146,31 @@ public final class NeoForgeGameTests {
 				StorageEnergyScenarios::storageChargesWithCabledOutputFace);
 		registerTest(event, "storage_charges_past_idle_producer", 200, true,
 				StorageEnergyScenarios::storageChargesPastIdleProducer);
+		// MOD-252: the flow field is seeded from demand, not from the sources. Without it a source fences
+		// off every source behind it (the arm case), and a base with no live generator reopens the MOD-214
+		// seam through the storage-only hole in the live-supply set.
+		registerTest(event, "mod252_far_source_behind_near_source_discharges", 80, true,
+				CableEnergyScenarios::mod252FarSourceBehindNearSourceDischarges);
+		registerTest(event, "mod252_vertical_source_groups_both_discharge", 160, true,
+				CableEnergyScenarios::mod252VerticalSourceGroupsBothDischarge);
+		registerTest(event, "mod252_two_consumers_on_both_sides_of_source", 160, true,
+				CableEnergyScenarios::mod252TwoConsumersOnBothSidesOfSource);
+		// MOD-252 (review): seeding is reachability, not priority — a machine on one side of the source must
+		// not fence off the Battery Box on the other.
+		registerTest(event, "mod252_machine_and_storage_on_both_sides_of_source", 200, true,
+				CableEnergyScenarios::mod252MachineAndStorageOnBothSidesOfSource);
+		registerTest(event, "mod254_every_source_feeds_a_saturated_line", 80, true,
+				CableEnergyScenarios::mod254EverySourceFeedsASaturatedLine);
+		registerTest(event, "mod254_fork_feeds_both_branches", 200, true,
+				CableEnergyScenarios::mod254ForkFeedsBothBranches);
+		registerTest(event, "mod252_base_without_live_generator_feeds_machine", 200, true,
+				StorageEnergyScenarios::mod252BaseWithoutLiveGeneratorFeedsMachine);
+		// MOD-255: a dual-role Battery Box (wired on both faces into ONE network) must not drink back its
+		// own discharge, and must not circulate it when nothing needs powering.
+		registerTest(event, "mod255_dual_role_battery_feeds_machine_through_line", 200, true,
+				StorageEnergyScenarios::mod255DualRoleBatteryFeedsMachineThroughLine);
+		registerTest(event, "mod255_dual_role_battery_holds_charge_without_consumers", 80, true,
+				StorageEnergyScenarios::mod255DualRoleBatteryHoldsChargeWithoutConsumers);
 		registerTest(event, "lone_storage_source_sleeps", 40, true,
 				StorageEnergyScenarios::loneStorageSourceSleeps);
 		registerTest(event, "mod009_battery_box_charges_to_full", 80, true,
@@ -156,7 +181,7 @@ public final class NeoForgeGameTests {
 		// NeoForgeEnergyPort.supportsInsertion/Extraction derived from that role, so EVERY face reported
 		// supporting BOTH insertion and extraction regardless of its real per-face role. EnergyNetwork.
 		// refreshEndpoints therefore classified every storage/consumer as a producer too, so
-		// computeConsumerDistances seeded cable-distance 1 at every consumer and the MOD-021 loss floored
+		// computeProducerField seeded cable-distance 1 at every consumer and the MOD-021 loss floored
 		// to 0 (the box gained a full lossless 32 EU/tick). insert()/extract() still gated correctly on
 		// role via the block-side FaceEnergyPort, so delivery worked — only the classification-only
 		// supports* predicates were wrong. Root cause: the per-face role was lost across the

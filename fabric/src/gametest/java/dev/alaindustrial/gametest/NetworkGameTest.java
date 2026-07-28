@@ -1329,6 +1329,102 @@ public class NetworkGameTest {
 	}
 
 	/**
+	 * @implements MOD-252 — a source must not fence off the sources behind it. The flow field used to be a
+	 *     BFS from the sources, so the midpoint between two of them was a local maximum and the
+	 *     strictly-downhill pull rule could not cross it: the far generator filled its own dead-end segment
+	 *     and stalled at a full buffer forever. Seeded from demand instead, the seam moves to the sinks,
+	 *     where it is harmless. Body is loader-neutral so NeoForge runs the same scenario.
+	 */
+	@GameTest(maxTicks = 80)
+	public void mod252_farSourceBehindNearSourceDischarges(GameTestHelper helper) {
+		CableEnergyScenarios.mod252FarSourceBehindNearSourceDischarges(helper);
+	}
+
+	/**
+	 * @implements MOD-252 — the reported shape verbatim: two source groups at different heights on one
+	 *     trunk. Topologically identical to the arm case (the cable graph has no notion of Y), pinned
+	 *     separately because the playtest report was vertical and sameness is an argument, not a gate.
+	 */
+	@GameTest(maxTicks = 160)
+	public void mod252_verticalSourceGroupsBothDischarge(GameTestHelper helper) {
+		CableEnergyScenarios.mod252VerticalSourceGroupsBothDischarge(helper);
+	}
+
+	/**
+	 * @implements MOD-252 — two consumers on opposite sides of one generator are both served, so reversing
+	 *     the field did not simply move the starvation to the other end of the line.
+	 */
+	@GameTest(maxTicks = 160)
+	public void mod252_twoConsumersOnBothSidesOfSource(GameTestHelper helper) {
+		CableEnergyScenarios.mod252TwoConsumersOnBothSidesOfSource(helper);
+	}
+
+	/**
+	 * @implements MOD-252 (review) — the flow field is seeded by every waiting endpoint, machines and
+	 *     storage sinks alike. Seeding decides reachability, not priority: with machines alone seeding it,
+	 *     one hungry machine fenced off the entire stretch of bus lying past the source, so a Battery Box
+	 *     out there stayed at 0 next to dead cable. MOD-009's ordering lives in the serve pass instead.
+	 *     Body is loader-neutral so NeoForge runs the same scenario.
+	 */
+	@GameTest(maxTicks = 200)
+	public void mod252_machineAndStorageOnBothSidesOfSource(GameTestHelper helper) {
+		CableEnergyScenarios.mod252MachineAndStorageOnBothSidesOfSource(helper);
+	}
+
+	/**
+	 * @implements MOD-254 (D4) — the line charge rotates its source sweep, so every source on a saturated
+	 *     line injects. Starting at index 0 every tick left whoever came later in the list next to a cable
+	 *     that was already full, permanently, and the network's rotation cursor was both pinned to 0 on a
+	 *     single-producer network and never passed to the charge pass. Body is loader-neutral.
+	 */
+	@GameTest(maxTicks = 80)
+	public void mod254_everySourceFeedsASaturatedLine(GameTestHelper helper) {
+		CableEnergyScenarios.mod254EverySourceFeedsASaturatedLine(helper);
+	}
+
+	/**
+	 * @implements MOD-254 (D3) — a cable buffer claimed by two downstream neighbours is split between them
+	 *     instead of going whole to whichever the sweep reached first. Measures the segments flanking the
+	 *     fork, because two consumers of one class pool their cable buffers on the serve path and would
+	 *     otherwise hide a branch that never carried anything. Body is loader-neutral.
+	 */
+	@GameTest(maxTicks = 200)
+	public void mod254_forkFeedsBothBranches(GameTestHelper helper) {
+		CableEnergyScenarios.mod254ForkFeedsBothBranches(helper);
+	}
+
+	/**
+	 * @implements MOD-252 (D2) — the hole MOD-214 left: its live-supply set was only filled from the
+	 *     generator branch, so a base running off a charged Battery Box always hit the fallback and an
+	 *     unfuelled generator on the bus went back to cutting the line in two. Body is loader-neutral.
+	 */
+	@GameTest(maxTicks = 200)
+	public void mod252_baseWithoutLiveGeneratorFeedsMachine(GameTestHelper helper) {
+		StorageEnergyScenarios.mod252BaseWithoutLiveGeneratorFeedsMachine(helper);
+	}
+
+	/**
+	 * @implements MOD-255 — a Battery Box wired on both its IN and its OUT face into one network used to
+	 *     drink back the EU it had just discharged into the wire: the no-self-churn rule compared positions,
+	 *     and on the line path the supply pool is cable buffers, so it never fired. The charge oscillated
+	 *     between the box and its own cables and the machines past it stayed on 0 EU. Body is loader-neutral.
+	 */
+	@GameTest(maxTicks = 200)
+	public void mod255_dualRoleBatteryFeedsMachineThroughLine(GameTestHelper helper) {
+		StorageEnergyScenarios.mod255DualRoleBatteryFeedsMachineThroughLine(helper);
+	}
+
+	/**
+	 * @implements MOD-255 — the same both-faces-wired Battery Box with nothing to power must not circulate
+	 *     its charge around the ring and burn it on cable loss: with no machine deficit the storage budget
+	 *     is zero, so it discharges nothing and the wire stays empty.
+	 */
+	@GameTest(maxTicks = 80)
+	public void mod255_dualRoleBatteryHoldsChargeWithoutConsumers(GameTestHelper helper) {
+		StorageEnergyScenarios.mod255DualRoleBatteryHoldsChargeWithoutConsumers(helper);
+	}
+
+	/**
 	 * @implements TC-CABLE-001-NRG07 — MOD-070 storage-through-line: a BatteryBox charged over a
 	 *     multi-cable line pulls its EU THROUGH the wires (not a bypass) — the intermediate cable holds
 	 *     real EU while the box fills. This is the storage analogue of NRG04 and the direct regression for
