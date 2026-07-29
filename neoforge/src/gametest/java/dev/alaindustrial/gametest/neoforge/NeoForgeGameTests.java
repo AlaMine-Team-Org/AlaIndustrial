@@ -153,6 +153,14 @@ public final class NeoForgeGameTests {
 				CableShockScenarios::retainedBufferIsSafe);
 		registerTest(event, "mod269_proximity_radius_respects_cover_and_config", 80, true,
 				CableShockScenarios::proximityRadiusRespectsCoverAndConfig);
+		registerTest(event, "mod279_shock_guard_gates_shock_and_opens_grace_window", 80, true,
+				CableShockScenarios::shockGuardGatesShockAndOpensGraceWindow);
+		registerTest(event, "mod279_shock_guard_shields_from_the_side", 80, true,
+				CableShockScenarios::shockGuardShieldsFromTheSide);
+		registerTest(event, "mod279_shock_guard_install_rules", 80, true,
+				CableShockScenarios::shockGuardInstallRules);
+		registerTest(event, "mod279_shock_guard_pops_when_down_connection_appears", 80, true,
+				CableShockScenarios::shockGuardPopsWhenDownConnectionAppears);
 		registerTest(event, "in_place_grade_swap_rebuilds_segment", 40, true,
 				CableEnergyScenarios::inPlaceGradeSwapRebuildsSegment);
 		registerTest(event, "storage_does_not_charge_storage", 60, true,

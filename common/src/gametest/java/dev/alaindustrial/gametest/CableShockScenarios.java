@@ -9,14 +9,22 @@ import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.core.energy.NetworkManager;
+import dev.alaindustrial.core.energy.ShockGuardMaterial;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDamageTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 
@@ -25,6 +33,8 @@ public final class CableShockScenarios {
 	private static final BlockPos GENERATOR = new BlockPos(1, 2, 1);
 	private static final BlockPos CABLE = new BlockPos(2, 2, 1);
 	private static final BlockPos BOX = new BlockPos(3, 2, 1);
+	/** Directly under {@link #CABLE} — where MOD-279's stand and a DOWN connection compete for space. */
+	private static final BlockPos BELOW_CABLE = new BlockPos(2, 1, 1);
 
 	private CableShockScenarios() {
 	}
@@ -196,6 +206,271 @@ public final class CableShockScenarios {
 			}
 			helper.succeed();
 		});
+	}
+
+	/**
+	 * MOD-279: an insulating stand gates the shock, and a blocked shock opens a contact window so the
+	 * chance is per contact rather than re-rolled every tick.
+	 *
+	 * <p>Driven at the two <b>deterministic</b> ends of the chance range (0 = always blocks, 1 = never
+	 * blocks) rather than by sampling a middle value. A statistical assertion would need a seeded
+	 * {@code RandomSource} the world does not hand out, and would trade a precise contract for a flaky
+	 * one; the ladder's actual numbers are pinned by the L1 {@code ShockGuardMaterialTest} instead.
+	 *
+	 * <p>Asserts {@link CableBlock#passesShockGuard} rather than {@link CableBlock#tryShockPlayer} for
+	 * the same reason {@link #energizedBareOnly} asserts eligibility rather than health loss: the
+	 * landing path calls {@code hurtServer}, which notifies the player's {@code connection} — and a
+	 * mock player created by {@code makeMockServerPlayer} has none.
+	 */
+	public static void shockGuardGatesShockAndOpensGraceWindow(GameTestHelper helper) {
+		ServerPlayer player = survivalPlayer(helper);
+		buildLine(helper, ModContent.COPPER_CABLE.get());
+		energize(helper);
+		CableBlock bare = (CableBlock) ModContent.COPPER_CABLE.get();
+		BlockPos cablePos = helper.absolutePos(CABLE);
+		CableBlockEntity cable = helper.getBlockEntity(CABLE, CableBlockEntity.class);
+		if (cable == null) {
+			helper.fail("fixture cable had no block entity");
+			return;
+		}
+
+		double woodBefore = Config.shockGuardWoodHitChance;
+		int graceBefore = Config.shockGuardGraceTicks;
+		try {
+			// No stand: the MOD-260 contract is untouched — the guard never intercepts a bare segment.
+			player.invulnerableTime = 0;
+			if (!bare.passesShockGuard(helper.getLevel(), cablePos, player)) {
+				helper.fail("bare cable without a stand was intercepted; MOD-260 regressed");
+				return;
+			}
+			if (player.invulnerableTime != 0) {
+				helper.fail("the no-stand path must not touch the invulnerability window");
+				return;
+			}
+
+			cable.setShockGuard(Blocks.OAK_PLANKS);
+			if (cable.shockGuard() != ShockGuardMaterial.WOOD) {
+				helper.fail("stand did not persist on the block entity, or its category was misderived");
+				return;
+			}
+			// Standing on the cable is what the chance governs, so put the player there for the rolls
+			// below; the side/below immunity is asserted separately by shockGuardShieldsFromTheSide.
+			standOnCable(helper, player);
+
+			// A stand that blocks everything must stop the shock AND leave a contact window behind, so the
+			// next tick of contact does not immediately roll again.
+			Config.shockGuardWoodHitChance = 0.0;
+			Config.shockGuardGraceTicks = 7;
+			player.invulnerableTime = 0;
+			if (bare.passesShockGuard(helper.getLevel(), cablePos, player)) {
+				helper.fail("a stand with hit chance 0 still let the shock through");
+				return;
+			}
+			if (player.invulnerableTime != 7) {
+				helper.fail("blocked shock left no grace window; invulnerableTime=" + player.invulnerableTime);
+				return;
+			}
+			// Still inside that window: eligibility itself must now say no, which is what stops the reroll.
+			if (bare.shouldShockPlayer(helper.getLevel(), cablePos, player)) {
+				helper.fail("grace window did not suppress the next contact tick");
+				return;
+			}
+
+			// A stand that blocks nothing must behave exactly like no stand at all.
+			Config.shockGuardWoodHitChance = 1.0;
+			player.invulnerableTime = 0;
+			if (!bare.passesShockGuard(helper.getLevel(), cablePos, player)) {
+				helper.fail("a stand with hit chance 1 wrongly absorbed the shock");
+				return;
+			}
+		} finally {
+			Config.shockGuardWoodHitChance = woodBefore;
+			Config.shockGuardGraceTicks = graceBefore;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-279: a stand shields anyone beside or under the wire outright, and only the player standing
+	 * on top of the cable is still at risk. This is the rule that makes a stood run safe to walk past,
+	 * and it must hold for the MOD-269 proximity sweep as well as for direct contact — which is why it
+	 * lives in {@link CableBlock#shouldShockPlayer} rather than in the damage path.
+	 */
+	public static void shockGuardShieldsFromTheSide(GameTestHelper helper) {
+		ServerPlayer player = survivalPlayer(helper);
+		buildLine(helper, ModContent.COPPER_CABLE.get());
+		energize(helper);
+		CableBlock bare = (CableBlock) ModContent.COPPER_CABLE.get();
+		BlockPos cablePos = helper.absolutePos(CABLE);
+		CableBlockEntity cable = helper.getBlockEntity(CABLE, CableBlockEntity.class);
+		if (cable == null) {
+			helper.fail("fixture cable had no block entity");
+			return;
+		}
+
+		// Baseline: with no stand, a player at the cable's own level is eligible — MOD-260 behaviour.
+		snapToCentre(helper, player, CABLE);
+		player.invulnerableTime = 0;
+		if (!bare.shouldShockPlayer(helper.getLevel(), cablePos, player)) {
+			helper.fail("bare cable did not reach a player at its own level; MOD-260 regressed");
+			return;
+		}
+
+		cable.setShockGuard(Blocks.OAK_PLANKS);
+
+		// Beside/below the wire the stand is between them: no shock at all, whatever the chance says.
+		player.invulnerableTime = 0;
+		if (bare.shouldShockPlayer(helper.getLevel(), cablePos, player)) {
+			helper.fail("a stand did not shield a player standing at the cable's own level");
+			return;
+		}
+
+		// On top of the wire the player is above the plate and still eligible.
+		standOnCable(helper, player);
+		player.invulnerableTime = 0;
+		if (!bare.shouldShockPlayer(helper.getLevel(), cablePos, player)) {
+			helper.fail("a stand wrongly shielded a player standing on top of the cable");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/** Puts the player on top of the cable, where a stand no longer shields them. */
+	private static void standOnCable(GameTestHelper helper, ServerPlayer player) {
+		BlockPos abs = helper.absolutePos(CABLE);
+		player.setPos(abs.getX() + 0.5, abs.getY() + 1.0, abs.getZ() + 0.5);
+	}
+
+	/**
+	 * MOD-279 placement rules: planks install a stand on a bare segment and cost an item, while an
+	 * insulated grade (no hazard left to reduce) and a downward-connected segment (the stand's own
+	 * volume is taken) both refuse without consuming anything.
+	 */
+	public static void shockGuardInstallRules(GameTestHelper helper) {
+		ServerPlayer player = survivalPlayer(helper);
+		buildLine(helper, ModContent.COPPER_CABLE.get());
+
+		// A non-oak species proves the exact block is stored, not a canonical stand-in for its category.
+		if (!installStand(helper, player, CABLE, new ItemStack(Items.BIRCH_PLANKS, 2))) {
+			helper.fail("planks did not install a stand on a bare cable");
+			return;
+		}
+		if (player.getMainHandItem().getCount() != 1) {
+			helper.fail("installing a stand did not consume exactly one item; left="
+					+ player.getMainHandItem().getCount());
+			return;
+		}
+		CableBlockEntity stood = helper.getBlockEntity(CABLE, CableBlockEntity.class);
+		if (stood == null || stood.shockGuardBlock() != Blocks.BIRCH_PLANKS) {
+			helper.fail("the installed stand did not keep the exact block the player used");
+			return;
+		}
+
+		// Empty hand takes it back off and returns the item.
+		if (!removeStand(helper, player, CABLE)) {
+			helper.fail("empty-handed use did not remove the stand");
+			return;
+		}
+
+		// Logs and dyed wool are stands too, not just planks.
+		if (!installStand(helper, player, CABLE, new ItemStack(Items.STRIPPED_SPRUCE_LOG, 1))
+				|| !removeStand(helper, player, CABLE)) {
+			helper.fail("a stripped log was not accepted as a wooden stand");
+			return;
+		}
+		if (!installStand(helper, player, CABLE, new ItemStack(Items.WOOL.blue(), 1))
+				|| !removeStand(helper, player, CABLE)) {
+			helper.fail("dyed wool was not accepted as a stand");
+			return;
+		}
+		if (!installStand(helper, player, CABLE, new ItemStack(Items.STAINED_GLASS.lime(), 1))
+				|| !removeStand(helper, player, CABLE)) {
+			helper.fail("stained glass was not accepted as a stand");
+			return;
+		}
+
+		// An insulated grade has no shock to reduce, so a stand there would be a no-op decoration.
+		helper.setBlock(CABLE, Blocks.AIR);
+		helper.setBlock(CABLE, ModContent.INSULATED_COPPER_CABLE.get());
+		if (installStand(helper, player, CABLE, new ItemStack(Items.OAK_PLANKS, 2))) {
+			helper.fail("insulated cable accepted an insulating stand");
+			return;
+		}
+		if (player.getMainHandItem().getCount() != 2) {
+			helper.fail("a refused install still consumed an item");
+			return;
+		}
+
+		// A segment wired downward has no room: the DOWN arm fills the same cell floor.
+		helper.setBlock(CABLE, Blocks.AIR);
+		helper.setBlock(CABLE, ModContent.COPPER_CABLE.get());
+		helper.setBlock(BELOW_CABLE, ModContent.COPPER_CABLE.get());
+		if (!helper.getBlockState(CABLE).getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(Direction.DOWN))) {
+			helper.fail("fixture did not form the downward connection the rule is about");
+			return;
+		}
+		if (installStand(helper, player, CABLE, new ItemStack(Items.OAK_PLANKS, 2))) {
+			helper.fail("a downward-connected segment accepted a stand");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/** MOD-279: a connection forming under an existing stand pops it back out as an item. */
+	public static void shockGuardPopsWhenDownConnectionAppears(GameTestHelper helper) {
+		ServerPlayer player = survivalPlayer(helper);
+		buildLine(helper, ModContent.COPPER_CABLE.get());
+		if (!installStand(helper, player, CABLE, new ItemStack(Items.OAK_PLANKS, 1))) {
+			helper.fail("fixture stand was not installed");
+			return;
+		}
+
+		helper.setBlock(BELOW_CABLE, ModContent.COPPER_CABLE.get());
+		tick(helper, be(helper, CABLE));
+
+		CableBlockEntity cable = helper.getBlockEntity(CABLE, CableBlockEntity.class);
+		if (cable == null || cable.shockGuard().isPresent()) {
+			helper.fail("stand survived a downward connection claiming its space");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/** A survival mock player with every invulnerability path explicitly cleared. */
+	private static ServerPlayer survivalPlayer(GameTestHelper helper) {
+		ServerPlayer player = (ServerPlayer) helper.makeMockServerPlayer(GameType.SURVIVAL);
+		player.getAbilities().instabuild = false;
+		player.getAbilities().invulnerable = false;
+		player.setInvulnerable(false);
+		player.invulnerableTime = 0;
+		return player;
+	}
+
+	/**
+	 * Runs the real right-click path ({@code BlockState.useItemOn}, the same entry vanilla uses) with
+	 * {@code held} in the player's main hand, and answers whether a stand ended up installed.
+	 */
+	private static boolean installStand(GameTestHelper helper, ServerPlayer player, BlockPos relative,
+			ItemStack held) {
+		player.setItemInHand(InteractionHand.MAIN_HAND, held);
+		BlockPos abs = helper.absolutePos(relative);
+		helper.getBlockState(relative).useItemOn(player.getMainHandItem(), helper.getLevel(), player,
+				InteractionHand.MAIN_HAND, hitOn(abs));
+		return helper.getBlockEntity(relative, CableBlockEntity.class) instanceof CableBlockEntity cable
+				&& cable.shockGuard().isPresent();
+	}
+
+	/** Empty-handed right-click, answering whether the stand is gone afterwards. */
+	private static boolean removeStand(GameTestHelper helper, ServerPlayer player, BlockPos relative) {
+		player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+		BlockPos abs = helper.absolutePos(relative);
+		helper.getBlockState(relative).useWithoutItem(helper.getLevel(), player, hitOn(abs));
+		return helper.getBlockEntity(relative, CableBlockEntity.class) instanceof CableBlockEntity cable
+				&& !cable.shockGuard().isPresent();
+	}
+
+	private static BlockHitResult hitOn(BlockPos abs) {
+		return new BlockHitResult(Vec3.atCenterOf(abs), Direction.UP, abs, false);
 	}
 
 	private static void buildLine(GameTestHelper helper, Block cable) {

@@ -243,6 +243,11 @@ public final class IndustrializationNeoForgeClient {
 		// Incubator (MOD-118): bound to the base, draws into the dome chamber above it.
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.INCUBATOR.get(),
 				dev.alaindustrial.client.render.IncubatorBlockEntityRenderer::new);
+		// Insulating stand under a bare cable (MOD-279). All cable grades share one BlockEntityType, so
+		// this single registration covers every grade — and it is the first renderer bound to that type,
+		// so nothing is being displaced.
+		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.COPPER_CABLE.get(),
+				dev.alaindustrial.client.render.CableShockGuardBlockEntityRenderer::new);
 		// Stock Display Frame (MOD-066): the mod's first entity renderer — NeoForge counterpart to
 		// the Fabric EntityRenderers.register call in IndustrializationClient.
 		event.registerEntityRenderer(

@@ -1,22 +1,16 @@
-## 0.1.56
+## 0.1.57
 
-<p><img alt="A bare copper cable shocking a player who stands next to it" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.56/release-media/v0.1.56/changelog.webp" width="720"></p>
+<p><img alt="A bare cable lifted on an insulating stand that shields players from its shock" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.57/release-media/v0.1.57/changelog.png" width="720"></p>
 
-Bare wiring bites, and rubber is what stops it — so this update reprices the sulfur behind that rubber and tidies up the machine that makes it.
+Bare cable bites — now you can put something under it. Slip any wood, wool or glass beneath a live wire and it shields anyone walking past.
 
-### Changes
+### New
 
-- **Vulcanizing now costs four sulfur dust** per operation instead of one. Sulfur is the real price of every insulated cable you run.
-- **Heat is how you stretch it.** The same four dust give 1 rubber on a campfire, 2 on lava or a magma block, 3 under an Electric Heater.
-- The Vulcanizer no longer starts on a partial batch — it says what is missing instead of going quiet.
+- **Insulating stand under a bare cable.** Place any wood, wool or glass below a bare wire and it shields anyone walking past or standing underneath — and only softens the shock for someone on top of the wire.
+- **The stand shows its real material.** The plate takes the exact wood, wool or glass you used, with its own shade — neighbouring segments join into one continuous board.
+- **Glass protects best, wood sits in the middle, wool is the weakest.** Pick the material that matches your build and the safety you need.
+- **Place it back by hand.** An empty-handed click on the wire returns the very same item you put down.
 
-### Fixed
+### Limits
 
-- **Vulcanizer interface.** Items sat a pixel off their slot frames, the status line ran into the inventory label, and hovering the progress arrow stopped offering recipes. All three are back in order.
-- The redundant "Ready" caption is gone — a filling arrow and a lit heat icon already say it.
-
-### Wiring, in case you missed it
-
-- **A live bare cable hurts.** Only a stretch actually carrying power shocks you, and it reaches half a block — put a solid block between you and the wire and you are safe.
-- **Insulated cable never shocks you**, and it loses half as much energy along the way.
-- That is the whole chain in one line: sulfur makes rubber, rubber makes insulation, insulation keeps your hands on the build instead of on the respawn screen.
+- Stands do not fit on insulated cable (it already can't shock you) or on a segment wired straight down.

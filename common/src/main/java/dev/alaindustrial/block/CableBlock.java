@@ -7,6 +7,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.NetworkManager;
+import dev.alaindustrial.core.energy.ShockGuardMaterial;
 import dev.alaindustrial.registry.ModCriteria;
 import dev.alaindustrial.registry.ModDamageTypes;
 import java.util.EnumMap;
@@ -18,11 +19,16 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -31,6 +37,8 @@ import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.StainedGlassBlock;
+import net.minecraft.world.level.block.TintedGlassBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -38,6 +46,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -201,6 +210,9 @@ public class CableBlock extends AbstractMachineBlock {
 				|| !shouldShockPlayer(level, pos, player)) {
 			return false;
 		}
+		if (!passesShockGuard(serverLevel, pos, player)) {
+			return false;
+		}
 
 		if (!player.hurtServer(serverLevel, ModDamageTypes.electricShock(level), type.shockDamage())) {
 			return false;
@@ -213,6 +225,45 @@ public class CableBlock extends AbstractMachineBlock {
 		return true;
 	}
 
+	/**
+	 * Rolls an installed insulating stand's chance to absorb a shock that {@link #shouldShockPlayer}
+	 * already ruled eligible (MOD-279). Returns {@code true} when the shock should land.
+	 *
+	 * <p>Deliberately <b>not</b> folded into {@link #shouldShockPlayer}: that method is a pure,
+	 * repeatable predicate that both GameTest lanes assert directly, and making it randomly answer
+	 * differently on identical input would break that contract. The roll therefore sits on the one path
+	 * that actually deals damage.
+	 *
+	 * <p>A bare segment short-circuits before touching the RNG at all, so the shipped MOD-260 behaviour
+	 * keeps its exact random stream — no stand, no roll, guaranteed hit.
+	 *
+	 * <p>When a stand does absorb the hit, the player is granted the same invulnerability window a real
+	 * hit would have produced. Without it the caller would roll again on the very next tick of contact
+	 * (both {@code entityInside} and the proximity sweep run every tick), so a 50 % stand would still
+	 * let a shock through within a fraction of a second — the chance would read as per-tick when the
+	 * player experiences it as per-contact.
+	 *
+	 * <p>Public for the same reason {@link #shouldShockPlayer} is: both loader GameTest lanes drive this
+	 * decision directly. They cannot go through {@link #tryShockPlayer} for the case where the shock
+	 * <em>lands</em>, because that reaches {@code hurtServer}, and a GameTest mock player has no
+	 * {@code connection} for vanilla to notify — the same constraint that already keeps
+	 * {@code energizedBareOnly} on the predicate rather than on health loss.
+	 */
+	public boolean passesShockGuard(ServerLevel level, BlockPos pos, ServerPlayer player) {
+		if (!(level.getBlockEntity(pos) instanceof CableBlockEntity cable)) {
+			return true;
+		}
+		ShockGuardMaterial guard = cable.shockGuard();
+		if (!guard.isPresent()) {
+			return true;
+		}
+		if (level.getRandom().nextDouble() < guard.hitChance()) {
+			return true;
+		}
+		player.invulnerableTime = Config.shockGuardGraceTicks;
+		return false;
+	}
+
 	/** Side-effect-free eligibility check shared with both loader GameTest lanes. */
 	public boolean shouldShockPlayer(Level level, BlockPos pos, ServerPlayer player) {
 		return Config.bareCableShockEnabled
@@ -221,7 +272,137 @@ public class CableBlock extends AbstractMachineBlock {
 				&& !type.isInsulated()
 				&& player.invulnerableTime <= 0
 				&& level.getBlockEntity(pos) instanceof CableBlockEntity cable
-				&& cable.isEnergizedForShock();
+				&& cable.isEnergizedForShock()
+				&& shockReachesPlayer(cable, pos, player);
+	}
+
+	/**
+	 * Whether the hazard can reach {@code player} at all given this segment's insulating stand
+	 * (MOD-279). A bare segment reaches everyone, as it always has. A stood segment only reaches a
+	 * player standing <b>on top of it</b>: the plate is under the wire, so it shields anyone walking
+	 * past at floor level or standing underneath, and a player who climbs onto the cable is above the
+	 * protection and still at risk (at the material's reduced chance — see {@link #passesShockGuard}).
+	 *
+	 * <p>Side-effect-free and part of {@link #shouldShockPlayer}, so both hazard paths honour it: the
+	 * direct-contact {@code entityInside} and the MOD-269 proximity sweep. Putting it in the shared
+	 * predicate rather than in the damage path is what makes "walking past a stood run is safe" true
+	 * for the radius rule too, which is the whole point of the stand.
+	 */
+	private static boolean shockReachesPlayer(CableBlockEntity cable, BlockPos pos, ServerPlayer player) {
+		if (!cable.shockGuard().isPresent()) {
+			return true;
+		}
+		// Feet above the cable's mid-height means the player is standing on the wire rather than beside
+		// it. A cable's collision tops out at 11px, and a player next to it on the same floor has their
+		// feet exactly at the cell's own Y, so the halfway mark separates the two cases cleanly.
+		return player.getBoundingBox().minY >= pos.getY() + 0.5;
+	}
+
+	/**
+	 * Installs an insulating stand when the player right-clicks a bare segment with planks, wool or
+	 * glass (MOD-279).
+	 *
+	 * <p><b>Building with those blocks still works.</b> Vanilla's {@code ServerPlayerGameMode.useItemOn}
+	 * skips block interaction entirely when the player is sneaking with a non-empty hand (verified
+	 * against 26.2 bytecode), so sneak+place puts the plank down as usual and this method never runs —
+	 * the sneak-to-bypass convention players already know covers the collision for free, no code needed.
+	 *
+	 * <p>Anything this method does not claim returns {@code super}'s {@code TRY_WITH_EMPTY_HAND} rather
+	 * than a consuming result, which is what preserves the MOD-039 fix: a consuming result here would
+	 * stop vanilla before {@code BlockItem.place} and make cables unplaceable flush against each other.
+	 */
+	@Override
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+			Player player, InteractionHand hand, BlockHitResult hit) {
+		ShockGuardMaterial material = shockGuardMaterialFor(stack);
+		if (material.isPresent() && canHoldShockGuard(state)
+				&& level.getBlockEntity(pos) instanceof CableBlockEntity cable
+				&& cable.shockGuardBlock() == null) {
+			if (level instanceof ServerLevel serverLevel) {
+				cable.setShockGuard(Block.byItem(stack.getItem()));
+				if (!player.getAbilities().instabuild) {
+					stack.shrink(1);
+				}
+				serverLevel.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 0.9f, 1.1f);
+			}
+			return InteractionResult.SUCCESS;
+		}
+		return super.useItemOn(stack, state, level, pos, player, hand, hit);
+	}
+
+	/**
+	 * Removes an installed stand on an empty-handed right-click and returns the item (MOD-279).
+	 *
+	 * <p>The empty-hand test is explicit rather than implied: vanilla routes a
+	 * {@code TRY_WITH_EMPTY_HAND} result here even when the player <em>is</em> holding something (any
+	 * item this block does not claim above), so without the check a right-click with, say, a pickaxe
+	 * would knock the stand off. Everything else defers to {@code super}, which returns {@code PASS}
+	 * for a menu-less block — the MOD-039 contract.
+	 */
+	@Override
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
+			Player player, BlockHitResult hit) {
+		if (player.getMainHandItem().isEmpty()
+				&& level.getBlockEntity(pos) instanceof CableBlockEntity cable
+				&& cable.shockGuardBlock() != null) {
+			if (level instanceof ServerLevel serverLevel) {
+				// The very block the player installed, not a canonical stand-in for its category.
+				ItemStack drop = new ItemStack(cable.shockGuardBlock());
+				cable.setShockGuard(null);
+				if (!player.getAbilities().instabuild) {
+					Block.popResource(serverLevel, pos, drop);
+				}
+				serverLevel.playSound(null, pos, SoundEvents.WOOD_HIT, SoundSource.BLOCKS, 0.9f, 0.9f);
+			}
+			return InteractionResult.SUCCESS;
+		}
+		return super.useWithoutItem(state, level, pos, player, hit);
+	}
+
+	/**
+	 * Whether this segment can carry an insulating stand at all. An insulated grade is refused because
+	 * it has no shock hazard left to reduce ({@link #shouldShockPlayer} already returns {@code false}
+	 * there) — allowing it would sell the player a decoration that does nothing. A segment already
+	 * connected downward is refused because the stand and the {@code DOWN} arm occupy the same volume
+	 * at the floor of the cell; the reverse order (a neighbour appearing later) is handled by
+	 * {@link CableBlockEntity#dropShockGuardIfObstructed}.
+	 */
+	private boolean canHoldShockGuard(BlockState state) {
+		return !type.isInsulated() && !state.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(Direction.DOWN));
+	}
+
+	/**
+	 * Maps a held stack to the stand material it installs, or {@link ShockGuardMaterial#NONE} for
+	 * anything that is not a valid stand.
+	 *
+	 * <p>Planks and wool have vanilla item tags; <b>glass does not</b> — there is no
+	 * {@code ItemTags.GLASS} in 26.2, plain {@code Blocks.GLASS} is a bare {@code Block} with no
+	 * dedicated subclass, and this project pulls in no conventional-tag library. Hence the explicit
+	 * triple: the plain block by item identity, plus the two subclasses that cover every dyed and
+	 * tinted variant.
+	 */
+	private static ShockGuardMaterial shockGuardMaterialFor(ItemStack stack) {
+		if (stack.is(ItemTags.PLANKS) || stack.is(ItemTags.LOGS)) {
+			return ShockGuardMaterial.WOOD;
+		}
+		if (stack.is(ItemTags.WOOL)) {
+			return ShockGuardMaterial.WOOL;
+		}
+		Block block = Block.byItem(stack.getItem());
+		if (stack.is(Items.GLASS) || block instanceof StainedGlassBlock || block instanceof TintedGlassBlock) {
+			return ShockGuardMaterial.GLASS;
+		}
+		return ShockGuardMaterial.NONE;
+	}
+
+	/**
+	 * The balance category of a block already installed as a stand. The block-side mirror of
+	 * {@link #shockGuardMaterialFor(ItemStack)}, used by {@link CableBlockEntity#shockGuard()} to
+	 * derive the category from the concrete block it stores instead of persisting both and risking
+	 * them disagreeing.
+	 */
+	public static ShockGuardMaterial shockGuardMaterialOf(Block block) {
+		return shockGuardMaterialFor(new ItemStack(block));
 	}
 
 	@Override
@@ -273,6 +454,12 @@ public class CableBlock extends AbstractMachineBlock {
 		super.neighborChanged(state, level, pos, neighborBlock, orientation, movedByPiston);
 		if (level instanceof ServerLevel serverLevel) {
 			NetworkManager.onNeighbourChanged(serverLevel, pos);
+			// A neighbour under this segment may have just claimed the space an insulating stand sits in
+			// (MOD-279). The block entity re-checks this every tick anyway; doing it here too makes the
+			// stand pop the instant the connection forms rather than up to a tick later.
+			if (serverLevel.getBlockEntity(pos) instanceof CableBlockEntity cable) {
+				cable.dropShockGuardIfObstructed(serverLevel, pos);
+			}
 		}
 	}
 

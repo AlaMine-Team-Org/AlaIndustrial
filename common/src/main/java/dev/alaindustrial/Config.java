@@ -457,6 +457,29 @@ public final class Config {
 	 */
 	public static double insulationLossMultiplier = 0.5;
 
+	// --- Insulating stands under bare cable, see core.energy.ShockGuardMaterial (MOD-279) ---
+	/**
+	 * Probability (0..1) that a shock still lands on a player standing <b>on top of</b> a wood-stood
+	 * segment. These chances only govern the from-above case: a stand blocks the side/below hazard
+	 * outright, so they are deliberately mild — the stand's main value is that it makes a cable run
+	 * safe to walk <em>past</em>, not safe to walk <em>on</em>. {@code 1.0} removes the from-above
+	 * benefit entirely, {@code 0.0} makes the stand as good as rubber insulation.
+	 */
+	public static double shockGuardWoodHitChance = 0.7;
+	/** Probability (0..1) a shock still lands from above through a <b>wool</b> stand — the weakest of the three. */
+	public static double shockGuardWoolHitChance = 0.9;
+	/** Probability (0..1) a shock still lands from above through a <b>glass</b> stand — the strongest of the three. */
+	public static double shockGuardGlassHitChance = 0.5;
+	/**
+	 * Contact ticks a player is left alone for after a stand absorbs a shock. Without this the roll would
+	 * repeat every tick the player stays in contact (20×/second), and even a strong stand would let a hit
+	 * through almost immediately — the reduced chance would be per-tick rather than per-contact, which is
+	 * not what a player reads it as. Matches vanilla's own post-hit invulnerability window
+	 * ({@code LivingEntity.INVULNERABLE_DURATION}, 20 ticks), so a blocked shock and a landed one pace
+	 * the same. That constant is {@code protected} and cannot be referenced from here, hence the literal.
+	 */
+	public static int shockGuardGraceTicks = 20;
+
 	// --- Cable grades: tin (cheap/narrow) and gold (MV/wide), see core.energy.CableType (MOD-219) ---
 	/**
 	 * Per-segment buffer of a tin cable — and therefore its real throughput (MOD-070: a cable carries its
@@ -783,6 +806,14 @@ public final class Config {
 				() -> bareCableShockProximityRadius, v -> bareCableShockProximityRadius = v, 0.0, 0.0),
 			new DoubleField("insulationLossMultiplier", "Multiplier applied to bare-cable attenuation for rubber-insulated tin/copper cables (0.5 = half the loss; throughput and packet cap are unchanged).",
 				() -> insulationLossMultiplier, v -> insulationLossMultiplier = v, 0.0, 0.0),
+			new DoubleField("shockGuardWoodHitChance", "Chance (0..1) a shock still lands through a plank insulating stand under a bare cable (1 = no protection, 0 = blocks every hit).",
+				() -> shockGuardWoodHitChance, v -> shockGuardWoodHitChance = v, 0.0, 0.0),
+			new DoubleField("shockGuardWoolHitChance", "Chance (0..1) a shock still lands through a wool insulating stand under a bare cable (1 = no protection, 0 = blocks every hit).",
+				() -> shockGuardWoolHitChance, v -> shockGuardWoolHitChance = v, 0.0, 0.0),
+			new DoubleField("shockGuardGlassHitChance", "Chance (0..1) a shock still lands through a glass insulating stand under a bare cable (1 = no protection, 0 = blocks every hit).",
+				() -> shockGuardGlassHitChance, v -> shockGuardGlassHitChance = v, 0.0, 0.0),
+			new IntField("shockGuardGraceTicks", "Contact ticks a player is spared after an insulating stand absorbs a shock, so the reduced chance is per contact rather than re-rolled every tick.",
+				() -> shockGuardGraceTicks, v -> shockGuardGraceTicks = v, 0),
 			new IntField("tinCableBuffer", "Per-segment working EU buffer of a tin cable = its real throughput (8 EU/t, narrower than copper's 12).",
 				() -> tinCableBuffer, v -> tinCableBuffer = v, 1),
 			new IntField("tinCablePacketCap", "Per-tick ceiling on EU drawn from one source through a tin cable (8 EU/t, below the LV tier voltage by design).",

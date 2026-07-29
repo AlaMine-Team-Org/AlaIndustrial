@@ -1287,6 +1287,26 @@ public class NetworkGameTest {
 		CableShockScenarios.proximityRadiusRespectsCoverAndConfig(helper);
 	}
 
+	@GameTest(maxTicks = 80)
+	public void mod279_shockGuardGatesShockAndOpensGraceWindow(GameTestHelper helper) {
+		CableShockScenarios.shockGuardGatesShockAndOpensGraceWindow(helper);
+	}
+
+	@GameTest(maxTicks = 80)
+	public void mod279_shockGuardShieldsFromTheSide(GameTestHelper helper) {
+		CableShockScenarios.shockGuardShieldsFromTheSide(helper);
+	}
+
+	@GameTest(maxTicks = 80)
+	public void mod279_shockGuardInstallRules(GameTestHelper helper) {
+		CableShockScenarios.shockGuardInstallRules(helper);
+	}
+
+	@GameTest(maxTicks = 80)
+	public void mod279_shockGuardPopsWhenDownConnectionAppears(GameTestHelper helper) {
+		CableShockScenarios.shockGuardPopsWhenDownConnectionAppears(helper);
+	}
+
 	// ── MOD-070: a storage source never charges another storage sink (no battery↔battery wash) ─────
 
 	// Both boxes FACING WEST: BB_SRC's OUT (east/back) feeds the cable; BB_DST's IN (west/front) draws it.

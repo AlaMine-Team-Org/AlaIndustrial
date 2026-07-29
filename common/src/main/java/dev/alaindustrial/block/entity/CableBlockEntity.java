@@ -5,14 +5,19 @@ import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.energy.NetworkManager;
+import dev.alaindustrial.core.energy.ShockGuardMaterial;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -22,6 +27,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 /**
  * LV copper cable: a transport segment of a logical {@link dev.alaindustrial.core.energy.EnergyNetwork}.
@@ -49,28 +55,102 @@ public class CableBlockEntity extends MachineBlockEntity {
 	private boolean shapeValidated;
 
 	/**
-	 * Persist only the cable-segment buffer — NOT the full machine-path keys. The cable has no
-	 * inventory (0 slots), no processing state (progress is always 0) and no owner (transport, not
-	 * a working machine), so the base class's {@code Progress}/{@code MaxProgress}/{@code items} keys
-	 * would all be empty/zero. Skipping them keeps per-cable NBT minimal — meaningful on a base with
-	 * hundreds of cable segments — and also avoids a redundant duplicate {@code "Energy"} write that
-	 * a {@code super} call would perform before {@link #saveEnergyOnly} wrote it again.
+	 * The exact block a player slipped under this segment as an insulating stand, or {@code null}
+	 * (MOD-279). Unlike {@link #lastEnergyTransferTick} and the two flags above, this one
+	 * <b>persists</b> — a stand a player paid an item for must survive a relog.
+	 *
+	 * <p>The concrete block is stored, not just its {@link ShockGuardMaterial} category, so the
+	 * renderer can show birch as birch and blue stained glass as blue, and so removing the stand hands
+	 * back the very item that was installed. The category — which is all the balance cares about — is
+	 * derived on demand by {@link #shockGuard()}.
+	 */
+	@Nullable
+	private Block shockGuard;
+
+	/**
+	 * Persist the cable-segment buffer and the insulating stand — NOT the full machine-path keys. The
+	 * cable has no inventory (0 slots), no processing state (progress is always 0) and no owner
+	 * (transport, not a working machine), so the base class's {@code Progress}/{@code MaxProgress}/
+	 * {@code items} keys would all be empty/zero. Skipping them keeps per-cable NBT minimal —
+	 * meaningful on a base with hundreds of cable segments — and also avoids a redundant duplicate
+	 * {@code "Energy"} write that a {@code super} call would perform before {@link #saveEnergyOnly}
+	 * wrote it again.
 	 *
 	 * <p>Backward-compat: existing player saves that DO carry the legacy {@code Progress}/
 	 * {@code MaxProgress} keys (always 0 on a cable) round-trip cleanly — they are simply ignored on
 	 * load (defaults remain 0, which is the correct value for a transport segment that never
-	 * processes anything).
+	 * processes anything). A save from before MOD-279 has no {@code "ShockGuard"} key and reads back
+	 * as {@link ShockGuardMaterial#NONE}, which is exactly right for a cable laid before stands existed.
+	 *
+	 * <p>This slim path is also what carries the stand to the <b>client</b>: the inherited
+	 * {@code getUpdateTag} is {@code saveWithoutMetadata}, which routes through this very method, so
+	 * writing the key here is all the renderer needs — no bespoke packet (see
+	 * {@code CableShockGuardBlockEntityRenderer}).
 	 */
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		// Intentionally NOT calling super.saveAdditional — we want the slim path, not the machine path.
 		saveEnergyOnly(output);
+		if (shockGuard != null) {
+			output.putString("ShockGuard", BuiltInRegistries.BLOCK.getKey(shockGuard).toString());
+		}
 	}
 
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		// Intentionally NOT calling super.loadAdditional — see saveAdditional above.
 		loadEnergyOnly(input);
+		shockGuard = readShockGuard(input.getStringOr("ShockGuard", ""));
+	}
+
+	/**
+	 * Resolves a persisted block id back to its block, or {@code null} for absent, malformed or
+	 * unknown ids. The lenient fallback is what makes a world saved with a mod that is no longer
+	 * installed load as "no stand" instead of failing chunk load.
+	 */
+	@Nullable
+	private static Block readShockGuard(String id) {
+		if (id.isEmpty()) {
+			return null;
+		}
+		Identifier key = Identifier.tryParse(id);
+		if (key == null) {
+			return null;
+		}
+		Block block = BuiltInRegistries.BLOCK.getValue(key);
+		// The registry answers AIR for an unknown key rather than null; AIR is never a valid stand.
+		return block == Blocks.AIR ? null : block;
+	}
+
+	/** The exact block installed as a stand under this segment (MOD-279), or {@code null} when bare. */
+	@Nullable
+	public Block shockGuardBlock() {
+		return shockGuard;
+	}
+
+	/**
+	 * The balance category of the installed stand — {@link ShockGuardMaterial#NONE} when bare. Derived
+	 * from the stored block on each call rather than persisted alongside it, so the two can never
+	 * disagree after a retag or a config change.
+	 */
+	public ShockGuardMaterial shockGuard() {
+		return shockGuard == null ? ShockGuardMaterial.NONE : CableBlock.shockGuardMaterialOf(shockGuard);
+	}
+
+	/**
+	 * Install ({@code block}) or clear ({@code null}) the insulating stand, persisting it and pushing
+	 * it to watching clients so the renderer updates immediately. Both side effects live here rather
+	 * than at the call sites because every caller needs both, and {@code syncBlockEntityToClient} is
+	 * {@code protected} on the base class — {@link dev.alaindustrial.block.CableBlock} could not
+	 * invoke it itself.
+	 */
+	public void setShockGuard(@Nullable Block block) {
+		if (shockGuard == block) {
+			return;
+		}
+		shockGuard = block;
+		setChanged();
+		syncBlockEntityToClient();
 	}
 
 	public CableBlockEntity(BlockPos pos, BlockState state) {
@@ -155,10 +235,41 @@ public class CableBlockEntity extends MachineBlockEntity {
 		// on neighbourChanged, not on chunk load, so without this a cable that was laid against a
 		// machine's front face before MOD-061 would keep drawing the misleading arm forever.
 		validateShape(level, pos, state);
+		dropShockGuardIfObstructed(level, pos);
 		shockNearbyPlayers(level, pos, state);
 		// Transport is owned by the network tick, not the cable; the per-cable check above is trivial,
 		// so cables stay awake (return 0) rather than manage a sleep timer (R-29).
 		return 0;
+	}
+
+	/**
+	 * Pops the insulating stand off this segment once a downward connection claims the space it
+	 * occupies (MOD-279). A stand renders as a thin plate at the floor of the cell, which is the same
+	 * volume {@code CableBlock}'s {@code DOWN} arm fills, so the two are mutually exclusive:
+	 * {@code CableBlock.useItemOn} refuses to install a stand on an already-connected segment, and this
+	 * handles the opposite order — a neighbour appearing <em>under</em> a segment that already has one.
+	 * The stand is returned as an item rather than deleted, because the player paid for it.
+	 *
+	 * <p><b>Why here and not in {@code validateShape}.</b> That method is a one-shot migration guarded
+	 * by {@link #shapeValidated}: it runs once per load and then early-returns forever, so a neighbour
+	 * placed minutes later would never be seen. This check is unguarded and runs every tick, which is
+	 * affordable for the same reason {@link #shockNearbyPlayers}'s guards are — the common case is a
+	 * segment with no stand at all, which costs one enum comparison and returns.
+	 * {@link dev.alaindustrial.block.CableBlock#neighborChanged} calls it too, so the reaction is
+	 * immediate rather than up to a tick late.
+	 */
+	public void dropShockGuardIfObstructed(Level level, BlockPos pos) {
+		if (shockGuard == null || !(level instanceof ServerLevel serverLevel)) {
+			return;
+		}
+		BlockState live = serverLevel.getBlockState(pos);
+		if (!(live.getBlock() instanceof CableBlock)
+				|| !live.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(Direction.DOWN))) {
+			return;
+		}
+		ItemStack drop = new ItemStack(shockGuard);
+		setShockGuard(null);
+		Block.popResource(serverLevel, pos, drop);
 	}
 
 	/**
