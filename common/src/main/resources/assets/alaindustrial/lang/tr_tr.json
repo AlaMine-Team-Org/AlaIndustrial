@@ -473,7 +473,6 @@
 	"gui.alaindustrial.vulcanizer.status.no_recipe": "Uygun tarif yok",
 	"gui.alaindustrial.vulcanizer.status.no_sulfur": "Kükürt Tozu gerekli",
 	"gui.alaindustrial.vulcanizer.status.output_blocked": "Çıkış engelli",
-	"gui.alaindustrial.vulcanizer.status.ready": "Hazır",
 	"gui.alaindustrial.incubator.mode.transform": "Dönüşüm",
 	"gui.alaindustrial.incubator.mode.duplicate": "Çoğaltma",
 	"gui.alaindustrial.incubator.mode.create": "Yaratım",

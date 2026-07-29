@@ -10,6 +10,7 @@ import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.ProcessingRecipeInput;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -53,9 +54,9 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity implements M
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
 		int euPerTick = Config.machineEuPerTickEffective();
+		ProcessingRecipeInput input = new ProcessingRecipeInput(items.get(RAW_RUBBER_SLOT), items.get(SULFUR_SLOT));
 		AlaProcessingRecipe recipe = level instanceof ServerLevel server
-				? ModRecipes.lookup(recipeCheck, server,
-						new ProcessingRecipeInput(items.get(RAW_RUBBER_SLOT), items.get(SULFUR_SLOT)))
+				? ModRecipes.lookup(recipeCheck, server, input)
 				: null;
 		heatSource = WorldHeatSources.resolve(level, pos);
 		resetCycleForHeatChange(heatSource);
@@ -79,7 +80,10 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity implements M
 		int outputLevel = cycleHeatLevel > 0 ? cycleHeatLevel : heatSource.level();
 		ItemStack result = scaledResult(recipe.resultStack(), outputLevel);
 		boolean heatEnough = heatSource.level() > 0;
-		boolean canWork = heatEnough && energy.amount >= euPerTick && canOutput(result);
+		// The batch price (MOD-271: four sulfur dust) must be on hand every tick, not just at the
+		// start — pulling dust out mid-cycle stops the run instead of completing it underpaid.
+		boolean canWork = heatEnough && recipe.hasEnough(input)
+				&& energy.amount >= euPerTick && canOutput(result);
 
 		if (canWork && !WorldHeatSources.consumeForProgress(level, pos, heatSource)) {
 			canWork = false;
@@ -99,8 +103,7 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity implements M
 		energy.amount -= euPerTick;
 		progress++;
 		if (progress >= maxProgress) {
-			items.get(RAW_RUBBER_SLOT).shrink(1);
-			items.get(SULFUR_SLOT).shrink(1);
+			recipe.consume(List.of(items.get(RAW_RUBBER_SLOT), items.get(SULFUR_SLOT)));
 			addOutput(result);
 			progress = 0;
 			cycleHeatLevel = 0;
@@ -111,10 +114,14 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity implements M
 	}
 
 	private VulcanizerStatus diagnose(AlaProcessingRecipe recipe, ItemStack result) {
-		if (items.get(RAW_RUBBER_SLOT).isEmpty()) {
+		// With a recipe in hand the shortfall is measured against its own per-input price, so half a
+		// batch of sulfur reads as "need sulfur dust" rather than "no matching recipe".
+		int rubberNeeded = recipe != null ? recipe.inputCount(RAW_RUBBER_SLOT) : 1;
+		int sulfurNeeded = recipe != null ? recipe.inputCount(SULFUR_SLOT) : 1;
+		if (items.get(RAW_RUBBER_SLOT).getCount() < rubberNeeded) {
 			return VulcanizerStatus.NO_RAW_RUBBER;
 		}
-		if (items.get(SULFUR_SLOT).isEmpty()) {
+		if (items.get(SULFUR_SLOT).getCount() < sulfurNeeded) {
 			return VulcanizerStatus.NO_SULFUR;
 		}
 		if (recipe == null) {

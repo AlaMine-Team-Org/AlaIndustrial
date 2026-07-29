@@ -473,7 +473,6 @@
 	"gui.alaindustrial.vulcanizer.status.no_recipe": "Inget passande recept",
 	"gui.alaindustrial.vulcanizer.status.no_sulfur": "Svaveldamm krävs",
 	"gui.alaindustrial.vulcanizer.status.output_blocked": "Utgången är blockerad",
-	"gui.alaindustrial.vulcanizer.status.ready": "Redo",
 	"gui.alaindustrial.incubator.mode.transform": "Transformation",
 	"gui.alaindustrial.incubator.mode.duplicate": "Duplikation",
 	"gui.alaindustrial.incubator.mode.create": "Skapelse",

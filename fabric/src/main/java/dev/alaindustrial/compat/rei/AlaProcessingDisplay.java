@@ -5,14 +5,17 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.registry.ModRecipes;
+import java.util.ArrayList;
 import java.util.List;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.DisplaySerializer;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
+import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * REI display for one {@link AlaProcessingRecipe} (macerator / electric furnace / compressor /
@@ -32,9 +35,28 @@ public class AlaProcessingDisplay extends BasicDisplay {
 
 	/** Build a display from a live recipe (the common case, used by the server-side filler). */
 	public AlaProcessingDisplay(AlaProcessingRecipe recipe) {
-		this(EntryIngredients.ofIngredients(recipe.ingredients()),
+		this(inputsOf(recipe),
 				List.of(EntryIngredients.of(recipe.result())),
 				recipe.kind(), recipe.energy(), recipe.chance());
+	}
+
+	/**
+	 * Inputs with their per-operation counts (MOD-271). REI's {@code ofIngredients} builds one-item
+	 * stacks, which would understate a recipe that eats four of something — the viewer must show the
+	 * price the machine actually charges. Recipes consuming one of each keep the plain REI path.
+	 */
+	private static List<EntryIngredient> inputsOf(AlaProcessingRecipe recipe) {
+		if (recipe.consumesOneEach()) {
+			return EntryIngredients.ofIngredients(recipe.ingredients());
+		}
+		List<EntryIngredient> inputs = new ArrayList<>(recipe.ingredients().size());
+		for (int i = 0; i < recipe.ingredients().size(); i++) {
+			int count = recipe.inputCount(i);
+			inputs.add(EntryIngredient.of(recipe.ingredients().get(i).items()
+					.map(holder -> EntryStacks.of(new ItemStack(holder, count)))
+					.toList()));
+		}
+		return inputs;
 	}
 
 	private AlaProcessingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs,

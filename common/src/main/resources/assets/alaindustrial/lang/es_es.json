@@ -473,7 +473,6 @@
 	"gui.alaindustrial.vulcanizer.status.no_recipe": "No hay receta compatible",
 	"gui.alaindustrial.vulcanizer.status.no_sulfur": "Necesita polvo de azufre",
 	"gui.alaindustrial.vulcanizer.status.output_blocked": "Salida bloqueada",
-	"gui.alaindustrial.vulcanizer.status.ready": "Listo",
 	"gui.alaindustrial.incubator.mode.transform": "Transformación",
 	"gui.alaindustrial.incubator.mode.duplicate": "Duplicación",
 	"gui.alaindustrial.incubator.mode.create": "Creación",

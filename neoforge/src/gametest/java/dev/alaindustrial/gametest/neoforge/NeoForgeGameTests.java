@@ -754,6 +754,8 @@ public final class NeoForgeGameTests {
 				VulcanizerScenarios::neg02NoPowerNoWork);
 		registerTest(event, "vulcanizer_inactive_heat_sources_resolve_as_none", 40, true,
 				VulcanizerScenarios::neg03InactiveHeatSourcesResolveAsNone);
+		registerTest(event, "vulcanizer_partial_sulfur_batch_does_not_work", 300, true,
+				VulcanizerScenarios::neg04PartialSulfurBatchDoesNotWork);
 		registerTest(event, "vulcanizer_output_jam_freezes_both_consumers", 40, true,
 				VulcanizerScenarios::con01OutputJamFreezesBothConsumers);
 		registerTest(event, "vulcanizer_heater_is_demand_driven", 40, true,

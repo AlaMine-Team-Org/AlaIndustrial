@@ -473,7 +473,6 @@
 	"gui.alaindustrial.vulcanizer.status.no_recipe": "맞는 제작법이 없습니다",
 	"gui.alaindustrial.vulcanizer.status.no_sulfur": "황 가루가 필요합니다",
 	"gui.alaindustrial.vulcanizer.status.output_blocked": "출력이 막혔습니다",
-	"gui.alaindustrial.vulcanizer.status.ready": "준비됨",
 	"gui.alaindustrial.incubator.mode.transform": "변환",
 	"gui.alaindustrial.incubator.mode.duplicate": "복제",
 	"gui.alaindustrial.incubator.mode.create": "생성",

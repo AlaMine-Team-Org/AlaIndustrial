@@ -5,6 +5,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
+import dev.alaindustrial.block.entity.VulcanizerStatus;
 import dev.alaindustrial.core.heat.HeatSource;
 import dev.alaindustrial.core.heat.WorldHeatSources;
 import dev.alaindustrial.registry.ModContent;
@@ -45,9 +46,28 @@ public final class VulcanizerScenarios {
 		return be;
 	}
 
-	private static void stock(VulcanizerBlockEntity be, int count) {
-		be.setItem(VulcanizerBlockEntity.RAW_RUBBER_SLOT, new ItemStack(ModContent.RAW_RUBBER.get(), count));
-		be.setItem(VulcanizerBlockEntity.SULFUR_SLOT, new ItemStack(ModContent.SULFUR_DUST.get(), count));
+	/**
+	 * Per-operation input price from {@code recipe/vulcanizing/rubber.json} (MOD-271). The scenarios
+	 * stock and assert in whole operations, so a future re-balance of the sulfur cost lands here and
+	 * not in a dozen literals.
+	 */
+	private static final int RAW_RUBBER_PER_OPERATION = 1;
+	private static final int SULFUR_PER_OPERATION = 4;
+
+	/** Load the machine with exactly {@code operations} batches worth of both inputs. */
+	private static void stock(VulcanizerBlockEntity be, int operations) {
+		be.setItem(VulcanizerBlockEntity.RAW_RUBBER_SLOT,
+				new ItemStack(ModContent.RAW_RUBBER.get(), operations * RAW_RUBBER_PER_OPERATION));
+		be.setItem(VulcanizerBlockEntity.SULFUR_SLOT,
+				new ItemStack(ModContent.SULFUR_DUST.get(), operations * SULFUR_PER_OPERATION));
+	}
+
+	/** True when the two input slots hold exactly {@code operations} batches worth. */
+	private static boolean holdsOperations(VulcanizerBlockEntity be, int operations) {
+		return be.getItem(VulcanizerBlockEntity.RAW_RUBBER_SLOT).getCount()
+						== operations * RAW_RUBBER_PER_OPERATION
+				&& be.getItem(VulcanizerBlockEntity.SULFUR_SLOT).getCount()
+						== operations * SULFUR_PER_OPERATION;
 	}
 
 	private static int operationTicks() {
@@ -102,9 +122,8 @@ public final class VulcanizerScenarios {
 			drive(be, helper, operationTicks());
 
 			assertOutput(helper, be, expected);
-			if (be.getItem(VulcanizerBlockEntity.RAW_RUBBER_SLOT).getCount() != 1
-					|| be.getItem(VulcanizerBlockEntity.SULFUR_SLOT).getCount() != 1) {
-				helper.fail("heat x" + expected + " must consume exactly one raw rubber and one sulfur");
+			if (!holdsOperations(be, 1)) {
+				helper.fail("heat x" + expected + " must consume exactly one operation's inputs");
 				return;
 			}
 		}
@@ -162,8 +181,7 @@ public final class VulcanizerScenarios {
 		drive(be, helper, 3);
 
 		if (be.getDataAccess().get(2) != 0 || be.getEnergyStorage().getAmount() != AMPLE_EU
-				|| be.getItem(VulcanizerBlockEntity.RAW_RUBBER_SLOT).getCount() != 1
-				|| be.getItem(VulcanizerBlockEntity.SULFUR_SLOT).getCount() != 1) {
+				|| !holdsOperations(be, 1)) {
 			helper.fail("unheated vulcanizer changed progress, energy or inputs");
 			return;
 		}
@@ -179,8 +197,7 @@ public final class VulcanizerScenarios {
 		drive(be, helper, operationTicks());
 
 		if (be.getDataAccess().get(2) != 0 || !be.getItem(VulcanizerBlockEntity.OUTPUT_SLOT).isEmpty()
-				|| be.getItem(VulcanizerBlockEntity.RAW_RUBBER_SLOT).getCount() != 1
-				|| be.getItem(VulcanizerBlockEntity.SULFUR_SLOT).getCount() != 1) {
+				|| !holdsOperations(be, 1)) {
 			helper.fail("unpowered vulcanizer progressed, produced, or consumed inputs");
 			return;
 		}
@@ -300,6 +317,43 @@ public final class VulcanizerScenarios {
 		helper.succeed();
 	}
 
+	/**
+	 * A partial sulfur batch buys nothing (MOD-271). With heat, EU and raw rubber all present but one
+	 * dust short of the recipe price, the machine must sit still and name the shortfall — the failure
+	 * this guards against is a cycle that runs to completion and then quietly underpays, or a status
+	 * line that blames a missing recipe when the recipe is right there.
+	 */
+	public static void neg04PartialSulfurBatchDoesNotWork(GameTestHelper helper) {
+		passiveHeat(helper, Blocks.CAMPFIRE);
+		VulcanizerBlockEntity be = placeMachine(helper);
+		be.getEnergyStorage().amount = AMPLE_EU;
+		be.setItem(VulcanizerBlockEntity.RAW_RUBBER_SLOT,
+				new ItemStack(ModContent.RAW_RUBBER.get(), RAW_RUBBER_PER_OPERATION));
+		be.setItem(VulcanizerBlockEntity.SULFUR_SLOT,
+				new ItemStack(ModContent.SULFUR_DUST.get(), SULFUR_PER_OPERATION - 1));
+
+		drive(be, helper, operationTicks());
+
+		if (!be.getItem(VulcanizerBlockEntity.OUTPUT_SLOT).isEmpty()) {
+			helper.fail("a short sulfur batch still produced rubber");
+			return;
+		}
+		if (be.getDataAccess().get(2) != 0 || be.getEnergyStorage().getAmount() != AMPLE_EU) {
+			helper.fail("a short sulfur batch moved progress or spent EU");
+			return;
+		}
+		if (be.getItem(VulcanizerBlockEntity.RAW_RUBBER_SLOT).getCount() != RAW_RUBBER_PER_OPERATION
+				|| be.getItem(VulcanizerBlockEntity.SULFUR_SLOT).getCount() != SULFUR_PER_OPERATION - 1) {
+			helper.fail("a short sulfur batch consumed inputs");
+			return;
+		}
+		if (be.status() != VulcanizerStatus.NO_SULFUR) {
+			helper.fail("expected status NO_SULFUR for a short batch, got " + be.status());
+			return;
+		}
+		helper.succeed();
+	}
+
 	/** Both input slots have strict predicates and the bottom face is entirely reserved for heat. */
 	public static void reg02AutomationKeepsInputsSeparated(GameTestHelper helper) {
 		VulcanizerBlockEntity be = placeMachine(helper);
@@ -344,8 +398,7 @@ public final class VulcanizerScenarios {
 
 		if (restored.getEnergyStorage().getAmount() != 321L - Config.machineEuPerTickEffective()
 				|| restored.getDataAccess().get(2) != 1 || restored.cycleHeatLevel() != 1
-				|| restored.getItem(VulcanizerBlockEntity.RAW_RUBBER_SLOT).getCount() != 3
-				|| restored.getItem(VulcanizerBlockEntity.SULFUR_SLOT).getCount() != 3) {
+				|| !holdsOperations(restored, 3)) {
 			helper.fail("in-flight vulcanizer cycle did not round-trip");
 			return;
 		}

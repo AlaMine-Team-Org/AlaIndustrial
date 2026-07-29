@@ -31,6 +31,11 @@ public class VulcanizerGameTest {
 		VulcanizerScenarios.neg03InactiveHeatSourcesResolveAsNone(helper);
 	}
 
+	@GameTest(maxTicks = 300)
+	public void tcVulc001Neg04_partialSulfurBatchDoesNotWork(GameTestHelper helper) {
+		VulcanizerScenarios.neg04PartialSulfurBatchDoesNotWork(helper);
+	}
+
 	@GameTest
 	public void tcVulc001Con01_outputJamFreezesBothConsumers(GameTestHelper helper) {
 		VulcanizerScenarios.con01OutputJamFreezesBothConsumers(helper);

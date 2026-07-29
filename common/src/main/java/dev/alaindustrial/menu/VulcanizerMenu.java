@@ -30,19 +30,19 @@ public final class VulcanizerMenu extends MachineMenu {
 	@Override
 	protected void addMachineSlots() {
 		Container container = machine;
-		addSlot(new Slot(container, VulcanizerBlockEntity.RAW_RUBBER_SLOT, 45, 26) {
+		addSlot(new Slot(container, VulcanizerBlockEntity.RAW_RUBBER_SLOT, 46, 19) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return stack.is(ModContent.RAW_RUBBER.get());
 			}
 		});
-		addSlot(new Slot(container, VulcanizerBlockEntity.SULFUR_SLOT, 45, 49) {
+		addSlot(new Slot(container, VulcanizerBlockEntity.SULFUR_SLOT, 46, 42) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return stack.is(ModContent.SULFUR_DUST.get());
 			}
 		});
-		addSlot(new Slot(container, VulcanizerBlockEntity.OUTPUT_SLOT, 119, 35) {
+		addSlot(new Slot(container, VulcanizerBlockEntity.OUTPUT_SLOT, 120, 28) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return false;

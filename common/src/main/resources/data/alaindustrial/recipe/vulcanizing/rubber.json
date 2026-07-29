@@ -4,6 +4,10 @@
     "alaindustrial:raw_rubber",
     "alaindustrial:sulfur_dust"
   ],
+  "input_counts": [
+    1,
+    4
+  ],
   "result": {
     "id": "alaindustrial:rubber",
     "count": 1

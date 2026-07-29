@@ -5,6 +5,7 @@ import dev.alaindustrial.client.compat.RecipeViewerLayout;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import java.util.List;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -15,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Block;
 
@@ -63,9 +65,18 @@ final class AlaProcessingJeiCategory implements IRecipeCategory<RecipeHolder<Ala
 		AlaProcessingRecipe recipe = holder.value();
 		List<Integer> inputXs = RecipeViewerLayout.inputXs(recipe.ingredients().size());
 		for (int i = 0; i < inputXs.size(); i++) {
-			builder.addInputSlot(inputXs.get(i), RecipeViewerLayout.SLOT_Y)
-					.setStandardSlotBackground()
-					.add(recipe.ingredients().get(i));
+			IRecipeSlotBuilder slot = builder.addInputSlot(inputXs.get(i), RecipeViewerLayout.SLOT_Y)
+					.setStandardSlotBackground();
+			int count = recipe.inputCount(i);
+			if (count == 1) {
+				slot.add(recipe.ingredients().get(i));
+			} else {
+				// MOD-271: an ingredient carries no count, so a four-dust recipe would read as one dust.
+				// Feed the slot explicit stacks instead — the viewer must quote the machine's real price.
+				slot.addItemStacks(recipe.ingredients().get(i).items()
+						.map(item -> new ItemStack(item, count))
+						.toList());
+			}
 		}
 		builder.addOutputSlot(RecipeViewerLayout.outputXs(1).getFirst(), RecipeViewerLayout.SLOT_Y)
 				.setOutputSlotBackground()

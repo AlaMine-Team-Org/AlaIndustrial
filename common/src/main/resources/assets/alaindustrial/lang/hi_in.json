@@ -469,7 +469,6 @@
 	"gui.alaindustrial.vulcanizer.status.no_recipe": "कोई उपयुक्त विधि नहीं",
 	"gui.alaindustrial.vulcanizer.status.no_sulfur": "गंधक का चूर्ण चाहिए",
 	"gui.alaindustrial.vulcanizer.status.output_blocked": "आउटपुट भरा है",
-	"gui.alaindustrial.vulcanizer.status.ready": "तैयार",
 	"advancements.alaindustrial.first_oil.title": "काला सोना",
 	"advancements.alaindustrial.first_oil.description": "कच्चे तेल की झील से एक बाल्टी भरें",
 	"advancements.alaindustrial.rubber_production.title": "रबर उत्पादन",

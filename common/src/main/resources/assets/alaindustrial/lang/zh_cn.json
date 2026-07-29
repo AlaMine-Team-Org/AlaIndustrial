@@ -473,7 +473,6 @@
 	"gui.alaindustrial.vulcanizer.status.no_recipe": "没有匹配的配方",
 	"gui.alaindustrial.vulcanizer.status.no_sulfur": "需要硫磺粉",
 	"gui.alaindustrial.vulcanizer.status.output_blocked": "输出已堵塞",
-	"gui.alaindustrial.vulcanizer.status.ready": "就绪",
 	"gui.alaindustrial.incubator.mode.transform": "转化",
 	"gui.alaindustrial.incubator.mode.duplicate": "复制",
 	"gui.alaindustrial.incubator.mode.create": "创造",

@@ -473,7 +473,6 @@
 	"gui.alaindustrial.vulcanizer.status.no_recipe": "Aucune recette compatible",
 	"gui.alaindustrial.vulcanizer.status.no_sulfur": "Poudre de soufre requise",
 	"gui.alaindustrial.vulcanizer.status.output_blocked": "Sortie bloquée",
-	"gui.alaindustrial.vulcanizer.status.ready": "Prêt",
 	"gui.alaindustrial.incubator.mode.transform": "Transformation",
 	"gui.alaindustrial.incubator.mode.duplicate": "Duplication",
 	"gui.alaindustrial.incubator.mode.create": "Création",
