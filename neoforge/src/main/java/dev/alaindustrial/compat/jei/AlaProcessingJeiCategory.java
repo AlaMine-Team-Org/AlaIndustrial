@@ -1,8 +1,9 @@
 package dev.alaindustrial.compat.jei;
 
 import dev.alaindustrial.block.entity.IncubatorMode;
+import dev.alaindustrial.client.compat.RecipeViewerLayout;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
-import java.util.Locale;
+import java.util.List;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -18,9 +19,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Block;
 
 final class AlaProcessingJeiCategory implements IRecipeCategory<RecipeHolder<AlaProcessingRecipe>> {
-	private static final int WIDTH = 116;
-	private static final int HEIGHT = 48;
-
 	private final IRecipeHolderType<AlaProcessingRecipe> recipeType;
 	private final Component title;
 	private final IDrawable icon;
@@ -47,12 +45,12 @@ final class AlaProcessingJeiCategory implements IRecipeCategory<RecipeHolder<Ala
 
 	@Override
 	public int getWidth() {
-		return WIDTH;
+		return RecipeViewerLayout.WIDTH;
 	}
 
 	@Override
 	public int getHeight() {
-		return HEIGHT;
+		return RecipeViewerLayout.HEIGHT;
 	}
 
 	@Override
@@ -63,21 +61,30 @@ final class AlaProcessingJeiCategory implements IRecipeCategory<RecipeHolder<Ala
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<AlaProcessingRecipe> holder, IFocusGroup focuses) {
 		AlaProcessingRecipe recipe = holder.value();
-		builder.addInputSlot(21, 6).setStandardSlotBackground().add(recipe.ingredient());
-		builder.addOutputSlot(78, 6).setOutputSlotBackground().add(recipe.result());
+		List<Integer> inputXs = RecipeViewerLayout.inputXs(recipe.ingredients().size());
+		for (int i = 0; i < inputXs.size(); i++) {
+			builder.addInputSlot(inputXs.get(i), RecipeViewerLayout.SLOT_Y)
+					.setStandardSlotBackground()
+					.add(recipe.ingredients().get(i));
+		}
+		builder.addOutputSlot(RecipeViewerLayout.outputXs(1).getFirst(), RecipeViewerLayout.SLOT_Y)
+				.setOutputSlotBackground()
+				.add(recipe.result());
 	}
 
 	@Override
 	public void draw(RecipeHolder<AlaProcessingRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
 			double mouseX, double mouseY) {
 		AlaProcessingRecipe recipe = holder.value();
-		arrow.draw(graphics, 47, 7);
+		arrow.draw(graphics, RecipeViewerLayout.ARROW_X, RecipeViewerLayout.ARROW_Y);
 		// The chance suffix only appears where the operation is a gamble (the incubator); without it a
 		// duplicate recipe reads as a guaranteed doubling. Symbols, so no lang key — as with EU and s.
-		String cost = recipe.energy() + " EU / " + formatSeconds(processingTicks(recipe))
-				+ formatChance(IncubatorMode.chanceOf(recipe.kind(), recipe.chance()));
-		int x = (WIDTH - Minecraft.getInstance().font.width(cost)) / 2;
-		graphics.text(Minecraft.getInstance().font, Component.literal(cost), x, 34, 0xFF404040, false);
+		String cost = RecipeViewerLayout.withChance(
+				RecipeViewerLayout.costLabel(recipe.energy(), processingTicks(recipe)),
+				IncubatorMode.chanceOf(recipe.kind(), recipe.chance()));
+		int x = (RecipeViewerLayout.WIDTH - Minecraft.getInstance().font.width(cost)) / 2;
+		graphics.text(Minecraft.getInstance().font, Component.literal(cost), x,
+				RecipeViewerLayout.LABEL_Y, 0xFF404040, false);
 	}
 
 	@Override
@@ -93,19 +100,4 @@ final class AlaProcessingJeiCategory implements IRecipeCategory<RecipeHolder<Ala
 		return recipe.kind().ticksFor(recipe.energy());
 	}
 
-	/** Chance → " / 45 %", or nothing at all for the machines that always deliver. */
-	private static String formatChance(double chance) {
-		if (chance <= 0.0) {
-			return "";
-		}
-		return " / " + Math.round(chance * 100.0) + " %";
-	}
-
-	private static String formatSeconds(int ticks) {
-		String seconds = String.format(Locale.ROOT, "%.1f", ticks / 20.0);
-		if (seconds.endsWith(".0")) {
-			seconds = seconds.substring(0, seconds.length() - 2);
-		}
-		return seconds + " s";
-	}
 }

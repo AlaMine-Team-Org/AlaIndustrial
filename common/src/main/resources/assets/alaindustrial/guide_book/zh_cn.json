@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "它会变成什么",
-              "text": "石油是橡胶产业链的起点。\n\n1. 收集它——用桶、真空胶囊或抽水泵\n2. 聚合机：1000 mB 石油加 400 EU 产出生橡胶\n3. 熔炉或电力熔炉：生橡胶烧制成橡胶\n\n橡胶目前还没有任何用途——它的使用者，绝缘线缆和 MV 组件，会随下一阶段到来。先囤起来吧。"
+              "text": "石油是橡胶产业链的起点。\n\n1. 用桶、真空胶囊或泵收集石油\n2. 聚合机：1000 mB 石油加 400 EU 产出生橡胶\n3. 硫化机：生橡胶 + 硫磺粉 + 400 EU\n4. 在下方放置营火（×1）、熔岩/岩浆（×2）或电热器（×3）\n\n更好的热源可以节省材料：每次操作始终只消耗一个生橡胶和一份硫磺粉。"
             }
           ]
         }
@@ -384,15 +384,14 @@
             {
               "type": "text",
               "title": "金缆",
-              "text": "MV 电缆——比铜宽四倍但损耗更大：近处是粗管，远处则像细管。"
+              "text": "宽大的裸露 MV 电缆，损耗很高；在电流实际流动时触碰会遭到强烈电击。"
             },
             {
               "type": "stats",
               "title": "属性",
               "lines": [
                 "能量：≤128 EU/包",
-                "缓冲：48 EU",
-                "损耗：0.03/方块"
+                "缓冲：48 EU"
               ]
             },
             {
@@ -416,6 +415,123 @@
           ]
         },
         {
+          "id": "insulated_gold_cable",
+          "title": "绝缘金缆",
+          "icon": "alaindustrial:insulated_gold_cable",
+          "block_id": "alaindustrial:insulated_gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "绝缘金缆",
+              "text": "包覆橡胶的 MV 金缆——损耗减半，且完全不会因触碰而电击。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：≤128 EU/包",
+                "缓冲：48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable"
+              ],
+              "result_id": "alaindustrial:insulated_gold_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "绝缘铜缆",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "绝缘铜缆",
+              "text": "包覆橡胶的 LV 铜缆——损耗减半，且完全不会因触碰而电击。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：≤32 EU/包",
+                "缓冲：12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:insulated_copper_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "绝缘锡缆",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "绝缘锡缆",
+              "text": "包覆橡胶的 LV 锡缆——损耗极低，且完全不会因触碰而电击。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：≤8 EU/包",
+                "缓冲：8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable"
+              ],
+              "result_id": "alaindustrial:insulated_tin_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "铜缆",
           "icon": "alaindustrial:copper_cable",
@@ -424,15 +540,14 @@
             {
               "type": "text",
               "title": "铜缆",
-              "text": "廉价耐用的 LV 电缆，适用于早期电网——将太阳能板、储能库和机器连成一条线路。"
+              "text": "廉价耐用的 LV 电缆；在电流实际流动时，裸露的导线会电击触碰它的玩家。"
             },
             {
               "type": "stats",
               "title": "属性",
               "lines": [
                 "能量：≤32 EU/包",
-                "缓冲：12 EU",
-                "损耗：0.02/方块"
+                "缓冲：12 EU"
               ]
             },
             {
@@ -464,15 +579,14 @@
             {
               "type": "text",
               "title": "锡缆",
-              "text": "最便宜的 LV 电缆——细但几乎无损耗，非常适合太阳能农场。"
+              "text": "最便宜、几乎无损耗的 LV 电缆；在电流实际流动时，裸露的导线会电击触碰它的玩家。"
             },
             {
               "type": "stats",
               "title": "属性",
               "lines": [
                 "能量：≤8 EU/包",
-                "缓冲：8 EU",
-                "损耗：0.006/方块"
+                "缓冲：8 EU"
               ]
             },
             {
@@ -500,8 +614,47 @@
     {
       "id": "processing",
       "title": "加工",
-      "icon": "alaindustrial:macerator",
+      "icon": "alaindustrial:vulcanizer",
       "entries": [
+        {
+          "id": "vulcanizer",
+          "title": "硫化机",
+          "icon": "alaindustrial:vulcanizer",
+          "block_id": "alaindustrial:vulcanizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "硫化机",
+              "text": "一种将生橡胶与硫磺粉结合制成橡胶的 LV 机器。它需要 EU 和来自下方的热量；热源越强，产量越高。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：400 EU/次",
+                "缓冲：800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:vulcanizer",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "macerator",
           "title": "粉碎机",
@@ -659,7 +812,7 @@
             {
               "type": "text",
               "title": "聚合机",
-              "text": "把石油熬煮成生橡胶——储罐容量 10 桶，每次操作消耗 1 桶。生橡胶再放进熔炉烧制，即可得到橡胶。"
+              "text": "把石油熬煮成生橡胶——储罐容量 10 桶，每次操作消耗 1 桶。之后在硫化机中将橡胶与硫磺结合。"
             },
             {
               "type": "stats",
@@ -724,6 +877,45 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_heater",
+          "title": "电热器",
+          "icon": "alaindustrial:electric_heater",
+          "block_id": "alaindustrial:electric_heater",
+          "pages": [
+            {
+              "type": "text",
+              "title": "电热器",
+              "text": "一种无界面的 LV 辅助方块，为硫化机提供最高 ×3 热量。只有上方机器实际工作时才消耗 EU。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：2 EU/t",
+                "缓冲：800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:redstone",
+                "minecraft:gold_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electric_heater",
               "result_count": 1
             }
           ]
@@ -1034,6 +1226,19 @@
           ]
         },
         {
+          "id": "sulfur_ore",
+          "title": "硫磺矿石",
+          "icon": "alaindustrial:sulfur_ore",
+          "block_id": "alaindustrial:sulfur_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "硫磺矿石",
+              "text": "天然硫磺——一种可开采的非金属，可加工成粉末用于橡胶硫化。"
+            }
+          ]
+        },
+        {
           "id": "uranium_ore",
           "title": "铀矿石",
           "icon": "alaindustrial:uranium_ore",
@@ -1042,7 +1247,7 @@
             {
               "type": "text",
               "title": "铀矿石",
-              "text": "本模组最稀有的矿石——用铁镐开采，加工成粉末和锭；为未来的核能机器预留。"
+              "text": "模组中最稀有的矿石——用铁镐开采并加工成粉末和锭；目前已用于火把、传送器和孵化器，未来还会用于核能机器。"
             }
           ]
         },
@@ -1515,6 +1720,37 @@
           ]
         },
         {
+          "id": "windmill_rotor",
+          "title": "木质转子",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "木质转子",
+              "text": "风力涡轮机的叶片——放入任意 T1/T2 风车的转子槽；没有它则无法发电。发电时会磨损。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "回火铁",
           "icon": "alaindustrial:tempered_iron",
@@ -1678,38 +1914,7 @@
             {
               "type": "text",
               "title": "橡胶",
-              "text": "由石油制成的材料——聚合机将石油炼成生橡胶，熔炉再将其烧制成橡胶。是未来绝缘线缆与 MV 组件的基础。"
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "木质转子",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "木质转子",
-              "text": "风力涡轮机的叶片——放入任意 T1/T2 风车的转子槽；没有它则无法发电。发电时会磨损。"
-            },
-            {
-              "type": "recipe",
-              "title": "配方",
-              "recipe_type": "有序合成",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
+              "text": "由石油和硫磺制成的材料——聚合机生产生橡胶，再由加热的硫化机将其制成橡胶。"
             }
           ]
         },

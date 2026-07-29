@@ -8,6 +8,8 @@ import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
+import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
+import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
@@ -70,6 +72,8 @@ public final class ModBlockEntities {
 	public static BlockEntityType<CompressorBlockEntity> COMPRESSOR;
 	public static BlockEntityType<SawmillBlockEntity> SAWMILL;
 	public static BlockEntityType<PolymerizerBlockEntity> POLYMERIZER;
+	public static BlockEntityType<VulcanizerBlockEntity> VULCANIZER;
+	public static BlockEntityType<ElectricHeaterBlockEntity> ELECTRIC_HEATER;
 	public static BlockEntityType<IncubatorBlockEntity> INCUBATOR;
 	public static BlockEntityType<PumpBlockEntity> PUMP;
 	public static BlockEntityType<FluidTankBlockEntity> FLUID_TANK;
@@ -98,7 +102,8 @@ public final class ModBlockEntities {
 		COPPER_CABLE = register("copper_cable",
 				new BlockEntityType<>(CableBlockEntity::new, Set.of(ModBlocks.COPPER_CABLE,
 						ModBlocks.TIN_CABLE, ModBlocks.GOLD_CABLE,
-						ModBlocks.INSULATED_COPPER_CABLE, ModBlocks.INSULATED_TIN_CABLE)));
+						ModBlocks.INSULATED_COPPER_CABLE, ModBlocks.INSULATED_TIN_CABLE,
+						ModBlocks.INSULATED_GOLD_CABLE)));
 		ITEM_PIPE = register("item_pipe", new BlockEntityType<>(ItemPipeBlockEntity::new, Set.of(ModBlocks.ITEM_PIPE)));
 		MACERATOR = register("macerator",
 				new BlockEntityType<>(MaceratorBlockEntity::new, Set.of(ModBlocks.MACERATOR)));
@@ -118,6 +123,10 @@ public final class ModBlockEntities {
 				new BlockEntityType<>(SawmillBlockEntity::new, Set.of(ModBlocks.SAWMILL)));
 		POLYMERIZER = register("polymerizer",
 				new BlockEntityType<>(PolymerizerBlockEntity::new, Set.of(ModBlocks.POLYMERIZER)));
+		VULCANIZER = register("vulcanizer",
+				new BlockEntityType<>(VulcanizerBlockEntity::new, Set.of(ModBlocks.VULCANIZER)));
+		ELECTRIC_HEATER = register("electric_heater",
+				new BlockEntityType<>(ElectricHeaterBlockEntity::new, Set.of(ModBlocks.ELECTRIC_HEATER)));
 		INCUBATOR = register("incubator",
 				new BlockEntityType<>(IncubatorBlockEntity::new, Set.of(ModBlocks.INCUBATOR)));
 		PUMP = register("pump",
@@ -162,6 +171,8 @@ public final class ModBlockEntities {
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),SAWMILL);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),INCUBATOR);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),POLYMERIZER);
+			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),VULCANIZER);
+			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ELECTRIC_HEATER);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),PUMP);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),WATER_MILL);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),WIND_MILL);
@@ -187,6 +198,8 @@ public final class ModBlockEntities {
 		ModContent.COMPRESSOR_BE = () -> COMPRESSOR;
 		ModContent.SAWMILL_BE = () -> SAWMILL;
 		ModContent.POLYMERIZER_BE = () -> POLYMERIZER;
+		ModContent.VULCANIZER_BE = () -> VULCANIZER;
+		ModContent.ELECTRIC_HEATER_BE = () -> ELECTRIC_HEATER;
 		ModContent.INCUBATOR_BE = () -> INCUBATOR;
 		ModContent.PUMP_BE = () -> PUMP;
 		ModContent.FLUID_TANK_BE = () -> FLUID_TANK;

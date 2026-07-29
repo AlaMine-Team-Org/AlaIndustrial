@@ -32,7 +32,7 @@ public class AlaProcessingDisplay extends BasicDisplay {
 
 	/** Build a display from a live recipe (the common case, used by the server-side filler). */
 	public AlaProcessingDisplay(AlaProcessingRecipe recipe) {
-		this(List.of(EntryIngredients.ofIngredient(recipe.ingredient())),
+		this(EntryIngredients.ofIngredients(recipe.ingredients()),
 				List.of(EntryIngredients.of(recipe.result())),
 				recipe.kind(), recipe.energy(), recipe.chance());
 	}

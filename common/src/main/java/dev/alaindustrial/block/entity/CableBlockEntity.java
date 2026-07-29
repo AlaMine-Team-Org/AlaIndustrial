@@ -1,5 +1,6 @@
 package dev.alaindustrial.block.entity;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.EnergyTier;
@@ -8,6 +9,8 @@ import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
@@ -15,6 +18,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * LV copper cable: a transport segment of a logical {@link dev.alaindustrial.core.energy.EnergyNetwork}.
@@ -25,6 +32,9 @@ import net.minecraft.world.level.storage.ValueOutput;
  * (tier packetCap per consumer), not an EU-destroying toll — see MOD-009.
  */
 public class CableBlockEntity extends MachineBlockEntity {
+	/** Game tick of the most recent committed energy transfer; transient by design. */
+	private long lastEnergyTransferTick = Long.MIN_VALUE;
+
 	/** Whether this cable has been registered with its level's {@link NetworkManager}. */
 	private boolean registered;
 
@@ -107,6 +117,27 @@ public class CableBlockEntity extends MachineBlockEntity {
 		return CableBlock.typeOf(getBlockState());
 	}
 
+	@Override
+	protected void onEnergyTransactionCommitted() {
+		super.onEnergyTransactionCommitted();
+		if (level != null) {
+			lastEnergyTransferTick = level.getGameTime();
+		}
+	}
+
+	/**
+	 * Whether energy actually moved through this exact segment on the current or immediately preceding
+	 * server tick. The one-tick grace makes collision order independent while still becoming safe as
+	 * soon as a disconnected line stops moving; retained buffer energy alone never energizes a cable.
+	 */
+	public boolean isEnergizedForShock() {
+		if (level == null || lastEnergyTransferTick == Long.MIN_VALUE) {
+			return false;
+		}
+		long age = level.getGameTime() - lastEnergyTransferTick;
+		return age >= 0 && age <= 1;
+	}
+
 	/** Transport, not a working machine (MOD-133): no owner, no player stats, no per-segment UUID ballast. */
 	@Override
 	public boolean tracksOwner() {
@@ -124,9 +155,80 @@ public class CableBlockEntity extends MachineBlockEntity {
 		// on neighbourChanged, not on chunk load, so without this a cable that was laid against a
 		// machine's front face before MOD-061 would keep drawing the misleading arm forever.
 		validateShape(level, pos, state);
+		shockNearbyPlayers(level, pos, state);
 		// Transport is owned by the network tick, not the cable; the per-cable check above is trivial,
 		// so cables stay awake (return 0) rather than manage a sleep timer (R-29).
 		return 0;
+	}
+
+	/**
+	 * Extends the MOD-260 shock hazard beyond direct contact: a survival player standing within
+	 * {@link dev.alaindustrial.Config#bareCableShockProximityRadius} blocks of an energized bare
+	 * segment is shocked even without touching the thin wire model. {@link CableBlock}'s
+	 * {@code entityInside} shape cannot reach past this block's own cell (a vanilla constraint), so
+	 * the extra radius is enforced here instead. Delegates the final eligibility decision to
+	 * {@link CableBlock#tryShockPlayer} so the per-player rules (creative/spectator, invulnerability
+	 * window) stay defined in exactly one place.
+	 *
+	 * <p><b>The cheap constant guards come first, and that ordering is load-bearing.</b> Cables never
+	 * sleep (see {@link #onServerTick}), so this runs for every segment on every tick — a base can hold
+	 * hundreds. Config-off, insulated and de-energized segments therefore return before touching the
+	 * player list at all, which is what keeps MOD-260's shipped "no tick overhead when disabled"
+	 * guarantee true. For the same reason this walks {@link ServerLevel#players()} (a handful of
+	 * entries, no allocation) instead of a broadphase entity query.
+	 *
+	 * <p>A clear-line check keeps the radius honest: without it a cable buried in a wall or floor would
+	 * shock a player on the far side of solid stone, which is neither intuitive nor what the radius is
+	 * for. Occlusion is only tested for players already inside the zone, so the raycast is rare.
+	 */
+	private void shockNearbyPlayers(Level level, BlockPos pos, BlockState state) {
+		double radius = Config.bareCableShockProximityRadius;
+		if (!Config.bareCableShockEnabled || radius <= 0 || !(level instanceof ServerLevel serverLevel)
+				|| !(state.getBlock() instanceof CableBlock cableBlock)
+				|| cableBlock.type().isInsulated() || !isEnergizedForShock()) {
+			return;
+		}
+		for (ServerPlayer player : serverLevel.players()) {
+			if (isWithinShockReach(serverLevel, pos, player)) {
+				cableBlock.tryShockPlayer(serverLevel, pos, player);
+			}
+		}
+	}
+
+	/**
+	 * Whether {@code player} is close enough to the segment at {@code pos} for the proximity hazard, and
+	 * not shielded from it. Side-effect-free and public so both loader GameTest lanes can assert the
+	 * radius and the cover rule directly, the same way {@link CableBlock#shouldShockPlayer} exposes the
+	 * per-player eligibility rules (MOD-269).
+	 *
+	 * <p>Reads {@link Config#bareCableShockProximityRadius} live, so a radius of {@code 0} answers
+	 * {@code false} for everyone — the MOD-260 direct-contact-only behaviour.
+	 */
+	public static boolean isWithinShockReach(ServerLevel level, BlockPos pos, ServerPlayer player) {
+		double radius = Config.bareCableShockProximityRadius;
+		if (radius <= 0) {
+			return false;
+		}
+		return player.getBoundingBox().intersects(new AABB(pos).inflate(radius))
+				&& hasClearContact(level, pos, player);
+	}
+
+	/**
+	 * Whether nothing solid stands between the cable at {@code pos} and {@code player}. A hit on the
+	 * cable's own cell still counts as clear — that is the wire itself, not cover.
+	 *
+	 * <p>The ray is cast <b>from the player toward the cable</b>, not the other way round, and the
+	 * direction is load-bearing. A cable's own core occupies the middle of its cell, so a ray starting
+	 * at {@link Vec3#atCenterOf} begins <em>inside</em> that collider and {@code clip} returns the cable
+	 * itself at zero distance — which this method reads as "clear", making the whole cover check inert
+	 * no matter what stands further along. Starting at the player's centre (open air, since the player
+	 * is standing there) means the first thing the ray meets is genuine cover if any exists, and the
+	 * cable itself otherwise.
+	 */
+	private static boolean hasClearContact(ServerLevel level, BlockPos pos, ServerPlayer player) {
+		BlockHitResult hit = level.clip(new ClipContext(player.getBoundingBox().getCenter(), Vec3.atCenterOf(pos),
+				ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
+		return hit.getType() == HitResult.Type.MISS || hit.getBlockPos().equals(pos);
 	}
 
 	/**

@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.menu.SawmillMenu;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.ProcessingRecipeInput;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -16,7 +17,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -50,7 +50,7 @@ public final class SawmillBlockEntity extends AbstractProcessingMachineBlockEnti
 	public static final int DATA_COUNT = 5;
 
 	// One cached lookup per mode: resolveInput uses the active mode's, canPlaceInput scans all four.
-	private final RecipeManager.CachedCheck<SingleRecipeInput, AlaProcessingRecipe>[] checks = newChecks();
+	private final RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe>[] checks = newChecks();
 
 	private SawmillMode mode = SawmillMode.PLANKS;
 
@@ -86,9 +86,9 @@ public final class SawmillBlockEntity extends AbstractProcessingMachineBlockEnti
 	}
 
 	@SuppressWarnings("unchecked")
-	private static RecipeManager.CachedCheck<SingleRecipeInput, AlaProcessingRecipe>[] newChecks() {
+	private static RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe>[] newChecks() {
 		SawmillMode[] modes = SawmillMode.values();
-		RecipeManager.CachedCheck<SingleRecipeInput, AlaProcessingRecipe>[] result =
+		RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe>[] result =
 				new RecipeManager.CachedCheck[modes.length];
 		for (int i = 0; i < modes.length; i++) {
 			result[i] = checkFor(modes[i].kind());
@@ -114,7 +114,7 @@ public final class SawmillBlockEntity extends AbstractProcessingMachineBlockEnti
 		if (stack.isEmpty() || !(level instanceof ServerLevel sl)) {
 			return false;
 		}
-		for (RecipeManager.CachedCheck<SingleRecipeInput, AlaProcessingRecipe> check : checks) {
+		for (RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe> check : checks) {
 			if (lookupKind(check, sl, stack) != null) {
 				return true;
 			}

@@ -189,8 +189,12 @@ public final class Config {
 	// --- Storage / per-block buffers (EU) ---
 	public static int batteryBoxBuffer = 20_000;
 	public static int maceratorBuffer = 800;
-	/** Shared buffer for electric furnace / compressor / extractor. */
+	/** Shared buffer for ordinary LV processing machines: electric furnace, compressor, extractor,
+	 * sawmill, polymerizer and vulcanizer. */
 	public static int machineBuffer = 800;
+	/** Electric Heater EU buffer. At the default 2 EU/t it holds two complete 200-tick
+	 * vulcanization operations and smooths a thin LV supply without becoming bulk storage. */
+	public static int electricHeaterBuffer = 800;
 	/** Pump EU buffer. Sized to hold several buckets' worth of pump cost (pumpEuPerBucket = 1000) so the
 	 * energy network can keep the pump fed without stalling just below the per-bucket threshold. NOTE
 	 * (MOD-070): a single copper cable now carries {@link #cableBuffer} EU/tick (the segment buffer, e.g.
@@ -334,6 +338,12 @@ public final class Config {
 	 * op of the LV processing family, because rubber is the material gate into MV and a bucket of oil is
 	 * a whole pumping cycle's worth of input, not a single ore. */
 	public static int polymerizerDuration = 200;
+	/** Vulcanizer (MOD-258): ticks per operation at 1.0 speed. The shipped recipe costs 400 EU, so at
+	 * the ordinary-machine rate of 2 EU/t the operation takes 200 ticks at every heat tier. */
+	public static int vulcanizerDuration = 200;
+	/** Electric Heater (MOD-258): EU/t spent only while a Vulcanizer directly above it advances.
+	 * Idle heating is free; the speed multiplier scales this rate together with processing duration. */
+	public static int electricHeaterEuPerTick = 2;
 
 	// --- Incubator (MOD-118): the mod's most energy-hungry LV machine. ---
 	/**
@@ -412,21 +422,40 @@ public final class Config {
 
 	// --- Cable ---
 	/**
-	 * Fraction of throughput lost per cable block traversed (copper LV). Resistive/proportional model
-	 * (MOD-021): a consumer at cable-distance {@code d} from the nearest producer receives
-	 * {@code floor(gross × copperCableLossPerBlock × d)} fewer EU, capped at {@code gross} so delivery
-	 * never goes negative. Proportional — not the flat per-tick toll removed in MOD-009 — so a small
-	 * top-off packet floors to zero loss and a buffer still reaches its exact capacity on a long line.
+	 * Fraction of throughput attenuated per cable block traversed (copper LV). The retained fraction
+	 * compounds over cable-distance {@code d}: a consumer receives the gross flow minus
+	 * {@code floor(gross × (1 - (1 - copperCableLossPerBlock)^d))}. Loss is capped below the whole packet,
+	 * so a positive flow always delivers at least 1 EU and a small top-off packet still reaches exact
+	 * capacity on a long line.
 	 *
 	 * <p>{@code 0.02} = 2%/block (finalized in MOD-073, source of truth PERFORMANCE.md): a full 32 EU
-	 * LV packet loses 6 EU over 10 cables, 12 over 20, and the whole packet over 50; an 8 EU/t
-	 * fuel-generator stream still loses only 1 EU over 10 cables, and a 1 EU trickle floors to zero
-	 * over any distance. Tuned to penalize long runs across the base rather than the LV tier ceiling,
+	 * LV packet loses 5 EU over 10 cables and 10 over 20; an 8 EU/t fuel-generator stream loses 1 EU
+	 * over 10 cables, and a 1 EU trickle floors to zero over any distance. Tuned to penalize long runs
+	 * across the base without ever turning a sufficiently long cable into a silent 100% cutoff,
 	 * pushing players to keep a BatteryBox near the load — copper stays the only cable in the release,
 	 * so 0.02 sits at the comfortable top of its band (0.025/0.03 are reserved for when glass fibre
 	 * gives a real upgrade path).
 	 */
 	public static double copperCableLossPerBlock = 0.02;
+	/** Master safety switch for contact damage and its particles/sound on energized bare cables. */
+	public static boolean bareCableShockEnabled = true;
+	/** Contact damage from an energized bare LV (tin/copper) cable, in half-hearts. */
+	public static float bareCableShockLvDamage = 2.0f;
+	/** Contact damage from an energized bare MV (gold) cable, in half-hearts. */
+	public static float bareCableShockMvDamage = 6.0f;
+	/**
+	 * Extra blocks the shock hazard reaches beyond the bare cable segment's own cell, in every
+	 * direction (proximity check, on top of the direct-contact shape). {@code 0} keeps the original
+	 * direct-touch-only behaviour.
+	 */
+	public static double bareCableShockProximityRadius = 0.5;
+	/**
+	 * Multiplier applied to the matching bare cable's attenuation when the whole governing cable grade
+	 * is insulated. {@code 0.5} makes rubber insulation halve loss without changing tier, packet cap or
+	 * segment throughput (MOD-259). Keeping this as one live knob preserves the exact relationship for
+	 * tin and copper instead of duplicating two independently drifting rates.
+	 */
+	public static double insulationLossMultiplier = 0.5;
 
 	// --- Cable grades: tin (cheap/narrow) and gold (MV/wide), see core.energy.CableType (MOD-219) ---
 	/**
@@ -445,10 +474,11 @@ public final class Config {
 	 */
 	public static int tinCablePacketCap = 8;
 	/**
-	 * Fraction of throughput lost per tin cable block traversed. {@code 0.006} (research §3) is ~3.3×
-	 * gentler than copper's 0.02 — this is tin's whole point: a 1 EU/t solar trickle floors to
-	 * {@code floor(1 × 0.006 × d) = 0} loss at ANY distance, so a sprawling panel farm loses nothing,
-	 * while copper's 0.02 would still be the better pick for a dense, high-flow line.
+	 * Fraction of throughput attenuated per tin cable block traversed. {@code 0.006} (research §3) is ~3.3×
+	 * gentler than copper's 0.02 — this is tin's whole point. A 1 EU/t solar trickle loses nothing at
+	 * any distance because the attenuation model always preserves at least 1 EU of a positive packet;
+	 * at larger flows tin also attenuates more slowly than copper, which remains the wider choice for a
+	 * dense, high-flow line.
 	 */
 	public static double tinCableLossPerBlock = 0.006;
 	/**
@@ -605,8 +635,10 @@ public final class Config {
 				() -> batteryBoxBuffer, v -> batteryBoxBuffer = v, 1),
 			new IntField("maceratorBuffer", "Macerator EU buffer. Applies to newly placed blocks.",
 				() -> maceratorBuffer, v -> maceratorBuffer = v, 1),
-			new IntField("machineBuffer", "Shared EU buffer for electric furnace / compressor / extractor. Applies to newly placed blocks.",
+			new IntField("machineBuffer", "Shared EU buffer for ordinary LV processing machines: electric furnace, compressor, extractor, sawmill, polymerizer and vulcanizer. Applies to newly placed blocks.",
 				() -> machineBuffer, v -> machineBuffer = v, 1),
+			new IntField("electricHeaterBuffer", "Electric Heater EU buffer. Applies to newly placed blocks.",
+				() -> electricHeaterBuffer, v -> electricHeaterBuffer = v, 1),
 			new IntField("pumpBuffer", "Pump EU buffer. Applies to newly placed blocks.",
 				() -> pumpBuffer, v -> pumpBuffer = v, 1),
 			new IntField("generatorBuffer", "Fuel generator EU buffer. Applies to newly placed blocks.",
@@ -711,6 +743,10 @@ public final class Config {
 				() -> sawmillDuration, v -> sawmillDuration = v, 1),
 			new IntField("polymerizerDuration", "Ticks a polymerizer takes to turn one bucket of oil into raw rubber at 1.0 speed.",
 				() -> polymerizerDuration, v -> polymerizerDuration = v, 1),
+			new IntField("vulcanizerDuration", "Fallback ticks a vulcanizer operation takes at 1.0 speed; shipped recipe energy 400 / machineEuPerTick 2 = 200.",
+				() -> vulcanizerDuration, v -> vulcanizerDuration = v, 1),
+			new IntField("electricHeaterEuPerTick", "EU/t an Electric Heater spends while the Vulcanizer directly above it advances; idle heater draws nothing.",
+				() -> electricHeaterEuPerTick, v -> electricHeaterEuPerTick = v, 1),
 			new IntField("ironFurnaceCookTime", "Ticks the (fuel-based) iron furnace takes to smelt one item. Vanilla furnace = 200.",
 				() -> ironFurnaceCookTime, v -> ironFurnaceCookTime = v, 1),
 			new IntField("euPerXp", "MOD-133 player profile: useful EU (from completed machine operations) per 1 point of mod XP. Higher = slower progression. Starting value, tune after playtest.",
@@ -735,17 +771,27 @@ public final class Config {
 				() -> tierMvCapacity, v -> tierMvCapacity = v, 1),
 			new IntField("tierHvCapacity", "Default internal buffer capacity for HV machines. Mirrored into EnergyTier.HV.",
 				() -> tierHvCapacity, v -> tierHvCapacity = v, 1),
-			new DoubleField("copperCableLossPerBlock", "Fraction of throughput lost per copper cable block traversed (0.02 = 2% per block).",
+			new DoubleField("copperCableLossPerBlock", "Fraction of throughput attenuated per copper cable block (0.02 = 2% of the remaining flow per block).",
 				() -> copperCableLossPerBlock, v -> copperCableLossPerBlock = v, 0.0, 0.0),
+			new BoolField("bareCableShockEnabled", "When true, energized bare cables damage players on direct contact and emit shock feedback. false disables the entire mechanic.",
+				() -> bareCableShockEnabled, v -> bareCableShockEnabled = v),
+			new FloatField("bareCableShockLvDamage", "Damage from direct contact with an energized bare LV cable, in half-hearts.",
+				() -> bareCableShockLvDamage, v -> bareCableShockLvDamage = v, 0.0f),
+			new FloatField("bareCableShockMvDamage", "Damage from direct contact with an energized bare MV cable, in half-hearts.",
+				() -> bareCableShockMvDamage, v -> bareCableShockMvDamage = v, 0.0f),
+			new DoubleField("bareCableShockProximityRadius", "Extra blocks the shock hazard reaches beyond a bare cable segment's own cell in every direction (0 = direct-touch only).",
+				() -> bareCableShockProximityRadius, v -> bareCableShockProximityRadius = v, 0.0, 0.0),
+			new DoubleField("insulationLossMultiplier", "Multiplier applied to bare-cable attenuation for rubber-insulated tin/copper cables (0.5 = half the loss; throughput and packet cap are unchanged).",
+				() -> insulationLossMultiplier, v -> insulationLossMultiplier = v, 0.0, 0.0),
 			new IntField("tinCableBuffer", "Per-segment working EU buffer of a tin cable = its real throughput (8 EU/t, narrower than copper's 12).",
 				() -> tinCableBuffer, v -> tinCableBuffer = v, 1),
 			new IntField("tinCablePacketCap", "Per-tick ceiling on EU drawn from one source through a tin cable (8 EU/t, below the LV tier voltage by design).",
 				() -> tinCablePacketCap, v -> tinCablePacketCap = v, 1),
-			new DoubleField("tinCableLossPerBlock", "Fraction of throughput lost per tin cable block traversed (0.006 = 0.6% per block; a 1 EU/t solar trickle floors to zero loss).",
+			new DoubleField("tinCableLossPerBlock", "Fraction of throughput attenuated per tin cable block (0.006 = 0.6% of the remaining flow per block; a 1 EU/t solar trickle floors to zero loss).",
 				() -> tinCableLossPerBlock, v -> tinCableLossPerBlock = v, 0.0, 0.0),
 			new IntField("goldCableBuffer", "Per-segment working EU buffer of a gold (MV) cable = its real throughput (48 EU/t, 4x copper).",
 				() -> goldCableBuffer, v -> goldCableBuffer = v, 1),
-			new DoubleField("goldCableLossPerBlock", "Fraction of throughput lost per gold cable block traversed (0.03 = 3% per block; worse than copper by design - gold buys throughput, not distance).",
+			new DoubleField("goldCableLossPerBlock", "Fraction of throughput attenuated per gold cable block (0.03 = 3% of the remaining flow per block; worse than copper by design - gold buys throughput, not distance).",
 				() -> goldCableLossPerBlock, v -> goldCableLossPerBlock = v, 0.0, 0.0),
 			new IntField("networksPerTick", "Max awake energy networks processed per server tick; the rest are deferred round-robin.",
 				() -> networksPerTick, v -> networksPerTick = v, 1),
@@ -753,12 +799,17 @@ public final class Config {
 				() -> networkAnalyzerMaxTraversedNetworks, v -> networkAnalyzerMaxTraversedNetworks = v, 1),
 			new BoolField("bonusChestEnabled", "When true, mod starter items are injected into the vanilla bonus chest at world creation (vanilla loot kept). false = purely vanilla bonus chest.",
 				() -> bonusChestEnabled, v -> bonusChestEnabled = v),
-			new BoolField("oilBurns", "When true, oil ignites from adjacent fire/lava and the burn spreads across the pool. false = oil is inert.",
+			new BoolField("oilBurns", "When true, oil ignites from adjacent fire or flint-and-steel and the burn spreads across the pool; lava alone does not ignite it. false = oil is inert.",
 				() -> oilBurns, v -> oilBurns = v));
 
 	/** Effective machine drain per tick after the speed multiplier (E_op stays ~constant). */
 	public static int machineEuPerTickEffective() {
 		return Math.max(1, Math.round(machineEuPerTick * globalMachineSpeedMultiplier));
+	}
+
+	/** Effective Electric Heater drain after the machine speed multiplier (heater E_op stays ~constant). */
+	public static int electricHeaterEuPerTickEffective() {
+		return Math.max(1, Math.round(electricHeaterEuPerTick * globalMachineSpeedMultiplier));
 	}
 
 	/** Scale a base duration (ticks) by the speed multiplier: faster machine -> fewer ticks. */

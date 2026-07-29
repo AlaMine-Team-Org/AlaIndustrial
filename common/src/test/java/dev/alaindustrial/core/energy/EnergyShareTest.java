@@ -54,9 +54,9 @@ class EnergyShareTest {
 
 	@Test
 	void cableLoss_trickleTopOffFloorsToZero() {
-		// The MOD-009 guard: a 1 EU top-off packet over a 10-cable line loses nothing (floor(0.2)=0),
-		// so a buffer still reaches exact capacity — a flat toll would have stranded it forever.
-		assertEquals(0L, EnergyShare.cableLoss(1, 0.02, 10), "1 EU over 10 cables → 0 loss");
+		// MOD-009 guard: the last EU must survive even an extreme run, otherwise a buffer can never top off.
+		assertEquals(0L, EnergyShare.cableLoss(1, 0.02, 1_000), "last EU over 1000 cables -> 0 loss");
+		assertEquals(1L, EnergyShare.cableLoss(2, 0.02, 1_000), "2 EU still delivers the final 1 EU");
 	}
 
 	@Test
@@ -70,13 +70,29 @@ class EnergyShareTest {
 	@Test
 	void cableLoss_scalesWithFlowAndDistance() {
 		assertEquals(1L, EnergyShare.cableLoss(8, 0.02, 10), "fuel-gen flow (8) over 10 cables → 1");
-		assertEquals(6L, EnergyShare.cableLoss(32, 0.02, 10), "full packet (32) over 10 cables → 6");
+		assertEquals(5L, EnergyShare.cableLoss(32, 0.02, 10),
+				"attenuating copper line: ceil(32 * 0.98^10) = 27 delivered, 5 lost");
 	}
 
 	@Test
-	void cableLoss_neverExceedsGross() {
-		// floor(200 × 0.02 × 100) = 400, but you cannot lose more than what flowed → clamped to 200.
-		assertEquals(200L, EnergyShare.cableLoss(200, 0.02, 100));
+	void cableLoss_longRunNeverConsumesWholePositivePacket() {
+		assertEquals(173L, EnergyShare.cableLoss(200, 0.02, 100),
+				"ceil(200 * 0.98^100) = 27 delivered, 173 lost");
+		assertTrue(EnergyShare.cableLoss(200, 0.02, 100_000) < 200,
+				"positive gross always leaves at least 1 EU deliverable");
+	}
+
+	@ParameterizedTest(name = "gross={0}, rate={1}, distance={2} -> loss={3}")
+	@CsvSource({
+		"12, 0.02, 50, 7",
+		"12, 0.02, 100, 10",
+		"12, 0.02, 1000, 11",
+		"48, 0.03, 34, 30",
+		"48, 0.03, 100, 45"
+	})
+	void cableLoss_pinsMod253LongDistanceBoundaries(
+			long gross, double lossPerBlock, int distanceBlocks, long expectedLoss) {
+		assertEquals(expectedLoss, EnergyShare.cableLoss(gross, lossPerBlock, distanceBlocks));
 	}
 
 	// --- split ---
@@ -317,13 +333,16 @@ class EnergyShareTest {
 		}
 	}
 
-	/** cableLoss bounds: result is always in [0, gross]. */
+	/** cableLoss bounds: a positive packet always retains at least 1 EU, even at extreme distance. */
 	@ParameterizedTest
 	@MethodSource("cableLossSweep")
 	void cableLoss_alwaysInZeroToGross(long gross, double lossPerBlock, int distanceBlocks) {
 		long loss = EnergyShare.cableLoss(gross, lossPerBlock, distanceBlocks);
 		assertTrue(loss >= 0, "loss never negative");
 		assertTrue(loss <= gross, "loss never exceeds gross");
+		if (gross > 0) {
+			assertTrue(loss < gross, "a positive packet must never suffer 100% loss");
+		}
 	}
 
 	/** cableLoss monotonicity: doubling flow (or distance) must not DECREASE the loss, all else equal. */

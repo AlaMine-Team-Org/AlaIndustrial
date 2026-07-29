@@ -59,6 +59,7 @@
 			,"dev.alaindustrial.gametest.HammerGameTest"
 			,"dev.alaindustrial.gametest.OilGameTest"
 			,"dev.alaindustrial.gametest.PolymerizerGameTest"
+			,"dev.alaindustrial.gametest.VulcanizerGameTest"
 		]
 	}
 }

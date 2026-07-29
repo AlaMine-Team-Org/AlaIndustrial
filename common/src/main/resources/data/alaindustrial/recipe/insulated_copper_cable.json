@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "C": "alaindustrial:copper_cable",
+    "R": "alaindustrial:rubber"
+  },
+  "pattern": [
+    "CCC",
+    "RRR",
+    "CCC"
+  ],
+  "result": {
+    "id": "alaindustrial:insulated_copper_cable",
+    "count": 6
+  }
+}

@@ -3,17 +3,24 @@ package dev.alaindustrial.block;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.registry.ModCriteria;
+import dev.alaindustrial.registry.ModDamageTypes;
 import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -123,6 +130,13 @@ public class CableBlock extends AbstractMachineBlock {
 	private static final double LOW_NEIGHBOUR_THRESHOLD = 0.5;
 
 	/**
+	 * A visually negligible contact tolerance around the solid cable shape. It only needs to exceed
+	 * Minecraft's internal collision epsilon: an equal inside/collision shape can never overlap because
+	 * collision resolution stops the entity exactly at the solid surface.
+	 */
+	private static final double SHOCK_CONTACT_MARGIN = 1.0E-3;
+
+	/**
 	 * Public accessor for the four horizontal {@code *_low} flags, used by
 	 * {@link CableBlockEntity#validateShape} to re-derive the low-arm geometry on chunk load (MOD-061).
 	 * Returns {@code null} for vertical directions (UP/DOWN have no low variant), matching the
@@ -168,6 +182,46 @@ public class CableBlock extends AbstractMachineBlock {
 	 */
 	public static CableType typeOf(BlockState state) {
 		return state.getBlock() instanceof CableBlock cable ? cable.type : CableType.COPPER;
+	}
+
+	/**
+	 * Shocks a survival player only while energy actually moved through this exact bare segment.
+	 * Vanilla hurt immunity supplies the cactus-style contact cooldown; insulated cables and the
+	 * config-off path return before registry lookup, particles, sound or any other overhead.
+	 */
+	@Override
+	protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity,
+			InsideBlockEffectApplier effectApplier, boolean isInside) {
+		tryShockPlayer(level, pos, entity);
+	}
+
+	/** Public for the shared Fabric/NeoForge GameTest body; normal gameplay enters via {@link #entityInside}. */
+	public boolean tryShockPlayer(Level level, BlockPos pos, Entity entity) {
+		if (!(level instanceof ServerLevel serverLevel) || !(entity instanceof ServerPlayer player)
+				|| !shouldShockPlayer(level, pos, player)) {
+			return false;
+		}
+
+		if (!player.hurtServer(serverLevel, ModDamageTypes.electricShock(level), type.shockDamage())) {
+			return false;
+		}
+		serverLevel.sendParticles(ParticleTypes.ELECTRIC_SPARK,
+				player.getX(), player.getY() + player.getBbHeight() * 0.5, player.getZ(),
+				8, 0.25, 0.35, 0.25, 0.08);
+		serverLevel.playSound(null, pos, SoundEvents.LIGHTNING_BOLT_IMPACT,
+				SoundSource.BLOCKS, 0.35f, 1.8f);
+		return true;
+	}
+
+	/** Side-effect-free eligibility check shared with both loader GameTest lanes. */
+	public boolean shouldShockPlayer(Level level, BlockPos pos, ServerPlayer player) {
+		return Config.bareCableShockEnabled
+				&& !player.getAbilities().instabuild
+				&& !player.isSpectator()
+				&& !type.isInsulated()
+				&& player.invulnerableTime <= 0
+				&& level.getBlockEntity(pos) instanceof CableBlockEntity cable
+				&& cable.isEnergizedForShock();
 	}
 
 	@Override
@@ -292,6 +346,27 @@ public class CableBlock extends AbstractMachineBlock {
 			}
 		}
 		return shape;
+	}
+
+	/**
+	 * Restricts {@link #entityInside} to a tiny shell around the thin cable geometry. Returning
+	 * the solid shape itself would make contact impossible because entity collision prevents overlap;
+	 * returning Minecraft's default full cube would shock players standing beside the cable.
+	 */
+	@Override
+	protected VoxelShape getEntityInsideCollisionShape(BlockState state, BlockGetter level, BlockPos pos,
+			Entity entity) {
+		VoxelShape contact = Shapes.empty();
+		for (var box : getShape(state, level, pos, CollisionContext.of(entity)).toAabbs()) {
+			contact = Shapes.or(contact, Shapes.box(
+					Math.max(0.0, box.minX - SHOCK_CONTACT_MARGIN),
+					Math.max(0.0, box.minY - SHOCK_CONTACT_MARGIN),
+					Math.max(0.0, box.minZ - SHOCK_CONTACT_MARGIN),
+					Math.min(1.0, box.maxX + SHOCK_CONTACT_MARGIN),
+					Math.min(1.0, box.maxY + SHOCK_CONTACT_MARGIN),
+					Math.min(1.0, box.maxZ + SHOCK_CONTACT_MARGIN)));
+		}
+		return contact;
 	}
 
 	@Override

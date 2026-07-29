@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * L2 server game tests for the eight Phase 0 material ore blocks (tin/silver/nickel/uranium ×
+ * L2 server game tests for the ten material ore blocks (tin/silver/nickel/sulfur/uranium ×
  * stone/deepslate) — TC-ORE-001-*. Parametric over the block set: one method per test-case row,
- * looping the 8 ids inside, so a new metal added to {@link ModBlocks} does not require a new
+ * looping the 10 ids inside, so a new material added to {@link ModBlocks} does not require a new
  * method. Mirrors {@link AlaCommonGameTest}'s parametric-over-blocks pattern.
  *
  * <p>See docs/testing/blocks/materials/ores.md for the case table and covered rules.
@@ -35,30 +35,34 @@ public class OreGameTest {
 	/** Reused single cell inside the test region; placed, asserted, cleared per block. */
 	private static final BlockPos PROBE = new BlockPos(1, 2, 1);
 
-	/** All 8 ore blocks under test, stone-variant id -> deepslate-variant id pairs are implicit in the flat list. */
+	/** All 10 ore blocks under test, stone/deepslate pairs are implicit in the flat list. */
 	private static final List<Block> ORES = List.of(
 			ModBlocks.TIN_ORE, ModBlocks.DEEPSLATE_TIN_ORE,
 			ModBlocks.SILVER_ORE, ModBlocks.DEEPSLATE_SILVER_ORE,
 			ModBlocks.NICKEL_ORE, ModBlocks.DEEPSLATE_NICKEL_ORE,
+			ModBlocks.SULFUR_ORE, ModBlocks.DEEPSLATE_SULFUR_ORE,
 			ModBlocks.URANIUM_ORE, ModBlocks.DEEPSLATE_URANIUM_ORE);
 
 	/** Stone-variant ores (hardness 3.0, SoundType.STONE) — see ModBlocks.java. */
 	private static final List<Block> STONE_ORES = List.of(
-			ModBlocks.TIN_ORE, ModBlocks.SILVER_ORE, ModBlocks.NICKEL_ORE, ModBlocks.URANIUM_ORE);
+			ModBlocks.TIN_ORE, ModBlocks.SILVER_ORE, ModBlocks.NICKEL_ORE,
+			ModBlocks.SULFUR_ORE, ModBlocks.URANIUM_ORE);
 
 	/** Deepslate-variant ores (hardness 4.5, SoundType.DEEPSLATE) — see ModBlocks.java. */
 	private static final List<Block> DEEPSLATE_ORES = List.of(
 			ModBlocks.DEEPSLATE_TIN_ORE, ModBlocks.DEEPSLATE_SILVER_ORE,
-			ModBlocks.DEEPSLATE_NICKEL_ORE, ModBlocks.DEEPSLATE_URANIUM_ORE);
+			ModBlocks.DEEPSLATE_NICKEL_ORE, ModBlocks.DEEPSLATE_SULFUR_ORE,
+			ModBlocks.DEEPSLATE_URANIUM_ORE);
 
 	/**
 	 * Stone-tier ores — tagged {@code minecraft:needs_stone_tool}: a stone pickaxe or better is
-	 * required to harvest (tin/silver/nickel, both stone and deepslate variants).
+	 * required to harvest (tin/silver/nickel/sulfur, both stone and deepslate variants).
 	 */
 	private static final List<Block> STONE_TIER_ORES = List.of(
 			ModBlocks.TIN_ORE, ModBlocks.DEEPSLATE_TIN_ORE,
 			ModBlocks.SILVER_ORE, ModBlocks.DEEPSLATE_SILVER_ORE,
-			ModBlocks.NICKEL_ORE, ModBlocks.DEEPSLATE_NICKEL_ORE);
+			ModBlocks.NICKEL_ORE, ModBlocks.DEEPSLATE_NICKEL_ORE,
+			ModBlocks.SULFUR_ORE, ModBlocks.DEEPSLATE_SULFUR_ORE);
 
 	/**
 	 * Iron-tier ores — tagged {@code minecraft:needs_iron_tool}: an iron pickaxe or better is
@@ -76,6 +80,7 @@ public class OreGameTest {
 			ModBlocks.TIN_ORE, ModItems.RAW_TIN, ModBlocks.DEEPSLATE_TIN_ORE, ModItems.RAW_TIN,
 			ModBlocks.SILVER_ORE, ModItems.RAW_SILVER, ModBlocks.DEEPSLATE_SILVER_ORE, ModItems.RAW_SILVER,
 			ModBlocks.NICKEL_ORE, ModItems.RAW_NICKEL, ModBlocks.DEEPSLATE_NICKEL_ORE, ModItems.RAW_NICKEL,
+			ModBlocks.SULFUR_ORE, ModItems.RAW_SULFUR, ModBlocks.DEEPSLATE_SULFUR_ORE, ModItems.RAW_SULFUR,
 			ModBlocks.URANIUM_ORE, ModItems.RAW_URANIUM, ModBlocks.DEEPSLATE_URANIUM_ORE, ModItems.RAW_URANIUM);
 
 	/**
@@ -136,7 +141,7 @@ public class OreGameTest {
 	/**
 	 * TC-ORE-001-BRK02: harvest-tier gate. Ore blocks are tagged so a too-low pickaxe is NOT a correct
 	 * tool — no drop and (in-world) much slower mining, the visual cue that the pickaxe is wrong.
-	 * Stone-tier ores (tin/silver/nickel, {@code minecraft:needs_stone_tool}) need a stone pickaxe or
+	 * Stone-tier ores (tin/silver/nickel/sulfur, {@code minecraft:needs_stone_tool}) need a stone pickaxe or
 	 * better; the uranium ore ({@code minecraft:needs_iron_tool}) needs an iron pickaxe or better.
 	 * Golden pickaxes are wood-tier for gating (vanilla {@code incorrect_for_gold_tool}), so they are
 	 * too low for every ore. The gate lives on the item ({@link ItemStack#isCorrectToolForDrops}), not
@@ -196,7 +201,7 @@ public class OreGameTest {
 
 	/**
 	 * TC-ORE-001-BRK04: Silk Touch drops the ore BLOCK itself (via the loot table's
-	 * {@code minecraft:alternatives} silk_touch branch); Fortune III boosts the {@code raw_<metal>}
+	 * {@code minecraft:alternatives} silk_touch branch); Fortune III boosts the {@code raw_<material>}
 	 * count via the loot table's {@code minecraft:apply_bonus}/{@code ore_drops} function on a plain
 	 * pickaxe — it is not neutral. Both are vanilla ore semantics, matching the loot table JSON.
 	 *
@@ -231,7 +236,7 @@ public class OreGameTest {
 			}
 			helper.setBlock(PROBE, Blocks.AIR);
 
-			// Fortune: boosts the raw_<metal> count above the plain-pickaxe baseline (apply_bonus/ore_drops).
+			// Fortune: boosts the raw_<material> count above the plain-pickaxe baseline (apply_bonus/ore_drops).
 			// ore_drops is probabilistic (binomial-style bonus rolls), so sample several breaks and check
 			// the fortune-enchanted maximum exceeds the plain baseline at least once — deterministic enough
 			// not to flake while still exercising the real apply_bonus function (not merely "never fails").
@@ -318,21 +323,21 @@ public class OreGameTest {
 	}
 
 	/**
-	 * TC-ORE-001-PHY06: every ore block is non-flammable — {@code ignitedByLava()} is false, since
-	 * none of the 8 ids call {@code .ignitedByLava()} in {@code ModBlocks.java#props()}. This is the
+	 * TC-ORE-001-PHY04: every ore block is non-flammable — {@code ignitedByLava()} is false, since
+	 * none of the 10 ids call {@code .ignitedByLava()} in {@code ModBlocks.java#props()}. This is the
 	 * public API surface available for a flammability assertion; full fire-spread behaviour (open
 	 * flame catching, spreading through the block) needs a lit real-world fire simulation and is not
 	 * automated here — see skipped note below.
 	 *
-	 * @implements TC-ORE-001-PHY06
+	 * @implements TC-ORE-001-PHY04
 	 * @covers R-PHY-06
 	 */
 	@GameTest
-	public void tcOre001Phy06_nonFlammable(GameTestHelper helper) {
+	public void tcOre001Phy04_nonFlammable(GameTestHelper helper) {
 		for (Block ore : ORES) {
 			BlockState state = ore.defaultBlockState();
 			if (state.ignitedByLava()) {
-				helper.fail(ore + " is marked ignitedByLava — expected non-flammable ore block (TC-ORE-001-PHY06)");
+				helper.fail(ore + " is marked ignitedByLava — expected non-flammable ore block (TC-ORE-001-PHY04)");
 			}
 		}
 		helper.succeed();

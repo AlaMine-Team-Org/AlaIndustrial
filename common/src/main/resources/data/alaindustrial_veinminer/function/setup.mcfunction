@@ -17,6 +17,8 @@ scoreboard objectives add svm.b.alaindustrial.silver_ore minecraft.mined:alaindu
 scoreboard objectives add svm.b.alaindustrial.deepslate_silver_ore minecraft.mined:alaindustrial.deepslate_silver_ore
 scoreboard objectives add svm.b.alaindustrial.nickel_ore minecraft.mined:alaindustrial.nickel_ore
 scoreboard objectives add svm.b.alaindustrial.deepslate_nickel_ore minecraft.mined:alaindustrial.deepslate_nickel_ore
+scoreboard objectives add svm.b.alaindustrial.sulfur_ore minecraft.mined:alaindustrial.sulfur_ore
+scoreboard objectives add svm.b.alaindustrial.deepslate_sulfur_ore minecraft.mined:alaindustrial.deepslate_sulfur_ore
 scoreboard objectives add svm.b.alaindustrial.uranium_ore minecraft.mined:alaindustrial.uranium_ore
 scoreboard objectives add svm.b.alaindustrial.deepslate_uranium_ore minecraft.mined:alaindustrial.deepslate_uranium_ore
 

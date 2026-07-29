@@ -22,6 +22,8 @@ import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
+import dev.alaindustrial.block.VulcanizerBlock;
+import dev.alaindustrial.block.ElectricHeaterBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.FluidTankBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
@@ -113,15 +115,21 @@ public final class ModBlocks {
 	public static final Block GOLD_CABLE =
 			register(GOLD_CABLE_KEY, new CableBlock(CableType.GOLD, props(GOLD_CABLE_KEY)));
 
-	// The insulated pair stays on copper's numbers: they are still hidden (MOD-010) and their niche is
-	// water resistance, not throughput — see docs/research/cable-balance-model.md §4.
+	// Rubber insulation keeps the conductor's tier/cap/buffer but halves its attenuation (MOD-259).
 	public static final ResourceKey<Block> INSULATED_COPPER_CABLE_KEY = key("insulated_copper_cable");
 	public static final Block INSULATED_COPPER_CABLE =
-			register(INSULATED_COPPER_CABLE_KEY, new CableBlock(CableType.COPPER, props(INSULATED_COPPER_CABLE_KEY)));
+			register(INSULATED_COPPER_CABLE_KEY,
+					new CableBlock(CableType.INSULATED_COPPER, props(INSULATED_COPPER_CABLE_KEY)));
 
 	public static final ResourceKey<Block> INSULATED_TIN_CABLE_KEY = key("insulated_tin_cable");
 	public static final Block INSULATED_TIN_CABLE =
-			register(INSULATED_TIN_CABLE_KEY, new CableBlock(CableType.TIN, props(INSULATED_TIN_CABLE_KEY)));
+			register(INSULATED_TIN_CABLE_KEY,
+					new CableBlock(CableType.INSULATED_TIN, props(INSULATED_TIN_CABLE_KEY)));
+
+	public static final ResourceKey<Block> INSULATED_GOLD_CABLE_KEY = key("insulated_gold_cable");
+	public static final Block INSULATED_GOLD_CABLE =
+			register(INSULATED_GOLD_CABLE_KEY,
+					new CableBlock(CableType.INSULATED_GOLD, props(INSULATED_GOLD_CABLE_KEY)));
 
 	public static final ResourceKey<Block> ITEM_PIPE_KEY = key("item_pipe");
 	public static final Block ITEM_PIPE = register(ITEM_PIPE_KEY, new ItemPipeBlock(props(ITEM_PIPE_KEY)));
@@ -155,6 +163,11 @@ public final class ModBlocks {
 	public static final Block SAWMILL = register(SAWMILL_KEY, new SawmillBlock(props(SAWMILL_KEY)));
 	public static final ResourceKey<Block> POLYMERIZER_KEY = key("polymerizer");
 	public static final Block POLYMERIZER = register(POLYMERIZER_KEY, new PolymerizerBlock(props(POLYMERIZER_KEY)));
+	public static final ResourceKey<Block> VULCANIZER_KEY = key("vulcanizer");
+	public static final Block VULCANIZER = register(VULCANIZER_KEY, new VulcanizerBlock(props(VULCANIZER_KEY)));
+	public static final ResourceKey<Block> ELECTRIC_HEATER_KEY = key("electric_heater");
+	public static final Block ELECTRIC_HEATER =
+			register(ELECTRIC_HEATER_KEY, new ElectricHeaterBlock(props(ELECTRIC_HEATER_KEY)));
 
 	public static final ResourceKey<Block> INCUBATOR_KEY = key("incubator");
 	public static final Block INCUBATOR = register(INCUBATOR_KEY, new IncubatorBlock(props(INCUBATOR_KEY)));
@@ -181,6 +194,13 @@ public final class ModBlocks {
 	public static final ResourceKey<Block> DEEPSLATE_NICKEL_ORE_KEY = key("deepslate_nickel_ore");
 	public static final Block DEEPSLATE_NICKEL_ORE =
 			register(DEEPSLATE_NICKEL_ORE_KEY, new Block(props(DEEPSLATE_NICKEL_ORE_KEY)));
+
+	public static final ResourceKey<Block> SULFUR_ORE_KEY = key("sulfur_ore");
+	public static final Block SULFUR_ORE = register(SULFUR_ORE_KEY, new Block(props(SULFUR_ORE_KEY)));
+
+	public static final ResourceKey<Block> DEEPSLATE_SULFUR_ORE_KEY = key("deepslate_sulfur_ore");
+	public static final Block DEEPSLATE_SULFUR_ORE =
+			register(DEEPSLATE_SULFUR_ORE_KEY, new Block(props(DEEPSLATE_SULFUR_ORE_KEY)));
 
 	public static final ResourceKey<Block> URANIUM_ORE_KEY = key("uranium_ore");
 	public static final Block URANIUM_ORE = register(URANIUM_ORE_KEY, new Block(props(URANIUM_ORE_KEY)));
@@ -291,6 +311,7 @@ public final class ModBlocks {
 		ModContent.GOLD_CABLE = () -> GOLD_CABLE;
 		ModContent.INSULATED_COPPER_CABLE = () -> INSULATED_COPPER_CABLE;
 		ModContent.INSULATED_TIN_CABLE = () -> INSULATED_TIN_CABLE;
+		ModContent.INSULATED_GOLD_CABLE = () -> INSULATED_GOLD_CABLE;
 		ModContent.ITEM_PIPE = () -> ITEM_PIPE;
 		ModContent.MACERATOR = () -> MACERATOR;
 		ModContent.BATTERY_BOX = () -> BATTERY_BOX;
@@ -300,6 +321,8 @@ public final class ModBlocks {
 		ModContent.COMPRESSOR = () -> COMPRESSOR;
 		ModContent.SAWMILL = () -> SAWMILL;
 		ModContent.POLYMERIZER = () -> POLYMERIZER;
+		ModContent.VULCANIZER = () -> VULCANIZER;
+		ModContent.ELECTRIC_HEATER = () -> ELECTRIC_HEATER;
 		ModContent.INCUBATOR = () -> INCUBATOR;
 		ModContent.INCUBATOR_DOME = () -> INCUBATOR_DOME;
 		ModContent.TIN_ORE = () -> TIN_ORE;
@@ -308,6 +331,8 @@ public final class ModBlocks {
 		ModContent.DEEPSLATE_SILVER_ORE = () -> DEEPSLATE_SILVER_ORE;
 		ModContent.NICKEL_ORE = () -> NICKEL_ORE;
 		ModContent.DEEPSLATE_NICKEL_ORE = () -> DEEPSLATE_NICKEL_ORE;
+		ModContent.SULFUR_ORE = () -> SULFUR_ORE;
+		ModContent.DEEPSLATE_SULFUR_ORE = () -> DEEPSLATE_SULFUR_ORE;
 		ModContent.URANIUM_ORE = () -> URANIUM_ORE;
 		ModContent.DEEPSLATE_URANIUM_ORE = () -> DEEPSLATE_URANIUM_ORE;
 		ModContent.IRON_CHEST = () -> IRON_CHEST;

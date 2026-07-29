@@ -21,7 +21,8 @@ import org.junit.jupiter.api.Test;
  * <p>Two structural invariants that a {@code min→max} or {@code *→/} mutant on a rare input would
  * violate:
  * <ul>
- *   <li><b>{@code cableLoss}</b>: result always in {@code [0, gross]}, monotonic in flow and distance.</li>
+ *   <li><b>{@code cableLoss}</b>: result is in {@code [0, gross)} for positive flow, monotonic in
+ *       flow and distance.</li>
  *   <li><b>{@code split}</b>: every share in {@code [0, min(room, packetCap)]}, sum ≤ moveTotal.</li>
  * </ul>
  *
@@ -64,6 +65,9 @@ class EnergySharePropertyTest {
 		long loss = EnergyShare.cableLoss(gross, lossPerBlock, distanceBlocks);
 		assertTrue(loss >= 0, "loss never negative");
 		assertTrue(loss <= gross, "loss never exceeds gross (clamp to [0, gross])");
+		if (gross > 0) {
+			assertTrue(loss < gross, "positive flow always leaves at least 1 EU deliverable");
+		}
 	}
 
 	@Property

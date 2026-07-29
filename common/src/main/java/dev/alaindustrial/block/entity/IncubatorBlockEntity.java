@@ -9,6 +9,7 @@ import dev.alaindustrial.menu.IncubatorMenu;
 import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.mutation.MutationRoll;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.ProcessingRecipeInput;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.ModTags;
@@ -24,7 +25,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -77,7 +77,7 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Me
 	 */
 	public static final int DATA_COUNT = 8;
 
-	private final RecipeManager.CachedCheck<SingleRecipeInput, AlaProcessingRecipe>[] checks = newChecks();
+	private final RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe>[] checks = newChecks();
 
 	/** Remaining irradiation attempts on the ingot currently loaded; 0 means none is loaded. */
 	private int charge;
@@ -109,9 +109,9 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Me
 	private boolean suppressDomeDrop;
 
 	@SuppressWarnings("unchecked")
-	private static RecipeManager.CachedCheck<SingleRecipeInput, AlaProcessingRecipe>[] newChecks() {
+	private static RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe>[] newChecks() {
 		IncubatorMode[] modes = IncubatorMode.values();
-		RecipeManager.CachedCheck<SingleRecipeInput, AlaProcessingRecipe>[] result =
+		RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe>[] result =
 				new RecipeManager.CachedCheck[modes.length];
 		for (int i = 0; i < modes.length; i++) {
 			result[i] = modes[i].kind().newCheck();

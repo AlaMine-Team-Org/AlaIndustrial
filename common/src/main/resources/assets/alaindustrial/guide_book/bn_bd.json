@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "এটি কী হয়ে ওঠে",
-              "text": "খনিজ তেল দিয়েই রাবারের শৃঙ্খল শুরু।\n\n1. সংগ্রহ করুন — বালতি, ভ্যাকুয়াম ক্যাপসুল বা পাম্প দিয়ে\n2. পলিমারাইজার: 1000 mB তেল আর 400 EU মিলে কাঁচা রাবার দেয়\n3. চুল্লি বা বৈদ্যুতিক চুল্লি: কাঁচা রাবার পুড়ে রাবার হয়\n\nরাবার এখনো কোথাও খরচ হয় না — এর ব্যবহারকারী, অন্তরিত কেবল ও MV যন্ত্রাংশ, আসছে পরের ধাপে। জমিয়ে রাখুন।"
+              "text": "খনিজ তেল দিয়েই রাবারের শৃঙ্খল শুরু।\n\n1. বালতি, ভ্যাকুয়াম ক্যাপসুল বা পাম্প দিয়ে সংগ্রহ করুন\n2. পলিমারাইজার: 1000 mB তেল ও 400 EU থেকে কাঁচা রাবার\n3. ভালকানাইজার: কাঁচা রাবার + সালফারের গুঁড়া + 400 EU\n4. নিচে ক্যাম্পফায়ার (×1), লাভা/ম্যাগমা (×2) বা বৈদ্যুতিক উত্তাপক (×3) রাখুন\n\nউন্নত তাপ উপকরণ সাশ্রয় করে: প্রতিটি ক্রিয়ায় সবসময় একটি কাঁচা রাবার ও একটি সালফারের গুঁড়া লাগে।"
             }
           ]
         }
@@ -384,15 +384,14 @@
             {
               "type": "text",
               "title": "সোনার কেবল",
-              "text": "MV কেবল — তামার চেয়ে চার গুণ চওড়া কিন্তু বেশি ক্ষতিপ্রবণ: কাছে চওড়া নল, দূরে সরু নল।"
+              "text": "চওড়া, অনাবৃত MV কেবল — ক্ষতি বেশি, আর যতক্ষণ সত্যিই শক্তি প্রবাহিত হয় ততক্ষণ স্পর্শ করলে জোরালো বৈদ্যুতিক শক লাগে।"
             },
             {
               "type": "stats",
               "title": "পরিসংখ্যান",
               "lines": [
                 "শক্তি: ≤128 EU/packet",
-                "বাফার: 48 EU",
-                "ক্ষতি: 0.03 প্রতি ব্লক"
+                "বাফার: 48 EU"
               ]
             },
             {
@@ -416,6 +415,123 @@
           ]
         },
         {
+          "id": "insulated_gold_cable",
+          "title": "অন্তরিত সোনার কেবল",
+          "icon": "alaindustrial:insulated_gold_cable",
+          "block_id": "alaindustrial:insulated_gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "অন্তরিত সোনার কেবল",
+              "text": "রাবারে মোড়ানো সোনার MV কেবল — অর্ধেক ক্ষতি এবং স্পর্শে শক থেকে সম্পূর্ণ সুরক্ষা।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: ≤128 EU/packet",
+                "বাফার: 48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable"
+              ],
+              "result_id": "alaindustrial:insulated_gold_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "অন্তরিত তামার কেবল",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "অন্তরিত তামার কেবল",
+              "text": "রাবারে মোড়ানো তামার LV কেবল — অর্ধেক ক্ষতি এবং স্পর্শে শক থেকে সম্পূর্ণ সুরক্ষা।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: ≤32 EU/packet",
+                "বাফার: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:insulated_copper_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "অন্তরিত টিনের কেবল",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "অন্তরিত টিনের কেবল",
+              "text": "রাবারে মোড়ানো টিনের LV কেবল — সামান্য ক্ষতি এবং স্পর্শে শক থেকে সম্পূর্ণ সুরক্ষা।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: ≤8 EU/packet",
+                "বাফার: 8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable"
+              ],
+              "result_id": "alaindustrial:insulated_tin_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "তামার কেবল",
           "icon": "alaindustrial:copper_cable",
@@ -424,15 +540,14 @@
             {
               "type": "text",
               "title": "তামার কেবল",
-              "text": "প্রাথমিক শক্তি নেটওয়ার্কের জন্য একটি সস্তা, নির্ভরযোগ্য LV কেবল — সোলার প্যানেল, ব্যাটারি ও যন্ত্রকে একটি লাইনে যুক্ত করে।"
+              "text": "একটি সস্তা, নির্ভরযোগ্য LV কেবল; যতক্ষণ সত্যিই শক্তি প্রবাহিত হয়, অনাবৃত তার স্পর্শকারী খেলোয়াড়কে শক দেয়।"
             },
             {
               "type": "stats",
               "title": "পরিসংখ্যান",
               "lines": [
                 "শক্তি: ≤32 EU/packet",
-                "বাফার: 12 EU",
-                "ক্ষতি: 0.02 প্রতি ব্লক"
+                "বাফার: 12 EU"
               ]
             },
             {
@@ -464,15 +579,14 @@
             {
               "type": "text",
               "title": "টিনের কেবল",
-              "text": "সবচেয়ে সস্তা LV কেবল — সরু কিন্তু প্রায় ক্ষতিহীন, সৌর খামারের জন্য আদর্শ।"
+              "text": "সবচেয়ে সস্তা, প্রায় ক্ষতিহীন LV কেবল; যতক্ষণ সত্যিই শক্তি প্রবাহিত হয়, অনাবৃত তার স্পর্শকারী খেলোয়াড়কে শক দেয়।"
             },
             {
               "type": "stats",
               "title": "পরিসংখ্যান",
               "lines": [
                 "শক্তি: ≤8 EU/packet",
-                "বাফার: 8 EU",
-                "ক্ষতি: 0.006 প্রতি ব্লক"
+                "বাফার: 8 EU"
               ]
             },
             {
@@ -500,8 +614,47 @@
     {
       "id": "processing",
       "title": "প্রক্রিয়াকরণ",
-      "icon": "alaindustrial:macerator",
+      "icon": "alaindustrial:vulcanizer",
       "entries": [
+        {
+          "id": "vulcanizer",
+          "title": "ভালকানাইজার",
+          "icon": "alaindustrial:vulcanizer",
+          "block_id": "alaindustrial:vulcanizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ভালকানাইজার",
+              "text": "একটি LV যন্ত্র যা কাঁচা রাবার ও সালফারের গুঁড়া মিলিয়ে রাবার তৈরি করে। এর EU ও নিচ থেকে তাপ দরকার; শক্তিশালী তাপের উৎস উৎপাদন বাড়ায়।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 400 EU/ক্রিয়া",
+                "বাফার: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:vulcanizer",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "macerator",
           "title": "পেষক যন্ত্র",
@@ -659,7 +812,7 @@
             {
               "type": "text",
               "title": "পলিমারাইজার",
-              "text": "খনিজ তেল ফুটিয়ে কাঁচা রাবারে পরিণত করে — 10 বালতির ট্যাংক, প্রতি ক্রিয়ায় এক বালতি। এরপর কাঁচা রাবার চুল্লিতে পুড়িয়ে রাবার বানানো হয়।"
+              "text": "খনিজ তেল ফুটিয়ে কাঁচা রাবারে পরিণত করে — ১০ বালতির ট্যাংক, প্রতি ক্রিয়ায় এক বালতি। এরপর ভালকানাইজারে রাবার ও সালফার একত্র করা হয়।"
             },
             {
               "type": "stats",
@@ -724,6 +877,45 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_heater",
+          "title": "বৈদ্যুতিক উত্তাপক",
+          "icon": "alaindustrial:electric_heater",
+          "block_id": "alaindustrial:electric_heater",
+          "pages": [
+            {
+              "type": "text",
+              "title": "বৈদ্যুতিক উত্তাপক",
+              "text": "GUI-বিহীন LV সহায়ক ব্লক, যা ভালকানাইজারকে সর্বোচ্চ ×3 তাপ দেয়। ওপরের যন্ত্রটি সত্যিই কাজ করলেই এটি EU খরচ করে।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 2 EU/t",
+                "বাফার: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:redstone",
+                "minecraft:gold_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electric_heater",
               "result_count": 1
             }
           ]
@@ -1034,6 +1226,19 @@
           ]
         },
         {
+          "id": "sulfur_ore",
+          "title": "সালফার আকরিক",
+          "icon": "alaindustrial:sulfur_ore",
+          "block_id": "alaindustrial:sulfur_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "সালফার আকরিক",
+              "text": "প্রাকৃতিক সালফার — খননযোগ্য অধাতু, যা রাবার ভালকানাইজেশনের জন্য গুঁড়ায় পরিণত করা হয়।"
+            }
+          ]
+        },
+        {
           "id": "uranium_ore",
           "title": "ইউরেনিয়াম আকরিক",
           "icon": "alaindustrial:uranium_ore",
@@ -1042,7 +1247,7 @@
             {
               "type": "text",
               "title": "ইউরেনিয়াম আকরিক",
-              "text": "মডের সবচেয়ে দুর্লভ আকরিক — লোহার কুদাল দিয়ে খনন, গুঁড়ো ও পিণ্ডে প্রক্রিয়াজাত; ভবিষ্যতের পারমাণবিক যন্ত্রের জন্য সংরক্ষিত।"
+              "text": "মডের সবচেয়ে বিরল আকরিক — লোহার পিক্যাক্স দিয়ে খনন করে গুঁড়া ও ইঙ্গটে প্রক্রিয়াজাত করা হয়; টর্চ, টেলিপোর্টার ও ইনকিউবেটরে ইতিমধ্যেই ব্যবহৃত হয়, পরে পারমাণবিক যন্ত্রেও লাগবে।"
             }
           ]
         },
@@ -1515,6 +1720,37 @@
           ]
         },
         {
+          "id": "windmill_rotor",
+          "title": "কাঠের রোটর",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "কাঠের রোটর",
+              "text": "বায়ু টারবাইনের পাখা — যেকোনো T1/T2 বায়ু চক্রের রোটর স্লটে বসে; এটি ছাড়া কোনো উৎপাদন নেই। উৎপাদনের সময় ক্ষয় হয়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "টেম্পার্ড লোহা",
           "icon": "alaindustrial:tempered_iron",
@@ -1678,38 +1914,7 @@
             {
               "type": "text",
               "title": "রাবার",
-              "text": "খনিজ তেল থেকে তৈরি একটি উপাদান — পলিমারাইজার তেলকে কাঁচা রাবারে পরিণত করে, চুল্লি তাকে পুড়িয়ে রাবার বানায়। ভবিষ্যতের অন্তরিত কেবল ও MV যন্ত্রাংশের ভিত্তি।"
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "কাঠের রোটর",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "কাঠের রোটর",
-              "text": "বায়ু টারবাইনের পাখা — যেকোনো T1/T2 বায়ু চক্রের রোটর স্লটে বসে; এটি ছাড়া কোনো উৎপাদন নেই। উৎপাদনের সময় ক্ষয় হয়।"
-            },
-            {
-              "type": "recipe",
-              "title": "রেসিপি",
-              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
+              "text": "খনিজ তেল ও সালফার থেকে তৈরি উপাদান — পলিমারাইজার কাঁচা রাবার বানায়, তারপর উত্তপ্ত ভালকানাইজার সেটিকে রাবারে পরিণত করে।"
             }
           ]
         },

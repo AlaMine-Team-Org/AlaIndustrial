@@ -10,6 +10,7 @@ import dev.alaindustrial.client.screen.IncubatorScreen;
 import dev.alaindustrial.client.screen.MaceratorScreen;
 import dev.alaindustrial.client.screen.PolymerizerScreen;
 import dev.alaindustrial.client.screen.SawmillScreen;
+import dev.alaindustrial.client.screen.VulcanizerScreen;
 
 /**
  * Loader-neutral click targets for opening machine recipe categories from a machine GUI.
@@ -35,6 +36,7 @@ public final class MachineRecipeViewerTargets {
 			new Target(ElectricFurnaceScreen.class, ModRecipes.SMELTING, new GuiRect(82, 38, 25, 9)),
 			new Target(CompressorScreen.class, ModRecipes.COMPRESSING, new GuiRect(81, 34, 25, 18)),
 			new Target(ExtractorScreen.class, ModRecipes.EXTRACTING, new GuiRect(80, 37, 29, 10)),
+			new Target(VulcanizerScreen.class, ModRecipes.VULCANIZING, new GuiRect(79, 38, 25, 9)),
 			// Sawmill (MOD-150): one screen, four recipe families (mode-switched). The progress sprite opens
 			// all four categories at once — the loader plugins special-case a sawmill target and pass every
 			// kind in SAWMILL_KINDS in a single click-area registration (mirrors the electric-furnace
@@ -55,7 +57,7 @@ public final class MachineRecipeViewerTargets {
 	 */
 	public record FluidTarget(
 			Class<? extends AbstractContainerScreen<?>> screenClass,
-			ModRecipes.FluidKind kind,
+			ModRecipes.FluidKind<?> kind,
 			GuiRect progressArea) {
 	}
 

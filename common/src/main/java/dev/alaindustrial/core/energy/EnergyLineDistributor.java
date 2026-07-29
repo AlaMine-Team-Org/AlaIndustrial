@@ -472,8 +472,8 @@ final class EnergyLineDistributor {
 			if (pulled <= 0) {
 				continue;
 			}
-			// MOD-021: destroy floor(pulled × lossPerBlock × distance) EU in transit, per consumer.
-			// Proportional to flow, so a small top-off packet floors to zero and the buffer still reaches
+			// MOD-021/MOD-253: attenuate the pulled flow once per traversed cable, per consumer.
+			// EnergyShare preserves at least 1 EU from a positive packet, so a small top-off still reaches
 			// exact capacity (no MOD-009 regression). The lost EU is not returned to any producer.
 			// The three lines below (deliver / surplus / consumed) are extracted into EnergyServe (MOD-144)
 			// so the runtime loss-application kernel — the +→− / −→+ EU-creation/destruction mutants — is

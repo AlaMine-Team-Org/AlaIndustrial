@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "它會變成什麼",
-              "text": "石油是橡膠產業鏈的起點。\n\n1. 收集它——用桶、真空膠囊或抽水機\n2. 聚合機：1000 mB 石油加 400 EU 產出生橡膠\n3. 熔爐或電力熔爐：生橡膠燒製成橡膠\n\n橡膠目前還沒有任何用途——它的使用者，絕緣纜線和 MV 元件，會隨下一階段到來。先囤起來吧。"
+              "text": "石油是橡膠產業鏈的起點。\n\n1. 用桶、真空膠囊或泵收集石油\n2. 聚合機：1000 mB 石油加 400 EU 產出生橡膠\n3. 硫化機：生橡膠 + 硫磺粉 + 400 EU\n4. 在下方放置營火（×1）、熔岩/岩漿（×2）或電熱器（×3）\n\n更好的熱源可以節省材料：每次操作始終只消耗一個生橡膠和一份硫磺粉。"
             }
           ]
         }
@@ -384,15 +384,14 @@
             {
               "type": "text",
               "title": "金纜線",
-              "text": "MV 電纜——比銅寬四倍但損耗更大：近處是粗管，遠處則像細管。"
+              "text": "寬大的裸露 MV 纜線，損耗很高；在電流實際流動時觸碰會遭到強烈電擊。"
             },
             {
               "type": "stats",
               "title": "數據",
               "lines": [
                 "能量：≤128 EU/封包",
-                "緩衝：48 EU",
-                "損耗：0.03/方塊"
+                "緩衝：48 EU"
               ]
             },
             {
@@ -416,6 +415,123 @@
           ]
         },
         {
+          "id": "insulated_gold_cable",
+          "title": "絕緣金纜線",
+          "icon": "alaindustrial:insulated_gold_cable",
+          "block_id": "alaindustrial:insulated_gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "絕緣金纜線",
+              "text": "包覆橡膠的 MV 金纜線——損耗減半，且完全不會因觸碰而電擊。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：≤128 EU/封包",
+                "緩衝：48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable"
+              ],
+              "result_id": "alaindustrial:insulated_gold_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "絕緣銅纜線",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "絕緣銅纜線",
+              "text": "包覆橡膠的 LV 銅纜線——損耗減半，且完全不會因觸碰而電擊。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：≤32 EU/封包",
+                "緩衝：12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:insulated_copper_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "絕緣錫纜線",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "絕緣錫纜線",
+              "text": "包覆橡膠的 LV 錫纜線——損耗極低，且完全不會因觸碰而電擊。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：≤8 EU/封包",
+                "緩衝：8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable"
+              ],
+              "result_id": "alaindustrial:insulated_tin_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "銅纜線",
           "icon": "alaindustrial:copper_cable",
@@ -424,15 +540,14 @@
             {
               "type": "text",
               "title": "銅纜線",
-              "text": "廉價又耐用的 LV 纜線，適合早期電網——將太陽能板、電池與機器連成一線。"
+              "text": "廉價又耐用的 LV 纜線；在電流實際流動時，裸露的導線會電擊觸碰它的玩家。"
             },
             {
               "type": "stats",
               "title": "數據",
               "lines": [
                 "能量：≤32 EU/封包",
-                "緩衝：12 EU",
-                "損耗：0.02/方塊"
+                "緩衝：12 EU"
               ]
             },
             {
@@ -464,15 +579,14 @@
             {
               "type": "text",
               "title": "錫纜線",
-              "text": "最便宜的 LV 電纜——細但幾乎無損耗，非常適合太陽能農場。"
+              "text": "最便宜、幾乎無損耗的 LV 纜線；在電流實際流動時，裸露的導線會電擊觸碰它的玩家。"
             },
             {
               "type": "stats",
               "title": "數據",
               "lines": [
                 "能量：≤8 EU/封包",
-                "緩衝：8 EU",
-                "損耗：0.006/方塊"
+                "緩衝：8 EU"
               ]
             },
             {
@@ -500,8 +614,47 @@
     {
       "id": "processing",
       "title": "加工",
-      "icon": "alaindustrial:macerator",
+      "icon": "alaindustrial:vulcanizer",
       "entries": [
+        {
+          "id": "vulcanizer",
+          "title": "硫化機",
+          "icon": "alaindustrial:vulcanizer",
+          "block_id": "alaindustrial:vulcanizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "硫化機",
+              "text": "一種將生橡膠與硫磺粉結合製成橡膠的 LV 機器。它需要 EU 和來自下方的熱量；熱源越強，產量越高。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：400 EU/操作",
+                "緩衝：800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:vulcanizer",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "macerator",
           "title": "研磨機",
@@ -659,7 +812,7 @@
             {
               "type": "text",
               "title": "聚合機",
-              "text": "將石油熬煮成生橡膠——儲罐容量 10 桶，每次操作消耗 1 桶。生橡膠再放進熔爐燒製，即可得到橡膠。"
+              "text": "將石油熬煮成生橡膠——儲罐容量 10 桶，每次操作消耗 1 桶。之後在硫化機中將橡膠與硫磺結合。"
             },
             {
               "type": "stats",
@@ -724,6 +877,45 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_heater",
+          "title": "電熱器",
+          "icon": "alaindustrial:electric_heater",
+          "block_id": "alaindustrial:electric_heater",
+          "pages": [
+            {
+              "type": "text",
+              "title": "電熱器",
+              "text": "一種無介面的 LV 輔助方塊，為硫化機提供最高 ×3 熱量。只有上方機器實際工作時才消耗 EU。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：2 EU/t",
+                "緩衝：800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:redstone",
+                "minecraft:gold_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electric_heater",
               "result_count": 1
             }
           ]
@@ -1034,6 +1226,19 @@
           ]
         },
         {
+          "id": "sulfur_ore",
+          "title": "硫磺礦石",
+          "icon": "alaindustrial:sulfur_ore",
+          "block_id": "alaindustrial:sulfur_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "硫磺礦石",
+              "text": "天然硫磺——一種可開採的非金屬，可加工成粉末用於橡膠硫化。"
+            }
+          ]
+        },
+        {
           "id": "uranium_ore",
           "title": "鈾礦石",
           "icon": "alaindustrial:uranium_ore",
@@ -1042,7 +1247,7 @@
             {
               "type": "text",
               "title": "鈾礦石",
-              "text": "模組中最稀有的礦石——需用鐵鎬開採，可加工成粉末與錠；保留給未來的核能機器。"
+              "text": "模組中最稀有的礦石——用鐵鎬開採並加工成粉末和錠；目前已用於火把、傳送器和孵化器，未來還會用於核能機器。"
             }
           ]
         },
@@ -1515,6 +1720,37 @@
           ]
         },
         {
+          "id": "windmill_rotor",
+          "title": "木製轉子",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "木製轉子",
+              "text": "風力渦輪機的葉片——放入任何 T1/T2 風車的轉子槽中；沒有它就無法發電。發電時會磨損。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "回火鐵",
           "icon": "alaindustrial:tempered_iron",
@@ -1678,38 +1914,7 @@
             {
               "type": "text",
               "title": "橡膠",
-              "text": "由石油製成的材料——聚合機將石油煉成生橡膠，熔爐再將其燒製成橡膠。是未來絕緣纜線與 MV 元件的基礎。"
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "木製轉子",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "木製轉子",
-              "text": "風力渦輪機的葉片——放入任何 T1/T2 風車的轉子槽中；沒有它就無法發電。發電時會磨損。"
-            },
-            {
-              "type": "recipe",
-              "title": "配方",
-              "recipe_type": "有序合成",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
+              "text": "由石油和硫磺製成的材料——聚合機生產生橡膠，再由加熱的硫化機將其製成橡膠。"
             }
           ]
         },

@@ -1,0 +1,20 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_gold_cable": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": "alaindustrial:gold_cable" } ] }
+    },
+    "has_rubber": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": "alaindustrial:rubber" } ] }
+    }
+  },
+  "requirements": [
+    [ "has_gold_cable" ],
+    [ "has_rubber" ]
+  ],
+  "rewards": {
+    "recipes": [ "alaindustrial:insulated_gold_cable" ]
+  }
+}

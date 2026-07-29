@@ -4,13 +4,13 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.ProcessingRecipeInput;
 import dev.alaindustrial.registry.ModRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -189,12 +189,14 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 	 * bound to the given kind; pass it to {@link #lookupKind} inside the subclass's
 	 * {@link #resolveInput} override.
 	 */
-	protected static RecipeManager.CachedCheck<SingleRecipeInput, AlaProcessingRecipe> checkFor(ModRecipes.Kind kind) {
+	protected static RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe> checkFor(
+			ModRecipes.Kind kind) {
 		return kind.newCheck();
 	}
 
 	/** Look up a single-kind recipe against a cached check; null when no recipe matches. */
-	protected static AlaProcessingRecipe lookupKind(RecipeManager.CachedCheck<SingleRecipeInput, AlaProcessingRecipe> check,
+	protected static AlaProcessingRecipe lookupKind(
+			RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe> check,
 			ServerLevel level, ItemStack input) {
 		return ModRecipes.lookup(check, level, input);
 	}

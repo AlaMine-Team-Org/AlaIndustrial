@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.alaindustrial.registry.ModCriteria;
+import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.ModRecipes.Kind;
@@ -51,6 +52,15 @@ class NeoForgeRegistrationTest {
 			assertNotNull(kind.type(), "ModRecipes." + kind.id() + ".type() unbound on NeoForge");
 			assertNotNull(kind.serializer(), "ModRecipes." + kind.id() + ".serializer() unbound on NeoForge");
 		}
+		for (ModRecipes.FluidKind<?> kind : ModRecipes.fluidKinds()) {
+			Identifier id = id(kind.id());
+			assertTrue(BuiltInRegistries.RECIPE_TYPE.containsKey(id),
+					"RECIPE_TYPE missing alaindustrial:" + kind.id() + " (fluid family)");
+			assertTrue(BuiltInRegistries.RECIPE_SERIALIZER.containsKey(id),
+					"RECIPE_SERIALIZER missing alaindustrial:" + kind.id() + " (fluid recipes would not parse)");
+			assertNotNull(kind.type(), "ModRecipes." + kind.id() + ".type() unbound on NeoForge");
+			assertNotNull(kind.serializer(), "ModRecipes." + kind.id() + ".serializer() unbound on NeoForge");
+		}
 	}
 
 	/** The {@code network_energized} advancement trigger + its neutral facade handle. */
@@ -78,6 +88,26 @@ class NeoForgeRegistrationTest {
 		assertTrue(BuiltInRegistries.SOUND_EVENT.containsKey(id("macerator_grind")),
 				"SOUND_EVENT missing alaindustrial:macerator_grind");
 		assertNotNull(ModSounds.MACERATOR_GRIND.get(), "ModSounds.MACERATOR_GRIND unbound on NeoForge");
+	}
+
+	/** MOD-245: sulfur's complete block/item set and loader-neutral facade are bound on NeoForge. */
+	@Test
+	void sulfurContentRegistered() {
+		for (String block : new String[] { "sulfur_ore", "deepslate_sulfur_ore" }) {
+			assertTrue(BuiltInRegistries.BLOCK.containsKey(id(block)),
+					"BLOCK missing alaindustrial:" + block);
+			assertTrue(BuiltInRegistries.ITEM.containsKey(id(block)),
+					"BlockItem missing alaindustrial:" + block);
+		}
+		for (String item : new String[] { "raw_sulfur", "sulfur_dust" }) {
+			assertTrue(BuiltInRegistries.ITEM.containsKey(id(item)),
+					"ITEM missing alaindustrial:" + item);
+		}
+		assertNotNull(ModContent.SULFUR_ORE.get(), "ModContent.SULFUR_ORE unbound on NeoForge");
+		assertNotNull(ModContent.DEEPSLATE_SULFUR_ORE.get(),
+				"ModContent.DEEPSLATE_SULFUR_ORE unbound on NeoForge");
+		assertNotNull(ModContent.RAW_SULFUR.get(), "ModContent.RAW_SULFUR unbound on NeoForge");
+		assertNotNull(ModContent.SULFUR_DUST.get(), "ModContent.SULFUR_DUST unbound on NeoForge");
 	}
 
 	/**

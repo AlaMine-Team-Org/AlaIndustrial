@@ -1,0 +1,51 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_sulfur": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:sulfur_dust"
+          }
+        ]
+      }
+    },
+    "has_casing": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:machine_casing"
+          }
+        ]
+      }
+    },
+    "has_circuit": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:electronic_circuit"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_sulfur"
+    ],
+    [
+      "has_casing"
+    ],
+    [
+      "has_circuit"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:vulcanizer"
+    ]
+  }
+}

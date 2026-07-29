@@ -4,6 +4,8 @@ import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.gametest.CableFaceParityScenarios;
 import dev.alaindustrial.gametest.CableEnergyScenarios;
+import dev.alaindustrial.gametest.CableInsulationScenarios;
+import dev.alaindustrial.gametest.CableShockScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.GeneratorEnergyScenarios;
 import dev.alaindustrial.gametest.MachineEnergyScenarios;
@@ -15,6 +17,7 @@ import dev.alaindustrial.gametest.ElectricDrillScenarios;
 import dev.alaindustrial.gametest.MagnetScenarios;
 import dev.alaindustrial.gametest.OilScenarios;
 import dev.alaindustrial.gametest.PolymerizerScenarios;
+import dev.alaindustrial.gametest.VulcanizerScenarios;
 import dev.alaindustrial.gametest.MenuDataWidthScenarios;
 import dev.alaindustrial.gametest.EnergyPackScenarios;
 import dev.alaindustrial.gametest.JetpackScenarios;
@@ -134,6 +137,22 @@ public final class NeoForgeGameTests {
 				CableEnergyScenarios::cableGradesCarryTheirOwnBuffer);
 		registerTest(event, "mixed_network_takes_loss_from_strongest_cable", 220, true,
 				CableEnergyScenarios::mixedNetworkTakesLossFromStrongestCable);
+		registerTest(event, "mod259_insulated_copper_loses_less_than_bare", 400, true,
+				CableInsulationScenarios::insulatedCopperLosesLessThanBare);
+		registerTest(event, "mod259_insulated_tin_loses_less_than_bare", 400, true,
+				CableInsulationScenarios::insulatedTinLosesLessThanBare);
+		registerTest(event, "mod268_insulated_gold_loses_less_than_bare", 400, true,
+				CableInsulationScenarios::insulatedGoldLosesLessThanBare);
+		registerTest(event, "mod259_mixed_copper_uses_bare_loss_deterministically", 400, true,
+				CableInsulationScenarios::mixedCopperUsesBareLossDeterministically);
+		registerTest(event, "mod259_recipes_and_visibility", 40, true,
+				CableInsulationScenarios::recipesAndVisibility);
+		registerTest(event, "mod260_energized_bare_only", 80, true,
+				CableShockScenarios::energizedBareOnly);
+		registerTest(event, "mod260_retained_buffer_is_safe", 80, true,
+				CableShockScenarios::retainedBufferIsSafe);
+		registerTest(event, "mod269_proximity_radius_respects_cover_and_config", 80, true,
+				CableShockScenarios::proximityRadiusRespectsCoverAndConfig);
 		registerTest(event, "in_place_grade_swap_rebuilds_segment", 40, true,
 				CableEnergyScenarios::inPlaceGradeSwapRebuildsSegment);
 		registerTest(event, "storage_does_not_charge_storage", 60, true,
@@ -191,6 +210,8 @@ public final class NeoForgeGameTests {
 		// tcCable001Nrg02 passes because EnergyStorage.supports* reflect the real per-face capability.
 		registerTest(event, "mod021_loss_over_ten_cables", 100, true,
 				CableEnergyScenarios::mod021LossOverTenCables);
+		registerTest(event, "mod253_long_copper_line_still_delivers_and_tops_off", 200, true,
+				CableEnergyScenarios::mod253LongCopperLineStillDeliversAndTopsOff);
 		registerTest(event, "nbt_round_trip_preserves_state", 40, true,
 				MachineEnergyScenarios::nbtRoundTripPreservesState);
 		// MOD-025: ring network union-find merge on cycle, proven on both loaders (loader-neutral body
@@ -719,6 +740,36 @@ public final class NeoForgeGameTests {
 				PolymerizerScenarios::con03NeighbourFillsThroughFluidPort);
 		registerTest(event, "polymerizer_nbt_round_trip_preserves_tank", 60, true,
 				PolymerizerScenarios::sta01NbtRoundTripPreservesTank);
+
+		// Vulcanizer + external heat (MOD-258, suite TC-VULC-001). These are the same bodies as the
+		// Fabric wrappers and cover the two-input recipe, heat multipliers, demand-driven electric
+		// heater, automation faces, cycle snapshot and persistence on the deferred-registration lane.
+		registerTest(event, "vulcanizer_heat_levels_scale_output", 700, true,
+				VulcanizerScenarios::fun01HeatLevelsScaleOutput);
+		registerTest(event, "vulcanizer_all_passive_heat_sources_resolve", 40, true,
+				VulcanizerScenarios::fun02AllPassiveHeatSourcesResolve);
+		registerTest(event, "vulcanizer_no_heat_no_work", 40, true,
+				VulcanizerScenarios::neg01NoHeatNoWork);
+		registerTest(event, "vulcanizer_no_power_no_work", 300, true,
+				VulcanizerScenarios::neg02NoPowerNoWork);
+		registerTest(event, "vulcanizer_inactive_heat_sources_resolve_as_none", 40, true,
+				VulcanizerScenarios::neg03InactiveHeatSourcesResolveAsNone);
+		registerTest(event, "vulcanizer_output_jam_freezes_both_consumers", 40, true,
+				VulcanizerScenarios::con01OutputJamFreezesBothConsumers);
+		registerTest(event, "vulcanizer_heater_is_demand_driven", 40, true,
+				VulcanizerScenarios::con02HeaterIsDemandDriven);
+		registerTest(event, "vulcanizer_heater_tariff_is_atomic_at_threshold", 40, true,
+				VulcanizerScenarios::con03HeaterTariffIsAtomicAtThreshold);
+		registerTest(event, "vulcanizer_heat_upgrade_restarts_cycle", 300, true,
+				VulcanizerScenarios::reg01HeatUpgradeRestartsCycle);
+		registerTest(event, "vulcanizer_automation_keeps_inputs_separated", 40, true,
+				VulcanizerScenarios::reg02AutomationKeepsInputsSeparated);
+		registerTest(event, "vulcanizer_heat_downgrade_restarts_cycle", 300, true,
+				VulcanizerScenarios::reg03HeatDowngradeRestartsCycle);
+		registerTest(event, "vulcanizer_round_trip_preserves_in_flight_cycle", 40, true,
+				VulcanizerScenarios::sta01RoundTripPreservesInFlightCycle);
+		registerTest(event, "vulcanizer_rubber_production_advancement", 300, true,
+				VulcanizerScenarios::fun03RubberProductionAdvancement);
 	}
 
 	/** Register one code-body scenario under the alaindustrial namespace with a sane maxTicks. */

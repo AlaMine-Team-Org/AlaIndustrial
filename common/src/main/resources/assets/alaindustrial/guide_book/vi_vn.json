@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "Nó biến thành gì",
-              "text": "Dầu mỏ là khởi đầu của chuỗi cao su.\n\n1. Thu dầu — bằng xô, Viên nang chân không hoặc Máy bơm\n2. Máy Trùng Hợp: 1000 mB dầu và 400 EU cho ra cao su thô\n3. Lò nung hoặc Lò điện: cao su thô chín thành cao su\n\nCao su hiện chưa bị tiêu thụ vào việc gì — nơi dùng nó, cáp cách điện và linh kiện MV, sẽ đến ở giai đoạn sau. Cứ tích trữ đi."
+              "text": "Dầu mỏ là khởi đầu của chuỗi cao su.\n\n1. Thu dầu — bằng xô, Viên nang chân không hoặc Máy bơm\n2. Máy Trùng Hợp: 1000 mB dầu và 400 EU cho ra cao su thô\n3. Máy Lưu Hóa: cao su thô + bột lưu huỳnh + 400 EU\n4. Đặt lửa trại (×1), dung nham/khối magma (×2) hoặc Máy sưởi điện (×3) bên dưới\n\nNhiệt tốt hơn giúp tiết kiệm vật liệu: mỗi lượt luôn tiêu thụ một cao su thô và một bột lưu huỳnh."
             }
           ]
         }
@@ -384,15 +384,14 @@
             {
               "type": "text",
               "title": "Cáp Vàng",
-              "text": "Cáp MV — rộng gấp bốn lần đồng nhưng hao hụt hơn: một ống rộng ở cự ly gần so với ống mỏng ở cự ly xa."
+              "text": "Cáp MV trần bản rộng, hao hụt lớn và gây giật mạnh khi chạm vào lúc năng lượng đang thực sự chảy qua."
             },
             {
               "type": "stats",
               "title": "Thông số",
               "lines": [
                 "Năng lượng: ≤128 EU/gói",
-                "Bộ đệm: 48 EU",
-                "Hao hụt: 0.03 mỗi khối"
+                "Bộ đệm: 48 EU"
               ]
             },
             {
@@ -416,6 +415,123 @@
           ]
         },
         {
+          "id": "insulated_gold_cable",
+          "title": "Cáp Vàng cách điện",
+          "icon": "alaindustrial:insulated_gold_cable",
+          "block_id": "alaindustrial:insulated_gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cáp Vàng cách điện",
+              "text": "Cáp Vàng MV bọc cao su — hao hụt chỉ còn một nửa và hoàn toàn miễn nhiễm với giật khi chạm."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: ≤128 EU/gói",
+                "Bộ đệm: 48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable"
+              ],
+              "result_id": "alaindustrial:insulated_gold_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "Cáp Đồng cách điện",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cáp Đồng cách điện",
+              "text": "Cáp Đồng LV bọc cao su — hao hụt chỉ còn một nửa và hoàn toàn miễn nhiễm với giật khi chạm."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: ≤32 EU/gói",
+                "Bộ đệm: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:insulated_copper_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "Cáp Thiếc cách điện",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cáp Thiếc cách điện",
+              "text": "Cáp Thiếc LV bọc cao su — hao hụt tối thiểu và hoàn toàn miễn nhiễm với giật khi chạm."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: ≤8 EU/gói",
+                "Bộ đệm: 8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable"
+              ],
+              "result_id": "alaindustrial:insulated_tin_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Cáp Đồng",
           "icon": "alaindustrial:copper_cable",
@@ -424,15 +540,14 @@
             {
               "type": "text",
               "title": "Cáp Đồng",
-              "text": "Cáp LV rẻ và bền bỉ cho mạng năng lượng thời kỳ đầu — nối tấm năng lượng mặt trời, pin và máy móc thành một đường dây."
+              "text": "Cáp LV rẻ và bền bỉ; khi năng lượng đang thực sự chảy qua, dây trần sẽ giật người chơi chạm vào."
             },
             {
               "type": "stats",
               "title": "Thông số",
               "lines": [
                 "Năng lượng: ≤32 EU/gói",
-                "Bộ đệm: 12 EU",
-                "Hao hụt: 0.02 mỗi khối"
+                "Bộ đệm: 12 EU"
               ]
             },
             {
@@ -464,15 +579,14 @@
             {
               "type": "text",
               "title": "Cáp Thiếc",
-              "text": "Cáp LV rẻ nhất — hẹp nhưng gần như không hao hụt, lý tưởng cho trang trại năng lượng mặt trời."
+              "text": "Cáp LV rẻ nhất và gần như không hao hụt; khi năng lượng đang thực sự chảy qua, dây trần sẽ giật người chơi chạm vào."
             },
             {
               "type": "stats",
               "title": "Thông số",
               "lines": [
                 "Năng lượng: ≤8 EU/gói",
-                "Bộ đệm: 8 EU",
-                "Hao hụt: 0.006 mỗi khối"
+                "Bộ đệm: 8 EU"
               ]
             },
             {
@@ -500,8 +614,47 @@
     {
       "id": "processing",
       "title": "Chế biến",
-      "icon": "alaindustrial:macerator",
+      "icon": "alaindustrial:vulcanizer",
       "entries": [
+        {
+          "id": "vulcanizer",
+          "title": "Máy Lưu Hóa",
+          "icon": "alaindustrial:vulcanizer",
+          "block_id": "alaindustrial:vulcanizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy Lưu Hóa",
+              "text": "Máy LV kết hợp cao su thô với bột lưu huỳnh để tạo cao su. Máy cần EU và nhiệt từ bên dưới; nguồn nhiệt mạnh hơn sẽ tăng sản lượng."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 400 EU/thao tác",
+                "Bộ đệm: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:vulcanizer",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "macerator",
           "title": "Máy nghiền",
@@ -659,7 +812,7 @@
             {
               "type": "text",
               "title": "Máy Trùng Hợp",
-              "text": "Chưng dầu mỏ thành cao su thô — bồn chứa 10 xô, mỗi lượt tốn một xô. Cao su thô sau đó được nung trong lò để thành cao su."
+              "text": "Chưng dầu mỏ thành cao su thô — bồn chứa 10 xô, mỗi lượt tốn một xô. Sau đó cao su được kết hợp với lưu huỳnh trong Máy Lưu Hóa."
             },
             {
               "type": "stats",
@@ -724,6 +877,45 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_heater",
+          "title": "Máy sưởi điện",
+          "icon": "alaindustrial:electric_heater",
+          "block_id": "alaindustrial:electric_heater",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy sưởi điện",
+              "text": "Khối hỗ trợ LV không có giao diện, cung cấp mức nhiệt tối đa ×3 cho Máy Lưu Hóa. Khối chỉ tiêu thụ EU khi máy phía trên thực sự hoạt động."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 2 EU/t",
+                "Bộ đệm: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:redstone",
+                "minecraft:gold_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electric_heater",
               "result_count": 1
             }
           ]
@@ -1034,6 +1226,19 @@
           ]
         },
         {
+          "id": "sulfur_ore",
+          "title": "Quặng lưu huỳnh",
+          "icon": "alaindustrial:sulfur_ore",
+          "block_id": "alaindustrial:sulfur_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Quặng lưu huỳnh",
+              "text": "Lưu huỳnh tự nhiên — một phi kim có thể khai thác và nghiền thành bột để lưu hóa cao su."
+            }
+          ]
+        },
+        {
           "id": "uranium_ore",
           "title": "Quặng uranium",
           "icon": "alaindustrial:uranium_ore",
@@ -1042,7 +1247,7 @@
             {
               "type": "text",
               "title": "Quặng uranium",
-              "text": "Quặng hiếm nhất của mod — đào bằng cuốc sắt, chế biến thành bột và thỏi; dành cho các máy hạt nhân trong tương lai."
+              "text": "Quặng hiếm nhất của mod — khai thác bằng cuốc sắt, chế biến thành bột và thỏi; hiện đã dùng cho đuốc, máy dịch chuyển và máy ấp, sau này còn dùng cho máy hạt nhân."
             }
           ]
         },
@@ -1515,6 +1720,37 @@
           ]
         },
         {
+          "id": "windmill_rotor",
+          "title": "Rotor gỗ",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rotor gỗ",
+              "text": "Cánh tuabin gió — lắp vào ô rotor của bất kỳ cối gió T1/T2 nào; thiếu nó thì không phát điện. Bị hao mòn khi phát điện."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Sắt Tôi",
           "icon": "alaindustrial:tempered_iron",
@@ -1678,38 +1914,7 @@
             {
               "type": "text",
               "title": "Cao su",
-              "text": "Vật liệu làm từ dầu mỏ — Máy Trùng Hợp biến dầu thành cao su thô, lò nung nung nó thành cao su. Nền tảng cho cáp cách điện và linh kiện MV sau này."
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "Rotor gỗ",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Rotor gỗ",
-              "text": "Cánh tuabin gió — lắp vào ô rotor của bất kỳ cối gió T1/T2 nào; thiếu nó thì không phát điện. Bị hao mòn khi phát điện."
-            },
-            {
-              "type": "recipe",
-              "title": "Công thức",
-              "recipe_type": "Chế tạo định hình",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
+              "text": "Vật liệu làm từ dầu mỏ và lưu huỳnh — Máy Trùng Hợp tạo cao su thô, rồi Máy Lưu Hóa được nung nóng biến nó thành cao su."
             }
           ]
         },

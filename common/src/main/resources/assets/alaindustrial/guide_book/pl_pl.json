@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "W co się zmienia",
-              "text": "Ropa to początek łańcucha gumy.\n\n1. Zbierz ją — wiadrem, Kapsułą próżniową albo Pompą\n2. Polimeryzator: 1000 mB ropy i 400 EU dają surowy kauczuk\n3. Piec albo Piec elektryczny: surowy kauczuk wypala się na gumę\n\nGuma na razie nigdzie się nie zużywa — jej odbiorcy, izolowane kable i komponenty MV, przyjdą w następnej fazie. Odkładaj ją na zapas."
+              "text": "Ropa to początek łańcucha gumy.\n\n1. Zbierz ją — wiadrem, Kapsułą próżniową albo Pompą\n2. Polimeryzator: 1000 mB ropy i 400 EU dają surowy kauczuk\n3. Wulkanizator: surowy kauczuk + pył siarkowy + 400 EU\n4. Umieść pod nim ognisko (×1), lawę/magmę (×2) albo Grzałkę elektryczną (×3)\n\nLepsze ciepło oszczędza materiały: każda operacja zawsze zużywa jeden surowy kauczuk i jeden pył siarkowy."
             }
           ]
         }
@@ -384,15 +384,14 @@
             {
               "type": "text",
               "title": "Kabel złoty",
-              "text": "Kabel MV — cztery razy szerszy od miedzi, ale bardziej stratny: szeroka rura z bliska kontra cienka z daleka."
+              "text": "Szeroki, goły kabel MV o dużych stratach — dopóki faktycznie płynie przez niego energia, dotknięcie kończy się poważnym porażeniem."
             },
             {
               "type": "stats",
               "title": "Statystyki",
               "lines": [
                 "Energia: ≤128 EU/pakiet",
-                "Bufor: 48 EU",
-                "Strata: 0.03 na blok"
+                "Bufor: 48 EU"
               ]
             },
             {
@@ -416,6 +415,123 @@
           ]
         },
         {
+          "id": "insulated_gold_cable",
+          "title": "Izolowany kabel złoty",
+          "icon": "alaindustrial:insulated_gold_cable",
+          "block_id": "alaindustrial:insulated_gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Izolowany kabel złoty",
+              "text": "Złoty kabel MV w gumowej osłonie — o połowę mniejsze straty i pełna odporność na porażenie przy dotknięciu."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: ≤128 EU/pakiet",
+                "Bufor: 48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable"
+              ],
+              "result_id": "alaindustrial:insulated_gold_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "Izolowany kabel miedziany",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Izolowany kabel miedziany",
+              "text": "Miedziany kabel LV w gumowej osłonie — o połowę mniejsze straty i pełna odporność na porażenie przy dotknięciu."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: ≤32 EU/pakiet",
+                "Bufor: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:insulated_copper_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "Izolowany kabel cynowy",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Izolowany kabel cynowy",
+              "text": "Cynowy kabel LV w gumowej osłonie — minimalne straty i pełna odporność na porażenie przy dotknięciu."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: ≤8 EU/pakiet",
+                "Bufor: 8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable"
+              ],
+              "result_id": "alaindustrial:insulated_tin_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Kabel miedziany",
           "icon": "alaindustrial:copper_cable",
@@ -424,15 +540,14 @@
             {
               "type": "text",
               "title": "Kabel miedziany",
-              "text": "Tani, uniwersalny kabel LV do wczesnych sieci energetycznych — łączy panele słoneczne, magazyny i maszyny w jedną linię."
+              "text": "Tani, uniwersalny kabel LV; gdy faktycznie płynie przez niego energia, goły przewód poraża gracza przy dotknięciu."
             },
             {
               "type": "stats",
               "title": "Statystyki",
               "lines": [
                 "Energia: ≤32 EU/pakiet",
-                "Bufor: 12 EU",
-                "Strata: 0.02 na blok"
+                "Bufor: 12 EU"
               ]
             },
             {
@@ -464,15 +579,14 @@
             {
               "type": "text",
               "title": "Kabel cynowy",
-              "text": "Najtańszy kabel LV — wąski, ale niemal bezstratny, idealny do farm solarnych."
+              "text": "Najtańszy, niemal bezstratny kabel LV; gdy faktycznie płynie przez niego energia, goły przewód poraża gracza przy dotknięciu."
             },
             {
               "type": "stats",
               "title": "Statystyki",
               "lines": [
                 "Energia: ≤8 EU/pakiet",
-                "Bufor: 8 EU",
-                "Strata: 0.006 na blok"
+                "Bufor: 8 EU"
               ]
             },
             {
@@ -500,8 +614,47 @@
     {
       "id": "processing",
       "title": "Przetwarzanie",
-      "icon": "alaindustrial:macerator",
+      "icon": "alaindustrial:vulcanizer",
       "entries": [
+        {
+          "id": "vulcanizer",
+          "title": "Wulkanizator",
+          "icon": "alaindustrial:vulcanizer",
+          "block_id": "alaindustrial:vulcanizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Wulkanizator",
+              "text": "Maszyna LV, która łączy surowy kauczuk z pyłem siarkowym, wytwarzając gumę. Potrzebuje EU i ciepła od dołu; silniejsze źródło ciepła zwiększa wydajność."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 400 EU/op",
+                "Bufor: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:vulcanizer",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "macerator",
           "title": "Rozdrabniacz",
@@ -659,7 +812,7 @@
             {
               "type": "text",
               "title": "Polimeryzator",
-              "text": "Wygotowuje ropę naftową do surowego kauczuku — zbiornik na 10 wiader, jedno wiadro na cykl. Surowy kauczuk wypala się potem w piecu i staje się gumą."
+              "text": "Wygotowuje ropę naftową do surowego kauczuku — zbiornik na 10 wiader, jedno wiadro na cykl. Kauczuk jest następnie łączony z siarką w Wulkanizatorze."
             },
             {
               "type": "stats",
@@ -724,6 +877,45 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_heater",
+          "title": "Grzałka elektryczna",
+          "icon": "alaindustrial:electric_heater",
+          "block_id": "alaindustrial:electric_heater",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Grzałka elektryczna",
+              "text": "Blok pomocniczy LV bez interfejsu, który zapewnia Wulkanizatorowi maksymalne ciepło ×3. Zużywa EU tylko wtedy, gdy maszyna nad nim faktycznie pracuje."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 2 EU/t",
+                "Bufor: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:redstone",
+                "minecraft:gold_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electric_heater",
               "result_count": 1
             }
           ]
@@ -1034,6 +1226,19 @@
           ]
         },
         {
+          "id": "sulfur_ore",
+          "title": "Ruda siarki",
+          "icon": "alaindustrial:sulfur_ore",
+          "block_id": "alaindustrial:sulfur_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ruda siarki",
+              "text": "Rodzima siarka — wydobywalny niemetal przerabiany na pył do wulkanizacji gumy."
+            }
+          ]
+        },
+        {
           "id": "uranium_ore",
           "title": "Złoże uranu",
           "icon": "alaindustrial:uranium_ore",
@@ -1042,7 +1247,7 @@
             {
               "type": "text",
               "title": "Złoże uranu",
-              "text": "Najrzadsze złoże w modzie — wydobywane żelaznym kilofem, przetwarzane na pył i sztabkę; zarezerwowane dla przyszłych maszyn nuklearnych."
+              "text": "Najrzadsza ruda moda — wydobywana żelaznym kilofem i przerabiana na pył oraz sztabkę; jest już używana w pochodni, teleporterze i inkubatorze, a później trafi do maszyn jądrowych."
             }
           ]
         },
@@ -1515,6 +1720,37 @@
           ]
         },
         {
+          "id": "windmill_rotor",
+          "title": "Wirnik wiatraka",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Wirnik wiatraka",
+              "text": "Łopaty wiatraka — umieszczane w slocie wirnika dowolnego wiatraka T1/T2; bez nich nie ma produkcji. Zużywają się podczas produkcji."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Hartowane żelazo",
           "icon": "alaindustrial:tempered_iron",
@@ -1678,38 +1914,7 @@
             {
               "type": "text",
               "title": "Guma",
-              "text": "Materiał otrzymywany z ropy — Polimeryzator przerabia ropę na surowy kauczuk, a piec wypala go na gumę. Podstawa przyszłych izolowanych kabli i komponentów MV."
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "Wirnik wiatraka",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Wirnik wiatraka",
-              "text": "Łopaty wiatraka — umieszczane w slocie wirnika dowolnego wiatraka T1/T2; bez nich nie ma produkcji. Zużywają się podczas produkcji."
-            },
-            {
-              "type": "recipe",
-              "title": "Przepis",
-              "recipe_type": "Wytwarzanie wg wzoru",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
+              "text": "Materiał z ropy i siarki — Polimeryzator wytwarza surowy kauczuk, a podgrzany Wulkanizator przerabia go na gumę."
             }
           ]
         },

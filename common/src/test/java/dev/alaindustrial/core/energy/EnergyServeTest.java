@@ -22,8 +22,8 @@ import dev.alaindustrial.core.fluid.FluidMover;
  *
  * <p>Three test layers:
  * <ul>
- *   <li><b>Point tests</b> — pin exact outputs at the canonical numbers (copper 0.02/blok, 32-EU LV
- *       packet over 10 cables → loss 6, delivered 26). These kill the obvious MATH mutants.</li>
+	 *   <li><b>Point tests</b> — pin exact outputs at the canonical numbers (copper 0.02/block, 32-EU LV
+	 *       packet over 10 cables → loss 5, delivered 27). These kill the obvious MATH mutants.</li>
  *   <li><b>jqwik {@code @Property}</b> — generative invariants (range, monotonicity, conservation)
  *       that hold for every legal input tuple. These kill mutants that only diverge on inputs a point
  *       test would not have chosen (e.g. a {@code max→min} flip is only visible when the two args
@@ -43,14 +43,14 @@ class EnergyServeTest {
 
 	@Test
 	void deliverAfterLoss_canonicalCopperCable10Blocks() {
-		// The documented balance invariant: a full LV packet (32 EU) over 10 copper cables loses
-		// floor(32 × 0.02 × 10) = 6 EU, so the consumer receives 26. This is the exact number pinned by
+		// The MOD-253 attenuation invariant: a full LV packet over 10 copper cables retains
+		// ceil(32 × 0.98^10) = 27 EU, so 5 EU are destroyed. This is the exact number pinned by
 		// EnergyShareTest.cableLoss_scalesWithFlowAndDistance AND the L2 NetworkGameTest scenario
 		// tcCable001Nrg02_lossOverTenCables — this test pins the FINAL delivered amount after subtracting.
 		long pulled = 32;
-		long loss = EnergyShare.cableLoss(pulled, 0.02, 10); // = 6
-		assertEquals(26L, EnergyServe.deliverAfterLoss(pulled, loss),
-				"32 EU with 6 EU loss → 26 delivered (canonical copper/10-block invariant)");
+		long loss = EnergyShare.cableLoss(pulled, 0.02, 10); // = 5
+		assertEquals(27L, EnergyServe.deliverAfterLoss(pulled, loss),
+				"32 EU with 5 EU loss → 27 delivered (canonical copper/10-block invariant)");
 	}
 
 	@Test
@@ -100,11 +100,11 @@ class EnergyServeTest {
 
 	@Test
 	void consumed_canonicalCopperCable10Blocks() {
-		// 32 pulled, 6 destroyed in transit, 26 inserted into the consumer. The pool must be charged 32
-		// (the full pull), not 26 — otherwise the next consumer class (storage sinks) would be served
+		// 32 pulled, 5 destroyed in transit, 27 inserted into the consumer. The pool must be charged 32
+		// (the full pull), not 27 — otherwise the next consumer class (storage sinks) would be served
 		// from a budget that pretends the loss never happened (silent EU creation at the pool level).
-		assertEquals(32L, EnergyServe.consumed(26, 6),
-				"pool charged 32: 26 delivered + 6 destroyed (no EU created at the pool level)");
+		assertEquals(32L, EnergyServe.consumed(27, 5),
+				"pool charged 32: 27 delivered + 5 destroyed (no EU created at the pool level)");
 	}
 
 	@Test

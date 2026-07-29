@@ -16,6 +16,9 @@ import dev.alaindustrial.block.IncubatorBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PumpBlock;
+import dev.alaindustrial.block.PolymerizerBlock;
+import dev.alaindustrial.block.VulcanizerBlock;
+import dev.alaindustrial.block.ElectricHeaterBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.item.misc.MutationGrades;
 import dev.alaindustrial.mutation.MutationGrade;
@@ -122,6 +125,7 @@ public final class MachineTooltips {
 					.withStyle(ChatFormatting.GRAY));
 		} else if (block instanceof CableBlock cable) {
 			lines.add(cableTier(cable));
+			lines.add(cableSafety(cable));
 		} else if (block instanceof SolarPanelBlock) {
 			lines.add(tier());
 			lines.add(Component.translatable("tooltip.alaindustrial.solar_chip_hint")
@@ -306,6 +310,9 @@ public final class MachineTooltips {
 				|| block instanceof ExtractorBlock
 				|| block instanceof IncubatorBlock
 				|| block instanceof PumpBlock
+				|| block instanceof PolymerizerBlock
+				|| block instanceof VulcanizerBlock
+				|| block instanceof ElectricHeaterBlock
 				|| block instanceof BatteryBoxBlock
 				|| block instanceof CableBlock;
 	}
@@ -341,6 +348,15 @@ public final class MachineTooltips {
 		} else if (block instanceof ExtractorBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.extractorDuration)));
+		} else if (block instanceof PolymerizerBlock) {
+			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
+			lines.add(tt("duration_ticks", Config.scaledDuration(Config.polymerizerDuration)));
+		} else if (block instanceof VulcanizerBlock) {
+			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
+			lines.add(tt("duration_ticks", Config.scaledDuration(Config.vulcanizerDuration)));
+		} else if (block instanceof ElectricHeaterBlock) {
+			lines.add(tt("energy_input", Config.electricHeaterEuPerTickEffective()));
+			lines.add(tt("capacity", Config.electricHeaterBuffer));
 		} else if (block instanceof IncubatorBlock) {
 			// The incubator does NOT run on machineEuPerTick — it has its own, four times higher draw,
 			// and three durations instead of one (the mutation chip picks the mode). So the basic line
@@ -355,6 +371,7 @@ public final class MachineTooltips {
 		} else if (block instanceof CableBlock cable) {
 			lines.add(cableTier(cable));
 			lines.add(tt("buffer", cable.type().segmentBuffer()));
+			lines.add(cableSafety(cable));
 		}
 	}
 
@@ -403,6 +420,18 @@ public final class MachineTooltips {
 			lines.add(tt("buffer", Config.machineBuffer));
 			lines.add(tt("energy_per_op",
 					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.extractorDuration)));
+		} else if (block instanceof PolymerizerBlock) {
+			lines.add(tier());
+			lines.add(tt("buffer", Config.machineBuffer));
+			lines.add(tt("energy_per_op",
+					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.polymerizerDuration)));
+		} else if (block instanceof VulcanizerBlock) {
+			lines.add(tier());
+			lines.add(tt("buffer", Config.machineBuffer));
+			lines.add(tt("energy_per_op",
+					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.vulcanizerDuration)));
+		} else if (block instanceof ElectricHeaterBlock) {
+			lines.add(tier());
 		} else if (block instanceof IncubatorBlock) {
 			lines.add(tier());
 			lines.add(tt("buffer", Config.incubatorBuffer));
@@ -422,6 +451,12 @@ public final class MachineTooltips {
 		} else if (block instanceof CableBlock cable) {
 			lines.add(tt("cable_loss", cableLossPercent(cable)));
 		}
+	}
+
+	private static Component cableSafety(CableBlock cable) {
+		String key = cable.type().isInsulated() ? "cable_safe" : "cable_shock_warning";
+		ChatFormatting color = cable.type().isInsulated() ? ChatFormatting.GREEN : ChatFormatting.RED;
+		return Component.translatable("tooltip.alaindustrial." + key).withStyle(color);
 	}
 
 	private static Component tt(String key, Object value) {

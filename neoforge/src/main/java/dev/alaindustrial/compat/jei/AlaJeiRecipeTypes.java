@@ -2,6 +2,7 @@ package dev.alaindustrial.compat.jei;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.FluidOutputRecipe;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
 import dev.alaindustrial.registry.ModRecipes;
 import mezz.jei.api.recipe.types.IRecipeHolderType;
@@ -15,6 +16,8 @@ final class AlaJeiRecipeTypes {
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.COMPRESSING.id()));
 	static final IRecipeHolderType<AlaProcessingRecipe> EXTRACTING =
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.EXTRACTING.id()));
+	static final IRecipeHolderType<AlaProcessingRecipe> VULCANIZING =
+			IRecipeHolderType.create(Industrialization.id(ModRecipes.VULCANIZING.id()));
 	static final IRecipeHolderType<AlaProcessingRecipe> SAWING_PLANKS =
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.SAWING_PLANKS.id()));
 	static final IRecipeHolderType<AlaProcessingRecipe> SAWING_STICKS =
@@ -33,6 +36,12 @@ final class AlaJeiRecipeTypes {
 	/** The Polymerizer's fluid → item family (MOD-019) — a different recipe class, so a separate type. */
 	static final IRecipeHolderType<PolymerizingRecipe> POLYMERIZING =
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.POLYMERIZING.id()));
+	/**
+	 * Viewer type hook for MOD-251. Its category/catalyst are intentionally registered only when the
+	 * real Distillation Column exists.
+	 */
+	static final IRecipeHolderType<FluidOutputRecipe> DISTILLING =
+			IRecipeHolderType.create(Industrialization.id(ModRecipes.DISTILLING.id()));
 
 	private AlaJeiRecipeTypes() {
 	}
@@ -49,6 +58,9 @@ final class AlaJeiRecipeTypes {
 		}
 		if (kind == ModRecipes.EXTRACTING) {
 			return EXTRACTING;
+		}
+		if (kind == ModRecipes.VULCANIZING) {
+			return VULCANIZING;
 		}
 		if (kind == ModRecipes.SAWING_PLANKS) {
 			return SAWING_PLANKS;

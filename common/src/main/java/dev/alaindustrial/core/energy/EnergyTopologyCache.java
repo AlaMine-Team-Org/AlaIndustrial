@@ -285,8 +285,10 @@ final class EnergyTopologyCache {
 	}
 
 	/**
-	 * The strongest cable grade present in this network — the one with the highest packet cap. It governs
-	 * BOTH the per-tick packet cap and the per-block loss rate of the whole line: splice one gold segment
+	 * The strongest cable grade present in this network — primarily the one with the highest packet cap.
+	 * Equal-cap bare/insulated variants are ordered conservatively so a bare segment governs the mixed
+	 * run instead of leaving the result to {@link HashSet} iteration order (MOD-259). It governs BOTH the
+	 * per-tick packet cap and the per-block loss rate of the whole line: splice one gold segment
 	 * into a copper run and the entire network moves to gold's 128 EU/t cap <b>and</b> to gold's 0.03
 	 * loss. That is the deliberate extension of the tier rule established in MOD-101 — taking the cap from
 	 * the strongest cable but the loss from the weakest (or from copper always) would let a player buy a
@@ -314,7 +316,8 @@ final class EnergyTopologyCache {
 		consumers.clear();
 		// Starts null, NOT at COPPER: seeding with copper would make an all-tin network (whose packet cap,
 		// 8, is below copper's 32) silently keep copper's numbers — the exact "recoloured copper" bug this
-		// whole change exists to kill. Only a network with no loadable cable at all falls back to copper.
+		// whole change exists to kill. CableType.strongerThan also resolves equal-cap insulation ties
+		// deterministically. Only a network with no loadable cable at all falls back to copper.
 		CableType strongest = null;
 		Set<BlockPos> seenProducer = new HashSet<>();
 		Set<BlockPos> seenConsumer = new HashSet<>();

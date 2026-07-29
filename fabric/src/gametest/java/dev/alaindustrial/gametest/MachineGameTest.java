@@ -18,9 +18,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.ProcessingRecipeInput;
 import dev.alaindustrial.registry.ModRecipes;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import team.reborn.energy.api.EnergyStorage;
 import dev.alaindustrial.core.energy.EnergyPort;
 import dev.alaindustrial.core.fabric.FabricEnergyPort;
@@ -104,6 +104,27 @@ public class MachineGameTest {
 		assertProduces(helper, ModBlocks.MACERATOR, new ItemStack(Items.IRON_ORE, 4), ModItems.IRON_DUST, 2);
 	}
 
+	/** MOD-245: stone sulfur ore follows the tag-driven ×2 maceration path. */
+	@GameTest
+	public void mod245_maceratorGrindsSulfurOre(GameTestHelper helper) {
+		assertProduces(helper, ModBlocks.MACERATOR,
+				new ItemStack(ModItems.SULFUR_ORE_ITEM, 4), ModItems.SULFUR_DUST, 2);
+	}
+
+	/** MOD-245: the deepslate variant is present in the same macerable tag. */
+	@GameTest
+	public void mod245_maceratorGrindsDeepslateSulfurOre(GameTestHelper helper) {
+		assertProduces(helper, ModBlocks.MACERATOR,
+				new ItemStack(ModItems.DEEPSLATE_SULFUR_ORE_ITEM, 4), ModItems.SULFUR_DUST, 2);
+	}
+
+	/** MOD-245: raw sulfur has its direct ×2 maceration recipe. */
+	@GameTest
+	public void mod245_maceratorGrindsRawSulfur(GameTestHelper helper) {
+		assertProduces(helper, ModBlocks.MACERATOR,
+				new ItemStack(ModItems.RAW_SULFUR, 4), ModItems.SULFUR_DUST, 2);
+	}
+
 	/**
 	 * @implements TC-MACH-002-FUN01 — electric furnace smelts raw iron into an iron ingot via the
 	 *     vanilla {@code minecraft:smelting} fallback (MOD-086 dropped the duplicate mod-side JSON;
@@ -112,6 +133,13 @@ public class MachineGameTest {
 	@GameTest
 	public void tcMach002Fun01_furnaceSmeltsRawIron(GameTestHelper helper) {
 		assertProduces(helper, ModBlocks.ELECTRIC_FURNACE, new ItemStack(Items.RAW_IRON, 4), Items.IRON_INGOT, 1);
+	}
+
+	/** MOD-245: the vanilla smelting recipe is also served by the electric furnace fallback. */
+	@GameTest
+	public void mod245_furnaceSmeltsRawSulfur(GameTestHelper helper) {
+		assertProduces(helper, ModBlocks.ELECTRIC_FURNACE,
+				new ItemStack(ModItems.RAW_SULFUR, 4), ModItems.SULFUR_DUST, 1);
 	}
 
 	/** @implements TC-MACH-003-FUN01 — compressor compresses clay balls into a brick. */
@@ -178,7 +206,7 @@ public class MachineGameTest {
 		// Looked up through the vanilla RecipeManager (R-14); iron_ore resolves via the
 		// #alaindustrial:macerable_iron tag (R-15), proving tag ingredients match. Ore blocks and
 		// raw_iron both macerate to ×2 dust (MOD-095, Mekanism/IC2 model); only the ingot path is ×1.
-		SingleRecipeInput input = new SingleRecipeInput(new ItemStack(Items.IRON_ORE));
+		ProcessingRecipeInput input = new ProcessingRecipeInput(new ItemStack(Items.IRON_ORE));
 		AlaProcessingRecipe ironRecipe = ModRecipes.MACERATION.newCheck()
 				.getRecipeFor(input, helper.getLevel()).map(RecipeHolder::value).orElse(null);
 		if (ironRecipe == null) {

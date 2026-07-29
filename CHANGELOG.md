@@ -1,16 +1,21 @@
-## 0.1.54
+## 0.1.55
 
-<p><img alt="Ala Industrial 0.1.54 bug fix patch" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.54/release-media/v0.1.54/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.55 — the Vulcanizer and the Electric Heater running" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.55/release-media/v0.1.55/changelog.png" width="720"></p>
 
-A small fix-up patch: baby mobs in jetpacks, smoother wind mill audio, and a more honest guide.
+Rubber is no longer something you bake in a furnace — it now takes two ingredients, a machine, a heat source, and a new ore to go find.
 
-### Bug Fixes
+### New
 
-- **Baby mobs wearing the jetpack** no longer show a pink-and-black missing texture on their chest — baby-zombies, piglins and villagers now get proper textures in both states.
-- **The wind mill's running sound** is preloaded, so on first world entry its loop starts cleanly instead of stuttering.
-- **The in-game guide** stopped lying: ore yields, metal uses, machine slots, component recipes, teleporter charge time and the cable/windmill formulas now match what the game actually does.
+- **Sulfur ore** generates underground and grinds into sulfur dust — half of every batch of rubber.
+- **The Vulcanizer** combines raw rubber and sulfur dust into rubber. It needs EU and a heat source directly below it.
+- **The Electric Heater** is the strongest heat source there is: it triples what the machine above it produces.
+- **Insulated cables** for tin, copper and gold — rubber halves the energy they lose over distance.
 
-### Internal
+### Improved
 
-- More of the mod's internal code is now covered by automated mutation testing.
-- Corrected understated oil-deposit volume figures in the design notes (no worldgen change).
+- Heat quality decides your yield: a campfire gives 1 rubber, lava or a magma block 2, an Electric Heater 3. Swapping the source mid-batch restarts it without eating your ingredients.
+- Insulating is a batch job now: 3 bare cables + 3 rubber + 3 bare cables gives 6 insulated cables — half the rubber per cable.
+
+### Fixed
+
+- Long cable runs no longer swallow the whole flow — losses ramp up smoothly and every packet delivers at least 1 EU.

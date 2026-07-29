@@ -432,6 +432,8 @@ public final class IndustrializationNeoForge {
 					ModBlockEntitiesNeoForge.COMPRESSOR,
 					ModBlockEntitiesNeoForge.SAWMILL,
 					ModBlockEntitiesNeoForge.POLYMERIZER,
+					ModBlockEntitiesNeoForge.VULCANIZER,
+					ModBlockEntitiesNeoForge.ELECTRIC_HEATER,
 					ModBlockEntitiesNeoForge.INCUBATOR,
 					ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR,
 					ModBlockEntitiesNeoForge.PUMP,
@@ -467,6 +469,7 @@ public final class IndustrializationNeoForge {
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.COMPRESSOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SAWMILL);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.POLYMERIZER);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.VULCANIZER);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.INCUBATOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.PUMP);

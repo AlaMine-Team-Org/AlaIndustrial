@@ -73,7 +73,7 @@ public final class ModItems {
 	public static final Item IRRADIATED_DIAMOND = item("irradiated_diamond");
 	public static final Item RESONANT_SHARD = item("resonant_shard");
 	public static final Item MUTAGEN_DUST = item("mutagen_dust");
-	// Oil → rubber chain (MOD-019): the polymerizer's product, and what a furnace cures it into.
+	// Oil → rubber chain: the polymerizer's product and the vulcanizer's cured output.
 	public static final Item RAW_RUBBER = item("raw_rubber");
 	public static final Item RUBBER = item("rubber");
 	public static final Item UNSTABLE_ISOTOPE = item("unstable_isotope");
@@ -130,6 +130,8 @@ public final class ModItems {
 	public static final Item NICKEL_DUST = item("nickel_dust");
 	public static final Item RAW_NICKEL = item("raw_nickel");
 	public static final Item NICKEL_INGOT = item("nickel_ingot");
+	public static final Item SULFUR_DUST = item("sulfur_dust");
+	public static final Item RAW_SULFUR = item("raw_sulfur");
 	public static final Item URANIUM_DUST = item("uranium_dust");
 	public static final Item RAW_URANIUM = item("raw_uranium");
 	public static final Item URANIUM_INGOT = item("uranium_ingot");
@@ -197,6 +199,7 @@ public final class ModItems {
 	public static final BlockItem GOLD_CABLE_ITEM = blockItem("gold_cable", ModBlocks.GOLD_CABLE);
 	public static final BlockItem INSULATED_COPPER_CABLE_ITEM = blockItem("insulated_copper_cable", ModBlocks.INSULATED_COPPER_CABLE);
 	public static final BlockItem INSULATED_TIN_CABLE_ITEM = blockItem("insulated_tin_cable", ModBlocks.INSULATED_TIN_CABLE);
+	public static final BlockItem INSULATED_GOLD_CABLE_ITEM = blockItem("insulated_gold_cable", ModBlocks.INSULATED_GOLD_CABLE);
 	// MOD-108: its own BlockItem subclass so the pipe can carry a tooltip (plain hint + Shift for the
 	// throughput numbers) — a plain blockItem() has none.
 	public static final BlockItem ITEM_PIPE_ITEM = pipeItem("item_pipe", ModBlocks.ITEM_PIPE);
@@ -208,6 +211,8 @@ public final class ModItems {
 	public static final BlockItem COMPRESSOR_ITEM = blockItem("compressor", ModBlocks.COMPRESSOR);
 	public static final BlockItem SAWMILL_ITEM = blockItem("sawmill", ModBlocks.SAWMILL);
 	public static final BlockItem POLYMERIZER_ITEM = blockItem("polymerizer", ModBlocks.POLYMERIZER);
+	public static final BlockItem VULCANIZER_ITEM = blockItem("vulcanizer", ModBlocks.VULCANIZER);
+	public static final BlockItem ELECTRIC_HEATER_ITEM = blockItem("electric_heater", ModBlocks.ELECTRIC_HEATER);
 	public static final BlockItem INCUBATOR_ITEM = blockItem("incubator", ModBlocks.INCUBATOR);
 	public static final BlockItem PUMP_ITEM = blockItem("pump", ModBlocks.PUMP);
 	public static final BlockItem FLUID_TANK_ITEM = fluidTankBlockItem("fluid_tank", ModBlocks.FLUID_TANK);
@@ -221,6 +226,8 @@ public final class ModItems {
 	public static final BlockItem DEEPSLATE_SILVER_ORE_ITEM = blockItem("deepslate_silver_ore", ModBlocks.DEEPSLATE_SILVER_ORE);
 	public static final BlockItem NICKEL_ORE_ITEM = blockItem("nickel_ore", ModBlocks.NICKEL_ORE);
 	public static final BlockItem DEEPSLATE_NICKEL_ORE_ITEM = blockItem("deepslate_nickel_ore", ModBlocks.DEEPSLATE_NICKEL_ORE);
+	public static final BlockItem SULFUR_ORE_ITEM = blockItem("sulfur_ore", ModBlocks.SULFUR_ORE);
+	public static final BlockItem DEEPSLATE_SULFUR_ORE_ITEM = blockItem("deepslate_sulfur_ore", ModBlocks.DEEPSLATE_SULFUR_ORE);
 	public static final BlockItem URANIUM_ORE_ITEM = blockItem("uranium_ore", ModBlocks.URANIUM_ORE);
 	public static final BlockItem DEEPSLATE_URANIUM_ORE_ITEM = blockItem("deepslate_uranium_ore", ModBlocks.DEEPSLATE_URANIUM_ORE);
 	public static final BlockItem IRON_CHEST_ITEM = blockItem("iron_chest", ModBlocks.IRON_CHEST);
@@ -582,6 +589,8 @@ public final class ModItems {
 		ModContent.NICKEL_DUST = () -> NICKEL_DUST;
 		ModContent.RAW_NICKEL = () -> RAW_NICKEL;
 		ModContent.NICKEL_INGOT = () -> NICKEL_INGOT;
+		ModContent.SULFUR_DUST = () -> SULFUR_DUST;
+		ModContent.RAW_SULFUR = () -> RAW_SULFUR;
 		ModContent.URANIUM_DUST = () -> URANIUM_DUST;
 		ModContent.RAW_URANIUM = () -> RAW_URANIUM;
 		ModContent.URANIUM_INGOT = () -> URANIUM_INGOT;
@@ -631,6 +640,7 @@ public final class ModItems {
 		ModContent.GOLD_CABLE_ITEM = () -> GOLD_CABLE_ITEM;
 		ModContent.INSULATED_COPPER_CABLE_ITEM = () -> INSULATED_COPPER_CABLE_ITEM;
 		ModContent.INSULATED_TIN_CABLE_ITEM = () -> INSULATED_TIN_CABLE_ITEM;
+		ModContent.INSULATED_GOLD_CABLE_ITEM = () -> INSULATED_GOLD_CABLE_ITEM;
 		ModContent.ITEM_PIPE_ITEM = () -> ITEM_PIPE_ITEM;
 		ModContent.MACERATOR_ITEM = () -> MACERATOR_ITEM;
 		ModContent.BATTERY_BOX_ITEM = () -> BATTERY_BOX_ITEM;
@@ -640,6 +650,8 @@ public final class ModItems {
 		ModContent.COMPRESSOR_ITEM = () -> COMPRESSOR_ITEM;
 		ModContent.SAWMILL_ITEM = () -> SAWMILL_ITEM;
 		ModContent.POLYMERIZER_ITEM = () -> POLYMERIZER_ITEM;
+		ModContent.VULCANIZER_ITEM = () -> VULCANIZER_ITEM;
+		ModContent.ELECTRIC_HEATER_ITEM = () -> ELECTRIC_HEATER_ITEM;
 		ModContent.INCUBATOR_ITEM = () -> INCUBATOR_ITEM;
 		ModContent.MUTATION_CHIP_TRANSFORM = () -> MUTATION_CHIP_TRANSFORM;
 		ModContent.MUTATION_CHIP_DUPLICATE = () -> MUTATION_CHIP_DUPLICATE;
@@ -660,6 +672,8 @@ public final class ModItems {
 		ModContent.DEEPSLATE_SILVER_ORE_ITEM = () -> DEEPSLATE_SILVER_ORE_ITEM;
 		ModContent.NICKEL_ORE_ITEM = () -> NICKEL_ORE_ITEM;
 		ModContent.DEEPSLATE_NICKEL_ORE_ITEM = () -> DEEPSLATE_NICKEL_ORE_ITEM;
+		ModContent.SULFUR_ORE_ITEM = () -> SULFUR_ORE_ITEM;
+		ModContent.DEEPSLATE_SULFUR_ORE_ITEM = () -> DEEPSLATE_SULFUR_ORE_ITEM;
 		ModContent.URANIUM_ORE_ITEM = () -> URANIUM_ORE_ITEM;
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = () -> DEEPSLATE_URANIUM_ORE_ITEM;
 		ModContent.IRON_CHEST_ITEM = () -> IRON_CHEST_ITEM;

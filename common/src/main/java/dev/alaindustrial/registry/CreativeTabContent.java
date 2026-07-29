@@ -96,6 +96,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.RAW_TIN.get());
 		out.accept(ModContent.RAW_SILVER.get());
 		out.accept(ModContent.RAW_NICKEL.get());
+		out.accept(ModContent.RAW_SULFUR.get());
 		out.accept(ModContent.RAW_URANIUM.get());
 		out.accept(ModContent.IRON_DUST.get());
 		out.accept(ModContent.COPPER_DUST.get());
@@ -107,6 +108,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.TIN_DUST.get());
 		out.accept(ModContent.SILVER_DUST.get());
 		out.accept(ModContent.NICKEL_DUST.get());
+		out.accept(ModContent.SULFUR_DUST.get());
 		out.accept(ModContent.URANIUM_DUST.get());
 		plates(out);
 		out.accept(ModContent.ELECTRONIC_CIRCUIT.get());
@@ -139,6 +141,8 @@ public final class CreativeTabContent {
 		out.accept(ModContent.DEEPSLATE_SILVER_ORE_ITEM.get());
 		out.accept(ModContent.NICKEL_ORE_ITEM.get());
 		out.accept(ModContent.DEEPSLATE_NICKEL_ORE_ITEM.get());
+		out.accept(ModContent.SULFUR_ORE_ITEM.get());
+		out.accept(ModContent.DEEPSLATE_SULFUR_ORE_ITEM.get());
 		out.accept(ModContent.URANIUM_ORE_ITEM.get());
 		out.accept(ModContent.DEEPSLATE_URANIUM_ORE_ITEM.get());
 	}
@@ -180,6 +184,8 @@ public final class CreativeTabContent {
 		out.accept(ModContent.INCUBATOR_ITEM.get());
 		out.accept(ModContent.PUMP_ITEM.get());
 		out.accept(ModContent.POLYMERIZER_ITEM.get());
+		out.accept(ModContent.VULCANIZER_ITEM.get());
+		out.accept(ModContent.ELECTRIC_HEATER_ITEM.get());
 	}
 
 	private static void storageAndCables(Sink out) {
@@ -195,12 +201,13 @@ public final class CreativeTabContent {
 		out.accept(ModContent.SILVER_CHEST_ITEM.get());
 		out.accept(ModContent.GOLD_CHEST_ITEM.get());
 		out.accept(ModContent.STOCK_DISPLAY_FRAME_ITEM.get());
-		// The three shipped cable grades, in ladder order (MOD-219): tin is the cheap near-lossless wire for
-		// solar farms, copper the universal workhorse, gold the wide MV pipe. The insulated pair stays out —
-		// its niche (water resistance) is not implemented yet.
+		// The conductor ladder and its rubber-insulated LV upgrades (MOD-219/MOD-259).
 		out.accept(ModContent.TIN_CABLE_ITEM.get());
+		out.accept(ModContent.INSULATED_TIN_CABLE_ITEM.get());
 		out.accept(ModContent.COPPER_CABLE_ITEM.get());
+		out.accept(ModContent.INSULATED_COPPER_CABLE_ITEM.get());
 		out.accept(ModContent.GOLD_CABLE_ITEM.get());
+		out.accept(ModContent.INSULATED_GOLD_CABLE_ITEM.get());
 		out.accept(ModContent.ITEM_PIPE_ITEM.get());
 	}
 
@@ -215,6 +222,8 @@ public final class CreativeTabContent {
 		out.accept(ModContent.RAW_NICKEL.get());
 		out.accept(ModContent.NICKEL_DUST.get());
 		out.accept(ModContent.NICKEL_INGOT.get());
+		out.accept(ModContent.RAW_SULFUR.get());
+		out.accept(ModContent.SULFUR_DUST.get());
 		out.accept(ModContent.RAW_URANIUM.get());
 		out.accept(ModContent.URANIUM_DUST.get());
 		out.accept(ModContent.URANIUM_INGOT.get());

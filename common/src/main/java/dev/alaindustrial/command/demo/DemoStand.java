@@ -5,6 +5,7 @@ import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
+import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -40,8 +41,14 @@ public final class DemoStand {
 
 	/** Stand footprint (x). */
 	public static final int WIDTH = 42;
-	/** Stand footprint (z). */
-	public static final int DEPTH = 26;
+	/**
+	 * Stand footprint (z). Grows whenever a zone gains a row — the cable zone takes one row per grade,
+	 * so insulated gold (MOD-268) pushed the item-pipe row to z=26 and this bound to 27. The
+	 * {@code demo_stand_area} GameTest structure is 28 deep with a 1-block origin margin, so 27 is the
+	 * ceiling: a row past it is built but falls outside the coverage scan, which reads as "block missing
+	 * from the stand" rather than as an out-of-bounds error.
+	 */
+	public static final int DEPTH = 27;
 	/** Blocks above the floor layer that belong to the stand (wind-mill pillars are tallest). */
 	public static final int HEIGHT = 9;
 
@@ -200,9 +207,8 @@ public final class DemoStand {
 	}
 
 	/**
-	 * Zone <b>machines</b> (row z=10): the four processing machines, buffer pre-charged to full
-	 * and a stack of a guaranteed-recipe input in slot 0, so they are visibly working (lit +
-	 * progress) the moment the stand is built.
+	 * Zone <b>machines</b> (row z=10): processing machines with full buffers and guaranteed
+	 * inputs, so they are visibly working (lit + progress) the moment the stand is built.
 	 */
 	private static void buildMachines(ServerLevel level, BlockPos origin) {
 		placeWorkingMachine(level, origin, 2, 10, ModContent.MACERATOR.get(), new ItemStack(Items.RAW_IRON, 64));
@@ -235,6 +241,17 @@ public final class DemoStand {
 			polymerizer.markDirtyAndSync();
 			polymerizer.wake();
 		}
+		// Vulcanizer (MOD-258): the electric heater occupies the block directly below the machine.
+		// Both buffers are charged and both positional inputs are stocked, so the stand demonstrates
+		// the tier-3 setup and its x3 rubber output rather than an idle shell.
+		set(level, origin, 26, 1, 10, ModContent.ELECTRIC_HEATER.get());
+		chargeBuffer(level, origin, 26, 1, 10);
+		set(level, origin, 26, 2, 10, ModContent.VULCANIZER.get());
+		chargeBuffer(level, origin, 26, 2, 10);
+		fillSlot(level, origin, 26, 2, 10, VulcanizerBlockEntity.RAW_RUBBER_SLOT,
+				new ItemStack(ModContent.RAW_RUBBER.get(), 64));
+		fillSlot(level, origin, 26, 2, 10, VulcanizerBlockEntity.SULFUR_SLOT,
+				new ItemStack(ModContent.SULFUR_DUST.get(), 64));
 		// Iron furnace (MOD-115): fuel-burning, not EU — so it is loaded with input + coal instead of a
 		// pre-charged buffer, and lights itself on the first tick like a vanilla furnace.
 		set(level, origin, 14, 1, 10, ModContent.IRON_FURNACE.get());
@@ -243,14 +260,15 @@ public final class DemoStand {
 	}
 
 	/**
-	 * Zone <b>cables</b> (rows z=14/16/18/20/22, one per cable type): a fully charged battery box
+	 * Zone <b>cables</b> (rows z=14..24, one per cable type): a fully charged battery box
 	 * feeds a 6-cable run into an electric furnace with input — a live network per row, so the
 	 * energy visibly flows (and the resistive loss of each material is observable in the GUI).
 	 */
 	private static void buildCableRuns(ServerLevel level, BlockPos origin) {
 		Block[] cables = {ModContent.COPPER_CABLE.get(), ModContent.TIN_CABLE.get(),
 				ModContent.GOLD_CABLE.get(),
-				ModContent.INSULATED_COPPER_CABLE.get(), ModContent.INSULATED_TIN_CABLE.get()};
+				ModContent.INSULATED_COPPER_CABLE.get(), ModContent.INSULATED_TIN_CABLE.get(),
+				ModContent.INSULATED_GOLD_CABLE.get()};
 		int z = 14;
 		for (Block cable : cables) {
 			// The box's rotation is load-bearing: single-axis IO (MOD-006) emits ONLY from the face
@@ -270,22 +288,25 @@ public final class DemoStand {
 		}
 		// MOD-104: a short item-pipe run between two chests. The two end faces remain neutral
 		// in the stand; the wrench is used by the player to demonstrate extract/insert arrows.
-		// Sits at z=24, one row past the last cable row: the gold cable (MOD-219) made the cable
-		// loop reach z=22, which this row used to occupy.
-		set(level, origin, 16, 1, 24, ModContent.IRON_CHEST.get());
-		fillSlot(level, origin, 16, 1, 24, 0, new ItemStack(Items.IRON_INGOT, 32));
-		for (int x = 17; x <= 21; x++) set(level, origin, x, 1, 24, ModContent.ITEM_PIPE.get());
-		set(level, origin, 22, 1, 24, ModContent.IRON_CHEST.get());
+		// Sits one row past the last cable row. That boundary keeps moving as grades are added —
+		// gold (MOD-219) pushed the cable loop to z=22, insulated gold (MOD-268) to z=24 — so this
+		// row now starts at z=26 instead of being overwritten by the loop's last iteration.
+		set(level, origin, 16, 1, 26, ModContent.IRON_CHEST.get());
+		fillSlot(level, origin, 16, 1, 26, 0, new ItemStack(Items.IRON_INGOT, 32));
+		for (int x = 17; x <= 21; x++) set(level, origin, x, 1, 26, ModContent.ITEM_PIPE.get());
+		set(level, origin, 22, 1, 26, ModContent.IRON_CHEST.get());
 	}
 
-	/** Zone <b>ores</b>: a 4×2 wall at z=4 — stone variants on top, deepslate variants below. */
+	/** Zone <b>ores</b>: a 5×2 wall at z=4 — stone variants on top, deepslate variants below. */
 	private static void buildOreWall(ServerLevel level, BlockPos origin) {
 		Block[][] wall = {
 				{ModContent.TIN_ORE.get(), ModContent.SILVER_ORE.get(),
-						ModContent.NICKEL_ORE.get(), ModContent.URANIUM_ORE.get()},
+						ModContent.NICKEL_ORE.get(), ModContent.URANIUM_ORE.get(),
+						ModContent.SULFUR_ORE.get()},
 				{ModContent.DEEPSLATE_TIN_ORE.get(), ModContent.DEEPSLATE_SILVER_ORE.get(),
-						ModContent.DEEPSLATE_NICKEL_ORE.get(), ModContent.DEEPSLATE_URANIUM_ORE.get()}};
-		for (int i = 0; i < 4; i++) {
+						ModContent.DEEPSLATE_NICKEL_ORE.get(), ModContent.DEEPSLATE_URANIUM_ORE.get(),
+						ModContent.DEEPSLATE_SULFUR_ORE.get()}};
+		for (int i = 0; i < wall[0].length; i++) {
 			set(level, origin, 34 + i, 2, 4, wall[0][i]);
 			set(level, origin, 34 + i, 1, 4, wall[1][i]);
 		}

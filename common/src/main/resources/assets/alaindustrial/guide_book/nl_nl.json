@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "Wat het wordt",
-              "text": "Aardolie is het begin van de rubberketen.\n\n1. Verzamel het — met een emmer, Vacuümcapsule of Pomp\n2. Polymerisator: 1000 mB aardolie en 400 EU leveren ruwe rubber\n3. Oven of Elektrische oven: ruwe rubber hardt uit tot rubber\n\nRubber wordt nog nergens voor verbruikt — de afnemers, geïsoleerde kabels en MV-onderdelen, komen met de volgende fase. Leg een voorraad aan."
+              "text": "Aardolie is het begin van de rubberketen.\n\n1. Verzamel het — met een emmer, Vacuümcapsule of Pomp\n2. Polymerisator: 1000 mB aardolie en 400 EU leveren ruwe rubber\n3. Vulkanisator: ruwe rubber + zwavelstof + 400 EU\n4. Plaats er een kampvuur (×1), lava/magma (×2) of een Elektrische verwarmer (×3) onder\n\nBetere hitte bespaart materiaal: elke bewerking verbruikt altijd één ruwe rubber en één zwavelstof."
             }
           ]
         }
@@ -384,15 +384,14 @@
             {
               "type": "text",
               "title": "Gouden kabel",
-              "text": "De MV-kabel — vier keer breder dan koper maar lekt meer: een brede pijp dichtbij tegenover een dunne veraf."
+              "text": "Een brede, blanke MV-kabel met veel verlies die een flinke schok geeft bij aanraking zolang er daadwerkelijk energie door stroomt."
             },
             {
               "type": "stats",
               "title": "Statistieken",
               "lines": [
                 "Energie: ≤128 EU/pakket",
-                "Buffer: 48 EU",
-                "Verlies: 0.03 per blok"
+                "Buffer: 48 EU"
               ]
             },
             {
@@ -416,6 +415,123 @@
           ]
         },
         {
+          "id": "insulated_gold_cable",
+          "title": "Geïsoleerde gouden kabel",
+          "icon": "alaindustrial:insulated_gold_cable",
+          "block_id": "alaindustrial:insulated_gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Geïsoleerde gouden kabel",
+              "text": "Een gouden MV-kabel met rubbermantel — de helft minder verlies en volledige immuniteit voor schokken bij aanraking."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: ≤128 EU/pakket",
+                "Buffer: 48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable"
+              ],
+              "result_id": "alaindustrial:insulated_gold_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "Geïsoleerde koperen kabel",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Geïsoleerde koperen kabel",
+              "text": "Een koperen LV-kabel met rubbermantel — de helft minder verlies en volledige immuniteit voor schokken bij aanraking."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: ≤32 EU/pakket",
+                "Buffer: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:insulated_copper_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "Geïsoleerde tinnen kabel",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Geïsoleerde tinnen kabel",
+              "text": "Een tinnen LV-kabel met rubbermantel — minimaal verlies en volledige immuniteit voor schokken bij aanraking."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: ≤8 EU/pakket",
+                "Buffer: 8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable"
+              ],
+              "result_id": "alaindustrial:insulated_tin_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Koperen kabel",
           "icon": "alaindustrial:copper_cable",
@@ -424,15 +540,14 @@
             {
               "type": "text",
               "title": "Koperen kabel",
-              "text": "Een goedkope, degelijke LV-kabel voor vroege energienetwerken — verbindt zonnepanelen, accu's en machines tot één lijn."
+              "text": "Een goedkope, degelijke LV-kabel; zolang er daadwerkelijk energie door stroomt, geeft de blanke draad spelers een schok bij aanraking."
             },
             {
               "type": "stats",
               "title": "Statistieken",
               "lines": [
                 "Energie: ≤32 EU/pakket",
-                "Buffer: 12 EU",
-                "Verlies: 0.02 per blok"
+                "Buffer: 12 EU"
               ]
             },
             {
@@ -464,15 +579,14 @@
             {
               "type": "text",
               "title": "Tinnen kabel",
-              "text": "De goedkoopste LV-kabel — smal maar vrijwel verliesvrij, ideaal voor zonneparken."
+              "text": "De goedkoopste, vrijwel verliesvrije LV-kabel; zolang er daadwerkelijk energie door stroomt, geeft de blanke draad spelers een schok bij aanraking."
             },
             {
               "type": "stats",
               "title": "Statistieken",
               "lines": [
                 "Energie: ≤8 EU/pakket",
-                "Buffer: 8 EU",
-                "Verlies: 0.006 per blok"
+                "Buffer: 8 EU"
               ]
             },
             {
@@ -500,8 +614,47 @@
     {
       "id": "processing",
       "title": "Verwerking",
-      "icon": "alaindustrial:macerator",
+      "icon": "alaindustrial:vulcanizer",
       "entries": [
+        {
+          "id": "vulcanizer",
+          "title": "Vulkanisator",
+          "icon": "alaindustrial:vulcanizer",
+          "block_id": "alaindustrial:vulcanizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vulkanisator",
+              "text": "Een LV-machine die ruwe rubber met zwavelstof combineert tot rubber. Hij heeft EU en warmte van onderen nodig; een sterkere warmtebron verhoogt de opbrengst."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 400 EU/bew.",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:vulcanizer",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "macerator",
           "title": "Vermaler",
@@ -659,7 +812,7 @@
             {
               "type": "text",
               "title": "Polymerisator",
-              "text": "Kookt aardolie in tot ruwe rubber — een tank van 10 emmers, één emmer per bewerking. De ruwe rubber wordt daarna in een oven gebakken tot rubber."
+              "text": "Kookt aardolie in tot ruwe rubber — een tank van 10 emmers, één emmer per bewerking. De rubber wordt daarna in een Vulkanisator met zwavel gecombineerd."
             },
             {
               "type": "stats",
@@ -724,6 +877,45 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_heater",
+          "title": "Elektrische verwarmer",
+          "icon": "alaindustrial:electric_heater",
+          "block_id": "alaindustrial:electric_heater",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrische verwarmer",
+              "text": "Een LV-hulpblok zonder interface dat de Vulkanisator de maximale warmte ×3 geeft. Het verbruikt alleen EU wanneer de machine erboven echt voortgang maakt."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 2 EU/t",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:redstone",
+                "minecraft:gold_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electric_heater",
               "result_count": 1
             }
           ]
@@ -1034,6 +1226,19 @@
           ]
         },
         {
+          "id": "sulfur_ore",
+          "title": "Zwavelerts",
+          "icon": "alaindustrial:sulfur_ore",
+          "block_id": "alaindustrial:sulfur_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zwavelerts",
+              "text": "Natuurlijke zwavel — een winbaar niet-metaal dat tot stof wordt verwerkt voor de vulkanisatie van rubber."
+            }
+          ]
+        },
+        {
           "id": "uranium_ore",
           "title": "Uraniumerts",
           "icon": "alaindustrial:uranium_ore",
@@ -1042,7 +1247,7 @@
             {
               "type": "text",
               "title": "Uraniumerts",
-              "text": "Het zeldzaamste erts van de mod — gedolven met een ijzeren houweel, verwerkt tot stof en staaf; gereserveerd voor toekomstige nucleaire machines."
+              "text": "Het zeldzaamste erts van de mod — gedolven met een ijzeren houweel en verwerkt tot stof en staaf; wordt al gebruikt in de fakkel, teleporter en incubator, en later in kernmachines."
             }
           ]
         },
@@ -1515,6 +1720,37 @@
           ]
         },
         {
+          "id": "windmill_rotor",
+          "title": "Molenrotor",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Molenrotor",
+              "text": "Windturbinebladen — geplaatst in de rotorsleuf van elke T1/T2-windmolen; zonder rotor geen opwekking. Slijten tijdens het opwekken."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Gehard ijzer",
           "icon": "alaindustrial:tempered_iron",
@@ -1678,38 +1914,7 @@
             {
               "type": "text",
               "title": "Rubber",
-              "text": "Een materiaal uit aardolie — de Polymerisator maakt van olie ruwe rubber, een oven bakt die tot rubber. De basis van toekomstige geïsoleerde kabels en MV-onderdelen."
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "Molenrotor",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Molenrotor",
-              "text": "Windturbinebladen — geplaatst in de rotorsleuf van elke T1/T2-windmolen; zonder rotor geen opwekking. Slijten tijdens het opwekken."
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Gevormd vervaardigen",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
+              "text": "Een materiaal uit aardolie en zwavel — de Polymerisator maakt ruwe rubber, waarna een verwarmde Vulkanisator die in rubber omzet."
             }
           ]
         },

@@ -131,6 +131,7 @@ class ConfigSnapshotTest {
 		SENTINELS.put("batteryBoxBuffer", 22_222);
 		SENTINELS.put("maceratorBuffer", 1600);
 		SENTINELS.put("machineBuffer", 1601);
+		SENTINELS.put("electricHeaterBuffer", 1602);
 		SENTINELS.put("pumpBuffer", 5000);
 		SENTINELS.put("generatorBuffer", 5001);
 		SENTINELS.put("geothermalBuffer", 5002);
@@ -188,6 +189,8 @@ class ConfigSnapshotTest {
 		SENTINELS.put("extractorDuration", 180);
 		SENTINELS.put("sawmillDuration", 130);
 		SENTINELS.put("polymerizerDuration", 333);
+		SENTINELS.put("vulcanizerDuration", 334);
+		SENTINELS.put("electricHeaterEuPerTick", 5);
 		SENTINELS.put("ironFurnaceCookTime", 160);
 		// Player stats / XP.
 		SENTINELS.put("euPerXp", 1500);

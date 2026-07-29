@@ -47,8 +47,14 @@ class CableTypeTest {
 	@Test
 	void loss_tinIsGentlest_andGoldIsWorstOnPurpose() {
 		assertEquals(0.006, CableType.TIN.lossPerBlock(), 1e-9);
+		assertEquals(0.003, CableType.INSULATED_TIN.lossPerBlock(), 1e-9);
 		assertEquals(0.02, CableType.COPPER.lossPerBlock(), 1e-9);
+		assertEquals(0.01, CableType.INSULATED_COPPER.lossPerBlock(), 1e-9);
 		assertEquals(0.03, CableType.GOLD.lossPerBlock(), 1e-9);
+		assertEquals(0.015, CableType.INSULATED_GOLD.lossPerBlock(), 1e-9);
+		assertTrue(CableType.INSULATED_TIN.lossPerBlock() < CableType.TIN.lossPerBlock());
+		assertTrue(CableType.INSULATED_COPPER.lossPerBlock() < CableType.COPPER.lossPerBlock());
+		assertTrue(CableType.INSULATED_GOLD.lossPerBlock() < CableType.GOLD.lossPerBlock());
 		assertTrue(CableType.TIN.lossPerBlock() < CableType.COPPER.lossPerBlock(),
 				"tin's low loss is its entire reason to exist");
 		assertTrue(CableType.GOLD.lossPerBlock() > CableType.COPPER.lossPerBlock(),
@@ -56,14 +62,57 @@ class CableTypeTest {
 	}
 
 	@Test
-	void tinCarriesSolarTrickleWithZeroLoss_whereCopperWouldLeak() {
-		// Tin's niche, expressed as the game actually computes it: one solar panel is 1 EU/t.
-		long solarFlow = Config.solarEuPerTick;
-		assertEquals(0L, EnergyShare.cableLoss(solarFlow, CableType.TIN.lossPerBlock(), 100),
-				"a 1 EU/t panel trickle floors to zero loss on tin over 100 blocks");
-		// Same trickle on copper over the same run does lose EU — this contrast is the design.
-		assertTrue(EnergyShare.cableLoss(solarFlow, CableType.COPPER.lossPerBlock(), 100) > 0,
-				"copper does leak on the same trickle, which is why tin has a niche");
+	void insulationChangesOnlyLoss_andUsesTheCanonicalHalfMultiplier() {
+		assertEquals(0.5, Config.insulationLossMultiplier, 1e-9);
+		assertSameConductor(CableType.TIN, CableType.INSULATED_TIN);
+		assertSameConductor(CableType.COPPER, CableType.INSULATED_COPPER);
+		assertSameConductor(CableType.GOLD, CableType.INSULATED_GOLD);
+		assertFalse(CableType.TIN.isInsulated());
+		assertFalse(CableType.COPPER.isInsulated());
+		assertFalse(CableType.GOLD.isInsulated());
+		assertTrue(CableType.INSULATED_TIN.isInsulated());
+		assertTrue(CableType.INSULATED_COPPER.isInsulated());
+		assertTrue(CableType.INSULATED_GOLD.isInsulated());
+		assertEquals(CableType.TIN.lossPerBlock() * 0.5,
+				CableType.INSULATED_TIN.lossPerBlock(), 1e-9);
+		assertEquals(CableType.COPPER.lossPerBlock() * 0.5,
+				CableType.INSULATED_COPPER.lossPerBlock(), 1e-9);
+		assertEquals(CableType.GOLD.lossPerBlock() * 0.5,
+				CableType.INSULATED_GOLD.lossPerBlock(), 1e-9);
+	}
+
+	@Test
+	void insulationGoldenDelivery_matchesMod253AttenuationAtFiftyAndOneHundredBlocks() {
+		assertDelivery(8, CableType.TIN, 50, 6);
+		assertDelivery(8, CableType.INSULATED_TIN, 50, 7);
+		assertDelivery(12, CableType.COPPER, 50, 5);
+		assertDelivery(12, CableType.INSULATED_COPPER, 50, 8);
+
+		assertDelivery(8, CableType.TIN, 100, 5);
+		assertDelivery(8, CableType.INSULATED_TIN, 100, 6);
+		assertDelivery(12, CableType.COPPER, 100, 2);
+		assertDelivery(12, CableType.INSULATED_COPPER, 100, 5);
+
+		assertDelivery(8, CableType.GOLD, 50, 2);
+		assertDelivery(8, CableType.INSULATED_GOLD, 50, 4);
+		assertDelivery(8, CableType.GOLD, 100, 1);
+		assertDelivery(8, CableType.INSULATED_GOLD, 100, 2);
+	}
+
+	@Test
+	void tinRetainsMoreOfTheSameFlowThanCopperAndGold() {
+		// MOD-253 guarantees that the last EU survives on every grade, so compare a representative packet
+		// instead of using a 1-EU trickle (which must now be loss-free on copper too).
+		long gross = 48;
+		int distance = 100;
+		long tinLoss = EnergyShare.cableLoss(gross, CableType.TIN.lossPerBlock(), distance);
+		long copperLoss = EnergyShare.cableLoss(gross, CableType.COPPER.lossPerBlock(), distance);
+		long goldLoss = EnergyShare.cableLoss(gross, CableType.GOLD.lossPerBlock(), distance);
+		assertEquals(21L, tinLoss);
+		assertEquals(41L, copperLoss);
+		assertEquals(45L, goldLoss);
+		assertTrue(tinLoss < copperLoss, "tin remains the long-distance grade");
+		assertTrue(copperLoss < goldLoss, "gold still pays the highest resistive loss");
 	}
 
 	@Test
@@ -96,11 +145,38 @@ class CableTypeTest {
 	}
 
 	@Test
+	void strongerThan_equalCapBareCableWinsDeterministically() {
+		assertTrue(CableType.TIN.strongerThan(CableType.INSULATED_TIN));
+		assertFalse(CableType.INSULATED_TIN.strongerThan(CableType.TIN));
+		assertTrue(CableType.COPPER.strongerThan(CableType.INSULATED_COPPER));
+		assertFalse(CableType.INSULATED_COPPER.strongerThan(CableType.COPPER));
+		assertTrue(CableType.GOLD.strongerThan(CableType.INSULATED_GOLD));
+		assertFalse(CableType.INSULATED_GOLD.strongerThan(CableType.GOLD));
+	}
+
+	@Test
 	void tier_goldIsMv_andTheLvPairIsLv() {
 		assertEquals(EnergyTier.LV, CableType.TIN.tier());
+		assertEquals(EnergyTier.LV, CableType.INSULATED_TIN.tier());
 		assertEquals(EnergyTier.LV, CableType.COPPER.tier());
+		assertEquals(EnergyTier.LV, CableType.INSULATED_COPPER.tier());
 		assertEquals(EnergyTier.MV, CableType.GOLD.tier(),
 				"gold is the mod's first MV wire — the tooltip and network read this");
+		assertEquals(EnergyTier.MV, CableType.INSULATED_GOLD.tier());
+	}
+
+	@Test
+	void shockDamage_scalesByTier_andReadsConfigLive() {
+		assertEquals(2.0f, CableType.TIN.shockDamage());
+		assertEquals(2.0f, CableType.COPPER.shockDamage());
+		assertEquals(6.0f, CableType.GOLD.shockDamage());
+		float original = Config.bareCableShockLvDamage;
+		try {
+			Config.bareCableShockLvDamage = 3.5f;
+			assertEquals(3.5f, CableType.COPPER.shockDamage());
+		} finally {
+			Config.bareCableShockLvDamage = original;
+		}
 	}
 
 	@ParameterizedTest
@@ -123,5 +199,32 @@ class CableTypeTest {
 		} finally {
 			Config.goldCableBuffer = original;
 		}
+	}
+
+	@Test
+	void insulationMultiplierIsReadLiveFromConfig() {
+		double original = Config.insulationLossMultiplier;
+		try {
+			Config.insulationLossMultiplier = 0.25;
+			assertEquals(Config.tinCableLossPerBlock * 0.25,
+					CableType.INSULATED_TIN.lossPerBlock(), 1e-9);
+			assertEquals(Config.copperCableLossPerBlock * 0.25,
+					CableType.INSULATED_COPPER.lossPerBlock(), 1e-9);
+			assertEquals(Config.goldCableLossPerBlock * 0.25,
+					CableType.INSULATED_GOLD.lossPerBlock(), 1e-9);
+		} finally {
+			Config.insulationLossMultiplier = original;
+		}
+	}
+
+	private static void assertSameConductor(CableType bare, CableType insulated) {
+		assertEquals(bare.tier(), insulated.tier());
+		assertEquals(bare.packetCap(), insulated.packetCap());
+		assertEquals(bare.segmentBuffer(), insulated.segmentBuffer());
+	}
+
+	private static void assertDelivery(long gross, CableType type, int distance, long expected) {
+		long delivered = gross - EnergyShare.cableLoss(gross, type.lossPerBlock(), distance);
+		assertEquals(expected, delivered, type + " delivery at " + distance + " blocks");
 	}
 }

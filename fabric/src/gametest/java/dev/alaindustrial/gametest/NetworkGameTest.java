@@ -7,6 +7,7 @@ import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.core.energy.EnergyNetwork;
+import dev.alaindustrial.core.energy.EnergyShare;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.registry.ModBlocks;
@@ -774,9 +775,9 @@ public class NetworkGameTest {
 	/**
 	 * @implements TC-CABLE-001-NRG02 — a 10-cable line loses EU proportional to distance (MOD-021). The
 	 *     generator buffer is pre-charged well above the LV packet cap and the BatteryBox is left empty
-	 *     (unlimited room), so flow is pinned at 32 EU/tick; each tick the box gains
-	 *     {@code 32 − floor(32 × copperCableLossPerBlock × 10)} EU — strictly less than the 32 a lossless
-	 *     line would deliver, proving the toll is active and distance-scaled.
+	 *     (unlimited room), so flow is pinned at the live copper segment buffer; each tick the box gains
+	 *     {@code flow - EnergyShare.cableLoss(flow, rate, 10)} EU — strictly less than a lossless line,
+	 *     proving the attenuating toll is active and distance-scaled.
 	 * @covers PERFORMANCE.md
 	 */
 	@GameTest(maxTicks = 80)
@@ -818,10 +819,10 @@ public class NetworkGameTest {
 		}
 
 		long got = be(helper, LOSS_BOX) instanceof BatteryBoxBlockEntity bb ? bb.getEnergyStorage().getAmount() : -1;
-		// MOD-070: per-cable throughput is the segment buffer (cableBuffer), not the tier voltage. The
-		// MOD-021 loss FORMULA is unchanged — it just applies to the actual per-tick flow (cableBuffer).
+		// MOD-070: per-cable throughput is the segment buffer (cableBuffer), not the tier voltage.
+		// MOD-253 attenuation applies to that actual per-tick flow.
 		long flow = Config.cableBuffer;
-		long lossPerTick = (long) Math.floor(flow * Config.copperCableLossPerBlock * 10);
+		long lossPerTick = EnergyShare.cableLoss(flow, Config.copperCableLossPerBlock, 10);
 		long deliveredPerTick = flow - lossPerTick;
 		// The fill front advances ~1 cable/tick, so the box only starts charging after ~LOSS_CABLES ticks.
 		long fillLatency = LOSS_CABLES.length;
@@ -838,6 +839,12 @@ public class NetworkGameTest {
 					+ " (deliveredPerTick=" + deliveredPerTick + ", latency~" + fillLatency + "), got " + got);
 		}
 		helper.succeed();
+	}
+
+	/** @implements MOD-253 — a 50-cable copper line still delivers and preserves MOD-009 exact top-off. */
+	@GameTest(maxTicks = 200)
+	public void mod253_longCopperLineStillDeliversAndTopsOff(GameTestHelper helper) {
+		CableEnergyScenarios.mod253LongCopperLineStillDeliversAndTopsOff(helper);
 	}
 
 	// ── TC-CABLE-001-NRG02b: a single-hop line is loss-free even at a full packet (MOD-021 / MOD-073) ─
@@ -1238,6 +1245,46 @@ public class NetworkGameTest {
 	@GameTest(maxTicks = 220)
 	public void tcCable003Nrg06_mixedNetworkTakesLossFromStrongestCable(GameTestHelper helper) {
 		CableEnergyScenarios.mixedNetworkTakesLossFromStrongestCable(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void mod259_insulatedCopperLosesLessThanBare(GameTestHelper helper) {
+		CableInsulationScenarios.insulatedCopperLosesLessThanBare(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void mod259_insulatedTinLosesLessThanBare(GameTestHelper helper) {
+		CableInsulationScenarios.insulatedTinLosesLessThanBare(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void mod268_insulatedGoldLosesLessThanBare(GameTestHelper helper) {
+		CableInsulationScenarios.insulatedGoldLosesLessThanBare(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void mod259_mixedCopperUsesBareLossDeterministically(GameTestHelper helper) {
+		CableInsulationScenarios.mixedCopperUsesBareLossDeterministically(helper);
+	}
+
+	@GameTest(maxTicks = 40)
+	public void mod259_recipesAndVisibility(GameTestHelper helper) {
+		CableInsulationScenarios.recipesAndVisibility(helper);
+	}
+
+	@GameTest(maxTicks = 80)
+	public void mod260_energizedBareOnly(GameTestHelper helper) {
+		CableShockScenarios.energizedBareOnly(helper);
+	}
+
+	@GameTest(maxTicks = 80)
+	public void mod260_retainedBufferIsSafe(GameTestHelper helper) {
+		CableShockScenarios.retainedBufferIsSafe(helper);
+	}
+
+	@GameTest(maxTicks = 80)
+	public void mod269_proximityRadiusRespectsCoverAndConfig(GameTestHelper helper) {
+		CableShockScenarios.proximityRadiusRespectsCoverAndConfig(helper);
 	}
 
 	// ── MOD-070: a storage source never charges another storage sink (no battery↔battery wash) ─────

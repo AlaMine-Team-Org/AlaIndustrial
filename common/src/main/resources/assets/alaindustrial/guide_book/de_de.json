@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "Was daraus wird",
-              "text": "Öl ist der Anfang der Gummikette.\n\n1. Sammle es ein — mit Eimer, Vakuumkapsel oder Pumpe\n2. Polymerisator: 1000 mB Öl und 400 EU ergeben Rohkautschuk\n3. Ofen oder Elektroofen: Rohkautschuk härtet zu Gummi aus\n\nGummi wird noch nirgends verbraucht — seine Abnehmer, isolierte Kabel und MV-Bauteile, kommen mit der nächsten Phase. Leg dir einen Vorrat an."
+              "text": "Öl ist der Anfang der Gummikette.\n\n1. Sammle es ein — mit Eimer, Vakuumkapsel oder Pumpe\n2. Polymerisator: 1000 mB Öl und 400 EU ergeben Rohkautschuk\n3. Vulkanisator: Rohkautschuk + Schwefelstaub + 400 EU\n4. Stelle darunter ein Lagerfeuer (×1), Lava/Magma (×2) oder einen Elektroerhitzer (×3)\n\nBessere Hitze spart Material: Jeder Vorgang verbraucht immer einen Rohkautschuk und einen Schwefelstaub."
             }
           ]
         }
@@ -384,15 +384,14 @@
             {
               "type": "text",
               "title": "Goldkabel",
-              "text": "Das MV-Kabel — viermal breiter als Kupfer, aber verlustreicher: ein breites Rohr auf kurzer Distanz gegenüber einem dünnen auf lange Distanz."
+              "text": "Ein breites, blankes MV-Kabel mit hohem Verlust — solange tatsächlich Energie fließt, versetzt es bei Berührung einen kräftigen Stromschlag."
             },
             {
               "type": "stats",
               "title": "Werte",
               "lines": [
                 "Energie: ≤128 EU/Paket",
-                "Puffer: 48 EU",
-                "Verlust: 0.03 pro Block"
+                "Puffer: 48 EU"
               ]
             },
             {
@@ -416,6 +415,123 @@
           ]
         },
         {
+          "id": "insulated_gold_cable",
+          "title": "Isoliertes Goldkabel",
+          "icon": "alaindustrial:insulated_gold_cable",
+          "block_id": "alaindustrial:insulated_gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Isoliertes Goldkabel",
+              "text": "Ein gummiummanteltes MV-Goldkabel mit halbem Verlust und völliger Immunität gegen Stromschläge bei Berührung."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: ≤128 EU/Paket",
+                "Puffer: 48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable"
+              ],
+              "result_id": "alaindustrial:insulated_gold_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "Isoliertes Kupferkabel",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Isoliertes Kupferkabel",
+              "text": "Ein gummiummanteltes LV-Kupferkabel mit halbem Verlust und völliger Immunität gegen Stromschläge bei Berührung."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: ≤32 EU/Paket",
+                "Puffer: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:insulated_copper_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "Isoliertes Zinnkabel",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Isoliertes Zinnkabel",
+              "text": "Ein gummiummanteltes LV-Zinnkabel mit minimalem Verlust und völliger Immunität gegen Stromschläge bei Berührung."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: ≤8 EU/Paket",
+                "Puffer: 8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable"
+              ],
+              "result_id": "alaindustrial:insulated_tin_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Kupferkabel",
           "icon": "alaindustrial:copper_cable",
@@ -424,15 +540,14 @@
             {
               "type": "text",
               "title": "Kupferkabel",
-              "text": "Ein günstiges LV-Allzweckkabel für frühe Energienetze — verbindet Solarpanels, Batterien und Maschinen zu einer Leitung."
+              "text": "Ein günstiges LV-Allzweckkabel; solange tatsächlich Energie fließt, versetzt der blanke Draht Spielern bei Berührung einen Stromschlag."
             },
             {
               "type": "stats",
               "title": "Werte",
               "lines": [
                 "Energie: ≤32 EU/Paket",
-                "Puffer: 12 EU",
-                "Verlust: 0.02 pro Block"
+                "Puffer: 12 EU"
               ]
             },
             {
@@ -464,15 +579,14 @@
             {
               "type": "text",
               "title": "Zinnkabel",
-              "text": "Das günstigste LV-Kabel — schmal, aber nahezu verlustfrei, ideal für Solarfarmen."
+              "text": "Das günstigste, nahezu verlustfreie LV-Kabel; solange tatsächlich Energie fließt, versetzt der blanke Draht Spielern bei Berührung einen Stromschlag."
             },
             {
               "type": "stats",
               "title": "Werte",
               "lines": [
                 "Energie: ≤8 EU/Paket",
-                "Puffer: 8 EU",
-                "Verlust: 0.006 pro Block"
+                "Puffer: 8 EU"
               ]
             },
             {
@@ -500,8 +614,47 @@
     {
       "id": "processing",
       "title": "Verarbeitung",
-      "icon": "alaindustrial:macerator",
+      "icon": "alaindustrial:vulcanizer",
       "entries": [
+        {
+          "id": "vulcanizer",
+          "title": "Vulkanisator",
+          "icon": "alaindustrial:vulcanizer",
+          "block_id": "alaindustrial:vulcanizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vulkanisator",
+              "text": "Eine LV-Maschine, die Rohkautschuk und Schwefelstaub zu Gummi verbindet. Sie benötigt EU und Hitze von unten; eine stärkere Wärmequelle erhöht die Ausbeute."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 400 EU/Vorgang",
+                "Puffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:vulcanizer",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "macerator",
           "title": "Brecher",
@@ -659,7 +812,7 @@
             {
               "type": "text",
               "title": "Polymerisator",
-              "text": "Kocht Öl zu Rohkautschuk ein — ein Tank für 10 Eimer, ein Eimer pro Durchlauf. Der Rohkautschuk wird anschließend im Ofen zu Gummi gebrannt."
+              "text": "Kocht Öl zu Rohkautschuk ein — ein Tank für 10 Eimer, ein Eimer pro Durchlauf. Der Rohkautschuk wird anschließend im Vulkanisator mit Schwefel verbunden."
             },
             {
               "type": "stats",
@@ -724,6 +877,45 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_heater",
+          "title": "Elektroerhitzer",
+          "icon": "alaindustrial:electric_heater",
+          "block_id": "alaindustrial:electric_heater",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektroerhitzer",
+              "text": "Ein GUI-loser LV-Hilfsblock, der dem Vulkanisator die maximale Hitze ×3 liefert. Er verbraucht nur EU, wenn die Maschine darüber tatsächlich arbeitet."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 2 EU/t",
+                "Puffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:redstone",
+                "minecraft:gold_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electric_heater",
               "result_count": 1
             }
           ]
@@ -1034,6 +1226,19 @@
           ]
         },
         {
+          "id": "sulfur_ore",
+          "title": "Schwefelerz",
+          "icon": "alaindustrial:sulfur_ore",
+          "block_id": "alaindustrial:sulfur_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Schwefelerz",
+              "text": "Natürlicher Schwefel — ein abbaubares Nichtmetall, das für die Vulkanisierung von Gummi zu Staub verarbeitet wird."
+            }
+          ]
+        },
+        {
           "id": "uranium_ore",
           "title": "Uranerz",
           "icon": "alaindustrial:uranium_ore",
@@ -1042,7 +1247,7 @@
             {
               "type": "text",
               "title": "Uranerz",
-              "text": "Das seltenste Erz des Mods — mit einer Eisenspitzhacke abgebaut, zu Staub und Barren verarbeitet; reserviert für künftige Nuklearmaschinen."
+              "text": "Das seltenste Erz des Mods — mit einer Eisenspitzhacke abgebaut und zu Staub und Barren verarbeitet; wird bereits für Fackel, Teleporter und Inkubator verwendet und später für Nuklearmaschinen."
             }
           ]
         },
@@ -1515,6 +1720,37 @@
           ]
         },
         {
+          "id": "windmill_rotor",
+          "title": "Windturbinenrotor",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Windturbinenrotor",
+              "text": "Windturbinenblätter — werden in den Rotor-Slot jeder T1/T2-Windturbine eingesetzt; ohne sie keine Erzeugung. Nutzen sich beim Erzeugen ab."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Gehärtetes Eisen",
           "icon": "alaindustrial:tempered_iron",
@@ -1678,38 +1914,7 @@
             {
               "type": "text",
               "title": "Gummi",
-              "text": "Ein Werkstoff aus Öl — der Polymerisator verarbeitet Öl zu Rohkautschuk, ein Ofen brennt ihn zu Gummi. Die Grundlage künftiger isolierter Kabel und MV-Komponenten."
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "Windturbinenrotor",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Windturbinenrotor",
-              "text": "Windturbinenblätter — werden in den Rotor-Slot jeder T1/T2-Windturbine eingesetzt; ohne sie keine Erzeugung. Nutzen sich beim Erzeugen ab."
-            },
-            {
-              "type": "recipe",
-              "title": "Rezept",
-              "recipe_type": "Geformtes Handwerk",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
+              "text": "Ein Werkstoff aus Öl und Schwefel — der Polymerisator erzeugt Rohkautschuk, den ein beheizter Vulkanisator anschließend zu Gummi verarbeitet."
             }
           ]
         },

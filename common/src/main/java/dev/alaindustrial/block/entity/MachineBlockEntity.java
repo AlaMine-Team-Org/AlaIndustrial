@@ -94,10 +94,16 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		// buffer commits (was MachineEnergyStorage.onFinalCommit): persist + GUI-sync, then wake. A
 		// committed insert/extract is external delivery/draw, which must wake an idle consumer (R-29);
 		// internal per-tick drain mutates `energy.amount` directly (no transaction) and never fires this.
-		this.energy = new EnergyBuffer(capacity, maxInsert, maxExtract, () -> {
-			markDirtyAndSync();
-			wake();
-		});
+		this.energy = new EnergyBuffer(capacity, maxInsert, maxExtract, this::onEnergyTransactionCommitted);
+	}
+
+	/**
+	 * Called after a transaction that changed this block's energy buffer commits. Subclasses may extend
+	 * the hook, but must call {@code super}: persistence, client sync and idle wake-up live here.
+	 */
+	protected void onEnergyTransactionCommitted() {
+		markDirtyAndSync();
+		wake();
 	}
 
 	/**

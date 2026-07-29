@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.menu.ExtractorMenu;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.ProcessingRecipeInput;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
 import net.minecraft.core.BlockPos;
@@ -16,7 +17,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -34,7 +34,8 @@ public final class ExtractorBlockEntity extends AbstractProcessingMachineBlockEn
 	/** Output slot index — re-export of the shared processing-machine slot 1. */
 	public static final int OUTPUT_SLOT = 1;
 
-	private final RecipeManager.CachedCheck<SingleRecipeInput, AlaProcessingRecipe> recipeCheck = checkFor(ModRecipes.EXTRACTING);
+	private final RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe> recipeCheck =
+			checkFor(ModRecipes.EXTRACTING);
 
 	public ExtractorBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.EXTRACTOR_BE.get(), pos, state, EnergyTier.LV, Config.machineBuffer, Config.extractorDuration);

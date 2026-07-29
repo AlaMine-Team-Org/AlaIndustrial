@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "alaindustrial:raw_sulfur",
+  "result": {
+    "id": "alaindustrial:sulfur_dust",
+    "count": 2
+  },
+  "energy": 300
+}

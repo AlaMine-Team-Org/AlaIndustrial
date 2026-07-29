@@ -310,14 +310,14 @@ public class AlaCommonGameTest {
 	/**
 	 * ORE_CONVENTION_TAGS (MOD-114): every ore block/item is exposed through the Fabric+NeoForge
 	 * common {@code c:} convention tags, so tag-driven mods (vein miners, ore-processing, unification,
-	 * REI/EMI grouping) recognise our metals as ores/materials — parity with vanilla iron/copper.
+	 * REI/EMI grouping) recognise our materials as ores — parity with vanilla iron/copper.
 	 *
-	 * <p>Asserts, for each of tin/silver/nickel/uranium (stone + deepslate variant):
+	 * <p>Asserts, for each of tin/silver/nickel/sulfur/uranium (stone + deepslate variant):
 	 * <ul>
 	 *   <li>block in {@code #c:ores} and {@code #c:ores/<metal>};</li>
 	 *   <li>stone variant in {@code #c:ores_in_ground/stone}, deepslate variant in {@code .../deepslate};</li>
 	 *   <li>block-item in {@code #c:ores}; raw drop in {@code #c:raw_materials(/<metal>)};
-	 *       ingot in {@code #c:ingots(/<metal>)}.</li>
+	 *       and, for metals, ingot in {@code #c:ingots(/<metal>)}.</li>
 	 * </ul>
 	 * A missing/typo'd tag JSON breaks membership → this test fails. The tag data lives in
 	 * {@code common/}, so the same files back the NeoForge loader (structural parity).
@@ -331,18 +331,18 @@ public class AlaCommonGameTest {
 		TagKey<Block> inStone = blockTag("ores_in_ground/stone");
 		TagKey<Block> inDeepslate = blockTag("ores_in_ground/deepslate");
 
-		for (String metal : new String[] { "tin", "silver", "nickel", "uranium" }) {
-			Block stoneOre = ore(metal + "_ore");
-			Block deepslateOre = ore("deepslate_" + metal + "_ore");
-			TagKey<Block> perMetal = blockTag("ores/" + metal);
+		for (String material : new String[] { "tin", "silver", "nickel", "sulfur", "uranium" }) {
+			Block stoneOre = ore(material + "_ore");
+			Block deepslateOre = ore("deepslate_" + material + "_ore");
+			TagKey<Block> perMaterial = blockTag("ores/" + material);
 
 			for (Block b : new Block[] { stoneOre, deepslateOre }) {
 				BlockState s = b.defaultBlockState();
 				if (!s.is(cOres)) {
 					failures.add(blockId(b) + " not in #c:ores");
 				}
-				if (!s.is(perMetal)) {
-					failures.add(blockId(b) + " not in #c:ores/" + metal);
+				if (!s.is(perMaterial)) {
+					failures.add(blockId(b) + " not in #c:ores/" + material);
 				}
 			}
 			if (!stoneOre.defaultBlockState().is(inStone)) {
@@ -352,17 +352,21 @@ public class AlaCommonGameTest {
 				failures.add(blockId(deepslateOre) + " not in #c:ores_in_ground/deepslate");
 			}
 
-			assertItemInTag(failures, metal + "_ore", "ores");
-			assertItemInTag(failures, "deepslate_" + metal + "_ore", "ores");
-			assertItemInTag(failures, "raw_" + metal, "raw_materials");
-			assertItemInTag(failures, "raw_" + metal, "raw_materials/" + metal);
+			assertItemInTag(failures, material + "_ore", "ores");
+			assertItemInTag(failures, "deepslate_" + material + "_ore", "ores");
+			assertItemInTag(failures, "raw_" + material, "raw_materials");
+			assertItemInTag(failures, "raw_" + material, "raw_materials/" + material);
+		}
+
+		// Sulfur is a non-metal: it deliberately has no ingot form.
+		for (String metal : new String[] { "tin", "silver", "nickel", "uranium" }) {
 			assertItemInTag(failures, metal + "_ingot", "ingots");
 			assertItemInTag(failures, metal + "_ingot", "ingots/" + metal);
 		}
 
 		// Dusts (MOD-114): full processing-chain material tag for unification/grinding mods. Covers
 		// the mod's own metals plus dusts of vanilla materials it produces.
-		for (String mat : new String[] { "tin", "silver", "nickel", "uranium", "copper", "iron",
+		for (String mat : new String[] { "tin", "silver", "nickel", "sulfur", "uranium", "copper", "iron",
 				"gold", "coal", "diamond", "emerald", "lapis" }) {
 			assertItemInTag(failures, mat + "_dust", "dusts");
 			assertItemInTag(failures, mat + "_dust", "dusts/" + mat);

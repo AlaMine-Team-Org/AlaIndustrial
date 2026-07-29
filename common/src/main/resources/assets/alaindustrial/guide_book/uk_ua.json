@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "На що перетворюється",
-              "text": "Нафта — початок ланцюга гуми.\n\n1. Зберіть її — відром, Вакуумною капсулою або Помпою\n2. Полімеризатор: 1000 мБ нафти і 400 EU дають сирий каучук\n3. Піч або Електрична піч: сирий каучук стає гумою\n\nГума поки ні на що не витрачається — її споживачі, ізольовані дроти та MV-компоненти, прийдуть наступною фазою. Складайте про запас."
+              "text": "Нафта — початок ланцюга гуми.\n\n1. Зберіть її — відром, Вакуумною капсулою або Помпою\n2. Полімеризатор: 1000 мБ нафти й 400 EU дають сирий каучук\n3. Вулканізатор: сирий каучук + сірчаний пил + 400 EU\n4. Поставте під ним багаття (×1), лаву/магму (×2) або Електронагрівач (×3)\n\nКраще нагрівання заощаджує матеріали: кожна операція завжди витрачає один сирий каучук і один сірчаний пил."
             }
           ]
         }
@@ -384,15 +384,14 @@
             {
               "type": "text",
               "title": "Золотий кабель",
-              "text": "MV-кабель — вчетверо ширший за мідь, але з більшими втратами: широка труба зблизька проти тонкої здалеку."
+              "text": "Широкий голий MV-кабель із великими втратами — доки енергія справді тече, дотик до нього дає серйозний удар струмом."
             },
             {
               "type": "stats",
               "title": "Характеристики",
               "lines": [
                 "Енергія: ≤128 EU/пакет",
-                "Буфер: 48 EU",
-                "Втрати: 0.03 на блок"
+                "Буфер: 48 EU"
               ]
             },
             {
@@ -416,6 +415,123 @@
           ]
         },
         {
+          "id": "insulated_gold_cable",
+          "title": "Ізольований золотий кабель",
+          "icon": "alaindustrial:insulated_gold_cable",
+          "block_id": "alaindustrial:insulated_gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ізольований золотий кабель",
+              "text": "Золотий MV-кабель у гумовій оболонці — удвічі менші втрати та повний захист від удару струмом при дотику."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: ≤128 EU/пакет",
+                "Буфер: 48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable"
+              ],
+              "result_id": "alaindustrial:insulated_gold_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "Ізольований мідний кабель",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ізольований мідний кабель",
+              "text": "Мідний LV-кабель у гумовій оболонці — удвічі менші втрати та повний захист від удару струмом при дотику."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: ≤32 EU/пакет",
+                "Буфер: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:insulated_copper_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "Ізольований олов’яний кабель",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ізольований олов’яний кабель",
+              "text": "Олов’яний LV-кабель у гумовій оболонці — мінімальні втрати та повний захист від удару струмом при дотику."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: ≤8 EU/пакет",
+                "Буфер: 8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable"
+              ],
+              "result_id": "alaindustrial:insulated_tin_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Мідний кабель",
           "icon": "alaindustrial:copper_cable",
@@ -424,15 +540,14 @@
             {
               "type": "text",
               "title": "Мідний кабель",
-              "text": "Дешевий робочий кабель LV для ранніх енергомереж — з’єднує сонячні панелі, акумулятори та машини в одну лінію."
+              "text": "Дешевий робочий LV-кабель; доки енергія справді тече, голий провід б’є струмом гравця при дотику."
             },
             {
               "type": "stats",
               "title": "Характеристики",
               "lines": [
                 "Енергія: ≤32 EU/пакет",
-                "Буфер: 12 EU",
-                "Втрати: 0.02 на блок"
+                "Буфер: 12 EU"
               ]
             },
             {
@@ -464,15 +579,14 @@
             {
               "type": "text",
               "title": "Олов’яний кабель",
-              "text": "Найдешевший LV-кабель — вузький, але майже без втрат, ідеальний для сонячних ферм."
+              "text": "Найдешевший LV-кабель, майже без втрат; доки енергія справді тече, голий провід б’є струмом гравця при дотику."
             },
             {
               "type": "stats",
               "title": "Характеристики",
               "lines": [
                 "Енергія: ≤8 EU/пакет",
-                "Буфер: 8 EU",
-                "Втрати: 0.006 на блок"
+                "Буфер: 8 EU"
               ]
             },
             {
@@ -500,8 +614,47 @@
     {
       "id": "processing",
       "title": "Переробка",
-      "icon": "alaindustrial:macerator",
+      "icon": "alaindustrial:vulcanizer",
       "entries": [
+        {
+          "id": "vulcanizer",
+          "title": "Вулканізатор",
+          "icon": "alaindustrial:vulcanizer",
+          "block_id": "alaindustrial:vulcanizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Вулканізатор",
+              "text": "LV-машина, що поєднує сирий каучук із сірчаним пилом і виробляє гуму. Потребує EU та нагрівання знизу; сильніше джерело тепла збільшує вихід."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 400 EU/оп",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:vulcanizer",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "macerator",
           "title": "Подрібнювач",
@@ -659,7 +812,7 @@
             {
               "type": "text",
               "title": "Полімеризатор",
-              "text": "Переганяє нафту в сирий каучук — бак на 10 відер, відро за операцію. Далі сирий каучук випалюють у печі, і він стає гумою."
+              "text": "Переганяє нафту в сирий каучук — бак на 10 відер, одне відро за операцію. Далі каучук поєднують із сіркою у Вулканізаторі."
             },
             {
               "type": "stats",
@@ -724,6 +877,45 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_heater",
+          "title": "Електронагрівач",
+          "icon": "alaindustrial:electric_heater",
+          "block_id": "alaindustrial:electric_heater",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Електронагрівач",
+              "text": "Допоміжний LV-блок без інтерфейсу, що дає Вулканізатору максимальне нагрівання ×3. Витрачає EU лише тоді, коли машина над ним справді працює."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 2 EU/t",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:redstone",
+                "minecraft:gold_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electric_heater",
               "result_count": 1
             }
           ]
@@ -1034,6 +1226,19 @@
           ]
         },
         {
+          "id": "sulfur_ore",
+          "title": "Сірчана руда",
+          "icon": "alaindustrial:sulfur_ore",
+          "block_id": "alaindustrial:sulfur_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Сірчана руда",
+              "text": "Самородна сірка — видобувний неметал, який переробляють на пил для вулканізації гуми."
+            }
+          ]
+        },
+        {
           "id": "uranium_ore",
           "title": "Уранова руда",
           "icon": "alaindustrial:uranium_ore",
@@ -1042,7 +1247,7 @@
             {
               "type": "text",
               "title": "Уранова руда",
-              "text": "Найрідкісніша руда мода — добувається залізним кайлом, переробляється в пил і злиток; зарезервована під майбутні ядерні машини."
+              "text": "Найрідкісніша руда мода — видобувається залізним кайлом і переробляється на пил та злиток; уже використовується у смолоскипі, телепорті й інкубаторі, а згодом — у ядерних машинах."
             }
           ]
         },
@@ -1515,6 +1720,37 @@
           ]
         },
         {
+          "id": "windmill_rotor",
+          "title": "Ротор вітряка",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ротор вітряка",
+              "text": "Лопаті вітротурбіни — ставляться в слот ротора будь-якого вітряка T1/T2; без нього генерації немає. Зношуються під час генерації."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Загартоване залізо",
           "icon": "alaindustrial:tempered_iron",
@@ -1678,38 +1914,7 @@
             {
               "type": "text",
               "title": "Гума",
-              "text": "Матеріал із нафти — полімеризатор переганяє нафту в сирий каучук, піч випалює його в гуму. Основа майбутніх ізольованих дротів і MV-компонентів."
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "Ротор вітряка",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Ротор вітряка",
-              "text": "Лопаті вітротурбіни — ставляться в слот ротора будь-якого вітряка T1/T2; без нього генерації немає. Зношуються під час генерації."
-            },
-            {
-              "type": "recipe",
-              "title": "Рецепт",
-              "recipe_type": "Крафт за формою",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
+              "text": "Матеріал із нафти та сірки — Полімеризатор виробляє сирий каучук, а нагрітий Вулканізатор перетворює його на гуму."
             }
           ]
         },

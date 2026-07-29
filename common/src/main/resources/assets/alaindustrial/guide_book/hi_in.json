@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "यह क्या बनता है",
-              "text": "कच्चा तेल रबर की शृंखला की शुरुआत है।\n\n1. इसे इकट्ठा करें — बाल्टी, वैक्यूम कैप्सूल या पंप से\n2. पॉलिमराइज़र: 1000 mB तेल और 400 EU मिलकर कच्चा रबर देते हैं\n3. भट्ठी या विद्युत भट्ठी: कच्चा रबर पककर रबर बन जाता है\n\nरबर अभी किसी चीज़ में खर्च नहीं होता — इसके उपभोक्ता, रोधित केबल और MV घटक, अगले चरण के साथ आएँगे। इसे जमा करते रहें।"
+              "text": "कच्चा तेल रबर की शृंखला की शुरुआत है।\n\n1. इसे बाल्टी, वैक्यूम कैप्सूल या पंप से इकट्ठा करें\n2. पॉलिमराइज़र: 1000 mB तेल और 400 EU से कच्चा रबर\n3. वल्कनाइज़र: कच्चा रबर + गंधक की धूल + 400 EU\n4. इसके नीचे अलाव (×1), लावा/मैग्मा (×2) या विद्युत तापक (×3) रखें\n\nबेहतर ऊष्मा सामग्री बचाती है: हर संचालन में हमेशा एक कच्चा रबर और एक गंधक की धूल खर्च होती है।"
             }
           ]
         }
@@ -384,15 +384,14 @@
             {
               "type": "text",
               "title": "सोने की केबल",
-              "text": "MV केबल — तांबे से चार गुना चौड़ा पर ज़्यादा रिसाव वाला: पास में चौड़ा पाइप, दूर में पतला।"
+              "text": "चौड़ी, बिना रोधन वाली MV केबल — हानि अधिक है, और जब तक इसमें वास्तव में ऊर्जा बह रही हो, छूने पर तेज़ झटका लगता है।"
             },
             {
               "type": "stats",
               "title": "आँकड़े",
               "lines": [
                 "ऊर्जा: ≤128 EU/पैकेट",
-                "बफ़र: 48 EU",
-                "हानि: 0.03 प्रति ब्लॉक"
+                "बफ़र: 48 EU"
               ]
             },
             {
@@ -416,6 +415,123 @@
           ]
         },
         {
+          "id": "insulated_gold_cable",
+          "title": "रोधित सोने की केबल",
+          "icon": "alaindustrial:insulated_gold_cable",
+          "block_id": "alaindustrial:insulated_gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "रोधित सोने की केबल",
+              "text": "रबर से मढ़ी सोने की MV केबल — हानि आधी और छूने पर झटके से पूरी सुरक्षा।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: ≤128 EU/पैकेट",
+                "बफ़र: 48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable"
+              ],
+              "result_id": "alaindustrial:insulated_gold_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "रोधित तांबे की केबल",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "रोधित तांबे की केबल",
+              "text": "रबर से मढ़ी तांबे की LV केबल — हानि आधी और छूने पर झटके से पूरी सुरक्षा।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: ≤32 EU/पैकेट",
+                "बफ़र: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:insulated_copper_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "रोधित टिन की केबल",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "रोधित टिन की केबल",
+              "text": "रबर से मढ़ी टिन की LV केबल — हानि बहुत कम और छूने पर झटके से पूरी सुरक्षा।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: ≤8 EU/पैकेट",
+                "बफ़र: 8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable"
+              ],
+              "result_id": "alaindustrial:insulated_tin_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "तांबे की केबल",
           "icon": "alaindustrial:copper_cable",
@@ -424,15 +540,14 @@
             {
               "type": "text",
               "title": "तांबे की केबल",
-              "text": "शुरुआती ऊर्जा नेटवर्क के लिए एक सस्ती, भरोसेमंद LV केबल — सौर पैनल, बैटरियों और मशीनों को एक ही लाइन में जोड़ती है।"
+              "text": "एक सस्ती, भरोसेमंद LV केबल; जब तक इसमें वास्तव में ऊर्जा बह रही हो, नंगा तार छूने वाले खिलाड़ी को झटका देता है।"
             },
             {
               "type": "stats",
               "title": "आँकड़े",
               "lines": [
                 "ऊर्जा: ≤32 EU/पैकेट",
-                "बफ़र: 12 EU",
-                "हानि: 0.02 प्रति ब्लॉक"
+                "बफ़र: 12 EU"
               ]
             },
             {
@@ -464,15 +579,14 @@
             {
               "type": "text",
               "title": "टिन की केबल",
-              "text": "सबसे सस्ती LV केबल — पतली पर लगभग बिना हानि के, सौर फार्मों के लिए आदर्श।"
+              "text": "सबसे सस्ती, लगभग हानिरहित LV केबल; जब तक इसमें वास्तव में ऊर्जा बह रही हो, नंगा तार छूने वाले खिलाड़ी को झटका देता है।"
             },
             {
               "type": "stats",
               "title": "आँकड़े",
               "lines": [
                 "ऊर्जा: ≤8 EU/पैकेट",
-                "बफ़र: 8 EU",
-                "हानि: 0.006 प्रति ब्लॉक"
+                "बफ़र: 8 EU"
               ]
             },
             {
@@ -500,8 +614,47 @@
     {
       "id": "processing",
       "title": "प्रोसेसिंग",
-      "icon": "alaindustrial:macerator",
+      "icon": "alaindustrial:vulcanizer",
       "entries": [
+        {
+          "id": "vulcanizer",
+          "title": "वल्कनाइज़र",
+          "icon": "alaindustrial:vulcanizer",
+          "block_id": "alaindustrial:vulcanizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "वल्कनाइज़र",
+              "text": "एक LV मशीन जो कच्चे रबर को गंधक की धूल के साथ मिलाकर रबर बनाती है। इसे EU और नीचे से ऊष्मा चाहिए; अधिक शक्तिशाली ऊष्मा स्रोत उत्पादन बढ़ाता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 400 EU/संचालन",
+                "बफ़र: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:vulcanizer",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "macerator",
           "title": "पेषक",
@@ -659,7 +812,7 @@
             {
               "type": "text",
               "title": "पॉलिमराइज़र",
-              "text": "कच्चे तेल को उबालकर कच्चा रबर बनाता है — 10 बाल्टी का टैंक, हर संचालन में एक बाल्टी। फिर कच्चे रबर को भट्ठी में पकाकर रबर बनाया जाता है।"
+              "text": "कच्चे तेल को उबालकर कच्चा रबर बनाता है — 10 बाल्टी का टैंक, हर संचालन में एक बाल्टी। फिर वल्कनाइज़र में रबर को गंधक के साथ मिलाया जाता है।"
             },
             {
               "type": "stats",
@@ -724,6 +877,45 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_heater",
+          "title": "विद्युत तापक",
+          "icon": "alaindustrial:electric_heater",
+          "block_id": "alaindustrial:electric_heater",
+          "pages": [
+            {
+              "type": "text",
+              "title": "विद्युत तापक",
+              "text": "बिना GUI वाला LV सहायक ब्लॉक, जो वल्कनाइज़र को अधिकतम ×3 ऊष्मा देता है। यह EU तभी खर्च करता है जब ऊपर की मशीन वास्तव में काम करती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 2 EU/t",
+                "बफ़र: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:redstone",
+                "minecraft:gold_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electric_heater",
               "result_count": 1
             }
           ]
@@ -1034,6 +1226,19 @@
           ]
         },
         {
+          "id": "sulfur_ore",
+          "title": "गंधक अयस्क",
+          "icon": "alaindustrial:sulfur_ore",
+          "block_id": "alaindustrial:sulfur_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "गंधक अयस्क",
+              "text": "प्राकृतिक गंधक — खनन योग्य अधातु, जिसे रबर वल्कनीकरण के लिए धूल में बदला जाता है।"
+            }
+          ]
+        },
+        {
           "id": "uranium_ore",
           "title": "यूरेनियम का अयस्क",
           "icon": "alaindustrial:uranium_ore",
@@ -1042,7 +1247,7 @@
             {
               "type": "text",
               "title": "यूरेनियम का अयस्क",
-              "text": "मॉड का सबसे दुर्लभ अयस्क — लोहे की कुदाल से खोदा जाता है, चूरा और पिंड में प्रोसेस होता है; भविष्य की परमाणु मशीनों के लिए आरक्षित।"
+              "text": "मॉड का सबसे दुर्लभ अयस्क — लोहे की कुदाल से खनन कर धूल और सिल्ले में बदला जाता है; मशाल, टेलीपोर्टर और इनक्यूबेटर में पहले से उपयोग होता है और आगे परमाणु मशीनों में भी होगा।"
             }
           ]
         },
@@ -1515,6 +1720,37 @@
           ]
         },
         {
+          "id": "windmill_rotor",
+          "title": "लकड़ी का रोटर",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "लकड़ी का रोटर",
+              "text": "पवन चक्की के ब्लेड — किसी भी T1/T2 पवन चक्की के रोटर स्लॉट में रखे जाते हैं; इसके बिना कोई उत्पादन नहीं। उत्पादन के दौरान घिसते हैं।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "टेम्पर्ड लोहा",
           "icon": "alaindustrial:tempered_iron",
@@ -1678,38 +1914,7 @@
             {
               "type": "text",
               "title": "रबर",
-              "text": "तेल से बना एक पदार्थ — पॉलिमराइज़र तेल को कच्चे रबर में बदलता है, भट्ठी उसे पकाकर रबर बना देती है। आगे आने वाली रोधित केबलों और MV घटकों का आधार।"
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "लकड़ी का रोटर",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "लकड़ी का रोटर",
-              "text": "पवन चक्की के ब्लेड — किसी भी T1/T2 पवन चक्की के रोटर स्लॉट में रखे जाते हैं; इसके बिना कोई उत्पादन नहीं। उत्पादन के दौरान घिसते हैं।"
-            },
-            {
-              "type": "recipe",
-              "title": "रेसिपी",
-              "recipe_type": "आकारित क्राफ्टिंग",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
+              "text": "तेल और गंधक से बना पदार्थ — पॉलिमराइज़र कच्चा रबर बनाता है, फिर गर्म वल्कनाइज़र उसे रबर में बदल देता है।"
             }
           ]
         },

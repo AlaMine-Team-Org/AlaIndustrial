@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "En qué se convierte",
-              "text": "El petróleo es el comienzo de la cadena del caucho.\n\n1. Recógelo: con un cubo, una cápsula de vacío o una bomba\n2. Polimerizador: 1000 mB de petróleo y 400 EU dan caucho en bruto\n3. Horno u horno eléctrico: el caucho en bruto se cuece y se convierte en caucho\n\nDe momento nada consume caucho: sus usuarios, los cables aislados y los componentes MV, llegarán en la próxima fase. Ve acumulándolo."
+              "text": "El petróleo es el comienzo de la cadena del caucho.\n\n1. Recógelo: con un cubo, una Cápsula de vacío o una Bomba\n2. Polimerizador: 1000 mB de petróleo y 400 EU producen caucho en bruto\n3. Vulcanizador: caucho en bruto + polvo de azufre + 400 EU\n4. Coloca debajo una hoguera (×1), lava/magma (×2) o un Calentador eléctrico (×3)\n\nUn calor mejor ahorra materiales: cada operación siempre consume un caucho en bruto y un polvo de azufre."
             }
           ]
         }
@@ -384,15 +384,14 @@
             {
               "type": "text",
               "title": "Cable de oro",
-              "text": "El cable MV: cuatro veces más ancho que el cobre pero con más fugas: una tubería ancha de cerca frente a una fina de lejos."
+              "text": "Un cable MV ancho y desnudo, con muchas pérdidas y una descarga seria al tocarlo mientras la energía está circulando de verdad."
             },
             {
               "type": "stats",
               "title": "Estadísticas",
               "lines": [
                 "Energía: ≤128 EU/paquete",
-                "Búfer: 48 EU",
-                "Pérdida: 0.03 por bloque"
+                "Búfer: 48 EU"
               ]
             },
             {
@@ -416,6 +415,123 @@
           ]
         },
         {
+          "id": "insulated_gold_cable",
+          "title": "Cable de oro aislado",
+          "icon": "alaindustrial:insulated_gold_cable",
+          "block_id": "alaindustrial:insulated_gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cable de oro aislado",
+              "text": "Un cable de oro MV forrado de caucho: la mitad de pérdidas e inmunidad total a las descargas por contacto."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: ≤128 EU/paquete",
+                "Búfer: 48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable"
+              ],
+              "result_id": "alaindustrial:insulated_gold_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "Cable de cobre aislado",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cable de cobre aislado",
+              "text": "Un cable de cobre LV forrado de caucho: la mitad de pérdidas e inmunidad total a las descargas por contacto."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: ≤32 EU/paquete",
+                "Búfer: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:insulated_copper_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "Cable de estaño aislado",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cable de estaño aislado",
+              "text": "Un cable de estaño LV forrado de caucho: pérdidas mínimas e inmunidad total a las descargas por contacto."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: ≤8 EU/paquete",
+                "Búfer: 8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable"
+              ],
+              "result_id": "alaindustrial:insulated_tin_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Cable de cobre",
           "icon": "alaindustrial:copper_cable",
@@ -424,15 +540,14 @@
             {
               "type": "text",
               "title": "Cable de cobre",
-              "text": "Un cable LV barato y resistente para las primeras redes de energía: une paneles solares, baterías y máquinas en una sola línea."
+              "text": "Un cable LV barato y resistente; mientras la energía circula de verdad, el hilo desnudo electrocuta a quien lo toca."
             },
             {
               "type": "stats",
               "title": "Estadísticas",
               "lines": [
                 "Energía: ≤32 EU/paquete",
-                "Búfer: 12 EU",
-                "Pérdida: 0.02 por bloque"
+                "Búfer: 12 EU"
               ]
             },
             {
@@ -464,15 +579,14 @@
             {
               "type": "text",
               "title": "Cable de estaño",
-              "text": "El cable LV más barato: estrecho pero casi sin pérdidas, ideal para granjas solares."
+              "text": "El cable LV más barato y casi sin pérdidas; mientras la energía circula de verdad, el hilo desnudo electrocuta a quien lo toca."
             },
             {
               "type": "stats",
               "title": "Estadísticas",
               "lines": [
                 "Energía: ≤8 EU/paquete",
-                "Búfer: 8 EU",
-                "Pérdida: 0.006 por bloque"
+                "Búfer: 8 EU"
               ]
             },
             {
@@ -500,8 +614,47 @@
     {
       "id": "processing",
       "title": "Procesamiento",
-      "icon": "alaindustrial:macerator",
+      "icon": "alaindustrial:vulcanizer",
       "entries": [
+        {
+          "id": "vulcanizer",
+          "title": "Vulcanizador",
+          "icon": "alaindustrial:vulcanizer",
+          "block_id": "alaindustrial:vulcanizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vulcanizador",
+              "text": "Una máquina LV que combina caucho en bruto con polvo de azufre para producir caucho. Necesita EU y calor desde abajo; una fuente de calor más potente aumenta el rendimiento."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 400 EU/op",
+                "Búfer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:vulcanizer",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "macerator",
           "title": "Triturador",
@@ -659,7 +812,7 @@
             {
               "type": "text",
               "title": "Polimerizador",
-              "text": "Destila el petróleo hasta convertirlo en caucho en bruto: un tanque de 10 cubos, un cubo por operación. Luego el caucho en bruto se cuece en un horno y se convierte en caucho."
+              "text": "Destila el petróleo hasta convertirlo en caucho en bruto: un tanque de 10 cubos, un cubo por operación. Después, el caucho se combina con azufre en un Vulcanizador."
             },
             {
               "type": "stats",
@@ -724,6 +877,45 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_heater",
+          "title": "Calentador eléctrico",
+          "icon": "alaindustrial:electric_heater",
+          "block_id": "alaindustrial:electric_heater",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Calentador eléctrico",
+              "text": "Un bloque auxiliar LV sin interfaz que proporciona al Vulcanizador el calor máximo ×3. Solo consume EU cuando la máquina de arriba está trabajando."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 2 EU/t",
+                "Búfer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "minecraft:redstone",
+                "minecraft:gold_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electric_heater",
               "result_count": 1
             }
           ]
@@ -1034,6 +1226,19 @@
           ]
         },
         {
+          "id": "sulfur_ore",
+          "title": "Mena de azufre",
+          "icon": "alaindustrial:sulfur_ore",
+          "block_id": "alaindustrial:sulfur_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Mena de azufre",
+              "text": "Azufre nativo: un no metal extraíble que se procesa en polvo para vulcanizar caucho."
+            }
+          ]
+        },
+        {
           "id": "uranium_ore",
           "title": "Mena de uranio",
           "icon": "alaindustrial:uranium_ore",
@@ -1042,7 +1247,7 @@
             {
               "type": "text",
               "title": "Mena de uranio",
-              "text": "La mena más rara del mod: se extrae con un pico de hierro, se procesa en polvo y lingote; reservada para futuras máquinas nucleares."
+              "text": "La mena más rara del mod: se extrae con un pico de hierro y se procesa en polvo y lingote; ya se usa en la antorcha, el teletransportador y la incubadora, y más adelante en máquinas nucleares."
             }
           ]
         },
@@ -1515,6 +1720,37 @@
           ]
         },
         {
+          "id": "windmill_rotor",
+          "title": "Rotor de madera",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rotor de madera",
+              "text": "Las aspas del aerogenerador: se colocan en la ranura de rotor de cualquier aerogenerador T1/T2; sin él no hay generación. Se desgastan mientras generan."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Hierro templado",
           "icon": "alaindustrial:tempered_iron",
@@ -1678,38 +1914,7 @@
             {
               "type": "text",
               "title": "Caucho",
-              "text": "Un material hecho de petróleo: el Polimerizador convierte el petróleo en caucho en bruto y un horno lo cuece hasta obtener caucho. La base de los futuros cables aislados y componentes MV."
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "Rotor de madera",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Rotor de madera",
-              "text": "Las aspas del aerogenerador: se colocan en la ranura de rotor de cualquier aerogenerador T1/T2; sin él no hay generación. Se desgastan mientras generan."
-            },
-            {
-              "type": "recipe",
-              "title": "Receta",
-              "recipe_type": "Fabricación con forma",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
+              "text": "Un material hecho de petróleo y azufre: el Polimerizador produce caucho en bruto y después un Vulcanizador caliente lo convierte en caucho."
             }
           ]
         },

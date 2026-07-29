@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "무엇이 되는가",
-              "text": "석유는 고무 사슬의 출발점입니다.\n\n1. 모으기 — 양동이, 진공 캡슐 또는 펌프로\n2. 중합기: 석유 1000 mB와 400 EU로 생고무를 만듭니다\n3. 화로 또는 전기 화로: 생고무를 구우면 고무가 됩니다\n\n고무는 아직 어디에도 쓰이지 않습니다 — 소비처인 절연 케이블과 MV 부품은 다음 단계에 나옵니다. 미리 쌓아 두세요."
+              "text": "석유는 고무 생산 사슬의 출발점입니다.\n\n1. 양동이, 진공 캡슐 또는 펌프로 모읍니다\n2. 중합기: 석유 1000 mB와 400 EU로 생고무를 만듭니다\n3. 가황기: 생고무 + 황 가루 + 400 EU\n4. 아래에 모닥불(×1), 용암/마그마(×2) 또는 전기 히터(×3)를 놓습니다\n\n더 좋은 열원은 재료를 아낍니다. 작업마다 생고무 하나와 황 가루 하나만 소비합니다."
             }
           ]
         }
@@ -384,15 +384,14 @@
             {
               "type": "text",
               "title": "금 케이블",
-              "text": "MV 케이블입니다. 구리보다 네 배 넓지만 손실이 큽니다. 가까이서는 굵은 관, 멀리서는 가는 관인 셈입니다."
+              "text": "피복이 없는 굵은 MV 케이블입니다. 손실이 크고, 실제로 에너지가 흐르는 동안 닿으면 크게 감전됩니다."
             },
             {
               "type": "stats",
               "title": "정보",
               "lines": [
                 "에너지: ≤128 EU/패킷",
-                "버퍼: 48 EU",
-                "손실: 0.03/블록"
+                "버퍼: 48 EU"
               ]
             },
             {
@@ -416,6 +415,123 @@
           ]
         },
         {
+          "id": "insulated_gold_cable",
+          "title": "절연 금 케이블",
+          "icon": "alaindustrial:insulated_gold_cable",
+          "block_id": "alaindustrial:insulated_gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "절연 금 케이블",
+              "text": "고무로 감싼 금 MV 케이블 — 손실이 절반이고 접촉 감전이 전혀 없습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: ≤128 EU/패킷",
+                "버퍼: 48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable"
+              ],
+              "result_id": "alaindustrial:insulated_gold_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "절연 구리 케이블",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "절연 구리 케이블",
+              "text": "고무로 감싼 구리 LV 케이블 — 손실이 절반이고 접촉 감전이 전혀 없습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: ≤32 EU/패킷",
+                "버퍼: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:insulated_copper_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "절연 주석 케이블",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "절연 주석 케이블",
+              "text": "고무로 감싼 주석 LV 케이블 — 손실이 매우 적고 접촉 감전이 전혀 없습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: ≤8 EU/패킷",
+                "버퍼: 8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable"
+              ],
+              "result_id": "alaindustrial:insulated_tin_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "구리 케이블",
           "icon": "alaindustrial:copper_cable",
@@ -424,15 +540,14 @@
             {
               "type": "text",
               "title": "구리 케이블",
-              "text": "초반 에너지망을 위한 저렴하고 든든한 LV 케이블 — 태양광 패널, 배터리, 기계를 하나의 선으로 연결합니다."
+              "text": "저렴하고 든든한 LV 케이블입니다. 실제로 에너지가 흐르는 동안에는 피복 없는 도선이 닿은 플레이어를 감전시킵니다."
             },
             {
               "type": "stats",
               "title": "정보",
               "lines": [
                 "에너지: ≤32 EU/패킷",
-                "버퍼: 12 EU",
-                "손실: 0.02/블록"
+                "버퍼: 12 EU"
               ]
             },
             {
@@ -464,15 +579,14 @@
             {
               "type": "text",
               "title": "주석 케이블",
-              "text": "가장 저렴한 LV 케이블입니다. 좁지만 거의 손실이 없어 태양광 발전 단지에 이상적입니다."
+              "text": "가장 저렴하고 거의 손실이 없는 LV 케이블입니다. 실제로 에너지가 흐르는 동안에는 피복 없는 도선이 닿은 플레이어를 감전시킵니다."
             },
             {
               "type": "stats",
               "title": "정보",
               "lines": [
                 "에너지: ≤8 EU/패킷",
-                "버퍼: 8 EU",
-                "손실: 0.006/블록"
+                "버퍼: 8 EU"
               ]
             },
             {
@@ -500,8 +614,47 @@
     {
       "id": "processing",
       "title": "가공",
-      "icon": "alaindustrial:macerator",
+      "icon": "alaindustrial:vulcanizer",
       "entries": [
+        {
+          "id": "vulcanizer",
+          "title": "가황기",
+          "icon": "alaindustrial:vulcanizer",
+          "block_id": "alaindustrial:vulcanizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "가황기",
+              "text": "생고무와 황 가루를 결합해 고무를 만드는 LV 기계입니다. EU와 아래쪽의 열이 필요하며, 더 강한 열원일수록 생산량이 늘어납니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 400 EU/작업",
+                "버퍼: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:vulcanizer",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "macerator",
           "title": "분쇄기",
@@ -659,7 +812,7 @@
             {
               "type": "text",
               "title": "중합기",
-              "text": "석유를 졸여 생고무로 만듭니다 — 양동이 10개 용량의 탱크로, 작업 한 번에 양동이 한 개를 씁니다. 생고무는 화로에서 구우면 고무가 됩니다."
+              "text": "석유를 졸여 생고무로 만듭니다 — 양동이 10개 용량의 탱크로, 작업 한 번에 양동이 한 개를 씁니다. 그런 다음 가황기에서 고무와 황을 결합합니다."
             },
             {
               "type": "stats",
@@ -724,6 +877,45 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_heater",
+          "title": "전기 히터",
+          "icon": "alaindustrial:electric_heater",
+          "block_id": "alaindustrial:electric_heater",
+          "pages": [
+            {
+              "type": "text",
+              "title": "전기 히터",
+              "text": "가황기에 최대 ×3 열을 제공하는 GUI 없는 LV 보조 블록입니다. 위의 기계가 실제로 작업할 때만 EU를 소비합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 2 EU/t",
+                "버퍼: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:redstone",
+                "minecraft:gold_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electric_heater",
               "result_count": 1
             }
           ]
@@ -1034,6 +1226,19 @@
           ]
         },
         {
+          "id": "sulfur_ore",
+          "title": "황 광석",
+          "icon": "alaindustrial:sulfur_ore",
+          "block_id": "alaindustrial:sulfur_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "황 광석",
+              "text": "천연 황 — 채굴 가능한 비금속으로, 고무 가황에 쓰는 가루로 가공합니다."
+            }
+          ]
+        },
+        {
           "id": "uranium_ore",
           "title": "우라늄 광석",
           "icon": "alaindustrial:uranium_ore",
@@ -1042,7 +1247,7 @@
             {
               "type": "text",
               "title": "우라늄 광석",
-              "text": "모드에서 가장 희귀한 광석 — 철 곡괭이로 채굴하며, 가루와 주괴로 가공됩니다; 미래의 원자력 기계용으로 예약되어 있습니다."
+              "text": "모드에서 가장 희귀한 광석 — 철 곡괭이로 캐서 가루와 주괴로 가공합니다. 이미 횃불, 텔레포터, 배양기에 쓰이며 나중에는 원자력 기계에도 사용됩니다."
             }
           ]
         },
@@ -1515,6 +1720,37 @@
           ]
         },
         {
+          "id": "windmill_rotor",
+          "title": "나무 회전날",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "나무 회전날",
+              "text": "풍력 터빈 날개 — 모든 T1/T2 풍력 터빈의 회전날 칸에 넣습니다; 없으면 발전하지 않습니다. 발전하는 동안 마모됩니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "담금질된 철",
           "icon": "alaindustrial:tempered_iron",
@@ -1678,38 +1914,7 @@
             {
               "type": "text",
               "title": "고무",
-              "text": "석유로 만드는 재료 — 중합기가 석유를 생고무로 바꾸고, 화로가 그것을 구워 고무로 만듭니다. 앞으로 나올 절연 케이블과 MV 부품의 기반입니다."
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "나무 회전날",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "나무 회전날",
-              "text": "풍력 터빈 날개 — 모든 T1/T2 풍력 터빈의 회전날 칸에 넣습니다; 없으면 발전하지 않습니다. 발전하는 동안 마모됩니다."
-            },
-            {
-              "type": "recipe",
-              "title": "레시피",
-              "recipe_type": "정형 제작",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
+              "text": "석유와 황으로 만드는 재료 — 중합기가 생고무를 만들고, 가열된 가황기가 이를 고무로 바꿉니다."
             }
           ]
         },

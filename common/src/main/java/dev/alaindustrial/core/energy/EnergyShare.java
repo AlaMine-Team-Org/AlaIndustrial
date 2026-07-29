@@ -26,12 +26,16 @@ public final class EnergyShare {
 	}
 
 	/**
-	 * EU destroyed in cable transit for one consumer this tick: {@code floor(gross × lossPerBlock ×
-	 * distanceBlocks)}, clamped to {@code [0, gross]}. Proportional to both the flow and the cable
-	 * distance (a resistive model), so a trickle top-off packet floors to zero loss and a buffer still
-	 * reaches its exact capacity — unlike the flat per-tick toll removed in MOD-009. Pure arithmetic: the
-	 * caller subtracts this from what it pulled before inserting into the consumer, and the lost EU is
-	 * not returned to any producer (it is destroyed on commit).
+	 * EU destroyed in cable transit for one consumer this tick:
+	 * {@code floor(gross × (1 - (1 - lossPerBlock)^distanceBlocks))}. Repeated attenuation keeps loss
+	 * monotonic with distance without the hard 100% cutoff of the old linear formula. The result is
+	 * clamped to {@code [0, gross - 1]} for positive flow, so even an extremely long line delivers at
+	 * least 1 EU and a trickle top-off packet can still fill a buffer exactly (MOD-009).
+	 *
+	 * <p>The implementation uses {@link Math#log1p(double)} and {@link Math#expm1(double)} instead of
+	 * subtracting a rounded {@code pow} result from 1. This preserves precision for small rates and
+	 * distances. Pure arithmetic: the caller subtracts the returned loss from what it pulled before
+	 * inserting into the consumer, and the lost EU is not returned to any producer.
 	 *
 	 * @param gross          EU actually pulled from producers toward this consumer (≥ 0)
 	 * @param lossPerBlock   fraction of throughput lost per cable block (≥ 0; copper ≈ 0.02)
@@ -42,8 +46,10 @@ public final class EnergyShare {
 		if (gross <= 0 || lossPerBlock <= 0 || distanceBlocks <= 0) {
 			return 0L;
 		}
-		long loss = (long) Math.floor(gross * lossPerBlock * distanceBlocks);
-		return Math.max(0L, Math.min(loss, gross));
+		double rate = Math.max(0.0, Math.min(lossPerBlock, 1.0));
+		double lossFraction = -Math.expm1(distanceBlocks * Math.log1p(-rate));
+		long loss = (long) Math.floor(gross * lossFraction);
+		return Math.max(0L, Math.min(loss, gross - 1L));
 	}
 
 	/**

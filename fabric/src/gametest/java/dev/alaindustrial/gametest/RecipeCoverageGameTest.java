@@ -1,10 +1,12 @@
 package dev.alaindustrial.gametest;
 
+import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
 import java.util.List;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -57,6 +59,29 @@ public class RecipeCoverageGameTest {
 	@GameTest
 	public void tcRecie04_extractingRecipesAllLoad(GameTestHelper helper) {
 		assertAllRecipesLoad(helper, ModRecipes.EXTRACTING, "extracting");
+	}
+
+	/** MOD-257: the second generic fluid family must be registered and bound on Fabric. */
+	@GameTest
+	public void tcRecie11_distillingRecipeFamilyRegistered(GameTestHelper helper) {
+		Identifier id = Industrialization.id(ModRecipes.DISTILLING.id());
+		if (!BuiltInRegistries.RECIPE_TYPE.containsKey(id)) {
+			helper.fail("distilling RecipeType is missing from the Fabric registry");
+			return;
+		}
+		if (!BuiltInRegistries.RECIPE_SERIALIZER.containsKey(id)) {
+			helper.fail("distilling RecipeSerializer is missing from the Fabric registry");
+			return;
+		}
+		if (BuiltInRegistries.RECIPE_TYPE.getValue(id) != ModRecipes.DISTILLING.type()) {
+			helper.fail("distilling FluidKind is not bound to its Fabric RecipeType");
+			return;
+		}
+		if (BuiltInRegistries.RECIPE_SERIALIZER.getValue(id) != ModRecipes.DISTILLING.serializer()) {
+			helper.fail("distilling FluidKind is not bound to its Fabric RecipeSerializer");
+			return;
+		}
+		helper.succeed();
 	}
 
 	// --- Crafting-recipe resolve guards (MOD-225): the four processing scans above cover machine
@@ -193,10 +218,13 @@ public class RecipeCoverageGameTest {
 				helper.fail(label + " recipe " + id + " has negative energy = " + recipe.energy());
 				return;
 			}
-			// Ingredient must be non-empty (would otherwise match nothing in the machine).
-			if (recipe.ingredient().isEmpty()) {
-				helper.fail(label + " recipe " + id + " has an empty ingredient — check the 'ingredient' field");
-				return;
+			// Every ingredient must be non-empty (would otherwise make its corresponding slot unusable).
+			for (int input = 0; input < recipe.ingredients().size(); input++) {
+				if (recipe.ingredients().get(input).isEmpty()) {
+					helper.fail(label + " recipe " + id + " has an empty ingredient at index " + input
+							+ " — check the 'ingredient'/'ingredients' field");
+					return;
+				}
 			}
 		}
 		helper.succeed();

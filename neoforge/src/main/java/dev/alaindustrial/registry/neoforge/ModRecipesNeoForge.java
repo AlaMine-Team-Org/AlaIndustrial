@@ -2,7 +2,7 @@ package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
-import dev.alaindustrial.recipe.PolymerizingRecipe;
+import dev.alaindustrial.recipe.FluidRecipeInput;
 import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.ModRecipes.FluidKind;
 import dev.alaindustrial.registry.ModRecipes.Kind;
@@ -11,6 +11,7 @@ import java.util.List;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Recipe;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -33,14 +34,8 @@ public final class ModRecipesNeoForge {
 			DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AlaProcessingRecipe>> serializer) {
 	}
 
-	/** The same pairing for the fluid-input families (MOD-019) — a different recipe class, same lifecycle. */
-	private record FluidHolders(FluidKind kind,
-			DeferredHolder<RecipeType<?>, RecipeType<PolymerizingRecipe>> type,
-			DeferredHolder<RecipeSerializer<?>, RecipeSerializer<PolymerizingRecipe>> serializer) {
-	}
-
 	private static final List<Holders> HOLDERS = new ArrayList<>();
-	private static final List<FluidHolders> FLUID_HOLDERS = new ArrayList<>();
+	private static final List<Runnable> FLUID_BINDERS = new ArrayList<>();
 
 	static {
 		for (Kind kind : ModRecipes.kinds()) {
@@ -50,13 +45,17 @@ public final class ModRecipesNeoForge {
 					SERIALIZERS.register(kind.id(), () -> ModRecipes.createSerializer(kind));
 			HOLDERS.add(new Holders(kind, type, serializer));
 		}
-		for (FluidKind kind : ModRecipes.fluidKinds()) {
-			DeferredHolder<RecipeType<?>, RecipeType<PolymerizingRecipe>> type =
-					TYPES.register(kind.id(), () -> ModRecipes.createType(kind));
-			DeferredHolder<RecipeSerializer<?>, RecipeSerializer<PolymerizingRecipe>> serializer =
-					SERIALIZERS.register(kind.id(), () -> ModRecipes.createSerializer(kind));
-			FLUID_HOLDERS.add(new FluidHolders(kind, type, serializer));
+		for (FluidKind<?> kind : ModRecipes.fluidKinds()) {
+			registerFluid(kind);
 		}
+	}
+
+	private static <R extends Recipe<FluidRecipeInput>> void registerFluid(FluidKind<R> kind) {
+		DeferredHolder<RecipeType<?>, RecipeType<R>> type =
+				TYPES.register(kind.id(), () -> ModRecipes.createType(kind));
+		DeferredHolder<RecipeSerializer<?>, RecipeSerializer<R>> serializer =
+				SERIALIZERS.register(kind.id(), () -> ModRecipes.createSerializer(kind));
+		FLUID_BINDERS.add(() -> kind.bind(type::get, serializer::get));
 	}
 
 	/** Bind each family to its deferred holders (lazy suppliers). Called from the {@code @Mod} ctor. */
@@ -64,8 +63,8 @@ public final class ModRecipesNeoForge {
 		for (Holders h : HOLDERS) {
 			h.kind().bind(h.type()::get, h.serializer()::get);
 		}
-		for (FluidHolders h : FLUID_HOLDERS) {
-			h.kind().bind(h.type()::get, h.serializer()::get);
+		for (Runnable binder : FLUID_BINDERS) {
+			binder.run();
 		}
 	}
 

@@ -30,8 +30,8 @@ import net.minecraft.world.level.material.Fluid;
  * {@code /reload}, and can be added or overridden by a datapack — the same contract
  * {@link AlaProcessingRecipe} gives the item-fed machines.
  *
- * <p><b>Why a separate class.</b> {@link AlaProcessingRecipe} is a {@code Recipe<SingleRecipeInput>}
- * whose input is an {@link net.minecraft.world.item.crafting.Ingredient} — an item or an item tag. The
+ * <p><b>Why a separate class.</b> {@link AlaProcessingRecipe} consumes ordered item stacks matched by
+ * {@link net.minecraft.world.item.crafting.Ingredient}s. The
  * Polymerizer consumes a <em>fluid volume</em> out of its own tank, which is neither, so it needs its own
  * input type ({@link FluidRecipeInput}) and its own JSON shape. Making the ingredient optional on the
  * shared class instead would have loosened the schema for all eleven item-fed families, where a missing
@@ -49,28 +49,41 @@ import net.minecraft.world.level.material.Fluid;
  *               {@code ItemStack.CODEC} throws during early datapack loading
  * @param energy total EU spent to complete one operation
  */
-public record PolymerizingRecipe(HolderSet<Fluid> fluid, int amount, ItemStackTemplate result, int energy)
+public record PolymerizingRecipe(ModRecipes.FluidKind<PolymerizingRecipe> kind,
+		HolderSet<Fluid> fluid, int amount, ItemStackTemplate result, int energy)
 		implements Recipe<FluidRecipeInput> {
 
+	/** Backward-compatible constructor for the Polymerizer's one existing recipe family. */
+	public PolymerizingRecipe(HolderSet<Fluid> fluid, int amount, ItemStackTemplate result, int energy) {
+		this(ModRecipes.POLYMERIZING, fluid, amount, result, energy);
+	}
+
 	/** JSON form: {@code {fluid, amount?, result, energy?}}. */
-	public static final MapCodec<PolymerizingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-			RegistryCodecs.homogeneousList(Registries.FLUID).fieldOf("fluid").forGetter(PolymerizingRecipe::fluid),
-			Codec.intRange(1, Integer.MAX_VALUE)
-					.optionalFieldOf("amount", (int) FluidAmounts.BUCKET).forGetter(PolymerizingRecipe::amount),
-			ItemStackTemplate.CODEC.fieldOf("result").forGetter(PolymerizingRecipe::result),
-			// Range-limited like `amount`: a zero or negative cost would make the machine fall back to its
-			// default duration while the recipe viewers divided by it and printed a 0.1 s operation.
-			Codec.intRange(1, Integer.MAX_VALUE).optionalFieldOf("energy", ModRecipes.POLYMERIZING.defaultEnergy())
-					.forGetter(PolymerizingRecipe::energy)
-	).apply(instance, PolymerizingRecipe::new));
+	public static MapCodec<PolymerizingRecipe> mapCodec(ModRecipes.FluidKind<PolymerizingRecipe> kind) {
+		return RecordCodecBuilder.mapCodec(instance -> instance.group(
+				RegistryCodecs.homogeneousList(Registries.FLUID).fieldOf("fluid").forGetter(PolymerizingRecipe::fluid),
+				Codec.intRange(1, Integer.MAX_VALUE)
+						.optionalFieldOf("amount", (int) FluidAmounts.BUCKET).forGetter(PolymerizingRecipe::amount),
+				ItemStackTemplate.CODEC.fieldOf("result").forGetter(PolymerizingRecipe::result),
+				// Range-limited like `amount`: a zero or negative cost would make the machine fall back to its
+				// default duration while the recipe viewers divided by it and printed a 0.1 s operation.
+				Codec.intRange(1, Integer.MAX_VALUE).optionalFieldOf("energy", kind.defaultEnergy())
+						.forGetter(PolymerizingRecipe::energy)
+		).apply(instance, (fluid, amount, result, energy) ->
+				new PolymerizingRecipe(kind, fluid, amount, result, energy)));
+	}
 
 	/** Network sync codec (recipes travel to the client for the recipe viewers). */
-	public static final StreamCodec<RegistryFriendlyByteBuf, PolymerizingRecipe> STREAM_CODEC = StreamCodec.composite(
-			ByteBufCodecs.holderSet(Registries.FLUID), PolymerizingRecipe::fluid,
-			ByteBufCodecs.INT, PolymerizingRecipe::amount,
-			ItemStackTemplate.STREAM_CODEC, PolymerizingRecipe::result,
-			ByteBufCodecs.INT, PolymerizingRecipe::energy,
-			PolymerizingRecipe::new);
+	public static StreamCodec<RegistryFriendlyByteBuf, PolymerizingRecipe> streamCodec(
+			ModRecipes.FluidKind<PolymerizingRecipe> kind) {
+		return StreamCodec.composite(
+				ByteBufCodecs.holderSet(Registries.FLUID), PolymerizingRecipe::fluid,
+				ByteBufCodecs.INT, PolymerizingRecipe::amount,
+				ItemStackTemplate.STREAM_CODEC, PolymerizingRecipe::result,
+				ByteBufCodecs.INT, PolymerizingRecipe::energy,
+				(fluid, amount, result, energy) ->
+						new PolymerizingRecipe(kind, fluid, amount, result, energy));
+	}
 
 	@Override
 	public boolean matches(FluidRecipeInput input, Level level) {
@@ -126,12 +139,12 @@ public record PolymerizingRecipe(HolderSet<Fluid> fluid, int amount, ItemStackTe
 
 	@Override
 	public RecipeSerializer<? extends Recipe<FluidRecipeInput>> getSerializer() {
-		return ModRecipes.POLYMERIZING.serializer();
+		return kind.serializer();
 	}
 
 	@Override
 	public RecipeType<? extends Recipe<FluidRecipeInput>> getType() {
-		return ModRecipes.POLYMERIZING.type();
+		return kind.type();
 	}
 
 	@Override

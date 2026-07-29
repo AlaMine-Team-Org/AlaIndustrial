@@ -4,6 +4,7 @@
     "#c:raw_materials/tin",
     "#c:raw_materials/silver",
     "#c:raw_materials/nickel",
+    "#c:raw_materials/sulfur",
     "#c:raw_materials/uranium"
   ]
 }

@@ -74,7 +74,7 @@ public final class ModItemsNeoForge {
 			ITEMS.registerItem("resonant_shard", Item::new);
 	public static final DeferredItem<Item> MUTAGEN_DUST =
 			ITEMS.registerItem("mutagen_dust", Item::new);
-	// Oil → rubber chain (MOD-019): the polymerizer's product, and what a furnace cures it into.
+	// Oil → rubber chain: the polymerizer's product and the vulcanizer's cured output.
 	public static final DeferredItem<Item> RAW_RUBBER =
 			ITEMS.registerItem("raw_rubber", Item::new);
 	public static final DeferredItem<Item> RUBBER =
@@ -150,6 +150,8 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> NICKEL_DUST = ITEMS.registerItem("nickel_dust", Item::new);
 	public static final DeferredItem<Item> RAW_NICKEL = ITEMS.registerItem("raw_nickel", Item::new);
 	public static final DeferredItem<Item> NICKEL_INGOT = ITEMS.registerItem("nickel_ingot", Item::new);
+	public static final DeferredItem<Item> SULFUR_DUST = ITEMS.registerItem("sulfur_dust", Item::new);
+	public static final DeferredItem<Item> RAW_SULFUR = ITEMS.registerItem("raw_sulfur", Item::new);
 	public static final DeferredItem<Item> URANIUM_DUST = ITEMS.registerItem("uranium_dust", Item::new);
 	public static final DeferredItem<Item> RAW_URANIUM = ITEMS.registerItem("raw_uranium", Item::new);
 	public static final DeferredItem<Item> URANIUM_INGOT = ITEMS.registerItem("uranium_ingot", Item::new);
@@ -278,6 +280,10 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("sawmill", ModBlocksNeoForge.SAWMILL);
 	public static final DeferredItem<BlockItem> POLYMERIZER_ITEM =
 			ITEMS.registerSimpleBlockItem("polymerizer", ModBlocksNeoForge.POLYMERIZER);
+	public static final DeferredItem<BlockItem> VULCANIZER_ITEM =
+			ITEMS.registerSimpleBlockItem("vulcanizer", ModBlocksNeoForge.VULCANIZER);
+	public static final DeferredItem<BlockItem> ELECTRIC_HEATER_ITEM =
+			ITEMS.registerSimpleBlockItem("electric_heater", ModBlocksNeoForge.ELECTRIC_HEATER);
 	public static final DeferredItem<BlockItem> INCUBATOR_ITEM =
 			ITEMS.registerSimpleBlockItem("incubator", ModBlocksNeoForge.INCUBATOR);
 	public static final DeferredItem<BlockItem> GEOTHERMAL_GENERATOR_ITEM =
@@ -304,6 +310,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("insulated_copper_cable", ModBlocksNeoForge.INSULATED_COPPER_CABLE);
 	public static final DeferredItem<BlockItem> INSULATED_TIN_CABLE_ITEM =
 			ITEMS.registerSimpleBlockItem("insulated_tin_cable", ModBlocksNeoForge.INSULATED_TIN_CABLE);
+	public static final DeferredItem<BlockItem> INSULATED_GOLD_CABLE_ITEM =
+			ITEMS.registerSimpleBlockItem("insulated_gold_cable", ModBlocksNeoForge.INSULATED_GOLD_CABLE);
 	// MOD-108: not registerSimpleBlockItem — the pipe needs its own BlockItem subclass to carry a
 	// tooltip (plain hint + Shift for the throughput numbers).
 	public static final DeferredItem<BlockItem> ITEM_PIPE_ITEM =
@@ -320,6 +328,10 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("nickel_ore", ModBlocksNeoForge.NICKEL_ORE);
 	public static final DeferredItem<BlockItem> DEEPSLATE_NICKEL_ORE_ITEM =
 			ITEMS.registerSimpleBlockItem("deepslate_nickel_ore", ModBlocksNeoForge.DEEPSLATE_NICKEL_ORE);
+	public static final DeferredItem<BlockItem> SULFUR_ORE_ITEM =
+			ITEMS.registerSimpleBlockItem("sulfur_ore", ModBlocksNeoForge.SULFUR_ORE);
+	public static final DeferredItem<BlockItem> DEEPSLATE_SULFUR_ORE_ITEM =
+			ITEMS.registerSimpleBlockItem("deepslate_sulfur_ore", ModBlocksNeoForge.DEEPSLATE_SULFUR_ORE);
 	public static final DeferredItem<BlockItem> URANIUM_ORE_ITEM =
 			ITEMS.registerSimpleBlockItem("uranium_ore", ModBlocksNeoForge.URANIUM_ORE);
 	public static final DeferredItem<BlockItem> DEEPSLATE_URANIUM_ORE_ITEM =
@@ -405,6 +417,8 @@ public final class ModItemsNeoForge {
 		ModContent.NICKEL_DUST = NICKEL_DUST;
 		ModContent.RAW_NICKEL = RAW_NICKEL;
 		ModContent.NICKEL_INGOT = NICKEL_INGOT;
+		ModContent.SULFUR_DUST = SULFUR_DUST;
+		ModContent.RAW_SULFUR = RAW_SULFUR;
 		ModContent.URANIUM_DUST = URANIUM_DUST;
 		ModContent.RAW_URANIUM = RAW_URANIUM;
 		ModContent.URANIUM_INGOT = URANIUM_INGOT;
@@ -460,6 +474,8 @@ public final class ModItemsNeoForge {
 		ModContent.COMPRESSOR_ITEM = COMPRESSOR_ITEM;
 		ModContent.SAWMILL_ITEM = SAWMILL_ITEM;
 		ModContent.POLYMERIZER_ITEM = POLYMERIZER_ITEM;
+		ModContent.VULCANIZER_ITEM = VULCANIZER_ITEM;
+		ModContent.ELECTRIC_HEATER_ITEM = ELECTRIC_HEATER_ITEM;
 		ModContent.INCUBATOR_ITEM = INCUBATOR_ITEM;
 		ModContent.MUTATION_CHIP_TRANSFORM = MUTATION_CHIP_TRANSFORM;
 		ModContent.MUTATION_CHIP_DUPLICATE = MUTATION_CHIP_DUPLICATE;
@@ -484,6 +500,7 @@ public final class ModItemsNeoForge {
 		ModContent.GOLD_CABLE_ITEM = GOLD_CABLE_ITEM;
 		ModContent.INSULATED_COPPER_CABLE_ITEM = INSULATED_COPPER_CABLE_ITEM;
 		ModContent.INSULATED_TIN_CABLE_ITEM = INSULATED_TIN_CABLE_ITEM;
+		ModContent.INSULATED_GOLD_CABLE_ITEM = INSULATED_GOLD_CABLE_ITEM;
 		ModContent.ITEM_PIPE_ITEM = ITEM_PIPE_ITEM;
 		ModContent.TIN_ORE_ITEM = TIN_ORE_ITEM;
 		ModContent.DEEPSLATE_TIN_ORE_ITEM = DEEPSLATE_TIN_ORE_ITEM;
@@ -491,6 +508,8 @@ public final class ModItemsNeoForge {
 		ModContent.DEEPSLATE_SILVER_ORE_ITEM = DEEPSLATE_SILVER_ORE_ITEM;
 		ModContent.NICKEL_ORE_ITEM = NICKEL_ORE_ITEM;
 		ModContent.DEEPSLATE_NICKEL_ORE_ITEM = DEEPSLATE_NICKEL_ORE_ITEM;
+		ModContent.SULFUR_ORE_ITEM = SULFUR_ORE_ITEM;
+		ModContent.DEEPSLATE_SULFUR_ORE_ITEM = DEEPSLATE_SULFUR_ORE_ITEM;
 		ModContent.URANIUM_ORE_ITEM = URANIUM_ORE_ITEM;
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = DEEPSLATE_URANIUM_ORE_ITEM;
 		ModContent.IRON_CHEST_ITEM = IRON_CHEST_ITEM;

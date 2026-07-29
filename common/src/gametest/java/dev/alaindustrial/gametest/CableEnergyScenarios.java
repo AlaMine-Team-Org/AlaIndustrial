@@ -8,9 +8,12 @@ import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.core.energy.EnergyNetwork;
+import dev.alaindustrial.core.energy.EnergyShare;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.registry.ModContent;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -311,9 +314,9 @@ public final class CableEnergyScenarios {
 	private static final BlockPos LOSS_BOX = new BlockPos(7, 2, 5);
 
 	/**
-	 * MOD-021: a 10-cable line loses EU proportional to distance. Flow pinned at the LV packet cap
-	 * (generator far over-charged, box empty), the box gains {@code 32 − floor(32 × loss × 10)} EU/tick,
-	 * strictly less than a lossless line's 32.
+	 * MOD-021/MOD-253: a 10-cable line loses EU according to the attenuating distance model. Flow is
+	 * bounded by the live copper segment buffer, and the receiver gains
+	 * {@code flow - EnergyShare.cableLoss(flow, rate, 10)} EU/tick.
 	 * Mirrors: NetworkGameTest.tcCable001Nrg02_lossOverTenCables
 	 */
 	public static void mod021LossOverTenCables(GameTestHelper helper) {
@@ -340,10 +343,10 @@ public final class CableEnergyScenarios {
 			tick(helper, be(helper, LOSS_BOX));
 		}
 		long got = be(helper, LOSS_BOX) instanceof BatteryBoxBlockEntity bb ? bb.getEnergyStorage().getAmount() : -1;
-		// MOD-070: per-cable throughput is the segment buffer (cableBuffer), not the tier voltage; the
-		// MOD-021 loss formula is unchanged, applied to the actual per-tick flow. Fill front ~1 cable/tick.
+		// MOD-070: per-cable throughput is the segment buffer (cableBuffer), not the tier voltage;
+		// MOD-253 attenuation applies to the actual per-tick flow. Fill front ~1 cable/tick.
 		long flow = Config.cableBuffer;
-		long lossPerTick = (long) Math.floor(flow * Config.copperCableLossPerBlock * 10);
+		long lossPerTick = EnergyShare.cableLoss(flow, Config.copperCableLossPerBlock, 10);
 		long deliveredPerTick = flow - lossPerTick;
 		long fillLatency = LOSS_CABLES.length;
 		long expected = deliveredPerTick * (ticks - fillLatency);
@@ -357,6 +360,122 @@ public final class CableEnergyScenarios {
 			helper.fail("delivered EU does not match the loss model: expected ~" + expected + ", got " + got);
 		}
 		helper.succeed();
+	}
+
+	/**
+	 * MOD-253 end-to-end regression: fifty real copper segment buffers must attenuate a 12 EU packet
+	 * to 5 EU, never black-hole it, and must still pass the final one-EU BatteryBox top-off.
+	 */
+	public static void mod253LongCopperLineStillDeliversAndTopsOff(GameTestHelper helper) {
+		// NeoForge runs many minecraft:empty tests in one shared level with closely spaced origins.
+		// Keep this large fixture above the ordinary y=2 plane so neighbouring test sources cannot
+		// shorten its producer-distance field.
+		int baseY = 100;
+		BlockPos genPos = new BlockPos(0, baseY, 1);
+		List<BlockPos> cables = mod253FiftyCablePath();
+		BlockPos boxPos = new BlockPos(3, baseY + 2, 3);
+
+		helper.setBlock(genPos, ModContent.GENERATOR.get());
+		for (BlockPos cable : cables) {
+			helper.setBlock(cable, ModContent.COPPER_CABLE.get());
+		}
+		helper.setBlock(boxPos, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+
+		if (be(helper, genPos) instanceof GeneratorBlockEntity gen) {
+			gen.getEnergyStorage().amount = EnergyTier.LV.maxVoltage() * 400;
+		}
+		if (be(helper, boxPos) instanceof BatteryBoxBlockEntity box) {
+			box.getEnergyStorage().amount = 0;
+		}
+
+		driveMod253Line(helper, genPos, cables, boxPos, 100);
+		long before = be(helper, boxPos) instanceof BatteryBoxBlockEntity box
+				? box.getEnergyStorage().getAmount() : -1;
+		driveMod253Line(helper, genPos, cables, boxPos, 20);
+		long after = be(helper, boxPos) instanceof BatteryBoxBlockEntity box
+				? box.getEnergyStorage().getAmount() : -1;
+
+		long flow = Config.cableBuffer;
+		long expectedPerTick = (long) Math.ceil(flow
+				* Math.pow(1.0 - Config.copperCableLossPerBlock, cables.size()));
+		if (expectedPerTick != 5L) {
+			helper.fail("MOD-253 golden balance drift: expected copper/50 delivery 5 EU/t, got "
+					+ expectedPerTick + " from config");
+			return;
+		}
+		long gained = after - before;
+		if (gained != expectedPerTick * 20) {
+			helper.fail("50-cable line delivered " + gained + " EU over 20 steady ticks; expected "
+					+ (expectedPerTick * 20) + " from real " + flow + " EU segment buffers");
+			return;
+		}
+
+		for (BlockPos cable : cables) {
+			if (!(be(helper, cable) instanceof CableBlockEntity segment)) {
+				helper.fail("missing cable block entity at " + cable);
+				return;
+			}
+			if (segment.getEnergyStorage().getCapacity() != flow
+					|| segment.getEnergyStorage().getAmount() > flow) {
+				helper.fail("cable at " + cable + " does not use the real " + flow
+						+ " EU copper segment buffer");
+				return;
+			}
+		}
+
+		long capacity = Config.batteryBoxBuffer;
+		if (be(helper, boxPos) instanceof BatteryBoxBlockEntity box) {
+			box.getEnergyStorage().amount = capacity - 1;
+			box.setChanged();
+		}
+		driveMod253Line(helper, genPos, cables, boxPos, 5);
+		long toppedOff = be(helper, boxPos) instanceof BatteryBoxBlockEntity box
+				? box.getEnergyStorage().getAmount() : -1;
+		if (toppedOff != capacity) {
+			helper.fail("MOD-009 regression on 50-cable line: BatteryBox stopped at "
+					+ toppedOff + "/" + capacity);
+			return;
+		}
+		helper.succeed();
+	}
+
+	private static List<BlockPos> mod253FiftyCablePath() {
+		int baseY = 100;
+		List<BlockPos> path = new ArrayList<>(50);
+		for (int row = 0; row < 4; row++) {
+			int z = 1 + row * 2;
+			if ((row & 1) == 0) {
+				for (int x = 1; x <= 7; x++) path.add(new BlockPos(x, baseY, z));
+				if (row < 3) path.add(new BlockPos(7, baseY, z + 1));
+			} else {
+				for (int x = 7; x >= 1; x--) path.add(new BlockPos(x, baseY, z));
+				if (row < 3) path.add(new BlockPos(1, baseY, z + 1));
+			}
+		}
+		path.add(new BlockPos(1, baseY + 1, 7));
+		for (int x = 1; x <= 7; x++) path.add(new BlockPos(x, baseY + 2, 7));
+		path.add(new BlockPos(7, baseY + 2, 6));
+		for (int x = 7; x >= 1; x--) path.add(new BlockPos(x, baseY + 2, 5));
+		path.add(new BlockPos(1, baseY + 2, 4));
+		path.add(new BlockPos(1, baseY + 2, 3));
+		path.add(new BlockPos(2, baseY + 2, 3));
+		if (path.size() != 50) {
+			throw new IllegalStateException("MOD-253 fixture must contain exactly 50 cables");
+		}
+		return path;
+	}
+
+	private static void driveMod253Line(GameTestHelper helper, BlockPos genPos, List<BlockPos> cables,
+			BlockPos boxPos, int ticks) {
+		for (int i = 0; i < ticks; i++) {
+			tick(helper, be(helper, genPos));
+			for (BlockPos cable : cables) {
+				tick(helper, be(helper, cable));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, boxPos));
+		}
 	}
 
 	/**

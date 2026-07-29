@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.menu.ElectricFurnaceMenu;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.ProcessingRecipeInput;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
 import net.minecraft.core.BlockPos;
@@ -39,7 +40,8 @@ public final class ElectricFurnaceBlockEntity extends AbstractProcessingMachineB
 	public static final int OUTPUT_SLOT = 1;
 
 	/** Mod-specific smelting recipes (priority over vanilla). */
-	private final RecipeManager.CachedCheck<SingleRecipeInput, AlaProcessingRecipe> modRecipeCheck = checkFor(ModRecipes.SMELTING);
+	private final RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe> modRecipeCheck =
+			checkFor(ModRecipes.SMELTING);
 	/** Vanilla furnace recipes — used as fallback when no mod recipe matches. */
 	private final RecipeManager.CachedCheck<SingleRecipeInput, SmeltingRecipe> vanillaRecipeCheck =
 			RecipeManager.createCheck(RecipeType.SMELTING);

@@ -1,8 +1,8 @@
 package dev.alaindustrial.compat.jei;
 
+import dev.alaindustrial.client.compat.RecipeViewerLayout;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
 import dev.alaindustrial.registry.ModRecipes;
-import java.util.Locale;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -26,9 +26,6 @@ import net.minecraft.world.level.material.Fluid;
  * (JEI renders it with the fluid's own texture and a "1000 mB" tooltip) instead of an item ingredient.
  */
 final class PolymerizingJeiCategory implements IRecipeCategory<RecipeHolder<PolymerizingRecipe>> {
-	private static final int WIDTH = 116;
-	private static final int HEIGHT = 48;
-
 	private final IRecipeHolderType<PolymerizingRecipe> recipeType;
 	private final Component title;
 	private final IDrawable icon;
@@ -54,12 +51,12 @@ final class PolymerizingJeiCategory implements IRecipeCategory<RecipeHolder<Poly
 
 	@Override
 	public int getWidth() {
-		return WIDTH;
+		return RecipeViewerLayout.WIDTH;
 	}
 
 	@Override
 	public int getHeight() {
-		return HEIGHT;
+		return RecipeViewerLayout.HEIGHT;
 	}
 
 	@Override
@@ -70,25 +67,30 @@ final class PolymerizingJeiCategory implements IRecipeCategory<RecipeHolder<Poly
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<PolymerizingRecipe> holder, IFocusGroup focuses) {
 		PolymerizingRecipe recipe = holder.value();
-		IRecipeSlotBuilder input = builder.addInputSlot(21, 6).setStandardSlotBackground();
+		IRecipeSlotBuilder input = builder.addInputSlot(
+				RecipeViewerLayout.inputXs(1).getFirst(), RecipeViewerLayout.SLOT_Y)
+				.setStandardSlotBackground();
 		// One entry per accepted SOURCE fluid, so a tag-backed recipe (#c:oil) cycles through every oil in
-		// the pack without also listing each one's flowing variant. JEI's addFluidStack takes the platform's
-		// own unit, which on NeoForge is millibuckets — the very number the recipe states.
+		// the pack without also listing each one's flowing variant. JEI's fluid add overload takes the
+		// platform's own unit, which on NeoForge is millibuckets — the very number the recipe states.
 		for (Holder<Fluid> fluid : recipe.displayFluids()) {
-			input.addFluidStack(fluid.value(), recipe.amount());
+			input.add(fluid.value(), recipe.amount());
 		}
-		builder.addOutputSlot(78, 6).setOutputSlotBackground().add(recipe.result());
+		builder.addOutputSlot(RecipeViewerLayout.outputXs(1).getFirst(), RecipeViewerLayout.SLOT_Y)
+				.setOutputSlotBackground()
+				.add(recipe.result());
 	}
 
 	@Override
 	public void draw(RecipeHolder<PolymerizingRecipe> holder, IRecipeSlotsView recipeSlotsView,
 			GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
 		PolymerizingRecipe recipe = holder.value();
-		arrow.draw(graphics, 47, 7);
-		String cost = recipe.energy() + " EU / " + formatSeconds(ModRecipes.POLYMERIZING.ticksFor(recipe.energy()))
-				+ " / " + recipe.amount() + " mB";
-		int x = (WIDTH - Minecraft.getInstance().font.width(cost)) / 2;
-		graphics.text(Minecraft.getInstance().font, Component.literal(cost), x, 34, 0xFF404040, false);
+		arrow.draw(graphics, RecipeViewerLayout.ARROW_X, RecipeViewerLayout.ARROW_Y);
+		String cost = RecipeViewerLayout.fluidCostLabel(
+				recipe.energy(), ModRecipes.POLYMERIZING.ticksFor(recipe.energy()), recipe.amount());
+		int x = (RecipeViewerLayout.WIDTH - Minecraft.getInstance().font.width(cost)) / 2;
+		graphics.text(Minecraft.getInstance().font, Component.literal(cost), x,
+				RecipeViewerLayout.LABEL_Y, 0xFF404040, false);
 	}
 
 	@Override
@@ -96,11 +98,4 @@ final class PolymerizingJeiCategory implements IRecipeCategory<RecipeHolder<Poly
 		return holder.id().identifier();
 	}
 
-	private static String formatSeconds(int ticks) {
-		String seconds = String.format(Locale.ROOT, "%.1f", ticks / 20.0);
-		if (seconds.endsWith(".0")) {
-			seconds = seconds.substring(0, seconds.length() - 2);
-		}
-		return seconds + " s";
-	}
 }

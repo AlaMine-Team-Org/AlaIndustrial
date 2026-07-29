@@ -1,9 +1,12 @@
 package dev.alaindustrial.recipe;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.alaindustrial.registry.ModRecipes;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -16,22 +19,21 @@ import net.minecraft.world.item.crafting.RecipeBookCategories;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 
 /**
- * A single-input → single-output processing recipe for an Industrialization machine (macerator,
- * electric furnace, compressor, extractor), expressed as a <em>real</em> vanilla
+ * A one- or two-input → single-output processing recipe for an Industrialization machine, expressed
+ * as a <em>real</em> vanilla
  * {@link Recipe}. Loaded by the vanilla {@link net.minecraft.world.item.crafting.RecipeManager} from
  * {@code data/<ns>/recipe/**.json} (so {@code /reload} refreshes it, datapacks can add/override it,
- * and the ingredient may be a tag — see R-14/R-15). Replaces the previous hand-rolled JSON loaders
+ * and each ingredient may be a tag — see R-14/R-15). Replaces the previous hand-rolled JSON loaders
  * ({@code MacerationRecipes} / {@code ProcessingRecipes}).
  *
  * <p>The {@link ModRecipes.Kind} carries which machine this recipe belongs to (its {@link RecipeType}
  * + {@link RecipeSerializer}), so the four machine types stay distinct while sharing this one class.
  *
  * @param kind       owning machine type (type + serializer + default energy)
- * @param ingredient accepted input (item or tag)
+ * @param ingredients one or two ordered accepted inputs (each an item or tag)
  * @param result     produced stack template (item + count). An {@link ItemStackTemplate} rather than a
  *                   live {@link ItemStack} so the result codec is safe during early datapack loading
  *                   (a raw {@code ItemStack.CODEC} throws "item does not have components yet" there).
@@ -41,8 +43,8 @@ import net.minecraft.world.level.Level;
  *                   fall back to its own default. Only the incubator reads this; every other machine
  *                   is deterministic and ignores it.
  */
-public record AlaProcessingRecipe(ModRecipes.Kind kind, Ingredient ingredient, ItemStackTemplate result,
-		int energy, double chance) implements Recipe<SingleRecipeInput> {
+public record AlaProcessingRecipe(ModRecipes.Kind kind, List<Ingredient> ingredients, ItemStackTemplate result,
+		int energy, double chance) implements Recipe<ProcessingRecipeInput> {
 
 	/**
 	 * Sentinel for "this recipe does not state a chance". A machine that cares (the incubator) then
@@ -50,19 +52,55 @@ public record AlaProcessingRecipe(ModRecipes.Kind kind, Ingredient ingredient, I
 	 */
 	public static final double CHANCE_UNSET = -1.0;
 
+	/** Validate and defensively copy the one- or two-ingredient contract. */
+	public AlaProcessingRecipe {
+		ingredients = List.copyOf(ingredients);
+		if (ingredients.isEmpty() || ingredients.size() > 2) {
+			throw new IllegalArgumentException("processing recipe must contain 1 or 2 ingredients");
+		}
+	}
+
+	/** Backward-compatible Java constructor for the existing one-input machines and recipe mirrors. */
+	public AlaProcessingRecipe(ModRecipes.Kind kind, Ingredient ingredient, ItemStackTemplate result,
+			int energy, double chance) {
+		this(kind, List.of(ingredient), result, energy, chance);
+	}
+
 	/** A recipe with no stated chance — the form every machine but the incubator uses. */
 	public AlaProcessingRecipe(ModRecipes.Kind kind, Ingredient ingredient, ItemStackTemplate result, int energy) {
-		this(kind, ingredient, result, energy, CHANCE_UNSET);
+		this(kind, List.of(ingredient), result, energy, CHANCE_UNSET);
+	}
+
+	/** A one- or two-input recipe with no stated chance. */
+	public AlaProcessingRecipe(ModRecipes.Kind kind, List<Ingredient> ingredients, ItemStackTemplate result,
+			int energy) {
+		this(kind, ingredients, result, energy, CHANCE_UNSET);
 	}
 
 	@Override
-	public boolean matches(SingleRecipeInput input, Level level) {
-		return ingredient.test(input.item());
+	public boolean matches(ProcessingRecipeInput input, Level level) {
+		if (input.size() != ingredients.size()) {
+			return false;
+		}
+		for (int i = 0; i < ingredients.size(); i++) {
+			if (!ingredients.get(i).test(input.getItem(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
-	public ItemStack assemble(SingleRecipeInput input) {
+	public ItemStack assemble(ProcessingRecipeInput input) {
 		return result.create();
+	}
+
+	/**
+	 * The first ingredient, retained for source compatibility with one-input consumers.
+	 * Multi-input-aware code must use {@link #ingredients()}.
+	 */
+	public Ingredient ingredient() {
+		return ingredients.getFirst();
 	}
 
 	/** A fresh output {@link ItemStack} (item + count) for the machine's slot logic. */
@@ -81,18 +119,18 @@ public record AlaProcessingRecipe(ModRecipes.Kind kind, Ingredient ingredient, I
 	}
 
 	@Override
-	public RecipeSerializer<? extends Recipe<SingleRecipeInput>> getSerializer() {
+	public RecipeSerializer<? extends Recipe<ProcessingRecipeInput>> getSerializer() {
 		return kind.serializer();
 	}
 
 	@Override
-	public RecipeType<? extends Recipe<SingleRecipeInput>> getType() {
+	public RecipeType<? extends Recipe<ProcessingRecipeInput>> getType() {
 		return kind.type();
 	}
 
 	@Override
 	public PlacementInfo placementInfo() {
-		return PlacementInfo.create(ingredient);
+		return PlacementInfo.create(ingredients);
 	}
 
 	@Override
@@ -101,25 +139,54 @@ public record AlaProcessingRecipe(ModRecipes.Kind kind, Ingredient ingredient, I
 		return RecipeBookCategories.CRAFTING_MISC;
 	}
 
-	/** MapCodec for a machine kind's JSON form: {@code {ingredient, result, energy?, chance?}}. */
+	private record IngredientFields(Optional<List<Ingredient>> ingredients, Optional<Ingredient> ingredient) {
+		private static final MapCodec<IngredientFields> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+				Ingredient.CODEC.listOf(1, 2).optionalFieldOf("ingredients")
+						.forGetter(IngredientFields::ingredients),
+				Ingredient.CODEC.optionalFieldOf("ingredient").forGetter(IngredientFields::ingredient)
+		).apply(instance, IngredientFields::new));
+
+		private static DataResult<List<Ingredient>> decode(IngredientFields fields) {
+			if (fields.ingredients.isPresent() == fields.ingredient.isPresent()) {
+				return DataResult.error(() ->
+						"processing recipe must define exactly one of 'ingredient' or 'ingredients'");
+			}
+			if (fields.ingredients.isPresent() && fields.ingredients.orElseThrow().size() != 2) {
+				return DataResult.error(() ->
+						"processing recipe field 'ingredients' must contain exactly 2 positional inputs");
+			}
+			return DataResult.success(fields.ingredients.orElseGet(() -> List.of(fields.ingredient.orElseThrow())));
+		}
+
+		private static DataResult<IngredientFields> encode(List<Ingredient> ingredients) {
+			return ingredients.size() == 1
+					? DataResult.success(new IngredientFields(Optional.empty(), Optional.of(ingredients.getFirst())))
+					: DataResult.success(new IngredientFields(Optional.of(ingredients), Optional.empty()));
+		}
+	}
+
+	private static final MapCodec<List<Ingredient>> INGREDIENTS_CODEC =
+			IngredientFields.CODEC.flatXmap(IngredientFields::decode, IngredientFields::encode);
+
+	/** MapCodec for a machine kind's JSON form: {@code {ingredient|ingredients, result, energy?, chance?}}. */
 	public static MapCodec<AlaProcessingRecipe> mapCodec(ModRecipes.Kind kind) {
 		return RecordCodecBuilder.mapCodec(instance -> instance.group(
-				Ingredient.CODEC.fieldOf("ingredient").forGetter(AlaProcessingRecipe::ingredient),
+				INGREDIENTS_CODEC.forGetter(AlaProcessingRecipe::ingredients),
 				ItemStackTemplate.CODEC.fieldOf("result").forGetter(AlaProcessingRecipe::result),
 				Codec.INT.optionalFieldOf("energy", kind.defaultEnergy()).forGetter(AlaProcessingRecipe::energy),
 				Codec.DOUBLE.optionalFieldOf("chance", CHANCE_UNSET).forGetter(AlaProcessingRecipe::chance)
-		).apply(instance, (ingredient, result, energy, chance) ->
-				new AlaProcessingRecipe(kind, ingredient, result, energy, chance)));
+		).apply(instance, (ingredients, result, energy, chance) ->
+				new AlaProcessingRecipe(kind, ingredients, result, energy, chance)));
 	}
 
 	/** Network sync codec for a machine kind. */
 	public static StreamCodec<RegistryFriendlyByteBuf, AlaProcessingRecipe> streamCodec(ModRecipes.Kind kind) {
 		return StreamCodec.composite(
-				Ingredient.CONTENTS_STREAM_CODEC, AlaProcessingRecipe::ingredient,
+				Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list(2)), AlaProcessingRecipe::ingredients,
 				ItemStackTemplate.STREAM_CODEC, AlaProcessingRecipe::result,
 				ByteBufCodecs.INT, AlaProcessingRecipe::energy,
 				ByteBufCodecs.DOUBLE, AlaProcessingRecipe::chance,
-				(ingredient, result, energy, chance) ->
-						new AlaProcessingRecipe(kind, ingredient, result, energy, chance));
+				(ingredients, result, energy, chance) ->
+						new AlaProcessingRecipe(kind, ingredients, result, energy, chance));
 	}
 }

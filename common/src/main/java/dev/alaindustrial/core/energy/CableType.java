@@ -5,7 +5,8 @@ import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 
 /**
- * The three shipped cable grades and the balance numbers that make them different (MOD-219).
+ * The three conductor grades, plus the rubber-insulated LV variants, and the balance numbers that
+ * make them different (MOD-219/MOD-259).
  *
  * <p>Before this existed, all cable blocks shared one {@code CableBlockEntity} hardcoded to
  * {@link EnergyTier#LV}, {@link Config#cableBuffer} and {@link Config#copperCableLossPerBlock}, so
@@ -31,10 +32,16 @@ import java.util.function.IntSupplier;
  *   <tr><th>Grade</th><th>Tier</th><th>Throughput (buffer)</th><th>Packet cap</th><th>Loss/block</th><th>Niche</th></tr>
  *   <tr><td>{@link #TIN}</td><td>LV</td><td>8 EU/t</td><td>8 EU/t</td><td>0.006</td>
  *       <td>Cheap solar-farm wire: a 1 EU/t panel trickle floors to <b>zero</b> loss at any distance</td></tr>
+ *   <tr><td>{@link #INSULATED_TIN}</td><td>LV</td><td>8 EU/t</td><td>8 EU/t</td><td>0.003</td>
+ *       <td>Rubber upgrade: the same narrow pipe with half the loss</td></tr>
  *   <tr><td>{@link #COPPER}</td><td>LV</td><td>12 EU/t</td><td>32 EU/t</td><td>0.02</td>
  *       <td>The universal workhorse (unchanged — these are the shipped v0.1 numbers)</td></tr>
+ *   <tr><td>{@link #INSULATED_COPPER}</td><td>LV</td><td>12 EU/t</td><td>32 EU/t</td><td>0.01</td>
+ *       <td>Rubber upgrade: workhorse throughput with half the loss</td></tr>
  *   <tr><td>{@link #GOLD}</td><td>MV</td><td>48 EU/t</td><td>128 EU/t</td><td>0.03</td>
  *       <td>Wide pipe: 4× copper's throughput, paid for with the highest loss per block</td></tr>
+ *   <tr><td>{@link #INSULATED_GOLD}</td><td>MV</td><td>48 EU/t</td><td>128 EU/t</td><td>0.015</td>
+ *       <td>Rubber upgrade: gold's throughput with half the loss</td></tr>
  * </table>
  *
  * <p>All numbers are read <b>live</b> from {@link Config} (same contract as
@@ -55,27 +62,38 @@ import java.util.function.IntSupplier;
 public enum CableType {
 	/** Cheapest grade: narrow but nearly lossless — the solar-farm wire. */
 	TIN("tin", EnergyTier.LV, () -> Config.tinCablePacketCap, () -> Config.tinCableBuffer,
-			() -> Config.tinCableLossPerBlock),
+			() -> Config.tinCableLossPerBlock, false),
+	/** Rubber-insulated tin: the same narrow LV conductor with half the attenuation. */
+	INSULATED_TIN("insulated_tin", EnergyTier.LV, () -> Config.tinCablePacketCap, () -> Config.tinCableBuffer,
+			() -> Config.tinCableLossPerBlock * Config.insulationLossMultiplier, true),
 	/** The shipped v0.1 workhorse. Its knobs keep their original Config names for save/config compat. */
 	COPPER("copper", EnergyTier.LV, () -> Config.tierLvVoltage, () -> Config.cableBuffer,
-			() -> Config.copperCableLossPerBlock),
+			() -> Config.copperCableLossPerBlock, false),
+	/** Rubber-insulated copper: unchanged LV throughput with half the attenuation. */
+	INSULATED_COPPER("insulated_copper", EnergyTier.LV, () -> Config.tierLvVoltage, () -> Config.cableBuffer,
+			() -> Config.copperCableLossPerBlock * Config.insulationLossMultiplier, true),
 	/** MV grade: 4× copper throughput at the highest loss per block. */
 	GOLD("gold", EnergyTier.MV, () -> Config.tierMvVoltage, () -> Config.goldCableBuffer,
-			() -> Config.goldCableLossPerBlock);
+			() -> Config.goldCableLossPerBlock, false),
+	/** Rubber-insulated gold: unchanged MV throughput with half the attenuation. */
+	INSULATED_GOLD("insulated_gold", EnergyTier.MV, () -> Config.tierMvVoltage, () -> Config.goldCableBuffer,
+			() -> Config.goldCableLossPerBlock * Config.insulationLossMultiplier, true);
 
 	private final String name;
 	private final EnergyTier tier;
 	private final IntSupplier packetCap;
 	private final IntSupplier segmentBuffer;
 	private final DoubleSupplier lossPerBlock;
+	private final boolean insulated;
 
 	CableType(String name, EnergyTier tier, IntSupplier packetCap, IntSupplier segmentBuffer,
-			DoubleSupplier lossPerBlock) {
+			DoubleSupplier lossPerBlock, boolean insulated) {
 		this.name = name;
 		this.tier = tier;
 		this.packetCap = packetCap;
 		this.segmentBuffer = segmentBuffer;
 		this.lossPerBlock = lossPerBlock;
+		this.insulated = insulated;
 	}
 
 	/** The voltage tier this cable belongs to — drives the tooltip and machine-facing semantics. */
@@ -100,21 +118,56 @@ public enum CableType {
 		return segmentBuffer.getAsInt();
 	}
 
-	/** Fraction of throughput destroyed per cable block traversed ({@code floor(flow × k × distance)}). */
+	/** Fraction of the remaining throughput attenuated per cable block traversed. */
 	public double lossPerBlock() {
 		return lossPerBlock.getAsDouble();
 	}
 
 	/**
-	 * Whether this grade governs a mixed network over {@code other} — i.e. carries the strictly higher
-	 * {@link #packetCap()}. A network takes BOTH its packet cap and its loss from the single strongest
-	 * cable present (the rule established for the tier cap in MOD-101 and extended to loss here), so one
+	 * Whether this cable has a rubber sleeve. The flag is part of the cable type rather than inferred
+	 * from a registry id, so the energy model and the later bare-cable shock rule (MOD-260) share one
+	 * loader-neutral source of truth.
+	 */
+	public boolean isInsulated() {
+		return insulated;
+	}
+
+	/** Player contact damage for this cable's voltage tier, in vanilla half-heart units. */
+	public float shockDamage() {
+		return switch (tier) {
+			case LV -> Config.bareCableShockLvDamage;
+			case MV, HV -> Config.bareCableShockMvDamage;
+		};
+	}
+
+	/**
+	 * Whether this grade governs a mixed network over {@code other}. Packet cap is the primary order;
+	 * for equal caps a bare cable beats its insulated counterpart, then the higher loss and stable id
+	 * break any remaining operator-configured ties. A network takes BOTH its packet cap and its loss from
+	 * the single strongest cable present (the rule established for the tier cap in MOD-101 and extended
+	 * to loss here), so one
 	 * gold segment lifts the whole line to 128 EU/t <b>and</b> to gold's 0.03 loss. That coupling is
 	 * deliberate: it keeps gold's "wide pipe, higher toll" trade honest instead of letting a player
 	 * cherry-pick a high cap at copper's loss by splicing in one cheap segment.
 	 */
 	public boolean strongerThan(CableType other) {
-		return packetCap() > other.packetCap();
+		int capOrder = Long.compare(packetCap(), other.packetCap());
+		if (capOrder != 0) {
+			return capOrder > 0;
+		}
+		// A mixed bare/insulated run of the same conductor is governed by its bare segment. This keeps
+		// the existing network-wide strongest-grade approximation conservative and, crucially, removes
+		// HashSet iteration order from the result.
+		if (insulated != other.insulated) {
+			return !insulated;
+		}
+		int lossOrder = Double.compare(lossPerBlock(), other.lossPerBlock());
+		if (lossOrder != 0) {
+			return lossOrder > 0;
+		}
+		// Config can make two otherwise unrelated grades equal. Give the cache a stable total order even
+		// in that operator-defined edge case.
+		return serializedName().compareTo(other.serializedName()) > 0;
 	}
 
 	/** Stable id used by {@code CableBlock}'s codec — never rename without a save migration. */

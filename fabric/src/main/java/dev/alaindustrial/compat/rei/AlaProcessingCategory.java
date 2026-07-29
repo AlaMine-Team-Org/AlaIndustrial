@@ -1,5 +1,6 @@
 package dev.alaindustrial.compat.rei;
 
+import dev.alaindustrial.client.compat.RecipeViewerLayout;
 import java.util.ArrayList;
 import java.util.List;
 import me.shedaniel.math.Point;
@@ -48,7 +49,12 @@ public class AlaProcessingCategory implements DisplayCategory<AlaProcessingDispl
 
 	@Override
 	public int getDisplayHeight() {
-		return 48;
+		return RecipeViewerLayout.HEIGHT;
+	}
+
+	@Override
+	public int getDisplayWidth(AlaProcessingDisplay display) {
+		return RecipeViewerLayout.WIDTH;
 	}
 
 	@Override
@@ -56,45 +62,29 @@ public class AlaProcessingCategory implements DisplayCategory<AlaProcessingDispl
 		List<Widget> widgets = new ArrayList<>();
 		widgets.add(Widgets.createRecipeBase(bounds));
 
-		int centerX = bounds.getCenterX();
-		int rowY = bounds.getY() + 6;
-		Point input = new Point(centerX - 35, rowY);
-		Point arrow = new Point(centerX - 12, rowY - 1);
-		Point output = new Point(centerX + 19, rowY);
+		widgets.add(Widgets.createArrow(new Point(
+				bounds.getX() + RecipeViewerLayout.ARROW_X,
+				bounds.getY() + RecipeViewerLayout.ARROW_Y)));
 
-		widgets.add(Widgets.createArrow(arrow));
-		if (!display.getInputEntries().isEmpty()) {
-			widgets.add(Widgets.createSlot(input).entries(display.getInputEntries().get(0)).markInput());
+		List<Integer> inputXs = RecipeViewerLayout.inputXs(display.getInputEntries().size());
+		for (int i = 0; i < inputXs.size(); i++) {
+			Point point = new Point(bounds.getX() + inputXs.get(i), bounds.getY() + RecipeViewerLayout.SLOT_Y);
+			widgets.add(Widgets.createSlot(point).entries(display.getInputEntries().get(i)).markInput());
 		}
-		if (!display.getOutputEntries().isEmpty()) {
-			widgets.add(Widgets.createSlot(output).entries(display.getOutputEntries().get(0)).markOutput());
+		List<Integer> outputXs = RecipeViewerLayout.outputXs(display.getOutputEntries().size());
+		for (int i = 0; i < outputXs.size(); i++) {
+			Point point = new Point(bounds.getX() + outputXs.get(i), bounds.getY() + RecipeViewerLayout.SLOT_Y);
+			widgets.add(Widgets.createSlot(point).entries(display.getOutputEntries().get(i)).markOutput());
 		}
 
 		// EU cost + intrinsic time, and the success chance where the operation is a gamble (the
 		// incubator). Units (EU / s / %) are symbols — literal, no lang keys.
-		String cost = display.energy() + " EU · " + formatSeconds(display.processingTicks())
-				+ formatChance(display.chance());
-		widgets.add(Widgets.createLabel(new Point(centerX, bounds.getMaxY() - 12), Component.literal(cost))
+		String cost = RecipeViewerLayout.withChance(
+				RecipeViewerLayout.costLabel(display.energy(), display.processingTicks()), display.chance());
+		widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(),
+				bounds.getY() + RecipeViewerLayout.LABEL_Y), Component.literal(cost))
 				.noShadow().color(0xFF404040, 0xFFBBBBBB));
 
 		return widgets;
-	}
-
-	/** Chance → " · 45 %", or nothing at all for the machines that always deliver. */
-	static String formatChance(double chance) {
-		if (chance <= 0.0) {
-			return "";
-		}
-		return " · " + Math.round(chance * 100.0) + " %";
-	}
-
-	/** Ticks → "N.N s" (20 ticks = 1 s), trimming a trailing ".0". */
-	private static String formatSeconds(int ticks) {
-		double seconds = ticks / 20.0;
-		String s = String.format(java.util.Locale.ROOT, "%.1f", seconds);
-		if (s.endsWith(".0")) {
-			s = s.substring(0, s.length() - 2);
-		}
-		return s + " s";
 	}
 }

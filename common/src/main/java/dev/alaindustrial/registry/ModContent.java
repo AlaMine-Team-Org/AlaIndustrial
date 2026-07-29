@@ -23,6 +23,7 @@ import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
+import dev.alaindustrial.menu.VulcanizerMenu;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -106,6 +107,7 @@ public final class ModContent {
 	public static Supplier<Block> GOLD_CABLE = unbound("GOLD_CABLE");
 	public static Supplier<Block> INSULATED_COPPER_CABLE = unbound("INSULATED_COPPER_CABLE");
 	public static Supplier<Block> INSULATED_TIN_CABLE = unbound("INSULATED_TIN_CABLE");
+	public static Supplier<Block> INSULATED_GOLD_CABLE = unbound("INSULATED_GOLD_CABLE");
 	public static Supplier<Block> ITEM_PIPE = unbound("ITEM_PIPE");
 	public static Supplier<Block> MACERATOR = unbound("MACERATOR");
 	public static Supplier<Block> BATTERY_BOX = unbound("BATTERY_BOX");
@@ -117,6 +119,8 @@ public final class ModContent {
 	public static Supplier<Block> SAWMILL = unbound("SAWMILL");
 	/** Polymerizer (MOD-019) — the first machine fed by a fluid: oil in the tank, raw rubber out. */
 	public static Supplier<Block> POLYMERIZER = unbound("POLYMERIZER");
+	public static Supplier<Block> VULCANIZER = unbound("VULCANIZER");
+	public static Supplier<Block> ELECTRIC_HEATER = unbound("ELECTRIC_HEATER");
 	public static Supplier<Block> INCUBATOR = unbound("INCUBATOR");
 	public static Supplier<Block> INCUBATOR_DOME = unbound("INCUBATOR_DOME");
 	public static Supplier<Block> TIN_ORE = unbound("TIN_ORE");
@@ -125,6 +129,8 @@ public final class ModContent {
 	public static Supplier<Block> DEEPSLATE_SILVER_ORE = unbound("DEEPSLATE_SILVER_ORE");
 	public static Supplier<Block> NICKEL_ORE = unbound("NICKEL_ORE");
 	public static Supplier<Block> DEEPSLATE_NICKEL_ORE = unbound("DEEPSLATE_NICKEL_ORE");
+	public static Supplier<Block> SULFUR_ORE = unbound("SULFUR_ORE");
+	public static Supplier<Block> DEEPSLATE_SULFUR_ORE = unbound("DEEPSLATE_SULFUR_ORE");
 	public static Supplier<Block> URANIUM_ORE = unbound("URANIUM_ORE");
 	public static Supplier<Block> DEEPSLATE_URANIUM_ORE = unbound("DEEPSLATE_URANIUM_ORE");
 	// Iron Chest — a pure-storage block (no energy), so its BE extends vanilla
@@ -217,6 +223,8 @@ public final class ModContent {
 	public static Supplier<Item> NICKEL_DUST = unbound("NICKEL_DUST");
 	public static Supplier<Item> RAW_NICKEL = unbound("RAW_NICKEL");
 	public static Supplier<Item> NICKEL_INGOT = unbound("NICKEL_INGOT");
+	public static Supplier<Item> SULFUR_DUST = unbound("SULFUR_DUST");
+	public static Supplier<Item> RAW_SULFUR = unbound("RAW_SULFUR");
 	public static Supplier<Item> URANIUM_DUST = unbound("URANIUM_DUST");
 	public static Supplier<Item> RAW_URANIUM = unbound("RAW_URANIUM");
 	public static Supplier<Item> URANIUM_INGOT = unbound("URANIUM_INGOT");
@@ -269,7 +277,7 @@ public final class ModContent {
 	public static Supplier<Item> FORGE_HAMMER = unbound("FORGE_HAMMER");
 	// Oil Bucket (MOD-238): a vanilla-pattern BucketItem carrying the still oil fluid.
 	public static Supplier<Item> OIL_BUCKET = unbound("OIL_BUCKET");
-	// Oil → rubber chain (MOD-019): the polymerizer turns oil into raw rubber, a furnace cures it.
+	// Oil → rubber chain: the polymerizer makes raw rubber; the vulcanizer cures it with sulfur and heat.
 	public static Supplier<Item> RAW_RUBBER = unbound("RAW_RUBBER");
 	public static Supplier<Item> RUBBER = unbound("RUBBER");
 
@@ -293,6 +301,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> GOLD_CABLE_ITEM = unbound("GOLD_CABLE_ITEM");
 	public static Supplier<BlockItem> INSULATED_COPPER_CABLE_ITEM = unbound("INSULATED_COPPER_CABLE_ITEM");
 	public static Supplier<BlockItem> INSULATED_TIN_CABLE_ITEM = unbound("INSULATED_TIN_CABLE_ITEM");
+	public static Supplier<BlockItem> INSULATED_GOLD_CABLE_ITEM = unbound("INSULATED_GOLD_CABLE_ITEM");
 	public static Supplier<BlockItem> ITEM_PIPE_ITEM = unbound("ITEM_PIPE_ITEM");
 	public static Supplier<BlockItem> MACERATOR_ITEM = unbound("MACERATOR_ITEM");
 	public static Supplier<BlockItem> BATTERY_BOX_ITEM = unbound("BATTERY_BOX_ITEM");
@@ -302,6 +311,8 @@ public final class ModContent {
 	public static Supplier<BlockItem> COMPRESSOR_ITEM = unbound("COMPRESSOR_ITEM");
 	public static Supplier<BlockItem> SAWMILL_ITEM = unbound("SAWMILL_ITEM");
 	public static Supplier<BlockItem> POLYMERIZER_ITEM = unbound("POLYMERIZER_ITEM");
+	public static Supplier<BlockItem> VULCANIZER_ITEM = unbound("VULCANIZER_ITEM");
+	public static Supplier<BlockItem> ELECTRIC_HEATER_ITEM = unbound("ELECTRIC_HEATER_ITEM");
 	public static Supplier<BlockItem> INCUBATOR_ITEM = unbound("INCUBATOR_ITEM");
 	public static Supplier<BlockItem> PUMP_ITEM = unbound("PUMP_ITEM");
 	public static Supplier<BlockItem> FLUID_TANK_ITEM = unbound("FLUID_TANK_ITEM");
@@ -311,6 +322,8 @@ public final class ModContent {
 	public static Supplier<BlockItem> DEEPSLATE_SILVER_ORE_ITEM = unbound("DEEPSLATE_SILVER_ORE_ITEM");
 	public static Supplier<BlockItem> NICKEL_ORE_ITEM = unbound("NICKEL_ORE_ITEM");
 	public static Supplier<BlockItem> DEEPSLATE_NICKEL_ORE_ITEM = unbound("DEEPSLATE_NICKEL_ORE_ITEM");
+	public static Supplier<BlockItem> SULFUR_ORE_ITEM = unbound("SULFUR_ORE_ITEM");
+	public static Supplier<BlockItem> DEEPSLATE_SULFUR_ORE_ITEM = unbound("DEEPSLATE_SULFUR_ORE_ITEM");
 	public static Supplier<BlockItem> URANIUM_ORE_ITEM = unbound("URANIUM_ORE_ITEM");
 	public static Supplier<BlockItem> DEEPSLATE_URANIUM_ORE_ITEM = unbound("DEEPSLATE_URANIUM_ORE_ITEM");
 	public static Supplier<BlockItem> IRON_CHEST_ITEM = unbound("IRON_CHEST_ITEM");
@@ -347,6 +360,8 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> COMPRESSOR_BE = unbound("COMPRESSOR_BE");
 	public static Supplier<BlockEntityType<?>> SAWMILL_BE = unbound("SAWMILL_BE");
 	public static Supplier<BlockEntityType<?>> POLYMERIZER_BE = unbound("POLYMERIZER_BE");
+	public static Supplier<BlockEntityType<?>> VULCANIZER_BE = unbound("VULCANIZER_BE");
+	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> INCUBATOR_BE = unbound("INCUBATOR_BE");
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
 	public static Supplier<BlockEntityType<?>> FLUID_TANK_BE = unbound("FLUID_TANK_BE");
@@ -373,6 +388,7 @@ public final class ModContent {
 	public static Supplier<MenuType<CompressorMenu>> COMPRESSOR_MENU = unbound("COMPRESSOR_MENU");
 	public static Supplier<MenuType<SawmillMenu>> SAWMILL_MENU = unbound("SAWMILL_MENU");
 	public static Supplier<MenuType<PolymerizerMenu>> POLYMERIZER_MENU = unbound("POLYMERIZER_MENU");
+	public static Supplier<MenuType<VulcanizerMenu>> VULCANIZER_MENU = unbound("VULCANIZER_MENU");
 	public static Supplier<MenuType<IncubatorMenu>> INCUBATOR_MENU = unbound("INCUBATOR_MENU");
 	public static Supplier<MenuType<BatteryBoxMenu>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");
 	/** Teleporter station screen (MOD-093): EU bar, owner, private/public toggle. */

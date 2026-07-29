@@ -51,18 +51,15 @@ public final class RecipeViewerInfo {
 	 * they have no {@code output.accept(...)} entry). They are also removed from the recipe viewer
 	 * (REI on Fabric, JEI on NeoForge) so the player never sees them before they ship.
 	 *
-	 * <p>Today: the insulated cables (copper / tin) and the recipe-less filled vacuum capsule. The base
+	 * <p>Today: only the recipe-less filled vacuum capsule. The base
 	 * {@code water_mill}, {@code wind_mill}, both T2 wind mills (restored in MOD-172 — recipe-less,
 	 * obtained by evolution) and all three shipped cable grades — {@code tin_cable}, {@code copper_cable},
-	 * {@code gold_cable} (MOD-219) — stay visible.
+	 * {@code gold_cable} (MOD-219), plus both insulated LV upgrades (MOD-259), stay visible.
 	 * Each entry is the same {@code Supplier<? extends ItemLike>} used everywhere else in the mod, so
 	 * the Fabric and NeoForge recipe viewers read one source and cannot drift.
 	 */
 	public static List<Supplier<? extends ItemLike>> hiddenFromRecipeViewerItems() {
 		return List.of(
-				// Cables — tin/copper/gold all ship (MOD-219); only the insulated pair is still unfinished.
-				ModContent.INSULATED_COPPER_CABLE,
-				ModContent.INSULATED_TIN_CABLE,
 				// Filled capsule (MOD-063) has no recipe — it is obtained by filling an empty capsule, so it
 				// would otherwise show as a recipe-less entry. Empty vacuum_capsule stays visible (craftable).
 				ModContent.FILLED_VACUUM_CAPSULE);

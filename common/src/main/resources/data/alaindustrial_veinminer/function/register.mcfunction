@@ -1,6 +1,6 @@
 # Ala Industrial -> Ore Vein Miner compat: TICK hook (#minecraft:tick).
 #
-# Registers the 8 Ala Industrial ore blocks into Ore Vein Miner's pickaxe block list, exactly once,
+# Registers the 10 Ala Industrial ore blocks into Ore Vein Miner's pickaxe block list, exactly once,
 # by calling its own `svm:add_block` API (so we never copy or patch its files).
 #
 # Self-disabling safety gate:
@@ -24,6 +24,8 @@ function svm:add_block {namespace:"alaindustrial",id:"silver_ore",category:"pick
 function svm:add_block {namespace:"alaindustrial",id:"deepslate_silver_ore",category:"pickaxe"}
 function svm:add_block {namespace:"alaindustrial",id:"nickel_ore",category:"pickaxe"}
 function svm:add_block {namespace:"alaindustrial",id:"deepslate_nickel_ore",category:"pickaxe"}
+function svm:add_block {namespace:"alaindustrial",id:"sulfur_ore",category:"pickaxe"}
+function svm:add_block {namespace:"alaindustrial",id:"deepslate_sulfur_ore",category:"pickaxe"}
 function svm:add_block {namespace:"alaindustrial",id:"uranium_ore",category:"pickaxe"}
 function svm:add_block {namespace:"alaindustrial",id:"deepslate_uranium_ore",category:"pickaxe"}
 

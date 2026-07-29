@@ -1,0 +1,12 @@
+{
+  "type": "alaindustrial:vulcanizing",
+  "ingredients": [
+    "alaindustrial:raw_rubber",
+    "alaindustrial:sulfur_dust"
+  ],
+  "result": {
+    "id": "alaindustrial:rubber",
+    "count": 1
+  },
+  "energy": 400
+}

@@ -1,0 +1,23 @@
+{
+  "parent": "alaindustrial:rubber_production",
+  "display": {
+    "icon": { "id": "alaindustrial:insulated_copper_cable" },
+    "title": { "translate": "advancements.alaindustrial.cable_insulation.title" },
+    "description": { "translate": "advancements.alaindustrial.cable_insulation.description" }
+  },
+  "criteria": {
+    "insulated_copper": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": "alaindustrial:insulated_copper_cable" } ] }
+    },
+    "insulated_tin": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": "alaindustrial:insulated_tin_cable" } ] }
+    },
+    "insulated_gold": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": "alaindustrial:insulated_gold_cable" } ] }
+    }
+  },
+  "requirements": [[ "insulated_copper", "insulated_tin", "insulated_gold" ]]
+}

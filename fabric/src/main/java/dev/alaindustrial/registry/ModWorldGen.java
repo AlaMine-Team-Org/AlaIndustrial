@@ -90,6 +90,10 @@ public final class ModWorldGen {
 		BiomeModifications.addFeature(
 				BiomeSelectors.foundInOverworld(),
 				GenerationStep.Decoration.UNDERGROUND_ORES,
+				ResourceKey.create(Registries.PLACED_FEATURE, Industrialization.id("sulfur_ore")));
+		BiomeModifications.addFeature(
+				BiomeSelectors.foundInOverworld(),
+				GenerationStep.Decoration.UNDERGROUND_ORES,
 				ResourceKey.create(Registries.PLACED_FEATURE, Industrialization.id("uranium_ore")));
 	}
 }

@@ -24,6 +24,8 @@ import dev.alaindustrial.block.SilverChestBlock;
 import dev.alaindustrial.block.GoldChestBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
+import dev.alaindustrial.block.VulcanizerBlock;
+import dev.alaindustrial.block.ElectricHeaterBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.FluidTankBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
@@ -89,6 +91,10 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("sawmill", SawmillBlock::new, props("sawmill"));
 	public static final DeferredBlock<PolymerizerBlock> POLYMERIZER =
 			BLOCKS.registerBlock("polymerizer", PolymerizerBlock::new, props("polymerizer"));
+	public static final DeferredBlock<VulcanizerBlock> VULCANIZER =
+			BLOCKS.registerBlock("vulcanizer", VulcanizerBlock::new, props("vulcanizer"));
+	public static final DeferredBlock<ElectricHeaterBlock> ELECTRIC_HEATER =
+			BLOCKS.registerBlock("electric_heater", ElectricHeaterBlock::new, props("electric_heater"));
 	public static final DeferredBlock<IncubatorBlock> INCUBATOR =
 			BLOCKS.registerBlock("incubator", IncubatorBlock::new, props("incubator"));
 	public static final DeferredBlock<IncubatorDomeBlock> INCUBATOR_DOME =
@@ -109,9 +115,8 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("storm_wind_mill", StormWindMillBlock::new, props("storm_wind_mill"));
 
 	// --- Cables ---
-	// Each grade passes its CableType (MOD-219) — the mirror of the Fabric side, which loader_parity_check
-	// enforces. The insulated pair reuses copper's/tin's numbers: still hidden (MOD-010), and their niche is
-	// water resistance rather than throughput.
+	// Each grade passes its CableType (MOD-219/MOD-259) — the mirror of the Fabric side, which
+	// loader_parity_check enforces. Rubber insulation keeps cap/buffer but halves attenuation.
 	public static final DeferredBlock<CableBlock> COPPER_CABLE =
 			BLOCKS.registerBlock("copper_cable", p -> new CableBlock(CableType.COPPER, p), props("copper_cable"));
 	public static final DeferredBlock<CableBlock> TIN_CABLE =
@@ -119,11 +124,14 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<CableBlock> GOLD_CABLE =
 			BLOCKS.registerBlock("gold_cable", p -> new CableBlock(CableType.GOLD, p), props("gold_cable"));
 	public static final DeferredBlock<CableBlock> INSULATED_COPPER_CABLE =
-			BLOCKS.registerBlock("insulated_copper_cable", p -> new CableBlock(CableType.COPPER, p),
+			BLOCKS.registerBlock("insulated_copper_cable", p -> new CableBlock(CableType.INSULATED_COPPER, p),
 					props("insulated_copper_cable"));
 	public static final DeferredBlock<CableBlock> INSULATED_TIN_CABLE =
-			BLOCKS.registerBlock("insulated_tin_cable", p -> new CableBlock(CableType.TIN, p),
+			BLOCKS.registerBlock("insulated_tin_cable", p -> new CableBlock(CableType.INSULATED_TIN, p),
 					props("insulated_tin_cable"));
+	public static final DeferredBlock<CableBlock> INSULATED_GOLD_CABLE =
+			BLOCKS.registerBlock("insulated_gold_cable", p -> new CableBlock(CableType.INSULATED_GOLD, p),
+					props("insulated_gold_cable"));
 	public static final DeferredBlock<ItemPipeBlock> ITEM_PIPE =
 			BLOCKS.registerBlock("item_pipe", ItemPipeBlock::new, props("item_pipe"));
 
@@ -140,6 +148,10 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("nickel_ore", Block::new, props("nickel_ore"));
 	public static final DeferredBlock<Block> DEEPSLATE_NICKEL_ORE =
 			BLOCKS.registerBlock("deepslate_nickel_ore", Block::new, props("deepslate_nickel_ore"));
+	public static final DeferredBlock<Block> SULFUR_ORE =
+			BLOCKS.registerBlock("sulfur_ore", Block::new, props("sulfur_ore"));
+	public static final DeferredBlock<Block> DEEPSLATE_SULFUR_ORE =
+			BLOCKS.registerBlock("deepslate_sulfur_ore", Block::new, props("deepslate_sulfur_ore"));
 	public static final DeferredBlock<Block> URANIUM_ORE =
 			BLOCKS.registerBlock("uranium_ore", Block::new, props("uranium_ore"));
 	public static final DeferredBlock<Block> DEEPSLATE_URANIUM_ORE =
@@ -227,6 +239,8 @@ public final class ModBlocksNeoForge {
 		ModContent.COMPRESSOR = COMPRESSOR::get;
 		ModContent.SAWMILL = SAWMILL::get;
 		ModContent.POLYMERIZER = POLYMERIZER::get;
+		ModContent.VULCANIZER = VULCANIZER::get;
+		ModContent.ELECTRIC_HEATER = ELECTRIC_HEATER::get;
 		ModContent.INCUBATOR = INCUBATOR::get;
 		ModContent.INCUBATOR_DOME = INCUBATOR_DOME::get;
 		ModContent.GEOTHERMAL_GENERATOR = GEOTHERMAL_GENERATOR::get;
@@ -241,6 +255,7 @@ public final class ModBlocksNeoForge {
 		ModContent.GOLD_CABLE = GOLD_CABLE::get;
 		ModContent.INSULATED_COPPER_CABLE = INSULATED_COPPER_CABLE::get;
 		ModContent.INSULATED_TIN_CABLE = INSULATED_TIN_CABLE::get;
+		ModContent.INSULATED_GOLD_CABLE = INSULATED_GOLD_CABLE::get;
 		ModContent.ITEM_PIPE = ITEM_PIPE::get;
 		ModContent.TIN_ORE = TIN_ORE::get;
 		ModContent.DEEPSLATE_TIN_ORE = DEEPSLATE_TIN_ORE::get;
@@ -248,6 +263,8 @@ public final class ModBlocksNeoForge {
 		ModContent.DEEPSLATE_SILVER_ORE = DEEPSLATE_SILVER_ORE::get;
 		ModContent.NICKEL_ORE = NICKEL_ORE::get;
 		ModContent.DEEPSLATE_NICKEL_ORE = DEEPSLATE_NICKEL_ORE::get;
+		ModContent.SULFUR_ORE = SULFUR_ORE::get;
+		ModContent.DEEPSLATE_SULFUR_ORE = DEEPSLATE_SULFUR_ORE::get;
 		ModContent.URANIUM_ORE = URANIUM_ORE::get;
 		ModContent.DEEPSLATE_URANIUM_ORE = DEEPSLATE_URANIUM_ORE::get;
 		ModContent.IRON_CHEST = IRON_CHEST::get;

@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "Neye dönüşür",
-              "text": "Petrol, kauçuk zincirinin başlangıcıdır.\n\n1. Toplayın — kovayla, Vakum kapsülüyle veya Pompayla\n2. Polimerleştirici: 1000 mB petrol ve 400 EU ham kauçuk verir\n3. Fırın veya Elektrikli Fırın: ham kauçuk pişerek kauçuğa dönüşür\n\nKauçuğu şimdilik hiçbir şey tüketmiyor — onu kullanacak yalıtımlı kablolar ve MV bileşenleri bir sonraki aşamada geliyor. Şimdiden stoklayın."
+              "text": "Petrol, kauçuk zincirinin başlangıcıdır.\n\n1. Toplayın — kovayla, Vakum Kapsülüyle veya Pompayla\n2. Polimerleştirici: 1000 mB petrol ve 400 EU ham kauçuk verir\n3. Vulkanizatör: ham kauçuk + kükürt tozu + 400 EU\n4. Altına kamp ateşi (×1), lav/magma (×2) veya Elektrikli Isıtıcı (×3) yerleştirin\n\nDaha iyi ısı malzeme tasarrufu sağlar: her işlem daima bir ham kauçuk ve bir kükürt tozu tüketir."
             }
           ]
         }
@@ -384,15 +384,14 @@
             {
               "type": "text",
               "title": "Altın Kablo",
-              "text": "MV kablosu — bakırdan dört kat geniş ama daha çok kaçaklı: yakında geniş bir boru, uzakta ince bir boru gibi."
+              "text": "Geniş, çıplak bir MV kablo; kaybı yüksektir ve içinden gerçekten enerji akarken dokunanı ciddi biçimde çarpar."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
                 "Enerji: ≤128 EU/paket",
-                "Tampon: 48 EU",
-                "Kayıp: blok başına 0.03"
+                "Tampon: 48 EU"
               ]
             },
             {
@@ -416,6 +415,123 @@
           ]
         },
         {
+          "id": "insulated_gold_cable",
+          "title": "Yalıtımlı Altın Kablo",
+          "icon": "alaindustrial:insulated_gold_cable",
+          "block_id": "alaindustrial:insulated_gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Yalıtımlı Altın Kablo",
+              "text": "Kauçuk kaplı altın MV kablo — kaybı yarı yarıya azalır ve dokunma çarpmasına karşı tamamen bağışıktır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: ≤128 EU/paket",
+                "Tampon: 48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable"
+              ],
+              "result_id": "alaindustrial:insulated_gold_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "Yalıtımlı Bakır Kablo",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Yalıtımlı Bakır Kablo",
+              "text": "Kauçuk kaplı bakır LV kablo — kaybı yarı yarıya azalır ve dokunma çarpmasına karşı tamamen bağışıktır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: ≤32 EU/paket",
+                "Tampon: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:insulated_copper_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "Yalıtımlı Kalay Kablo",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Yalıtımlı Kalay Kablo",
+              "text": "Kauçuk kaplı kalay LV kablo — kaybı en az düzeydedir ve dokunma çarpmasına karşı tamamen bağışıktır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: ≤8 EU/paket",
+                "Tampon: 8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable"
+              ],
+              "result_id": "alaindustrial:insulated_tin_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Bakır Kablo",
           "icon": "alaindustrial:copper_cable",
@@ -424,15 +540,14 @@
             {
               "type": "text",
               "title": "Bakır Kablo",
-              "text": "Erken enerji ağları için ucuz, iş gören bir LV kablo — güneş panellerini, pilleri ve makineleri tek bir hatta bağlar."
+              "text": "Ucuz, iş gören bir LV kablo; içinden gerçekten enerji akarken çıplak tel dokunan oyuncuyu çarpar."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
                 "Enerji: ≤32 EU/paket",
-                "Tampon: 12 EU",
-                "Kayıp: blok başına 0.02"
+                "Tampon: 12 EU"
               ]
             },
             {
@@ -464,15 +579,14 @@
             {
               "type": "text",
               "title": "Kalay Kablo",
-              "text": "En ucuz LV kablosu — dar ama neredeyse kayıpsız, güneş tarlaları için ideal."
+              "text": "En ucuz, neredeyse kayıpsız LV kablo; içinden gerçekten enerji akarken çıplak tel dokunan oyuncuyu çarpar."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
                 "Enerji: ≤8 EU/paket",
-                "Tampon: 8 EU",
-                "Kayıp: blok başına 0.006"
+                "Tampon: 8 EU"
               ]
             },
             {
@@ -500,8 +614,47 @@
     {
       "id": "processing",
       "title": "İşleme",
-      "icon": "alaindustrial:macerator",
+      "icon": "alaindustrial:vulcanizer",
       "entries": [
+        {
+          "id": "vulcanizer",
+          "title": "Vulkanizatör",
+          "icon": "alaindustrial:vulcanizer",
+          "block_id": "alaindustrial:vulcanizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vulkanizatör",
+              "text": "Ham kauçuğu kükürt tozuyla birleştirerek kauçuk üreten bir LV makinesi. EU ve alttan ısı gerektirir; daha güçlü ısı kaynağı verimi artırır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 400 EU/işlem",
+                "Tampon: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:vulcanizer",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "macerator",
           "title": "Öğütücü",
@@ -659,7 +812,7 @@
             {
               "type": "text",
               "title": "Polimerleştirici",
-              "text": "Petrolü kaynatarak ham kauçuğa dönüştürür — 10 kovalık tank, işlem başına bir kova. Ham kauçuk daha sonra fırında pişirilerek kauçuk olur."
+              "text": "Petrolü kaynatarak ham kauçuğa dönüştürür — 10 kovalık tank, işlem başına bir kova. Kauçuk daha sonra bir Vulkanizatörde kükürtle birleştirilir."
             },
             {
               "type": "stats",
@@ -724,6 +877,45 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_heater",
+          "title": "Elektrikli Isıtıcı",
+          "icon": "alaindustrial:electric_heater",
+          "block_id": "alaindustrial:electric_heater",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrikli Isıtıcı",
+              "text": "Vulkanizatöre en yüksek ×3 ısıyı sağlayan, arayüzsüz bir LV destek bloğu. Yalnızca üstündeki makine gerçekten çalışırken EU tüketir."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 2 EU/t",
+                "Tampon: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:redstone",
+                "minecraft:gold_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electric_heater",
               "result_count": 1
             }
           ]
@@ -1034,6 +1226,19 @@
           ]
         },
         {
+          "id": "sulfur_ore",
+          "title": "Kükürt Cevheri",
+          "icon": "alaindustrial:sulfur_ore",
+          "block_id": "alaindustrial:sulfur_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kükürt Cevheri",
+              "text": "Doğal kükürt — kauçuk vulkanizasyonu için toza dönüştürülen, çıkarılabilir bir ametal."
+            }
+          ]
+        },
+        {
           "id": "uranium_ore",
           "title": "Uranyum Cevheri",
           "icon": "alaindustrial:uranium_ore",
@@ -1042,7 +1247,7 @@
             {
               "type": "text",
               "title": "Uranyum Cevheri",
-              "text": "Modun en nadir cevheri — demir kazma ile kazılır, toz ve külçeye işlenir; gelecekteki nükleer makineler için ayrılmıştır."
+              "text": "Modun en nadir cevheri — demir kazmayla çıkarılır, toza ve külçeye işlenir; meşale, ışınlayıcı ve kuluçka makinesinde zaten kullanılır, ileride nükleer makinelerde de kullanılacaktır."
             }
           ]
         },
@@ -1515,6 +1720,37 @@
           ]
         },
         {
+          "id": "windmill_rotor",
+          "title": "Ahşap Rotor",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ahşap Rotor",
+              "text": "Rüzgar türbini kanatları — herhangi bir T1/T2 rüzgar türbininin rotor yuvasına takılır; onsuz üretim olmaz. Üretim sırasında aşınır."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Su Verilmiş Demir",
           "icon": "alaindustrial:tempered_iron",
@@ -1678,38 +1914,7 @@
             {
               "type": "text",
               "title": "Kauçuk",
-              "text": "Petrolden elde edilen bir malzeme — Polimerleştirici petrolü ham kauçuğa çevirir, fırın onu pişirerek kauçuğa dönüştürür. Gelecekteki yalıtımlı kabloların ve MV bileşenlerinin temeli."
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "Ahşap Rotor",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Ahşap Rotor",
-              "text": "Rüzgar türbini kanatları — herhangi bir T1/T2 rüzgar türbininin rotor yuvasına takılır; onsuz üretim olmaz. Üretim sırasında aşınır."
-            },
-            {
-              "type": "recipe",
-              "title": "Tarif",
-              "recipe_type": "Şekilli Üretim",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
+              "text": "Petrol ve kükürtten yapılan bir malzeme — Polimerleştirici ham kauçuk üretir, ardından ısıtılmış Vulkanizatör onu kauçuğa dönüştürür."
             }
           ]
         },

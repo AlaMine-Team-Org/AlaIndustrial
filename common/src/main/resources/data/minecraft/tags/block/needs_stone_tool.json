@@ -6,6 +6,8 @@
     "alaindustrial:silver_ore",
     "alaindustrial:deepslate_silver_ore",
     "alaindustrial:nickel_ore",
-    "alaindustrial:deepslate_nickel_ore"
+    "alaindustrial:deepslate_nickel_ore",
+    "alaindustrial:sulfur_ore",
+    "alaindustrial:deepslate_sulfur_ore"
   ]
 }

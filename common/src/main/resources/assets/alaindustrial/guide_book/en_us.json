@@ -89,7 +89,7 @@
             {
               "type": "text",
               "title": "What it becomes",
-              "text": "Oil is the start of the rubber chain.\n\n1. Collect it — by bucket, Vacuum Capsule or Pump\n2. Polymerizer: 1000 mB of oil and 400 EU give raw rubber\n3. Furnace or Electric Furnace: raw rubber cures into rubber\n\nRubber is not consumed by anything yet — its users, insulated cables and MV components, arrive with the next phase. Stockpile it."
+              "text": "Oil is the start of the rubber chain.\n\n1. Collect it — by bucket, Vacuum Capsule or Pump\n2. Polymerizer: 1000 mB of oil and 400 EU give raw rubber\n3. Vulcanizer: raw rubber + sulfur dust + 400 EU\n4. Put a campfire (×1), lava/magma (×2), or an Electric Heater (×3) below it\n\nBetter heat saves materials: every operation always consumes one raw rubber and one sulfur dust."
             }
           ]
         }
@@ -384,15 +384,14 @@
             {
               "type": "text",
               "title": "Gold Cable",
-              "text": "The MV cable — four times wider than copper but leakier: a wide pipe up close versus a thin one far away."
+              "text": "A wide bare MV cable with high loss and a serious contact shock while energy is actually flowing."
             },
             {
               "type": "stats",
               "title": "Stats",
               "lines": [
                 "Energy: ≤128 EU/packet",
-                "Buffer: 48 EU",
-                "Loss: 0.03 per block"
+                "Buffer: 48 EU"
               ]
             },
             {
@@ -416,6 +415,123 @@
           ]
         },
         {
+          "id": "insulated_gold_cable",
+          "title": "Insulated Gold Cable",
+          "icon": "alaindustrial:insulated_gold_cable",
+          "block_id": "alaindustrial:insulated_gold_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Insulated Gold Cable",
+              "text": "A rubber-sheathed gold MV cable with half the loss and complete immunity to contact shock."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: ≤128 EU/packet",
+                "Buffer: 48 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable",
+                "alaindustrial:gold_cable"
+              ],
+              "result_id": "alaindustrial:insulated_gold_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_copper_cable",
+          "title": "Insulated Copper Cable",
+          "icon": "alaindustrial:insulated_copper_cable",
+          "block_id": "alaindustrial:insulated_copper_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Insulated Copper Cable",
+              "text": "A rubber-sheathed copper LV cable with half the loss and complete immunity to contact shock."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: ≤32 EU/packet",
+                "Buffer: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable"
+              ],
+              "result_id": "alaindustrial:insulated_copper_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
+          "id": "insulated_tin_cable",
+          "title": "Insulated Tin Cable",
+          "icon": "alaindustrial:insulated_tin_cable",
+          "block_id": "alaindustrial:insulated_tin_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Insulated Tin Cable",
+              "text": "A rubber-sheathed tin LV cable with minimal loss and complete immunity to contact shock."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: ≤8 EU/packet",
+                "Buffer: 8 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable",
+                "alaindustrial:tin_cable"
+              ],
+              "result_id": "alaindustrial:insulated_tin_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Copper Cable",
           "icon": "alaindustrial:copper_cable",
@@ -424,15 +540,14 @@
             {
               "type": "text",
               "title": "Copper Cable",
-              "text": "A cheap, workhorse LV cable for early energy networks — links solar panels, batteries and machines into a single line."
+              "text": "A cheap workhorse LV cable; while energy is actually flowing, the bare wire shocks players on contact."
             },
             {
               "type": "stats",
               "title": "Stats",
               "lines": [
                 "Energy: ≤32 EU/packet",
-                "Buffer: 12 EU",
-                "Loss: 0.02 per block"
+                "Buffer: 12 EU"
               ]
             },
             {
@@ -464,15 +579,14 @@
             {
               "type": "text",
               "title": "Tin Cable",
-              "text": "The cheapest LV cable — narrow but nearly lossless, ideal for solar farms."
+              "text": "The cheapest nearly-lossless LV cable; while energy is actually flowing, the bare wire shocks players on contact."
             },
             {
               "type": "stats",
               "title": "Stats",
               "lines": [
                 "Energy: ≤8 EU/packet",
-                "Buffer: 8 EU",
-                "Loss: 0.006 per block"
+                "Buffer: 8 EU"
               ]
             },
             {
@@ -500,8 +614,47 @@
     {
       "id": "processing",
       "title": "Processing",
-      "icon": "alaindustrial:macerator",
+      "icon": "alaindustrial:vulcanizer",
       "entries": [
+        {
+          "id": "vulcanizer",
+          "title": "Vulcanizer",
+          "icon": "alaindustrial:vulcanizer",
+          "block_id": "alaindustrial:vulcanizer",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vulcanizer",
+              "text": "An LV machine that combines raw rubber with sulfur dust to make rubber. It needs EU and heat from below; a stronger heat source increases the output."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 400 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:sulfur_dust",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:vulcanizer",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "macerator",
           "title": "Macerator",
@@ -659,7 +812,7 @@
             {
               "type": "text",
               "title": "Polymerizer",
-              "text": "Boils oil down into raw rubber — a ten-bucket tank, one bucket per run. The raw rubber is then fired in a furnace to become rubber."
+              "text": "Boils oil down into raw rubber — a ten-bucket tank, one bucket per run. The rubber is then combined with sulfur in a Vulcanizer."
             },
             {
               "type": "stats",
@@ -724,6 +877,45 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:extractor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_heater",
+          "title": "Electric Heater",
+          "icon": "alaindustrial:electric_heater",
+          "block_id": "alaindustrial:electric_heater",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Electric Heater",
+              "text": "A GUI-less LV support block that gives the Vulcanizer maximum ×3 heat. It consumes EU only when the machine above actually advances."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 2 EU/t",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "minecraft:redstone",
+                "minecraft:gold_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:electric_heater",
               "result_count": 1
             }
           ]
@@ -1034,6 +1226,19 @@
           ]
         },
         {
+          "id": "sulfur_ore",
+          "title": "Sulfur Ore",
+          "icon": "alaindustrial:sulfur_ore",
+          "block_id": "alaindustrial:sulfur_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sulfur Ore",
+              "text": "Native sulfur — a mineable non-metal processed into dust for rubber vulcanization."
+            }
+          ]
+        },
+        {
           "id": "uranium_ore",
           "title": "Uranium Ore",
           "icon": "alaindustrial:uranium_ore",
@@ -1042,7 +1247,7 @@
             {
               "type": "text",
               "title": "Uranium Ore",
-              "text": "The mod's rarest ore — mined with an iron pickaxe, processed into dust and ingot; reserved for future nuclear machines."
+              "text": "The mod's rarest ore — mined with an iron pickaxe, processed into dust and ingot; already goes into the torch, teleporter and incubator, and later into nuclear machines."
             }
           ]
         },
@@ -1515,6 +1720,37 @@
           ]
         },
         {
+          "id": "windmill_rotor",
+          "title": "Wooden Rotor",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Wooden Rotor",
+              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron",
           "title": "Tempered Iron",
           "icon": "alaindustrial:tempered_iron",
@@ -1678,38 +1914,7 @@
             {
               "type": "text",
               "title": "Rubber",
-              "text": "A material made from oil — the Polymerizer turns oil into raw rubber, a furnace fires it into rubber. The base of future insulated cables and MV components."
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "Wooden Rotor",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Wooden Rotor",
-              "text": "Wind turbine blades — placed in the rotor slot of any T1/T2 wind mill; without it, no generation. Wears out while generating."
-            },
-            {
-              "type": "recipe",
-              "title": "Recipe",
-              "recipe_type": "Shaped Crafting",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
+              "text": "A material made from oil and sulfur — the Polymerizer makes raw rubber, then a heated Vulcanizer turns it into rubber."
             }
           ]
         },
