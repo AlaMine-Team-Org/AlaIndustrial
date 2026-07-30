@@ -497,5 +497,8 @@
   "tooltip.alaindustrial.tier_lv": "Тир: LV",
   "tooltip.alaindustrial.tier_mv": "Тир: MV",
   "advancements.alaindustrial.cable_insulation.title": "Надёжная изоляция",
-  "advancements.alaindustrial.cable_insulation.description": "Создайте кабель с резиновой изоляцией, чтобы вдвое снизить потери энергии"
+  "advancements.alaindustrial.cable_insulation.description": "Создайте кабель с резиновой изоляцией, чтобы вдвое снизить потери энергии",
+  "block.alaindustrial.trellis": "Жердочка",
+  "item.alaindustrial.cotton_seeds": "Семена хлопка",
+  "item.alaindustrial.cotton_fiber": "Хлопковое волокно"
 }

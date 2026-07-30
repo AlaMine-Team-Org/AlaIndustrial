@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "帶等級的物品更容易變異：+%s / +%s / +%s 個百分點，上限 %s%%。",
 	"jei.alaindustrial.mutation_grades.line4": "基因在嘗試中燒盡——結果始終重新擲點，因此傳說無法複製出另一個傳說。",
 	"advancements.alaindustrial.cable_insulation.title": "更好的絕緣",
-	"advancements.alaindustrial.cable_insulation.description": "製作橡膠絕緣電纜，將輸電損耗減半"
+	"advancements.alaindustrial.cable_insulation.description": "製作橡膠絕緣電纜，將輸電損耗減半",
+	"block.alaindustrial.trellis": "棚架",
+	"item.alaindustrial.cotton_seeds": "棉花種子",
+	"item.alaindustrial.cotton_fiber": "棉纖維"
 }

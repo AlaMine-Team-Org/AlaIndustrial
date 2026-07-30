@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "Vật phẩm có cấp thì đột biến dễ hơn: +%s / +%s / +%s điểm phần trăm, tối đa %s%%.",
 	"jei.alaindustrial.mutation_grades.line4": "Gen cháy rụi trong lần thử — kết quả luôn được tung lại từ đầu, nên không thể nhân bản một Huyền thoại thành một cái khác.",
 	"advancements.alaindustrial.cable_insulation.title": "Cách điện tốt hơn",
-	"advancements.alaindustrial.cable_insulation.description": "Chế tạo cáp bọc cao su để giảm một nửa hao hụt truyền tải"
+	"advancements.alaindustrial.cable_insulation.description": "Chế tạo cáp bọc cao su để giảm một nửa hao hụt truyền tải",
+	"block.alaindustrial.trellis": "Giàn",
+	"item.alaindustrial.cotton_seeds": "Hạt bông",
+	"item.alaindustrial.cotton_fiber": "Sợi bông"
 }

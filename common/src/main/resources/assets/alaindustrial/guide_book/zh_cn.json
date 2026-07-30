@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "棚架",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "棚架",
+              "text": "为攀缘植物准备的两格高支架，目前上面种的是棉花。放置在湿润的耕地上，右键播种。植株只需缓慢生根一次，之后便会无限循环结果：采收永远不会破坏它。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "培育舱",
           "icon": "alaindustrial:incubator",

@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "支柱",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "支柱",
+              "text": "つる性の植物のための高さ2ブロックの支柱で、現在は綿が育ちます。湿った農地に設置し、右クリックで種をまきます。根づくまでは一度だけ時間がかかり、その後は無限に実をつけます。収穫しても株は決して壊れません。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "インキュベーター",
           "icon": "alaindustrial:incubator",

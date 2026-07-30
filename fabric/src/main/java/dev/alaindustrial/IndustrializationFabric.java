@@ -2,6 +2,9 @@ package dev.alaindustrial;
 
 import dev.alaindustrial.command.AlaCommand;
 import dev.alaindustrial.loot.BonusChest;
+import dev.alaindustrial.loot.Trellis;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.storage.loot.LootTable;
 import dev.alaindustrial.core.energy.EnergyLookup;
 import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.fluid.FluidLookup;
@@ -423,6 +426,19 @@ public class IndustrializationFabric implements ModInitializer {
 				tableBuilder.withPool(LootPool.lootPool()
 						.setRolls(ConstantValue.exactly(1.0f))
 						.add(NestedLootTable.lootTableReference(BonusChest.INJECT_TABLE)));
+			}
+			// MOD-280: cotton seeds from grass, the way wheat seeds are found. Same shape as above — one
+			// added pool referencing a shared sub-table, vanilla pools untouched — and the shears rule
+			// lives inside that sub-table, because this pool rolls independently of vanilla's.
+			//
+			// Short and tall grass get DIFFERENT sub-tables: tall grass is a two-block plant whose table
+			// is evaluated once per half, so its sub-table carries vanilla's half/partner guards to stay
+			// at one payout. See Trellis.SEEDS_FROM_TALL_GRASS.
+			ResourceKey<LootTable> seedTable = source.isBuiltin() ? Trellis.GRASS_TABLES.get(key) : null;
+			if (seedTable != null) {
+				tableBuilder.withPool(LootPool.lootPool()
+						.setRolls(ConstantValue.exactly(1.0f))
+						.add(NestedLootTable.lootTableReference(seedTable)));
 			}
 		});
 	}

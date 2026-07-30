@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "Предмет із грейдом мутує охочіше: +%s / +%s / +%s відсоткових пунктів, стеля — %s%%.",
 	"jei.alaindustrial.mutation_grades.line4": "Ген згорає у спробі — результат завжди отримує свіжий кидок, тож розмножити легендарку дублюванням не вийде.",
 	"advancements.alaindustrial.cable_insulation.title": "Надійна ізоляція",
-	"advancements.alaindustrial.cable_insulation.description": "Створіть кабель із гумовою ізоляцією, щоб удвічі зменшити втрати енергії"
+	"advancements.alaindustrial.cable_insulation.description": "Створіть кабель із гумовою ізоляцією, щоб удвічі зменшити втрати енергії",
+	"block.alaindustrial.trellis": "Жердка",
+	"item.alaindustrial.cotton_seeds": "Насіння бавовни",
+	"item.alaindustrial.cotton_fiber": "Бавовняне волокно"
 }

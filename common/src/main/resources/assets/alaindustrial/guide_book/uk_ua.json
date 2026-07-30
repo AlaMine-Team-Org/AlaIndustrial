@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "Жердка",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Жердка",
+              "text": "Опора заввишки у два блоки для витких рослин — нині на ній росте бавовна. Ставиться на вологий зораний ґрунт, насіння садиться правим кліком. Рослина повільно вкорінюється один раз, а далі плодоносить у нескінченному циклі: збирання ніколи її не руйнує."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "Інкубатор",
           "icon": "alaindustrial:incubator",

@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "Un objet gradé mute plus volontiers : +%s / +%s / +%s points de pourcentage, plafonné à %s%%.",
 	"jei.alaindustrial.mutation_grades.line4": "Le gène brûle dans la tentative — le résultat est toujours relancé, un légendaire ne peut donc pas être dupliqué en un autre.",
 	"advancements.alaindustrial.cable_insulation.title": "Mieux isolé",
-	"advancements.alaindustrial.cable_insulation.description": "Fabriquez un câble isolé au caoutchouc pour réduire de moitié les pertes"
+	"advancements.alaindustrial.cable_insulation.description": "Fabriquez un câble isolé au caoutchouc pour réduire de moitié les pertes",
+	"block.alaindustrial.trellis": "Treillis",
+	"item.alaindustrial.cotton_seeds": "Graines de coton",
+	"item.alaindustrial.cotton_fiber": "Fibre de coton"
 }

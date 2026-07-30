@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "Derecesi olan bir eşya daha istekli mutasyona uğrar: +%s / +%s / +%s yüzde puanı, en fazla %s%%.",
 	"jei.alaindustrial.mutation_grades.line4": "Gen denemede yanar — sonuç her zaman yeniden atılır, bu yüzden bir efsanevi kopyalanarak bir başkasına dönüştürülemez.",
 	"advancements.alaindustrial.cable_insulation.title": "Daha iyi yalıtım",
-	"advancements.alaindustrial.cable_insulation.description": "İletim kaybını yarıya indirmek için kauçuk yalıtımlı bir kablo üret"
+	"advancements.alaindustrial.cable_insulation.description": "İletim kaybını yarıya indirmek için kauçuk yalıtımlı bir kablo üret",
+	"block.alaindustrial.trellis": "Kafes",
+	"item.alaindustrial.cotton_seeds": "Pamuk tohumu",
+	"item.alaindustrial.cotton_fiber": "Pamuk lifi"
 }

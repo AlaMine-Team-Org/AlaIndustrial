@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "Un objeto con grado muta con más facilidad: +%s / +%s / +%s puntos porcentuales, con un tope del %s%%.",
 	"jei.alaindustrial.mutation_grades.line4": "El gen se consume en el intento — el resultado siempre se sortea de nuevo, así que un legendario no se puede duplicar en otro.",
 	"advancements.alaindustrial.cable_insulation.title": "Mejor aislamiento",
-	"advancements.alaindustrial.cable_insulation.description": "Fabrica un cable aislado con caucho para reducir a la mitad las pérdidas"
+	"advancements.alaindustrial.cable_insulation.description": "Fabrica un cable aislado con caucho para reducir a la mitad las pérdidas",
+	"block.alaindustrial.trellis": "Espaldera",
+	"item.alaindustrial.cotton_seeds": "Semillas de algodón",
+	"item.alaindustrial.cotton_fiber": "Fibra de algodón"
 }

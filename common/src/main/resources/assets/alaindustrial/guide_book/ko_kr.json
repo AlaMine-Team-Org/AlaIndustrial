@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "지지대",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "지지대",
+              "text": "덩굴 식물을 위한 높이 2블록의 지지대로, 현재는 면화가 자랍니다. 젖은 경작지에 설치하고 우클릭으로 씨앗을 심습니다. 식물은 처음 한 번만 천천히 뿌리를 내리고, 그 뒤로는 끝없이 열매를 맺습니다. 수확해도 사라지지 않습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "인큐베이터",
           "icon": "alaindustrial:incubator",

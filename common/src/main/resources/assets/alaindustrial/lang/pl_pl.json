@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "Przedmiot ze stopniem mutuje chętniej: +%s / +%s / +%s punktów procentowych, z limitem %s%%.",
 	"jei.alaindustrial.mutation_grades.line4": "Gen spala się w próbie — wynik zawsze losowany jest od nowa, więc legendarnego nie da się zduplikować w kolejnego.",
 	"advancements.alaindustrial.cable_insulation.title": "Lepsza izolacja",
-	"advancements.alaindustrial.cable_insulation.description": "Wytwórz kabel izolowany gumą, aby zmniejszyć straty przesyłu o połowę"
+	"advancements.alaindustrial.cable_insulation.description": "Wytwórz kabel izolowany gumą, aby zmniejszyć straty przesyłu o połowę",
+	"block.alaindustrial.trellis": "Krata",
+	"item.alaindustrial.cotton_seeds": "Nasiona bawełny",
+	"item.alaindustrial.cotton_fiber": "Włókno bawełny"
 }

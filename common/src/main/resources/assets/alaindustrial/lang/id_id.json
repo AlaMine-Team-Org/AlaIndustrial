@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "Item bertingkat bermutasi lebih mudah: +%s / +%s / +%s poin persentase, dibatasi %s%%.",
 	"jei.alaindustrial.mutation_grades.line4": "Gen terbakar dalam percobaan — hasilnya selalu diundi ulang, jadi Legendaris tidak bisa digandakan menjadi Legendaris lain.",
 	"advancements.alaindustrial.cable_insulation.title": "Isolasi lebih baik",
-	"advancements.alaindustrial.cable_insulation.description": "Buat kabel berisolasi karet untuk mengurangi kehilangan energi hingga setengah"
+	"advancements.alaindustrial.cable_insulation.description": "Buat kabel berisolasi karet untuk mengurangi kehilangan energi hingga setengah",
+	"block.alaindustrial.trellis": "Rambatan",
+	"item.alaindustrial.cotton_seeds": "Benih kapas",
+	"item.alaindustrial.cotton_fiber": "Serat kapas"
 }

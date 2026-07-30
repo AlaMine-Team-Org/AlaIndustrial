@@ -379,6 +379,23 @@ public final class Config {
 	/** Share of successes that roll the legendary grade. */
 	public static double mutationGradeLegendary = 0.02;
 
+	// --- Cotton trellis (MOD-280): the mod's first crop. ---
+	/**
+	 * Chance divisor for one rooting stage of the trellis: on each random tick of a moist, lit
+	 * plant there is a 1-in-this chance of advancing. Growth is deliberately random rather than a timer —
+	 * the plant carries no block entity, so a field of any size costs nothing to tick (MOD-280).
+	 *
+	 * <p>Rooting runs three stages and happens <b>once per plant</b>, so this is the slow knob: raising it
+	 * lengthens the initial wait without touching how fast an established plant re-fruits.
+	 */
+	public static int cottonRootingChanceDivisor = 12;
+	/**
+	 * Chance divisor for one fruiting stage — the two-stage cycle an established plant repeats forever
+	 * after every harvest. Much smaller than the rooting divisor: waiting once is the price of the plant,
+	 * waiting every harvest would be tedium.
+	 */
+	public static int cottonFruitingChanceDivisor = 4;
+
 	// --- Iron Furnace (fuel-based, MOD-115): ticks to smelt one item. Vanilla furnace = 200. ---
 	/** Ticks the iron furnace needs to smelt one item on fuel. Between vanilla (200) and the
 	 * electric furnace, so it reads as "a bit faster than stone" without devaluing the electric tier. */
@@ -756,6 +773,11 @@ public final class Config {
 				() -> mutationGradeEpic, v -> mutationGradeEpic = v, 0.0, 0.0),
 			new DoubleField("mutationGradeLegendary", "Share of successful mutations rolling the legendary grade.",
 				() -> mutationGradeLegendary, v -> mutationGradeLegendary = v, 0.0, 0.0),
+			// Minimum 1 on both: a 0 divisor would divide by zero inside the plant's random tick (MOD-169).
+			new IntField("cottonRootingChanceDivisor", "Cotton trellis: 1-in-this chance of advancing one rooting stage per random tick (higher = longer initial growth).",
+				() -> cottonRootingChanceDivisor, v -> cottonRootingChanceDivisor = v, 1),
+			new IntField("cottonFruitingChanceDivisor", "Cotton trellis: 1-in-this chance of advancing one fruiting stage per random tick (the repeating harvest cycle).",
+				() -> cottonFruitingChanceDivisor, v -> cottonFruitingChanceDivisor = v, 1),
 			new IntField("electricFurnaceDuration", "Ticks an electric furnace takes per smelt at 1.0 speed.",
 				() -> electricFurnaceDuration, v -> electricFurnaceDuration = v, 1),
 			new IntField("compressorDuration", "Ticks a compressor takes per operation at 1.0 speed.",

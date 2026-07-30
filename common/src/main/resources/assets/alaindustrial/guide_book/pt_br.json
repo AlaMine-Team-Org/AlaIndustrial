@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "Treliça",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Treliça",
+              "text": "Um suporte de dois blocos de altura para plantas trepadeiras — hoje cresce algodão nele. É colocado em terra arada úmida e semeado com clique direito. A planta enraíza lentamente uma vez e depois frutifica em um ciclo infinito: colhê-la nunca a destrói."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "Incubadora",
           "icon": "alaindustrial:incubator",

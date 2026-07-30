@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "जाली",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "जाली",
+              "text": "बेल वाले पौधों के लिए दो ब्लॉक ऊँचा सहारा — आज इस पर कपास उगती है। इसे नम जुती हुई ज़मीन पर रखा जाता है और दाएँ क्लिक से बोया जाता है। पौधा एक बार धीरे-धीरे जड़ पकड़ता है, फिर अनंत चक्र में फल देता है: कटाई से वह कभी नष्ट नहीं होता।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "इनक्यूबेटर",
           "icon": "alaindustrial:incubator",

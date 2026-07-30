@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "Um item com grau muta com mais facilidade: +%s / +%s / +%s pontos percentuais, com teto de %s%%.",
 	"jei.alaindustrial.mutation_grades.line4": "O gene queima na tentativa — o resultado é sempre sorteado do zero, então um lendário não pode ser duplicado em outro.",
 	"advancements.alaindustrial.cable_insulation.title": "Melhor isolamento",
-	"advancements.alaindustrial.cable_insulation.description": "Fabrique um cabo isolado com borracha para reduzir as perdas pela metade"
+	"advancements.alaindustrial.cable_insulation.description": "Fabrique um cabo isolado com borracha para reduzir as perdas pela metade",
+	"block.alaindustrial.trellis": "Treliça",
+	"item.alaindustrial.cotton_seeds": "Sementes de algodão",
+	"item.alaindustrial.cotton_fiber": "Fibra de algodão"
 }

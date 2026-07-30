@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "গ্রেডযুক্ত আইটেম আরও সহজে মিউটেট হয়: +%s / +%s / +%s শতাংশ পয়েন্ট, সর্বোচ্চ %s%%।",
 	"jei.alaindustrial.mutation_grades.line4": "চেষ্টায় জিনটি পুড়ে যায় — ফলাফল সবসময় নতুন করে নির্ধারিত হয়, তাই একটি কিংবদন্তিকে আরেকটিতে নকল করা যায় না।",
 	"advancements.alaindustrial.cable_insulation.title": "উন্নত নিরোধক",
-	"advancements.alaindustrial.cable_insulation.description": "শক্তি ক্ষয় অর্ধেক করতে রাবার-নিরোধক কেবল তৈরি করুন"
+	"advancements.alaindustrial.cable_insulation.description": "শক্তি ক্ষয় অর্ধেক করতে রাবার-নিরোধক কেবল তৈরি করুন",
+	"block.alaindustrial.trellis": "মাচা",
+	"item.alaindustrial.cotton_seeds": "তুলার বীজ",
+	"item.alaindustrial.cotton_fiber": "তুলার তন্তু"
 }

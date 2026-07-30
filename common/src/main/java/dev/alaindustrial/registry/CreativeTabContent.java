@@ -145,6 +145,8 @@ public final class CreativeTabContent {
 		out.accept(ModContent.DEEPSLATE_SULFUR_ORE_ITEM.get());
 		out.accept(ModContent.URANIUM_ORE_ITEM.get());
 		out.accept(ModContent.DEEPSLATE_URANIUM_ORE_ITEM.get());
+		out.accept(ModContent.TRELLIS_ITEM.get());
+		out.accept(ModContent.COTTON_SEEDS.get());
 	}
 
 	public static void functionalBlocks(Sink out) {
@@ -247,6 +249,7 @@ public final class CreativeTabContent {
 		// Oil → rubber chain (MOD-019), in production order.
 		out.accept(ModContent.RAW_RUBBER.get());
 		out.accept(ModContent.RUBBER.get());
+		out.accept(ModContent.COTTON_FIBER.get());
 		out.accept(ModContent.MUTE_CHIP.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
 		out.accept(ModContent.WATER_MILL_WHEEL.get());

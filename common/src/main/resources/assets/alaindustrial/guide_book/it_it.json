@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "Graticcio",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Graticcio",
+              "text": "Un sostegno alto due blocchi per piante rampicanti: oggi ci cresce il cotone. Si posa su terreno coltivato umido e si semina con il tasto destro. La pianta attecchisce lentamente una sola volta, poi fruttifica in un ciclo infinito: raccoglierla non la distrugge mai."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "Incubatrice",
           "icon": "alaindustrial:incubator",

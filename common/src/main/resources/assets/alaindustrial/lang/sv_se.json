@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "Ett föremål med grad muterar villigare: +%s / +%s / +%s procentenheter, med tak på %s%%.",
 	"jei.alaindustrial.mutation_grades.line4": "Genen brinner upp i försöket — resultatet slås alltid om, så en legendarisk kan inte dupliceras till ännu en.",
 	"advancements.alaindustrial.cable_insulation.title": "Bättre isolerad",
-	"advancements.alaindustrial.cable_insulation.description": "Tillverka en gummiisolerad kabel för att halvera överföringsförlusten"
+	"advancements.alaindustrial.cable_insulation.description": "Tillverka en gummiisolerad kabel för att halvera överföringsförlusten",
+	"block.alaindustrial.trellis": "Spaljé",
+	"item.alaindustrial.cotton_seeds": "Bomullsfrön",
+	"item.alaindustrial.cotton_fiber": "Bomullsfiber"
 }

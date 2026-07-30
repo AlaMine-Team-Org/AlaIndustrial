@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "Spalier",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Spalier",
+              "text": "Eine zwei Blöcke hohe Stütze für Kletterpflanzen — derzeit wächst Baumwolle daran. Wird auf feuchtem Ackerboden platziert und per Rechtsklick besät. Die Pflanze wurzelt einmal langsam an und trägt danach in endlosem Kreislauf Früchte: Das Ernten zerstört sie nie."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "Inkubator",
           "icon": "alaindustrial:incubator",

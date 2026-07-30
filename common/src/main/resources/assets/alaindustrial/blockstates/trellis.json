@@ -1,0 +1,46 @@
+{
+	"variants": {
+		"half=lower,age=0": {
+			"model": "alaindustrial:block/trellis_post"
+		},
+		"half=upper,age=0": {
+			"model": "alaindustrial:block/trellis_top_post"
+		},
+		"half=lower,age=1": {
+			"model": "alaindustrial:block/trellis_stage1"
+		},
+		"half=upper,age=1": {
+			"model": "alaindustrial:block/trellis_top_post"
+		},
+		"half=lower,age=2": {
+			"model": "alaindustrial:block/trellis_stage2"
+		},
+		"half=upper,age=2": {
+			"model": "alaindustrial:block/trellis_top_post"
+		},
+		"half=lower,age=3": {
+			"model": "alaindustrial:block/trellis_mature"
+		},
+		"half=upper,age=3": {
+			"model": "alaindustrial:block/trellis_top_leaves"
+		},
+		"half=lower,age=4": {
+			"model": "alaindustrial:block/trellis_mature"
+		},
+		"half=upper,age=4": {
+			"model": "alaindustrial:block/trellis_top_leaves"
+		},
+		"half=lower,age=5": {
+			"model": "alaindustrial:block/trellis_set"
+		},
+		"half=upper,age=5": {
+			"model": "alaindustrial:block/trellis_top_set"
+		},
+		"half=lower,age=6": {
+			"model": "alaindustrial:block/trellis_ripe"
+		},
+		"half=upper,age=6": {
+			"model": "alaindustrial:block/trellis_top_ripe"
+		}
+	}
+}

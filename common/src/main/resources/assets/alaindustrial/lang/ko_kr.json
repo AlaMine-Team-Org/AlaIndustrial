@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "등급이 붙은 아이템은 더 잘 변이합니다: +%s / +%s / +%s 퍼센트포인트, 상한은 %s%%.",
 	"jei.alaindustrial.mutation_grades.line4": "유전자는 시도에서 타 버립니다 — 결과는 항상 새로 굴리므로 전설을 복제해 또 하나 만들 수는 없습니다.",
 	"advancements.alaindustrial.cable_insulation.title": "더 나은 절연",
-	"advancements.alaindustrial.cable_insulation.description": "고무 절연 케이블을 제작해 송전 손실을 절반으로 줄이세요"
+	"advancements.alaindustrial.cable_insulation.description": "고무 절연 케이블을 제작해 송전 손실을 절반으로 줄이세요",
+	"block.alaindustrial.trellis": "지지대",
+	"item.alaindustrial.cotton_seeds": "면화 씨앗",
+	"item.alaindustrial.cotton_fiber": "면 섬유"
 }

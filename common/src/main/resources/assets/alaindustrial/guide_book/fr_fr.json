@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "Treillis",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Treillis",
+              "text": "Un support de deux blocs de haut pour plantes grimpantes — le coton y pousse aujourd'hui. Il se pose sur une terre labourée humide et se sème d'un clic droit. La plante s'enracine lentement une seule fois, puis fructifie en cycle sans fin : la récolte ne la détruit jamais."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "Incubateur",
           "icon": "alaindustrial:incubator",

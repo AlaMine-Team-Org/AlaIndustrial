@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "Krata",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Krata",
+              "text": "Podpora o wysokości dwóch bloków dla roślin pnących — dziś rośnie na niej bawełna. Stawia się ją na wilgotnej ziemi uprawnej i obsiewa prawym przyciskiem. Roślina raz powoli się ukorzenia, a potem owocuje w nieskończonym cyklu: zbiór nigdy jej nie niszczy."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "Inkubator",
           "icon": "alaindustrial:incubator",

@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "带等级的物品更容易变异：+%s / +%s / +%s 个百分点，上限 %s%%。",
 	"jei.alaindustrial.mutation_grades.line4": "基因在尝试中烧尽——结果始终重新掷点，因此传说无法复制出另一个传说。",
 	"advancements.alaindustrial.cable_insulation.title": "更好的绝缘",
-	"advancements.alaindustrial.cable_insulation.description": "制作橡胶绝缘电缆，将输电损耗减半"
+	"advancements.alaindustrial.cable_insulation.description": "制作橡胶绝缘电缆，将输电损耗减半",
+	"block.alaindustrial.trellis": "棚架",
+	"item.alaindustrial.cotton_seeds": "棉花种子",
+	"item.alaindustrial.cotton_fiber": "棉纤维"
 }

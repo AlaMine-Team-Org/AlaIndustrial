@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "মাচা",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "মাচা",
+              "text": "লতানো গাছের জন্য দুই ব্লক উঁচু অবলম্বন — এখন এতে তুলা জন্মে। আর্দ্র চাষের জমিতে বসানো হয়, ডান-ক্লিকে বীজ বোনা হয়। গাছ একবার ধীরে ধীরে শিকড় গাড়ে, তারপর অবিরাম চক্রে ফল দেয়: সংগ্রহ করলেও গাছ নষ্ট হয় না।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "ইনকিউবেটর",
           "icon": "alaindustrial:incubator",

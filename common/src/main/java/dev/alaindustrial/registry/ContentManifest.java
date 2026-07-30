@@ -186,6 +186,14 @@ public final class ContentManifest {
 			// by the base below, so moving it away from its base would strand both.
 			Map.entry("incubator_dome", machine(p -> p.strength(1.0f, 2.0f).sound(SoundType.GLASS)
 					.noOcclusion().pushReaction(PushReaction.BLOCK))),
+			// Cotton trellis (MOD-280) — a plant, not a machine: no requiresCorrectToolForDrops (it comes
+			// apart by hand), and randomTicks() is load-bearing rather than decoration — without it the
+			// block never receives randomTick and the crop would simply never grow. Deliberately NOT
+			// noCollision: the trellis is a structure the player builds, so it blocks movement like a fence
+			// post rather than being walked through like wheat. A piston must not drag half a two-block
+			// plant away from its other half.
+			Map.entry("trellis", p -> p.strength(0.2f).sound(SoundType.GRASS)
+					.noOcclusion().randomTicks().pushReaction(PushReaction.DESTROY)),
 			Map.entry("tin_ore", machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE))),
 			Map.entry("deepslate_tin_ore", machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE))),
 			Map.entry("silver_ore", machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE))),

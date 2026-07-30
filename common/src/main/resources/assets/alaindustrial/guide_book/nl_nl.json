@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "Latwerk",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Latwerk",
+              "text": "Een twee blokken hoge steun voor klimplanten — er groeit nu katoen aan. Wordt op vochtige akkergrond geplaatst en met rechtsklik ingezaaid. De plant wortelt één keer langzaam en draagt daarna in een eindeloze cyclus vrucht: oogsten vernielt haar nooit."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "Incubator",
           "icon": "alaindustrial:incubator",

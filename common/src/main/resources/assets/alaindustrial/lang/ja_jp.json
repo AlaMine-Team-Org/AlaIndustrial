@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "グレード付きのアイテムはより変異しやすい: +%s / +%s / +%s パーセントポイント、上限は %s%%。",
 	"jei.alaindustrial.mutation_grades.line4": "遺伝子は試行で燃え尽きる — 結果は常に振り直されるため、レジェンダリーを複製してもう一つ作ることはできない。",
 	"advancements.alaindustrial.cable_insulation.title": "より良い絶縁",
-	"advancements.alaindustrial.cable_insulation.description": "ゴム絶縁ケーブルを作り、送電損失を半分にする"
+	"advancements.alaindustrial.cable_insulation.description": "ゴム絶縁ケーブルを作り、送電損失を半分にする",
+	"block.alaindustrial.trellis": "支柱",
+	"item.alaindustrial.cotton_seeds": "綿の種",
+	"item.alaindustrial.cotton_fiber": "綿繊維"
 }

@@ -9,6 +9,7 @@ import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
 import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
 import dev.alaindustrial.block.CompressorBlock;
+import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.IncubatorBlock;
 import dev.alaindustrial.block.IncubatorDomeBlock;
 import dev.alaindustrial.block.SawmillBlock;
@@ -175,6 +176,11 @@ public final class ModBlocks {
 	public static final Block INCUBATOR_DOME =
 			register(INCUBATOR_DOME_KEY, new IncubatorDomeBlock(props(INCUBATOR_DOME_KEY)));
 
+	// Cotton trellis (MOD-280) — the mod's first crop; a two-block plant support, not a machine.
+	public static final ResourceKey<Block> TRELLIS_KEY = key("trellis");
+	public static final Block TRELLIS =
+			register(TRELLIS_KEY, new TrellisBlock(props(TRELLIS_KEY)));
+
 	public static final ResourceKey<Block> TIN_ORE_KEY = key("tin_ore");
 	public static final Block TIN_ORE = register(TIN_ORE_KEY, new Block(props(TIN_ORE_KEY)));
 
@@ -325,6 +331,7 @@ public final class ModBlocks {
 		ModContent.ELECTRIC_HEATER = () -> ELECTRIC_HEATER;
 		ModContent.INCUBATOR = () -> INCUBATOR;
 		ModContent.INCUBATOR_DOME = () -> INCUBATOR_DOME;
+		ModContent.TRELLIS = () -> TRELLIS;
 		ModContent.TIN_ORE = () -> TIN_ORE;
 		ModContent.DEEPSLATE_TIN_ORE = () -> DEEPSLATE_TIN_ORE;
 		ModContent.SILVER_ORE = () -> SILVER_ORE;

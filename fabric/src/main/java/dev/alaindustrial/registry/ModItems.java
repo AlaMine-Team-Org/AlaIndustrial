@@ -76,6 +76,11 @@ public final class ModItems {
 	// Oil → rubber chain: the polymerizer's product and the vulcanizer's cured output.
 	public static final Item RAW_RUBBER = item("raw_rubber");
 	public static final Item RUBBER = item("rubber");
+
+	// Cotton (MOD-280): the seed is planted onto a trellis by right-click (the block handles it, so this
+	// stays a plain Item — no BlockItem/ItemNameBlockItem), the fibre is the harvest.
+	public static final Item COTTON_SEEDS = item("cotton_seeds");
+	public static final Item COTTON_FIBER = item("cotton_fiber");
 	public static final Item UNSTABLE_ISOTOPE = item("unstable_isotope");
 	public static final Item MUTE_CHIP = hintItem("mute_chip");
 	// Rotor / wheel (MOD-189): durability components — wear shows as a vanilla durability bar and, being
@@ -214,6 +219,7 @@ public final class ModItems {
 	public static final BlockItem VULCANIZER_ITEM = blockItem("vulcanizer", ModBlocks.VULCANIZER);
 	public static final BlockItem ELECTRIC_HEATER_ITEM = blockItem("electric_heater", ModBlocks.ELECTRIC_HEATER);
 	public static final BlockItem INCUBATOR_ITEM = blockItem("incubator", ModBlocks.INCUBATOR);
+	public static final BlockItem TRELLIS_ITEM = blockItem("trellis", ModBlocks.TRELLIS);
 	public static final BlockItem PUMP_ITEM = blockItem("pump", ModBlocks.PUMP);
 	public static final BlockItem FLUID_TANK_ITEM = fluidTankBlockItem("fluid_tank", ModBlocks.FLUID_TANK);
 	public static final BlockItem WATER_MILL_ITEM = blockItem("water_mill", ModBlocks.WATER_MILL);
@@ -653,6 +659,7 @@ public final class ModItems {
 		ModContent.VULCANIZER_ITEM = () -> VULCANIZER_ITEM;
 		ModContent.ELECTRIC_HEATER_ITEM = () -> ELECTRIC_HEATER_ITEM;
 		ModContent.INCUBATOR_ITEM = () -> INCUBATOR_ITEM;
+		ModContent.TRELLIS_ITEM = () -> TRELLIS_ITEM;
 		ModContent.MUTATION_CHIP_TRANSFORM = () -> MUTATION_CHIP_TRANSFORM;
 		ModContent.MUTATION_CHIP_DUPLICATE = () -> MUTATION_CHIP_DUPLICATE;
 		ModContent.MUTATION_CHIP_CREATE = () -> MUTATION_CHIP_CREATE;
@@ -662,6 +669,8 @@ public final class ModItems {
 		ModContent.RESONANT_SHARD = () -> RESONANT_SHARD;
 		ModContent.MUTAGEN_DUST = () -> MUTAGEN_DUST;
 		ModContent.RAW_RUBBER = () -> RAW_RUBBER;
+		ModContent.COTTON_SEEDS = () -> COTTON_SEEDS;
+		ModContent.COTTON_FIBER = () -> COTTON_FIBER;
 		ModContent.RUBBER = () -> RUBBER;
 		ModContent.UNSTABLE_ISOTOPE = () -> UNSTABLE_ISOTOPE;
 		ModContent.PUMP_ITEM = () -> PUMP_ITEM;

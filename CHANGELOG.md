@@ -1,16 +1,13 @@
-## 0.1.57
+## 0.1.58
 
-<p><img alt="A bare cable lifted on an insulating stand that shields players from its shock" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.57/release-media/v0.1.57/changelog.png" width="720"></p>
+<p><img alt="Cotton growing on trellises next to water" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.58/release-media/v0.1.58/changelog.png" width="720"></p>
 
-Bare cable bites — now you can put something under it. Slip any wood, wool or glass beneath a live wire and it shields anyone walking past.
+Cotton is here — the first crop you farm instead of fight for.
 
 ### New
 
-- **Insulating stand under a bare cable.** Place any wood, wool or glass below a bare wire and it shields anyone walking past or standing underneath — and only softens the shock for someone on top of the wire.
-- **The stand shows its real material.** The plate takes the exact wood, wool or glass you used, with its own shade — neighbouring segments join into one continuous board.
-- **Glass protects best, wood sits in the middle, wool is the weakest.** Pick the material that matches your build and the safety you need.
-- **Place it back by hand.** An empty-handed click on the wire returns the very same item you put down.
-
-### Limits
-
-- Stands do not fit on insulated cable (it already can't shock you) or on a segment wired straight down.
+- **Cotton grows on a trellis.** Place the two-block trellis on watered farmland and right-click a seed onto it.
+- **Picking never breaks the plant.** A right-click takes the cotton and leaves the bush standing, so it fills up again and again.
+- **Seeds come from grass.** Clearing plains turns them up, the same way wheat seeds do, and every harvest gives some back.
+- **Dry ground only pauses it.** Run out of water and the plant waits for you instead of dying.
+- **Bone meal helps, within reason.** One use, one stage — it never skips a plant straight to ripe.

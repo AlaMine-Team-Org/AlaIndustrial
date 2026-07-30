@@ -8,6 +8,7 @@ import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.IncubatorBlock;
+import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.IncubatorDomeBlock;
 import dev.alaindustrial.block.SawmillBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
@@ -99,6 +100,9 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("incubator", IncubatorBlock::new, props("incubator"));
 	public static final DeferredBlock<IncubatorDomeBlock> INCUBATOR_DOME =
 			BLOCKS.registerBlock("incubator_dome", IncubatorDomeBlock::new, props("incubator_dome"));
+	// Cotton trellis (MOD-280) — the mod's first crop; a two-block plant support, not a machine.
+	public static final DeferredBlock<TrellisBlock> TRELLIS =
+			BLOCKS.registerBlock("trellis", TrellisBlock::new, props("trellis"));
 	public static final DeferredBlock<GeothermalGeneratorBlock> GEOTHERMAL_GENERATOR =
 			BLOCKS.registerBlock("geothermal_generator", GeothermalGeneratorBlock::new, props("geothermal_generator"));
 	public static final DeferredBlock<PumpBlock> PUMP =
@@ -243,6 +247,7 @@ public final class ModBlocksNeoForge {
 		ModContent.ELECTRIC_HEATER = ELECTRIC_HEATER::get;
 		ModContent.INCUBATOR = INCUBATOR::get;
 		ModContent.INCUBATOR_DOME = INCUBATOR_DOME::get;
+		ModContent.TRELLIS = TRELLIS::get;
 		ModContent.GEOTHERMAL_GENERATOR = GEOTHERMAL_GENERATOR::get;
 		ModContent.PUMP = PUMP::get;
 		ModContent.FLUID_TANK = FLUID_TANK::get;

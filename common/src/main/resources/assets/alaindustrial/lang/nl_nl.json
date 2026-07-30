@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "Een voorwerp met graad muteert gewilliger: +%s / +%s / +%s procentpunten, met een maximum van %s%%.",
 	"jei.alaindustrial.mutation_grades.line4": "Het gen verbrandt bij de poging — het resultaat wordt altijd opnieuw geworpen, dus een legendarisch exemplaar kun je niet tot een tweede dupliceren.",
 	"advancements.alaindustrial.cable_insulation.title": "Beter geïsoleerd",
-	"advancements.alaindustrial.cable_insulation.description": "Maak een rubbergeïsoleerde kabel om transmissieverlies te halveren"
+	"advancements.alaindustrial.cable_insulation.description": "Maak een rubbergeïsoleerde kabel om transmissieverlies te halveren",
+	"block.alaindustrial.trellis": "Latwerk",
+	"item.alaindustrial.cotton_seeds": "Katoenzaden",
+	"item.alaindustrial.cotton_fiber": "Katoenvezel"
 }

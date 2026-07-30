@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "Espaldera",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Espaldera",
+              "text": "Un soporte de dos bloques de alto para plantas trepadoras: hoy crece algodón en él. Se coloca sobre tierra de cultivo húmeda y se siembra con clic derecho. La planta arraiga lentamente una vez y luego fructifica en un ciclo infinito: cosecharla nunca la destruye."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "Incubadora",
           "icon": "alaindustrial:incubator",

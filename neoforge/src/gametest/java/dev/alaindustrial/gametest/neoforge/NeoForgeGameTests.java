@@ -24,6 +24,7 @@ import dev.alaindustrial.gametest.JetpackScenarios;
 import dev.alaindustrial.gametest.GuideBookGiverScenarios;
 import dev.alaindustrial.gametest.PouchScenarios;
 import dev.alaindustrial.gametest.HammerScenarios;
+import dev.alaindustrial.gametest.TrellisScenarios;
 import dev.alaindustrial.gametest.IncubatorScenarios;
 import dev.alaindustrial.gametest.ScytheScenarios;
 import dev.alaindustrial.gametest.StockDisplayFrameScenarios;
@@ -653,6 +654,38 @@ public final class NeoForgeGameTests {
 		// charge and — the regressions worth a second loader — the output slot never eating a result.
 		registerTest(event, "incubator_glass_forms_dome", 40, true,
 				IncubatorScenarios::fun01GlassOnTopFormsTheDome);
+
+		// Cotton trellis (MOD-280) — same loader-neutral bodies as the Fabric suite.
+		registerTest(event, "cotton_plants_seed", 40, true,
+				TrellisScenarios::fun01PlantsSeed);
+		registerTest(event, "cotton_keeps_seed_on_planted", 40, true,
+				TrellisScenarios::neg01KeepsSeedOnPlantedTrellis);
+		registerTest(event, "cotton_grows_on_moist_farmland", 40, true,
+				TrellisScenarios::fun02GrowsOnMoistFarmland);
+		registerTest(event, "cotton_pauses_on_dry_farmland", 40, true,
+				TrellisScenarios::neg02PausesOnDryFarmland);
+		registerTest(event, "cotton_harvest_keeps_plant", 40, true,
+				TrellisScenarios::fun03HarvestKeepsPlant);
+		registerTest(event, "cotton_unripe_yields_nothing", 40, true,
+				TrellisScenarios::neg03UnripeYieldsNothing);
+		registerTest(event, "cotton_farmland_survives", 40, true,
+				TrellisScenarios::reg01FarmlandSurvivesUnderTrellis);
+		registerTest(event, "cotton_break_drops_one", 40, true,
+				TrellisScenarios::reg02BreakDropsExactlyOneTrellis);
+		registerTest(event, "cotton_harvest_with_seeds_in_hand", 40, true,
+				TrellisScenarios::reg03HarvestWorksWithSeedsInHand);
+		registerTest(event, "cotton_planted_returns_seed", 40, true,
+				TrellisScenarios::reg04PlantedTrellisReturnsSeed);
+		registerTest(event, "cotton_bare_returns_no_seed", 40, true,
+				TrellisScenarios::neg04BareTrellisReturnsNoSeed);
+		registerTest(event, "cotton_bonemeal_one_stage", 40, true,
+				TrellisScenarios::fun04BonemealAdvancesOneStage);
+		registerTest(event, "cotton_bonemeal_refuses_dry", 40, true,
+				TrellisScenarios::neg05BonemealRefusesDrySoil);
+		registerTest(event, "cotton_second_harvest_cycle", 60, true,
+				TrellisScenarios::fun05SecondHarvestCycle);
+		registerTest(event, "cotton_break_upper_drops_one", 40, true,
+				TrellisScenarios::reg05BreakingUpperHalfDropsOne);
 		registerTest(event, "incubator_dome_returns_glass", 40, true,
 				IncubatorScenarios::fun02RemovingTheDomeReturnsTheOriginalGlass);
 		registerTest(event, "incubator_transform_yields_mineral", 40, true,

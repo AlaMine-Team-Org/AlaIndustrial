@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "Kafes",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kafes",
+              "text": "Sarmaşık bitkiler için iki blok yüksekliğinde bir destek — şu anda üzerinde pamuk yetişiyor. Nemli tarlaya yerleştirilir ve sağ tıkla ekilir. Bitki bir kez yavaşça köklenir, sonra sonsuz bir döngüde ürün verir: hasat etmek onu asla yok etmez."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "Kuluçka",
           "icon": "alaindustrial:incubator",

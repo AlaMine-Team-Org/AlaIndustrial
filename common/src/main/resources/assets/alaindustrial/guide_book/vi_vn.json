@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "Giàn",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Giàn",
+              "text": "Một giá đỡ cao hai khối dành cho cây leo — hiện tại bông mọc trên đó. Đặt trên đất canh tác ẩm và gieo hạt bằng chuột phải. Cây bén rễ chậm một lần duy nhất, sau đó ra quả theo chu kỳ vô tận: thu hoạch không bao giờ phá hủy nó."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "Lồng ấp",
           "icon": "alaindustrial:incubator",

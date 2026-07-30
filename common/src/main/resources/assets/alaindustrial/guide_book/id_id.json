@@ -1252,6 +1252,37 @@
           ]
         },
         {
+          "id": "trellis",
+          "title": "Rambatan",
+          "icon": "alaindustrial:trellis",
+          "block_id": "alaindustrial:trellis",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rambatan",
+              "text": "Penopang setinggi dua blok untuk tanaman merambat — saat ini kapas tumbuh di atasnya. Dipasang di tanah garapan yang lembap dan ditanami dengan klik kanan. Tanaman berakar perlahan sekali saja, lalu berbuah dalam siklus tanpa akhir: memanennya tidak pernah merusaknya."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "minecraft:stick",
+                "minecraft:string",
+                "minecraft:stick",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:trellis",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "incubator",
           "title": "Inkubator",
           "icon": "alaindustrial:incubator",

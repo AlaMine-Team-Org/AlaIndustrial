@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "Ein Gegenstand mit Grad mutiert williger: +%s / +%s / +%s Prozentpunkte, gedeckelt bei %s%%.",
 	"jei.alaindustrial.mutation_grades.line4": "Das Gen verbrennt beim Versuch — das Ergebnis wird immer neu ausgewürfelt, ein legendäres lässt sich also nicht zu einem weiteren duplizieren.",
 	"advancements.alaindustrial.cable_insulation.title": "Besser isoliert",
-	"advancements.alaindustrial.cable_insulation.description": "Stelle ein gummiisoliertes Kabel her, um Übertragungsverluste zu halbieren"
+	"advancements.alaindustrial.cable_insulation.description": "Stelle ein gummiisoliertes Kabel her, um Übertragungsverluste zu halbieren",
+	"block.alaindustrial.trellis": "Spalier",
+	"item.alaindustrial.cotton_seeds": "Baumwollsamen",
+	"item.alaindustrial.cotton_fiber": "Baumwollfaser"
 }

@@ -79,6 +79,12 @@ public final class ModItemsNeoForge {
 			ITEMS.registerItem("raw_rubber", Item::new);
 	public static final DeferredItem<Item> RUBBER =
 			ITEMS.registerItem("rubber", Item::new);
+	// Cotton (MOD-280): the seed is planted onto a trellis by right-click (the block handles it, so this
+	// stays a plain Item — no BlockItem/ItemNameBlockItem), the fibre is the harvest.
+	public static final DeferredItem<Item> COTTON_SEEDS =
+			ITEMS.registerItem("cotton_seeds", Item::new);
+	public static final DeferredItem<Item> COTTON_FIBER =
+			ITEMS.registerItem("cotton_fiber", Item::new);
 	public static final DeferredItem<Item> UNSTABLE_ISOTOPE =
 			ITEMS.registerItem("unstable_isotope", Item::new);
 	// Rotor / wheel (MOD-189): durability components — wear shows as a vanilla durability bar and, being
@@ -286,6 +292,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("electric_heater", ModBlocksNeoForge.ELECTRIC_HEATER);
 	public static final DeferredItem<BlockItem> INCUBATOR_ITEM =
 			ITEMS.registerSimpleBlockItem("incubator", ModBlocksNeoForge.INCUBATOR);
+	public static final DeferredItem<BlockItem> TRELLIS_ITEM =
+			ITEMS.registerSimpleBlockItem("trellis", ModBlocksNeoForge.TRELLIS);
 	public static final DeferredItem<BlockItem> GEOTHERMAL_GENERATOR_ITEM =
 			ITEMS.registerSimpleBlockItem("geothermal_generator", ModBlocksNeoForge.GEOTHERMAL_GENERATOR);
 	public static final DeferredItem<BlockItem> PUMP_ITEM =
@@ -477,6 +485,7 @@ public final class ModItemsNeoForge {
 		ModContent.VULCANIZER_ITEM = VULCANIZER_ITEM;
 		ModContent.ELECTRIC_HEATER_ITEM = ELECTRIC_HEATER_ITEM;
 		ModContent.INCUBATOR_ITEM = INCUBATOR_ITEM;
+		ModContent.TRELLIS_ITEM = TRELLIS_ITEM;
 		ModContent.MUTATION_CHIP_TRANSFORM = MUTATION_CHIP_TRANSFORM;
 		ModContent.MUTATION_CHIP_DUPLICATE = MUTATION_CHIP_DUPLICATE;
 		ModContent.MUTATION_CHIP_CREATE = MUTATION_CHIP_CREATE;
@@ -486,6 +495,8 @@ public final class ModItemsNeoForge {
 		ModContent.RESONANT_SHARD = RESONANT_SHARD;
 		ModContent.MUTAGEN_DUST = MUTAGEN_DUST;
 		ModContent.RAW_RUBBER = RAW_RUBBER::get;
+		ModContent.COTTON_SEEDS = COTTON_SEEDS::get;
+		ModContent.COTTON_FIBER = COTTON_FIBER::get;
 		ModContent.RUBBER = RUBBER::get;
 		ModContent.UNSTABLE_ISOTOPE = UNSTABLE_ISOTOPE;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = GEOTHERMAL_GENERATOR_ITEM;

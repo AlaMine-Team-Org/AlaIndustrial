@@ -9,9 +9,13 @@ import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.core.BlockPos;
+import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.WallTorchBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -342,6 +346,22 @@ public final class DemoStand {
 			tank.fluidTank.fluid = FluidHolder.of(Fluids.WATER);
 			tank.fluidTank.amount = tank.fluidTank.capacity / 2;
 			tank.setChanged();
+		}
+		// Cotton trellis (MOD-280): a ripe plant on moist farmland — the stand has to show the crop at
+		// its most recognisable stage, with the soil it actually needs. Placed via the vanilla two-block
+		// helper so both halves appear; the age is written to BOTH halves, since the upper one carries it
+		// only to keep its model in step with the lower.
+		set(level, origin, 41, 0, 10, FLOOR);
+		level.setBlockAndUpdate(origin.offset(41, 0, 10),
+				Blocks.FARMLAND.defaultBlockState().setValue(FarmlandBlock.MOISTURE, FarmlandBlock.MAX_MOISTURE));
+		DoublePlantBlock.placeAt(level, ModContent.TRELLIS.get().defaultBlockState(),
+				origin.offset(41, 1, 10), 3);
+		for (int dy = 1; dy <= 2; dy++) {
+			BlockPos half = origin.offset(41, dy, 10);
+			BlockState state = level.getBlockState(half);
+			if (state.is(ModContent.TRELLIS.get())) {
+				level.setBlock(half, state.setValue(TrellisBlock.AGE, TrellisBlock.MAX_AGE), 3);
+			}
 		}
 		// Enriched Uranium Torch (MOD-085): the standing torch on the floor, and the wall variant mounted
 		// on a small stone post (facing WEST → supported by the post block to its east) so both survive.

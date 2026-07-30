@@ -123,6 +123,8 @@ public final class ModContent {
 	public static Supplier<Block> ELECTRIC_HEATER = unbound("ELECTRIC_HEATER");
 	public static Supplier<Block> INCUBATOR = unbound("INCUBATOR");
 	public static Supplier<Block> INCUBATOR_DOME = unbound("INCUBATOR_DOME");
+	/** Cotton trellis (MOD-280) — the mod's first crop: a two-block support carrying a perennial plant. */
+	public static Supplier<Block> TRELLIS = unbound("TRELLIS");
 	public static Supplier<Block> TIN_ORE = unbound("TIN_ORE");
 	public static Supplier<Block> DEEPSLATE_TIN_ORE = unbound("DEEPSLATE_TIN_ORE");
 	public static Supplier<Block> SILVER_ORE = unbound("SILVER_ORE");
@@ -280,6 +282,10 @@ public final class ModContent {
 	// Oil → rubber chain: the polymerizer makes raw rubber; the vulcanizer cures it with sulfur and heat.
 	public static Supplier<Item> RAW_RUBBER = unbound("RAW_RUBBER");
 	public static Supplier<Item> RUBBER = unbound("RUBBER");
+	/** Cotton seed (MOD-280) — right-clicked onto a bare trellis to plant it. */
+	public static Supplier<Item> COTTON_SEEDS = unbound("COTTON_SEEDS");
+	/** Cotton fibre (MOD-280) — the harvest; the farming alternative to spider string for MOD-127. */
+	public static Supplier<Item> COTTON_FIBER = unbound("COTTON_FIBER");
 
 	// --- Entity types ---
 	// Stock Display Frame (MOD-066) — the mod's first entity: an ItemFrame subclass that counts the
@@ -314,6 +320,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> VULCANIZER_ITEM = unbound("VULCANIZER_ITEM");
 	public static Supplier<BlockItem> ELECTRIC_HEATER_ITEM = unbound("ELECTRIC_HEATER_ITEM");
 	public static Supplier<BlockItem> INCUBATOR_ITEM = unbound("INCUBATOR_ITEM");
+	public static Supplier<BlockItem> TRELLIS_ITEM = unbound("TRELLIS_ITEM");
 	public static Supplier<BlockItem> PUMP_ITEM = unbound("PUMP_ITEM");
 	public static Supplier<BlockItem> FLUID_TANK_ITEM = unbound("FLUID_TANK_ITEM");
 	public static Supplier<BlockItem> TIN_ORE_ITEM = unbound("TIN_ORE_ITEM");

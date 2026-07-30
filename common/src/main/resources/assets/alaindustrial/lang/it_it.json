@@ -497,5 +497,8 @@
 	"jei.alaindustrial.mutation_grades.line3": "Un oggetto con grado muta più volentieri: +%s / +%s / +%s punti percentuali, con un tetto del %s%%.",
 	"jei.alaindustrial.mutation_grades.line4": "Il gene brucia nel tentativo — il risultato viene sempre ritirato a sorte, quindi un leggendario non può essere duplicato in un altro.",
 	"advancements.alaindustrial.cable_insulation.title": "Isolamento migliore",
-	"advancements.alaindustrial.cable_insulation.description": "Crea un cavo isolato in gomma per dimezzare le perdite di trasmissione"
+	"advancements.alaindustrial.cable_insulation.description": "Crea un cavo isolato in gomma per dimezzare le perdite di trasmissione",
+	"block.alaindustrial.trellis": "Graticcio",
+	"item.alaindustrial.cotton_seeds": "Semi di cotone",
+	"item.alaindustrial.cotton_fiber": "Fibra di cotone"
 }

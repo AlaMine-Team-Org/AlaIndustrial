@@ -497,5 +497,8 @@
   "tooltip.alaindustrial.tier_lv": "Tier: LV",
   "tooltip.alaindustrial.tier_mv": "Tier: MV",
   "advancements.alaindustrial.cable_insulation.title": "Better Insulated",
-  "advancements.alaindustrial.cable_insulation.description": "Craft a rubber-insulated cable to halve transmission loss"
+  "advancements.alaindustrial.cable_insulation.description": "Craft a rubber-insulated cable to halve transmission loss",
+  "block.alaindustrial.trellis": "Trellis",
+  "item.alaindustrial.cotton_seeds": "Cotton Seeds",
+  "item.alaindustrial.cotton_fiber": "Cotton Fiber"
 }

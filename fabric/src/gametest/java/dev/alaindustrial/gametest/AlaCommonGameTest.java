@@ -177,6 +177,12 @@ public class AlaCommonGameTest {
 			if (block instanceof net.minecraft.world.level.block.LiquidBlock) {
 				continue;
 			}
+			// Plants (MOD-280 trellis and any crop after it): vegetation is pulled up by hand,
+			// exactly like vanilla wheat or a sapling — never pickaxe-gated. Exempted by CLASS rather
+			// than by id so future crops are covered without touching this test again.
+			if (block instanceof net.minecraft.world.level.block.VegetationBlock) {
+				continue;
+			}
 			helper.setBlock(PROBE, block);
 			var state = level.getBlockState(abs);
 			helper.setBlock(PROBE, Blocks.AIR);

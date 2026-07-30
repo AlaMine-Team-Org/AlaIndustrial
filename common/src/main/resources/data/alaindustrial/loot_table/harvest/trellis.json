@@ -1,0 +1,40 @@
+{
+	"type": "minecraft:block_interact",
+	"random_sequence": "alaindustrial:harvest/trellis",
+	"pools": [
+		{
+			"rolls": 1.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "alaindustrial:cotton_fiber",
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 1.0,
+								"max": 2.0
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"rolls": 1.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "alaindustrial:cotton_seeds"
+				}
+			],
+			"conditions": [
+				{
+					"condition": "minecraft:random_chance",
+					"chance": 0.35
+				}
+			]
+		}
+	]
+}
