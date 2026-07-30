@@ -26,6 +26,7 @@
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
     text-align:center; line-height:1; }
   .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
   
   .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
     display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
@@ -343,16 +344,16 @@
 <div class="group-title">Энергия</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="7 страниц">7</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="9 страниц">9</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="8 страниц">8</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="2 страницы">2</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
 <a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="9 страниц">9</span></a>
@@ -374,7 +375,7 @@
   </div>
 </div>
 <h2>Сводка</h2>
-<p><strong>Полимеризатор</strong> — первая машина мода, которая ест не предмет, а <strong>жидкость</strong>. Внутри у него бак на десять вёдер нефти; за одну операцию машина выпивает ровно ведро и выдаёт кусок сырого каучука. Сырой каучук потом обжигается в обычной или электрической печи и превращается в резину.</p>
+<p><strong>Полимеризатор</strong> — первая машина мода, которая ест не предмет, а <strong>жидкость</strong>. Внутри у него бак на десять вёдер нефти; за одну операцию машина выпивает ровно ведро и выдаёт кусок сырого каучука. Сырой каучук затем соединяется с пылью серы в <a href="vulcanizer.html">Вулканизаторе</a>.</p>
 <blockquote><strong>Мини-пример:</strong> подведите к полимеризатору трубу от помпы, стоящей на нефтяном озере, дайте</blockquote>
 <p>питание — и он сам будет молоть нефть в каучук, пока в баке есть нефть. Нефть можно залить и руками: положите ведро (или капсулу) в верхний слот — жидкость уйдёт в бак, а пустая тара упадёт в слот под ним.</p>
 <h2>Энергия</h2>
@@ -403,8 +404,8 @@
 <h2>Рецепты</h2>
 <p>Что он делает:</p>
 <table><thead><tr><th>Вход</th><th>Выход</th></tr></thead><tbody><tr><td>1000 mB нефти</td><td>1 сырой каучук</td></tr></tbody></table>
-<p>Дальше сырой каучук идёт в печь или <a href="electric_furnace.html">электропечь</a>:</p>
-<table><thead><tr><th>Вход</th><th>Выход</th></tr></thead><tbody><tr><td>1 сырой каучук</td><td>1 резина</td></tr></tbody></table>
+<p>Дальше сырой каучук идёт в <a href="vulcanizer.html">Вулканизатор</a> вместе с пылью серы:</p>
+<table><thead><tr><th>Вход</th><th>Выход</th></tr></thead><tbody><tr><td>1 сырой каучук + 1 пыль серы</td><td>1 / 2 / 3 резины в зависимости от нагрева снизу</td></tr></tbody></table>
 <h2>Прогрессия</h2>
 <p>Тир: LV. Ставится после того, как игрок нашёл нефть и построил помпу. Резина — материал для будущих изолированных проводов и MV-компонентов. Требует питание от LV-источника, например <a href="../generators/generator.html">Генератор</a>.</p>
 <h2>Связанное</h2>
