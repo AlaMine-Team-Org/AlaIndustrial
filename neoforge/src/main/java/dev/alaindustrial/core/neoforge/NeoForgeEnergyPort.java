@@ -209,14 +209,22 @@ public final class NeoForgeEnergyPort implements EnergyPort {
 	 * on close through {@link #revertToSnapshot} (abort) and {@link #onRootCommit} (commit) — the only
 	 * overridable close seams, since {@code SnapshotJournal.onClose} is package-private.
 	 *
-	 * <p><b>Root-close only.</b> We evict solely when the transaction's ROOT resolves:
-	 * {@link #onRootCommit} fires exclusively at root commit (NeoForge schedules it only for {@code depth<=0}),
-	 * and {@link #revertToSnapshot} is gated to {@code depth()==0}. Evicting on a NESTED close (depth&gt;0)
-	 * would drop the entry mid-transaction; a subsequent enlist of the same buffer would then spawn a SECOND
-	 * {@link ParticipantJournal}, and on the eventual abort NeoForge would revert them in registration order
-	 * (snapshot-before-first, then snapshot-after-first) — leaving the buffer at the intermediate value:
-	 * silent EU/mB dup or loss. That is exactly the fresh-per-call regression MOD-185 rejected, so the cache
-	 * (one journal per buffer) is load-bearing for rollback correctness, and eviction must wait for the root.
+	 * <p><b>Evict on the close of whatever context we were enlisted in (MOD-285).</b>
+	 * {@link #onRootCommit} fires at root commit, and {@link #revertToSnapshot} fires when that context
+	 * aborts — nested or not. Both drop the entry for {@link #ctx}, which is safe at any depth because the
+	 * cache is keyed by that exact {@link TransactionContext}: once it closes, nothing can look the entry
+	 * up again.
+	 *
+	 * <p>This used to be gated to {@code depth()==0} out of concern that dropping an entry on a nested
+	 * close could let a later enlist of the same buffer build a SECOND {@link ParticipantJournal} — which
+	 * on abort would revert in registration order and strand the buffer at its intermediate value, the
+	 * exact fresh-per-call regression MOD-185 rejected. The concern does not apply: a nested context and
+	 * its root are different cache keys, so the root's entry (and its one-journal-per-buffer map) is
+	 * untouched. The gate instead ORPHANED entries — a foreign mod that probes in a nested transaction,
+	 * aborts the probe and commits the root for real (the standard simulate-then-commit pattern) left its
+	 * handle in the cache forever, and since NeoForge reuses {@code TransactionContext} identities between
+	 * root transactions, a later transaction could pick up that stale handle and its dead journals.
+	 * Both the orphan and the multi-journal concern are pinned by {@code NeoForgeTxnCacheTest}.
 	 *
 	 * <p>The journal carries no state — its snapshot is a constant token — so it never mutates game state; it
 	 * is pure per-thread-cache housekeeping.
@@ -237,12 +245,13 @@ public final class NeoForgeEnergyPort implements EnergyPort {
 
 		@Override
 		protected void revertToSnapshot(Object snapshot) {
-			// Root abort only. A journal enlisted at depth 0 reverts solely when the root aborts; the
-			// depth()==0 gate additionally suppresses eviction on a nested foreign abort (depth>0), where
-			// dropping the entry could resurrect the multi-journal bug (see class doc).
-			if (ctx.depth() == 0) {
-				NeoForgeTxn.evict(ctx);
-			}
+			// Evict whenever the context this journal was enlisted in aborts, nested or not (MOD-285).
+			// The entry is keyed by that exact TransactionContext, so once it closes the entry is dead
+			// regardless of depth: nothing can look it up again. A depth()==0 gate used to stand here to
+			// protect against a second ParticipantJournal being built for a buffer mid-transaction, but a
+			// nested context and its root are DIFFERENT cache keys, so dropping the nested entry cannot
+			// disturb the root's. Pinned by NeoForgeTxnCacheTest#bufferReEnlistedAfterNestedAbort_*.
+			NeoForgeTxn.evict(ctx);
 		}
 
 		@Override

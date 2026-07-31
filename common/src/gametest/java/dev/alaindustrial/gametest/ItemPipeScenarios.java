@@ -6,6 +6,7 @@ import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import net.minecraft.server.level.ServerLevel;
+import dev.alaindustrial.core.item.ItemNetwork;
 import dev.alaindustrial.core.item.ItemNetworkManager;
 import dev.alaindustrial.core.item.PipeFaceMode;
 import dev.alaindustrial.registry.ModContent;
@@ -445,6 +446,106 @@ public final class ItemPipeScenarios {
 		int targetCount = target == null ? -1 : target.getItem(0).getCount();
 		if (sourceCount != 16 || targetCount != 0) {
 			helper.fail("MOD-104 disabled internal link leaked items; source=" + sourceCount + " target=" + targetCount);
+			return;
+		}
+		helper.succeed();
+	}
+
+	// ── MOD-282: a re-enabled pipe-to-pipe joint must REJOIN the two networks ──────────────────────
+	//
+	// rebuild() can only split a component: its traversal is bounded by the old network's own pipe set,
+	// so a link that comes back on leaves the halves as separate ItemNetwork objects. The line still
+	// renders as one whole pipe (the model reads shouldConnectTo, not the graph), so the failure is
+	// invisible: items simply stop crossing the former break.
+
+	/** Networks owning the two rig pipes, or null when either side has no network yet. */
+	private static boolean pipesShareNetwork(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		ItemNetwork a = ItemNetworkManager.networkAt(level, helper.absolutePos(PIPE_A));
+		ItemNetwork b = ItemNetworkManager.networkAt(level, helper.absolutePos(PIPE_B));
+		return a != null && a == b;
+	}
+
+	/** MOD-282: disable then re-enable an internal link — the graph must be whole and items must flow again. */
+	public static void reEnabledPipeLinkRejoinsNetwork(GameTestHelper helper) {
+		if (!build(helper)) return;
+		ItemPipeBlockEntity a = pipe(helper, PIPE_A);
+		if (a == null) {
+			helper.fail("MOD-282 source pipe vanished before re-enable check");
+			return;
+		}
+		a.setFaceMode(Direction.EAST, PipeFaceMode.DISABLED);
+		ItemNetworkManager.tickAll(helper.getLevel());
+		a.setFaceMode(Direction.EAST, PipeFaceMode.NEUTRAL);
+		if (!pipesShareNetwork(helper)) {
+			helper.fail("MOD-282 re-enabled pipe link left two separate networks; the line looks whole but is split");
+			return;
+		}
+		ItemNetworkManager.tickAll(helper.getLevel());
+		Container source = container(helper, SOURCE);
+		Container target = container(helper, TARGET);
+		int expected = Math.min(16, Config.itemPipeItemsPerTransfer);
+		int sourceCount = source == null ? -1 : source.getItem(0).getCount();
+		int targetCount = target == null ? -1 : target.getItem(0).getCount();
+		if (sourceCount != 16 - expected || targetCount != expected) {
+			helper.fail("MOD-282 re-enabled link moved nothing; source=" + sourceCount + " target=" + targetCount);
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-282 counter-guard: disabling the link must still SPLIT the graph. Without this a naive
+	 * "merge everything adjacent" fix would pass the re-enable case while silently destroying the
+	 * disconnect feature — the existing item-count checks cannot tell the two apart.
+	 */
+	public static void disabledPipeLinkSplitsNetwork(GameTestHelper helper) {
+		if (!build(helper)) return;
+		ItemPipeBlockEntity a = pipe(helper, PIPE_A);
+		if (a == null) {
+			helper.fail("MOD-282 source pipe vanished before split check");
+			return;
+		}
+		if (!pipesShareNetwork(helper)) {
+			helper.fail("MOD-282 rig pipes were not one network before the link was disabled");
+			return;
+		}
+		a.setFaceMode(Direction.EAST, PipeFaceMode.DISABLED);
+		if (pipesShareNetwork(helper)) {
+			helper.fail("MOD-282 disabled pipe link did not split the network");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-282 player path: the wrench ladder is neutral → extract → insert → disabled → neutral, so a
+	 * player restoring a joint walks THROUGH disabled rather than setting the mode directly. Exercises
+	 * cycleFaceMode, which is what the wrench actually calls.
+	 */
+	public static void wrenchCycleRestoresPipeLink(GameTestHelper helper) {
+		if (!build(helper)) return;
+		ItemPipeBlockEntity a = pipe(helper, PIPE_A);
+		if (a == null) {
+			helper.fail("MOD-282 source pipe vanished before wrench-cycle check");
+			return;
+		}
+		for (int step = 0; step < PipeFaceMode.values().length; step++) {
+			a.cycleFaceMode(Direction.EAST);
+		}
+		if (a.faceMode(Direction.EAST) != PipeFaceMode.NEUTRAL) {
+			helper.fail("MOD-282 wrench cycle did not return the face to NEUTRAL; got " + a.faceMode(Direction.EAST));
+			return;
+		}
+		if (!pipesShareNetwork(helper)) {
+			helper.fail("MOD-282 full wrench cycle left the pipe link split");
+			return;
+		}
+		ItemNetworkManager.tickAll(helper.getLevel());
+		Container target = container(helper, TARGET);
+		int targetCount = target == null ? -1 : target.getItem(0).getCount();
+		if (targetCount != Math.min(16, Config.itemPipeItemsPerTransfer)) {
+			helper.fail("MOD-282 items did not flow after a full wrench cycle; target=" + targetCount);
 			return;
 		}
 		helper.succeed();

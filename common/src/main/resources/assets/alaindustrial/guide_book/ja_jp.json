@@ -1074,6 +1074,37 @@
           ]
         },
         {
+          "id": "fluid_pipe",
+          "title": "液体パイプ",
+          "icon": "alaindustrial:fluid_pipe",
+          "block_id": "alaindustrial:fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "液体パイプ",
+              "text": "タンクと機械の間で液体を運ぶ、動力不要のマルチパートパイプ。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:glass",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "携帯用流体タンク",
           "icon": "alaindustrial:fluid_tank",

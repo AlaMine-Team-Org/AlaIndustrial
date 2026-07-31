@@ -248,6 +248,31 @@ public final class Config {
 	 */
 	public static int itemPipeTransferIntervalTicks = 20;
 
+	// --- Fluid pipes (MOD-151) ---
+	/**
+	 * Working fluid buffer of one pipe segment, in mB. As with {@link #cableBuffer}, this doubles as the
+	 * segment's real throughput: fluid physically flows THROUGH the buffer, one hop per tick, so a line
+	 * carries at most this much per tick regardless of how much the endpoints want to move.
+	 *
+	 * <p><b>Why 50.</b> Anchored to what actually feeds a line: the pump costs
+	 * {@link #pumpEuPerBucket} EU per bucket and draws at LV (32 EU/tick), so it produces about
+	 * 32 mB/tick. A pipe at 50 mB/tick (1 bucket/s) keeps the pump as the bottleneck rather than
+	 * becoming one itself, while staying deliberately modest — like the item pipe, the basic tier earns
+	 * its keep by reaching across a base, not by raw speed. Later tiers should raise this number; the
+	 * one-hop-per-tick rule stays.
+	 *
+	 * <p>Kept small on purpose for the same reason as the cable buffer: a wall of pipes must not become
+	 * bulk storage. 1000 segments hold 50 buckets, well under a single portable tank.
+	 */
+	public static int fluidPipeSegmentBuffer = 50;
+
+	/**
+	 * Fluid networks processed per server tick; the remainder round-robins to later ticks. Mirrors
+	 * {@link #networksPerTick} for energy — a base with hundreds of separate pipe runs must not be able
+	 * to spike the tick.
+	 */
+	public static int fluidNetworksPerTick = 512;
+
 	// --- Battery Pouch (MOD-052, powered item) ---
 	/** Pouch storage capacity in weight units (vanilla-bundle math: one item weighs 64/maxStackSize).
 	 * 128 = exactly twice a vanilla bundle, ≈ two stacks of ordinary items. */
@@ -736,6 +761,10 @@ public final class Config {
 				() -> itemPipeItemsPerTransfer, v -> itemPipeItemsPerTransfer = v, 1),
 			new IntField("itemPipeTransferIntervalTicks", "Server ticks between item-pipe transfers (20 = once per second).",
 				() -> itemPipeTransferIntervalTicks, v -> itemPipeTransferIntervalTicks = v, 1),
+			new IntField("fluidPipeSegmentBuffer", "Per-segment fluid buffer in mB — also the segment's throughput, since fluid flows through the buffer one hop per tick (MOD-151). Applies to newly placed pipes.",
+				() -> fluidPipeSegmentBuffer, v -> fluidPipeSegmentBuffer = v, 1),
+			new IntField("fluidNetworksPerTick", "Fluid networks processed per server tick; the rest round-robin to later ticks.",
+				() -> fluidNetworksPerTick, v -> fluidNetworksPerTick = v, 1),
 			new IntField("lvPouchCapacity", "Battery Pouch item-storage capacity in weight units (one ordinary item = 1).",
 				() -> lvPouchCapacity, v -> lvPouchCapacity = v, 1),
 			new IntField("lvPouchBuffer", "Battery Pouch EU buffer.",

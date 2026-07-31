@@ -1,0 +1,171 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "alaindustrial:block/fluid_pipe_ring",
+    "ring": "alaindustrial:block/fluid_pipe_ring",
+    "glass": {
+      "sprite": "alaindustrial:block/fluid_pipe_glass",
+      "force_translucent": true
+    },
+    "fluid": "alaindustrial:block/fluid_pipe_fluid",
+    "extract": "alaindustrial:block/fluid_pipe_extract",
+    "insert": "alaindustrial:block/fluid_pipe_insert"
+  },
+  "elements": [
+    {
+      "from": [
+        4.5,
+        10,
+        0
+      ],
+      "to": [
+        11.5,
+        11,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#extract"
+        },
+        "south": {
+          "texture": "#extract"
+        },
+        "east": {
+          "texture": "#extract"
+        },
+        "west": {
+          "texture": "#extract"
+        },
+        "up": {
+          "texture": "#extract"
+        },
+        "down": {
+          "texture": "#extract"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        5,
+        0
+      ],
+      "to": [
+        11.5,
+        6,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#extract"
+        },
+        "south": {
+          "texture": "#extract"
+        },
+        "east": {
+          "texture": "#extract"
+        },
+        "west": {
+          "texture": "#extract"
+        },
+        "up": {
+          "texture": "#extract"
+        },
+        "down": {
+          "texture": "#extract"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        6,
+        0
+      ],
+      "to": [
+        6,
+        10,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#extract"
+        },
+        "south": {
+          "texture": "#extract"
+        },
+        "east": {
+          "texture": "#extract"
+        },
+        "west": {
+          "texture": "#extract"
+        },
+        "up": {
+          "texture": "#extract"
+        },
+        "down": {
+          "texture": "#extract"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        6,
+        0
+      ],
+      "to": [
+        11.5,
+        10,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#extract"
+        },
+        "south": {
+          "texture": "#extract"
+        },
+        "east": {
+          "texture": "#extract"
+        },
+        "west": {
+          "texture": "#extract"
+        },
+        "up": {
+          "texture": "#extract"
+        },
+        "down": {
+          "texture": "#extract"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        6,
+        0
+      ],
+      "to": [
+        10,
+        10,
+        6
+      ],
+      "faces": {
+        "down": {
+          "texture": "#glass"
+        },
+        "up": {
+          "texture": "#glass"
+        },
+        "west": {
+          "texture": "#glass"
+        },
+        "east": {
+          "texture": "#glass"
+        }
+      }
+    }
+  ]
+}

@@ -1,15 +1,18 @@
-## 0.1.59
+## 0.1.60
 
-<p><img alt="Ala Industrial 0.1.59 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.59/release-media/v0.1.59/changelog.png" width="720"></p>
+<p><img alt="Fluid pipes carrying water between tanks in Ala Industrial 0.1.60" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.60/release-media/v0.1.60/changelog.png" width="720"></p>
 
-A new material line that ends in the mod's first powered armour.
+Pipes for liquids: water, lava and oil now travel between your tanks and machines on their own.
 
 ### New
 
-- **Fluxweave armour.** A four-piece suit that runs on stored power: breathe longer underwater, swim and run faster, land softer, and heal slowly while all four pieces are worn.
-- **Galvanic Bath.** Plates fibre with silver to make flux thread — plain string or cotton both work. Thread is woven into cloth, cloth becomes the suit.
-- **Step-up.** The leggings can walk you up a full block. Off by default, and the key is yours to pick.
+- **Fluid Pipe** — moves any liquid between tanks, the pump and machines. Needs no power.
+- **You can see what is inside.** The liquid shows through the glass in its own colour and flows along the line instead of appearing at the far end.
+- **Set the sides with a wrench**, exactly as on the item pipe: the orange collar draws, the teal one pours.
+- **One liquid per line.** Water and lava cannot share the same run.
+- Recipe: 8 silver ingots around a block of glass = 8 pipes.
 
-### Improved
+### Fixed
 
-- **The suit now looks like a suit.** Sleeves reach the wrist and the helmet closes over the head, leaving only the mouth free.
+- **Item pipes work again** after a joint between two pipes is switched off with the wrench and back on. The line used to look whole but carry nothing.
+- **Liquids no longer vanish or multiply** when moved to and from tanks belonging to other mods.

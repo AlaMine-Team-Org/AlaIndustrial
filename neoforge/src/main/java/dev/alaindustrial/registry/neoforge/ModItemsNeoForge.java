@@ -346,6 +346,8 @@ public final class ModItemsNeoForge {
 	// tooltip (plain hint + Shift for the throughput numbers).
 	public static final DeferredItem<BlockItem> ITEM_PIPE_ITEM =
 			ITEMS.registerItem("item_pipe", ItemBuildersNeoForge.pipeItem(ModBlocksNeoForge.ITEM_PIPE));
+	public static final DeferredItem<BlockItem> FLUID_PIPE_ITEM =
+			ITEMS.registerItem("fluid_pipe", ItemBuildersNeoForge.fluidPipeItem(ModBlocksNeoForge.FLUID_PIPE));
 	public static final DeferredItem<BlockItem> TIN_ORE_ITEM =
 			ITEMS.registerSimpleBlockItem("tin_ore", ModBlocksNeoForge.TIN_ORE);
 	public static final DeferredItem<BlockItem> DEEPSLATE_TIN_ORE_ITEM =
@@ -542,6 +544,7 @@ public final class ModItemsNeoForge {
 		ModContent.INSULATED_TIN_CABLE_ITEM = INSULATED_TIN_CABLE_ITEM;
 		ModContent.INSULATED_GOLD_CABLE_ITEM = INSULATED_GOLD_CABLE_ITEM;
 		ModContent.ITEM_PIPE_ITEM = ITEM_PIPE_ITEM;
+		ModContent.FLUID_PIPE_ITEM = FLUID_PIPE_ITEM;
 		ModContent.TIN_ORE_ITEM = TIN_ORE_ITEM;
 		ModContent.DEEPSLATE_TIN_ORE_ITEM = DEEPSLATE_TIN_ORE_ITEM;
 		ModContent.SILVER_ORE_ITEM = SILVER_ORE_ITEM;

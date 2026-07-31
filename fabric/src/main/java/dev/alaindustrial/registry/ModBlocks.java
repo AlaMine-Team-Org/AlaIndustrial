@@ -5,6 +5,7 @@ import dev.alaindustrial.block.BatteryBoxBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.core.energy.CableType;
+import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
 import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
@@ -135,6 +136,8 @@ public final class ModBlocks {
 
 	public static final ResourceKey<Block> ITEM_PIPE_KEY = key("item_pipe");
 	public static final Block ITEM_PIPE = register(ITEM_PIPE_KEY, new ItemPipeBlock(props(ITEM_PIPE_KEY)));
+	public static final ResourceKey<Block> FLUID_PIPE_KEY = key("fluid_pipe");
+	public static final Block FLUID_PIPE = register(FLUID_PIPE_KEY, new FluidPipeBlock(props(FLUID_PIPE_KEY)));
 
 	public static final ResourceKey<Block> MACERATOR_KEY = key("macerator");
 	public static final Block MACERATOR = register(MACERATOR_KEY, new MaceratorBlock(props(MACERATOR_KEY)));
@@ -323,6 +326,7 @@ public final class ModBlocks {
 		ModContent.INSULATED_TIN_CABLE = () -> INSULATED_TIN_CABLE;
 		ModContent.INSULATED_GOLD_CABLE = () -> INSULATED_GOLD_CABLE;
 		ModContent.ITEM_PIPE = () -> ITEM_PIPE;
+		ModContent.FLUID_PIPE = () -> FLUID_PIPE;
 		ModContent.MACERATOR = () -> MACERATOR;
 		ModContent.BATTERY_BOX = () -> BATTERY_BOX;
 		ModContent.TELEPORTER = () -> TELEPORTER;

@@ -1074,6 +1074,37 @@
           ]
         },
         {
+          "id": "fluid_pipe",
+          "title": "Жидкостная труба",
+          "icon": "alaindustrial:fluid_pipe",
+          "block_id": "alaindustrial:fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Жидкостная труба",
+              "text": "Пассивная труба для переноса жидкостей между баками и машинами."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:glass",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Переносной бак для жидкости",
           "icon": "alaindustrial:fluid_tank",

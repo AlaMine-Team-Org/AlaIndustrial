@@ -217,6 +217,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.GOLD_CABLE_ITEM.get());
 		out.accept(ModContent.INSULATED_GOLD_CABLE_ITEM.get());
 		out.accept(ModContent.ITEM_PIPE_ITEM.get());
+		out.accept(ModContent.FLUID_PIPE_ITEM.get());
 	}
 
 	private static void oresAndMaterials(Sink out) {

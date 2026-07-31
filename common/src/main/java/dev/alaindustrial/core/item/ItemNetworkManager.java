@@ -35,6 +35,18 @@ public final class ItemNetworkManager {
 		network.addPipe(pos);
 		state.byPos.put(pos, network);
 		state.networks.add(network);
+		unionWithNeighbours(state, level, pos);
+	}
+
+	/**
+	 * Merge the network owning {@code pos} with the network of every pipe it currently connects to.
+	 * This is the ONLY place networks are joined: {@link #rebuild} can only split (its traversal is
+	 * bounded by {@code old.pipes()}), so any call site that may have CREATED connectivity has to run
+	 * this afterwards (MOD-282).
+	 */
+	private static void unionWithNeighbours(LevelState state, ServerLevel level, BlockPos pos) {
+		ItemNetwork network = state.byPos.get(pos);
+		if (network == null) return;
 		for (Direction dir : Direction.values()) {
 			ItemNetwork adjacent = state.byPos.get(pos.relative(dir));
 			if (adjacent != null && adjacent != network && ItemPipeBlock.shouldConnectTo(level, pos, dir)) {
@@ -69,7 +81,18 @@ public final class ItemNetworkManager {
 		LevelState state = LEVELS.get(level);
 		if (state == null) return;
 		ItemNetwork network = state.byPos.get(pos);
-		if (network != null) rebuild(state, network);
+		if (network == null) return;
+		rebuild(state, network);
+		// A face-mode change can restore a link as well as break one, and rebuild only ever splits.
+		// Without this union a re-enabled pipe-to-pipe joint leaves the two halves as separate networks
+		// forever: the line looks whole and silently moves nothing (MOD-282).
+		unionWithNeighbours(state, level, pos);
+	}
+
+	/** Network owning {@code pos}, or null. Exposed for tests; mirrors NetworkManager#networkAt. */
+	public static ItemNetwork networkAt(ServerLevel level, BlockPos pos) {
+		LevelState state = LEVELS.get(level);
+		return state == null ? null : state.byPos.get(pos);
 	}
 
 	private static void rebuild(LevelState state, ItemNetwork old) {

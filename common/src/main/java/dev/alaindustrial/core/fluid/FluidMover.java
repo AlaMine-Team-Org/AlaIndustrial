@@ -18,11 +18,17 @@ import dev.alaindustrial.core.energy.EnergyPort;
  * returning, so a partial acceptance never destroys fluid — mirrors {@code StorageUtil.move}'s behaviour
  * (which also refunds unaccepted amounts back to the source).
  *
+ * <p><b>Return value is NET, not gross (MOD-283).</b> {@link #move} returns what actually reached
+ * {@code to} — never the amount that merely left {@code from}. It previously returned
+ * {@code inserted + refunded}, i.e. the gross outflow before the refund, so a move into a full target
+ * reported the full {@code maxAmount} while nothing had moved at all. Callers use the return value to
+ * decide "did any fluid actually flow", which drives sleep/wake and dirty-marking, so a gross value
+ * keeps a stalled line awake forever.
+ *
  * <p><b>L1 testability.</b> {@link #move}'s signature takes {@link FluidPort} + {@link FluidHolder}
  * (both coupled to {@code net.minecraft.Fluid}, absent from {@code :common}'s L1 runtime), so this class
- * itself is exercised only by the Fabric L2 gametests. The refund arithmetic — the shortfall computation
- * and the moved-with-refund return — is extracted into {@link FluidMoverMath} and covered there by
- * {@code FluidMoverMathTest} + pitest (MOD-113).
+ * itself is exercised only by the Fabric L2 gametests. The shortfall computation is extracted into
+ * {@link FluidMoverMath} and covered there by {@code FluidMoverMathTest} + pitest (MOD-113).
  */
 public final class FluidMover {
 	private FluidMover() {
@@ -30,7 +36,9 @@ public final class FluidMover {
 
 	/**
 	 * Move up to {@code maxAmount} mB of {@code filterFluid} from {@code from} into {@code to} under
-	 * {@code txn}. Returns the amount actually moved (0 if either port is {@code null}, empty, or refuses).
+	 * {@code txn}. Returns the amount that actually landed in {@code to} — 0 if either port is
+	 * {@code null}, the source is empty, or the target refuses everything (in which case the whole
+	 * extraction is refunded to the source and nothing has moved).
 	 */
 	public static long move(FluidPort from, FluidPort to, FluidHolder filterFluid, long maxAmount,
 			EnergyPort.Txn txn) {
@@ -47,11 +55,10 @@ public final class FluidMover {
 			// destroyed — mirrors StorageUtil.move's partial-acceptance refund. The refund target is the
 			// same tank we just extracted from, which always has at least `shortfall` room freed by the
 			// extract above, so `refunded` should always equal `shortfall` in practice.
-			// Refund arithmetic extracted to FluidMoverMath (MOD-113) so the L1 suite + pitest cover the
-			// shortfall / movedWithRefund MATH mutants without a live FluidHolder / FluidPort.
+			// Shortfall arithmetic extracted to FluidMoverMath (MOD-113) so the L1 suite + pitest cover
+			// the MATH mutants without a live FluidHolder / FluidPort.
 			long shortfall = FluidMoverMath.shortfall(extracted, inserted);
-			long refunded = from.insert(filterFluid, shortfall, txn);
-			return FluidMoverMath.movedWithRefund(inserted, refunded);
+			from.insert(filterFluid, shortfall, txn);
 		}
 		return inserted;
 	}

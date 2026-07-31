@@ -96,11 +96,9 @@ class FluidMoverTest {
 	 * nothing is destroyed. A mutant that mis-computes the refund (e.g. inserts the sum back, or skips
 	 * the refund) breaks conservation — the source + target totals must be invariant.
 	 *
-	 * <p>The return value of {@code move} here is {@code movedWithRefund(inserted=10, refunded=990) = 1000}
-	 * — by {@link FluidMover}'s documented contract this is "the amount actually moved" counting both what
-	 * landed in the target and what was returned to the source (the gross outflow from source before
-	 * refund). The two tank-state assertions below pin the actual end state; the return-value assertion
-	 * pins the contract.
+	 * <p>MOD-283: {@code move} returns the NET amount that reached the target — 10 here, not the 1000 mB
+	 * gross outflow that briefly left the source before 990 was refunded. The old contract reported the
+	 * gross figure, which made a stalled transfer look like a working one.
 	 */
 	@Test
 	void move_partialAcceptance_refundsShortfallToSource(MinecraftServer server) {
@@ -113,8 +111,8 @@ class FluidMoverTest {
 			moved = FluidMover.move(from, to, LAVA, 1000, NeoForgeEnergyPort.wrap(tx));
 			tx.commit();
 		}
-		assertEquals(1000L, moved,
-				"move returns movedWithRefund(inserted + refunded) = 10 + 990 = 1000 (gross source outflow)");
+		assertEquals(10L, moved,
+				"move returns what reached the target (10 mB), not the gross outflow before the refund");
 		assertEquals(1000L, to.amount, "target filled to capacity: 990 (start) + 10 (its free room) = 1000");
 		assertEquals(990L, from.amount, "source net: 1000 - 10 transferred + 990 refunded = 990");
 		assertEquals(totalBefore, from.amount + to.amount,
@@ -141,6 +139,29 @@ class FluidMoverTest {
 		assertEquals(500L, moved, "the full 500 mB must move when the target has room");
 		assertEquals(500L, from.amount, "source dropped by exactly the moved amount");
 		assertEquals(500L, to.amount, "target gained exactly the moved amount");
+	}
+
+	/**
+	 * MOD-283 regression: a target with zero room accepts nothing, the whole extraction is refunded, and
+	 * {@code move} must report 0. The old contract returned the full {@code maxAmount} here, so every
+	 * caller testing {@code moved > 0} saw a stalled transfer as a working one — which is what keeps a
+	 * jammed line marked dirty and awake tick after tick.
+	 */
+	@Test
+	void move_targetFull_movesNothingAndReportsZero(MinecraftServer server) {
+		assertNotNull(server);
+		FluidTank from = tankOf(2000, 1000);
+		FluidTank to = tankOf(1000, 1000); // completely full
+		long totalBefore = from.amount + to.amount;
+		long moved;
+		try (Transaction tx = Transaction.openRoot()) {
+			moved = FluidMover.move(from, to, LAVA, 1000, NeoForgeEnergyPort.wrap(tx));
+			tx.commit();
+		}
+		assertEquals(0L, moved, "nothing reached the target, so nothing moved");
+		assertEquals(1000L, from.amount, "the whole extraction was refunded to the source");
+		assertEquals(1000L, to.amount, "the full target is unchanged");
+		assertEquals(totalBefore, from.amount + to.amount, "no fluid created or destroyed");
 	}
 
 	/** Exactly one bucket moves, end-to-end — the canonical pump scenario at L1.5 granularity. */

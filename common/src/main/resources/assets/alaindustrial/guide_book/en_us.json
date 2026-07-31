@@ -1074,6 +1074,37 @@
           ]
         },
         {
+          "id": "fluid_pipe",
+          "title": "Fluid Pipe",
+          "icon": "alaindustrial:fluid_pipe",
+          "block_id": "alaindustrial:fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fluid Pipe",
+              "text": "Passive multipart pipe that carries fluids between tanks and machines."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:glass",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Portable Fluid Tank",
           "icon": "alaindustrial:fluid_tank",

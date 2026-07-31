@@ -1074,6 +1074,37 @@
           ]
         },
         {
+          "id": "fluid_pipe",
+          "title": "তরল পাইপ",
+          "icon": "alaindustrial:fluid_pipe",
+          "block_id": "alaindustrial:fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "তরল পাইপ",
+              "text": "ট্যাংক ও যন্ত্রের মধ্যে তরল বহনকারী নিষ্ক্রিয় বহু-অংশ পাইপ।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:glass",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "বহনযোগ্য তরল ট্যাংক",
           "icon": "alaindustrial:fluid_tank",

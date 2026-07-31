@@ -92,6 +92,11 @@ final class ItemBuildersNeoForge {
 		return p -> new ItemPipeBlockItem(block.get(), p.useBlockDescriptionPrefix());
 	}
 
+	/** {@link #pipeItem} for the fluid pipe, whose tooltip quotes mB/tick rather than items (MOD-151). */
+	static Function<Item.Properties, BlockItem> fluidPipeItem(Supplier<? extends Block> block) {
+		return p -> new dev.alaindustrial.item.misc.FluidPipeBlockItem(block.get(), p.useBlockDescriptionPrefix());
+	}
+
 	static Function<Item.Properties, FluidTankBlockItem> fluidTankBlockItem(Supplier<? extends Block> block) {
 		return p -> new FluidTankBlockItem(block.get(), p.useBlockDescriptionPrefix());
 	}

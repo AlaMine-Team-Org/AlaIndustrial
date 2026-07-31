@@ -1074,6 +1074,37 @@
           ]
         },
         {
+          "id": "fluid_pipe",
+          "title": "Tubo per fluidi",
+          "icon": "alaindustrial:fluid_pipe",
+          "block_id": "alaindustrial:fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tubo per fluidi",
+              "text": "Tubo multiparte passivo che trasporta fluidi tra serbatoi e macchine."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:glass",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Serbatoio di fluidi portatile",
           "icon": "alaindustrial:fluid_tank",

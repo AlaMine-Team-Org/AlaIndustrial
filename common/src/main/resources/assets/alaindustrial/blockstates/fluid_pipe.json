@@ -1,0 +1,590 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "filled": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_core"
+      }
+    },
+    {
+      "when": {
+        "filled": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_core_filled"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "north_mode": "neutral"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_arm"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "north_mode": "neutral"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_arm_filled"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "south_mode": "neutral"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_arm",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "south_mode": "neutral"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_arm_filled",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "west_mode": "neutral"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_arm",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "west_mode": "neutral"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_arm_filled",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "east_mode": "neutral"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_arm",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "east_mode": "neutral"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_arm_filled",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "up_mode": "neutral"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_arm",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "up_mode": "neutral"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_arm_filled",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "down_mode": "neutral"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_arm",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "down_mode": "neutral"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_arm_filled",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "north_mode": "extract"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_extract"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "north_mode": "extract"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_extract_filled"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "south_mode": "extract"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_extract",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "south_mode": "extract"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_extract_filled",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "west_mode": "extract"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_extract",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "west_mode": "extract"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_extract_filled",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "east_mode": "extract"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_extract",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "east_mode": "extract"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_extract_filled",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "up_mode": "extract"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_extract",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "up_mode": "extract"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_extract_filled",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "down_mode": "extract"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_extract",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "down_mode": "extract"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_extract_filled",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "north_mode": "insert"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_insert"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "north_mode": "insert"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_insert_filled"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "south_mode": "insert"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_insert",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "south_mode": "insert"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_insert_filled",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "west_mode": "insert"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_insert",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "west_mode": "insert"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_insert_filled",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "east_mode": "insert"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_insert",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "east_mode": "insert"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_insert_filled",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "up_mode": "insert"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_insert",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "up_mode": "insert"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_insert_filled",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "down_mode": "insert"
+          },
+          {
+            "filled": "false"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_insert",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {
+            "down_mode": "insert"
+          },
+          {
+            "filled": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_pipe_insert_filled",
+        "x": 90
+      }
+    }
+  ]
+}

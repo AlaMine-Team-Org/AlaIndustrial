@@ -120,9 +120,12 @@ public final class IndustrializationNeoForgeClient {
 		// same signature as the Fabric BlockColorRegistry call in IndustrializationClient, with the
 		// list index being the model's tintindex. 26.2 dropped BlockColor: a tint layer is a
 		// BlockTintSource and the in-world hook is colorInWorld(state, level, pos).
-		modBus.addListener((net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.BlockTintSources event) ->
-				event.register(java.util.List.of(dev.alaindustrial.client.render.IncubatorDomeTint.INSTANCE),
-						dev.alaindustrial.registry.ModContent.INCUBATOR_DOME.get()));
+		modBus.addListener((net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.BlockTintSources event) -> {
+			event.register(java.util.List.of(dev.alaindustrial.client.render.IncubatorDomeTint.INSTANCE),
+					dev.alaindustrial.registry.ModContent.INCUBATOR_DOME.get());
+			event.register(java.util.List.of(dev.alaindustrial.client.render.FluidPipeTint.INSTANCE),
+					dev.alaindustrial.registry.ModContent.FLUID_PIPE.get());
+		});
 		// Battery Pouch bundle-style tooltip (MOD-052) — NeoForge counterpart to the Fabric
 		// ClientTooltipComponentCallback mapping in IndustrializationClient.
 		modBus.addListener((net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent event) ->

@@ -103,59 +103,25 @@ class FluidMoverMathTest {
 				"MATH mutant (extracted + inserted) would return 13, duplicating fluid");
 	}
 
-	// --- movedWithRefund: inserted + refunded ---
-
-	@Test
-	void movedWithRefund_isInsertedPlusRefunded() {
-		assertEquals(10L, FluidMoverMath.movedWithRefund(3, 7),
-				"movedWithRefund = inserted + refunded (total that ended up moving)");
-	}
-
-	@Test
-	void movedWithRefund_zeroRefundReturnsInserted() {
-		assertEquals(10L, FluidMoverMath.movedWithRefund(10, 0),
-				"zero refund -> return the direct insert");
-	}
-
-	/**
-	 * The MATH mutant flips {@code inserted + refunded} to {@code inserted - refunded}. On a
-	 * partial-acceptance move (inserted=3, refunded=7) the mutant would return 3 - 7 = -4 — under-reporting
-	 * the moved amount by 2×refund AND going negative. This exact-value assertion kills it.
-	 */
-	@Test
-	void movedWithRefund_mathMutantFlipsToSubtract_isCaught() {
-		// Correct: 3 + 7 = 10. MATH mutant: 3 - 7 = -4.
-		assertEquals(10L, FluidMoverMath.movedWithRefund(3, 7),
-				"MATH mutant (inserted - refunded) would return -4, under-reporting by 2x");
-	}
-
-	/**
-	 * The PrimitiveReturns mutant zeroes the return on every partial-acceptance move, making the move
-	 * look like nothing transferred even though {@code inserted} mB did land in the target. Pin the
-	 * non-zero return on a typical partial-acceptance case.
-	 */
-	@Test
-	void movedWithRefund_primitiveReturnZeroMutant_isCaught() {
-		assertEquals(10L, FluidMoverMath.movedWithRefund(3, 7),
-				"PrimitiveReturns mutant would return 0 — masking a real partial-acceptance move");
-	}
-
 	// --- property-based sweeps: conservation across partial-acceptance scenarios ---
 
 	/**
-	 * Conservation: the moved-with-refund total equals {@code inserted + refunded} (by definition), and
-	 * never exceeds the originally-extracted amount (you can't move more than you pulled). A MATH mutant
-	 * on either the shortfall or the moved-with-refund line breaks this on partial-acceptance inputs.
+	 * Conservation of the split: what the target kept plus what goes back to the source is exactly what
+	 * was pulled, so the refund path neither destroys nor creates fluid. A MATH mutant on the shortfall
+	 * line breaks this on every partial-acceptance input.
+	 *
+	 * <p>MOD-283: this used to be phrased as {@code movedWithRefund(inserted, refunded) == extracted}
+	 * and called the result "moved", which is what encoded the gross-outflow confusion in the first
+	 * place — the refunded part goes back to the SOURCE and has moved nowhere. It also computed the
+	 * refund as {@code Math.min(shortfall, shortfall)}, a self-min that asserted nothing about the
+	 * intended clamp.
 	 */
 	@ParameterizedTest
 	@MethodSource("partialAcceptanceSweep")
-	void refundConservation_insertedPlusRefundedNeverExceedsExtracted(long extracted, long inserted) {
-		// refunded is clamped: at most the shortfall, which is extracted - inserted.
+	void refundConservation_targetKeepPlusSourceRefundEqualsExtracted(long extracted, long inserted) {
 		long shortfall = FluidMoverMath.shortfall(extracted, inserted);
-		long refunded = Math.min(shortfall, shortfall); // refund target always has room (extract freed it)
-		long moved = FluidMoverMath.movedWithRefund(inserted, refunded);
-		assertEquals(extracted, moved,
-				"inserted + refunded == extracted (full conservation, no loss/gain)");
+		assertEquals(extracted, inserted + shortfall,
+				"inserted (stays in target) + shortfall (returns to source) == extracted");
 	}
 
 	/** shortfall is always in [0, extracted]: never negative, never more than what was pulled. */
@@ -165,15 +131,6 @@ class FluidMoverMathTest {
 		long shortfall = FluidMoverMath.shortfall(extracted, inserted);
 		assertTrue(shortfall >= 0, "shortfall never negative");
 		assertTrue(shortfall <= extracted, "shortfall never exceeds extracted");
-	}
-
-	/** movedWithRefund is always >= inserted (refunded is non-negative): refund never reduces the move. */
-	@ParameterizedTest
-	@MethodSource("partialAcceptanceSweep")
-	void movedWithRefund_neverBelowInserted(long extracted, long inserted) {
-		long shortfall = FluidMoverMath.shortfall(extracted, inserted);
-		long moved = FluidMoverMath.movedWithRefund(inserted, shortfall);
-		assertTrue(moved >= inserted, "movedWithRefund >= inserted (refund adds, never subtracts)");
 	}
 
 	private static Stream<Arguments> partialAcceptanceSweep() {

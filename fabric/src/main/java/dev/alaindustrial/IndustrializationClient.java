@@ -202,6 +202,9 @@ public class IndustrializationClient implements ClientModInitializer {
 		net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry.register(
 				java.util.List.of(dev.alaindustrial.client.render.IncubatorDomeTint.INSTANCE),
 				dev.alaindustrial.registry.ModContent.INCUBATOR_DOME.get());
+		net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry.register(
+				java.util.List.of(dev.alaindustrial.client.render.FluidPipeTint.INSTANCE),
+				dev.alaindustrial.registry.ModContent.FLUID_PIPE.get());
 	}
 
 	/** Installs the world-overlay / client-hook singletons (network viz, cable preview, hum, tooltip keys). */

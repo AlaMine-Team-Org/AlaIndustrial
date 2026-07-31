@@ -1074,6 +1074,37 @@
           ]
         },
         {
+          "id": "fluid_pipe",
+          "title": "Sıvı Borusu",
+          "icon": "alaindustrial:fluid_pipe",
+          "block_id": "alaindustrial:fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sıvı Borusu",
+              "text": "Tanklar ve makineler arasında sıvı taşıyan pasif çok parçalı boru."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:glass",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "Taşınabilir Sıvı Tankı",
           "icon": "alaindustrial:fluid_tank",

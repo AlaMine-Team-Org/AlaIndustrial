@@ -64,6 +64,24 @@ public final class ItemPipeGameTest {
 		ItemPipeScenarios.disabledPipeLinkBlocksTransfer(helper);
 	}
 
+	/** MOD-282 repro: a re-enabled pipe link must rejoin the two networks, not leave a silent split. */
+	@GameTest
+	public void mod282ReEnabledPipeLinkRejoinsNetwork(GameTestHelper helper) {
+		ItemPipeScenarios.reEnabledPipeLinkRejoinsNetwork(helper);
+	}
+
+	/** MOD-282 counter-guard: disabling the link must still split the graph. */
+	@GameTest
+	public void mod282DisabledPipeLinkSplitsNetwork(GameTestHelper helper) {
+		ItemPipeScenarios.disabledPipeLinkSplitsNetwork(helper);
+	}
+
+	/** MOD-282: the wrench ladder walks through DISABLED — a full cycle must restore a working link. */
+	@GameTest
+	public void mod282WrenchCycleRestoresPipeLink(GameTestHelper helper) {
+		ItemPipeScenarios.wrenchCycleRestoresPipeLink(helper);
+	}
+
 	/** MOD-108: chest → pipe → machine — the machine-automation path the chest-to-chest cases never touch. */
 	@GameTest
 	public void mod108InsertsIntoMachine(GameTestHelper helper) {

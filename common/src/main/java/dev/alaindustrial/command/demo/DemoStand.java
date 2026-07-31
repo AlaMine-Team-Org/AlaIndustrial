@@ -315,6 +315,20 @@ public final class DemoStand {
 		fillSlot(level, origin, 16, 1, 26, 0, new ItemStack(Items.IRON_INGOT, 32));
 		for (int x = 17; x <= 21; x++) set(level, origin, x, 1, 26, ModContent.ITEM_PIPE.get());
 		set(level, origin, 22, 1, 26, ModContent.IRON_CHEST.get());
+
+		// The fluid line continues the same row (DEPTH is 27, so z=26 is the last one available):
+		// tank → pipes → tank, the same read-left-to-right shape, so the two transport systems can be
+		// compared side by side. The source tank is seeded so the pipes carry something and show their
+		// fluid colour instead of sitting empty.
+		set(level, origin, 25, 1, 26, ModContent.FLUID_TANK.get());
+		if (level.getBlockEntity(origin.offset(25, 1, 26))
+				instanceof dev.alaindustrial.block.entity.FluidTankBlockEntity tank) {
+			tank.fluidTank.fluid =
+					dev.alaindustrial.core.fluid.FluidHolder.of(net.minecraft.world.level.material.Fluids.WATER);
+			tank.fluidTank.amount = dev.alaindustrial.Config.fluidTankCapacity;
+		}
+		for (int x = 26; x <= 30; x++) set(level, origin, x, 1, 26, ModContent.FLUID_PIPE.get());
+		set(level, origin, 31, 1, 26, ModContent.FLUID_TANK.get());
 	}
 
 	/** Zone <b>ores</b>: a 5×2 wall at z=4 — stone variants on top, deepslate variants below. */

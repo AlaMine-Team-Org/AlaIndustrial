@@ -13,9 +13,13 @@ package dev.alaindustrial.core.fluid;
  * <ul>
  *   <li>{@code extracted <= 0} short-circuit (L33) — see {@link #nothingExtracted};</li>
  *   <li>{@code inserted < extracted} refund-needed test (L37) — see {@link #shortfallNeeded};</li>
- *   <li>{@code extracted - inserted} shortfall (L42) — see {@link #shortfall};</li>
- *   <li>{@code inserted + refunded} total-moved return (L44) — see {@link #movedWithRefund}.</li>
+ *   <li>{@code extracted - inserted} shortfall (L42) — see {@link #shortfall}.</li>
  * </ul>
+ *
+ * <p><b>MOD-283.</b> A fourth helper, {@code movedWithRefund(inserted, refunded)}, used to compute
+ * {@link FluidMover#move}'s return as {@code inserted + refunded}. That is the GROSS outflow from the
+ * source, not what reached the target: on a fully-refused move it reported the whole amount while
+ * nothing actually moved. {@code move} now returns {@code inserted} directly and the helper is gone.
  * Pure extract: same results, no new branching, no MC types.
  */
 final class FluidMoverMath {
@@ -52,14 +56,4 @@ final class FluidMoverMath {
 		return extracted - inserted;
 	}
 
-	/**
-	 * The total amount that ended up in the target: what it accepted directly ({@code inserted}) plus
-	 * what was refunded back into the source ({@code refunded}). The MATH mutant flips the {@code +} to
-	 * {@code -}, so a partial-acceptance move would report {@code inserted - refunded} — under-reporting
-	 * the moved amount by twice the refund. A PrimitiveReturns mutant zeroing the return would report 0
-	 * on every partial-acceptance move.
-	 */
-	static long movedWithRefund(long inserted, long refunded) {
-		return inserted + refunded;
-	}
 }

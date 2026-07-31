@@ -1074,6 +1074,37 @@
           ]
         },
         {
+          "id": "fluid_pipe",
+          "title": "द्रव पाइप",
+          "icon": "alaindustrial:fluid_pipe",
+          "block_id": "alaindustrial:fluid_pipe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "द्रव पाइप",
+              "text": "टंकियों और मशीनों के बीच द्रव पहुँचाने वाला निष्क्रिय बहु-भाग पाइप।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:glass",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:fluid_pipe",
+              "result_count": 8
+            }
+          ]
+        },
+        {
           "id": "fluid_tank",
           "title": "पोर्टेबल द्रव टैंक",
           "icon": "alaindustrial:fluid_tank",

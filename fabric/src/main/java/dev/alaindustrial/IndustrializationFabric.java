@@ -348,6 +348,7 @@ public class IndustrializationFabric implements ModInitializer {
 			for (net.minecraft.server.level.ServerLevel lvl : server.getAllLevels()) {
 				NetworkManager.tickAll(lvl);
 				ItemNetworkManager.tickAll(lvl);
+				dev.alaindustrial.core.fluid.FluidNetworkManager.tickAll(lvl);
 			}
 			// Teleport warmups are per-player, not per-level, so they tick once per server tick
 			// (MOD-092) rather than once per level.

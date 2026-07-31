@@ -282,6 +282,7 @@ public final class IndustrializationNeoForge {
 			for (ServerLevel lvl : event.getServer().getAllLevels()) {
 				NetworkManager.tickAll(lvl);
 				ItemNetworkManager.tickAll(lvl);
+				dev.alaindustrial.core.fluid.FluidNetworkManager.tickAll(lvl);
 			}
 			// Teleport warmups are per-player, not per-level (MOD-092).
 			dev.alaindustrial.teleporter.TeleportWarmupManager.tickAll(event.getServer());
@@ -459,6 +460,7 @@ public final class IndustrializationNeoForge {
 		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.FLUID_TANK);
 		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.POLYMERIZER);
 		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.GALVANIC_BATH);
+		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.FLUID_PIPE);
 
 		// MOD-104: publish transactional, side-aware item views for mod containers. This is required
 		// because a vanilla Container is not automatically a 26.2 ResourceHandler on NeoForge.

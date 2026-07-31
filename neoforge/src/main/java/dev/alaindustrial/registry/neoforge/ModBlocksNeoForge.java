@@ -5,6 +5,7 @@ import dev.alaindustrial.block.BatteryBoxBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.core.energy.CableType;
+import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.IncubatorBlock;
@@ -141,6 +142,8 @@ public final class ModBlocksNeoForge {
 					props("insulated_gold_cable"));
 	public static final DeferredBlock<ItemPipeBlock> ITEM_PIPE =
 			BLOCKS.registerBlock("item_pipe", ItemPipeBlock::new, props("item_pipe"));
+	public static final DeferredBlock<FluidPipeBlock> FLUID_PIPE =
+			BLOCKS.registerBlock("fluid_pipe", FluidPipeBlock::new, props("fluid_pipe"));
 
 	// --- Ores (plain Block, harvest tier is tag-driven) ---
 	public static final DeferredBlock<Block> TIN_ORE =
@@ -266,6 +269,7 @@ public final class ModBlocksNeoForge {
 		ModContent.INSULATED_TIN_CABLE = INSULATED_TIN_CABLE::get;
 		ModContent.INSULATED_GOLD_CABLE = INSULATED_GOLD_CABLE::get;
 		ModContent.ITEM_PIPE = ITEM_PIPE::get;
+		ModContent.FLUID_PIPE = FLUID_PIPE::get;
 		ModContent.TIN_ORE = TIN_ORE::get;
 		ModContent.DEEPSLATE_TIN_ORE = DEEPSLATE_TIN_ORE::get;
 		ModContent.SILVER_ORE = SILVER_ORE::get;

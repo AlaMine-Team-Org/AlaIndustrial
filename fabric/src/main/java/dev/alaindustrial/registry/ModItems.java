@@ -223,6 +223,7 @@ public final class ModItems {
 	// MOD-108: its own BlockItem subclass so the pipe can carry a tooltip (plain hint + Shift for the
 	// throughput numbers) — a plain blockItem() has none.
 	public static final BlockItem ITEM_PIPE_ITEM = pipeItem("item_pipe", ModBlocks.ITEM_PIPE);
+	public static final BlockItem FLUID_PIPE_ITEM = fluidPipeItem("fluid_pipe", ModBlocks.FLUID_PIPE);
 	public static final BlockItem MACERATOR_ITEM = blockItem("macerator", ModBlocks.MACERATOR);
 	public static final BlockItem BATTERY_BOX_ITEM = blockItem("battery_box", ModBlocks.BATTERY_BOX);
 	public static final BlockItem TELEPORTER_ITEM = blockItem("teleporter", ModBlocks.TELEPORTER);
@@ -490,6 +491,14 @@ public final class ModItems {
 		return Registry.register(BuiltInRegistries.ITEM, key, item);
 	}
 
+	/** {@link #pipeItem} for the fluid pipe, whose tooltip quotes mB/tick rather than items (MOD-151). */
+	private static BlockItem fluidPipeItem(String path, Block block) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		BlockItem item = new dev.alaindustrial.item.misc.FluidPipeBlockItem(block,
+				new Item.Properties().useBlockDescriptionPrefix().setId(key));
+		return Registry.register(BuiltInRegistries.ITEM, key, item);
+	}
+
 	private static BlockItem fluidTankBlockItem(String path, Block block) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		BlockItem item = new FluidTankBlockItem(block,
@@ -673,6 +682,7 @@ public final class ModItems {
 		ModContent.INSULATED_TIN_CABLE_ITEM = () -> INSULATED_TIN_CABLE_ITEM;
 		ModContent.INSULATED_GOLD_CABLE_ITEM = () -> INSULATED_GOLD_CABLE_ITEM;
 		ModContent.ITEM_PIPE_ITEM = () -> ITEM_PIPE_ITEM;
+		ModContent.FLUID_PIPE_ITEM = () -> FLUID_PIPE_ITEM;
 		ModContent.MACERATOR_ITEM = () -> MACERATOR_ITEM;
 		ModContent.BATTERY_BOX_ITEM = () -> BATTERY_BOX_ITEM;
 		ModContent.TELEPORTER_ITEM = () -> TELEPORTER_ITEM;

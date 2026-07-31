@@ -1,6 +1,8 @@
 package dev.alaindustrial.item.tool;
 
+import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
+import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.core.item.PipeFaceMode;
 import net.minecraft.core.Direction;
@@ -38,6 +40,9 @@ public final class WrenchItem extends Item {
 					? InteractionResult.SUCCESS
 					: InteractionResult.PASS;
 		}
+		if (level.getBlockEntity(context.getClickedPos()) instanceof FluidPipeBlockEntity fluidPipe) {
+			return cycleFluidPipeFace(context, level, player, fluidPipe);
+		}
 		if (!(level.getBlockEntity(context.getClickedPos()) instanceof ItemPipeBlockEntity pipe)) {
 			return InteractionResult.PASS;
 		}
@@ -55,6 +60,52 @@ public final class WrenchItem extends Item {
 				Component.translatable(mode.translationKey()))
 				.withStyle(ChatFormatting.AQUA));
 		return InteractionResult.SUCCESS;
+	}
+
+	/**
+	 * The fluid pipe's faces work exactly like the item pipe's — same ladder, same pipe-to-pipe
+	 * join/cut rule — so the two behave identically in the player's hands. Only the lookup used to find
+	 * a hidden endpoint differs, because a fluid port is not an inventory.
+	 */
+	private static InteractionResult cycleFluidPipeFace(UseOnContext context, ServerLevel level,
+			ServerPlayer player, FluidPipeBlockEntity pipe) {
+		Direction face = configuredFluidFace(context);
+		if (level.getBlockState(context.getClickedPos().relative(face)).getBlock() instanceof FluidPipeBlock) {
+			pipe.setFaceMode(face, pipe.faceMode(face) == PipeFaceMode.DISABLED
+					? PipeFaceMode.NEUTRAL : PipeFaceMode.DISABLED);
+		} else {
+			pipe.cycleFaceMode(face);
+		}
+		PipeFaceMode mode = pipe.faceMode(face);
+		player.sendOverlayMessage(Component.translatable("message.alaindustrial.fluid_pipe.mode",
+				Component.translatable(mode.translationKey()))
+				.withStyle(ChatFormatting.AQUA));
+		return InteractionResult.SUCCESS;
+	}
+
+	/** {@link #configuredFace} for fluid pipes: same nearest-candidate resolution, fluid-port lookup. */
+	private static Direction configuredFluidFace(UseOnContext context) {
+		Direction clicked = context.getClickedFace();
+		if (FluidPipeBlock.hasEndpointCandidate(context.getLevel(), context.getClickedPos(), clicked)) {
+			return clicked;
+		}
+		Vec3 hit = context.getClickLocation();
+		double localX = hit.x - context.getClickedPos().getX();
+		double localY = hit.y - context.getClickedPos().getY();
+		double localZ = hit.z - context.getClickedPos().getZ();
+		Direction nearest = null;
+		double nearestDistance = Double.MAX_VALUE;
+		for (Direction candidate : Direction.values()) {
+			if (!FluidPipeBlock.hasEndpointCandidate(context.getLevel(), context.getClickedPos(), candidate)) {
+				continue;
+			}
+			double distance = distanceToFace(candidate, localX, localY, localZ);
+			if (distance < nearestDistance) {
+				nearest = candidate;
+				nearestDistance = distance;
+			}
+		}
+		return nearest == null ? clicked : nearest;
 	}
 
 	/**

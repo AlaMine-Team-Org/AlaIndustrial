@@ -933,6 +933,157 @@ public class FluidGameTest {
 	}
 
 	/**
+	 * A foreign fluid storage whose amounts are NOT whole millibuckets — the case the mod's own
+	 * transfers never produce and therefore never tested. It hands over everything it holds (and accepts
+	 * up to its remaining room) regardless of whether that figure divides by 81.
+	 *
+	 * <p>Deliberately not snapshot-participating: these scenarios commit, and a rollback-capable fake
+	 * would only add noise to what is being pinned here (the adapter's unit arithmetic).
+	 */
+	private static final class OddDropletStorage
+			implements net.fabricmc.fabric.api.transfer.v1.storage.Storage<
+					net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant> {
+		private final net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant variant;
+		private long droplets;
+		private final long capacityDroplets;
+
+		OddDropletStorage(net.minecraft.world.level.material.Fluid fluid, long droplets, long capacityDroplets) {
+			this.variant = net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant.of(fluid);
+			this.droplets = droplets;
+			this.capacityDroplets = capacityDroplets;
+		}
+
+		long droplets() {
+			return droplets;
+		}
+
+		@Override
+		public long insert(net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant resource, long maxAmount,
+				net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext transaction) {
+			if (!resource.equals(variant) || maxAmount <= 0) {
+				return 0;
+			}
+			long accepted = Math.min(maxAmount, capacityDroplets - droplets);
+			droplets += accepted;
+			return accepted;
+		}
+
+		@Override
+		public long extract(net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant resource, long maxAmount,
+				net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext transaction) {
+			if (!resource.equals(variant) || maxAmount <= 0) {
+				return 0;
+			}
+			long given = Math.min(maxAmount, droplets);
+			droplets -= given;
+			return given;
+		}
+
+		@Override
+		public java.util.Iterator<net.fabricmc.fabric.api.transfer.v1.storage.StorageView<
+				net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant>> iterator() {
+			net.fabricmc.fabric.api.transfer.v1.storage.StorageView<
+					net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant> view = new net.fabricmc.fabric.api.transfer.v1.storage.StorageView<>() {
+				@Override
+				public long extract(net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant resource, long maxAmount,
+						net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext transaction) {
+					return OddDropletStorage.this.extract(resource, maxAmount, transaction);
+				}
+
+				@Override
+				public boolean isResourceBlank() {
+					return droplets <= 0;
+				}
+
+				@Override
+				public net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant getResource() {
+					return variant;
+				}
+
+				@Override
+				public long getAmount() {
+					return droplets;
+				}
+
+				@Override
+				public long getCapacity() {
+					return capacityDroplets;
+				}
+			};
+			return java.util.List.of(view).iterator();
+		}
+	}
+
+	/**
+	 * MOD-284: a foreign storage yields 121 droplets — one whole millibucket plus a 40-droplet tail that
+	 * the neutral mB contract cannot express. Flooring the report to 1 mB while letting the donor keep
+	 * the loss destroys those 40 droplets outright. The adapter must hand the tail back, so the donor
+	 * ends up down by exactly the reported amount and nothing evaporates.
+	 *
+	 * <p>This path is Fabric-only by construction: {@code NeoForgeFluidLookup} resolves our own blocks
+	 * through {@code FluidPortHost} and never crosses a droplet conversion at all, so the NeoForge lane
+	 * cannot catch a regression here.
+	 *
+	 * @implements MOD-284 droplet-tail conservation on extract
+	 * @covers R-CON-01
+	 */
+	@GameTest
+	public void mod284_extractFromOddForeignStorageDestroysNothing(GameTestHelper helper) {
+		long odd = 121L; // 1 mB (81) + 40 droplets
+		OddDropletStorage foreign = new OddDropletStorage(Fluids.LAVA, odd, 81_000L);
+		dev.alaindustrial.core.fluid.FluidPort port =
+				dev.alaindustrial.core.fabric.FabricFluidPort.of(foreign);
+		long[] reportedMb = {0};
+		EnergyTransactions.get().runCommitting(
+				txn -> reportedMb[0] = port.extract(FluidHolder.of(Fluids.LAVA), FluidAmounts.BUCKET, txn));
+
+		if (reportedMb[0] != 1L) {
+			helper.fail("expected the adapter to report exactly 1 mB from 121 droplets, got " + reportedMb[0]);
+			return;
+		}
+		long expectedLeft = odd - FluidAmounts.toDroplets(reportedMb[0]); // 121 - 81 = 40
+		if (foreign.droplets() != expectedLeft) {
+			helper.fail("donor must be down by exactly the reported 1 mB (81 droplets), leaving "
+					+ expectedLeft + " droplets, but holds " + foreign.droplets()
+					+ " — the sub-mB tail was destroyed instead of returned");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-284, the mirror case: a foreign storage has only 121 droplets of room. Reporting the floored
+	 * 1 mB while letting it keep all 121 credits the receiver with more than the source is debited —
+	 * fluid out of nowhere. The adapter must reclaim the 40-droplet tail.
+	 *
+	 * @implements MOD-284 droplet-tail conservation on insert
+	 * @covers R-CON-01
+	 */
+	@GameTest
+	public void mod284_insertIntoOddForeignStorageCreatesNothing(GameTestHelper helper) {
+		long room = 121L;
+		OddDropletStorage foreign = new OddDropletStorage(Fluids.LAVA, 0L, room);
+		dev.alaindustrial.core.fluid.FluidPort port =
+				dev.alaindustrial.core.fabric.FabricFluidPort.of(foreign);
+		long[] reportedMb = {0};
+		EnergyTransactions.get().runCommitting(
+				txn -> reportedMb[0] = port.insert(FluidHolder.of(Fluids.LAVA), FluidAmounts.BUCKET, txn));
+
+		if (reportedMb[0] != 1L) {
+			helper.fail("expected the adapter to report exactly 1 mB into 121 droplets of room, got "
+					+ reportedMb[0]);
+			return;
+		}
+		long expectedHeld = FluidAmounts.toDroplets(reportedMb[0]); // 81
+		if (foreign.droplets() != expectedHeld) {
+			helper.fail("receiver must hold exactly the reported 1 mB (81 droplets) but holds "
+					+ foreign.droplets() + " — the extra tail was conjured out of nowhere");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
 	 * @implements TC-PUMP-001-FUN06 — the pump acquires WATER (not just lava) from a water source block in
 	 *     front of it (FACING face). Generalised fluid intake, post-restoration: the tank whitelist accepts
 	 *     both lava and water, and the source block is consumed like a lava source would be.

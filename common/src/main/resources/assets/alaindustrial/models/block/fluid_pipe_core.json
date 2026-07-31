@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "alaindustrial:block/fluid_pipe_ring",
+    "ring": "alaindustrial:block/fluid_pipe_ring",
+    "glass": {
+      "sprite": "alaindustrial:block/fluid_pipe_glass",
+      "force_translucent": true
+    },
+    "fluid": "alaindustrial:block/fluid_pipe_fluid"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        6,
+        6
+      ],
+      "to": [
+        10,
+        10,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#glass"
+        },
+        "south": {
+          "texture": "#glass"
+        },
+        "east": {
+          "texture": "#glass"
+        },
+        "west": {
+          "texture": "#glass"
+        },
+        "up": {
+          "texture": "#glass"
+        },
+        "down": {
+          "texture": "#glass"
+        }
+      }
+    }
+  ]
+}

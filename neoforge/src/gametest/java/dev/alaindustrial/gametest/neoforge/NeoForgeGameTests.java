@@ -3,6 +3,7 @@ package dev.alaindustrial.gametest.neoforge;
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.gametest.CableFaceParityScenarios;
+import dev.alaindustrial.gametest.FluidPipeScenarios;
 import dev.alaindustrial.gametest.CableEnergyScenarios;
 import dev.alaindustrial.gametest.CableInsulationScenarios;
 import dev.alaindustrial.gametest.CableShockScenarios;
@@ -584,6 +585,26 @@ public final class NeoForgeGameTests {
 		registerTest(event, "item_pipe_disabled_face_blocks_transfer", 40, true, ItemPipeScenarios::disabledFaceBlocksTransfer);
 		registerTest(event, "item_pipe_disabled_link_blocks_transfer", 40, true,
 				ItemPipeScenarios::disabledPipeLinkBlocksTransfer);
+		// MOD-282: rebuild only ever splits, so a re-enabled pipe link used to leave two networks
+		// forever — a line that renders whole and moves nothing. Split guard included so a naive
+		// "merge everything adjacent" fix cannot pass by destroying the disconnect feature.
+		registerTest(event, "item_pipe_reenabled_link_rejoins_network", 40, true,
+				ItemPipeScenarios::reEnabledPipeLinkRejoinsNetwork);
+		registerTest(event, "item_pipe_disabled_link_splits_network", 40, true,
+				ItemPipeScenarios::disabledPipeLinkSplitsNetwork);
+		registerTest(event, "item_pipe_wrench_cycle_restores_link", 40, true,
+				ItemPipeScenarios::wrenchCycleRestoresPipeLink);
+		// MOD-151: the fluid pipe on the NeoForge fluid-capability seam.
+		registerTest(event, "fluid_pipe_transfers_between_tanks", 60, true,
+				FluidPipeScenarios::transfersBetweenTanks);
+		registerTest(event, "fluid_pipe_segments_hold_fluid_in_transit", 60, true,
+				FluidPipeScenarios::segmentsHoldFluidInTransit);
+		registerTest(event, "fluid_pipe_reenabled_link_rejoins_network", 40, true,
+				FluidPipeScenarios::reEnabledPipeLinkRejoinsNetwork);
+		registerTest(event, "fluid_pipe_segment_refuses_second_fluid", 40, true,
+				FluidPipeScenarios::segmentRefusesASecondFluid);
+		registerTest(event, "fluid_pipe_broken_segment_loses_contents", 60, true,
+				FluidPipeScenarios::brokenSegmentLosesItsContentsWithoutDuplicating);
 		// MOD-108: chest → pipe → MACHINE. The chest-to-chest cases above never touch a machine's
 		// automation gate (canPlaceItemThroughFace), which is exactly the path players build.
 		// MOD-178: source → three insert chests, first two full — the pipe must skip to the free one.
