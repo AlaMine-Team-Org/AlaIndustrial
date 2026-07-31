@@ -24,6 +24,7 @@ import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
 import dev.alaindustrial.menu.VulcanizerMenu;
+import dev.alaindustrial.menu.GalvanicBathMenu;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -120,6 +121,7 @@ public final class ModContent {
 	/** Polymerizer (MOD-019) — the first machine fed by a fluid: oil in the tank, raw rubber out. */
 	public static Supplier<Block> POLYMERIZER = unbound("POLYMERIZER");
 	public static Supplier<Block> VULCANIZER = unbound("VULCANIZER");
+	public static Supplier<Block> GALVANIC_BATH = unbound("GALVANIC_BATH");
 	public static Supplier<Block> ELECTRIC_HEATER = unbound("ELECTRIC_HEATER");
 	public static Supplier<Block> INCUBATOR = unbound("INCUBATOR");
 	public static Supplier<Block> INCUBATOR_DOME = unbound("INCUBATOR_DOME");
@@ -286,6 +288,15 @@ public final class ModContent {
 	public static Supplier<Item> COTTON_SEEDS = unbound("COTTON_SEEDS");
 	/** Cotton fibre (MOD-280) — the harvest; the farming alternative to spider string for MOD-127. */
 	public static Supplier<Item> COTTON_FIBER = unbound("COTTON_FIBER");
+	// Fluxweave chain (MOD-127): the Galvanic Bath plates fibre with silver into conductive thread, and
+	// four threads weave into one sheet of cloth — the material the LV armor set is built from.
+	public static Supplier<Item> FLUX_THREAD = unbound("FLUX_THREAD");
+	public static Supplier<Item> FLUXWEAVE_CLOTH = unbound("FLUXWEAVE_CLOTH");
+	// Fluxweave armour (MOD-127): the mod's first full EU set. One class, four registrations.
+	public static Supplier<Item> FLUXWEAVE_HELMET = unbound("FLUXWEAVE_HELMET");
+	public static Supplier<Item> FLUXWEAVE_CHESTPLATE = unbound("FLUXWEAVE_CHESTPLATE");
+	public static Supplier<Item> FLUXWEAVE_LEGGINGS = unbound("FLUXWEAVE_LEGGINGS");
+	public static Supplier<Item> FLUXWEAVE_BOOTS = unbound("FLUXWEAVE_BOOTS");
 
 	// --- Entity types ---
 	// Stock Display Frame (MOD-066) — the mod's first entity: an ItemFrame subclass that counts the
@@ -318,6 +329,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> SAWMILL_ITEM = unbound("SAWMILL_ITEM");
 	public static Supplier<BlockItem> POLYMERIZER_ITEM = unbound("POLYMERIZER_ITEM");
 	public static Supplier<BlockItem> VULCANIZER_ITEM = unbound("VULCANIZER_ITEM");
+	public static Supplier<BlockItem> GALVANIC_BATH_ITEM = unbound("GALVANIC_BATH_ITEM");
 	public static Supplier<BlockItem> ELECTRIC_HEATER_ITEM = unbound("ELECTRIC_HEATER_ITEM");
 	public static Supplier<BlockItem> INCUBATOR_ITEM = unbound("INCUBATOR_ITEM");
 	public static Supplier<BlockItem> TRELLIS_ITEM = unbound("TRELLIS_ITEM");
@@ -368,6 +380,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> SAWMILL_BE = unbound("SAWMILL_BE");
 	public static Supplier<BlockEntityType<?>> POLYMERIZER_BE = unbound("POLYMERIZER_BE");
 	public static Supplier<BlockEntityType<?>> VULCANIZER_BE = unbound("VULCANIZER_BE");
+	public static Supplier<BlockEntityType<?>> GALVANIC_BATH_BE = unbound("GALVANIC_BATH_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> INCUBATOR_BE = unbound("INCUBATOR_BE");
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
@@ -396,6 +409,7 @@ public final class ModContent {
 	public static Supplier<MenuType<SawmillMenu>> SAWMILL_MENU = unbound("SAWMILL_MENU");
 	public static Supplier<MenuType<PolymerizerMenu>> POLYMERIZER_MENU = unbound("POLYMERIZER_MENU");
 	public static Supplier<MenuType<VulcanizerMenu>> VULCANIZER_MENU = unbound("VULCANIZER_MENU");
+	public static Supplier<MenuType<GalvanicBathMenu>> GALVANIC_BATH_MENU = unbound("GALVANIC_BATH_MENU");
 	public static Supplier<MenuType<IncubatorMenu>> INCUBATOR_MENU = unbound("INCUBATOR_MENU");
 	public static Supplier<MenuType<BatteryBoxMenu>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");
 	/** Teleporter station screen (MOD-093): EU bar, owner, private/public toggle. */

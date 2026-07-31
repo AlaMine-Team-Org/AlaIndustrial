@@ -882,6 +882,44 @@
           ]
         },
         {
+          "id": "galvanic_bath",
+          "title": "Baño galvánico",
+          "icon": "alaindustrial:galvanic_bath",
+          "block_id": "alaindustrial:galvanic_bath",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Baño galvánico",
+              "text": "Máquina de galvanoplastia de BV: convierte fibra y polvo de plata en hilo de flujo en un baño de agua, la entrada a la línea de tela de flujo y la armadura EU."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Búfer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:silver_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:silver_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:silver_plate"
+              ],
+              "result_id": "alaindustrial:galvanic_bath",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electric_heater",
           "title": "Calentador eléctrico",
           "icon": "alaindustrial:electric_heater",
@@ -2089,6 +2127,45 @@
                 "minecraft:leather"
               ],
               "result_id": "alaindustrial:battery_pouch",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_chestplate",
+          "title": "Peto de flujo",
+          "icon": "alaindustrial:fluxweave_chestplate",
+          "block_id": "alaindustrial:fluxweave_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Peto de flujo",
+              "text": "El primer conjunto completo de armadura EU del mod: casco, peto, grebas y botas de tela de flujo; la carga activa utilidades sin desactivar nunca la protección."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 15000",
+                "Búfer: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_chestplate",
               "result_count": 1
             }
           ]

@@ -16,6 +16,7 @@ import dev.alaindustrial.block.IncubatorBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PumpBlock;
+import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.ElectricHeaterBlock;
@@ -311,6 +312,7 @@ public final class MachineTooltips {
 				|| block instanceof IncubatorBlock
 				|| block instanceof PumpBlock
 				|| block instanceof PolymerizerBlock
+				|| block instanceof GalvanicBathBlock
 				|| block instanceof VulcanizerBlock
 				|| block instanceof ElectricHeaterBlock
 				|| block instanceof BatteryBoxBlock
@@ -351,6 +353,9 @@ public final class MachineTooltips {
 		} else if (block instanceof PolymerizerBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.polymerizerDuration)));
+		} else if (block instanceof GalvanicBathBlock) {
+			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
+			lines.add(tt("duration_ticks", Config.scaledDuration(Config.galvanicBathDuration)));
 		} else if (block instanceof VulcanizerBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.vulcanizerDuration)));
@@ -425,6 +430,11 @@ public final class MachineTooltips {
 			lines.add(tt("buffer", Config.machineBuffer));
 			lines.add(tt("energy_per_op",
 					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.polymerizerDuration)));
+		} else if (block instanceof GalvanicBathBlock) {
+			lines.add(tier());
+			lines.add(tt("buffer", Config.machineBuffer));
+			lines.add(tt("energy_per_op",
+					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.galvanicBathDuration)));
 		} else if (block instanceof VulcanizerBlock) {
 			lines.add(tier());
 			lines.add(tt("buffer", Config.machineBuffer));

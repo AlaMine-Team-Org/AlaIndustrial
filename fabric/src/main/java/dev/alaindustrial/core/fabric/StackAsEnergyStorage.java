@@ -63,7 +63,9 @@ public final class StackAsEnergyStorage implements EnergyStorage {
 			return new DelegatingEnergyStorage(new StackAsEnergyStorage(context),
 					() -> context.getItemVariant().isOf(startingItem) && context.getAmount() > 0);
 		}, ModItems.BATTERY_POUCH, ModItems.ENERGY_PACK, ModItems.ELECTRIC_DRILL, ModItems.ELECTROMAGNET,
-				ModItems.JETPACK);
+				ModItems.JETPACK,
+				ModItems.FLUXWEAVE_HELMET, ModItems.FLUXWEAVE_CHESTPLATE, ModItems.FLUXWEAVE_LEGGINGS,
+				ModItems.FLUXWEAVE_BOOTS);
 	}
 
 	@Override
@@ -74,7 +76,7 @@ public final class StackAsEnergyStorage implements EnergyStorage {
 	@Override
 	public long insert(long maxAmount, TransactionContext transaction) {
 		StoragePreconditions.notNegative(maxAmount);
-		// All three powered items are stacksTo(1). Refusing anything else keeps the "energy per item"
+		// Every powered item here is stacksTo(1). Refusing anything else keeps the "energy per item"
 		// arithmetic (and any dupe it could hide) out of the picture entirely.
 		if (context.getAmount() != 1) {
 			return 0L;

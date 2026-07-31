@@ -3,6 +3,7 @@ package dev.alaindustrial.item.energy;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.MagnetItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
+import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
 import dev.alaindustrial.item.wearable.JetpackItem;
 
 import dev.alaindustrial.Config;
@@ -49,6 +50,11 @@ public final class ItemEnergy {
 		if (stack.getItem() instanceof JetpackItem) {
 			return Config.jetpackBuffer;
 		}
+		// One branch for all four armour pieces (MOD-127): they share a buffer, and the class carries
+		// its ArmorType, so four classes would only mean four copies of this and of the hook below.
+		if (stack.getItem() instanceof FluxweaveArmorItem) {
+			return Config.fluxweaveBuffer;
+		}
 		return 0L;
 	}
 
@@ -72,6 +78,9 @@ public final class ItemEnergy {
 		}
 		if (stack.getItem() instanceof JetpackItem) {
 			return Config.jetpackInputRate;
+		}
+		if (stack.getItem() instanceof FluxweaveArmorItem) {
+			return Config.fluxweaveInputRate;
 		}
 		return 0L;
 	}
@@ -101,6 +110,11 @@ public final class ItemEnergy {
 		if (stack.getItem() instanceof JetpackItem) {
 			// Same contract as the pack: the worn model follows the charge from the single write point.
 			JetpackItem.refreshWornAsset(stack, clamped);
+		}
+		if (stack.getItem() instanceof FluxweaveArmorItem) {
+			// The armour swaps BOTH its worn asset and its attribute modifiers with the charge, so the
+			// active bonuses can never disagree with the number in the tooltip.
+			FluxweaveArmorItem.refreshWorn(stack, clamped);
 		}
 	}
 

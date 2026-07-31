@@ -16,6 +16,8 @@ import dev.alaindustrial.gametest.GeothermalLavaInputScenarios;
 import dev.alaindustrial.gametest.ElectricDrillScenarios;
 import dev.alaindustrial.gametest.MagnetScenarios;
 import dev.alaindustrial.gametest.OilScenarios;
+import dev.alaindustrial.gametest.FluxweaveArmorScenarios;
+import dev.alaindustrial.gametest.GalvanicBathScenarios;
 import dev.alaindustrial.gametest.PolymerizerScenarios;
 import dev.alaindustrial.gametest.VulcanizerScenarios;
 import dev.alaindustrial.gametest.MenuDataWidthScenarios;
@@ -765,6 +767,44 @@ public final class NeoForgeGameTests {
 		// silently inert on that loader alone.
 		registerTest(event, "polymerizer_oil_becomes_raw_rubber", 400, true,
 				PolymerizerScenarios::fun01OilBecomesRawRubber);
+		// Galvanic Bath (MOD-127, suite TC-BATH-001) — same loader-neutral bodies as the Fabric
+		// GalvanicBathGameTest suite. Two rules here are invisible to the recipe system: the fibre tag
+		// (string OR cotton must both work) and the water gate (water is not a recipe ingredient, so a
+		// dropped check would let the bath run on an empty tank).
+		registerTest(event, "galvanic_bath_string_becomes_flux_thread", 700, true,
+				GalvanicBathScenarios::fun01StringBecomesFluxThread);
+		registerTest(event, "galvanic_bath_cotton_becomes_flux_thread", 700, true,
+				GalvanicBathScenarios::fun02CottonBecomesFluxThread);
+		registerTest(event, "galvanic_bath_operation_debits_water", 700, true,
+				GalvanicBathScenarios::fun03OperationDebitsWater);
+		registerTest(event, "galvanic_bath_bucket_fills_tank", 60, true,
+				GalvanicBathScenarios::fun04BucketFillsTank);
+		registerTest(event, "galvanic_bath_dry_tank_blocks_work", 700, true,
+				GalvanicBathScenarios::con01DryTankBlocksWork);
+		registerTest(event, "galvanic_bath_partial_water_blocks_work", 700, true,
+				GalvanicBathScenarios::con02PartialWaterBlocksWork);
+		registerTest(event, "galvanic_bath_tank_refuses_extraction", 60, true,
+				GalvanicBathScenarios::con03TankRefusesExtraction);
+		registerTest(event, "galvanic_bath_tank_refuses_non_water", 60, true,
+				GalvanicBathScenarios::reg01TankRefusesNonWater);
+		// Fluxweave armour (MOD-127, suite TC-FLUX-001) — the same loader-neutral bodies as the Fabric
+		// FluxweaveArmorGameTest suite. The invariant worth the most here is REG01: the bonuses share a
+		// component with the material's own armour modifiers, so a rewrite that replaced instead of
+		// extended would leave a drained suit with no protection at all.
+		registerTest(event, "fluxweave_drained_set_keeps_base_protection", 60, true,
+				FluxweaveArmorScenarios::reg01DrainedSetKeepsBaseProtection);
+		registerTest(event, "fluxweave_charge_switches_bonuses_on", 60, true,
+				FluxweaveArmorScenarios::fun01ChargeSwitchesBonusesOn);
+		registerTest(event, "fluxweave_boots_soften_but_never_cancel_falls", 60, true,
+				FluxweaveArmorScenarios::con01BootsSoftenButNeverCancelFalls);
+		registerTest(event, "fluxweave_step_assist_is_opt_in", 60, true,
+				FluxweaveArmorScenarios::fun02StepAssistIsOptIn);
+		registerTest(event, "fluxweave_set_bonus_applies_once_per_second", 200, true,
+				FluxweaveArmorScenarios::con02SetBonusAppliesOncePerSecond);
+		registerTest(event, "fluxweave_dead_piece_breaks_the_set", 200, true,
+				FluxweaveArmorScenarios::con03DeadPieceBreaksTheSet);
+		registerTest(event, "fluxweave_worn_asset_follows_charge", 60, true,
+				FluxweaveArmorScenarios::reg02WornAssetFollowsCharge);
 		registerTest(event, "polymerizer_bucket_fills_tank", 60, true,
 				PolymerizerScenarios::fun02BucketFillsTank);
 		registerTest(event, "polymerizer_no_power_no_output", 400, true,

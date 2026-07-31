@@ -1,0 +1,10 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cloth": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:fluxweave_cloth" } ] } },
+    "has_circuit": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:electronic_circuit" } ] } },
+    "has_battery": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:battery" } ] } }
+  },
+  "requirements": [ [ "has_cloth" ], [ "has_circuit" ], [ "has_battery" ] ],
+  "rewards": { "recipes": [ "alaindustrial:fluxweave_leggings" ] }
+}

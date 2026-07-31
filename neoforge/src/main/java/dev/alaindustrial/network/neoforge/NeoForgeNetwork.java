@@ -3,6 +3,7 @@ package dev.alaindustrial.network.neoforge;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.TeleportFadePayload;
 import dev.alaindustrial.network.TeleportNoticePayload;
+import dev.alaindustrial.network.FluxweaveStepAssistPayload;
 import dev.alaindustrial.network.TeleportRenamePayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -54,5 +55,8 @@ public final class NeoForgeNetwork {
 		registrar.playToServer(TeleportRenamePayload.TYPE, TeleportRenamePayload.CODEC,
 				(payload, context) -> context.enqueueWork(
 						() -> TeleportRenamePayload.handle(payload, (ServerPlayer) context.player())));
+		registrar.playToServer(FluxweaveStepAssistPayload.TYPE, FluxweaveStepAssistPayload.CODEC,
+				(payload, context) -> context.enqueueWork(
+						() -> FluxweaveStepAssistPayload.handle(payload, (ServerPlayer) context.player())));
 	}
 }

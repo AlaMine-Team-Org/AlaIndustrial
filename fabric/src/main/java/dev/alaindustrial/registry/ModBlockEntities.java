@@ -9,6 +9,7 @@ import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
+import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
@@ -73,6 +74,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<SawmillBlockEntity> SAWMILL;
 	public static BlockEntityType<PolymerizerBlockEntity> POLYMERIZER;
 	public static BlockEntityType<VulcanizerBlockEntity> VULCANIZER;
+	public static BlockEntityType<GalvanicBathBlockEntity> GALVANIC_BATH;
 	public static BlockEntityType<ElectricHeaterBlockEntity> ELECTRIC_HEATER;
 	public static BlockEntityType<IncubatorBlockEntity> INCUBATOR;
 	public static BlockEntityType<PumpBlockEntity> PUMP;
@@ -125,6 +127,8 @@ public final class ModBlockEntities {
 				new BlockEntityType<>(PolymerizerBlockEntity::new, Set.of(ModBlocks.POLYMERIZER)));
 		VULCANIZER = register("vulcanizer",
 				new BlockEntityType<>(VulcanizerBlockEntity::new, Set.of(ModBlocks.VULCANIZER)));
+		GALVANIC_BATH = register("galvanic_bath",
+				new BlockEntityType<>(GalvanicBathBlockEntity::new, Set.of(ModBlocks.GALVANIC_BATH)));
 		ELECTRIC_HEATER = register("electric_heater",
 				new BlockEntityType<>(ElectricHeaterBlockEntity::new, Set.of(ModBlocks.ELECTRIC_HEATER)));
 		INCUBATOR = register("incubator",
@@ -172,6 +176,7 @@ public final class ModBlockEntities {
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),INCUBATOR);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),POLYMERIZER);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),VULCANIZER);
+			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GALVANIC_BATH);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ELECTRIC_HEATER);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),PUMP);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),WATER_MILL);
@@ -199,6 +204,7 @@ public final class ModBlockEntities {
 		ModContent.SAWMILL_BE = () -> SAWMILL;
 		ModContent.POLYMERIZER_BE = () -> POLYMERIZER;
 		ModContent.VULCANIZER_BE = () -> VULCANIZER;
+		ModContent.GALVANIC_BATH_BE = () -> GALVANIC_BATH;
 		ModContent.ELECTRIC_HEATER_BE = () -> ELECTRIC_HEATER;
 		ModContent.INCUBATOR_BE = () -> INCUBATOR;
 		ModContent.PUMP_BE = () -> PUMP;
@@ -218,6 +224,8 @@ public final class ModBlockEntities {
 		FluidStorage.SIDED.registerForBlockEntity((be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), PUMP);
 		FluidStorage.SIDED.registerForBlockEntity((be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), FLUID_TANK);
 		FluidStorage.SIDED.registerForBlockEntity((be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), POLYMERIZER);
+		FluidStorage.SIDED.registerForBlockEntity(
+				(be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), GALVANIC_BATH);
 	}
 
 	private static <T extends BlockEntity> BlockEntityType<T> register(String path, BlockEntityType<T> type) {

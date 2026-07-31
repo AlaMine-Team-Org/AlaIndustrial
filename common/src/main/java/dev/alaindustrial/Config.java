@@ -307,6 +307,32 @@ public final class Config {
 	/** Jetpack EU buffer — 1.5 Energy Packs. At {@link #jetpackEuPerTick} per tick of thrust this is
 	 * ~30 s of continuous flight; charging at the LV ceiling (32 EU/t) refills it in ~938 ticks (~47 s). */
 	public static int jetpackBuffer = 30_000;
+	// Fluxweave armour (MOD-127). Only EU numbers live here: defense/toughness/enchantability are built
+	// into ArmorMaterial at item-registration time, BEFORE the config file is read, so exposing those
+	// would be dead knobs. See ModArmorMaterials.
+	/** EU buffer of each Fluxweave piece — between the drill (10k) and the Energy Pack (20k). */
+	public static int fluxweaveBuffer = 15_000;
+	/** Max EU/t a Fluxweave piece accepts while charging in a slot (LV ceiling). */
+	public static int fluxweaveInputRate = 32;
+	/** EU/second a charged, worn piece burns to keep its bonuses on. 1 EU/s = ~4 h per full buffer. */
+	public static int fluxweaveUpkeepEuPerSecond = 1;
+	/** Boots: percent of fall damage absorbed while charged. Clamped to 90 in code — never a full cancel. */
+	public static int fluxweaveFallDamageReductionPercent = 50;
+	/** Leggings: percent added to run speed while charged. */
+	public static int fluxweaveRunSpeedPercent = 12;
+	/** Helmet: OXYGEN_BONUS levels while charged (Respiration's mechanic: 3 = ~75 % of air ticks skipped). */
+	public static int fluxweaveOxygenBonus = 3;
+	/** Helmet: percent added to water movement efficiency while charged (attribute caps at 100). */
+	public static int fluxweaveSwimEfficiency = 50;
+	/** Chestplate: extra armour toughness while charged. */
+	public static int fluxweaveChargedToughness = 2;
+	/** Chestplate: percent of knockback resisted while charged. */
+	public static int fluxweaveKnockbackResistance = 10;
+	/** Leggings: extra step height (in hundredths of a block) while charged AND the assist is toggled on.
+	 * 60 = +0.6, which takes the player from the vanilla 0.6 to 1.2 — a full block step. */
+	public static int fluxweaveStepHeightBonus = 60;
+	/** Set bonus: EU the helmet spends per half-heart healed at 4/4 while below full health. */
+	public static int fluxweaveRegenEuPerHeal = 200;
 	/** EU burned per tick the jetpack engine actually thrusts (jump held while airborne, charge left).
 	 * Matches the drill's per-block cost: a second of flight ≈ 20 mined blocks' worth of EU. */
 	public static int jetpackEuPerTick = 50;
@@ -341,6 +367,17 @@ public final class Config {
 	/** Vulcanizer (MOD-258): ticks per operation at 1.0 speed. The shipped recipe costs 400 EU, so at
 	 * the ordinary-machine rate of 2 EU/t the operation takes 200 ticks at every heat tier. */
 	public static int vulcanizerDuration = 200;
+	/** Galvanic Bath (MOD-127): fallback ticks per operation at 1.0 speed. The shipped recipe costs
+	 * 1000 EU, so at the ordinary-machine rate of 2 EU/t the operation takes 500 ticks (25 s) — by far
+	 * the slowest of the LV processing family, because plating silver onto fibre is the gate into the
+	 * Fluxweave line and its armour. */
+	public static int galvanicBathDuration = 500;
+	/** Galvanic Bath (MOD-127): mB of water one operation consumes from the internal tank. Deliberately
+	 * NOT part of the recipe JSON (no recipe family in the mod takes items and a fluid at once — see
+	 * GalvanicBathBlockEntity), so this is the one knob for the water price. 4000 mB = four buckets per
+	 * thread: the bath is meant to be thirsty, so a full 10-bucket tank yields only two threads and the
+	 * player is pushed to pipe water in from a pump rather than carry it. */
+	public static int galvanicBathWaterPerOp = 4000;
 	/** Electric Heater (MOD-258): EU/t spent only while a Vulcanizer directly above it advances.
 	 * Idle heating is free; the speed multiplier scales this rate together with processing duration. */
 	public static int electricHeaterEuPerTick = 2;
@@ -719,6 +756,28 @@ public final class Config {
 				() -> electricDrillInputRate, v -> electricDrillInputRate = v, 1),
 			new IntField("electricDrillTorchEuCost", "EU the drill spends to place a torch on right-click.",
 				() -> electricDrillTorchEuCost, v -> electricDrillTorchEuCost = v, 0),
+			new IntField("fluxweaveBuffer", "EU buffer of each Fluxweave armour piece.",
+				() -> fluxweaveBuffer, v -> fluxweaveBuffer = v, 1),
+			new IntField("fluxweaveInputRate", "Max EU/t a Fluxweave piece accepts while charging in a slot.",
+				() -> fluxweaveInputRate, v -> fluxweaveInputRate = v, 1),
+			new IntField("fluxweaveUpkeepEuPerSecond", "EU/second a charged, worn Fluxweave piece burns to keep its bonuses on.",
+				() -> fluxweaveUpkeepEuPerSecond, v -> fluxweaveUpkeepEuPerSecond = v, 0),
+			new IntField("fluxweaveFallDamageReductionPercent", "Percent of fall damage Fluxweave boots absorb while charged (clamped to 90 in code).",
+				() -> fluxweaveFallDamageReductionPercent, v -> fluxweaveFallDamageReductionPercent = v, 0),
+			new IntField("fluxweaveRunSpeedPercent", "Percent added to run speed by charged Fluxweave leggings.",
+				() -> fluxweaveRunSpeedPercent, v -> fluxweaveRunSpeedPercent = v, 0),
+			new IntField("fluxweaveOxygenBonus", "OXYGEN_BONUS levels granted by a charged Fluxweave helmet.",
+				() -> fluxweaveOxygenBonus, v -> fluxweaveOxygenBonus = v, 0),
+			new IntField("fluxweaveSwimEfficiency", "Percent of water movement efficiency granted by a charged Fluxweave helmet.",
+				() -> fluxweaveSwimEfficiency, v -> fluxweaveSwimEfficiency = v, 0),
+			new IntField("fluxweaveChargedToughness", "Extra armour toughness on a charged Fluxweave chestplate.",
+				() -> fluxweaveChargedToughness, v -> fluxweaveChargedToughness = v, 0),
+			new IntField("fluxweaveKnockbackResistance", "Percent of knockback resisted by a charged Fluxweave chestplate.",
+				() -> fluxweaveKnockbackResistance, v -> fluxweaveKnockbackResistance = v, 0),
+			new IntField("fluxweaveStepHeightBonus", "Extra step height (hundredths of a block) from charged Fluxweave leggings with the assist toggled on.",
+				() -> fluxweaveStepHeightBonus, v -> fluxweaveStepHeightBonus = v, 0),
+			new IntField("fluxweaveRegenEuPerHeal", "EU the Fluxweave helmet spends per half-heart healed by the 4/4 set bonus.",
+				() -> fluxweaveRegenEuPerHeal, v -> fluxweaveRegenEuPerHeal = v, 1),
 			new IntField("jetpackBuffer", "Jetpack EU buffer.",
 				() -> jetpackBuffer, v -> jetpackBuffer = v, 1),
 			new IntField("jetpackEuPerTick", "EU the jetpack burns per tick of thrust (jump held while airborne).",
@@ -790,6 +849,10 @@ public final class Config {
 				() -> polymerizerDuration, v -> polymerizerDuration = v, 1),
 			new IntField("vulcanizerDuration", "Fallback ticks a vulcanizer operation takes at 1.0 speed; shipped recipe energy 400 / machineEuPerTick 2 = 200.",
 				() -> vulcanizerDuration, v -> vulcanizerDuration = v, 1),
+			new IntField("galvanicBathDuration", "Fallback ticks a galvanic bath operation takes at 1.0 speed; shipped recipe energy 1000 / machineEuPerTick 2 = 500.",
+				() -> galvanicBathDuration, v -> galvanicBathDuration = v, 1),
+			new IntField("galvanicBathWaterPerOp", "mB of water a galvanic bath consumes per completed operation (not part of the recipe JSON).",
+				() -> galvanicBathWaterPerOp, v -> galvanicBathWaterPerOp = v, 1),
 			new IntField("electricHeaterEuPerTick", "EU/t an Electric Heater spends while the Vulcanizer directly above it advances; idle heater draws nothing.",
 				() -> electricHeaterEuPerTick, v -> electricHeaterEuPerTick = v, 1),
 			new IntField("ironFurnaceCookTime", "Ticks the (fuel-based) iron furnace takes to smelt one item. Vanilla furnace = 200.",

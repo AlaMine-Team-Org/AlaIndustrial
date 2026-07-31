@@ -6,6 +6,7 @@ import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.misc.MutationChipItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
+import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
 import dev.alaindustrial.item.fluid.FluidTankBlockItem;
 import dev.alaindustrial.item.tool.ScytheTier;
 import dev.alaindustrial.item.tool.ScytheTiers;
@@ -85,6 +86,12 @@ public final class ModItemsNeoForge {
 			ITEMS.registerItem("cotton_seeds", Item::new);
 	public static final DeferredItem<Item> COTTON_FIBER =
 			ITEMS.registerItem("cotton_fiber", Item::new);
+	// Fluxweave chain (MOD-127): silver-plated fibre, then the woven sheet. Both are plain crafting
+	// components — the EU buffer lives on the armor, not on the material.
+	public static final DeferredItem<Item> FLUX_THREAD =
+			ITEMS.registerItem("flux_thread", Item::new);
+	public static final DeferredItem<Item> FLUXWEAVE_CLOTH =
+			ITEMS.registerItem("fluxweave_cloth", Item::new);
 	public static final DeferredItem<Item> UNSTABLE_ISOTOPE =
 			ITEMS.registerItem("unstable_isotope", Item::new);
 	// Rotor / wheel (MOD-189): durability components — wear shows as a vanilla durability bar and, being
@@ -140,6 +147,19 @@ public final class ModItemsNeoForge {
 			ITEMS.registerItem("tempered_iron_leggings", Item::new, ItemBuildersNeoForge.temperedArmor(ArmorType.LEGGINGS));
 	public static final DeferredItem<Item> TEMPERED_IRON_BOOTS =
 			ITEMS.registerItem("tempered_iron_boots", Item::new, ItemBuildersNeoForge.temperedArmor(ArmorType.BOOTS));
+	// Fluxweave armour (MOD-127): concrete type is FluxweaveArmorItem so it carries its ArmorType.
+	public static final DeferredItem<Item> FLUXWEAVE_HELMET =
+			ITEMS.registerItem("fluxweave_helmet", p -> new FluxweaveArmorItem(p, ArmorType.HELMET),
+					ItemBuildersNeoForge.fluxweaveArmor(ArmorType.HELMET));
+	public static final DeferredItem<Item> FLUXWEAVE_CHESTPLATE =
+			ITEMS.registerItem("fluxweave_chestplate", p -> new FluxweaveArmorItem(p, ArmorType.CHESTPLATE),
+					ItemBuildersNeoForge.fluxweaveArmor(ArmorType.CHESTPLATE));
+	public static final DeferredItem<Item> FLUXWEAVE_LEGGINGS =
+			ITEMS.registerItem("fluxweave_leggings", p -> new FluxweaveArmorItem(p, ArmorType.LEGGINGS),
+					ItemBuildersNeoForge.fluxweaveArmor(ArmorType.LEGGINGS));
+	public static final DeferredItem<Item> FLUXWEAVE_BOOTS =
+			ITEMS.registerItem("fluxweave_boots", p -> new FluxweaveArmorItem(p, ArmorType.BOOTS),
+					ItemBuildersNeoForge.fluxweaveArmor(ArmorType.BOOTS));
 	public static final DeferredItem<Item> IRON_DUST = ITEMS.registerItem("iron_dust", Item::new);
 	public static final DeferredItem<Item> COPPER_DUST = ITEMS.registerItem("copper_dust", Item::new);
 	public static final DeferredItem<Item> GOLD_DUST = ITEMS.registerItem("gold_dust", Item::new);
@@ -288,6 +308,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("polymerizer", ModBlocksNeoForge.POLYMERIZER);
 	public static final DeferredItem<BlockItem> VULCANIZER_ITEM =
 			ITEMS.registerSimpleBlockItem("vulcanizer", ModBlocksNeoForge.VULCANIZER);
+	public static final DeferredItem<BlockItem> GALVANIC_BATH_ITEM =
+			ITEMS.registerSimpleBlockItem("galvanic_bath", ModBlocksNeoForge.GALVANIC_BATH);
 	public static final DeferredItem<BlockItem> ELECTRIC_HEATER_ITEM =
 			ITEMS.registerSimpleBlockItem("electric_heater", ModBlocksNeoForge.ELECTRIC_HEATER);
 	public static final DeferredItem<BlockItem> INCUBATOR_ITEM =
@@ -483,6 +505,7 @@ public final class ModItemsNeoForge {
 		ModContent.SAWMILL_ITEM = SAWMILL_ITEM;
 		ModContent.POLYMERIZER_ITEM = POLYMERIZER_ITEM;
 		ModContent.VULCANIZER_ITEM = VULCANIZER_ITEM;
+		ModContent.GALVANIC_BATH_ITEM = GALVANIC_BATH_ITEM;
 		ModContent.ELECTRIC_HEATER_ITEM = ELECTRIC_HEATER_ITEM;
 		ModContent.INCUBATOR_ITEM = INCUBATOR_ITEM;
 		ModContent.TRELLIS_ITEM = TRELLIS_ITEM;
@@ -497,6 +520,12 @@ public final class ModItemsNeoForge {
 		ModContent.RAW_RUBBER = RAW_RUBBER::get;
 		ModContent.COTTON_SEEDS = COTTON_SEEDS::get;
 		ModContent.COTTON_FIBER = COTTON_FIBER::get;
+		ModContent.FLUX_THREAD = FLUX_THREAD::get;
+		ModContent.FLUXWEAVE_CLOTH = FLUXWEAVE_CLOTH::get;
+		ModContent.FLUXWEAVE_HELMET = FLUXWEAVE_HELMET::get;
+		ModContent.FLUXWEAVE_CHESTPLATE = FLUXWEAVE_CHESTPLATE::get;
+		ModContent.FLUXWEAVE_LEGGINGS = FLUXWEAVE_LEGGINGS::get;
+		ModContent.FLUXWEAVE_BOOTS = FLUXWEAVE_BOOTS::get;
 		ModContent.RUBBER = RUBBER::get;
 		ModContent.UNSTABLE_ISOTOPE = UNSTABLE_ISOTOPE;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = GEOTHERMAL_GENERATOR_ITEM;

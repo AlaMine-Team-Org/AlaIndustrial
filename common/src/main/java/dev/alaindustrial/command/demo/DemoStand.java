@@ -4,6 +4,7 @@ import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
+import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.registry.ModContent;
@@ -256,6 +257,21 @@ public final class DemoStand {
 				new ItemStack(ModContent.RAW_RUBBER.get(), 64));
 		fillSlot(level, origin, 26, 2, 10, VulcanizerBlockEntity.SULFUR_SLOT,
 				new ItemStack(ModContent.SULFUR_DUST.get(), 64));
+		// Galvanic Bath (MOD-127): like the polymerizer its feedstock is a fluid, so the tank is stocked
+		// directly rather than through a bucket — one bucket would buy four operations and then the stand
+		// would show an idle machine. Both item inputs are filled so it plates continuously.
+		set(level, origin, 29, 1, 10, ModContent.GALVANIC_BATH.get());
+		chargeBuffer(level, origin, 29, 1, 10);
+		fillSlot(level, origin, 29, 1, 10, GalvanicBathBlockEntity.FIBER_SLOT,
+				new ItemStack(Items.STRING, 64));
+		fillSlot(level, origin, 29, 1, 10, GalvanicBathBlockEntity.SILVER_SLOT,
+				new ItemStack(ModContent.SILVER_DUST.get(), 64));
+		if (level.getBlockEntity(origin.offset(29, 1, 10)) instanceof GalvanicBathBlockEntity bath) {
+			bath.fluidTank.fluid = FluidHolder.of(net.minecraft.world.level.material.Fluids.WATER);
+			bath.fluidTank.amount = GalvanicBathBlockEntity.TANK_CAPACITY;
+			bath.markDirtyAndSync();
+			bath.wake();
+		}
 		// Iron furnace (MOD-115): fuel-burning, not EU — so it is loaded with input + coal instead of a
 		// pre-charged buffer, and lights itself on the first tick like a vanilla furnace.
 		set(level, origin, 14, 1, 10, ModContent.IRON_FURNACE.get());

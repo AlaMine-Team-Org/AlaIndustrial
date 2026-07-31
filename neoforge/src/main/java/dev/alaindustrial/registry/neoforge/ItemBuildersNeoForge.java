@@ -5,6 +5,7 @@ import dev.alaindustrial.item.fluid.FluidTankBlockItem;
 import dev.alaindustrial.item.misc.HintItem;
 import dev.alaindustrial.item.misc.ItemPipeBlockItem;
 import dev.alaindustrial.item.material.ModArmorMaterials;
+import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
 import dev.alaindustrial.item.misc.StockDisplayFrameItem;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
@@ -56,6 +57,13 @@ final class ItemBuildersNeoForge {
 	// exactly how vanilla Items.IRON_HELMET is built. Each piece stays `registerItem(name, Item::new, op)`.
 	static UnaryOperator<Item.Properties> temperedArmor(ArmorType type) {
 		return p -> p.humanoidArmor(ModArmorMaterials.TEMPERED_IRON, type);
+	}
+
+	// --- Fluxweave armour (MOD-127) ---
+	// Unlike tempered iron this one also seeds the charge-driven layer: the drained EQUIPPABLE (with
+	// setDamageOnHurt(false)) and the uncharged attribute set. FluxweaveArmorItem swaps both as EU moves.
+	static UnaryOperator<Item.Properties> fluxweaveArmor(ArmorType type) {
+		return p -> FluxweaveArmorItem.equipmentProperties(p, type);
 	}
 
 	// --- Spawning / entity-bound ---

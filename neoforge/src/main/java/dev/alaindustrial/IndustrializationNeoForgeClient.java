@@ -161,7 +161,8 @@ public final class IndustrializationNeoForgeClient {
 		modBus.addListener((RegisterKeyMappingsEvent event) -> {
 			event.register(ModKeyMappings.TOGGLE_ENERGY_HUD);
 			event.register(ModKeyMappings.TOGGLE_DRILL_HUD);
-			event.register(ModKeyMappings.OPEN_PROFILE); // MOD-133 player dashboard
+			event.register(ModKeyMappings.OPEN_PROFILE);
+			event.register(ModKeyMappings.TOGGLE_STEP_ASSIST); // MOD-133 player dashboard
 		});
 		modBus.addListener((RegisterGuiLayersEvent event) -> {
 			// Teleport screen fade (MOD-106) — counterpart to the Fabric HudElementRegistry entry; the

@@ -26,6 +26,7 @@ import dev.alaindustrial.block.GoldChestBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
+import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.ElectricHeaterBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.FluidTankBlock;
@@ -94,6 +95,8 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("polymerizer", PolymerizerBlock::new, props("polymerizer"));
 	public static final DeferredBlock<VulcanizerBlock> VULCANIZER =
 			BLOCKS.registerBlock("vulcanizer", VulcanizerBlock::new, props("vulcanizer"));
+	public static final DeferredBlock<GalvanicBathBlock> GALVANIC_BATH =
+			BLOCKS.registerBlock("galvanic_bath", GalvanicBathBlock::new, props("galvanic_bath"));
 	public static final DeferredBlock<ElectricHeaterBlock> ELECTRIC_HEATER =
 			BLOCKS.registerBlock("electric_heater", ElectricHeaterBlock::new, props("electric_heater"));
 	public static final DeferredBlock<IncubatorBlock> INCUBATOR =
@@ -244,6 +247,7 @@ public final class ModBlocksNeoForge {
 		ModContent.SAWMILL = SAWMILL::get;
 		ModContent.POLYMERIZER = POLYMERIZER::get;
 		ModContent.VULCANIZER = VULCANIZER::get;
+		ModContent.GALVANIC_BATH = GALVANIC_BATH::get;
 		ModContent.ELECTRIC_HEATER = ELECTRIC_HEATER::get;
 		ModContent.INCUBATOR = INCUBATOR::get;
 		ModContent.INCUBATOR_DOME = INCUBATOR_DOME::get;

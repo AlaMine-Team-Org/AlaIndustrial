@@ -151,7 +151,8 @@ public class IndustrializationClient implements ClientModInitializer {
 		// GuiLayer take the same (GuiGraphicsExtractor, DeltaTracker) pair.
 		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_ENERGY_HUD);
 		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_DRILL_HUD);
-		KeyMappingHelper.registerKeyMapping(ModKeyMappings.OPEN_PROFILE); // MOD-133 player dashboard
+		KeyMappingHelper.registerKeyMapping(ModKeyMappings.OPEN_PROFILE);
+		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_STEP_ASSIST); // MOD-133 player dashboard
 		ClientTickEvents.END_CLIENT_TICK.register(client -> ModKeyMappings.handleInput());
 		// Jetpack thrust/glide (MOD-148) — player motion is client-authoritative, so the velocity
 		// change lives in this end-of-tick step; the server burns the EU on its own input view.

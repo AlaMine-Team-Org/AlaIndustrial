@@ -1,0 +1,19 @@
+{
+	"layers": {
+		"humanoid": [
+			{
+				"texture": "alaindustrial:fluxweave"
+			}
+		],
+		"humanoid_baby": [
+			{
+				"texture": "alaindustrial:fluxweave"
+			}
+		],
+		"humanoid_leggings": [
+			{
+				"texture": "alaindustrial:fluxweave"
+			}
+		]
+	}
+}

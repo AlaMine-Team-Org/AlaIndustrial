@@ -24,6 +24,7 @@ import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
+import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.ElectricHeaterBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.FluidTankBlock;
@@ -166,6 +167,9 @@ public final class ModBlocks {
 	public static final Block POLYMERIZER = register(POLYMERIZER_KEY, new PolymerizerBlock(props(POLYMERIZER_KEY)));
 	public static final ResourceKey<Block> VULCANIZER_KEY = key("vulcanizer");
 	public static final Block VULCANIZER = register(VULCANIZER_KEY, new VulcanizerBlock(props(VULCANIZER_KEY)));
+	public static final ResourceKey<Block> GALVANIC_BATH_KEY = key("galvanic_bath");
+	public static final Block GALVANIC_BATH =
+			register(GALVANIC_BATH_KEY, new GalvanicBathBlock(props(GALVANIC_BATH_KEY)));
 	public static final ResourceKey<Block> ELECTRIC_HEATER_KEY = key("electric_heater");
 	public static final Block ELECTRIC_HEATER =
 			register(ELECTRIC_HEATER_KEY, new ElectricHeaterBlock(props(ELECTRIC_HEATER_KEY)));
@@ -328,6 +332,7 @@ public final class ModBlocks {
 		ModContent.SAWMILL = () -> SAWMILL;
 		ModContent.POLYMERIZER = () -> POLYMERIZER;
 		ModContent.VULCANIZER = () -> VULCANIZER;
+		ModContent.GALVANIC_BATH = () -> GALVANIC_BATH;
 		ModContent.ELECTRIC_HEATER = () -> ELECTRIC_HEATER;
 		ModContent.INCUBATOR = () -> INCUBATOR;
 		ModContent.INCUBATOR_DOME = () -> INCUBATOR_DOME;

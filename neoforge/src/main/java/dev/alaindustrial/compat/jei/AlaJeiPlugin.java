@@ -54,6 +54,7 @@ public final class AlaJeiPlugin implements IModPlugin {
 			machine(ModRecipes.COMPRESSING, ModBlocksNeoForge.COMPRESSOR::get),
 			machine(ModRecipes.EXTRACTING, ModBlocksNeoForge.EXTRACTOR::get),
 			machine(ModRecipes.VULCANIZING, ModBlocksNeoForge.VULCANIZER::get),
+			machine(ModRecipes.GALVANIC_BATH, ModBlocksNeoForge.GALVANIC_BATH::get),
 			// Sawmill (MOD-150): four mode families, all worked at the same sawmill block.
 			machine(ModRecipes.SAWING_PLANKS, ModBlocksNeoForge.SAWMILL::get),
 			machine(ModRecipes.SAWING_STICKS, ModBlocksNeoForge.SAWMILL::get),

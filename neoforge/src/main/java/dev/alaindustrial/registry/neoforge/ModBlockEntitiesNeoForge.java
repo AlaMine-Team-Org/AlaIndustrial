@@ -9,6 +9,7 @@ import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
+import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
@@ -100,6 +101,9 @@ public final class ModBlockEntitiesNeoForge {
 			register("polymerizer", PolymerizerBlockEntity::new, ModBlocksNeoForge.POLYMERIZER);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VulcanizerBlockEntity>> VULCANIZER =
 			register("vulcanizer", VulcanizerBlockEntity::new, ModBlocksNeoForge.VULCANIZER);
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GalvanicBathBlockEntity>>
+			GALVANIC_BATH = register("galvanic_bath", GalvanicBathBlockEntity::new,
+					ModBlocksNeoForge.GALVANIC_BATH);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectricHeaterBlockEntity>> ELECTRIC_HEATER =
 			register("electric_heater", ElectricHeaterBlockEntity::new, ModBlocksNeoForge.ELECTRIC_HEATER);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IncubatorBlockEntity>> INCUBATOR =
@@ -159,6 +163,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.SAWMILL_BE = SAWMILL::get;
 		ModContent.POLYMERIZER_BE = POLYMERIZER::get;
 		ModContent.VULCANIZER_BE = VULCANIZER::get;
+		ModContent.GALVANIC_BATH_BE = GALVANIC_BATH::get;
 		ModContent.ELECTRIC_HEATER_BE = ELECTRIC_HEATER::get;
 		ModContent.INCUBATOR_BE = INCUBATOR::get;
 		ModContent.GEOTHERMAL_GENERATOR_BE = GEOTHERMAL_GENERATOR::get;

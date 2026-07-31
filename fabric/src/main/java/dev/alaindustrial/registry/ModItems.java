@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
+import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
 import dev.alaindustrial.item.wearable.JetpackItem;
 import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.item.misc.HintItem;
@@ -81,6 +82,10 @@ public final class ModItems {
 	// stays a plain Item — no BlockItem/ItemNameBlockItem), the fibre is the harvest.
 	public static final Item COTTON_SEEDS = item("cotton_seeds");
 	public static final Item COTTON_FIBER = item("cotton_fiber");
+	// Fluxweave chain (MOD-127): silver-plated fibre, then the woven sheet. Both are plain crafting
+	// components — the EU buffer lives on the armor, not on the material.
+	public static final Item FLUX_THREAD = item("flux_thread");
+	public static final Item FLUXWEAVE_CLOTH = item("fluxweave_cloth");
 	public static final Item UNSTABLE_ISOTOPE = item("unstable_isotope");
 	public static final Item MUTE_CHIP = hintItem("mute_chip");
 	// Rotor / wheel (MOD-189): durability components — wear shows as a vanilla durability bar and, being
@@ -119,6 +124,16 @@ public final class ModItems {
 			temperedArmor("tempered_iron_leggings", ArmorType.LEGGINGS);
 	public static final Item TEMPERED_IRON_BOOTS =
 			temperedArmor("tempered_iron_boots", ArmorType.BOOTS);
+	// Fluxweave armour (MOD-127): humanoidArmor gives it ordinary armour stats; FluxweaveArmorItem
+	// layers the charge-driven worn asset and bonus attributes on top of that.
+	public static final Item FLUXWEAVE_HELMET =
+			fluxweaveArmor("fluxweave_helmet", ArmorType.HELMET);
+	public static final Item FLUXWEAVE_CHESTPLATE =
+			fluxweaveArmor("fluxweave_chestplate", ArmorType.CHESTPLATE);
+	public static final Item FLUXWEAVE_LEGGINGS =
+			fluxweaveArmor("fluxweave_leggings", ArmorType.LEGGINGS);
+	public static final Item FLUXWEAVE_BOOTS =
+			fluxweaveArmor("fluxweave_boots", ArmorType.BOOTS);
 	public static final Item IRON_DUST = item("iron_dust");
 	public static final Item COPPER_DUST = item("copper_dust");
 	public static final Item GOLD_DUST = item("gold_dust");
@@ -217,6 +232,8 @@ public final class ModItems {
 	public static final BlockItem SAWMILL_ITEM = blockItem("sawmill", ModBlocks.SAWMILL);
 	public static final BlockItem POLYMERIZER_ITEM = blockItem("polymerizer", ModBlocks.POLYMERIZER);
 	public static final BlockItem VULCANIZER_ITEM = blockItem("vulcanizer", ModBlocks.VULCANIZER);
+	public static final BlockItem GALVANIC_BATH_ITEM =
+			blockItem("galvanic_bath", ModBlocks.GALVANIC_BATH);
 	public static final BlockItem ELECTRIC_HEATER_ITEM = blockItem("electric_heater", ModBlocks.ELECTRIC_HEATER);
 	public static final BlockItem INCUBATOR_ITEM = blockItem("incubator", ModBlocks.INCUBATOR);
 	public static final BlockItem TRELLIS_ITEM = blockItem("trellis", ModBlocks.TRELLIS);
@@ -411,6 +428,14 @@ public final class ModItems {
 	// (type.getDurability(material.durability())), attributes, enchantability, the EQUIPPABLE
 	// component (equip sound + asset id from the material) and the repair tag in one call — this
 	// is exactly how vanilla Items.IRON_HELMET is built (javap-verified against the 26.2 jar).
+	// Fluxweave armour helper (MOD-127). Same shape as temperedArmor, but the concrete type is
+	// FluxweaveArmorItem so the piece can carry its ArmorType and rewrite its own components as EU changes.
+	private static Item fluxweaveArmor(String path, ArmorType type) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key, new FluxweaveArmorItem(
+				FluxweaveArmorItem.equipmentProperties(new Item.Properties().setId(key), type), type));
+	}
+
 	private static Item temperedArmor(String path, ArmorType type) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
@@ -657,6 +682,7 @@ public final class ModItems {
 		ModContent.SAWMILL_ITEM = () -> SAWMILL_ITEM;
 		ModContent.POLYMERIZER_ITEM = () -> POLYMERIZER_ITEM;
 		ModContent.VULCANIZER_ITEM = () -> VULCANIZER_ITEM;
+		ModContent.GALVANIC_BATH_ITEM = () -> GALVANIC_BATH_ITEM;
 		ModContent.ELECTRIC_HEATER_ITEM = () -> ELECTRIC_HEATER_ITEM;
 		ModContent.INCUBATOR_ITEM = () -> INCUBATOR_ITEM;
 		ModContent.TRELLIS_ITEM = () -> TRELLIS_ITEM;
@@ -671,6 +697,12 @@ public final class ModItems {
 		ModContent.RAW_RUBBER = () -> RAW_RUBBER;
 		ModContent.COTTON_SEEDS = () -> COTTON_SEEDS;
 		ModContent.COTTON_FIBER = () -> COTTON_FIBER;
+		ModContent.FLUX_THREAD = () -> FLUX_THREAD;
+		ModContent.FLUXWEAVE_CLOTH = () -> FLUXWEAVE_CLOTH;
+		ModContent.FLUXWEAVE_HELMET = () -> FLUXWEAVE_HELMET;
+		ModContent.FLUXWEAVE_CHESTPLATE = () -> FLUXWEAVE_CHESTPLATE;
+		ModContent.FLUXWEAVE_LEGGINGS = () -> FLUXWEAVE_LEGGINGS;
+		ModContent.FLUXWEAVE_BOOTS = () -> FLUXWEAVE_BOOTS;
 		ModContent.RUBBER = () -> RUBBER;
 		ModContent.UNSTABLE_ISOTOPE = () -> UNSTABLE_ISOTOPE;
 		ModContent.PUMP_ITEM = () -> PUMP_ITEM;

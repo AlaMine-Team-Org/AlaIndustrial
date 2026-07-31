@@ -148,6 +148,8 @@ public class IndustrializationFabric implements ModInitializer {
 				ModDataComponents.TELEPORTER_PRIVATE_ID, ModDataComponents.createTeleporterPrivate());
 		ModDataComponents.MAGNET_ENABLED = registerDataComponent(
 				ModDataComponents.MAGNET_ENABLED_ID, ModDataComponents.createMagnetEnabled());
+		ModDataComponents.STEP_ASSIST_ENABLED = registerDataComponent(
+				ModDataComponents.STEP_ASSIST_ENABLED_ID, ModDataComponents.createStepAssistEnabled());
 		ModDataComponents.MUTATION_GRADE = registerDataComponent(
 				ModDataComponents.MUTATION_GRADE_ID, ModDataComponents.createMutationGrade());
 		ModDataComponents.TELEPORTER_OWNER = registerDataComponent(
@@ -324,6 +326,13 @@ public class IndustrializationFabric implements ModInitializer {
 				dev.alaindustrial.network.TeleportRenamePayload.TYPE,
 				(payload, context) -> context.server().execute(
 						() -> dev.alaindustrial.network.TeleportRenamePayload.handle(payload, context.player())));
+		PayloadTypeRegistry.serverboundPlay().register(
+				dev.alaindustrial.network.FluxweaveStepAssistPayload.TYPE,
+				dev.alaindustrial.network.FluxweaveStepAssistPayload.CODEC);
+		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(
+				dev.alaindustrial.network.FluxweaveStepAssistPayload.TYPE,
+				(payload, context) -> context.server().execute(
+						() -> dev.alaindustrial.network.FluxweaveStepAssistPayload.handle(payload, context.player())));
 	}
 
 	/**

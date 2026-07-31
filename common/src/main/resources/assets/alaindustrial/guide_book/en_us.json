@@ -882,6 +882,44 @@
           ]
         },
         {
+          "id": "galvanic_bath",
+          "title": "Galvanic Bath",
+          "icon": "alaindustrial:galvanic_bath",
+          "block_id": "alaindustrial:galvanic_bath",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Galvanic Bath",
+              "text": "An LV electroplating machine: it turns fibre and silver dust into flux thread in a water bath — the way into the Fluxweave line and the EU armour."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:silver_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:silver_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:silver_plate"
+              ],
+              "result_id": "alaindustrial:galvanic_bath",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electric_heater",
           "title": "Electric Heater",
           "icon": "alaindustrial:electric_heater",
@@ -2089,6 +2127,45 @@
                 "minecraft:leather"
               ],
               "result_id": "alaindustrial:battery_pouch",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_chestplate",
+          "title": "Fluxweave Chestplate",
+          "icon": "alaindustrial:fluxweave_chestplate",
+          "block_id": "alaindustrial:fluxweave_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fluxweave Chestplate",
+              "text": "The mod's first full EU armour set — Fluxweave helmet, chestplate, leggings and boots; charge switches on a utility kit without ever switching protection off."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 15000",
+                "Buffer: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_chestplate",
               "result_count": 1
             }
           ]

@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"key": {
+		"F": "alaindustrial:fluxweave_cloth",
+		"E": "alaindustrial:electronic_circuit",
+		"B": "alaindustrial:battery",
+		"T": "alaindustrial:tempered_iron"
+	},
+	"pattern": [
+		"TET",
+		"FBF"
+	],
+	"result": {
+		"id": "alaindustrial:fluxweave_boots",
+		"count": 1
+	}
+}

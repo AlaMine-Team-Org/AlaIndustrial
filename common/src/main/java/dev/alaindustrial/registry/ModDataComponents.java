@@ -49,6 +49,7 @@ public final class ModDataComponents {
 	public static final Identifier TELEPORTER_POINTS_ID = Industrialization.id("teleporter_points");
 	public static final Identifier FLUID_TANK_CONTENTS_ID = Industrialization.id("fluid_tank_contents");
 	public static final Identifier MAGNET_ENABLED_ID = Industrialization.id("magnet_enabled");
+	public static final Identifier STEP_ASSIST_ENABLED_ID = Industrialization.id("step_assist_enabled");
 
 	/** Rarity grade rolled by the incubator on a successful mutation (MOD-118). */
 	public static final Identifier MUTATION_GRADE_ID = Industrialization.id("mutation_grade");
@@ -140,6 +141,27 @@ public final class ModDataComponents {
 
 	/** Build the {@code magnet_enabled} type both loaders register (MOD-132). */
 	public static DataComponentType<Boolean> createMagnetEnabled() {
+		return DataComponentType.<Boolean>builder()
+				.persistent(Codec.BOOL)
+				.networkSynchronized(ByteBufCodecs.BOOL)
+				.build();
+	}
+
+	/**
+	 * Whether the wearer has switched the Fluxweave leggings' step assist on (MOD-127). Absent means
+	 * <b>off</b> — the inverse of {@link #MAGNET_ENABLED}, because auto-stepping changes how movement
+	 * feels and not everyone wants it, so it stays off until the player asks for it.
+	 *
+	 * <p>The flag lives on the stack rather than on the player: persistence is then free, it travels
+	 * with the trousers, and neither loader needs a per-player storage mechanism. Read/written only via
+	 * {@link dev.alaindustrial.item.wearable.FluxweaveArmorItem}.
+	 */
+	public static Supplier<DataComponentType<Boolean>> STEP_ASSIST_ENABLED = () -> {
+		throw new IllegalStateException("ModDataComponents.STEP_ASSIST_ENABLED read before its loader bound it");
+	};
+
+	/** Build the {@code step_assist_enabled} type both loaders register (MOD-127). */
+	public static DataComponentType<Boolean> createStepAssistEnabled() {
 		return DataComponentType.<Boolean>builder()
 				.persistent(Codec.BOOL)
 				.networkSynchronized(ByteBufCodecs.BOOL)

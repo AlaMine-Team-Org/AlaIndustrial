@@ -78,6 +78,40 @@ public final class ModArmorMaterials {
 			TEMPERED_IRON_ASSET);                     // assetId — mod-owned worn textures
 
 	/**
+	 * Visual asset key for charged Fluxweave armor (MOD-127) — the gold conductor tracks are lit. The
+	 * drained look lives in {@code FluxweaveArmorItem.FLUXWEAVE_OFF_ASSET}; this one is the material's
+	 * declared asset, so a piece that never passes through {@code ItemEnergy.set} still renders sanely.
+	 */
+	public static final ResourceKey<EquipmentAsset> FLUXWEAVE_ASSET =
+			ResourceKey.create(EquipmentAssets.ROOT_ID, Industrialization.id("fluxweave"));
+
+	/**
+	 * Fluxweave — the mod's first full EU armour set (MOD-127): silver-plated spider silk (or cotton)
+	 * woven into cloth. Deliberately <b>not</b> a tank. Defense sits at the vanilla iron line, and what
+	 * the player actually buys is the utility layer the charge switches on (breathing, swim and run
+	 * speed, a toggleable step assist, softened falls) — see
+	 * {@link dev.alaindustrial.item.wearable.FluxweaveArmorItem}.
+	 *
+	 * <p>Durability is wired by {@code humanoidArmor(...)} and then never spent: the item's EQUIPPABLE
+	 * is rewritten with {@code setDamageOnHurt(false)}, so the bar in the inventory shows EU instead and
+	 * the suit cannot break. The number below therefore only matters to the anvil.
+	 *
+	 * <p>Enchantability is high (18, above tempered iron's 12): the cloth is thin and conductive rather
+	 * than thick plate, so enchanting is the intended way to make it survivable.
+	 *
+	 * <p>Repair tag: {@code alaindustrial:fluxweave_armor_materials} → {@code alaindustrial:fluxweave_cloth}.
+	 */
+	public static final ArmorMaterial FLUXWEAVE = new ArmorMaterial(
+			15,                                     // durability factor (never consumed; anvil only)
+			makeDefense(2, 6, 5, 2),                // helmet/chest/legs/boots — the iron line
+			18,                                     // enchantmentValue (tempered iron: 12)
+			SoundEvents.ARMOR_EQUIP_LEATHER,        // cloth, not plate
+			1.0f,                                   // toughness
+			0.0f,                                   // knockbackResistance (the chestplate adds its own when charged)
+			tagKey("fluxweave_armor_materials"),    // repairIngredient
+			FLUXWEAVE_ASSET);
+
+	/**
 	 * Build the per-slot defense map the way vanilla {@code ArmorMaterials.makeDefense(...)} does,
 	 * minus the {@code body} slot (only wolf/animal armor uses it). Order: helmet, chestplate,
 	 * leggings, boots — matching {@link ArmorType} ordinals.

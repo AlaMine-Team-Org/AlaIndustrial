@@ -432,6 +432,7 @@ public final class IndustrializationNeoForge {
 					ModBlockEntitiesNeoForge.COMPRESSOR,
 					ModBlockEntitiesNeoForge.SAWMILL,
 					ModBlockEntitiesNeoForge.POLYMERIZER,
+					ModBlockEntitiesNeoForge.GALVANIC_BATH,
 					ModBlockEntitiesNeoForge.VULCANIZER,
 					ModBlockEntitiesNeoForge.ELECTRIC_HEATER,
 					ModBlockEntitiesNeoForge.INCUBATOR,
@@ -457,6 +458,7 @@ public final class IndustrializationNeoForge {
 		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.PUMP);
 		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.FLUID_TANK);
 		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.POLYMERIZER);
+		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.GALVANIC_BATH);
 
 		// MOD-104: publish transactional, side-aware item views for mod containers. This is required
 		// because a vanilla Container is not automatically a 26.2 ResourceHandler on NeoForge.
@@ -469,6 +471,7 @@ public final class IndustrializationNeoForge {
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.COMPRESSOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SAWMILL);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.POLYMERIZER);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GALVANIC_BATH);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.VULCANIZER);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.INCUBATOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR);
@@ -506,7 +509,9 @@ public final class IndustrializationNeoForge {
 				(stack, access) -> new dev.alaindustrial.core.neoforge.StackAsEnergyHandler(access),
 				ModItemsNeoForge.BATTERY_POUCH.get(), ModItemsNeoForge.ENERGY_PACK.get(),
 				ModItemsNeoForge.ELECTRIC_DRILL.get(), ModItemsNeoForge.ELECTROMAGNET.get(),
-				ModItemsNeoForge.JETPACK.get());
+				ModItemsNeoForge.JETPACK.get(),
+				ModItemsNeoForge.FLUXWEAVE_HELMET.get(), ModItemsNeoForge.FLUXWEAVE_CHESTPLATE.get(),
+				ModItemsNeoForge.FLUXWEAVE_LEGGINGS.get(), ModItemsNeoForge.FLUXWEAVE_BOOTS.get());
 
 		// MOD-084/MOD-242: the fake "other mod" energy item (ForeignEnergyItemStandIn) is registered by
 		// NeoForgeGameTestBootstrap via its own RegisterCapabilitiesEvent listener — gametest source

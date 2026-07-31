@@ -1,13 +1,15 @@
-## 0.1.58
+## 0.1.59
 
-<p><img alt="Cotton growing on trellises next to water" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.58/release-media/v0.1.58/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.59 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.59/release-media/v0.1.59/changelog.png" width="720"></p>
 
-Cotton is here — the first crop you farm instead of fight for.
+A new material line that ends in the mod's first powered armour.
 
 ### New
 
-- **Cotton grows on a trellis.** Place the two-block trellis on watered farmland and right-click a seed onto it.
-- **Picking never breaks the plant.** A right-click takes the cotton and leaves the bush standing, so it fills up again and again.
-- **Seeds come from grass.** Clearing plains turns them up, the same way wheat seeds do, and every harvest gives some back.
-- **Dry ground only pauses it.** Run out of water and the plant waits for you instead of dying.
-- **Bone meal helps, within reason.** One use, one stage — it never skips a plant straight to ripe.
+- **Fluxweave armour.** A four-piece suit that runs on stored power: breathe longer underwater, swim and run faster, land softer, and heal slowly while all four pieces are worn.
+- **Electro Bath.** Plates fibre with silver to make flux thread — plain string or cotton both work. Thread is woven into cloth, cloth becomes the suit.
+- **Step-up.** The leggings can walk you up a full block. Off by default, and the key is yours to pick.
+
+### Improved
+
+- **The suit now looks like a suit.** Sleeves reach the wrist and the helmet closes over the head, leaving only the mouth free.

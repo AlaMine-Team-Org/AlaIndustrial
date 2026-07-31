@@ -882,6 +882,44 @@
           ]
         },
         {
+          "id": "galvanic_bath",
+          "title": "Galvanik banyo",
+          "icon": "alaindustrial:galvanic_bath",
+          "block_id": "alaindustrial:galvanic_bath",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Galvanik banyo",
+              "text": "AG galvanik kaplama makinesi: lif ve gümüş tozunu su banyosunda fluks ipliğine dönüştürür — fluks kumaş hattına ve EU zırhına giriş."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:silver_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:silver_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:silver_plate"
+              ],
+              "result_id": "alaindustrial:galvanic_bath",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electric_heater",
           "title": "Elektrikli Isıtıcı",
           "icon": "alaindustrial:electric_heater",
@@ -2089,6 +2127,45 @@
                 "minecraft:leather"
               ],
               "result_id": "alaindustrial:battery_pouch",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_chestplate",
+          "title": "Fluks zırh",
+          "icon": "alaindustrial:fluxweave_chestplate",
+          "block_id": "alaindustrial:fluxweave_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fluks zırh",
+              "text": "Modun ilk tam EU zırh takımı — fluks kumaştan miğfer, zırh, pantolon ve bot; şarj, korumayı hiç kapatmadan yardımcı özellikleri açar."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 15000",
+                "Tampon: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_chestplate",
               "result_count": 1
             }
           ]

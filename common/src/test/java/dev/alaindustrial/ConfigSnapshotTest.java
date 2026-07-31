@@ -190,6 +190,20 @@ class ConfigSnapshotTest {
 		SENTINELS.put("sawmillDuration", 130);
 		SENTINELS.put("polymerizerDuration", 333);
 		SENTINELS.put("vulcanizerDuration", 334);
+		SENTINELS.put("galvanicBathDuration", 335);
+		SENTINELS.put("galvanicBathWaterPerOp", 336);
+		// Fluxweave armour (MOD-127).
+		SENTINELS.put("fluxweaveBuffer", 15_101);
+		SENTINELS.put("fluxweaveInputRate", 337);
+		SENTINELS.put("fluxweaveUpkeepEuPerSecond", 338);
+		SENTINELS.put("fluxweaveFallDamageReductionPercent", 41);
+		SENTINELS.put("fluxweaveRunSpeedPercent", 42);
+		SENTINELS.put("fluxweaveOxygenBonus", 43);
+		SENTINELS.put("fluxweaveSwimEfficiency", 44);
+		SENTINELS.put("fluxweaveChargedToughness", 45);
+		SENTINELS.put("fluxweaveKnockbackResistance", 46);
+		SENTINELS.put("fluxweaveStepHeightBonus", 47);
+		SENTINELS.put("fluxweaveRegenEuPerHeal", 339);
 		SENTINELS.put("electricHeaterEuPerTick", 5);
 		SENTINELS.put("ironFurnaceCookTime", 160);
 		// Player stats / XP.

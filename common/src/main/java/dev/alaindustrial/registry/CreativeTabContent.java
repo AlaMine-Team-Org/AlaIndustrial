@@ -42,6 +42,11 @@ public final class CreativeTabContent {
 		out.accept(ModContent.TEMPERED_IRON_CHESTPLATE.get());
 		out.accept(ModContent.TEMPERED_IRON_LEGGINGS.get());
 		out.accept(ModContent.TEMPERED_IRON_BOOTS.get());
+		// Fluxweave set (MOD-127) — the EU armour line, listed right after the plain tempered iron set.
+		out.accept(ModContent.FLUXWEAVE_HELMET.get());
+		out.accept(ModContent.FLUXWEAVE_CHESTPLATE.get());
+		out.accept(ModContent.FLUXWEAVE_LEGGINGS.get());
+		out.accept(ModContent.FLUXWEAVE_BOOTS.get());
 	}
 
 	public static void toolsAndUtilities(Sink out) {
@@ -187,6 +192,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.PUMP_ITEM.get());
 		out.accept(ModContent.POLYMERIZER_ITEM.get());
 		out.accept(ModContent.VULCANIZER_ITEM.get());
+		out.accept(ModContent.GALVANIC_BATH_ITEM.get());
 		out.accept(ModContent.ELECTRIC_HEATER_ITEM.get());
 	}
 
@@ -250,6 +256,9 @@ public final class CreativeTabContent {
 		out.accept(ModContent.RAW_RUBBER.get());
 		out.accept(ModContent.RUBBER.get());
 		out.accept(ModContent.COTTON_FIBER.get());
+		// Fluxweave chain (MOD-127), in production order: fibre → plated thread → woven sheet.
+		out.accept(ModContent.FLUX_THREAD.get());
+		out.accept(ModContent.FLUXWEAVE_CLOTH.get());
 		out.accept(ModContent.MUTE_CHIP.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
 		out.accept(ModContent.WATER_MILL_WHEEL.get());
@@ -294,5 +303,10 @@ public final class CreativeTabContent {
 		out.accept(ModContent.TEMPERED_IRON_CHESTPLATE.get());
 		out.accept(ModContent.TEMPERED_IRON_LEGGINGS.get());
 		out.accept(ModContent.TEMPERED_IRON_BOOTS.get());
+		// Fluxweave set (MOD-127) — the EU armour line, listed right after the plain tempered iron set.
+		out.accept(ModContent.FLUXWEAVE_HELMET.get());
+		out.accept(ModContent.FLUXWEAVE_CHESTPLATE.get());
+		out.accept(ModContent.FLUXWEAVE_LEGGINGS.get());
+		out.accept(ModContent.FLUXWEAVE_BOOTS.get());
 	}
 }

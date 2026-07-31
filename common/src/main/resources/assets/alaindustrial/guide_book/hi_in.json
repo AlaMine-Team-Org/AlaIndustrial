@@ -882,6 +882,44 @@
           ]
         },
         {
+          "id": "galvanic_bath",
+          "title": "गैल्वेनिक स्नान",
+          "icon": "alaindustrial:galvanic_bath",
+          "block_id": "alaindustrial:galvanic_bath",
+          "pages": [
+            {
+              "type": "text",
+              "title": "गैल्वेनिक स्नान",
+              "text": "एलवी गैल्वेनिक मशीन: यह पानी के स्नान में रेशे और चाँदी के चूर्ण को फ्लक्स धागे में बदलती है — फ्लक्स कपड़े और EU कवच की ओर पहला कदम।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:silver_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:silver_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:silver_plate"
+              ],
+              "result_id": "alaindustrial:galvanic_bath",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electric_heater",
           "title": "विद्युत तापक",
           "icon": "alaindustrial:electric_heater",
@@ -2089,6 +2127,45 @@
                 "minecraft:leather"
               ],
               "result_id": "alaindustrial:battery_pouch",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_chestplate",
+          "title": "फ्लक्स कवच",
+          "icon": "alaindustrial:fluxweave_chestplate",
+          "block_id": "alaindustrial:fluxweave_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "फ्लक्स कवच",
+              "text": "मॉड का पहला पूरा EU कवच सेट — फ्लक्स कपड़े का हेलमेट, कवच, लेगिंग और जूते; चार्ज सुविधाएँ चालू करता है, सुरक्षा कभी बंद नहीं करता।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 15000",
+                "बफ़र: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_chestplate",
               "result_count": 1
             }
           ]

@@ -118,6 +118,9 @@ public final class ModRecipes {
 	public static final Kind COMPRESSING = new Kind("compressing", 260);
 	public static final Kind EXTRACTING = new Kind("extracting", 240);
 	public static final Kind VULCANIZING = new Kind("vulcanizing", 400);
+	// Galvanic Bath (MOD-127): fibre + silver dust → flux thread. Two item inputs like the Vulcanizer;
+	// the water the bath also consumes is a fixed config cost, not a recipe field (see the block entity).
+	public static final Kind GALVANIC_BATH = new Kind("galvanic_bath", 1000);
 	// Sawmill (MOD-150): one Kind per cutting mode (planks/sticks/slabs/stairs). defaultEnergy 160 =
 	// sawmillDuration (80) × machineEuPerTick (2); every shipped sawing JSON sets energy: 160 explicitly.
 	public static final Kind SAWING_PLANKS = new Kind("sawing_planks", 160);
@@ -138,7 +141,7 @@ public final class ModRecipes {
 			new Kind("mutation_create", 8000, () -> Config.incubatorEuPerTick);
 
 	private static final Kind[] ALL = {MACERATION, SMELTING, COMPRESSING, EXTRACTING, VULCANIZING,
-			SAWING_PLANKS, SAWING_STICKS, SAWING_SLABS, SAWING_STAIRS,
+			GALVANIC_BATH, SAWING_PLANKS, SAWING_STICKS, SAWING_SLABS, SAWING_STAIRS,
 			MUTATION_TRANSFORM, MUTATION_DUPLICATE, MUTATION_CREATE};
 
 	/** All recipe families, in registration order (used by both loaders' registration). */

@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"C": "alaindustrial:machine_casing",
+		"L": "alaindustrial:copper_coil",
+		"E": "alaindustrial:electronic_circuit",
+		"S": "alaindustrial:silver_plate"
+	},
+	"pattern": [
+		"SLS",
+		"ECE",
+		"SLS"
+	],
+	"result": {
+		"id": "alaindustrial:galvanic_bath",
+		"count": 1
+	}
+}

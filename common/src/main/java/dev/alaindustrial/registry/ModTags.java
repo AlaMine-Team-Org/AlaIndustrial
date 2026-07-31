@@ -72,6 +72,15 @@ public final class ModTags {
 		/** The three mutation chips that select the incubator's mode (MOD-118). */
 		public static final TagKey<Item> MUTATION_CHIP = key("mutation_chip");
 
+		/**
+		 * Fibre the Galvanic Bath plates with silver to make flux thread (MOD-127): vanilla string and
+		 * our own cotton fibre (MOD-280). A tag rather than two recipes because the two are meant to be
+		 * interchangeable by design — string comes from a spider farm, cotton from a trellis, and the
+		 * player picks whichever playstyle they already have. Backed by
+		 * {@code data/alaindustrial/tags/item/fiber.json}.
+		 */
+		public static final TagKey<Item> FIBER = key("fiber");
+
 		private static TagKey<Item> key(String path) {
 			return TagKey.create(Registries.ITEM, Industrialization.id(path));
 		}

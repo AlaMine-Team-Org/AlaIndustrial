@@ -3,6 +3,8 @@ package dev.alaindustrial.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
 import net.minecraft.client.KeyMapping;
+import dev.alaindustrial.network.FluxweaveStepAssistPayload;
+import dev.alaindustrial.network.NetworkDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -47,6 +49,13 @@ public final class ModKeyMappings {
 			GLFW.GLFW_KEY_K,
 			CATEGORY);
 
+	/** Toggle the Fluxweave leggings' step assist (MOD-127). Default: G — free in vanilla, next to H/J/K. */
+	public static final KeyMapping TOGGLE_STEP_ASSIST = new KeyMapping(
+			"key.alaindustrial.toggle_step_assist",
+			InputConstants.Type.KEYSYM,
+			GLFW.GLFW_KEY_G,
+			CATEGORY);
+
 	private ModKeyMappings() {
 	}
 
@@ -74,6 +83,15 @@ public final class ModKeyMappings {
 				player.sendOverlayMessage(Component.translatable(AlaClientConfig.drillHudEnabled
 						? "message.alaindustrial.drill_hud.on"
 						: "message.alaindustrial.drill_hud.off"));
+			}
+		}
+		while (TOGGLE_STEP_ASSIST.consumeClick()) {
+			// Unlike the other three mappings this one cannot be handled client-side: the assist is an
+			// attribute modifier on the trousers, and attributes are applied from the stack's components
+			// on the server. A custom KeyMapping is not part of vanilla's input sync either, so the
+			// server has to be told explicitly. The reply (message + click) comes back from the handler.
+			if (player != null) {
+				NetworkDispatcher.get().sendToServer(new FluxweaveStepAssistPayload());
 			}
 		}
 		while (OPEN_PROFILE.consumeClick()) {

@@ -60,6 +60,8 @@
 			,"dev.alaindustrial.gametest.HammerGameTest"
 			,"dev.alaindustrial.gametest.OilGameTest"
 			,"dev.alaindustrial.gametest.PolymerizerGameTest"
+			,"dev.alaindustrial.gametest.GalvanicBathGameTest"
+			,"dev.alaindustrial.gametest.FluxweaveArmorGameTest"
 			,"dev.alaindustrial.gametest.VulcanizerGameTest"
 		]
 	}

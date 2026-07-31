@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"key": {
+		"F": "alaindustrial:fluxweave_cloth",
+		"E": "alaindustrial:electronic_circuit",
+		"B": "alaindustrial:battery",
+		"T": "alaindustrial:tempered_iron"
+	},
+	"pattern": [
+		"FEF",
+		"TBT",
+		"T T"
+	],
+	"result": {
+		"id": "alaindustrial:fluxweave_leggings",
+		"count": 1
+	}
+}
