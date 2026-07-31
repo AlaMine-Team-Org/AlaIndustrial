@@ -7,7 +7,7 @@ A new material line that ends in the mod's first powered armour.
 ### New
 
 - **Fluxweave armour.** A four-piece suit that runs on stored power: breathe longer underwater, swim and run faster, land softer, and heal slowly while all four pieces are worn.
-- **Electro Bath.** Plates fibre with silver to make flux thread — plain string or cotton both work. Thread is woven into cloth, cloth becomes the suit.
+- **Galvanic Bath.** Plates fibre with silver to make flux thread — plain string or cotton both work. Thread is woven into cloth, cloth becomes the suit.
 - **Step-up.** The leggings can walk you up a full block. Off by default, and the key is yours to pick.
 
 ### Improved
