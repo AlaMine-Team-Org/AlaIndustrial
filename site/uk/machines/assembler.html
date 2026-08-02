@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="uk" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Складальний автомат — Ala Industrial — Гід</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
+    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
+    padding:1px 2px; line-height:1; border-radius:0; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="Відкрити меню" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">UA</summary><div class="language-popover"><span>UA</span><a href="../../en/machines/assembler.html">EN</a><a href="../../ru/machines/assembler.html">RU</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Огляд</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>З чого почати</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
+<div class="group-title">Енергія</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
+<div class="group-title">Переробка</div>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="11 сторінок">11</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<div class="group-title">Логістика</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<div class="group-title">Світ та автоматизація</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<div class="group-title">Інше</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="10 сторінок">10</span></a>
+<div class="group-title">Предмети</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../machines/index.html">Машини</a><span class="sep">/</span><span>Складальний автомат</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/block/assembler_top.png" alt="Складальний автомат" width="64" height="64">
+    <div class="info">
+      <h1>Складальний автомат</h1>
+      <div class="block-id">alaindustrial:assembler</div>
+      <div class="tags"><span class="tag cat" style="background:#ff7a45">Машини</span><span class="tag tier">MV</span><span class="tag lifecycle" style="background:#22c55e">Реалізовано</span><span class="tag">tier-mv</span><span class="tag">processing</span><span class="tag">automation</span><span class="tag">assembler</span><span class="tag">blueprint</span><span class="tag">crafting</span></div>
+    </div>
+  </div>
+</div>
+<h2>Summary</h2>
+<p>The <strong>Assembler</strong> is the mod's first MV machine and the end of hand-crafting 64 stacks at a time. It remembers crafting-table recipes — stored on an Assembly Blueprint and stamps them out continuously for as long as materials and charge hold out. No redstone needed; the machine runs on its own. It draws materials <strong>neither from its own inventory nor from pipes</strong>, but from its own store built out of <a href="../utility/storage_module.html">Storage Modules</a>. Finished items go into a separate output area so product never mixes with feedstock. Unlike the vanilla Crafter, which re-solves the grid on every redstone pulse and remembers nothing, the Assembler holds a <strong>queue of three blueprints</strong> and switches between them by itself.</p>
+<h2>Energy</h2>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer</td></tr><tr><td>Buffer (EU/FE)</td><td>12000</td></tr><tr><td>Max input (EU/FE/tick)</td><td>128 (MV)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>n/a</td></tr><tr><td>EU/FE/tick</td><td>12</td></tr></tbody></table>
+<p>It runs off existing generators through a <a href="../energy-transfer/gold_cable.html">Gold Cable</a> (MV transport, 48 EU/FE/t) — no dedicated MV generator or transformer is required to get it going. A copper LV cable (12 EU/FE/t) is just barely enough: the machine needs exactly 12 EU/FE/t. Energy is spent <strong>only on a working tick</strong>. Idling for any reason — no blueprint, no ingredients, no room in the output area — costs no EU/FE at all.</p>
+<h2>Processing</h2>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Recipe type</td><td><code>minecraft:crafting</code> (shaped + shapeless)</td></tr><tr><td>Duration (ticks)</td><td>40</td></tr><tr><td>E_op (EU/FE)</td><td>480</td></tr><tr><td>Auto-eject</td><td>false</td></tr></tbody></table>
+<p><strong>The Assembler has no recipe type of its own.</strong> It solves ordinary crafting-table recipes through the stock <code>RecipeType.CRAFTING</code>, which means it automatically supports vanilla recipes, this mod's own recipes (they are declared as plain <code>minecraft:crafting_shaped</code>), recipes from <strong>any third-party mod</strong>, and datapacks. Tags come for free: <code>#minecraft:planks</code> in a recipe means "any planks", exactly as at a crafting table. The mod's own machine recipes (macerating, smelting, extracting) are <strong>not</strong> run by the Assembler — those are separate recipe types and separate machines.</p>
+<h3>Picking a blueprint from the queue</h3>
+<p>Blueprints are polled <strong>round-robin</strong>, and the cursor position persists between cycles. A blueprint is skipped if any of the following holds: the store is missing an ingredient; there is no room for the result in the output area; the blueprint's recipe no longer exists (e.g. after a datapack change). If no blueprint is ready, the machine sleeps and wakes when the store or the charge changes. Round-robin was chosen deliberately over strict top-down priority: under strict priority the first blueprint with an endless supply would never hand the queue over to the others.</p>
+<h3>Order of a single operation</h3>
+<p>The order is strict; deviating breaks either the result or the return of remainders:</p>
+<ol><li>Build the input from the blueprint grid and check every ingredient against the store.</li><li>Check that the result fits the output area <strong>and the remainders fit the store</strong>. If not, do not</li></ol>
+<p>start the operation at all — this is what protects against item loss.</p>
+<ol><li>Spend EU/FE and advance progress.</li><li>On completion: take the recipe result, then the remainders, and only then consume the ingredients.</li></ol>
+<p>Steps 1–2 run on <strong>copies</strong> of the store and the output area: an operation is either worked out in full or not begun, and what is written back to the world is exactly the arrays the fitting check ran on. The check and the act are the same code, so "it will fit" and "it was placed" cannot drift apart. The planning happens <strong>twice per operation</strong> — once to decide whether to start, once at the finish (the store may have changed over forty ticks) — and not on the forty ticks in between. If the plan no longer holds at the finish (the store ran dry, the recipe vanished), the machine parks on the finish line: progress and the EU/FE already spent are kept, and it completes the moment the plan holds again.</p>
+<h3>Ingredient substitution</h3>
+<p>By default the Assembler takes <strong>exactly the items recorded on the blueprint</strong>, matching by item and ignoring components (the same comparison the stock <code>Ingredient</code> makes). A worn tool therefore satisfies a blueprint written with a fresh one. <strong>The substitution toggle</strong> — the square arrow button right of "Write" — flips this for <strong>whichever blueprint the window is showing</strong>, that is, the one ringed in the queue. The setting lives on the blueprint item itself: move the blueprint to another Assembler and it substitutes there too. With substitution on, the order is:</p>
+<ol><li><strong>The item the player recorded comes first.</strong> As long as the store holds it, that is what is</li></ol>
+<p>taken. Refined Storage does not do this, and it is a standing player complaint.</p>
+<ol><li><strong>If it is out of stock, candidates come from the <code>Ingredient</code> of that particular recipe slot</strong>,</li></ol>
+<p>in the recipe's own order. Never "from the tag in general": a recipe written as <code>#minecraft:planks</code> (sticks, crafting table, bowl) has twelve candidates, while <code>oak_stairs</code>, whose ingredient is literally <code>minecraft:oak_planks</code>, has none at all and never substitutes. The "any planks in the blueprint, oak and birch in the store, which stairs do I get" situation <strong>cannot arise</strong>: vanilla family recipes are per-species.</p>
+<ol><li><strong>A stand-in is accepted only if re-assembling gives the same result</strong> — the recipe still matches</li></ol>
+<p>and the assembled stack equals what the blueprint promises in its tooltip, components and count included. If it does not, the operation never starts: no EU/FE spent, nothing taken from the store. The positions come from <code>Recipe.placementInfoslotsToIngredientIndex</code> is a list parallel to the recipe's placement slots whose value indexes <code>ingredients</code> (or −1 for a cell the recipe leaves empty). For a <code>ShapedRecipe</code> those slots are the pattern cells, so the index is mapped onto the 3×3 grid through the same trim — and, for a mirrored match, the same reflection — as the remainder return. Anything that is not a <code>ShapedRecipe</code> (shapeless above all) has no positions by definition; there every ingredient of the recipe is offered for every filled cell, and step 3 is what keeps that honest. <strong>Why it is off by default.</strong> The stock <code>Ingredient</code> compares items and ignores components, so with substitution on an enchanted book can be taken where a plain one was recorded, or a worn tool where a fresh one was. The button's tooltip says so, and a blueprint with substitution on carries an extra line of its own. Materials from other mods (copper, tin, silver) work exactly as far as recipe ingredients are written with common <code>c:</code> tags — that is separate work, not a property of the machine.</p>
+<h3>Remaining items</h3>
+<p>Recipes with containers (the bucket in a cake, a bottle) hand the item back. A remainder goes back <strong>into the very store slot its ingredient came from</strong>; if that slot cannot take it, into any free store slot; if the store is full, into the output area; and if that is full too, the operation never started (step 2). Returning it home is not cosmetic: it is what makes the Forge Hammer stay put and simply lose a point of durability instead of creeping across the store one craft at a time. It is also the reason the <code>CraftingInput</code> trimming has to be undone — the remainder list arrives in <strong>trimmed</strong> grid coordinates, and without mapping them back the "home slot" would be computed wrong. Stack-dependent remainders (this mod's hammer, which loses a point of durability instead of disappearing) work automatically, because remainders are taken through the recipe rather than straight off the item.</p>
+<h2>Inventory</h2>
+<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Blueprints</td><td>Assembly Blueprint with a recorded recipe</td><td>3</td></tr><tr><td>Output area</td><td>output only (the machine fills it, you empty it)</td><td>6</td></tr><tr><td>Blank slot</td><td>a blank assembly blueprint — what "Write" stamps onto</td><td>1</td></tr><tr><td>Upgrades</td><td>upgrade modules</td><td>4 (the first one is live)</td></tr><tr><td>Store</td><td>any items</td><td>27, plus 27 per <a href="../utility/storage_module.html">module</a>, capped at 108</td></tr></tbody></table>
+<p>The recipe grid is <strong>not an inventory</strong>: it is nine ghost cells whose items are neither consumed nor stored — they only show what will be written to the blueprint. A 6-slot output area is a deliberate choice: a single output slot is a well-known cause of machines jamming once the result fills the one cell available. Outside automation: an item pipe fills the <strong>store</strong> and empties the <strong>output area</strong>. Feeding ingredients straight into the machine by pipe is neither needed nor supported.</p>
+<h2>Interface</h2>
+<p><strong>Machine window</strong> (right-click the Assembler) has <strong>two tabs</strong>: "Work" and "Record". One block, one window — only what is shown changes. The window used to do two unrelated jobs side by side: the 3×3 grid a recipe is <strong>authored</strong> in sat next to the machine's live production state, and such a window does not tell you what had been recorded, what was being made right now, or which grid was which. Recording and producing are different jobs; each now has a tab, and they share no screen space at all. <strong>Switching tabs is a view switch, not a mode switch.</strong> The machine keeps crafting while you are on the recording tab: the tab touches neither the queue, nor the progress, nor the energy. There is deliberately no mode that halts production while you record — it would turn "I want to record one more recipe" into stopping the line.</p>
+<h3>The "Work" tab</h3>
+<p>What the machine is doing right now: three blueprint slots — the queue, the active one ringed; <strong>the active blueprint's 3×3 layout and its product</strong> — view only (see below); the 6-slot output area; an energy bar and a progress bar; a status line: <em>working / no blueprint / missing materials / output full / no energy / recipe not found</em>. You must be able to tell the reasons apart — otherwise "the machine is idle" is indistinguishable from "the machine is broken".</p>
+<h3>The "Record" tab</h3>
+<p>What authoring a recipe involves: a 3×3 grid of ghost cells; a result preview — what that layout makes; a slot for a blank blueprint; a "Write" button — turns the blank into a recorded blueprint; the square arrow button to the left of "Write" — the <a href="index.html#ingredient-substitution">substitution toggle</a> for the blueprint on show: grey arrows for off, green for on. Grid cells are filled by clicking: hover a cell and click while holding an item on the cursor and one copy of it lands in the cell; clicking with an empty cursor clears it. Nothing is consumed — the grid shows a layout, it does not hold one. The blank sits <strong>here rather than in the blueprint queue</strong>, and that follows from the same decision: the recording tab has to stand on its own. If "Write" took its blank from the queue you would have to visit the Work tab in order to record a recipe, and the two jobs would be tangled together again. The recorded blueprint appears where the blank was; from there you pick it up and put it in the queue on the Work tab. Recording is not queueing, and the order of operations says so out loud.</p>
+<h3>A hidden tab's slots are out of reach</h3>
+<p>A slot belonging to the tab that is not on screen can be neither filled nor emptied — not by clicking, not by shift-clicking, not by dragging, not by a double-click "collect all". A hidden tab is not merely undrawn: while it is hidden, its slots do not exist as far as the game is concerned. The tab is window state, not machine state: it is never saved, and two players at one Assembler can be on different tabs without getting in each other's way.</p>
+<h3>Showing the active blueprint</h3>
+<p>The Work tab <strong>shows the layout of a blueprint from the queue</strong> — the one the machine is running, or the first recorded one while it is idle. Without that, a working machine looked like this: status "Assembling", the output filling up, and an empty window. The blueprint's product is drawn under the output area it is filling. The shown layout is marked <strong>borrowed and not editable</strong>: the items are dimmed, and hovering a cell adds the line "Blueprint N layout — view only". A pale cyan ring sits around the blueprint slot the layout came from, so it is clear which of the three is on display. It cannot be mistaken for your own layout: the shown blueprint is only <strong>drawn</strong> on top of the tab's artwork, and there are no slots in that area at all — there is nothing to take out of it on any client. Your own layout lives on the other tab and does not affect this one: while you lay out a recipe, the Work tab goes on showing what the machine is doing. (Before the tabs it was the other way round — your layout overrode the display, and the machine's vanished from under you.) The two rings in the queue mean different things: <strong>orange</strong> is the blueprint the current operation is running from, <strong>pale cyan</strong> is the one whose layout is on display. Usually the same blueprint, and the orange one wins there. On top of that, every written blueprint <strong>carries its product in the item's own icon</strong> — see the Assembly Blueprint. Three queued blueprints are told apart without hovering anything, and so are three sitting in a chest. <strong>Storage window</strong> — this is the <a href="../utility/storage_module.html">Storage Module</a>'s own window, opened by right-clicking a module rather than by a button in the Assembler: the shared storage grid, 3 to 12 rows depending on how many modules are connected; no scrolling, no scrollbar, no search — the 108-slot cap was picked so everything fits one screen. Type: container (<code>AssemblerMenu</code>; the storage window is the module's <code>StorageModuleMenu</code>). With no store attached at all the Assembler behaves exactly as it does with an empty one: the status line reads "missing materials", no EU/FE is spent, and nothing breaks.</p>
+<h2>Block properties</h2>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full cube 16³</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Drops with energy NBT</td><td>false</td></tr></tbody></table>
+<p>Breaking the Assembler drops the blueprints from its slots and the contents of the output area. The store's contents <strong>stay in the modules</strong> — only connectivity is lost, and the modules idle until a new assembler is placed. Pinned by <code>TC-ASM-026</code>: the drops are counted exactly, so both a lost blueprint (which cannot be crafted back) and a doubled output area show up. The blueprint queue, the progress and the round-robin cursor survive a reload — <code>TC-ASM-027</code> takes the machine through NBT, the same path a chunk save and load takes. The cursor is the one field with no visible symptom: were it lost, the rotation would silently restart at the first blueprint and the fairness it exists for would quietly stop working. The front face is marked and, as on the mod's other machines, excluded from automation: a pipe pushed against the front will see no slots.</p>
+<h2>Recipes</h2>
+<p>Craft: No processing recipes — the machine uses vanilla <code>minecraft:crafting</code> The composition follows the genre pattern — a tier casing, two circuits, an "identity" part and a "storage" part, with the four corners taken by the mechanics that move the parts:</p>
+<pre><code class="lang-">G T G A — Advanced Machine Casing — the heart, and the tier the machine belongs to
+C A C C — Electronic Circuit ×2 — the logic that reads a blueprint
+G S G T — Crafting Table — what the machine does
+S — Storage Module — where it draws its parts from
+G — Iron Gear ×4 — the arms that move a part into the grid</code></pre>
+<p>The corners are <a href="../components/metal_gears.html">Iron Gears</a> rather than more plating: the assembler is the first machine in the mod that moves parts around on its own, and the gear is the part this mod already spends on exactly that — the <a href="../fluid-storage/fluid_tank.html">Fluid Tank</a> and the <a href="../item-transport/item_pipe.html">Item Pipe</a> read the same way. Filling all nine cells also puts the craft in line with the mod's other machines, where an empty corner is the exception.</p>
+<h2>Progression</h2>
+<p>Tier: MV — the <strong>first MV machine in the mod</strong>, the anchor of the MV phase Requires: a <a href="../utility/storage_module.html">Storage Module</a> (with no store the machine has nowhere to draw from) and an Assembly Blueprint Upgrades into: nothing. On-demand autocrafting (order "make 64 X" with a sub-craft tree) is a separate future system, not an upgrade to this machine</p>
+<h2>Compatibility</h2>
+<p>Recipe viewers: JEI, REI, EMI — the machine's own craft recipe Tooltips: Jade, The One Probe — charge, progress, active blueprint</p>
+<h2>Balance</h2>
+<p><strong>12 EU/FE/t × 40 ticks = 480 EU/FE per operation.</strong> The 40-tick duration (2 seconds) is a proven pace: it is exactly what the closest analogue in the genre, Mekanism's Formulaic Assemblicator, uses. Faster becomes imperceptible; slower is irritating. The price rise went entirely into the rate, so the operation costs more without feeling slower. The 12 EU/FE/t rate is six times the mod's ordinary LV machines ( = 2) and half again the Incubator's 8 EU/FE/t, which makes the Assembler the mod's most power-hungry machine. It reads unambiguously: draws a lot, but the operation is short. One practical consequence: a copper LV cable (12 EU/FE/t) now covers the machine exactly and nothing more, so a second consumer on the same line forces the player onto gold. The resulting 480 EU/FE sits inside the band of existing machines (from 160 EU/FE for the Sawmill to 1000 EU/FE for the Galvanic Bath), roughly in the middle. That is deliberate: autocrafting should cost <strong>more than hand-crafting</strong> (or it devalues resources) but <strong>less than a processing step</strong> (or crafting by hand wins). The first pass set 8 EU/FE/t and 320 EU/FE; the playtest read that as too cheap for the amount of routine the machine removes, so the rate went up by a third of the band. Against the genre: Mekanism charges 1600 FE per craft — about 640 EU/FE at the same usual conversion, so our 480 EU/FE is no longer "half of Mekanism" but the same order, roughly a third below it. The AE2 Molecular Assembler (around 100 AE) and the RFTools Crafter (about 12 RF) stay far under us: there autocrafting is nearly free in energy and is balanced through the cost of the machine and its channels, whereas ours is balanced through energy. We sit deliberately at the expensive end of the genre, right next to Mekanism. The numbers live in <code>C (</code>assemblerEuPerTick<code>, </code>assemblerDuration<code>, </code>assemblerBuffer`) and</p>
+<h2>Open questions</h2>
+<p><strong>Substitution and components.</strong> Candidates are compared by item, components ignored — as in an ordinary crafting grid. Respecting components (never handing over an enchanted or worn instance) needs a filter on top of <code>Ingredient</code>; deferred until playtest, and covered for now by the toggle being off by default and by the warning on it. <strong>Blueprint starvation.</strong> Three blueprints share one store: a blueprint using a common ingredient can eat it down so the others go hungry. Round-robin softens this but does not solve it. The full fix is the "keep N in stock" mode from , deliberately deferred to the iteration after the base system ships. <strong>A "don't eat the last one" rule</strong> (RFTools' Keep) appears <strong>unnecessary</strong> in our model: it solves the problem of an input slot running dry, whereas our store is an ordinary inventory and a pipe will insert into any free cell. Verify in playtest before adding a setting. <strong>Several assemblers competing</strong> for the same item in a shared store: is a deterministic walk order enough, or is a cycle-long reservation needed? Queue size — three blueprints, taken from the Immersive Engineering Assembler. Playtest whether that is too few or too many.</p>
+<h2>Related</h2>
+<p><a href="../utility/storage_module.html">Storage Module</a> — the store the Assembler draws from Assembly Blueprint — the item that holds a recipe <a href="../energy-transfer/gold_cable.html">Gold Cable</a> — powering an MV machine <a href="../item-transport/item_pipe.html">Item Pipe</a> — fills the store, empties the output <a href="sawmill.html">Sawmill</a> — reference for a machine with switchable modes in its GUI</p>
+<h2>Крафт</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="складальний автомат alaindustrial:assembler" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Залізна шестірня"><img src="../assets/item/iron_gear_3d.png" alt="Залізна шестірня" width="32" height="32"></div> <div class="cell" title="Crafting Table"><img src="../assets/item/crafting_table_3d.png" alt="Crafting Table" width="32" height="32"></div> <div class="cell" title="Залізна шестірня"><img src="../assets/item/iron_gear_3d.png" alt="Залізна шестірня" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Просунутий машинний корпус"><img src="../assets/block/advanced_machine_casing.png" alt="Просунутий машинний корпус" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Залізна шестірня"><img src="../assets/item/iron_gear_3d.png" alt="Залізна шестірня" width="32" height="32"></div> <div class="cell" title="Модуль зберігання"><img src="../assets/block/storage_module_top.png" alt="Модуль зберігання" width="32" height="32"></div> <div class="cell" title="Залізна шестірня"><img src="../assets/item/iron_gear_3d.png" alt="Залізна шестірня" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Складальний автомат"><img src="../assets/block/assembler_top.png" alt="Складальний автомат" width="32" height="32"></div><div class="result-name">Складальний автомат</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ru" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Сборочный автомат — Ala Industrial — Гайд</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
+    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
+    padding:1px 2px; line-height:1; border-radius:0; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="Открыть меню" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">RU</summary><div class="language-popover"><span>RU</span><a href="../../en/machines/assembler.html">EN</a><a href="../../uk/machines/assembler.html">UA</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Обзор</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>С чего начать</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепты</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
+<div class="group-title">Энергия</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<div class="group-title">Переработка</div>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<div class="group-title">Логистика</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<div class="group-title">Мир и автоматизация</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="2 страницы">2</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<div class="group-title">Прочее</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="10 страниц">10</span></a>
+<div class="group-title">Предметы</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../machines/index.html">Машины</a><span class="sep">/</span><span>Сборочный автомат</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/block/assembler_top.png" alt="Сборочный автомат" width="64" height="64">
+    <div class="info">
+      <h1>Сборочный автомат</h1>
+      <div class="block-id">alaindustrial:assembler</div>
+      <div class="tags"><span class="tag cat" style="background:#ff7a45">Машины</span><span class="tag tier">MV</span><span class="tag lifecycle" style="background:#22c55e">Реализовано</span><span class="tag">tier-mv</span><span class="tag">processing</span><span class="tag">automation</span><span class="tag">assembler</span><span class="tag">blueprint</span><span class="tag">crafting</span></div>
+    </div>
+  </div>
+</div>
+<h2>Сводка</h2>
+<p><strong>Сборочный автомат</strong> — первая MV-машина мода и конец ручному крафту по 64 стака. Он помнит верстачные рецепты (записанные на Схему сборки) и штампует их непрерывно, пока есть сырьё и заряд. Редстоун не нужен — машина работает сама. Сырьё автомат берёт <strong>не из своего инвентаря и не из труб</strong>, а из собственного склада, собранного из <a href="../utility/storage_module.html">Модулей хранения</a>. Готовое кладёт в отдельную выходную зону, чтобы продукция не смешивалась с сырьём. В отличие от ванильного «Крафтера», который заново решает сетку на каждый редстоун-импульс и ничего не запоминает, автомат хранит <strong>очередь из трёх схем</strong> и переключается между ними сам.</p>
+<h2>Энергия</h2>
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>потребитель</td></tr><tr><td>Буфер (EU/FE)</td><td>12000</td></tr><tr><td>Макс. вход (EU/FE/такт)</td><td>128 (MV)</td></tr><tr><td>Макс. выход (EU/FE/такт)</td><td>н/п</td></tr><tr><td>EU/FE/такт</td><td>12</td></tr></tbody></table>
+<p>Питается от существующих генераторов через <a href="../energy-transfer/gold_cable.html">золотой кабель</a> (MV-транспорт, 48 EU/FE/т) — отдельный MV-генератор или трансформатор для запуска <strong>не требуется</strong>. Медный LV-кабель (12 EU/FE/т) тоже справится ровно впритык: машине нужно как раз 12 EU/FE/т. Энергия расходуется <strong>только во время рабочего тика</strong>. Простой по любой причине — нет схемы, нет ингредиентов, нет места в выходной зоне — EU/FE не тратит вообще.</p>
+<h2>Процессинг</h2>
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Тип рецепта</td><td><code>minecraft:crafting</code> (shaped + shapeless)</td></tr><tr><td>Длительность (тики)</td><td>40</td></tr><tr><td>E_op (EU/FE)</td><td>480</td></tr><tr><td>Авто-выгрузка</td><td>false</td></tr></tbody></table>
+<p><strong>Собственного типа рецептов у автомата нет.</strong> Он решает обычные верстачные рецепты через штатный <code>RecipeType.CRAFTING</code>, а значит автоматически поддерживает ванильные рецепты, рецепты самого мода (они объявлены обычным <code>minecraft:crafting_shaped</code>), рецепты <strong>любого стороннего мода</strong> и датапаков. Теги работают бесплатно: <code>#minecraft:planks</code> в рецепте означает «любые доски» — ровно как в верстаке. Рецепты машин мода (дробление, плавка, экстракция) автомат <strong>не выполняет</strong> — это отдельные типы рецептов и отдельные машины.</p>
+<h3>Выбор схемы из очереди</h3>
+<p>Схемы опрашиваются <strong>по кругу</strong> (round-robin), позиция курсора сохраняется между циклами. Схема пропускается, если выполняется хотя бы одно: на складе не хватает ингредиентов; в выходной зоне нет места под результат; рецепт схемы не существует (например, исчез после смены датапака). Если ни одна схема не готова — машина уходит в сон и просыпается при изменении склада или заряда. Круговой обход выбран намеренно вместо приоритета «сверху вниз»: при строгом приоритете первая схема с бесконечным сырьём никогда не отдала бы очередь остальным.</p>
+<h3>Порядок одной операции</h3>
+<p>Порядок жёсткий, отступление ломает либо результат, либо возврат остатков:</p>
+<ol><li>Собрать вход из сетки схемы и проверить наличие каждого ингредиента на складе.</li><li>Проверить, что результат влезает в выходную зону, <strong>а остатки — на склад</strong>. Если нет — операцию</li></ol>
+<p>не начинать вовсе (это то, что защищает от потери предметов).</p>
+<ol><li>Списать EU/FE и тикать прогресс.</li><li>На финише: получить результат рецепта, затем остатки, и только потом израсходовать ингредиенты.</li></ol>
+<p>Шаги 1–2 выполняются на <strong>копиях</strong> склада и выходной зоны: операция либо просчитана целиком, либо не начата вовсе, а запись в мир — это ровно те массивы, на которых проверяли вместимость. Проверка и действие — один и тот же код, поэтому «проверили, что влезет» и «положили» не могут разойтись. Просчёт происходит <strong>дважды за операцию</strong> — на старте (решить, начинать ли) и на финише (склад мог измениться за 40 тиков), но не на сорока промежуточных тиках. Если на финише плана больше нет (склад опустел, рецепт исчез), машина замирает на финишной черте: прогресс и уже потраченные EU/FE сохраняются, и операция завершается сразу, как только план снова сходится.</p>
+<h3>Подстановка ингредиентов</h3>
+<p>По умолчанию автомат берёт со склада <strong>ровно те предметы, что записаны в схеме</strong>, сравнивая по предмету и игнорируя компоненты (так же, как это делает штатный <code>Ingredient</code>). Изношенный инструмент поэтому годится там, где в схему положили новый. <strong>Тумблер подстановки</strong> (квадратная кнопка со стрелками справа от «Записать») переключает это для <strong>той схемы, чью раскладку показывает окно</strong> — то есть для схемы, обведённой в очереди. Настройка живёт на самом предмете-схеме: переставили схему в другой автомат — она подставляет там тоже. Когда подстановка включена, порядок такой:</p>
+<ol><li><strong>Сначала — предмет, который положил игрок.</strong> Пока он есть на складе, берётся он и только он.</li></ol>
+<p>Refined Storage этого не делает, и это постоянная претензия игроков.</p>
+<ol><li><strong>Если его нет — кандидаты из <code>Ingredient</code> того самого слота рецепта</strong>, в порядке самого рецепта.</li></ol>
+<p>Не «из тега вообще»: для рецепта, написанного через <code>#minecraft:planks</code> (палки, верстак, миска), кандидатов двенадцать; для <code>oak_stairs</code>, где ингредиент — литерально <code>minecraft:oak_planks</code>, кандидатов нет вообще, и подстановка не сработает. Ситуация «в схеме любые доски, на складе дуб и берёза, непонятно какая лестница получится» <strong>невозможна в принципе</strong>: ванильные рецепты семейств пер-породные.</p>
+<ol><li><strong>Замена принимается, только если пересборка даёт тот же результат</strong> — рецепт по-прежнему</li></ol>
+<p>сходится, и собранный стек совпадает с тем, что схема обещает в тултипе (с компонентами и количеством). Не сошлось — операция не начинается вовсе, EU/FE не тратится, склад не трогается. Позиционность берётся из <code>Recipe.placementInfoslotsToIngredientIndex</code> — список, параллельный слотам рецепта, где значение — индекс в <code>ingredients</code> (или −1 для пустой ячейки). Для <code>ShapedRecipe</code> слоты — это ячейки паттерна, поэтому индекс переводится в ячейку сетки 3×3 через те же обрезку и, при зеркальном совпадении, отражение, что и возврат остатков. Для всего, что не <code>ShapedRecipe</code> (в первую очередь shapeless), позиций нет по определению — тогда кандидатами каждой занятой ячейки становятся все ингредиенты рецепта, а отсекает лишнее пункт 3. <strong>Почему по умолчанию выключено.</strong> Штатный <code>Ingredient</code> сравнивает только предмет и игнорирует компоненты, поэтому при включённой подстановке в ячейку может уйти зачарованная книга вместо чистой или изношенный инструмент вместо нового. Тултип кнопки об этом предупреждает, а сама схема с включённой подстановкой подписана отдельной строкой. Материалы из чужих модов (медь, олово, серебро) работают ровно настолько, насколько ингредиенты рецептов записаны общими тегами <code>c:</code> — это отдельная работа, не свойство автомата.</p>
+<h3>Остаточные предметы</h3>
+<p>Рецепты с контейнерами (ведро в торте, бутылка) возвращают предмет обратно. Остаток кладётся <strong>в ту самую ячейку склада, из которой был взят его ингредиент</strong>; если она занята — в любую свободную ячейку склада; если склад полон — в выходную зону; если полна и она — операция не начиналась (шаг 2). Возврат «в родную ячейку» выбран не ради красоты: именно он заставляет кузнечный молот оставаться на месте и просто терять единицу прочности, а не переползать по складу на одну ячейку за каждый крафт. Технически это и есть то место, ради которого приходится разворачивать обрезку координат <code>CraftingInput</code> — список остатков приходит в координатах <strong>обрезанной</strong> сетки, и без обратного пересчёта «родная ячейка» была бы вычислена неверно. Стек-зависимые остатки (молот мода, теряющий единицу прочности вместо исчезновения) работают автоматически, потому что остатки берутся через рецепт, а не напрямую из предмета.</p>
+<h2>Инвентарь</h2>
+<table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>Схемы</td><td>Схема сборки с записанным рецептом</td><td>3</td></tr><tr><td>Выходная зона</td><td>только выдача (автомат кладёт, игрок забирает)</td><td>6</td></tr><tr><td>Бланк схемы</td><td>чистая схема сборки — то, на что пишет «Записать»</td><td>1</td></tr><tr><td>Апгрейды</td><td>модули-апгрейды</td><td>4 (рабочий — первый)</td></tr><tr><td>Склад</td><td>любые предметы</td><td>27 + 27 за каждый <a href="../utility/storage_module.html">модуль</a>, потолок 108</td></tr></tbody></table>
+<p>Сетка задания рецепта <strong>не является инвентарём</strong>: это девять «призрачных» ячеек, предметы в них не расходуются и не хранятся — они только показывают, что записать в схему. Выходная зона на 6 слотов выбрана осознанно: однослотовый выход — известная причина клина машины, когда результат забил единственную ячейку и производство встало. Автоматизация снаружи: предметная труба наполняет <strong>склад</strong> и забирает из <strong>выходной зоны</strong>. Подавать ингредиенты трубой напрямую в машину не нужно и не предусмотрено.</p>
+<h2>Интерфейс</h2>
+<p><strong>Окно машины</strong> (открывается правым кликом по автомату) состоит из <strong>двух вкладок</strong>: «Работа» и «Запись». Это один блок и одно окно — переключается только то, что показано. Раньше окно делало две несвязанные работы одновременно: рядом стояли сетка 3×3, в которой рецепт <strong>сочиняют</strong>, и живое состояние производства. По такому окну не понять, что записано, что делается прямо сейчас и какая из сеток какая. Запись и производство — разные занятия, и теперь у каждого своя вкладка; общего места на экране у них нет вовсе. <strong>Переключение вкладки — это смена вида, а не режима.</strong> Машина продолжает крафтить, пока игрок сидит на вкладке записи: вкладка не трогает ни очередь, ни прогресс, ни энергию. Режим, который останавливал бы производство на время записи, сознательно не сделан — он превратил бы «хочу записать ещё один рецепт» в остановку линии.</p>
+<h3>Вкладка «Работа»</h3>
+<p>Что машина делает прямо сейчас: три слота схем — очередь, с рамкой на активной; <strong>раскладка активной схемы 3×3 и её продукт</strong> — только просмотр (см. ниже); выходная зона на 6 слотов; полоса энергии и полоса прогресса; строка статуса: <em>работает / нет схемы / не хватает сырья / выход заполнен / нет энергии / рецепт не найден</em>. Игрок должен различать причины простоя — иначе «машина стоит» неотличимо от «машина сломалась».</p>
+<h3>Вкладка «Запись»</h3>
+<p>Чем занимаются, когда сочиняют рецепт: сетка 3×3 из призрачных ячеек; предпросмотр результата — что эта раскладка делает; слот чистого бланка; кнопка «Записать» — превращает бланк в записанную схему; квадратная кнопка со стрелками слева от «Записать» — <a href="index.html#подстановка-ингредиентов">тумблер подстановки</a> для показанной схемы: серые стрелки — выключено, зелёные — включено. Ячейки сетки заполняются кликом: наведи на ячейку и щёлкни, держа предмет на курсоре, — в ячейку ляжет одна его копия; щелчок пустым курсором ячейку очищает. Предметы при этом <strong>не расходуются</strong>: сетка показывает раскладку, а не хранит её. Бланк лежит <strong>здесь, а не в очереди схем</strong>, и это следствие того же решения: вкладка записи должна быть самодостаточной. Если бы «Записать» брала бланк из очереди, игроку пришлось бы сходить на вкладку «Работа», чтобы записать рецепт, — и две работы снова оказались бы связаны. Записанная схема появляется на месте бланка; оттуда её забирают и кладут в очередь на вкладке «Работа». Записывать — не то же самое, что ставить в очередь, и порядок действий это говорит вслух.</p>
+<h3>Слоты скрытой вкладки недоступны</h3>
+<p>Слот, принадлежащий невидимой сейчас вкладке, нельзя ни заполнить, ни опустошить — ни кликом, ни шифт-кликом, ни перетаскиванием, ни двойным кликом «собрать всё». Скрытая вкладка не просто не нарисована: пока она скрыта, её слотов для игры не существует. Вкладка — состояние окна, а не машины: она нигде не сохраняется, и два игрока у одного автомата могут смотреть разные вкладки, не мешая друг другу.</p>
+<h3>Показ активной схемы</h3>
+<p>Вкладка «Работа» <strong>показывает раскладку схемы из очереди</strong> — той, по которой машина работает, а если она простаивает, то первой записанной. Без этого работающая машина выглядела так: статус «Собирает», выход наполняется, а окно пустое — «непонятно, что за рецепт записан». Продукт схемы нарисован под выходной зоной, которую он и наполняет. Показанная раскладка помечена как <strong>чужая и нередактируемая</strong>: приглушённые предметы, и тултип по ячейке добавляет строку «Раскладка схемы N — только просмотр». Бледно-голубая рамка стоит вокруг слота схемы, из которой раскладка взята, — видно, какая именно из трёх показана. Спутать показанное с собственной раскладкой нельзя: показанная схема только <strong>рисуется</strong> поверх рисунка вкладки, и никаких слотов в этом месте нет вообще — взять оттуда нечего ни при каком клиенте. Собственная раскладка игрока живёт на другой вкладке и на эту не влияет: пока он раскладывает свой рецепт, вкладка «Работа» продолжает показывать то, что делает машина. (До появления вкладок было наоборот — раскладка игрока перебивала показ, и машинная пропадала у него из-под рук.) Рамки в очереди различаются по смыслу: <strong>оранжевая</strong> — схема, по которой идёт текущая операция, <strong>бледно-голубая</strong> — схема, чья раскладка показана. Обычно это одна и та же схема, и оранжевая перекрывает голубую. Кроме того, у каждой записанной схемы <strong>её продукт нарисован прямо в иконке предмета</strong> — см. Схему сборки. Три схемы в очереди различимы без наведения, и точно так же они различимы в сундуке или в инвентаре. <strong>Окно склада</strong> — это окно <a href="../utility/storage_module.html">модуля хранения</a>, оно открывается правым кликом по самому модулю, а не кнопкой в автомате: сетка общего склада, 3–12 рядов по числу подключённых модулей; прокрутки, скроллбара и поиска нет — потолок в 108 слотов выбран так, чтобы всё влезало на экран. Тип: container (<code>AssemblerMenu</code>; окно склада — <code>StorageModuleMenu</code> модуля). Если склада рядом нет вовсе, автомат ведёт себя ровно как при пустом складе: строка статуса говорит «не хватает материалов», EU/FE не тратится, ничего не ломается.</p>
+<h2>Свойства блока</h2>
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Дроп с NBT энергии</td><td>false</td></tr></tbody></table>
+<p>При разрушении автомата выпадают схемы из слотов и содержимое выходной зоны. Содержимое склада <strong>остаётся в модулях</strong> — теряется только связность, и модули простаивают до установки нового автомата. Закреплено <code>TC-ASM-026</code>: выпавшее считается точным числом, поэтому видна и потеря схемы (её не скрафтить обратно), и двойной дроп выходной зоны. Очередь схем, прогресс и позиция круга (курсора) переживают перезагрузку — <code>TC-ASM-027</code> гоняет машину через NBT, тот же путь, что сохранение и загрузка чанка. Курсор в этом списке — единственное поле без видимого симптома: потеряйся он, круг молча начинал бы заново с первой схемы, и честность очереди, ради которой он и существует, тихо перестала бы работать. Передняя грань помечена и, как у прочих машин мода, исключена из автоматизации: труба, приткнутая к лицевой стороне, не увидит слотов.</p>
+<h2>Рецепты</h2>
+<p>Крафт: Рецептов переработки нет — машина использует ванильный <code>minecraft:crafting</code> Состав по образцу жанра — корпус тира + две схемы + «идентичность» + «хранение», а четыре угла заняты механикой, которая эти детали двигает:</p>
+<pre><code class="lang-">G T G A — [Продвинутый корпус машины] — сердце и тир машины
+C A C C — [Электронная схема] ×2 — логика, читающая схему сборки
+G S G T — верстак — то, что машина делает
+S — [Модуль хранения] — откуда она берёт детали
+G — [Железная шестерня] ×4 — «руки», подающие деталь в сетку</code></pre>
+<p>Ссылки: <a href="../components/advanced_machine_casing.html">Продвинутый корпус машины</a>, <a href="../components/electronic_circuit.html">Электронная схема</a>, <a href="../utility/storage_module.html">Модуль хранения</a>, <a href="../components/metal_gears.html">Железная шестерня</a>. Углы — именно шестерни, а не ещё пластины: автомат — первая машина мода, которая сама перекладывает детали, и шестерня — та деталь, которую мод уже тратит ровно на это (<a href="../fluid-storage/fluid_tank.html">Бак</a>, <a href="../item-transport/item_pipe.html">Предметная труба</a> читаются так же). Заполненные девять клеток заодно ставят крафт в один ряд с прочими машинами мода, где пустой угол — исключение.</p>
+<h2>Прогрессия</h2>
+<p>Тир: MV — <strong>первая MV-машина мода</strong>, якорь MV-фазы Требует: <a href="../utility/storage_module.html">Модуль хранения</a> (без склада машине неоткуда брать сырьё) и Схему сборки Развивается в: нет. Автокрафт «по требованию» (заказ «сделай 64 X» с деревом подкрафтов) — отдельная будущая система, а не апгрейд этой машины</p>
+<h2>Совместимость</h2>
+<p>Просмотрщики: JEI, REI, EMI — рецепт крафта самой машины Тултипы: Jade, The One Probe — заряд, прогресс, активная схема</p>
+<h2>Связанное</h2>
+<p><a href="../utility/storage_module.html">Модуль хранения</a> — склад, из которого автомат берёт сырьё Схема сборки — предмет, хранящий рецепт <a href="../energy-transfer/gold_cable.html">Золотой кабель</a> — питание MV-машины <a href="../item-transport/item_pipe.html">Предметная труба</a> — наполняет склад, забирает выход <a href="sawmill.html">Лесопилка</a> — образец машины с переключаемыми режимами в GUI</p>
+<h2>Крафт</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="сборочный автомат alaindustrial:assembler" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Железная шестерня"><img src="../assets/item/iron_gear_3d.png" alt="Железная шестерня" width="32" height="32"></div> <div class="cell" title="Crafting Table"><img src="../assets/item/crafting_table_3d.png" alt="Crafting Table" width="32" height="32"></div> <div class="cell" title="Железная шестерня"><img src="../assets/item/iron_gear_3d.png" alt="Железная шестерня" width="32" height="32"></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Продвинутый машинный корпус"><img src="../assets/block/advanced_machine_casing.png" alt="Продвинутый машинный корпус" width="32" height="32"></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Железная шестерня"><img src="../assets/item/iron_gear_3d.png" alt="Железная шестерня" width="32" height="32"></div> <div class="cell" title="Модуль хранения"><img src="../assets/block/storage_module_top.png" alt="Модуль хранения" width="32" height="32"></div> <div class="cell" title="Железная шестерня"><img src="../assets/item/iron_gear_3d.png" alt="Железная шестерня" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Сборочный автомат"><img src="../assets/block/assembler_top.png" alt="Сборочный автомат" width="32" height="32"></div><div class="result-name">Сборочный автомат</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>
