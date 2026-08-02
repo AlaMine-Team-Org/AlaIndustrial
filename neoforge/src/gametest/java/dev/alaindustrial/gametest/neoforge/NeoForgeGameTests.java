@@ -27,6 +27,7 @@ import dev.alaindustrial.gametest.FluxweaveArmorScenarios;
 import dev.alaindustrial.gametest.GalvanicBathScenarios;
 import dev.alaindustrial.gametest.PolymerizerScenarios;
 import dev.alaindustrial.gametest.VulcanizerScenarios;
+import dev.alaindustrial.gametest.GardenDroneScenarios;
 import dev.alaindustrial.gametest.MenuDataWidthScenarios;
 import dev.alaindustrial.gametest.EnergyPackScenarios;
 import dev.alaindustrial.gametest.JetpackScenarios;
@@ -670,6 +671,21 @@ public final class NeoForgeGameTests {
 		// MOD-235 (TC-CMN-001-REG02): the same client-stub-width check, swept over EVERY machine menu in
 		// ContentManifest.MENUS — the pump's FUN09 above only ever covered the pump. Longer timeout: the
 		// body places 17 machines and builds 22 menus.
+		// MOD-277: the Garden Drone Station — the same five bodies the Fabric lane runs.
+		registerTest(event, "garden_drone_tills_dirt", 40, true,
+				GardenDroneScenarios::fun01TillsDirtAndSpendsEu);
+		registerTest(event, "garden_drone_plants_seed", 40, true,
+				GardenDroneScenarios::fun02PlantsSeedOnFarmland);
+		registerTest(event, "garden_drone_harvests_into_station", 40, true,
+				GardenDroneScenarios::fun03HarvestsRipeCropIntoStation);
+		registerTest(event, "garden_drone_without_energy_does_nothing", 40, true,
+				GardenDroneScenarios::fun04NoEnergyLeavesCropUntouched);
+		registerTest(event, "garden_drone_full_output_keeps_crop", 40, true,
+				GardenDroneScenarios::fun05FullOutputLeavesCropStanding);
+		registerTest(event, "garden_drone_without_drone_is_inert", 40, true,
+				GardenDroneScenarios::fun07WithoutDroneNothingHappens);
+		registerTest(event, "garden_drone_flight_delays_action", 300, true,
+				GardenDroneScenarios::fun06FlightDelaysTheAction);
 		registerTest(event, "menu_data_width_matches_block_entity", 200, true,
 				MenuDataWidthScenarios::reg02ClientMenuWidthMatchesBlockEntity);
 		// MOD-107: the pump's slots exchange with fluid containers through the loader's item fluid

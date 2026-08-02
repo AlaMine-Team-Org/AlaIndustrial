@@ -16,6 +16,7 @@ import dev.alaindustrial.menu.StorageMenu6;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.PolymerizerMenu;
+import dev.alaindustrial.menu.GardenDroneStationMenu;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.menu.IncubatorMenu;
 import dev.alaindustrial.menu.SawmillMenu;
@@ -123,6 +124,8 @@ public final class ContentManifest {
 			menu("daylight_solar_panel", DaylightSolarPanelMenu::new, s -> ModContent.DAYLIGHT_SOLAR_PANEL_MENU = s),
 			menu("geothermal_generator", GeothermalGeneratorMenu::new, s -> ModContent.GEOTHERMAL_GENERATOR_MENU = s),
 			menu("pump", PumpMenu::new, s -> ModContent.PUMP_MENU = s),
+			menu("garden_drone_station", GardenDroneStationMenu::new,
+					s -> ModContent.GARDEN_DRONE_STATION_MENU = s),
 			menu("water_mill", WaterMillMenu::new, s -> ModContent.WATER_MILL_MENU = s),
 			menu("wind_mill", WindMillMenu::new, s -> ModContent.WIND_MILL_MENU = s),
 			menu("high_altitude_wind_mill", HighAltitudeWindMillMenu::new,
@@ -166,6 +169,10 @@ public final class ContentManifest {
 			Map.entry("high_altitude_wind_mill", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("storm_wind_mill", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("pump", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			// noOcclusion: the dock is a 4px plate, not a full cube — without it the faces below/around
+			// it would be culled as if a solid block sat there.
+			Map.entry("garden_drone_station",
+					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("fluid_tank", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("copper_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
 			Map.entry("tin_cable", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),

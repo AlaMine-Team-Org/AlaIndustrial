@@ -244,6 +244,9 @@ public final class ModItems {
 	public static final BlockItem INCUBATOR_ITEM = blockItem("incubator", ModBlocks.INCUBATOR);
 	public static final BlockItem TRELLIS_ITEM = blockItem("trellis", ModBlocks.TRELLIS);
 	public static final BlockItem PUMP_ITEM = blockItem("pump", ModBlocks.PUMP);
+	public static final BlockItem GARDEN_DRONE_STATION_ITEM =
+			blockItem("garden_drone_station", ModBlocks.GARDEN_DRONE_STATION);
+	public static final Item GARDEN_DRONE = item("garden_drone");
 	public static final BlockItem FLUID_TANK_ITEM = fluidTankBlockItem("fluid_tank", ModBlocks.FLUID_TANK);
 	public static final BlockItem WATER_MILL_ITEM = blockItem("water_mill", ModBlocks.WATER_MILL);
 	public static final BlockItem WIND_MILL_ITEM = blockItem("wind_mill", ModBlocks.WIND_MILL);
@@ -736,6 +739,8 @@ public final class ModItems {
 		ModContent.RUBBER = () -> RUBBER;
 		ModContent.UNSTABLE_ISOTOPE = () -> UNSTABLE_ISOTOPE;
 		ModContent.PUMP_ITEM = () -> PUMP_ITEM;
+		ModContent.GARDEN_DRONE_STATION_ITEM = () -> GARDEN_DRONE_STATION_ITEM;
+		ModContent.GARDEN_DRONE = () -> GARDEN_DRONE;
 		ModContent.FLUID_TANK_ITEM = () -> FLUID_TANK_ITEM;
 		ModContent.TIN_ORE_ITEM = () -> TIN_ORE_ITEM;
 		ModContent.DEEPSLATE_TIN_ORE_ITEM = () -> DEEPSLATE_TIN_ORE_ITEM;

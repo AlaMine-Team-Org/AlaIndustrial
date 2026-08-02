@@ -1,5 +1,6 @@
 package dev.alaindustrial.item.tool;
 
+import dev.alaindustrial.core.crop.CropMaturity;
 import dev.alaindustrial.registry.ModSounds;
 import dev.alaindustrial.registry.ModTags;
 import java.util.ArrayList;
@@ -20,11 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.StemBlock;
-import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 /**
  * Scythe (MOD-068) — a hand tool for mass-clearing decorative foliage and harvesting mature crops.
@@ -42,7 +39,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
  * ({@link ModTags.Blocks#SCYTHE_CROPS} — {@code #minecraft:crops} plus sweet berry bush, cactus and
  * sugar cane). Immature crops ({@code age < max}) are skipped so young plants keep growing; the scythe
  * acts as an AOE sickle. Melon/pumpkin stems are never harvested (they are not a pickable crop — see
- * {@link #isCropTarget}); cactus/sugar cane are only taken above their base block so the crop regrows.
+ * {@link CropMaturity#isHarvestable}); cactus/sugar cane are only taken above their base block so the crop regrows.
  * Decorative foliage is untouched in this mode.</li>
  * </ul>
  *
@@ -77,7 +74,6 @@ public class ScytheItem extends Item {
 	 * Mature age for a sweet berry bush: at {@code age >= 2} the bush is ripe (vanilla drops berries on
 	 * interaction/growth at age 2 and 3, never at 0/1), so 2+ counts as "ready to harvest".
 	 */
-	private static final int SWEET_BERRY_RIPE_AGE = 2;
 
 	private final Profile profile;
 
@@ -136,7 +132,7 @@ public class ScytheItem extends Item {
 		if (level.isClientSide() || !(player instanceof ServerPlayer serverPlayer)) {
 			for (BlockPos pos : area) {
 				BlockState state = level.getBlockState(pos);
-				if (cropMode ? isCropTarget(level, pos, state) : isDecorTarget(state)) {
+				if (cropMode ? CropMaturity.isHarvestable(level, pos, state) : isDecorTarget(state)) {
 					return InteractionResult.SUCCESS;
 				}
 			}
@@ -152,7 +148,7 @@ public class ScytheItem extends Item {
 			// tall plant, or a sugar-cane/cactus column collapsing) may have already cleared this spot,
 			// and we must not spend durability on air.
 			BlockState state = level.getBlockState(pos);
-			if (!(cropMode ? isCropTarget(level, pos, state) : isDecorTarget(state))) {
+			if (!(cropMode ? CropMaturity.isHarvestable(level, pos, state) : isDecorTarget(state))) {
 				continue;
 			}
 			if (serverPlayer.gameMode.destroyBlock(pos)) {
@@ -201,82 +197,6 @@ public class ScytheItem extends Item {
 	 */
 	private static boolean isDecorTarget(BlockState state) {
 		return !state.isAir() && state.is(ModTags.Blocks.SCYTHE_HARVESTABLE);
-	}
-
-	/**
-	 * Crop-mode target: a <b>mature</b> crop in {@link ModTags.Blocks#SCYTHE_CROPS}. Immature crops are
-	 * left to keep growing, and decorative foliage is untouched (it is not in the crops tag).
-	 *
-	 * <p>The tag pulls {@code #minecraft:crops}, whose 26.2 membership is broader than {@link CropBlock}:
-	 * wheat/carrot/potato/beetroot/torchflower_crop are {@code CropBlock}, but {@code melon_stem}/
-	 * {@code pumpkin_stem} are {@code StemBlock} and {@code pitcher_crop} is a {@code DoublePlantBlock}.
-	 * Each type needs its own maturity rule, and stems are deliberately never harvested (they are not a
-	 * crop you pick — they spawn a fruit on a neighbour and keep growing), matching MOD-098 decision 2.
-	 *
-	 * <p>Cactus / sugar cane grow as a vertical column from a single base block on the ground. Only the
-	 * blocks <b>above the base</b> are harvested — i.e. this block is a target only when the block below
-	 * it is the same type (it is part of the stalk, not the root). That leaves the base alive to regrow,
-	 * exactly like hand-picking the top of a cane/cactus (MOD-098 decision 1).
-	 *
-	 * @param level the level, to read the block below for the cactus/cane base check
-	 * @param pos   the candidate position
-	 * @param state the candidate state
-	 */
-	private static boolean isCropTarget(Level level, BlockPos pos, BlockState state) {
-		if (state.isAir() || !state.is(ModTags.Blocks.SCYTHE_CROPS)) {
-			return false;
-		}
-		Block block = state.getBlock();
-		// CropBlock covers wheat, carrots, potatoes, beetroots, torchflower_crop (all its subclasses).
-		if (block instanceof CropBlock crop) {
-			return crop.isMaxAge(state);
-		}
-		// Sweet berry bush: ripe from age 2 (drops berries); age 0/1 left to grow.
-		if (block instanceof SweetBerryBushBlock) {
-			return state.getValue(SweetBerryBushBlock.AGE) >= SWEET_BERRY_RIPE_AGE;
-		}
-		// Cactus / sugar cane: harvest only above the base. The base block sits on ground with nothing
-		// of the same type beneath it; any same-typed block above the base is the pickable stalk.
-		if (isStalkBlock(block)) {
-			return level.getBlockState(pos.below()).is(block);
-		}
-		// Melon/pumpkin stems (StemBlock) are never harvested: they are not a pickable crop — they grow
-		// a fruit on a neighbour and keep growing. Explicit guard before the AGE fallback, because a
-		// ripe stem DOES carry AGE at max and would otherwise be caught there (MOD-098 decision 2).
-		if (block instanceof StemBlock) {
-			return false;
-		}
-		// Pitcher crop (DoublePlantBlock, not CropBlock): mature at its max AGE. Same for any other
-		// future crop that carries a vanilla AGE property — harvest at the property's top value, so new
-		// crops added to the tag by Mojang or mods work without a code change.
-		IntegerProperty age = findAgeProperty(state);
-		if (age != null) {
-			int max = age.getPossibleValues().stream().max(Integer::compare).orElse(0);
-			return state.getValue(age) >= max;
-		}
-		// Unknown tagged block with no AGE rule and no specific handler: never auto-harvest. A block we
-		// cannot prove ripe is safer left untouched than broken blind.
-		return false;
-	}
-
-	/** {@code true} for the cactus / sugar cane columns that regrow from a base (the stalk crops). */
-	private static boolean isStalkBlock(Block block) {
-		return block == net.minecraft.world.level.block.Blocks.CACTUS
-				|| block == net.minecraft.world.level.block.Blocks.SUGAR_CANE;
-	}
-
-	/**
-	 * The block's {@code AGE} {@link IntegerProperty} if it has one (most growing blocks do), else
-	 * {@code null}. Used as the maturity fallback for tagged crops that are not {@link CropBlock} and
-	 * not handled by a specific branch (e.g. {@code pitcher_crop}).
-	 */
-	private static IntegerProperty findAgeProperty(BlockState state) {
-		for (var property : state.getProperties()) {
-			if (property instanceof IntegerProperty ip && "age".equals(property.getName())) {
-				return ip;
-			}
-		}
-		return null;
 	}
 
 	/**

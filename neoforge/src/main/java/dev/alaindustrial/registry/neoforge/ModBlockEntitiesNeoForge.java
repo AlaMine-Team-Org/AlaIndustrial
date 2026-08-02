@@ -26,6 +26,7 @@ import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
+import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
@@ -119,6 +120,9 @@ public final class ModBlockEntitiesNeoForge {
 			register("geothermal_generator", GeothermalGeneratorBlockEntity::new, ModBlocksNeoForge.GEOTHERMAL_GENERATOR);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PumpBlockEntity>> PUMP =
 			register("pump", PumpBlockEntity::new, ModBlocksNeoForge.PUMP);
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GardenDroneStationBlockEntity>>
+			GARDEN_DRONE_STATION = register("garden_drone_station", GardenDroneStationBlockEntity::new,
+					ModBlocksNeoForge.GARDEN_DRONE_STATION);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidTankBlockEntity>> FLUID_TANK =
 			register("fluid_tank", FluidTankBlockEntity::new, ModBlocksNeoForge.FLUID_TANK);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WaterMillBlockEntity>> WATER_MILL =
@@ -180,6 +184,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.INCUBATOR_BE = INCUBATOR::get;
 		ModContent.GEOTHERMAL_GENERATOR_BE = GEOTHERMAL_GENERATOR::get;
 		ModContent.PUMP_BE = PUMP::get;
+		ModContent.GARDEN_DRONE_STATION_BE = GARDEN_DRONE_STATION::get;
 		ModContent.FLUID_TANK_BE = FLUID_TANK::get;
 		ModContent.WATER_MILL_BE = WATER_MILL::get;
 		ModContent.WIND_MILL_BE = WIND_MILL::get;

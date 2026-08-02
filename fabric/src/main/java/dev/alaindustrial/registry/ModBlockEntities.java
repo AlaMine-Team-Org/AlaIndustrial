@@ -26,6 +26,7 @@ import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
+import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
@@ -83,6 +84,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<ElectricHeaterBlockEntity> ELECTRIC_HEATER;
 	public static BlockEntityType<IncubatorBlockEntity> INCUBATOR;
 	public static BlockEntityType<PumpBlockEntity> PUMP;
+	public static BlockEntityType<GardenDroneStationBlockEntity> GARDEN_DRONE_STATION;
 	public static BlockEntityType<FluidTankBlockEntity> FLUID_TANK;
 	public static BlockEntityType<WaterMillBlockEntity> WATER_MILL;
 	public static BlockEntityType<WindMillBlockEntity> WIND_MILL;
@@ -144,6 +146,8 @@ public final class ModBlockEntities {
 				new BlockEntityType<>(IncubatorBlockEntity::new, Set.of(ModBlocks.INCUBATOR)));
 		PUMP = register("pump",
 				new BlockEntityType<>(PumpBlockEntity::new, Set.of(ModBlocks.PUMP)));
+		GARDEN_DRONE_STATION = register("garden_drone_station",
+				new BlockEntityType<>(GardenDroneStationBlockEntity::new, Set.of(ModBlocks.GARDEN_DRONE_STATION)));
 		FLUID_TANK = register("fluid_tank",
 				new BlockEntityType<>(FluidTankBlockEntity::new, Set.of(ModBlocks.FLUID_TANK)));
 		WATER_MILL = register("water_mill",
@@ -191,6 +195,7 @@ public final class ModBlockEntities {
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GALVANIC_BATH);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ELECTRIC_HEATER);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),PUMP);
+			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GARDEN_DRONE_STATION);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),WATER_MILL);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),WIND_MILL);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),HIGH_ALTITUDE_WIND_MILL);
@@ -222,6 +227,7 @@ public final class ModBlockEntities {
 		ModContent.ELECTRIC_HEATER_BE = () -> ELECTRIC_HEATER;
 		ModContent.INCUBATOR_BE = () -> INCUBATOR;
 		ModContent.PUMP_BE = () -> PUMP;
+		ModContent.GARDEN_DRONE_STATION_BE = () -> GARDEN_DRONE_STATION;
 		ModContent.FLUID_TANK_BE = () -> FLUID_TANK;
 		ModContent.WATER_MILL_BE = () -> WATER_MILL;
 		ModContent.WIND_MILL_BE = () -> WIND_MILL;

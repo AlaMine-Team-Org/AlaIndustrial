@@ -16,6 +16,7 @@ import dev.alaindustrial.menu.StorageMenu6;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.PolymerizerMenu;
+import dev.alaindustrial.menu.GardenDroneStationMenu;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.menu.IncubatorMenu;
 import dev.alaindustrial.menu.SawmillMenu;
@@ -105,6 +106,7 @@ public final class ModContent {
 	public static Supplier<Block> HIGH_ALTITUDE_WIND_MILL = unbound("HIGH_ALTITUDE_WIND_MILL");
 	public static Supplier<Block> STORM_WIND_MILL = unbound("STORM_WIND_MILL");
 	public static Supplier<Block> PUMP = unbound("PUMP");
+	public static Supplier<Block> GARDEN_DRONE_STATION = unbound("GARDEN_DRONE_STATION");
 	public static Supplier<Block> FLUID_TANK = unbound("FLUID_TANK");
 	public static Supplier<Block> COPPER_CABLE = unbound("COPPER_CABLE");
 	public static Supplier<Block> TIN_CABLE = unbound("TIN_CABLE");
@@ -349,6 +351,9 @@ public final class ModContent {
 	public static Supplier<BlockItem> INCUBATOR_ITEM = unbound("INCUBATOR_ITEM");
 	public static Supplier<BlockItem> TRELLIS_ITEM = unbound("TRELLIS_ITEM");
 	public static Supplier<BlockItem> PUMP_ITEM = unbound("PUMP_ITEM");
+	public static Supplier<BlockItem> GARDEN_DRONE_STATION_ITEM = unbound("GARDEN_DRONE_STATION_ITEM");
+	/** The drone itself — an item that lives in the station's dock slot (MOD-277). */
+	public static Supplier<Item> GARDEN_DRONE = unbound("GARDEN_DRONE");
 	public static Supplier<BlockItem> FLUID_TANK_ITEM = unbound("FLUID_TANK_ITEM");
 	public static Supplier<BlockItem> TIN_ORE_ITEM = unbound("TIN_ORE_ITEM");
 	public static Supplier<BlockItem> DEEPSLATE_TIN_ORE_ITEM = unbound("DEEPSLATE_TIN_ORE_ITEM");
@@ -403,6 +408,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> INCUBATOR_BE = unbound("INCUBATOR_BE");
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
+	public static Supplier<BlockEntityType<?>> GARDEN_DRONE_STATION_BE = unbound("GARDEN_DRONE_STATION_BE");
 	public static Supplier<BlockEntityType<?>> FLUID_TANK_BE = unbound("FLUID_TANK_BE");
 	public static Supplier<BlockEntityType<?>> IRON_CHEST_BE = unbound("IRON_CHEST_BE");
 	public static Supplier<BlockEntityType<?>> STORAGE_MODULE_BE = unbound("STORAGE_MODULE_BE");
@@ -444,6 +450,9 @@ public final class ModContent {
 	public static Supplier<MenuType<GeothermalGeneratorMenu>> GEOTHERMAL_GENERATOR_MENU =
 			unbound("GEOTHERMAL_GENERATOR_MENU");
 	public static Supplier<MenuType<PumpMenu>> PUMP_MENU = unbound("PUMP_MENU");
+	// Typed (not wildcard): MenuScreenManifest.screen(...) cannot bind a wildcard MenuType.
+	public static Supplier<MenuType<GardenDroneStationMenu>> GARDEN_DRONE_STATION_MENU =
+			unbound("GARDEN_DRONE_STATION_MENU");
 	public static Supplier<MenuType<WaterMillMenu>> WATER_MILL_MENU = unbound("WATER_MILL_MENU");
 	public static Supplier<MenuType<WindMillMenu>> WIND_MILL_MENU = unbound("WIND_MILL_MENU");
 	public static Supplier<MenuType<HighAltitudeWindMillMenu>> HIGH_ALTITUDE_WIND_MILL_MENU =

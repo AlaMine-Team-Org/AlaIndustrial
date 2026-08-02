@@ -195,6 +195,8 @@ public final class CreativeTabContent {
 		out.accept(ModContent.SAWMILL_ITEM.get());
 		out.accept(ModContent.INCUBATOR_ITEM.get());
 		out.accept(ModContent.PUMP_ITEM.get());
+		out.accept(ModContent.GARDEN_DRONE_STATION_ITEM.get());
+		out.accept(ModContent.GARDEN_DRONE.get());
 		out.accept(ModContent.POLYMERIZER_ITEM.get());
 		out.accept(ModContent.VULCANIZER_ITEM.get());
 		out.accept(ModContent.GALVANIC_BATH_ITEM.get());

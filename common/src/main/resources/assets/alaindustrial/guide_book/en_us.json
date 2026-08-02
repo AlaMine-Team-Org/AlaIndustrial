@@ -1429,6 +1429,44 @@
           ]
         },
         {
+          "id": "garden_drone_station",
+          "title": "Garden Drone Station",
+          "icon": "alaindustrial:garden_drone_station",
+          "block_id": "alaindustrial:garden_drone_station",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Garden Drone Station",
+              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Buffer: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "Teleporter",
           "icon": "alaindustrial:teleporter",

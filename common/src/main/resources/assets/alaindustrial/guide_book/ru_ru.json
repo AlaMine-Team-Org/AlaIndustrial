@@ -1429,6 +1429,44 @@
           ]
         },
         {
+          "id": "garden_drone_station",
+          "title": "Станция дрона-садовника",
+          "icon": "alaindustrial:garden_drone_station",
+          "block_id": "alaindustrial:garden_drone_station",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Станция дрона-садовника",
+              "text": "LV-станция с EU-буфером, с которой поднимается BER-дрон и облетает грядки в радиусе 9 блоков — вспахивает свободную землю, сажает семена, удобряет недозревшее и свозит спелый урожай обратно в станцию."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Буфер: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "Телепорт",
           "icon": "alaindustrial:teleporter",

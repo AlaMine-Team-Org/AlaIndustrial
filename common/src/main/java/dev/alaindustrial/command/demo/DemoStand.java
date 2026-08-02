@@ -407,6 +407,11 @@ public final class DemoStand {
 				level.setBlock(half, state.setValue(TrellisBlock.AGE, TrellisBlock.MAX_AGE), 3);
 			}
 		}
+		// Garden Drone Station (MOD-277): the dock beside the trellis plot, charged so its status light
+		// reads "powered" rather than "no EU". Placed next to farmland on purpose — the stand should show
+		// the block in the context it works in.
+		set(level, origin, 40, 1, 10, ModContent.GARDEN_DRONE_STATION.get());
+		chargeBuffer(level, origin, 40, 1, 10);
 		// Enriched Uranium Torch (MOD-085): the standing torch on the floor, and the wall variant mounted
 		// on a small stone post (facing WEST → supported by the post block to its east) so both survive.
 		set(level, origin, 37, 1, 10, ModContent.ENRICHED_URANIUM_TORCH.get());

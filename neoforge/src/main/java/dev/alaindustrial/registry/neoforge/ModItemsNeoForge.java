@@ -328,6 +328,10 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("geothermal_generator", ModBlocksNeoForge.GEOTHERMAL_GENERATOR);
 	public static final DeferredItem<BlockItem> PUMP_ITEM =
 			ITEMS.registerSimpleBlockItem("pump", ModBlocksNeoForge.PUMP);
+	public static final DeferredItem<BlockItem> GARDEN_DRONE_STATION_ITEM =
+			ITEMS.registerSimpleBlockItem("garden_drone_station", ModBlocksNeoForge.GARDEN_DRONE_STATION);
+	public static final DeferredItem<Item> GARDEN_DRONE =
+			ITEMS.registerItem("garden_drone", Item::new);
 	public static final DeferredItem<FluidTankBlockItem> FLUID_TANK_ITEM =
 			ITEMS.registerItem("fluid_tank", ItemBuildersNeoForge.fluidTankBlockItem(ModBlocksNeoForge.FLUID_TANK));
 	public static final DeferredItem<BlockItem> WATER_MILL_ITEM =
@@ -547,6 +551,8 @@ public final class ModItemsNeoForge {
 		ModContent.UNSTABLE_ISOTOPE = UNSTABLE_ISOTOPE;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = GEOTHERMAL_GENERATOR_ITEM;
 		ModContent.PUMP_ITEM = PUMP_ITEM;
+		ModContent.GARDEN_DRONE_STATION_ITEM = GARDEN_DRONE_STATION_ITEM;
+		ModContent.GARDEN_DRONE = GARDEN_DRONE;
 		ModContent.FLUID_TANK_ITEM = FLUID_TANK_ITEM::get;
 		ModContent.WATER_MILL_ITEM = WATER_MILL_ITEM;
 		ModContent.WIND_MILL_ITEM = WIND_MILL_ITEM;

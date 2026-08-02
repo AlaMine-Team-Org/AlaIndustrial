@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"C": "#c:ingots/copper",
+		"I": "#c:ingots/iron",
+		"E": "alaindustrial:electronic_circuit",
+		"H": "minecraft:hopper"
+	},
+	"pattern": ["C C", "IEI", "CHC"],
+	"result": { "id": "alaindustrial:garden_drone" }
+}

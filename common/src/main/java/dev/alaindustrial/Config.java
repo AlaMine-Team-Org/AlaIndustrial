@@ -450,6 +450,32 @@ public final class Config {
 	/** Share of successes that roll the legendary grade. */
 	public static double mutationGradeLegendary = 0.02;
 
+	// --- Garden Drone Station (MOD-277): zone-scan farm caretaker, one BER-drawn drone per station. ---
+	/** Internal EU buffer. Sized like {@link #pumpBuffer}/{@link #magnetBuffer} — a modest LV
+	 * reservoir for a per-action (not per-tick) consumer. */
+	public static int gardenDroneBuffer = 4000;
+	/** EU spent per completed action (till / plant / fertilize / harvest). Demand-driven: an idle
+	 * station (nothing to do) spends nothing, same pattern as {@link #electricHeaterEuPerTick}. */
+	public static int gardenDroneEuPerAction = 8;
+	/**
+	 * Scan radius in blocks around the station.
+	 *
+	 * <p>Four, not the nine an edge-placed 9x9 plot would need: this is the tier-1 drone, and a machine
+	 * that tends a 9-wide field the moment it is crafted leaves nothing for a later tier to improve.
+	 * A radius-4 zone is a comfortable plot around the dock and keeps the flights short enough to watch.
+	 */
+	public static int gardenDroneRange = 4;
+	/** Ticks between zone re-scans; same cadence as {@link #pumpScanCooldownTicks}. The scan result
+	 * is cached and invalidated by block updates inside the zone, so this interval only bounds the
+	 * cost of a full rebuild after cache invalidation, not every tick's work. */
+	public static int gardenDroneScanIntervalTicks = 20;
+	/**
+	 * Ticks the drone spends flying per block of distance to its target. The action lands when the
+	 * drone arrives, not when the target is chosen — without this the whole farm is tended in a couple
+	 * of ticks, which reads as teleportation rather than as a machine doing work.
+	 */
+	public static int gardenDroneFlightTicksPerBlock = 11;
+
 	// --- Cotton trellis (MOD-280): the mod's first crop. ---
 	/**
 	 * Chance divisor for one rooting stage of the trellis: on each random tick of a moist, lit
@@ -870,6 +896,16 @@ public final class Config {
 				() -> mutationGradeEpic, v -> mutationGradeEpic = v, 0.0, 0.0),
 			new DoubleField("mutationGradeLegendary", "Share of successful mutations rolling the legendary grade.",
 				() -> mutationGradeLegendary, v -> mutationGradeLegendary = v, 0.0, 0.0),
+			new IntField("gardenDroneBuffer", "Garden Drone station internal EU buffer.",
+				() -> gardenDroneBuffer, v -> gardenDroneBuffer = v, 1),
+			new IntField("gardenDroneEuPerAction", "EU the Garden Drone spends per completed action (till/plant/fertilize/harvest); idle costs nothing.",
+				() -> gardenDroneEuPerAction, v -> gardenDroneEuPerAction = v, 1),
+			new IntField("gardenDroneRange", "Garden Drone zone-scan radius in blocks around the station.",
+				() -> gardenDroneRange, v -> gardenDroneRange = v, 1),
+			new IntField("gardenDroneScanIntervalTicks", "Ticks between Garden Drone zone rebuilds after cache invalidation.",
+				() -> gardenDroneScanIntervalTicks, v -> gardenDroneScanIntervalTicks = v, 1),
+			new IntField("gardenDroneFlightTicksPerBlock", "Ticks the Garden Drone flies per block of distance before its action lands.",
+				() -> gardenDroneFlightTicksPerBlock, v -> gardenDroneFlightTicksPerBlock = v, 0),
 			// Minimum 1 on both: a 0 divisor would divide by zero inside the plant's random tick (MOD-169).
 			new IntField("cottonRootingChanceDivisor", "Cotton trellis: 1-in-this chance of advancing one rooting stage per random tick (higher = longer initial growth).",
 				() -> cottonRootingChanceDivisor, v -> cottonRootingChanceDivisor = v, 1),

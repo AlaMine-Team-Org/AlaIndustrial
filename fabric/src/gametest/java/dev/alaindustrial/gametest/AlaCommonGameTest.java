@@ -302,6 +302,54 @@ public class AlaCommonGameTest {
 	}
 
 	/**
+	 * MOD-277: the Garden Drone Station's four actions, its EU accounting, and the two ways the
+	 * harvest must refuse to run (no power, no room). Bodies are loader-neutral — the NeoForge lane
+	 * runs the same ones.
+	 *
+	 * @implements TC-DRONE-001-FUN01 — bare dirt is tilled, one action's EU is spent
+	 */
+	@GameTest
+	public void gardenDroneTillsDirt(GameTestHelper helper) {
+		GardenDroneScenarios.fun01TillsDirtAndSpendsEu(helper);
+	}
+
+	/** @implements TC-DRONE-001-FUN02 — a seed is planted on bare farmland and consumed */
+	@GameTest
+	public void gardenDronePlantsSeed(GameTestHelper helper) {
+		GardenDroneScenarios.fun02PlantsSeedOnFarmland(helper);
+	}
+
+	/** @implements TC-DRONE-001-FUN03 — a ripe crop lands in the station, never in the world */
+	@GameTest
+	public void gardenDroneHarvestsIntoStation(GameTestHelper helper) {
+		GardenDroneScenarios.fun03HarvestsRipeCropIntoStation(helper);
+	}
+
+	/** @implements TC-DRONE-001-FUN04 — an unpowered station leaves the crop alone */
+	@GameTest
+	public void gardenDroneWithoutEnergyDoesNothing(GameTestHelper helper) {
+		GardenDroneScenarios.fun04NoEnergyLeavesCropUntouched(helper);
+	}
+
+	/** @implements TC-DRONE-001-FUN05 — a full output blocks the harvest instead of voiding it */
+	@GameTest
+	public void gardenDroneFullOutputKeepsCrop(GameTestHelper helper) {
+		GardenDroneScenarios.fun05FullOutputLeavesCropStanding(helper);
+	}
+
+	/** @implements TC-DRONE-001-FUN07 — an empty dock tends nothing and says why */
+	@GameTest
+	public void gardenDroneWithoutDroneIsInert(GameTestHelper helper) {
+		GardenDroneScenarios.fun07WithoutDroneNothingHappens(helper);
+	}
+
+	/** @implements TC-DRONE-001-FUN06 — the drone flies before its action lands */
+	@GameTest
+	public void gardenDroneFlightDelaysAction(GameTestHelper helper) {
+		GardenDroneScenarios.fun06FlightDelaysTheAction(helper);
+	}
+
+	/**
 	 * MOD-235: every machine menu's client stub is bound to exactly as many sync channels as its block
 	 * entity projects. Parametric over {@code ContentManifest.MENUS}, so a new machine menu is covered
 	 * without editing this file. Body is loader-neutral — the NeoForge lane runs the same one.

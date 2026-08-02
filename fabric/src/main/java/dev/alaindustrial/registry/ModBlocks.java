@@ -29,6 +29,7 @@ import dev.alaindustrial.block.PolymerizerBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.ElectricHeaterBlock;
+import dev.alaindustrial.block.GardenDroneStationBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.FluidTankBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
@@ -104,6 +105,9 @@ public final class ModBlocks {
 
 	public static final ResourceKey<Block> PUMP_KEY = key("pump");
 	public static final Block PUMP = register(PUMP_KEY, new PumpBlock(props(PUMP_KEY)));
+	public static final ResourceKey<Block> GARDEN_DRONE_STATION_KEY = key("garden_drone_station");
+	public static final Block GARDEN_DRONE_STATION =
+			register(GARDEN_DRONE_STATION_KEY, new GardenDroneStationBlock(props(GARDEN_DRONE_STATION_KEY)));
 
 	public static final ResourceKey<Block> FLUID_TANK_KEY = key("fluid_tank");
 	public static final Block FLUID_TANK = register(FLUID_TANK_KEY, new FluidTankBlock(props(FLUID_TANK_KEY)));
@@ -330,6 +334,7 @@ public final class ModBlocks {
 		ModContent.HIGH_ALTITUDE_WIND_MILL = () -> HIGH_ALTITUDE_WIND_MILL;
 		ModContent.STORM_WIND_MILL = () -> STORM_WIND_MILL;
 		ModContent.PUMP = () -> PUMP;
+		ModContent.GARDEN_DRONE_STATION = () -> GARDEN_DRONE_STATION;
 		ModContent.FLUID_TANK = () -> FLUID_TANK;
 		ModContent.COPPER_CABLE = () -> COPPER_CABLE;
 		ModContent.TIN_CABLE = () -> TIN_CABLE;

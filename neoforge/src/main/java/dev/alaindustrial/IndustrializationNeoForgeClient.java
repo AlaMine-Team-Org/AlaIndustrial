@@ -18,6 +18,7 @@ import dev.alaindustrial.client.tooltip.MachineTooltips;
 import dev.alaindustrial.client.screen.MoonlitSolarPanelScreen;
 import dev.alaindustrial.client.screen.SolarPanelScreen;
 import dev.alaindustrial.client.screen.WaterMillScreen;
+import dev.alaindustrial.client.render.GardenDroneBlockEntityRenderer;
 import dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer;
 import dev.alaindustrial.client.screen.WindMillScreen;
 import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
@@ -241,6 +242,9 @@ public final class IndustrializationNeoForgeClient {
 				ChestBlockEntityRenderer::gold);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.WATER_MILL.get(),
 				WaterMillWheelBlockEntityRenderer::new);
+		// Garden Drone (MOD-277) — NeoForge counterpart of the Fabric registration.
+		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.GARDEN_DRONE_STATION.get(),
+				GardenDroneBlockEntityRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.WIND_MILL.get(),
 				WindMillRotorBlockEntityRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.HIGH_ALTITUDE_WIND_MILL.get(),
@@ -270,6 +274,8 @@ public final class IndustrializationNeoForgeClient {
 	 * the Fabric {@code ModelLayerRegistry.registerModelLayer} call.
 	 */
 	private void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+		event.registerLayerDefinition(GardenDroneBlockEntityRenderer.MODEL_LAYER,
+				GardenDroneBlockEntityRenderer::createLayer);
 		event.registerLayerDefinition(ChestBlockEntityRenderer.IRON_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
 		event.registerLayerDefinition(ChestBlockEntityRenderer.SILVER_CHEST_LAYER,

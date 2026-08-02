@@ -31,6 +31,7 @@ import dev.alaindustrial.block.PolymerizerBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.ElectricHeaterBlock;
+import dev.alaindustrial.block.GardenDroneStationBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.FluidTankBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
@@ -116,6 +117,9 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("geothermal_generator", GeothermalGeneratorBlock::new, props("geothermal_generator"));
 	public static final DeferredBlock<PumpBlock> PUMP =
 			BLOCKS.registerBlock("pump", PumpBlock::new, props("pump"));
+	public static final DeferredBlock<GardenDroneStationBlock> GARDEN_DRONE_STATION =
+			BLOCKS.registerBlock("garden_drone_station", GardenDroneStationBlock::new,
+					props("garden_drone_station"));
 	public static final DeferredBlock<FluidTankBlock> FLUID_TANK =
 			BLOCKS.registerBlock("fluid_tank", FluidTankBlock::new, props("fluid_tank"));
 	public static final DeferredBlock<WaterMillBlock> WATER_MILL =
@@ -269,6 +273,7 @@ public final class ModBlocksNeoForge {
 		ModContent.TRELLIS = TRELLIS::get;
 		ModContent.GEOTHERMAL_GENERATOR = GEOTHERMAL_GENERATOR::get;
 		ModContent.PUMP = PUMP::get;
+		ModContent.GARDEN_DRONE_STATION = GARDEN_DRONE_STATION::get;
 		ModContent.FLUID_TANK = FLUID_TANK::get;
 		ModContent.WATER_MILL = WATER_MILL::get;
 		ModContent.WIND_MILL = WIND_MILL::get;

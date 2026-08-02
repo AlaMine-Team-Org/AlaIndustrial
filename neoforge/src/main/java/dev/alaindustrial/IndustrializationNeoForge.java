@@ -440,6 +440,7 @@ public final class IndustrializationNeoForge {
 					ModBlockEntitiesNeoForge.INCUBATOR,
 					ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR,
 					ModBlockEntitiesNeoForge.PUMP,
+					ModBlockEntitiesNeoForge.GARDEN_DRONE_STATION,
 					ModBlockEntitiesNeoForge.WATER_MILL,
 					ModBlockEntitiesNeoForge.WIND_MILL,
 					ModBlockEntitiesNeoForge.HIGH_ALTITUDE_WIND_MILL,
@@ -483,6 +484,7 @@ public final class IndustrializationNeoForge {
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.INCUBATOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.PUMP);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GARDEN_DRONE_STATION);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.IRON_CHEST);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SILVER_CHEST);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GOLD_CHEST);

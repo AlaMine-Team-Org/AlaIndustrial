@@ -15,6 +15,7 @@ import dev.alaindustrial.block.GeothermalGeneratorBlock;
 import dev.alaindustrial.block.IncubatorBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
+import dev.alaindustrial.block.GardenDroneStationBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
@@ -370,6 +371,8 @@ public final class MachineTooltips {
 			lines.add(tt("capacity", Config.incubatorBuffer));
 		} else if (block instanceof PumpBlock) {
 			lines.add(tt("pump_cost", Config.pumpEuPerBucket));
+		} else if (block instanceof GardenDroneStationBlock) {
+			lines.add(tt("garden_drone_action_cost", Config.gardenDroneEuPerAction));
 		} else if (block instanceof BatteryBoxBlock) {
 			lines.add(tt("capacity", Config.batteryBoxBuffer));
 			lines.add(tier());
@@ -450,6 +453,10 @@ public final class MachineTooltips {
 			lines.add(incubatorMode("create", ModRecipes.MUTATION_CREATE));
 		} else if (block instanceof PumpBlock) {
 			lines.add(tier());
+		} else if (block instanceof GardenDroneStationBlock) {
+			lines.add(tier());
+			lines.add(tt("garden_drone_range", Config.gardenDroneRange));
+			lines.add(tt("capacity", Config.gardenDroneBuffer));
 		} else if (block instanceof BatteryBoxBlock) {
 			lines.add(Component.translatable("tooltip.alaindustrial.battery_box_io")
 					.withStyle(ChatFormatting.GRAY));

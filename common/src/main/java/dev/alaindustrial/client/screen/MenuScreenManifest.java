@@ -112,6 +112,7 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.DAYLIGHT_SOLAR_PANEL_MENU.get(), DaylightSolarPanelScreen::new),
 			screen(() -> ModContent.GEOTHERMAL_GENERATOR_MENU.get(), GeothermalGeneratorScreen::new),
 			screen(() -> ModContent.PUMP_MENU.get(), PumpScreen::new),
+			screen(() -> ModContent.GARDEN_DRONE_STATION_MENU.get(), GardenDroneStationScreen::new),
 			screen(() -> ModContent.WATER_MILL_MENU.get(), WaterMillScreen::new),
 			screen(() -> ModContent.WIND_MILL_MENU.get(), WindMillScreen::new),
 			screen(() -> ModContent.HIGH_ALTITUDE_WIND_MILL_MENU.get(), HighAltitudeWindMillScreen::new),
