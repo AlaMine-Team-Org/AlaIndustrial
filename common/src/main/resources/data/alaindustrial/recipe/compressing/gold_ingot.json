@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:compressing",
-  "ingredient": "minecraft:gold_ingot",
+  "ingredient": "#c:ingots/gold",
   "result": {
     "id": "alaindustrial:gold_plate",
     "count": 1

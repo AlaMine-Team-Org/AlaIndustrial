@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "alaindustrial:raw_tin",
+  "ingredient": "#c:raw_materials/tin",
   "result": {
     "id": "alaindustrial:tin_dust",
     "count": 2

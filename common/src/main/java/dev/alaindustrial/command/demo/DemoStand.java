@@ -272,6 +272,12 @@ public final class DemoStand {
 			bath.markDirtyAndSync();
 			bath.wake();
 		}
+		// Assembler (MOD-275): the first MV machine. Row z=10 is full from x=2 to x=41 (machines then
+		// the misc zone), so it opens a second machines row one block further south, in front of the
+		// macerator. Charged but idle by design — this slice registers the block and its inventory; the
+		// crafting cycle (and with it a blueprint to stock it with) lands in a later slice.
+		set(level, origin, 2, 1, 12, ModContent.ASSEMBLER.get());
+		chargeBuffer(level, origin, 2, 1, 12);
 		// Iron furnace (MOD-115): fuel-burning, not EU — so it is loaded with input + coal instead of a
 		// pre-charged buffer, and lights itself on the first tick like a vanilla furnace.
 		set(level, origin, 14, 1, 10, ModContent.IRON_FURNACE.get());
@@ -355,7 +361,15 @@ public final class DemoStand {
 		set(level, origin, 31, 1, 10, ModContent.SILVER_CHEST.get());
 		set(level, origin, 32, 1, 10, ModContent.GOLD_CHEST.get());
 		set(level, origin, 33, 1, 10, ModContent.TEMPERED_IRON_BLOCK.get());
+		// MOD-287: two storage modules side by side on the shelf above the plate blocks — adjacent on
+		// purpose, so the stand shows them merged into one warehouse rather than two separate ones.
+		// x=32/33 rather than 30/31: MOD-292 owns (30, 3, 10) for the MV casing that has to sit directly
+		// on top of the LV one below it, and two `set` calls on one cell silently left a lone module.
+		set(level, origin, 32, 3, 10, ModContent.STORAGE_MODULE.get());
+		set(level, origin, 33, 3, 10, ModContent.STORAGE_MODULE.get());
 		// Plate blocks (MOD-225): machine casing + two decorative plate panels, on the shelf above the chests.
+		// MOD-292 puts the MV casing directly on top of the LV one so the tier step is visible side by side.
+		set(level, origin, 30, 3, 10, ModContent.ADVANCED_MACHINE_CASING.get());
 		set(level, origin, 30, 2, 10, ModContent.MACHINE_CASING.get());
 		set(level, origin, 31, 2, 10, ModContent.SILVER_PLATE_BLOCK.get());
 		set(level, origin, 32, 2, 10, ModContent.TEMPERED_IRON_PLATE_BLOCK.get());

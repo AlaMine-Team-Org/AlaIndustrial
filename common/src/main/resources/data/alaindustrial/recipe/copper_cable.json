@@ -1,7 +1,7 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"category": "redstone",
-	"key": { "C": "minecraft:copper_ingot" },
+	"key": { "C": "#c:ingots/copper" },
 	"pattern": ["CCC"],
 	"result": { "id": "alaindustrial:copper_cable", "count": 3 }
 }

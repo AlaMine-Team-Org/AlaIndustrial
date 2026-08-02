@@ -3,7 +3,7 @@
 	"category": "misc",
 	"ingredients": [
 		"minecraft:torch",
-		"alaindustrial:uranium_dust"
+		"#c:dusts/uranium"
 	],
 	"result": {
 		"id": "alaindustrial:enriched_uranium_torch",

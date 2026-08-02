@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "minecraft:lapis_lazuli",
+  "ingredient": "#c:gems/lapis",
   "result": {
     "id": "alaindustrial:lapis_dust",
     "count": 1

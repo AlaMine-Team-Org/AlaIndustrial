@@ -7,8 +7,8 @@
 		" S "
 	],
 	"key": {
-		"M": "minecraft:diamond",
-		"S": "minecraft:stick"
+		"M": "#c:gems/diamond",
+		"S": "#c:rods/wooden"
 	},
 	"result": {
 		"id": "alaindustrial:scythe_diamond",

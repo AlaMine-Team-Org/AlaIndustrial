@@ -3,7 +3,7 @@
 	"category": "misc",
 	"key": {
 		"W": "alaindustrial:copper_cable",
-		"T": "alaindustrial:tin_ingot"
+		"T": "#c:ingots/tin"
 	},
 	"pattern": [
 		"WTW",

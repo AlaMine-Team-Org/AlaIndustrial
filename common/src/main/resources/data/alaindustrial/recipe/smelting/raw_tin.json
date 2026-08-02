@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:smelting",
-  "ingredient": "alaindustrial:raw_tin",
+  "ingredient": "#c:raw_materials/tin",
   "result": { "id": "alaindustrial:tin_ingot", "count": 1 },
   "energy": 200
 }

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_iron_plate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:iron_plate"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_iron_plate"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:storage_module"
+    ]
+  }
+}

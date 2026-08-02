@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:smelting",
-  "ingredient": "alaindustrial:raw_uranium",
+  "ingredient": "#c:raw_materials/uranium",
   "result": { "id": "alaindustrial:uranium_ingot", "count": 1 },
   "energy": 200
 }

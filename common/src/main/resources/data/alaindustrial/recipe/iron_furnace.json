@@ -3,7 +3,7 @@
   "category": "building",
   "key": {
     "F": "minecraft:furnace",
-    "I": "minecraft:iron_ingot"
+    "I": "#c:ingots/iron"
   },
   "pattern": [
     "III",

@@ -3,8 +3,8 @@
 	"category": "redstone",
 	"key": {
 		"E": "alaindustrial:empty_chip",
-		"A": "minecraft:amethyst_shard",
-		"U": "alaindustrial:uranium_plate"
+		"A": "#c:gems/amethyst",
+		"U": "#c:plates/uranium"
 	},
 	"pattern": [
 		"AEA",

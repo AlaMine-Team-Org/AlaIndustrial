@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "alaindustrial:raw_silver",
+  "ingredient": "#c:raw_materials/silver",
   "result": {
     "id": "alaindustrial:silver_dust",
     "count": 2

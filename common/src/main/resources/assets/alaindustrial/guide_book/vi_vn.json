@@ -843,6 +843,45 @@
           ]
         },
         {
+          "id": "assembler",
+          "title": "Máy lắp ráp",
+          "icon": "alaindustrial:assembler",
+          "block_id": "alaindustrial:assembler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy lắp ráp",
+              "text": "Liên tục chế tạo các công thức bàn chế tạo theo bản thiết kế bằng EU, lấy nguyên liệu từ kho mô-đun của chính nó. Giữ hàng đợi ba bản thiết kế."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 480 EU/thao tác",
+                "Bộ đệm: 12000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "",
+                "minecraft:crafting_table",
+                "",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:electronic_circuit",
+                "",
+                "alaindustrial:storage_module",
+                ""
+              ],
+              "result_id": "alaindustrial:assembler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Máy chiết xuất",
           "icon": "alaindustrial:extractor",
@@ -1542,6 +1581,44 @@
           ]
         },
         {
+          "id": "storage_module",
+          "title": "Storage Module",
+          "icon": "alaindustrial:storage_module",
+          "block_id": "alaindustrial:storage_module",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Storage Module",
+              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots on a single screen."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "minecraft:chest",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "industrial_workbench",
           "title": "Bàn chế tạo công nghiệp",
           "icon": "alaindustrial:industrial_workbench",
@@ -1970,6 +2047,37 @@
                 ""
               ],
               "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "advanced_machine_casing",
+          "title": "Advanced Machine Casing",
+          "icon": "alaindustrial:advanced_machine_casing",
+          "block_id": "alaindustrial:advanced_machine_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Advanced Machine Casing",
+              "text": "A full-cube base block for MV machines — a plain machine casing clad in 8 tempered-iron plates."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "#c:plates/tempered_iron",
+                "#c:plates/tempered_iron",
+                "#c:plates/tempered_iron",
+                "#c:plates/tempered_iron",
+                "alaindustrial:machine_casing",
+                "#c:plates/tempered_iron",
+                "#c:plates/tempered_iron",
+                "#c:plates/tempered_iron",
+                "#c:plates/tempered_iron"
+              ],
+              "result_id": "alaindustrial:advanced_machine_casing",
               "result_count": 1
             }
           ]

@@ -2,7 +2,7 @@
 	"type": "minecraft:crafting_shaped",
 	"category": "redstone",
 	"key": {
-		"S": "alaindustrial:silver_ingot",
+		"S": "#c:ingots/silver",
 		"F": "alaindustrial:iron_furnace",
 		"C": "alaindustrial:electronic_circuit",
 		"B": "alaindustrial:battery"

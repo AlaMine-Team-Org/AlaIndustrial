@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:smelting",
-  "ingredient": "minecraft:iron_ingot",
+  "ingredient": "#c:ingots/iron",
   "result": {
     "id": "alaindustrial:tempered_iron",
     "count": 1

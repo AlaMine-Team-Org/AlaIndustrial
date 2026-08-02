@@ -20,4 +20,8 @@ public interface AbstractContainerScreenAccessor {
 
 	@Accessor("imageWidth")
 	int alaindustrial$getImageWidth();
+
+	/** MOD-287: the L3 stand measures whether a window's panel fits the screen it is drawn on. */
+	@Accessor("imageHeight")
+	int alaindustrial$getImageHeight();
 }

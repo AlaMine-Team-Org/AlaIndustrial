@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:compressing",
-  "ingredient": "alaindustrial:nickel_ingot",
+  "ingredient": "#c:ingots/nickel",
   "result": {
     "id": "alaindustrial:nickel_plate",
     "count": 1

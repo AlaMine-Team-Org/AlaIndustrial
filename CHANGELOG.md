@@ -1,18 +1,12 @@
-## 0.1.60
+## 0.1.61
 
-<p><img alt="Fluid pipes carrying water between tanks in Ala Industrial 0.1.60" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.60/release-media/v0.1.60/changelog.png" width="720"></p>
+<p><img alt="Assembler beside a row of merged storage modules, with a blueprint in hand" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.61/release-media/v0.1.61/changelog.png" width="720"></p>
 
-Pipes for liquids: water, lava and oil now travel between your tanks and machines on their own.
+Automated crafting arrives: a machine that repeats a recipe for you, fed by a wall of storage.
 
 ### New
 
-- **Fluid Pipe** — moves any liquid between tanks, the pump and machines. Needs no power.
-- **You can see what is inside.** The liquid shows through the glass in its own colour and flows along the line instead of appearing at the far end.
-- **Set the sides with a wrench**, exactly as on the item pipe: the orange collar draws, the teal one pours.
-- **One liquid per line.** Water and lava cannot share the same run.
-- Recipe: 8 silver ingots around a block of glass = 8 pipes.
-
-### Fixed
-
-- **Item pipes work again** after a joint between two pipes is switched off with the wrench and back on. The line used to look whole but carry nothing.
-- **Liquids no longer vanish or multiply** when moved to and from tanks belonging to other mods.
+- **Assembler.** Give it a recipe and it crafts that item over and over for power, taking the parts from storage attached to the machine. Holds three recipes and switches between them.
+- **Ingredient substitution.** Optional, per recipe: let it accept any matching material instead of the exact one you recorded.
+- **Storage Module.** 27 slots each. Modules placed side by side merge into one store of up to 108 slots, and a row of them reads as a single cabinet.
+- **Advanced Machine Casing and Advanced Circuit.** The mid-tier casing the Assembler is built from, plus a new rubber-based circuit that now goes into that casing.

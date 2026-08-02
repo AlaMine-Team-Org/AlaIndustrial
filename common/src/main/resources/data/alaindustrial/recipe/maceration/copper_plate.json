@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "alaindustrial:copper_plate",
+  "ingredient": "#c:plates/copper",
   "result": {
     "id": "alaindustrial:copper_dust",
     "count": 1

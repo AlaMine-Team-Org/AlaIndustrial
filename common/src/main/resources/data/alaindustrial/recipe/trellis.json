@@ -2,8 +2,8 @@
 	"type": "minecraft:crafting_shaped",
 	"category": "redstone",
 	"key": {
-		"S": "minecraft:stick",
-		"T": "minecraft:string"
+		"S": "#c:rods/wooden",
+		"T": "#c:strings"
 	},
 	"pattern": [
 		"STS",

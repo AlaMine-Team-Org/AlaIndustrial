@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.AssemblerBlock;
 import dev.alaindustrial.block.BatteryBoxBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
@@ -20,6 +21,7 @@ import dev.alaindustrial.block.ExtractorBlock;
 import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
 import dev.alaindustrial.block.IronChestBlock;
+import dev.alaindustrial.block.StorageModuleBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
@@ -166,6 +168,9 @@ public final class ModBlocks {
 
 	public static final ResourceKey<Block> SAWMILL_KEY = key("sawmill");
 	public static final Block SAWMILL = register(SAWMILL_KEY, new SawmillBlock(props(SAWMILL_KEY)));
+	// MOD-275 — the first MV machine; a blueprint-driven auto-crafter.
+	public static final ResourceKey<Block> ASSEMBLER_KEY = key("assembler");
+	public static final Block ASSEMBLER = register(ASSEMBLER_KEY, new AssemblerBlock(props(ASSEMBLER_KEY)));
 	public static final ResourceKey<Block> POLYMERIZER_KEY = key("polymerizer");
 	public static final Block POLYMERIZER = register(POLYMERIZER_KEY, new PolymerizerBlock(props(POLYMERIZER_KEY)));
 	public static final ResourceKey<Block> VULCANIZER_KEY = key("vulcanizer");
@@ -224,6 +229,10 @@ public final class ModBlocks {
 
 	public static final ResourceKey<Block> IRON_CHEST_KEY = key("iron_chest");
 	public static final Block IRON_CHEST = register(IRON_CHEST_KEY, new IronChestBlock(props(IRON_CHEST_KEY)));
+	// MOD-287 — modular warehouse block; several face-adjacent ones share one inventory.
+	public static final ResourceKey<Block> STORAGE_MODULE_KEY = key("storage_module");
+	public static final Block STORAGE_MODULE =
+			register(STORAGE_MODULE_KEY, new StorageModuleBlock(props(STORAGE_MODULE_KEY)));
 
 	// Silver Chest (MOD-087) — the tier above the iron chest: 45 slots (5×9). Same block stats.
 	public static final ResourceKey<Block> SILVER_CHEST_KEY = key("silver_chest");
@@ -244,6 +253,9 @@ public final class ModBlocks {
 	public static final ResourceKey<Block> MACHINE_CASING_KEY = key("machine_casing");
 	public static final Block MACHINE_CASING =
 			register(MACHINE_CASING_KEY, new Block(props(MACHINE_CASING_KEY)));
+	public static final ResourceKey<Block> ADVANCED_MACHINE_CASING_KEY = key("advanced_machine_casing");
+	public static final Block ADVANCED_MACHINE_CASING =
+			register(ADVANCED_MACHINE_CASING_KEY, new Block(props(ADVANCED_MACHINE_CASING_KEY)));
 	public static final ResourceKey<Block> SILVER_PLATE_BLOCK_KEY = key("silver_plate_block");
 	public static final Block SILVER_PLATE_BLOCK =
 			register(SILVER_PLATE_BLOCK_KEY, new Block(props(SILVER_PLATE_BLOCK_KEY)));
@@ -334,6 +346,7 @@ public final class ModBlocks {
 		ModContent.EXTRACTOR = () -> EXTRACTOR;
 		ModContent.COMPRESSOR = () -> COMPRESSOR;
 		ModContent.SAWMILL = () -> SAWMILL;
+		ModContent.ASSEMBLER = () -> ASSEMBLER;
 		ModContent.POLYMERIZER = () -> POLYMERIZER;
 		ModContent.VULCANIZER = () -> VULCANIZER;
 		ModContent.GALVANIC_BATH = () -> GALVANIC_BATH;
@@ -352,11 +365,13 @@ public final class ModBlocks {
 		ModContent.URANIUM_ORE = () -> URANIUM_ORE;
 		ModContent.DEEPSLATE_URANIUM_ORE = () -> DEEPSLATE_URANIUM_ORE;
 		ModContent.IRON_CHEST = () -> IRON_CHEST;
+		ModContent.STORAGE_MODULE = () -> STORAGE_MODULE;
 		ModContent.IRON_FURNACE = () -> IRON_FURNACE;
 		ModContent.SILVER_CHEST = () -> SILVER_CHEST;
 		ModContent.GOLD_CHEST = () -> GOLD_CHEST;
 		ModContent.TEMPERED_IRON_BLOCK = () -> TEMPERED_IRON_BLOCK;
 		ModContent.MACHINE_CASING = () -> MACHINE_CASING;
+		ModContent.ADVANCED_MACHINE_CASING = () -> ADVANCED_MACHINE_CASING;
 		ModContent.SILVER_PLATE_BLOCK = () -> SILVER_PLATE_BLOCK;
 		ModContent.TEMPERED_IRON_PLATE_BLOCK = () -> TEMPERED_IRON_PLATE_BLOCK;
 		ModContent.INDUSTRIAL_WORKBENCH = () -> INDUSTRIAL_WORKBENCH;

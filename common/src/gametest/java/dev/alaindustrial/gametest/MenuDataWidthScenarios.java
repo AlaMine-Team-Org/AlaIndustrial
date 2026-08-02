@@ -51,7 +51,7 @@ public final class MenuDataWidthScenarios {
 	 * literal on purpose — comparing the loop's own count against the manifest would be the tautology that
 	 * lets coverage fall to zero unnoticed. Adding a machine menu means bumping this by one.
 	 */
-	private static final int EXPECTED_MACHINE_MENUS = 20;
+	private static final int EXPECTED_MACHINE_MENUS = 21;
 
 	/** Reused single cell inside the test region; each machine is placed here, read, then cleared. */
 	private static final BlockPos PROBE = new BlockPos(1, 2, 1);

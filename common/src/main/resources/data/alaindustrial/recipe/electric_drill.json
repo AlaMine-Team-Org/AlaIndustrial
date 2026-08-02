@@ -2,7 +2,7 @@
 	"type": "minecraft:crafting_shaped",
 	"category": "equipment",
 	"key": {
-		"I": "minecraft:iron_ingot",
+		"I": "#c:ingots/iron",
 		"B": "alaindustrial:battery",
 		"P": "minecraft:diamond_pickaxe",
 		"C": "alaindustrial:copper_coil",

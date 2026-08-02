@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:compressing",
-  "ingredient": "minecraft:iron_ingot",
+  "ingredient": "#c:ingots/iron",
   "result": {
     "id": "alaindustrial:iron_plate",
     "count": 1

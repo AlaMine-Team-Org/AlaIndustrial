@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     "alaindustrial:forge_hammer",
-    "minecraft:gold_ingot"
+    "#c:ingots/gold"
   ],
   "result": {
     "id": "alaindustrial:gold_plate",

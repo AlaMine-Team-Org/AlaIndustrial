@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " P ",
+    "PCP",
+    " P "
+  ],
+  "key": {
+    "P": "#c:plates/iron",
+    "C": "minecraft:chest"
+  },
+  "result": {
+    "id": "alaindustrial:storage_module",
+    "count": 1
+  }
+}

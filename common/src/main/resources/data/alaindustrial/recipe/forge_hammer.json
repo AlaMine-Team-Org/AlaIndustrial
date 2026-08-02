@@ -7,8 +7,8 @@
     " S "
   ],
   "key": {
-    "I": "minecraft:iron_ingot",
-    "S": "minecraft:stick"
+    "I": "#c:ingots/iron",
+    "S": "#c:rods/wooden"
   },
   "result": {
     "id": "alaindustrial:forge_hammer",

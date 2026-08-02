@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     "alaindustrial:forge_hammer",
-    "alaindustrial:uranium_ingot"
+    "#c:ingots/uranium"
   ],
   "result": {
     "id": "alaindustrial:uranium_plate",

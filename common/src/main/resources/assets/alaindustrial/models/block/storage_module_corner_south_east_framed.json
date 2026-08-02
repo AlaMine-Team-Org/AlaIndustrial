@@ -1,0 +1,50 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "alaindustrial:block/storage_module_front",
+    "side": "alaindustrial:block/storage_module_front",
+    "open_side": "alaindustrial:block/storage_module_front_open",
+    "top": "alaindustrial:block/storage_module_top",
+    "open_top": "alaindustrial:block/storage_module_top_open"
+  },
+  "elements": [
+    {
+      "name": "corner_south_east_up",
+      "from": [
+        15,
+        16,
+        15
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#top",
+          "cullface": "up"
+        }
+      }
+    },
+    {
+      "name": "corner_south_east_down",
+      "from": [
+        15,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        0,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#top",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

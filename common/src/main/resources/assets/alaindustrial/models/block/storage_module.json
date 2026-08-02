@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "alaindustrial:block/storage_module_top",
+    "bottom": "alaindustrial:block/storage_module_top",
+    "side": "alaindustrial:block/storage_module_front"
+  }
+}

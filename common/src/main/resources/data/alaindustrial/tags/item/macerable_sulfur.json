@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
+    {
+      "id": "#c:ores/sulfur",
+      "required": false
+    },
     "alaindustrial:sulfur_ore",
     "alaindustrial:deepslate_sulfur_ore"
   ]

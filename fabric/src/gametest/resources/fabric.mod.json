@@ -9,7 +9,8 @@
 	},
 	"entrypoints": {
 		"main": [
-			"dev.alaindustrial.gametest.ForeignEnergyItemMod"
+			"dev.alaindustrial.gametest.ForeignEnergyItemMod",
+			"dev.alaindustrial.gametest.ForeignMaterialMod"
 		],
 		"fabric-client-gametest": [
 			"dev.alaindustrial.gametest.GuiClientGameTest"
@@ -57,6 +58,9 @@
 			,"dev.alaindustrial.gametest.PlayerStatsAttachmentGameTest"
 			,"dev.alaindustrial.gametest.EnrichedUraniumTorchGameTest"
 			,"dev.alaindustrial.gametest.RecipeCoverageGameTest"
+			,"dev.alaindustrial.gametest.StorageClusterGameTest"
+			,"dev.alaindustrial.gametest.AssemblerGameTest"
+			,"dev.alaindustrial.gametest.RecipeTagGameTest"
 			,"dev.alaindustrial.gametest.IndustrialistVillagerGameTest"
 			,"dev.alaindustrial.gametest.HammerGameTest"
 			,"dev.alaindustrial.gametest.OilGameTest"

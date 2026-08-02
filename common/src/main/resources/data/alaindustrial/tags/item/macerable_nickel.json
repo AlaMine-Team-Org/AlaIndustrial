@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
+    {
+      "id": "#c:ores/nickel",
+      "required": false
+    },
     "alaindustrial:nickel_ore",
     "alaindustrial:deepslate_nickel_ore"
   ]

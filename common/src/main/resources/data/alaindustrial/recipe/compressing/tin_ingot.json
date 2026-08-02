@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:compressing",
-  "ingredient": "alaindustrial:tin_ingot",
+  "ingredient": "#c:ingots/tin",
   "result": {
     "id": "alaindustrial:tin_plate",
     "count": 1

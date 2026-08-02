@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
+    {
+      "id": "#c:ores/copper",
+      "required": false
+    },
     "minecraft:copper_ore",
     "minecraft:deepslate_copper_ore"
   ]

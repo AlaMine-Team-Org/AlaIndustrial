@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "minecraft:raw_iron",
+  "ingredient": "#c:raw_materials/iron",
   "result": {
     "id": "alaindustrial:iron_dust",
     "count": 2

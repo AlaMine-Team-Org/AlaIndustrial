@@ -140,6 +140,12 @@ public class IndustrializationFabric implements ModInitializer {
 				ModDataComponents.POUCH_ENERGY_ID, ModDataComponents.createPouchEnergy());
 		ModDataComponents.POUCH_CONTENTS = registerDataComponent(
 				ModDataComponents.POUCH_CONTENTS_ID, ModDataComponents.createPouchContents());
+		ModDataComponents.BLUEPRINT_PATTERN = registerDataComponent(
+				ModDataComponents.BLUEPRINT_PATTERN_ID, ModDataComponents.createBlueprintPattern());
+		ModDataComponents.BLUEPRINT_RESULT = registerDataComponent(
+				ModDataComponents.BLUEPRINT_RESULT_ID, ModDataComponents.createBlueprintResult());
+		ModDataComponents.BLUEPRINT_SUBSTITUTE = registerDataComponent(
+				ModDataComponents.BLUEPRINT_SUBSTITUTE_ID, ModDataComponents.createBlueprintSubstitute());
 		ModDataComponents.CAPSULE_FLUID = registerDataComponent(
 				ModDataComponents.CAPSULE_FLUID_ID, ModDataComponents.createCapsuleFluid());
 		ModDataComponents.FLUID_TANK_CONTENTS = registerDataComponent(

@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "minecraft:gold_ingot",
+  "ingredient": "#c:ingots/gold",
   "result": {
     "id": "alaindustrial:gold_dust",
     "count": 1

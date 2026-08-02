@@ -1,0 +1,249 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "alaindustrial:block/storage_module_core"
+      }
+    },
+    {
+      "when": {
+        "north": false
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_edge_north_framed"
+      }
+    },
+    {
+      "when": {
+        "north": true
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_edge_north_open"
+      }
+    },
+    {
+      "when": {
+        "south": false
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_edge_south_framed"
+      }
+    },
+    {
+      "when": {
+        "south": true
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_edge_south_open"
+      }
+    },
+    {
+      "when": {
+        "east": false
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_edge_east_framed"
+      }
+    },
+    {
+      "when": {
+        "east": true
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_edge_east_open"
+      }
+    },
+    {
+      "when": {
+        "west": false
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_edge_west_framed"
+      }
+    },
+    {
+      "when": {
+        "west": true
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_edge_west_open"
+      }
+    },
+    {
+      "when": {
+        "up": false
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_edge_up_framed"
+      }
+    },
+    {
+      "when": {
+        "up": true
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_edge_up_open"
+      }
+    },
+    {
+      "when": {
+        "down": false
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_edge_down_framed"
+      }
+    },
+    {
+      "when": {
+        "down": true
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_edge_down_open"
+      }
+    },
+    {
+      "when": {
+        "north": true,
+        "west": true
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_north_west_open"
+      }
+    },
+    {
+      "when": {
+        "north": false,
+        "west": false
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_north_west_framed"
+      }
+    },
+    {
+      "when": {
+        "north": false,
+        "west": true
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_north_west_framed"
+      }
+    },
+    {
+      "when": {
+        "north": true,
+        "west": false
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_north_west_framed"
+      }
+    },
+    {
+      "when": {
+        "north": true,
+        "east": true
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_north_east_open"
+      }
+    },
+    {
+      "when": {
+        "north": false,
+        "east": false
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_north_east_framed"
+      }
+    },
+    {
+      "when": {
+        "north": false,
+        "east": true
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_north_east_framed"
+      }
+    },
+    {
+      "when": {
+        "north": true,
+        "east": false
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_north_east_framed"
+      }
+    },
+    {
+      "when": {
+        "south": true,
+        "west": true
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_south_west_open"
+      }
+    },
+    {
+      "when": {
+        "south": false,
+        "west": false
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_south_west_framed"
+      }
+    },
+    {
+      "when": {
+        "south": false,
+        "west": true
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_south_west_framed"
+      }
+    },
+    {
+      "when": {
+        "south": true,
+        "west": false
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_south_west_framed"
+      }
+    },
+    {
+      "when": {
+        "south": true,
+        "east": true
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_south_east_open"
+      }
+    },
+    {
+      "when": {
+        "south": false,
+        "east": false
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_south_east_framed"
+      }
+    },
+    {
+      "when": {
+        "south": false,
+        "east": true
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_south_east_framed"
+      }
+    },
+    {
+      "when": {
+        "south": true,
+        "east": false
+      },
+      "apply": {
+        "model": "alaindustrial:block/storage_module_corner_south_east_framed"
+      }
+    }
+  ]
+}

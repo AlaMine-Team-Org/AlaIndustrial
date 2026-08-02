@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "alaindustrial:iron_plate",
+  "ingredient": "#c:plates/iron",
   "result": {
     "id": "alaindustrial:iron_dust",
     "count": 1

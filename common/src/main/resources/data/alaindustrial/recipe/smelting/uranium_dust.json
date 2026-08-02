@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:smelting",
-  "ingredient": "alaindustrial:uranium_dust",
+  "ingredient": "#c:dusts/uranium",
   "result": {
     "id": "alaindustrial:uranium_ingot",
     "count": 1

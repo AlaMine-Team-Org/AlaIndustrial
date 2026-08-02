@@ -2,11 +2,11 @@
 	"type": "minecraft:crafting_shaped",
 	"category": "equipment",
 	"key": {
-		"I": "minecraft:iron_ingot",
+		"I": "#c:ingots/iron",
 		"C": "alaindustrial:copper_coil",
 		"E": "alaindustrial:electronic_circuit",
-		"R": "minecraft:redstone",
-		"L": "minecraft:lapis_lazuli"
+		"R": "#c:dusts/redstone",
+		"L": "#c:gems/lapis"
 	},
 	"pattern": [
 		"R L",

@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "minecraft:copper_ingot",
+  "ingredient": "#c:ingots/copper",
   "result": {
     "id": "alaindustrial:copper_dust",
     "count": 1

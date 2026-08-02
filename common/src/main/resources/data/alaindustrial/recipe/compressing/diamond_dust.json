@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:compressing",
-  "ingredient": "alaindustrial:diamond_dust",
+  "ingredient": "#c:dusts/diamond",
   "result": {
     "id": "minecraft:diamond",
     "count": 1

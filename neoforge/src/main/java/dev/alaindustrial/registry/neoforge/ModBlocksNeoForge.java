@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.AssemblerBlock;
 import dev.alaindustrial.block.BatteryBoxBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
@@ -20,6 +21,7 @@ import dev.alaindustrial.block.ExtractorBlock;
 import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
 import dev.alaindustrial.block.IronChestBlock;
+import dev.alaindustrial.block.StorageModuleBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.SilverChestBlock;
@@ -92,6 +94,9 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("compressor", CompressorBlock::new, props("compressor"));
 	public static final DeferredBlock<SawmillBlock> SAWMILL =
 			BLOCKS.registerBlock("sawmill", SawmillBlock::new, props("sawmill"));
+	// MOD-275 — the first MV machine; a blueprint-driven auto-crafter.
+	public static final DeferredBlock<AssemblerBlock> ASSEMBLER =
+			BLOCKS.registerBlock("assembler", AssemblerBlock::new, props("assembler"));
 	public static final DeferredBlock<PolymerizerBlock> POLYMERIZER =
 			BLOCKS.registerBlock("polymerizer", PolymerizerBlock::new, props("polymerizer"));
 	public static final DeferredBlock<VulcanizerBlock> VULCANIZER =
@@ -170,6 +175,9 @@ public final class ModBlocksNeoForge {
 	// --- Storage (pure container, no energy) ---
 	public static final DeferredBlock<IronChestBlock> IRON_CHEST =
 			BLOCKS.registerBlock("iron_chest", IronChestBlock::new, props("iron_chest"));
+	// MOD-287 — modular warehouse block; several face-adjacent ones share one inventory.
+	public static final DeferredBlock<StorageModuleBlock> STORAGE_MODULE =
+			BLOCKS.registerBlock("storage_module", StorageModuleBlock::new, props("storage_module"));
 	public static final DeferredBlock<SilverChestBlock> SILVER_CHEST =
 			BLOCKS.registerBlock("silver_chest", SilverChestBlock::new, props("silver_chest"));
 	public static final DeferredBlock<GoldChestBlock> GOLD_CHEST =
@@ -181,6 +189,9 @@ public final class ModBlocksNeoForge {
 	// MOD-225 — machine casing + two decorative plate blocks (plain full cubes).
 	public static final DeferredBlock<Block> MACHINE_CASING =
 			BLOCKS.registerBlock("machine_casing", Block::new, props("machine_casing"));
+	// MOD-292 — MV casing, the tier-up crafting base.
+	public static final DeferredBlock<Block> ADVANCED_MACHINE_CASING =
+			BLOCKS.registerBlock("advanced_machine_casing", Block::new, props("advanced_machine_casing"));
 	public static final DeferredBlock<Block> SILVER_PLATE_BLOCK =
 			BLOCKS.registerBlock("silver_plate_block", Block::new, props("silver_plate_block"));
 	public static final DeferredBlock<Block> TEMPERED_IRON_PLATE_BLOCK =
@@ -248,6 +259,7 @@ public final class ModBlocksNeoForge {
 		ModContent.EXTRACTOR = EXTRACTOR::get;
 		ModContent.COMPRESSOR = COMPRESSOR::get;
 		ModContent.SAWMILL = SAWMILL::get;
+		ModContent.ASSEMBLER = ASSEMBLER::get;
 		ModContent.POLYMERIZER = POLYMERIZER::get;
 		ModContent.VULCANIZER = VULCANIZER::get;
 		ModContent.GALVANIC_BATH = GALVANIC_BATH::get;
@@ -281,10 +293,12 @@ public final class ModBlocksNeoForge {
 		ModContent.URANIUM_ORE = URANIUM_ORE::get;
 		ModContent.DEEPSLATE_URANIUM_ORE = DEEPSLATE_URANIUM_ORE::get;
 		ModContent.IRON_CHEST = IRON_CHEST::get;
+		ModContent.STORAGE_MODULE = STORAGE_MODULE::get;
 		ModContent.SILVER_CHEST = SILVER_CHEST::get;
 		ModContent.GOLD_CHEST = GOLD_CHEST::get;
 		ModContent.TEMPERED_IRON_BLOCK = TEMPERED_IRON_BLOCK::get;
 		ModContent.MACHINE_CASING = MACHINE_CASING::get;
+		ModContent.ADVANCED_MACHINE_CASING = ADVANCED_MACHINE_CASING::get;
 		ModContent.SILVER_PLATE_BLOCK = SILVER_PLATE_BLOCK::get;
 		ModContent.TEMPERED_IRON_PLATE_BLOCK = TEMPERED_IRON_PLATE_BLOCK::get;
 		ModContent.INDUSTRIAL_WORKBENCH = INDUSTRIAL_WORKBENCH::get;

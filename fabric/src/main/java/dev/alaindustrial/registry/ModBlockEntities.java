@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.entity.AssemblerBlockEntity;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
@@ -19,6 +20,7 @@ import dev.alaindustrial.block.entity.ExtractorBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
+import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
@@ -74,6 +76,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<ExtractorBlockEntity> EXTRACTOR;
 	public static BlockEntityType<CompressorBlockEntity> COMPRESSOR;
 	public static BlockEntityType<SawmillBlockEntity> SAWMILL;
+	public static BlockEntityType<AssemblerBlockEntity> ASSEMBLER;
 	public static BlockEntityType<PolymerizerBlockEntity> POLYMERIZER;
 	public static BlockEntityType<VulcanizerBlockEntity> VULCANIZER;
 	public static BlockEntityType<GalvanicBathBlockEntity> GALVANIC_BATH;
@@ -87,6 +90,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<StormWindMillBlockEntity> STORM_WIND_MILL;
 	// Iron chest is a pure Container (no EnergyPort), so no Team Reborn EnergyStorage.SIDED line below.
 	public static BlockEntityType<IronChestBlockEntity> IRON_CHEST;
+	public static BlockEntityType<StorageModuleBlockEntity> STORAGE_MODULE;
 	// Silver chest is likewise a pure Container (no EnergyPort) — no Team Reborn EnergyStorage.SIDED line.
 	public static BlockEntityType<SilverChestBlockEntity> SILVER_CHEST;
 	// Gold chest is likewise a pure Container (no EnergyPort) — no Team Reborn EnergyStorage.SIDED line.
@@ -126,6 +130,8 @@ public final class ModBlockEntities {
 				new BlockEntityType<>(CompressorBlockEntity::new, Set.of(ModBlocks.COMPRESSOR)));
 		SAWMILL = register("sawmill",
 				new BlockEntityType<>(SawmillBlockEntity::new, Set.of(ModBlocks.SAWMILL)));
+		ASSEMBLER = register("assembler",
+				new BlockEntityType<>(AssemblerBlockEntity::new, Set.of(ModBlocks.ASSEMBLER)));
 		POLYMERIZER = register("polymerizer",
 				new BlockEntityType<>(PolymerizerBlockEntity::new, Set.of(ModBlocks.POLYMERIZER)));
 		VULCANIZER = register("vulcanizer",
@@ -150,6 +156,8 @@ public final class ModBlockEntities {
 				new BlockEntityType<>(StormWindMillBlockEntity::new, Set.of(ModBlocks.STORM_WIND_MILL)));
 		IRON_CHEST = register("iron_chest",
 				new BlockEntityType<>(IronChestBlockEntity::new, Set.of(ModBlocks.IRON_CHEST)));
+		STORAGE_MODULE = register("storage_module",
+				new BlockEntityType<>(StorageModuleBlockEntity::new, Set.of(ModBlocks.STORAGE_MODULE)));
 		SILVER_CHEST = register("silver_chest",
 				new BlockEntityType<>(SilverChestBlockEntity::new, Set.of(ModBlocks.SILVER_CHEST)));
 		GOLD_CHEST = register("gold_chest",
@@ -176,6 +184,7 @@ public final class ModBlockEntities {
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),EXTRACTOR);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),COMPRESSOR);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),SAWMILL);
+			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ASSEMBLER);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),INCUBATOR);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),POLYMERIZER);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),VULCANIZER);
@@ -206,6 +215,7 @@ public final class ModBlockEntities {
 		ModContent.EXTRACTOR_BE = () -> EXTRACTOR;
 		ModContent.COMPRESSOR_BE = () -> COMPRESSOR;
 		ModContent.SAWMILL_BE = () -> SAWMILL;
+		ModContent.ASSEMBLER_BE = () -> ASSEMBLER;
 		ModContent.POLYMERIZER_BE = () -> POLYMERIZER;
 		ModContent.VULCANIZER_BE = () -> VULCANIZER;
 		ModContent.GALVANIC_BATH_BE = () -> GALVANIC_BATH;
@@ -218,6 +228,7 @@ public final class ModBlockEntities {
 		ModContent.HIGH_ALTITUDE_WIND_MILL_BE = () -> HIGH_ALTITUDE_WIND_MILL;
 		ModContent.STORM_WIND_MILL_BE = () -> STORM_WIND_MILL;
 		ModContent.IRON_CHEST_BE = () -> IRON_CHEST;
+		ModContent.STORAGE_MODULE_BE = () -> STORAGE_MODULE;
 		ModContent.SILVER_CHEST_BE = () -> SILVER_CHEST;
 		ModContent.GOLD_CHEST_BE = () -> GOLD_CHEST;
 

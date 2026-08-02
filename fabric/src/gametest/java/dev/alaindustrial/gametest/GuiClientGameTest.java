@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContex
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.client.CameraType;
+import dev.alaindustrial.menu.StorageModuleMenu;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -47,6 +48,9 @@ import org.slf4j.LoggerFactory;
  *   <li>R-PHY-10   — {@link #checkHitboxes}               — hitbox shape matches block model
  *   <li>MOD-024    — {@link #checkWaterMillWheel}       — the water wheel BlockEntityRenderer draws into the frame
  *   <li>MOD-232    — {@link #checkWindMillRotor}       — the wind mill rotor BlockEntityRenderer draws into the frame
+ *   <li>MOD-275    — {@link #assertBlueprintPreviewInFrame} — the assembler's read-only blueprint preview reaches the frame
+ *   <li>MOD-275    — {@link #assertBlueprintIconShowsProduct} — a recorded blueprint's own icon carries its product
+ *   <li>MOD-287    — {@link #checkStorageModuleSeams}  — storage-module connected textures (frames for review)
  * </ul>
  *
  * <p>Screenshots land in {@code build/run/clientGameTest/screenshots/}.
@@ -87,6 +91,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 checkWaterMillWheel(context, singleplayer);     // MOD-024 BER visual regression
                 checkWindMillRotor(context, singleplayer);      // MOD-232 BER visual regression
                 checkIncubatorDome(context, singleplayer);      // MOD-118 BER visual regression
+                checkStorageModuleSeams(context, singleplayer); // MOD-287 connected textures
                 // R-PHY-10: mc.debugHitboxes removed in MC 26.2; re-enable when API is found.
             }
 
@@ -557,12 +562,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
             int differing = 0;
             for (int y = 0; y < a.getHeight(); y++) {
                 for (int x = 0; x < a.getWidth(); x++) {
-                    int pa = a.getRGB(x, y);
-                    int pb = b.getRGB(x, y);
-                    int dr = Math.abs(((pa >> 16) & 0xFF) - ((pb >> 16) & 0xFF));
-                    int dg = Math.abs(((pa >> 8) & 0xFF) - ((pb >> 8) & 0xFF));
-                    int db = Math.abs((pa & 0xFF) - (pb & 0xFF));
-                    if (Math.max(dr, Math.max(dg, db)) > 24) {
+                    if (differsAt(a, b, x, y)) {
                         differing++;
                     }
                 }
@@ -571,6 +571,16 @@ public class GuiClientGameTest implements FabricClientGameTest {
         } catch (IOException e) {
             throw new AssertionError("[GUITEST] could not read screenshots for the pixel gate", e);
         }
+    }
+
+    /** The single "these two pixels differ" rule every pixel gate in this suite shares. */
+    private static boolean differsAt(BufferedImage a, BufferedImage b, int x, int y) {
+        int pa = a.getRGB(x, y);
+        int pb = b.getRGB(x, y);
+        int dr = Math.abs(((pa >> 16) & 0xFF) - ((pb >> 16) & 0xFF));
+        int dg = Math.abs(((pa >> 8) & 0xFF) - ((pb >> 8) & 0xFF));
+        int db = Math.abs((pa & 0xFF) - (pb & 0xFF));
+        return Math.max(dr, Math.max(dg, db)) > 24;
     }
 
     // ────────────────────────────────────────────────────────────────────────────────
@@ -787,6 +797,265 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 takeCleanScreenshot(context, "incubator_night").toAbsolutePath());
         server.runCommand("time set day");
         context.waitTicks(5);
+    }
+
+    // ────────────────────────────────────────────────────────────────────────────────
+    // Storage module — connected textures (MOD-287 visuals)
+    // ────────────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Photographs the five arrangements the storage module's connected textures exist for: one
+     * module alone, two side by side, a 2x2 wall, a row of four, and that row with a fifth module
+     * pushed against it.
+     *
+     * <p><b>This stand used to assert nothing about pixels</b>, and the seams shipped visibly broken
+     * underneath it: it took the photographs and trusted that somebody would look. It now carries two
+     * pixel gates of its own (see {@link #assertStorageSeamsInFrame}) — that the block renders at all,
+     * and that joining the modules really changes what the camera sees.
+     *
+     * <p>What it still does NOT try to decide is whether the joint is pixel-continuous. That question
+     * is answered exactly, off-screen, by {@code tools/gen_storage_module_models.py --check}, which
+     * composes the shipped models face by face; a screenshot at an angle, with perspective and
+     * ambient occlusion in it, could only answer it approximately. The seam flags themselves are gated
+     * headlessly on both loaders by {@code StorageClusterScenarios.seamsMatchClusterMembership} and
+     * {@code seamsJoinAWallAndNeverADiagonal}. The frames below stay for a human to look at, and the
+     * client-side blockstates are logged next to them so a reviewer can tell "the model is wrong" from
+     * "the seam flag never reached the client".
+     *
+     * <p>The fifth module is the interesting frame: the group outgrows the four-module cap, the
+     * warehouse it would belong to stops being well-defined, and every seam in the row — including
+     * the one three blocks away — has to disappear. A frame where the row still looks welded
+     * together is the visuals lying about what the machine does.
+     *
+     * <p>Platform at (158..180, 99, 164..176).
+     */
+    private static void checkStorageModuleSeams(ClientGameTestContext context,
+            TestSingleplayerContext singleplayer) {
+        TestServerContext server = singleplayer.getServer();
+
+        server.runCommand("fill 158 99 164 180 105 176 minecraft:air");
+        server.runCommand("fill 158 99 164 180 99 176 minecraft:smooth_stone");
+        server.runCommand("gamemode spectator @p");
+
+        // Four groups on one line, two empty blocks between them so none of them merges into the next.
+        String module = "alaindustrial:storage_module";
+        server.runCommand("setblock 160 100 170 " + module);                       // alone
+        server.runCommand("fill 163 100 170 164 100 170 " + module);               // pair
+        server.runCommand("fill 167 100 170 168 101 170 " + module);               // 2x2 wall
+        server.runCommand("fill 171 100 170 174 100 170 " + module);               // row of four
+
+        singleplayer.getClientLevel().waitForChunksRender();
+        context.waitTicks(5);
+
+        String[][] views = {
+            {"167.5 103.5 184.5 180 6", "storage_seams_family"},
+            {"160.5 100.5 173.5 180 4", "storage_seams_one"},
+            {"163.5 100.5 173.5 180 4", "storage_seams_pair"},
+            {"167.5 101.5 174.5 180 4", "storage_seams_wall_2x2"},
+            {"170.5 103.0 174.5 150 20", "storage_seams_wall_2x2_iso"},
+            {"172.5 100.5 176.5 180 4", "storage_seams_row_4"},
+            {"177.5 103.0 176.5 150 20", "storage_seams_row_4_iso"},
+        };
+        for (String[] view : views) {
+            server.runCommand("tp @p " + view[0]);
+            singleplayer.getClientLevel().waitForChunksRender();
+            context.waitTicks(5);
+            LOG.info("[GUITEST][STORAGE] {} -> {}",
+                    view[1], takeCleanScreenshot(context, view[1]).toAbsolutePath());
+        }
+        logStorageStates(context, 171, 175);
+
+        assertStorageSeamsInFrame(context, singleplayer, server, module);
+
+        checkStorageWindowFits(context);
+
+        // The fifth module. Everything the row was claiming has to be withdrawn, all the way to its
+        // far end.
+        server.runCommand("setblock 175 100 170 " + module);
+        context.waitTicks(5);
+        for (String[] view : new String[][] {
+            {"172.5 100.5 176.5 180 4", "storage_seams_row_5"},
+            {"178.5 103.0 176.5 150 20", "storage_seams_row_5_iso"},
+        }) {
+            server.runCommand("tp @p " + view[0]);
+            singleplayer.getClientLevel().waitForChunksRender();
+            context.waitTicks(5);
+            LOG.info("[GUITEST][STORAGE] {} -> {}",
+                    view[1], takeCleanScreenshot(context, view[1]).toAbsolutePath());
+        }
+        logStorageStates(context, 171, 175);
+    }
+
+    /**
+     * Two differential pixel gates on the row of four, both without a committed baseline PNG.
+     *
+     * <ol>
+     *   <li><b>The block renders.</b> The storage module's model is nothing but flat quads sitting on
+     *       the block surface — after the connected textures were rewritten as a face partition there
+     *       is no solid cube element in it at all, and every face is assembled from up to nine pieces
+     *       chosen by the multipart. "Does that produce geometry" is a real question and the answer
+     *       cannot come from a JSON checker: clearing the row must change the frame by a wide margin.
+     *   <li><b>Joining changes the picture.</b> A fifth module hidden directly BEHIND the westmost one
+     *       pushes the group past the cap, so every seam in the row is withdrawn while nothing else in
+     *       view moves — the camera is level so the hidden block's top face cannot appear either. The
+     *       same camera must therefore see a different picture. If the connected textures never
+     *       reached the renderer, the two frames are identical and this fails.
+     * </ol>
+     *
+     * <p>Both thresholds are stated against a noise baseline measured on the spot (two frames of the
+     * same, unchanged scene), the way the mill gates in this file do it, so neither can be flipped by
+     * driver dithering.
+     */
+    private static void assertStorageSeamsInFrame(ClientGameTestContext context,
+            TestSingleplayerContext singleplayer, TestServerContext server, String module) {
+        // Level camera (pitch 0): the hidden fifth module below must stay hidden.
+        server.runCommand("tp @p 172.5 100.9 176.5 180 0");
+        singleplayer.getClientLevel().waitForChunksRender();
+        context.waitTicks(5);
+        Path merged = takeCleanScreenshot(context, "storage_gate_merged");
+        context.waitTicks(5);
+        Path mergedAgain = takeCleanScreenshot(context, "storage_gate_merged_again");
+        int noise = differingPixels(merged, mergedAgain);
+
+        server.runCommand("fill 171 100 170 174 100 170 minecraft:air");
+        context.waitTicks(5);
+        Path cleared = takeCleanScreenshot(context, "storage_gate_cleared");
+        int drawn = differingPixels(merged, cleared);
+        server.runCommand("fill 171 100 170 174 100 170 " + module);
+        context.waitTicks(5);
+
+        int requiredDrawn = Math.max(4 * noise, 5000);
+        LOG.info("[GUITEST][STORAGE] render gate: row delta={} px, noise={} px, required>{}",
+                drawn, noise, requiredDrawn);
+        if (drawn < requiredDrawn) {
+            throw new AssertionError("[GUITEST][STORAGE] removing four storage modules changed only "
+                    + drawn + " px (noise " + noise + ", required > " + requiredDrawn + ") — the "
+                    + "block's face partition produced no geometry in the captured frame. Compare "
+                    + merged.getFileName() + " with " + cleared.getFileName() + ".");
+        }
+
+        // The hidden fifth module: same x and y as the westmost, one block further north, so the row
+        // itself occludes it completely at this camera.
+        server.runCommand("setblock 171 100 169 " + module);
+        context.waitTicks(5);
+        Path split = takeCleanScreenshot(context, "storage_gate_split");
+        int seamDelta = differingPixels(merged, split);
+        server.runCommand("setblock 171 100 169 minecraft:air");
+        context.waitTicks(5);
+
+        int requiredSeam = Math.max(4 * noise, 300);
+        LOG.info("[GUITEST][STORAGE] seam gate: merged-vs-split delta={} px, noise={} px, required>{}",
+                seamDelta, noise, requiredSeam);
+        if (seamDelta < requiredSeam) {
+            throw new AssertionError("[GUITEST][STORAGE] outgrowing the four-module cap changed only "
+                    + seamDelta + " px (noise " + noise + ", required > " + requiredSeam + ") — the "
+                    + "seam flags reach the blockstate but the connected models never reach the "
+                    + "frame. Compare " + merged.getFileName() + " with " + split.getFileName() + ".");
+        }
+    }
+
+    /** Captured inside {@code runOnClient}: panel top, panel height, and the screen's scaled height. */
+    private static int[] storageWindowBox;
+
+    /**
+     * The biggest warehouse window, photographed and measured: the whole panel, hotbar included, has
+     * to be on the screen.
+     *
+     * <p>This is the defect, stated as an assertion. A four-module warehouse used to open twelve rows
+     * — a 328 px panel — and the player photographed it running off the top AND the bottom with the
+     * hotbar clipped. The window now shows six rows and scrolls, which is 220 px: the same height as
+     * the vanilla double chest.
+     *
+     * <p>Two claims, because the test window is not the player's:
+     * <ul>
+     *   <li><b>Absolute.</b> The panel must fit in 240 px. That is the floor the game itself
+     *       guarantees: {@code Window.calculateScale} keeps raising the GUI scale while
+     *       {@code height / (scale + 1) >= 240}, so at the default "auto" the usable height is never
+     *       below 240 — and on 1440p and 4K it is exactly 240. A panel that fits 240 fits everywhere.
+     *   <li><b>Here.</b> In this frame the panel must start at or below the top edge and end at or
+     *       above the bottom one, which is what {@code topPos} being negative would deny.
+     * </ul>
+     *
+     * <p>The menu is opened client-side and told it stands on a twelve-row warehouse through the same
+     * {@code ContainerData} the server would send, so the scrollbar is in its active state and the
+     * frame shows what four modules really look like.
+     */
+    private static void checkStorageWindowFits(ClientGameTestContext context) {
+        // Every rung of the capacity ladder, not only the top one: one module opens the three-row
+        // window, and two, three and four modules all open the six-row window over a different number
+        // of total rows (so the scrollbar is inactive at two and active at three and four). A window
+        // that only fits at one of these is a window the player meets broken at another.
+        checkOneStorageWindow(context, 1, 3);
+        checkOneStorageWindow(context, 2, 6);
+        checkOneStorageWindow(context, 3, 9);
+        checkOneStorageWindow(context, 4, 12);
+    }
+
+    /**
+     * One rung: open the window a {@code modules}-module warehouse would open, photograph it, and
+     * measure it.
+     */
+    private static void checkOneStorageWindow(ClientGameTestContext context, int modules, int totalRows) {
+        storageWindowBox = null;
+        context.runOnClient(mc -> {
+            // The two menu types are different generic parameters, so the branch has to be on the
+            // call, not inside it — a conditional would have to unify StorageMenu3 with StorageMenu6.
+            if (modules == 1) {
+                MenuScreens.create(ModContent.STORAGE_MODULE_MENU_3.get(), mc, 0,
+                        Component.literal("Warehouse"));
+            } else {
+                MenuScreens.create(ModContent.STORAGE_MODULE_MENU_6.get(), mc, 0,
+                        Component.literal("Warehouse"));
+            }
+            if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs) {
+                // What the server sends for a cluster of this size.
+                acs.getMenu().setData(StorageModuleMenu.DATA_TOTAL_ROWS, totalRows);
+                acs.getMenu().setData(StorageModuleMenu.DATA_TOP_ROW, 0);
+                var pos = (dev.alaindustrial.mixin.client.AbstractContainerScreenAccessor) acs;
+                storageWindowBox = new int[] {
+                        pos.alaindustrial$getTopPos(),
+                        pos.alaindustrial$getImageHeight(),
+                        mc.getWindow().getGuiScaledHeight(),
+                };
+            }
+        });
+        context.waitTicks(5);
+        Path frame = takeCleanScreenshot(context, "gui_storage_warehouse_" + modules + "_modules");
+        LOG.info("[GUITEST][STORAGE] window frame ({} modules) -> {}", modules, frame.toAbsolutePath());
+        context.runOnClient(mc -> mc.setScreenAndShow(null));
+
+        if (storageWindowBox == null) {
+            throw new AssertionError("[GUITEST][STORAGE] the window for " + modules + " module(s) "
+                    + "did not open — the menu type has no screen registered for it.");
+        }
+        int topPos = storageWindowBox[0];
+        int panelHeight = storageWindowBox[1];
+        int screenHeight = storageWindowBox[2];
+        LOG.info("[GUITEST][STORAGE] window fit ({} modules, {} rows): panel={}px top={} screen={}px",
+                modules, totalRows, panelHeight, topPos, screenHeight);
+        if (panelHeight > 240) {
+            throw new AssertionError("[GUITEST][STORAGE] the " + modules + "-module warehouse panel is " + panelHeight
+                    + " px tall; the game guarantees only 240 px of usable height at its own GUI "
+                    + "scale (Window.calculateScale grows the scale while height/(scale+1) >= 240), "
+                    + "so this window is cut off on 1440p and 4K. See " + frame.getFileName() + ".");
+        }
+        if (topPos < 0 || topPos + panelHeight > screenHeight) {
+            throw new AssertionError("[GUITEST][STORAGE] the " + modules + "-module warehouse panel "
+                    + "runs off this screen: top=" + topPos + ", height=" + panelHeight + ", screen=" + screenHeight
+                    + ". See " + frame.getFileName() + ".");
+        }
+    }
+
+    /** Log the client's copy of each module's blockstate across {@code x0..x1} at (x, 100, 170). */
+    private static void logStorageStates(ClientGameTestContext context, int x0, int x1) {
+        context.runOnClient(mc -> {
+            for (int x = x0; x <= x1; x++) {
+                net.minecraft.core.BlockPos pos = new net.minecraft.core.BlockPos(x, 100, 170);
+                if (mc.level != null) {
+                    LOG.info("[GUITEST][STORAGE] client state x={} -> {}", x, mc.level.getBlockState(pos));
+                }
+            }
+        });
     }
 
     /** One mill: install its rotor, gate the renderer's inputs, then gate its pixels. Leaves it bare. */
@@ -1141,6 +1410,38 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 ModContent.SAWMILL_MENU.get(), "Sawmill",
                 CAP, CAP, SAW, SAW);
 
+        // ── Assembler (MOD-275) — three states ───────────────────────────────────────
+        // The one screen in the mod with ghost cells: nine slots that show items nobody owns, plus a
+        // result preview, a Write button drawn in code and a status line. None of that is in the
+        // atlas, so these shots are the only visual guard on it.
+        final int ASM = 40;   // Config.assemblerDuration — one operation at 1.0 speed
+        shootAssembler(context, "gui_assembler_empty", 0, CAP, 0, ASM, -1,
+                dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus.NO_BLUEPRINT, false);
+        shootAssembler(context, "gui_assembler_working", CAP * 3 / 4, CAP, ASM / 2, ASM, 0,
+                dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus.READY, true);
+        shootAssembler(context, "gui_assembler_output_full", CAP, CAP, 0, ASM, 2,
+                dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus.OUTPUT_FULL, true);
+        // Two more states, and they are the reason this stand exists after MOD-275's playtest: a queue
+        // of recorded blueprints has to be readable WITHOUT touching anything. State 4 is the machine
+        // idle — no layout of the player's own, so the window shows the queued blueprint's, dimmed and
+        // blue-framed, with the blue ring naming which slot it came from. State 5 is the same window
+        // while the machine works: the ring on the working slot turns MV orange. The blueprints in the
+        // queue carry their own products in their icons (sticks vs planks — two different products in
+        // one frame, so the icon cannot be a fixed picture).
+        shootAssemblerQueue(context, "gui_assembler_blueprint_preview", CAP, CAP, 0, ASM, -1,
+                dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus.NO_MATERIALS, true);
+        shootAssemblerQueue(context, "gui_assembler_blueprint_active", CAP * 3 / 4, CAP, ASM / 2, ASM, 1,
+                dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus.READY, true);
+        assertBlueprintPreviewInFrame(context, ASM);
+        // MOD-275, the tab split: one window, two tabs, and the two jobs must not share screen space.
+        // Both tabs are photographed, and the gate proves the hidden one's contents are GONE rather
+        // than merely covered — in both directions.
+        assertHiddenTabIsGone(context);
+        // The icon itself (the player's actual complaint): a recorded blueprint has to be readable
+        // wherever the item is, not only inside this window. Shot in plain player-inventory slots,
+        // which no mod code draws over, so what these frames show is the item model and nothing else.
+        assertBlueprintIconShowsProduct(context);
+
         // ── Incubator (MOD-118) — three states ───────────────────────────────────────
         // Its screen carries two things no other machine draws: the charge pips under the fuel slot
         // and a status line that explains why nothing is happening. The energy bar sits on the right
@@ -1334,6 +1635,944 @@ public class GuiClientGameTest implements FabricClientGameTest {
         context.waitTicks(5);
         java.nio.file.Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
+    }
+
+    /**
+     * Assembler variant of {@link #shootMenuWithState} (MOD-275): also fills the two channels this
+     * machine adds — the queue slot it is working from ({@code -1} = the queue is empty) and the idle
+     * reason — and, when {@code withPattern}, lays a real recipe into the ghost grid so the shot shows
+     * the cells, the result preview and an enabled Write button rather than an empty frame.
+     *
+     * <p>The pattern is written straight into the client-side container behind the ghost slots, the
+     * same way {@link #shootSolarPanel} injects its chip: the screen reads slot contents
+     * synchronously, so no server round-trip is needed to photograph the state.
+     */
+    private static void shootAssembler(ClientGameTestContext context, String name,
+                                       int energy, int capacity, int progress, int maxProgress,
+                                       int activeSlot,
+                                       dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus status,
+                                       boolean withPattern) {
+        LOG.info("[GUITEST][MOD-275] opening {} (E={}/{} P={}/{} active={} status={} pattern={})",
+                name, energy, capacity, progress, maxProgress, activeSlot, status, withPattern);
+        context.runOnClient(mc -> {
+            MenuScreens.create(ModContent.ASSEMBLER_MENU.get(), mc, 0, Component.literal("Assembler"));
+            if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                    && acs.getMenu() instanceof MachineMenu menu) {
+                menu.injectTestData(energy, capacity, progress, maxProgress);
+                menu.injectTestChannel(4, activeSlot);
+                menu.injectTestChannel(5, status.ordinal());
+                selectTab(menu, dev.alaindustrial.menu.AssemblerMenu.TAB_WORK);
+                if (withPattern) {
+                    // A stick: two planks stacked in the left column — an off-centre layout on purpose,
+                    // because that is the case CraftingInput trimming turns into a 1x2 grid. It reaches
+                    // the Work tab through the QUEUE, which is what that tab draws its read-only view
+                    // from; the editable grid it used to be injected into now lives on the Record tab.
+                    menu.slots.get(0).set(blueprint(new int[] {0, 3},
+                            net.minecraft.world.item.Items.OAK_PLANKS,
+                            new ItemStack(net.minecraft.world.item.Items.STICK, 4)));
+                }
+            }
+        });
+        context.waitTicks(5);
+        java.nio.file.Path path = takeCleanScreenshot(context, name);
+        LOG.info("[GUITEST][MOD-275] screenshot {} -> {}", name, path.toAbsolutePath());
+    }
+
+    /**
+     * Assembler window with a queue of <b>recorded</b> blueprints and an untouched authoring grid — the
+     * state MOD-275's playtest found unreadable, where the machine visibly worked and the window showed
+     * nothing about what it was making.
+     *
+     * <p>Two different products on purpose (4 sticks in slot 0, 4 planks in slot 1): an icon that showed
+     * the same picture for both would be a lie dressed as a feature, and one frame with two unlike icons
+     * is what rules it out. {@code recorded=false} shoots the identical rig with blank blueprints, which
+     * is the baseline the pixel gate measures against.
+     */
+    private static Path shootAssemblerQueue(ClientGameTestContext context, String name,
+                                            int energy, int capacity, int progress, int maxProgress,
+                                            int activeSlot,
+                                            dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus status,
+                                            boolean recorded) {
+        LOG.info("[GUITEST][MOD-275] opening {} (active={} status={} recorded={})",
+                name, activeSlot, status, recorded);
+        context.runOnClient(mc -> {
+            MenuScreens.create(ModContent.ASSEMBLER_MENU.get(), mc, 0, Component.literal("Assembler"));
+            if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                    && acs.getMenu() instanceof MachineMenu menu) {
+                menu.injectTestData(energy, capacity, progress, maxProgress);
+                menu.injectTestChannel(4, activeSlot);
+                menu.injectTestChannel(5, status.ordinal());
+                selectTab(menu, dev.alaindustrial.menu.AssemblerMenu.TAB_WORK);
+                // Slot 0: two planks in the left column -> 4 sticks. Slot 1: one log -> 4 planks.
+                menu.slots.get(0).set(recorded
+                        ? blueprint(new int[] {0, 3}, net.minecraft.world.item.Items.OAK_PLANKS,
+                                new ItemStack(net.minecraft.world.item.Items.STICK, 4))
+                        : new ItemStack(ModContent.ASSEMBLY_BLUEPRINT.get()));
+                menu.slots.get(1).set(recorded
+                        ? blueprint(new int[] {0}, net.minecraft.world.item.Items.OAK_LOG,
+                                new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 4))
+                        : new ItemStack(ModContent.ASSEMBLY_BLUEPRINT.get()));
+            }
+        });
+        context.waitTicks(5);
+        Path path = takeCleanScreenshot(context, name);
+        LOG.info("[GUITEST][MOD-275] screenshot {} -> {}", name, path.toAbsolutePath());
+        return path;
+    }
+
+    /**
+     * The Assembler window as {@code {leftPos, topPos, imageWidth, imageHeight, guiScaledWidth}}, in
+     * GUI-scaled units, captured inside {@code runOnClient} by {@link #shootAssemblerTab}.
+     */
+    private static int[] assemblerWindowBox;
+
+    /** Put the Assembler window on {@code tab}; a no-op for any other machine menu. */
+    private static void selectTab(MachineMenu menu, int tab) {
+        if (menu instanceof dev.alaindustrial.menu.AssemblerMenu assembler) {
+            assembler.setActiveTab(tab);
+        }
+    }
+
+    /**
+     * One Assembler window on one tab, with each group of content independently switchable (MOD-275).
+     *
+     * <p>Everything else is pinned, so a pair of shots from this method differs by exactly the groups
+     * that were toggled between them — which is what makes the tab gate below able to say "this content
+     * is not in this frame" rather than merely "the two frames look different".
+     *
+     * @param tab       {@code TAB_WORK} or {@code TAB_RECORD}
+     * @param fillGrid  lay a recipe into the authoring grid and its result preview (Record-tab content)
+     * @param fillBlank put a blank blueprint in the Record tab's slot (Record-tab content)
+     * @param fillQueue put two recorded blueprints in the queue (Work-tab content)
+     */
+    private static Path shootAssemblerTab(ClientGameTestContext context, String name, int tab,
+                                          boolean fillGrid, boolean fillBlank, boolean fillQueue) {
+        final int CAP = 12000;   // Config.assemblerBuffer
+        final int ASM = 40;      // Config.assemblerDuration
+        LOG.info("[GUITEST][MOD-275] opening {} (tab={} grid={} blank={} queue={})",
+                name, tab, fillGrid, fillBlank, fillQueue);
+        context.runOnClient(mc -> {
+            MenuScreens.create(ModContent.ASSEMBLER_MENU.get(), mc, 0, Component.literal("Assembler"));
+            if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                    && acs.getMenu() instanceof MachineMenu menu) {
+                menu.injectTestData(CAP * 3 / 4, CAP, ASM / 2, ASM);
+                menu.injectTestChannel(4, fillQueue ? 0 : -1);
+                menu.injectTestChannel(5, dev.alaindustrial.block.entity.AssemblerBlockEntity
+                        .AssemblerStatus.READY.ordinal());
+                selectTab(menu, tab);
+                var box = (dev.alaindustrial.mixin.client.AbstractContainerScreenAccessor) acs;
+                assemblerWindowBox = new int[] {
+                        box.alaindustrial$getLeftPos(), box.alaindustrial$getTopPos(),
+                        box.alaindustrial$getImageWidth(), box.alaindustrial$getImageHeight(),
+                        mc.getWindow().getGuiScaledWidth(),
+                };
+                if (fillGrid) {
+                    menu.slots.get(dev.alaindustrial.menu.AssemblerMenu.GRID_SLOT_START)
+                            .set(new ItemStack(net.minecraft.world.item.Items.DIAMOND));
+                    menu.slots.get(dev.alaindustrial.menu.AssemblerMenu.GRID_SLOT_START + 4)
+                            .set(new ItemStack(net.minecraft.world.item.Items.DIAMOND));
+                    menu.slots.get(dev.alaindustrial.menu.AssemblerMenu.RESULT_SLOT_INDEX)
+                            .set(new ItemStack(net.minecraft.world.item.Items.DIAMOND_BLOCK));
+                }
+                if (fillBlank) {
+                    menu.slots.get(dev.alaindustrial.block.entity.AssemblerBlockEntity.BLANK_SLOT)
+                            .set(new ItemStack(ModContent.ASSEMBLY_BLUEPRINT.get()));
+                }
+                if (fillQueue) {
+                    menu.slots.get(0).set(blueprint(new int[] {0, 3},
+                            net.minecraft.world.item.Items.OAK_PLANKS,
+                            new ItemStack(net.minecraft.world.item.Items.STICK, 4)));
+                    menu.slots.get(1).set(blueprint(new int[] {0},
+                            net.minecraft.world.item.Items.OAK_LOG,
+                            new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 4)));
+                }
+            }
+        });
+        context.waitTicks(5);
+        Path path = takeCleanScreenshot(context, name);
+        LOG.info("[GUITEST][MOD-275] screenshot {} -> {}", name, path.toAbsolutePath());
+        return path;
+    }
+
+    /**
+     * The gate that says the hidden tab's contents are <b>gone</b>, not merely covered (MOD-275).
+     *
+     * <p>Hiding a slot in Minecraft is one boolean — {@code Slot#isActive} — and getting it wrong looks
+     * exactly like getting it right in a single screenshot: the frame is drawn from a different atlas
+     * either way, and a slot that is still painted underneath, or an item drawn over the wrong band, is
+     * a couple of hundred pixels nobody notices. So this measures each tab's content twice, once with it
+     * present and once absent, and asserts <em>both</em> directions:
+     *
+     * <ul>
+     *   <li>on its own tab that content moves pixels (otherwise the injection is doing nothing and the
+     *       zero below would be vacuous — this is the control);</li>
+     *   <li>on the other tab the identical injection moves <b>no</b> pixels beyond the frame-to-frame
+     *       noise floor.</li>
+     * </ul>
+     *
+     * <p>Run for both tabs, so neither one is trusted on the strength of the other.
+     */
+    private static void assertHiddenTabIsGone(ClientGameTestContext context) {
+        int work = dev.alaindustrial.menu.AssemblerMenu.TAB_WORK;
+        int record = dev.alaindustrial.menu.AssemblerMenu.TAB_RECORD;
+
+        // Noise floor: the same state, twice.
+        Path noiseA = shootAssemblerTab(context, "gui_assembler_tab_noise_a", work, false, false, false);
+        Path noiseB = shootAssemblerTab(context, "gui_assembler_tab_noise_b", work, false, false, false);
+        int noise = differingPixelsInWindow(noiseA, noiseB);
+
+        // Record-tab content: visible on Record, absent from Work.
+        Path recOn = shootAssemblerTab(context, "gui_assembler_tab_record_filled", record, true, true, false);
+        Path recOff = shootAssemblerTab(context, "gui_assembler_tab_record_empty", record, false, false, false);
+        Path workRecOn = shootAssemblerTab(context, "gui_assembler_tab_work_recdata", work, true, true, false);
+        Path workRecOff = shootAssemblerTab(context, "gui_assembler_tab_work_nodata", work, false, false, false);
+
+        // Work-tab content: visible on Work, absent from Record.
+        Path workOn = shootAssemblerTab(context, "gui_assembler_tab_work_filled", work, false, false, true);
+        Path workOff = workRecOff;
+        Path recWorkOn = shootAssemblerTab(context, "gui_assembler_tab_record_workdata", record, false, false, true);
+        Path recWorkOff = recOff;
+
+        assertTabIsolation("Record", differingPixelsInWindow(recOn, recOff),
+                differingPixelsInWindow(workRecOn, workRecOff), noise, recOn, workRecOn);
+        assertTabIsolation("Work", differingPixelsInWindow(workOn, workOff),
+                differingPixelsInWindow(recWorkOn, recWorkOff), noise, workOn, recWorkOn);
+    }
+
+    /**
+     * Pixels that differ inside the Assembler window, and nowhere else.
+     *
+     * <p>The whole screen is the wrong canvas for this measurement, and measuring it taught that the
+     * hard way: the recipe viewer's item panel down the right-hand edge re-renders its item models every
+     * frame and drifts by a few dozen pixels between two identical shots. Cropping to the window is not
+     * a way of hiding an inconvenient signal — it is the only region either tab can draw in, so a
+     * difference outside it cannot be the thing under test, and a noise floor big enough to absorb the
+     * viewer would also absorb a genuinely leaking slot.
+     */
+    private static int differingPixelsInWindow(Path first, Path second) {
+        if (assemblerWindowBox == null) {
+            throw new AssertionError("[GUITEST][MOD-275] the Assembler window was never measured");
+        }
+        try {
+            BufferedImage a = ImageIO.read(first.toFile());
+            BufferedImage b = ImageIO.read(second.toFile());
+            if (a == null || b == null) {
+                throw new AssertionError("[GUITEST][MOD-275] could not decode " + first + " / " + second);
+            }
+            // Screenshots are in physical pixels, the box in GUI-scaled units.
+            int scale = Math.max(1, a.getWidth() / assemblerWindowBox[4]);
+            int x0 = assemblerWindowBox[0] * scale;
+            int y0 = assemblerWindowBox[1] * scale;
+            int x1 = Math.min(a.getWidth(), x0 + assemblerWindowBox[2] * scale);
+            int y1 = Math.min(a.getHeight(), y0 + assemblerWindowBox[3] * scale);
+            int differing = 0;
+            for (int y = Math.max(0, y0); y < y1; y++) {
+                for (int x = Math.max(0, x0); x < x1; x++) {
+                    if (differsAt(a, b, x, y)) {
+                        differing++;
+                    }
+                }
+            }
+            return differing;
+        } catch (IOException e) {
+            throw new AssertionError("[GUITEST][MOD-275] could not read screenshots for the tab gate", e);
+        }
+    }
+
+    /** One direction of {@link #assertHiddenTabIsGone}: seen on its own tab, unseen on the other. */
+    private static void assertTabIsolation(String owner,
+                                           int onOwnTab, int onOtherTab, int noise,
+                                           Path ownShot, Path otherShot) {
+        LOG.info("[GUITEST][MOD-275] {} content: {} px on its own tab, {} px on the other (noise {})",
+                owner, onOwnTab, onOtherTab, noise);
+        int required = Math.max(4 * noise, 200);
+        if (onOwnTab < required) {
+            throw new AssertionError("[GUITEST][MOD-275] the " + owner + " tab's own content changed only "
+                    + onOwnTab + " px (noise " + noise + ", required > " + required + ") — the shots are "
+                    + "not injecting anything, so the isolation check below would be vacuous. See "
+                    + ownShot.getFileName() + ".");
+        }
+        // Zero, not "small": inside the window there is nothing to be noisy about, and the noise floor
+        // measured above is the evidence for that rather than a budget to spend.
+        int tolerated = noise;
+        if (onOtherTab > tolerated) {
+            throw new AssertionError("[GUITEST][MOD-275] " + owner + "-tab content moved " + onOtherTab
+                    + " px on the OTHER tab (noise floor " + tolerated + ") — a hidden slot is still being "
+                    + "drawn, or its item is bleeding into the visible band. See " + otherShot.getFileName()
+                    + ".");
+        }
+    }
+
+    /** A recorded blueprint: {@code item} in each of {@code cells}, carrying {@code result} as its product. */
+    private static ItemStack blueprint(int[] cells, net.minecraft.world.item.Item item, ItemStack result) {
+        java.util.List<ItemStack> grid = new java.util.ArrayList<>(java.util.Collections.nCopies(
+                dev.alaindustrial.item.assembler.BlueprintPattern.GRID_SIZE, ItemStack.EMPTY));
+        for (int cell : cells) {
+            grid.set(cell, new ItemStack(item));
+        }
+        return dev.alaindustrial.item.assembler.AssemblyBlueprintItem.record(
+                new ItemStack(ModContent.ASSEMBLY_BLUEPRINT.get()),
+                dev.alaindustrial.item.assembler.BlueprintPattern.of(grid), result);
+    }
+
+    /**
+     * Pixel gate for MOD-275's read-only preview: a screenshot of a window is not evidence that anything
+     * was drawn in it.
+     *
+     * <p>Same window twice — once with recorded blueprints in the queue, once with blanks. Everything
+     * else is identical, so the only thing that can move a pixel is the new drawing: the borrowed layout
+     * in the ghost cells, the blue frame around it, the result preview and the two icons. A run where
+     * the preview silently stopped rendering shows a delta of nearly zero here and fails, instead of
+     * producing a perfectly valid, perfectly empty frame for a reviewer to sign off.
+     */
+    private static void assertBlueprintPreviewInFrame(ClientGameTestContext context, int maxProgress) {
+        final int CAP = 12000;   // Config.assemblerBuffer
+        Path recorded = shootAssemblerQueue(context, "gui_assembler_bp_gate_recorded", CAP, CAP, 0,
+                maxProgress, -1,
+                dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus.NO_MATERIALS, true);
+        Path blankA = shootAssemblerQueue(context, "gui_assembler_bp_gate_blank_a", CAP, CAP, 0,
+                maxProgress, -1,
+                dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus.NO_MATERIALS, false);
+        context.waitTicks(3);
+        Path blankB = takeCleanScreenshot(context, "gui_assembler_bp_gate_blank_b");
+
+        int previewDelta = differingPixels(recorded, blankA);
+        int noise = differingPixels(blankA, blankB);
+        // A static GUI has essentially no frame-to-frame noise, so the floor is what matters: the two
+        // layout items, the result preview, the frame and the icons cover well over 400 px even at the
+        // smallest GUI scale this harness runs at.
+        int required = Math.max(4 * noise, 400);
+        LOG.info("[GUITEST][MOD-275] preview pixel gate: delta={} px, noise={} px, required>{}",
+                previewDelta, noise, required);
+        if (previewDelta < required) {
+            throw new AssertionError("[GUITEST][MOD-275] recording the queued blueprints changed only "
+                    + previewDelta + " px (noise " + noise + ", required > " + required + ") — the "
+                    + "read-only layout preview and the blueprint icons are NOT in the captured frame. "
+                    + "Compare " + recorded.getFileName() + " with " + blankA.getFileName() + ".");
+        }
+    }
+
+    /**
+     * Photographs three blueprint icons side by side in ordinary player-inventory slots and gates them
+     * on pixels (MOD-275).
+     *
+     * <p>The player's complaint was about the <b>item</b>, not the machine window: a recorded blueprint
+     * looked exactly like a blank one in the hotbar, on the ground and in a chest. The fix replaces the
+     * grid motif in the middle of the icon with the recipe's real product, through a custom item-model
+     * type ({@code alaindustrial:blueprint_result}). Player-inventory slots are used on purpose — the
+     * Assembler draws its own decoration over its queue slots, so a shot taken there could pass on the
+     * strength of that decoration alone.
+     *
+     * <p>Two gates, because "something changed" and "the right thing changed" are different claims:
+     * <ul>
+     *   <li><b>Drawn at all</b> — three recorded blueprints against three blanks. A registration that
+     *       silently fell back to the plain model, or a composite that rendered nothing, shows a delta
+     *       of roughly zero here and fails instead of producing a valid, empty-looking frame.
+     *   <li><b>Reflects the recipe</b> — three sticks-blueprints against three planks-blueprints. Same
+     *       component, same model, different product: a static "recorded" texture pretending to be
+     *       dynamic passes the first gate and dies on this one.
+     * </ul>
+     */
+    private static void assertBlueprintIconShowsProduct(ClientGameTestContext context) {
+        ItemStack blank = new ItemStack(ModContent.ASSEMBLY_BLUEPRINT.get());
+        // Two planks in the left column -> 4 sticks (a flat, mostly transparent icon), and one log ->
+        // 4 planks (a full cube). Two very different shapes, so the second gate cannot be satisfied by
+        // a tint difference.
+        ItemStack sticks = blueprint(new int[] {0, 3}, net.minecraft.world.item.Items.OAK_PLANKS,
+                new ItemStack(net.minecraft.world.item.Items.STICK, 4));
+        ItemStack planks = blueprint(new int[] {0}, net.minecraft.world.item.Items.OAK_LOG,
+                new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 4));
+
+        // The reviewer's frame: blank, sticks and planks in one row, so "these are three different
+        // pieces of paper" is a claim a human can check in one glance.
+        shootBlueprintIcons(context, "gui_blueprint_icon_states", blank, sticks, planks);
+
+        Path recorded = shootBlueprintIcons(context, "gui_blueprint_icon_gate_sticks",
+                sticks, sticks, sticks);
+        Path blankA = shootBlueprintIcons(context, "gui_blueprint_icon_gate_blank_a",
+                blank, blank, blank);
+        context.waitTicks(3);
+        Path blankB = takeCleanScreenshot(context, "gui_blueprint_icon_gate_blank_b");
+        Path otherProduct = shootBlueprintIcons(context, "gui_blueprint_icon_gate_planks",
+                planks, planks, planks);
+        // The lighting stand: the same block, once composed into a blueprint and once as itself, in two
+        // adjacent slots of the same frame — so the comparison below is free of every other variable.
+        Path lighting = shootBlueprintIcons(context, "gui_blueprint_icon_gate_lighting",
+                planks, new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS), blank);
+        // Leave the slots as we found them: every later shot in this suite renders the same inventory.
+        Path cleared = shootBlueprintIcons(context, "gui_blueprint_icon_cleared",
+                ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
+
+        // Out of the GUI entirely. The item-model definition carries no display-context switch, so the
+        // product should follow the item into the hand — unlike vanilla's bundle, which restricts its
+        // composed item to "when": "gui". Photographed rather than assumed.
+        // Gated on two *products*, not on recorded-vs-blank. Blank and recorded blueprints also differ
+        // by their sheet texture (the grid motif is erased on a recorded one), so a recorded-vs-blank
+        // delta out here stays large even when the product is drawn in the GUI only — measured, not
+        // assumed: restricting the product to "when": "gui" left that comparison at 52 000 px. Sticks
+        // against planks shares the sheet, so anything this gate sees is the product.
+        shootBlueprintInHand(context, "world_blueprint_in_hand_blank", blank);
+        Path handSticks = shootBlueprintInHand(context, "world_blueprint_in_hand_sticks", sticks);
+        Path handPlanks = shootBlueprintInHand(context, "world_blueprint_in_hand_planks", planks);
+        // The baseline goes through a full swap cycle (sticks -> empty -> sticks), not two consecutive
+        // frames: a world frame drifts between shots (sky, equip animation), and a baseline that skipped
+        // the swap would understate the noise and make the gate vacuous.
+        shootBlueprintInHand(context, "world_blueprint_in_hand_empty", ItemStack.EMPTY);
+        Path handSticksAgain = shootBlueprintInHand(context, "world_blueprint_in_hand_sticks_again", sticks);
+        shootBlueprintInHand(context, "world_blueprint_in_hand_cleared", ItemStack.EMPTY);
+
+        int drawnDelta = differingPixels(recorded, blankA);
+        int noise = differingPixels(blankA, blankB);
+        int productDelta = differingPixels(recorded, otherProduct);
+        int handDelta = differingPixels(handSticks, handPlanks);
+        int handNoise = differingPixels(handSticks, handSticksAgain);
+        // Three icons at 16x16 GUI px, gui scale 2, with the product filling the middle 10x10 of each:
+        // ~1200 px of the frame belong to the three products. The floors below are a quarter of that,
+        // so a partial render still fails while driver dithering never flakes a healthy one.
+        int drawnRequired = Math.max(4 * noise, 300);
+        int productRequired = Math.max(4 * noise, 200);
+        LOG.info("[GUITEST][MOD-275] icon pixel gates: recorded-vs-blank={} px (>{}), "
+                + "sticks-vs-planks={} px (>{}), noise={} px",
+                drawnDelta, drawnRequired, productDelta, productRequired, noise);
+        if (drawnDelta < drawnRequired) {
+            throw new AssertionError("[GUITEST][MOD-275] recording a blueprint changed only "
+                    + drawnDelta + " px of its icon (noise " + noise + ", required > " + drawnRequired
+                    + ") — the product is NOT drawn into the item model. Either the "
+                    + "alaindustrial:blueprint_result model type is not registered on this loader, or "
+                    + "items/assembly_blueprint.json no longer selects it. Compare "
+                    + recorded.getFileName() + " with " + blankA.getFileName() + ".");
+        }
+        if (productDelta < productRequired) {
+            throw new AssertionError("[GUITEST][MOD-275] a sticks blueprint and a planks blueprint "
+                    + "render " + productDelta + " px apart (noise " + noise + ", required > "
+                    + productRequired + ") — the icon does not follow the recorded recipe. Compare "
+                    + recorded.getFileName() + " with " + otherProduct.getFileName() + ".");
+        }
+        // "Inside the frame" is an acceptance criterion, not a matter of taste: the sheet's dark border
+        // ring and its highlight row have to survive, or the icon stops reading as a blueprint at all.
+        // Every pixel the recording changed must therefore land inside the sheet's interior.
+        assertDiffStaysInsideIconInteriors(recorded, blankA);
+        // Inside the frame is not the same claim as in the MIDDLE of it: everything above stays green
+        // with the product shoved into a corner of the field. Both a flat product and a block one are
+        // measured against the sheet's own texture (MOD-275 follow-up).
+        assertProductCentredInIcon(recorded, "sticks");
+        assertProductCentredInIcon(otherProduct, "planks");
+        // Placement is not the same claim as LIGHTING: every gate above stayed green for a release while
+        // the composed block rendered dark grey, because they all count pixels or measure where they are.
+        assertProductLitLikeTheItemItself(lighting, cleared);
+        // The held item is a fraction of the frame and the sky moves behind it, so this gate is
+        // measured against its own noise baseline rather than a fixed floor.
+        int handRequired = Math.max(4 * handNoise, 4000);
+        LOG.info("[GUITEST][MOD-275] in-hand pixel gate: delta={} px (>{}), noise={} px",
+                handDelta, handRequired, handNoise);
+        if (handDelta < handRequired) {
+            throw new AssertionError("[GUITEST][MOD-275] a sticks blueprint and a planks blueprint look "
+                    + handDelta + " px apart in the player's hand (noise " + handNoise + ", required > "
+                    + handRequired + ") — the product reaches the icon in a GUI slot but not in the "
+                    + "world, so the item definition has picked up a display-context restriction. "
+                    + "Compare " + handSticks.getFileName() + " with " + handPlanks.getFileName() + ".");
+        }
+    }
+
+    /**
+     * The three icon slots of the last {@link #shootBlueprintIcons} call, in GUI coordinates
+     * ({@code x, y} of the 16×16 icon), plus the GUI-scaled screen width the shot was taken at.
+     * Written inside the client task, read by {@link #assertDiffStaysInsideIconInteriors}.
+     */
+    private static int[][] iconSlotBoxes;
+    private static int iconGuiScaledWidth;
+
+    /**
+     * Fails unless every pixel that differs between the two frames lies inside one of the three icons'
+     * <em>interiors</em> — the 12×12 field the sheet's border ring encloses.
+     *
+     * <p>The pixel-count gates above prove something was drawn and that it follows the recipe; neither
+     * would notice a product drawn at full size, spilling over the frame and turning the blueprint into
+     * "an item with a blue outline". This is the check for the size and placement, and it is exact:
+     * the border ring (icon column/row 1) and the highlight and shadow rows (2 and 13) must come out
+     * byte-identical to the blank sheet's.
+     */
+    private static void assertDiffStaysInsideIconInteriors(Path recorded, Path blank) {
+        if (iconSlotBoxes == null) {
+            throw new AssertionError("[GUITEST][MOD-275] no icon slot geometry was captured — "
+                    + "shootBlueprintIcons must run before this gate.");
+        }
+        try {
+            BufferedImage a = ImageIO.read(recorded.toFile());
+            BufferedImage b = ImageIO.read(blank.toFile());
+            if (a == null || b == null) {
+                throw new AssertionError("[GUITEST][MOD-275] could not decode " + recorded + " / " + blank);
+            }
+            // The screenshot is the raw framebuffer; the GUI is drawn at an integer scale over it.
+            int scale = a.getWidth() / iconGuiScaledWidth;
+            // Icon interior: columns/rows 2..13 of the 16×16 sprite. 1 is the border ring, 0 is the
+            // one-pixel margin outside it.
+            final int INSET = 2;
+            final int INTERIOR = 12;
+            // Scan the icons and their immediate surroundings only. The rest of the frame carries the
+            // world behind the window, whose few drifting pixels have nothing to say about whether the
+            // product stayed inside its frame — and a whole-frame scan would fail on them.
+            final int MARGIN = 8;
+            int scanX0 = Integer.MAX_VALUE;
+            int scanY0 = Integer.MAX_VALUE;
+            int scanX1 = Integer.MIN_VALUE;
+            int scanY1 = Integer.MIN_VALUE;
+            for (int[] box : iconSlotBoxes) {
+                scanX0 = Math.min(scanX0, (box[0] - MARGIN) * scale);
+                scanY0 = Math.min(scanY0, (box[1] - MARGIN) * scale);
+                scanX1 = Math.max(scanX1, (box[0] + 16 + MARGIN) * scale);
+                scanY1 = Math.max(scanY1, (box[1] + 16 + MARGIN) * scale);
+            }
+            scanX0 = Math.max(0, scanX0);
+            scanY0 = Math.max(0, scanY0);
+            scanX1 = Math.min(a.getWidth(), scanX1);
+            scanY1 = Math.min(a.getHeight(), scanY1);
+            int outside = 0;
+            int firstX = -1;
+            int firstY = -1;
+            for (int y = scanY0; y < scanY1; y++) {
+                for (int x = scanX0; x < scanX1; x++) {
+                    if (!differsAt(a, b, x, y)) {
+                        continue;
+                    }
+                    boolean inside = false;
+                    for (int[] box : iconSlotBoxes) {
+                        int x0 = (box[0] + INSET) * scale;
+                        int y0 = (box[1] + INSET) * scale;
+                        if (x >= x0 && x < x0 + INTERIOR * scale && y >= y0 && y < y0 + INTERIOR * scale) {
+                            inside = true;
+                            break;
+                        }
+                    }
+                    if (!inside) {
+                        if (firstX < 0) {
+                            firstX = x;
+                            firstY = y;
+                        }
+                        outside++;
+                    }
+                }
+            }
+            LOG.info("[GUITEST][MOD-275] icon containment gate: {} px changed outside the sheet interiors",
+                    outside);
+            if (outside > 0) {
+                throw new AssertionError("[GUITEST][MOD-275] recording a blueprint changed " + outside
+                        + " px outside the sheets' interiors (first at " + firstX + "," + firstY
+                        + ") — the product overflows the frame instead of sitting inside it. Check the "
+                        + "scale in the minecraft:composite transformation of items/assembly_blueprint.json. "
+                        + "Compare " + recorded.getFileName() + " with " + blank.getFileName() + ".");
+            }
+        } catch (IOException e) {
+            throw new AssertionError("[GUITEST][MOD-275] could not read the icon screenshots", e);
+        }
+    }
+
+    /**
+     * The recorded sheet the icon is drawn on. Read straight off the mod's own resources, so the gate
+     * below re-measures itself if the art ever changes instead of pinning colours as constants.
+     */
+    private static final String RECORDED_SHEET_TEXTURE =
+            "/assets/alaindustrial/textures/item/assembly_blueprint_recorded.png";
+
+    /**
+     * How far the product's centre may sit from the icon's centre, in sprite texels (MOD-275).
+     *
+     * <p>Three quarters of a texel. The residual it has to tolerate is the product sprite's own
+     * off-centre artwork — a vanilla stick's opaque pixels run 2..14 of its 16×16 sheet, so its visual
+     * middle is 8.5, not 8.0, and shrunk to 10/16 that puts its centre of mass 0.38 texels low and
+     * right; an oak-planks cube measures 0.01. A placement error, by contrast, moves in whole texels:
+     * the smallest wrong translation the JSON can carry (1/16 off) displaces the product by a full
+     * texel and fails.
+     */
+    private static final double ICON_CENTRE_TOLERANCE_TEXELS = 0.75;
+
+    /** The recorded sheet, read off the mod's own resources so the gates re-measure instead of pinning. */
+    private static BufferedImage readRecordedSheet() {
+        BufferedImage sheet;
+        try (java.io.InputStream in =
+                     GuiClientGameTest.class.getResourceAsStream(RECORDED_SHEET_TEXTURE)) {
+            if (in == null) {
+                throw new AssertionError("[GUITEST][MOD-275] " + RECORDED_SHEET_TEXTURE
+                        + " is not on the classpath — the sheet texture moved or was renamed.");
+            }
+            sheet = ImageIO.read(in);
+        } catch (IOException e) {
+            throw new AssertionError("[GUITEST][MOD-275] could not read " + RECORDED_SHEET_TEXTURE, e);
+        }
+        if (sheet == null || sheet.getWidth() != 16 || sheet.getHeight() != 16) {
+            throw new AssertionError("[GUITEST][MOD-275] the recorded sheet is expected to be a 16×16 "
+                    + "sprite; the gates' texel arithmetic does not hold otherwise.");
+        }
+        return sheet;
+    }
+
+    /**
+     * Fails unless the product sits in the MIDDLE of the sheet, not merely somewhere inside it
+     * (MOD-275 follow-up — the playtest complaint was "it is not centred", which every earlier gate
+     * passed happily).
+     *
+     * <p>Method: the recorded blueprint is a flat 16×16 sprite drawn at an integer GUI scale, so every
+     * pixel of the icon that is <em>not</em> the sheet's own texel is a pixel of the product. Compared
+     * against the texture rather than against a blank blueprint on purpose — a blank carries a
+     * different sheet (the 3×3 grid motif), so a recorded-vs-blank diff is contaminated by the erased
+     * grid, which is itself centred and would drag any centre-of-mass measurement back towards the
+     * middle no matter where the product went.
+     *
+     * <p>Two measurements, because they fail on different mistakes. The bounding box says the product
+     * stays inside the frame — a centre test alone passes a product that is centred but overflows.
+     * The <em>centre of mass</em> says it sits in the middle — a box test alone passes a product
+     * shoved off to one side, and the box's own centre is the wrong instrument for that: an isometric
+     * block's silhouette narrows to a single vertex top and bottom, and whether that sliver lands on a
+     * sample point shifts the box by half a texel for reasons that have nothing to do with placement.
+     * The centre of mass of the same shape is stable to a hundredth of a texel.
+     */
+    private static void assertProductCentredInIcon(Path frame, String label) {
+        if (iconSlotBoxes == null) {
+            throw new AssertionError("[GUITEST][MOD-275] no icon slot geometry was captured — "
+                    + "shootBlueprintIcons must run before this gate.");
+        }
+        BufferedImage sheet = readRecordedSheet();
+        BufferedImage shot;
+        try {
+            shot = ImageIO.read(frame.toFile());
+        } catch (IOException e) {
+            throw new AssertionError("[GUITEST][MOD-275] could not read " + frame, e);
+        }
+        if (shot == null) {
+            throw new AssertionError("[GUITEST][MOD-275] could not decode " + frame);
+        }
+        int scale = shot.getWidth() / iconGuiScaledWidth;
+        for (int slot = 0; slot < iconSlotBoxes.length; slot++) {
+            int[] box = iconSlotBoxes[slot];
+            double minX = Double.MAX_VALUE;
+            double minY = Double.MAX_VALUE;
+            double maxX = -Double.MAX_VALUE;
+            double maxY = -Double.MAX_VALUE;
+            int count = 0;
+            double sumX = 0.0;
+            double sumY = 0.0;
+            for (int ty = 0; ty < 16; ty++) {
+                for (int tx = 0; tx < 16; tx++) {
+                    int expected = sheet.getRGB(tx, ty);
+                    for (int sy = 0; sy < scale; sy++) {
+                        for (int sx = 0; sx < scale; sx++) {
+                            int x = (box[0] + tx) * scale + sx;
+                            int y = (box[1] + ty) * scale + sy;
+                            if (!differsFrom(shot, x, y, expected)) {
+                                continue;
+                            }
+                            count++;
+                            // Sub-texel bounds: the pixel covers [u, u + 1/scale) of the sprite.
+                            double u = tx + (double) sx / scale;
+                            double v = ty + (double) sy / scale;
+                            minX = Math.min(minX, u);
+                            minY = Math.min(minY, v);
+                            maxX = Math.max(maxX, u + 1.0 / scale);
+                            maxY = Math.max(maxY, v + 1.0 / scale);
+                            sumX += u + 0.5 / scale;
+                            sumY += v + 0.5 / scale;
+                        }
+                    }
+                }
+            }
+            // A stick is the thinnest product this suite photographs and still covers ~55 pixels at
+            // scale 2; a floor of 16 says "something is drawn" without pinning either product's shape.
+            if (count < 16) {
+                throw new AssertionError("[GUITEST][MOD-275] icon " + slot + " of " + label + " carries "
+                        + count + " px that differ from the bare sheet — the product is not drawn at "
+                        + "all. Compare " + frame.getFileName() + " with " + RECORDED_SHEET_TEXTURE + ".");
+            }
+            double centreX = sumX / count;
+            double centreY = sumY / count;
+            LOG.info("[GUITEST][MOD-275] icon {} of {}: {} px, box x[{}, {}] y[{}, {}], "
+                            + "centre of mass ({}, {})",
+                    slot, label, count, minX, maxX, minY, maxY, centreX, centreY);
+            // Columns/rows 2..13 are the field the border ring encloses; the product must not reach the
+            // ring itself. Same acceptance criterion as the containment gate, restated per product so
+            // this method is a complete statement about placement on its own.
+            if (minX < 2.0 || minY < 2.0 || maxX > 14.0 || maxY > 14.0) {
+                throw new AssertionError("[GUITEST][MOD-275] icon " + slot + " of " + label + " draws the "
+                        + "product over texels x[" + minX + ", " + maxX + "] y[" + minY + ", " + maxY
+                        + "] — outside the sheet's 2..14 interior. Check the scale in the "
+                        + "minecraft:composite transformation of items/assembly_blueprint.json.");
+            }
+            double offX = centreX - 8.0;
+            double offY = centreY - 8.0;
+            if (Math.abs(offX) > ICON_CENTRE_TOLERANCE_TEXELS
+                    || Math.abs(offY) > ICON_CENTRE_TOLERANCE_TEXELS) {
+                throw new AssertionError("[GUITEST][MOD-275] icon " + slot + " of " + label + " puts the "
+                        + "product's centre of mass at (" + centreX + ", " + centreY + ") texels instead "
+                        + "of (8, 8) — off by (" + offX + ", " + offY + "), tolerance "
+                        + ICON_CENTRE_TOLERANCE_TEXELS + ". The sheet's frame is symmetric, so the blue "
+                        + "field's centre IS the icon's centre; a layer scaled by s is centred only when "
+                        + "the minecraft:composite translates it by (1 - s) / 2 on every axis. Check the "
+                        + "translation in items/assembly_blueprint.json against " + frame.getFileName() + ".");
+            }
+        }
+    }
+
+    /**
+     * How far the composed product's top-to-side shading contrast may drift from the same item's own.
+     *
+     * <p>Mean brightness is NOT the instrument here, and that is worth recording: measured on the two
+     * rigs, the composed cube's mean luminance came out 106 under the wrong rig and 88 under the right
+     * one — <em>brighter</em> when broken. The flat-sprite rig does not dim a block, it relights it, and
+     * what the playtest saw as "dark grey" was the top face going dark while a side face went white. So
+     * the gate compares the shape of the shading, not its level: top band against bottom band. The two
+     * rigs put that ratio 45 % apart (1.24 against 1.82), and two sizes of the same cube agree to a few
+     * percent, so a fifth of the way between them separates them with room on both sides.
+     */
+    private static final double ICON_SHADING_TOLERANCE = 0.20;
+
+    /**
+     * How far the composed product's aspect ratio may drift from the same item's own (MOD-275 follow-up).
+     *
+     * <p>This is the gate for "cropped", and it exists because none of the placement gates could see it.
+     * The bounding box only says the product stays inside the frame — a cut-down product is smaller, so
+     * it passes more easily. The centre of mass only says it sits in the middle — the sheet bisects the
+     * product symmetrically, so a bisected cube is still dead centre. Both stayed green while the icon
+     * showed a flat-topped stump. Shape is the thing neither measures: the icon draws the product with a
+     * uniform scale, so its silhouette must have the same proportions as the item drawn on its own.
+     * Measured, the bisected cube came out 18×17 device px against a whole one's 18×20 — 0.94 against
+     * 1.11, 15 % apart — while the two whole shapes agree to a few percent across a 10-vs-16 texel size
+     * difference.
+     */
+    private static final double ICON_SILHOUETTE_TOLERANCE = 0.08;
+
+    /**
+     * Fails unless a block product composed into a blueprint is as brightly lit as the same block drawn
+     * as an ordinary item one slot to its right (MOD-275 follow-up).
+     *
+     * <p><b>Why this gate had to be added.</b> Every other icon gate in this file — pixel deltas,
+     * containment, bounding box, centre of mass — is a statement about <em>where</em> pixels are. All of
+     * them stayed green through an entire release in which the product rendered dark grey, because a
+     * dark cube occupies exactly the same texels as a lit one. Brightness needed its own instrument.
+     *
+     * <p><b>Method.</b> One frame, two adjacent slots: a planks blueprint in slot 0 and a plain oak
+     * planks stack in slot 1. Slot 0's product is every pixel that differs from the bare sheet texture
+     * (the same identification {@link #assertProductCentredInIcon} uses); slot 1's item is every pixel
+     * that differs from the same slot in the all-empty frame. Each shape is then split into a top band
+     * (its cube's upward face) and a bottom band (its side faces), and the two <em>contrasts</em> are
+     * compared. Measuring the reference in the SAME frame is the point — it cancels the GUI scale, the
+     * window background and any driver gamma, so the only thing left between the two numbers is the rig.
+     */
+    private static void assertProductLitLikeTheItemItself(Path frame, Path emptyFrame) {
+        if (iconSlotBoxes == null || iconSlotBoxes.length < 2) {
+            throw new AssertionError("[GUITEST][MOD-275] no icon slot geometry was captured — "
+                    + "shootBlueprintIcons must run before this gate.");
+        }
+        BufferedImage sheet = readRecordedSheet();
+        BufferedImage shot;
+        BufferedImage empty;
+        try {
+            shot = ImageIO.read(frame.toFile());
+            empty = ImageIO.read(emptyFrame.toFile());
+        } catch (IOException e) {
+            throw new AssertionError("[GUITEST][MOD-275] could not read " + frame + " / " + emptyFrame, e);
+        }
+        if (shot == null || empty == null) {
+            throw new AssertionError("[GUITEST][MOD-275] could not decode " + frame + " / " + emptyFrame);
+        }
+        int scale = shot.getWidth() / iconGuiScaledWidth;
+        IconShape composedShape = measureShape(shot, iconSlotBoxes[0], scale, sheet, null,
+                "composed product");
+        IconShape plainShape = measureShape(shot, iconSlotBoxes[1], scale, null, empty, "plain item");
+        double aspectDrift = composedShape.aspect() / plainShape.aspect() - 1.0;
+        LOG.info("[GUITEST][MOD-275] icon silhouette gate: composed {}x{} (aspect {}), "
+                        + "plain {}x{} (aspect {}), drift={} (|.| < {})",
+                composedShape.width(), composedShape.height(), composedShape.aspect(),
+                plainShape.width(), plainShape.height(), plainShape.aspect(),
+                aspectDrift, ICON_SILHOUETTE_TOLERANCE);
+        if (Math.abs(aspectDrift) > ICON_SILHOUETTE_TOLERANCE) {
+            throw new AssertionError("[GUITEST][MOD-275] the composed product's silhouette is "
+                    + composedShape.width() + "x" + composedShape.height() + " px (aspect "
+                    + composedShape.aspect() + ") while the same item drawn on its own is "
+                    + plainShape.width() + "x" + plainShape.height() + " (aspect " + plainShape.aspect()
+                    + ", drift " + aspectDrift + ", tolerance " + ICON_SILHOUETTE_TOLERANCE + ") — the "
+                    + "product is not the whole shape. A composite scale cannot do this: it is uniform. "
+                    + "What can is the sheet, if the product intersects it — everything behind the "
+                    + "paper's plane is occluded and the silhouette comes back cut off. See "
+                    + "BlueprintResultItemModel#onTheSheet. Compare " + frame.getFileName() + ".");
+        }
+        double composed = composedShape.contrast();
+        double plain = plainShape.contrast();
+        double drift = composed / plain - 1.0;
+        LOG.info("[GUITEST][MOD-275] icon lighting gate: top/bottom contrast composed={}, plain={}, "
+                + "drift={} (|.| < {})", composed, plain, drift, ICON_SHADING_TOLERANCE);
+        if (Math.abs(drift) > ICON_SHADING_TOLERANCE) {
+            throw new AssertionError("[GUITEST][MOD-275] a block product composed into a blueprint is "
+                    + "shaded with a top-to-side contrast of " + composed + " while the same block as a "
+                    + "plain item measures " + plain + " in the same frame (drift " + drift
+                    + ", tolerance " + ICON_SHADING_TOLERANCE + ") — the GUI is lighting the whole icon "
+                    + "with the wrong rig. ItemStackRenderState.usesBlockLight() answers for layer 0 "
+                    + "only, so the paper decides the rig for the product; see BlueprintResultItemModel. "
+                    + "Compare " + frame.getFileName() + " with " + emptyFrame.getFileName() + ".");
+        }
+    }
+
+    /**
+     * A drawn shape's silhouette in device pixels plus its top-to-bottom shading contrast.
+     *
+     * <p>Both numbers describe the same set of pixels and are measured in one pass, because both gates
+     * ask about the same shape: is it whole, and is it lit like the item it is a copy of.
+     */
+    private record IconShape(int width, int height, double contrast) {
+        double aspect() {
+            return (double) height / width;
+        }
+    }
+
+    /**
+     * Measures the shape a slot draws: its bounding box, and the mean luminance of its top third over
+     * that of its bottom half.
+     *
+     * <p>The shape is whatever differs from the reference: a 16×16 sprite passed as {@code sheet}, or
+     * the same slot of another frame passed as {@code background}. Bands are taken as fractions of the
+     * shape's own bounding box, so the measurement does not care how large the shape is — which is the
+     * whole point, since the two shapes compared here are 10 and 16 texels across.
+     */
+    private static IconShape measureShape(BufferedImage shot, int[] box, int scale,
+                                          BufferedImage sheet, BufferedImage background, String label) {
+        int minX = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int maxY = Integer.MIN_VALUE;
+        int count = 0;
+        for (int ty = 0; ty < 16; ty++) {
+            for (int tx = 0; tx < 16; tx++) {
+                for (int sy = 0; sy < scale; sy++) {
+                    for (int sx = 0; sx < scale; sx++) {
+                        int x = (box[0] + tx) * scale + sx;
+                        int y = (box[1] + ty) * scale + sy;
+                        int expected = sheet != null ? sheet.getRGB(tx, ty) : background.getRGB(x, y);
+                        if (!differsFrom(shot, x, y, expected)) {
+                            continue;
+                        }
+                        minX = Math.min(minX, x);
+                        maxX = Math.max(maxX, x);
+                        minY = Math.min(minY, y);
+                        maxY = Math.max(maxY, y);
+                        count++;
+                    }
+                }
+            }
+        }
+        if (count < 32) {
+            throw new AssertionError("[GUITEST][MOD-275] the lighting stand drew " + count + " px of "
+                    + label + " — that slot is empty, so the shading comparison would be meaningless.");
+        }
+        double height = maxY - minY + 1;
+        double topEdge = minY + 0.35 * height;
+        double bottomEdge = minY + 0.55 * height;
+        double topSum = 0.0;
+        double bottomSum = 0.0;
+        int topCount = 0;
+        int bottomCount = 0;
+        for (int ty = 0; ty < 16; ty++) {
+            for (int tx = 0; tx < 16; tx++) {
+                for (int sy = 0; sy < scale; sy++) {
+                    for (int sx = 0; sx < scale; sx++) {
+                        int x = (box[0] + tx) * scale + sx;
+                        int y = (box[1] + ty) * scale + sy;
+                        int expected = sheet != null ? sheet.getRGB(tx, ty) : background.getRGB(x, y);
+                        if (!differsFrom(shot, x, y, expected)) {
+                            continue;
+                        }
+                        if (y < topEdge) {
+                            topSum += luminance(shot.getRGB(x, y));
+                            topCount++;
+                        } else if (y >= bottomEdge) {
+                            bottomSum += luminance(shot.getRGB(x, y));
+                            bottomCount++;
+                        }
+                    }
+                }
+            }
+        }
+        if (topCount == 0 || bottomCount == 0 || bottomSum <= 0.0) {
+            throw new AssertionError("[GUITEST][MOD-275] could not band " + label + " into a top and a "
+                    + "bottom (" + topCount + " / " + bottomCount + " px) — the shape is degenerate.");
+        }
+        return new IconShape(maxX - minX + 1, maxY - minY + 1,
+                (topSum / topCount) / (bottomSum / bottomCount));
+    }
+
+    /** Rec. 709 luminance of an ARGB pixel. */
+    private static double luminance(int argb) {
+        return 0.2126 * ((argb >> 16) & 0xFF) + 0.7152 * ((argb >> 8) & 0xFF) + 0.0722 * (argb & 0xFF);
+    }
+
+    /** True when the framebuffer pixel is a different colour than {@code expected} (same slack as
+     * {@link #differsAt}, so driver dithering never registers as product). */
+    private static boolean differsFrom(BufferedImage image, int x, int y, int expected) {
+        int actual = image.getRGB(x, y);
+        int dr = Math.abs(((actual >> 16) & 0xFF) - ((expected >> 16) & 0xFF));
+        int dg = Math.abs(((actual >> 8) & 0xFF) - ((expected >> 8) & 0xFF));
+        int db = Math.abs((actual & 0xFF) - (expected & 0xFF));
+        return Math.max(dr, Math.max(dg, db)) > 24;
+    }
+
+    /** Closes any open screen, puts {@code held} in the selected hotbar slot and shoots the world. */
+    private static Path shootBlueprintInHand(ClientGameTestContext context, String name,
+                                             ItemStack held) {
+        LOG.info("[GUITEST][MOD-275] in hand {} ({})", name, held.getItem());
+        context.runOnClient(mc -> {
+            mc.setScreenAndShow(null);
+            mc.player.getInventory().setSelectedSlot(0);
+            mc.player.getInventory().setItem(0, held.copy());
+        });
+        // Swapping the held item plays the equip animation; wait it out or the frames differ for a
+        // reason that has nothing to do with the icon.
+        context.waitTicks(20);
+        Path path = takeCleanScreenshot(context, name);
+        LOG.info("[GUITEST][MOD-275] screenshot {} -> {}", name, path.toAbsolutePath());
+        return path;
+    }
+
+    /**
+     * Puts three stacks into the first three player-inventory slots of an open Assembler window and
+     * shoots it. The slots are found by their container rather than by index: the Assembler appends its
+     * ghost-grid slots after the base menu's groups, so the player rows do not sit at a fixed offset.
+     */
+    private static Path shootBlueprintIcons(ClientGameTestContext context, String name,
+                                            ItemStack left, ItemStack middle, ItemStack right) {
+        LOG.info("[GUITEST][MOD-275] icon row {} ({} | {} | {})", name,
+                left.getItem(), middle.getItem(), right.getItem());
+        context.runOnClient(mc -> {
+            MenuScreens.create(ModContent.ASSEMBLER_MENU.get(), mc, 0, Component.literal("Assembler"));
+            if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                    && acs.getMenu() instanceof MachineMenu menu) {
+                menu.injectTestData(0, 12000, 0, 40);
+                menu.injectTestChannel(4, -1);
+                menu.injectTestChannel(5, dev.alaindustrial.block.entity.AssemblerBlockEntity
+                        .AssemblerStatus.NO_BLUEPRINT.ordinal());
+                java.util.List<net.minecraft.world.inventory.Slot> player = menu.slots.stream()
+                        .filter(s -> s.container instanceof net.minecraft.world.entity.player.Inventory)
+                        .toList();
+                if (player.size() < 3) {
+                    throw new AssertionError("[GUITEST][MOD-275] the Assembler menu exposes only "
+                            + player.size() + " player-inventory slots — the icon stand needs three.");
+                }
+                player.get(0).set(left.copy());
+                player.get(1).set(middle.copy());
+                player.get(2).set(right.copy());
+                // Remember where the three icons landed, so a gate can say "inside the frame" in pixels.
+                // leftPos/topPos are protected in 26.2 — read through the accessor the mod already has.
+                var pos = (dev.alaindustrial.mixin.client.AbstractContainerScreenAccessor) acs;
+                int guiLeft = pos.alaindustrial$getLeftPos();
+                int guiTop = pos.alaindustrial$getTopPos();
+                iconSlotBoxes = new int[][] {
+                        {guiLeft + player.get(0).x, guiTop + player.get(0).y},
+                        {guiLeft + player.get(1).x, guiTop + player.get(1).y},
+                        {guiLeft + player.get(2).x, guiTop + player.get(2).y},
+                };
+                iconGuiScaledWidth = mc.getWindow().getGuiScaledWidth();
+            }
+        });
+        context.waitTicks(5);
+        Path path = takeCleanScreenshot(context, name);
+        LOG.info("[GUITEST][MOD-275] screenshot {} -> {}", name, path.toAbsolutePath());
+        return path;
     }
 
     /**

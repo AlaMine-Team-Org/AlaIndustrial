@@ -76,6 +76,7 @@ public final class CreativeTabContent {
 	/** Blocks made from plates (MOD-225): the machine casing and two decorative panels. */
 	public static void plateBlocks(Sink out) {
 		out.accept(ModContent.MACHINE_CASING_ITEM.get());
+		out.accept(ModContent.ADVANCED_MACHINE_CASING_ITEM.get());
 		out.accept(ModContent.SILVER_PLATE_BLOCK_ITEM.get());
 		out.accept(ModContent.TEMPERED_IRON_PLATE_BLOCK_ITEM.get());
 	}
@@ -117,6 +118,9 @@ public final class CreativeTabContent {
 		out.accept(ModContent.URANIUM_DUST.get());
 		plates(out);
 		out.accept(ModContent.ELECTRONIC_CIRCUIT.get());
+		// MOD-299 — the MV tier of the circuit, listed right after its LV predecessor.
+		out.accept(ModContent.ADVANCED_CIRCUIT.get());
+		out.accept(ModContent.ASSEMBLY_BLUEPRINT.get());
 		out.accept(ModContent.COPPER_COIL.get());
 		out.accept(ModContent.ALIGNMENT_CHIP_DAY.get());
 		out.accept(ModContent.ALIGNMENT_CHIP_NIGHT.get());
@@ -134,6 +138,7 @@ public final class CreativeTabContent {
 	public static void buildingBlocks(Sink out) {
 		out.accept(ModContent.TEMPERED_IRON_BLOCK_ITEM.get());
 		out.accept(ModContent.MACHINE_CASING_ITEM.get());
+		out.accept(ModContent.ADVANCED_MACHINE_CASING_ITEM.get());
 		out.accept(ModContent.SILVER_PLATE_BLOCK_ITEM.get());
 		out.accept(ModContent.TEMPERED_IRON_PLATE_BLOCK_ITEM.get());
 		out.accept(ModContent.INDUSTRIAL_WORKBENCH_ITEM.get());
@@ -194,6 +199,8 @@ public final class CreativeTabContent {
 		out.accept(ModContent.VULCANIZER_ITEM.get());
 		out.accept(ModContent.GALVANIC_BATH_ITEM.get());
 		out.accept(ModContent.ELECTRIC_HEATER_ITEM.get());
+		// MOD-275 — the first MV machine, last in the list because it sits a tier above the rest.
+		out.accept(ModContent.ASSEMBLER_ITEM.get());
 	}
 
 	private static void storageAndCables(Sink out) {
@@ -208,6 +215,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.IRON_CHEST_ITEM.get());
 		out.accept(ModContent.SILVER_CHEST_ITEM.get());
 		out.accept(ModContent.GOLD_CHEST_ITEM.get());
+		out.accept(ModContent.STORAGE_MODULE_ITEM.get());
 		out.accept(ModContent.STOCK_DISPLAY_FRAME_ITEM.get());
 		// The conductor ladder and its rubber-insulated LV upgrades (MOD-219/MOD-259).
 		out.accept(ModContent.TIN_CABLE_ITEM.get());
@@ -240,6 +248,14 @@ public final class CreativeTabContent {
 
 	private static void components(Sink out) {
 		out.accept(ModContent.ELECTRONIC_CIRCUIT.get());
+		// MOD-299 — the MV tier of the circuit, listed right after its LV predecessor. Added here in
+		// components() as well as in ingredients(): the latter feeds the VANILLA ingredients tab, so
+		// listing it there alone would leave the item craftable but absent from the mod's own tab.
+		out.accept(ModContent.ADVANCED_CIRCUIT.get());
+		// MOD-275: the blueprint belongs in the mod's own tab too. It was added to ingredients()
+		// alone at first — that feeds the VANILLA ingredients tab, so the item was in the game and
+		// craftable while being absent from the tab players actually browse.
+		out.accept(ModContent.ASSEMBLY_BLUEPRINT.get());
 		out.accept(ModContent.COPPER_COIL.get());
 		out.accept(ModContent.ALIGNMENT_CHIP_DAY.get());
 		out.accept(ModContent.ALIGNMENT_CHIP_NIGHT.get());

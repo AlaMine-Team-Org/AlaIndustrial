@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:smelting",
-  "ingredient": "alaindustrial:silver_dust",
+  "ingredient": "#c:dusts/silver",
   "result": {
     "id": "alaindustrial:silver_ingot",
     "count": 1

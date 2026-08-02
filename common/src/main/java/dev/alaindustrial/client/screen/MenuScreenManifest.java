@@ -101,6 +101,7 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.EXTRACTOR_MENU.get(), ExtractorScreen::new),
 			screen(() -> ModContent.COMPRESSOR_MENU.get(), CompressorScreen::new),
 			screen(() -> ModContent.SAWMILL_MENU.get(), SawmillScreen::new),
+			screen(() -> ModContent.ASSEMBLER_MENU.get(), AssemblerScreen::new),
 			screen(() -> ModContent.INCUBATOR_MENU.get(), IncubatorScreen::new),
 			screen(() -> ModContent.POLYMERIZER_MENU.get(), PolymerizerScreen::new),
 			screen(() -> ModContent.VULCANIZER_MENU.get(), VulcanizerScreen::new),
@@ -116,6 +117,9 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.HIGH_ALTITUDE_WIND_MILL_MENU.get(), HighAltitudeWindMillScreen::new),
 			screen(() -> ModContent.STORM_WIND_MILL_MENU.get(), StormWindMillScreen::new),
 			screen(() -> ModContent.IRON_CHEST_MENU.get(), IronChestScreen::new),
+			// MOD-287 — the modular warehouse, one entry per registered height.
+			screen(() -> ModContent.STORAGE_MODULE_MENU_3.get(), StorageScreen3::new),
+			screen(() -> ModContent.STORAGE_MODULE_MENU_6.get(), StorageScreen6::new),
 			screen(() -> ModContent.SILVER_CHEST_MENU.get(), SilverChestScreen::new),
 			screen(() -> ModContent.GOLD_CHEST_MENU.get(), GoldChestScreen::new));
 }

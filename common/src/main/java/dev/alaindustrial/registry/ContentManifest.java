@@ -1,5 +1,6 @@
 package dev.alaindustrial.registry;
 
+import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
@@ -10,6 +11,8 @@ import dev.alaindustrial.menu.GeothermalGeneratorMenu;
 import dev.alaindustrial.menu.GoldChestMenu;
 import dev.alaindustrial.menu.HighAltitudeWindMillMenu;
 import dev.alaindustrial.menu.IronChestMenu;
+import dev.alaindustrial.menu.StorageMenu3;
+import dev.alaindustrial.menu.StorageMenu6;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.PolymerizerMenu;
@@ -108,6 +111,8 @@ public final class ContentManifest {
 			menu("extractor", ExtractorMenu::new, s -> ModContent.EXTRACTOR_MENU = s),
 			menu("compressor", CompressorMenu::new, s -> ModContent.COMPRESSOR_MENU = s),
 			menu("sawmill", SawmillMenu::new, s -> ModContent.SAWMILL_MENU = s),
+			// MOD-275 — the assembler: blueprint queue, ghost pattern grid, six-slot output.
+			menu("assembler", AssemblerMenu::new, s -> ModContent.ASSEMBLER_MENU = s),
 			menu("incubator", IncubatorMenu::new, s -> ModContent.INCUBATOR_MENU = s),
 			menu("polymerizer", PolymerizerMenu::new, s -> ModContent.POLYMERIZER_MENU = s),
 			menu("vulcanizer", VulcanizerMenu::new, s -> ModContent.VULCANIZER_MENU = s),
@@ -124,6 +129,9 @@ public final class ContentManifest {
 					s -> ModContent.HIGH_ALTITUDE_WIND_MILL_MENU = s),
 			menu("storm_wind_mill", StormWindMillMenu::new, s -> ModContent.STORM_WIND_MILL_MENU = s),
 			menu("iron_chest", IronChestMenu::new, s -> ModContent.IRON_CHEST_MENU = s),
+			// MOD-287 — the warehouse window, one registration per height (3/6/9/12 rows).
+			menu("storage_module_3", StorageMenu3::new, s -> ModContent.STORAGE_MODULE_MENU_3 = s),
+			menu("storage_module_6", StorageMenu6::new, s -> ModContent.STORAGE_MODULE_MENU_6 = s),
 			menu("silver_chest", SilverChestMenu::new, s -> ModContent.SILVER_CHEST_MENU = s),
 			menu("gold_chest", GoldChestMenu::new, s -> ModContent.GOLD_CHEST_MENU = s));
 
@@ -176,6 +184,8 @@ public final class ContentManifest {
 			Map.entry("extractor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("compressor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("sawmill", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			// MOD-275: the assembler has no lit model, so no lightLevel — a plain metal machine cube.
+			Map.entry("assembler", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("polymerizer", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("galvanic_bath", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("vulcanizer", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
@@ -209,11 +219,15 @@ public final class ContentManifest {
 			Map.entry("uranium_ore", machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE))),
 			Map.entry("deepslate_uranium_ore", machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE))),
 			Map.entry("iron_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
+			// MOD-287 — plain full cube, no noOcclusion(): unlike the chests it has no 3D renderer.
+			Map.entry("storage_module", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("silver_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("gold_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("tempered_iron_block", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL))),
 			// MOD-225: machine casing (crafting base for machines) + two decorative plate blocks.
 			Map.entry("machine_casing", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL))),
+			// MOD-292: MV casing — tougher than the LV one, it is the tier-up part.
+			Map.entry("advanced_machine_casing", machine(p -> p.strength(6.0f, 8.0f).sound(SoundType.METAL))),
 			Map.entry("silver_plate_block", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("tempered_iron_plate_block", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("industrial_workbench", machine(p -> p.strength(2.5f, 6.0f).sound(SoundType.METAL))),

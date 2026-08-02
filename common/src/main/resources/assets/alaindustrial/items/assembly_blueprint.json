@@ -1,0 +1,34 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "property": "minecraft:has_component",
+    "component": "alaindustrial:blueprint_result",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "alaindustrial:item/assembly_blueprint"
+    },
+    "on_true": {
+      "type": "minecraft:composite",
+      "models": [
+        {
+          "type": "minecraft:model",
+          "model": "alaindustrial:item/assembly_blueprint_recorded"
+        },
+        {
+          "type": "minecraft:composite",
+          "transformation": {
+            "translation": [0.1875, 0.1875, 0.1875],
+            "left_rotation": [0.0, 0.0, 0.0, 1.0],
+            "scale": [0.625, 0.625, 0.625],
+            "right_rotation": [0.0, 0.0, 0.0, 1.0]
+          },
+          "models": [
+            {
+              "type": "alaindustrial:blueprint_result"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

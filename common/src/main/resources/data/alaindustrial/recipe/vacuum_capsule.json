@@ -2,9 +2,9 @@
 	"type": "minecraft:crafting_shaped",
 	"category": "misc",
 	"key": {
-		"T": "alaindustrial:tin_ingot",
-		"G": "minecraft:glass_pane",
-		"R": "minecraft:redstone",
+		"T": "#c:ingots/tin",
+		"G": "#c:glass_panes/colorless",
+		"R": "#c:dusts/redstone",
 		"C": "alaindustrial:copper_cable"
 	},
 	"pattern": [

@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:compressing",
-  "ingredient": "alaindustrial:copper_dust",
+  "ingredient": "#c:dusts/copper",
   "result": {
     "id": "minecraft:copper_ingot",
     "count": 1

@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     "alaindustrial:forge_hammer",
-    "alaindustrial:nickel_ingot"
+    "#c:ingots/nickel"
   ],
   "result": {
     "id": "alaindustrial:nickel_plate",

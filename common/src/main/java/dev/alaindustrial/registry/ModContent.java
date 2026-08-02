@@ -1,5 +1,6 @@
 package dev.alaindustrial.registry;
 
+import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
@@ -10,6 +11,8 @@ import dev.alaindustrial.menu.GeothermalGeneratorMenu;
 import dev.alaindustrial.menu.GoldChestMenu;
 import dev.alaindustrial.menu.HighAltitudeWindMillMenu;
 import dev.alaindustrial.menu.IronChestMenu;
+import dev.alaindustrial.menu.StorageMenu3;
+import dev.alaindustrial.menu.StorageMenu6;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.PolymerizerMenu;
@@ -119,6 +122,8 @@ public final class ModContent {
 	public static Supplier<Block> EXTRACTOR = unbound("EXTRACTOR");
 	public static Supplier<Block> COMPRESSOR = unbound("COMPRESSOR");
 	public static Supplier<Block> SAWMILL = unbound("SAWMILL");
+	/** MOD-275 — the first MV machine: stamps crafting-table recipes from blueprints. */
+	public static Supplier<Block> ASSEMBLER = unbound("ASSEMBLER");
 	/** Polymerizer (MOD-019) — the first machine fed by a fluid: oil in the tank, raw rubber out. */
 	public static Supplier<Block> POLYMERIZER = unbound("POLYMERIZER");
 	public static Supplier<Block> VULCANIZER = unbound("VULCANIZER");
@@ -141,6 +146,8 @@ public final class ModContent {
 	// Iron Chest — a pure-storage block (no energy), so its BE extends vanilla
 	// BaseContainerBlockEntity, not the mod's MachineBlockEntity. See docs/blocks/iron_chest.md.
 	public static Supplier<Block> IRON_CHEST = unbound("IRON_CHEST");
+	/** MOD-287 — one block of the modular warehouse; several form one shared inventory. */
+	public static Supplier<Block> STORAGE_MODULE = unbound("STORAGE_MODULE");
 	public static Supplier<Block> IRON_FURNACE = unbound("IRON_FURNACE");
 	// Silver Chest (MOD-087) — the tier above the iron chest: 45 slots (5×9, +1 row). Same vanilla
 	// BaseContainerBlockEntity spine, no energy. Crafted from an iron chest ringed with silver ingots.
@@ -153,6 +160,7 @@ public final class ModContent {
 	public static Supplier<Block> TEMPERED_IRON_BLOCK = unbound("TEMPERED_IRON_BLOCK");
 	// MOD-225: machine casing (crafting base for machines) + two decorative plate blocks.
 	public static Supplier<Block> MACHINE_CASING = unbound("MACHINE_CASING");
+	public static Supplier<Block> ADVANCED_MACHINE_CASING = unbound("ADVANCED_MACHINE_CASING");
 	public static Supplier<Block> SILVER_PLATE_BLOCK = unbound("SILVER_PLATE_BLOCK");
 	public static Supplier<Block> TEMPERED_IRON_PLATE_BLOCK = unbound("TEMPERED_IRON_PLATE_BLOCK");
 	public static Supplier<Block> INDUSTRIAL_WORKBENCH = unbound("INDUSTRIAL_WORKBENCH");
@@ -172,6 +180,10 @@ public final class ModContent {
 
 	// --- Items (crafting components + tools) ---
 	public static Supplier<Item> ELECTRONIC_CIRCUIT = unbound("ELECTRONIC_CIRCUIT");
+	/** MOD-299 — the MV tier of the circuit: the LV board rewired with gold and sealed in rubber. */
+	public static Supplier<Item> ADVANCED_CIRCUIT = unbound("ADVANCED_CIRCUIT");
+	/** MOD-275 — blank out of the grid, a recorded blueprint once the Assembler writes a layout. */
+	public static Supplier<Item> ASSEMBLY_BLUEPRINT = unbound("ASSEMBLY_BLUEPRINT");
 	// Copper Coil — a crafting component (copper cable wound on a tin core); gates the Electric Drill.
 	public static Supplier<Item> COPPER_COIL = unbound("COPPER_COIL");
 	public static Supplier<Item> ALIGNMENT_CHIP_DAY = unbound("ALIGNMENT_CHIP_DAY");
@@ -329,6 +341,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> EXTRACTOR_ITEM = unbound("EXTRACTOR_ITEM");
 	public static Supplier<BlockItem> COMPRESSOR_ITEM = unbound("COMPRESSOR_ITEM");
 	public static Supplier<BlockItem> SAWMILL_ITEM = unbound("SAWMILL_ITEM");
+	public static Supplier<BlockItem> ASSEMBLER_ITEM = unbound("ASSEMBLER_ITEM");
 	public static Supplier<BlockItem> POLYMERIZER_ITEM = unbound("POLYMERIZER_ITEM");
 	public static Supplier<BlockItem> VULCANIZER_ITEM = unbound("VULCANIZER_ITEM");
 	public static Supplier<BlockItem> GALVANIC_BATH_ITEM = unbound("GALVANIC_BATH_ITEM");
@@ -348,12 +361,14 @@ public final class ModContent {
 	public static Supplier<BlockItem> URANIUM_ORE_ITEM = unbound("URANIUM_ORE_ITEM");
 	public static Supplier<BlockItem> DEEPSLATE_URANIUM_ORE_ITEM = unbound("DEEPSLATE_URANIUM_ORE_ITEM");
 	public static Supplier<BlockItem> IRON_CHEST_ITEM = unbound("IRON_CHEST_ITEM");
+	public static Supplier<BlockItem> STORAGE_MODULE_ITEM = unbound("STORAGE_MODULE_ITEM");
 	public static Supplier<BlockItem> IRON_FURNACE_ITEM = unbound("IRON_FURNACE_ITEM");
 	public static Supplier<BlockItem> SILVER_CHEST_ITEM = unbound("SILVER_CHEST_ITEM");
 	public static Supplier<BlockItem> GOLD_CHEST_ITEM = unbound("GOLD_CHEST_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_BLOCK_ITEM = unbound("TEMPERED_IRON_BLOCK_ITEM");
 	// MOD-225 block-items.
 	public static Supplier<BlockItem> MACHINE_CASING_ITEM = unbound("MACHINE_CASING_ITEM");
+	public static Supplier<BlockItem> ADVANCED_MACHINE_CASING_ITEM = unbound("ADVANCED_MACHINE_CASING_ITEM");
 	public static Supplier<BlockItem> SILVER_PLATE_BLOCK_ITEM = unbound("SILVER_PLATE_BLOCK_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_PLATE_BLOCK_ITEM = unbound("TEMPERED_IRON_PLATE_BLOCK_ITEM");
 	public static Supplier<BlockItem> INDUSTRIAL_WORKBENCH_ITEM = unbound("INDUSTRIAL_WORKBENCH_ITEM");
@@ -381,6 +396,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> EXTRACTOR_BE = unbound("EXTRACTOR_BE");
 	public static Supplier<BlockEntityType<?>> COMPRESSOR_BE = unbound("COMPRESSOR_BE");
 	public static Supplier<BlockEntityType<?>> SAWMILL_BE = unbound("SAWMILL_BE");
+	public static Supplier<BlockEntityType<?>> ASSEMBLER_BE = unbound("ASSEMBLER_BE");
 	public static Supplier<BlockEntityType<?>> POLYMERIZER_BE = unbound("POLYMERIZER_BE");
 	public static Supplier<BlockEntityType<?>> VULCANIZER_BE = unbound("VULCANIZER_BE");
 	public static Supplier<BlockEntityType<?>> GALVANIC_BATH_BE = unbound("GALVANIC_BATH_BE");
@@ -389,6 +405,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
 	public static Supplier<BlockEntityType<?>> FLUID_TANK_BE = unbound("FLUID_TANK_BE");
 	public static Supplier<BlockEntityType<?>> IRON_CHEST_BE = unbound("IRON_CHEST_BE");
+	public static Supplier<BlockEntityType<?>> STORAGE_MODULE_BE = unbound("STORAGE_MODULE_BE");
 	public static Supplier<BlockEntityType<?>> IRON_FURNACE_BE = unbound("IRON_FURNACE_BE");
 	public static Supplier<BlockEntityType<?>> SILVER_CHEST_BE = unbound("SILVER_CHEST_BE");
 	public static Supplier<BlockEntityType<?>> GOLD_CHEST_BE = unbound("GOLD_CHEST_BE");
@@ -410,6 +427,7 @@ public final class ModContent {
 	public static Supplier<MenuType<ExtractorMenu>> EXTRACTOR_MENU = unbound("EXTRACTOR_MENU");
 	public static Supplier<MenuType<CompressorMenu>> COMPRESSOR_MENU = unbound("COMPRESSOR_MENU");
 	public static Supplier<MenuType<SawmillMenu>> SAWMILL_MENU = unbound("SAWMILL_MENU");
+	public static Supplier<MenuType<AssemblerMenu>> ASSEMBLER_MENU = unbound("ASSEMBLER_MENU");
 	public static Supplier<MenuType<PolymerizerMenu>> POLYMERIZER_MENU = unbound("POLYMERIZER_MENU");
 	public static Supplier<MenuType<VulcanizerMenu>> VULCANIZER_MENU = unbound("VULCANIZER_MENU");
 	public static Supplier<MenuType<GalvanicBathMenu>> GALVANIC_BATH_MENU = unbound("GALVANIC_BATH_MENU");
@@ -432,6 +450,10 @@ public final class ModContent {
 			unbound("HIGH_ALTITUDE_WIND_MILL_MENU");
 	public static Supplier<MenuType<StormWindMillMenu>> STORM_WIND_MILL_MENU = unbound("STORM_WIND_MILL_MENU");
 	public static Supplier<MenuType<IronChestMenu>> IRON_CHEST_MENU = unbound("IRON_CHEST_MENU");
+	// MOD-287 — one menu class, four registered sizes: the client builds its menu from
+	// (syncId, Inventory) alone, so the row count has to travel in the menu type itself.
+	public static Supplier<MenuType<StorageMenu3>> STORAGE_MODULE_MENU_3 = unbound("STORAGE_MODULE_MENU_3");
+	public static Supplier<MenuType<StorageMenu6>> STORAGE_MODULE_MENU_6 = unbound("STORAGE_MODULE_MENU_6");
 	public static Supplier<MenuType<SilverChestMenu>> SILVER_CHEST_MENU = unbound("SILVER_CHEST_MENU");
 	public static Supplier<MenuType<GoldChestMenu>> GOLD_CHEST_MENU = unbound("GOLD_CHEST_MENU");
 

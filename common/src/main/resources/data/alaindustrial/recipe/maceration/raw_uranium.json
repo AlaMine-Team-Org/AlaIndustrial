@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "alaindustrial:raw_uranium",
+  "ingredient": "#c:raw_materials/uranium",
   "result": {
     "id": "alaindustrial:uranium_dust",
     "count": 2

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_lapis_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:lapis_dust"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_lapis_dust"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:assembly_blueprint"
+    ]
+  }
+}

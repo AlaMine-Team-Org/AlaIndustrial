@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "minecraft:raw_gold",
+  "ingredient": "#c:raw_materials/gold",
   "result": {
     "id": "alaindustrial:gold_dust",
     "count": 2

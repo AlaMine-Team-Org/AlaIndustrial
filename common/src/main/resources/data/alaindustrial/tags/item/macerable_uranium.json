@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
+    {
+      "id": "#c:ores/uranium",
+      "required": false
+    },
     "alaindustrial:uranium_ore",
     "alaindustrial:deepslate_uranium_ore"
   ]

@@ -3,7 +3,7 @@
   "category": "redstone",
   "key": {
     "C": "alaindustrial:silver_chest",
-    "G": "minecraft:gold_ingot"
+    "G": "#c:ingots/gold"
   },
   "pattern": [
     "GGG",

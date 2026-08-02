@@ -7,9 +7,9 @@
 		"#"
 	],
 	"key": {
-		"U": "alaindustrial:uranium_dust",
+		"U": "#c:dusts/uranium",
 		"X": "#minecraft:coals",
-		"#": "minecraft:stick"
+		"#": "#c:rods/wooden"
 	},
 	"result": {
 		"id": "alaindustrial:enriched_uranium_torch",

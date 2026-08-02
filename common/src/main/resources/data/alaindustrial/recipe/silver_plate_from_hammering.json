@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     "alaindustrial:forge_hammer",
-    "alaindustrial:silver_ingot"
+    "#c:ingots/silver"
   ],
   "result": {
     "id": "alaindustrial:silver_plate",

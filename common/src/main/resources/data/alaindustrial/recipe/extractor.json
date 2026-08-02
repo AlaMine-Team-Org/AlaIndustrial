@@ -3,7 +3,7 @@
   "category": "redstone",
   "key": {
     "H": "minecraft:hopper",
-    "I": "minecraft:iron_ingot",
+    "I": "#c:ingots/iron",
     "M": "alaindustrial:machine_casing",
     "E": "alaindustrial:electronic_circuit"
   },

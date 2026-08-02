@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "minecraft:iron_ingot",
+  "ingredient": "#c:ingots/iron",
   "result": {
     "id": "alaindustrial:iron_dust",
     "count": 1

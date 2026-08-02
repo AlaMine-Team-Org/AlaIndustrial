@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.entity.AssemblerBlockEntity;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
@@ -19,6 +20,7 @@ import dev.alaindustrial.block.entity.ExtractorBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
+import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
@@ -100,6 +102,8 @@ public final class ModBlockEntitiesNeoForge {
 			register("compressor", CompressorBlockEntity::new, ModBlocksNeoForge.COMPRESSOR);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SawmillBlockEntity>> SAWMILL =
 			register("sawmill", SawmillBlockEntity::new, ModBlocksNeoForge.SAWMILL);
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AssemblerBlockEntity>> ASSEMBLER =
+			register("assembler", AssemblerBlockEntity::new, ModBlocksNeoForge.ASSEMBLER);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PolymerizerBlockEntity>> POLYMERIZER =
 			register("polymerizer", PolymerizerBlockEntity::new, ModBlocksNeoForge.POLYMERIZER);
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VulcanizerBlockEntity>> VULCANIZER =
@@ -128,6 +132,9 @@ public final class ModBlockEntitiesNeoForge {
 	// Pure container (no EnergyPort) — no capability binding in IndustrializationNeoForge#registerCapabilities.
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IronChestBlockEntity>> IRON_CHEST =
 			register("iron_chest", IronChestBlockEntity::new, ModBlocksNeoForge.IRON_CHEST);
+	// Pure container (no EnergyPort) — no capability binding. MOD-287 modular warehouse.
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StorageModuleBlockEntity>> STORAGE_MODULE =
+			register("storage_module", StorageModuleBlockEntity::new, ModBlocksNeoForge.STORAGE_MODULE);
 	// Pure container (no EnergyPort) — no capability binding. Silver chest = tier above the iron chest.
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SilverChestBlockEntity>> SILVER_CHEST =
 			register("silver_chest", SilverChestBlockEntity::new, ModBlocksNeoForge.SILVER_CHEST);
@@ -165,6 +172,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.EXTRACTOR_BE = EXTRACTOR::get;
 		ModContent.COMPRESSOR_BE = COMPRESSOR::get;
 		ModContent.SAWMILL_BE = SAWMILL::get;
+		ModContent.ASSEMBLER_BE = ASSEMBLER::get;
 		ModContent.POLYMERIZER_BE = POLYMERIZER::get;
 		ModContent.VULCANIZER_BE = VULCANIZER::get;
 		ModContent.GALVANIC_BATH_BE = GALVANIC_BATH::get;
@@ -178,6 +186,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.HIGH_ALTITUDE_WIND_MILL_BE = HIGH_ALTITUDE_WIND_MILL::get;
 		ModContent.STORM_WIND_MILL_BE = STORM_WIND_MILL::get;
 		ModContent.IRON_CHEST_BE = IRON_CHEST::get;
+		ModContent.STORAGE_MODULE_BE = STORAGE_MODULE::get;
 		ModContent.SILVER_CHEST_BE = SILVER_CHEST::get;
 		ModContent.GOLD_CHEST_BE = GOLD_CHEST::get;
 	}

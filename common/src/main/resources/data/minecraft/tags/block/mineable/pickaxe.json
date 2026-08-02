@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "alaindustrial:assembler",
     "alaindustrial:battery_box",
     "alaindustrial:compressor",
     "alaindustrial:copper_cable",
@@ -29,6 +30,7 @@
     "alaindustrial:fluid_pipe",
     "alaindustrial:macerator",
     "alaindustrial:machine_casing",
+    "alaindustrial:advanced_machine_casing",
     "alaindustrial:moonlit_solar_panel",
     "alaindustrial:nickel_ore",
     "alaindustrial:sulfur_ore",
@@ -51,6 +53,7 @@
     "alaindustrial:wind_mill",
     "alaindustrial:incubator",
     "alaindustrial:incubator_dome",
-    "alaindustrial:polymerizer"
+    "alaindustrial:polymerizer",
+    "alaindustrial:storage_module"
   ]
 }

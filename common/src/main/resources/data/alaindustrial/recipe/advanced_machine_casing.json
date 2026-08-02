@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "ACA",
+    "PPP"
+  ],
+  "key": {
+    "P": "#c:plates/tempered_iron",
+    "A": "alaindustrial:advanced_circuit",
+    "C": "alaindustrial:machine_casing"
+  },
+  "result": {
+    "id": "alaindustrial:advanced_machine_casing",
+    "count": 1
+  }
+}

@@ -6,6 +6,7 @@ import dev.alaindustrial.item.tool.AnalyzerMode;
 import dev.alaindustrial.item.fluid.FluidTankContents;
 import dev.alaindustrial.item.misc.MutationGrades;
 import dev.alaindustrial.item.tool.NetworkScanData;
+import dev.alaindustrial.item.assembler.BlueprintPattern;
 import dev.alaindustrial.item.energy.PouchContents;
 import dev.alaindustrial.item.teleport.TeleportPoints;
 import dev.alaindustrial.mutation.MutationGrade;
@@ -18,6 +19,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.material.Fluid;
 
 /**
@@ -43,6 +46,9 @@ public final class ModDataComponents {
 	public static final Identifier NETWORK_ANALYZER_MODE_ID = Industrialization.id("network_analyzer_mode");
 	public static final Identifier POUCH_ENERGY_ID = Industrialization.id("pouch_energy");
 	public static final Identifier POUCH_CONTENTS_ID = Industrialization.id("pouch_contents");
+	public static final Identifier BLUEPRINT_PATTERN_ID = Industrialization.id("blueprint_pattern");
+	public static final Identifier BLUEPRINT_RESULT_ID = Industrialization.id("blueprint_result");
+	public static final Identifier BLUEPRINT_SUBSTITUTE_ID = Industrialization.id("blueprint_substitute");
 	public static final Identifier CAPSULE_FLUID_ID = Industrialization.id("capsule_fluid");
 	public static final Identifier TELEPORTER_PRIVATE_ID = Industrialization.id("teleporter_private");
 	public static final Identifier TELEPORTER_OWNER_ID = Industrialization.id("teleporter_owner");
@@ -81,6 +87,63 @@ public final class ModDataComponents {
 	/** Battery Pouch stored items (MOD-052) — immutable stack list with weight math, absent = empty. */
 	public static Supplier<DataComponentType<PouchContents>> POUCH_CONTENTS = () -> {
 		throw new IllegalStateException("ModDataComponents.POUCH_CONTENTS read before its loader bound it");
+	};
+
+	/** Assembly Blueprint 3×3 layout (MOD-275) — absent or all-empty means a blank blueprint. */
+	public static Supplier<DataComponentType<BlueprintPattern>> BLUEPRINT_PATTERN = () -> {
+		throw new IllegalStateException("ModDataComponents.BLUEPRINT_PATTERN read before its loader bound it");
+	};
+
+	/**
+	 * What a recorded Assembly Blueprint makes, cached on the stack at write time (MOD-275).
+	 *
+	 * <p><b>A display cache, and nothing else.</b> The machine never reads it: every operation still
+	 * re-solves {@link BlueprintPattern} against {@code RecipeType.CRAFTING}, so a datapack that changes
+	 * or drops the recipe changes or stops production exactly as before. This component only answers
+	 * "what does this blueprint make" for the tooltip and the window.
+	 *
+	 * <p><b>Why it has to be cached rather than resolved on demand.</b> Answering that question means
+	 * solving a crafting recipe, and the client cannot: {@code Level.recipeAccess()} hands back a
+	 * {@link net.minecraft.world.item.crafting.RecipeAccess}, whose whole 26.2 surface is
+	 * {@code propertySet(…)} and {@code stonecutterRecipes()} — no crafting lookup at all (verified with
+	 * {@code javap}; {@code RecipeManager.getRecipeFor} exists only on the server's own
+	 * {@code ServerLevel.recipeAccess()}). {@code Item.TooltipContext} offers only
+	 * {@code registries()}, a {@code HolderLookup.Provider}, which knows registries and not recipes. So
+	 * the server writes the answer down once, at the moment it resolves the recipe for the "Write"
+	 * button, and the client reads it back off the synced stack. Absent (a blueprint written before this
+	 * existed) simply falls back to the generic "recipe recorded" line.
+	 *
+	 * <p><b>Stored as an {@link ItemStackTemplate}, not an {@link ItemStack}, and that is not a detail.</b>
+	 * A data-component value must be immutable and must implement {@code equals}/{@code hashCode};
+	 * {@code ItemStack} is mutable and declares neither, so it inherits identity equality. Fabric lets
+	 * that through silently — NeoForge asserts it at runtime and every test touching such a component
+	 * dies with "Data components must implement equals and hashCode". {@code ItemStackTemplate} is
+	 * vanilla's immutable record for exactly this ({@code Holder<Item>} + count +
+	 * {@code DataComponentPatch}, with codecs of its own), so the value compares by what it is rather
+	 * than by which object it is, and it keeps the result's own components — a crafted firework or
+	 * banner still names itself correctly.
+	 *
+	 * <p>Absent means "no result known"; nothing ever stores an empty one, and
+	 * {@link dev.alaindustrial.item.assembler.AssemblyBlueprintItem#resultOf} turns it back into a fresh
+	 * {@link ItemStack} for the tooltip and the window.
+	 */
+	public static Supplier<DataComponentType<ItemStackTemplate>> BLUEPRINT_RESULT = () -> {
+		throw new IllegalStateException("ModDataComponents.BLUEPRINT_RESULT read before its loader bound it");
+	};
+
+	/**
+	 * Whether this blueprint may substitute ingredients (MOD-275). Absent means <b>off</b>, like
+	 * {@link #STEP_ASSIST_ENABLED} and unlike {@link #MAGNET_ENABLED}, and the default is off on purpose:
+	 * a plain {@code Ingredient} compares items and ignores components, so a substituting blueprint will
+	 * happily reach for an enchanted book or a half-worn tool where the player recorded a pristine one.
+	 * The player opts in per blueprint, from the machine window.
+	 *
+	 * <p>On the stack rather than on the machine so the setting travels with the recipe: copy the
+	 * blueprint to another assembler and it still substitutes, which is the behaviour a player who set it
+	 * expects.
+	 */
+	public static Supplier<DataComponentType<Boolean>> BLUEPRINT_SUBSTITUTE = () -> {
+		throw new IllegalStateException("ModDataComponents.BLUEPRINT_SUBSTITUTE read before its loader bound it");
 	};
 
 	/**
@@ -251,6 +314,30 @@ public final class ModDataComponents {
 	}
 
 	/** Build the {@code pouch_contents} type both loaders register (MOD-052). */
+	/** Build the {@code blueprint_pattern} type both loaders register (MOD-275). */
+	public static DataComponentType<BlueprintPattern> createBlueprintPattern() {
+		return DataComponentType.<BlueprintPattern>builder()
+				.persistent(BlueprintPattern.CODEC)
+				.networkSynchronized(BlueprintPattern.STREAM_CODEC)
+				.build();
+	}
+
+	/** Build the {@code blueprint_substitute} type both loaders register (MOD-275). */
+	public static DataComponentType<Boolean> createBlueprintSubstitute() {
+		return DataComponentType.<Boolean>builder()
+				.persistent(Codec.BOOL)
+				.networkSynchronized(ByteBufCodecs.BOOL)
+				.build();
+	}
+
+	/** Build the {@code blueprint_result} type both loaders register (MOD-275). */
+	public static DataComponentType<ItemStackTemplate> createBlueprintResult() {
+		return DataComponentType.<ItemStackTemplate>builder()
+				.persistent(ItemStackTemplate.CODEC)
+				.networkSynchronized(ItemStackTemplate.STREAM_CODEC)
+				.build();
+	}
+
 	public static DataComponentType<PouchContents> createPouchContents() {
 		return DataComponentType.<PouchContents>builder()
 				.persistent(PouchContents.CODEC)

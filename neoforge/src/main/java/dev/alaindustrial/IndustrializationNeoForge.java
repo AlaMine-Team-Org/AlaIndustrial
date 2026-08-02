@@ -432,6 +432,7 @@ public final class IndustrializationNeoForge {
 					ModBlockEntitiesNeoForge.EXTRACTOR,
 					ModBlockEntitiesNeoForge.COMPRESSOR,
 					ModBlockEntitiesNeoForge.SAWMILL,
+					ModBlockEntitiesNeoForge.ASSEMBLER,
 					ModBlockEntitiesNeoForge.POLYMERIZER,
 					ModBlockEntitiesNeoForge.GALVANIC_BATH,
 					ModBlockEntitiesNeoForge.VULCANIZER,
@@ -472,6 +473,10 @@ public final class IndustrializationNeoForge {
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.EXTRACTOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.COMPRESSOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SAWMILL);
+		// MOD-275: the assembler's blueprint queue and output area. Fabric gets this for free from
+		// ItemStorage.SIDED's global Container fallback; here it must be named, or the machine is
+		// invisible to the item pipe on this loader only (the MOD-193 asymmetry).
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.ASSEMBLER);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.POLYMERIZER);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GALVANIC_BATH);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.VULCANIZER);
@@ -481,6 +486,10 @@ public final class IndustrializationNeoForge {
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.IRON_CHEST);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SILVER_CHEST);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GOLD_CHEST);
+		// MOD-287: the warehouse module. Without this line the pipe is blind to it on this loader
+		// only — Fabric wraps any Container through a global fallback — which is exactly the
+		// asymmetry the MOD-193 note below describes.
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.STORAGE_MODULE);
 		// MOD-193: the six containers MOD-104 missed. Fabric never showed the gap — ItemStorage.SIDED
 		// wraps any Container through a global fallback, so every machine is visible to the pipe there
 		// for free. Here the capability is per block entity, so anything absent from this list is

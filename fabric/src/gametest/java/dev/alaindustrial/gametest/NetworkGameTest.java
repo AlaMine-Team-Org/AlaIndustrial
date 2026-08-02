@@ -1272,6 +1272,11 @@ public class NetworkGameTest {
 		CableInsulationScenarios.recipesAndVisibility(helper);
 	}
 
+	@GameTest(maxTicks = 40)
+	public void mod299_advancedCircuitRecipesAndVisibility(GameTestHelper helper) {
+		AdvancedCircuitScenarios.recipesAndVisibility(helper);
+	}
+
 	@GameTest(maxTicks = 80)
 	public void mod260_energizedBareOnly(GameTestHelper helper) {
 		CableShockScenarios.energizedBareOnly(helper);

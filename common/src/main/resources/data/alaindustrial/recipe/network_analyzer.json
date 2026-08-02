@@ -2,9 +2,9 @@
 	"type": "minecraft:crafting_shaped",
 	"category": "misc",
 	"key": {
-		"T": "alaindustrial:tin_ingot",
+		"T": "#c:ingots/tin",
 		"C": "alaindustrial:electronic_circuit",
-		"U": "minecraft:copper_ingot"
+		"U": "#c:ingots/copper"
 	},
 	"pattern": [
 		"TTT",

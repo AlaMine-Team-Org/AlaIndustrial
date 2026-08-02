@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "minecraft:raw_copper",
+  "ingredient": "#c:raw_materials/copper",
   "result": {
     "id": "alaindustrial:copper_dust",
     "count": 2

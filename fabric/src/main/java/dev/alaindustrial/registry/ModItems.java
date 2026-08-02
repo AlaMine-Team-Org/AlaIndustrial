@@ -2,6 +2,7 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
@@ -58,6 +59,9 @@ public final class ModItems {
 
 	// Crafting components (referenced by MaceratorBlockEntity recipes and crafting recipes).
 	public static final Item ELECTRONIC_CIRCUIT = item("electronic_circuit");
+	// MOD-299 — the MV circuit: electronic circuit + gold plates + rubber. Gates the advanced casing.
+	public static final Item ADVANCED_CIRCUIT = item("advanced_circuit");
+	public static final Item ASSEMBLY_BLUEPRINT = assemblyBlueprint("assembly_blueprint");
 	// Copper Coil — crafting component (copper cable + tin), gates the Electric Drill.
 	public static final Item COPPER_COIL = item("copper_coil");
 	public static final Item ALIGNMENT_CHIP_DAY = item("alignment_chip_day");
@@ -231,6 +235,7 @@ public final class ModItems {
 	public static final BlockItem EXTRACTOR_ITEM = blockItem("extractor", ModBlocks.EXTRACTOR);
 	public static final BlockItem COMPRESSOR_ITEM = blockItem("compressor", ModBlocks.COMPRESSOR);
 	public static final BlockItem SAWMILL_ITEM = blockItem("sawmill", ModBlocks.SAWMILL);
+	public static final BlockItem ASSEMBLER_ITEM = blockItem("assembler", ModBlocks.ASSEMBLER);
 	public static final BlockItem POLYMERIZER_ITEM = blockItem("polymerizer", ModBlocks.POLYMERIZER);
 	public static final BlockItem VULCANIZER_ITEM = blockItem("vulcanizer", ModBlocks.VULCANIZER);
 	public static final BlockItem GALVANIC_BATH_ITEM =
@@ -255,12 +260,16 @@ public final class ModItems {
 	public static final BlockItem URANIUM_ORE_ITEM = blockItem("uranium_ore", ModBlocks.URANIUM_ORE);
 	public static final BlockItem DEEPSLATE_URANIUM_ORE_ITEM = blockItem("deepslate_uranium_ore", ModBlocks.DEEPSLATE_URANIUM_ORE);
 	public static final BlockItem IRON_CHEST_ITEM = blockItem("iron_chest", ModBlocks.IRON_CHEST);
+	public static final BlockItem STORAGE_MODULE_ITEM =
+			blockItem("storage_module", ModBlocks.STORAGE_MODULE);
 	public static final BlockItem IRON_FURNACE_ITEM = blockItem("iron_furnace", ModBlocks.IRON_FURNACE);
 	public static final BlockItem SILVER_CHEST_ITEM = blockItem("silver_chest", ModBlocks.SILVER_CHEST);
 	public static final BlockItem GOLD_CHEST_ITEM = blockItem("gold_chest", ModBlocks.GOLD_CHEST);
 	public static final BlockItem TEMPERED_IRON_BLOCK_ITEM = blockItem("tempered_iron_block", ModBlocks.TEMPERED_IRON_BLOCK);
 	// MOD-225 block-items.
 	public static final BlockItem MACHINE_CASING_ITEM = blockItem("machine_casing", ModBlocks.MACHINE_CASING);
+	public static final BlockItem ADVANCED_MACHINE_CASING_ITEM =
+			blockItem("advanced_machine_casing", ModBlocks.ADVANCED_MACHINE_CASING);
 	public static final BlockItem SILVER_PLATE_BLOCK_ITEM = blockItem("silver_plate_block", ModBlocks.SILVER_PLATE_BLOCK);
 	public static final BlockItem TEMPERED_IRON_PLATE_BLOCK_ITEM = blockItem("tempered_iron_plate_block", ModBlocks.TEMPERED_IRON_PLATE_BLOCK);
 	public static final BlockItem INDUSTRIAL_WORKBENCH_ITEM = blockItem("industrial_workbench", ModBlocks.INDUSTRIAL_WORKBENCH);
@@ -269,6 +278,14 @@ public final class ModItems {
 	// of its own — this item maps to both blocks (StandingAndWallBlockItem#registerBlocks).
 	public static final BlockItem ENRICHED_URANIUM_TORCH_ITEM = standingAndWallBlockItem(
 			"enriched_uranium_torch", ModBlocks.ENRICHED_URANIUM_TORCH, ModBlocks.ENRICHED_URANIUM_WALL_TORCH);
+
+	/** MOD-275 — needs its own class for the two-state stack size and tooltip. */
+	private static Item assemblyBlueprint(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key, new AssemblyBlueprintItem(
+				new Item.Properties().setId(key)
+						.stacksTo(AssemblyBlueprintItem.BLANK_STACK_SIZE)));
+	}
 
 	private static Item item(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
@@ -591,6 +608,8 @@ public final class ModItems {
 	 */
 	private static void bindModContent() {
 		ModContent.ELECTRONIC_CIRCUIT = () -> ELECTRONIC_CIRCUIT;
+		ModContent.ADVANCED_CIRCUIT = () -> ADVANCED_CIRCUIT;
+		ModContent.ASSEMBLY_BLUEPRINT = () -> ASSEMBLY_BLUEPRINT;
 		ModContent.COPPER_COIL = () -> COPPER_COIL;
 		ModContent.ALIGNMENT_CHIP_DAY = () -> ALIGNMENT_CHIP_DAY;
 		ModContent.ALIGNMENT_CHIP_NIGHT = () -> ALIGNMENT_CHIP_NIGHT;
@@ -690,6 +709,7 @@ public final class ModItems {
 		ModContent.EXTRACTOR_ITEM = () -> EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = () -> COMPRESSOR_ITEM;
 		ModContent.SAWMILL_ITEM = () -> SAWMILL_ITEM;
+		ModContent.ASSEMBLER_ITEM = () -> ASSEMBLER_ITEM;
 		ModContent.POLYMERIZER_ITEM = () -> POLYMERIZER_ITEM;
 		ModContent.VULCANIZER_ITEM = () -> VULCANIZER_ITEM;
 		ModContent.GALVANIC_BATH_ITEM = () -> GALVANIC_BATH_ITEM;
@@ -728,11 +748,13 @@ public final class ModItems {
 		ModContent.URANIUM_ORE_ITEM = () -> URANIUM_ORE_ITEM;
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = () -> DEEPSLATE_URANIUM_ORE_ITEM;
 		ModContent.IRON_CHEST_ITEM = () -> IRON_CHEST_ITEM;
+		ModContent.STORAGE_MODULE_ITEM = () -> STORAGE_MODULE_ITEM;
 		ModContent.IRON_FURNACE_ITEM = () -> IRON_FURNACE_ITEM;
 		ModContent.SILVER_CHEST_ITEM = () -> SILVER_CHEST_ITEM;
 		ModContent.GOLD_CHEST_ITEM = () -> GOLD_CHEST_ITEM;
 		ModContent.TEMPERED_IRON_BLOCK_ITEM = () -> TEMPERED_IRON_BLOCK_ITEM;
 		ModContent.MACHINE_CASING_ITEM = () -> MACHINE_CASING_ITEM;
+		ModContent.ADVANCED_MACHINE_CASING_ITEM = () -> ADVANCED_MACHINE_CASING_ITEM;
 		ModContent.SILVER_PLATE_BLOCK_ITEM = () -> SILVER_PLATE_BLOCK_ITEM;
 		ModContent.TEMPERED_IRON_PLATE_BLOCK_ITEM = () -> TEMPERED_IRON_PLATE_BLOCK_ITEM;
 		ModContent.INDUSTRIAL_WORKBENCH_ITEM = () -> INDUSTRIAL_WORKBENCH_ITEM;

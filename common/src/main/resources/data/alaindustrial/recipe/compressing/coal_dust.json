@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:compressing",
-  "ingredient": "alaindustrial:coal_dust",
+  "ingredient": "#c:dusts/coal",
   "result": {
     "id": "minecraft:coal",
     "count": 1

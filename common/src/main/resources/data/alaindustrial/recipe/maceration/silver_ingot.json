@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "alaindustrial:silver_ingot",
+  "ingredient": "#c:ingots/silver",
   "result": {
     "id": "alaindustrial:silver_dust",
     "count": 1

@@ -23,6 +23,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
+import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -48,6 +49,11 @@ public final class ModItemsNeoForge {
 
 	// --- Crafting components (plain items) ---
 	public static final DeferredItem<Item> ELECTRONIC_CIRCUIT = ITEMS.registerItem("electronic_circuit", Item::new);
+	// MOD-299 — the MV circuit: electronic circuit + gold plates + rubber. Gates the advanced casing.
+	public static final DeferredItem<Item> ADVANCED_CIRCUIT = ITEMS.registerItem("advanced_circuit", Item::new);
+	// MOD-275 — two-state stack size and tooltip, so it needs its own class.
+	public static final DeferredItem<Item> ASSEMBLY_BLUEPRINT = ITEMS.registerItem("assembly_blueprint",
+			props -> new AssemblyBlueprintItem(props.stacksTo(AssemblyBlueprintItem.BLANK_STACK_SIZE)));
 	// Copper Coil — crafting component (copper cable + tin), gates the Electric Drill.
 	public static final DeferredItem<Item> COPPER_COIL = ITEMS.registerItem("copper_coil", Item::new);
 	public static final DeferredItem<Item> ALIGNMENT_CHIP_DAY = ITEMS.registerItem("alignment_chip_day", Item::new);
@@ -304,6 +310,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("compressor", ModBlocksNeoForge.COMPRESSOR);
 	public static final DeferredItem<BlockItem> SAWMILL_ITEM =
 			ITEMS.registerSimpleBlockItem("sawmill", ModBlocksNeoForge.SAWMILL);
+	public static final DeferredItem<BlockItem> ASSEMBLER_ITEM =
+			ITEMS.registerSimpleBlockItem("assembler", ModBlocksNeoForge.ASSEMBLER);
 	public static final DeferredItem<BlockItem> POLYMERIZER_ITEM =
 			ITEMS.registerSimpleBlockItem("polymerizer", ModBlocksNeoForge.POLYMERIZER);
 	public static final DeferredItem<BlockItem> VULCANIZER_ITEM =
@@ -370,6 +378,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("deepslate_uranium_ore", ModBlocksNeoForge.DEEPSLATE_URANIUM_ORE);
 	public static final DeferredItem<BlockItem> IRON_CHEST_ITEM =
 			ITEMS.registerSimpleBlockItem("iron_chest", ModBlocksNeoForge.IRON_CHEST);
+	public static final DeferredItem<BlockItem> STORAGE_MODULE_ITEM =
+			ITEMS.registerSimpleBlockItem("storage_module", ModBlocksNeoForge.STORAGE_MODULE);
 	// Silver Chest (MOD-087) — the tier above the iron chest: 45 slots (5×9).
 	public static final DeferredItem<BlockItem> SILVER_CHEST_ITEM =
 			ITEMS.registerSimpleBlockItem("silver_chest", ModBlocksNeoForge.SILVER_CHEST);
@@ -381,6 +391,8 @@ public final class ModItemsNeoForge {
 	// MOD-225 block-items.
 	public static final DeferredItem<BlockItem> MACHINE_CASING_ITEM =
 			ITEMS.registerSimpleBlockItem("machine_casing", ModBlocksNeoForge.MACHINE_CASING);
+	public static final DeferredItem<BlockItem> ADVANCED_MACHINE_CASING_ITEM =
+			ITEMS.registerSimpleBlockItem("advanced_machine_casing", ModBlocksNeoForge.ADVANCED_MACHINE_CASING);
 	public static final DeferredItem<BlockItem> SILVER_PLATE_BLOCK_ITEM =
 			ITEMS.registerSimpleBlockItem("silver_plate_block", ModBlocksNeoForge.SILVER_PLATE_BLOCK);
 	public static final DeferredItem<BlockItem> TEMPERED_IRON_PLATE_BLOCK_ITEM =
@@ -411,6 +423,8 @@ public final class ModItemsNeoForge {
 	 */
 	public static void init() {
 		ModContent.ELECTRONIC_CIRCUIT = ELECTRONIC_CIRCUIT;
+		ModContent.ADVANCED_CIRCUIT = ADVANCED_CIRCUIT;
+		ModContent.ASSEMBLY_BLUEPRINT = ASSEMBLY_BLUEPRINT;
 		ModContent.COPPER_COIL = COPPER_COIL;
 		ModContent.ALIGNMENT_CHIP_DAY = ALIGNMENT_CHIP_DAY;
 		ModContent.ALIGNMENT_CHIP_NIGHT = ALIGNMENT_CHIP_NIGHT;
@@ -505,6 +519,7 @@ public final class ModItemsNeoForge {
 		ModContent.EXTRACTOR_ITEM = EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = COMPRESSOR_ITEM;
 		ModContent.SAWMILL_ITEM = SAWMILL_ITEM;
+		ModContent.ASSEMBLER_ITEM = ASSEMBLER_ITEM;
 		ModContent.POLYMERIZER_ITEM = POLYMERIZER_ITEM;
 		ModContent.VULCANIZER_ITEM = VULCANIZER_ITEM;
 		ModContent.GALVANIC_BATH_ITEM = GALVANIC_BATH_ITEM;
@@ -556,10 +571,12 @@ public final class ModItemsNeoForge {
 		ModContent.URANIUM_ORE_ITEM = URANIUM_ORE_ITEM;
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = DEEPSLATE_URANIUM_ORE_ITEM;
 		ModContent.IRON_CHEST_ITEM = IRON_CHEST_ITEM;
+		ModContent.STORAGE_MODULE_ITEM = STORAGE_MODULE_ITEM;
 		ModContent.SILVER_CHEST_ITEM = SILVER_CHEST_ITEM;
 		ModContent.GOLD_CHEST_ITEM = GOLD_CHEST_ITEM;
 		ModContent.TEMPERED_IRON_BLOCK_ITEM = TEMPERED_IRON_BLOCK_ITEM;
 		ModContent.MACHINE_CASING_ITEM = MACHINE_CASING_ITEM;
+		ModContent.ADVANCED_MACHINE_CASING_ITEM = ADVANCED_MACHINE_CASING_ITEM;
 		ModContent.SILVER_PLATE_BLOCK_ITEM = SILVER_PLATE_BLOCK_ITEM;
 		ModContent.TEMPERED_IRON_PLATE_BLOCK_ITEM = TEMPERED_IRON_PLATE_BLOCK_ITEM;
 		ModContent.INDUSTRIAL_WORKBENCH_ITEM = INDUSTRIAL_WORKBENCH_ITEM;

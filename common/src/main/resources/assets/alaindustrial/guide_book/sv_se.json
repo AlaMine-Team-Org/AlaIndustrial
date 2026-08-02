@@ -843,6 +843,45 @@
           ]
         },
         {
+          "id": "assembler",
+          "title": "Monteringsmaskin",
+          "icon": "alaindustrial:assembler",
+          "block_id": "alaindustrial:assembler",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Monteringsmaskin",
+              "text": "Stansar oavbrutet ut hantverksbänksrecept efter ritning mot EU och hämtar materialet ur sitt eget modulära lager. Håller en kö på tre ritningar."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 480 EU/op",
+                "Buffert: 12000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "",
+                "minecraft:crafting_table",
+                "",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:electronic_circuit",
+                "",
+                "alaindustrial:storage_module",
+                ""
+              ],
+              "result_id": "alaindustrial:assembler",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extraktor",
           "icon": "alaindustrial:extractor",
@@ -1542,6 +1581,44 @@
           ]
         },
         {
+          "id": "storage_module",
+          "title": "Storage Module",
+          "icon": "alaindustrial:storage_module",
+          "block_id": "alaindustrial:storage_module",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Storage Module",
+              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots on a single screen."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                "minecraft:chest",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate",
+                ""
+              ],
+              "result_id": "alaindustrial:storage_module",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "industrial_workbench",
           "title": "Industriell arbetsbänk",
           "icon": "alaindustrial:industrial_workbench",
@@ -1970,6 +2047,37 @@
                 ""
               ],
               "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "advanced_machine_casing",
+          "title": "Advanced Machine Casing",
+          "icon": "alaindustrial:advanced_machine_casing",
+          "block_id": "alaindustrial:advanced_machine_casing",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Advanced Machine Casing",
+              "text": "A full-cube base block for MV machines — a plain machine casing clad in 8 tempered-iron plates."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "#c:plates/tempered_iron",
+                "#c:plates/tempered_iron",
+                "#c:plates/tempered_iron",
+                "#c:plates/tempered_iron",
+                "alaindustrial:machine_casing",
+                "#c:plates/tempered_iron",
+                "#c:plates/tempered_iron",
+                "#c:plates/tempered_iron",
+                "#c:plates/tempered_iron"
+              ],
+              "result_id": "alaindustrial:advanced_machine_casing",
               "result_count": 1
             }
           ]

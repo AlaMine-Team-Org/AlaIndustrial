@@ -1,7 +1,7 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"category": "redstone",
-	"key": { "N": "alaindustrial:nickel_ingot", "L": "minecraft:lapis_block", "E": "alaindustrial:electronic_circuit" },
+	"key": { "N": "#c:ingots/nickel", "L": "minecraft:lapis_block", "E": "alaindustrial:electronic_circuit" },
 	"pattern": ["NLN","LEL","NLN"],
 	"result": { "id": "alaindustrial:alignment_chip_night" }
 }

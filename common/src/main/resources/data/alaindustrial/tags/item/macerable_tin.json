@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
+    {
+      "id": "#c:ores/tin",
+      "required": false
+    },
     "alaindustrial:tin_ore",
     "alaindustrial:deepslate_tin_ore"
   ]

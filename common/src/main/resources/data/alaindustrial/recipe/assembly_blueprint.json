@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "PIP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:paper",
+    "I": "#c:dusts/lapis"
+  },
+  "result": {
+    "id": "alaindustrial:assembly_blueprint",
+    "count": 4
+  }
+}

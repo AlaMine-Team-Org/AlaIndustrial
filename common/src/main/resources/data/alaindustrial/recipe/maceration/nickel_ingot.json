@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "alaindustrial:nickel_ingot",
+  "ingredient": "#c:ingots/nickel",
   "result": {
     "id": "alaindustrial:nickel_dust",
     "count": 1

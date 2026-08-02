@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
+    {
+      "id": "#c:ores/lapis",
+      "required": false
+    },
     "minecraft:lapis_ore",
     "minecraft:deepslate_lapis_ore"
   ]

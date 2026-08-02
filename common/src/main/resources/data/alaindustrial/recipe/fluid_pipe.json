@@ -2,8 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "S": "alaindustrial:silver_ingot",
-    "G": "minecraft:glass"
+    "S": "#c:ingots/silver",
+    "G": "#c:glass_blocks/colorless"
   },
   "pattern": [
     "S S",

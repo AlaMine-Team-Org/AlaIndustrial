@@ -7,7 +7,7 @@
 		" M "
 	],
 	"key": {
-		"M": "minecraft:gold_ingot",
+		"M": "#c:ingots/gold",
 		"G": "alaindustrial:wooden_gear"
 	},
 	"result": {

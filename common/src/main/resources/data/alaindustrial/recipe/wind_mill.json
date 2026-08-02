@@ -2,7 +2,7 @@
 	"type": "minecraft:crafting_shaped",
 	"category": "redstone",
 	"key": {
-		"U": "minecraft:copper_ingot",
+		"U": "#c:ingots/copper",
 		"P": "#minecraft:planks",
 		"C": "alaindustrial:copper_cable",
 		"G": "alaindustrial:wooden_gear"

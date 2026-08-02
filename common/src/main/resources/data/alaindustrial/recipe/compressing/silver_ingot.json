@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:compressing",
-  "ingredient": "alaindustrial:silver_ingot",
+  "ingredient": "#c:ingots/silver",
   "result": {
     "id": "alaindustrial:silver_plate",
     "count": 1

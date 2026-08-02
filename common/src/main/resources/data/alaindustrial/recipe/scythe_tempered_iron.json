@@ -8,7 +8,7 @@
 	],
 	"key": {
 		"M": "alaindustrial:tempered_iron",
-		"S": "minecraft:stick"
+		"S": "#c:rods/wooden"
 	},
 	"result": {
 		"id": "alaindustrial:scythe_tempered_iron",

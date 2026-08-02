@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "key": {
-    "G": "alaindustrial:gold_dust",
+    "G": "#c:dusts/gold",
     "W": "alaindustrial:wooden_gear",
-    "S": "alaindustrial:silver_ingot",
+    "S": "#c:ingots/silver",
     "F": "minecraft:item_frame"
   },
   "pattern": [

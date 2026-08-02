@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "alaindustrial:tin_ingot",
+  "ingredient": "#c:ingots/tin",
   "result": {
     "id": "alaindustrial:tin_dust",
     "count": 1

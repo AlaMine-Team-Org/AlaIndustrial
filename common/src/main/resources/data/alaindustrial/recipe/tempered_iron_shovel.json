@@ -8,7 +8,7 @@
 	],
 	"key": {
 		"I": "alaindustrial:tempered_iron",
-		"S": "minecraft:stick"
+		"S": "#c:rods/wooden"
 	},
 	"result": {
 		"id": "alaindustrial:tempered_iron_shovel",

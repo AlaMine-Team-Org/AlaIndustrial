@@ -3,9 +3,9 @@
 	"category": "redstone",
 	"key": {
 		"E": "alaindustrial:empty_chip",
-		"R": "minecraft:redstone",
-		"L": "minecraft:lapis_lazuli",
-		"U": "alaindustrial:uranium_plate"
+		"R": "#c:dusts/redstone",
+		"L": "#c:gems/lapis",
+		"U": "#c:plates/uranium"
 	},
 	"pattern": [
 		"REL",

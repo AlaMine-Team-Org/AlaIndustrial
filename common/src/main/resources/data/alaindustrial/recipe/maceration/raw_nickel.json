@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "alaindustrial:raw_nickel",
+  "ingredient": "#c:raw_materials/nickel",
   "result": {
     "id": "alaindustrial:nickel_dust",
     "count": 2

@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_machine_casing": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:machine_casing"
+          }
+        ]
+      }
+    },
+    "has_advanced_circuit": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:advanced_circuit"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_machine_casing"
+    ],
+    [
+      "has_advanced_circuit"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:advanced_machine_casing"
+    ]
+  }
+}

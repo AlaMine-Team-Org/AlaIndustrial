@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     "alaindustrial:forge_hammer",
-    "alaindustrial:tin_ingot"
+    "#c:ingots/tin"
   ],
   "result": {
     "id": "alaindustrial:tin_plate",

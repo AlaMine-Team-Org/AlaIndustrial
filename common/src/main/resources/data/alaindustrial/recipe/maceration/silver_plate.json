@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "alaindustrial:silver_plate",
+  "ingredient": "#c:plates/silver",
   "result": {
     "id": "alaindustrial:silver_dust",
     "count": 1

@@ -2,8 +2,8 @@
 	"type": "minecraft:crafting_shaped",
 	"category": "misc",
 	"key": {
-		"L": "minecraft:leather",
-		"T": "alaindustrial:tin_ingot",
+		"L": "#c:leathers",
+		"T": "#c:ingots/tin",
 		"B": "minecraft:bundle",
 		"C": "alaindustrial:electronic_circuit"
 	},

@@ -5,7 +5,7 @@
 		"C": "alaindustrial:machine_casing",
 		"L": "alaindustrial:copper_coil",
 		"E": "alaindustrial:electronic_circuit",
-		"S": "alaindustrial:silver_plate"
+		"S": "#c:plates/silver"
 	},
 	"pattern": [
 		"SLS",

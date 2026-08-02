@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:compressing",
-  "ingredient": "alaindustrial:emerald_dust",
+  "ingredient": "#c:dusts/emerald",
   "result": {
     "id": "minecraft:emerald",
     "count": 1

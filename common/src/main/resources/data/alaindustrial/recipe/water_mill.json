@@ -8,7 +8,7 @@
   ],
   "key": {
     "P": "#minecraft:planks",
-    "U": "minecraft:copper_ingot",
+    "U": "#c:ingots/copper",
     "C": "alaindustrial:copper_cable",
     "G": "alaindustrial:wooden_gear"
   },

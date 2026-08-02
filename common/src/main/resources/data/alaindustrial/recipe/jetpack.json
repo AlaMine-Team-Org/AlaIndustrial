@@ -2,11 +2,11 @@
 	"type": "minecraft:crafting_shaped",
 	"category": "equipment",
 	"key": {
-		"I": "minecraft:iron_ingot",
+		"I": "#c:ingots/iron",
 		"E": "alaindustrial:electronic_circuit",
 		"B": "alaindustrial:battery",
 		"P": "alaindustrial:energy_pack",
-		"T": "alaindustrial:tin_ingot",
+		"T": "#c:ingots/tin",
 		"C": "alaindustrial:copper_coil"
 	},
 	"pattern": [

@@ -3,7 +3,7 @@
   "category": "redstone",
   "key": {
     "C": "alaindustrial:iron_chest",
-    "S": "alaindustrial:silver_ingot"
+    "S": "#c:ingots/silver"
   },
   "pattern": [
     "SSS",

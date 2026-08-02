@@ -2,7 +2,7 @@
   "type": "alaindustrial:galvanic_bath",
   "ingredients": [
     "#alaindustrial:fiber",
-    "alaindustrial:silver_dust"
+    "#c:dusts/silver"
   ],
   "result": {
     "id": "alaindustrial:flux_thread",

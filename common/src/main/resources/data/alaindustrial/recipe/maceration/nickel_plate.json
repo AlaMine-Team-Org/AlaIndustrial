@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "alaindustrial:nickel_plate",
+  "ingredient": "#c:plates/nickel",
   "result": {
     "id": "alaindustrial:nickel_dust",
     "count": 1

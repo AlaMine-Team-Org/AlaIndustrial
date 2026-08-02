@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "alaindustrial:raw_sulfur",
+  "ingredient": "#c:raw_materials/sulfur",
   "result": {
     "id": "alaindustrial:sulfur_dust",
     "count": 2

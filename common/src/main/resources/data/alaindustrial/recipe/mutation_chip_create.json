@@ -3,9 +3,9 @@
 	"category": "redstone",
 	"key": {
 		"E": "alaindustrial:empty_chip",
-		"D": "minecraft:diamond",
+		"D": "#c:gems/diamond",
 		"H": "minecraft:echo_shard",
-		"U": "alaindustrial:uranium_plate"
+		"U": "#c:plates/uranium"
 	},
 	"pattern": [
 		"DEH",

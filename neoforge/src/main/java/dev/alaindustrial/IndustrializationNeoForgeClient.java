@@ -73,10 +73,15 @@ public final class IndustrializationNeoForgeClient {
 		Industrialization.LOGGER.info("Industrialization (NeoForge client) initialized.");
 	}
 
-	/** Initialises the client config screen state, the fluid-tank item tint source, and the config-screen factory. */
+	/**
+	 * Initialises the client config screen state, the fluid-tank item tint source, the blueprint's
+	 * product item-model type (MOD-275) and the config-screen factory. The two render hooks add
+	 * themselves to vanilla late-bound registries, so the call sites are identical on both loaders.
+	 */
 	private void initClientConfig(ModContainer container) {
 		AlaClientConfig.init(FMLPaths.CONFIGDIR.get());
 		dev.alaindustrial.client.render.FluidTankItemTintSource.register();
+		dev.alaindustrial.client.render.BlueprintResultItemModel.register();
 		container.registerExtensionPoint(IConfigScreenFactory.class,
 				(modContainer, parent) -> new AlaConfigScreen(parent));
 	}

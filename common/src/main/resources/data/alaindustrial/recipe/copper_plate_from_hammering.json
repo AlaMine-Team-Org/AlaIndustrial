@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     "alaindustrial:forge_hammer",
-    "minecraft:copper_ingot"
+    "#c:ingots/copper"
   ],
   "result": {
     "id": "alaindustrial:copper_plate",

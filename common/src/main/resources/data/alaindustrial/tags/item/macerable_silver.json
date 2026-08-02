@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
+    {
+      "id": "#c:ores/silver",
+      "required": false
+    },
     "alaindustrial:silver_ore",
     "alaindustrial:deepslate_silver_ore"
   ]

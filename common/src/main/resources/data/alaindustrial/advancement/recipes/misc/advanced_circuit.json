@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_electronic_circuit": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:electronic_circuit"
+          }
+        ]
+      }
+    },
+    "has_rubber": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:rubber"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_electronic_circuit"
+    ],
+    [
+      "has_rubber"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:advanced_circuit"
+    ]
+  }
+}

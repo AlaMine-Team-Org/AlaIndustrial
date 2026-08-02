@@ -2,15 +2,21 @@ package dev.alaindustrial.gametest.neoforge;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.gametest.AssemblerPerfScenarios;
+import dev.alaindustrial.gametest.ForeignMaterialScenarios;
 import dev.alaindustrial.gametest.CableFaceParityScenarios;
 import dev.alaindustrial.gametest.FluidPipeScenarios;
 import dev.alaindustrial.gametest.CableEnergyScenarios;
+import dev.alaindustrial.gametest.AdvancedCircuitScenarios;
 import dev.alaindustrial.gametest.CableInsulationScenarios;
 import dev.alaindustrial.gametest.CableShockScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.GeneratorEnergyScenarios;
 import dev.alaindustrial.gametest.MachineEnergyScenarios;
 import dev.alaindustrial.gametest.StorageEnergyScenarios;
+import dev.alaindustrial.gametest.RecipeTagScenarios;
+import dev.alaindustrial.gametest.AssemblerScenarios;
+import dev.alaindustrial.gametest.StorageClusterScenarios;
 import dev.alaindustrial.gametest.WorldContentScenarios;
 import dev.alaindustrial.gametest.CapsuleScenarios;
 import dev.alaindustrial.gametest.GeothermalLavaInputScenarios;
@@ -151,6 +157,8 @@ public final class NeoForgeGameTests {
 				CableInsulationScenarios::mixedCopperUsesBareLossDeterministically);
 		registerTest(event, "mod259_recipes_and_visibility", 40, true,
 				CableInsulationScenarios::recipesAndVisibility);
+		registerTest(event, "mod299_advanced_circuit_recipes_and_visibility", 40, true,
+				AdvancedCircuitScenarios::recipesAndVisibility);
 		registerTest(event, "mod260_energized_bare_only", 80, true,
 				CableShockScenarios::energizedBareOnly);
 		registerTest(event, "mod260_retained_buffer_is_safe", 80, true,
@@ -333,6 +341,117 @@ public final class NeoForgeGameTests {
 				MachineEnergyScenarios::extractorMakesFlint);
 		registerTest(event, "furnace_smelts_raw_iron", 420, true,
 				MachineEnergyScenarios::furnaceSmeltsRawIron);
+
+		// MOD-290: recipes now name c: tags. An empty tag makes a recipe load fine and never match,
+		// and the tags are supplied by the loader — so this has to be asserted on the NeoForge lane too.
+		registerTest(event, "consumed_common_tags_are_non_empty", 40, true,
+				RecipeTagScenarios::consumedCommonTagsAreNonEmpty);
+		registerTest(event, "every_mod_recipe_ingredient_resolves", 40, true,
+				RecipeTagScenarios::everyModRecipeIngredientResolves);
+		registerTest(event, "referenced_foreign_tags_resolve", 40, true,
+				RecipeTagScenarios::referencedForeignTagsResolve);
+
+		// MOD-287: the modular warehouse. Which modules merge is pure common logic, but it has to hold
+		// on both lanes — the block entity is registered separately per loader.
+		registerTest(event, "storage_face_adjacent_merges", 40, true,
+				StorageClusterScenarios::faceAdjacentMergesDiagonalDoesNot);
+		registerTest(event, "storage_fifth_module_adds_nothing", 40, true,
+				StorageClusterScenarios::fifthModuleAddsNothing);
+		registerTest(event, "storage_items_stay_in_their_own_module", 40, true,
+				StorageClusterScenarios::itemsStayInTheirOwnModule);
+		registerTest(event, "storage_breaking_middle_module_splits", 40, true,
+				StorageClusterScenarios::breakingMiddleModuleSplitsWithoutLoss);
+		registerTest(event, "storage_module_exposes_item_port", 40, true,
+				StorageClusterScenarios::moduleExposesItemPortOnEveryFace);
+		// The seam flags are written by a hand-rolled refresh walk on block place/break, so they are
+		// world behaviour, not pure logic — both lanes have to see them.
+		registerTest(event, "storage_seams_match_cluster_membership", 40, true,
+				StorageClusterScenarios::seamsMatchClusterMembership);
+		registerTest(event, "storage_seams_join_wall_not_diagonal", 40, true,
+				StorageClusterScenarios::seamsJoinAWallAndNeverADiagonal);
+		registerTest(event, "storage_window_shows_six_rows_and_scrolls", 40, true,
+				StorageClusterScenarios::windowShowsSixRowsAndScrolls);
+		registerTest(event, "storage_shift_click_reaches_scrolled_away_rows", 40, true,
+				StorageClusterScenarios::shiftClickReachesScrolledAwayRows);
+		registerTest(event, "storage_capacity_never_goes_negative", 40, true,
+				StorageClusterScenarios::capacityNeverGoesNegative);
+		registerTest(event, "storage_unloaded_position_is_skipped", 40, true,
+				StorageClusterScenarios::unloadedPositionIsSkippedNotForceLoaded);
+		registerTest(event, "storage_pipe_fills_and_drains_warehouse", 100, true,
+				StorageClusterScenarios::pipeFillsAndDrainsTheWarehouse);
+		registerTest(event, "storage_module_contents_survive_reload", 40, true,
+				StorageClusterScenarios::moduleContentsSurviveReload);
+
+		// MOD-275: the assembler. Every case is a documented failure of a comparable machine in another
+		// mod, and each has to hold on both lanes — the block entity, the menu and the craft-remainder
+		// hook are all registered per loader, and the remainder hook in particular is a different
+		// mechanism on each (Fabric mixin vs NeoForge patch).
+		registerTest(event, "assembler_balance_numbers", 40, true,
+				AssemblerScenarios::con01BalanceNumbers);
+		registerTest(event, "assembler_one_operation_costs_one_operation", 40, true,
+				AssemblerScenarios::fun01OneOperationCostsExactlyOneOperation);
+		registerTest(event, "assembler_no_eu_without_materials", 40, true,
+				AssemblerScenarios::neg01NoEuWithoutMaterials);
+		registerTest(event, "assembler_no_eu_when_output_full", 40, true,
+				AssemblerScenarios::neg02NoEuWhenOutputFull);
+		registerTest(event, "assembler_output_area_uses_every_slot", 40, true,
+				AssemblerScenarios::fun02OutputAreaUsesEverySlot);
+		registerTest(event, "assembler_hammer_remainder_returns_home", 40, true,
+				AssemblerScenarios::fun03HammerRemainderReturnsToItsOwnSlot);
+		registerTest(event, "assembler_self_returning_ingredient_terminates", 40, true,
+				AssemblerScenarios::neg03SelfReturningIngredientTerminates);
+		registerTest(event, "assembler_queue_skips_starved_blueprint", 40, true,
+				AssemblerScenarios::fun04QueueSkipsStarvedBlueprint);
+		registerTest(event, "assembler_queue_rotates_between_blueprints", 40, true,
+				AssemblerScenarios::fun05QueueRotatesBetweenBlueprints);
+		registerTest(event, "assembler_missing_recipe_stops_without_crashing", 40, true,
+				AssemblerScenarios::neg04MissingRecipeStopsWithoutCrashing);
+		registerTest(event, "assembler_two_machines_share_one_warehouse", 40, true,
+				AssemblerScenarios::fun06TwoAssemblersShareOneWarehouse);
+		registerTest(event, "assembler_blueprint_tooltip_names_its_result", 40, true,
+				AssemblerScenarios::gui01BlueprintTooltipNamesItsResult);
+		registerTest(event, "assembler_window_shows_the_active_blueprint", 40, true,
+				AssemblerScenarios::gui02WindowShowsTheActiveBlueprint);
+		registerTest(event, "assembler_active_blueprint_slot_is_synced", 40, true,
+				AssemblerScenarios::gui03ActiveBlueprintSlotIsSynced);
+		registerTest(event, "assembler_blueprint_icon_is_wired_to_the_cached_result", 40, true,
+				AssemblerScenarios::gui04BlueprintIconIsWiredToTheCachedResult);
+		registerTest(event, "assembler_craft_fills_nine_cells", 40, true,
+				AssemblerScenarios::con02CraftFillsNineCells);
+		registerTest(event, "assembler_hidden_tab_slots_are_unreachable", 40, true,
+				AssemblerScenarios::tab01HiddenTabSlotsAreUnreachable);
+		registerTest(event, "assembler_recording_does_not_stop_production", 40, true,
+				AssemblerScenarios::tab02RecordingDoesNotStopProduction);
+		registerTest(event, "assembler_write_belongs_to_the_record_tab", 40, true,
+				AssemblerScenarios::tab03WriteBelongsToTheRecordTab);
+
+		registerTest(event, "assembler_substitution_off_by_default", 40, true,
+				AssemblerScenarios::sub01OffByDefaultOnWhenToggled);
+		registerTest(event, "assembler_substitution_prefers_recorded_item", 40, true,
+				AssemblerScenarios::sub02RecordedItemWins);
+		registerTest(event, "assembler_substitution_only_this_recipes_ingredient", 40, true,
+				AssemblerScenarios::sub03OnlyThisRecipesIngredient);
+		registerTest(event, "assembler_substitution_validated_by_reassembly", 40, true,
+				AssemblerScenarios::sub04ValidatedByReassembly);
+		registerTest(event, "assembler_substitution_button_channel_routes", 40, true,
+				AssemblerScenarios::sub05ButtonChannelRoutesToSubstitution);
+		registerTest(event, "assembler_breaking_drops_queue_and_output", 40, true,
+				AssemblerScenarios::brk01BreakingTheMachineDropsQueueAndOutput);
+		registerTest(event, "assembler_state_survives_reload", 40, true,
+				AssemblerScenarios::per01AssemblerStateSurvivesReload);
+
+		// MOD-290 cross-mod lane: the fake foreign mod's tin, reaching our tags and our recipes.
+		registerTest(event, "foreign_material_reaches_our_tags", 40, true,
+				ForeignMaterialScenarios::tags04ForeignItemReachesOurTags);
+		registerTest(event, "foreign_ore_is_macerated", 100, true,
+				ForeignMaterialScenarios::tags05MaceratorGrindsForeignOre);
+		registerTest(event, "foreign_ingot_feeds_our_craft", 40, true,
+				ForeignMaterialScenarios::tags06ForeignIngotFeedsOurCraft);
+
+		// MOD-275/MOD-287 — the warehouse tick-cost measurement. maxTicks is generous: the body runs
+		// three 2200-tick phases inside a single game tick, so the gametest clock is not what bounds it.
+		registerTest(event, "assembler_full_warehouse_tick_cost", 100, true,
+				AssemblerPerfScenarios::perf01FullWarehouseTickCost);
 
 		// Pump: source -> tank -> sink (geo) -> EU. Fluid transport end-to-end on the NeoForge lane.
 		registerTest(event, "pump_source_to_tank_to_sink_to_eu", 100, true,

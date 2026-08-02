@@ -397,6 +397,15 @@ public final class Config {
 	 * the slowest of the LV processing family, because plating silver onto fibre is the gate into the
 	 * Fluxweave line and its armour. */
 	public static int galvanicBathDuration = 500;
+
+	// --- MOD-275 assembler. The first MV machine: six times the LV rate, but a short operation.
+	// 12 EU/t x 40 ticks = 480 EU per craft — dearer than crafting by hand, cheaper than a processing
+	// step, so the machine buys time rather than resources. Raised from 8 EU/t after the playtest:
+	// automation was reading as too cheap for what it removes. The buffer follows the rate so it still
+	// holds 25 operations.
+	public static int assemblerEuPerTick = 12;
+	public static int assemblerDuration = 40;
+	public static int assemblerBuffer = 12000;
 	/** Galvanic Bath (MOD-127): mB of water one operation consumes from the internal tank. Deliberately
 	 * NOT part of the recipe JSON (no recipe family in the mod takes items and a fluid at once — see
 	 * GalvanicBathBlockEntity), so this is the one knob for the water price. 4000 mB = four buckets per
@@ -880,6 +889,12 @@ public final class Config {
 				() -> vulcanizerDuration, v -> vulcanizerDuration = v, 1),
 			new IntField("galvanicBathDuration", "Fallback ticks a galvanic bath operation takes at 1.0 speed; shipped recipe energy 1000 / machineEuPerTick 2 = 500.",
 				() -> galvanicBathDuration, v -> galvanicBathDuration = v, 1),
+			new IntField("assemblerEuPerTick", "EU/tick the assembler draws while crafting (MOD-275). MV rate: six times an LV machine.",
+				() -> assemblerEuPerTick, v -> assemblerEuPerTick = v, 1),
+			new IntField("assemblerDuration", "Ticks one assembler craft takes at 1.0 speed (MOD-275). 40 = 2 seconds, the pace of the genre.",
+				() -> assemblerDuration, v -> assemblerDuration = v, 1),
+			new IntField("assemblerBuffer", "EU buffer of the assembler (MOD-275) — 25 operations at 480 EU each.",
+				() -> assemblerBuffer, v -> assemblerBuffer = v, 1),
 			new IntField("galvanicBathWaterPerOp", "mB of water a galvanic bath consumes per completed operation (not part of the recipe JSON).",
 				() -> galvanicBathWaterPerOp, v -> galvanicBathWaterPerOp = v, 1),
 			new IntField("electricHeaterEuPerTick", "EU/t an Electric Heater spends while the Vulcanizer directly above it advances; idle heater draws nothing.",

@@ -73,11 +73,12 @@ mapfile -t files < <(printf '%s\n' "${files[@]}" | grep -vE '(^|/)(scan-clean\.s
 # English-only (L1) check, but still scanned by L2/L3 (automation traces / secrets).
 # This covers both the per-item lang files (/lang/<locale>.json) and the guide
 # book's per-locale content (/guide_book/<locale>.json) — same shipped-translation
-# class. The guide site ships two intentional localized surfaces: the Russian edition
-# (site/ru/) and the two root language-picker pages (site/index.html, site/404.html)
-# whose only Cyrillic is the "Русский" link label. Both are excluded from L1.
+# class. The guide site ships intentional localized editions: Russian (site/ru/)
+# and Ukrainian (site/uk/), plus the two root language-picker pages (site/index.html,
+# site/404.html) whose Cyrillic is the "Русский"/"Українська" link labels. All are
+# excluded from L1 (MOD-224: third site language uk).
 mapfile -t l1_files < <(printf '%s\n' "${files[@]}" \
-  | grep -vE '/(lang|guide_book)/[a-z_]+\.json$|^site/ru/|^site/(index|404)\.html$' || true)
+  | grep -vE '/(lang|guide_book)/[a-z_]+\.json$|^site/(ru|uk)/|^site/(index|404)\.html$' || true)
 
 fail=0
 # scan <label> <grep-flags> <pattern> [filelist-var] [whitelist-text-regex]

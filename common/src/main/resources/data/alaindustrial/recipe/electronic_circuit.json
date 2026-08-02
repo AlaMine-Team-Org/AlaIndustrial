@@ -7,10 +7,10 @@
 		"SNS"
 	],
 	"key": {
-		"S": "alaindustrial:silver_ingot",
-		"N": "alaindustrial:nickel_ingot",
-		"Q": "minecraft:quartz",
-		"E": "minecraft:emerald"
+		"S": "#c:ingots/silver",
+		"N": "#c:ingots/nickel",
+		"Q": "#c:gems/quartz",
+		"E": "#c:gems/emerald"
 	},
 	"result": {
 		"id": "alaindustrial:electronic_circuit",

@@ -2,10 +2,10 @@
 	"type": "minecraft:crafting_shaped",
 	"category": "redstone",
 	"key": {
-		"I": "minecraft:iron_ingot",
+		"I": "#c:ingots/iron",
 		"P": "#minecraft:planks",
 		"C": "alaindustrial:electronic_circuit",
-		"A": "alaindustrial:silver_ingot"
+		"A": "#c:ingots/silver"
 	},
 	"pattern": ["III", "PCP", "PAP"],
 	"result": { "id": "alaindustrial:sawmill" }

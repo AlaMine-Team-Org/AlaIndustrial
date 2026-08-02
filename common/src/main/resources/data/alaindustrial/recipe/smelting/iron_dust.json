@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:smelting",
-  "ingredient": "alaindustrial:iron_dust",
+  "ingredient": "#c:dusts/iron",
   "result": {
     "id": "minecraft:iron_ingot",
     "count": 1

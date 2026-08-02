@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:smelting",
-  "ingredient": "alaindustrial:gold_dust",
+  "ingredient": "#c:dusts/gold",
   "result": {
     "id": "minecraft:gold_ingot",
     "count": 1

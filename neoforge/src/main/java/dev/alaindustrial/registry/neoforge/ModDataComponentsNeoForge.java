@@ -3,6 +3,7 @@ package dev.alaindustrial.registry.neoforge;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.tool.AnalyzerMode;
 import dev.alaindustrial.item.tool.NetworkScanData;
+import dev.alaindustrial.item.assembler.BlueprintPattern;
 import dev.alaindustrial.item.energy.PouchContents;
 import dev.alaindustrial.item.teleport.TeleportPoints;
 import dev.alaindustrial.item.fluid.FluidTankContents;
@@ -12,6 +13,7 @@ import java.util.UUID;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -40,6 +42,16 @@ public final class ModDataComponentsNeoForge {
 
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<PouchContents>> POUCH_CONTENTS =
 			DATA_COMPONENTS.register("pouch_contents", ModDataComponents::createPouchContents);
+
+	// MOD-275 — the blueprint layout, and the display-only cache of what it makes.
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlueprintPattern>> BLUEPRINT_PATTERN =
+			DATA_COMPONENTS.register("blueprint_pattern", ModDataComponents::createBlueprintPattern);
+
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemStackTemplate>> BLUEPRINT_RESULT =
+			DATA_COMPONENTS.register("blueprint_result", ModDataComponents::createBlueprintResult);
+
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> BLUEPRINT_SUBSTITUTE =
+			DATA_COMPONENTS.register("blueprint_substitute", ModDataComponents::createBlueprintSubstitute);
 
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<Fluid>>> CAPSULE_FLUID =
 			DATA_COMPONENTS.register("capsule_fluid", ModDataComponents::createCapsuleFluid);
@@ -71,6 +83,9 @@ public final class ModDataComponentsNeoForge {
 		ModDataComponents.NETWORK_ANALYZER_MODE = NETWORK_ANALYZER_MODE;
 		ModDataComponents.POUCH_ENERGY = POUCH_ENERGY;
 		ModDataComponents.POUCH_CONTENTS = POUCH_CONTENTS;
+		ModDataComponents.BLUEPRINT_PATTERN = BLUEPRINT_PATTERN;
+		ModDataComponents.BLUEPRINT_RESULT = BLUEPRINT_RESULT;
+		ModDataComponents.BLUEPRINT_SUBSTITUTE = BLUEPRINT_SUBSTITUTE;
 		ModDataComponents.CAPSULE_FLUID = CAPSULE_FLUID;
 		ModDataComponents.FLUID_TANK_CONTENTS = FLUID_TANK_CONTENTS;
 		ModDataComponents.TELEPORTER_PRIVATE = TELEPORTER_PRIVATE;

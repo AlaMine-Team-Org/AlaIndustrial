@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
+    {
+      "id": "#c:ores/diamond",
+      "required": false
+    },
     "minecraft:diamond_ore",
     "minecraft:deepslate_diamond_ore"
   ]

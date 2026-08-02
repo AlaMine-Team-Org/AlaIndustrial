@@ -1,6 +1,6 @@
 {
   "type": "alaindustrial:maceration",
-  "ingredient": "minecraft:emerald",
+  "ingredient": "#c:gems/emerald",
   "result": {
     "id": "alaindustrial:emerald_dust",
     "count": 1

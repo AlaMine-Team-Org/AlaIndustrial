@@ -7,8 +7,8 @@
 		" S "
 	],
 	"key": {
-		"M": "minecraft:cobblestone",
-		"S": "minecraft:stick"
+		"M": "#c:cobblestones/normal",
+		"S": "#c:rods/wooden"
 	},
 	"result": {
 		"id": "alaindustrial:scythe_stone",

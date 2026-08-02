@@ -21,6 +21,8 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
  *       {@code RegisterGameTestsEvent} fires only when {@code GameTestHooks.isGametestEnabled()}.</li>
  *   <li>{@link ForeignEnergyItemStandIn#register} — the MOD-084 fake foreign-mod energy item; it
  *       additionally guards itself with {@code FMLEnvironment.isProduction()}.</li>
+ *   <li>{@link ForeignMaterialStandIn#register} — the MOD-290 fake foreign-mod tin, registered under
+ *       a namespace this mod does not own; same production guard.</li>
  * </ul>
  */
 public final class NeoForgeGameTestBootstrap {
@@ -32,5 +34,6 @@ public final class NeoForgeGameTestBootstrap {
 		NeoForgeGameTests.INSTANCE_TYPES.register(modBus);
 		modBus.addListener(NeoForgeGameTests::register);
 		modBus.addListener((RegisterCapabilitiesEvent event) -> ForeignEnergyItemStandIn.register(event));
+		ForeignMaterialStandIn.register(modBus);
 	}
 }

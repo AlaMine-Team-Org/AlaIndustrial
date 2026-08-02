@@ -7,7 +7,7 @@
     "PPP"
   ],
   "key": {
-    "P": "alaindustrial:iron_plate"
+    "P": "#c:plates/iron"
   },
   "result": {
     "id": "alaindustrial:machine_casing",

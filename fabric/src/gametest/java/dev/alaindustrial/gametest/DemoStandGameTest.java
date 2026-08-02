@@ -5,6 +5,7 @@ import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.command.demo.DemoStand;
+import dev.alaindustrial.storage.StorageCluster;
 import java.util.HashSet;
 import java.util.Set;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
@@ -38,6 +39,16 @@ public class DemoStandGameTest {
 	public void demoStandBuildsCoversAndRuns(GameTestHelper helper) {
 		BlockPos origin = helper.absolutePos(ORIGIN);
 		DemoStand.buildAll(helper.getLevel(), origin);
+
+		// --- the storage-module pair really is a pair (MOD-275 stage A) ---
+		// Two `set` calls landed on the same cell, so the stand showed ONE module where the comment
+		// promised two merged into one warehouse. The block-coverage scan below cannot see that — the
+		// surviving module still ticks the "storage_module appears somewhere" box. Walking the cluster
+		// does: a single module walks to moduleCount() == 1.
+		if (StorageCluster.of(helper.getLevel(), origin.offset(32, 3, 10)).moduleCount() != 2) {
+			helper.fail("the demo stand's two storage modules do not form one 2-module warehouse "
+					+ "— a second `set` on the same cell overwrote one of them");
+		}
 
 		// --- coverage: every registered mod block is somewhere in the stand envelope ---
 		Set<Identifier> missing = new HashSet<>();

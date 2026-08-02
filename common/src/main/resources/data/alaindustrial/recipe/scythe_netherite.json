@@ -7,8 +7,8 @@
 		" S "
 	],
 	"key": {
-		"M": "minecraft:netherite_ingot",
-		"S": "minecraft:stick"
+		"M": "#c:ingots/netherite",
+		"S": "#c:rods/wooden"
 	},
 	"result": {
 		"id": "alaindustrial:scythe_netherite",
