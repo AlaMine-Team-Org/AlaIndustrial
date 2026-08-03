@@ -5,9 +5,9 @@ import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.core.energy.GraphComponents;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,8 +33,8 @@ public final class FluidNetworkManager {
 	}
 
 	private static final class LevelState {
-		final Map<BlockPos, FluidNetwork> byPos = new HashMap<>();
-		final Set<FluidNetwork> networks = new HashSet<>();
+		final Map<BlockPos, FluidNetwork> byPos = new LinkedHashMap<>();
+		final Set<FluidNetwork> networks = new LinkedHashSet<>();
 		int tickCursor;
 	}
 
@@ -152,7 +152,7 @@ public final class FluidNetworkManager {
 
 	private static void rebuild(LevelState st, FluidNetwork old) {
 		ServerLevel level = old.level();
-		Set<BlockPos> remaining = new HashSet<>(old.pipes());
+		Set<BlockPos> remaining = new LinkedHashSet<>(old.pipes());
 		st.networks.remove(old);
 		List<Set<BlockPos>> components =
 				GraphComponents.components(remaining, p -> pipeNeighbours(level, p));

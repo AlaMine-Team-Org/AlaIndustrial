@@ -36,7 +36,6 @@ import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.core.fabric.PortAsEnergyStorage;
 import dev.alaindustrial.core.fabric.TankAsFluidStorage;
-import java.util.Set;
 // MOD-022 Phase 2: machines now expose a platform-neutral EnergyPort (MachineBlockEntity#energyPort).
 // The Fabric SIDED capability binding is the per-loader seam: the neutral port is published through
 // Team Reborn's EnergyStorage.SIDED via the PortAsEnergyStorage reverse adapter. NeoForge binds the same
@@ -99,73 +98,39 @@ public final class ModBlockEntities {
 	public static BlockEntityType<GoldChestBlockEntity> GOLD_CHEST;
 
 	public static void init() {
-		GENERATOR = register("generator",
-				new BlockEntityType<>(GeneratorBlockEntity::new, Set.of(ModBlocks.GENERATOR)));
-		GEOTHERMAL_GENERATOR = register("geothermal_generator",
-				new BlockEntityType<>(GeothermalGeneratorBlockEntity::new, Set.of(ModBlocks.GEOTHERMAL_GENERATOR)));
-		SOLAR_PANEL = register("solar_panel",
-				new BlockEntityType<>(SolarPanelBlockEntity::new, Set.of(ModBlocks.SOLAR_PANEL)));
-		MOONLIT_SOLAR_PANEL = register("moonlit_solar_panel",
-				new BlockEntityType<>(MoonlitSolarPanelBlockEntity::new, Set.of(ModBlocks.MOONLIT_SOLAR_PANEL)));
-		DAYLIGHT_SOLAR_PANEL = register("daylight_solar_panel",
-				new BlockEntityType<>(DaylightSolarPanelBlockEntity::new, Set.of(ModBlocks.DAYLIGHT_SOLAR_PANEL)));
-		COPPER_CABLE = register("copper_cable",
-				new BlockEntityType<>(CableBlockEntity::new, Set.of(ModBlocks.COPPER_CABLE,
-						ModBlocks.TIN_CABLE, ModBlocks.GOLD_CABLE,
-						ModBlocks.INSULATED_COPPER_CABLE, ModBlocks.INSULATED_TIN_CABLE,
-						ModBlocks.INSULATED_GOLD_CABLE)));
-		ITEM_PIPE = register("item_pipe", new BlockEntityType<>(ItemPipeBlockEntity::new, Set.of(ModBlocks.ITEM_PIPE)));
-		FLUID_PIPE = register("fluid_pipe", new BlockEntityType<>(FluidPipeBlockEntity::new, Set.of(ModBlocks.FLUID_PIPE)));
-		MACERATOR = register("macerator",
-				new BlockEntityType<>(MaceratorBlockEntity::new, Set.of(ModBlocks.MACERATOR)));
-		BATTERY_BOX = register("battery_box",
-				new BlockEntityType<>(BatteryBoxBlockEntity::new, Set.of(ModBlocks.BATTERY_BOX)));
-		TELEPORTER = register("teleporter",
-				new BlockEntityType<>(TeleporterBlockEntity::new, Set.of(ModBlocks.TELEPORTER)));
-		ELECTRIC_FURNACE = register("electric_furnace",
-				new BlockEntityType<>(ElectricFurnaceBlockEntity::new, Set.of(ModBlocks.ELECTRIC_FURNACE)));
-		IRON_FURNACE = register("iron_furnace",
-				new BlockEntityType<>(IronFurnaceBlockEntity::new, Set.of(ModBlocks.IRON_FURNACE)));
-		EXTRACTOR = register("extractor",
-				new BlockEntityType<>(ExtractorBlockEntity::new, Set.of(ModBlocks.EXTRACTOR)));
-		COMPRESSOR = register("compressor",
-				new BlockEntityType<>(CompressorBlockEntity::new, Set.of(ModBlocks.COMPRESSOR)));
-		SAWMILL = register("sawmill",
-				new BlockEntityType<>(SawmillBlockEntity::new, Set.of(ModBlocks.SAWMILL)));
-		ASSEMBLER = register("assembler",
-				new BlockEntityType<>(AssemblerBlockEntity::new, Set.of(ModBlocks.ASSEMBLER)));
-		POLYMERIZER = register("polymerizer",
-				new BlockEntityType<>(PolymerizerBlockEntity::new, Set.of(ModBlocks.POLYMERIZER)));
-		VULCANIZER = register("vulcanizer",
-				new BlockEntityType<>(VulcanizerBlockEntity::new, Set.of(ModBlocks.VULCANIZER)));
-		GALVANIC_BATH = register("galvanic_bath",
-				new BlockEntityType<>(GalvanicBathBlockEntity::new, Set.of(ModBlocks.GALVANIC_BATH)));
-		ELECTRIC_HEATER = register("electric_heater",
-				new BlockEntityType<>(ElectricHeaterBlockEntity::new, Set.of(ModBlocks.ELECTRIC_HEATER)));
-		INCUBATOR = register("incubator",
-				new BlockEntityType<>(IncubatorBlockEntity::new, Set.of(ModBlocks.INCUBATOR)));
-		PUMP = register("pump",
-				new BlockEntityType<>(PumpBlockEntity::new, Set.of(ModBlocks.PUMP)));
-		GARDEN_DRONE_STATION = register("garden_drone_station",
-				new BlockEntityType<>(GardenDroneStationBlockEntity::new, Set.of(ModBlocks.GARDEN_DRONE_STATION)));
-		FLUID_TANK = register("fluid_tank",
-				new BlockEntityType<>(FluidTankBlockEntity::new, Set.of(ModBlocks.FLUID_TANK)));
-		WATER_MILL = register("water_mill",
-				new BlockEntityType<>(WaterMillBlockEntity::new, Set.of(ModBlocks.WATER_MILL)));
-		WIND_MILL = register("wind_mill",
-				new BlockEntityType<>(WindMillBlockEntity::new, Set.of(ModBlocks.WIND_MILL)));
-		HIGH_ALTITUDE_WIND_MILL = register("high_altitude_wind_mill",
-				new BlockEntityType<>(HighAltitudeWindMillBlockEntity::new, Set.of(ModBlocks.HIGH_ALTITUDE_WIND_MILL)));
-		STORM_WIND_MILL = register("storm_wind_mill",
-				new BlockEntityType<>(StormWindMillBlockEntity::new, Set.of(ModBlocks.STORM_WIND_MILL)));
-		IRON_CHEST = register("iron_chest",
-				new BlockEntityType<>(IronChestBlockEntity::new, Set.of(ModBlocks.IRON_CHEST)));
-		STORAGE_MODULE = register("storage_module",
-				new BlockEntityType<>(StorageModuleBlockEntity::new, Set.of(ModBlocks.STORAGE_MODULE)));
-		SILVER_CHEST = register("silver_chest",
-				new BlockEntityType<>(SilverChestBlockEntity::new, Set.of(ModBlocks.SILVER_CHEST)));
-		GOLD_CHEST = register("gold_chest",
-				new BlockEntityType<>(GoldChestBlockEntity::new, Set.of(ModBlocks.GOLD_CHEST)));
+		GENERATOR = register(ContentManifest.blockEntity("generator", GeneratorBlockEntity.class));
+		GEOTHERMAL_GENERATOR = register(ContentManifest.blockEntity("geothermal_generator", GeothermalGeneratorBlockEntity.class));
+		SOLAR_PANEL = register(ContentManifest.blockEntity("solar_panel", SolarPanelBlockEntity.class));
+		MOONLIT_SOLAR_PANEL = register(ContentManifest.blockEntity("moonlit_solar_panel", MoonlitSolarPanelBlockEntity.class));
+		DAYLIGHT_SOLAR_PANEL = register(ContentManifest.blockEntity("daylight_solar_panel", DaylightSolarPanelBlockEntity.class));
+		COPPER_CABLE = register(ContentManifest.blockEntity("copper_cable", CableBlockEntity.class));
+		ITEM_PIPE = register(ContentManifest.blockEntity("item_pipe", ItemPipeBlockEntity.class));
+		FLUID_PIPE = register(ContentManifest.blockEntity("fluid_pipe", FluidPipeBlockEntity.class));
+		MACERATOR = register(ContentManifest.blockEntity("macerator", MaceratorBlockEntity.class));
+		BATTERY_BOX = register(ContentManifest.blockEntity("battery_box", BatteryBoxBlockEntity.class));
+		TELEPORTER = register(ContentManifest.blockEntity("teleporter", TeleporterBlockEntity.class));
+		ELECTRIC_FURNACE = register(ContentManifest.blockEntity("electric_furnace", ElectricFurnaceBlockEntity.class));
+		IRON_FURNACE = register(ContentManifest.blockEntity("iron_furnace", IronFurnaceBlockEntity.class));
+		EXTRACTOR = register(ContentManifest.blockEntity("extractor", ExtractorBlockEntity.class));
+		COMPRESSOR = register(ContentManifest.blockEntity("compressor", CompressorBlockEntity.class));
+		SAWMILL = register(ContentManifest.blockEntity("sawmill", SawmillBlockEntity.class));
+		ASSEMBLER = register(ContentManifest.blockEntity("assembler", AssemblerBlockEntity.class));
+		POLYMERIZER = register(ContentManifest.blockEntity("polymerizer", PolymerizerBlockEntity.class));
+		VULCANIZER = register(ContentManifest.blockEntity("vulcanizer", VulcanizerBlockEntity.class));
+		GALVANIC_BATH = register(ContentManifest.blockEntity("galvanic_bath", GalvanicBathBlockEntity.class));
+		ELECTRIC_HEATER = register(ContentManifest.blockEntity("electric_heater", ElectricHeaterBlockEntity.class));
+		INCUBATOR = register(ContentManifest.blockEntity("incubator", IncubatorBlockEntity.class));
+		PUMP = register(ContentManifest.blockEntity("pump", PumpBlockEntity.class));
+		GARDEN_DRONE_STATION = register(ContentManifest.blockEntity("garden_drone_station", GardenDroneStationBlockEntity.class));
+		FLUID_TANK = register(ContentManifest.blockEntity("fluid_tank", FluidTankBlockEntity.class));
+		WATER_MILL = register(ContentManifest.blockEntity("water_mill", WaterMillBlockEntity.class));
+		WIND_MILL = register(ContentManifest.blockEntity("wind_mill", WindMillBlockEntity.class));
+		HIGH_ALTITUDE_WIND_MILL = register(ContentManifest.blockEntity("high_altitude_wind_mill", HighAltitudeWindMillBlockEntity.class));
+		STORM_WIND_MILL = register(ContentManifest.blockEntity("storm_wind_mill", StormWindMillBlockEntity.class));
+		IRON_CHEST = register(ContentManifest.blockEntity("iron_chest", IronChestBlockEntity.class));
+		STORAGE_MODULE = register(ContentManifest.blockEntity("storage_module", StorageModuleBlockEntity.class));
+		SILVER_CHEST = register(ContentManifest.blockEntity("silver_chest", SilverChestBlockEntity.class));
+		GOLD_CHEST = register(ContentManifest.blockEntity("gold_chest", GoldChestBlockEntity.class));
 
 			// EnergyStorage.SIDED registration: explicit per-block lines, one per energy-exposing block
 			// entity. This is deliberately NOT driven from a shared loader-neutral list: such a list would
@@ -250,7 +215,18 @@ public final class ModBlockEntities {
 				(be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), GALVANIC_BATH);
 	}
 
-	private static <T extends BlockEntity> BlockEntityType<T> register(String path, BlockEntityType<T> type) {
-		return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Industrialization.id(path), type);
+	/**
+	 * Registers the {@code BlockEntityType} described by the shared manifest (MOD-307). The id, the
+	 * factory and the valid-block set all come from {@link ContentManifest#BLOCK_ENTITIES} — before this,
+	 * the block set was written out here AND in {@code ModBlockEntitiesNeoForge}, with only a Python
+	 * parity script holding the two copies together (the MOD-191 defect: a block missing from one
+	 * loader's set is not a type error, it is a silently absent block entity on that loader).
+	 *
+	 * <p>Fabric registers eagerly, so the blocks are resolved right here — safe because
+	 * {@code ModBlocks.init()} runs before {@code ModBlockEntities.init()} in the entrypoint.
+	 */
+	private static <T extends BlockEntity> BlockEntityType<T> register(ContentManifest.BlockEntityDef<T> def) {
+		return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Industrialization.id(def.id()),
+				new BlockEntityType<>(def.factory(), def.blockSet()));
 	}
 }

@@ -1,15 +1,11 @@
 package dev.alaindustrial.registry;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
 import dev.alaindustrial.item.wearable.JetpackItem;
-import dev.alaindustrial.block.entity.IncubatorMode;
-import dev.alaindustrial.item.misc.HintItem;
-import dev.alaindustrial.item.misc.MutationChipItem;
 import dev.alaindustrial.item.fluid.FluidTankBlockItem;
 import dev.alaindustrial.item.tool.ScytheTiers;
 import dev.alaindustrial.item.tool.MagnetItem;
@@ -58,51 +54,51 @@ public final class ModItems {
 			ResourceKey.create(Registries.CREATIVE_MODE_TAB, Industrialization.id("main"));
 
 	// Crafting components (referenced by MaceratorBlockEntity recipes and crafting recipes).
-	public static final Item ELECTRONIC_CIRCUIT = item("electronic_circuit");
+	public static final Item ELECTRONIC_CIRCUIT = manifestItem("electronic_circuit");
 	// MOD-299 — the MV circuit: electronic circuit + gold plates + rubber. Gates the advanced casing.
-	public static final Item ADVANCED_CIRCUIT = item("advanced_circuit");
+	public static final Item ADVANCED_CIRCUIT = manifestItem("advanced_circuit");
 	public static final Item ASSEMBLY_BLUEPRINT = assemblyBlueprint("assembly_blueprint");
 	// Copper Coil — crafting component (copper cable + tin), gates the Electric Drill.
-	public static final Item COPPER_COIL = item("copper_coil");
-	public static final Item ALIGNMENT_CHIP_DAY = item("alignment_chip_day");
-	public static final Item ALIGNMENT_CHIP_NIGHT = item("alignment_chip_night");
+	public static final Item COPPER_COIL = manifestItem("copper_coil");
+	public static final Item ALIGNMENT_CHIP_DAY = manifestItem("alignment_chip_day");
+	public static final Item ALIGNMENT_CHIP_NIGHT = manifestItem("alignment_chip_night");
 	// Upgrade chips (MOD-080): empty blank + the mute upgrade. Each shows a gray hint line.
-	public static final Item EMPTY_CHIP = hintItem("empty_chip");
+	public static final Item EMPTY_CHIP = manifestItem("empty_chip");
 
 	// Incubator (MOD-118): mode chips, by-products and the tier-1 evolution materials.
-	public static final Item MUTATION_CHIP_TRANSFORM = mutationChip("mutation_chip_transform", IncubatorMode.TRANSFORM);
-	public static final Item MUTATION_CHIP_DUPLICATE = mutationChip("mutation_chip_duplicate", IncubatorMode.DUPLICATE);
-	public static final Item MUTATION_CHIP_CREATE = mutationChip("mutation_chip_create", IncubatorMode.CREATE);
-	public static final Item DEPLETED_URANIUM = item("depleted_uranium");
-	public static final Item IRRADIATED_SLAG = item("irradiated_slag");
-	public static final Item IRRADIATED_DIAMOND = item("irradiated_diamond");
-	public static final Item RESONANT_SHARD = item("resonant_shard");
-	public static final Item MUTAGEN_DUST = item("mutagen_dust");
+	public static final Item MUTATION_CHIP_TRANSFORM = manifestItem("mutation_chip_transform");
+	public static final Item MUTATION_CHIP_DUPLICATE = manifestItem("mutation_chip_duplicate");
+	public static final Item MUTATION_CHIP_CREATE = manifestItem("mutation_chip_create");
+	public static final Item DEPLETED_URANIUM = manifestItem("depleted_uranium");
+	public static final Item IRRADIATED_SLAG = manifestItem("irradiated_slag");
+	public static final Item IRRADIATED_DIAMOND = manifestItem("irradiated_diamond");
+	public static final Item RESONANT_SHARD = manifestItem("resonant_shard");
+	public static final Item MUTAGEN_DUST = manifestItem("mutagen_dust");
 	// Oil → rubber chain: the polymerizer's product and the vulcanizer's cured output.
-	public static final Item RAW_RUBBER = item("raw_rubber");
-	public static final Item RUBBER = item("rubber");
+	public static final Item RAW_RUBBER = manifestItem("raw_rubber");
+	public static final Item RUBBER = manifestItem("rubber");
 
 	// Cotton (MOD-280): the seed is planted onto a trellis by right-click (the block handles it, so this
 	// stays a plain Item — no BlockItem/ItemNameBlockItem), the fibre is the harvest.
-	public static final Item COTTON_SEEDS = item("cotton_seeds");
-	public static final Item COTTON_FIBER = item("cotton_fiber");
+	public static final Item COTTON_SEEDS = manifestItem("cotton_seeds");
+	public static final Item COTTON_FIBER = manifestItem("cotton_fiber");
 	// Fluxweave chain (MOD-127): silver-plated fibre, then the woven sheet. Both are plain crafting
 	// components — the EU buffer lives on the armor, not on the material.
-	public static final Item FLUX_THREAD = item("flux_thread");
-	public static final Item FLUXWEAVE_CLOTH = item("fluxweave_cloth");
-	public static final Item UNSTABLE_ISOTOPE = item("unstable_isotope");
-	public static final Item MUTE_CHIP = hintItem("mute_chip");
+	public static final Item FLUX_THREAD = manifestItem("flux_thread");
+	public static final Item FLUXWEAVE_CLOTH = manifestItem("fluxweave_cloth");
+	public static final Item UNSTABLE_ISOTOPE = manifestItem("unstable_isotope");
+	public static final Item MUTE_CHIP = manifestItem("mute_chip");
 	// Rotor / wheel (MOD-189): durability components — wear shows as a vanilla durability bar and, being
 	// damageable, they are automatically non-stackable. maxDamage from Config (registration-time).
-	public static final Item WINDMILL_ROTOR = durableComponent("windmill_rotor", Config.windMillRotorMaxDamage);
-	public static final Item WATER_MILL_WHEEL = durableComponent("water_mill_wheel", Config.waterMillWheelMaxDamage);
-	public static final Item WOODEN_GEAR = item("wooden_gear");
+	public static final Item WINDMILL_ROTOR = manifestItem("windmill_rotor");
+	public static final Item WATER_MILL_WHEEL = manifestItem("water_mill_wheel");
+	public static final Item WOODEN_GEAR = manifestItem("wooden_gear");
 	// Metal gears (MOD-105): crafting components for machinery still to come.
-	public static final Item STONE_GEAR = item("stone_gear");
-	public static final Item IRON_GEAR = item("iron_gear");
-	public static final Item GOLD_GEAR = item("gold_gear");
-	public static final Item SILVER_GEAR = item("silver_gear");
-	public static final Item TEMPERED_IRON = item("tempered_iron");
+	public static final Item STONE_GEAR = manifestItem("stone_gear");
+	public static final Item IRON_GEAR = manifestItem("iron_gear");
+	public static final Item GOLD_GEAR = manifestItem("gold_gear");
+	public static final Item SILVER_GEAR = manifestItem("silver_gear");
+	public static final Item TEMPERED_IRON = manifestItem("tempered_iron");
 	public static final Item TEMPERED_IRON_PICKAXE =
 			temperedIronTool("tempered_iron_pickaxe", p -> p.pickaxe(ModToolMaterials.TEMPERED_IRON, TemperedIronToolStats.PICKAXE.attackDamage(), TemperedIronToolStats.PICKAXE.attackSpeed()));
 	// Axe/Hoe/Shovel extend their vanilla subclasses so useOn (stripping/tilling/path) works —
@@ -138,27 +134,27 @@ public final class ModItems {
 			fluxweaveArmor("fluxweave_leggings", ArmorType.LEGGINGS);
 	public static final Item FLUXWEAVE_BOOTS =
 			fluxweaveArmor("fluxweave_boots", ArmorType.BOOTS);
-	public static final Item IRON_DUST = item("iron_dust");
-	public static final Item COPPER_DUST = item("copper_dust");
-	public static final Item GOLD_DUST = item("gold_dust");
-	public static final Item COAL_DUST = item("coal_dust");
-	public static final Item DIAMOND_DUST = item("diamond_dust");
-	public static final Item EMERALD_DUST = item("emerald_dust");
-	public static final Item LAPIS_DUST = item("lapis_dust");
-	public static final Item TIN_DUST = item("tin_dust");
-	public static final Item RAW_TIN = item("raw_tin");
-	public static final Item TIN_INGOT = item("tin_ingot");
-	public static final Item SILVER_DUST = item("silver_dust");
-	public static final Item RAW_SILVER = item("raw_silver");
-	public static final Item SILVER_INGOT = item("silver_ingot");
-	public static final Item NICKEL_DUST = item("nickel_dust");
-	public static final Item RAW_NICKEL = item("raw_nickel");
-	public static final Item NICKEL_INGOT = item("nickel_ingot");
-	public static final Item SULFUR_DUST = item("sulfur_dust");
-	public static final Item RAW_SULFUR = item("raw_sulfur");
-	public static final Item URANIUM_DUST = item("uranium_dust");
-	public static final Item RAW_URANIUM = item("raw_uranium");
-	public static final Item URANIUM_INGOT = item("uranium_ingot");
+	public static final Item IRON_DUST = manifestItem("iron_dust");
+	public static final Item COPPER_DUST = manifestItem("copper_dust");
+	public static final Item GOLD_DUST = manifestItem("gold_dust");
+	public static final Item COAL_DUST = manifestItem("coal_dust");
+	public static final Item DIAMOND_DUST = manifestItem("diamond_dust");
+	public static final Item EMERALD_DUST = manifestItem("emerald_dust");
+	public static final Item LAPIS_DUST = manifestItem("lapis_dust");
+	public static final Item TIN_DUST = manifestItem("tin_dust");
+	public static final Item RAW_TIN = manifestItem("raw_tin");
+	public static final Item TIN_INGOT = manifestItem("tin_ingot");
+	public static final Item SILVER_DUST = manifestItem("silver_dust");
+	public static final Item RAW_SILVER = manifestItem("raw_silver");
+	public static final Item SILVER_INGOT = manifestItem("silver_ingot");
+	public static final Item NICKEL_DUST = manifestItem("nickel_dust");
+	public static final Item RAW_NICKEL = manifestItem("raw_nickel");
+	public static final Item NICKEL_INGOT = manifestItem("nickel_ingot");
+	public static final Item SULFUR_DUST = manifestItem("sulfur_dust");
+	public static final Item RAW_SULFUR = manifestItem("raw_sulfur");
+	public static final Item URANIUM_DUST = manifestItem("uranium_dust");
+	public static final Item RAW_URANIUM = manifestItem("raw_uranium");
+	public static final Item URANIUM_INGOT = manifestItem("uranium_ingot");
 	public static final Item NETWORK_ANALYZER = networkAnalyzer("network_analyzer");
 	public static final Item WRENCH = wrench("wrench");
 	public static final Item GUIDE_BOOK = guideBook("guide_book");
@@ -167,7 +163,7 @@ public final class ModItems {
 	public static final Item TELEPORTER_REMOTE = teleporterRemote("teleporter_remote");
 	public static final Item BATTERY_POUCH = pouch("battery_pouch");
 	// Energy Pack (MOD-065): worn LV buffer + the inert battery cell it is crafted from.
-	public static final Item BATTERY = item("battery");
+	public static final Item BATTERY = manifestItem("battery");
 	public static final Item ENERGY_PACK = energyPack("energy_pack");
 	// Electric Drill (MOD-079): first powered hand tool — a diamond-tier pickaxe that runs on EU.
 	public static final Item ELECTRIC_DRILL = electricDrill("electric_drill");
@@ -197,14 +193,14 @@ public final class ModItems {
 	public static final Item SCYTHE_NETHERITE = scythe(ScytheTiers.NETHERITE);
 	// Metal plates (MOD-078): plain ingredient items, ingot form. Made by the Forge Hammer (by hand)
 	// or the Compressor; recycled back to dust by the Macerator (except tempered_iron — no dust).
-	public static final Item COPPER_PLATE = item("copper_plate");
-	public static final Item GOLD_PLATE = item("gold_plate");
-	public static final Item IRON_PLATE = item("iron_plate");
-	public static final Item TIN_PLATE = item("tin_plate");
-	public static final Item SILVER_PLATE = item("silver_plate");
-	public static final Item NICKEL_PLATE = item("nickel_plate");
-	public static final Item URANIUM_PLATE = item("uranium_plate");
-	public static final Item TEMPERED_IRON_PLATE = item("tempered_iron_plate");
+	public static final Item COPPER_PLATE = manifestItem("copper_plate");
+	public static final Item GOLD_PLATE = manifestItem("gold_plate");
+	public static final Item IRON_PLATE = manifestItem("iron_plate");
+	public static final Item TIN_PLATE = manifestItem("tin_plate");
+	public static final Item SILVER_PLATE = manifestItem("silver_plate");
+	public static final Item NICKEL_PLATE = manifestItem("nickel_plate");
+	public static final Item URANIUM_PLATE = manifestItem("uranium_plate");
+	public static final Item TEMPERED_IRON_PLATE = manifestItem("tempered_iron_plate");
 	// Forge Hammer (MOD-078): pre-machine hand tool — ingot + hammer on the grid → plate; the hammer
 	// stays and loses 1 durability per plate via the Fabric craft-remainder hook (HammerItemFabric).
 	public static final Item FORGE_HAMMER = forgeHammer("forge_hammer");
@@ -246,7 +242,7 @@ public final class ModItems {
 	public static final BlockItem PUMP_ITEM = blockItem("pump", ModBlocks.PUMP);
 	public static final BlockItem GARDEN_DRONE_STATION_ITEM =
 			blockItem("garden_drone_station", ModBlocks.GARDEN_DRONE_STATION);
-	public static final Item GARDEN_DRONE = item("garden_drone");
+	public static final Item GARDEN_DRONE = manifestItem("garden_drone");
 	public static final BlockItem FLUID_TANK_ITEM = fluidTankBlockItem("fluid_tank", ModBlocks.FLUID_TANK);
 	public static final BlockItem WATER_MILL_ITEM = blockItem("water_mill", ModBlocks.WATER_MILL);
 	public static final BlockItem WIND_MILL_ITEM = blockItem("wind_mill", ModBlocks.WIND_MILL);
@@ -290,36 +286,26 @@ public final class ModItems {
 						.stacksTo(AssemblyBlueprintItem.BLANK_STACK_SIZE)));
 	}
 
-	private static Item item(String path) {
-		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
-		return Registry.register(BuiltInRegistries.ITEM, key, new Item(new Item.Properties().setId(key)));
-	}
-
 	/**
-	 * A crafted machine component with durability (MOD-189): {@code Item.Properties.durability(max)} sets the
-	 * vanilla {@code max_damage} component (so wear renders as the standard durability bar) and makes the
-	 * item non-stackable. {@code maxDamage} is read from {@link Config} here at registration — see the field
-	 * docs, a change to it needs a restart; the wear RATE is read live in the block entity each tick.
+	 * Registers an item whose CONSTRUCTION is declared once for both loaders in
+	 * {@link ContentManifest#ITEM_FACTORIES} (MOD-306) — plain components, hint items, mode chips,
+	 * wearing parts. Before this, each of them was written out twice: here and in
+	 * {@code ModItemsNeoForge}, same id and same comment, two registration syntaxes around an identical
+	 * construction, with only a Python validator running after the fact to notice a drift.
+	 *
+	 * <p>The field stays (it is the handle 100+ call sites use); what moved out is the definition.
+	 * Fabric registers eagerly, so it stamps the id itself and hands the manifest factory a
+	 * {@code Properties} that already carries the key — the NeoForge side gets the same factory with a
+	 * {@code Properties} whose id its {@code DeferredRegister} derived.
 	 */
-	private static Item durableComponent(String path, int maxDamage) {
+	// NB: the parameter is called `path` on purpose. The dashboard generator derives the names of the
+	// registering helpers from the structural invariant `private static … name(String path…)`; calling
+	// it `id` drops every item registered through this helper out of the generated catalogue silently
+	// — the only symptom is a stale-artifact check going red, with no hint as to why.
+	private static Item manifestItem(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
-				new Item(new Item.Properties().durability(maxDamage).setId(key)));
-	}
-
-	/** A mutation chip (MOD-118): the two-layer mode tooltip; the mode binding lives in the item. */
-	private static Item mutationChip(String path, IncubatorMode mode) {
-		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
-		return Registry.register(BuiltInRegistries.ITEM, key,
-				new MutationChipItem(new Item.Properties().setId(key), mode));
-	}
-
-	/** A plain item with two gray hint lines (keys {@code item.alaindustrial.<path>.hint}/{@code .hint2}). */
-	private static Item hintItem(String path) {
-		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
-		return Registry.register(BuiltInRegistries.ITEM, key,
-				new HintItem(new Item.Properties().setId(key),
-						"item.alaindustrial." + path + ".hint", "item.alaindustrial." + path + ".hint2"));
+				ContentManifest.itemFactory(path).apply(new Item.Properties().setId(key)));
 	}
 
 	private static Item teleporterRemote(String path) {

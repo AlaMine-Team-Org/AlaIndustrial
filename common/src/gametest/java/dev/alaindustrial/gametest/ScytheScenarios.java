@@ -1,5 +1,6 @@
 package dev.alaindustrial.gametest;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.item.tool.ScytheItem;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -8,12 +9,16 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
+
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -472,6 +477,194 @@ public final class ScytheScenarios {
 			return;
 		}
 		helper.succeed();
+	}
+
+	// ── MOD-315: bonus seed drop ───────────────────────────────────────────────────────────────────
+
+	/**
+	 * A tier with no bonus (wood, {@code bonusSeedChance = 0}) yields only what the loot table gives.
+	 *
+	 * <h2>Why this is a threshold and not an exact count</h2>
+	 * No vanilla crop that the scythe can actually harvest has a deterministic seed drop: wheat,
+	 * carrot, potato and beetroot all roll their seeds from a binomial (0–3 per plant), so an exact
+	 * assertion is impossible. ({@code torchflower_crop} is the one deterministic loot table in the
+	 * game — a single seed, no binomial — but it is unharvestable by construction: its {@code AGE}
+	 * property is {@code AGE_1} while {@code getMaxAge()} returns 2, so {@code isMaxAge} is never
+	 * true for it.)
+	 *
+	 * <p>So the mechanic is instead driven to a <b>guaranteed</b> hit in
+	 * {@link #fun05CropBonusAlwaysDropsAtFullChance} and sampled over {@link #BONUS_SWINGS} swings.
+	 * That makes the two populations separate by about eight standard deviations — the threshold is
+	 * not a p-value chosen to look significant, it is a gap wide enough that a false verdict is far
+	 * less likely than a hardware fault. The probability arithmetic itself is covered exactly at L1
+	 * by {@code ScytheBonusTest}; these scenarios only prove the roll is wired into the harvest on
+	 * both loaders.
+	 *
+	 * <h2>Why this scenario cannot race the other one</h2>
+	 * It asserts through a zero-chance tier, whose effective chance is {@code 0 × multiplier} — zero
+	 * for every possible value of the global knob. So even if the runner batches this body alongside
+	 * the scenario that mutates that shared static, this assertion still holds.
+	 */
+	public static void fun04CropBonusAbsentOnZeroChanceTier(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		int harvested = harvestRepeatedly(helper, player, ModContent.SCYTHE_WOOD.get());
+
+		int seeds = countDrops(helper, Items.WHEAT_SEEDS);
+		if (seeds > BONUS_DECISION_THRESHOLD) {
+			helper.fail("wood scythe (0 % bonus) dropped " + seeds + " seeds from " + harvested
+					+ " plants — above the no-bonus threshold of " + BONUS_DECISION_THRESHOLD
+					+ ", which means a bonus was granted by a tier that ships with none");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * With the global multiplier raised so the tier's chance clamps to certainty, every harvested crop
+	 * yields its loot-table seeds <b>plus</b> one bonus seed — pushing the total far above what the
+	 * loot table alone can produce. See {@link #fun04CropBonusAbsentOnZeroChanceTier} for why the
+	 * assertion is a threshold and how wide the margin is.
+	 *
+	 * <p>The multiplier is restored in a {@code finally}: it is a global static, and leaving it raised
+	 * would silently change the yield of every scenario that runs after this one.
+	 */
+	public static void fun05CropBonusAlwaysDropsAtFullChance(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+
+		double previous = Config.scytheBonusSeedMultiplier;
+		// Large enough that any non-zero tier clamps to 1.0; iron ships at 0.12.
+		Config.scytheBonusSeedMultiplier = 1000.0;
+		int harvested;
+		try {
+			harvested = harvestRepeatedly(helper, player, ModContent.SCYTHE_IRON.get());
+		} finally {
+			Config.scytheBonusSeedMultiplier = previous;
+		}
+
+		int seeds = countDrops(helper, Items.WHEAT_SEEDS);
+		// A guaranteed bonus contributes exactly one seed per plant on top of the loot roll, so the
+		// total cannot fall to the no-bonus population without the bonus path being skipped.
+		if (seeds < BONUS_DECISION_THRESHOLD) {
+			helper.fail("iron scythe at a guaranteed bonus dropped only " + seeds + " seeds from "
+					+ harvested + " plants — below the bonus threshold of " + BONUS_DECISION_THRESHOLD
+					+ ", which means the bonus seed was not granted");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A harvestable crop that is <b>not</b> a {@link CropBlock} gets no bonus even at a guaranteed
+	 * chance. Sugar cane is in {@code #alaindustrial:scythe_crops} and its loot table is a single
+	 * deterministic {@code sugar_cane}, so the assertion is exact: six harvested stalks must yield
+	 * exactly six canes, never twelve.
+	 *
+	 * <p>This is the guard that keeps the {@code instanceof CropBlock} filter honest. Without it the
+	 * bonus path would call {@code getCloneItemStack} on cane, get the cane item back (its pick-block
+	 * result), and quietly double a crop that has no seed at all — the same would then hold for
+	 * cactus, berry bushes and {@code pitcher_crop}. Cane stands in for that whole excluded family
+	 * because it is the one whose loot table makes an exact count possible.
+	 */
+	public static void neg07CropBonusSkipsNonCropBlock(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		sand(helper); // sugar cane can survive on sand
+		int stalks = 0;
+		for (int x = 1; x <= 3; x++) {
+			for (int z = 2; z <= 3; z++) {
+				// Base at FLOOR+1, one harvestable stalk block above it — only the upper block is taken.
+				helper.setBlock(new BlockPos(x, FLOOR + 1, z), Blocks.SUGAR_CANE);
+				helper.setBlock(new BlockPos(x, FLOOR + 2, z), Blocks.SUGAR_CANE);
+				stalks++;
+			}
+		}
+
+		double previous = Config.scytheBonusSeedMultiplier;
+		Config.scytheBonusSeedMultiplier = 1000.0;
+		try {
+			useScytheShift(helper, player, ModContent.SCYTHE_IRON.get());
+		} finally {
+			Config.scytheBonusSeedMultiplier = previous;
+		}
+
+		int canes = countDrops(helper, Items.SUGAR_CANE);
+		if (canes != stalks) {
+			helper.fail("sugar cane is not a CropBlock and must get no bonus: harvested " + stalks
+					+ " stalks but " + canes + " canes dropped (expected exactly " + stalks + ")");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/** Swings sampled by the bonus scenarios; each one replants and harvests the shared 3×2 patch. */
+	private static final int BONUS_SWINGS = 30;
+
+	/**
+	 * Seed count separating the "no bonus" population from the "guaranteed bonus" one.
+	 *
+	 * <p>A ripe wheat plant drops one wheat plus {@code 1 + Binomial(3, 0.5714)} seeds — the
+	 * {@code apply_bonus} function <i>adds</i> its roll to the entry's base count of one, so the mean
+	 * is ~2.71 seeds per plant (σ ≈ 0.86), not the ~1.71 the binomial alone would suggest. Over
+	 * {@link #BONUS_SWINGS} × 6 = 180 plants that is a mean of ~489 seeds (σ ≈ 11.5) with no bonus and
+	 * ~669 with a guaranteed one: the bonus adds exactly one seed per plant, so the two distributions
+	 * sit 180 apart while each is barely a dozen wide.
+	 *
+	 * <p>The threshold below is placed midway, ~7.8 standard deviations from either mean, which is why
+	 * this reads as a decision boundary rather than a sampling test — crossing it by chance is on the
+	 * order of 1e-15. (The empirical baseline of a real run was 487, against the predicted 489.)
+	 */
+	private static final int BONUS_DECISION_THRESHOLD = 580;
+
+	/**
+	 * Replants the shared 3×2 wheat patch and harvests it {@link #BONUS_SWINGS} times, returning the
+	 * total number of plants taken.
+	 *
+	 * <p>Each swing gets a fresh scythe stack (that is what {@code useScytheShift} does), so tool
+	 * durability never bounds the sample. Every swing is also verified to have actually cleared the
+	 * patch — without that check a scenario where nothing is harvested at all would read as "no
+	 * bonus" and pass the baseline assertion for entirely the wrong reason.
+	 */
+	private static int harvestRepeatedly(GameTestHelper helper, ServerPlayer player, Item scythe) {
+		int harvested = 0;
+		for (int swing = 0; swing < BONUS_SWINGS; swing++) {
+			farmland(helper);
+			for (int x = 1; x <= 3; x++) {
+				for (int z = 2; z <= 3; z++) {
+					helper.setBlock(new BlockPos(x, FLOOR + 1, z), Blocks.WHEAT.defaultBlockState()
+							.setValue(CropBlock.AGE, CropBlock.MAX_AGE));
+				}
+			}
+			useScytheShift(helper, player, scythe);
+			for (int x = 1; x <= 3; x++) {
+				for (int z = 2; z <= 3; z++) {
+					BlockPos p = new BlockPos(x, FLOOR + 1, z);
+					if (!helper.getBlockState(p).isAir()) {
+						helper.fail("swing " + swing + " left an unharvested crop at " + p + ": "
+								+ helper.getBlockState(p));
+						return harvested;
+					}
+					harvested++;
+				}
+			}
+		}
+		return harvested;
+	}
+
+	/**
+	 * Total count of {@code item} lying around the rig. The radius mirrors
+	 * {@code TrellisScenarios.countDrops}, where both extremes were tried and rejected on the NeoForge
+	 * lane: a wider box reaches into the neighbouring gametest and counts its drops (green on Fabric,
+	 * whose layout is sparser — a loader-specific false pass), while {@code getBounds()} is too tight
+	 * for code-registered structures and returns zero.
+	 */
+	private static int countDrops(GameTestHelper helper, Item item) {
+		AABB box = new AABB(helper.absolutePos(CLICK)).inflate(2.0);
+		int total = 0;
+		for (ItemEntity entity : helper.getLevel().getEntitiesOfClass(ItemEntity.class, box)) {
+			if (entity.getItem().is(item)) {
+				total += entity.getItem().getCount();
+			}
+		}
+		return total;
 	}
 
 	// ── helpers ────────────────────────────────────────────────────────────────────────────────────

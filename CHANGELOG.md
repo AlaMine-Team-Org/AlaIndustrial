@@ -1,18 +1,18 @@
-## 0.1.62
+## 0.1.63
 
-<p><img alt="Garden drone tending crops around its station" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.62/release-media/v0.1.62/changelog.webp" width="720"></p>
+<p><img alt="Ala Industrial 0.1.63 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.63/release-media/v0.1.63/changelog.jpeg" width="720"></p>
 
-### Farms now look after themselves — park a drone on its station and walk away.
+Farming gets a reason to reach for a better scythe, and the drone station stops eating hoes.
 
 ### New
 
-- **Garden Drone Station.** A landing pad that puts a drone to work on the farmland around it. Slot in the drone, a hoe, seeds and bone meal, hook up power, and it takes over.
-- **Four jobs, one machine.** It tills bare ground, plants seeds, feeds crops fertilizer and harvests them when ripe — four blocks in every direction from the pad.
-- **The harvest lands in the station.** Nothing drops on the ground, so there is nothing to chase around the field.
-- **The hoe is real equipment.** Tilling and harvesting wear it down a point at a time, and neither job runs without one.
+- **Scythes now yield bonus seeds.** Harvesting a ripe crop with Shift held has a chance to drop one extra seed — 5% on stone, up to 35% on netherite. Gold is the lucky-but-fragile pick at 20%; wooden scythes give none.
+- Works on wheat, carrots, potatoes and beetroot, and stacks with Fortune. Berries, cactus and sugar cane have no seed of their own, so they never roll the bonus.
 
 ### Improved
 
-- **The station says why it stopped.** Out of seeds, out of fertilizer, no drone, no power — it names the reason instead of sitting there looking idle.
-- **A full output never costs you a crop.** No room for the harvest? The crop is left growing until you make space.
-- **It flies like a drone.** Lifts off, arcs across, settles onto the tile it is working, then heads home — and it picks from the nearest free tiles, so no two trips trace the same line.
+- **Machines accept materials from other tech mods.** Ingots, dusts, plates and ores from another mod now work in our recipes instead of only our own items, and the macerator's ore list was widened to match.
+
+### Fixed
+
+- **Hoes in the drone station now break instead of jamming.** A worn hoe used to freeze one point short of breaking and sat in the slot forever, quietly stopping the station from tilling and harvesting until you pulled it out by hand.

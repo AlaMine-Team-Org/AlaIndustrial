@@ -24,6 +24,8 @@ mixinextras = "0.5.4"
 # L1 unit-test stack (docs/testing/AUTOMATION-STANDARDS.md). The common suite runs
 # without the Minecraft jar, so it brings its own gson/slf4j at test runtime.
 jqwik = "1.9.3"
+# Architecture rules as an executable gate: reads the bytecode of common/, not its text.
+archunit = "1.4.1"
 gson = "2.14.0"
 slf4j = "2.0.9"
 
@@ -45,6 +47,7 @@ pitest-core = "1.25.7"
 sponge-mixin = { module = "net.fabricmc:sponge-mixin", version.ref = "sponge-mixin" }
 mixinextras-common = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }
 jqwik = { module = "net.jqwik:jqwik", version.ref = "jqwik" }
+archunit-junit5 = { module = "com.tngtech.archunit:archunit-junit5", version.ref = "archunit" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4j-nop = { module = "org.slf4j:slf4j-nop", version.ref = "slf4j" }

@@ -1,7 +1,7 @@
 package dev.alaindustrial.core.energy;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiPredicate;
@@ -153,7 +153,7 @@ final class EnergyLineDistributor {
 		// the line never advances. Tested per direction rather than off the endpoint's cached side because
 		// the endpoint cache keeps only ONE side per position — a machine with two working input faces
 		// would otherwise lose half its draw.
-		Set<BlockPos> touched = new HashSet<>();
+		Set<BlockPos> touched = new LinkedHashSet<>();
 		for (LiveConsumer m : consumers) {
 			for (Direction dir : DIRECTIONS) {
 				BlockPos np = m.pos().relative(dir);

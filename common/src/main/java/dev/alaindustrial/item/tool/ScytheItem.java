@@ -1,5 +1,6 @@
 package dev.alaindustrial.item.tool;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.core.crop.CropMaturity;
 import dev.alaindustrial.registry.ModSounds;
 import dev.alaindustrial.registry.ModTags;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -85,11 +87,25 @@ public class ScytheItem extends Item {
 	/**
 	 * Per-tier AOE parameters.
 	 *
-	 * @param width     the perpendicular span (must be odd so the box has a centre line)
-	 * @param depth     how far the box extends forward along the player's facing
-	 * @param maxBlocks the cap on how many blocks a single use may break
+	 * <p>This is where the scythe's balance lives — the mod's convention for this tool, see
+	 * {@code docs/blocks/items/scythe.md} ("numbers live in code, not {@code Config.java}"). The
+	 * matching bonus-chance formula sits in {@link ScytheBonus}, which is a top-level class precisely
+	 * so it can be unit-tested at L1: this record is nested inside a Minecraft-derived class and is
+	 * therefore unreachable from a test source set that has no Minecraft on its classpath.
+	 *
+	 * <p><b>Why the bonus chance sits here and not on {@link ScytheTier} (MOD-315).</b> The item is
+	 * constructed with a {@code Profile} and never sees its {@code ScytheTier}, so a field on the tier
+	 * would have to be threaded through as a separate constructor argument. Both loaders already pass
+	 * {@code tier.profile()} straight through, which is why widening this record needs no change in
+	 * either registry.
+	 *
+	 * @param width            the perpendicular span (must be odd so the box has a centre line)
+	 * @param depth            how far the box extends forward along the player's facing
+	 * @param maxBlocks        the cap on how many blocks a single use may break
+	 * @param bonusSeedChance  probability (0..1) that harvesting one ripe {@code CropBlock} in crop
+	 *                         mode drops one extra seed item, before the global config multiplier
 	 */
-	public record Profile(int width, int depth, int maxBlocks) {
+	public record Profile(int width, int depth, int maxBlocks, float bonusSeedChance) {
 		public Profile {
 			if (width < 1 || width % 2 == 0) {
 				throw new IllegalArgumentException("scythe width must be a positive odd number, got " + width);
@@ -99,6 +115,10 @@ public class ScytheItem extends Item {
 			}
 			if (maxBlocks < 1) {
 				throw new IllegalArgumentException("scythe maxBlocks must be >= 1, got " + maxBlocks);
+			}
+			if (!(bonusSeedChance >= 0.0f) || bonusSeedChance > 1.0f) {
+				throw new IllegalArgumentException(
+						"scythe bonusSeedChance must be within 0..1, got " + bonusSeedChance);
 			}
 		}
 	}
@@ -153,6 +173,13 @@ public class ScytheItem extends Item {
 			}
 			if (serverPlayer.gameMode.destroyBlock(pos)) {
 				broken++;
+				// MOD-315: the tier's yield bonus. Rolled AFTER the block actually broke (so a block
+				// vetoed by a protection mod pays nothing) and only in crop mode, where `state` is by
+				// definition a ripe crop. `state` is the pre-break state read above — the world already
+				// holds air here.
+				if (cropMode) {
+					dropBonusSeed(serverPlayer, (ServerLevel) level, pos, state);
+				}
 				// Explicit durability: 1 per actually-broken block in either mode, independent of hardness
 				// (MOD-098). Creative (instabuild) spends nothing, mirroring vanilla's creative parity.
 				// hurtAndBreak(hand) is the canonical hand-tool path: it converts to the ServerLevel/
@@ -176,6 +203,48 @@ public class ScytheItem extends Item {
 					puffs, profile.width() / 2.0, 0.3, profile.depth() / 2.0, 0.0);
 		}
 		return broken > 0 ? InteractionResult.SUCCESS : InteractionResult.PASS;
+	}
+
+	/**
+	 * Rolls this tier's bonus and, on a hit, drops one extra seed for the crop just harvested
+	 * (MOD-315).
+	 *
+	 * <h2>Why only {@link CropBlock}</h2>
+	 * The seed item is taken from the block itself via {@code BlockState.getCloneItemStack}, which
+	 * {@link CropBlock} overrides to return {@code new ItemStack(getBaseSeedId())} — i.e. exactly the
+	 * planting material (wheat → seeds, carrot → carrot, beetroot → beetroot seeds). That contract
+	 * only holds for {@code CropBlock}: for the other members of {@code #alaindustrial:scythe_crops}
+	 * the same call returns the block's own pick-block item, which is not a seed at all. The
+	 * {@code instanceof} is therefore the whole filter — sweet berry bushes, cactus, sugar cane and
+	 * {@code pitcher_crop} have no separate seed and are excluded by construction rather than by a
+	 * hand-kept deny-list that would rot the moment a crop is added.
+	 *
+	 * <p>Reading the seed from the block instead of a hardcoded map also means a crop added by another
+	 * mod (any {@code CropBlock} subclass in the tag) gets the bonus with no change here.
+	 *
+	 * <h2>Why not through the loot table</h2>
+	 * The drop is spawned directly rather than routed through the break path, so Fortune does
+	 * <b>not</b> apply to it (MOD-315 decision): the main drop keeps its tool-aware Fortune roll via
+	 * {@code destroyBlock}, and this bonus stacks on top as a flat, independently-rolled extra.
+	 *
+	 * <p>Creative needs no guard: {@code destroyBlock} returns true but suppresses drops there, and
+	 * this method is only reached through it — so the caller's {@code instabuild} branch already
+	 * covers durability while the bonus follows the same "no drops in creative" rule as the main loot
+	 * by virtue of… nothing dropping to begin with. The explicit check below keeps that promise even
+	 * if the break path changes.
+	 */
+	private void dropBonusSeed(ServerPlayer player, ServerLevel level, BlockPos pos, BlockState state) {
+		if (player.getAbilities().instabuild || !(state.getBlock() instanceof CropBlock)) {
+			return;
+		}
+		double chance = ScytheBonus.effectiveChance(profile.bonusSeedChance(), Config.scytheBonusSeedMultiplier);
+		if (chance <= 0.0 || level.getRandom().nextDouble() >= chance) {
+			return;
+		}
+		ItemStack seed = state.getCloneItemStack(level, pos, false);
+		if (!seed.isEmpty()) {
+			Block.popResource(level, pos, seed);
+		}
 	}
 
 	/**

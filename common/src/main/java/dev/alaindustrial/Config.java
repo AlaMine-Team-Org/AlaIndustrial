@@ -376,6 +376,20 @@ public final class Config {
 	 * a 100-frame warehouse costs ~5 container sums per tick at the default. */
 	public static int stockFrameScanIntervalTicks = 20;
 
+	// --- Scythe bonus seed drop (MOD-315) ---
+	/**
+	 * Global multiplier on the scythe's per-tier bonus-seed chance. The per-tier base lives in
+	 * {@code ScytheTiers} together with the rest of the scythe's balance (area, cap, attack bias) —
+	 * this is the one server-side knob over the whole ladder, so a server can soften or disable the
+	 * mechanic without rebalancing eight tiers.
+	 *
+	 * <p>{@code 1.0} keeps the shipped ladder (wood 0 % → netherite 35 %); {@code 0.0} disables the
+	 * bonus entirely; anything that pushes a tier past 1.0 is clamped, so a large value means "every
+	 * ripe crop drops the extra seed". The multiplication and the clamp live in
+	 * {@code ScytheItem.Profile.effectiveBonusChance}.
+	 */
+	public static double scytheBonusSeedMultiplier = 1.0;
+
 	// --- Machines: shared EU/tick + per-machine duration (ticks) -> E_op = euPerTick × duration ---
 	public static int machineEuPerTick = 2;
 	public static int maceratorDuration = 150;
@@ -864,6 +878,8 @@ public final class Config {
 				() -> magnetScanIntervalTicks, v -> magnetScanIntervalTicks = v, 1),
 			new IntField("stockFrameScanIntervalTicks", "How often (ticks) a Stock Display Frame rescans the container behind it.",
 				() -> stockFrameScanIntervalTicks, v -> stockFrameScanIntervalTicks = v, 1),
+			new DoubleField("scytheBonusSeedMultiplier", "Global multiplier on the scythe's per-tier bonus-seed chance (1.0 = shipped ladder, 0.0 = mechanic off; a tier is clamped to 1.0).",
+				() -> scytheBonusSeedMultiplier, v -> scytheBonusSeedMultiplier = v, 0.0, 0.0),
 			new IntField("machineEuPerTick", "Base EU/t a processing machine draws while running (energy per operation = this x its duration).",
 				() -> machineEuPerTick, v -> machineEuPerTick = v, 1),
 			new IntField("maceratorDuration", "Ticks a macerator takes per operation at 1.0 speed.",

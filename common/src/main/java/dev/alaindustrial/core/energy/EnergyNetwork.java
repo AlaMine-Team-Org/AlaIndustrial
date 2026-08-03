@@ -4,7 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
@@ -311,12 +311,12 @@ public final class EnergyNetwork {
 		// storage; storage only discharges into the line as backup (machine deficit), and NEVER sources
 		// for another storage sink — so batteries can't wash energy through the wires or into each other. ---
 		long genSupply = 0;
-		java.util.Set<BlockPos> supplyingProducers = new java.util.HashSet<>();
+		java.util.Set<BlockPos> supplyingProducers = new java.util.LinkedHashSet<>();
 		List<EnergyLineDistributor.LiveProducer> generators = new ArrayList<>(producers.size());
 		List<EnergyLineDistributor.LiveProducer> storageSources = new ArrayList<>();
 		// MOD-255: the positions of the dual-role nodes, so the sink pass below can tell a battery that is
 		// discharging into this very line from an ordinary consumer.
-		Set<BlockPos> storageSourcePositions = new HashSet<>();
+		Set<BlockPos> storageSourcePositions = new LinkedHashSet<>();
 		for (EnergyTopologyCache.Endpoint ep : producers) {
 			EnergyPort st = storageAt(ep);
 			if (st == null || !st.supportsExtraction()) {
@@ -406,8 +406,8 @@ public final class EnergyNetwork {
 		//
 		// An empty set means nobody is waiting, which puts the network on the producer-seeded fallback
 		// field and reproduces MOD-070's producer-only line fill exactly.
-		Set<BlockPos> sinkSeeds = new HashSet<>();
-		Set<BlockPos> machineSeeds = new HashSet<>();
+		Set<BlockPos> sinkSeeds = new LinkedHashSet<>();
+		Set<BlockPos> machineSeeds = new LinkedHashSet<>();
 		for (EnergyLineDistributor.LiveConsumer c : machines) {
 			sinkSeeds.add(c.pos());
 			machineSeeds.add(c.pos());

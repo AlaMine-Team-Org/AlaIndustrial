@@ -1,0 +1,43 @@
+# MOD-322 — the gametest source set is its OWN mod, mirroring Fabric.
+#
+# Why this file exists. NeoForge builds one PackResources per mod. While `main` and `gametest` were
+# declared as a single mod (neoforge/build.gradle, `mods { alaindustrial { sourceSet main; sourceSet
+# gametest } }`), both roots were stacked into one union file system, where a path resolves to
+# exactly ONE file — there is no datapack merge inside a single mod. Any test fixture whose path
+# also exists under common/src/main/resources therefore SHADOWED the real file instead of adding to
+# it. That is how `foreignmod:tin_ingot` silently replaced `alaindustrial:tin_ingot` in
+# `#c:ingots/tin` (found by MOD-310), and — worse — how ForeignMaterialScenarios'
+# `tags04ForeignItemReachesOurTags` stayed green while testing nothing: it read back its own single
+# file instead of a genuine two-pack merge.
+#
+# Declaring the gametest resources as a separate mod restores two packs, so vanilla tag merging
+# (`"replace": false`) applies again — the same way it always has on Fabric, where
+# fabric/src/gametest/resources/fabric.mod.json declares `alaindustrial-gametest`.
+#
+# `lowcodefml`: this mod has no @Mod entrypoint. The gametest CLASSES are still wired through the
+# production entrypoint, which reflectively calls NeoForgeGameTestBootstrap#init on the
+# `alaindustrial` mod bus — that is unchanged and must stay that way, because the registries the
+# bootstrap touches (`alaindustrial:code` instance type) belong to the main mod's namespace.
+#
+# Values are literals on purpose: mods.toml interpolation is wired for `processResources` (main),
+# not for `processGametestResources`, so a `${...}` placeholder here would ship unexpanded.
+modLoader = "lowcodefml"
+loaderVersion = "[4,)"
+license = "MIT"
+[[mods]]
+modId = "alaindustrial_gametest"
+version = "0.0.0"
+displayName = "Ala Industrial — gametest fixtures"
+description = '''Dev-only test fixtures for the NeoForge world-gametest lane. Never shipped: the release jar packs only the `main` source set.'''
+[[dependencies.alaindustrial_gametest]]
+modId = "alaindustrial"
+type = "required"
+versionRange = "[0,)"
+ordering = "AFTER"
+side = "BOTH"
+[[dependencies.alaindustrial_gametest]]
+modId = "neoforge"
+type = "required"
+versionRange = "[0,)"
+ordering = "NONE"
+side = "BOTH"

@@ -96,4 +96,22 @@ public class ScytheGameTest {
 	public void con02_netheriteFireResistant(GameTestHelper helper) {
 		ScytheScenarios.con02NetheriteFireResistant(helper);
 	}
+
+	/** @implements TC-SCYTHE-003-FUN01 — a 0 %-bonus tier (wood) yields the loot table only. */
+	@GameTest
+	public void fun04_cropBonusAbsentOnZeroChanceTier(GameTestHelper helper) {
+		ScytheScenarios.fun04CropBonusAbsentOnZeroChanceTier(helper);
+	}
+
+	/** @implements TC-SCYTHE-003-FUN02 — at a guaranteed chance every crop yields one extra seed. */
+	@GameTest
+	public void fun05_cropBonusAlwaysDropsAtFullChance(GameTestHelper helper) {
+		ScytheScenarios.fun05CropBonusAlwaysDropsAtFullChance(helper);
+	}
+
+	/** @implements TC-SCYTHE-003-NEG01 — a non-CropBlock crop (sugar cane) never gets the bonus. */
+	@GameTest
+	public void neg07_cropBonusSkipsNonCropBlock(GameTestHelper helper) {
+		ScytheScenarios.neg07CropBonusSkipsNonCropBlock(helper);
+	}
 }

@@ -2,8 +2,8 @@ package dev.alaindustrial.core.energy;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -39,14 +39,21 @@ final class EnergyTopologyCache {
 	/** Cached once — {@link Direction#values()} clones its array on every call (hot-path GC hygiene). */
 	static final Direction[] DIRECTIONS = Direction.values();
 
+	/**
+	 * A stable geometric order for positions: see {@link PosOrder} for the rule, why it is x/y/z and
+	 * emphatically NOT {@code BlockPos.asLong()}, and for the L1 tests that hold it in place.
+	 */
+	static final java.util.Comparator<BlockPos> BLOCK_POS_ORDER =
+			(a, b) -> PosOrder.compare(a.getX(), a.getY(), a.getZ(), b.getX(), b.getY(), b.getZ());
+
 	private final ServerLevel level;
-	private final Set<BlockPos> cables = new HashSet<>();
+	private final Set<BlockPos> cables = new LinkedHashSet<>();
 
 	/** Cached endpoints, rebuilt on {@link #markDirty()} / any topology change. */
 	private final List<Endpoint> producers = new ArrayList<>();
 	private final List<Endpoint> consumers = new ArrayList<>();
 	/** Cable-distance from each consumer position to its nearest producer, for per-consumer loss (MOD-021). */
-	private final Map<BlockPos, Integer> consumerDistance = new HashMap<>();
+	private final Map<BlockPos, Integer> consumerDistance = new LinkedHashMap<>();
 	/**
 	 * Cable-distance from each cable position to the nearest supplying producer (BFS over the cable
 	 * graph). Two consumers of this field, and they are deliberately separate concerns:
@@ -57,7 +64,7 @@ final class EnergyTopologyCache {
 	 *       still fills outward from the source to its buffer capacity (MOD-070).</li>
 	 * </ul>
 	 */
-	private final Map<BlockPos, Integer> producerDistance = new HashMap<>();
+	private final Map<BlockPos, Integer> producerDistance = new LinkedHashMap<>();
 	/**
 	 * Cable-distance from each cable position to the nearest sink that actually wants energy this tick
 	 * (BFS over the cable graph, MOD-252). This — not {@link #producerDistance} — is what directs the
@@ -71,7 +78,7 @@ final class EnergyTopologyCache {
 	 *
 	 * <p>Empty when nothing wants energy; then the network falls back to {@link #producerDistance}.
 	 */
-	private final Map<BlockPos, Integer> sinkDistance = new HashMap<>();
+	private final Map<BlockPos, Integer> sinkDistance = new LinkedHashMap<>();
 	/**
 	 * Cable-distance to the nearest waiting <em>machine</em> — {@link #sinkDistance} restricted to the
 	 * machine half of the seed set (MOD-254). Deliberately NOT a flow field: it never decides where energy
@@ -81,7 +88,7 @@ final class EnergyTopologyCache {
 	 * machines-before-storage rule holds geometrically and not merely in the serve order. Empty when no
 	 * machine is waiting, and then every claimant weighs the same.
 	 */
-	private final Map<BlockPos, Integer> machineDistance = new HashMap<>();
+	private final Map<BlockPos, Integer> machineDistance = new LinkedHashMap<>();
 	/**
 	 * True while {@link #sinkDistance} is non-empty, i.e. the flow field is sink-seeded. Selects which map
 	 * {@link #flowPotentialOrNull} reads and how {@link #rebuildFlowOrder} sorts.
@@ -194,22 +201,39 @@ final class EnergyTopologyCache {
 		refreshIfDirty();
 		boolean changed = false;
 		if (!supplyingProducers.equals(supplying)) {
-			supplyingProducers = Set.copyOf(supplying);
+			supplyingProducers = orderedCopy(supplying);
 			computeProducerField();
 			changed = true;
 		}
 		if (!flowSinkSeeds.equals(sinkSeeds)) {
-			flowSinkSeeds = Set.copyOf(sinkSeeds);
+			flowSinkSeeds = orderedCopy(sinkSeeds);
 			computeSinkField();
 			changed = true;
 		}
 		if (!flowMachineSeeds.equals(machineSeeds)) {
-			flowMachineSeeds = Set.copyOf(machineSeeds);
+			flowMachineSeeds = orderedCopy(machineSeeds);
 			computeMachineField();
 		}
 		if (changed) {
 			rebuildFlowOrder();
 		}
+	}
+
+	/**
+	 * Defensive copy that KEEPS the caller's order (MOD-304 round 2).
+	 *
+	 * <p>This deliberately does not use {@code Set.copyOf}. That returns a
+	 * {@code java.util.ImmutableCollections.SetN} whose iteration order is randomised by a per-JVM salt,
+	 * so it threw away the order the caller had carefully built in a {@link LinkedHashSet} and replaced it
+	 * with one that differs between runs of the same world. That mattered here precisely because of the
+	 * other half of MOD-304: {@code sinkDistance} is now a {@link LinkedHashMap}, so its key order is the
+	 * BFS insertion order, which is seeded from these sets, and {@code rebuildFlowOrder} then breaks
+	 * equal-distance ties with a STABLE sort — i.e. by insertion order. A salted seed order therefore
+	 * leaked all the way into "which of two equal donors fills the shared neighbour", which is the exact
+	 * non-determinism this task exists to remove.
+	 */
+	private static Set<BlockPos> orderedCopy(Set<BlockPos> source) {
+		return java.util.Collections.unmodifiableSet(new LinkedHashSet<>(source));
 	}
 
 	List<Endpoint> producers() {
@@ -287,7 +311,7 @@ final class EnergyTopologyCache {
 	/**
 	 * The strongest cable grade present in this network — primarily the one with the highest packet cap.
 	 * Equal-cap bare/insulated variants are ordered conservatively so a bare segment governs the mixed
-	 * run instead of leaving the result to {@link HashSet} iteration order (MOD-259). It governs BOTH the
+	 * run instead of leaving the result to {@code HashSet} iteration order (MOD-259). It governs BOTH the
 	 * per-tick packet cap and the per-block loss rate of the whole line: splice one gold segment
 	 * into a copper run and the entire network moves to gold's 128 EU/t cap <b>and</b> to gold's 0.03
 	 * loss. That is the deliberate extension of the tier rule established in MOD-101 — taking the cap from
@@ -319,10 +343,23 @@ final class EnergyTopologyCache {
 		// whole change exists to kill. CableType.strongerThan also resolves equal-cap insulation ties
 		// deterministically. Only a network with no loadable cable at all falls back to copper.
 		CableType strongest = null;
-		Set<BlockPos> seenProducer = new HashSet<>();
-		Set<BlockPos> seenConsumer = new HashSet<>();
+		Set<BlockPos> seenProducer = new LinkedHashSet<>();
+		Set<BlockPos> seenConsumer = new LinkedHashSet<>();
 		EnergyLookup lookup = EnergyLookup.get();
-		for (BlockPos cable : cables) {
+		// MOD-304 — walk the cables in GEOMETRIC order, not in set order.
+		//
+		// This loop's order fixes the order of producers/consumers, which in turn fixes the delivery
+		// order and how ties at equal distance are broken. While a HashSet was iterated here, that order
+		// was BlockPos.hashCode() over ABSOLUTE coordinates: the very same layout delivered energy
+		// differently at x=100 and at x=5000, and the test rigs — which the world lays out at fresh
+		// coordinates every run — were green alone and red in the full suite. A LinkedHashSet would drop
+		// the hash dependency but keep a dependency on the order the network happened to be built in.
+		// Sorting is translation-invariant, which is the property actually wanted here: the same layout
+		// behaves the same wherever it stands. (See BLOCK_POS_ORDER for why the comparator is x/y/z and
+		// emphatically NOT asLong.)
+		List<BlockPos> orderedCables = new ArrayList<>(cables);
+		orderedCables.sort(BLOCK_POS_ORDER);
+		for (BlockPos cable : orderedCables) {
 			if (level.getBlockEntity(cable) instanceof dev.alaindustrial.block.entity.CableBlockEntity ce
 					&& (strongest == null || ce.cableType().strongerThan(strongest))) {
 				strongest = ce.cableType();

@@ -7,17 +7,19 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 
 import static dev.alaindustrial.gametest.EnergyScenarioSupport.be;
 
 /**
  * Loader-neutral world-based gametest bodies (MOD-022) — world-content seams outside the
- * energy-network core: ore pickaxe tier gates (R-BRK-09) and the pump fluid chain. Suite
- * contract and shared helpers: {@link EnergyScenarioSupport}.
+ * energy-network core: the pump fluid chain. Suite contract and shared helpers:
+ * {@link EnergyScenarioSupport}.
+ *
+ * <p>MOD-310 — the two ore tier-gate bodies that used to live here were mirrors of the Fabric
+ * {@code OreGameTest} written by hand for the NeoForge lane. The real bodies now live in
+ * {@link OreScenarios} and run on both loaders, so the mirrors were removed rather than kept
+ * as a second copy.
  */
 public final class WorldContentScenarios {
 
@@ -66,78 +68,5 @@ public final class WorldContentScenarios {
 			return;
 		}
 		helper.fail("pump block entity missing");
-	}
-
-	// ── scenario 26: ore drop tier-gate (R-BRK-09, all 4 metals) ───────────────────────────────────
-
-	private static final BlockPos ORE = new BlockPos(1, 2, 1);
-
-	/**
-	 * Ore blocks require a minimum pickaxe tier: tin/silver/nickel need stone+, uranium needs iron+.
-	 * A wooden pickaxe (below every ore's tier) must NOT be the correct tool for drops on any of them.
-	 * Catches a regression that drops the {@code needs_stone_tool}/{@code needs_iron_tool} tags.
-	 * Mirrors: OreGameTest.tcOre001Brk02_pickaxeTierGate (wooden-too-low leg)
-	 */
-	public static void oreWoodenPickaxeNoDrop(GameTestHelper helper) {
-		net.minecraft.world.item.ItemStack woodenPick = new net.minecraft.world.item.ItemStack(Items.WOODEN_PICKAXE);
-		java.util.function.Supplier<net.minecraft.world.level.block.Block>[] ores = new java.util.function.Supplier[]{
-				ModContent.TIN_ORE, ModContent.DEEPSLATE_TIN_ORE,
-				ModContent.SILVER_ORE, ModContent.DEEPSLATE_SILVER_ORE,
-				ModContent.NICKEL_ORE, ModContent.DEEPSLATE_NICKEL_ORE,
-				ModContent.URANIUM_ORE, ModContent.DEEPSLATE_URANIUM_ORE,
-		};
-		int rel = 1;
-		for (java.util.function.Supplier<net.minecraft.world.level.block.Block> ore : ores) {
-			BlockPos orePos = new BlockPos(rel, 2, 1);
-			helper.setBlock(orePos, ore.get());
-			net.minecraft.world.level.block.state.BlockState state =
-					helper.getLevel().getBlockState(helper.absolutePos(orePos));
-			if (woodenPick.isCorrectToolForDrops(state)) {
-				helper.fail("wooden pickaxe is the correct tool for " + ore + " — tier gate (needs_stone/iron_tool) missing");
-				return;
-			}
-			rel++;
-		}
-		helper.succeed();
-	}
-
-	/**
-	 * A stone pickaxe IS the correct tool for tin/silver/nickel (needs_stone_tool), but NOT for uranium
-	 * (needs_iron_tool). Catches a regression that mis-tags uranium as stone-tier or the others as iron-tier.
-	 * Mirrors: OreGameTest.tcOre001Brk02_pickaxeTierGate (stone/iron legs)
-	 */
-	public static void oreStonePickaxeTierGate(GameTestHelper helper) {
-		net.minecraft.world.item.ItemStack stonePick = new net.minecraft.world.item.ItemStack(Items.STONE_PICKAXE);
-		net.minecraft.world.item.ItemStack ironPick = new net.minecraft.world.item.ItemStack(Items.IRON_PICKAXE);
-		// Stone-tier ores: stone pick OK.
-		java.util.function.Supplier<net.minecraft.world.level.block.Block>[] stoneOres = new java.util.function.Supplier[]{
-				ModContent.TIN_ORE, ModContent.SILVER_ORE, ModContent.NICKEL_ORE,
-		};
-		int rel = 1;
-		for (java.util.function.Supplier<net.minecraft.world.level.block.Block> ore : stoneOres) {
-			BlockPos orePos = new BlockPos(rel, 2, 2);
-			helper.setBlock(orePos, ore.get());
-			net.minecraft.world.level.block.state.BlockState state =
-					helper.getLevel().getBlockState(helper.absolutePos(orePos));
-			if (!stonePick.isCorrectToolForDrops(state)) {
-				helper.fail("stone pickaxe is NOT the correct tool for " + ore + " (needs_stone_tool)");
-				return;
-			}
-			rel++;
-		}
-		// Uranium: stone pick too low, iron pick OK.
-		BlockPos uraniumPos = new BlockPos(1, 2, 3);
-		helper.setBlock(uraniumPos, ModContent.URANIUM_ORE.get());
-		net.minecraft.world.level.block.state.BlockState uraniumState =
-				helper.getLevel().getBlockState(helper.absolutePos(uraniumPos));
-		if (stonePick.isCorrectToolForDrops(uraniumState)) {
-			helper.fail("stone pickaxe is the correct tool for uranium — must need iron+ (needs_iron_tool)");
-			return;
-		}
-		if (!ironPick.isCorrectToolForDrops(uraniumState)) {
-			helper.fail("iron pickaxe is NOT the correct tool for uranium (needs_iron_tool)");
-			return;
-		}
-		helper.succeed();
 	}
 }

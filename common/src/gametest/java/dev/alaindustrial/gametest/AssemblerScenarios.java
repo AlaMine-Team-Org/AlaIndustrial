@@ -1036,7 +1036,13 @@ public final class AssemblerScenarios {
 	/** The {@code model} object of an item definition, or {@code null} after failing the test. */
 	private static JsonObject itemDefinitionModel(GameTestHelper helper, String path) {
 		String resource = "/assets/" + Industrialization.MOD_ID + "/items/" + path + ".json";
-		try (java.io.InputStream in = AssemblerScenarios.class.getResourceAsStream(resource)) {
+		// MOD-322 — anchor the lookup to a class of the MOD, not to this test class. Since the
+		// NeoForge gametest source set became its own mod (`alaindustrial_gametest`), the test
+		// classes resolve resources against the gametest mod, which does not carry the mod's
+		// assets — `AssemblerScenarios.class.getResourceAsStream` returned null there. Fabric's
+		// flat classloader hid the difference. What is asserted here is the mod's shipped item
+		// definition, so `Industrialization.class` is also the semantically correct anchor.
+		try (java.io.InputStream in = Industrialization.class.getResourceAsStream(resource)) {
 			if (in == null) {
 				helper.fail("no item definition on the classpath at " + resource);
 				return null;

@@ -5,7 +5,7 @@ import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
@@ -28,7 +28,7 @@ public final class ItemNetwork {
 			Comparator.comparingLong((Endpoint e) -> e.pos().asLong()).thenComparingInt(e -> e.side().ordinal());
 
 	private final ServerLevel level;
-	private final Set<BlockPos> pipes = new HashSet<>();
+	private final Set<BlockPos> pipes = new LinkedHashSet<>();
 	private final List<Endpoint> sources = new ArrayList<>();
 	private final List<Endpoint> targets = new ArrayList<>();
 	private boolean endpointsDirty = true;
@@ -147,8 +147,8 @@ public final class ItemNetwork {
 	private void refreshEndpoints() {
 		sources.clear();
 		targets.clear();
-		Set<Endpoint> sourceSeen = new HashSet<>();
-		Set<Endpoint> targetSeen = new HashSet<>();
+		Set<Endpoint> sourceSeen = new LinkedHashSet<>();
+		Set<Endpoint> targetSeen = new LinkedHashSet<>();
 		for (BlockPos pipe : pipes) {
 			if (!(level.getBlockEntity(pipe) instanceof ItemPipeBlockEntity entity)) continue;
 			for (Direction direction : Direction.values()) {

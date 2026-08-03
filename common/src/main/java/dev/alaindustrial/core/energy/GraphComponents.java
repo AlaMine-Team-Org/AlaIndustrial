@@ -3,7 +3,7 @@ package dev.alaindustrial.core.energy;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -29,12 +29,12 @@ public final class GraphComponents {
 	 */
 	public static <N> List<Set<N>> components(Set<N> nodes, Function<N, ? extends Iterable<N>> neighbours) {
 		List<Set<N>> result = new ArrayList<>();
-		Set<N> visited = new HashSet<>();
+		Set<N> visited = new LinkedHashSet<>();
 		for (N start : nodes) {
 			if (!visited.add(start)) {
 				continue;
 			}
-			Set<N> component = new HashSet<>();
+			Set<N> component = new LinkedHashSet<>();
 			Deque<N> queue = new ArrayDeque<>();
 			queue.add(start);
 			while (!queue.isEmpty()) {

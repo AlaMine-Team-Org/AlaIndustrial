@@ -40,6 +40,20 @@ import dev.alaindustrial.gametest.ScytheScenarios;
 import dev.alaindustrial.gametest.StockDisplayFrameScenarios;
 import dev.alaindustrial.gametest.TemperedIronToolScenarios;
 import dev.alaindustrial.gametest.ItemPipeScenarios;
+import dev.alaindustrial.gametest.PersistenceScenarios;
+import dev.alaindustrial.gametest.EnrichedUraniumTorchScenarios;
+import dev.alaindustrial.gametest.WaterMillWheelScenarios;
+import dev.alaindustrial.gametest.CablePlacementScenarios;
+import dev.alaindustrial.gametest.GeneratorScenarios;
+import dev.alaindustrial.gametest.RecipeCoverageScenarios;
+import dev.alaindustrial.gametest.NetworkAnalyzerScenarios;
+import dev.alaindustrial.gametest.TeleporterStationScenarios;
+import dev.alaindustrial.gametest.TeleporterGuiScenarios;
+import dev.alaindustrial.gametest.TeleporterJumpScenarios;
+import dev.alaindustrial.gametest.OreScenarios;
+import dev.alaindustrial.gametest.MuteChipScenarios;
+import dev.alaindustrial.gametest.FluidTankScenarios;
+import dev.alaindustrial.gametest.AlaCommonScenarios;
 import dev.alaindustrial.registry.ModContent;
 import java.util.function.Consumer;
 import net.minecraft.core.Holder;
@@ -498,12 +512,9 @@ public final class NeoForgeGameTests {
 		registerTest(event, "solar_day_chip_evolves_to_daylight", 200, true,
 				GeneratorEnergyScenarios::solarDayChipEvolvesToDaylight);
 
-		// Ore tier-gate (R-BRK-09): wooden too low for all 8; stone OK for tin/silver/nickel,
-		// iron required for uranium.
-		registerTest(event, "ore_wooden_pickaxe_no_drop", 40, true,
-				WorldContentScenarios::oreWoodenPickaxeNoDrop);
-		registerTest(event, "ore_stone_pickaxe_tier_gate", 40, true,
-				WorldContentScenarios::oreStonePickaxeTierGate);
+		// MOD-310: the two former ore mirrors (ore_wooden_pickaxe_no_drop / ore_stone_pickaxe_tier_gate)
+		// are gone — the shared OreScenarios::tcOre001Brk02_pickaxeTierGate strictly subsumes them
+		// (same assertions plus sulfur, the deepslate variants, and diamond/netherite/gold).
 
 		// Network split + rejoin (R-CON-04, R-CON-09): break stops delivery, replace resumes flow.
 		registerTest(event, "network_split_rejoin_resumes_flow", 200, true,
@@ -684,6 +695,10 @@ public final class NeoForgeGameTests {
 				GardenDroneScenarios::fun05FullOutputLeavesCropStanding);
 		registerTest(event, "garden_drone_without_drone_is_inert", 40, true,
 				GardenDroneScenarios::fun07WithoutDroneNothingHappens);
+		registerTest(event, "garden_drone_hoe_breaks_on_last_use", 40, true,
+				GardenDroneScenarios::fun08HoeBreaksOnItsLastUse);
+		registerTest(event, "garden_drone_hoe_survives_until_last_use", 40, true,
+				GardenDroneScenarios::fun09HoeSurvivesUntilItsLastUse);
 		registerTest(event, "garden_drone_flight_delays_action", 300, true,
 				GardenDroneScenarios::fun06FlightDelaysTheAction);
 		registerTest(event, "menu_data_width_matches_block_entity", 200, true,
@@ -714,6 +729,11 @@ public final class NeoForgeGameTests {
 		registerTest(event, "scythe_crop_mode_keeps_lone_cactus", 40, true, ScytheScenarios::neg05CropModeKeepsLoneCactus);
 		registerTest(event, "scythe_crop_mode_keeps_stem", 40, true, ScytheScenarios::neg06CropModeKeepsStem);
 		registerTest(event, "scythe_netherite_fire_resistant", 40, true, ScytheScenarios::con02NetheriteFireResistant);
+		// MOD-315 bonus seed drop (suite TC-SCYTHE-003). Deterministic by construction: the torchflower
+		// loot table yields exactly one seed, so the baseline is exact and a bonus shows up as a second.
+		registerTest(event, "scythe_crop_bonus_absent_on_zero_tier", 40, true, ScytheScenarios::fun04CropBonusAbsentOnZeroChanceTier);
+		registerTest(event, "scythe_crop_bonus_always_at_full_chance", 40, true, ScytheScenarios::fun05CropBonusAlwaysDropsAtFullChance);
+		registerTest(event, "scythe_crop_bonus_skips_non_crop_block", 40, true, ScytheScenarios::neg07CropBonusSkipsNonCropBlock);
 
 		// MOD-104: exact end-to-end item movement through native item APIs and the disabled-face gate.
 		registerTest(event, "item_pipe_transfers_between_chests", 40, true, ItemPipeScenarios::transfersBetweenChests);
@@ -1009,6 +1029,305 @@ public final class NeoForgeGameTests {
 				VulcanizerScenarios::sta01RoundTripPreservesInFlightCycle);
 		registerTest(event, "vulcanizer_rubber_production_advancement", 300, true,
 				VulcanizerScenarios::fun03RubberProductionAdvancement);
+
+		// Scenarios moved out of Fabric-only bodies into common: the NBT round-trips and the two
+		// enriched-uranium-torch guarantees. Neither was exercised on NeoForge at all before the move.
+		// Note on what this does and does not buy: ten of the eleven persistence scenarios rebuild the
+		// block entity directly rather than resolving it from a registered BlockEntityType, so what
+		// they add here is the setBlock + getBlockEntity wiring on this loader, not the 26.2
+		// ValueInput/ValueOutput seam itself.
+		registerTest(event, "persistence_r_per01_macerator_nbt_round_trip", 40, true,
+				PersistenceScenarios::rPer01_maceratorNbtRoundTrip);
+		registerTest(event, "persistence_r_per01_furnace_nbt_round_trip", 40, true,
+				PersistenceScenarios::rPer01_furnaceNbtRoundTrip);
+		registerTest(event, "persistence_r_per01_geothermal_fluid_nbt_round_trip", 40, true,
+				PersistenceScenarios::rPer01_geothermalFluidNbtRoundTrip);
+		registerTest(event, "persistence_r_per01_solar_evolve_nbt_round_trip", 40, true,
+				PersistenceScenarios::rPer01_solarEvolveNbtRoundTrip);
+		registerTest(event, "persistence_tc_mach003_per01_compressor_nbt_round_trip", 40, true,
+				PersistenceScenarios::tcMach003Per01_compressorNbtRoundTrip);
+		registerTest(event, "persistence_tc_mach004_per01_extractor_nbt_round_trip", 40, true,
+				PersistenceScenarios::tcMach004Per01_extractorNbtRoundTrip);
+		registerTest(event, "persistence_tc_efurn001_per01_furnace_freeze_then_resume", 40, true,
+				PersistenceScenarios::tcEFurn001Per01_furnaceFreezeThenResume);
+		registerTest(event, "persistence_tc_pump001_per01_pump_tank_nbt_round_trip", 40, true,
+				PersistenceScenarios::tcPump001Per01_pumpTankNbtRoundTrip);
+		registerTest(event, "persistence_tc_pump001_per02_pump_tank_empty_nbt_round_trip", 40, true,
+				PersistenceScenarios::tcPump001Per02_pumpTankEmptyNbtRoundTrip);
+		registerTest(event, "persistence_tc_cable001_per01_buffer_nbt_round_trip", 40, true,
+				PersistenceScenarios::tcCable001Per01_bufferNbtRoundTrip);
+		registerTest(event, "persistence_tc_cable001_per02_legacy_machine_keys_ignored_on_load", 40, true,
+				PersistenceScenarios::tcCable001Per02_legacyMachineKeysIgnoredOnLoad);
+		registerTest(event, "torch_torches_emit_vanilla_torch_light", 40, true,
+				EnrichedUraniumTorchScenarios::torchesEmitVanillaTorchLight);
+		registerTest(event, "torch_wall_torch_drops_standing_torch", 40, true,
+				EnrichedUraniumTorchScenarios::wallTorchDropsStandingTorch);
+
+		// ── MOD-310 — bodies lifted from the Fabric gametest source set into common ─────
+		// Every scenario below used to exist for one loader only, so the matching mechanic was
+		// never verified here at all. That class is now a thin wrapper around the shared body.
+		// Scenarios already covered by an existing mirror below are deliberately NOT registered
+		// twice; the skip list lives with the task that moved them.
+
+		// Water mill + wheel (MOD-310): wheel placement, neighbour interference, wear, face roles.
+		registerTest(event, "water_mill_wheel_progress_tracks_water_faces", 40, true,
+				WaterMillWheelScenarios::waterMillWheel_progressTracksWaterFaces);
+		registerTest(event, "water_mill_wheel_slot_filter_is_dedicated", 40, true,
+				WaterMillWheelScenarios::waterMillWheel_slotFilterIsDedicated);
+		registerTest(event, "water_mill_crafting_recipe_resolves", 40, true,
+				WaterMillWheelScenarios::waterMill_craftingRecipeResolves);
+		registerTest(event, "water_mill_wheel_crafting_recipe_resolves", 40, true,
+				WaterMillWheelScenarios::waterMillWheel_craftingRecipeResolves);
+		registerTest(event, "water_mill_side_by_side_interference", 40, true,
+				WaterMillWheelScenarios::waterMill_sideBySideInterference);
+		registerTest(event, "water_mill_face_to_face_interference", 40, true,
+				WaterMillWheelScenarios::waterMill_faceToFaceInterference);
+		registerTest(event, "water_mill_spaced_mills_do_not_interfere", 40, true,
+				WaterMillWheelScenarios::waterMill_spacedMillsDoNotInterfere);
+		registerTest(event, "water_mill_back_to_back_do_not_interfere", 40, true,
+				WaterMillWheelScenarios::waterMill_backToBackDoNotInterfere);
+		registerTest(event, "water_mill_wall_in_front_stalls_and_recovers", 40, true,
+				WaterMillWheelScenarios::waterMill_wallInFrontStallsAndRecovers);
+		registerTest(event, "water_mill_block_above_front_also_obstructs", 40, true,
+				WaterMillWheelScenarios::waterMill_blockAboveFrontAlsoObstructs);
+		registerTest(event, "water_mill_solid_river_bed_below_front_is_allowed", 40, true,
+				WaterMillWheelScenarios::waterMill_solidRiverBedBelowFrontIsAllowed);
+		registerTest(event, "water_mill_side_block_obstructs", 40, true,
+				WaterMillWheelScenarios::waterMill_sideBlockObstructs);
+		registerTest(event, "water_mill_water_beside_wheel_is_allowed", 40, true,
+				WaterMillWheelScenarios::waterMill_waterBesideWheelIsAllowed);
+		registerTest(event, "water_mill_interference_clears_within_scan_interval", 40, true,
+				WaterMillWheelScenarios::waterMill_interferenceClearsWithinScanInterval);
+		registerTest(event, "water_mill_neighbour_wheel_removal_clears_interference", 40, true,
+				WaterMillWheelScenarios::waterMill_neighbourWheelRemovalClearsInterference);
+		registerTest(event, "water_mill_dry_mill_shows_no_water_hint", 40, true,
+				WaterMillWheelScenarios::waterMill_dryMillShowsNoWaterHint);
+		registerTest(event, "water_mill_still_source_does_not_generate", 40, true,
+				WaterMillWheelScenarios::waterMill_stillSourceDoesNotGenerate);
+		registerTest(event, "water_mill_energy_only_from_back_face", 40, true,
+				WaterMillWheelScenarios::waterMill_energyOnlyFromBackFace);
+		registerTest(event, "water_mill_front_face_inert_for_automation", 40, true,
+				WaterMillWheelScenarios::waterMill_frontFaceInertForAutomation);
+		registerTest(event, "water_mill_automation_cannot_stack_second_wheel", 40, true,
+				WaterMillWheelScenarios::waterMill_automationCannotStackSecondWheel);
+		registerTest(event, "water_mill_wheel_no_wear_while_dry", 40, true,
+				WaterMillWheelScenarios::waterMillWheel_noWearWhileDry);
+
+		// Cable placement and the face-connection rules (MOD-038/039/061/071).
+		registerTest(event, "mod039_cable_use_returns_pass", 40, true,
+				CablePlacementScenarios::mod039_cableUseReturnsPass);
+		registerTest(event, "mod039_machine_use_returns_success", 40, true,
+				CablePlacementScenarios::mod039_machineUseReturnsSuccess);
+		registerTest(event, "mod039_rmb_on_cable_places_adjacent", 40, true,
+				CablePlacementScenarios::mod039_rmbOnCablePlacesAdjacent);
+		registerTest(event, "mod038_cable_does_not_connect_to_iron_chest", 40, true,
+				CablePlacementScenarios::mod038_cableDoesNotConnectToIronChest);
+		registerTest(event, "cable_connects_only_to_wind_mill_back_face", 40, true,
+				CablePlacementScenarios::cableConnectsOnlyToWindMillBackFace);
+		registerTest(event, "cable_connects_only_to_water_mill_back_face", 40, true,
+				CablePlacementScenarios::cableConnectsOnlyToWaterMillBackFace);
+		registerTest(event, "cable_connects_only_to_battery_box_io_faces", 40, true,
+				CablePlacementScenarios::cableConnectsOnlyToBatteryBoxIOFaces);
+		registerTest(event, "mod061_cable_does_not_arm_to_generator_facing", 40, true,
+				CablePlacementScenarios::mod061_cableDoesNotArmToGeneratorFacing);
+		registerTest(event, "mod061_cable_does_not_arm_to_geothermal_facing", 40, true,
+				CablePlacementScenarios::mod061_cableDoesNotArmToGeothermalFacing);
+		registerTest(event, "mod061_cable_does_not_arm_to_macerator_facing", 40, true,
+				CablePlacementScenarios::mod061_cableDoesNotArmToMaceratorFacing);
+		registerTest(event, "mod061_cable_does_not_arm_to_electric_furnace_facing", 40, true,
+				CablePlacementScenarios::mod061_cableDoesNotArmToElectricFurnaceFacing);
+		registerTest(event, "mod061_cable_does_not_arm_to_extractor_facing", 40, true,
+				CablePlacementScenarios::mod061_cableDoesNotArmToExtractorFacing);
+		registerTest(event, "mod061_cable_does_not_arm_to_compressor_facing", 40, true,
+				CablePlacementScenarios::mod061_cableDoesNotArmToCompressorFacing);
+		registerTest(event, "mod061_cable_facing_inert_on_non_north_facing", 40, true,
+				CablePlacementScenarios::mod061_cableFacingInertOnNonNorthFacing);
+		registerTest(event, "mod061_cable_does_not_arm_to_pump_facing", 40, true,
+				CablePlacementScenarios::mod061_cableDoesNotArmToPumpFacing);
+		registerTest(event, "mod061_cable_stale_flags_reshape_on_first_tick", 40, true,
+				CablePlacementScenarios::mod061_cableStaleFlagsReshapeOnFirstTick);
+		registerTest(event, "mod071_cable_does_not_arm_to_solar_panel_up", 40, true,
+				CablePlacementScenarios::mod071_cableDoesNotArmToSolarPanelUp);
+		registerTest(event, "mod071_cable_does_not_arm_to_daylight_solar_panel_up", 40, true,
+				CablePlacementScenarios::mod071_cableDoesNotArmToDaylightSolarPanelUp);
+		registerTest(event, "mod071_cable_does_not_arm_to_moonlit_solar_panel_up", 40, true,
+				CablePlacementScenarios::mod071_cableDoesNotArmToMoonlitSolarPanelUp);
+
+		// Fuel generator (MOD-310): burning, fuel slot, drops, hitbox, LIT state.
+		registerTest(event, "tc_gen001_fun01_coal_raises_buffer", 40, true,
+				GeneratorScenarios::tcGen001Fun01_coalRaisesBuffer);
+		registerTest(event, "tc_gen001_per01_state_survives_nbt_round_trip", 40, true,
+				GeneratorScenarios::tcGen001Per01_stateSurvivesNbtRoundTrip);
+		registerTest(event, "tc_gen001_neg04_lava_bucket_rejected", 40, true,
+				GeneratorScenarios::tcGen001Neg04_lavaBucketRejected);
+		registerTest(event, "tc_gen001_neg04b_menu_slot_rejects_lava_bucket", 40, true,
+				GeneratorScenarios::tcGen001Neg04b_menuSlotRejectsLavaBucket);
+		registerTest(event, "tc_gen001_fun03_coal_block_burns_longer", 40, true,
+				GeneratorScenarios::tcGen001Fun03_coalBlockBurnsLonger);
+		registerTest(event, "tc_gen001_neg02_non_fuel_produces_no_eu", 40, true,
+				GeneratorScenarios::tcGen001Neg02_nonFuelProducesNoEu);
+		registerTest(event, "tc_gen001_neg02b_fuel_slot_rejects_non_fuel", 40, true,
+				GeneratorScenarios::tcGen001Neg02b_fuelSlotRejectsNonFuel);
+		registerTest(event, "tc_gen001_per02_break_drops_fuel_no_dupe", 40, true,
+				GeneratorScenarios::tcGen001Per02_breakDropsFuelNoDupe);
+		registerTest(event, "tc_gen001_con01_pairwise_neighbours", 40, true,
+				GeneratorScenarios::tcGen001Con01_pairwiseNeighbours);
+		registerTest(event, "tc_gen001_phy02_hitbox_is_full_cube", 40, true,
+				GeneratorScenarios::tcGen001Phy02_hitboxIsFullCube);
+		registerTest(event, "tc_gen001_prf02_packet_capped_at_lv", 40, true,
+				GeneratorScenarios::tcGen001Prf02_packetCappedAtLv);
+		registerTest(event, "tc_gen001_sta01_lit_state_tracks_burning", 40, true,
+				GeneratorScenarios::tcGen001Sta01_litStateTracksBurning);
+
+		// Recipe coverage: every family loads and the key crafts resolve.
+		registerTest(event, "tc_recie01_maceration_recipes_all_load", 40, true,
+				RecipeCoverageScenarios::tcRecie01_macerationRecipesAllLoad);
+		registerTest(event, "tc_recie02_smelting_recipes_all_load", 40, true,
+				RecipeCoverageScenarios::tcRecie02_smeltingRecipesAllLoad);
+		registerTest(event, "tc_recie03_compressing_recipes_all_load", 40, true,
+				RecipeCoverageScenarios::tcRecie03_compressingRecipesAllLoad);
+		registerTest(event, "tc_recie04_extracting_recipes_all_load", 40, true,
+				RecipeCoverageScenarios::tcRecie04_extractingRecipesAllLoad);
+		registerTest(event, "tc_recie11_distilling_recipe_family_registered", 40, true,
+				RecipeCoverageScenarios::tcRecie11_distillingRecipeFamilyRegistered);
+		registerTest(event, "tc_recie05_machine_casing_resolves", 40, true,
+				RecipeCoverageScenarios::tcRecie05_machineCasingResolves);
+		registerTest(event, "tc_recie06_macerator_resolves", 40, true,
+				RecipeCoverageScenarios::tcRecie06_maceratorResolves);
+		registerTest(event, "tc_recie07_extractor_resolves", 40, true,
+				RecipeCoverageScenarios::tcRecie07_extractorResolves);
+		registerTest(event, "tc_recie08_compressor_resolves", 40, true,
+				RecipeCoverageScenarios::tcRecie08_compressorResolves);
+		registerTest(event, "tc_recie09_silver_plate_block_resolves", 40, true,
+				RecipeCoverageScenarios::tcRecie09_silverPlateBlockResolves);
+		registerTest(event, "tc_recie10_tempered_iron_plate_block_resolves", 40, true,
+				RecipeCoverageScenarios::tcRecie10_temperedIronPlateBlockResolves);
+
+		// Network analyzer (MOD-047): traversal through storage, stop conditions, traversal cap.
+		registerTest(event, "mod047_traverse_bridges_battery_box", 40, true,
+				NetworkAnalyzerScenarios::mod047_traverseBridgesBatteryBox);
+		registerTest(event, "mod047_stop_at_storage_stays_in_segment", 40, true,
+				NetworkAnalyzerScenarios::mod047_stopAtStorageStaysInSegment);
+		registerTest(event, "mod047_traverse_cap_flags_limit", 40, true,
+				NetworkAnalyzerScenarios::mod047_traverseCapFlagsLimit);
+
+		// Teleporter station: buffer, privacy, drops, role in the network.
+		registerTest(event, "tc_tele001_fun02_buffer_matches_config", 40, true,
+				TeleporterStationScenarios::tcTele001Fun02_bufferMatchesConfig);
+		registerTest(event, "tc_tele001_fun03_hv_intake_rate", 40, true,
+				TeleporterStationScenarios::tcTele001Fun03_hvIntakeRate);
+		registerTest(event, "tc_tele001_per01_state_survives_nbt", 40, true,
+				TeleporterStationScenarios::tcTele001Per01_stateSurvivesNbt);
+		registerTest(event, "tc_tele001_per02_defaults_to_private", 40, true,
+				TeleporterStationScenarios::tcTele001Per02_defaultsToPrivate);
+		registerTest(event, "tc_tele001_brk07_drop_carries_energy_and_privacy_but_not_owner", 40, true,
+				TeleporterStationScenarios::tcTele001Brk07_dropCarriesEnergyAndPrivacyButNotOwner);
+		registerTest(event, "tc_tele001_sec01_privacy_gate", 40, true,
+				TeleporterStationScenarios::tcTele001Sec01_privacyGate);
+		registerTest(event, "tc_tele001_con01_is_a_storage_sink", 40, true,
+				TeleporterStationScenarios::tcTele001Con01_isAStorageSink);
+		registerTest(event, "tc_tele001_con02_does_not_starve_machines", 40, true,
+				TeleporterStationScenarios::tcTele001Con02_doesNotStarveMachines);
+
+		// Server side of the teleporter screens: index bounds, list limit, permissions.
+		registerTest(event, "tc_tele003_sec01_index_bounds_are_exact", 40, true,
+				TeleporterGuiScenarios::tcTele003Sec01_indexBoundsAreExact);
+		registerTest(event, "tc_tele003_sec02_rename_clamps_name", 40, true,
+				TeleporterGuiScenarios::tcTele003Sec02_renameClampsName);
+		registerTest(event, "tc_tele003_sec04_wire_carries_legacy_length_names", 40, true,
+				TeleporterGuiScenarios::tcTele003Sec04_wireCarriesLegacyLengthNames);
+		registerTest(event, "tc_tele003_fun01_list_is_immutable", 40, true,
+				TeleporterGuiScenarios::tcTele003Fun01_listIsImmutable);
+		registerTest(event, "tc_tele003_fun02_dedupe_by_dim_and_pos", 40, true,
+				TeleporterGuiScenarios::tcTele003Fun02_dedupeByDimAndPos);
+		registerTest(event, "tc_tele003_fun03_limit_is_the_configured_one", 40, true,
+				TeleporterGuiScenarios::tcTele003Fun03_limitIsTheConfiguredOne);
+		registerTest(event, "tc_tele003_fun05_auto_names_take_the_lowest_free_number", 40, true,
+				TeleporterGuiScenarios::tcTele003Fun05_autoNamesTakeTheLowestFreeNumber);
+		registerTest(event, "tc_tele003_sec03_only_owner_toggles_privacy", 40, true,
+				TeleporterGuiScenarios::tcTele003Sec03_onlyOwnerTogglesPrivacy);
+		registerTest(event, "tc_tele003_fun04_menu_reads_the_held_remote", 40, true,
+				TeleporterGuiScenarios::tcTele003Fun04_menuReadsTheHeldRemote);
+
+		// Teleporter jump: cost formula, policy gate, warmup.
+		registerTest(event, "tc_tele002_fun01_cost_formula", 40, true,
+				TeleporterJumpScenarios::tcTele002Fun01_costFormula);
+		registerTest(event, "tc_tele002_fun02_weight_ignores_armour", 40, true,
+				TeleporterJumpScenarios::tcTele002Fun02_weightIgnoresArmour);
+		registerTest(event, "tc_tele002_sec01_policy_gate", 40, true,
+				TeleporterJumpScenarios::tcTele002Sec01_policyGate);
+		registerTest(event, "tc_tele002_nrg01_failed_jump_costs_nothing", 40, true,
+				TeleporterJumpScenarios::tcTele002Nrg01_failedJumpCostsNothing);
+		registerTest(event, "tc_tele002_fun03_success_moves_and_charges", 40, true,
+				TeleporterJumpScenarios::tcTele002Fun03_successMovesAndCharges);
+		registerTest(event, "tc_tele002_sec02_remote_binds_to_owner", 40, true,
+				TeleporterJumpScenarios::tcTele002Sec02_remoteBindsToOwner);
+		registerTest(event, "tc_tele002_sta01_warmup_state_starts_clean", 40, true,
+				TeleporterJumpScenarios::tcTele002Sta01_warmupStateStartsClean);
+
+		// Ores (MOD-310): drops, tier gate, hardness, hitbox, fire resistance.
+		registerTest(event, "tc_ore001_brk01_drops_itself_with_pickaxe", 40, true,
+				OreScenarios::tcOre001Brk01_dropsItselfWithPickaxe);
+		registerTest(event, "tc_ore001_brk03_no_drop_by_hand_axe_or_shovel", 40, true,
+				OreScenarios::tcOre001Brk03_noDropByHandAxeOrShovel);
+		registerTest(event, "tc_ore001_brk02_pickaxe_tier_gate", 40, true,
+				OreScenarios::tcOre001Brk02_pickaxeTierGate);
+		registerTest(event, "tc_ore001_brk04_fortune_and_silk_touch_neutral", 40, true,
+				OreScenarios::tcOre001Brk04_fortuneAndSilkTouchNeutral);
+		registerTest(event, "tc_ore001_brk05_hardness_stone_vs_deepslate", 40, true,
+				OreScenarios::tcOre001Brk05_hardnessStoneVsDeepslate);
+		registerTest(event, "tc_ore001_phy02_full_cube_hitbox", 40, true,
+				OreScenarios::tcOre001Phy02_fullCubeHitbox);
+		registerTest(event, "tc_ore001_phy04_non_flammable", 40, true,
+				OreScenarios::tcOre001Phy04_nonFlammable);
+
+		// Silence chip: active slot, persistence, slot filters, drops.
+		registerTest(event, "mute_chip_is_muted_reflects_active_slot", 40, true,
+				MuteChipScenarios::muteChip_isMutedReflectsActiveSlot);
+		registerTest(event, "mute_chip_persists_across_nbt_round_trip", 40, true,
+				MuteChipScenarios::muteChip_persistsAcrossNbtRoundTrip);
+		registerTest(event, "mute_chip_hoppers_cannot_reach_upgrade_slots", 40, true,
+				MuteChipScenarios::muteChip_hoppersCannotReachUpgradeSlots);
+		registerTest(event, "mute_chip_drops_on_break", 40, true,
+				MuteChipScenarios::muteChip_dropsOnBreak);
+		registerTest(event, "mute_chip_drops_from_formerly_slotless_machine", 40, true,
+				MuteChipScenarios::muteChip_dropsFromFormerlySlotlessMachine);
+		registerTest(event, "mute_chip_menu_slot_filter_and_quick_move", 40, true,
+				MuteChipScenarios::muteChip_menuSlotFilterAndQuickMove);
+		registerTest(event, "mute_chip_crafting_recipes_resolve", 40, true,
+				MuteChipScenarios::muteChip_craftingRecipesResolve);
+
+		// Fluid tank: contents codec, NBT + component, item atomicity.
+		registerTest(event, "tc_fluid_tank001_fun02_glass_wall_stops_a_click", 40, true,
+				FluidTankScenarios::tcFluidTank001Fun02_glassWallStopsAClick);
+		registerTest(event, "tc_fluid_tank001_dat01_contents_codec_round_trips", 40, true,
+				FluidTankScenarios::tcFluidTank001Dat01_contentsCodecRoundTrips);
+		registerTest(event, "tc_fluid_tank001_per01_nbt_and_component_round_trip", 40, true,
+				FluidTankScenarios::tcFluidTank001Per01_nbtAndComponentRoundTrip);
+		registerTest(event, "tc_fluid_tank001_safe01_filled_item_is_atomic_and_unstackable", 40, true,
+				FluidTankScenarios::tcFluidTank001Safe01_filledItemIsAtomicAndUnstackable);
+		registerTest(event, "tc_fluid_tank001_bva01_component_amount_clamps_to_capacity", 40, true,
+				FluidTankScenarios::tcFluidTank001Bva01_componentAmountClampsToCapacity);
+		registerTest(event, "tc_fluid_tank001_per02_placing_a_filled_tank_keeps_its_contents", 40, true,
+				FluidTankScenarios::tcFluidTank001Per02_placingAFilledTankKeepsItsContents);
+		registerTest(event, "tc_fluid_tank001_fun01_bucket_and_capsule_use_real_click_routing", 40, true,
+				FluidTankScenarios::tcFluidTank001Fun01_bucketAndCapsuleUseRealClickRouting);
+
+		// End-to-end content invariants: block registry, loot, the /ala command, c: tags.
+		registerTest(event, "every_block_places_and_breaks", 40, true,
+				AlaCommonScenarios::everyBlockPlacesAndBreaks);
+		registerTest(event, "network_tick_guard_isolates_throws", 40, true,
+				AlaCommonScenarios::networkTickGuardIsolatesThrows);
+		registerTest(event, "every_block_drops_itself", 40, true,
+				AlaCommonScenarios::everyBlockDropsItself);
+		registerTest(event, "every_block_no_drop_by_hand", 40, true,
+				AlaCommonScenarios::everyBlockNoDropByHand);
+		registerTest(event, "block_standards_all_blocks", 40, true,
+				AlaCommonScenarios::blockStandardsAllBlocks);
+		registerTest(event, "ala_command_registered", 40, true,
+				AlaCommonScenarios::alaCommandRegistered);
+		registerTest(event, "ores_in_convention_tags", 40, true,
+				AlaCommonScenarios::oresInConventionTags);
 	}
 
 	/** Register one code-body scenario under the alaindustrial namespace with a sane maxTicks. */

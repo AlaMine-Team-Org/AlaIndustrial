@@ -32,7 +32,7 @@ public final class FluidSourceFinder {
 	public static BlockPos findClosestSource(Level level, BlockPos pumpPos, BlockPos startPos, Fluid targetSourceFluid,
 			int maxDistance, int maxVisited) {
 		java.util.Queue<BlockPos> queue = new java.util.ArrayDeque<>();
-		java.util.Set<BlockPos> visited = new java.util.HashSet<>();
+		java.util.Set<BlockPos> visited = new java.util.LinkedHashSet<>();
 
 		queue.add(startPos);
 		visited.add(startPos);

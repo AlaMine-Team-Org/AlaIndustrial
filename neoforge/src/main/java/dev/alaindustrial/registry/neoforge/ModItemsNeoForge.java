@@ -1,10 +1,7 @@
 package dev.alaindustrial.registry.neoforge;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
-import dev.alaindustrial.item.misc.MutationChipItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
 import dev.alaindustrial.item.fluid.FluidTankBlockItem;
@@ -17,6 +14,7 @@ import dev.alaindustrial.item.teleport.TeleporterRemoteItem;
 import dev.alaindustrial.item.energy.PouchItem;
 import dev.alaindustrial.item.tool.ScytheItem;
 import dev.alaindustrial.item.tool.neoforge.HammerItemNeoForge;
+import dev.alaindustrial.registry.ContentManifest;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -48,71 +46,71 @@ public final class ModItemsNeoForge {
 			DeferredRegister.createItems(Industrialization.MOD_ID);
 
 	// --- Crafting components (plain items) ---
-	public static final DeferredItem<Item> ELECTRONIC_CIRCUIT = ITEMS.registerItem("electronic_circuit", Item::new);
+	public static final DeferredItem<Item> ELECTRONIC_CIRCUIT = manifestItem("electronic_circuit");
 	// MOD-299 — the MV circuit: electronic circuit + gold plates + rubber. Gates the advanced casing.
-	public static final DeferredItem<Item> ADVANCED_CIRCUIT = ITEMS.registerItem("advanced_circuit", Item::new);
+	public static final DeferredItem<Item> ADVANCED_CIRCUIT = manifestItem("advanced_circuit");
 	// MOD-275 — two-state stack size and tooltip, so it needs its own class.
 	public static final DeferredItem<Item> ASSEMBLY_BLUEPRINT = ITEMS.registerItem("assembly_blueprint",
 			props -> new AssemblyBlueprintItem(props.stacksTo(AssemblyBlueprintItem.BLANK_STACK_SIZE)));
 	// Copper Coil — crafting component (copper cable + tin), gates the Electric Drill.
-	public static final DeferredItem<Item> COPPER_COIL = ITEMS.registerItem("copper_coil", Item::new);
-	public static final DeferredItem<Item> ALIGNMENT_CHIP_DAY = ITEMS.registerItem("alignment_chip_day", Item::new);
-	public static final DeferredItem<Item> ALIGNMENT_CHIP_NIGHT = ITEMS.registerItem("alignment_chip_night", Item::new);
+	public static final DeferredItem<Item> COPPER_COIL = manifestItem("copper_coil");
+	public static final DeferredItem<Item> ALIGNMENT_CHIP_DAY = manifestItem("alignment_chip_day");
+	public static final DeferredItem<Item> ALIGNMENT_CHIP_NIGHT = manifestItem("alignment_chip_night");
 	// Upgrade chips (MOD-080): empty blank + the mute upgrade. Each shows a gray hint line.
 	public static final DeferredItem<Item> EMPTY_CHIP =
-			ITEMS.registerItem("empty_chip", ItemBuildersNeoForge.hint("empty_chip"));
+			manifestItem("empty_chip");
 	public static final DeferredItem<Item> MUTE_CHIP =
-			ITEMS.registerItem("mute_chip", ItemBuildersNeoForge.hint("mute_chip"));
+			manifestItem("mute_chip");
 
 	// Incubator (MOD-118): mode chips, by-products and the tier-1 evolution materials.
 	public static final DeferredItem<Item> MUTATION_CHIP_TRANSFORM =
-			ITEMS.registerItem("mutation_chip_transform", p -> new MutationChipItem(p, IncubatorMode.TRANSFORM));
+			manifestItem("mutation_chip_transform");
 	public static final DeferredItem<Item> MUTATION_CHIP_DUPLICATE =
-			ITEMS.registerItem("mutation_chip_duplicate", p -> new MutationChipItem(p, IncubatorMode.DUPLICATE));
+			manifestItem("mutation_chip_duplicate");
 	public static final DeferredItem<Item> MUTATION_CHIP_CREATE =
-			ITEMS.registerItem("mutation_chip_create", p -> new MutationChipItem(p, IncubatorMode.CREATE));
+			manifestItem("mutation_chip_create");
 	public static final DeferredItem<Item> DEPLETED_URANIUM =
-			ITEMS.registerItem("depleted_uranium", Item::new);
+			manifestItem("depleted_uranium");
 	public static final DeferredItem<Item> IRRADIATED_SLAG =
-			ITEMS.registerItem("irradiated_slag", Item::new);
+			manifestItem("irradiated_slag");
 	public static final DeferredItem<Item> IRRADIATED_DIAMOND =
-			ITEMS.registerItem("irradiated_diamond", Item::new);
+			manifestItem("irradiated_diamond");
 	public static final DeferredItem<Item> RESONANT_SHARD =
-			ITEMS.registerItem("resonant_shard", Item::new);
+			manifestItem("resonant_shard");
 	public static final DeferredItem<Item> MUTAGEN_DUST =
-			ITEMS.registerItem("mutagen_dust", Item::new);
+			manifestItem("mutagen_dust");
 	// Oil → rubber chain: the polymerizer's product and the vulcanizer's cured output.
 	public static final DeferredItem<Item> RAW_RUBBER =
-			ITEMS.registerItem("raw_rubber", Item::new);
+			manifestItem("raw_rubber");
 	public static final DeferredItem<Item> RUBBER =
-			ITEMS.registerItem("rubber", Item::new);
+			manifestItem("rubber");
 	// Cotton (MOD-280): the seed is planted onto a trellis by right-click (the block handles it, so this
 	// stays a plain Item — no BlockItem/ItemNameBlockItem), the fibre is the harvest.
 	public static final DeferredItem<Item> COTTON_SEEDS =
-			ITEMS.registerItem("cotton_seeds", Item::new);
+			manifestItem("cotton_seeds");
 	public static final DeferredItem<Item> COTTON_FIBER =
-			ITEMS.registerItem("cotton_fiber", Item::new);
+			manifestItem("cotton_fiber");
 	// Fluxweave chain (MOD-127): silver-plated fibre, then the woven sheet. Both are plain crafting
 	// components — the EU buffer lives on the armor, not on the material.
 	public static final DeferredItem<Item> FLUX_THREAD =
-			ITEMS.registerItem("flux_thread", Item::new);
+			manifestItem("flux_thread");
 	public static final DeferredItem<Item> FLUXWEAVE_CLOTH =
-			ITEMS.registerItem("fluxweave_cloth", Item::new);
+			manifestItem("fluxweave_cloth");
 	public static final DeferredItem<Item> UNSTABLE_ISOTOPE =
-			ITEMS.registerItem("unstable_isotope", Item::new);
+			manifestItem("unstable_isotope");
 	// Rotor / wheel (MOD-189): durability components — wear shows as a vanilla durability bar and, being
 	// damageable, they are automatically non-stackable. maxDamage from Config (registration-time).
 	public static final DeferredItem<Item> WINDMILL_ROTOR =
-			ITEMS.registerItem("windmill_rotor", Item::new, p -> p.durability(Config.windMillRotorMaxDamage));
+			manifestItem("windmill_rotor");
 	public static final DeferredItem<Item> WATER_MILL_WHEEL =
-			ITEMS.registerItem("water_mill_wheel", Item::new, p -> p.durability(Config.waterMillWheelMaxDamage));
-	public static final DeferredItem<Item> WOODEN_GEAR = ITEMS.registerItem("wooden_gear", Item::new);
+			manifestItem("water_mill_wheel");
+	public static final DeferredItem<Item> WOODEN_GEAR = manifestItem("wooden_gear");
 	// Metal gears (MOD-105): crafting components for machinery still to come.
-	public static final DeferredItem<Item> STONE_GEAR = ITEMS.registerItem("stone_gear", Item::new);
-	public static final DeferredItem<Item> IRON_GEAR = ITEMS.registerItem("iron_gear", Item::new);
-	public static final DeferredItem<Item> GOLD_GEAR = ITEMS.registerItem("gold_gear", Item::new);
-	public static final DeferredItem<Item> SILVER_GEAR = ITEMS.registerItem("silver_gear", Item::new);
-	public static final DeferredItem<Item> TEMPERED_IRON = ITEMS.registerItem("tempered_iron", Item::new);
+	public static final DeferredItem<Item> STONE_GEAR = manifestItem("stone_gear");
+	public static final DeferredItem<Item> IRON_GEAR = manifestItem("iron_gear");
+	public static final DeferredItem<Item> GOLD_GEAR = manifestItem("gold_gear");
+	public static final DeferredItem<Item> SILVER_GEAR = manifestItem("silver_gear");
+	public static final DeferredItem<Item> TEMPERED_IRON = manifestItem("tempered_iron");
 	// Tempered-iron pickaxe — first mod tool (MOD-054). MC 26.2 has no PickaxeItem class: a pickaxe is
 	// a plain Item whose `minecraft:tool` component is attached via Item.Properties.pickaxe(...). The
 	// third arg is a Properties-unary-op that applies the tempered-iron material (durability/speed/
@@ -166,27 +164,27 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> FLUXWEAVE_BOOTS =
 			ITEMS.registerItem("fluxweave_boots", p -> new FluxweaveArmorItem(p, ArmorType.BOOTS),
 					ItemBuildersNeoForge.fluxweaveArmor(ArmorType.BOOTS));
-	public static final DeferredItem<Item> IRON_DUST = ITEMS.registerItem("iron_dust", Item::new);
-	public static final DeferredItem<Item> COPPER_DUST = ITEMS.registerItem("copper_dust", Item::new);
-	public static final DeferredItem<Item> GOLD_DUST = ITEMS.registerItem("gold_dust", Item::new);
-	public static final DeferredItem<Item> COAL_DUST = ITEMS.registerItem("coal_dust", Item::new);
-	public static final DeferredItem<Item> DIAMOND_DUST = ITEMS.registerItem("diamond_dust", Item::new);
-	public static final DeferredItem<Item> EMERALD_DUST = ITEMS.registerItem("emerald_dust", Item::new);
-	public static final DeferredItem<Item> LAPIS_DUST = ITEMS.registerItem("lapis_dust", Item::new);
-	public static final DeferredItem<Item> TIN_DUST = ITEMS.registerItem("tin_dust", Item::new);
-	public static final DeferredItem<Item> RAW_TIN = ITEMS.registerItem("raw_tin", Item::new);
-	public static final DeferredItem<Item> TIN_INGOT = ITEMS.registerItem("tin_ingot", Item::new);
-	public static final DeferredItem<Item> SILVER_DUST = ITEMS.registerItem("silver_dust", Item::new);
-	public static final DeferredItem<Item> RAW_SILVER = ITEMS.registerItem("raw_silver", Item::new);
-	public static final DeferredItem<Item> SILVER_INGOT = ITEMS.registerItem("silver_ingot", Item::new);
-	public static final DeferredItem<Item> NICKEL_DUST = ITEMS.registerItem("nickel_dust", Item::new);
-	public static final DeferredItem<Item> RAW_NICKEL = ITEMS.registerItem("raw_nickel", Item::new);
-	public static final DeferredItem<Item> NICKEL_INGOT = ITEMS.registerItem("nickel_ingot", Item::new);
-	public static final DeferredItem<Item> SULFUR_DUST = ITEMS.registerItem("sulfur_dust", Item::new);
-	public static final DeferredItem<Item> RAW_SULFUR = ITEMS.registerItem("raw_sulfur", Item::new);
-	public static final DeferredItem<Item> URANIUM_DUST = ITEMS.registerItem("uranium_dust", Item::new);
-	public static final DeferredItem<Item> RAW_URANIUM = ITEMS.registerItem("raw_uranium", Item::new);
-	public static final DeferredItem<Item> URANIUM_INGOT = ITEMS.registerItem("uranium_ingot", Item::new);
+	public static final DeferredItem<Item> IRON_DUST = manifestItem("iron_dust");
+	public static final DeferredItem<Item> COPPER_DUST = manifestItem("copper_dust");
+	public static final DeferredItem<Item> GOLD_DUST = manifestItem("gold_dust");
+	public static final DeferredItem<Item> COAL_DUST = manifestItem("coal_dust");
+	public static final DeferredItem<Item> DIAMOND_DUST = manifestItem("diamond_dust");
+	public static final DeferredItem<Item> EMERALD_DUST = manifestItem("emerald_dust");
+	public static final DeferredItem<Item> LAPIS_DUST = manifestItem("lapis_dust");
+	public static final DeferredItem<Item> TIN_DUST = manifestItem("tin_dust");
+	public static final DeferredItem<Item> RAW_TIN = manifestItem("raw_tin");
+	public static final DeferredItem<Item> TIN_INGOT = manifestItem("tin_ingot");
+	public static final DeferredItem<Item> SILVER_DUST = manifestItem("silver_dust");
+	public static final DeferredItem<Item> RAW_SILVER = manifestItem("raw_silver");
+	public static final DeferredItem<Item> SILVER_INGOT = manifestItem("silver_ingot");
+	public static final DeferredItem<Item> NICKEL_DUST = manifestItem("nickel_dust");
+	public static final DeferredItem<Item> RAW_NICKEL = manifestItem("raw_nickel");
+	public static final DeferredItem<Item> NICKEL_INGOT = manifestItem("nickel_ingot");
+	public static final DeferredItem<Item> SULFUR_DUST = manifestItem("sulfur_dust");
+	public static final DeferredItem<Item> RAW_SULFUR = manifestItem("raw_sulfur");
+	public static final DeferredItem<Item> URANIUM_DUST = manifestItem("uranium_dust");
+	public static final DeferredItem<Item> RAW_URANIUM = manifestItem("raw_uranium");
+	public static final DeferredItem<Item> URANIUM_INGOT = manifestItem("uranium_ingot");
 	public static final DeferredItem<NetworkAnalyzerItem> NETWORK_ANALYZER =
 			ITEMS.registerItem("network_analyzer", NetworkAnalyzerItem::new, p -> p.stacksTo(1));
 	public static final DeferredItem<dev.alaindustrial.item.tool.WrenchItem> WRENCH =
@@ -202,7 +200,7 @@ public final class ModItemsNeoForge {
 	// Energy Pack (MOD-065): worn LV buffer + the inert battery cell it is crafted from. Equipment
 	// properties (EQUIPPABLE + token armor attribute, no ArmorMaterial) come from the common helper,
 	// so both loaders build the same item; NeoForge supplies the id from the deferred key itself.
-	public static final DeferredItem<Item> BATTERY = ITEMS.registerItem("battery", Item::new);
+	public static final DeferredItem<Item> BATTERY = manifestItem("battery");
 	public static final DeferredItem<EnergyPackItem> ENERGY_PACK =
 			ITEMS.registerItem("energy_pack", EnergyPackItem::new, EnergyPackItem::equipmentProperties);
 	// Electric Drill (MOD-079): first powered hand tool — a diamond-tier pickaxe that runs on EU. The
@@ -260,14 +258,14 @@ public final class ModItemsNeoForge {
 
 	// Metal plates (MOD-078): plain ingredient items (ingot form). Made by the Forge Hammer (by hand)
 	// or the Compressor; recycled back to dust by the Macerator (except tempered_iron — no dust).
-	public static final DeferredItem<Item> COPPER_PLATE = ITEMS.registerItem("copper_plate", Item::new);
-	public static final DeferredItem<Item> GOLD_PLATE = ITEMS.registerItem("gold_plate", Item::new);
-	public static final DeferredItem<Item> IRON_PLATE = ITEMS.registerItem("iron_plate", Item::new);
-	public static final DeferredItem<Item> TIN_PLATE = ITEMS.registerItem("tin_plate", Item::new);
-	public static final DeferredItem<Item> SILVER_PLATE = ITEMS.registerItem("silver_plate", Item::new);
-	public static final DeferredItem<Item> NICKEL_PLATE = ITEMS.registerItem("nickel_plate", Item::new);
-	public static final DeferredItem<Item> URANIUM_PLATE = ITEMS.registerItem("uranium_plate", Item::new);
-	public static final DeferredItem<Item> TEMPERED_IRON_PLATE = ITEMS.registerItem("tempered_iron_plate", Item::new);
+	public static final DeferredItem<Item> COPPER_PLATE = manifestItem("copper_plate");
+	public static final DeferredItem<Item> GOLD_PLATE = manifestItem("gold_plate");
+	public static final DeferredItem<Item> IRON_PLATE = manifestItem("iron_plate");
+	public static final DeferredItem<Item> TIN_PLATE = manifestItem("tin_plate");
+	public static final DeferredItem<Item> SILVER_PLATE = manifestItem("silver_plate");
+	public static final DeferredItem<Item> NICKEL_PLATE = manifestItem("nickel_plate");
+	public static final DeferredItem<Item> URANIUM_PLATE = manifestItem("uranium_plate");
+	public static final DeferredItem<Item> TEMPERED_IRON_PLATE = manifestItem("tempered_iron_plate");
 
 	// Forge Hammer (MOD-078): pre-machine hand tool — ingot + hammer on the grid → plate; the hammer
 	// stays and loses 1 durability per plate via the NeoForge craft-remainder hook (HammerItemNeoForge).
@@ -331,7 +329,7 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<BlockItem> GARDEN_DRONE_STATION_ITEM =
 			ITEMS.registerSimpleBlockItem("garden_drone_station", ModBlocksNeoForge.GARDEN_DRONE_STATION);
 	public static final DeferredItem<Item> GARDEN_DRONE =
-			ITEMS.registerItem("garden_drone", Item::new);
+			manifestItem("garden_drone");
 	public static final DeferredItem<FluidTankBlockItem> FLUID_TANK_ITEM =
 			ITEMS.registerItem("fluid_tank", ItemBuildersNeoForge.fluidTankBlockItem(ModBlocksNeoForge.FLUID_TANK));
 	public static final DeferredItem<BlockItem> WATER_MILL_ITEM =
@@ -415,6 +413,21 @@ public final class ModItemsNeoForge {
 					ItemBuildersNeoForge.blockItemProperties());
 
 	private ModItemsNeoForge() {
+	}
+
+	/**
+	 * Declares an item whose CONSTRUCTION is shared with Fabric through
+	 * {@link ContentManifest#ITEM_FACTORIES} (MOD-306) — plain components, hint items, mode chips,
+	 * wearing parts. Before this, each of them existed twice: here and in the Fabric {@code ModItems},
+	 * same id and same comment, two registration syntaxes around an identical construction.
+	 *
+	 * <p>The {@code DeferredItem} field stays — it is this loader's handle, and the lazy timing is exactly
+	 * why the manifest stores a FACTORY rather than a finished item: NeoForge only builds the item when
+	 * its {@code RegisterEvent} fires, with {@code Properties} whose id the deferred key already supplied
+	 * (so, unlike Fabric, no {@code setId} here).
+	 */
+	private static DeferredItem<Item> manifestItem(String id) {
+		return ITEMS.registerItem(id, p -> ContentManifest.itemFactory(id).apply(p));
 	}
 
 	/**

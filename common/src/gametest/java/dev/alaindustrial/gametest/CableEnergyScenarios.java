@@ -7,6 +7,7 @@ import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
+import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.EnergyShare;
 import dev.alaindustrial.core.energy.EnergyTier;
@@ -41,32 +42,29 @@ public final class CableEnergyScenarios {
 
 	// ── scenario 2: generator → cable → macerator (network transport) ─────────────────────────────
 
-	private static void buildLine(GameTestHelper helper) {
-		helper.setBlock(LINE_GEN, ModContent.GENERATOR.get());
-		helper.setBlock(LINE_CABLE, ModContent.COPPER_CABLE.get());
-		helper.setBlock(LINE_MAC, ModContent.MACERATOR.get());
-		if (be(helper, LINE_GEN) instanceof GeneratorBlockEntity gen) {
-			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
-		}
-		if (be(helper, LINE_MAC) instanceof MaceratorBlockEntity mac) {
-			mac.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON, 8));
-		}
-	}
-
 	/**
 	 * Generator delivers EU down a copper cable to a macerator, and an energy network forms.
 	 * Mirrors: NetworkGameTest.it001_delivery
+	 *
+	 * <p>Written with the {@link EnergyLine} builder (MOD-309), which also buys the assertion this
+	 * test was missing: it used to check only that the macerator ended up with EU, which stays green
+	 * even when the consumer is charged off-network with every cable left at 0 — the MOD-070 failure
+	 * mode. {@code assertFlowedThroughCable()} samples the wire itself on every driven tick.
 	 */
 	public static void generatorDeliversDownCable(GameTestHelper helper) {
-		buildLine(helper);
-		driveLine(helper, 120);
-		EnergyNetwork net = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(LINE_CABLE));
+		EnergyLine line = EnergyLine.in(helper)
+				.fueledGenerator()
+				.cables(1)
+				.consumer(ModContent.MACERATOR.get(), new ItemStack(Items.RAW_IRON, 8))
+				.build()
+				.drive(120)
+				.assertConsumerCharged()
+				.assertFlowedThroughCable();
+
+		EnergyNetwork net = NetworkManager.networkAt(helper.getLevel(),
+				helper.absolutePos(line.cablePos(0)));
 		if (net == null) {
 			helper.fail("no energy network formed on the cable");
-		}
-		long mac = be(helper, LINE_MAC) instanceof MaceratorBlockEntity m ? m.getEnergyStorage().getAmount() : -1;
-		if (mac <= 0) {
-			helper.fail("macerator received no EU over the cable");
 		}
 		helper.succeed();
 	}
@@ -785,29 +783,39 @@ public final class CableEnergyScenarios {
 	 * Mirrors: NetworkGameTest.it001Neg01_breakStopsDelivery + it001Fun02_rejoinResumesFlow
 	 */
 	public static void networkSplitRejoinResumesFlow(GameTestHelper helper) {
-		buildLine(helper);
-		driveLine(helper, 60);
+		// Built through EnergyLine so that BOTH halves prove the wire carried the energy, not just
+		// that the macerator ended up with some. Note the rebaseline() before the rejoin phase: the
+		// peak-buffer observation is cumulative, so without it an assertFlowedThroughCable() after the
+		// rejoin would pass on data collected BEFORE the cable was ever broken — a vacuous assertion
+		// that reads like a strong one.
+		EnergyLine line = EnergyLine.in(helper)
+				.fueledGenerator()
+				.cables(1)
+				.consumer(ModContent.MACERATOR.get(), new ItemStack(Items.RAW_IRON, 8))
+				.build()
+				.drive(60)
+				.assertConsumerCharged()
+				.assertFlowedThroughCable();
+
 		// Break the cable: the macerator must stop receiving.
-		helper.setBlock(LINE_CABLE, Blocks.AIR);
-		if (be(helper, LINE_MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
+		BlockPos cable = line.cablePos(0);
+		helper.setBlock(cable, Blocks.AIR);
+		if (be(helper, line.consumerPos()) instanceof MachineBlockEntity mac) {
 			mac.getEnergyStorage().amount = 0;
 		}
-		driveLine(helper, 40);
-		long afterBreak = be(helper, LINE_MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity m
+		line.drive(40);
+		long afterBreak = be(helper, line.consumerPos()) instanceof MachineBlockEntity m
 				? m.getEnergyStorage().getAmount() : -1;
 		if (afterBreak != 0) {
 			helper.fail("macerator kept receiving EU after the cable was removed: " + afterBreak);
 			return;
 		}
-		// Rejoin: replacing the cable must resume flow.
-		helper.setBlock(LINE_CABLE, ModContent.COPPER_CABLE.get());
-		driveLine(helper, 80);
-		long afterRejoin = be(helper, LINE_MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity m
-				? m.getEnergyStorage().getAmount() : -1;
-		if (afterRejoin <= 0) {
-			helper.fail("flow did not resume after the cable was replaced: " + afterRejoin);
-			return;
-		}
+		// Rejoin: replacing the cable must resume flow — and it must resume THROUGH the new cable.
+		helper.setBlock(cable, ModContent.COPPER_CABLE.get());
+		line.rebaseline()
+				.drive(80)
+				.assertConsumerCharged()
+				.assertFlowedThroughCable();
 		helper.succeed();
 	}
 

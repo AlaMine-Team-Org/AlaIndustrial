@@ -6,7 +6,7 @@ import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.item.PipeFaceMode;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
@@ -32,7 +32,7 @@ public final class FluidNetwork {
 	}
 
 	private final ServerLevel level;
-	private final Set<BlockPos> pipes = new HashSet<>();
+	private final Set<BlockPos> pipes = new LinkedHashSet<>();
 	private final List<Endpoint> sources = new ArrayList<>();
 	private final List<Endpoint> sinks = new ArrayList<>();
 	private boolean endpointsDirty = true;

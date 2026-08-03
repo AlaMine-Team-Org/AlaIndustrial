@@ -2,7 +2,6 @@ package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.item.fluid.FilledCapsuleItem;
 import dev.alaindustrial.item.fluid.FluidTankBlockItem;
-import dev.alaindustrial.item.misc.HintItem;
 import dev.alaindustrial.item.misc.ItemPipeBlockItem;
 import dev.alaindustrial.item.material.ModArmorMaterials;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
@@ -42,13 +41,9 @@ final class ItemBuildersNeoForge {
 	private ItemBuildersNeoForge() {
 	}
 
-	// --- Plain items ---
-
-	/** Factory for a plain item with two gray hint lines (keys {@code item.alaindustrial.<path>.hint}/{@code .hint2}). */
-	static Function<Item.Properties, Item> hint(String path) {
-		return p -> new HintItem(p,
-				"item.alaindustrial." + path + ".hint", "item.alaindustrial." + path + ".hint2");
-	}
+	// NB: the plain-item / hint-item factories that used to live here moved into the shared
+	// ContentManifest.ITEM_FACTORIES (MOD-306) — they were identical to the Fabric ones, so keeping a
+	// NeoForge copy only created a place for the two to drift.
 
 	// --- Tempered-iron armor (MOD-056) ---
 

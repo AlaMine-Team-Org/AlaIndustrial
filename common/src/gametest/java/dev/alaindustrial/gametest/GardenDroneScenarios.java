@@ -281,6 +281,82 @@ public final class GardenDroneScenarios {
 		});
 	}
 
+	/**
+	 * Loads the hoe slot with a hoe that is {@code pointsLeft} uses away from breaking.
+	 *
+	 * <p>Derived from the item's own {@code maxDamage} rather than a literal, so the pair below keeps
+	 * testing the boundary if the hoe material ever changes.
+	 */
+	private static ItemStack wornHoe(GardenDroneStationBlockEntity station, int pointsLeft) {
+		ItemStack hoe = new ItemStack(Items.IRON_HOE);
+		hoe.setDamageValue(hoe.getMaxDamage() - pointsLeft);
+		station.setItem(GardenDroneStationBlockEntity.HOE_SLOT, hoe);
+		return hoe;
+	}
+
+	/**
+	 * TC-DRONE-001-FUN08 — the hoe's last point is actually spent: the station tills, the hoe breaks and
+	 * the slot ends up <b>empty</b>.
+	 *
+	 * <p>This is the MOD-319 regression. The guard used to refuse the very use that would have broken the
+	 * tool, so the hoe froze one point short of breaking and sat in the slot forever — and because
+	 * {@code canPlaceItem} needs an empty slot, that killed hopper-fed hoe replacement outright. The
+	 * assertion is on the <b>slot</b>, not on the damage value: "wore down" was never the contract, "frees
+	 * the slot for the next hoe" is.
+	 */
+	public static void fun08HoeBreaksOnItsLastUse(GameTestHelper helper) {
+		withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = place(helper);
+			charge(station);
+			wornHoe(station, 1); // one point left: this till must be its last
+			helper.setBlock(PLOT, Blocks.DIRT);
+			helper.setBlock(PLOT.above(), Blocks.AIR);
+
+			AlaGameTestHelper.drive(station, helper, TICKS_PER_JOB);
+
+			BlockState tilled = helper.getLevel().getBlockState(helper.absolutePos(PLOT));
+			if (!tilled.is(Blocks.FARMLAND)) {
+				helper.fail("a hoe with one point left refused to till; found " + tilled.getBlock());
+			}
+			ItemStack left = station.getItem(GardenDroneStationBlockEntity.HOE_SLOT);
+			if (!left.isEmpty()) {
+				helper.fail("the hoe survived its last use with damage " + left.getDamageValue()
+						+ "/" + left.getMaxDamage() + "; the slot must be empty so a hopper can refill it");
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * TC-DRONE-001-FUN09 — the other half of the boundary: two points left means the hoe <b>survives</b>
+	 * with exactly one left.
+	 *
+	 * <p>Without this, FUN08 alone would stay green if the threshold were over-corrected the other way and
+	 * the station started destroying hoes one use early. A one-sided boundary test cannot tell "breaks at
+	 * the right moment" from "breaks too eagerly".
+	 */
+	public static void fun09HoeSurvivesUntilItsLastUse(GameTestHelper helper) {
+		withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = place(helper);
+			charge(station);
+			ItemStack hoe = wornHoe(station, 2); // two points left: this till must NOT be the last
+			int maxDamage = hoe.getMaxDamage();
+			helper.setBlock(PLOT, Blocks.DIRT);
+			helper.setBlock(PLOT.above(), Blocks.AIR);
+
+			AlaGameTestHelper.drive(station, helper, TICKS_PER_JOB);
+
+			ItemStack left = station.getItem(GardenDroneStationBlockEntity.HOE_SLOT);
+			if (left.isEmpty()) {
+				helper.fail("the hoe broke one use early — two points were left before this till");
+			} else if (left.getDamageValue() != maxDamage - 1) {
+				helper.fail("tilling moved the hoe to damage " + left.getDamageValue()
+						+ ", expected exactly " + (maxDamage - 1));
+			}
+			helper.succeed();
+		});
+	}
+
 	/** Whether any output slot holds the given item. */
 	private static boolean stationHolds(GardenDroneStationBlockEntity station, net.minecraft.world.item.Item item) {
 		for (int i = 0; i < GardenDroneStationBlockEntity.OUTPUT_SLOT_COUNT; i++) {

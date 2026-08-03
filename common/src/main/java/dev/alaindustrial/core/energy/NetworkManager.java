@@ -3,9 +3,9 @@ package dev.alaindustrial.core.energy;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,8 +37,8 @@ public final class NetworkManager {
 
 	/** Per-level state: pos→network index, the live networks, a round-robin cursor, and telemetry. */
 	private static final class LevelState {
-		final Map<BlockPos, EnergyNetwork> byPos = new HashMap<>();
-		final Set<EnergyNetwork> networks = new HashSet<>();
+		final Map<BlockPos, EnergyNetwork> byPos = new LinkedHashMap<>();
+		final Set<EnergyNetwork> networks = new LinkedHashSet<>();
 		int tickCursor;
 		// --- telemetry (R-13): last server tick + cumulative since load ---
 		int lastTicked;
@@ -152,7 +152,7 @@ public final class NetworkManager {
 	 */
 	private static void rebuildComponents(LevelState st, EnergyNetwork old) {
 		ServerLevel level = old.level();
-		Set<BlockPos> remaining = new HashSet<>(old.cables());
+		Set<BlockPos> remaining = new LinkedHashSet<>(old.cables());
 		st.networks.remove(old);
 
 		List<Set<BlockPos>> comps = GraphComponents.components(remaining, NetworkManager::cableNeighbours);

@@ -10,8 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.MenuProvider;
@@ -22,6 +28,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -357,7 +364,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		if (!level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState())) {
 			return false;
 		}
-		wearHoe();
+		wearHoe(level);
 		return true;
 	}
 
@@ -395,42 +402,77 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		return true;
 	}
 
-	/**
-	 * Turns ground into farmland and wears the hoe by one point, breaking it when it runs out.
-	 *
-	 * <p>The damage is applied by hand rather than through {@code ItemStack.hurtAndBreak}: every
-	 * overload of that method wants a {@code LivingEntity} to notify, and this machine has no player
-	 * behind it. Counting the damage here keeps the wear identical to a hand-held hoe without inventing
-	 * a fake entity to satisfy a signature.
-	 */
+	/** Turns ground into farmland and wears the hoe by one point, breaking it when it runs out. */
 	private boolean till(ServerLevel level, BlockPos target) {
 		if (!level.setBlockAndUpdate(target, Blocks.FARMLAND.defaultBlockState())) {
 			return false;
 		}
-		wearHoe();
+		wearHoe(level);
 		return true;
 	}
 
-	/** Spends one point of the loaded hoe's durability, emptying the slot when it is used up. */
-	private void wearHoe() {
+	/**
+	 * Spends one point of the loaded hoe's durability, emptying the slot when it is used up.
+	 *
+	 * <p>The wear goes through vanilla's own {@code hurtAndBreak} rather than a hand-rolled counter.
+	 * The overload taking a {@code ServerPlayer} accepts {@code null}, so a machine can use it without
+	 * inventing a fake entity — and that matters for more than tidiness: vanilla routes the damage
+	 * through {@code EnchantmentHelper.processDurabilityChange}, so a counter of its own would silently
+	 * ignore Unbreaking and burn an enchanted hoe about four times too fast. It also owns the break
+	 * threshold, which is what a duplicated one got wrong before (MOD-319): the guard refused the last
+	 * use the consumer needed to break the tool, so the hoe froze one point short of breaking and
+	 * blocked the slot against hopper refills forever.
+	 */
+	private void wearHoe(ServerLevel level) {
 		ItemStack hoe = items.get(HOE_SLOT);
 		if (hoe.isEmpty() || !hoe.isDamageableItem()) {
 			return;
 		}
-		int damage = hoe.getDamageValue() + 1;
-		if (damage >= hoe.getMaxDamage()) {
-			items.set(HOE_SLOT, ItemStack.EMPTY); // worn out — the player refits it
-		} else {
-			hoe.setDamageValue(damage);
+		// Snapshot before the hit: on the last point hurtAndBreak empties the stack, and the effect needs
+		// the hoe's own components (a modded hoe may carry its own break sound) rather than a bare Item.
+		ItemStack broken = hoe.copy();
+		hoe.hurtAndBreak(1, level, null, item -> playBreakEffect(level, broken));
+		if (hoe.isEmpty()) {
+			// hurtAndBreak shrinks the stack to a count of 0; normalise so the slot reads as truly empty.
+			items.set(HOE_SLOT, ItemStack.EMPTY);
 		}
 		setChanged();
 	}
 
-	/** Whether a hoe with life left is loaded; tilling refuses to run without one. */
+	/**
+	 * Reproduces vanilla's tool-break feedback at the station.
+	 *
+	 * <p>Vanilla's own effect lives in {@code LivingEntity#breakItem} and reaches the client through an
+	 * entity event, so a block entity gets nothing for free. The parameters are copied from it: the
+	 * sound comes off the stack ({@code BREAK_SOUND} is per-item and nullable, so a modded hoe keeps its
+	 * own) at volume 0.8 with a jittered pitch, followed by five item particles. Only the particle
+	 * velocities differ — vanilla's are rotated by the entity's facing, which a block has none of.
+	 */
+	private void playBreakEffect(ServerLevel level, ItemStack broken) {
+		double x = worldPosition.getX() + 0.5;
+		double y = worldPosition.getY() + 0.5;
+		double z = worldPosition.getZ() + 0.5;
+		Holder<SoundEvent> sound = broken.get(DataComponents.BREAK_SOUND);
+		if (sound != null) {
+			RandomSource random = level.getRandom();
+			level.playSound(null, x, y, z, sound, SoundSource.BLOCKS,
+					0.8F, 0.8F + random.nextFloat() * 0.4F);
+		}
+		level.sendParticles(
+				new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(broken)),
+				x, y, z, 5, 0.1, 0.1, 0.1, 0.05);
+	}
+
+	/**
+	 * Whether a hoe with life left is loaded; tilling and harvesting refuse to run without one.
+	 *
+	 * <p>Stated in vanilla's terms ({@link ItemStack#isBroken()}) instead of arithmetic on the damage
+	 * value: a second copy of the break threshold is exactly what drifted out of step with
+	 * {@link #wearHoe(ServerLevel)} in MOD-319.
+	 */
 	private boolean hasUsableHoe() {
 		ItemStack hoe = items.get(HOE_SLOT);
-		return !hoe.isEmpty()
-				&& (!hoe.isDamageableItem() || hoe.getDamageValue() < hoe.getMaxDamage() - 1);
+		return !hoe.isEmpty() && !hoe.isBroken();
 	}
 
 	// ---------------------------------------------------------------- output insertion
@@ -615,7 +657,9 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 			// One drone at a time; without the empty-slot guard a hopper would stuff a whole stack in.
 			case DRONE_SLOT -> items.get(DRONE_SLOT).isEmpty()
 					&& stack.is(dev.alaindustrial.registry.ModContent.GARDEN_DRONE.get());
-			case HOE_SLOT -> items.get(HOE_SLOT).isEmpty() && stack.is(ItemTags.HOES);
+			// An already-broken hoe (damage == maxDamage, reachable via /give or another mod) would pass
+			// the tag check, fail hasUsableHoe forever and re-block the slot the MOD-319 fix just freed.
+			case HOE_SLOT -> items.get(HOE_SLOT).isEmpty() && stack.is(ItemTags.HOES) && !stack.isBroken();
 			// Output slots are filled by the station alone — no manual or automated insertion.
 			default -> false;
 		};

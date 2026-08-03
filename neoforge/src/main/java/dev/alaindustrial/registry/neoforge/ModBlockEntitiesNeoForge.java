@@ -34,10 +34,9 @@ import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
+import dev.alaindustrial.registry.ContentManifest;
 import dev.alaindustrial.registry.ModContent;
-import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -70,81 +69,76 @@ public final class ModBlockEntitiesNeoForge {
 			DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Industrialization.MOD_ID);
 
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeneratorBlockEntity>> GENERATOR =
-			register("generator", GeneratorBlockEntity::new, ModBlocksNeoForge.GENERATOR);
+			register(ContentManifest.blockEntity("generator", GeneratorBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>> SOLAR_PANEL =
-			register("solar_panel", SolarPanelBlockEntity::new, ModBlocksNeoForge.SOLAR_PANEL);
+			register(ContentManifest.blockEntity("solar_panel", SolarPanelBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MoonlitSolarPanelBlockEntity>> MOONLIT_SOLAR_PANEL =
-			register("moonlit_solar_panel", MoonlitSolarPanelBlockEntity::new, ModBlocksNeoForge.MOONLIT_SOLAR_PANEL);
+			register(ContentManifest.blockEntity("moonlit_solar_panel", MoonlitSolarPanelBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DaylightSolarPanelBlockEntity>> DAYLIGHT_SOLAR_PANEL =
-			register("daylight_solar_panel", DaylightSolarPanelBlockEntity::new, ModBlocksNeoForge.DAYLIGHT_SOLAR_PANEL);
+			register(ContentManifest.blockEntity("daylight_solar_panel", DaylightSolarPanelBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CableBlockEntity>> COPPER_CABLE =
-			register("copper_cable", CableBlockEntity::new,
-					ModBlocksNeoForge.COPPER_CABLE, ModBlocksNeoForge.TIN_CABLE, ModBlocksNeoForge.GOLD_CABLE,
-					ModBlocksNeoForge.INSULATED_COPPER_CABLE, ModBlocksNeoForge.INSULATED_TIN_CABLE,
-					ModBlocksNeoForge.INSULATED_GOLD_CABLE);
+			register(ContentManifest.blockEntity("copper_cable", CableBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ItemPipeBlockEntity>> ITEM_PIPE =
-			register("item_pipe", ItemPipeBlockEntity::new, ModBlocksNeoForge.ITEM_PIPE);
+			register(ContentManifest.blockEntity("item_pipe", ItemPipeBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidPipeBlockEntity>> FLUID_PIPE =
-			register("fluid_pipe", FluidPipeBlockEntity::new, ModBlocksNeoForge.FLUID_PIPE);
+			register(ContentManifest.blockEntity("fluid_pipe", FluidPipeBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MaceratorBlockEntity>> MACERATOR =
-			register("macerator", MaceratorBlockEntity::new, ModBlocksNeoForge.MACERATOR);
+			register(ContentManifest.blockEntity("macerator", MaceratorBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BatteryBoxBlockEntity>> BATTERY_BOX =
-			register("battery_box", BatteryBoxBlockEntity::new, ModBlocksNeoForge.BATTERY_BOX);
+			register(ContentManifest.blockEntity("battery_box", BatteryBoxBlockEntity.class));
 
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TeleporterBlockEntity>> TELEPORTER =
-			register("teleporter", TeleporterBlockEntity::new, ModBlocksNeoForge.TELEPORTER);
+			register(ContentManifest.blockEntity("teleporter", TeleporterBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE =
-			register("electric_furnace", ElectricFurnaceBlockEntity::new, ModBlocksNeoForge.ELECTRIC_FURNACE);
+			register(ContentManifest.blockEntity("electric_furnace", ElectricFurnaceBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IronFurnaceBlockEntity>> IRON_FURNACE =
-			register("iron_furnace", IronFurnaceBlockEntity::new, ModBlocksNeoForge.IRON_FURNACE);
+			register(ContentManifest.blockEntity("iron_furnace", IronFurnaceBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ExtractorBlockEntity>> EXTRACTOR =
-			register("extractor", ExtractorBlockEntity::new, ModBlocksNeoForge.EXTRACTOR);
+			register(ContentManifest.blockEntity("extractor", ExtractorBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CompressorBlockEntity>> COMPRESSOR =
-			register("compressor", CompressorBlockEntity::new, ModBlocksNeoForge.COMPRESSOR);
+			register(ContentManifest.blockEntity("compressor", CompressorBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SawmillBlockEntity>> SAWMILL =
-			register("sawmill", SawmillBlockEntity::new, ModBlocksNeoForge.SAWMILL);
+			register(ContentManifest.blockEntity("sawmill", SawmillBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AssemblerBlockEntity>> ASSEMBLER =
-			register("assembler", AssemblerBlockEntity::new, ModBlocksNeoForge.ASSEMBLER);
+			register(ContentManifest.blockEntity("assembler", AssemblerBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PolymerizerBlockEntity>> POLYMERIZER =
-			register("polymerizer", PolymerizerBlockEntity::new, ModBlocksNeoForge.POLYMERIZER);
+			register(ContentManifest.blockEntity("polymerizer", PolymerizerBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VulcanizerBlockEntity>> VULCANIZER =
-			register("vulcanizer", VulcanizerBlockEntity::new, ModBlocksNeoForge.VULCANIZER);
+			register(ContentManifest.blockEntity("vulcanizer", VulcanizerBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GalvanicBathBlockEntity>>
-			GALVANIC_BATH = register("galvanic_bath", GalvanicBathBlockEntity::new,
-					ModBlocksNeoForge.GALVANIC_BATH);
+			GALVANIC_BATH = register(ContentManifest.blockEntity("galvanic_bath", GalvanicBathBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectricHeaterBlockEntity>> ELECTRIC_HEATER =
-			register("electric_heater", ElectricHeaterBlockEntity::new, ModBlocksNeoForge.ELECTRIC_HEATER);
+			register(ContentManifest.blockEntity("electric_heater", ElectricHeaterBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IncubatorBlockEntity>> INCUBATOR =
-			register("incubator", IncubatorBlockEntity::new, ModBlocksNeoForge.INCUBATOR);
+			register(ContentManifest.blockEntity("incubator", IncubatorBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeothermalGeneratorBlockEntity>> GEOTHERMAL_GENERATOR =
-			register("geothermal_generator", GeothermalGeneratorBlockEntity::new, ModBlocksNeoForge.GEOTHERMAL_GENERATOR);
+			register(ContentManifest.blockEntity("geothermal_generator", GeothermalGeneratorBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PumpBlockEntity>> PUMP =
-			register("pump", PumpBlockEntity::new, ModBlocksNeoForge.PUMP);
+			register(ContentManifest.blockEntity("pump", PumpBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GardenDroneStationBlockEntity>>
-			GARDEN_DRONE_STATION = register("garden_drone_station", GardenDroneStationBlockEntity::new,
-					ModBlocksNeoForge.GARDEN_DRONE_STATION);
+			GARDEN_DRONE_STATION = register(ContentManifest.blockEntity("garden_drone_station", GardenDroneStationBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidTankBlockEntity>> FLUID_TANK =
-			register("fluid_tank", FluidTankBlockEntity::new, ModBlocksNeoForge.FLUID_TANK);
+			register(ContentManifest.blockEntity("fluid_tank", FluidTankBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WaterMillBlockEntity>> WATER_MILL =
-			register("water_mill", WaterMillBlockEntity::new, ModBlocksNeoForge.WATER_MILL);
+			register(ContentManifest.blockEntity("water_mill", WaterMillBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WindMillBlockEntity>> WIND_MILL =
-			register("wind_mill", WindMillBlockEntity::new, ModBlocksNeoForge.WIND_MILL);
+			register(ContentManifest.blockEntity("wind_mill", WindMillBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<HighAltitudeWindMillBlockEntity>> HIGH_ALTITUDE_WIND_MILL =
-			register("high_altitude_wind_mill", HighAltitudeWindMillBlockEntity::new, ModBlocksNeoForge.HIGH_ALTITUDE_WIND_MILL);
+			register(ContentManifest.blockEntity("high_altitude_wind_mill", HighAltitudeWindMillBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StormWindMillBlockEntity>> STORM_WIND_MILL =
-			register("storm_wind_mill", StormWindMillBlockEntity::new, ModBlocksNeoForge.STORM_WIND_MILL);
+			register(ContentManifest.blockEntity("storm_wind_mill", StormWindMillBlockEntity.class));
 	// Pure container (no EnergyPort) — no capability binding in IndustrializationNeoForge#registerCapabilities.
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IronChestBlockEntity>> IRON_CHEST =
-			register("iron_chest", IronChestBlockEntity::new, ModBlocksNeoForge.IRON_CHEST);
+			register(ContentManifest.blockEntity("iron_chest", IronChestBlockEntity.class));
 	// Pure container (no EnergyPort) — no capability binding. MOD-287 modular warehouse.
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StorageModuleBlockEntity>> STORAGE_MODULE =
-			register("storage_module", StorageModuleBlockEntity::new, ModBlocksNeoForge.STORAGE_MODULE);
+			register(ContentManifest.blockEntity("storage_module", StorageModuleBlockEntity.class));
 	// Pure container (no EnergyPort) — no capability binding. Silver chest = tier above the iron chest.
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SilverChestBlockEntity>> SILVER_CHEST =
-			register("silver_chest", SilverChestBlockEntity::new, ModBlocksNeoForge.SILVER_CHEST);
+			register(ContentManifest.blockEntity("silver_chest", SilverChestBlockEntity.class));
 	// Pure container (no EnergyPort) — no capability binding. Gold chest = tier above the silver chest.
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GoldChestBlockEntity>> GOLD_CHEST =
-			register("gold_chest", GoldChestBlockEntity::new, ModBlocksNeoForge.GOLD_CHEST);
+			register(ContentManifest.blockEntity("gold_chest", GoldChestBlockEntity.class));
 
 	private ModBlockEntitiesNeoForge() {
 	}
@@ -197,29 +191,20 @@ public final class ModBlockEntitiesNeoForge {
 	}
 
 	/**
-	 * Registers one machine {@code BlockEntityType} against its block(s), taking the blocks as
-	 * <b>deferred handles</b>.
+	 * Registers the {@code BlockEntityType} described by the shared manifest (MOD-307): id, factory and
+	 * valid-block set all come from {@link ContentManifest#BLOCK_ENTITIES}. Before this, the block set was
+	 * spelled out here AND in the Fabric {@code ModBlockEntities}, held together only by a Python parity
+	 * script — the MOD-191 defect, where a block missing from one loader's set is not a type error but a
+	 * silently absent block entity on that loader.
 	 *
-	 * <p><b>Timing (the chicken-and-egg guard).</b> On NeoForge a block is a {@code DeferredBlock} that only
-	 * resolves after its {@code RegisterEvent} fires — later than when this method is <i>called</i> (static
-	 * init of this class, which runs while the {@code @Mod} constructor touches it). Passing resolved
-	 * {@code Block}s here would force the caller to {@code deferredBlock.get()} too early and crash. So this
-	 * takes {@code Supplier<Block>} handles (a {@code DeferredBlock} is one) and resolves them <b>inside</b>
-	 * the deferred {@code BlockEntityType} supplier — which the register only invokes when the block-entity
-	 * {@code RegisterEvent} fires, by which point every block is resolved. Verified against
-	 * neoforge/minecraft 26.2.0.8-beta: {@code new BlockEntityType<>(factory, boolean, Block...)} stores the
-	 * blocks in a {@code Set} and only reads them at runtime — deferring construction to the event is both
-	 * necessary and sufficient.
+	 * <p><b>Timing (the chicken-and-egg guard, unchanged).</b> On NeoForge a block only resolves after its
+	 * {@code RegisterEvent} — later than this method is <i>called</i> (static init of this class). So the
+	 * manifest ids are resolved <b>inside</b> the deferred type supplier, which the register invokes only
+	 * when the block-entity {@code RegisterEvent} fires, by which point every block is registered. That is
+	 * the same guarantee the previous {@code Supplier<Block>} handles relied on.
 	 */
-	@SafeVarargs
 	public static <T extends BlockEntity> DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> register(
-			String name, BlockEntityType.BlockEntitySupplier<T> factory, Supplier<? extends Block>... validBlocks) {
-		return BLOCK_ENTITIES.register(name, () -> {
-			Block[] blocks = new Block[validBlocks.length];
-			for (int i = 0; i < validBlocks.length; i++) {
-				blocks[i] = validBlocks[i].get();
-			}
-			return new BlockEntityType<>(factory, false, blocks);
-		});
+			ContentManifest.BlockEntityDef<T> def) {
+		return BLOCK_ENTITIES.register(def.id(), () -> new BlockEntityType<>(def.factory(), def.blockSet()));
 	}
 }

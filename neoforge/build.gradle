@@ -59,9 +59,19 @@ neoForge {
     mods {
         "${mod_id}" {
             sourceSet sourceSets.main
-            // MOD-242: dev runs (client/server/gameTests) load the gametest classes as part of the
-            // mod, so the reflective NeoForgeGameTestBootstrap lookup in IndustrializationNeoForge
-            // finds them there — while `jar` still packs only `main`, keeping them out of the release.
+        }
+        // MOD-322: the gametest source set is its OWN mod, mirroring Fabric's `alaindustrial-gametest`.
+        // While it was a second sourceSet of `${mod_id}`, both roots collapsed into one union file
+        // system per mod, so a test fixture at a path that also exists in common/src/main/resources
+        // SHADOWED the real file instead of merging with it (there is no datapack merge inside one
+        // mod). That silently replaced our own entries in `#c:ingots/tin` / `#c:ores/tin` and left
+        // ForeignMaterialScenarios' cross-mod tag test green while it verified nothing. Two mods =
+        // two packs = vanilla tag merging works again. See src/gametest/resources/META-INF/neoforge.mods.toml.
+        //
+        // The gametest CLASSES stay reachable exactly as before (same dev classpath), so the
+        // reflective NeoForgeGameTestBootstrap lookup in IndustrializationNeoForge still resolves and
+        // still registers on the `${mod_id}` mod bus. `jar` packs only `main`, so nothing here ships.
+        "${mod_id}_gametest" {
             sourceSet sourceSets.gametest
         }
     }

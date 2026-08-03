@@ -1,5 +1,43 @@
 package dev.alaindustrial.registry;
 
+import dev.alaindustrial.Config;
+import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.entity.AssemblerBlockEntity;
+import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
+import dev.alaindustrial.block.entity.CableBlockEntity;
+import dev.alaindustrial.block.entity.CompressorBlockEntity;
+import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
+import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
+import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
+import dev.alaindustrial.block.entity.ExtractorBlockEntity;
+import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
+import dev.alaindustrial.block.entity.FluidTankBlockEntity;
+import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
+import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
+import dev.alaindustrial.block.entity.GeneratorBlockEntity;
+import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
+import dev.alaindustrial.block.entity.GoldChestBlockEntity;
+import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
+import dev.alaindustrial.block.entity.IncubatorBlockEntity;
+import dev.alaindustrial.block.entity.IncubatorMode;
+import dev.alaindustrial.block.entity.IronChestBlockEntity;
+import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
+import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
+import dev.alaindustrial.block.entity.MaceratorBlockEntity;
+import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
+import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
+import dev.alaindustrial.block.entity.PumpBlockEntity;
+import dev.alaindustrial.block.entity.SawmillBlockEntity;
+import dev.alaindustrial.block.entity.SilverChestBlockEntity;
+import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
+import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
+import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
+import dev.alaindustrial.block.entity.TeleporterBlockEntity;
+import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
+import dev.alaindustrial.block.entity.WaterMillBlockEntity;
+import dev.alaindustrial.block.entity.WindMillBlockEntity;
+import dev.alaindustrial.item.misc.HintItem;
+import dev.alaindustrial.item.misc.MutationChipItem;
 import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.menu.CompressorMenu;
@@ -29,15 +67,27 @@ import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
 import dev.alaindustrial.menu.VulcanizerMenu;
 import dev.alaindustrial.menu.GalvanicBathMenu;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.IntSupplier;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -253,5 +303,228 @@ public final class ContentManifest {
 			throw new IllegalArgumentException("No BLOCK_PROPS entry for block id '" + id + "'");
 		}
 		return op;
+	}
+
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+	// Items (MOD-305 / MOD-306)
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+
+	/**
+	 * How an item is CONSTRUCTED, declared once for both loaders (MOD-306). Same shape as
+	 * {@link #BLOCK_PROPS}: keyed by registry path, looked up by the per-loader registry class.
+	 *
+	 * <p><b>What this fixes.</b> {@code ModItems} (Fabric) and {@code ModItemsNeoForge} were
+	 * line-for-line twins — same ids, same comments, two different registration syntaxes around an
+	 * identical construction. Adding an item meant two edits in two files, and nothing but a Python
+	 * validator running after the fact stopped the two from drifting apart.
+	 *
+	 * <p><b>Why a factory over {@code Item.Properties} and not a finished {@code Item}.</b> That is the
+	 * one shape both loaders can consume, because they disagree on <i>when</i> and <i>with what</i> the
+	 * properties appear:
+	 * <ul>
+	 *   <li>Fabric registers eagerly and must stamp the id itself — it calls the factory with
+	 *       {@code new Item.Properties().setId(key)};</li>
+	 *   <li>NeoForge registers lazily through {@code DeferredRegister.Items#registerItem}, which hands
+	 *       the factory a {@code Properties} whose id it has already derived from the deferred key.</li>
+	 * </ul>
+	 * Neither loader can hold a constructed {@code Item} at this point, but both can hold the function
+	 * that makes one. Everything else about the item — extra {@code Properties} steps such as
+	 * {@code durability(...)}, and the concrete {@code Item} subclass — lives inside the factory, so the
+	 * whole definition is one expression here.
+	 *
+	 * <p><b>Scope, deliberately.</b> Entries here are the items whose construction is genuinely
+	 * loader-neutral. Block items are NOT here: their factory needs the loader's own block handle
+	 * ({@code ModBlocks.X} is an eager {@code Block}, {@code ModBlocksNeoForge.X} a lazy holder), so a
+	 * shared factory would have to close over a loader type — exactly what {@code common} must not do.
+	 * The typed field per loader also stays: it is the handle 100+ call sites already use, and MOD-190
+	 * settled that trade-off (menus collapse fully, blocks/items keep their field, definition is shared).
+	 */
+	public static final Map<String, Function<Item.Properties, ? extends Item>> ITEM_FACTORIES =
+			buildItemFactories();
+
+	/** The construction function for item {@code id} (see {@link #ITEM_FACTORIES}); throws if unknown. */
+	public static Function<Item.Properties, ? extends Item> itemFactory(String id) {
+		Function<Item.Properties, ? extends Item> factory = ITEM_FACTORIES.get(id);
+		if (factory == null) {
+			throw new IllegalArgumentException("No ITEM_FACTORIES entry for item id '" + id + "'");
+		}
+		return factory;
+	}
+
+	/**
+	 * Two gray hint lines under the name, keyed {@code item.alaindustrial.<id>.hint} / {@code .hint2}.
+	 * The key strings are derived from the id here rather than typed twice per loader.
+	 */
+	private static Function<Item.Properties, ? extends Item> hintItem(String id) {
+		return p -> new HintItem(p, "item.alaindustrial." + id + ".hint",
+				"item.alaindustrial." + id + ".hint2");
+	}
+
+	/**
+	 * A wearing machine component (MOD-189): {@code durability(max)} sets the vanilla {@code max_damage}
+	 * component, so wear renders as the standard durability bar and the item becomes non-stackable.
+	 * {@code max} is read from {@link Config} when the item is constructed — i.e. at registration, so a
+	 * config change still needs a restart; the wear RATE is read live each tick in the block entity.
+	 */
+	private static Function<Item.Properties, ? extends Item> durableComponent(IntSupplier maxDamage) {
+		return p -> new Item(p.durability(maxDamage.getAsInt()));
+	}
+
+	private static Map<String, Function<Item.Properties, ? extends Item>> buildItemFactories() {
+		Map<String, Function<Item.Properties, ? extends Item>> defs = new LinkedHashMap<>();
+		// Plain items: crafting components, dusts, plates, ingots, raw ores, by-products. Nothing but
+		// `new Item(properties)` — the largest and most duplicated group.
+		for (String id : List.of(
+				"advanced_circuit", "alignment_chip_day", "alignment_chip_night", "battery",
+				"coal_dust", "copper_coil", "copper_dust", "copper_plate", "cotton_fiber",
+				"cotton_seeds", "depleted_uranium", "diamond_dust", "electronic_circuit",
+				"emerald_dust", "flux_thread", "fluxweave_cloth", "garden_drone", "gold_dust",
+				"gold_gear", "gold_plate", "iron_dust", "iron_gear", "iron_plate",
+				"irradiated_diamond", "irradiated_slag", "lapis_dust", "mutagen_dust",
+				"nickel_dust", "nickel_ingot", "nickel_plate", "raw_nickel", "raw_rubber",
+				"raw_silver", "raw_sulfur", "raw_tin", "raw_uranium", "resonant_shard", "rubber",
+				"silver_dust", "silver_gear", "silver_ingot", "silver_plate", "stone_gear",
+				"sulfur_dust", "tempered_iron", "tempered_iron_plate", "tin_dust", "tin_ingot",
+				"tin_plate", "unstable_isotope", "uranium_dust", "uranium_ingot", "uranium_plate",
+				"wooden_gear")) {
+			defs.put(id, Item::new);
+		}
+		// Upgrade chips (MOD-080): the blank and the mute upgrade, each with its hint lines.
+		defs.put("empty_chip", hintItem("empty_chip"));
+		defs.put("mute_chip", hintItem("mute_chip"));
+		// Incubator mode chips (MOD-118) — the mode binding lives in the item.
+		defs.put("mutation_chip_transform", p -> new MutationChipItem(p, IncubatorMode.TRANSFORM));
+		defs.put("mutation_chip_duplicate", p -> new MutationChipItem(p, IncubatorMode.DUPLICATE));
+		defs.put("mutation_chip_create", p -> new MutationChipItem(p, IncubatorMode.CREATE));
+		// Wearing components (MOD-189).
+		defs.put("windmill_rotor", durableComponent(() -> Config.windMillRotorMaxDamage));
+		defs.put("water_mill_wheel", durableComponent(() -> Config.waterMillWheelMaxDamage));
+		return Map.copyOf(defs);
+	}
+
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+	// BlockEntity types (MOD-307)
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+
+	/**
+	 * One {@code BlockEntityType} to register: its id, the {@code BlockEntity} class it produces, the
+	 * factory, and the set of blocks it is valid for — <b>by registry id</b>.
+	 *
+	 * <p><b>Why the blocks are ids and not {@code Block} handles.</b> A handle would have to come from a
+	 * loader registry ({@code ModBlocks.X} is an eager {@code Block}; {@code ModBlocksNeoForge.X} a lazy
+	 * holder), so the valid-block set had to be written out twice — and the two copies were held together
+	 * by nothing but a Python parity script. That is exactly the defect class MOD-191 filed: a block
+	 * missing from one loader's set is not a type error, it is a silent "this block entity does not exist
+	 * on that loader". With ids, the set is written once and each loader resolves it against the vanilla
+	 * registry at its own registration moment.
+	 *
+	 * @param <T>     the block entity class
+	 * @param id      registry path ({@code alaindustrial:<id>})
+	 * @param type    the block entity class, so a lookup can verify the caller's expected type
+	 * @param factory the {@code BlockEntity} constructor, shared by both loaders
+	 * @param blocks  registry ids of the blocks this type is valid for
+	 */
+	public record BlockEntityDef<T extends BlockEntity>(String id, Class<T> type,
+			BlockEntityType.BlockEntitySupplier<T> factory, List<String> blocks) {
+
+		/**
+		 * Resolves {@link #blocks} against the vanilla block registry. Called by each loader when it
+		 * builds the {@code BlockEntityType}: on Fabric that is {@code ModBlockEntities.init()} (after
+		 * {@code ModBlocks.init()}), on NeoForge it is inside the deferred type supplier — in both cases
+		 * the blocks are already registered.
+		 *
+		 * <p>An unknown id throws instead of quietly resolving to {@code AIR}: a typo here would otherwise
+		 * produce a block entity that never attaches to anything, which is precisely the silent failure
+		 * this manifest exists to remove.
+		 */
+		public Set<Block> blockSet() {
+			// The strictness below is not belt-and-braces: it replaces guarantees the vanilla/NeoForge
+			// varargs constructors used to give and that the Set-taking one does not. An empty block set
+			// used to throw; a duplicate block used to throw (Set.of). Losing both silently would leave a
+			// BlockEntityType that is valid for nothing — the exact quiet failure this manifest exists to
+			// remove.
+			if (blocks.isEmpty()) {
+				throw new IllegalStateException("BlockEntityDef '" + id
+						+ "' lists no blocks — the type would be valid for nothing");
+			}
+			Set<Block> resolved = new LinkedHashSet<>();
+			for (String blockId : blocks) {
+				Identifier key = Industrialization.id(blockId);
+				// getValue on a DefaultedRegistry substitutes AIR for an unknown key rather than
+				// returning null, so AIR — not null — is what an unregistered/misspelt id looks like.
+				Block block = BuiltInRegistries.BLOCK.getValue(key);
+				if (block == Blocks.AIR) {
+					throw new IllegalStateException("BlockEntityDef '" + id + "': block '" + key
+							+ "' is not registered (yet) — cannot build its BlockEntityType");
+				}
+				if (!resolved.add(block)) {
+					throw new IllegalStateException("BlockEntityDef '" + id + "': block '" + key
+							+ "' listed twice");
+				}
+			}
+			return resolved;
+		}
+	}
+
+	private static <T extends BlockEntity> BlockEntityDef<T> blockEntity(String id, Class<T> type,
+			BlockEntityType.BlockEntitySupplier<T> factory, String... blocks) {
+		return new BlockEntityDef<>(id, type, factory, List.of(blocks));
+	}
+
+	/** Every {@code BlockEntityType}, declared once for both loaders. See {@link BlockEntityDef}. */
+	public static final List<BlockEntityDef<?>> BLOCK_ENTITIES = List.of(
+			blockEntity("generator", GeneratorBlockEntity.class, GeneratorBlockEntity::new, "generator"),
+			blockEntity("geothermal_generator", GeothermalGeneratorBlockEntity.class, GeothermalGeneratorBlockEntity::new, "geothermal_generator"),
+			blockEntity("solar_panel", SolarPanelBlockEntity.class, SolarPanelBlockEntity::new, "solar_panel"),
+			blockEntity("moonlit_solar_panel", MoonlitSolarPanelBlockEntity.class, MoonlitSolarPanelBlockEntity::new, "moonlit_solar_panel"),
+			blockEntity("daylight_solar_panel", DaylightSolarPanelBlockEntity.class, DaylightSolarPanelBlockEntity::new, "daylight_solar_panel"),
+			blockEntity("copper_cable", CableBlockEntity.class, CableBlockEntity::new, "copper_cable", "tin_cable", "gold_cable", "insulated_copper_cable", "insulated_tin_cable", "insulated_gold_cable"),
+			blockEntity("item_pipe", ItemPipeBlockEntity.class, ItemPipeBlockEntity::new, "item_pipe"),
+			blockEntity("fluid_pipe", FluidPipeBlockEntity.class, FluidPipeBlockEntity::new, "fluid_pipe"),
+			blockEntity("macerator", MaceratorBlockEntity.class, MaceratorBlockEntity::new, "macerator"),
+			blockEntity("battery_box", BatteryBoxBlockEntity.class, BatteryBoxBlockEntity::new, "battery_box"),
+			blockEntity("teleporter", TeleporterBlockEntity.class, TeleporterBlockEntity::new, "teleporter"),
+			blockEntity("electric_furnace", ElectricFurnaceBlockEntity.class, ElectricFurnaceBlockEntity::new, "electric_furnace"),
+			blockEntity("iron_furnace", IronFurnaceBlockEntity.class, IronFurnaceBlockEntity::new, "iron_furnace"),
+			blockEntity("extractor", ExtractorBlockEntity.class, ExtractorBlockEntity::new, "extractor"),
+			blockEntity("compressor", CompressorBlockEntity.class, CompressorBlockEntity::new, "compressor"),
+			blockEntity("sawmill", SawmillBlockEntity.class, SawmillBlockEntity::new, "sawmill"),
+			blockEntity("assembler", AssemblerBlockEntity.class, AssemblerBlockEntity::new, "assembler"),
+			blockEntity("polymerizer", PolymerizerBlockEntity.class, PolymerizerBlockEntity::new, "polymerizer"),
+			blockEntity("vulcanizer", VulcanizerBlockEntity.class, VulcanizerBlockEntity::new, "vulcanizer"),
+			blockEntity("galvanic_bath", GalvanicBathBlockEntity.class, GalvanicBathBlockEntity::new, "galvanic_bath"),
+			blockEntity("electric_heater", ElectricHeaterBlockEntity.class, ElectricHeaterBlockEntity::new, "electric_heater"),
+			blockEntity("incubator", IncubatorBlockEntity.class, IncubatorBlockEntity::new, "incubator"),
+			blockEntity("pump", PumpBlockEntity.class, PumpBlockEntity::new, "pump"),
+			blockEntity("garden_drone_station", GardenDroneStationBlockEntity.class, GardenDroneStationBlockEntity::new, "garden_drone_station"),
+			blockEntity("fluid_tank", FluidTankBlockEntity.class, FluidTankBlockEntity::new, "fluid_tank"),
+			blockEntity("water_mill", WaterMillBlockEntity.class, WaterMillBlockEntity::new, "water_mill"),
+			blockEntity("wind_mill", WindMillBlockEntity.class, WindMillBlockEntity::new, "wind_mill"),
+			blockEntity("high_altitude_wind_mill", HighAltitudeWindMillBlockEntity.class, HighAltitudeWindMillBlockEntity::new, "high_altitude_wind_mill"),
+			blockEntity("storm_wind_mill", StormWindMillBlockEntity.class, StormWindMillBlockEntity::new, "storm_wind_mill"),
+			blockEntity("iron_chest", IronChestBlockEntity.class, IronChestBlockEntity::new, "iron_chest"),
+			blockEntity("storage_module", StorageModuleBlockEntity.class, StorageModuleBlockEntity::new, "storage_module"),
+			blockEntity("silver_chest", SilverChestBlockEntity.class, SilverChestBlockEntity::new, "silver_chest"),
+			blockEntity("gold_chest", GoldChestBlockEntity.class, GoldChestBlockEntity::new, "gold_chest"));
+
+	/**
+	 * The definition for block-entity {@code id}, checked against the type the caller expects.
+	 *
+	 * <p>The {@code Class} argument is what keeps the loader's typed field honest: asking for
+	 * {@code blockEntity("macerator", SawmillBlockEntity.class)} fails loudly here instead of producing a
+	 * {@code BlockEntityType} whose generic parameter lies about what it creates.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends BlockEntity> BlockEntityDef<T> blockEntity(String id, Class<T> type) {
+		for (BlockEntityDef<?> def : BLOCK_ENTITIES) {
+			if (def.id().equals(id)) {
+				if (def.type() != type) {
+					throw new IllegalArgumentException("BlockEntityDef '" + id + "' produces "
+							+ def.type().getSimpleName() + ", not " + type.getSimpleName());
+				}
+				return (BlockEntityDef<T>) def;
+			}
+		}
+		throw new IllegalArgumentException("No BLOCK_ENTITIES entry for block-entity id '" + id + "'");
 	}
 }

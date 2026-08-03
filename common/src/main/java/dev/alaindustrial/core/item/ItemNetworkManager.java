@@ -3,9 +3,9 @@ package dev.alaindustrial.core.item;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,8 +19,8 @@ import dev.alaindustrial.core.energy.NetworkManager;
 public final class ItemNetworkManager {
 	private ItemNetworkManager() { }
 	private static final class LevelState {
-		final Map<BlockPos, ItemNetwork> byPos = new HashMap<>();
-		final Set<ItemNetwork> networks = new HashSet<>();
+		final Map<BlockPos, ItemNetwork> byPos = new LinkedHashMap<>();
+		final Set<ItemNetwork> networks = new LinkedHashSet<>();
 		int tickCursor;
 	}
 	private static final Map<ServerLevel, LevelState> LEVELS = new IdentityHashMap<>();
@@ -96,7 +96,7 @@ public final class ItemNetworkManager {
 	}
 
 	private static void rebuild(LevelState state, ItemNetwork old) {
-		Set<BlockPos> remaining = new HashSet<>(old.pipes());
+		Set<BlockPos> remaining = new LinkedHashSet<>(old.pipes());
 		state.networks.remove(old);
 		List<Set<BlockPos>> components = GraphComponents.components(remaining,
 				pos -> pipeNeighbours(old.level(), pos));

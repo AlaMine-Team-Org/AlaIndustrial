@@ -51,6 +51,13 @@ dependencies {
     // jqwik release notes; compatible with our JUnit Platform 1.10.2 since jqwik ≥1.9.0 requires only
     // Platform ≥1.7.0). DO NOT upgrade above 1.9.x without auditing the source for injection payloads.
     testImplementation(libs.jqwik)
+    // Architecture rules (common/src/test/java/dev/alaindustrial/arch/). They read the COMPILED
+    // bytecode of common/, so they see the real dependency graph rather than text: a grep for
+    // `net.fabricmc` would miss a transitive edge and would flag the same string inside a javadoc
+    // block. ArchUnit's own JUnit engine discovers the rules class by its @AnalyzeClasses annotation,
+    // so the class needs no `Test` suffix — which conveniently also keeps it out of the pitest
+    // mutation run (targetTests = dev.alaindustrial.*Test).
+    testImplementation(libs.archunit.junit5)
     // Config lives in common and its config-file load/write (Config.loadFrom) references Gson, so
     // linking Config on the L1 test classpath needs Gson at runtime even though the balance tests
     // only read static fields. Gson is a transitive of Minecraft (MC 26.2 bundles 2.14.0); the L1
@@ -143,6 +150,11 @@ pitest {
                      'dev.alaindustrial.worldgen.OilLakeShape',
                      'dev.alaindustrial.item.material.TemperedIronToolStats',
                      'dev.alaindustrial.item.misc.TooltipKeys',
+                     // MOD-315: the scythe's bonus-seed chance formula. Lifted out of the (nested,
+                     // and therefore L1-unreachable) ScytheItem.Profile precisely so it could be
+                     // unit-tested, so it is added here with the class rather than a release later.
+                     // Its L1 suite is ScytheBonusTest.
+                     'dev.alaindustrial.item.tool.ScytheBonus',
                      // MOD-247: the incubator's MC-free trio, added with MOD-118 (the dice) and
                      // MOD-234 (the status line) and never appended here — the same "code added,
                      // list not updated" defect MOD-200 filed the target gate for, only on the
