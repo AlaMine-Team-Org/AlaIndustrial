@@ -95,7 +95,7 @@ public class AssemblerMenu extends MachineMenu {
 	// Record tab.
 	private static final int GRID_X = 25, GRID_Y = 37;
 	private static final int RESULT_X = 111, RESULT_Y = 55;
-	private static final int BLANK_X = 147, BLANK_Y = 55;
+	private static final int BLANK_X = 151, BLANK_Y = 55;
 	private static final int SLOT_PITCH = 18;
 
 	@Nullable

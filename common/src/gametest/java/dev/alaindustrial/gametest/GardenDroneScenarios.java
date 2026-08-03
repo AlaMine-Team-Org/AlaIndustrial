@@ -357,6 +357,53 @@ public final class GardenDroneScenarios {
 		});
 	}
 
+	/**
+	 * TC-DRONE-001-FUN10 — the drone stands on the tile it worked before flying home (MOD-317).
+	 *
+	 * <p>The action used to land and the return leg used to start in the same tick, so the drone touched
+	 * down and lifted off inside one frame. {@link GardenDroneStationBlockEntity#LANDING_PAUSE_TICKS} now
+	 * sits between the two, and this pins it by <em>timing the homeward leg</em> rather than by reading a
+	 * position: {@code drive()} advances the block entity without advancing the world clock, so the
+	 * renderer's own interpolation (which is what the pause is ultimately for) cannot be observed here —
+	 * the tick budget can.
+	 *
+	 * <p>The assertion is a negative control by construction. One full leg after the action lands, the
+	 * drone must still be on its way home; with the pause removed the leg would already have ended by
+	 * that tick and the station would be parked or outbound on the next errand — so deleting the pause
+	 * turns this red instead of leaving it quietly green.
+	 */
+	public static void fun10StandsOnTheTileBeforeFlyingHome(GameTestHelper helper) {
+		withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = place(helper);
+			charge(station);
+			helper.setBlock(PLOT, Blocks.DIRT);
+			helper.setBlock(PLOT.above(), Blocks.AIR);
+
+			// Up to and including the tick the action lands on; the homeward leg starts here.
+			AlaGameTestHelper.drive(station, helper, TICKS_PER_JOB);
+
+			// A whole leg's worth of ticks later the drone would already be home if the leg had started
+			// immediately — the pause is exactly what must still be holding it out here. The margin is
+			// two ticks rather than one so the assertion also catches a pause whittled down to a single
+			// tick, not only one deleted outright.
+			AlaGameTestHelper.drive(station, helper, GardenDroneStationBlockEntity.MIN_FLIGHT_TICKS + 2);
+			if (station.droneTarget() == null || !station.isReturning()) {
+				helper.fail("the drone was already off its homeward leg one leg after the action landed —"
+						+ " the landing pause is not delaying the return (target="
+						+ station.droneTarget() + ", returning=" + station.isReturning() + ")");
+				return;
+			}
+
+			// …and the pause ends: it is a beat, not a stall.
+			AlaGameTestHelper.drive(station, helper, GardenDroneStationBlockEntity.LANDING_PAUSE_TICKS + 2);
+			if (station.isReturning()) {
+				helper.fail("the drone never finished its homeward leg — the landing pause does not end");
+				return;
+			}
+			helper.succeed();
+		});
+	}
+
 	/** Whether any output slot holds the given item. */
 	private static boolean stationHolds(GardenDroneStationBlockEntity station, net.minecraft.world.item.Item item) {
 		for (int i = 0; i < GardenDroneStationBlockEntity.OUTPUT_SLOT_COUNT; i++) {

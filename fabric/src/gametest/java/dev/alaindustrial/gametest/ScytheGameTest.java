@@ -91,6 +91,18 @@ public class ScytheGameTest {
 		ScytheScenarios.neg06CropModeKeepsStem(helper);
 	}
 
+	/** @implements TC-SCYTHE-002-FUN03 — crop mode harvests torchflower_crop at its real max age (MOD-325). */
+	@GameTest
+	public void fun06_cropModeHarvestsTorchflowerAtMaxAge(GameTestHelper helper) {
+		ScytheScenarios.fun06CropModeHarvestsTorchflowerAtMaxAge(helper);
+	}
+
+	/** @implements TC-SCYTHE-002-NEG05 — crop mode keeps immature torchflower_crop (MOD-325). */
+	@GameTest
+	public void neg08_cropModeKeepsImmatureTorchflower(GameTestHelper helper) {
+		ScytheScenarios.neg08CropModeKeepsImmatureTorchflower(helper);
+	}
+
 	/** @implements TC-SCYTHE-001-CON02 — only the netherite tier is fire-resistant. */
 	@GameTest
 	public void con02_netheriteFireResistant(GameTestHelper helper) {

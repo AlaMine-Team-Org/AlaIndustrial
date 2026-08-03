@@ -1,18 +1,15 @@
-## 0.1.63
+## 0.1.64
 
-<p><img alt="Ala Industrial 0.1.63 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.63/release-media/v0.1.63/changelog.jpeg" width="720"></p>
+<p><img alt="Ala Industrial 0.1.64 fix and patch banner" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.64/release-media/v0.1.64/changelog.jpeg" width="720"></p>
 
-Farming gets a reason to reach for a better scythe, and the drone station stops eating hoes.
+The garden drone flies properly now — and you can finally hear it.
 
 ### New
 
-- **Scythes now yield bonus seeds.** Harvesting a ripe crop with Shift held has a chance to drop one extra seed — 5% on stone, up to 35% on netherite. Gold is the lucky-but-fragile pick at 20%; wooden scythes give none.
-- Works on wheat, carrots, potatoes and beetroot, and stacks with Fortune. Berries, cactus and sugar cane have no seed of their own, so they never roll the bonus.
-
-### Improved
-
-- **Machines accept materials from other tech mods.** Ingots, dusts, plates and ores from another mod now work in our recipes instead of only our own items, and the macerator's ore list was widened to match.
+- **The drone has a voice.** A quiet rotor loop follows it through the air, and goes silent the moment it lands.
+- **Tilling sounds like tilling.** The drone plays the usual hoe sound as it turns a tile.
 
 ### Fixed
 
-- **Hoes in the drone station now break instead of jamming.** A worn hoe used to freeze one point short of breaking and sat in the slot forever, quietly stopping the station from tilling and harvesting until you pulled it out by hand.
+- **The drone no longer jumps.** It used to snap a block into the air on take-off and drop back down when it finished. Now it lifts off, crosses, settles, and holds a beat on the tile it works.
+- **Torchflowers can be harvested.** Ripe torchflower crops were skipped by both the scythe and the drone. Not any more.

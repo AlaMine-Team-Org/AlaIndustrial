@@ -56,6 +56,17 @@ public final class MachineHumSoundInstance extends AbstractTickableSoundInstance
 		boolean working = state.is(block)
 				&& block instanceof dev.alaindustrial.block.MachineHumProvider provider
 				&& provider.isWorking(mc.level, pos, state);
+		// A machine whose noise-maker moves reports where it is now, and the loop follows it — the
+		// Garden Drone Station's sound belongs to the drone out over the farm, not to the dock it took
+		// off from (MOD-329). Every other machine returns null here and stays pinned to its block.
+		if (working && block instanceof dev.alaindustrial.block.MachineHumProvider provider) {
+			net.minecraft.world.phys.Vec3 moved = provider.humPosition(mc.level, pos, state);
+			if (moved != null) {
+				this.x = moved.x;
+				this.y = moved.y;
+				this.z = moved.z;
+			}
+		}
 		// A mute chip inserted while the loop plays silences the machine at once (MOD-080).
 		boolean muted = mc.level.getBlockEntity(pos)
 				instanceof dev.alaindustrial.block.entity.MachineBlockEntity be && be.isMuted();

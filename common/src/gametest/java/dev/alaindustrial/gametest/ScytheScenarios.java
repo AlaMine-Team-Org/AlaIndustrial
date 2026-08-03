@@ -17,6 +17,7 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
+import net.minecraft.world.level.block.TorchflowerCropBlock;
 
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -462,6 +463,74 @@ public final class ScytheScenarios {
 		helper.succeed();
 	}
 
+	// ── FUN06: crop mode harvests torchflower_crop at its real max age (MOD-325) ───────────────────
+
+	/**
+	 * Crop mode harvests a mature {@code torchflower_crop} ({@code age = 1}, its actual top value) and
+	 * drops exactly its deterministic loot: one {@code torchflower_seeds}, no binomial. Guards MOD-325:
+	 * {@code torchflower_crop} is a {@link CropBlock} whose {@code AGE} property (vanilla
+	 * {@code AGE_1}, range 0..1) never reaches {@code getMaxAge()} (2) — the next growth step replaces
+	 * the block with {@code minecraft:torchflower} instead of incrementing {@code AGE}. Before the fix,
+	 * {@code CropMaturity} trusted {@code CropBlock#isMaxAge}, which is unreachable for this crop, so it
+	 * was never harvestable by the scythe or the drone. The fix reads the AGE property's own top value
+	 * instead, same as every other tagged crop.
+	 */
+	public static void fun06CropModeHarvestsTorchflowerAtMaxAge(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		farmland(helper);
+		helper.setBlock(CLICK, Blocks.TORCHFLOWER_CROP.defaultBlockState().setValue(TorchflowerCropBlock.AGE, 1));
+		ItemStack scythe = new ItemStack(ModContent.SCYTHE_WOOD.get());
+		player.setItemInHand(InteractionHand.MAIN_HAND, scythe);
+		useScytheStackShift(helper, player);
+
+		if (!helper.getBlockState(CLICK).isAir()) {
+			helper.fail("mature torchflower_crop should be harvested at " + CLICK + " but found "
+					+ helper.getBlockState(CLICK));
+			return;
+		}
+		if (scythe.getDamageValue() != 1) {
+			helper.fail("crop mode should spend exactly 1 durability on the torchflower harvest, spent "
+					+ scythe.getDamageValue());
+			return;
+		}
+		// The wood tier's bonusSeedChance is 0 (see fun04), so this stays exact: no bonus roll can add a
+		// second seed on top of the loot table's deterministic one.
+		int seeds = countDrops(helper, Items.TORCHFLOWER_SEEDS);
+		if (seeds != 1) {
+			helper.fail("torchflower_crop's loot table is deterministic (exactly 1 seed) — expected 1, got "
+					+ seeds);
+			return;
+		}
+		helper.succeed();
+	}
+
+	// ── NEG08: crop mode keeps immature torchflower_crop ────────────────────────────────────────────
+
+	/**
+	 * Crop mode never breaks an immature {@code torchflower_crop} ({@code age = 0}). Pins the other half
+	 * of MOD-325: the AGE-property fallback must gate on the real top value (1), not silently harvest
+	 * every age once the {@code CropBlock}-specific short-circuit is gone.
+	 */
+	public static void neg08CropModeKeepsImmatureTorchflower(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		farmland(helper);
+		helper.setBlock(CLICK, Blocks.TORCHFLOWER_CROP.defaultBlockState().setValue(TorchflowerCropBlock.AGE, 0));
+		ItemStack scythe = new ItemStack(ModContent.SCYTHE_WOOD.get());
+		player.setItemInHand(InteractionHand.MAIN_HAND, scythe);
+		useScytheStackShift(helper, player);
+
+		if (!helper.getBlockState(CLICK).is(Blocks.TORCHFLOWER_CROP)) {
+			helper.fail("immature torchflower_crop should survive crop mode at " + CLICK + " but found "
+					+ helper.getBlockState(CLICK));
+			return;
+		}
+		if (scythe.getDamageValue() != 0) {
+			helper.fail("crop mode spent durability on immature torchflower_crop: " + scythe.getDamageValue());
+			return;
+		}
+		helper.succeed();
+	}
+
 	// ── CON02: only the netherite tier is fire-resistant ───────────────────────────────────────────
 
 	/** The netherite scythe carries DAMAGE_RESISTANT (survives lava) like vanilla netherite gear; the
@@ -485,12 +554,11 @@ public final class ScytheScenarios {
 	 * A tier with no bonus (wood, {@code bonusSeedChance = 0}) yields only what the loot table gives.
 	 *
 	 * <h2>Why this is a threshold and not an exact count</h2>
-	 * No vanilla crop that the scythe can actually harvest has a deterministic seed drop: wheat,
-	 * carrot, potato and beetroot all roll their seeds from a binomial (0–3 per plant), so an exact
-	 * assertion is impossible. ({@code torchflower_crop} is the one deterministic loot table in the
-	 * game — a single seed, no binomial — but it is unharvestable by construction: its {@code AGE}
-	 * property is {@code AGE_1} while {@code getMaxAge()} returns 2, so {@code isMaxAge} is never
-	 * true for it.)
+	 * Wheat, carrot, potato and beetroot all roll their seeds from a binomial (0–3 per plant), so an
+	 * exact assertion over this shared 3×2 patch is impossible. ({@code torchflower_crop} is the one
+	 * deterministic loot table in the game — a single seed, no binomial, and harvestable since the
+	 * MOD-325 fix — but it is exercised separately by {@link #fun06CropModeHarvestsTorchflowerAtMaxAge},
+	 * which asserts the exact drop count; this patch stays wheat so the sample size here is unchanged.)
 	 *
 	 * <p>So the mechanic is instead driven to a <b>guaranteed</b> hit in
 	 * {@link #fun05CropBonusAlwaysDropsAtFullChance} and sampled over {@link #BONUS_SWINGS} swings.

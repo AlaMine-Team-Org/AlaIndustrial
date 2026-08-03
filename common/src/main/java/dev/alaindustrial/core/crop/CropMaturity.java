@@ -4,7 +4,6 @@ import dev.alaindustrial.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,7 +34,7 @@ public final class CropMaturity {
 	 * crops tag).
 	 *
 	 * <p>The tag pulls {@code #minecraft:crops}, whose 26.2 membership is broader than
-	 * {@link CropBlock}: wheat/carrot/potato/beetroot/torchflower_crop are {@code CropBlock}, but
+	 * {@code CropBlock}: wheat/carrot/potato/beetroot/torchflower_crop are {@code CropBlock}, but
 	 * {@code melon_stem}/{@code pumpkin_stem} are {@code StemBlock} and {@code pitcher_crop} is a
 	 * {@code DoublePlantBlock}. Each type needs its own maturity rule, and stems are deliberately
 	 * never harvested (they are not a crop you pick — they spawn a fruit on a neighbour and keep
@@ -59,10 +58,6 @@ public final class CropMaturity {
 			return false;
 		}
 		Block block = state.getBlock();
-		// CropBlock covers wheat, carrots, potatoes, beetroots, torchflower_crop (all its subclasses).
-		if (block instanceof CropBlock crop) {
-			return crop.isMaxAge(state);
-		}
 		if (block instanceof SweetBerryBushBlock) {
 			return state.getValue(SweetBerryBushBlock.AGE) >= SWEET_BERRY_RIPE_AGE;
 		}
@@ -77,9 +72,13 @@ public final class CropMaturity {
 		if (block instanceof StemBlock) {
 			return false;
 		}
-		// Pitcher crop (DoublePlantBlock, not CropBlock): mature at its max AGE. Same for any other
-		// future crop that carries a vanilla AGE property — harvest at the property's top value, so new
-		// crops added to the tag by Mojang or mods work without a code change.
+		// Every remaining tagged crop — wheat/carrot/potato/beetroot/torchflower_crop (CropBlock) and
+		// pitcher_crop (DoublePlantBlock) — is mature at its AGE property's own top value. Deliberately
+		// NOT CropBlock#getMaxAge(): for torchflower_crop that returns 2 while its AGE property (AGE_1)
+		// only ever reaches 1 (the next growth step replaces the block with `minecraft:torchflower`
+		// instead of incrementing AGE), so getMaxAge() is unreachable and crop.isMaxAge() is always
+		// false (MOD-325). Reading the property's own possible values sidesteps that mismatch for
+		// torchflower and keeps working for every crop where the two numbers do agree.
 		IntegerProperty age = findAgeProperty(state);
 		if (age != null) {
 			int max = age.getPossibleValues().stream().max(Integer::compare).orElse(0);
@@ -114,8 +113,8 @@ public final class CropMaturity {
 
 	/**
 	 * The block's {@code AGE} {@link IntegerProperty} if it has one (most growing blocks do), else
-	 * {@code null}. Used as the maturity fallback for tagged crops that are not {@link CropBlock} and
-	 * not handled by a specific branch (e.g. {@code pitcher_crop}).
+	 * {@code null}. Used as the maturity fallback for every tagged crop not handled by a specific
+	 * branch above (e.g. {@code wheat}, {@code torchflower_crop}, {@code pitcher_crop}).
 	 */
 	private static IntegerProperty findAgeProperty(BlockState state) {
 		for (var property : state.getProperties()) {

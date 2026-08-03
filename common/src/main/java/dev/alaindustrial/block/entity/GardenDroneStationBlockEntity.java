@@ -17,6 +17,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
@@ -101,6 +102,20 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	 * count of ticks.
 	 */
 	public static final int MIN_FLIGHT_TICKS = 26;
+
+	/**
+	 * How long the drone stands on the tile it has just worked before it flies home, in ticks. Without
+	 * it the action landed and the return leg began in the same tick: the drone touched down and lifted
+	 * off inside a single frame, which read as a bounce rather than as a machine doing a job (MOD-317).
+	 *
+	 * <p>Deliberately only at the far end. A matching pause on the pad would push back the tick the
+	 * action lands on, and that tick is what every scenario in the drone suite counts to — the beat the
+	 * player actually reads as "it is working" is the one out in the field, so the dock gets nothing.
+	 *
+	 * <p>Public so a gametest can time the return leg off the same number instead of copying it, for
+	 * the same reason {@link #MIN_FLIGHT_TICKS} is.
+	 */
+	public static final int LANDING_PAUSE_TICKS = 6;
 
 	/**
 	 * How many of the nearest candidate tiles the drone picks its next errand from at random. One would
@@ -206,11 +221,17 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 					energy.amount -= Config.gardenDroneEuPerAction;
 					creditUsefulWork(level, Config.gardenDroneEuPerAction);
 				}
-				// Head home along the same leg length, so the return reads as the same flight reversed.
+				// Head home along the same leg length, so the return reads as the same flight reversed —
+				// but stand on the tile for a beat first. Starting the leg in the FUTURE is the whole
+				// mechanism: flightProgress() clamps a negative elapsed time to 0, so for those ticks the
+				// renderer holds the drone exactly where it landed (travel 1, arc 0) with no new field to
+				// persist or sync. The countdown carries the pause as well as the leg, so a chunk that
+				// unloads mid-pause resumes it on load rather than landing the action a second time —
+				// which a separate, unsaved timer would have done (MOD-317).
 				returning = true;
 				droneJob = null;
-				flightRemaining = flightTotal;
-				flightStart = level.getGameTime();
+				flightRemaining = flightTotal + LANDING_PAUSE_TICKS;
+				flightStart = level.getGameTime() + LANDING_PAUSE_TICKS;
 			}
 			markDirtyAndSync();
 			syncBlockEntityToClient();
@@ -407,6 +428,12 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		if (!level.setBlockAndUpdate(target, Blocks.FARMLAND.defaultBlockState())) {
 			return false;
 		}
+		// The same feedback a hoe gives in the player's hand, on the tile that was actually turned
+		// (MOD-328). Parameters are vanilla's own, from HoeItem: BLOCKS, volume and pitch 1, no jitter.
+		// The listener argument is null rather than a player: vanilla passes the player so they are
+		// EXCLUDED from the packet, having already predicted the sound client-side — a block entity
+		// predicts nothing, so excluding anyone would silence it for whoever stood closest.
+		level.playSound(null, target, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
 		wearHoe(level);
 		return true;
 	}
@@ -633,6 +660,24 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	/** True while the drone is heading back to the dock (the action has already landed). */
 	public boolean isReturning() {
 		return returning;
+	}
+
+	/**
+	 * The flight's speed curve: slow off the pad, fast across the middle, braking onto the target.
+	 * Smootherstep (the quintic one) rather than plain smoothstep — over a leg as short as
+	 * {@link #MIN_FLIGHT_TICKS} the cubic curve still reads as near-constant speed, and the whole point
+	 * of the easing is that the player can see the drone accelerate and brake the way a real one does.
+	 *
+	 * <p>Its derivative is zero at both 0 and 1, which is what gives the drone zero vertical speed as it
+	 * leaves and meets the ground however steep the arc's own ends are (MOD-317).
+	 *
+	 * <p>Lives here, on the flight model, rather than in the renderer: the renderer positions the drone
+	 * and the flight-loop sound follows it, and two copies of this curve would let the sound drift away
+	 * from the thing making it (MOD-329).
+	 */
+	public static float accelerate(float rawProgress) {
+		float c = Math.clamp(rawProgress, 0.0f, 1.0f);
+		return c * c * c * (c * (c * 6.0f - 15.0f) + 10.0f);
 	}
 
 	// ---------------------------------------------------------------- container

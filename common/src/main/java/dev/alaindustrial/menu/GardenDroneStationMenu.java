@@ -45,20 +45,20 @@ public class GardenDroneStationMenu extends MachineMenu {
 	@Override
 	protected void addMachineSlots() {
 		Container machineContainer = this.machine;
-		addSlot(new Slot(machineContainer, GardenDroneStationBlockEntity.SEED_SLOT, 44, 24) {
+		addSlot(new Slot(machineContainer, GardenDroneStationBlockEntity.SEED_SLOT, 44, 21) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return stack.getItem() instanceof BlockItem;
 			}
 		});
-		addSlot(new Slot(machineContainer, GardenDroneStationBlockEntity.FERTILIZER_SLOT, 44, 48) {
+		addSlot(new Slot(machineContainer, GardenDroneStationBlockEntity.FERTILIZER_SLOT, 44, 45) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return stack.is(Items.BONE_MEAL);
 			}
 		});
 		// The hoe the drone tills with — a tool, so it sits with the other things the player refits.
-		addSlot(new Slot(machineContainer, GardenDroneStationBlockEntity.HOE_SLOT, 80, 48) {
+		addSlot(new Slot(machineContainer, GardenDroneStationBlockEntity.HOE_SLOT, 67, 45) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return getItem().isEmpty() && stack.is(ItemTags.HOES);
@@ -70,7 +70,7 @@ public class GardenDroneStationMenu extends MachineMenu {
 			}
 		});
 		// The drone's own bay, set apart from the consumables: it is installed once, not refilled.
-		addSlot(new Slot(machineContainer, GardenDroneStationBlockEntity.DRONE_SLOT, 80, 24) {
+		addSlot(new Slot(machineContainer, GardenDroneStationBlockEntity.DRONE_SLOT, 67, 21) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return getItem().isEmpty() && stack.is(ModContent.GARDEN_DRONE.get());
@@ -83,7 +83,7 @@ public class GardenDroneStationMenu extends MachineMenu {
 		});
 		for (int i = 0; i < GardenDroneStationBlockEntity.OUTPUT_SLOT_COUNT; i++) {
 			int x = 116 + (i % 2) * 18;
-			int y = 24 + (i / 2) * 18;
+			int y = 23 + (i / 2) * 18;
 			addSlot(new Slot(machineContainer, GardenDroneStationBlockEntity.OUTPUT_SLOT_START + i, x, y) {
 				@Override
 				public boolean mayPlace(ItemStack stack) {

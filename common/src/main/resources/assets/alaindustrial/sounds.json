@@ -89,5 +89,14 @@
         "preload": true
       }
     ]
+  },
+  "garden_drone_fly": {
+    "subtitle": "subtitles.alaindustrial.garden_drone_fly",
+    "sounds": [
+      {
+        "name": "alaindustrial:garden_drone_fly",
+        "stream": false
+      }
+    ]
   }
 }

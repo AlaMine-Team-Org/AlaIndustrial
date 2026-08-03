@@ -104,6 +104,15 @@ public final class GardenDroneBlockEntityRenderer<T extends GardenDroneStationBl
 	private static final float ARC_HEIGHT = 1.6F;
 	/** How far the drone leans into its flight direction, in radians at full tilt. */
 	private static final float MAX_TILT = 0.30F;
+	/**
+	 * Nose-up/nose-down pitch over the climb and the descent, in radians. Applied as
+	 * {@code cos(t·π) · PITCH_AMPLITUDE · arc}, and because {@code arc} is itself {@code sin(t·π)} that
+	 * product is {@code ½·sin(2t·π)·PITCH_AMPLITUDE} — so the steepest the airframe ever gets is
+	 * <b>half</b> this number, a quarter and three quarters of the way along a leg. The constant is
+	 * doubled against that visible peak on purpose, to keep the ~0.12 rad lean the drone had before the
+	 * envelope was introduced (MOD-317).
+	 */
+	private static final float PITCH_AMPLITUDE = 0.24F;
 	/** Sideways drift amplitude mid-leg, in blocks — keeps the path off a dead-straight rail. */
 	private static final float SWAY_AMPLITUDE = 0.25F;
 
@@ -253,6 +262,12 @@ public final class GardenDroneBlockEntityRenderer<T extends GardenDroneStationBl
 		long gameTime = level == null ? 0L : level.getGameTime();
 		float time = gameTime + partialTicks;
 
+		// How far off the ground the leg has lifted the drone, 0 at both ends and 1 over the midpoint.
+		// Hoisted out of the flight branch because everything that only belongs in the air — the lean,
+		// the sway, the pitch, the hover bob — fades in and out with it, and a parked drone needs it at
+		// zero rather than at whatever the last frame of the last leg left behind (MOD-317).
+		float arc = 0.0F;
+
 		if (target != null) {
 			// The whole flight is computed here, from the leg the server sent once. Reading a synced
 			// per-tick counter instead would freeze the drone on its dock between packets.
@@ -278,13 +293,24 @@ public final class GardenDroneBlockEntityRenderer<T extends GardenDroneStationBl
 					surface = (float) collision.max(Direction.Axis.Y);
 				}
 			}
-			state.restHeight = MODEL_BOTTOM + surface + Mth.lerp(travel, DOCK_SURFACE, FIELD_CLEARANCE);
+			// Both ends of this interpolation are a whole standing height, so the base slides between
+			// "on the dock plate" and "on the target's collision top" over the leg. Adding `surface`
+			// OUTSIDE the lerp — which this did — charged the drone the TARGET's height while it was
+			// still sitting on its pad, so the base jumped by a full block (dirt collides at 1.0, the
+			// tilling target) the frame a job started and dropped back the frame it ended. That pair of
+			// teleports, not the arc, is the "sharp drop and sharp hop" the player reported: at
+			// travel = 0 this now equals the parked height exactly (MOD-317).
+			state.restHeight = MODEL_BOTTOM + Mth.lerp(travel, DOCK_SURFACE, surface + FIELD_CLEARANCE);
 
 			// Climb out and settle back down. The arc is what makes the drone land ON the tile it works:
 			// at both ends of the leg it is zero, so the drone is at REST_HEIGHT over the dock at the
 			// start and REST_HEIGHT over the target at the finish — it descends all the way instead of
 			// hovering a block up and reaching down.
-			float arc = (float) Math.sin(t * Math.PI);
+			//
+			// `t` is already through accelerate(), whose derivative is zero at 0 and 1, so the arc leaves
+			// and meets the ground with zero vertical speed however steep sin's own ends are. Feeding it
+			// the raw progress instead would be the hard landing this task first blamed it for.
+			arc = (float) Math.sin(t * Math.PI);
 			state.offsetY += arc * ARC_HEIGHT;
 
 			double len = Math.sqrt(dx * dx + dz * dz);
@@ -300,14 +326,24 @@ public final class GardenDroneBlockEntityRenderer<T extends GardenDroneStationBl
 				state.tiltX = (float) (dz / len) * dir * MAX_TILT * arc;
 				state.tiltZ = (float) (-dx / len) * dir * MAX_TILT * arc;
 			}
-			// Nose-up on the climb, nose-down on the descent.
-			state.tiltX += (float) Math.cos(t * Math.PI) * 0.12F;
+			// Nose-up on the climb, nose-down on the descent, faded by the same arc envelope as the lean
+			// and the sway. The bare cosine is ±1 at the ends of a leg, so it snapped the airframe about
+			// seven degrees the instant one began and again when it finished; through the envelope the
+			// drone is level whenever it is on the ground and steepest mid-climb (MOD-317).
+			state.tiltX += (float) Math.cos(t * Math.PI) * PITCH_AMPLITUDE * arc;
 		}
+		// No parked branch on purpose: BlockEntityRenderDispatcher calls createRenderState() fresh every
+		// frame, so a drone with no target arrives here holding the field initializers — which already
+		// are the parked pose (dock height, no offset, no tilt). Zeroing them again would only look like
+		// it were load-bearing.
 
 		// Blades never stop outright — they idle slowly on the dock and spin up in flight.
 		state.bladeAngle = time * (state.flying ? BLADE_SPEED : BLADE_IDLE_SPEED);
-		// Bobbing belongs to a drone in the air; on the pad it would push the legs through the plate.
-		state.bob = state.flying ? (float) Math.sin(time * 0.15F) * BOB_AMPLITUDE : 0.0F;
+		// Bobbing belongs to a drone in the air; on the pad it would push the legs through the plate. It
+		// rides the arc envelope rather than the bare flying flag, so it fades in over the climb and out
+		// over the descent — switched hard, it added or dropped the full amplitude in one frame at the
+		// exact moment of touchdown, on top of everything else happening there (MOD-317).
+		state.bob = (float) Math.sin(time * 0.15F) * BOB_AMPLITUDE * arc;
 		if (level != null) {
 			state.lightCoords = LightCoordsUtil.getLightCoords(level, station.above());
 		}
@@ -353,15 +389,13 @@ public final class GardenDroneBlockEntityRenderer<T extends GardenDroneStationBl
 	}
 
 	/**
-	 * The speed curve: slow off the pad, fast across the middle, braking onto the target.
-	 *
-	 * <p>Smootherstep (the quintic one) rather than plain smoothstep — over a leg as short as sixteen
-	 * ticks the cubic curve still reads as near-constant speed, and the whole point of the easing is
-	 * that the player can see the drone accelerate and brake the way a real one does.
+	 * The speed curve, delegated to the flight model that owns it
+	 * ({@link GardenDroneStationBlockEntity#accelerate}). It lives there rather than here because the
+	 * flight-loop sound has to follow the same path this renderer draws — a second copy of the curve
+	 * would let the sound drift away from the drone making it (MOD-329).
 	 */
 	private static float accelerate(float t) {
-		float c = Math.clamp(t, 0.0F, 1.0F);
-		return c * c * c * (c * (c * 6.0F - 15.0F) + 10.0F);
+		return GardenDroneStationBlockEntity.accelerate(t);
 	}
 
 	public static final class State extends BlockEntityRenderState {

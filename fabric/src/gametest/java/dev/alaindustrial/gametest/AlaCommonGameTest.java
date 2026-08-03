@@ -100,6 +100,12 @@ public class AlaCommonGameTest {
 		GardenDroneScenarios.fun09HoeSurvivesUntilItsLastUse(helper);
 	}
 
+	/** @implements TC-DRONE-001-FUN10 — the drone stands on the tile it worked before flying home */
+	@GameTest
+	public void gardenDroneStandsOnTileBeforeFlyingHome(GameTestHelper helper) {
+		GardenDroneScenarios.fun10StandsOnTheTileBeforeFlyingHome(helper);
+	}
+
 	/** @implements TC-DRONE-001-FUN07 — an empty dock tends nothing and says why */
 	@GameTest
 	public void gardenDroneWithoutDroneIsInert(GameTestHelper helper) {

@@ -158,6 +158,24 @@ public final class ModSounds {
 		return SoundEvent.createFixedRangeEvent(WIND_MILL_HUM_ID, 12.0f);
 	}
 
+	/** The registry id for the garden drone's flight loop (MOD-329) — plays while the drone is airborne. */
+	public static final Identifier GARDEN_DRONE_FLY_ID = Industrialization.id("garden_drone_fly");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> GARDEN_DRONE_FLY = () -> {
+		throw new IllegalStateException("ModSounds.GARDEN_DRONE_FLY read before its loader bound it");
+	};
+
+	/**
+	 * Build the drone-flight-loop event both loaders register. Fixed <b>8</b>-block range — the shortest
+	 * of any loop in the mod, and deliberately so: this is the only sound whose source moves, and it
+	 * flies to the player rather than waiting to be walked up to. A wider radius would mean a drone
+	 * crossing the far side of its own farm is still audible indoors.
+	 */
+	public static SoundEvent createGardenDroneFly() {
+		return SoundEvent.createFixedRangeEvent(GARDEN_DRONE_FLY_ID, 8.0f);
+	}
+
 	private ModSounds() {
 	}
 }

@@ -701,6 +701,9 @@ public final class NeoForgeGameTests {
 				GardenDroneScenarios::fun09HoeSurvivesUntilItsLastUse);
 		registerTest(event, "garden_drone_flight_delays_action", 300, true,
 				GardenDroneScenarios::fun06FlightDelaysTheAction);
+		// MOD-317: the drone holds on the tile it worked before the return leg starts.
+		registerTest(event, "garden_drone_stands_on_tile_before_flying_home", 300, true,
+				GardenDroneScenarios::fun10StandsOnTheTileBeforeFlyingHome);
 		registerTest(event, "menu_data_width_matches_block_entity", 200, true,
 				MenuDataWidthScenarios::reg02ClientMenuWidthMatchesBlockEntity);
 		// MOD-107: the pump's slots exchange with fluid containers through the loader's item fluid
@@ -728,6 +731,11 @@ public final class NeoForgeGameTests {
 		registerTest(event, "scythe_crop_mode_harvests_cane_stalk", 40, true, ScytheScenarios::fun03CropModeHarvestsCaneStalk);
 		registerTest(event, "scythe_crop_mode_keeps_lone_cactus", 40, true, ScytheScenarios::neg05CropModeKeepsLoneCactus);
 		registerTest(event, "scythe_crop_mode_keeps_stem", 40, true, ScytheScenarios::neg06CropModeKeepsStem);
+		// MOD-325: torchflower_crop is harvestable at its real max age (1), not CropBlock#getMaxAge() (2).
+		registerTest(event, "scythe_crop_mode_harvests_torchflower", 40, true,
+				ScytheScenarios::fun06CropModeHarvestsTorchflowerAtMaxAge);
+		registerTest(event, "scythe_crop_mode_keeps_immature_torchflower", 40, true,
+				ScytheScenarios::neg08CropModeKeepsImmatureTorchflower);
 		registerTest(event, "scythe_netherite_fire_resistant", 40, true, ScytheScenarios::con02NetheriteFireResistant);
 		// MOD-315 bonus seed drop (suite TC-SCYTHE-003). Deterministic by construction: the torchflower
 		// loot table yields exactly one seed, so the baseline is exact and a bonus shows up as a second.

@@ -5,6 +5,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A machine block that emits a looping ambient hum while working. The client-side sound manager reads
@@ -43,5 +45,21 @@ public interface MachineHumProvider {
 	 */
 	default boolean isWorking(Level level, BlockPos pos, BlockState state) {
 		return state.hasProperty(LitMachineBlock.LIT) && state.getValue(LitMachineBlock.LIT);
+	}
+
+	/**
+	 * Where the loop should be heard from this tick, or {@code null} to leave it at the block's centre.
+	 *
+	 * <p>Almost every machine is a box that stays put, so the default is {@code null} and the sound
+	 * engine never re-reads a position. The Garden Drone Station is the exception: the thing making the
+	 * noise is the drone, which is somewhere out over the farm rather than on the dock, so it returns
+	 * the drone's current position and the loop travels with it (MOD-329).
+	 *
+	 * <p>Called client-side every tick while the loop plays, so it must be cheap and side-agnostic —
+	 * the same contract as {@link #isWorking}.
+	 */
+	@Nullable
+	default Vec3 humPosition(Level level, BlockPos pos, BlockState state) {
+		return null;
 	}
 }

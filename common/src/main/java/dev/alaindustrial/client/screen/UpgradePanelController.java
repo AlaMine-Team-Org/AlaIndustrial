@@ -27,7 +27,7 @@ import net.minecraft.util.Mth;
 public final class UpgradePanelController {
 	static final int ATLAS = 256;
 	static final int BTN_U = 0, BTN_V = 0, BTN_W = 24, BTN_H = 34;
-	static final int BTN_X = 176, BTN_Y = 0;
+	static final int BTN_X = 176, BTN_Y = 4;
 	static final int PANEL_U = 97, PANEL_V = 0, PANEL_W = 159, PANEL_H = 145;
 	static final int CLOSE_U = 162, CLOSE_V = 60, CLOSE_W = 28, CLOSE_H = 28;
 	static final int ACT_U = 0, ACT_V = 48, ACT_W = 7, ACT_H = 7;
