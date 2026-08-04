@@ -190,8 +190,12 @@ public final class NeoForgeGameTests {
 				CableShockScenarios::shockGuardPopsWhenDownConnectionAppears);
 		registerTest(event, "in_place_grade_swap_rebuilds_segment", 40, true,
 				CableEnergyScenarios::inPlaceGradeSwapRebuildsSegment);
-		registerTest(event, "storage_does_not_charge_storage", 60, true,
-				StorageEnergyScenarios::storageDoesNotChargeStorage);
+		registerTest(event, "mod314_cascade_charges_empty_battery_box_over_cable", 60, true,
+				StorageEnergyScenarios::cascadeChargesEmptyBatteryBoxOverCable);
+		registerTest(event, "mod314_cascade_stops_at_equilibrium", 200, true,
+				StorageEnergyScenarios::cascadeStopsAtEquilibrium);
+		registerTest(event, "mod314_cascade_charges_mid_bus_battery_box", 100, true,
+				StorageEnergyScenarios::cascadeChargesMidBusBatteryBox);
 		registerTest(event, "source_fills_cable_without_consumer", 40, true,
 				CableEnergyScenarios::sourceFillsCableWithoutConsumer);
 		registerTest(event, "storage_charges_through_line", 100, true,

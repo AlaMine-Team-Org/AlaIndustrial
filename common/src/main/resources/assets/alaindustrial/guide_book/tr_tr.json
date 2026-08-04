@@ -866,15 +866,15 @@
               "title": "Tarif",
               "recipe_type": "Şekilli Üretim",
               "grid": [
-                "",
+                "alaindustrial:iron_gear",
                 "minecraft:crafting_table",
-                "",
+                "alaindustrial:iron_gear",
                 "alaindustrial:electronic_circuit",
                 "alaindustrial:advanced_machine_casing",
                 "alaindustrial:electronic_circuit",
-                "",
+                "alaindustrial:iron_gear",
                 "alaindustrial:storage_module",
-                ""
+                "alaindustrial:iron_gear"
               ],
               "result_id": "alaindustrial:assembler",
               "result_count": 1
@@ -1429,6 +1429,44 @@
           ]
         },
         {
+          "id": "garden_drone_station",
+          "title": "Bahçe Dronu İstasyonu",
+          "icon": "alaindustrial:garden_drone_station",
+          "block_id": "alaindustrial:garden_drone_station",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bahçe Dronu İstasyonu",
+              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "Işınlayıcı",
           "icon": "alaindustrial:teleporter",
@@ -1582,14 +1620,14 @@
         },
         {
           "id": "storage_module",
-          "title": "Storage Module",
+          "title": "Depolama Modülü",
           "icon": "alaindustrial:storage_module",
           "block_id": "alaindustrial:storage_module",
           "pages": [
             {
               "type": "text",
-              "title": "Storage Module",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots on a single screen."
+              "title": "Depolama Modülü",
+              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
             },
             {
               "type": "stats",
@@ -2052,15 +2090,46 @@
           ]
         },
         {
+          "id": "advanced_circuit",
+          "title": "Gelişmiş Devre",
+          "icon": "alaindustrial:advanced_circuit",
+          "block_id": "alaindustrial:advanced_circuit",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gelişmiş Devre",
+              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:gold_plate",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:gold_plate",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_plate",
+                "alaindustrial:rubber"
+              ],
+              "result_id": "alaindustrial:advanced_circuit",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "advanced_machine_casing",
-          "title": "Advanced Machine Casing",
+          "title": "Gelişmiş Makine Gövdesi",
           "icon": "alaindustrial:advanced_machine_casing",
           "block_id": "alaindustrial:advanced_machine_casing",
           "pages": [
             {
               "type": "text",
-              "title": "Advanced Machine Casing",
-              "text": "A full-cube base block for MV machines — a plain machine casing clad in 8 tempered-iron plates."
+              "title": "Gelişmiş Makine Gövdesi",
+              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
             },
             {
               "type": "recipe",
@@ -2070,9 +2139,9 @@
                 "#c:plates/tempered_iron",
                 "#c:plates/tempered_iron",
                 "#c:plates/tempered_iron",
-                "#c:plates/tempered_iron",
+                "alaindustrial:advanced_circuit",
                 "alaindustrial:machine_casing",
-                "#c:plates/tempered_iron",
+                "alaindustrial:advanced_circuit",
                 "#c:plates/tempered_iron",
                 "#c:plates/tempered_iron",
                 "#c:plates/tempered_iron"
@@ -2607,7 +2676,7 @@
             {
               "type": "text",
               "title": "Tırpan",
-              "text": "Tek savuruşta yaprakları, otları, çiçekleri ve diğer dekoratif bitki örtüsünü temizleyen alan etkili (AOE) bir alet; Shift basılıyken — olgun ekinleri hasat eden alan etkili bir orak. Ahşaptan netherite kadar sekiz malzeme kademesi."
+              "text": "Tek savuruşta yaprakları, otları, çiçekleri ve diğer dekoratif bitki örtüsünü temizleyen alan etkili (AOE) bir alet; Shift basılıyken — olgun ekinleri hasat eden alan etkili bir orak. Ahşaptan netherite kadar sekiz malzeme kademesi. Hasat sırasında fazladan tohum düşme şansı vardır ve bu şans tırpanın seviyesiyle birlikte artar."
             },
             {
               "type": "stats",

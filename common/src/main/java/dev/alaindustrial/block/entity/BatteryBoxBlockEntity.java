@@ -114,6 +114,16 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 		return true;
 	}
 
+	/**
+	 * BatteryBox takes part in the storage→storage cascade (MOD-314): "put down a second box to extend the
+	 * bank" is its whole point, and boxes share one capacity, so balancing by fill fraction reads to the
+	 * player as the two simply levelling out.
+	 */
+	@Override
+	public boolean acceptsCascade() {
+		return true;
+	}
+
 	// R-BRK-07: carry the buffered EU on the dropped item so a charged BatteryBox keeps its charge through
 	// break -> place. The block's loot table copies STORED_ENERGY from this block entity onto the drop;
 	// placement applies it back here. Machines do NOT override these, so they lose their buffer on break.

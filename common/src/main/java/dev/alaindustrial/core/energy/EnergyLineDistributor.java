@@ -3,6 +3,7 @@ package dev.alaindustrial.core.energy;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
@@ -113,11 +114,18 @@ final class EnergyLineDistributor {
 	}
 
 	/**
-	 * How much EU storage sources are allowed to discharge into the line this tick: the machine demand
-	 * generators fall short of, never less than zero (MOD-070 backup-power rule). Shared with
-	 * {@link EnergyNetwork#tick()}, which needs the same number to decide whether a dual-role storage node
-	 * is discharging — and therefore must not also be served from the line this tick (MOD-255). Kept in one
-	 * place because two copies of this expression would drift and silently decouple the two decisions.
+	 * How much EU storage sources are allowed to discharge into the line this tick <em>as backup power</em>:
+	 * the machine demand generators fall short of, never less than zero (MOD-070 backup-power rule).
+	 * Shared with {@link EnergyNetwork#tick()}, which needs the same number to decide whether a dual-role
+	 * storage node is discharging — and therefore must not also be served from the line this tick
+	 * (MOD-255). Kept in one place because two copies of this expression would drift and silently
+	 * decouple the two decisions.
+	 *
+	 * <p>Since MOD-314 this is no longer the ONLY reason storage discharges: when this budget is zero
+	 * (machines absent or already covered) a fuller store may still feed an emptier one through the
+	 * cascade. The two are mutually exclusive by construction — see
+	 * {@link #chargeAndPropagateLine(List, List, long, long, long, EnergyPort.Txn, int, Map)} — so this
+	 * number still answers "is backup power flowing", just not "is any storage discharging".
 	 */
 	static long storageBudget(long machineDemand, long genSupply) {
 		return Math.max(0L, machineDemand - genSupply);
@@ -190,8 +198,22 @@ final class EnergyLineDistributor {
 	 *     {@link #propagateLineOneHop} so the indivisible remainder of a forked buffer does not land on the
 	 *     same branch every tick — see MOD-254.
 	 */
+	/**
+	 * Cascade-free overload: the line stage as it behaved before MOD-314. Kept because most callers —
+	 * every scenario in the L1.5 distributor suite that is about generators, machines, loss or
+	 * propagation — have no opinion about the storage→storage cascade, and threading an empty map
+	 * through them would add noise without adding coverage. Scenarios that ARE about the cascade pass
+	 * allowances explicitly.
+	 */
 	void chargeAndPropagateLine(List<LiveProducer> generators, List<LiveProducer> storageSources,
 			long machineDemand, long genSupply, long packetCap, EnergyPort.Txn tx, int rotation) {
+		chargeAndPropagateLine(generators, storageSources, machineDemand, genSupply, packetCap, tx, rotation,
+				null);
+	}
+
+	void chargeAndPropagateLine(List<LiveProducer> generators, List<LiveProducer> storageSources,
+			long machineDemand, long genSupply, long packetCap, EnergyPort.Txn tx, int rotation,
+			Map<BlockPos, Long> cascadeAllowances) {
 		propagateLineOneHop(packetCap, tx, rotation);
 		// Generators fill the line freely (free energy → inertia); only their draw is docked from the
 		// supply left for storage sinks.
@@ -202,6 +224,26 @@ final class EnergyLineDistributor {
 		long storageBudget = storageBudget(machineDemand, genSupply);
 		if (storageBudget > 0 && !storageSources.isEmpty()) {
 			chargeLineFrom(storageSources, packetCap, storageBudget, tx, rotation);
+			// Backup power and cascade are mutually exclusive, and the caller has already guaranteed it
+			// (EnergyNetwork only computes allowances when this budget is 0). Returning here states the
+			// same invariant at the point it protects: two storage stages in one tick would each start a
+			// fresh per-source `fromThis`, letting one battery inject 2 × packetCap and quietly break the
+			// tier ceiling this class documents on chargeLineFrom.
+			return;
+		}
+		// MOD-314: the cascade — a fuller store topping up an emptier one once machines are satisfied.
+		// Per-donor budgets, never a shared pool: eligibility is decided per (donor, sink) pair, so a
+		// single scalar would let a donor that is NOT proportionally fuller spend a budget opened by one
+		// that is — washing energy backwards while looking like a cascade. Iterating `storageSources`
+		// rather than the map keeps the order the topology fixed (MOD-304).
+		if (cascadeAllowances == null || cascadeAllowances.isEmpty()) {
+			return;
+		}
+		for (LiveProducer donor : storageSources) {
+			Long allowance = cascadeAllowances.get(donor.pos());
+			if (allowance != null && allowance > 0) {
+				chargeLineFrom(List.of(donor), packetCap, allowance, tx, rotation);
+			}
 		}
 	}
 

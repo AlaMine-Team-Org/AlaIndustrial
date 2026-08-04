@@ -1320,53 +1320,39 @@ public class NetworkGameTest {
 	private static final BlockPos WASH_DST = new BlockPos(3, 2, 1);
 
 	/**
-	 * @implements TC-CABLE-001-NRG06 — MOD-070 storage priority: a charged BatteryBox connected by cable
-	 *     to an empty BatteryBox (no generator, no machine) must NOT charge it — storage never sources for
-	 *     another storage sink. Under the old paired path the empty box would drain the charged one
-	 *     (pointless wash, lossy over distance). Asserts the destination stays empty and the source keeps
-	 *     its charge. @covers R-NRG-08
+	 * @implements TC-CABLE-001-NRG06 — MOD-314 cascade: a charged BatteryBox connected by cable to an
+	 *     empty one (no generator, no machine) DOES charge it, until the two level out. This case used to
+	 *     assert the opposite, under MOD-070's blanket "storage never sources for another storage sink"
+	 *     rule; that rule stopped battery↔battery washing but also blocked the legitimate "extend the bank
+	 *     with a second box" case, which is the bug MOD-314 fixed. Washing is now prevented by construction
+	 *     (gradient + half step + deadband) instead of by banning the transfer. @covers R-NRG-08
 	 */
 	@GameTest(maxTicks = 60)
-	public void tcCable001Nrg06_storageDoesNotChargeStorage(GameTestHelper helper) {
-		helper.setBlock(WASH_SRC, ModBlocks.BATTERY_BOX.defaultBlockState()
-				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
-		helper.setBlock(WASH_CABLE, ModBlocks.COPPER_CABLE);
-		helper.setBlock(WASH_DST, ModBlocks.BATTERY_BOX.defaultBlockState()
-				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
-		long srcStart = Config.batteryBoxBuffer;
-		if (be(helper, WASH_SRC) instanceof BatteryBoxBlockEntity src) {
-			src.getEnergyStorage().amount = srcStart; // full
-		}
-		if (be(helper, WASH_DST) instanceof BatteryBoxBlockEntity dst) {
-			dst.getEnergyStorage().amount = 0L; // empty
-		}
-		for (int i = 0; i < 20; i++) {
-			var s = be(helper, WASH_SRC);
-			if (s != null) {
-				tick(helper, s);
-			}
-			var c = be(helper, WASH_CABLE);
-			if (c != null) {
-				tick(helper, c);
-			}
-			NetworkManager.tickAll(helper.getLevel());
-			var d = be(helper, WASH_DST);
-			if (d != null) {
-				tick(helper, d);
-			}
-		}
-		// Guard against a false green: the test only means something if a network actually formed on the
-		// cable (otherwise "nothing happened" would pass even if the anti-wash logic were broken).
-		EnergyNetwork net = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(WASH_CABLE));
-		if (net == null) {
-			helper.fail("no energy network formed between the two BatteryBoxes — test cannot verify anti-wash");
-		}
-		long dstEnd = be(helper, WASH_DST) instanceof BatteryBoxBlockEntity d ? d.getEnergyStorage().getAmount() : -1;
-		if (dstEnd != 0L) {
-			helper.fail("empty BatteryBox was charged from another BatteryBox: " + dstEnd
-					+ " (storage must never source for another storage sink — battery↔battery wash)");
-		}
-		helper.succeed();
+	public void tcCable001Nrg06_cascadeChargesEmptyBatteryBoxOverCable(GameTestHelper helper) {
+		StorageEnergyScenarios.cascadeChargesEmptyBatteryBoxOverCable(helper);
+	}
+
+	/**
+	 * @implements TC-CABLE-001-NRG09 — MOD-314 anti-wash: two BatteryBoxes already at the same fill
+	 *     fraction trade nothing, and the pair's total EU does not shrink. The conservation half is the
+	 *     load-bearing one: a pair that ping-pongs a packet each way ends up looking level while quietly
+	 *     burning MOD-021 loss every lap. @covers R-NRG-08
+	 */
+	@GameTest(maxTicks = 200)
+	public void tcCable001Nrg09_cascadeStopsAtEquilibrium(GameTestHelper helper) {
+		StorageEnergyScenarios.cascadeStopsAtEquilibrium(helper);
+	}
+
+	/**
+	 * @implements TC-CABLE-001-NRG10 — MOD-314 regression: a Battery Box with the bus running through it
+	 *     (cable on BOTH faces, so it counts as a storage "source" by face role even while empty) must
+	 *     still be charged by the cascade. The first cut of the fix keyed its self-serve guard on
+	 *     membership of the storage-source list and so silently kept the original bug for this wiring.
+	 *     @covers R-NRG-08
+	 */
+	@GameTest(maxTicks = 100)
+	public void tcCable001Nrg10_cascadeChargesMidBusBatteryBox(GameTestHelper helper) {
+		StorageEnergyScenarios.cascadeChargesMidBusBatteryBox(helper);
 	}
 
 	// ── MOD-070 audit follow-up: storage charges THROUGH the line; lone storage source sleeps ──────

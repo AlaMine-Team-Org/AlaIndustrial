@@ -7,8 +7,11 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -229,6 +232,117 @@ class ConfigSnapshotTest {
 		// Network / worldgen.
 		SENTINELS.put("networksPerTick", 1024);
 		SENTINELS.put("networkAnalyzerMaxTraversedNetworks", 64);
+		// MOD-324: the 21 tunables added after MOD-204 wrote this map and never appended to it. Their
+		// getter lambdas were the entirety of Config's surviving mutants (21 PrimitiveReturns on
+		// `() -> field`), which is how the class fell from MOD-204's documented 157/157 to 173/196.
+		// The completeness guard below now fails the build when a new key lands without a sentinel,
+		// so this block cannot silently fall behind a third time.
+		// Fluid pipes / fluid network.
+		SENTINELS.put("fluidPipeSegmentBuffer", 77);
+		SENTINELS.put("fluidNetworksPerTick", 333);
+		// Scythe (MOD-315).
+		SENTINELS.put("scytheBonusSeedMultiplier", 0.44);
+		// Garden drone station (MOD-277).
+		SENTINELS.put("gardenDroneBuffer", 4444);
+		SENTINELS.put("gardenDroneEuPerAction", 18);
+		SENTINELS.put("gardenDroneRange", 9);
+		SENTINELS.put("gardenDroneScanIntervalTicks", 35);
+		SENTINELS.put("gardenDroneFlightTicksPerBlock", 23);
+		// Cotton growth divisors.
+		SENTINELS.put("cottonRootingChanceDivisor", 27);
+		SENTINELS.put("cottonFruitingChanceDivisor", 14);
+		// Assembler (MOD-288/289).
+		SENTINELS.put("assemblerEuPerTick", 26);
+		SENTINELS.put("assemblerDuration", 88);
+		SENTINELS.put("assemblerBuffer", 13_500);
+		// Bare-cable shock + insulation (MOD-279/318). Float sentinels are exact binary fractions so
+		// Gson's rendering matches Float.toString in the snapshot assertion.
+		SENTINELS.put("bareCableShockLvDamage", 3.25f);
+		SENTINELS.put("bareCableShockMvDamage", 7.75f);
+		SENTINELS.put("bareCableShockProximityRadius", 0.85);
+		SENTINELS.put("insulationLossMultiplier", 0.35);
+		SENTINELS.put("shockGuardWoodHitChance", 0.62);
+		SENTINELS.put("shockGuardWoolHitChance", 0.81);
+		SENTINELS.put("shockGuardGlassHitChance", 0.43);
+		SENTINELS.put("shockGuardGraceTicks", 37);
+	}
+
+	/**
+	 * Boolean tunables, covered by the polarity pair of tests rather than by a numeric sentinel. Held
+	 * as a named set so the completeness guard can tell "covered elsewhere" from "forgotten".
+	 */
+	private static final Set<String> BOOLEAN_TUNABLES =
+			Set.of("bonusChestEnabled", "oilBurns", "bareCableShockEnabled");
+
+	/**
+	 * Every key in {@link Config}'s own {@code FIELDS} registry is covered by this suite — either by a
+	 * numeric sentinel or by the boolean polarity pair (MOD-324).
+	 *
+	 * <p>This is the guard that makes the rest of the suite self-maintaining, and it exists because the
+	 * hand-written map above silently fell 21 keys behind. Every tunable's getter lambda is mutable
+	 * bytecode ({@code () -> field} → {@code return 0}); a key absent from this suite is a mutant no
+	 * test can kill, and the only visible symptom was a slowly sagging kill rate that nobody attributed
+	 * to Config — MOD-204's "157/157" claim stayed in the build file long after it stopped being true.
+	 *
+	 * <p>Reading the registry reflectively rather than re-listing the keys is the whole point: the
+	 * oracle has to come from production code, or it drifts in exactly the same way it just did.
+	 */
+	@Test
+	void everyRegisteredTunableIsCoveredBySomeSentinel() throws ReflectiveOperationException {
+		Field fieldsRegistry = Config.class.getDeclaredField("FIELDS");
+		fieldsRegistry.setAccessible(true);
+		List<?> registry = (List<?>) fieldsRegistry.get(null);
+		assertTrue(registry.size() > 100, "sanity: the registry should hold every tunable, got " + registry.size());
+
+		List<String> uncovered = new ArrayList<>();
+		for (Object entry : registry) {
+			// entry is an IntField/FloatField/DoubleField/BoolField; `key` lives on their shared
+			// ConfigField superclass.
+			Field keyField = entry.getClass().getSuperclass().getDeclaredField("key");
+			keyField.setAccessible(true);
+			String key = (String) keyField.get(entry);
+			if (!SENTINELS.containsKey(key) && !BOOLEAN_TUNABLES.contains(key)) {
+				uncovered.add(key);
+			}
+		}
+
+		assertTrue(uncovered.isEmpty(),
+				"Config tunables with no coverage in this suite — their getter lambdas are unkillable "
+						+ "mutants. Add a numeric sentinel to SENTINELS (distinct from the default, from 0, "
+						+ "and clearing the field's own minimum), or add a boolean to BOOLEAN_TUNABLES and "
+						+ "assert both polarities: " + uncovered);
+	}
+
+	/**
+	 * The mirror of the guard above: no sentinel may name a key the registry no longer has. A renamed
+	 * or deleted tunable would otherwise leave a sentinel that reflection still resolves (the field may
+	 * linger) while the registry path it was meant to exercise is gone.
+	 */
+	@Test
+	void noSentinelNamesAnUnregisteredKey() throws ReflectiveOperationException {
+		Field fieldsRegistry = Config.class.getDeclaredField("FIELDS");
+		fieldsRegistry.setAccessible(true);
+		List<?> registry = (List<?>) fieldsRegistry.get(null);
+
+		Set<String> registered = new java.util.HashSet<>();
+		for (Object entry : registry) {
+			Field keyField = entry.getClass().getSuperclass().getDeclaredField("key");
+			keyField.setAccessible(true);
+			registered.add((String) keyField.get(entry));
+		}
+
+		List<String> orphans = new ArrayList<>();
+		for (String key : SENTINELS.keySet()) {
+			if (!registered.contains(key)) {
+				orphans.add(key);
+			}
+		}
+		for (String key : BOOLEAN_TUNABLES) {
+			if (!registered.contains(key)) {
+				orphans.add(key);
+			}
+		}
+		assertTrue(orphans.isEmpty(), "sentinels naming keys absent from Config.FIELDS: " + orphans);
 	}
 
 	/**
@@ -292,9 +406,11 @@ class ConfigSnapshotTest {
 	void absentBooleanKeys_keepTrueValueViaGetter(@TempDir Path dir)
 			throws IOException, ReflectiveOperationException {
 		// bonusChestEnabled=TRUE kills BooleanFalseReturnVals on its getter;
-		// oilBurns=TRUE        kills BooleanFalseReturnVals on its getter too.
+		// oilBurns=TRUE        kills BooleanFalseReturnVals on its getter too;
+		// bareCableShockEnabled=TRUE likewise (MOD-324 — added with MOD-279, never covered here).
 		Config.class.getDeclaredField("bonusChestEnabled").setBoolean(null, true);
 		Config.class.getDeclaredField("oilBurns").setBoolean(null, true);
+		Config.class.getDeclaredField("bareCableShockEnabled").setBoolean(null, true);
 
 		Path f = dir.resolve("alaindustrial.json");
 		Files.writeString(f, "{}");
@@ -303,15 +419,19 @@ class ConfigSnapshotTest {
 				"absent boolean key 'bonusChestEnabled' keeps its live TRUE via the getter, not false");
 		assertEquals(true, Config.oilBurns,
 				"absent boolean key 'oilBurns' keeps its live TRUE via the getter, not false");
+		assertEquals(true, Config.bareCableShockEnabled,
+				"absent boolean key 'bareCableShockEnabled' keeps its live TRUE via the getter, not false");
 	}
 
 	@Test
 	void absentBooleanKeys_keepFalseValueViaGetter(@TempDir Path dir)
 			throws IOException, ReflectiveOperationException {
 		// bonusChestEnabled=FALSE kills BooleanTrueReturnVals on its getter;
-		// oilBurns=FALSE          kills BooleanTrueReturnVals on its getter too.
+		// oilBurns=FALSE          kills BooleanTrueReturnVals on its getter too;
+		// bareCableShockEnabled=FALSE likewise (MOD-324).
 		Config.class.getDeclaredField("bonusChestEnabled").setBoolean(null, false);
 		Config.class.getDeclaredField("oilBurns").setBoolean(null, false);
+		Config.class.getDeclaredField("bareCableShockEnabled").setBoolean(null, false);
 
 		Path f = dir.resolve("alaindustrial.json");
 		Files.writeString(f, "{}");
@@ -320,6 +440,8 @@ class ConfigSnapshotTest {
 				"absent boolean key 'bonusChestEnabled' keeps its live FALSE via the getter, not true");
 		assertEquals(false, Config.oilBurns,
 				"absent boolean key 'oilBurns' keeps its live FALSE via the getter, not true");
+		assertEquals(false, Config.bareCableShockEnabled,
+				"absent boolean key 'bareCableShockEnabled' keeps its live FALSE via the getter, not true");
 	}
 
 	/**

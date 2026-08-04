@@ -866,15 +866,15 @@
               "title": "레시피",
               "recipe_type": "정형 제작",
               "grid": [
-                "",
+                "alaindustrial:iron_gear",
                 "minecraft:crafting_table",
-                "",
+                "alaindustrial:iron_gear",
                 "alaindustrial:electronic_circuit",
                 "alaindustrial:advanced_machine_casing",
                 "alaindustrial:electronic_circuit",
-                "",
+                "alaindustrial:iron_gear",
                 "alaindustrial:storage_module",
-                ""
+                "alaindustrial:iron_gear"
               ],
               "result_id": "alaindustrial:assembler",
               "result_count": 1
@@ -1429,6 +1429,44 @@
           ]
         },
         {
+          "id": "garden_drone_station",
+          "title": "정원 드론 스테이션",
+          "icon": "alaindustrial:garden_drone_station",
+          "block_id": "alaindustrial:garden_drone_station",
+          "pages": [
+            {
+              "type": "text",
+              "title": "정원 드론 스테이션",
+              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:copper_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:copper_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:garden_drone_station",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "텔레포터",
           "icon": "alaindustrial:teleporter",
@@ -1582,14 +1620,14 @@
         },
         {
           "id": "storage_module",
-          "title": "Storage Module",
+          "title": "저장 모듈",
           "icon": "alaindustrial:storage_module",
           "block_id": "alaindustrial:storage_module",
           "pages": [
             {
               "type": "text",
-              "title": "Storage Module",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots on a single screen."
+              "title": "저장 모듈",
+              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
             },
             {
               "type": "stats",
@@ -2052,15 +2090,46 @@
           ]
         },
         {
+          "id": "advanced_circuit",
+          "title": "고급 회로",
+          "icon": "alaindustrial:advanced_circuit",
+          "block_id": "alaindustrial:advanced_circuit",
+          "pages": [
+            {
+              "type": "text",
+              "title": "고급 회로",
+              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:gold_plate",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:gold_plate",
+                "alaindustrial:rubber",
+                "alaindustrial:gold_plate",
+                "alaindustrial:rubber"
+              ],
+              "result_id": "alaindustrial:advanced_circuit",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "advanced_machine_casing",
-          "title": "Advanced Machine Casing",
+          "title": "고급 기계 케이스",
           "icon": "alaindustrial:advanced_machine_casing",
           "block_id": "alaindustrial:advanced_machine_casing",
           "pages": [
             {
               "type": "text",
-              "title": "Advanced Machine Casing",
-              "text": "A full-cube base block for MV machines — a plain machine casing clad in 8 tempered-iron plates."
+              "title": "고급 기계 케이스",
+              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
             },
             {
               "type": "recipe",
@@ -2070,9 +2139,9 @@
                 "#c:plates/tempered_iron",
                 "#c:plates/tempered_iron",
                 "#c:plates/tempered_iron",
-                "#c:plates/tempered_iron",
+                "alaindustrial:advanced_circuit",
                 "alaindustrial:machine_casing",
-                "#c:plates/tempered_iron",
+                "alaindustrial:advanced_circuit",
                 "#c:plates/tempered_iron",
                 "#c:plates/tempered_iron",
                 "#c:plates/tempered_iron"
@@ -2607,7 +2676,7 @@
             {
               "type": "text",
               "title": "큰낫",
-              "text": "한 번 휘둘러 나뭇잎, 풀, 꽃, 그 밖의 장식용 초목을 광역으로 베는 도구이며, Shift를 누르면 다 자란 작물을 수확하는 광역 낫이 됩니다. 나무부터 네더라이트까지 여덟 가지 재료 등급이 있습니다."
+              "text": "한 번 휘둘러 나뭇잎, 풀, 꽃, 그 밖의 장식용 초목을 광역으로 베는 도구이며, Shift를 누르면 다 자란 작물을 수확하는 광역 낫이 됩니다. 나무부터 네더라이트까지 여덟 가지 재료 등급이 있습니다. 수확할 때 추가 씨앗을 얻을 확률이 있으며, 그 확률은 낫의 등급에 따라 높아집니다."
             },
             {
               "type": "stats",

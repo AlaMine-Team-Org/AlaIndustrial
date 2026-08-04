@@ -61,10 +61,31 @@ public final class DirectAdjacencyDistributor {
 			if (target == null || !target.supportsInsertion()) {
 				continue;
 			}
+			long limit = srcTier.maxVoltage();
+			// MOD-314: store → store is the ONE pairing this push must not perform at full tilt. Everything
+			// else here (generator → machine, generator → store) stays an unconditional push, because
+			// neither can flow back and so neither can oscillate.
+			//
+			// Two stores can. Left unregulated, this push is a pump that ignores fill levels entirely, and
+			// a pump beats the regulator: with two boxes flush against each other and a cable looping back,
+			// it keeps re-creating the very gradient the cabled cascade is trying to close, and every lap
+			// pays MOD-021 loss. That circulates forever and drains both. The same gradient rule applied on
+			// both paths removes the asymmetry that makes it possible — and keeps one story for the player,
+			// rather than "flush against each other drains to empty, through a cable it levels out".
+			if (source.isEnergyStorageSink() && isCascadeStore(level, np)) {
+				if (!source.acceptsCascade()) {
+					continue;
+				}
+				limit = CascadeShare.allowance(src.getAmount(), src.getCapacity(),
+						target.getAmount(), target.getCapacity(), dev.alaindustrial.Config.cableBuffer, limit);
+				if (limit <= 0) {
+					continue;
+				}
+			}
 			// Probe (dry run) how much the target will take, then commit exactly that. Sizing the move
 			// before extracting avoids over-pulling from the source and losing the surplus — a generator
 			// buffer has maxInsert == 0, so a refund could not put anything back (see EnergyMover).
-			long movable = EnergyMover.probe(src, target, srcTier.maxVoltage());
+			long movable = EnergyMover.probe(src, target, limit);
 			if (movable <= 0) {
 				continue;
 			}
@@ -73,4 +94,12 @@ public final class DirectAdjacencyDistributor {
 		}
 	}
 
+	/**
+	 * True if the block at {@code pos} is a store that takes part in the cascade (MOD-314). Deliberately
+	 * the same {@code acceptsCascade} predicate the cabled path uses, so the two cannot drift into
+	 * different answers for the same pair of blocks.
+	 */
+	private static boolean isCascadeStore(Level level, BlockPos pos) {
+		return level.getBlockEntity(pos) instanceof MachineBlockEntity mbe && mbe.acceptsCascade();
+	}
 }

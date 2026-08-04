@@ -177,6 +177,22 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		return false;
 	}
 
+	/**
+	 * True if this store may take part in the storage→storage cascade (MOD-314): a fuller battery topping
+	 * up an emptier one until their fill fractions meet.
+	 *
+	 * <p>Deliberately narrower than {@link #isEnergyStorageSink()} and deliberately a named predicate
+	 * rather than an {@code instanceof BatteryBoxBlockEntity} at the call site. The Teleporter is also a
+	 * storage sink, with a buffer 25× a Battery Box's, so a fraction-balancing cascade would quietly drain
+	 * a full box into it down to ~2 % with no generator on the network and no action by the player — a
+	 * balance change nobody asked for, and one that contradicts the Teleporter's own documented model of
+	 * banking EU from a surplus. Whoever adds the next store answers this question explicitly instead of
+	 * inheriting an answer from a type check somewhere else. Default false.
+	 */
+	public boolean acceptsCascade() {
+		return false;
+	}
+
 	public EnergyTier getTier() {
 		return tier;
 	}

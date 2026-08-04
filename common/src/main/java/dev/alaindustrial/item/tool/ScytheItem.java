@@ -7,9 +7,12 @@ import dev.alaindustrial.registry.ModTags;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -19,6 +22,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -125,6 +130,34 @@ public class ScytheItem extends Item {
 
 	public Profile profile() {
 		return this.profile;
+	}
+
+	/**
+	 * Show the bonus-seed chance on the item (MOD-326). MOD-315 gave every tier its own chance — eight
+	 * values from 0 % to 35 % — and said nothing about them in game, so the ladder that is supposed to
+	 * make a better scythe worth crafting was unreadable: a player cannot tell 5 % from 35 % by feel.
+	 *
+	 * <p>The number comes from the same call the drop roll uses, so the tooltip and the dice can never
+	 * disagree. It is therefore the EFFECTIVE chance, with {@code scytheBonusSeedMultiplier} applied: on a
+	 * server that tuned or disabled the mechanic the tooltip follows. At zero — a wooden scythe, or the
+	 * mechanic switched off — the line is omitted rather than shown as "0 %", because a stat that cannot
+	 * happen is noise.
+	 *
+	 * <p>Known limit, shared with every other config-reading tooltip in the mod (see
+	 * {@code MutationChipItem}): this runs on the client and reads the CLIENT's config, which on a
+	 * dedicated server with a different multiplier is not the server's. The mod has no config sync, and
+	 * MOD-326 deliberately did not add one for a cosmetic line.
+	 */
+	@Override
+	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
+			Consumer<Component> adder, TooltipFlag flag) {
+		double chance = ScytheBonus.effectiveChance(profile.bonusSeedChance(), Config.scytheBonusSeedMultiplier);
+		if (chance <= 0.0) {
+			return;
+		}
+		long percent = Math.round(chance * 100.0);
+		adder.accept(Component.translatable("item.alaindustrial.scythe.bonus_seed_chance", percent)
+				.withStyle(ChatFormatting.GRAY));
 	}
 
 	@Override

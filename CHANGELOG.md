@@ -1,15 +1,17 @@
-## 0.1.64
+## 0.1.65
 
-<p><img alt="Ala Industrial 0.1.64 fix and patch banner" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.64/release-media/v0.1.64/changelog.jpeg" width="720"></p>
+<p><img alt="Ala Industrial 0.1.65 fix and patch banner" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.65/release-media/v0.1.65/changelog.jpeg" width="720"></p>
 
-The garden drone flies properly now — and you can finally hear it.
+Battery boxes finally work as one bank, and the scythe tells you what it is worth.
 
 ### New
 
-- **The drone has a voice.** A quiet rotor loop follows it through the air, and goes silent the moment it lands.
-- **Tilling sounds like tilling.** The drone plays the usual hoe sound as it turns a tile.
+- **Scythes show their bonus chance.** Hover any scythe — from 5% on stone up to 35% on netherite. The bonus was always there; now you can see it.
 
 ### Fixed
 
-- **The drone no longer jumps.** It used to snap a block into the air on take-off and drop back down when it finished. Now it lifts off, crosses, settles, and holds a beat on the tile it works.
-- **Torchflowers can be harvested.** Ripe torchflower crops were skipped by both the scythe and the drone. Not any more.
+- **A second battery box actually helps.** A fuller box tops up an emptier one until the two level out. Before, the second box sat empty forever.
+- **Cable or flush, same behaviour.** Boxes wired together and boxes placed side by side now work the same way.
+- **Machines still come first.** A running machine is powered before a neighbouring box, and once two boxes are level nothing keeps moving between them.
+
+Long cable runs pay the usual transfer loss, so keeping boxes close together is cheaper.

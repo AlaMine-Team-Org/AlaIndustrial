@@ -2676,7 +2676,7 @@
             {
               "type": "text",
               "title": "Scythe",
-              "text": "An AOE tool that clears leaves, grass, flowers and other decorative foliage in a single swing, and with Shift held — an AOE sickle that harvests ripe crops. Eight material tiers from wood to netherite."
+              "text": "An AOE tool that clears leaves, grass, flowers and other decorative foliage in a single swing, and with Shift held — an AOE sickle that harvests ripe crops. Harvesting has a chance to yield an extra seed, and that chance grows with the scythe's tier. Eight material tiers from wood to netherite."
             },
             {
               "type": "stats",

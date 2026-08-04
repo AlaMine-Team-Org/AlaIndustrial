@@ -168,6 +168,27 @@ pitest {
                      'dev.alaindustrial.block.entity.IncubatorStatus',
                      'dev.alaindustrial.mutation.MutationGrade',
                      'dev.alaindustrial.mutation.MutationRoll',
+                     // MOD-324: seven MC-free classes that no glob here reached, so their mutants were
+                     // never counted at all — the `targetClasses` side of the same "code added, list not
+                     // updated" defect as the incubator trio above. Four of them already carried a
+                     // written L1 suite that PIT simply never ran (VulcanizerStatusTest,
+                     // FluidOutputViewerModelTest, RecipeViewerLayoutTest, CraftingGridMappingTest); the
+                     // other three (GalvanicBathStatus, GardenDroneStatus, GardenDroneAction) get their
+                     // suites in this same change, because listing a class without a test is a
+                     // deliberate step DOWN in kill rate.
+                     //
+                     // By FQCN, not by package glob, and that is load-bearing: `client.compat` holds
+                     // five classes of which three (MachineRecipeViewerTargets, RecipeCategoryTitle,
+                     // RecipeViewerInfo) are MC-coupled, and `recipe` holds nine of which eight
+                     // implement Recipe<…>. A glob over either package would drag those in and
+                     // manufacture exactly the guaranteed-NO_COVERAGE mutants this task is removing.
+                     'dev.alaindustrial.block.entity.GalvanicBathStatus',
+                     'dev.alaindustrial.block.entity.GardenDroneAction',
+                     'dev.alaindustrial.block.entity.GardenDroneStatus',
+                     'dev.alaindustrial.block.entity.VulcanizerStatus',
+                     'dev.alaindustrial.client.compat.FluidOutputViewerModel',
+                     'dev.alaindustrial.client.compat.RecipeViewerLayout',
+                     'dev.alaindustrial.recipe.CraftingGridMapping',
                      // MOD-204: Config's full L1 suite (ConfigFileTest + ConfigBalanceTest +
                      // ConfigSnapshotTest) now kills 157/157 mutants, so the class rejoins the
                      // mutation run on equal footing with the rest of the core. It is plain-Gson and
@@ -257,6 +278,39 @@ pitest {
             // Listed here (rather than simply left out of targetClasses) so `pitest_check.py --targets`
             // sees a deliberate decision instead of a fresh blind spot and keeps passing.
             'dev.alaindustrial.stats.PlayerStatsClientCache',
+            // MOD-324: four MC-coupled classes that arrived in MOD-258, MOD-151 and MOD-277 over six
+            // days and were never appended here — 195 NO_COVERAGE mutations (20 WorldHeatSources +
+            // 81 FluidNetwork + 64 FluidNetworkManager + 30 CropMaturity) that dropped the gate from
+            // MOD-204's 88.25 % to 67.04 %. This is the SECOND time this exact drift has happened
+            // (MOD-200 fixed it at 67.21 %), which is why MOD-324 also raised the target gate's
+            // `uncovered_mc` finding from a warning to a [FAIL] and wired `pitest_check.py --targets`
+            // into checkAll: the next occurrence now blocks the commit that causes it.
+            //
+            // Excluding them is not a way of dodging the bar — it is arithmetically forced. All 195
+            // are detected="false" and none can ever be otherwise: :common has no Minecraft jar on its
+            // test classpath by design, so the ceiling WITH these classes in the run is 703/898 =
+            // 78.28 %, below the threshold of 80 even with perfect tests.
+            //   - WorldHeatSources: a thin world-facing adapter (Level#getBlockState/getBlockEntity/
+            //     getFluidState). Its MC-free half already lives in HeatSource, which is in the run.
+            //     Same shape as WaterMillClearance/WindMillClearance above.
+            //   - CropMaturity: every branch is an identity query about a block (state.is(tag),
+            //     instanceof StemBlock/SweetBerryBushBlock, comparisons against Blocks.CACTUS), not a
+            //     decision over numbers. Covered by the Fabric/NeoForge L2 scythe + garden-drone tests.
+            //   - FluidNetwork / FluidNetworkManager: mirror the already-excluded EnergyNetwork and
+            //     NetworkManager — ServerLevel/BlockPos/Direction throughout. Honest caveat, recorded
+            //     rather than glossed: each holds a genuinely extractable MC-free rule (the
+            //     "move half the difference" anti-slosh threshold in propagateOneHop, and the
+            //     round-robin tick cursor in tickAll, which is duplicated across three managers).
+            //     Extracting them is worth ~29 mutants (~0.6 pt) and touches live fluid transport, so
+            //     it is its own task rather than a rider on a gate fix — see MOD-324's log.
+            // Do NOT justify these with the "future NeoForge L1.5 pitest lane" the MOD-144 block above
+            // mentions: MOD-110 phase 2 proved that lane impossible (FML's ClassLoadingGuardian
+            // intercepts classloading) and deleted its config. These exclusions are permanent under the
+            // current architecture, and their behaviour is covered by L2 gametests on both loaders.
+            'dev.alaindustrial.core.crop.CropMaturity',
+            'dev.alaindustrial.core.fluid.FluidNetwork',
+            'dev.alaindustrial.core.fluid.FluidNetworkManager',
+            'dev.alaindustrial.core.heat.WorldHeatSources',
             // NOTE: `dev.alaindustrial.Config` lived here as a deferred-coverage parking spot from
             // MOD-200 (135 mutants, only 35 killed) until MOD-204 wrote the full L1 suite
             // (ConfigSnapshotTest) that kills all 157 mutants. It has moved to `targetClasses` above

@@ -64,18 +64,27 @@ public final class StorageEnergyScenarios {
 		helper.fail("battery box block entity missing");
 	}
 
-	// ── MOD-070: a storage source never charges another storage sink (no battery↔battery wash) ─────
+	// ── MOD-314: a fuller store cascades into an emptier one, and stops when they level out ─────────
 
 	private static final BlockPos WASH_SRC = new BlockPos(1, 2, 1);
 	private static final BlockPos WASH_CABLE = new BlockPos(2, 2, 1);
 	private static final BlockPos WASH_DST = new BlockPos(3, 2, 1);
 
 	/**
-	 * MOD-070 storage priority: a charged BatteryBox cabled to an empty one (no generator, no machine)
-	 * must NOT charge it — storage never sources for another storage sink (battery↔battery wash).
-	 * Mirrors: NetworkGameTest.tcCable001Nrg06_storageDoesNotChargeStorage
+	 * MOD-314 cascade: a charged BatteryBox cabled to an empty one (no generator, no machine) DOES charge
+	 * it — that is the whole point of placing a second box to extend the bank.
+	 *
+	 * <p>This test replaces MOD-070's {@code storageDoesNotChargeStorage}, which asserted the exact
+	 * opposite. That rule was written to stop two batteries washing energy back and forth, and it did —
+	 * but it also blocked the legitimate "full box tops up empty box" case, which is the bug MOD-314 was
+	 * filed for. Washing is now excluded by CascadeShare's construction (gradient + half step + deadband,
+	 * and a donor never feeds another donor) rather than by banning the transfer outright, so the
+	 * assertion inverts. Kept at the same coordinates and the same traceability id so the rewrite is
+	 * visible in history instead of appearing as one test deleted and an unrelated one added.
+	 *
+	 * <p>Mirrors: NetworkGameTest.tcCable001Nrg06_cascadeChargesEmptyBatteryBoxOverCable
 	 */
-	public static void storageDoesNotChargeStorage(GameTestHelper helper) {
+	public static void cascadeChargesEmptyBatteryBoxOverCable(GameTestHelper helper) {
 		helper.setBlock(WASH_SRC, ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		helper.setBlock(WASH_CABLE, ModContent.COPPER_CABLE.get());
@@ -95,14 +104,206 @@ public final class StorageEnergyScenarios {
 		}
 		EnergyNetwork net = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(WASH_CABLE));
 		if (net == null) {
-			helper.fail("no energy network formed between the two BatteryBoxes — test cannot verify anti-wash");
+			helper.fail("no energy network formed between the two BatteryBoxes — test cannot verify the cascade");
 		}
 		long dstEnd = be(helper, WASH_DST) instanceof BatteryBoxBlockEntity d ? d.getEnergyStorage().getAmount() : -1;
-		if (dstEnd != 0L) {
-			helper.fail("empty BatteryBox was charged from another BatteryBox: " + dstEnd
-					+ " (storage must never source for another storage sink — battery↔battery wash)");
+		if (dstEnd <= 0L) {
+			helper.fail("empty BatteryBox was not charged from the full one: " + dstEnd
+					+ " (MOD-314: a fuller store must cascade into an emptier one once machines are covered)");
+		}
+		long srcEnd = be(helper, WASH_SRC) instanceof BatteryBoxBlockEntity s ? s.getEnergyStorage().getAmount() : -1;
+		if (srcEnd >= Config.batteryBoxBuffer) {
+			helper.fail("donor BatteryBox did not give anything away: " + srcEnd);
+		}
+		// The donor must never end up emptier than the box it fed: that would mean the half step
+		// overshot, which is the first half of an oscillation.
+		if (srcEnd < dstEnd) {
+			helper.fail("cascade overshot — donor " + srcEnd + " ended below receiver " + dstEnd);
 		}
 		helper.succeed();
+	}
+
+	// ── MOD-314 anti-wash: a levelled pair must stop, and stop COSTING ─────────────────────────────
+
+	private static final BlockPos EQ_DONOR = new BlockPos(1, 2, 1);
+	private static final BlockPos EQ_RECEIVER = new BlockPos(12, 2, 1);
+	private static final BlockPos[] EQ_CABLES = {
+		new BlockPos(2, 2, 1), new BlockPos(3, 2, 1), new BlockPos(4, 2, 1), new BlockPos(5, 2, 1),
+		new BlockPos(6, 2, 1), new BlockPos(7, 2, 1), new BlockPos(8, 2, 1), new BlockPos(9, 2, 1),
+		new BlockPos(10, 2, 1), new BlockPos(11, 2, 1),
+	};
+
+	/**
+	 * MOD-314 anti-wash: once two stores have levelled out, the cascade stops — and stops COSTING.
+	 *
+	 * <p>The first version of this test could not fail, and it is worth saying why so it is not written
+	 * that way again. It put the two boxes one cable apart and started them at exactly equal charge.
+	 * Both choices disarmed it: {@code cableLoss} is {@code floor(gross × (1 − (1 − rate)^distance))},
+	 * which is identically 0 for a 12 EU packet over one copper block, so the conservation assertion was
+	 * arithmetically incapable of detecting a ping-pong; and at exactly equal fill the cascade never opens
+	 * in the first place, so nothing was exercised at all.
+	 *
+	 * <p>This version fixes both. Ten cables make the per-delivery loss non-zero (≈2 EU per 12 EU packet
+	 * on copper), so any energy going round in circles is permanently destroyed and visible as a shrinking
+	 * total. And the pair starts with a real gap, so the cascade genuinely runs, converges, and only then
+	 * is asked to be quiet: the total is sampled after settling and again much later, and the two must be
+	 * identical. A limit cycle would show up as a total that keeps sliding.
+	 */
+	public static void cascadeStopsAtEquilibrium(GameTestHelper helper) {
+		for (BlockPos c : EQ_CABLES) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		helper.setBlock(EQ_DONOR, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		helper.setBlock(EQ_RECEIVER, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		if (!(be(helper, EQ_DONOR) instanceof BatteryBoxBlockEntity donor)
+				|| !(be(helper, EQ_RECEIVER) instanceof BatteryBoxBlockEntity receiver)) {
+			helper.fail("cascade pair was not placed — outside the structure?");
+			return;
+		}
+		long half = Config.batteryBoxBuffer / 2;
+		donor.getEnergyStorage().amount = half + 3_000L;
+		receiver.getEnergyStorage().amount = half;
+		long receiverStart = receiver.getEnergyStorage().getAmount();
+
+		// Phase 1 — let it converge.
+		driveEqualisingLine(helper, 400);
+		long settledTotal = equalisingTotal(helper);
+		long donorMid = be(helper, EQ_DONOR) instanceof BatteryBoxBlockEntity d ? d.getEnergyStorage().getAmount() : -1;
+		long receiverMid = be(helper, EQ_RECEIVER) instanceof BatteryBoxBlockEntity r
+				? r.getEnergyStorage().getAmount() : -1;
+
+		// Guard against a vacuous pass: if nothing ever moved, the quiet phase below proves nothing.
+		if (receiverMid <= receiverStart) {
+			helper.fail("the cascade never ran — receiver still at " + receiverMid
+					+ " EU, so the settling assertions below would be vacuous");
+			return;
+		}
+		if (donorMid < receiverMid) {
+			helper.fail("cascade overshot — donor " + donorMid + " ended below receiver " + receiverMid);
+			return;
+		}
+
+		// Phase 2 — it must now be quiet. Not "almost level": costing nothing.
+		driveEqualisingLine(helper, 200);
+		long laterTotal = equalisingTotal(helper);
+		if (laterTotal != settledTotal) {
+			helper.fail("a settled cascade pair kept moving energy: total " + settledTotal + " -> " + laterTotal
+					+ " EU over 200 idle ticks. Every lap pays MOD-021 cable loss, so a drifting total means the"
+					+ " pair is circulating and will bleed the bank dry.");
+		}
+		helper.succeed();
+	}
+
+	private static void driveEqualisingLine(GameTestHelper helper, int ticks) {
+		for (int i = 0; i < ticks; i++) {
+			tick(helper, be(helper, EQ_DONOR));
+			for (BlockPos c : EQ_CABLES) {
+				tick(helper, be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+			tick(helper, be(helper, EQ_RECEIVER));
+		}
+	}
+
+	/** Every EU the equalising layout holds: both boxes plus every cable segment between them. */
+	private static long equalisingTotal(GameTestHelper helper) {
+		long total = 0;
+		if (be(helper, EQ_DONOR) instanceof BatteryBoxBlockEntity d) {
+			total += d.getEnergyStorage().getAmount();
+		}
+		if (be(helper, EQ_RECEIVER) instanceof BatteryBoxBlockEntity r) {
+			total += r.getEnergyStorage().getAmount();
+		}
+		for (BlockPos c : EQ_CABLES) {
+			if (be(helper, c) instanceof CableBlockEntity cb) {
+				total += cb.getEnergyStorage().getAmount();
+			}
+		}
+		return total;
+	}
+
+	// ── MOD-314 B1: a box wired on BOTH faces (bus running through it) must still receive ───────────
+
+	private static final BlockPos MIDBUS_RING_BOX = new BlockPos(2, 56, 2);
+	private static final BlockPos MIDBUS_DONOR = new BlockPos(2, 56, 4);
+	private static final BlockPos[] MIDBUS_CABLES = {
+		new BlockPos(1, 56, 2), new BlockPos(1, 56, 3), new BlockPos(2, 56, 3),
+		new BlockPos(3, 56, 3), new BlockPos(3, 56, 2),
+	};
+
+	/**
+	 * MOD-314 regression: an EMPTY Battery Box whose IN and OUT faces both touch the same network — the
+	 * ordinary "run the bus through the box" wiring — must still be charged by the cascade.
+	 *
+	 * <p>This is the case the first cut of the fix silently missed, and it is worth stating why, because
+	 * the mistake is easy to repeat. A node lands in the network's storage-source list purely by face
+	 * role: {@code supportsExtraction()} asks the FACE whether it may emit and never looks at the buffer.
+	 * So a box with a cable on its OUT face is a "source" even at 0 EU. Keying the self-serve guard on
+	 * that list therefore dropped every mid-bus box out of the consumer pass, and it could never fill —
+	 * exactly the bug this task was filed for, preserved for the more common wiring while the end-of-line
+	 * case looked fixed. The guard now excludes only nodes that actually received a cascade allowance.
+	 */
+	public static void cascadeChargesMidBusBatteryBox(GameTestHelper helper) {
+		for (BlockPos c : MIDBUS_CABLES) {
+			helper.setBlock(c, ModContent.COPPER_CABLE.get());
+		}
+		// Receiver: FACING=WEST puts IN on (1,56,2) and OUT on (3,56,2) — both ring cables, so the box is
+		// dual-role on ONE network, which is what makes it a "source" despite being empty.
+		helper.setBlock(MIDBUS_RING_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+		// Donor: FACING=SOUTH puts its OUT face on the north side, touching ring cable (2,56,3); its IN
+		// face points at air, so it is a pure source and cannot itself receive.
+		helper.setBlock(MIDBUS_DONOR, ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.SOUTH));
+
+		// A block placed outside the structure bounds is dropped SILENTLY, which would leave this test
+		// green and meaningless. Prove both boxes exist before drawing any conclusion from the result.
+		if (!(be(helper, MIDBUS_DONOR) instanceof BatteryBoxBlockEntity donor)) {
+			helper.fail("donor BatteryBox was not placed at " + MIDBUS_DONOR + " — outside the structure?");
+			return;
+		}
+		if (!(be(helper, MIDBUS_RING_BOX) instanceof BatteryBoxBlockEntity receiver)) {
+			helper.fail("mid-bus BatteryBox was not placed at " + MIDBUS_RING_BOX);
+			return;
+		}
+		donor.getEnergyStorage().amount = Config.batteryBoxBuffer;
+		receiver.getEnergyStorage().amount = 0L;
+
+		for (int i = 0; i < 40; i++) {
+			tick(helper, be(helper, MIDBUS_DONOR));
+			tick(helper, be(helper, MIDBUS_RING_BOX));
+			for (BlockPos c : MIDBUS_CABLES) {
+				tick(helper, be(helper, c));
+			}
+			NetworkManager.tickAll(helper.getLevel());
+		}
+
+		long received = be(helper, MIDBUS_RING_BOX) instanceof BatteryBoxBlockEntity r
+				? r.getEnergyStorage().getAmount() : -1;
+		if (received <= 0L) {
+			helper.fail("a Battery Box with the bus running through it was never charged: " + received
+					+ " EU (MOD-314 B1: face role, not stored charge, decides membership of the storage-source"
+					+ " list — an empty mid-bus box must not be treated as a donor and dropped from the sinks)");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/** Total EU held by the cascade pair and the cable between them. */
+	private static long storedTotal(GameTestHelper helper) {
+		long total = 0;
+		if (be(helper, WASH_SRC) instanceof BatteryBoxBlockEntity s) {
+			total += s.getEnergyStorage().getAmount();
+		}
+		if (be(helper, WASH_DST) instanceof BatteryBoxBlockEntity d) {
+			total += d.getEnergyStorage().getAmount();
+		}
+		if (be(helper, WASH_CABLE) instanceof dev.alaindustrial.block.entity.CableBlockEntity c) {
+			total += c.getEnergyStorage().getAmount();
+		}
+		return total;
 	}
 
 	private static final BlockPos STO_GEN = new BlockPos(1, 2, 1);

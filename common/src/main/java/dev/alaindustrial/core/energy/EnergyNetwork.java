@@ -4,8 +4,10 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -124,11 +126,17 @@ public final class EnergyNetwork {
 	 * WITHOUT a consumer (MOD-070) a <em>generator</em> still fills the cable line up to its buffer
 	 * capacity — a source connected to wires charges them so the buffer is visible and retained — so a
 	 * generator-only network stays awake while any cable still has room, then sleeps once the line is
-	 * full. A network whose only sources are <em>storage sources</em> (a dual-role BatteryBox) with no
-	 * consumer sleeps immediately: storage discharges into the line only to cover a machine deficit
-	 * ({@link EnergyLineDistributor#chargeAndPropagateLine}), so with no machine it would charge nothing
-	 * — keeping it awake would spin a no-op tick (and an O(cables) {@link #lineHasRoom} scan) forever.
+	 * full. A network whose only sources are <em>storage sources</em> (a dual-role BatteryBox) and that
+	 * has NO consumer at all sleeps immediately: with nothing to serve, storage charges nothing, and
+	 * keeping it awake would spin a no-op tick (plus an O(cables) {@link #lineHasRoom} scan) forever.
 	 * A consumer-only or empty network can move nothing and is asleep until its neighbours change.
+	 *
+	 * <p>Note the precise condition, because MOD-314 narrowed what "storage charges nothing" means. It
+	 * used to hold because storage discharged only to cover a machine deficit; a cascade donor now also
+	 * discharges toward an emptier store. That does not change this method: the early return above fires
+	 * only when {@code consumers()} is empty, and a cascade needs a storage sink on the network, which
+	 * would be a consumer. So the sleep gate is still correct — but it is correct because there is no
+	 * consumer, not because storage never discharges without machines.
 	 */
 	public boolean isAwake() {
 		List<EnergyTopologyCache.Endpoint> producers = topology.producers();
@@ -262,6 +270,81 @@ public final class EnergyNetwork {
 	}
 
 	/**
+	 * True if the store at {@code pos} may RECEIVE from the storage→storage cascade (MOD-314). Strictly
+	 * narrower than {@link #isStorageSink}: the Teleporter is a storage sink too, with 25× a Battery Box's
+	 * buffer, so balancing by fill fraction would drain a full box into it unbidden.
+	 */
+	private boolean acceptsCascade(BlockPos pos) {
+		return topology.level().getBlockEntity(pos) instanceof MachineBlockEntity mbe && mbe.acceptsCascade();
+	}
+
+	/**
+	 * How much each storage source may push into the line as a cascade donor this tick (MOD-314).
+	 *
+	 * <p>Per (donor, sink) pair, keeping only the single most-favourable target per donor: the line
+	 * decides where the EU actually lands (proportionally to room, {@code EnergyShare.split}), so this
+	 * only has to answer "is there a target worth opening the tap for, and how wide". Sizing off the
+	 * emptiest eligible target is what makes the allowance shrink as the pair levels out.
+	 *
+	 * <p>The deadband is the network's segment buffer, taken from its strongest cable grade — not the
+	 * tier packet cap and not the global {@code Config.cableBuffer}. MOD-070 established the segment
+	 * buffer as the real per-tick throughput between two points, so it is the unit a "too small to
+	 * bother" threshold has to be measured in; MOD-219 made it per grade, so reading the global would
+	 * under-set the deadband fourfold on a gold line and weaken the anti-oscillation guarantee exactly
+	 * where packets are largest.
+	 *
+	 * <p>Only self is excluded as a target — deliberately not "every other storage source". A node is a
+	 * source by face role alone, charge not consulted, so excluding the whole set would make an empty
+	 * mid-bus box permanently ineligible (see the guard in {@code tick()}). Two nodes cannot donate to
+	 * each other anyway: the gradient is strict, and {@code fill(a) > fill(b)} and {@code fill(b) >
+	 * fill(a)} cannot both hold. A chain (c → a → b) is legitimate, and the guard keeps whoever is
+	 * actually donating out of the serve pass.
+	 */
+	private Map<BlockPos, Long> computeCascadeAllowances(List<EnergyLineDistributor.LiveProducer> donors,
+			List<EnergyLineDistributor.LiveConsumer> sinks, long deadband, long packetCap) {
+		Map<BlockPos, Long> allowances = new LinkedHashMap<>();
+		// EU that has already left a donor and is still travelling: the line advances one hop per tick, so
+		// on an N-cable run up to N × segmentBuffer EU is in transit and absent from every stored amount
+		// the comparison below can see. Ignoring it makes the donor keep giving for as many ticks as the
+		// line is long, and it lands PAST level — measured at 77 EU over ten copper cables, which is the
+		// first half of an oscillation on any layout where the receiver can donate back. Counting it as
+		// already delivered removes the blind spot. Attributing it per (donor, sink) pair is not possible
+		// — a cable buffer does not record where its EU came from or is going — so the whole line counts
+		// against every sink, which biases toward refusing a transfer rather than overshooting one.
+		long inFlight = 0L;
+		for (BlockPos pos : topology.cables()) {
+			EnergyBuffer buf = cableBufferAt(pos);
+			if (buf != null) {
+				inFlight += buf.amount;
+			}
+		}
+		for (EnergyLineDistributor.LiveProducer donor : donors) {
+			if (!acceptsCascade(donor.pos())) {
+				continue;
+			}
+			long donorAmount = donor.storage().getAmount();
+			long donorCapacity = donor.storage().getCapacity();
+			long best = 0L;
+			for (EnergyLineDistributor.LiveConsumer sink : sinks) {
+				if (sink.pos().equals(donor.pos()) || !acceptsCascade(sink.pos())) {
+					continue;
+				}
+				long sinkCapacity = sink.storage().getCapacity();
+				long sinkAmount = Math.min(sinkCapacity, sink.storage().getAmount() + inFlight);
+				long allowance = CascadeShare.allowance(donorAmount, donorCapacity,
+						sinkAmount, sinkCapacity, deadband, packetCap);
+				if (allowance > best) {
+					best = allowance;
+				}
+			}
+			if (best > 0) {
+				allowances.put(donor.pos(), best);
+			}
+		}
+		return allowances;
+	}
+
+	/**
 	 * Can the block at {@code pos} ACCEPT energy through the face pointing in {@code face} (MOD-255)? The
 	 * distributor finds an endpoint's cables by adjacency, which says nothing about the role of the face
 	 * they touch; this is the per-face permission behind that adjacency. Neutral on purpose — resolved
@@ -308,8 +391,15 @@ public final class EnergyNetwork {
 
 		// --- dry-run supply, partitioned by source priority (MOD-070): pure generators vs storage
 		// sources (dual-role BatteryBox with a cabled OUT face). Generators feed the line and charge
-		// storage; storage only discharges into the line as backup (machine deficit), and NEVER sources
-		// for another storage sink — so batteries can't wash energy through the wires or into each other. ---
+		// storage; storage discharges into the line as backup power (machine deficit) and — since
+		// MOD-314 — as a cascade donor once machines are covered.
+		//
+		// This comment used to end "and NEVER sources for another storage sink — so batteries can't wash
+		// energy through the wires or into each other". That blanket ban was too wide: it did stop washing,
+		// but it also stopped the legitimate case of a full box topping up an empty one, so a player could
+		// not extend their bank by placing a second Battery Box. Washing is now excluded by construction
+		// instead — a donor only feeds a store that is proportionally emptier, only by half the gap, only
+		// above a deadband, and never one that is itself donating this tick. See CascadeShare. ---
 		long genSupply = 0;
 		java.util.Set<BlockPos> supplyingProducers = new java.util.LinkedHashSet<>();
 		List<EnergyLineDistributor.LiveProducer> generators = new ArrayList<>(producers.size());
@@ -387,8 +477,47 @@ public final class EnergyNetwork {
 		// machines are hungry and generators fall short, a dual-role box only feeds and does not fill. That
 		// is MOD-009's "machines before storage" rule, now also applied to the battery's own second role.
 		long storageDischarge = EnergyLineDistributor.storageBudget(machineDemand, genSupply);
-		if (storageDischarge > 0 && !storageSourcePositions.isEmpty()) {
-			sinks.removeIf(c -> storageSourcePositions.contains(c.pos()));
+
+		// MOD-314: the storage→storage cascade — a fuller Battery Box topping up an emptier one, so
+		// "extend the bank by placing a second box" works. Computed HERE, before the guard below, because
+		// the guard has to know whether a node is discharging for ANY reason this tick.
+		//
+		// Only when `storageDischarge == 0`, i.e. machines are absent or already covered by generators.
+		// That is MOD-009's "machines before storage" rule (a battery must not top up another battery
+		// while a machine starves) and it also makes the two storage stages mutually exclusive, which is
+		// what keeps one source from injecting 2 × packetCap in a tick — see chargeAndPropagateLine.
+		//
+		// Targets exclude every dual-role position: a node that donates this tick must not also receive,
+		// or two boxes wired on both faces would hand the same EU back and forth, paying MOD-021 loss on
+		// every leg — a slow drain, strictly worse than the bug being fixed. Restricting the RECEIVER to
+		// a pure sink makes that ping-pong structurally impossible rather than merely unlikely.
+		Map<BlockPos, Long> cascadeAllowances = new LinkedHashMap<>();
+		if (storageDischarge == 0 && !storageSources.isEmpty() && !sinks.isEmpty()) {
+			cascadeAllowances = computeCascadeAllowances(storageSources, sinks, strongestCable.segmentBuffer(),
+					packetCap);
+		}
+
+		// MOD-255 + MOD-314: a storage node that discharges into this line THIS tick — as backup power OR
+		// as a cascade donor — must not also be served from it, or it drinks its own discharge back out of
+		// the neighbouring cable. Before MOD-314 this read `storageDischarge > 0` alone, which is zero in
+		// exactly the scenario the cascade runs in (no machines), so the guard would have been inert
+		// precisely when it was needed.
+		//
+		// Membership of `storageSources` is NOT the right criterion, and using it re-created the very bug
+		// this task exists to fix. That list is built from `supportsExtraction()`, a pure face-role test
+		// that never looks at the buffer — so an EMPTY box with a cable on its OUT face counts as a
+		// "source". Excluding all of them would drop every box wired mid-bus (cable–box–cable, the layout
+		// MOD-255 documents as ordinary) out of `sinks`, and it would never charge from its full neighbour:
+		// the original symptom, preserved for the more common wiring. Backup discharge does draw from every
+		// storage source, so there the whole set is right; the cascade draws only from donors that actually
+		// got an allowance, so only those are excluded.
+		if (!storageSourcePositions.isEmpty()) {
+			if (storageDischarge > 0) {
+				sinks.removeIf(c -> storageSourcePositions.contains(c.pos()));
+			} else if (!cascadeAllowances.isEmpty()) {
+				Map<BlockPos, Long> discharging = cascadeAllowances;
+				sinks.removeIf(c -> discharging.containsKey(c.pos()));
+			}
 		}
 
 		// MOD-252: the flow direction is seeded from the endpoints that actually WANT energy this tick, so
@@ -430,6 +559,7 @@ public final class EnergyNetwork {
 		long[] movedEu = {0L};
 		long finalMachineDemand = machineDemand;
 		long finalGenSupply = genSupply;
+		Map<BlockPos, Long> finalCascadeAllowances = cascadeAllowances;
 		EnergyTransactions.get().runCommitting(tx -> {
 			// Serve ALL consumers from the line — machines first (MOD-009 priority), then storage sinks.
 			// Both drain the cable buffers they touch, so a cable between a source and ANY consumer
@@ -442,7 +572,7 @@ public final class EnergyNetwork {
 			// short of (backup power), never to hoard buffers or wash into another battery. With no
 			// generator present, storage discharges nothing, so two batteries can't drain each other.
 			distributor.chargeAndPropagateLine(generators, storageSources, finalMachineDemand, finalGenSupply,
-					packetCap, tx, producerCursor);
+					packetCap, tx, producerCursor, finalCascadeAllowances);
 		});
 		// Advance the rotation cursor so the next tick starts at a different producer / face. Monotonic and
 		// masked non-negative (MOD-254); every use site re-applies the modulus against its own list size.
