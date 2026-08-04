@@ -84,8 +84,9 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		this.tier = tier;
 		this.baseSlots = slots;
 		// Every GUI machine gets four upgrade slots appended to the tail of `items` (MOD-080). "GUI
-		// machine" = a MenuProvider; the cable is the only MachineBlockEntity that is not one, so it
-		// keeps its zero slots. Appending at the tail leaves existing indices (0=input, 1=output, …)
+		// machine" = a MenuProvider; the screenless blocks (cables, the pipes, the electric heater, the
+		// charging station) are not, so they keep their zero slots. Appending at the tail leaves
+		// existing indices (0=input, 1=output, …)
 		// and their gametests untouched. `this instanceof` is well-defined here: the object's runtime
 		// type is the concrete subclass throughout super-construction.
 		int total = slots + (this instanceof MenuProvider ? UPGRADE_SLOT_COUNT : 0);

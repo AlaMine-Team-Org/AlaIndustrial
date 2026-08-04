@@ -338,6 +338,45 @@
           ]
         },
         {
+          "id": "charge_pad",
+          "title": "Station de recharge",
+          "icon": "alaindustrial:charge_pad",
+          "block_id": "alaindustrial:charge_pad",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Station de recharge",
+              "text": "Une plaque qui recharge tout l'équipement alimenté du joueur qui se tient dessus — inventaire, seconde main et équipement porté — sans aucune interface à ouvrir."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 20 000 EU",
+                "Buffer: 20 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:battery",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:charge_pad",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "Coffre à batteries",
           "icon": "alaindustrial:battery_box",

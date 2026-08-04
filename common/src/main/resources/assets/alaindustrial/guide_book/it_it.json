@@ -338,6 +338,45 @@
           ]
         },
         {
+          "id": "charge_pad",
+          "title": "Stazione di ricarica",
+          "icon": "alaindustrial:charge_pad",
+          "block_id": "alaindustrial:charge_pad",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Stazione di ricarica",
+              "text": "Una piastra che ricarica tutto l'equipaggiamento alimentato del giocatore che ci sta sopra — inventario, mano secondaria ed equipaggiamento indossato — senza alcuna interfaccia da aprire."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: 20 000 EU",
+                "Buffer: 20 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:battery",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:charge_pad",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "Deposito di energia",
           "icon": "alaindustrial:battery_box",

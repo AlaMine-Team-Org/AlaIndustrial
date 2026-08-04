@@ -5,6 +5,7 @@ import dev.alaindustrial.block.AssemblerBlock;
 import dev.alaindustrial.block.BatteryBoxBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
+import dev.alaindustrial.block.ChargePadBlock;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
@@ -185,6 +186,8 @@ public final class ModBlocks {
 	public static final ResourceKey<Block> ELECTRIC_HEATER_KEY = key("electric_heater");
 	public static final Block ELECTRIC_HEATER =
 			register(ELECTRIC_HEATER_KEY, new ElectricHeaterBlock(props(ELECTRIC_HEATER_KEY)));
+	public static final ResourceKey<Block> CHARGE_PAD_KEY = key("charge_pad");
+	public static final Block CHARGE_PAD = register(CHARGE_PAD_KEY, new ChargePadBlock(props(CHARGE_PAD_KEY)));
 
 	public static final ResourceKey<Block> INCUBATOR_KEY = key("incubator");
 	public static final Block INCUBATOR = register(INCUBATOR_KEY, new IncubatorBlock(props(INCUBATOR_KEY)));
@@ -356,6 +359,7 @@ public final class ModBlocks {
 		ModContent.VULCANIZER = () -> VULCANIZER;
 		ModContent.GALVANIC_BATH = () -> GALVANIC_BATH;
 		ModContent.ELECTRIC_HEATER = () -> ELECTRIC_HEATER;
+		ModContent.CHARGE_PAD = () -> CHARGE_PAD;
 		ModContent.INCUBATOR = () -> INCUBATOR;
 		ModContent.INCUBATOR_DOME = () -> INCUBATOR_DOME;
 		ModContent.TRELLIS = () -> TRELLIS;

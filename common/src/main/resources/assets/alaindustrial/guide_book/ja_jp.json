@@ -338,6 +338,45 @@
           ]
         },
         {
+          "id": "charge_pad",
+          "title": "充電ステーション",
+          "icon": "alaindustrial:charge_pad",
+          "block_id": "alaindustrial:charge_pad",
+          "pages": [
+            {
+              "type": "text",
+              "title": "充電ステーション",
+              "text": "上に立ったプレイヤーの動力付き装備をすべて充電するプレート。インベントリ、オフハンド、着用中の装備まで対応し、開く画面は一切ありません。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 20 000 EU",
+                "Buffer: 20 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:battery",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:charge_pad",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "エネルギー貯蔵庫",
           "icon": "alaindustrial:battery_box",

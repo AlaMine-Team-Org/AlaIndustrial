@@ -338,6 +338,45 @@
           ]
         },
         {
+          "id": "charge_pad",
+          "title": "চার্জিং স্টেশন",
+          "icon": "alaindustrial:charge_pad",
+          "block_id": "alaindustrial:charge_pad",
+          "pages": [
+            {
+              "type": "text",
+              "title": "চার্জিং স্টেশন",
+              "text": "একটি প্লেট যা এর উপর দাঁড়ানো খেলোয়াড়ের সমস্ত চালিত জিনিস চার্জ করে — ইনভেন্টরি, অফহ্যান্ড এবং পরিহিত সরঞ্জাম — কোনো ইন্টারফেস খোলার প্রয়োজন ছাড়াই।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 20 000 EU",
+                "Buffer: 20 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:battery",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:charge_pad",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "ব্যাটারি বাক্স",
           "icon": "alaindustrial:battery_box",

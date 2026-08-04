@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "state=idle": { "model": "alaindustrial:block/charge_pad" },
+    "state=charging": { "model": "alaindustrial:block/charge_pad_charging" },
+    "state=ready": { "model": "alaindustrial:block/charge_pad_ready" },
+    "state=empty": { "model": "alaindustrial:block/charge_pad_empty" }
+  }
+}

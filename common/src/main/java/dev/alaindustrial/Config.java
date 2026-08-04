@@ -295,6 +295,39 @@ public final class Config {
 	 * runs once per second in batches of {@code energyPackOutputRate × 20} EU (see EnergyPackItem). */
 	public static int energyPackOutputRate = 32;
 
+	// --- Charging Station (MOD-274, the pad the player stands on) ---
+	/**
+	 * Charging Station EU buffer — a Battery Box's worth ({@link #batteryBoxBuffer}), and the single
+	 * number that makes the station feel instant.
+	 *
+	 * <p>This is the one machine in the mod whose buffer is not sized to "one operation": it is sized to
+	 * a <em>visit</em>. The station is a capacitor. It fills slowly from the grid while nobody is on it
+	 * and empties fast into whoever steps up, which is the only way {@link #chargePadOutputRate} can ever
+	 * be reached — the grid itself cannot deliver that much (see the rate's own note). Cut this to a
+	 * machine-sized 800 and the station still works, but hands out its whole buffer in six ticks and
+	 * then crawls at whatever the cable feeds it, which is exactly the "stand here for three minutes"
+	 * experience the block exists to remove.
+	 */
+	public static int chargePadBuffer = 20_000;
+	/**
+	 * Max EU/tick the station accepts from the grid. Set to the MV ceiling ({@link #tierMvVoltage}) on
+	 * purpose, even though the block itself is LV: it is a ceiling, not a promise, and nothing in the
+	 * mod can currently reach it. What actually arrives is set by the supply — 12 EU/t through a copper
+	 * cable ({@link #cableBuffer}), 48 through a gold one ({@link #goldCableBuffer}), 32 from a Battery
+	 * Box flush against it ({@code DirectAdjacencyDistributor} caps at the SOURCE's tier voltage). So
+	 * the station simply scales with whatever grid the player has built instead of capping their good
+	 * infrastructure at LV, and the MV supply it is ready for costs gold to lay.
+	 */
+	public static int chargePadInputRate = 128;
+	/**
+	 * Max EU/tick the station hands to the items on the player standing on it, drawn from its buffer.
+	 * Every target is still clamped by its own {@link dev.alaindustrial.item.energy.ItemEnergy#inputRate}
+	 * (32 for every powered item in the mod), so this is the station's total per-tick output shared
+	 * across everything the player carries, not a per-item rate — a full set drains the buffer in
+	 * roughly eight seconds and then continues at the speed of the incoming supply.
+	 */
+	public static int chargePadOutputRate = 128;
+
 	// --- Electric Drill (MOD-079, first powered hand tool) ---
 	/** Electric Drill EU buffer — half an Energy Pack, five pouches' worth. At {@link #electricDrillEuPerBlock}
 	 * per block this is ~200 blocks on a full charge. */
@@ -790,6 +823,12 @@ public final class Config {
 				() -> machineBuffer, v -> machineBuffer = v, 1),
 			new IntField("electricHeaterBuffer", "Electric Heater EU buffer. Applies to newly placed blocks.",
 				() -> electricHeaterBuffer, v -> electricHeaterBuffer = v, 1),
+			new IntField("chargePadBuffer", "Charging Station EU buffer. Sized to a visit, not an operation: the station banks power while idle so it can charge a player's gear in one burst. Applies to newly placed blocks.",
+				() -> chargePadBuffer, v -> chargePadBuffer = v, 1),
+			new IntField("chargePadInputRate", "Max EU/t the Charging Station accepts from the grid. A ceiling, not a promise - a copper cable delivers 12, a gold one 48, an adjacent Battery Box 32.",
+				() -> chargePadInputRate, v -> chargePadInputRate = v, 1),
+			new IntField("chargePadOutputRate", "Max EU/t the Charging Station hands to the player standing on it, shared across every powered item they carry (each item still capped by its own input rate).",
+				() -> chargePadOutputRate, v -> chargePadOutputRate = v, 1),
 			new IntField("pumpBuffer", "Pump EU buffer. Applies to newly placed blocks.",
 				() -> pumpBuffer, v -> pumpBuffer = v, 1),
 			new IntField("generatorBuffer", "Fuel generator EU buffer. Applies to newly placed blocks.",

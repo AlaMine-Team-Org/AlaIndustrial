@@ -318,6 +318,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("galvanic_bath", ModBlocksNeoForge.GALVANIC_BATH);
 	public static final DeferredItem<BlockItem> ELECTRIC_HEATER_ITEM =
 			ITEMS.registerSimpleBlockItem("electric_heater", ModBlocksNeoForge.ELECTRIC_HEATER);
+	public static final DeferredItem<BlockItem> CHARGE_PAD_ITEM =
+			ITEMS.registerSimpleBlockItem("charge_pad", ModBlocksNeoForge.CHARGE_PAD);
 	public static final DeferredItem<BlockItem> INCUBATOR_ITEM =
 			ITEMS.registerSimpleBlockItem("incubator", ModBlocksNeoForge.INCUBATOR);
 	public static final DeferredItem<BlockItem> TRELLIS_ITEM =
@@ -541,6 +543,7 @@ public final class ModItemsNeoForge {
 		ModContent.VULCANIZER_ITEM = VULCANIZER_ITEM;
 		ModContent.GALVANIC_BATH_ITEM = GALVANIC_BATH_ITEM;
 		ModContent.ELECTRIC_HEATER_ITEM = ELECTRIC_HEATER_ITEM;
+		ModContent.CHARGE_PAD_ITEM = CHARGE_PAD_ITEM;
 		ModContent.INCUBATOR_ITEM = INCUBATOR_ITEM;
 		ModContent.TRELLIS_ITEM = TRELLIS_ITEM;
 		ModContent.MUTATION_CHIP_TRANSFORM = MUTATION_CHIP_TRANSFORM;

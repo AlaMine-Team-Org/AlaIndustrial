@@ -135,6 +135,9 @@ class ConfigSnapshotTest {
 		SENTINELS.put("maceratorBuffer", 1600);
 		SENTINELS.put("machineBuffer", 1601);
 		SENTINELS.put("electricHeaterBuffer", 1602);
+		SENTINELS.put("chargePadBuffer", 22_333);
+		SENTINELS.put("chargePadInputRate", 137);
+		SENTINELS.put("chargePadOutputRate", 138);
 		SENTINELS.put("pumpBuffer", 5000);
 		SENTINELS.put("generatorBuffer", 5001);
 		SENTINELS.put("geothermalBuffer", 5002);

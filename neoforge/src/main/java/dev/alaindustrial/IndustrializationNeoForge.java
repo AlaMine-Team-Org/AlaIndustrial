@@ -437,6 +437,7 @@ public final class IndustrializationNeoForge {
 					ModBlockEntitiesNeoForge.GALVANIC_BATH,
 					ModBlockEntitiesNeoForge.VULCANIZER,
 					ModBlockEntitiesNeoForge.ELECTRIC_HEATER,
+					ModBlockEntitiesNeoForge.CHARGE_PAD,
 					ModBlockEntitiesNeoForge.INCUBATOR,
 					ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR,
 					ModBlockEntitiesNeoForge.PUMP,

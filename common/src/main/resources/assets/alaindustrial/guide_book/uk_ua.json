@@ -338,6 +338,45 @@
           ]
         },
         {
+          "id": "charge_pad",
+          "title": "Зарядна станція",
+          "icon": "alaindustrial:charge_pad",
+          "block_id": "alaindustrial:charge_pad",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Зарядна станція",
+              "text": "Плита, яка заряджає все енергетичне спорядження гравця, що став на неї — інвентар, ліву руку та вдягнене — без жодного вікна інтерфейсу."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 20 000 EU",
+                "Buffer: 20 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:battery",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:charge_pad",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "Енергосховище",
           "icon": "alaindustrial:battery_box",

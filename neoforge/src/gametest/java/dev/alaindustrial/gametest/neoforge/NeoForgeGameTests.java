@@ -10,6 +10,7 @@ import dev.alaindustrial.gametest.CableEnergyScenarios;
 import dev.alaindustrial.gametest.AdvancedCircuitScenarios;
 import dev.alaindustrial.gametest.CableInsulationScenarios;
 import dev.alaindustrial.gametest.CableShockScenarios;
+import dev.alaindustrial.gametest.ChargePadScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.GeneratorEnergyScenarios;
 import dev.alaindustrial.gametest.MachineEnergyScenarios;
@@ -644,6 +645,25 @@ public final class NeoForgeGameTests {
 		registerTest(event, "pack_charges_cursor_and_grid", 40, true, EnergyPackScenarios::fun10ChargesCursorAndCraftGrid);
 		registerTest(event, "pack_skips_open_container", 40, true, EnergyPackScenarios::neg05DoesNotChargeOpenContainer);
 		registerTest(event, "pack_charge_round_trip", 40, true, EnergyPackScenarios::per01ChargeRoundTrip);
+
+		// Charging Station (MOD-274, TC-PAD-001) — same loader-neutral bodies as the Fabric
+		// ChargePadGameTest suite: the transfer, worn gear, the tag and input-rate guards, the
+		// indicator states, the idle release and the energy-face contract.
+		registerTest(event, "pad_charges_carried_item", 40, true, ChargePadScenarios::fun01ChargesCarriedItem);
+		registerTest(event, "pad_charges_worn_equipment", 40, true, ChargePadScenarios::fun02ChargesWornEquipment);
+		registerTest(event, "pad_charges_pack_despite_tag", 40, true, ChargePadScenarios::fun03ChargesEnergyPackDespiteTag);
+		registerTest(event, "pad_respects_input_rate", 40, true, ChargePadScenarios::fun04RespectsPerItemInputRate);
+		registerTest(event, "pad_budget_shared_and_capped", 40, true, ChargePadScenarios::fun05BudgetIsSharedAndCapped);
+		registerTest(event, "pad_armour_set_together", 40, true, ChargePadScenarios::fun12WholeArmourSetChargesTogether);
+		registerTest(event, "pad_empty_reports_empty", 40, true, ChargePadScenarios::fun06EmptyStationReportsEmpty);
+		registerTest(event, "pad_full_visitor_ready", 40, true, ChargePadScenarios::fun07FullVisitorReportsReady);
+		registerTest(event, "pad_releases_after_leaving", 40, true, ChargePadScenarios::fun08ReleasesAfterVisitorLeaves);
+		registerTest(event, "pad_spectator_ignored", 40, true, ChargePadScenarios::fun09SpectatorIsIgnored);
+		registerTest(event, "pad_entity_inside_hook", 40, true, ChargePadScenarios::fun10EntityInsideHookReachesTheStation);
+		registerTest(event, "pad_only_underfoot_serves", 40, true, ChargePadScenarios::fun11OnlyTheStationUnderfootServes);
+		registerTest(event, "pad_faces_intake_only", 40, true, ChargePadScenarios::nrg01EveryFaceIsIntakeOnly);
+		registerTest(event, "pad_buffer_persists", 40, true, ChargePadScenarios::nrg02BufferPersists);
+		registerTest(event, "pad_takes_energy_from_neighbour", 40, true, ChargePadScenarios::nrg03TakesEnergyFromNeighbour);
 
 		// Electric Drill (MOD-079, TC-DRILL-001) — same loader-neutral bodies as the Fabric
 		// ElectricDrillGameTest suite: charge slot, EU drain, hand-speed fallback, pickaxe tags, enchants.

@@ -1,0 +1,24 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "alaindustrial:block/charge_pad_side_charging",
+    "down": "alaindustrial:block/machine_bottom",
+    "up": "alaindustrial:block/charge_pad_top_charging",
+    "side": "alaindustrial:block/charge_pad_side_charging"
+  },
+  "elements": [
+    {
+      "name": "plate",
+      "from": [0, 0, 0],
+      "to": [16, 4, 16],
+      "faces": {
+        "down": { "uv": [0, 0, 16, 16], "texture": "#down", "cullface": "down" },
+        "up":   { "uv": [0, 0, 16, 16], "texture": "#up" },
+        "north": { "uv": [0, 12, 16, 16], "texture": "#side" },
+        "south": { "uv": [0, 12, 16, 16], "texture": "#side" },
+        "west":  { "uv": [0, 12, 16, 16], "texture": "#side" },
+        "east":  { "uv": [0, 12, 16, 16], "texture": "#side" }
+      }
+    }
+  ]
+}

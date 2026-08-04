@@ -1,17 +1,14 @@
-## 0.1.65
+## 0.1.66
 
-<p><img alt="Ala Industrial 0.1.65 fix and patch banner" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.65/release-media/v0.1.65/changelog.jpeg" width="720"></p>
+<p><img alt="Ala Industrial 0.1.66 update preview: a player standing on the Charging Station while their gear charges" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.66/release-media/v0.1.66/changelog.webp" width="720"></p>
 
-Battery boxes finally work as one bank, and the scythe tells you what it is worth.
+One new block: step onto it and your gear charges itself.
 
 ### New
 
-- **Scythes show their bonus chance.** Hover any scythe — from 5% on stone up to 35% on netherite. The bonus was always there; now you can see it.
+- **Charging Station.** A flat plate you stand on. Everything powered charges at once — tools in your bag, whatever is in your offhand, and worn gear like a Jetpack or a full Fluxweave set.
+- **Nothing to open.** The lamps under your feet say it all: blue is charging, green means you are done, red means the station is out of power.
+- **It banks power while you are away**, so the reserve is waiting when you get back.
+- **A column of sparks** rises around you while it works — you can see it running from across the base.
 
-### Fixed
-
-- **A second battery box actually helps.** A fuller box tops up an emptier one until the two level out. Before, the second box sat empty forever.
-- **Cable or flush, same behaviour.** Boxes wired together and boxes placed side by side now work the same way.
-- **Machines still come first.** A running machine is powered before a neighbouring box, and once two boxes are level nothing keeps moving between them.
-
-Long cable runs pay the usual transfer loss, so keeping boxes close together is cheaper.
+Each item still charges at its usual speed. This is not a faster charger; it is one that does your whole kit at once, with no clicks.

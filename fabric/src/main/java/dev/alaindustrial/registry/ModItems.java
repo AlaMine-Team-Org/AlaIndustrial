@@ -237,6 +237,7 @@ public final class ModItems {
 	public static final BlockItem GALVANIC_BATH_ITEM =
 			blockItem("galvanic_bath", ModBlocks.GALVANIC_BATH);
 	public static final BlockItem ELECTRIC_HEATER_ITEM = blockItem("electric_heater", ModBlocks.ELECTRIC_HEATER);
+	public static final BlockItem CHARGE_PAD_ITEM = blockItem("charge_pad", ModBlocks.CHARGE_PAD);
 	public static final BlockItem INCUBATOR_ITEM = blockItem("incubator", ModBlocks.INCUBATOR);
 	public static final BlockItem TRELLIS_ITEM = blockItem("trellis", ModBlocks.TRELLIS);
 	public static final BlockItem PUMP_ITEM = blockItem("pump", ModBlocks.PUMP);
@@ -703,6 +704,7 @@ public final class ModItems {
 		ModContent.VULCANIZER_ITEM = () -> VULCANIZER_ITEM;
 		ModContent.GALVANIC_BATH_ITEM = () -> GALVANIC_BATH_ITEM;
 		ModContent.ELECTRIC_HEATER_ITEM = () -> ELECTRIC_HEATER_ITEM;
+		ModContent.CHARGE_PAD_ITEM = () -> CHARGE_PAD_ITEM;
 		ModContent.INCUBATOR_ITEM = () -> INCUBATOR_ITEM;
 		ModContent.TRELLIS_ITEM = () -> TRELLIS_ITEM;
 		ModContent.MUTATION_CHIP_TRANSFORM = () -> MUTATION_CHIP_TRANSFORM;

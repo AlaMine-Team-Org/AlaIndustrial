@@ -415,6 +415,11 @@ public final class DemoStand {
 		// Enriched Uranium Torch (MOD-085): the standing torch on the floor, and the wall variant mounted
 		// on a small stone post (facing WEST → supported by the post block to its east) so both survive.
 		set(level, origin, 37, 1, 10, ModContent.ENRICHED_URANIUM_TORCH.get());
+		// Charging Station (MOD-274): banked full, so a visitor can step straight onto the stand's copy
+		// and watch their gear fill — an empty one would only ever show the red "no power" indicator.
+		// Sits at floor level under the wall torch's post; it is a 4px plate, so nothing above it moves.
+		set(level, origin, 38, 1, 10, ModContent.CHARGE_PAD.get());
+		chargeBuffer(level, origin, 38, 1, 10);
 		set(level, origin, 39, 1, 10, FLOOR);
 		set(level, origin, 39, 2, 10, FLOOR);
 		level.setBlockAndUpdate(origin.offset(38, 2, 10),

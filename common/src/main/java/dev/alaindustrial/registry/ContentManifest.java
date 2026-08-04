@@ -5,6 +5,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
+import dev.alaindustrial.block.entity.ChargePadBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
@@ -249,6 +250,11 @@ public final class ContentManifest {
 					.lightLevel(ModBlockProperties::litLight))),
 			Map.entry("electric_heater", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.lightLevel(ModBlockProperties::litLight))),
+			// noOcclusion for the same reason as the drone dock: a 4px plate would otherwise cull the
+			// faces around it as if a solid cube sat there. The light is four-valued rather than lit/unlit
+			// — see ChargePadState.
+			Map.entry("charge_pad", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.noOcclusion().lightLevel(ModBlockProperties::chargePadLight))),
 			// The emitter ring lights the chamber while an operation runs, so the block emits too.
 			Map.entry("incubator", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.lightLevel(ModBlockProperties::litLight))),
@@ -494,6 +500,7 @@ public final class ContentManifest {
 			blockEntity("vulcanizer", VulcanizerBlockEntity.class, VulcanizerBlockEntity::new, "vulcanizer"),
 			blockEntity("galvanic_bath", GalvanicBathBlockEntity.class, GalvanicBathBlockEntity::new, "galvanic_bath"),
 			blockEntity("electric_heater", ElectricHeaterBlockEntity.class, ElectricHeaterBlockEntity::new, "electric_heater"),
+			blockEntity("charge_pad", ChargePadBlockEntity.class, ChargePadBlockEntity::new, "charge_pad"),
 			blockEntity("incubator", IncubatorBlockEntity.class, IncubatorBlockEntity::new, "incubator"),
 			blockEntity("pump", PumpBlockEntity.class, PumpBlockEntity::new, "pump"),
 			blockEntity("garden_drone_station", GardenDroneStationBlockEntity.class, GardenDroneStationBlockEntity::new, "garden_drone_station"),

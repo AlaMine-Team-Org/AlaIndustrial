@@ -5,6 +5,7 @@ import dev.alaindustrial.block.AssemblerBlock;
 import dev.alaindustrial.block.BatteryBoxBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
+import dev.alaindustrial.block.ChargePadBlock;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
@@ -106,6 +107,8 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("galvanic_bath", GalvanicBathBlock::new, props("galvanic_bath"));
 	public static final DeferredBlock<ElectricHeaterBlock> ELECTRIC_HEATER =
 			BLOCKS.registerBlock("electric_heater", ElectricHeaterBlock::new, props("electric_heater"));
+	public static final DeferredBlock<ChargePadBlock> CHARGE_PAD =
+			BLOCKS.registerBlock("charge_pad", ChargePadBlock::new, props("charge_pad"));
 	public static final DeferredBlock<IncubatorBlock> INCUBATOR =
 			BLOCKS.registerBlock("incubator", IncubatorBlock::new, props("incubator"));
 	public static final DeferredBlock<IncubatorDomeBlock> INCUBATOR_DOME =
@@ -268,6 +271,7 @@ public final class ModBlocksNeoForge {
 		ModContent.VULCANIZER = VULCANIZER::get;
 		ModContent.GALVANIC_BATH = GALVANIC_BATH::get;
 		ModContent.ELECTRIC_HEATER = ELECTRIC_HEATER::get;
+		ModContent.CHARGE_PAD = CHARGE_PAD::get;
 		ModContent.INCUBATOR = INCUBATOR::get;
 		ModContent.INCUBATOR_DOME = INCUBATOR_DOME::get;
 		ModContent.TRELLIS = TRELLIS::get;

@@ -1,5 +1,7 @@
 package dev.alaindustrial.registry;
 
+import dev.alaindustrial.block.ChargePadBlock;
+import dev.alaindustrial.block.ChargePadState;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -40,6 +42,18 @@ public final class ModBlockProperties {
 	 */
 	public static int litLight(BlockState state) {
 		return state.getValue(BlockStateProperties.LIT) ? 13 : 0;
+	}
+
+	/**
+	 * Per-state light emission for the Charging Station (MOD-274). Unlike {@link #litLight} this reads a
+	 * four-valued {@code state} property, so the levels live on {@link ChargePadState} itself rather than
+	 * as magic numbers here — the enum is where "what is the station telling the player" is decided.
+	 *
+	 * <p>Lives in this shared file for the same reason {@code litLight} does: a per-loader copy is exactly
+	 * how MOD-157 left a lit generator dark on NeoForge.
+	 */
+	public static int chargePadLight(BlockState state) {
+		return state.getValue(ChargePadBlock.STATE).lightLevel();
 	}
 
 	/**
