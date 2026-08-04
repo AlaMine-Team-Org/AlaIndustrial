@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "alaindustrial:alloy_smelter",
     "alaindustrial:assembler",
     "alaindustrial:battery_box",
     "alaindustrial:charge_pad",

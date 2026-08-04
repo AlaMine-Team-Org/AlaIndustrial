@@ -27,6 +27,7 @@ import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
+import dev.alaindustrial.menu.AlloySmelterMenu;
 import dev.alaindustrial.menu.VulcanizerMenu;
 import dev.alaindustrial.menu.GalvanicBathMenu;
 import java.lang.reflect.Field;
@@ -129,6 +130,8 @@ public final class ModContent {
 	/** Polymerizer (MOD-019) — the first machine fed by a fluid: oil in the tank, raw rubber out. */
 	public static Supplier<Block> POLYMERIZER = unbound("POLYMERIZER");
 	public static Supplier<Block> VULCANIZER = unbound("VULCANIZER");
+	/** Alloy Smelter (MOD-064) — three interchangeable component slots melt into one alloy. */
+	public static Supplier<Block> ALLOY_SMELTER = unbound("ALLOY_SMELTER");
 	public static Supplier<Block> GALVANIC_BATH = unbound("GALVANIC_BATH");
 	public static Supplier<Block> ELECTRIC_HEATER = unbound("ELECTRIC_HEATER");
 	/** Charging Station (MOD-274) — the plate that tops up the gear of whoever stands on it. */
@@ -244,6 +247,11 @@ public final class ModContent {
 	public static Supplier<Item> NICKEL_DUST = unbound("NICKEL_DUST");
 	public static Supplier<Item> RAW_NICKEL = unbound("RAW_NICKEL");
 	public static Supplier<Item> NICKEL_INGOT = unbound("NICKEL_INGOT");
+	// MOD-064 alloys — the four products of the alloy smelter.
+	public static Supplier<Item> BRONZE_INGOT = unbound("BRONZE_INGOT");
+	public static Supplier<Item> INVAR_INGOT = unbound("INVAR_INGOT");
+	public static Supplier<Item> CUPRONICKEL_INGOT = unbound("CUPRONICKEL_INGOT");
+	public static Supplier<Item> ELECTRUM_INGOT = unbound("ELECTRUM_INGOT");
 	public static Supplier<Item> SULFUR_DUST = unbound("SULFUR_DUST");
 	public static Supplier<Item> RAW_SULFUR = unbound("RAW_SULFUR");
 	public static Supplier<Item> URANIUM_DUST = unbound("URANIUM_DUST");
@@ -348,6 +356,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> ASSEMBLER_ITEM = unbound("ASSEMBLER_ITEM");
 	public static Supplier<BlockItem> POLYMERIZER_ITEM = unbound("POLYMERIZER_ITEM");
 	public static Supplier<BlockItem> VULCANIZER_ITEM = unbound("VULCANIZER_ITEM");
+	public static Supplier<BlockItem> ALLOY_SMELTER_ITEM = unbound("ALLOY_SMELTER_ITEM");
 	public static Supplier<BlockItem> GALVANIC_BATH_ITEM = unbound("GALVANIC_BATH_ITEM");
 	public static Supplier<BlockItem> ELECTRIC_HEATER_ITEM = unbound("ELECTRIC_HEATER_ITEM");
 	public static Supplier<BlockItem> CHARGE_PAD_ITEM = unbound("CHARGE_PAD_ITEM");
@@ -407,6 +416,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> ASSEMBLER_BE = unbound("ASSEMBLER_BE");
 	public static Supplier<BlockEntityType<?>> POLYMERIZER_BE = unbound("POLYMERIZER_BE");
 	public static Supplier<BlockEntityType<?>> VULCANIZER_BE = unbound("VULCANIZER_BE");
+	public static Supplier<BlockEntityType<?>> ALLOY_SMELTER_BE = unbound("ALLOY_SMELTER_BE");
 	public static Supplier<BlockEntityType<?>> GALVANIC_BATH_BE = unbound("GALVANIC_BATH_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
@@ -440,6 +450,7 @@ public final class ModContent {
 	public static Supplier<MenuType<AssemblerMenu>> ASSEMBLER_MENU = unbound("ASSEMBLER_MENU");
 	public static Supplier<MenuType<PolymerizerMenu>> POLYMERIZER_MENU = unbound("POLYMERIZER_MENU");
 	public static Supplier<MenuType<VulcanizerMenu>> VULCANIZER_MENU = unbound("VULCANIZER_MENU");
+	public static Supplier<MenuType<AlloySmelterMenu>> ALLOY_SMELTER_MENU = unbound("ALLOY_SMELTER_MENU");
 	public static Supplier<MenuType<GalvanicBathMenu>> GALVANIC_BATH_MENU = unbound("GALVANIC_BATH_MENU");
 	public static Supplier<MenuType<IncubatorMenu>> INCUBATOR_MENU = unbound("INCUBATOR_MENU");
 	public static Supplier<MenuType<BatteryBoxMenu>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");

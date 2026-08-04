@@ -1,0 +1,16 @@
+{
+  "type": "alaindustrial:alloying",
+  "components": [
+    {
+      "ingredient": "#c:ingots/copper"
+    },
+    {
+      "ingredient": "#c:ingots/nickel"
+    }
+  ],
+  "result": {
+    "id": "alaindustrial:cupronickel_ingot",
+    "count": 1
+  },
+  "energy": 1200
+}

@@ -353,7 +353,7 @@
               "title": "Werte",
               "lines": [
                 "Energie: 20 000 EU",
-                "Buffer: 20 000 EU"
+                "Puffer: 20 000 EU"
               ]
             },
             {
@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "Legierungsofen",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Legierungsofen",
+              "text": "Eine LV-Maschine mit drei austauschbaren Eingabeplätzen, die mehrere Metalle zu einer Legierung schmilzt. Die Reihenfolge beim Einlegen spielt keine Rolle; aus Kupfer, Zinn, Eisen, Nickel, Gold und Silber werden Bronze, Invar, Kupfernickel und Elektrum."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 1200 EU/Vorgang",
+                "Puffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extraktor",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "Bronzebarren",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bronzebarren",
+              "text": "Die Kupfer-Zinn-Legierung für den Massenbedarf — drei Kupferbarren plus ein Zinnbarren ergeben im Legierungsofen zwei Bronzebarren."
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "Invarbarren",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Invarbarren",
+              "text": "Eine Eisen-Nickel-Legierung, immer nur eine auf einmal — zwei Eisenbarren plus ein Nickelbarren ergeben im Legierungsofen einen einzigen Invarbarren."
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "Kupfernickelbarren",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kupfernickelbarren",
+              "text": "Eine Kupfer-Nickel-Legierung im Verhältnis eins zu eins, immer nur ein Barren auf einmal — der vom Material her günstigste Weg, Nickel einzusetzen."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Öl",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "Uranerz",
               "text": "Das seltenste Erz des Mods — mit einer Eisenspitzhacke abgebaut und zu Staub und Barren verarbeitet; wird bereits für Fackel, Teleporter und Inkubator verwendet und später für Nuklearmaschinen."
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "Elektrumbarren",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrumbarren",
+              "text": "Die vom Material her teuerste Legierung des Mods — ein Goldbarren und ein Silberbarren ergeben im Legierungsofen einen einzigen Elektrumbarren."
             }
           ]
         },

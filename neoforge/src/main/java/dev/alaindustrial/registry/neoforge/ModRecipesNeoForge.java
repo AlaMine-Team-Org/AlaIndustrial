@@ -2,8 +2,10 @@ package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.AlloyRecipeInput;
 import dev.alaindustrial.recipe.FluidRecipeInput;
 import dev.alaindustrial.registry.ModRecipes;
+import dev.alaindustrial.registry.ModRecipes.AlloyKind;
 import dev.alaindustrial.registry.ModRecipes.FluidKind;
 import dev.alaindustrial.registry.ModRecipes.Kind;
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ public final class ModRecipesNeoForge {
 
 	private static final List<Holders> HOLDERS = new ArrayList<>();
 	private static final List<Runnable> FLUID_BINDERS = new ArrayList<>();
+	private static final List<Runnable> ALLOY_BINDERS = new ArrayList<>();
 
 	static {
 		for (Kind kind : ModRecipes.kinds()) {
@@ -48,6 +51,9 @@ public final class ModRecipesNeoForge {
 		for (FluidKind<?> kind : ModRecipes.fluidKinds()) {
 			registerFluid(kind);
 		}
+		for (AlloyKind<?> kind : ModRecipes.alloyKinds()) {
+			registerAlloy(kind);
+		}
 	}
 
 	private static <R extends Recipe<FluidRecipeInput>> void registerFluid(FluidKind<R> kind) {
@@ -58,12 +64,23 @@ public final class ModRecipesNeoForge {
 		FLUID_BINDERS.add(() -> kind.bind(type::get, serializer::get));
 	}
 
+	private static <R extends Recipe<AlloyRecipeInput>> void registerAlloy(AlloyKind<R> kind) {
+		DeferredHolder<RecipeType<?>, RecipeType<R>> type =
+				TYPES.register(kind.id(), () -> ModRecipes.createType(kind));
+		DeferredHolder<RecipeSerializer<?>, RecipeSerializer<R>> serializer =
+				SERIALIZERS.register(kind.id(), () -> ModRecipes.createSerializer(kind));
+		ALLOY_BINDERS.add(() -> kind.bind(type::get, serializer::get));
+	}
+
 	/** Bind each family to its deferred holders (lazy suppliers). Called from the {@code @Mod} ctor. */
 	public static void init() {
 		for (Holders h : HOLDERS) {
 			h.kind().bind(h.type()::get, h.serializer()::get);
 		}
 		for (Runnable binder : FLUID_BINDERS) {
+			binder.run();
+		}
+		for (Runnable binder : ALLOY_BINDERS) {
 			binder.run();
 		}
 	}

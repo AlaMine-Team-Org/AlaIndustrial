@@ -353,7 +353,7 @@
               "title": "属性",
               "lines": [
                 "能量：20 000 EU",
-                "Buffer: 20 000 EU"
+                "缓冲：20 000 EU"
               ]
             },
             {
@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "合金熔炉",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "合金熔炉",
+              "text": "一种带有三个可互换输入格的 LV 机器，将多种金属熔炼成一种合金。放入的顺序无关紧要；铜、锡、铁、镍、金和银可炼成青铜、因瓦、白铜和琥珀金。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：1200 EU/次",
+                "缓冲：800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "提取机",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "青铜锭",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "青铜锭",
+              "text": "可大批量产出的铜锡合金——在合金熔炉中，3 个铜锭加 1 个锡锭可得 2 个青铜锭。"
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "因瓦锭",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "因瓦锭",
+              "text": "一次只出一个的铁镍合金——在合金熔炉中，2 个铁锭加 1 个镍锭只得 1 个因瓦锭。"
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "白铜锭",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "白铜锭",
+              "text": "一比一的铜镍合金，每次只产出一个锭——就材料而言，这是让镍派上用场的最廉价途径。"
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "石油",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "铀矿石",
               "text": "模组中最稀有的矿石——用铁镐开采并加工成粉末和锭；目前已用于火把、传送器和孵化器，未来还会用于核能机器。"
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "琥珀金锭",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "琥珀金锭",
+              "text": "本模组材料成本最高的合金——在合金熔炉中，1 个金锭和 1 个银锭只得 1 个琥珀金锭。"
             }
           ]
         },

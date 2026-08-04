@@ -254,6 +254,9 @@ class ConfigSnapshotTest {
 		// Cotton growth divisors.
 		SENTINELS.put("cottonRootingChanceDivisor", 27);
 		SENTINELS.put("cottonFruitingChanceDivisor", 14);
+		// Alloy smelter (MOD-064).
+		SENTINELS.put("alloySmelterEuPerTick", 19);
+		SENTINELS.put("alloySmelterDuration", 233);
 		// Assembler (MOD-288/289).
 		SENTINELS.put("assemblerEuPerTick", 26);
 		SENTINELS.put("assemblerDuration", 88);

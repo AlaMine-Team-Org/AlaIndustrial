@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "Сплавочная печь",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Сплавочная печь",
+              "text": "LV-машина с тремя равноправными входными слотами, которая сплавляет несколько металлов в один. Порядок загрузки не важен; из меди, олова, железа, никеля, золота и серебра получаются бронза, инвар, купроникель и электрум."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 1200 EU/оп",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Экстрактор",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "Бронзовый слиток",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Бронзовый слиток",
+              "text": "Массовый сплав меди и олова — три медных слитка и один оловянный дают в сплавочной печи два бронзовых."
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "Инваровый слиток",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Инваровый слиток",
+              "text": "Штучный сплав железа и никеля — два железных слитка и один никелевый дают в сплавочной печи один инваровый."
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "Купроникелевый слиток",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Купроникелевый слиток",
+              "text": "Штучный сплав меди и никеля в отношении один к одному — самый дешёвый по сырью способ пустить никель в дело."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Нефть",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "Урановая руда",
               "text": "Самая редкая руда мода — добывается железной киркой, перерабатывается в пыль и слиток; уже сейчас идёт на факел, телепорт и инкубатор, а позже — на ядерные машины."
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "Электрумовый слиток",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Электрумовый слиток",
+              "text": "Самый дорогой по сырью сплав мода — золотой слиток и серебряный дают в сплавочной печи один электрумовый."
             }
           ]
         },

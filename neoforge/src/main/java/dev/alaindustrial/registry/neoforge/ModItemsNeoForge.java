@@ -180,6 +180,11 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> NICKEL_DUST = manifestItem("nickel_dust");
 	public static final DeferredItem<Item> RAW_NICKEL = manifestItem("raw_nickel");
 	public static final DeferredItem<Item> NICKEL_INGOT = manifestItem("nickel_ingot");
+	// MOD-064 alloys.
+	public static final DeferredItem<Item> BRONZE_INGOT = manifestItem("bronze_ingot");
+	public static final DeferredItem<Item> INVAR_INGOT = manifestItem("invar_ingot");
+	public static final DeferredItem<Item> CUPRONICKEL_INGOT = manifestItem("cupronickel_ingot");
+	public static final DeferredItem<Item> ELECTRUM_INGOT = manifestItem("electrum_ingot");
 	public static final DeferredItem<Item> SULFUR_DUST = manifestItem("sulfur_dust");
 	public static final DeferredItem<Item> RAW_SULFUR = manifestItem("raw_sulfur");
 	public static final DeferredItem<Item> URANIUM_DUST = manifestItem("uranium_dust");
@@ -312,6 +317,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("assembler", ModBlocksNeoForge.ASSEMBLER);
 	public static final DeferredItem<BlockItem> POLYMERIZER_ITEM =
 			ITEMS.registerSimpleBlockItem("polymerizer", ModBlocksNeoForge.POLYMERIZER);
+	public static final DeferredItem<BlockItem> ALLOY_SMELTER_ITEM =
+			ITEMS.registerSimpleBlockItem("alloy_smelter", ModBlocksNeoForge.ALLOY_SMELTER);
 	public static final DeferredItem<BlockItem> VULCANIZER_ITEM =
 			ITEMS.registerSimpleBlockItem("vulcanizer", ModBlocksNeoForge.VULCANIZER);
 	public static final DeferredItem<BlockItem> GALVANIC_BATH_ITEM =
@@ -482,6 +489,10 @@ public final class ModItemsNeoForge {
 		ModContent.NICKEL_DUST = NICKEL_DUST;
 		ModContent.RAW_NICKEL = RAW_NICKEL;
 		ModContent.NICKEL_INGOT = NICKEL_INGOT;
+		ModContent.BRONZE_INGOT = BRONZE_INGOT;
+		ModContent.INVAR_INGOT = INVAR_INGOT;
+		ModContent.CUPRONICKEL_INGOT = CUPRONICKEL_INGOT;
+		ModContent.ELECTRUM_INGOT = ELECTRUM_INGOT;
 		ModContent.SULFUR_DUST = SULFUR_DUST;
 		ModContent.RAW_SULFUR = RAW_SULFUR;
 		ModContent.URANIUM_DUST = URANIUM_DUST;
@@ -541,6 +552,7 @@ public final class ModItemsNeoForge {
 		ModContent.ASSEMBLER_ITEM = ASSEMBLER_ITEM;
 		ModContent.POLYMERIZER_ITEM = POLYMERIZER_ITEM;
 		ModContent.VULCANIZER_ITEM = VULCANIZER_ITEM;
+		ModContent.ALLOY_SMELTER_ITEM = ALLOY_SMELTER_ITEM;
 		ModContent.GALVANIC_BATH_ITEM = GALVANIC_BATH_ITEM;
 		ModContent.ELECTRIC_HEATER_ITEM = ELECTRIC_HEATER_ITEM;
 		ModContent.CHARGE_PAD_ITEM = CHARGE_PAD_ITEM;

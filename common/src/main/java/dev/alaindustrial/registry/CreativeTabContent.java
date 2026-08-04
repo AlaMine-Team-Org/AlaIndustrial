@@ -99,6 +99,10 @@ public final class CreativeTabContent {
 		out.accept(ModContent.SILVER_INGOT.get());
 		out.accept(ModContent.NICKEL_INGOT.get());
 		out.accept(ModContent.URANIUM_INGOT.get());
+		out.accept(ModContent.BRONZE_INGOT.get());
+		out.accept(ModContent.INVAR_INGOT.get());
+		out.accept(ModContent.CUPRONICKEL_INGOT.get());
+		out.accept(ModContent.ELECTRUM_INGOT.get());
 		out.accept(ModContent.RAW_TIN.get());
 		out.accept(ModContent.RAW_SILVER.get());
 		out.accept(ModContent.RAW_NICKEL.get());
@@ -200,6 +204,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.POLYMERIZER_ITEM.get());
 		out.accept(ModContent.VULCANIZER_ITEM.get());
 		out.accept(ModContent.GALVANIC_BATH_ITEM.get());
+		out.accept(ModContent.ALLOY_SMELTER_ITEM.get());
 		out.accept(ModContent.ELECTRIC_HEATER_ITEM.get());
 		// MOD-275 — the first MV machine, last in the list because it sits a tier above the rest.
 		out.accept(ModContent.ASSEMBLER_ITEM.get());
@@ -249,6 +254,11 @@ public final class CreativeTabContent {
 		out.accept(ModContent.RAW_URANIUM.get());
 		out.accept(ModContent.URANIUM_DUST.get());
 		out.accept(ModContent.URANIUM_INGOT.get());
+		// MOD-064 alloys: made from the metals above rather than mined, so they close the list.
+		out.accept(ModContent.BRONZE_INGOT.get());
+		out.accept(ModContent.INVAR_INGOT.get());
+		out.accept(ModContent.CUPRONICKEL_INGOT.get());
+		out.accept(ModContent.ELECTRUM_INGOT.get());
 	}
 
 	private static void components(Sink out) {

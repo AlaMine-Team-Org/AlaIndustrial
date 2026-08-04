@@ -353,7 +353,7 @@
               "title": "İstatistikler",
               "lines": [
                 "Enerji: 20 000 EU",
-                "Buffer: 20 000 EU"
+                "Tampon: 20 000 EU"
               ]
             },
             {
@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "Alaşım Fırını",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Alaşım Fırını",
+              "text": "Yerleri değiştirilebilen üç girdi yuvasına sahip, birkaç metali eritip tek bir alaşıma dönüştüren bir LV makinesi. Yükleme sırası önemli değildir; bakır, kalay, demir, nikel, altın ve gümüş bronza, invara, kupronikele ve elektruma dönüşür."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 1200 EU/işlem",
+                "Tampon: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Çıkarıcı",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "Bronz Külçesi",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bronz Külçesi",
+              "text": "Toplu üretim için bakır-kalay alaşımı — alaşım fırınında üç bakır külçesi artı bir kalay külçesi iki bronz külçesi verir."
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "İnvar Külçesi",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "İnvar Külçesi",
+              "text": "Birer birer üretilen demir-nikel alaşımı — alaşım fırınında iki demir külçesi artı bir nikel külçesi tek bir invar külçesi verir."
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "Kupronikel Külçesi",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kupronikel Külçesi",
+              "text": "Bire bir oranında, seferde tek külçe üretilen bakır-nikel alaşımı — malzeme açısından nikeli işe koşmanın en ucuz yolu."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Petrol",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "Uranyum Cevheri",
               "text": "Modun en nadir cevheri — demir kazmayla çıkarılır, toza ve külçeye işlenir; meşale, ışınlayıcı ve kuluçka makinesinde zaten kullanılır, ileride nükleer makinelerde de kullanılacaktır."
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "Elektrum Külçesi",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrum Külçesi",
+              "text": "Malzeme açısından modun en pahalı alaşımı — alaşım fırınında bir altın külçesi ve bir gümüş külçesi tek bir elektrum külçesi verir."
             }
           ]
         },

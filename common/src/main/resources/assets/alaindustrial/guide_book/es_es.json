@@ -353,7 +353,7 @@
               "title": "Estadísticas",
               "lines": [
                 "Energía: 20 000 EU",
-                "Buffer: 20 000 EU"
+                "Búfer: 20 000 EU"
               ]
             },
             {
@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "Horno de aleaciones",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Horno de aleaciones",
+              "text": "Una máquina LV con tres ranuras de entrada intercambiables que funde varios metales en una aleación. El orden en que los cargues no importa; el cobre, el estaño, el hierro, el níquel, el oro y la plata se convierten en bronce, invar, cuproníquel y electro."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 1200 EU/op",
+                "Búfer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extractor",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "Lingote de bronce",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingote de bronce",
+              "text": "La aleación de cobre y estaño para producir en cantidad: tres lingotes de cobre más un lingote de estaño dan dos lingotes de bronce en el horno de aleaciones."
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "Lingote de invar",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingote de invar",
+              "text": "Una aleación de hierro y níquel de uno en uno: dos lingotes de hierro más un lingote de níquel dan un solo lingote de invar en el horno de aleaciones."
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "Lingote de cuproníquel",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingote de cuproníquel",
+              "text": "Una aleación de cobre y níquel uno a uno, fabricada de lingote en lingote: la forma más barata, en materiales, de dar uso al níquel."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Petróleo",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "Mena de uranio",
               "text": "La mena más rara del mod: se extrae con un pico de hierro y se procesa en polvo y lingote; ya se usa en la antorcha, el teletransportador y la incubadora, y más adelante en máquinas nucleares."
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "Lingote de electro",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingote de electro",
+              "text": "La aleación más cara del mod en materiales: un lingote de oro y un lingote de plata dan un solo lingote de electro en el horno de aleaciones."
             }
           ]
         },

@@ -4,6 +4,10 @@
     "#c:ingots/tin",
     "#c:ingots/silver",
     "#c:ingots/nickel",
-    "#c:ingots/uranium"
+    "#c:ingots/uranium",
+    "#c:ingots/bronze",
+    "#c:ingots/invar",
+    "#c:ingots/cupronickel",
+    "#c:ingots/electrum"
   ]
 }

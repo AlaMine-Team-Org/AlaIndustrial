@@ -445,6 +445,14 @@ public final class Config {
 	 * Fluxweave line and its armour. */
 	public static int galvanicBathDuration = 500;
 
+	// --- MOD-064 alloy smelter. Its own rate, like the incubator and the assembler: melting several
+	// metals into one is a hotter job than milling a single ore. 8 EU/t x 150 ticks = 1200 EU per
+	// operation (7.5 s) for every alloy — one price across the family, so the four alloys differ by what
+	// they consume and yield, not by what the machine charges. 8 EU/t is exactly a coal generator's
+	// output and 2/3 of a copper cable's throughput, so one smelter occupies a starter line by itself.
+	public static int alloySmelterEuPerTick = 8;
+	public static int alloySmelterDuration = 150;
+
 	// --- MOD-275 assembler. The first MV machine: six times the LV rate, but a short operation.
 	// 12 EU/t x 40 ticks = 480 EU per craft — dearer than crafting by hand, cheaper than a processing
 	// step, so the machine buys time rather than resources. Raised from 8 EU/t after the playtest:
@@ -980,6 +988,10 @@ public final class Config {
 				() -> vulcanizerDuration, v -> vulcanizerDuration = v, 1),
 			new IntField("galvanicBathDuration", "Fallback ticks a galvanic bath operation takes at 1.0 speed; shipped recipe energy 1000 / machineEuPerTick 2 = 500.",
 				() -> galvanicBathDuration, v -> galvanicBathDuration = v, 1),
+			new IntField("alloySmelterEuPerTick", "EU/t the alloy smelter draws while running (MOD-064). Four times the machine standard, like the incubator.",
+				() -> alloySmelterEuPerTick, v -> alloySmelterEuPerTick = v, 1),
+			new IntField("alloySmelterDuration", "Fallback ticks one alloying operation takes at 1.0 speed (MOD-064); shipped recipe energy 1200 / alloySmelterEuPerTick 8 = 150.",
+				() -> alloySmelterDuration, v -> alloySmelterDuration = v, 1),
 			new IntField("assemblerEuPerTick", "EU/tick the assembler draws while crafting (MOD-275). MV rate: six times an LV machine.",
 				() -> assemblerEuPerTick, v -> assemblerEuPerTick = v, 1),
 			new IntField("assemblerDuration", "Ticks one assembler craft takes at 1.0 speed (MOD-275). 40 = 2 seconds, the pace of the genre.",

@@ -1,14 +1,14 @@
-## 0.1.66
+## 0.1.67
 
-<p><img alt="Ala Industrial 0.1.66 update preview: a player standing on the Charging Station while their gear charges" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.66/release-media/v0.1.66/changelog.webp" width="720"></p>
+<p><img alt="Ala Industrial 0.1.67 update preview: the Alloy Smelter running, with bronze, invar, electrum and cupronickel ingots displayed above it" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.67/release-media/v0.1.67/changelog.png" width="720"></p>
 
-One new block: step onto it and your gear charges itself.
+One new machine: put metals in, get an alloy out.
 
 ### New
 
-- **Charging Station.** A flat plate you stand on. Everything powered charges at once — tools in your bag, whatever is in your offhand, and worn gear like a Jetpack or a full Fluxweave set.
-- **Nothing to open.** The lamps under your feet say it all: blue is charging, green means you are done, red means the station is out of power.
-- **It banks power while you are away**, so the reserve is waiting when you get back.
-- **A column of sparks** rises around you while it works — you can see it running from across the base.
+- **Alloy Smelter.** Three input slots and one result slot. Feed it metal, it hands you an alloy.
+- **Four new metals:** bronze, invar, cupronickel and electrum. Bronze is the bulk one — 3 copper + 1 tin gives 2 bronze.
+- **Any slot, any order.** Copper on top or copper at the bottom makes no difference; the smelter reads what you loaded, not where.
+- **Metals from other mods count.** Copper, iron and gold from elsewhere in your pack go straight in.
 
-Each item still charges at its usual speed. This is not a faster charger; it is one that does your whole kit at once, with no clicks.
+Melting costs metal — you always get back fewer ingots than you put in.

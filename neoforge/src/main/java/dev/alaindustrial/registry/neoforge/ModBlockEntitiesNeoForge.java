@@ -11,6 +11,7 @@ import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
+import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
@@ -106,6 +107,8 @@ public final class ModBlockEntitiesNeoForge {
 			register(ContentManifest.blockEntity("polymerizer", PolymerizerBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VulcanizerBlockEntity>> VULCANIZER =
 			register(ContentManifest.blockEntity("vulcanizer", VulcanizerBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AlloySmelterBlockEntity>> ALLOY_SMELTER =
+			register(ContentManifest.blockEntity("alloy_smelter", AlloySmelterBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GalvanicBathBlockEntity>>
 			GALVANIC_BATH = register(ContentManifest.blockEntity("galvanic_bath", GalvanicBathBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectricHeaterBlockEntity>> ELECTRIC_HEATER =
@@ -176,6 +179,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.ASSEMBLER_BE = ASSEMBLER::get;
 		ModContent.POLYMERIZER_BE = POLYMERIZER::get;
 		ModContent.VULCANIZER_BE = VULCANIZER::get;
+		ModContent.ALLOY_SMELTER_BE = ALLOY_SMELTER::get;
 		ModContent.GALVANIC_BATH_BE = GALVANIC_BATH::get;
 		ModContent.ELECTRIC_HEATER_BE = ELECTRIC_HEATER::get;
 		ModContent.CHARGE_PAD_BE = CHARGE_PAD::get;

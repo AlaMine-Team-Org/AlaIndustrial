@@ -353,7 +353,7 @@
               "title": "পরিসংখ্যান",
               "lines": [
                 "শক্তি: 20 000 EU",
-                "Buffer: 20 000 EU"
+                "বাফার: 20 000 EU"
               ]
             },
             {
@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "সংকর ধাতু চুল্লি",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "সংকর ধাতু চুল্লি",
+              "text": "তিনটি বিনিময়যোগ্য ইনপুট স্লটওয়ালা একটি LV যন্ত্র, যা কয়েকটি ধাতু গলিয়ে একটিমাত্র সংকর ধাতু বানায়। রাখার ক্রম কোনো ব্যাপার নয়; তামা, টিন, লোহা, নিকেল, সোনা ও রূপা থেকে হয় ব্রোঞ্জ, ইনভার, কিউপ্রোনিকেল ও ইলেকট্রাম।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 1200 EU/ক্রিয়া",
+                "বাফার: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "নিষ্কর্ষক",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "ব্রোঞ্জের পিণ্ড",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ব্রোঞ্জের পিণ্ড",
+              "text": "তামা-টিনের বড় মাপের সংকর ধাতু — সংকর ধাতু চুল্লিতে তিনটি তামার পিণ্ড ও একটি টিনের পিণ্ড থেকে দুটি ব্রোঞ্জের পিণ্ড মেলে।"
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "ইনভারের পিণ্ড",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ইনভারের পিণ্ড",
+              "text": "লোহা-নিকেলের সংকর ধাতু, একবারে একটি — সংকর ধাতু চুল্লিতে দুটি লোহার পিণ্ড ও একটি নিকেলের পিণ্ড থেকে মাত্র একটি ইনভারের পিণ্ড মেলে।"
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "কিউপ্রোনিকেলের পিণ্ড",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "কিউপ্রোনিকেলের পিণ্ড",
+              "text": "এক-এক অনুপাতে তামা-নিকেলের সংকর ধাতু, একবারে একটি পিণ্ড — উপকরণের হিসাবে নিকেলকে কাজে লাগানোর সবচেয়ে সস্তা উপায়।"
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "খনিজ তেল",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "ইউরেনিয়াম আকরিক",
               "text": "মডের সবচেয়ে বিরল আকরিক — লোহার পিক্যাক্স দিয়ে খনন করে গুঁড়া ও ইঙ্গটে প্রক্রিয়াজাত করা হয়; টর্চ, টেলিপোর্টার ও ইনকিউবেটরে ইতিমধ্যেই ব্যবহৃত হয়, পরে পারমাণবিক যন্ত্রেও লাগবে।"
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "ইলেকট্রামের পিণ্ড",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ইলেকট্রামের পিণ্ড",
+              "text": "উপকরণের হিসাবে মডের সবচেয়ে দামি সংকর ধাতু — সংকর ধাতু চুল্লিতে একটি সোনার পিণ্ড ও একটি রূপার পিণ্ড থেকে মাত্র একটি ইলেকট্রামের পিণ্ড মেলে।"
             }
           ]
         },

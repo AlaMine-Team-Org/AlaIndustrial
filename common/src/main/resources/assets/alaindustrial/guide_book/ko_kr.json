@@ -353,7 +353,7 @@
               "title": "정보",
               "lines": [
                 "에너지: 20 000 EU",
-                "Buffer: 20 000 EU"
+                "버퍼: 20 000 EU"
               ]
             },
             {
@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "합금 제련기",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "합금 제련기",
+              "text": "서로 바꿔 넣을 수 있는 입력 칸 세 개를 갖춘 LV 기계로, 여러 금속을 녹여 하나의 합금으로 만듭니다. 넣는 순서는 상관없으며 구리, 주석, 철, 니켈, 금, 은이 청동, 인바, 백동, 호박금이 됩니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 1200 EU/작업",
+                "버퍼: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "추출기",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "청동 주괴",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "청동 주괴",
+              "text": "대량으로 뽑는 구리·주석 합금 — 합금 제련기에서 구리 주괴 3개와 주석 주괴 1개로 청동 주괴 2개가 나옵니다."
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "인바 주괴",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "인바 주괴",
+              "text": "한 번에 하나씩 나오는 철·니켈 합금 — 합금 제련기에서 철 주괴 2개와 니켈 주괴 1개로 인바 주괴 1개만 나옵니다."
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "백동 주괴",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "백동 주괴",
+              "text": "1대1 비율의 구리·니켈 합금으로, 한 번에 주괴 하나씩만 나옵니다 — 재료로 따지면 니켈을 활용하는 가장 값싼 길입니다."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "석유",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "우라늄 광석",
               "text": "모드에서 가장 희귀한 광석 — 철 곡괭이로 캐서 가루와 주괴로 가공합니다. 이미 횃불, 텔레포터, 배양기에 쓰이며 나중에는 원자력 기계에도 사용됩니다."
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "호박금 주괴",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "호박금 주괴",
+              "text": "재료로 따져 이 모드에서 가장 비싼 합금 — 합금 제련기에서 금 주괴 1개와 은 주괴 1개로 호박금 주괴 1개만 나옵니다."
             }
           ]
         },

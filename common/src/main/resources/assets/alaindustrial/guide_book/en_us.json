@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "Alloy Smelter",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Alloy Smelter",
+              "text": "An LV machine with three interchangeable input slots that melts several metals into one alloy. Loading order does not matter; copper, tin, iron, nickel, gold and silver become bronze, invar, cupronickel and electrum."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 1200 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extractor",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "Bronze Ingot",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bronze Ingot",
+              "text": "The bulk copper-tin alloy — three copper ingots plus one tin ingot give two bronze ingots in the alloy smelter."
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "Invar Ingot",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Invar Ingot",
+              "text": "A one-at-a-time iron-nickel alloy — two iron ingots plus one nickel ingot give a single invar ingot in the alloy smelter."
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "Cupronickel Ingot",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cupronickel Ingot",
+              "text": "A one-to-one copper-nickel alloy made a single ingot at a time — the cheapest way, by materials, to put nickel to work."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Oil",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "Uranium Ore",
               "text": "The mod's rarest ore — mined with an iron pickaxe, processed into dust and ingot; already goes into the torch, teleporter and incubator, and later into nuclear machines."
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "Electrum Ingot",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Electrum Ingot",
+              "text": "The mod's most expensive alloy by materials — one gold ingot and one silver ingot give a single electrum ingot in the alloy smelter."
             }
           ]
         },

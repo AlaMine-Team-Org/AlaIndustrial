@@ -6,6 +6,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.compat.MachineRecipeViewerTargets;
 import dev.alaindustrial.client.compat.RecipeViewerInfo;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.AlloyingRecipe;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
 import dev.alaindustrial.recipe.VanillaSmeltingMirror;
 import dev.alaindustrial.registry.ModRecipes;
@@ -87,6 +88,10 @@ public final class AlaJeiPlugin implements IModPlugin {
 		Block polymerizer = ModBlocksNeoForge.POLYMERIZER.get();
 		registration.addRecipeCategories(new PolymerizingJeiCategory(AlaJeiRecipeTypes.POLYMERIZING,
 				polymerizer, polymerizer.getName(), guiHelper));
+		// MOD-064: the alloy smelter. A single family, so the plain block name titles it.
+		Block alloySmelter = ModBlocksNeoForge.ALLOY_SMELTER.get();
+		registration.addRecipeCategories(new AlloyingJeiCategory(AlaJeiRecipeTypes.ALLOYING,
+				alloySmelter, alloySmelter.getName(), guiHelper));
 	}
 
 	@Override
@@ -109,6 +114,11 @@ public final class AlaJeiPlugin implements IModPlugin {
 		Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI recipe(s) for {}", polymerizing.size(),
 				ModRecipes.POLYMERIZING.id());
 		registration.addRecipes(AlaJeiRecipeTypes.POLYMERIZING, polymerizing);
+		// MOD-064: likewise the alloy smelter's own recipe class.
+		List<RecipeHolder<AlloyingRecipe>> alloying = alloyingRecipes(recipes);
+		Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI recipe(s) for {}", alloying.size(),
+				ModRecipes.ALLOYING.id());
+		registration.addRecipes(AlaJeiRecipeTypes.ALLOYING, alloying);
 		// Informational pages (MOD-043): for blocks/items with no crafting recipe — the solar panel
 		// evolution line today — JEI's built-in ingredient info gives a paginated, auto-wrapping page.
 		// Title + lines come from the same loader-neutral source the Fabric REI integration uses.
@@ -138,6 +148,8 @@ public final class AlaJeiPlugin implements IModPlugin {
 		}
 		registration.addCraftingStation(AlaJeiRecipeTypes.POLYMERIZING,
 				(ItemLike) ModBlocksNeoForge.POLYMERIZER.get());
+		registration.addCraftingStation(AlaJeiRecipeTypes.ALLOYING,
+				(ItemLike) ModBlocksNeoForge.ALLOY_SMELTER.get());
 		// MOD-076: the electric furnace also performs vanilla smelting — ElectricFurnaceBlockEntity
 		// falls back to RecipeType.SMELTING when no alaindustrial:smelting recipe matches — so it is a
 		// crafting station for JEI's built-in minecraft:smelting category too (ore smelting,
@@ -202,6 +214,14 @@ public final class AlaJeiPlugin implements IModPlugin {
 					rect.x(), rect.y(), rect.width(), rect.height(),
 					AlaJeiRecipeTypes.POLYMERIZING);
 		}
+		// MOD-064: the alloy smelter carries its own recipe type too.
+		for (MachineRecipeViewerTargets.AlloyTarget target : MachineRecipeViewerTargets.ALLOY_ALL) {
+			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
+			registration.addRecipeClickArea(
+					target.screenClass(),
+					rect.x(), rect.y(), rect.width(), rect.height(),
+					AlaJeiRecipeTypes.ALLOYING);
+		}
 		// MOD-080: keep JEI's item grid clear of the upgrade panel + gear tab on every machine screen.
 		registration.addGuiContainerHandler((Class) MachineScreen.class, new AlaJeiGuiExtraAreasHandler());
 	}
@@ -225,6 +245,18 @@ public final class AlaJeiPlugin implements IModPlugin {
 			if (holder.value() instanceof AlaProcessingRecipe recipe && recipe.kind() == kind) {
 				@SuppressWarnings("unchecked")
 				RecipeHolder<AlaProcessingRecipe> typed = (RecipeHolder<AlaProcessingRecipe>) holder;
+				result.add(typed);
+			}
+		}
+		return result;
+	}
+
+	private static List<RecipeHolder<AlloyingRecipe>> alloyingRecipes(RecipeMap recipes) {
+		List<RecipeHolder<AlloyingRecipe>> result = new ArrayList<>();
+		for (RecipeHolder<?> holder : recipes.values()) {
+			if (holder.value() instanceof AlloyingRecipe) {
+				@SuppressWarnings("unchecked")
+				RecipeHolder<AlloyingRecipe> typed = (RecipeHolder<AlloyingRecipe>) holder;
 				result.add(typed);
 			}
 		}

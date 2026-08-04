@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "Fornace per leghe",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fornace per leghe",
+              "text": "Una macchina LV con tre slot d'ingresso intercambiabili che fonde più metalli in un'unica lega. L'ordine di caricamento non conta; rame, stagno, ferro, nichel, oro e argento diventano bronzo, invar, cupronichel ed elettro."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: 1200 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Estrattore",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "Lingotto di bronzo",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingotto di bronzo",
+              "text": "La lega rame-stagno da produzione in serie — tre lingotti di rame più un lingotto di stagno danno due lingotti di bronzo nella fornace per leghe."
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "Lingotto d'invar",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingotto d'invar",
+              "text": "Una lega ferro-nichel prodotta uno per volta — due lingotti di ferro più un lingotto di nichel danno un solo lingotto d'invar nella fornace per leghe."
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "Lingotto di cupronichel",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingotto di cupronichel",
+              "text": "Una lega rame-nichel uno a uno, prodotta un lingotto alla volta — il modo più economico, in materiali, per mettere al lavoro il nichel."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Petrolio",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "Minerale di uranio",
               "text": "Il minerale più raro del mod — estratto con un piccone di ferro e trasformato in polvere e lingotto; è già usato per torcia, teletrasporto e incubatore, e più avanti per le macchine nucleari."
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "Lingotto di elettro",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingotto di elettro",
+              "text": "La lega più costosa della mod in materiali — un lingotto d'oro e un lingotto d'argento danno un solo lingotto d'elettro nella fornace per leghe."
             }
           ]
         },

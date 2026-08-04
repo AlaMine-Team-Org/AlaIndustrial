@@ -353,7 +353,7 @@
               "title": "Thông số",
               "lines": [
                 "Năng lượng: 20 000 EU",
-                "Buffer: 20 000 EU"
+                "Bộ đệm: 20 000 EU"
               ]
             },
             {
@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "Lò Nung Hợp Kim",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lò Nung Hợp Kim",
+              "text": "Máy LV có ba ô nạp liệu thay thế cho nhau, nung chảy nhiều kim loại thành một hợp kim. Thứ tự bỏ vào không quan trọng; đồng, thiếc, sắt, niken, vàng và bạc trở thành đồng thiếc, invar, đồng niken và electrum."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 1200 EU/thao tác",
+                "Bộ đệm: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Máy chiết xuất",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "Thỏi Đồng Thiếc",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Thỏi Đồng Thiếc",
+              "text": "Hợp kim đồng–thiếc dùng cho sản lượng lớn — trong lò nung hợp kim, ba thỏi đồng cộng một thỏi thiếc cho ra hai thỏi đồng thiếc."
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "Thỏi Invar",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Thỏi Invar",
+              "text": "Hợp kim sắt–niken làm từng thỏi một — trong lò nung hợp kim, hai thỏi sắt cộng một thỏi niken chỉ cho ra một thỏi invar."
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "Thỏi Đồng Niken",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Thỏi Đồng Niken",
+              "text": "Hợp kim đồng–niken theo tỉ lệ một đối một, mỗi lần chỉ ra một thỏi — xét về nguyên liệu, đây là cách rẻ nhất để dùng đến niken."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Dầu mỏ",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "Quặng uranium",
               "text": "Quặng hiếm nhất của mod — khai thác bằng cuốc sắt, chế biến thành bột và thỏi; hiện đã dùng cho đuốc, máy dịch chuyển và máy ấp, sau này còn dùng cho máy hạt nhân."
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "Thỏi Electrum",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Thỏi Electrum",
+              "text": "Hợp kim đắt nhất của mod xét về nguyên liệu — trong lò nung hợp kim, một thỏi vàng và một thỏi bạc chỉ cho ra một thỏi electrum."
             }
           ]
         },

@@ -353,7 +353,7 @@
               "title": "Statystyki",
               "lines": [
                 "Energia: 20 000 EU",
-                "Buffer: 20 000 EU"
+                "Bufor: 20 000 EU"
               ]
             },
             {
@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "Piec stopowy",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Piec stopowy",
+              "text": "Maszyna LV z trzema wymiennymi slotami wejściowymi, która wytapia kilka metali w jeden stop. Kolejność wkładania nie ma znaczenia; z miedzi, cyny, żelaza, niklu, złota i srebra powstają brąz, inwar, miedzionikiel i elektrum."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 1200 EU/op",
+                "Bufor: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Ekstraktor",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "Sztabka brązu",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sztabka brązu",
+              "text": "Masowy stop miedzi z cyną — trzy sztabki miedzi plus jedna sztabka cyny dają w piecu stopowym dwie sztabki brązu."
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "Sztabka inwaru",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sztabka inwaru",
+              "text": "Stop żelaza z niklem wytapiany po jednej sztuce — dwie sztabki żelaza plus jedna sztabka niklu dają w piecu stopowym tylko jedną sztabkę inwaru."
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "Sztabka miedzioniklu",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sztabka miedzioniklu",
+              "text": "Stop miedzi z niklem w proporcji jeden do jednego, wytapiany po jednej sztabce — materiałowo najtańszy sposób, by wykorzystać nikiel."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Ropa naftowa",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "Złoże uranu",
               "text": "Najrzadsza ruda moda — wydobywana żelaznym kilofem i przerabiana na pył oraz sztabkę; jest już używana w pochodni, teleporterze i inkubatorze, a później trafi do maszyn jądrowych."
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "Sztabka elektrum",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sztabka elektrum",
+              "text": "Materiałowo najdroższy stop w modzie — jedna sztabka złota i jedna sztabka srebra dają w piecu stopowym tylko jedną sztabkę elektrum."
             }
           ]
         },

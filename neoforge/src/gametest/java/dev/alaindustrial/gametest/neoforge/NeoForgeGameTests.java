@@ -25,6 +25,7 @@ import dev.alaindustrial.gametest.ElectricDrillScenarios;
 import dev.alaindustrial.gametest.MagnetScenarios;
 import dev.alaindustrial.gametest.OilScenarios;
 import dev.alaindustrial.gametest.FluxweaveArmorScenarios;
+import dev.alaindustrial.gametest.AlloySmelterScenarios;
 import dev.alaindustrial.gametest.GalvanicBathScenarios;
 import dev.alaindustrial.gametest.PolymerizerScenarios;
 import dev.alaindustrial.gametest.VulcanizerScenarios;
@@ -995,6 +996,36 @@ public final class NeoForgeGameTests {
 				GalvanicBathScenarios::con03TankRefusesExtraction);
 		registerTest(event, "galvanic_bath_tank_refuses_non_water", 60, true,
 				GalvanicBathScenarios::reg01TankRefusesNonWater);
+		// Alloy Smelter (MOD-064, suite TC-ALLOY-001) — same loader-neutral bodies as the Fabric
+		// AlloySmelterGameTest suite. The rule worth the most here is FUN02: this is the mod's only
+		// machine whose inputs are matched as an unordered multiset, so a regression to a positional
+		// compare would leave FUN01 green and show up only there.
+		registerTest(event, "alloy_smelter_bronze_is_smelted", 400, true,
+				AlloySmelterScenarios::fun01BronzeIsSmelted);
+		registerTest(event, "alloy_smelter_order_does_not_matter", 400, true,
+				AlloySmelterScenarios::fun02OrderDoesNotMatter);
+		registerTest(event, "alloy_smelter_consumes_per_component_counts", 400, true,
+				AlloySmelterScenarios::fun03ConsumesPerComponentCounts);
+		registerTest(event, "alloy_smelter_electrum_from_gold_and_silver", 400, true,
+				AlloySmelterScenarios::fun04ElectrumFromGoldAndSilver);
+		registerTest(event, "alloy_smelter_spare_slot_blocks_shorter_recipe", 400, true,
+				AlloySmelterScenarios::con01SpareSlotBlocksShorterRecipe);
+		registerTest(event, "alloy_smelter_short_component_blocks_work", 400, true,
+				AlloySmelterScenarios::con02ShortComponentBlocksWork);
+		registerTest(event, "alloy_smelter_no_energy_blocks_work", 400, true,
+				AlloySmelterScenarios::con03NoEnergyBlocksWork);
+		registerTest(event, "alloy_smelter_duplicate_input_refused", 60, true,
+				AlloySmelterScenarios::reg01DuplicateInputRefused);
+		registerTest(event, "alloy_smelter_non_component_refused", 60, true,
+				AlloySmelterScenarios::reg02NonComponentRefused);
+		registerTest(event, "alloy_smelter_output_slot_refuses_insert", 60, true,
+				AlloySmelterScenarios::reg03OutputSlotRefusesInsert);
+		registerTest(event, "alloy_smelter_input_swap_resets_progress", 400, true,
+				AlloySmelterScenarios::reg04InputSwapResetsProgress);
+		registerTest(event, "alloy_smelter_distinct_metals_cannot_fill_every_slot", 60, true,
+				AlloySmelterScenarios::reg05DistinctMetalsCannotFillEverySlot);
+		registerTest(event, "alloy_smelter_speed_multiplier_keeps_operation_cost", 400, true,
+				AlloySmelterScenarios::reg06SpeedMultiplierKeepsOperationCost);
 		// Fluxweave armour (MOD-127, suite TC-FLUX-001) — the same loader-neutral bodies as the Fabric
 		// FluxweaveArmorGameTest suite. The invariant worth the most here is REG01: the bonuses share a
 		// component with the material's own armour modifiers, so a rewrite that replaced instead of

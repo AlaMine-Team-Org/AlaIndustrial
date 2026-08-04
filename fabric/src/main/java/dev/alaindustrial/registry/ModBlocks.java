@@ -27,6 +27,7 @@ import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
+import dev.alaindustrial.block.AlloySmelterBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.ElectricHeaterBlock;
@@ -178,6 +179,9 @@ public final class ModBlocks {
 	public static final Block ASSEMBLER = register(ASSEMBLER_KEY, new AssemblerBlock(props(ASSEMBLER_KEY)));
 	public static final ResourceKey<Block> POLYMERIZER_KEY = key("polymerizer");
 	public static final Block POLYMERIZER = register(POLYMERIZER_KEY, new PolymerizerBlock(props(POLYMERIZER_KEY)));
+	public static final ResourceKey<Block> ALLOY_SMELTER_KEY = key("alloy_smelter");
+	public static final Block ALLOY_SMELTER =
+			register(ALLOY_SMELTER_KEY, new AlloySmelterBlock(props(ALLOY_SMELTER_KEY)));
 	public static final ResourceKey<Block> VULCANIZER_KEY = key("vulcanizer");
 	public static final Block VULCANIZER = register(VULCANIZER_KEY, new VulcanizerBlock(props(VULCANIZER_KEY)));
 	public static final ResourceKey<Block> GALVANIC_BATH_KEY = key("galvanic_bath");
@@ -357,6 +361,7 @@ public final class ModBlocks {
 		ModContent.ASSEMBLER = () -> ASSEMBLER;
 		ModContent.POLYMERIZER = () -> POLYMERIZER;
 		ModContent.VULCANIZER = () -> VULCANIZER;
+		ModContent.ALLOY_SMELTER = () -> ALLOY_SMELTER;
 		ModContent.GALVANIC_BATH = () -> GALVANIC_BATH;
 		ModContent.ELECTRIC_HEATER = () -> ELECTRIC_HEATER;
 		ModContent.CHARGE_PAD = () -> CHARGE_PAD;

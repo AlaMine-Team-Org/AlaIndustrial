@@ -2,6 +2,7 @@ package dev.alaindustrial.compat.rei;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.AlloyingRecipe;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
 import dev.alaindustrial.recipe.VanillaSmeltingMirror;
 import java.util.List;
@@ -34,6 +35,9 @@ public class AlaReiCommonPlugin implements REICommonPlugin {
 		// MOD-019: the Polymerizer's fluid → item card is a different display type (fluid input), so it
 		// carries its own serializer.
 		registry.register(Industrialization.id("polymerizing"), PolymerizingDisplay.SERIALIZER);
+		// MOD-064: the alloy smelter's multi-component card is its own display type (AlloyKind, not
+		// Kind, and per-component counts), so it carries its own serializer.
+		registry.register(Industrialization.id("alloying"), AlloyingDisplay.SERIALIZER);
 	}
 
 	@Override
@@ -58,5 +62,8 @@ public class AlaReiCommonPlugin implements REICommonPlugin {
 		// MOD-019: the Polymerizer's own recipe family — a fluid volume in, an item out.
 		registry.beginRecipeFiller(PolymerizingRecipe.class)
 				.fill(holder -> new PolymerizingDisplay(holder.value()));
+		// MOD-064: the alloy smelter's family — two or three sized components in, one alloy out.
+		registry.beginRecipeFiller(AlloyingRecipe.class)
+				.fill(holder -> new AlloyingDisplay(holder.value()));
 	}
 }

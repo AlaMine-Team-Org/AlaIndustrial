@@ -4,6 +4,8 @@ import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.recipe.AlloyRecipeInput;
+import dev.alaindustrial.recipe.AlloyingRecipe;
 import dev.alaindustrial.recipe.FluidRecipeInput;
 import dev.alaindustrial.recipe.FluidOutputRecipe;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
@@ -239,6 +241,97 @@ public final class ModRecipes {
 		return FLUID_ALL;
 	}
 
+	/**
+	 * One multi-input alloying family (MOD-064). A third family type next to {@link Kind} and
+	 * {@link FluidKind} rather than a generalization of either: {@link Kind} is fixed to
+	 * {@link AlaProcessingRecipe} and its positional {@link ProcessingRecipeInput}, and thirteen shipped
+	 * families depend on that. Adding a sibling costs one small class and touches none of them — the same
+	 * trade {@link FluidKind} made for MOD-019.
+	 */
+	public static final class AlloyKind<R extends Recipe<AlloyRecipeInput>> {
+		private final String id;
+		private final int defaultEnergy;
+		/** Read lazily: Config values are reloadable, so a captured int would go stale. */
+		private final IntSupplier euPerTick;
+		private final Function<AlloyKind<R>, MapCodec<R>> mapCodecFactory;
+		private final Function<AlloyKind<R>, StreamCodec<RegistryFriendlyByteBuf, R>> streamCodecFactory;
+		private Supplier<RecipeType<R>> type = () -> {
+			throw new IllegalStateException("ModRecipes.AlloyKind type read before its loader bound it");
+		};
+		private Supplier<RecipeSerializer<R>> serializer = () -> {
+			throw new IllegalStateException("ModRecipes.AlloyKind serializer read before its loader bound it");
+		};
+
+		private AlloyKind(String id, int defaultEnergy, IntSupplier euPerTick,
+				Function<AlloyKind<R>, MapCodec<R>> mapCodecFactory,
+				Function<AlloyKind<R>, StreamCodec<RegistryFriendlyByteBuf, R>> streamCodecFactory) {
+			this.id = id;
+			this.defaultEnergy = defaultEnergy;
+			this.euPerTick = euPerTick;
+			this.mapCodecFactory = mapCodecFactory;
+			this.streamCodecFactory = streamCodecFactory;
+		}
+
+		public String id() {
+			return id;
+		}
+
+		public int defaultEnergy() {
+			return defaultEnergy;
+		}
+
+		/** What the smelter draws per tick — its own rate, not the shared processing-machine one. */
+		public int euPerTick() {
+			return Math.max(1, euPerTick.getAsInt());
+		}
+
+		/** Base processing time of a recipe costing {@code energy} EU — the number the recipe viewers print. */
+		public int ticksFor(int energy) {
+			return Math.max(1, energy / euPerTick());
+		}
+
+		public RecipeType<R> type() {
+			return type.get();
+		}
+
+		public RecipeSerializer<R> serializer() {
+			return serializer.get();
+		}
+
+		/** Bind this family's type + serializer suppliers. Called once per loader during its registration. */
+		public void bind(Supplier<RecipeType<R>> typeSupplier,
+				Supplier<RecipeSerializer<R>> serializerSupplier) {
+			this.type = typeSupplier;
+			this.serializer = serializerSupplier;
+		}
+
+		/** A cached lookup for the machine (mirrors {@link Kind#newCheck()}). */
+		public RecipeManager.CachedCheck<AlloyRecipeInput, R> newCheck() {
+			return RecipeManager.createCheck(type.get());
+		}
+
+		private RecipeSerializer<R> createSerializer() {
+			return new RecipeSerializer<>(mapCodecFactory.apply(this), streamCodecFactory.apply(this));
+		}
+	}
+
+	// Alloy Smelter (MOD-064). defaultEnergy 1200 = alloySmelterDuration (150) × alloySmelterEuPerTick (8);
+	// every shipped alloying JSON states it explicitly, so this fallback is never active — it is kept in
+	// step with the real cost on purpose so recipe_check.py does not flag a stale-looking default (MOD-134).
+	// The smelter is one of the few machines with its own draw (8 EU/t against the shared 2), so the kind
+	// carries it: energy / euPerTick is what the recipe viewers show as the operation's length.
+	public static final AlloyKind<AlloyingRecipe> ALLOYING = new AlloyKind<>(
+			"alloying", 1200, () -> Config.alloySmelterEuPerTick,
+			kind -> AlloyingRecipe.mapCodec(kind),
+			kind -> AlloyingRecipe.streamCodec(kind));
+
+	private static final AlloyKind<?>[] ALLOY_ALL = {ALLOYING};
+
+	/** All alloying recipe families, in registration order (used by both loaders' registration). */
+	public static AlloyKind<?>[] alloyKinds() {
+		return ALLOY_ALL;
+	}
+
 	/** Resolve a {@link Kind} back from its string id, or {@code null} if unknown. Used by the REI
 	 *  display serializer to rebuild a display's kind from its synced id (see {@code AlaProcessingDisplay}). */
 	public static Kind byId(String id) {
@@ -282,6 +375,22 @@ public final class ModRecipes {
 		return kind.createSerializer();
 	}
 
+	/** Build the {@link RecipeType} instance both loaders register for {@code kind} (MOD-064). */
+	public static <R extends Recipe<AlloyRecipeInput>> RecipeType<R> createType(AlloyKind<R> kind) {
+		Identifier id = Industrialization.id(kind.id);
+		return new RecipeType<R>() {
+			@Override
+			public String toString() {
+				return id.toString();
+			}
+		};
+	}
+
+	/** Build the family-specific serializer from the codec factories owned by {@code kind}. */
+	public static <R extends Recipe<AlloyRecipeInput>> RecipeSerializer<R> createSerializer(AlloyKind<R> kind) {
+		return kind.createSerializer();
+	}
+
 	/**
 	 * Fabric registration: the {@code RECIPE_TYPE}/{@code RECIPE_SERIALIZER} registries stay writable during
 	 * init, so register each kind eagerly and bind it to constant suppliers. NeoForge instead uses a
@@ -298,9 +407,20 @@ public final class ModRecipes {
 		for (FluidKind<?> kind : FLUID_ALL) {
 			registerFluid(kind);
 		}
+		for (AlloyKind<?> kind : ALLOY_ALL) {
+			registerAlloy(kind);
+		}
 	}
 
 	private static <R extends Recipe<FluidRecipeInput>> void registerFluid(FluidKind<R> kind) {
+		Identifier id = Industrialization.id(kind.id);
+		RecipeType<R> type = Registry.register(BuiltInRegistries.RECIPE_TYPE, id, createType(kind));
+		RecipeSerializer<R> serializer =
+				Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, createSerializer(kind));
+		kind.bind(() -> type, () -> serializer);
+	}
+
+	private static <R extends Recipe<AlloyRecipeInput>> void registerAlloy(AlloyKind<R> kind) {
 		Identifier id = Industrialization.id(kind.id);
 		RecipeType<R> type = Registry.register(BuiltInRegistries.RECIPE_TYPE, id, createType(kind));
 		RecipeSerializer<R> serializer =
@@ -323,6 +443,15 @@ public final class ModRecipes {
 	/** Resolve an ordered one- or two-slot input against an item-processing recipe family. */
 	public static AlaProcessingRecipe lookup(RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe> check,
 			ServerLevel level, ProcessingRecipeInput input) {
+		if (input.isEmpty()) {
+			return null;
+		}
+		return check.getRecipeFor(input, level).map(RecipeHolder::value).orElse(null);
+	}
+
+	/** Resolve an unordered three-slot input against the alloying family (MOD-064). */
+	public static AlloyingRecipe lookup(RecipeManager.CachedCheck<AlloyRecipeInput, AlloyingRecipe> check,
+			ServerLevel level, AlloyRecipeInput input) {
 		if (input.isEmpty()) {
 			return null;
 		}

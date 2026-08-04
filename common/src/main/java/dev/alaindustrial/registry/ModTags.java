@@ -81,6 +81,18 @@ public final class ModTags {
 		 */
 		public static final TagKey<Item> FIBER = key("fiber");
 
+		/**
+		 * The conventional umbrella ingot tag ({@code c:ingots}), aggregating every metal ingot in the
+		 * pack — ours and other mods'.
+		 *
+		 * <p>Used by the Alloy Smelter's menu (MOD-064) as the <i>client-side</i> approximation of "this
+		 * could be an alloy component". The authoritative rule needs the recipe manager and therefore the
+		 * server; without something for the client to predict with, every drag into an input slot would
+		 * flicker. Deliberately not used server-side, where the real recipe check runs.
+		 */
+		public static final TagKey<Item> C_INGOTS =
+				TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots"));
+
 		private static TagKey<Item> key(String path) {
 			return TagKey.create(Registries.ITEM, Industrialization.id(path));
 		}

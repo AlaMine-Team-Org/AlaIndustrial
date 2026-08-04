@@ -29,6 +29,7 @@ import dev.alaindustrial.block.SilverChestBlock;
 import dev.alaindustrial.block.GoldChestBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
+import dev.alaindustrial.block.AlloySmelterBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.ElectricHeaterBlock;
@@ -101,6 +102,8 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("assembler", AssemblerBlock::new, props("assembler"));
 	public static final DeferredBlock<PolymerizerBlock> POLYMERIZER =
 			BLOCKS.registerBlock("polymerizer", PolymerizerBlock::new, props("polymerizer"));
+	public static final DeferredBlock<AlloySmelterBlock> ALLOY_SMELTER =
+			BLOCKS.registerBlock("alloy_smelter", AlloySmelterBlock::new, props("alloy_smelter"));
 	public static final DeferredBlock<VulcanizerBlock> VULCANIZER =
 			BLOCKS.registerBlock("vulcanizer", VulcanizerBlock::new, props("vulcanizer"));
 	public static final DeferredBlock<GalvanicBathBlock> GALVANIC_BATH =
@@ -269,6 +272,7 @@ public final class ModBlocksNeoForge {
 		ModContent.ASSEMBLER = ASSEMBLER::get;
 		ModContent.POLYMERIZER = POLYMERIZER::get;
 		ModContent.VULCANIZER = VULCANIZER::get;
+		ModContent.ALLOY_SMELTER = ALLOY_SMELTER::get;
 		ModContent.GALVANIC_BATH = GALVANIC_BATH::get;
 		ModContent.ELECTRIC_HEATER = ELECTRIC_HEATER::get;
 		ModContent.CHARGE_PAD = CHARGE_PAD::get;

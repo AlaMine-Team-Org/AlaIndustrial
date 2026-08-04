@@ -353,7 +353,7 @@
               "title": "Statistik",
               "lines": [
                 "Energi: 20 000 EU",
-                "Buffer: 20 000 EU"
+                "Bufer: 20 000 EU"
               ]
             },
             {
@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "Tungku Paduan",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tungku Paduan",
+              "text": "Mesin LV dengan tiga slot masukan yang bisa dipertukarkan; mesin ini melebur beberapa logam menjadi satu paduan. Urutan pengisian tidak berpengaruh; tembaga, timah, besi, nikel, emas, dan perak menjadi perunggu, invar, kupronikel, dan elektrum."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 1200 EU/op",
+                "Bufer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Ekstraktor",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "Batangan Perunggu",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Batangan Perunggu",
+              "text": "Paduan tembaga-timah untuk produksi massal — tiga batangan tembaga ditambah satu batangan timah menghasilkan dua batangan perunggu di tungku paduan."
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "Batangan Invar",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Batangan Invar",
+              "text": "Paduan besi-nikel yang dibuat satu per satu — dua batangan besi ditambah satu batangan nikel menghasilkan satu batangan invar saja di tungku paduan."
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "Batangan Kupronikel",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Batangan Kupronikel",
+              "text": "Paduan tembaga-nikel satu banding satu yang dibuat sebatang demi sebatang — cara termurah, dari sisi bahan, untuk memanfaatkan nikel."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Minyak bumi",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "Bijih Uranium",
               "text": "Bijih paling langka dalam mod — ditambang dengan beliung besi dan diproses menjadi debu serta ingot; sudah digunakan pada obor, teleporter, dan inkubator, lalu kelak pada mesin nuklir."
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "Batangan Elektrum",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Batangan Elektrum",
+              "text": "Paduan termahal di mod ini dari sisi bahan — satu batangan emas dan satu batangan perak menghasilkan satu batangan elektrum saja di tungku paduan."
             }
           ]
         },

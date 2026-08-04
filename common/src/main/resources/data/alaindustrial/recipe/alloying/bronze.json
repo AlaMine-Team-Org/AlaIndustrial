@@ -1,0 +1,17 @@
+{
+  "type": "alaindustrial:alloying",
+  "components": [
+    {
+      "ingredient": "#c:ingots/copper",
+      "count": 3
+    },
+    {
+      "ingredient": "#c:ingots/tin"
+    }
+  ],
+  "result": {
+    "id": "alaindustrial:bronze_ingot",
+    "count": 2
+  },
+  "energy": 1200
+}

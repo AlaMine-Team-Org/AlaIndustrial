@@ -1,0 +1,16 @@
+{
+  "type": "alaindustrial:alloying",
+  "components": [
+    {
+      "ingredient": "#c:ingots/gold"
+    },
+    {
+      "ingredient": "#c:ingots/silver"
+    }
+  ],
+  "result": {
+    "id": "alaindustrial:electrum_ingot",
+    "count": 1
+  },
+  "energy": 1200
+}

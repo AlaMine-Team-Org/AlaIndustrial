@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "Fornalha de Ligas",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fornalha de Ligas",
+              "text": "Uma máquina LV com três espaços de entrada intercambiáveis que funde vários metais em uma única liga. A ordem de carregamento não importa; cobre, estanho, ferro, níquel, ouro e prata viram bronze, invar, cuproníquel e electro."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 1200 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extrator",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "Lingote de Bronze",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingote de Bronze",
+              "text": "A liga de cobre e estanho para produção em massa — três lingotes de cobre mais um lingote de estanho dão dois lingotes de bronze na fornalha de ligas."
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "Lingote de Invar",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingote de Invar",
+              "text": "Uma liga de ferro e níquel feita um de cada vez — dois lingotes de ferro mais um lingote de níquel dão um único lingote de invar na fornalha de ligas."
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "Lingote de Cuproníquel",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingote de Cuproníquel",
+              "text": "Uma liga de cobre e níquel na proporção de um para um, feita um lingote por vez — o jeito mais barato, em materiais, de pôr o níquel para trabalhar."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Petróleo",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "Minério de Urânio",
               "text": "O minério mais raro do mod — extraído com picareta de ferro e processado em pó e lingote; já é usado na tocha, no teletransportador e na incubadora, e futuramente em máquinas nucleares."
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "Lingote de Electro",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingote de Electro",
+              "text": "A liga mais cara do mod em materiais — um lingote de ouro e um lingote de prata dão um único lingote de electro na fornalha de ligas."
             }
           ]
         },

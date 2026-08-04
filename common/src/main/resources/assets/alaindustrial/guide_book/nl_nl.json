@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "Legeringsoven",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Legeringsoven",
+              "text": "Een LV-machine met drie onderling verwisselbare invoersleuven die meerdere metalen tot één legering smelt. De volgorde van laden maakt niet uit; koper, tin, ijzer, nikkel, goud en zilver worden brons, invar, cupronikkel en elektrum."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 1200 EU/bew.",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extractor",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "Bronsstaaf",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bronsstaaf",
+              "text": "De koper-tinlegering voor grootverbruik — drie koperstaven plus één tinstaaf leveren twee bronsstaven op in de legeringsoven."
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "Invarstaaf",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Invarstaaf",
+              "text": "Een ijzer-nikkellegering die er één per keer uit komt — twee ijzerstaven plus één nikkelstaaf leveren één enkele invarstaaf op in de legeringsoven."
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "Cupronikkelstaaf",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cupronikkelstaaf",
+              "text": "Een koper-nikkellegering in de verhouding één op één, staaf voor staaf gemaakt — qua materiaal de goedkoopste manier om nikkel aan het werk te zetten."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Aardolie",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "Uraniumerts",
               "text": "Het zeldzaamste erts van de mod — gedolven met een ijzeren houweel en verwerkt tot stof en staaf; wordt al gebruikt in de fakkel, teleporter en incubator, en later in kernmachines."
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "Elektrumstaaf",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrumstaaf",
+              "text": "De qua materiaal duurste legering van de mod — één goudstaaf en één zilverstaaf leveren één enkele elektrumstaaf op in de legeringsoven."
             }
           ]
         },

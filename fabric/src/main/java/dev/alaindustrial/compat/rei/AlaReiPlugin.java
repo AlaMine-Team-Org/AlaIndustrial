@@ -103,6 +103,9 @@ public class AlaReiPlugin implements REIClientPlugin {
 		// MOD-019: the Polymerizer's fluid → item family. One category, its own display type.
 		registry.add(new PolymerizingCategory(ModBlocks.POLYMERIZER, ModBlocks.POLYMERIZER.getName()));
 		registry.addWorkstations(PolymerizingDisplay.CATEGORY, EntryStacks.of(ModBlocks.POLYMERIZER));
+		// MOD-064: the alloy smelter's multi-component family. One category, its own display type.
+		registry.add(new AlloyingCategory(ModBlocks.ALLOY_SMELTER, ModBlocks.ALLOY_SMELTER.getName()));
+		registry.addWorkstations(AlloyingDisplay.CATEGORY, EntryStacks.of(ModBlocks.ALLOY_SMELTER));
 		// Informational category: the T2 solar branches (and future evolution lines) with no crafting
 		// recipe. The base solar_panel is craftable, so it is intentionally not linked here.
 		registry.add(new AlaInfoCategory());
@@ -166,6 +169,11 @@ public class AlaReiPlugin implements REIClientPlugin {
 		for (MachineRecipeViewerTargets.FluidTarget target : MachineRecipeViewerTargets.FLUID_ALL) {
 			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
 			registerClickArea(registry, target.screenClass(), rect, PolymerizingDisplay.CATEGORY);
+		}
+		// MOD-064: the alloy smelter likewise carries its own display type.
+		for (MachineRecipeViewerTargets.AlloyTarget target : MachineRecipeViewerTargets.ALLOY_ALL) {
+			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
+			registerClickArea(registry, target.screenClass(), rect, AlloyingDisplay.CATEGORY);
 		}
 		// MOD-080: keep REI's item grid clear of the upgrade panel + gear tab on every machine screen.
 		registry.exclusionZones().register((Class) MachineScreen.class, new AlaReiExclusionZones());

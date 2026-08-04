@@ -4,6 +4,7 @@ import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
+import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
@@ -283,6 +284,16 @@ public final class DemoStand {
 		set(level, origin, 14, 1, 10, ModContent.IRON_FURNACE.get());
 		fillSlot(level, origin, 14, 1, 10, 0, new ItemStack(Items.RAW_IRON, 64));
 		fillSlot(level, origin, 14, 1, 10, 1, new ItemStack(Items.COAL, 64));
+		// Alloy smelter (MOD-064): the second machines row, next to the assembler. Stocked for bronze —
+		// and deliberately with the tin in the LAST input rather than the second, so the stand shows the
+		// thing that makes this machine different: the components may sit in any slot in any order.
+		// The third slot is left empty on purpose; filling it would block the two-component recipe.
+		set(level, origin, 5, 1, 12, ModContent.ALLOY_SMELTER.get());
+		chargeBuffer(level, origin, 5, 1, 12);
+		fillSlot(level, origin, 5, 1, 12, AlloySmelterBlockEntity.INPUT_SLOT_0,
+				new ItemStack(Items.COPPER_INGOT, 64));
+		fillSlot(level, origin, 5, 1, 12, AlloySmelterBlockEntity.INPUT_SLOT_2,
+				new ItemStack(ModContent.TIN_INGOT.get(), 64));
 	}
 
 	/**

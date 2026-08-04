@@ -3,6 +3,7 @@ package dev.alaindustrial.client.tooltip;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.BatteryBoxBlock;
 import dev.alaindustrial.block.TeleporterBlock;
+import dev.alaindustrial.block.AlloySmelterBlock;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.SawmillBlock;
@@ -141,6 +142,7 @@ public final class MachineTooltips {
 				|| block instanceof CompressorBlock
 				|| block instanceof ExtractorBlock
 				|| block instanceof IncubatorBlock
+				|| block instanceof AlloySmelterBlock
 				|| block instanceof PumpBlock) {
 			lines.add(tier());
 		}

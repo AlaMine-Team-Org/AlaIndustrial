@@ -353,7 +353,7 @@
               "title": "Statistik",
               "lines": [
                 "Energi: 20 000 EU",
-                "Buffer: 20 000 EU"
+                "Buffert: 20 000 EU"
               ]
             },
             {
@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "Legeringsugn",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Legeringsugn",
+              "text": "En LV-maskin med tre utbytbara inmatningsplatser som smälter flera metaller till en legering. Ordningen du lägger i dem spelar ingen roll; koppar, tenn, järn, nickel, guld och silver blir brons, invar, kupronickel och elektrum."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 1200 EU/op",
+                "Buffert: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extraktor",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "Bronstacka",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bronstacka",
+              "text": "Koppar-tennlegeringen för storskalig tillverkning — tre koppartackor plus en tenntacka ger två bronstackor i legeringsugnen."
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "Invartacka",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Invartacka",
+              "text": "En järn-nickellegering som kommer en i taget — två järntackor plus en nickeltacka ger en enda invartacka i legeringsugnen."
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "Kupronickeltacka",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kupronickeltacka",
+              "text": "En koppar-nickellegering i förhållandet ett till ett, gjord en tacka i taget — materialmässigt det billigaste sättet att sätta nickel i arbete."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Olja",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "Uranmalm",
               "text": "Moddens sällsyntaste malm — bryts med järnhacka och bearbetas till stoft och tacka; används redan i facklan, teleportören och inkubatorn, och senare i kärnmaskiner."
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "Elektrumtacka",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrumtacka",
+              "text": "Moddens materialmässigt dyraste legering — en guldtacka och en silvertacka ger en enda elektrumtacka i legeringsugnen."
             }
           ]
         },

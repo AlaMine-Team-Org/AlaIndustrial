@@ -34,6 +34,7 @@ import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
+import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
@@ -66,6 +67,7 @@ import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
+import dev.alaindustrial.menu.AlloySmelterMenu;
 import dev.alaindustrial.menu.VulcanizerMenu;
 import dev.alaindustrial.menu.GalvanicBathMenu;
 import java.util.LinkedHashMap;
@@ -168,6 +170,8 @@ public final class ContentManifest {
 			menu("incubator", IncubatorMenu::new, s -> ModContent.INCUBATOR_MENU = s),
 			menu("polymerizer", PolymerizerMenu::new, s -> ModContent.POLYMERIZER_MENU = s),
 			menu("vulcanizer", VulcanizerMenu::new, s -> ModContent.VULCANIZER_MENU = s),
+			// MOD-064 — the alloy smelter: three interchangeable component slots, one result slot.
+			menu("alloy_smelter", AlloySmelterMenu::new, s -> ModContent.ALLOY_SMELTER_MENU = s),
 			menu("galvanic_bath", GalvanicBathMenu::new, s -> ModContent.GALVANIC_BATH_MENU = s),
 			menu("battery_box", BatteryBoxMenu::new, s -> ModContent.BATTERY_BOX_MENU = s),
 			menu("teleporter_station", TeleporterStationMenu::new, s -> ModContent.TELEPORTER_STATION_MENU = s),
@@ -242,6 +246,10 @@ public final class ContentManifest {
 			Map.entry("extractor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("compressor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("sawmill", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			// MOD-064: the smelter glows through its crucible windows while melting, so it lights like
+			// the other machines with a lit front texture.
+			Map.entry("alloy_smelter", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.lightLevel(ModBlockProperties::litLight))),
 			// MOD-275: the assembler has no lit model, so no lightLevel — a plain metal machine cube.
 			Map.entry("assembler", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("polymerizer", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
@@ -382,6 +390,8 @@ public final class ContentManifest {
 		// `new Item(properties)` — the largest and most duplicated group.
 		for (String id : List.of(
 				"advanced_circuit", "alignment_chip_day", "alignment_chip_night", "battery",
+				// MOD-064 alloys: the four products of the alloy smelter.
+				"bronze_ingot", "cupronickel_ingot", "electrum_ingot", "invar_ingot",
 				"coal_dust", "copper_coil", "copper_dust", "copper_plate", "cotton_fiber",
 				"cotton_seeds", "depleted_uranium", "diamond_dust", "electronic_circuit",
 				"emerald_dust", "flux_thread", "fluxweave_cloth", "garden_drone", "gold_dust",
@@ -498,6 +508,7 @@ public final class ContentManifest {
 			blockEntity("assembler", AssemblerBlockEntity.class, AssemblerBlockEntity::new, "assembler"),
 			blockEntity("polymerizer", PolymerizerBlockEntity.class, PolymerizerBlockEntity::new, "polymerizer"),
 			blockEntity("vulcanizer", VulcanizerBlockEntity.class, VulcanizerBlockEntity::new, "vulcanizer"),
+			blockEntity("alloy_smelter", AlloySmelterBlockEntity.class, AlloySmelterBlockEntity::new, "alloy_smelter"),
 			blockEntity("galvanic_bath", GalvanicBathBlockEntity.class, GalvanicBathBlockEntity::new, "galvanic_bath"),
 			blockEntity("electric_heater", ElectricHeaterBlockEntity.class, ElectricHeaterBlockEntity::new, "electric_heater"),
 			blockEntity("charge_pad", ChargePadBlockEntity.class, ChargePadBlockEntity::new, "charge_pad"),

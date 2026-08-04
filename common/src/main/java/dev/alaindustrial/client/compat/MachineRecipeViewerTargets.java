@@ -3,6 +3,7 @@ package dev.alaindustrial.client.compat;
 import dev.alaindustrial.registry.ModRecipes;
 import java.util.List;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import dev.alaindustrial.client.screen.AlloySmelterScreen;
 import dev.alaindustrial.client.screen.CompressorScreen;
 import dev.alaindustrial.client.screen.ElectricFurnaceScreen;
 import dev.alaindustrial.client.screen.ExtractorScreen;
@@ -68,6 +69,22 @@ public final class MachineRecipeViewerTargets {
 	/** Fluid-fed machines' click targets. The rect tracks {@code PolymerizerScreen.ARROW_*}. */
 	public static final List<FluidTarget> FLUID_ALL = List.of(
 			new FluidTarget(PolymerizerScreen.class, ModRecipes.POLYMERIZING, new GuiRect(79, 35, 24, 17)));
+
+	/**
+	 * The same again for the multi-component alloying family ({@link ModRecipes.AlloyKind}) — a third
+	 * list for the same reason {@link FluidTarget} is a second one: the family types are unrelated in
+	 * Java, and widening {@code kind} to a common supertype would push an {@code instanceof} into every
+	 * plugin call site.
+	 */
+	public record AlloyTarget(
+			Class<? extends AbstractContainerScreen<?>> screenClass,
+			ModRecipes.AlloyKind<?> kind,
+			GuiRect progressArea) {
+	}
+
+	/** The alloy smelter's click target. The rect tracks {@code AlloySmelterScreen.PROGRESS}. */
+	public static final List<AlloyTarget> ALLOY_ALL = List.of(
+			new AlloyTarget(AlloySmelterScreen.class, ModRecipes.ALLOYING, new GuiRect(79, 38, 25, 9)));
 
 	/** The four sawmill recipe families, in button order — used by REI/JEI to open every mode from the sprite. */
 	public static final List<ModRecipes.Kind> SAWMILL_KINDS = List.of(

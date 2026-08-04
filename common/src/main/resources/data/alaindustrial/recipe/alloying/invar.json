@@ -1,0 +1,17 @@
+{
+  "type": "alaindustrial:alloying",
+  "components": [
+    {
+      "ingredient": "#c:ingots/iron",
+      "count": 2
+    },
+    {
+      "ingredient": "#c:ingots/nickel"
+    }
+  ],
+  "result": {
+    "id": "alaindustrial:invar_ingot",
+    "count": 1
+  },
+  "energy": 1200
+}

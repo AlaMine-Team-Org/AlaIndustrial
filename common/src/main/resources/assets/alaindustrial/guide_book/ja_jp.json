@@ -353,7 +353,7 @@
               "title": "ステータス",
               "lines": [
                 "エネルギー: 20 000 EU",
-                "Buffer: 20 000 EU"
+                "バッファ: 20 000 EU"
               ]
             },
             {
@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "合金炉",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "合金炉",
+              "text": "入れ替え自由な3つの入力スロットを備えたLV機械で、複数の金属を溶かして1つの合金にします。入れる順番は問いません。銅、スズ、鉄、ニッケル、金、銀から、青銅、インバー、白銅、エレクトラムができます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 1200 EU/処理",
+                "バッファ: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "抽出機",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "青銅インゴット",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "青銅インゴット",
+              "text": "まとめて作れる銅とスズの合金 — 合金炉で銅インゴット3個とスズインゴット1個から青銅インゴットが2個できます。"
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "インバーインゴット",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "インバーインゴット",
+              "text": "1個ずつ作る鉄とニッケルの合金 — 合金炉で鉄インゴット2個とニッケルインゴット1個からインバーインゴットが1個だけできます。"
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "白銅インゴット",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "白銅インゴット",
+              "text": "1対1の銅とニッケルの合金で、1個ずつしか作れません — 素材で見れば、ニッケルを活かす最も安上がりな道です。"
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "石油",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "ウラン鉱石",
               "text": "このMODで最も希少な鉱石 — 鉄のツルハシで採掘し、粉とインゴットに加工します。すでに松明、テレポーター、培養器に使われ、将来は原子力機械にも使われます。"
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "エレクトラムインゴット",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "エレクトラムインゴット",
+              "text": "素材で見るとMOD随一の高価な合金 — 合金炉で金インゴット1個と銀インゴット1個からエレクトラムインゴットが1個だけできます。"
             }
           ]
         },

@@ -353,7 +353,7 @@
               "title": "Statistiques",
               "lines": [
                 "Énergie : 20 000 EU",
-                "Buffer: 20 000 EU"
+                "Tampon : 20 000 EU"
               ]
             },
             {
@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "Four à alliages",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Four à alliages",
+              "text": "Une machine LV dotée de trois emplacements d'entrée interchangeables qui fond plusieurs métaux en un seul alliage. L'ordre de chargement n'a aucune importance ; le cuivre, l'étain, le fer, le nickel, l'or et l'argent deviennent du bronze, de l'invar, du cupronickel et de l'électrum."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 1200 EU/op",
+                "Tampon : 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "Extracteur",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "Lingot de bronze",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingot de bronze",
+              "text": "L'alliage cuivre-étain de production courante — trois lingots de cuivre plus un lingot d'étain donnent deux lingots de bronze dans le four à alliages."
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "Lingot d'invar",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingot d'invar",
+              "text": "Un alliage fer-nickel produit un par un — deux lingots de fer plus un lingot de nickel donnent un seul lingot d'invar dans le four à alliages."
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "Lingot de cupronickel",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingot de cupronickel",
+              "text": "Un alliage cuivre-nickel à parts égales, produit un lingot à la fois — le moyen le moins coûteux, en matériaux, de mettre le nickel au travail."
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "Pétrole",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "Minerai d'uranium",
               "text": "Le minerai le plus rare du mod — extrait avec une pioche en fer et transformé en poudre et lingot ; déjà utilisé dans la torche, le téléporteur et l'incubateur, puis dans les futures machines nucléaires."
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "Lingot d'électrum",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lingot d'électrum",
+              "text": "L'alliage le plus coûteux du mod en matériaux — un lingot d'or et un lingot d'argent donnent un seul lingot d'électrum dans le four à alliages."
             }
           ]
         },

@@ -20,28 +20,34 @@ public final class RecipeViewerLayout {
 
 	private static final List<Integer> ONE_INPUT = List.of(38);
 	private static final List<Integer> TWO_INPUTS = List.of(27, 49);
+	// Three inputs (MOD-064, the alloy smelter): the widest row the card holds. 3 slots x 18 px plus
+	// two 3 px gaps is exactly the 60 px between the card edge and ARROW_X, so these are packed rather
+	// than centred — a wider spacing would put the last slot under the arrow.
+	private static final List<Integer> THREE_INPUTS = List.of(4, 25, 46);
 	private static final List<Integer> ONE_OUTPUT = List.of(95);
 	private static final List<Integer> TWO_OUTPUTS = List.of(84, 106);
 
 	private RecipeViewerLayout() {
 	}
 
-	/** Ordered x positions for one or two simultaneous input slots. */
+	/** Ordered x positions for one to three simultaneous input slots. */
 	public static List<Integer> inputXs(int count) {
-		return positions(count, ONE_INPUT, TWO_INPUTS, "input");
+		return switch (count) {
+			case 1 -> ONE_INPUT;
+			case 2 -> TWO_INPUTS;
+			case 3 -> THREE_INPUTS;
+			default -> throw new IllegalArgumentException(
+					"recipe viewer supports 1 to 3 input slots, got " + count);
+		};
 	}
 
 	/** Ordered x positions for one or two simultaneous output slots. */
 	public static List<Integer> outputXs(int count) {
-		return positions(count, ONE_OUTPUT, TWO_OUTPUTS, "output");
-	}
-
-	private static List<Integer> positions(int count, List<Integer> one, List<Integer> two, String role) {
 		return switch (count) {
-			case 1 -> one;
-			case 2 -> two;
+			case 1 -> ONE_OUTPUT;
+			case 2 -> TWO_OUTPUTS;
 			default -> throw new IllegalArgumentException(
-					"recipe viewer supports 1 or 2 " + role + " slots, got " + count);
+					"recipe viewer supports 1 or 2 output slots, got " + count);
 		};
 	}
 

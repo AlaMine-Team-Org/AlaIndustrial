@@ -150,6 +150,11 @@ public final class ModItems {
 	public static final Item NICKEL_DUST = manifestItem("nickel_dust");
 	public static final Item RAW_NICKEL = manifestItem("raw_nickel");
 	public static final Item NICKEL_INGOT = manifestItem("nickel_ingot");
+	// MOD-064 alloys.
+	public static final Item BRONZE_INGOT = manifestItem("bronze_ingot");
+	public static final Item INVAR_INGOT = manifestItem("invar_ingot");
+	public static final Item CUPRONICKEL_INGOT = manifestItem("cupronickel_ingot");
+	public static final Item ELECTRUM_INGOT = manifestItem("electrum_ingot");
 	public static final Item SULFUR_DUST = manifestItem("sulfur_dust");
 	public static final Item RAW_SULFUR = manifestItem("raw_sulfur");
 	public static final Item URANIUM_DUST = manifestItem("uranium_dust");
@@ -234,6 +239,8 @@ public final class ModItems {
 	public static final BlockItem ASSEMBLER_ITEM = blockItem("assembler", ModBlocks.ASSEMBLER);
 	public static final BlockItem POLYMERIZER_ITEM = blockItem("polymerizer", ModBlocks.POLYMERIZER);
 	public static final BlockItem VULCANIZER_ITEM = blockItem("vulcanizer", ModBlocks.VULCANIZER);
+	public static final BlockItem ALLOY_SMELTER_ITEM =
+			blockItem("alloy_smelter", ModBlocks.ALLOY_SMELTER);
 	public static final BlockItem GALVANIC_BATH_ITEM =
 			blockItem("galvanic_bath", ModBlocks.GALVANIC_BATH);
 	public static final BlockItem ELECTRIC_HEATER_ITEM = blockItem("electric_heater", ModBlocks.ELECTRIC_HEATER);
@@ -638,6 +645,10 @@ public final class ModItems {
 		ModContent.NICKEL_DUST = () -> NICKEL_DUST;
 		ModContent.RAW_NICKEL = () -> RAW_NICKEL;
 		ModContent.NICKEL_INGOT = () -> NICKEL_INGOT;
+		ModContent.BRONZE_INGOT = () -> BRONZE_INGOT;
+		ModContent.INVAR_INGOT = () -> INVAR_INGOT;
+		ModContent.CUPRONICKEL_INGOT = () -> CUPRONICKEL_INGOT;
+		ModContent.ELECTRUM_INGOT = () -> ELECTRUM_INGOT;
 		ModContent.SULFUR_DUST = () -> SULFUR_DUST;
 		ModContent.RAW_SULFUR = () -> RAW_SULFUR;
 		ModContent.URANIUM_DUST = () -> URANIUM_DUST;
@@ -702,6 +713,7 @@ public final class ModItems {
 		ModContent.ASSEMBLER_ITEM = () -> ASSEMBLER_ITEM;
 		ModContent.POLYMERIZER_ITEM = () -> POLYMERIZER_ITEM;
 		ModContent.VULCANIZER_ITEM = () -> VULCANIZER_ITEM;
+		ModContent.ALLOY_SMELTER_ITEM = () -> ALLOY_SMELTER_ITEM;
 		ModContent.GALVANIC_BATH_ITEM = () -> GALVANIC_BATH_ITEM;
 		ModContent.ELECTRIC_HEATER_ITEM = () -> ELECTRIC_HEATER_ITEM;
 		ModContent.CHARGE_PAD_ITEM = () -> CHARGE_PAD_ITEM;

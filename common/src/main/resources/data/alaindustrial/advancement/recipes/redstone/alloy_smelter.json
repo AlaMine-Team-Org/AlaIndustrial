@@ -1,0 +1,51 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_casing": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:machine_casing"
+          }
+        ]
+      }
+    },
+    "has_circuit": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:electronic_circuit"
+          }
+        ]
+      }
+    },
+    "has_brick": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:brick"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_casing"
+    ],
+    [
+      "has_circuit"
+    ],
+    [
+      "has_brick"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:alloy_smelter"
+    ]
+  }
+}

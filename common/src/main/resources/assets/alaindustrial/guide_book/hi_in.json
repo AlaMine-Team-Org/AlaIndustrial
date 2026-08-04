@@ -353,7 +353,7 @@
               "title": "आँकड़े",
               "lines": [
                 "ऊर्जा: 20 000 EU",
-                "Buffer: 20 000 EU"
+                "बफ़र: 20 000 EU"
               ]
             },
             {
@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "मिश्रधातु भट्ठी",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "मिश्रधातु भट्ठी",
+              "text": "तीन आपस में बदले जा सकने वाले इनपुट स्लॉट वाली एक LV मशीन, जो कई धातुओं को गलाकर एक ही मिश्रधातु बनाती है। डालने का क्रम मायने नहीं रखता; तांबा, टिन, लोहा, निकल, सोना और चांदी से कांस्य, इन्वार, क्यूप्रोनिकल और इलेक्ट्रम बनते हैं।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 1200 EU/संचालन",
+                "बफ़र: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "एक्सट्रैक्टर",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "कांस्य का पिंड",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "कांस्य का पिंड",
+              "text": "तांबे-टिन की बड़े पैमाने वाली मिश्रधातु — मिश्रधातु भट्ठी में तीन तांबे के पिंड और एक टिन का पिंड मिलकर दो कांस्य के पिंड देते हैं।"
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "इन्वार का पिंड",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "इन्वार का पिंड",
+              "text": "लोहे-निकल की मिश्रधातु, एक बार में एक — मिश्रधातु भट्ठी में दो लोहे के पिंड और एक निकल का पिंड मिलकर केवल एक इन्वार का पिंड देते हैं।"
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "क्यूप्रोनिकल का पिंड",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "क्यूप्रोनिकल का पिंड",
+              "text": "एक-से-एक अनुपात वाली तांबे-निकल की मिश्रधातु, एक बार में एक पिंड — सामग्री के हिसाब से निकल को काम में लाने का सबसे सस्ता तरीका।"
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "कच्चा तेल",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "यूरेनियम का अयस्क",
               "text": "मॉड का सबसे दुर्लभ अयस्क — लोहे की कुदाल से खनन कर धूल और सिल्ले में बदला जाता है; मशाल, टेलीपोर्टर और इनक्यूबेटर में पहले से उपयोग होता है और आगे परमाणु मशीनों में भी होगा।"
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "इलेक्ट्रम का पिंड",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "इलेक्ट्रम का पिंड",
+              "text": "सामग्री के हिसाब से मॉड की सबसे महंगी मिश्रधातु — मिश्रधातु भट्ठी में एक सोने का पिंड और एक चांदी का पिंड मिलकर केवल एक इलेक्ट्रम का पिंड देते हैं।"
             }
           ]
         },

@@ -353,7 +353,7 @@
               "title": "數據",
               "lines": [
                 "能量：20 000 EU",
-                "Buffer: 20 000 EU"
+                "緩衝：20 000 EU"
               ]
             },
             {
@@ -921,6 +921,45 @@
           ]
         },
         {
+          "id": "alloy_smelter",
+          "title": "合金熔爐",
+          "icon": "alaindustrial:alloy_smelter",
+          "block_id": "alaindustrial:alloy_smelter",
+          "pages": [
+            {
+              "type": "text",
+              "title": "合金熔爐",
+              "text": "一種帶有三個可互換輸入格的 LV 機器，將多種金屬熔煉成一種合金。放入的順序無關緊要；銅、錫、鐵、鎳、金與銀可煉成青銅、因瓦、白銅與琥珀金。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：1200 EU/操作",
+                "緩衝：800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:brick",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:alloy_smelter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "extractor",
           "title": "萃取機",
           "icon": "alaindustrial:extractor",
@@ -1259,6 +1298,45 @@
           ]
         },
         {
+          "id": "bronze_ingot",
+          "title": "青銅錠",
+          "icon": "alaindustrial:bronze_ingot",
+          "block_id": "alaindustrial:bronze_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "青銅錠",
+              "text": "可大量產出的銅錫合金——在合金熔爐中，3 個銅錠加 1 個錫錠可得 2 個青銅錠。"
+            }
+          ]
+        },
+        {
+          "id": "invar_ingot",
+          "title": "因瓦錠",
+          "icon": "alaindustrial:invar_ingot",
+          "block_id": "alaindustrial:invar_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "因瓦錠",
+              "text": "一次只產一個的鐵鎳合金——在合金熔爐中，2 個鐵錠加 1 個鎳錠只得 1 個因瓦錠。"
+            }
+          ]
+        },
+        {
+          "id": "cupronickel_ingot",
+          "title": "白銅錠",
+          "icon": "alaindustrial:cupronickel_ingot",
+          "block_id": "alaindustrial:cupronickel_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "白銅錠",
+              "text": "一比一的銅鎳合金，每次只產出一個錠——就材料而言，這是讓鎳派上用場最便宜的途徑。"
+            }
+          ]
+        },
+        {
           "id": "oil",
           "title": "石油",
           "icon": "alaindustrial:oil_bucket",
@@ -1395,6 +1473,19 @@
               "type": "text",
               "title": "鈾礦石",
               "text": "模組中最稀有的礦石——用鐵鎬開採並加工成粉末和錠；目前已用於火把、傳送器和孵化器，未來還會用於核能機器。"
+            }
+          ]
+        },
+        {
+          "id": "electrum_ingot",
+          "title": "琥珀金錠",
+          "icon": "alaindustrial:electrum_ingot",
+          "block_id": "alaindustrial:electrum_ingot",
+          "pages": [
+            {
+              "type": "text",
+              "title": "琥珀金錠",
+              "text": "本模組材料成本最高的合金——在合金熔爐中，1 個金錠加 1 個銀錠只得 1 個琥珀金錠。"
             }
           ]
         },

@@ -189,6 +189,11 @@ pitest {
                      'dev.alaindustrial.client.compat.FluidOutputViewerModel',
                      'dev.alaindustrial.client.compat.RecipeViewerLayout',
                      'dev.alaindustrial.recipe.CraftingGridMapping',
+                     // MOD-064: the alloy smelter's order-independent slot assignment, lifted out of
+                     // AlloyingRecipe precisely so it could be tested without Minecraft on the
+                     // classpath. Added here with the class rather than a release later. Its L1 suite
+                     // is AlloyMatchTest.
+                     'dev.alaindustrial.recipe.AlloyMatch',
                      // MOD-204: Config's full L1 suite (ConfigFileTest + ConfigBalanceTest +
                      // ConfigSnapshotTest) now kills 157/157 mutants, so the class rejoins the
                      // mutation run on equal footing with the rest of the core. It is plain-Gson and
