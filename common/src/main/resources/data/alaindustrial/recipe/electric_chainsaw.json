@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"key": {
+		"I": "#c:ingots/iron",
+		"B": "alaindustrial:battery",
+		"A": "minecraft:diamond_axe",
+		"C": "alaindustrial:copper_coil",
+		"E": "alaindustrial:electronic_circuit"
+	},
+	"pattern": [
+		"III",
+		"BAB",
+		"CEC"
+	],
+	"result": { "id": "alaindustrial:electric_chainsaw" }
+}

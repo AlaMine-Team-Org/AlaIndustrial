@@ -2432,6 +2432,37 @@
           ]
         },
         {
+          "id": "electric_chainsaw",
+          "title": "विद्युत आरा",
+          "icon": "alaindustrial:electric_chainsaw",
+          "block_id": "alaindustrial:electric_chainsaw",
+          "pages": [
+            {
+              "type": "text",
+              "title": "विद्युत आरा",
+              "text": "EU से चलने वाली रिचार्जेबल कुल्हाड़ी — चार्ज रहने तक लकड़ी और पत्ते काटती है, हर ब्लॉक पर EU खर्च करती है और कभी नहीं टूटती।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_axe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_chainsaw",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_pouch",
           "title": "बैटरी थैली",
           "icon": "alaindustrial:battery_pouch",
@@ -3100,6 +3131,44 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:electromagnet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_chainsaw",
+          "title": "विद्युत आरा",
+          "icon": "alaindustrial:electric_chainsaw",
+          "block_id": "alaindustrial:electric_chainsaw",
+          "pages": [
+            {
+              "type": "text",
+              "title": "विद्युत आरा",
+              "text": "EU से चलने वाली रिचार्जेबल कुल्हाड़ी — चार्ज रहने तक लकड़ी और पत्ते काटती है, हर ब्लॉक पर EU खर्च करती है और कभी नहीं टूटती।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_axe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_chainsaw",
               "result_count": 1
             }
           ]

@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
@@ -219,6 +220,11 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<ElectricDrillDiamondTipItem> ELECTRIC_DRILL_DIAMOND_TIP =
 			ITEMS.registerItem("electric_drill_diamond_tip", ElectricDrillDiamondTipItem::new,
 					ElectricDrillDiamondTipItem::electricDrillDiamondTipProperties);
+	// Electric Chainsaw (MOD-337): the drill's wood-side counterpart — an EU axe for logs and leaves.
+	// Same wiring as the drill; the properties factory carries the axe/leaves TOOL rules.
+	public static final DeferredItem<ElectricChainsawItem> ELECTRIC_CHAINSAW =
+			ITEMS.registerItem("electric_chainsaw", ElectricChainsawItem::new,
+					ElectricChainsawItem::electricChainsawProperties);
 	// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
 	public static final DeferredItem<dev.alaindustrial.item.tool.MagnetItem> ELECTROMAGNET =
 			ITEMS.registerItem("electromagnet", dev.alaindustrial.item.tool.MagnetItem::new, p -> p.stacksTo(1));
@@ -517,6 +523,7 @@ public final class ModItemsNeoForge {
 		// DeferredItem<ElectricDrillItem> into a Supplier<Item> slot — bind via ::get (invariant generics).
 		ModContent.ELECTRIC_DRILL = ELECTRIC_DRILL::get;
 		ModContent.ELECTRIC_DRILL_DIAMOND_TIP = ELECTRIC_DRILL_DIAMOND_TIP::get;
+		ModContent.ELECTRIC_CHAINSAW = ELECTRIC_CHAINSAW::get;
 		ModContent.ELECTROMAGNET = ELECTROMAGNET::get;
 		ModContent.JETPACK = JETPACK::get;
 		ModContent.VACUUM_CAPSULE = VACUUM_CAPSULE::get;

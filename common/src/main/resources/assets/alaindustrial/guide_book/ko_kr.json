@@ -2432,6 +2432,37 @@
           ]
         },
         {
+          "id": "electric_chainsaw",
+          "title": "전기톱",
+          "icon": "alaindustrial:electric_chainsaw",
+          "block_id": "alaindustrial:electric_chainsaw",
+          "pages": [
+            {
+              "type": "text",
+              "title": "전기톱",
+              "text": "EU로 작동하는 충전식 도끼. 충전된 동안 나무와 잎을 베며, 블록당 EU를 쓰고, 절대 부서지지 않는다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_axe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_chainsaw",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_pouch",
           "title": "배터리 주머니",
           "icon": "alaindustrial:battery_pouch",
@@ -3100,6 +3131,44 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:electromagnet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_chainsaw",
+          "title": "전기톱",
+          "icon": "alaindustrial:electric_chainsaw",
+          "block_id": "alaindustrial:electric_chainsaw",
+          "pages": [
+            {
+              "type": "text",
+              "title": "전기톱",
+              "text": "EU로 작동하는 충전식 도끼. 충전된 동안 나무와 잎을 베며, 블록당 EU를 쓰고, 절대 부서지지 않는다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_axe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_chainsaw",
               "result_count": 1
             }
           ]

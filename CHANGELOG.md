@@ -1,12 +1,12 @@
-## 0.1.68
+## 0.1.69
 
-<p><img alt="Ala Industrial 0.1.68 update preview: the diamond-tipped drill mining coal ore that drops as whole blocks" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.68/release-media/v0.1.68/changelog.webp" width="720"></p>
+<p><img alt="Ala Industrial 0.1.69 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.69/release-media/v0.1.69/changelog.png" width="720"></p>
 
-The Electric Drill gets a second tier — and it can pull ore out of the wall in one piece.
+A powered saw for wood — the drill's counterpart for trees.
 
 ### New
 
-- **Diamond-Tipped Electric Drill.** Digs noticeably faster than the plain drill, and still never wears out.
-- **Silk Touch on a switch.** Sneak + right-click, and ore, glass and leaves come out as whole blocks.
-- **Switch it back and ore doubles as usual.** Normal mode drops exactly what it always did, so the Macerator keeps paying off.
-- **Made from the drill you already carry.** Diamond dust, invar and a silver gear turn it into the upgraded one.
+- **Electric Chainsaw** — a powered axe that runs on energy instead of durability and never breaks. One charge is roughly 333 blocks.
+- **Fells trees faster than a diamond axe**, and clears leaves just as fast — no slow canopy after a quick trunk.
+- **Out of power, it keeps working.** A flat chainsaw cuts at hand speed instead of stopping, with every drop intact.
+- Charges anywhere the Electric Drill does: the Battery Box, a worn Energy Pack, or the Charging Station.

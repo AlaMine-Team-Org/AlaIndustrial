@@ -2432,6 +2432,37 @@
           ]
         },
         {
+          "id": "electric_chainsaw",
+          "title": "Elektrische Kettensäge",
+          "icon": "alaindustrial:electric_chainsaw",
+          "block_id": "alaindustrial:electric_chainsaw",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrische Kettensäge",
+              "text": "Eine aufladbare EU-Axt — fällt Holz und Laub, solange sie geladen ist, verbraucht EU pro Block und geht nie kaputt."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_axe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_chainsaw",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_pouch",
           "title": "Batterie-Beutel",
           "icon": "alaindustrial:battery_pouch",
@@ -3100,6 +3131,44 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:electromagnet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_chainsaw",
+          "title": "Elektrische Kettensäge",
+          "icon": "alaindustrial:electric_chainsaw",
+          "block_id": "alaindustrial:electric_chainsaw",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrische Kettensäge",
+              "text": "Eine aufladbare EU-Axt — fällt Holz und Laub, solange sie geladen ist, verbraucht EU pro Block und geht nie kaputt."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_axe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_chainsaw",
               "result_count": 1
             }
           ]

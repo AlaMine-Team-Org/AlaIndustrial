@@ -2,6 +2,7 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
+import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
@@ -175,6 +176,8 @@ public final class ModItems {
 	public static final Item ELECTRIC_DRILL = electricDrill("electric_drill");
 	// Diamond-Tipped Electric Drill (MOD-321): the drill's upgrade tier — faster, switchable Silk Touch.
 	public static final Item ELECTRIC_DRILL_DIAMOND_TIP = electricDrillDiamondTip("electric_drill_diamond_tip");
+	// Electric Chainsaw (MOD-337): the drill's wood-side counterpart — an EU axe for logs and leaves.
+	public static final Item ELECTRIC_CHAINSAW = electricChainsaw("electric_chainsaw");
 	// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
 	public static final Item ELECTROMAGNET = magnet("electromagnet");
 	// Jetpack (MOD-148): worn EU flight — thrust on held jump, powerless glide when drained.
@@ -393,6 +396,16 @@ public final class ModItems {
 						ElectricDrillDiamondTipItem.electricDrillDiamondTipProperties(new Item.Properties().setId(key))));
 	}
 
+	// Electric Chainsaw (MOD-337). Same shape as the drill above — a plain-Item subclass whose
+	// properties come from a common static factory (hand-built TOOL component + EU-item bar, no
+	// MAX_DAMAGE; see ElectricChainsawItem.electricChainsawProperties for why it is not an AxeItem).
+	private static Item electricChainsaw(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new ElectricChainsawItem(
+						ElectricChainsawItem.electricChainsawProperties(new Item.Properties().setId(key))));
+	}
+
 	// Electromagnet (MOD-132). A plain-Item subclass; stacksTo(1) because it carries per-item state
 	// (EU + on/off). No pouch_energy default — ItemEnergy reads an absent component as 0 EU.
 	private static Item magnet(String path) {
@@ -597,6 +610,7 @@ public final class ModItems {
 					output.accept(ModContent.ENERGY_PACK.get());
 					output.accept(ModContent.ELECTRIC_DRILL.get());
 					output.accept(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get());
+					output.accept(ModContent.ELECTRIC_CHAINSAW.get());
 					output.accept(ModContent.ELECTROMAGNET.get());
 					output.accept(ModContent.JETPACK.get());
 				});
@@ -676,6 +690,7 @@ public final class ModItems {
 		ModContent.ENERGY_PACK = () -> ENERGY_PACK;
 		ModContent.ELECTRIC_DRILL = () -> ELECTRIC_DRILL;
 		ModContent.ELECTRIC_DRILL_DIAMOND_TIP = () -> ELECTRIC_DRILL_DIAMOND_TIP;
+		ModContent.ELECTRIC_CHAINSAW = () -> ELECTRIC_CHAINSAW;
 		ModContent.ELECTROMAGNET = () -> ELECTROMAGNET;
 		ModContent.JETPACK = () -> JETPACK;
 		ModContent.VACUUM_CAPSULE = () -> VACUUM_CAPSULE;

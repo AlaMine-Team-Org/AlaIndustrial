@@ -2432,6 +2432,37 @@
           ]
         },
         {
+          "id": "electric_chainsaw",
+          "title": "বৈদ্যুতিক করাত",
+          "icon": "alaindustrial:electric_chainsaw",
+          "block_id": "alaindustrial:electric_chainsaw",
+          "pages": [
+            {
+              "type": "text",
+              "title": "বৈদ্যুতিক করাত",
+              "text": "EU-চালিত রিচার্জযোগ্য কুড়াল — চার্জ থাকা পর্যন্ত কাঠ ও পাতা কাটে, প্রতি ব্লকে EU খরচ করে এবং কখনো ভাঙে না।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_axe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_chainsaw",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_pouch",
           "title": "ব্যাটারি থলি",
           "icon": "alaindustrial:battery_pouch",
@@ -3100,6 +3131,44 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:electromagnet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_chainsaw",
+          "title": "বৈদ্যুতিক করাত",
+          "icon": "alaindustrial:electric_chainsaw",
+          "block_id": "alaindustrial:electric_chainsaw",
+          "pages": [
+            {
+              "type": "text",
+              "title": "বৈদ্যুতিক করাত",
+              "text": "EU-চালিত রিচার্জযোগ্য কুড়াল — চার্জ থাকা পর্যন্ত কাঠ ও পাতা কাটে, প্রতি ব্লকে EU খরচ করে এবং কখনো ভাঙে না।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "বাফার: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_axe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_chainsaw",
               "result_count": 1
             }
           ]

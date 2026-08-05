@@ -2432,6 +2432,37 @@
           ]
         },
         {
+          "id": "electric_chainsaw",
+          "title": "电动链锯",
+          "icon": "alaindustrial:electric_chainsaw",
+          "block_id": "alaindustrial:electric_chainsaw",
+          "pages": [
+            {
+              "type": "text",
+              "title": "电动链锯",
+              "text": "以 EU 驱动的可充电斧头——有电时砍伐木头和树叶，每个方块消耗 EU，永不损坏。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_axe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_chainsaw",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_pouch",
           "title": "电池储物袋",
           "icon": "alaindustrial:battery_pouch",
@@ -3100,6 +3131,44 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:electromagnet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_chainsaw",
+          "title": "电动链锯",
+          "icon": "alaindustrial:electric_chainsaw",
+          "block_id": "alaindustrial:electric_chainsaw",
+          "pages": [
+            {
+              "type": "text",
+              "title": "电动链锯",
+              "text": "以 EU 驱动的可充电斧头——有电时砍伐木头和树叶，每个方块消耗 EU，永不损坏。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "缓冲：10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_axe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_chainsaw",
               "result_count": 1
             }
           ]

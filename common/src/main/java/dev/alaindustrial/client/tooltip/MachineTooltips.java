@@ -26,6 +26,7 @@ import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.item.misc.MutationGrades;
 import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.item.tool.AnalyzerMode;
+import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
@@ -81,6 +82,10 @@ public final class MachineTooltips {
 		}
 		if (stack.getItem() instanceof ElectricDrillItem) {
 			addElectricDrillTooltip(stack, lines);
+			return;
+		}
+		if (stack.getItem() instanceof ElectricChainsawItem) {
+			addElectricChainsawTooltip(stack, lines);
 			return;
 		}
 		if (stack.getItem() instanceof JetpackItem) {
@@ -288,6 +293,27 @@ public final class MachineTooltips {
 					.withStyle(ChatFormatting.RED));
 		} else {
 			lines.add(Component.translatable("tooltip.alaindustrial.electric_drill.charge", eu, cap)
+					.withStyle(ChatFormatting.GOLD));
+		}
+	}
+
+	/**
+	 * Tooltip for the Electric Chainsaw (MOD-337) — the same shape as the drill's: what it does with its
+	 * per-block EU cost, then the charge line (gold, or red DEPLETED at 0). Deliberately a sibling method
+	 * rather than a branch inside the drill's: the chainsaw is not an {@code ElectricDrillItem}, and the
+	 * usage line names logs and leaves instead of a pickaxe's blocks.
+	 */
+	private static void addElectricChainsawTooltip(ItemStack stack, List<Component> lines) {
+		lines.add(Component.translatable("tooltip.alaindustrial.electric_chainsaw.usage",
+						Config.electricChainsawEuPerBlock)
+				.withStyle(ChatFormatting.GRAY));
+		long eu = ItemEnergy.get(stack);
+		long cap = ItemEnergy.capacity(stack);
+		if (eu <= 0) {
+			lines.add(Component.translatable("tooltip.alaindustrial.electric_chainsaw.depleted")
+					.withStyle(ChatFormatting.RED));
+		} else {
+			lines.add(Component.translatable("tooltip.alaindustrial.electric_chainsaw.charge", eu, cap)
 					.withStyle(ChatFormatting.GOLD));
 		}
 	}

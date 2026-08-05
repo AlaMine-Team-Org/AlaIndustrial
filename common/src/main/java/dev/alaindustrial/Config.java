@@ -345,6 +345,19 @@ public final class Config {
 		(MOD-097) — the torch is powered, not free. */
 	public static int electricDrillTorchEuCost = 5;
 
+	// --- Electric Chainsaw (MOD-337, the drill's wood-side counterpart) ---
+	/** Electric Chainsaw EU buffer — the same reservoir as the drill, so the two tools of the LV hand-tool
+	 * line charge and last alike. At {@link #electricChainsawEuPerBlock} per block this is ~333 logs on a
+	 * full charge. */
+	public static int electricChainsawBuffer = 10_000;
+	/** EU drained per block the chainsaw successfully cuts while it has at least this much charge. Below it
+	 * the chainsaw still cuts (and drops), but at hand speed and free — see ElectricChainsawItem. Cheaper
+	 * than the drill's 50 because wood is softer than stone, and well under the LV machine floor
+	 * (200 EU/op). */
+	public static int electricChainsawEuPerBlock = 30;
+	/** Max EU/tick the chainsaw accepts while sitting in a charge slot — the LV ceiling, like the drill. */
+	public static int electricChainsawInputRate = 32;
+
 	// --- Electromagnet (MOD-132, item-pull convenience) ---
 	/** Electromagnet EU buffer (tier 1). A modest LV reservoir: at {@link #magnetEuPerItem} per pulled
 	 * item·tick it reaps hundreds of drops before a recharge, and tops up in ~8 s at an LV charger. */
@@ -881,6 +894,12 @@ public final class Config {
 				() -> electricDrillInputRate, v -> electricDrillInputRate = v, 1),
 			new IntField("electricDrillTorchEuCost", "EU the drill spends to place a torch on right-click.",
 				() -> electricDrillTorchEuCost, v -> electricDrillTorchEuCost = v, 0),
+			new IntField("electricChainsawBuffer", "Electric Chainsaw EU buffer.",
+				() -> electricChainsawBuffer, v -> electricChainsawBuffer = v, 1),
+			new IntField("electricChainsawEuPerBlock", "EU the chainsaw spends per block cut at powered speed (below this it cuts at hand speed for free).",
+				() -> electricChainsawEuPerBlock, v -> electricChainsawEuPerBlock = v, 1),
+			new IntField("electricChainsawInputRate", "Max EU/t the chainsaw accepts while charging in a slot.",
+				() -> electricChainsawInputRate, v -> electricChainsawInputRate = v, 1),
 			new IntField("fluxweaveBuffer", "EU buffer of each Fluxweave armour piece.",
 				() -> fluxweaveBuffer, v -> fluxweaveBuffer = v, 1),
 			new IntField("fluxweaveInputRate", "Max EU/t a Fluxweave piece accepts while charging in a slot.",
