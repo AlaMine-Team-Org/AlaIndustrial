@@ -3143,6 +3143,44 @@
           ]
         },
         {
+          "id": "electric_hoe",
+          "title": "Cangkul Listrik",
+          "icon": "alaindustrial:electric_hoe",
+          "block_id": "alaindustrial:electric_hoe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cangkul Listrik",
+              "text": "Cangkul bertenaga EU yang bisa diisi ulang — mencangkul lahan pertanian dan memecah jerami, daun, dan lumut lebih cepat daripada cangkul berlian, memakai 50 EU per penggunaan, dan tidak pernah rusak."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Bufer: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_hoe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_hoe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electric_chainsaw",
           "title": "Gergaji Mesin Listrik",
           "icon": "alaindustrial:electric_chainsaw",

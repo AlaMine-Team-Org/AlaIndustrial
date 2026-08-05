@@ -3143,6 +3143,44 @@
           ]
         },
         {
+          "id": "electric_hoe",
+          "title": "Enxada elétrica",
+          "icon": "alaindustrial:electric_hoe",
+          "block_id": "alaindustrial:electric_hoe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Enxada elétrica",
+              "text": "Uma enxada elétrica recarregável: ara a terra de cultivo e quebra feno, folhas e musgo mais rápido que uma de diamante, gastando 50 EU por uso; nunca quebra."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Buffer: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_hoe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_hoe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electric_chainsaw",
           "title": "Motosserra elétrica",
           "icon": "alaindustrial:electric_chainsaw",

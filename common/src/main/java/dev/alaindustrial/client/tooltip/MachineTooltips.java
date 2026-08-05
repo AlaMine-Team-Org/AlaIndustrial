@@ -29,6 +29,7 @@ import dev.alaindustrial.item.tool.AnalyzerMode;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
+import dev.alaindustrial.item.tool.ElectricHoeItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.JetpackItem;
@@ -91,6 +92,10 @@ public final class MachineTooltips {
 		}
 		if (stack.getItem() instanceof ElectricShovelItem) {
 			addElectricShovelTooltip(stack, lines);
+			return;
+		}
+		if (stack.getItem() instanceof ElectricHoeItem) {
+			addElectricHoeTooltip(stack, lines);
 			return;
 		}
 		if (stack.getItem() instanceof JetpackItem) {
@@ -340,6 +345,26 @@ public final class MachineTooltips {
 					.withStyle(ChatFormatting.RED));
 		} else {
 			lines.add(Component.translatable("tooltip.alaindustrial.electric_shovel.charge", eu, cap)
+					.withStyle(ChatFormatting.GOLD));
+		}
+	}
+
+	/**
+	 * Tooltip for the Electric Hoe (MOD-342) — same shape as the other three powered tools. The usage
+	 * line names tilling first because that is the action players reach for, and both it and breaking a
+	 * block cost the same figure, so one number covers the whole tool.
+	 */
+	private static void addElectricHoeTooltip(ItemStack stack, List<Component> lines) {
+		lines.add(Component.translatable("tooltip.alaindustrial.electric_hoe.usage",
+						Config.electricHoeEuPerBlock)
+				.withStyle(ChatFormatting.GRAY));
+		long eu = ItemEnergy.get(stack);
+		long cap = ItemEnergy.capacity(stack);
+		if (eu <= 0) {
+			lines.add(Component.translatable("tooltip.alaindustrial.electric_hoe.depleted")
+					.withStyle(ChatFormatting.RED));
+		} else {
+			lines.add(Component.translatable("tooltip.alaindustrial.electric_hoe.charge", eu, cap)
 					.withStyle(ChatFormatting.GOLD));
 		}
 	}

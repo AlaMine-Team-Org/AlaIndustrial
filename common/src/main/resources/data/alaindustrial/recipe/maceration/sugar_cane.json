@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "minecraft:sugar_cane",
+  "result": {
+    "id": "minecraft:sugar",
+    "count": 2
+  },
+  "energy": 300
+}

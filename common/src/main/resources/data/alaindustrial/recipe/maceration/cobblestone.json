@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "minecraft:cobblestone",
+  "result": {
+    "id": "minecraft:sand",
+    "count": 1
+  },
+  "energy": 300
+}

@@ -3143,6 +3143,44 @@
           ]
         },
         {
+          "id": "electric_hoe",
+          "title": "विद्युत कुदाल",
+          "icon": "alaindustrial:electric_hoe",
+          "block_id": "alaindustrial:electric_hoe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "विद्युत कुदाल",
+              "text": "रिचार्ज होने वाला EU कुदाल — खेत जोतता है और भूसा, पत्ते व काई हीरे के कुदाल से तेज़ तोड़ता है, प्रति उपयोग 50 EU खर्च करता है और कभी नहीं टूटता।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_hoe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_hoe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electric_chainsaw",
           "title": "विद्युत आरा",
           "icon": "alaindustrial:electric_chainsaw",

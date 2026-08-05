@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
+import dev.alaindustrial.item.tool.ElectricHoeItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
@@ -231,6 +232,10 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<ElectricShovelItem> ELECTRIC_SHOVEL =
 			ITEMS.registerItem("electric_shovel", ElectricShovelItem::new,
 					ElectricShovelItem::electricShovelProperties);
+	// Electric Hoe (MOD-342): the farming member of the same line — an EU hoe that tills for free.
+	public static final DeferredItem<ElectricHoeItem> ELECTRIC_HOE =
+			ITEMS.registerItem("electric_hoe", ElectricHoeItem::new,
+					ElectricHoeItem::electricHoeProperties);
 	// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
 	public static final DeferredItem<dev.alaindustrial.item.tool.MagnetItem> ELECTROMAGNET =
 			ITEMS.registerItem("electromagnet", dev.alaindustrial.item.tool.MagnetItem::new, p -> p.stacksTo(1));
@@ -531,6 +536,7 @@ public final class ModItemsNeoForge {
 		ModContent.ELECTRIC_DRILL_DIAMOND_TIP = ELECTRIC_DRILL_DIAMOND_TIP::get;
 		ModContent.ELECTRIC_CHAINSAW = ELECTRIC_CHAINSAW::get;
 		ModContent.ELECTRIC_SHOVEL = ELECTRIC_SHOVEL::get;
+		ModContent.ELECTRIC_HOE = ELECTRIC_HOE::get;
 		ModContent.ELECTROMAGNET = ELECTROMAGNET::get;
 		ModContent.JETPACK = JETPACK::get;
 		ModContent.VACUUM_CAPSULE = VACUUM_CAPSULE::get;

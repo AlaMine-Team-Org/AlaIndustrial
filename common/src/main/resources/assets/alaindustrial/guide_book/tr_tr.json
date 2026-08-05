@@ -3143,6 +3143,44 @@
           ]
         },
         {
+          "id": "electric_hoe",
+          "title": "Elektrikli çapa",
+          "icon": "alaindustrial:electric_hoe",
+          "block_id": "alaindustrial:electric_hoe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrikli çapa",
+              "text": "Şarj edilebilir EU çapa — tarlayı çapalar, saman, yaprak ve yosunu elmas çapadan hızlı kırar, kullanım başına 50 EU harcar ve asla kırılmaz."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_hoe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_hoe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electric_chainsaw",
           "title": "Elektrikli testere",
           "icon": "alaindustrial:electric_chainsaw",

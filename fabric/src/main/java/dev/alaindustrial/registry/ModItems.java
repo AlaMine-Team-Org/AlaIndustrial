@@ -5,6 +5,7 @@ import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
+import dev.alaindustrial.item.tool.ElectricHoeItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
@@ -181,6 +182,8 @@ public final class ModItems {
 	public static final Item ELECTRIC_CHAINSAW = electricChainsaw("electric_chainsaw");
 	// Electric Shovel (MOD-338): the earth-side member of the same line — an EU shovel for loose ground.
 	public static final Item ELECTRIC_SHOVEL = electricShovel("electric_shovel");
+	// Electric Hoe (MOD-342): the farming member of the same line — an EU hoe that tills for free.
+	public static final Item ELECTRIC_HOE = electricHoe("electric_hoe");
 	// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
 	public static final Item ELECTROMAGNET = magnet("electromagnet");
 	// Jetpack (MOD-148): worn EU flight — thrust on held jump, powerless glide when drained.
@@ -419,6 +422,16 @@ public final class ModItems {
 						ElectricShovelItem.electricShovelProperties(new Item.Properties().setId(key))));
 	}
 
+	// Electric Hoe (MOD-342). Same shape as the three above — a plain-Item subclass whose properties
+	// come from a common static factory (hand-built TOOL component + EU-item bar, no MAX_DAMAGE; see
+	// ElectricHoeItem.electricHoeProperties for why it is not a HoeItem).
+	private static Item electricHoe(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new ElectricHoeItem(
+						ElectricHoeItem.electricHoeProperties(new Item.Properties().setId(key))));
+	}
+
 	// Electromagnet (MOD-132). A plain-Item subclass; stacksTo(1) because it carries per-item state
 	// (EU + on/off). No pouch_energy default — ItemEnergy reads an absent component as 0 EU.
 	private static Item magnet(String path) {
@@ -625,6 +638,7 @@ public final class ModItems {
 					output.accept(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get());
 					output.accept(ModContent.ELECTRIC_CHAINSAW.get());
 					output.accept(ModContent.ELECTRIC_SHOVEL.get());
+					output.accept(ModContent.ELECTRIC_HOE.get());
 					output.accept(ModContent.ELECTROMAGNET.get());
 					output.accept(ModContent.JETPACK.get());
 				});
@@ -706,6 +720,7 @@ public final class ModItems {
 		ModContent.ELECTRIC_DRILL_DIAMOND_TIP = () -> ELECTRIC_DRILL_DIAMOND_TIP;
 		ModContent.ELECTRIC_CHAINSAW = () -> ELECTRIC_CHAINSAW;
 		ModContent.ELECTRIC_SHOVEL = () -> ELECTRIC_SHOVEL;
+		ModContent.ELECTRIC_HOE = () -> ELECTRIC_HOE;
 		ModContent.ELECTROMAGNET = () -> ELECTROMAGNET;
 		ModContent.JETPACK = () -> JETPACK;
 		ModContent.VACUUM_CAPSULE = () -> VACUUM_CAPSULE;

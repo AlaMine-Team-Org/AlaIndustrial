@@ -3143,6 +3143,44 @@
           ]
         },
         {
+          "id": "electric_hoe",
+          "title": "전기 괭이",
+          "icon": "alaindustrial:electric_hoe",
+          "block_id": "alaindustrial:electric_hoe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "전기 괭이",
+              "text": "충전식 EU 괭이 — 농경지를 갈고, 건초·잎·이끼를 다이아몬드 괭이보다 빠르게 부숩니다. 사용당 50 EU를 소모하며 절대 부서지지 않습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_hoe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_hoe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electric_chainsaw",
           "title": "전기톱",
           "icon": "alaindustrial:electric_chainsaw",

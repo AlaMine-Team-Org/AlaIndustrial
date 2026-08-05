@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"key": {
+		"I": "#c:ingots/iron",
+		"B": "alaindustrial:battery",
+		"H": "minecraft:diamond_hoe",
+		"C": "alaindustrial:copper_coil",
+		"E": "alaindustrial:electronic_circuit"
+	},
+	"pattern": [
+		"III",
+		"BHB",
+		"CEC"
+	],
+	"result": { "id": "alaindustrial:electric_hoe" }
+}

@@ -371,6 +371,24 @@ public final class Config {
 	/** Max EU/tick the shovel accepts while sitting in a charge slot — the LV ceiling, like its siblings. */
 	public static int electricShovelInputRate = 32;
 
+	// --- Electric Hoe (MOD-342, the farming member of the same hand-tool line) ---
+	/** Electric Hoe EU buffer — the same reservoir as the rest of the line, so all four powered hand
+	 * tools charge and last alike. */
+	public static int electricHoeBuffer = 10_000;
+	/** EU drained per block the hoe successfully breaks while it has at least this much charge. Below it
+	 * the hoe still breaks (and drops), but at hand speed and free — see ElectricHoeItem. Set to the
+	 * drill's 50 by customer decision: the hoe's block set ({@code #minecraft:mineable/hoe} — hay,
+	 * leaves, sponge, moss, nether wart block) is small, so a cheap rate would make the tool spend
+	 * nothing at all. Tilling itself is free. */
+	public static int electricHoeEuPerBlock = 50;
+	/** EU the hoe spends per successful right-click conversion (tilling soil, coarse dirt → dirt, …).
+	 * Unlike the shovel's free dirt paths, tilling is powered: it is the hoe's whole job, and if it were
+	 * free the tool would never spend a single EU in normal play. Below this the hoe tills nothing and
+	 * says so, mirroring the drill's torch (`electricDrillTorchEuCost`). */
+	public static int electricHoeTillEuCost = 50;
+	/** Max EU/tick the hoe accepts while sitting in a charge slot — the LV ceiling, like its siblings. */
+	public static int electricHoeInputRate = 32;
+
 	// --- Electromagnet (MOD-132, item-pull convenience) ---
 	/** Electromagnet EU buffer (tier 1). A modest LV reservoir: at {@link #magnetEuPerItem} per pulled
 	 * item·tick it reaps hundreds of drops before a recharge, and tops up in ~8 s at an LV charger. */
@@ -919,6 +937,14 @@ public final class Config {
 				() -> electricShovelEuPerBlock, v -> electricShovelEuPerBlock = v, 1),
 			new IntField("electricShovelInputRate", "Max EU/t the shovel accepts while charging in a slot.",
 				() -> electricShovelInputRate, v -> electricShovelInputRate = v, 1),
+			new IntField("electricHoeBuffer", "Electric Hoe EU buffer.",
+				() -> electricHoeBuffer, v -> electricHoeBuffer = v, 1),
+			new IntField("electricHoeEuPerBlock", "EU the hoe spends per block broken at powered speed (below this it breaks at hand speed for free; tilling is always free).",
+				() -> electricHoeEuPerBlock, v -> electricHoeEuPerBlock = v, 1),
+			new IntField("electricHoeTillEuCost", "EU the hoe spends per successful right-click conversion (tilling soil).",
+				() -> electricHoeTillEuCost, v -> electricHoeTillEuCost = v, 0),
+			new IntField("electricHoeInputRate", "Max EU/t the hoe accepts while charging in a slot.",
+				() -> electricHoeInputRate, v -> electricHoeInputRate = v, 1),
 			new IntField("fluxweaveBuffer", "EU buffer of each Fluxweave armour piece.",
 				() -> fluxweaveBuffer, v -> fluxweaveBuffer = v, 1),
 			new IntField("fluxweaveInputRate", "Max EU/t a Fluxweave piece accepts while charging in a slot.",

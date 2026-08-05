@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "#minecraft:wool",
+  "result": {
+    "id": "minecraft:string",
+    "count": 4
+  },
+  "energy": 300
+}

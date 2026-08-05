@@ -166,6 +166,10 @@ class ConfigSnapshotTest {
 		SENTINELS.put("electricShovelBuffer", 14_000);
 		SENTINELS.put("electricShovelEuPerBlock", 43);
 		SENTINELS.put("electricShovelInputRate", 52);
+		SENTINELS.put("electricHoeBuffer", 15_000);
+		SENTINELS.put("electricHoeEuPerBlock", 47);
+		SENTINELS.put("electricHoeTillEuCost", 44);
+		SENTINELS.put("electricHoeInputRate", 53);
 		SENTINELS.put("jetpackBuffer", 33_000);
 		SENTINELS.put("jetpackEuPerTick", 64);
 		SENTINELS.put("jetpackInputRate", 51);

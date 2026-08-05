@@ -3143,6 +3143,44 @@
           ]
         },
         {
+          "id": "electric_hoe",
+          "title": "Cuốc điện",
+          "icon": "alaindustrial:electric_hoe",
+          "block_id": "alaindustrial:electric_hoe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cuốc điện",
+              "text": "Cuốc chạy EU có thể sạc lại — cuốc đất trồng và phá cỏ khô, lá cây, rêu nhanh hơn cuốc kim cương, tốn 50 EU mỗi lần dùng và không bao giờ hỏng."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_hoe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_hoe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electric_chainsaw",
           "title": "Cưa máy điện",
           "icon": "alaindustrial:electric_chainsaw",

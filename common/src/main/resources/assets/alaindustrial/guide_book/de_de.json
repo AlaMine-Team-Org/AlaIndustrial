@@ -3143,6 +3143,44 @@
           ]
         },
         {
+          "id": "electric_hoe",
+          "title": "Elektrische Hacke",
+          "icon": "alaindustrial:electric_hoe",
+          "block_id": "alaindustrial:electric_hoe",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrische Hacke",
+              "text": "Eine aufladbare EU-Hacke — pflügt Ackerland und baut Heu, Laub und Moos schneller ab als eine Diamanthacke, verbraucht dabei 50 EU pro Einsatz und geht nie kaputt."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_hoe",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_hoe",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electric_chainsaw",
           "title": "Elektrische Kettensäge",
           "icon": "alaindustrial:electric_chainsaw",

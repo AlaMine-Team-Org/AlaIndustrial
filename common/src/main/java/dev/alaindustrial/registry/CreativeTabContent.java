@@ -317,6 +317,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get());
 		out.accept(ModContent.ELECTRIC_CHAINSAW.get());
 		out.accept(ModContent.ELECTRIC_SHOVEL.get());
+		out.accept(ModContent.ELECTRIC_HOE.get());
 		out.accept(ModContent.ELECTROMAGNET.get());
 		out.accept(ModContent.JETPACK.get());
 		out.accept(ModContent.TELEPORTER_REMOTE.get());

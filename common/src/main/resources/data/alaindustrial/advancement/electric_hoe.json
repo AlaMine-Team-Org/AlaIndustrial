@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:electric_drill",
+  "display": {
+    "icon": { "id": "alaindustrial:electric_hoe" },
+    "title": { "translate": "advancements.alaindustrial.electric_hoe.title" },
+    "description": { "translate": "advancements.alaindustrial.electric_hoe.description" }
+  },
+  "criteria": {
+    "electric_hoe": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "items": "alaindustrial:electric_hoe" }] }
+    }
+  },
+  "requirements": [["electric_hoe"]]
+}

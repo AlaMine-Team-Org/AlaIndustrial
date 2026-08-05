@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "minecraft:bone_block",
+  "result": {
+    "id": "minecraft:bone_meal",
+    "count": 12
+  },
+  "energy": 300
+}

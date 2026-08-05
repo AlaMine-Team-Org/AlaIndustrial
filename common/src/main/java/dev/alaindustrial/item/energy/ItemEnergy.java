@@ -2,6 +2,7 @@ package dev.alaindustrial.item.energy;
 
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
+import dev.alaindustrial.item.tool.ElectricHoeItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.tool.MagnetItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
@@ -52,6 +53,9 @@ public final class ItemEnergy {
 		if (stack.getItem() instanceof ElectricShovelItem) {
 			return Config.electricShovelBuffer;
 		}
+		if (stack.getItem() instanceof ElectricHoeItem) {
+			return Config.electricHoeBuffer;
+		}
 		if (stack.getItem() instanceof MagnetItem) {
 			return Config.magnetBuffer;
 		}
@@ -86,6 +90,9 @@ public final class ItemEnergy {
 		}
 		if (stack.getItem() instanceof ElectricShovelItem) {
 			return Config.electricShovelInputRate;
+		}
+		if (stack.getItem() instanceof ElectricHoeItem) {
+			return Config.electricHoeInputRate;
 		}
 		if (stack.getItem() instanceof MagnetItem) {
 			return Config.magnetInputRate;
