@@ -2,6 +2,7 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
+import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
@@ -172,6 +173,8 @@ public final class ModItems {
 	public static final Item ENERGY_PACK = energyPack("energy_pack");
 	// Electric Drill (MOD-079): first powered hand tool — a diamond-tier pickaxe that runs on EU.
 	public static final Item ELECTRIC_DRILL = electricDrill("electric_drill");
+	// Diamond-Tipped Electric Drill (MOD-321): the drill's upgrade tier — faster, switchable Silk Touch.
+	public static final Item ELECTRIC_DRILL_DIAMOND_TIP = electricDrillDiamondTip("electric_drill_diamond_tip");
 	// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
 	public static final Item ELECTROMAGNET = magnet("electromagnet");
 	// Jetpack (MOD-148): worn EU flight — thrust on held jump, powerless glide when drained.
@@ -381,6 +384,15 @@ public final class ModItems {
 				new ElectricDrillItem(ElectricDrillItem.electricDrillProperties(new Item.Properties().setId(key))));
 	}
 
+	// Diamond-Tipped Electric Drill (MOD-321). Same shape as the base drill above, with its own
+	// properties factory (higher mining speed); the Silk Touch mode is per-stack state, not a property.
+	private static Item electricDrillDiamondTip(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new ElectricDrillDiamondTipItem(
+						ElectricDrillDiamondTipItem.electricDrillDiamondTipProperties(new Item.Properties().setId(key))));
+	}
+
 	// Electromagnet (MOD-132). A plain-Item subclass; stacksTo(1) because it carries per-item state
 	// (EU + on/off). No pouch_energy default — ItemEnergy reads an absent component as 0 EU.
 	private static Item magnet(String path) {
@@ -584,6 +596,7 @@ public final class ModItems {
 					output.accept(ModContent.BATTERY_POUCH.get());
 					output.accept(ModContent.ENERGY_PACK.get());
 					output.accept(ModContent.ELECTRIC_DRILL.get());
+					output.accept(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get());
 					output.accept(ModContent.ELECTROMAGNET.get());
 					output.accept(ModContent.JETPACK.get());
 				});
@@ -662,6 +675,7 @@ public final class ModItems {
 		ModContent.BATTERY = () -> BATTERY;
 		ModContent.ENERGY_PACK = () -> ENERGY_PACK;
 		ModContent.ELECTRIC_DRILL = () -> ELECTRIC_DRILL;
+		ModContent.ELECTRIC_DRILL_DIAMOND_TIP = () -> ELECTRIC_DRILL_DIAMOND_TIP;
 		ModContent.ELECTROMAGNET = () -> ELECTROMAGNET;
 		ModContent.JETPACK = () -> JETPACK;
 		ModContent.VACUUM_CAPSULE = () -> VACUUM_CAPSULE;

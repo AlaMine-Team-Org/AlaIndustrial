@@ -108,4 +108,31 @@ public class ElectricDrillGameTest {
 	public void tcDrill001Per01_chargeRoundTrip(GameTestHelper helper) {
 		ElectricDrillScenarios.per01ChargeRoundTrip(helper);
 	}
+
+	/**
+	 * @implements TC-DRILL-001-FUN10 — the diamond-tipped upgrade (MOD-321) digs at 10.0, strictly faster
+	 *     than the base drill, keeps the diamond mining tier and still drops to hand speed when flat.
+	 */
+	@GameTest
+	public void tcDrill001Fun10_diamondTipSpeedAndTier(GameTestHelper helper) {
+		ElectricDrillScenarios.fun10DiamondTipSpeedAndTier(helper);
+	}
+
+	/**
+	 * @implements TC-DRILL-001-FUN11 — sneak + right-click toggles the upgrade's Silk Touch mode, and the
+	 *     mode changes the real loot-table drop both ways (ore block ↔ raw iron); a plain click is inert.
+	 */
+	@GameTest
+	public void tcDrill001Fun11_diamondTipSilkToggle(GameTestHelper helper) {
+		ElectricDrillScenarios.fun11DiamondTipSilkToggle(helper);
+	}
+
+	/**
+	 * @implements TC-DRILL-001-FUN12 — the upgrade recipe accepts the base drill in any state (empty,
+	 *     charged, part-charged, enchanted). Play-test report: "a charged drill does not fit the craft".
+	 */
+	@GameTest
+	public void tcDrill001Fun12_upgradeRecipeAcceptsAnyDrillState(GameTestHelper helper) {
+		ElectricDrillScenarios.fun12UpgradeRecipeAcceptsAnyDrillState(helper);
+	}
 }

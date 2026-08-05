@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"key": {
+		"D": "alaindustrial:diamond_dust",
+		"I": "alaindustrial:invar_ingot",
+		"U": "alaindustrial:electric_drill",
+		"G": "alaindustrial:silver_gear"
+	},
+	"pattern": [
+		"DDD",
+		"IUI",
+		" G "
+	],
+	"result": { "id": "alaindustrial:electric_drill_diamond_tip" }
+}

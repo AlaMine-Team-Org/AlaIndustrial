@@ -26,6 +26,7 @@ import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.item.misc.MutationGrades;
 import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.item.tool.AnalyzerMode;
+import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.JetpackItem;
@@ -270,6 +271,16 @@ public final class MachineTooltips {
 	private static void addElectricDrillTooltip(ItemStack stack, List<Component> lines) {
 		lines.add(Component.translatable("tooltip.alaindustrial.electric_drill.usage", Config.electricDrillEuPerBlock)
 				.withStyle(ChatFormatting.GRAY));
+		// MOD-321: the upgraded drill adds its switchable Silk Touch mode. The line is worth showing in
+		// both states: vanilla already lists "Silk Touch I" while the mode is on, but with it off nothing
+		// would hint that the drill has a toggle at all, so this is where the player learns the control.
+		if (stack.getItem() instanceof ElectricDrillDiamondTipItem) {
+			boolean silk = ElectricDrillDiamondTipItem.isSilkMode(stack);
+			lines.add(Component.translatable(silk
+					? "tooltip.alaindustrial.electric_drill_diamond_tip.silk_on"
+					: "tooltip.alaindustrial.electric_drill_diamond_tip.silk_off")
+					.withStyle(silk ? ChatFormatting.AQUA : ChatFormatting.GRAY));
+		}
 		long eu = ItemEnergy.get(stack);
 		long cap = ItemEnergy.capacity(stack);
 		if (eu <= 0) {

@@ -524,7 +524,8 @@ public final class IndustrializationNeoForge {
 		event.registerItem(Capabilities.Energy.ITEM,
 				(stack, access) -> new dev.alaindustrial.core.neoforge.StackAsEnergyHandler(access),
 				ModItemsNeoForge.BATTERY_POUCH.get(), ModItemsNeoForge.ENERGY_PACK.get(),
-				ModItemsNeoForge.ELECTRIC_DRILL.get(), ModItemsNeoForge.ELECTROMAGNET.get(),
+				ModItemsNeoForge.ELECTRIC_DRILL.get(), ModItemsNeoForge.ELECTRIC_DRILL_DIAMOND_TIP.get(),
+				ModItemsNeoForge.ELECTROMAGNET.get(),
 				ModItemsNeoForge.JETPACK.get(),
 				ModItemsNeoForge.FLUXWEAVE_HELMET.get(), ModItemsNeoForge.FLUXWEAVE_CHESTPLATE.get(),
 				ModItemsNeoForge.FLUXWEAVE_LEGGINGS.get(), ModItemsNeoForge.FLUXWEAVE_BOOTS.get());

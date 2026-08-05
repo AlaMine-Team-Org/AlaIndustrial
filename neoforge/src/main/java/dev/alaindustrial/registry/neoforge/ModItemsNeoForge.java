@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
@@ -213,6 +214,11 @@ public final class ModItemsNeoForge {
 	// so both loaders build the same item; NeoForge supplies the id from the deferred key itself.
 	public static final DeferredItem<ElectricDrillItem> ELECTRIC_DRILL =
 			ITEMS.registerItem("electric_drill", ElectricDrillItem::new, ElectricDrillItem::electricDrillProperties);
+	// Diamond-Tipped Electric Drill (MOD-321): the drill's upgrade tier — faster, switchable Silk Touch.
+	// Same wiring as the base drill; the properties factory differs only in the mining speed.
+	public static final DeferredItem<ElectricDrillDiamondTipItem> ELECTRIC_DRILL_DIAMOND_TIP =
+			ITEMS.registerItem("electric_drill_diamond_tip", ElectricDrillDiamondTipItem::new,
+					ElectricDrillDiamondTipItem::electricDrillDiamondTipProperties);
 	// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
 	public static final DeferredItem<dev.alaindustrial.item.tool.MagnetItem> ELECTROMAGNET =
 			ITEMS.registerItem("electromagnet", dev.alaindustrial.item.tool.MagnetItem::new, p -> p.stacksTo(1));
@@ -510,6 +516,7 @@ public final class ModItemsNeoForge {
 		ModContent.ENERGY_PACK = ENERGY_PACK::get;
 		// DeferredItem<ElectricDrillItem> into a Supplier<Item> slot — bind via ::get (invariant generics).
 		ModContent.ELECTRIC_DRILL = ELECTRIC_DRILL::get;
+		ModContent.ELECTRIC_DRILL_DIAMOND_TIP = ELECTRIC_DRILL_DIAMOND_TIP::get;
 		ModContent.ELECTROMAGNET = ELECTROMAGNET::get;
 		ModContent.JETPACK = JETPACK::get;
 		ModContent.VACUUM_CAPSULE = VACUUM_CAPSULE::get;

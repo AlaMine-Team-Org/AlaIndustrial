@@ -269,6 +269,9 @@ public final class ModContent {
 	public static Supplier<Item> ENERGY_PACK = unbound("ENERGY_PACK");
 	// Electric Drill (MOD-079) — the first powered hand tool: a diamond-tier pickaxe that runs on EU.
 	public static Supplier<Item> ELECTRIC_DRILL = unbound("ELECTRIC_DRILL");
+	// Diamond-Tipped Electric Drill (MOD-321) — the drill's upgrade tier: faster, with a switchable
+	// Silk Touch mode. Shares the base drill's EU buffer and charging behaviour.
+	public static Supplier<Item> ELECTRIC_DRILL_DIAMOND_TIP = unbound("ELECTRIC_DRILL_DIAMOND_TIP");
 	// Electromagnet (MOD-132) — EU item in any inventory slot that draws loose drops toward the carrier.
 	public static Supplier<Item> ELECTROMAGNET = unbound("ELECTROMAGNET");
 	// Jetpack (MOD-148) — worn EU flight device (chest slot): thrust on held jump, glide when drained.

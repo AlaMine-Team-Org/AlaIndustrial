@@ -682,6 +682,11 @@ public final class NeoForgeGameTests {
 		registerTest(event, "drill_place_torch_on_replaceable_block", 40, true, ElectricDrillScenarios::fun09PlaceTorchOnReplaceableBlock);
 		// MOD-097 (TC-DRILL-001-NEG01): a drill below the torch cost refuses to place instead of a freebie.
 		registerTest(event, "drill_torch_refused_below_cost", 40, true, ElectricDrillScenarios::neg01TorchRefusedBelowCost);
+		// MOD-321 (TC-DRILL-001-FUN10/11): the diamond-tipped upgrade digs faster at the same tier, and its
+		// sneak-toggled Silk Touch mode flips the real loot-table drop both ways.
+		registerTest(event, "drill_diamond_tip_speed_and_tier", 40, true, ElectricDrillScenarios::fun10DiamondTipSpeedAndTier);
+		registerTest(event, "drill_diamond_tip_silk_toggle", 40, true, ElectricDrillScenarios::fun11DiamondTipSilkToggle);
+		registerTest(event, "drill_upgrade_recipe_any_state", 40, true, ElectricDrillScenarios::fun12UpgradeRecipeAcceptsAnyDrillState);
 
 		// MOD-132 Electromagnet (suite TC-MAGNET-001) — same neutral bodies as the Fabric MagnetGameTest.
 		registerTest(event, "magnet_pulls_nearby_drop", 40, true, MagnetScenarios::fun01PullsNearbyDrop);

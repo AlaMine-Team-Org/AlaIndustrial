@@ -4,6 +4,8 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.energy.ItemEnergy;
+import java.util.List;
+import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -19,15 +21,23 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -385,6 +395,227 @@ public final class ElectricDrillScenarios {
 		helper.succeed();
 	}
 
+	// ── MOD-321 — diamond-tipped upgrade ─────────────────────────────────────────────────────────
+
+	/**
+	 * FUN10 (MOD-321): the upgrade digs faster than the base drill, keeps the base drill's mining tier,
+	 * and falls back to the same exact hand speed when flat.
+	 *
+	 * <p>The speed assertion is deliberately doubled: an absolute check against 10.0 pins the balance
+	 * number, and a relative check against the base drill's own {@code getDestroySpeed} makes the test
+	 * fail if someone later raises the base drill to match — a bare {@code == 10.0f} would stay green
+	 * while the upgrade silently stopped being an upgrade.
+	 */
+	public static void fun10DiamondTipSpeedAndTier(GameTestHelper helper) {
+		Item tip = ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get();
+		BlockState stone = Blocks.STONE.defaultBlockState();
+
+		float charged = tip.getDestroySpeed(diamondTipDrill(Config.electricDrillBuffer), stone);
+		if (charged != 10.0f) {
+			helper.fail("a charged diamond-tipped drill must mine stone at 10.0, got " + charged);
+		}
+		float baseSpeed = ModContent.ELECTRIC_DRILL.get()
+				.getDestroySpeed(drill(Config.electricDrillBuffer), stone);
+		if (!(charged > baseSpeed)) {
+			helper.fail("the upgrade must out-dig the base drill, got " + charged + " vs base " + baseSpeed);
+		}
+		float flat = tip.getDestroySpeed(diamondTipDrill(0), stone);
+		if (flat != 1.0f) {
+			helper.fail("a flat diamond-tipped drill must mine at exactly hand speed 1.0, got " + flat);
+		}
+
+		// The tier is unchanged: same correct-for-drops answers as the base drill, including the dirt negative.
+		ItemStack charge = diamondTipDrill(Config.electricDrillBuffer);
+		assertCorrect(helper, charge, Blocks.OBSIDIAN.defaultBlockState(), "obsidian", true);
+		assertCorrect(helper, charge, Blocks.ANCIENT_DEBRIS.defaultBlockState(), "ancient_debris", true);
+		assertCorrect(helper, charge, Blocks.DIRT.defaultBlockState(), "dirt", false);
+		helper.succeed();
+	}
+
+	/**
+	 * FUN11 (MOD-321): sneak + right-click toggles Silk Touch mode, and the mode actually changes what
+	 * the block drops.
+	 *
+	 * <p>Both directions are asserted against real loot tables via {@link Block#getDrops}: silk mode must
+	 * yield the iron ore <b>block</b>, normal mode must yield <b>raw iron</b>. That pairing is what makes
+	 * the test able to fail — asserting only the silk branch would stay green even if the toggle got stuck
+	 * on and quietly broke ore doubling, which is the exact regression this feature was designed to avoid.
+	 * A non-sneaking click is checked too, so the toggle cannot start firing on every plain right-click.
+	 */
+	public static void fun11DiamondTipSilkToggle(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		ItemStack stack = diamondTipDrill(Config.electricDrillBuffer);
+		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+
+		// A freshly crafted drill starts in normal mode — ore keeps feeding the Macerator out of the box.
+		if (ElectricDrillDiamondTipItem.isSilkMode(stack)) {
+			helper.fail("a fresh diamond-tipped drill must start in normal (non-silk) mode");
+		}
+
+		// Plain right-click must not toggle: the control is sneak-gated.
+		player.setShiftKeyDown(false);
+		stack.getItem().use(level, player, InteractionHand.MAIN_HAND);
+		if (ElectricDrillDiamondTipItem.isSilkMode(stack)) {
+			helper.fail("a non-sneaking right-click must not toggle Silk Touch mode");
+		}
+
+		player.setShiftKeyDown(true);
+		stack.getItem().use(level, player, InteractionHand.MAIN_HAND);
+		if (!ElectricDrillDiamondTipItem.isSilkMode(stack)) {
+			helper.fail("sneak + right-click must switch Silk Touch mode on");
+		}
+
+		BlockPos abs = helper.absolutePos(ORE);
+		helper.setBlock(ORE, Blocks.IRON_ORE);
+		BlockState ore = level.getBlockState(abs);
+
+		if (!dropsContain(level, ore, abs, player, Blocks.IRON_ORE.asItem())) {
+			helper.fail("in Silk Touch mode iron ore must drop as the ore block");
+		}
+		if (dropsContain(level, ore, abs, player, Items.RAW_IRON)) {
+			helper.fail("in Silk Touch mode iron ore must NOT drop raw iron");
+		}
+
+		stack.getItem().use(level, player, InteractionHand.MAIN_HAND);
+		if (ElectricDrillDiamondTipItem.isSilkMode(stack)) {
+			helper.fail("a second sneak + right-click must switch Silk Touch mode back off");
+		}
+		if (!dropsContain(level, ore, abs, player, Items.RAW_IRON)) {
+			helper.fail("in normal mode iron ore must drop raw iron (ore doubling must keep working)");
+		}
+		if (dropsContain(level, ore, abs, player, Blocks.IRON_ORE.asItem())) {
+			helper.fail("in normal mode iron ore must NOT drop as the ore block");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * FUN12 (MOD-321): the upgrade recipe accepts a base drill in <b>any</b> state — fresh, charged,
+	 * half-charged, enchanted — because that is the drill the player actually owns by the time they can
+	 * afford the upgrade.
+	 *
+	 * <p>Reported from play-testing: "a charged drill does not fit the craft". A vanilla {@code Ingredient}
+	 * is a {@code HolderSet<Item>} and matches by item alone, so components should be irrelevant — this
+	 * test exists to prove that claim against the real {@code RecipeManager} rather than trust it, and to
+	 * lock the behaviour in if anything ever swaps the plain ingredient for a component-sensitive one.
+	 */
+	public static void fun12UpgradeRecipeAcceptsAnyDrillState(GameTestHelper helper) {
+		assertUpgradeCraftable(helper, drill(0), "empty drill");
+		assertUpgradeCraftable(helper, drill(Config.electricDrillBuffer), "fully charged drill");
+		assertUpgradeCraftable(helper, drill(Config.electricDrillBuffer / 3), "part-charged drill");
+
+		ItemStack enchanted = drill(Config.electricDrillBuffer);
+		Holder<Enchantment> efficiency = enchant(helper.getLevel(), Enchantments.EFFICIENCY);
+		EnchantmentHelper.updateEnchantments(enchanted, mutable -> mutable.set(efficiency, 3));
+		assertUpgradeCraftable(helper, enchanted, "enchanted charged drill");
+
+		// The other half of the story (play-test report "the craft does not work"): laying the grid out by
+		// hand goes through RecipeManager (asserted above), but the recipe-book / auto-fill button goes
+		// through StackedItemContents, which silently ignores any stack failing
+		// Inventory.isUsableForCrafting = !damaged && !enchanted && !custom-named. A merely CHARGED drill
+		// passes that gate, so auto-fill must be able to place it; an ENCHANTED one cannot, and that is
+		// vanilla behaviour for every item, not something this recipe can opt out of.
+		assertAutoFillCanCraft(helper, drill(Config.electricDrillBuffer), true, "charged drill");
+		assertAutoFillCanCraft(helper, drill(0), true, "empty drill");
+		assertAutoFillCanCraft(helper, enchanted, false, "enchanted drill (vanilla refuses to auto-fill)");
+
+		// Closest possible simulation of the player at a bench: a real CraftingMenu over a real player
+		// inventory, items dropped into the real grid slots, result read from the real result slot.
+		assertBenchCraft(helper, drill(Config.electricDrillBuffer), "charged drill at a real bench");
+		assertBenchCraft(helper, enchanted, "enchanted charged drill at a real bench");
+
+		helper.succeed();
+	}
+
+	/**
+	 * Drives an actual {@link CraftingMenu} the way a player does: put the nine stacks into the real grid
+	 * slots, let {@code slotsChanged} resolve the recipe, then read the real result slot. This is a
+	 * strictly stronger check than {@link #assertUpgradeCraftable} — it would catch a menu-level problem
+	 * that direct {@code RecipeManager} lookups cannot see.
+	 */
+	private static void assertBenchCraft(GameTestHelper helper, ItemStack drillStack, String label) {
+		ServerLevel level = helper.getLevel();
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		CraftingMenu menu = new CraftingMenu(1, player.getInventory(),
+				ContainerLevelAccess.create(level, helper.absolutePos(BOX)));
+
+		List<ItemStack> grid = List.of(
+				new ItemStack(ModContent.DIAMOND_DUST.get()), new ItemStack(ModContent.DIAMOND_DUST.get()),
+				new ItemStack(ModContent.DIAMOND_DUST.get()),
+				new ItemStack(ModContent.INVAR_INGOT.get()), drillStack, new ItemStack(ModContent.INVAR_INGOT.get()),
+				ItemStack.EMPTY, new ItemStack(ModContent.SILVER_GEAR.get()), ItemStack.EMPTY);
+		List<Slot> inputs = menu.getInputGridSlots();
+		for (int i = 0; i < grid.size(); i++) {
+			inputs.get(i).set(grid.get(i).copy());
+		}
+		menu.slotsChanged(inputs.get(0).container);
+
+		ItemStack result = menu.getResultSlot().getItem();
+		if (!result.is(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get())) {
+			helper.fail("the bench result slot stayed " + result + " with a " + label
+					+ "; expected the diamond-tipped drill");
+		}
+	}
+
+	/**
+	 * Asserts whether the vanilla recipe-book/auto-fill path can place the upgrade recipe when the player
+	 * carries {@code drillStack} plus the other ingredients. This is the code REI's "+" button drives, and
+	 * it is a different gate from {@link #assertUpgradeCraftable} — hence both are asserted.
+	 */
+	private static void assertAutoFillCanCraft(GameTestHelper helper, ItemStack drillStack,
+			boolean expected, String label) {
+		ServerLevel level = helper.getLevel();
+		CraftingInput input = CraftingInput.of(3, 3, List.of(
+				new ItemStack(ModContent.DIAMOND_DUST.get()), new ItemStack(ModContent.DIAMOND_DUST.get()),
+				new ItemStack(ModContent.DIAMOND_DUST.get()),
+				new ItemStack(ModContent.INVAR_INGOT.get()), drill(0), new ItemStack(ModContent.INVAR_INGOT.get()),
+				ItemStack.EMPTY, new ItemStack(ModContent.SILVER_GEAR.get()), ItemStack.EMPTY));
+		RecipeHolder<CraftingRecipe> recipe = level.getServer().getRecipeManager()
+				.getRecipeFor(RecipeType.CRAFTING, input, level).orElse(null);
+		if (recipe == null) {
+			helper.fail("could not resolve the upgrade recipe while testing auto-fill");
+			return;
+		}
+
+		StackedItemContents contents = new StackedItemContents();
+		contents.accountSimpleStack(new ItemStack(ModContent.DIAMOND_DUST.get(), 3));
+		contents.accountSimpleStack(new ItemStack(ModContent.INVAR_INGOT.get(), 2));
+		contents.accountSimpleStack(new ItemStack(ModContent.SILVER_GEAR.get(), 1));
+		contents.accountSimpleStack(drillStack);
+
+		boolean actual = contents.canCraft(recipe.value(), null);
+		if (actual != expected) {
+			helper.fail("auto-fill with a " + label + ": expected canCraft=" + expected + ", got " + actual);
+		}
+	}
+
+	/** Lays out the MOD-321 upgrade recipe with {@code drillStack} in the centre and asserts it resolves. */
+	private static void assertUpgradeCraftable(GameTestHelper helper, ItemStack drillStack, String label) {
+		ItemStack dust = new ItemStack(ModContent.DIAMOND_DUST.get());
+		ItemStack invar = new ItemStack(ModContent.INVAR_INGOT.get());
+		ItemStack gear = new ItemStack(ModContent.SILVER_GEAR.get());
+		List<ItemStack> grid = List.of(
+				dust.copy(), dust.copy(), dust.copy(),
+				invar.copy(), drillStack, invar.copy(),
+				ItemStack.EMPTY, gear.copy(), ItemStack.EMPTY);
+
+		ServerLevel level = helper.getLevel();
+		CraftingInput input = CraftingInput.of(3, 3, grid);
+		RecipeHolder<CraftingRecipe> recipe = level.getServer().getRecipeManager()
+				.getRecipeFor(RecipeType.CRAFTING, input, level).orElse(null);
+		if (recipe == null) {
+			helper.fail("the diamond-tip upgrade recipe did not resolve with a " + label
+					+ " — the base drill must be accepted in any state");
+			return;
+		}
+		ItemStack output = recipe.value().assemble(input);
+		if (!output.is(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get())) {
+			helper.fail("with a " + label + " the recipe produced " + output
+					+ "; expected the diamond-tipped drill");
+		}
+	}
+
 	// ── PER — persistence ────────────────────────────────────────────────────────────────────────
 
 	/** PER01: charge survives a stack copy, 0 EU removes the component, and writes clamp at capacity. */
@@ -406,6 +637,27 @@ public final class ElectricDrillScenarios {
 	}
 
 	// ── helpers ────────────────────────────────────────────────────────────────────────────────────
+
+	private static ItemStack diamondTipDrill(long eu) {
+		ItemStack stack = new ItemStack(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get());
+		ItemEnergy.set(stack, eu);
+		return stack;
+	}
+
+	/**
+	 * Whether breaking {@code state} with the player's current main-hand tool yields {@code expected}.
+	 * Runs the real loot table (that is where the Silk Touch predicate lives), so this asserts the drop
+	 * the player would actually receive rather than the enchantment component in isolation.
+	 */
+	private static boolean dropsContain(ServerLevel level, BlockState state, BlockPos pos,
+			ServerPlayer player, Item expected) {
+		for (ItemStack dropped : Block.getDrops(state, level, pos, null, player, player.getMainHandItem())) {
+			if (dropped.getItem() == expected) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	private static Holder<Enchantment> enchant(ServerLevel level, net.minecraft.resources.ResourceKey<Enchantment> key) {
 		return level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(key);
