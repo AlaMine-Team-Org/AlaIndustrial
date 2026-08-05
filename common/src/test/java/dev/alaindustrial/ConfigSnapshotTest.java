@@ -163,6 +163,9 @@ class ConfigSnapshotTest {
 		SENTINELS.put("electricChainsawBuffer", 13_000);
 		SENTINELS.put("electricChainsawEuPerBlock", 41);
 		SENTINELS.put("electricChainsawInputRate", 51);
+		SENTINELS.put("electricShovelBuffer", 14_000);
+		SENTINELS.put("electricShovelEuPerBlock", 43);
+		SENTINELS.put("electricShovelInputRate", 52);
 		SENTINELS.put("jetpackBuffer", 33_000);
 		SENTINELS.put("jetpackEuPerTick", 64);
 		SENTINELS.put("jetpackInputRate", 51);

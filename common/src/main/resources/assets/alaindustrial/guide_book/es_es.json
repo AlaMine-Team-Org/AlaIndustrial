@@ -2432,37 +2432,6 @@
           ]
         },
         {
-          "id": "electric_chainsaw",
-          "title": "Motosierra eléctrica",
-          "icon": "alaindustrial:electric_chainsaw",
-          "block_id": "alaindustrial:electric_chainsaw",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Motosierra eléctrica",
-              "text": "Un hacha recargable que funciona con EU: corta madera y hojas mientras tenga carga, gasta EU por bloque y nunca se rompe."
-            },
-            {
-              "type": "recipe",
-              "title": "Receta",
-              "recipe_type": "Fabricación con forma",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:iron_ingot",
-                "minecraft:iron_ingot",
-                "alaindustrial:battery",
-                "minecraft:diamond_axe",
-                "alaindustrial:battery",
-                "alaindustrial:copper_coil",
-                "alaindustrial:electronic_circuit",
-                "alaindustrial:copper_coil"
-              ],
-              "result_id": "alaindustrial:electric_chainsaw",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "battery_pouch",
           "title": "Bolsa de batería",
           "icon": "alaindustrial:battery_pouch",
@@ -3092,6 +3061,44 @@
                 "alaindustrial:copper_coil"
               ],
               "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_shovel",
+          "title": "Pala eléctrica",
+          "icon": "alaindustrial:electric_shovel",
+          "block_id": "alaindustrial:electric_shovel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pala eléctrica",
+              "text": "Una pala eléctrica recargable: cava tierra, arena y grava mientras tiene carga, gasta EU por bloque y nunca se rompe."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Búfer: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_shovel",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_shovel",
               "result_count": 1
             }
           ]

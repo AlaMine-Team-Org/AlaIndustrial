@@ -2432,37 +2432,6 @@
           ]
         },
         {
-          "id": "electric_chainsaw",
-          "title": "電動鏈鋸",
-          "icon": "alaindustrial:electric_chainsaw",
-          "block_id": "alaindustrial:electric_chainsaw",
-          "pages": [
-            {
-              "type": "text",
-              "title": "電動鏈鋸",
-              "text": "以 EU 驅動的可充電斧頭——有電時砍伐木頭和樹葉，每個方塊消耗 EU，永不損壞。"
-            },
-            {
-              "type": "recipe",
-              "title": "配方",
-              "recipe_type": "有序合成",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:iron_ingot",
-                "minecraft:iron_ingot",
-                "alaindustrial:battery",
-                "minecraft:diamond_axe",
-                "alaindustrial:battery",
-                "alaindustrial:copper_coil",
-                "alaindustrial:electronic_circuit",
-                "alaindustrial:copper_coil"
-              ],
-              "result_id": "alaindustrial:electric_chainsaw",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "battery_pouch",
           "title": "電池儲物袋",
           "icon": "alaindustrial:battery_pouch",
@@ -3092,6 +3061,44 @@
                 "alaindustrial:copper_coil"
               ],
               "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_shovel",
+          "title": "電動鏟",
+          "icon": "alaindustrial:electric_shovel",
+          "block_id": "alaindustrial:electric_shovel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "電動鏟",
+              "text": "可充電的EU鏟——有電時挖掘泥土、沙子和礫石，每方塊消耗EU，永不損壞。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "緩衝：10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_shovel",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_shovel",
               "result_count": 1
             }
           ]

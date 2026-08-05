@@ -358,6 +358,19 @@ public final class Config {
 	/** Max EU/tick the chainsaw accepts while sitting in a charge slot — the LV ceiling, like the drill. */
 	public static int electricChainsawInputRate = 32;
 
+	// --- Electric Shovel (MOD-338, the earth-side member of the same hand-tool line) ---
+	/** Electric Shovel EU buffer — the same reservoir as the drill and the chainsaw, so the whole LV
+	 * hand-tool line charges and lasts alike. At {@link #electricShovelEuPerBlock} per block this is
+	 * ~500 blocks of dirt on a full charge. */
+	public static int electricShovelBuffer = 10_000;
+	/** EU drained per block the shovel successfully digs while it has at least this much charge. Below it
+	 * the shovel still digs (and drops), but at hand speed and free — see ElectricShovelItem. Cheaper
+	 * than the chainsaw's 30 because loose earth is softer than wood, and far under the LV machine floor
+	 * (200 EU/op). */
+	public static int electricShovelEuPerBlock = 20;
+	/** Max EU/tick the shovel accepts while sitting in a charge slot — the LV ceiling, like its siblings. */
+	public static int electricShovelInputRate = 32;
+
 	// --- Electromagnet (MOD-132, item-pull convenience) ---
 	/** Electromagnet EU buffer (tier 1). A modest LV reservoir: at {@link #magnetEuPerItem} per pulled
 	 * item·tick it reaps hundreds of drops before a recharge, and tops up in ~8 s at an LV charger. */
@@ -900,6 +913,12 @@ public final class Config {
 				() -> electricChainsawEuPerBlock, v -> electricChainsawEuPerBlock = v, 1),
 			new IntField("electricChainsawInputRate", "Max EU/t the chainsaw accepts while charging in a slot.",
 				() -> electricChainsawInputRate, v -> electricChainsawInputRate = v, 1),
+			new IntField("electricShovelBuffer", "Electric Shovel EU buffer.",
+				() -> electricShovelBuffer, v -> electricShovelBuffer = v, 1),
+			new IntField("electricShovelEuPerBlock", "EU the shovel spends per block dug at powered speed (below this it digs at hand speed for free).",
+				() -> electricShovelEuPerBlock, v -> electricShovelEuPerBlock = v, 1),
+			new IntField("electricShovelInputRate", "Max EU/t the shovel accepts while charging in a slot.",
+				() -> electricShovelInputRate, v -> electricShovelInputRate = v, 1),
 			new IntField("fluxweaveBuffer", "EU buffer of each Fluxweave armour piece.",
 				() -> fluxweaveBuffer, v -> fluxweaveBuffer = v, 1),
 			new IntField("fluxweaveInputRate", "Max EU/t a Fluxweave piece accepts while charging in a slot.",

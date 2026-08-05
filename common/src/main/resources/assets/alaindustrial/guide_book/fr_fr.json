@@ -2432,37 +2432,6 @@
           ]
         },
         {
-          "id": "electric_chainsaw",
-          "title": "Tronçonneuse électrique",
-          "icon": "alaindustrial:electric_chainsaw",
-          "block_id": "alaindustrial:electric_chainsaw",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Tronçonneuse électrique",
-              "text": "Une hache rechargeable alimentée en EU — coupe le bois et les feuilles tant qu'elle est chargée, consomme des EU par bloc et ne casse jamais."
-            },
-            {
-              "type": "recipe",
-              "title": "Recette",
-              "recipe_type": "Fabrication façonnée",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:iron_ingot",
-                "minecraft:iron_ingot",
-                "alaindustrial:battery",
-                "minecraft:diamond_axe",
-                "alaindustrial:battery",
-                "alaindustrial:copper_coil",
-                "alaindustrial:electronic_circuit",
-                "alaindustrial:copper_coil"
-              ],
-              "result_id": "alaindustrial:electric_chainsaw",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "battery_pouch",
           "title": "Sacoche à batterie",
           "icon": "alaindustrial:battery_pouch",
@@ -3092,6 +3061,44 @@
                 "alaindustrial:copper_coil"
               ],
               "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_shovel",
+          "title": "Pelle électrique",
+          "icon": "alaindustrial:electric_shovel",
+          "block_id": "alaindustrial:electric_shovel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pelle électrique",
+              "text": "Une pelle électrique rechargeable — creuse la terre, le sable et le gravier tant qu'elle est chargée, consomme des EU par bloc et ne casse jamais."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Tampon : 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_shovel",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_shovel",
               "result_count": 1
             }
           ]

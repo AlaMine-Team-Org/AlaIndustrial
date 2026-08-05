@@ -29,6 +29,7 @@ import dev.alaindustrial.item.tool.AnalyzerMode;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
+import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.JetpackItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
@@ -86,6 +87,10 @@ public final class MachineTooltips {
 		}
 		if (stack.getItem() instanceof ElectricChainsawItem) {
 			addElectricChainsawTooltip(stack, lines);
+			return;
+		}
+		if (stack.getItem() instanceof ElectricShovelItem) {
+			addElectricShovelTooltip(stack, lines);
 			return;
 		}
 		if (stack.getItem() instanceof JetpackItem) {
@@ -314,6 +319,27 @@ public final class MachineTooltips {
 					.withStyle(ChatFormatting.RED));
 		} else {
 			lines.add(Component.translatable("tooltip.alaindustrial.electric_chainsaw.charge", eu, cap)
+					.withStyle(ChatFormatting.GOLD));
+		}
+	}
+
+	/**
+	 * Tooltip for the Electric Shovel (MOD-338) — the same shape as the drill's and the chainsaw's:
+	 * what it does with its per-block EU cost, then the charge line (gold, or red DEPLETED at 0). A
+	 * sibling method rather than a branch inside either of theirs, because the usage line names earth
+	 * instead of stone or wood.
+	 */
+	private static void addElectricShovelTooltip(ItemStack stack, List<Component> lines) {
+		lines.add(Component.translatable("tooltip.alaindustrial.electric_shovel.usage",
+						Config.electricShovelEuPerBlock)
+				.withStyle(ChatFormatting.GRAY));
+		long eu = ItemEnergy.get(stack);
+		long cap = ItemEnergy.capacity(stack);
+		if (eu <= 0) {
+			lines.add(Component.translatable("tooltip.alaindustrial.electric_shovel.depleted")
+					.withStyle(ChatFormatting.RED));
+		} else {
+			lines.add(Component.translatable("tooltip.alaindustrial.electric_shovel.charge", eu, cap)
 					.withStyle(ChatFormatting.GOLD));
 		}
 	}

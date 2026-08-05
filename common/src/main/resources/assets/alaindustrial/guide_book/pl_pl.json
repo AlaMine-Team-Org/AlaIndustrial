@@ -2432,37 +2432,6 @@
           ]
         },
         {
-          "id": "electric_chainsaw",
-          "title": "Piła elektryczna",
-          "icon": "alaindustrial:electric_chainsaw",
-          "block_id": "alaindustrial:electric_chainsaw",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Piła elektryczna",
-              "text": "Ładowalna siekiera na EU — tnie drewno i liście, dopóki ma zasilanie, zużywa EU na blok i nigdy się nie psuje."
-            },
-            {
-              "type": "recipe",
-              "title": "Przepis",
-              "recipe_type": "Wytwarzanie wg wzoru",
-              "grid": [
-                "minecraft:iron_ingot",
-                "minecraft:iron_ingot",
-                "minecraft:iron_ingot",
-                "alaindustrial:battery",
-                "minecraft:diamond_axe",
-                "alaindustrial:battery",
-                "alaindustrial:copper_coil",
-                "alaindustrial:electronic_circuit",
-                "alaindustrial:copper_coil"
-              ],
-              "result_id": "alaindustrial:electric_chainsaw",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "battery_pouch",
           "title": "Sakwa bateryjna",
           "icon": "alaindustrial:battery_pouch",
@@ -3092,6 +3061,44 @@
                 "alaindustrial:copper_coil"
               ],
               "result_id": "alaindustrial:electric_drill",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_shovel",
+          "title": "Łopata elektryczna",
+          "icon": "alaindustrial:electric_shovel",
+          "block_id": "alaindustrial:electric_shovel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Łopata elektryczna",
+              "text": "Ładowalna łopata na EU — kopie ziemię, piasek i żwir, dopóki ma zasilanie, zużywa EU za blok i nigdy się nie psuje."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Bufor: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_shovel",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_shovel",
               "result_count": 1
             }
           ]

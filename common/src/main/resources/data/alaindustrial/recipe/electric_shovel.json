@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"key": {
+		"I": "#c:ingots/iron",
+		"B": "alaindustrial:battery",
+		"S": "minecraft:diamond_shovel",
+		"C": "alaindustrial:copper_coil",
+		"E": "alaindustrial:electronic_circuit"
+	},
+	"pattern": [
+		"III",
+		"BSB",
+		"CEC"
+	],
+	"result": { "id": "alaindustrial:electric_shovel" }
+}

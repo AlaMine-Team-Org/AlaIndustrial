@@ -274,6 +274,8 @@ public final class ModContent {
 	public static Supplier<Item> ELECTRIC_DRILL_DIAMOND_TIP = unbound("ELECTRIC_DRILL_DIAMOND_TIP");
 	// Electric Chainsaw (MOD-337) — the drill's wood-side counterpart: an EU axe for logs and leaves.
 	public static Supplier<Item> ELECTRIC_CHAINSAW = unbound("ELECTRIC_CHAINSAW");
+	// Electric Shovel (MOD-338) — the earth-side member of the same line: an EU shovel for loose ground.
+	public static Supplier<Item> ELECTRIC_SHOVEL = unbound("ELECTRIC_SHOVEL");
 	// Electromagnet (MOD-132) — EU item in any inventory slot that draws loose drops toward the carrier.
 	public static Supplier<Item> ELECTROMAGNET = unbound("ELECTROMAGNET");
 	// Jetpack (MOD-148) — worn EU flight device (chest slot): thrust on held jump, glide when drained.
