@@ -72,22 +72,42 @@ public final class Config {
 	public static int highAltWindMillMaxBaseEuPerTick = 8;
 	/** Blocks of height above sea level needed for +1 EU/t of base on the high-altitude variant (half the T1 16). */
 	public static int highAltWindMillBlocksPerBase = 8;
-	/** Hard cap on high-altitude wind-mill EU/t after the weather multiplier. */
-	public static int highAltWindMillMaxEuPerTick = 16;
+	/**
+	 * Weather multipliers for the high-altitude variant (MOD-345). Deliberately weaker than T1's
+	 * ×1.5/×2: this branch's identity is a steady income that barely cares about the sky, so it wins in
+	 * clear weather and concedes the storm to the storm branch. Before MOD-345 it borrowed T1's factors
+	 * and, with twice T1's height growth, beat the storm mill in almost every cell of the table — two
+	 * equally priced evolution chips with only one correct answer.
+	 */
+	public static float highAltWindMillRainFactor = 1.25f;
+	/** @see #highAltWindMillRainFactor */
+	public static float highAltWindMillThunderFactor = 1.5f;
+	/**
+	 * Hard cap on high-altitude wind-mill EU/t after the weather multiplier. Equals the reachable peak
+	 * (base 8 × thunder 1.5), so the branch tops out at 12 and leaves the 16+ band to the storm mill.
+	 */
+	public static int highAltWindMillMaxEuPerTick = 12;
 	// --- Storm wind mill (T2, LV) — boosted by weather ---
 	/**
 	 * Clear-sky height cap for the storm variant: same height step as T1 (16 blocks/+1), but raised above T1
-	 * so the thunder multiplier (×3) actually reaches the T2 cap: base 6 × thunder 3 = 18 → clamped to 16.
-	 * At 4 (the old value) the peak was only 12, leaving the T2 cap dead and the storm mill strictly weaker
-	 * than the high-altitude T2. Now both T2 mills reach 16, but via different reliability profiles.
+	 * so the thunder multiplier actually pays off. The base stays low on purpose — this branch is not
+	 * supposed to earn a living in clear weather.
 	 */
 	public static int stormWindMillMaxBaseEuPerTick = 6;
 	/** Weather multiplier for the storm variant when it is raining (not thundering). */
 	public static float stormWindMillRainFactor = 2.0f;
-	/** Weather multiplier for the storm variant when it is thundering. */
-	public static float stormWindMillThunderFactor = 3.0f;
-	/** Hard cap on storm wind-mill EU/t after the weather multiplier. */
-	public static int stormWindMillMaxEuPerTick = 16;
+	/**
+	 * Weather multiplier for the storm variant when it is thundering (MOD-345: ×3 → ×3.5). This is the
+	 * branch's whole identity — the highest burst EU/t in the mod's LV tier, paid for by producing the
+	 * least of the three mills when the sky is clear.
+	 */
+	public static float stormWindMillThunderFactor = 3.5f;
+	/**
+	 * Hard cap on storm wind-mill EU/t after the weather multiplier (MOD-345: 16 → 24). The old 16 clipped
+	 * the thunder peak down to the high-altitude branch's ceiling, erasing the difference between the two
+	 * chips. Headroom, not a target: the reachable peak is base 6 × 3.5 = 21.
+	 */
+	public static int stormWindMillMaxEuPerTick = 24;
 	// --- Rotor / wheel wear (MOD-189) — the wind mill rotor and water mill wheel are consumables ---
 	/**
 	 * Wind mill rotor max durability (wear shown as a vanilla durability bar). Total rotor life is
@@ -815,6 +835,10 @@ public final class Config {
 				() -> highAltWindMillMaxBaseEuPerTick, v -> highAltWindMillMaxBaseEuPerTick = v, 0),
 			new IntField("highAltWindMillBlocksPerBase", "Blocks of height above sea level per +1 EU/t of base on the high-altitude T2 variant.",
 				() -> highAltWindMillBlocksPerBase, v -> highAltWindMillBlocksPerBase = v, 1),
+			new FloatField("highAltWindMillRainFactor", "High-altitude T2 wind mill output multiplier while it is raining.",
+				() -> highAltWindMillRainFactor, v -> highAltWindMillRainFactor = v, 0.0f),
+			new FloatField("highAltWindMillThunderFactor", "High-altitude T2 wind mill output multiplier while it is thundering.",
+				() -> highAltWindMillThunderFactor, v -> highAltWindMillThunderFactor = v, 0.0f),
 			new IntField("highAltWindMillMaxEuPerTick", "Hard cap on high-altitude T2 wind mill EU/t after the weather multiplier.",
 				() -> highAltWindMillMaxEuPerTick, v -> highAltWindMillMaxEuPerTick = v, 0),
 			new IntField("stormWindMillMaxBaseEuPerTick", "Storm wind mill (T2) clear-sky height cap in EU/t before the weather multiplier.",

@@ -58,18 +58,19 @@ public class HighAltitudeWindMillScreen extends MachineScreen<HighAltitudeWindMi
 					TEX_SIZE, TEX_SIZE);
 		}
 
-		// While idle, explain why in a centred translated label so the player can fix it.
+		// Running: show the current output (MOD-346). Idle: explain why so the player can fix it.
 		drawStatusText(graphics, mode, x, y);
 	}
 
-	/** Centred status label for idle modes; nothing is drawn while the mill is generating. */
+	/** Centred status row: production while generating, the idle reason otherwise. */
 	private void drawStatusText(GuiGraphicsExtractor graphics, int mode, int x, int y) {
 		Component label = modeLabel(mode);
-		if (label == null) {
-			return;
+		boolean idle = label != null;
+		if (!idle) {
+			label = Component.translatable("gui.alaindustrial.output", this.menu.getProductionRate());
 		}
 		int tx = x + (this.imageWidth - this.font.width(label)) / 2;
-		graphics.text(this.font, label, tx, y + STATUS_TEXT_Y, GuiStyle.TEXT_DIM, false);
+		graphics.text(this.font, label, tx, y + STATUS_TEXT_Y, idle ? GuiStyle.TEXT_DIM : GuiStyle.TEXT, false);
 	}
 
 	/** Map a wind-mill mode code to its translated status label, or {@code null} while generating. */

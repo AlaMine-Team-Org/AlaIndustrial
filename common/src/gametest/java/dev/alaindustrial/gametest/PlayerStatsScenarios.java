@@ -1,18 +1,24 @@
 package dev.alaindustrial.gametest;
 
+import dev.alaindustrial.Config;
+import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
+import dev.alaindustrial.block.entity.PumpBlockEntity;
+import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.stats.PlayerModStats;
 import dev.alaindustrial.stats.PlayerStatsStore;
 import dev.alaindustrial.stats.PlayerStatsTracker;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 /**
@@ -26,6 +32,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
  *   <li>a completed operation credits useful EU (XP) to an online, survival owner;</li>
  *   <li>an aborted operation (input pulled before completion) credits nothing — the anti-AFK rule;</li>
  *   <li>a creative owner earns nothing (creative EU is free);</li>
+ *   <li>pumping a bucket credits nothing at all — MOD-264, unattended extraction is not useful work;</li>
  *   <li>an ownerless machine (structure / {@code /ala demo}) credits nobody;</li>
  *   <li>an offline owner accrues nothing — the gate that also neutralises other mods' fake players;</li>
  *   <li>a running generator credits its owner's career production, but never machine EU;</li>
@@ -122,6 +129,56 @@ public final class PlayerStatsScenarios {
 		long xp = PlayerStatsStore.get(player).euUsefulConsumedTotal();
 		if (xp != 0) {
 			helper.fail("creative owner wrongly earned useful EU: " + xp);
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-264: pumping a bucket credits NO mastery, even for an online survival owner. Before the fix a
+	 * pump paid the full {@code euPerXp} rate per bucket, so one AFK session on an oil vein (thousands of
+	 * source blocks) skipped one or two ranks outright.
+	 *
+	 * <p>The assertion has a negative control on purpose: the scenario first proves the pump ACTUALLY
+	 * acquired fluid (its tank holds at least one bucket) and only then requires the owner's useful EU to
+	 * be zero. Without that control the test would pass just as green on a pump that never pumped —
+	 * e.g. if the water source failed to place — and would guard nothing. Re-adding
+	 * {@code creditUsefulWork} in {@code PumpBlockEntity} turns it red.
+	 */
+	public static void pumpGrantsNoMastery(GameTestHelper helper) {
+		ServerPlayer player = survivalOwner(helper);
+		if (helper.getLevel().getServer().getPlayerList().getPlayer(player.getUUID()) == null) {
+			helper.fail("mock owner is not in the server player list — attribution can't resolve it");
+			return;
+		}
+		BlockPos pumpRel = new BlockPos(1, 2, 1);
+		BlockPos sourceRel = new BlockPos(2, 2, 1); // straight in front of the EAST-facing intake
+		helper.setBlock(pumpRel, ModContent.PUMP.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
+		helper.getLevel().setBlockAndUpdate(helper.absolutePos(sourceRel),
+				Blocks.WATER.defaultBlockState());
+
+		PumpBlockEntity pump = helper.getBlockEntity(pumpRel, PumpBlockEntity.class);
+		if (pump == null) {
+			helper.fail("pump block entity missing after placement");
+			return;
+		}
+		pump.setOwner(player.getUUID(), "TestOwner");
+		pump.getEnergyStorage().amount = Config.pumpEuPerBucket * 4L; // EU for several acquisitions
+		for (int i = 0; i < 60; i++) { // > pumpScanCooldownTicks: at least one scan+acquire lands
+			pump.serverTick(helper.getLevel(), pump.getBlockPos(),
+					helper.getLevel().getBlockState(pump.getBlockPos()));
+		}
+		PlayerStatsTracker.get().flush(helper.getLevel().getServer());
+
+		if (pump.fluidTank.amount < FluidAmounts.BUCKET) { // negative control — see javadoc
+			helper.fail("pump acquired nothing (tank=" + pump.fluidTank.amount
+					+ " mB); the zero-XP assertion below would be vacuous");
+			return;
+		}
+		long xp = PlayerStatsStore.get(player).euUsefulConsumedTotal();
+		if (xp != 0) {
+			helper.fail("pumping wrongly credited useful EU (MOD-264 says zero): " + xp);
 			return;
 		}
 		helper.succeed();

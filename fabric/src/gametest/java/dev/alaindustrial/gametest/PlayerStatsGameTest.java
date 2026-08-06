@@ -29,6 +29,12 @@ public class PlayerStatsGameTest {
 		PlayerStatsScenarios.noXpForCreativeOwner(helper);
 	}
 
+	/** @implements MOD-264 pumping a bucket credits no mastery at all (unattended extraction). */
+	@GameTest
+	public void pumpGrantsNoMastery(GameTestHelper helper) {
+		PlayerStatsScenarios.pumpGrantsNoMastery(helper);
+	}
+
 	/** @implements an ownerless machine (structure / demo stand) credits no player. */
 	@GameTest
 	public void noStatsForNullOwner(GameTestHelper helper) {

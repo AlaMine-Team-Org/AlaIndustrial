@@ -102,10 +102,14 @@ class ConfigSnapshotTest {
 		SENTINELS.put("windMillEvolveTicks", 11_111);
 		SENTINELS.put("highAltWindMillMaxBaseEuPerTick", 14);
 		SENTINELS.put("highAltWindMillBlocksPerBase", 11);
+		SENTINELS.put("highAltWindMillRainFactor", 1.9f);
+		SENTINELS.put("highAltWindMillThunderFactor", 2.4f);
 		SENTINELS.put("highAltWindMillMaxEuPerTick", 21);
 		SENTINELS.put("stormWindMillMaxBaseEuPerTick", 9);
 		SENTINELS.put("stormWindMillRainFactor", 2.5f);
-		SENTINELS.put("stormWindMillThunderFactor", 3.5f);
+		// 4.5f, not 3.5f: MOD-345 made 3.5 the default, and a sentinel equal to the default proves
+		// nothing (the field would read correctly even if the setter never ran).
+		SENTINELS.put("stormWindMillThunderFactor", 4.5f);
 		SENTINELS.put("stormWindMillMaxEuPerTick", 22);
 		SENTINELS.put("windMillRotorMaxDamage", 808);
 		SENTINELS.put("windMillRotorEuPerDamage", 369);

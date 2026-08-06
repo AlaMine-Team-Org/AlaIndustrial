@@ -161,7 +161,11 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 				acquiredFrom = acquireFluid(level, pos, state);
 				if (acquiredFrom != null) {
 					energy.amount -= euPerBucket;
-					creditUsefulWork(level, euPerBucket); // MOD-133: one bucket pumped = useful work → XP
+					// MOD-264: pumping credits NO mastery. A pump runs unattended, so one AFK session on an
+					// oil vein (~3 677 buckets average, ~5 497 max) used to hand out that many XP points at
+					// the full euPerXp rate — enough to skip one or two ranks outright, while a hand-run
+					// machine needs ~320 operations for 80 points. EU is still spent; extraction is raw
+					// material gathering, not "useful machine work".
 					worked = true;
 					scanCooldown = Config.pumpScanCooldownTicks; // cooldown on success to balance speed and reduce BFS frequency
 				} else {

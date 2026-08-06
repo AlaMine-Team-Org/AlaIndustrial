@@ -1,14 +1,18 @@
-## 0.1.71
+## 0.1.72
 
-<p><img alt="A player holding the Electric Hoe on freshly tilled farmland" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.71/release-media/v0.1.71/changelog.png" width="720"></p>
+<p><img alt="Wind turbine interface showing live EU/t output" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.72/release-media/v0.1.72/changelog.png" width="720"></p>
 
-The powered tool line is complete, and the macerator now grinds a lot more than ore.
+Wind turbines now tell you how much power they make, and newer ores finally vein-mine in old worlds.
 
 ### New
 
-- **Electric Hoe** — the fourth and last powered tool, after the drill, the saw and the shovel. Runs on energy instead of durability and never breaks.
-- **Tills farmland on right-click** and cuts hay, leaves, sponge and moss faster than a diamond hoe. Both cost 50 EU; one charge is roughly 200 uses.
-- **Out of power it still breaks blocks** at hand speed with every drop intact — but it will not till, and says so above your hotbar.
-- **Renewable sand.** Cobblestone now grinds into sand, so a cobble farm becomes an endless supply of glass and concrete.
-- **More out of what you already have:** a bone gives 4 bone meal instead of 3, a bone block 12 instead of 9, a blaze rod 3 powder instead of 2, sugar cane 2 sugar instead of 1.
-- **Two things you could never undo before:** wool comes apart into 4 string, and sandstone crumbles into 4 sand.
+- **Wind turbines show live output.** While the blades spin, the interface reads `Output: N EU/t`. When they stop, the row tells you why instead.
+
+### Improved
+
+- **The two turbine branches now play different roles.** The Sky Mill gives steady income in almost any weather, peaking at 12 EU/t. The Tempest Mill is the weakest under clear skies but reaches 21 EU/t in a thunderstorm.
+- **Pumping no longer earns mastery.** Moving fluid around is not machine work — progress in the oil branch now comes from processing what you pumped, not from leaving a pump running.
+
+### Fixed
+
+- **Newer ores now vein-mine in worlds that already existed.** Sulfur was registered once per world, so a world created before sulfur existed never picked it up and mined one block at a time. Ores are re-checked every time you load a world now — old saves repair themselves, no commands needed, and any ore added later works the same way.

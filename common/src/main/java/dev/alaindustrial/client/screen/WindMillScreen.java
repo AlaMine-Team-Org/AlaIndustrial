@@ -100,21 +100,22 @@ public class WindMillScreen extends MachineScreen<WindMillMenu> {
 					TEX_SIZE, TEX_SIZE);
 		}
 
-		// ── Status text — explain WHY the mill is idle ───────────────────────────
-		// While generating (breeze/gale/storm) the gear icon above is enough; when the mill is stopped
-		// the player needs to see the reason at a glance. Each idle mode maps to a translated label drawn
-		// centered in the empty band between the rotor slot (ends y≈40) and the evolution bar (y=70).
+		// ── Status text — current output while running, the reason while idle ────
+		// One centred row in the empty band between the rotor slot (ends y≈40) and the evolution bar
+		// (y=70) carries both messages, because only one of them is ever meaningful: a running mill
+		// answers "how much am I making right now" (MOD-346), a stopped one answers "why am I stopped".
 		drawStatusText(graphics, mode, x, y);
 	}
 
-	/** Centered status label for idle modes; nothing is drawn when the mill is generating. */
+	/** Centered status row: production while generating, the idle reason otherwise. */
 	private void drawStatusText(GuiGraphicsExtractor graphics, int mode, int x, int y) {
 		Component label = modeLabel(mode);
-		if (label == null) {
-			return; // generating (or generating-capable) — the gear icon covers it
+		boolean idle = label != null;
+		if (!idle) {
+			label = Component.translatable("gui.alaindustrial.output", this.menu.getProductionRate());
 		}
 		int tx = x + (this.imageWidth - this.font.width(label)) / 2;
-		graphics.text(this.font, label, tx, y + STATUS_TEXT_Y, GuiStyle.TEXT_DIM, false);
+		graphics.text(this.font, label, tx, y + STATUS_TEXT_Y, idle ? GuiStyle.TEXT_DIM : GuiStyle.TEXT, false);
 	}
 
 	/** Map a wind-mill mode code to its translated status label, or {@code null} while generating. */

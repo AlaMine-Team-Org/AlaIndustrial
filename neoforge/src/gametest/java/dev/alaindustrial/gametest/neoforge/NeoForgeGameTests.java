@@ -66,6 +66,7 @@ import net.minecraft.gametest.framework.TestData;
 import net.minecraft.gametest.framework.TestEnvironmentDefinition;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Rotation;
 import net.neoforged.neoforge.event.RegisterGameTestsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -842,6 +843,9 @@ public final class NeoForgeGameTests {
 				dev.alaindustrial.gametest.PlayerStatsScenarios::noXpFromAbortedWork);
 		registerTest(event, "player_stats_no_xp_for_creative_owner", 500, true,
 				dev.alaindustrial.gametest.PlayerStatsScenarios::noXpForCreativeOwner);
+		// MOD-264: a pump credits no mastery at all — unattended extraction is not "useful work".
+		registerTest(event, "player_stats_pump_grants_no_mastery", 200, true,
+				dev.alaindustrial.gametest.PlayerStatsScenarios::pumpGrantsNoMastery);
 		registerTest(event, "player_stats_no_stats_for_null_owner", 500, true,
 				dev.alaindustrial.gametest.PlayerStatsScenarios::noStatsForNullOwner);
 		registerTest(event, "player_stats_no_stats_for_offline_owner", 500, true,
@@ -1396,17 +1400,58 @@ public final class NeoForgeGameTests {
 				AlaCommonScenarios::alaCommandRegistered);
 		registerTest(event, "ores_in_convention_tags", 40, true,
 				AlaCommonScenarios::oresInConventionTags);
+		// MOD-335 guard: fails deterministically if RIG_STRUCTURE is ever shrunk back to a 1x1x1
+		// template, which silently made every drop count in this lane unreliable.
+		registerTest(event, "gametest_rig_structure_fits_rigs", 40, true,
+				AlaCommonScenarios::gametestRigStructureFitsRigs);
 	}
+
+	/**
+	 * Structure template every scenario is placed on: 8x8x8 of air, shipped in this source set as
+	 * {@code data/alaindustrial/structure/gametest_rig.nbt}.
+	 *
+	 * <p><b>Why not {@code minecraft:empty} (MOD-335).</b> The vanilla template is 1x1x1, and the
+	 * engine sizes three things off the STRUCTURE box, not off what a scenario body actually writes:
+	 * <ul>
+	 *   <li>{@code TestInstanceBlockEntity.forceLoadChunks()} force-loads only the chunks intersecting
+	 *       {@code getStructureBoundingBox()};</li>
+	 *   <li>{@code GameTestInfo} waits for only those chunks to be entity-ticking before running;</li>
+	 *   <li>{@code StructureGridSpawner} spaces the grid by {@code getTestBounds().getXsize() + 5}
+	 *       (rows: {@code + 6}), so a 1x1x1 template packed tests 6 blocks apart.</li>
+	 * </ul>
+	 * Our rigs are up to 5x5 (the scythe/trellis platforms), so a rig whose origin landed late in a
+	 * chunk straddled the border and dropped its items into a chunk this lane never loaded —
+	 * {@code getEntitiesOfClass} then counted zero and the test failed with "no drop". It reproduced
+	 * on exactly the tests whose origin had {@code z % 16 == 14} (rig z spans 14..18, crossing 16),
+	 * which is why it looked random: {@code GameTestServer} picks a RANDOM world origin per run.
+	 *
+	 * <p>8x8x8 + {@code padding = 1} mirrors Fabric's {@code fabric-gametest-api-v1:empty} (same size,
+	 * same default padding) — the reason the Fabric lane never saw this failure on identical bodies.
+	 */
+	private static final Identifier RIG_STRUCTURE = Industrialization.id("gametest_rig");
+
+	/**
+	 * Padding around the structure. Widens grid spacing and, importantly, extends
+	 * {@code clearSpaceForStructure} + {@code removeEntities} so a neighbour's leftover drops are
+	 * cleared before this test runs. Matches the Fabric annotation default.
+	 */
+	private static final int RIG_PADDING = 1;
 
 	/** Register one code-body scenario under the alaindustrial namespace with a sane maxTicks. */
 	private static void registerTest(RegisterGameTestsEvent event, String name, int maxTicks, boolean required,
 			Consumer<GameTestHelper> body) {
 		TestData<Holder<TestEnvironmentDefinition<?>>> data = new TestData<>(
 				emptyEnv,
-				Identifier.withDefaultNamespace("empty"), // minecraft:empty structure (1x1x1), ships in vanilla data
+				RIG_STRUCTURE,
 				maxTicks,
 				0,          // setupTicks
-				required);
+				required,
+				Rotation.NONE,
+				false,      // manualOnly
+				1,          // maxAttempts — a retry would only mask a real defect
+				1,          // requiredSuccesses
+				false,      // skyAccess
+				RIG_PADDING);
 		event.registerTest(Industrialization.id(name), new CodeGameTestInstance(body, data));
 	}
 }

@@ -134,4 +134,14 @@ public class AlaCommonGameTest {
 	public void oresInConventionTags(GameTestHelper helper) {
 		AlaCommonScenarios.oresInConventionTags(helper);
 	}
+
+	/**
+	 * MOD-335 guard — the structure this lane runs on must contain a rig, or drops fall into a chunk
+	 * nothing force-loads and drop counts silently read zero. Fabric's default template already
+	 * satisfies this; the guard exists so a future {@code structure = ...} override cannot regress it.
+	 */
+	@GameTest
+	public void gametestRigStructureFitsRigs(GameTestHelper helper) {
+		AlaCommonScenarios.gametestRigStructureFitsRigs(helper);
+	}
 }

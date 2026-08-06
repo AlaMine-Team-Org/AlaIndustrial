@@ -368,6 +368,41 @@ public final class AlaCommonScenarios {
 		helper.succeed();
 	}
 
+	/**
+	 * The test structure this lane runs on must be big enough to contain a scenario rig (MOD-335).
+	 *
+	 * <p>This is a configuration guard, not a gameplay test, and it is here because the bug it pins
+	 * was invisible to every gameplay test: the engine sizes <b>chunk force-loading</b>, the
+	 * entity-ticking wait, grid spacing and {@code clearSpaceForStructure} off the STRUCTURE box, not
+	 * off what a scenario body writes. The NeoForge lane used {@code minecraft:empty} (1x1x1) while
+	 * rigs are up to 5x5, so a rig whose origin landed late in a chunk straddled the border and
+	 * dropped its items into a chunk nothing had force-loaded — {@code getEntitiesOfClass} counted
+	 * zero and the test failed with "no drop". Because {@code GameTestServer} picks a RANDOM world
+	 * origin per run, that surfaced as an unreproducible flake that blocked a release.
+	 *
+	 * <p>A flake is a poor regression test, so this guard is deterministic: shrink the structure back
+	 * and it fails on every run, on both loaders.
+	 */
+	public static void gametestRigStructureFitsRigs(GameTestHelper helper) {
+		double x = helper.getBounds().getXsize();
+		double z = helper.getBounds().getZsize();
+		if (x < MIN_RIG_STRUCTURE_SIZE || z < MIN_RIG_STRUCTURE_SIZE) {
+			helper.fail("this lane's test structure is " + x + "x" + z + ", below the required "
+					+ MIN_RIG_STRUCTURE_SIZE + "x" + MIN_RIG_STRUCTURE_SIZE + " — rigs up to 5x5 would"
+					+ " straddle a chunk border and their drops would land in a chunk the lane never"
+					+ " force-loads (MOD-335). Fabric: @GameTest(structure = ...); NeoForge:"
+					+ " NeoForgeGameTests.RIG_STRUCTURE.");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Smallest structure that safely holds a rig: the widest rigs that count drops are 5x5
+	 * (the scythe / trellis platforms) and 8 is what Fabric's own default template ships.
+	 */
+	private static final double MIN_RIG_STRUCTURE_SIZE = 8.0;
+
 	private static TagKey<Block> blockTag(String path) {
 		return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("c", path));
 	}
