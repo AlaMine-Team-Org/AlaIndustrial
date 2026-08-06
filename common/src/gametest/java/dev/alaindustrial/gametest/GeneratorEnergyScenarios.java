@@ -145,7 +145,9 @@ public final class GeneratorEnergyScenarios {
 		}
 		// MOD-188: the mill counts only FLOWING water — a still source powers nothing. Place a static
 		// flowing block (LEVEL 1); tick() drives only the mill's serverTick, so it does not dissipate.
-		helper.setBlock(millPos.east(), Blocks.WATER.defaultBlockState()
+		// MOD-352: it has to go in a cell the WHEEL sweeps, not beside the mill block. Default FACING is
+		// NORTH, so the undershot cell is one below the front cell.
+		helper.setBlock(millPos.north().below(), Blocks.WATER.defaultBlockState()
 				.setValue(net.minecraft.world.level.block.LiquidBlock.LEVEL, 1));
 		for (int i = 0; i < 5; i++) {
 			tick(helper, mill);
@@ -184,8 +186,9 @@ public final class GeneratorEnergyScenarios {
 				helper.fail("water mill block entity missing after placement");
 				return;
 			}
-			helper.setBlock(millPos.east(), Blocks.WATER.defaultBlockState()
-					.setValue(net.minecraft.world.level.block.LiquidBlock.LEVEL, 1)); // one flowing face → 1 EU/t
+			// MOD-352: the wheel's undershot cell (default FACING is NORTH), not the mill's own face.
+			helper.setBlock(millPos.north().below(), Blocks.WATER.defaultBlockState()
+					.setValue(net.minecraft.world.level.block.LiquidBlock.LEVEL, 1)); // one driven side → 1 EU/t
 			ItemStack wheel = new ItemStack(ModContent.WATER_MILL_WHEEL.get());
 			if (!wheel.isDamageableItem()) {
 				helper.fail("water_mill_wheel is not a durability item on NeoForge — wear can never apply");

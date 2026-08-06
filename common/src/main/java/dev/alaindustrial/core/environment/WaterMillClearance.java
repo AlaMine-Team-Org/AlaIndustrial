@@ -17,19 +17,19 @@ import net.minecraft.world.level.block.state.BlockState;
  * test of {@link WaterMillInterference} cannot see it (boxes overlap only at centre distances
  * 1.165–2.915).
  *
- * <p>Checked cells, all relative to {@code pos.relative(facing)} (the front cell the wheel lives in) —
- * the wheel needs a clear vertical slot, open on top and both sides:
+ * <p><b>Checked cells: the whole 3×3 of the wheel's plane</b> (MOD-355) — the front column and the one
+ * on each side, each at the level of the front cell, one above and one below. That is what the geometry
+ * demands: the disc's half-size is {@value WaterMillWheelGeometry#DISC_HALF_SIZE} about a centre sitting
+ * at (0.5, 0.5) of the front cell, so its box covers all nine cells. The diagonals are not a rounding
+ * artefact either — a diagonal cell's nearest corner is 0.707 away while the disc reaches 1.433 along
+ * that diagonal, so the rim enters it by nearly half a block and is plainly visible cutting through.
  *
- * <ul>
- *   <li><b>Front</b> — the hub cell: it must be free.</li>
- *   <li><b>Front-above</b> — the upper rim arc.</li>
- *   <li><b>Front-left / Front-right</b> — the horizontal rim arcs (the sides the player sees the rim
- *       sweep through).</li>
- * </ul>
- *
- * <p>The cell <b>below</b> the front cell is the one exemption: the lower arc of a water wheel is meant
- * to dip into the river — into water, or visually into a shallow river bed — so a solid block there
- * does not stall the mill. Requiring the bottom cell to be clear would forbid every riverbed placement.
+ * <p><b>The bottom row used to be exempt, and is not any more (MOD-355).</b> The exemption existed so a
+ * mill could stand on a river bed, but it let players sink the lower third of the wheel into solid stone
+ * and keep generating — the exact "broken wheel" look MOD-175/MOD-179 exist to prevent. It was never
+ * needed: a cell counts as free when it is {@link BlockState#canBeReplaced()}, and water is replaceable,
+ * so a wheel hanging over a channel passes just as before. Since MOD-352 the cell below the front one is
+ * also the undershot drive cell, so in any working build it holds water rather than rock.
  *
  * <p>A position is free when its state reports {@link BlockState#canBeReplaced()} — air, water, tall
  * grass and other filler. Anything with real collision (stone, another mill's casing, glass) blocks
@@ -40,21 +40,28 @@ public final class WaterMillClearance {
 	}
 
 	/**
-	 * True when a non-replaceable block occupies the front cell (hub) or the cell above / to either
-	 * side of it (the rim arcs) — the wheel would clip through it and must stall. The cell below the
-	 * front cell is exempt (the wheel dips into the river/riverbed).
+	 * True when a non-replaceable block occupies any of the nine cells of the wheel's plane — the
+	 * wheel would visibly clip through it and must stall. Nine reads a tick is still cheap enough to
+	 * run unconditionally, like the wind mill's blade clearance.
 	 *
 	 * @param level  the mill's level
 	 * @param pos    the mill's block position
 	 * @param facing the mill's {@code FACING} (the wheel face)
-	 * @return {@code true} if the hub cell or one of its top/side neighbours is a non-replaceable block
+	 * @return {@code true} if any cell of the wheel's 3×3 plane holds a non-replaceable block
 	 */
 	public static boolean hasObstruction(Level level, BlockPos pos, Direction facing) {
 		BlockPos front = pos.relative(facing);
-		return blocks(level, front)
-				|| blocks(level, front.above())
-				|| blocks(level, front.relative(facing.getClockWise()))
-				|| blocks(level, front.relative(facing.getCounterClockWise()));
+		BlockPos[] columns = {
+			front,
+			front.relative(facing.getClockWise()),
+			front.relative(facing.getCounterClockWise()),
+		};
+		for (BlockPos column : columns) {
+			if (blocks(level, column) || blocks(level, column.above()) || blocks(level, column.below())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** True when the block at {@code at} cannot be replaced (solid enough to stall the wheel). */

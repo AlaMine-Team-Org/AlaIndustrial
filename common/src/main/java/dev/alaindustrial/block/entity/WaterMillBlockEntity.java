@@ -7,6 +7,7 @@ import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.environment.WaterMillClearance;
 import dev.alaindustrial.core.environment.WaterMillInterference;
 import dev.alaindustrial.core.environment.WaterMillOutput;
+import dev.alaindustrial.core.environment.WaterMillWheelGeometry;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -17,6 +18,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -25,8 +27,10 @@ import net.minecraft.world.level.material.FluidState;
 
 /**
  * LV water mill (spec: alaindustrial:water_mill) — a passive, fuel-free generator. Each tick it counts
- * <b>flowing</b> water (a current — not a still source, MOD-188) on its four horizontal faces (N/S/E/W)
- * and produces {@link Config#waterMillEuPerTick} EU/t per flowing face: 0–4 EU/t, continuous. A crafted
+ * <b>flowing</b> water (a current — not a still source, MOD-188) in the four cells the <b>wheel</b>
+ * sweeps through — above, below and to each side of the front cell, NOT around the mill block itself
+ * (MOD-352) — and produces {@link Config#waterMillEuPerTick} EU/t per driven side: 0–4 EU/t,
+ * continuous. A crafted
  * {@code water_mill_wheel} must be installed in the single component slot. Since MOD-189 the
  * wheel is a durability component: it wears out only while the mill produces EU (wear proportional to
  * output) and breaks when spent — see {@link AbstractGeneratorBlockEntity#wearComponent}.
@@ -35,6 +39,9 @@ import net.minecraft.world.level.material.FluidState;
  *
  * <p>It never touches the fluid-tank/{@code FluidStorage} system; it reads {@code level.getFluidState}
  * directly. Energy persists via {@link MachineBlockEntity}; the water mill adds no NBT of its own.
+ *
+ * <p>Sync channels: 0 energy, 1 capacity, 2 driven-side count (the wheel renderer's speed input),
+ * 3 mode, 4 current production in EU/t (MOD-348, shown in the GUI status row).
  */
 public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implements MenuProvider {
 	public static final int WHEEL_SLOT = 0;
@@ -50,8 +57,9 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 	public static final int MODE_INTERFERENCE = 1;
 	public static final int MODE_OBSTRUCTED = 2;
 	/**
-	 * Wheel installed and free to spin, but no water on any horizontal face — the player-facing hint
-	 * "place water next to the mill" (MOD-179 feedback). Unlike interference/obstruction this does NOT
+	 * Wheel installed and free to spin, but no current in any of the four cells the wheel sweeps — the
+	 * player-facing hint "place water next to the mill" (MOD-179 feedback). Since MOD-352 those are the
+	 * cells around the WHEEL, not around the mill block. Unlike interference/obstruction this does NOT
 	 * hide the wheel: a dry wheel stands still but stays rendered.
 	 */
 	public static final int MODE_NO_WATER = 3;
@@ -68,23 +76,53 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 
 	private int scanCounter;
 	private boolean cachedInterfered;
+	/**
+	 * Current generation rate in EU/t, projected on sync channel 4 (MOD-348). Transient: it is recomputed
+	 * from the world every tick by {@link #produce}, so it is never serialised and never read off a client
+	 * block entity — the open screen gets it through the menu's {@link ContainerData} sync, not through the
+	 * block-entity update packet.
+	 */
+	private int productionRate;
 
 	public WaterMillBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.WATER_MILL_BE.get(), pos, state, EnergyTier.LV, 1, Config.waterMillBuffer, MAX_EXTRACT);
 	}
 
 	/**
-	 * Count the four horizontal faces (N/S/E/W) whose neighbour is <b>flowing</b> water (MOD-188). A
-	 * real water wheel is driven by a current, so a still source block ({@link FluidState#isSource()})
-	 * does NOT count — only flowing/falling water ({@code isSource() == false}, i.e. a stream or a
-	 * waterfall) turns the wheel. This closes the "drop it in a still pool and it powers itself" exploit.
-	 * Note: vanilla river/ocean water is mostly source blocks, so the player must supply an actual
-	 * current (a source feeding a channel with a drain, or a waterfall).
+	 * Count the four cells the <b>wheel</b> sweeps through that carry <b>flowing</b> water (MOD-352).
+	 *
+	 * <p><b>The cells are around the wheel, not around the block.</b> The wheel is not inside the mill:
+	 * the renderer pushes it {@link WaterMillWheelGeometry#DISC_PUSH} blocks along {@code FACING} and
+	 * gives it a rim radius of {@link WaterMillWheelGeometry#DISC_HALF_SIZE}, so its box spans the
+	 * <em>front</em> cell plus one cell above, below and to each side of it. Counting the mill block's
+	 * own horizontal neighbours (what this did before MOD-352) meant three of the four counted cells —
+	 * including the back one, which carries the output port for the cable — never touched the wheel at
+	 * all, while the four cells the rim genuinely passes through counted for nothing. Players read the
+	 * model off the picture, and the picture is the wheel: the mill block itself can be buried in the
+	 * bank with only the wheel sticking out.
+	 *
+	 * <p>The four cells map onto how real water wheels are driven: below is undershot (the classic —
+	 * the lower arc dips into the current), above is overshot (water poured over the top), and the two
+	 * sides are the horizontal rim sweep. The hub cell itself is deliberately NOT counted: it is where
+	 * the axle sits, and leaving it out keeps the maximum at a clean 4 EU/t with one unit per side of
+	 * the wheel.
+	 *
+	 * <p>Only a current turns a wheel, so a still source block ({@link FluidState#isSource()}) does NOT
+	 * count — only flowing/falling water (MOD-188). That closes the "drop it in a still pool and it
+	 * powers itself" exploit. Vanilla rivers and oceans are mostly source blocks, so the player must
+	 * supply an actual current (a source feeding a channel with a drain, or a waterfall).
 	 */
-	private static int waterSides(Level level, BlockPos pos) {
+	private static int waterSides(Level level, BlockPos pos, Direction facing) {
+		BlockPos front = pos.relative(facing);
+		BlockPos[] driveCells = {
+			front.above(),
+			front.below(),
+			front.relative(facing.getClockWise()),
+			front.relative(facing.getCounterClockWise()),
+		};
 		int sides = 0;
-		for (Direction dir : Direction.Plane.HORIZONTAL) {
-			FluidState fluid = level.getFluidState(pos.relative(dir));
+		for (BlockPos cell : driveCells) {
+			FluidState fluid = level.getFluidState(cell);
 			if (fluid.is(FluidTags.WATER) && !fluid.isSource()) {
 				sides++;
 			}
@@ -98,7 +136,7 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 			// No wheel → nothing rendered, nothing to clash with. Force a rescan when a wheel returns.
 			cachedInterfered = false;
 			scanCounter = 0;
-			setState(0, MODE_OK);
+			setState(0, MODE_OK, 0);
 			return 0;
 		}
 		Direction facing = state.hasProperty(HorizontalMachineBlock.FACING)
@@ -119,23 +157,23 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 		scanCounter++;
 		if (obstructed) {
 			// Wheel hidden by the renderer, generation halted until the blocking block is removed.
-			setState(0, MODE_OBSTRUCTED);
+			setState(0, MODE_OBSTRUCTED, 0);
 			return 0;
 		}
 		if (cachedInterfered) {
 			// Wheel hidden by the renderer, generation halted — both interfering mills stall (symmetric).
-			setState(0, MODE_INTERFERENCE);
+			setState(0, MODE_INTERFERENCE, 0);
 			return 0;
 		}
-		int sides = waterSides(level, pos);
+		int sides = waterSides(level, pos, facing);
 		if (sides == 0) {
-			// Wheel present and free, but dry: show the "no water" hint instead of a silent idle
-			// (MOD-179 feedback) — the player sees exactly what is missing.
-			setState(0, MODE_NO_WATER);
+			// Wheel present and free, but no current reaches it: show the "no water" hint instead of a
+			// silent idle (MOD-179 feedback) — the player sees exactly what is missing.
+			setState(0, MODE_NO_WATER, 0);
 			return 0;
 		}
 		int made = WaterMillOutput.euFor(sides, Config.waterMillEuPerTick);
-		setState(sides, MODE_OK);
+		setState(sides, MODE_OK, made);
 		// Wheel wear (MOD-189): wear accrues only while the wheel actually turns water into EU (made > 0).
 		// No weather stress on the water mill, so the multiplier is a flat 1.0.
 		wearComponent(level, pos, WHEEL_SLOT, made, 1.0f, Config.waterMillWheelEuPerDamage);
@@ -158,7 +196,7 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 	}
 
 	/**
-	 * Store the wheel's spin input ({@code progress} = water-face count, the value the wheel renderer
+	 * Store the wheel's spin input ({@code progress} = driven-side count, the value the wheel renderer
 	 * reads via {@code dataAccess} slot 2) and the status {@code mode} (the {@code maxProgress} channel,
 	 * slot 3), and push a block-entity update to watching clients whenever either changes.
 	 *
@@ -168,12 +206,63 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 	 * chunk-load value (usually 0) — the wheel would freeze or stay visible during interference. Sync only
 	 * on change, so a steady water setup does not spam block updates (mirrors the wind-mill rotor fix).
 	 */
-	private void setState(int sides, int mode) {
+	private void setState(int sides, int mode, int rate) {
+		// The rate (MOD-348) is assigned unconditionally and deliberately left OUT of the change test
+		// below: it reaches an open screen through the menu's ContainerData sync, which runs every tick
+		// on its own, and no client-side consumer reads it off the block entity. Including it would only
+		// widen the block-update trigger — and it could not widen it in practice anyway, since
+		// rate == waterMillEuPerTick × sides moves in lockstep with `sides`. Every early return in
+		// produce() routes through here with rate 0, so a mill that stops never leaves a stale reading.
+		this.productionRate = rate;
 		if (this.progress != sides || this.maxProgress != mode) {
 			this.progress = sides;
 			this.maxProgress = mode;
 			syncBlockEntityToClient();
 		}
+	}
+
+	/**
+	 * Five-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so {@code WaterMillBlockEntity.DATA_COUNT}
+	 * names this machine's width for the bridge below and for {@code WaterMillMenu}'s client stub (MOD-235).
+	 */
+	public static final int DATA_COUNT = 5;
+
+	/**
+	 * Five-wide data: the shared base 0..3 (energy, capacity, water-face count, mode) plus the current
+	 * production rate on channel 4 (MOD-348).
+	 *
+	 * <p><b>Why the rate needs a channel of its own.</b> Channel 2 already carries the <em>water-face
+	 * count</em> (0..4), which {@code WaterMillWheelBlockEntityRenderer} turns into the wheel's angular
+	 * speed via {@code Math.min(production, 4)} — so it cannot double as EU/t without capping the
+	 * in-world wheel at {@code waterMillEuPerTick} faces. Deriving EU/t on the client instead
+	 * ({@code faces × waterMillEuPerTick}) is not an option either: {@link Config} is loaded per side
+	 * and never synced, so a dedicated server with retuned balance would feed every client a number
+	 * from its own local config file.
+	 */
+	private final ContainerData waterMillData = new ContainerData() {
+		@Override
+		public int get(int index) {
+			return index == 4 ? productionRate : WaterMillBlockEntity.this.dataAccess.get(index);
+		}
+
+		@Override
+		public void set(int index, int value) {
+			if (index == 4) {
+				productionRate = value;
+			} else {
+				WaterMillBlockEntity.this.dataAccess.set(index, value);
+			}
+		}
+
+		@Override
+		public int getCount() {
+			return DATA_COUNT;
+		}
+	};
+
+	@Override
+	public ContainerData getDataAccess() {
+		return waterMillData;
 	}
 
 	@Override

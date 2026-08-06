@@ -38,10 +38,25 @@ public final class WaterMillWheelScenarios {
 		return Blocks.WATER.defaultBlockState().setValue(LiquidBlock.LEVEL, 1);
 	}
 
+	/**
+	 * The wheel's undershot cell for a mill at {@code pos} facing {@code facing} — one below the front
+	 * cell (MOD-352). Since MOD-352 the mill is driven by the four cells the WHEEL sweeps, not by the
+	 * mill block's own neighbours. Wetting a drive cell rather than filling it never collides with the
+	 * clearance check, because water is {@code canBeReplaced()} and so counts as clear (MOD-355).
+	 */
+	private static BlockPos undershotCell(BlockPos pos, Direction facing) {
+		return pos.relative(facing).below();
+	}
+
+	/** Put a current in the undershot cell of a NORTH-facing mill at {@link #POS} — one driven side. */
+	private static void driveOneSide(GameTestHelper helper) {
+		helper.setBlock(undershotCell(POS, Direction.NORTH), flowingWater());
+	}
+
 	private static WaterMillBlockEntity placeWithWater(GameTestHelper helper) {
 		WaterMillBlockEntity mill =
 				AlaGameTestHelper.place(helper, POS, ModContent.WATER_MILL.get(), WaterMillBlockEntity.class);
-		helper.setBlock(POS.relative(Direction.EAST), flowingWater());
+		driveOneSide(helper); // default FACING is NORTH
 		return mill;
 	}
 
@@ -79,14 +94,15 @@ public final class WaterMillWheelScenarios {
 	 * a server-only gametest cannot observe whether a block-entity update packet reached a client.)
 	 */
 	public static void waterMillWheel_progressTracksWaterFaces(GameTestHelper helper) {
-		WaterMillBlockEntity mill = placeWithWater(helper); // water on EAST -> 1 face
+		WaterMillBlockEntity mill = placeWithWater(helper); // undershot cell wet -> 1 driven side
 		mill.setItem(WaterMillBlockEntity.WHEEL_SLOT, new ItemStack(ModContent.WATER_MILL_WHEEL.get()));
 		AlaGameTestHelper.drive(mill, helper, 3);
 		if (mill.getDataAccess().get(2) != 1) {
-			helper.fail("water mill progress (wheel-renderer input) should be 1 with one water face, was "
+			helper.fail("water mill progress (wheel-renderer input) should be 1 with one driven side, was "
 					+ mill.getDataAccess().get(2));
 		}
-		helper.setBlock(POS.relative(Direction.NORTH), flowingWater()); // add a second flowing face
+		// Wet a second cell the wheel sweeps — beside the rim, not beside the mill block (MOD-352).
+		helper.setBlock(POS.north().east(), flowingWater());
 		AlaGameTestHelper.drive(mill, helper, 3);
 		if (mill.getDataAccess().get(2) != 2) {
 			helper.fail("water mill progress should track the added water face (expected 2), was "
@@ -260,7 +276,7 @@ public final class WaterMillWheelScenarios {
 	public static void waterMill_faceToFaceAdjacentObstructed(GameTestHelper helper) {
 		WaterMillBlockEntity a = placeMillWithWheel(helper, POS, Direction.EAST);
 		WaterMillBlockEntity b = placeMillWithWheel(helper, POS.east(), Direction.WEST);
-		helper.setBlock(POS.north(), Blocks.WATER); // water face for A: obstruction must still win
+		helper.setBlock(POS.east().below(), flowingWater()); // a driven side for A: obstruction must still win
 		AlaGameTestHelper.drive(a, helper, 3);
 		AlaGameTestHelper.drive(b, helper, 3);
 		assertMode(helper, a, "adjacent face-to-face mill A", WaterMillBlockEntity.MODE_OBSTRUCTED);
@@ -278,7 +294,7 @@ public final class WaterMillWheelScenarios {
 	 */
 	public static void waterMill_wallInFrontStallsAndRecovers(GameTestHelper helper) {
 		WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
-		helper.setBlock(POS.relative(Direction.EAST), flowingWater());
+		driveOneSide(helper);
 		helper.setBlock(POS.north(), Blocks.STONE);
 		AlaGameTestHelper.drive(mill, helper, 3);
 		assertMode(helper, mill, "walled mill", WaterMillBlockEntity.MODE_OBSTRUCTED);
@@ -308,17 +324,61 @@ public final class WaterMillWheelScenarios {
 	}
 
 	/**
-	 * The BOTTOM row of the rotation plane is deliberately NOT swept: the lower wheel arc dips into
-	 * the river (water or a shallow river bed) by design, and shipped shallow-water placements rely on
-	 * it. A solid block under the front cell must not stall the mill. Guards the documented asymmetry
-	 * of {@code WaterMillClearance} against an over-eager future "fix".
+	 * A solid river bed directly under the wheel now stalls the mill (MOD-355), and water in the same
+	 * cell does not. Before MOD-355 the bottom row of the rotation plane was exempt so a mill could sit
+	 * on a river bed — but that let a player sink the lower third of the wheel into stone and keep
+	 * generating, which is the "broken wheel" look the clearance check exists to prevent. The exemption
+	 * was never needed: clearance treats any {@code canBeReplaced()} cell as free, and water is
+	 * replaceable, so a wheel hanging over a channel passes exactly as before.
+	 *
+	 * <p>Both halves are load-bearing. Without the first, sinking the wheel into rock stays legal;
+	 * without the second, the fix would forbid every real water channel.
 	 */
-	public static void waterMill_solidRiverBedBelowFrontIsAllowed(GameTestHelper helper) {
+	public static void waterMill_solidRiverBedBelowFrontObstructs(GameTestHelper helper) {
 		WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
-		helper.setBlock(POS.relative(Direction.EAST), flowingWater());
+		// A driven side, so the only thing that can stall the mill below is the clearance check.
+		helper.setBlock(POS.north().east(), flowingWater());
 		helper.setBlock(POS.north().below(), Blocks.STONE);
 		AlaGameTestHelper.drive(mill, helper, 3);
-		assertMode(helper, mill, "river-bed mill", WaterMillBlockEntity.MODE_OK);
+		assertMode(helper, mill, "wheel sunk into a solid river bed", WaterMillBlockEntity.MODE_OBSTRUCTED);
+		helper.setBlock(POS.north().below(), flowingWater());
+		AlaGameTestHelper.drive(mill, helper, 3);
+		assertMode(helper, mill, "wheel hanging over a water channel", WaterMillBlockEntity.MODE_OK);
+		helper.succeed();
+	}
+
+	/**
+	 * Every one of the nine cells of the wheel's plane stalls the mill when it holds a solid block, and
+	 * clearing that cell lifts the stall (MOD-355).
+	 *
+	 * <p>The owner reported three builds that all kept running while the wheel was visibly cut through:
+	 * stone under the wheel, blocks on the lower diagonals, and dirt on all four diagonals. The old
+	 * check looked at four cells out of nine — it never looked at a diagonal at all, and the bottom row
+	 * was deliberately exempt. Walking the full plane locks the set: drop any cell from the check and
+	 * the sweep fails on it by name.
+	 *
+	 * <p>The clear-and-recheck half is the negative control: a test that only ever placed blocks would
+	 * still pass if the mill were stalled by something else entirely.
+	 */
+	public static void waterMill_everyWheelPlaneCellObstructs(GameTestHelper helper) {
+		WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
+		BlockPos front = POS.north();
+		BlockPos[] plane = {
+			front, front.above(), front.below(),
+			front.east(), front.east().above(), front.east().below(),
+			front.west(), front.west().above(), front.west().below(),
+		};
+		for (BlockPos cell : plane) {
+			helper.setBlock(cell, Blocks.STONE);
+			AlaGameTestHelper.drive(mill, helper, 2);
+			assertMode(helper, mill, "solid block at wheel-plane cell " + cell,
+					WaterMillBlockEntity.MODE_OBSTRUCTED);
+			helper.setBlock(cell, Blocks.AIR);
+			AlaGameTestHelper.drive(mill, helper, 2);
+			if (mill.getDataAccess().get(3) == WaterMillBlockEntity.MODE_OBSTRUCTED) {
+				helper.fail("clearing wheel-plane cell " + cell + " did not lift the obstruction");
+			}
+		}
 		helper.succeed();
 	}
 
@@ -330,7 +390,7 @@ public final class WaterMillWheelScenarios {
 	 */
 	public static void waterMill_sideBlockObstructs(GameTestHelper helper) {
 		WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
-		helper.setBlock(POS.relative(Direction.EAST), flowingWater()); // a flowing face — obstruction must still win
+		driveOneSide(helper); // a driven side — obstruction must still win
 		// Right side of the wheel.
 		helper.setBlock(POS.north().east(), Blocks.STONE);
 		AlaGameTestHelper.drive(mill, helper, 2);
@@ -353,8 +413,8 @@ public final class WaterMillWheelScenarios {
 	 */
 	public static void waterMill_waterBesideWheelIsAllowed(GameTestHelper helper) {
 		WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
-		helper.setBlock(POS.relative(Direction.EAST), flowingWater());
-		// Beside-wheel cells are clearance-only (not generation faces); still SOURCE water there is
+		driveOneSide(helper);
+		// Still SOURCE water beside the wheel drives nothing (MOD-188) but is
 		// replaceable and must pass clearance just the same.
 		helper.setBlock(POS.north().east(), Blocks.WATER);
 		helper.setBlock(POS.north().west(), Blocks.WATER);
@@ -417,7 +477,7 @@ public final class WaterMillWheelScenarios {
 		if (mill.getEnergyStorage().getAmount() != 0) {
 			helper.fail("dry mill generated EU");
 		}
-		helper.setBlock(POS.relative(Direction.EAST), flowingWater());
+		driveOneSide(helper);
 		AlaGameTestHelper.drive(mill, helper, 3);
 		assertMode(helper, mill, "watered mill", WaterMillBlockEntity.MODE_OK);
 		if (mill.getEnergyStorage().getAmount() <= 0) {
@@ -435,15 +495,20 @@ public final class WaterMillWheelScenarios {
 	 */
 	public static void waterMill_stillSourceDoesNotGenerate(GameTestHelper helper) {
 		WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
-		for (Direction dir : Direction.Plane.HORIZONTAL) {
-			helper.setBlock(POS.relative(dir), Blocks.WATER); // still SOURCE on all four faces
+		// Flood the four cells the WHEEL sweeps with still sources (MOD-352: those are the cells that
+		// drive it). Flooding the mill block's own neighbours instead would make this test vacuous —
+		// since MOD-352 they drive nothing whether they are source or flowing, so it would stay green
+		// even with the isSource() guard deleted.
+		BlockPos front = POS.north();
+		for (BlockPos cell : new BlockPos[] {front.above(), front.below(), front.east(), front.west()}) {
+			helper.setBlock(cell, Blocks.WATER);
 		}
 		AlaGameTestHelper.drive(mill, helper, 3);
 		assertMode(helper, mill, "mill in still source pool", WaterMillBlockEntity.MODE_NO_WATER);
 		if (mill.getEnergyStorage().getAmount() != 0) {
 			helper.fail("mill in a still source pool generated EU (should need a current)");
 		}
-		helper.setBlock(POS.relative(Direction.EAST), flowingWater()); // one flowing face
+		driveOneSide(helper); // one driven side, now with a current
 		AlaGameTestHelper.drive(mill, helper, 3);
 		assertMode(helper, mill, "mill with one flowing face", WaterMillBlockEntity.MODE_OK);
 		if (mill.getEnergyStorage().getAmount() <= 0) {
@@ -522,6 +587,124 @@ public final class WaterMillWheelScenarios {
 		helper.succeed();
 	}
 
+	// ── MOD-352: the wheel is driven by the cells the WHEEL touches, not the mill block's ────────────
+
+	/**
+	 * The mill block's own horizontal neighbours drive nothing; the cells the wheel sweeps do.
+	 *
+	 * <p>This is the owner's in-game report reproduced exactly. Before MOD-352 the mill counted a
+	 * current on its own four horizontal faces, three of which the wheel never touches — the wheel is
+	 * rendered a full block in front of the mill. So pouring water around the visible wheel produced
+	 * nothing, while pouring it around the buried mill block spun a wheel the water never reached. The
+	 * model was unreadable from the picture, and the picture is all a player has.
+	 *
+	 * <p>Both halves matter. The first asserts that all four block-neighbour cells (including the front
+	 * cell, where the hub sits) yield zero — delete the fix and this fails immediately. The second
+	 * asserts the wheel's own cell does drive it, so the test cannot pass by the mill simply never
+	 * generating.
+	 */
+	public static void waterMill_blockNeighboursDoNotDriveWheel(GameTestHelper helper) {
+		WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
+		for (Direction dir : Direction.Plane.HORIZONTAL) {
+			helper.setBlock(POS.relative(dir), flowingWater());
+		}
+		AlaGameTestHelper.drive(mill, helper, 3);
+		assertMode(helper, mill, "mill with a current on all four BLOCK faces",
+				WaterMillBlockEntity.MODE_NO_WATER);
+		if (mill.getEnergyStorage().getAmount() != 0) {
+			helper.fail("a current touching only the mill block generated EU ("
+					+ mill.getEnergyStorage().getAmount() + ") — the wheel is a block in front and never "
+					+ "touches those cells");
+		}
+		driveOneSide(helper); // now wet a cell the rim actually passes through
+		AlaGameTestHelper.drive(mill, helper, 3);
+		assertMode(helper, mill, "mill with a current under the wheel", WaterMillBlockEntity.MODE_OK);
+		if (mill.getEnergyStorage().getAmount() <= 0) {
+			helper.fail("a current in the wheel's undershot cell generated no EU");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * All four of the wheel's cells count, and they cap at the documented 4 EU/t. Locks the drive set
+	 * itself: drop any one of the four (above / below / left / right of the front cell) and the total
+	 * comes up short.
+	 */
+	public static void waterMill_allFourWheelCellsDrive(GameTestHelper helper) {
+		WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
+		BlockPos front = POS.north();
+		BlockPos[] driveCells = {front.above(), front.below(), front.east(), front.west()};
+		for (int i = 0; i < driveCells.length; i++) {
+			helper.setBlock(driveCells[i], flowingWater());
+			AlaGameTestHelper.drive(mill, helper, 3);
+			int expected = i + 1;
+			int actual = mill.getDataAccess().get(2);
+			if (actual != expected) {
+				helper.fail("after wetting " + expected + " wheel cell(s) the driven-side count was "
+						+ actual + "; cell " + driveCells[i] + " did not register");
+			}
+		}
+		int rate = mill.getDataAccess().get(4);
+		int expectedRate = Config.waterMillEuPerTick * 4;
+		if (rate != expectedRate) {
+			helper.fail("fully driven wheel reported " + rate + " EU/t, expected " + expectedRate);
+		}
+		helper.succeed();
+	}
+
+	// ── MOD-348: the GUI production readout rides its own sync channel ───────────────────────────────
+
+	/**
+	 * Sync channel 4 carries the mill's live output in EU/t (what the GUI status row prints), and it is a
+	 * channel of its own — channel 2 keeps carrying the water-face count that drives the wheel renderer.
+	 *
+	 * <p><b>Why the Config override is load-bearing.</b> At the shipped default of 1 EU per face the two
+	 * quantities are numerically identical (1 face = 1 EU/t), so an implementation that simply returned the
+	 * face count as the rate — the obvious way to copy the wind mill, whose rate genuinely does ride
+	 * channel 2 — would pass a test written against defaults. Three EU per face separates them: the rate
+	 * channel must read 3 and 6 where the face channel reads 1 and 2. Remove the dedicated channel and
+	 * this test fails on the very first assertion.
+	 *
+	 * <p>The last leg covers the stale-readout case: a mill that stalls must publish 0, not keep serving
+	 * the last figure it produced.
+	 */
+	public static void waterMill_productionRateChannelTracksOutput(GameTestHelper helper) {
+		int savedPerSide = Config.waterMillEuPerTick;
+		try {
+			Config.waterMillEuPerTick = 3;
+			WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
+			driveOneSide(helper);
+			AlaGameTestHelper.drive(mill, helper, 3);
+			assertRate(helper, mill, "one driven side", 3, 1);
+
+			helper.setBlock(POS.north().east(), flowingWater());
+			AlaGameTestHelper.drive(mill, helper, 3);
+			assertRate(helper, mill, "two driven sides", 6, 2);
+
+			helper.setBlock(POS.north(), Blocks.STONE); // wheel blocked → generation halts
+			AlaGameTestHelper.drive(mill, helper, 3);
+			assertMode(helper, mill, "obstructed mill", WaterMillBlockEntity.MODE_OBSTRUCTED);
+			assertRate(helper, mill, "obstructed mill", 0, 0);
+			helper.succeed();
+		} finally {
+			Config.waterMillEuPerTick = savedPerSide;
+		}
+	}
+
+	/** Assert both readout channels at once: 4 = EU/t for the GUI, 2 = water faces for the renderer. */
+	private static void assertRate(GameTestHelper helper, WaterMillBlockEntity mill, String label,
+			int expectedEu, int expectedFaces) {
+		int rate = mill.getDataAccess().get(4);
+		if (rate != expectedEu) {
+			helper.fail(label + ": production channel = " + rate + " EU/t, expected " + expectedEu);
+		}
+		int faces = mill.getDataAccess().get(2);
+		if (faces != expectedFaces) {
+			helper.fail(label + ": water-face channel = " + faces + ", expected " + expectedFaces
+					+ " — channel 2 must stay the wheel renderer's face count, never the EU/t rate");
+		}
+	}
+
 	// ── MOD-189: wheel wear — the wheel is a durability component that wears out and breaks ───────────
 
 	/**
@@ -535,7 +718,7 @@ public final class WaterMillWheelScenarios {
 		int savedRate = Config.waterMillWheelEuPerDamage;
 		try {
 			Config.waterMillWheelEuPerDamage = 1; // 1 EU of production spends 1 durability point
-			WaterMillBlockEntity mill = placeWithWater(helper); // one flowing face → 1 EU/t
+			WaterMillBlockEntity mill = placeWithWater(helper); // one driven side → 1 EU/t
 			ItemStack wheel = new ItemStack(ModContent.WATER_MILL_WHEEL.get());
 			wheel.setDamageValue(wheel.getMaxDamage() - 1); // one active tick from breaking
 			mill.setItem(WaterMillBlockEntity.WHEEL_SLOT, wheel);

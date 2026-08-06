@@ -1162,8 +1162,10 @@ public final class NeoForgeGameTests {
 				WaterMillWheelScenarios::waterMill_wallInFrontStallsAndRecovers);
 		registerTest(event, "water_mill_block_above_front_also_obstructs", 40, true,
 				WaterMillWheelScenarios::waterMill_blockAboveFrontAlsoObstructs);
-		registerTest(event, "water_mill_solid_river_bed_below_front_is_allowed", 40, true,
-				WaterMillWheelScenarios::waterMill_solidRiverBedBelowFrontIsAllowed);
+		registerTest(event, "water_mill_solid_river_bed_below_front_obstructs", 40, true,
+				WaterMillWheelScenarios::waterMill_solidRiverBedBelowFrontObstructs);
+		registerTest(event, "water_mill_every_wheel_plane_cell_obstructs", 60, true,
+				WaterMillWheelScenarios::waterMill_everyWheelPlaneCellObstructs);
 		registerTest(event, "water_mill_side_block_obstructs", 40, true,
 				WaterMillWheelScenarios::waterMill_sideBlockObstructs);
 		registerTest(event, "water_mill_water_beside_wheel_is_allowed", 40, true,
@@ -1184,6 +1186,12 @@ public final class NeoForgeGameTests {
 				WaterMillWheelScenarios::waterMill_automationCannotStackSecondWheel);
 		registerTest(event, "water_mill_wheel_no_wear_while_dry", 40, true,
 				WaterMillWheelScenarios::waterMillWheel_noWearWhileDry);
+		registerTest(event, "water_mill_production_rate_channel_tracks_output", 40, true,
+				WaterMillWheelScenarios::waterMill_productionRateChannelTracksOutput);
+		registerTest(event, "water_mill_block_neighbours_do_not_drive_wheel", 40, true,
+				WaterMillWheelScenarios::waterMill_blockNeighboursDoNotDriveWheel);
+		registerTest(event, "water_mill_all_four_wheel_cells_drive", 40, true,
+				WaterMillWheelScenarios::waterMill_allFourWheelCellsDrive);
 
 		// Cable placement and the face-connection rules (MOD-038/039/061/071).
 		registerTest(event, "mod039_cable_use_returns_pass", 40, true,

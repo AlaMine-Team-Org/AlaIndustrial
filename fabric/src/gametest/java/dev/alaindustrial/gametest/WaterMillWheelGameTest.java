@@ -80,8 +80,13 @@ public class WaterMillWheelGameTest {
 	}
 
 	@GameTest
-	public void waterMill_solidRiverBedBelowFrontIsAllowed(GameTestHelper helper) {
-		WaterMillWheelScenarios.waterMill_solidRiverBedBelowFrontIsAllowed(helper);
+	public void waterMill_solidRiverBedBelowFrontObstructs(GameTestHelper helper) {
+		WaterMillWheelScenarios.waterMill_solidRiverBedBelowFrontObstructs(helper);
+	}
+
+	@GameTest
+	public void waterMill_everyWheelPlaneCellObstructs(GameTestHelper helper) {
+		WaterMillWheelScenarios.waterMill_everyWheelPlaneCellObstructs(helper);
 	}
 
 	@GameTest
@@ -127,6 +132,21 @@ public class WaterMillWheelGameTest {
 	@GameTest
 	public void waterMill_automationCannotStackSecondWheel(GameTestHelper helper) {
 		WaterMillWheelScenarios.waterMill_automationCannotStackSecondWheel(helper);
+	}
+
+	@GameTest
+	public void waterMill_blockNeighboursDoNotDriveWheel(GameTestHelper helper) {
+		WaterMillWheelScenarios.waterMill_blockNeighboursDoNotDriveWheel(helper);
+	}
+
+	@GameTest
+	public void waterMill_allFourWheelCellsDrive(GameTestHelper helper) {
+		WaterMillWheelScenarios.waterMill_allFourWheelCellsDrive(helper);
+	}
+
+	@GameTest
+	public void waterMill_productionRateChannelTracksOutput(GameTestHelper helper) {
+		WaterMillWheelScenarios.waterMill_productionRateChannelTracksOutput(helper);
 	}
 
 	@GameTest

@@ -19,8 +19,19 @@ public class WaterMillMenu extends MachineMenu {
 	/** Client side. */
 	public WaterMillMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.WATER_MILL_MENU.get(), syncId, playerInventory, new SimpleContainer(1 + UPGRADE_SLOT_COUNT),
-				new net.minecraft.world.inventory.SimpleContainerData(MachineBlockEntity.DATA_COUNT),
+				new net.minecraft.world.inventory.SimpleContainerData(WaterMillBlockEntity.DATA_COUNT),
 				ContainerLevelAccess.NULL, ModContent.WATER_MILL.get());
+	}
+
+	/**
+	 * Current generation in EU/t, carried on channel 4 (MOD-348). Unlike the wind mill and the solar
+	 * panels — whose rate rides the {@code progress} channel — the water mill's channel 2 is taken by the
+	 * water-face count the wheel renderer spins on, so the rate needed a channel of its own; see
+	 * {@link WaterMillBlockEntity#DATA_COUNT}. Like those generators, this is the mechanical rate before
+	 * {@code Config.globalEuRateMultiplier} is applied.
+	 */
+	public int getProductionRate() {
+		return data.get(4);
 	}
 
 	/**

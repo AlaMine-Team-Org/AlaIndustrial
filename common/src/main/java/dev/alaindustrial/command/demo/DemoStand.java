@@ -164,24 +164,33 @@ public final class DemoStand {
 		}
 
 		// Water mill driven by a real CURRENT (MOD-188): only FLOWING water turns the wheel — a still
-		// source powers nothing. A water source boxed one block above the wheel's front cell (facing
-		// NORTH → front cell at z=3) falls straight down into it, so the mill's north face sees flowing
-		// (falling) water. Floors hold the flow; the wheel-clearance cells (front, front-above, front
-		// sides) stay non-solid so the wheel does not stall (MOD-179).
-		set(level, origin, 16, -1, 3, FLOOR);
-		set(level, origin, 17, -1, 3, FLOOR); // riverbed under the flow (holds the water)
-		set(level, origin, 18, -1, 3, FLOOR);
-		set(level, origin, 17, -1, 4, FLOOR);
-		// Clearance cells at hub height — non-solid; the falling column spreads into them (flowing).
-		set(level, origin, 16, 0, 3, Blocks.AIR);
-		set(level, origin, 17, 0, 3, Blocks.AIR); // front cell — the waterfall lands here
-		set(level, origin, 18, 0, 3, Blocks.AIR);
-		// Box the source at y=1 so it only falls down onto the front cell (walls on all four sides).
-		set(level, origin, 16, 1, 3, FLOOR);
-		set(level, origin, 18, 1, 3, FLOOR);
-		set(level, origin, 17, 1, 2, FLOOR);
-		set(level, origin, 17, 1, 4, FLOOR);
-		set(level, origin, 17, 1, 3, Blocks.WATER); // source → falls into the front cell as flowing water
+		// source powers nothing. The mill faces NORTH, so its wheel hangs in the whole z=3 plane:
+		// x 16..18 by y -1..1. Two rules shape this build:
+		//   MOD-355 — every one of those nine cells must be non-solid or the wheel clips through it and
+		//             stalls, so the channel is dug a level deeper and walled OUTSIDE the plane;
+		//   MOD-352 — the mill is driven by the four cells around the WHEEL (above, below, both sides),
+		//             so three sources at y=2 fall through the plane and wet all four → a full 4 EU/t.
+		// Water is canBeReplaced(), so a wet wheel plane is a clear wheel plane.
+		for (int dx = 16; dx <= 18; dx++) {
+			set(level, origin, dx, -2, 3, FLOOR); // bed, one level BELOW the plane so the plane stays clear
+			for (int dy = -1; dy <= 1; dy++) {
+				set(level, origin, dx, dy, 3, Blocks.AIR);
+			}
+		}
+		set(level, origin, 17, -1, 4, FLOOR); // support under the mill itself (outside the wheel plane)
+		// Walls that hold the water in, all outside the wheel plane: beside it (x=15/19) and in front (z=2).
+		for (int dy = -2; dy <= 2; dy++) {
+			set(level, origin, 15, dy, 3, FLOOR);
+			set(level, origin, 19, dy, 3, FLOOR);
+			for (int dx = 15; dx <= 19; dx++) {
+				set(level, origin, dx, dy, 2, FLOOR);
+			}
+		}
+		// Cap the feed at y=2 (above the plane) so the sources only ever fall downward.
+		for (int dx = 16; dx <= 18; dx++) {
+			set(level, origin, dx, 2, 4, FLOOR);
+			set(level, origin, dx, 2, 3, Blocks.WATER);
+		}
 		// The mill and its battery box behind it (south = the back/OUT face).
 		set(level, origin, 17, 0, 4, ModContent.WATER_MILL.get());
 		fillSlot(level, origin, 17, 0, 4, 0, new ItemStack(ModContent.WATER_MILL_WHEEL.get()));

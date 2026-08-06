@@ -1,18 +1,18 @@
-## 0.1.73
+## 0.1.74
 
-<p><img alt="Wind Gauge reading 28.4 km/h at height Y 130 over a forest lake" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.73/release-media/v0.1.73/changelog.png" width="720"></p>
+<p><img alt="Water mill interface showing its live output" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.74/release-media/v0.1.74/changelog.png" width="720"></p>
 
-Wind now has a best height, and there is a tool to find it.
+The water mill now tells you how much it makes, and its wheel finally respects the blocks around it.
 
 ### New
 
-- **Wind Gauge.** Sneak + right-click and it reads the wind where you stand — speed, weather, whether the sky is open. Cheap, no power, no circuits: build it before your first turbine.
-
-### Changes
-
-- **Turbines now care where you put them.** Wind builds towards the clouds, peaks in a narrow band just below them, and thins out above. Higher is no longer automatically better.
-- **Heads up:** a turbine parked far above the clouds makes less power than it used to. Move it down into the windy band and it beats its old output.
+- **See what the mill makes.** The screen shows `Output: N EU/t` while the wheel turns. Block part of the current and watch the number drop.
 
 ### Fixed
 
-- **The creative inventory no longer crashes** when another mod removes vanilla weapons or tools. Our items sat directly behind those neighbours; now they fall back to the end of the tab instead.
+- **Water has to reach the wheel, not the block.** Pouring water around the visible wheel used to do nothing. The four cells around the wheel drive it now: above, below, and one on each side. Still up to 4 EU/t.
+- **The wheel no longer spins through terrain.** Burying it in the ground or packing blocks against it kept it turning through solid rock. Now it hides and the screen reads "Blocked".
+
+### Heads up
+
+- Mills fed only from the sides or the back of the block, and wheels buried in terrain, need a quick rebuild — dig the wheel out and let the water run past it.

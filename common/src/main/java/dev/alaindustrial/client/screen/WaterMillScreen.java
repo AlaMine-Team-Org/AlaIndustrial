@@ -25,7 +25,7 @@ public class WaterMillScreen extends MachineScreen<WaterMillMenu> {
 	private static final float STATUS_UV_X = 176.0F;
 	private static final float STATUS_UV_Y = 0.0F;
 
-	/** Baseline (relative to topPos) of the centered status label shown on wheel interference. */
+	/** Baseline (relative to topPos) of the centered status label: current output, or the idle reason. */
 	private static final int STATUS_TEXT_Y = 44;
 
 	public WaterMillScreen(WaterMillMenu menu, Inventory inventory, Component title) {
@@ -56,8 +56,14 @@ public class WaterMillScreen extends MachineScreen<WaterMillMenu> {
 					TEX_SIZE, TEX_SIZE);
 		}
 
-		// MOD-175/MOD-179: explain every idle state — wheel clash, wheel blocked by a solid block, or
-		// simply no water around the mill — so the player sees exactly what is missing.
+		// One centred row carries both messages, because only one of them is ever meaningful: a running
+		// mill answers "how much am I making right now" (MOD-348), a stopped one answers "why am I
+		// stopped" (MOD-175/MOD-179 — wheel clash, wheel blocked by a solid block, or no water at all).
+		drawStatusText(graphics);
+	}
+
+	/** Centered status row: production while the wheel turns, the idle reason otherwise. */
+	private void drawStatusText(GuiGraphicsExtractor graphics) {
 		String modeKey = switch (this.menu.getMode()) {
 			case WaterMillBlockEntity.MODE_INTERFERENCE -> "gui.alaindustrial.water_mill.mode.interference";
 			case WaterMillBlockEntity.MODE_OBSTRUCTED -> "gui.alaindustrial.water_mill.mode.obstructed";
@@ -65,11 +71,22 @@ public class WaterMillScreen extends MachineScreen<WaterMillMenu> {
 					this.menu.getSlot(0).hasItem() ? "gui.alaindustrial.water_mill.mode.no_water" : null;
 			default -> null;
 		};
-		if (modeKey != null) {
-			Component label = Component.translatable(modeKey);
-			int tx = this.leftPos + (this.imageWidth - this.font.width(label)) / 2;
-			graphics.text(this.font, label, tx, this.topPos + STATUS_TEXT_Y, GuiStyle.TEXT_DIM, false);
+		Component label;
+		boolean idle = modeKey != null;
+		if (idle) {
+			label = Component.translatable(modeKey);
+		} else if (this.menu.getSlot(0).hasItem()) {
+			// MODE_OK with a wheel installed — the mill is running, so show what it makes (MOD-348).
+			label = Component.translatable("gui.alaindustrial.output", this.menu.getProductionRate());
+		} else {
+			// MODE_OK with an EMPTY slot is the "no wheel yet" state, not a running mill: the block entity
+			// reports MODE_OK there because a bare mill has nothing to clash with. The empty slot itself is
+			// the message, so the row stays blank rather than claiming an output of 0.
+			return;
 		}
+		int tx = this.leftPos + (this.imageWidth - this.font.width(label)) / 2;
+		graphics.text(this.font, label, tx, this.topPos + STATUS_TEXT_Y,
+				idle ? GuiStyle.TEXT_DIM : GuiStyle.TEXT, false);
 	}
 
 	@Override
