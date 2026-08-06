@@ -2432,6 +2432,37 @@
           ]
         },
         {
+          "id": "wind_gauge",
+          "title": "Windmeter",
+          "icon": "alaindustrial:wind_gauge",
+          "block_id": "alaindustrial:wind_gauge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Windmeter",
+              "text": "Meet de windsnelheid waar de speler staat, om de hoogte van een windmolen te kiezen."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:glass_pane",
+                "minecraft:stick",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:tin_ingot",
+                "",
+                "alaindustrial:wooden_gear",
+                ""
+              ],
+              "result_id": "alaindustrial:wind_gauge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_pouch",
           "title": "Batterij-buidel",
           "icon": "alaindustrial:battery_pouch",

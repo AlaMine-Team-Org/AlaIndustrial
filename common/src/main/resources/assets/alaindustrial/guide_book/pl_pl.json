@@ -2432,6 +2432,37 @@
           ]
         },
         {
+          "id": "wind_gauge",
+          "title": "Wiatromierz",
+          "icon": "alaindustrial:wind_gauge",
+          "block_id": "alaindustrial:wind_gauge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Wiatromierz",
+              "text": "Mierzy prędkość wiatru w miejscu, gdzie stoi gracz, aby dobrać wysokość wiatraka."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:glass_pane",
+                "minecraft:stick",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:tin_ingot",
+                "",
+                "alaindustrial:wooden_gear",
+                ""
+              ],
+              "result_id": "alaindustrial:wind_gauge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_pouch",
           "title": "Sakwa bateryjna",
           "icon": "alaindustrial:battery_pouch",

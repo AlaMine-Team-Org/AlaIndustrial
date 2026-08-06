@@ -51,8 +51,29 @@ public final class Config {
 	 * directly; never touches the fluid/tank system (Phases 4–5).
 	 */
 	public static int waterMillEuPerTick = 1;
+	// --- Wind altitude profile (MOD-347) — shared by all three mills AND the Wind Gauge ---
+	/**
+	 * The cloud deck: the windiest height in the world. Wind climbs to here and collapses above it.
+	 * 192 is the vanilla Overworld cloud layer, so the rule the player learns ("the best wind is just
+	 * under the clouds, above them there is nothing") is something they can see.
+	 */
+	public static int windCloudY = 192;
+	/** Height above which only {@link #windTraceFactor} remains — too little to turn any rotor. */
+	public static int windDeadY = 248;
+	/**
+	 * Fraction of full strength reached at a branch's ridge ({@code seaLevel + maxBase × blocksPerBase},
+	 * where that branch used to hit its cap before MOD-347). The remaining {@code 1 − this} is gained
+	 * over an accelerating shoulder up to {@link #windCloudY}. Deliberately well under 1: the lower it
+	 * is, the narrower the band of heights that yields full output, and the more the Wind Gauge is
+	 * worth carrying. At 0.45 a T1 mill runs at its cap over eleven blocks instead of sixty-seven.
+	 */
+	public static float windRidgeFactor = 0.45f;
+	/** Fraction of full strength left above {@link #windDeadY}: readable on the gauge, 0 EU/t for mills. */
+	public static float windTraceFactor = 0.06f;
+	/** Clear-weather wind speed in km/h at the cloud deck — the Wind Gauge's full-scale reading. */
+	public static float windGaugePeakKmh = 62.5f;
 	// --- Wind mill (LV) — needs open sky; base scales with height, boosted by weather ---
-	/** Clear-sky height cap: base EU/t = min((y − seaLevel) / 16, this). 0 at/below sea level. */
+	/** Base EU/t at the cloud deck (MOD-347); the height profile scales this. 0 at/below sea level. */
 	public static int windMillMaxBaseEuPerTick = 4;
 	/** Hard cap on wind-mill EU/t after the weather multiplier (thunder can otherwise push past base). */
 	public static int windMillMaxEuPerTick = 8;
@@ -819,7 +840,17 @@ public final class Config {
 				() -> geothermalBurnTicks, v -> geothermalBurnTicks = v, 1),
 			new IntField("waterMillEuPerTick", "Water mill EU/t per adjacent water block on its four sides (0..4 EU/t total).",
 				() -> waterMillEuPerTick, v -> waterMillEuPerTick = v, 0),
-			new IntField("windMillMaxBaseEuPerTick", "Wind mill clear-sky height cap in EU/t (base grows with altitude up to this).",
+			new IntField("windCloudY", "Cloud deck Y: the windiest height. Wind climbs to here and collapses above it (shared by all wind mills and the Wind Gauge).",
+				() -> windCloudY, v -> windCloudY = v, 0),
+			new IntField("windDeadY", "Y above which only a trace of wind remains — too little to turn any rotor.",
+				() -> windDeadY, v -> windDeadY = v, 0),
+			new FloatField("windRidgeFactor", "Fraction of full wind strength reached at a mill branch's ridge; the rest is gained over the shoulder up to windCloudY.",
+				() -> windRidgeFactor, v -> windRidgeFactor = v, 0.0f),
+			new FloatField("windTraceFactor", "Fraction of full wind strength left above windDeadY (readable on the gauge, 0 EU/t for mills).",
+				() -> windTraceFactor, v -> windTraceFactor = v, 0.0f),
+			new FloatField("windGaugePeakKmh", "Clear-weather wind speed in km/h at the cloud deck — the Wind Gauge's full-scale reading.",
+				() -> windGaugePeakKmh, v -> windGaugePeakKmh = v, 0.0f),
+			new IntField("windMillMaxBaseEuPerTick", "Wind mill base EU/t at the cloud deck; the altitude profile scales it (MOD-347).",
 				() -> windMillMaxBaseEuPerTick, v -> windMillMaxBaseEuPerTick = v, 0),
 			new IntField("windMillMaxEuPerTick", "Hard cap on wind mill EU/t after the weather multiplier.",
 				() -> windMillMaxEuPerTick, v -> windMillMaxEuPerTick = v, 0),

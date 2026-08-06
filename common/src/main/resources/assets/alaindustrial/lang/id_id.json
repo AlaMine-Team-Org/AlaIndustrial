@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "Interferensi",
   "gui.alaindustrial.water_mill.mode.no_water": "Tidak ada air",
   "gui.alaindustrial.water_mill.mode.obstructed": "Terhalang",
+  "gui.alaindustrial.wind_gauge.no_wind": "Tidak ada angin di sini — alat ini hanya mengukur di dunia biasa",
+  "gui.alaindustrial.wind_gauge.reading": "Ketinggian Y %1$s · Angin %2$s km/jam · %3$s · Langit: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "tertutup",
+  "gui.alaindustrial.wind_gauge.sky.open": "terbuka",
+  "gui.alaindustrial.wind_gauge.weather.clear": "Cerah",
+  "gui.alaindustrial.wind_gauge.weather.rain": "Hujan",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "Badai petir",
   "gui.alaindustrial.wind_mill.mode.breeze": "Angin sepoi",
   "gui.alaindustrial.wind_mill.mode.calm": "Tenang",
   "gui.alaindustrial.wind_mill.mode.gale": "Angin kencang",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "Kapsul Vakum",
   "item.alaindustrial.vacuum_capsule.hint": "Klik kanan pada sumber fluida untuk mengisi.",
   "item.alaindustrial.water_mill_wheel": "Roda air",
+  "item.alaindustrial.wind_gauge": "Pengukur Angin",
   "item.alaindustrial.windmill_rotor": "Rotor Kayu",
   "item.alaindustrial.wooden_gear": "Roda Gigi Kayu",
   "item.alaindustrial.wrench": "Kunci Pas",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "Belum terikat — shift+klik kanan stasiun",
   "tooltip.alaindustrial.tier_hv": "Tingkat: HV",
   "tooltip.alaindustrial.tier_lv": "Tingkat: LV",
-  "tooltip.alaindustrial.tier_mv": "Tingkat: MV"
+  "tooltip.alaindustrial.tier_mv": "Tingkat: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + klik kanan: ukur angin di sini"
 }

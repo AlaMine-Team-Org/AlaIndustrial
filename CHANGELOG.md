@@ -1,18 +1,18 @@
-## 0.1.72
+## 0.1.73
 
-<p><img alt="Wind turbine interface showing live EU/t output" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.72/release-media/v0.1.72/changelog.png" width="720"></p>
+<p><img alt="Wind Gauge reading 28.4 km/h at height Y 130 over a forest lake" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.73/release-media/v0.1.73/changelog.png" width="720"></p>
 
-Wind turbines now tell you how much power they make, and newer ores finally vein-mine in old worlds.
+Wind now has a best height, and there is a tool to find it.
 
 ### New
 
-- **Wind turbines show live output.** While the blades spin, the interface reads `Output: N EU/t`. When they stop, the row tells you why instead.
+- **Wind Gauge.** Sneak + right-click and it reads the wind where you stand — speed, weather, whether the sky is open. Cheap, no power, no circuits: build it before your first turbine.
 
-### Improved
+### Changes
 
-- **The two turbine branches now play different roles.** The Sky Mill gives steady income in almost any weather, peaking at 12 EU/t. The Tempest Mill is the weakest under clear skies but reaches 21 EU/t in a thunderstorm.
-- **Pumping no longer earns mastery.** Moving fluid around is not machine work — progress in the oil branch now comes from processing what you pumped, not from leaving a pump running.
+- **Turbines now care where you put them.** Wind builds towards the clouds, peaks in a narrow band just below them, and thins out above. Higher is no longer automatically better.
+- **Heads up:** a turbine parked far above the clouds makes less power than it used to. Move it down into the windy band and it beats its old output.
 
 ### Fixed
 
-- **Newer ores now vein-mine in worlds that already existed.** Sulfur was registered once per world, so a world created before sulfur existed never picked it up and mined one block at a time. Ores are re-checked every time you load a world now — old saves repair themselves, no commands needed, and any ore added later works the same way.
+- **The creative inventory no longer crashes** when another mod removes vanilla weapons or tools. Our items sat directly behind those neighbours; now they fall back to the end of the tab instead.

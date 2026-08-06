@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "Nhiễu",
   "gui.alaindustrial.water_mill.mode.no_water": "Không có nước",
   "gui.alaindustrial.water_mill.mode.obstructed": "Bị chặn",
+  "gui.alaindustrial.wind_gauge.no_wind": "Ở đây không có gió — thiết bị chỉ đo ở thế giới thường",
+  "gui.alaindustrial.wind_gauge.reading": "Độ cao Y %1$s · Gió %2$s km/h · %3$s · Bầu trời: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "bị che",
+  "gui.alaindustrial.wind_gauge.sky.open": "thoáng",
+  "gui.alaindustrial.wind_gauge.weather.clear": "Quang đãng",
+  "gui.alaindustrial.wind_gauge.weather.rain": "Mưa",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "Giông bão",
   "gui.alaindustrial.wind_mill.mode.breeze": "Gió nhẹ",
   "gui.alaindustrial.wind_mill.mode.calm": "Yên tĩnh",
   "gui.alaindustrial.wind_mill.mode.gale": "Gió mạnh",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "Viên nang chân không",
   "item.alaindustrial.vacuum_capsule.hint": "Chuột phải vào nguồn chất lỏng để đổ đầy.",
   "item.alaindustrial.water_mill_wheel": "Bánh xe nước",
+  "item.alaindustrial.wind_gauge": "Máy đo gió",
   "item.alaindustrial.windmill_rotor": "Rotor gỗ",
   "item.alaindustrial.wooden_gear": "Bánh Răng Gỗ",
   "item.alaindustrial.wrench": "Cờ lê",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "Chưa liên kết — shift+chuột phải vào trạm",
   "tooltip.alaindustrial.tier_hv": "Cấp: HV",
   "tooltip.alaindustrial.tier_lv": "Cấp: LV",
-  "tooltip.alaindustrial.tier_mv": "Cấp: MV"
+  "tooltip.alaindustrial.tier_mv": "Cấp: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + chuột phải: đo gió tại đây"
 }

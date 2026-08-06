@@ -2432,6 +2432,37 @@
           ]
         },
         {
+          "id": "wind_gauge",
+          "title": "Máy đo gió",
+          "icon": "alaindustrial:wind_gauge",
+          "block_id": "alaindustrial:wind_gauge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy đo gió",
+              "text": "Đo tốc độ gió tại nơi người chơi đứng, để chọn độ cao cho cối xay gió."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:glass_pane",
+                "minecraft:stick",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:tin_ingot",
+                "",
+                "alaindustrial:wooden_gear",
+                ""
+              ],
+              "result_id": "alaindustrial:wind_gauge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_pouch",
           "title": "Túi pin",
           "icon": "alaindustrial:battery_pouch",

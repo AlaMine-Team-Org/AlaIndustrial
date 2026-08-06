@@ -196,6 +196,8 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> URANIUM_INGOT = manifestItem("uranium_ingot");
 	public static final DeferredItem<NetworkAnalyzerItem> NETWORK_ANALYZER =
 			ITEMS.registerItem("network_analyzer", NetworkAnalyzerItem::new, p -> p.stacksTo(1));
+	public static final DeferredItem<dev.alaindustrial.item.tool.WindGaugeItem> WIND_GAUGE =
+			ITEMS.registerItem("wind_gauge", dev.alaindustrial.item.tool.WindGaugeItem::new, p -> p.stacksTo(1));
 	public static final DeferredItem<dev.alaindustrial.item.tool.WrenchItem> WRENCH =
 			ITEMS.registerItem("wrench", dev.alaindustrial.item.tool.WrenchItem::new, p -> p.stacksTo(1));
 	public static final DeferredItem<dev.alaindustrial.item.misc.GuideBookItem> GUIDE_BOOK =
@@ -524,6 +526,8 @@ public final class ModItemsNeoForge {
 		// NETWORK_ANALYZER is a DeferredItem<NetworkAnalyzerItem>; the slot is Supplier<Item>. Generics are
 		// invariant, so bind via the (still-lazy) method reference — see ModBlocksNeoForge#init javadoc.
 		ModContent.NETWORK_ANALYZER = NETWORK_ANALYZER::get;
+		// Same invariant-generics story: DeferredItem<WindGaugeItem> into a Supplier<Item> slot.
+		ModContent.WIND_GAUGE = WIND_GAUGE::get;
 		ModContent.WRENCH = WRENCH::get;
 		ModContent.GUIDE_BOOK = GUIDE_BOOK::get;
 		ModContent.TELEPORTER_REMOTE = TELEPORTER_REMOTE::get;

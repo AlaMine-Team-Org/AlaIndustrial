@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "Rotor çakışması",
   "gui.alaindustrial.water_mill.mode.no_water": "Su yok",
   "gui.alaindustrial.water_mill.mode.obstructed": "Engelli",
+  "gui.alaindustrial.wind_gauge.no_wind": "Burada rüzgâr yok — alet yalnızca normal dünyada ölçer",
+  "gui.alaindustrial.wind_gauge.reading": "Yükseklik Y %1$s · Rüzgâr %2$s km/sa · %3$s · Gökyüzü: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "kapalı",
+  "gui.alaindustrial.wind_gauge.sky.open": "açık",
+  "gui.alaindustrial.wind_gauge.weather.clear": "Açık",
+  "gui.alaindustrial.wind_gauge.weather.rain": "Yağmur",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "Fırtına",
   "gui.alaindustrial.wind_mill.mode.breeze": "Esinti",
   "gui.alaindustrial.wind_mill.mode.calm": "Durgun",
   "gui.alaindustrial.wind_mill.mode.gale": "Fırtına",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "Vakum kapsülü",
   "item.alaindustrial.vacuum_capsule.hint": "Doldurmak için bir kaynak sıvıya sağ tıklayın.",
   "item.alaindustrial.water_mill_wheel": "Su çarkı",
+  "item.alaindustrial.wind_gauge": "Rüzgâr Ölçer",
   "item.alaindustrial.windmill_rotor": "Ahşap Rotor",
   "item.alaindustrial.wooden_gear": "Ahşap Dişli",
   "item.alaindustrial.wrench": "İngiliz anahtarı",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "Bağlı değil — bir istasyona shift+sağ tık",
   "tooltip.alaindustrial.tier_hv": "Seviye: HV",
   "tooltip.alaindustrial.tier_lv": "Kademe: LV",
-  "tooltip.alaindustrial.tier_mv": "Kademe: MV"
+  "tooltip.alaindustrial.tier_mv": "Kademe: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + sağ tık: buradaki rüzgârı ölç"
 }

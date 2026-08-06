@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "Wheel interference",
   "gui.alaindustrial.water_mill.mode.no_water": "No water",
   "gui.alaindustrial.water_mill.mode.obstructed": "Blocked",
+  "gui.alaindustrial.wind_gauge.no_wind": "No wind here — the gauge reads the Overworld only",
+  "gui.alaindustrial.wind_gauge.reading": "Height Y %1$s · Wind %2$s km/h · %3$s · Sky: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "closed",
+  "gui.alaindustrial.wind_gauge.sky.open": "open",
+  "gui.alaindustrial.wind_gauge.weather.clear": "Clear",
+  "gui.alaindustrial.wind_gauge.weather.rain": "Rain",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "Thunderstorm",
   "gui.alaindustrial.wind_mill.mode.breeze": "Breeze",
   "gui.alaindustrial.wind_mill.mode.calm": "Calm",
   "gui.alaindustrial.wind_mill.mode.gale": "Gale",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "Vacuum Capsule",
   "item.alaindustrial.vacuum_capsule.hint": "Right-click a source fluid to fill it.",
   "item.alaindustrial.water_mill_wheel": "Water Wheel",
+  "item.alaindustrial.wind_gauge": "Wind Gauge",
   "item.alaindustrial.windmill_rotor": "Wooden Rotor",
   "item.alaindustrial.wooden_gear": "Wooden Gear",
   "item.alaindustrial.wrench": "Wrench",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "Unbound — shift-right-click a station",
   "tooltip.alaindustrial.tier_hv": "Tier: HV",
   "tooltip.alaindustrial.tier_lv": "Tier: LV",
-  "tooltip.alaindustrial.tier_mv": "Tier: MV"
+  "tooltip.alaindustrial.tier_mv": "Tier: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + right-click: measure the wind here"
 }

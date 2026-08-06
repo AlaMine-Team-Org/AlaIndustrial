@@ -115,7 +115,13 @@ public class WindMillGameTest {
 	private static void requirePositiveHeightBase(GameTestHelper helper, BlockPos millRel) {
 		BlockPos abs = helper.absolutePos(millRel);
 		int sea = helper.getLevel().getSeaLevel();
-		int base = Math.max(0, (abs.getY() - sea) / 16);
+		// MOD-347: the height term is the shared altitude profile, not a 16-block ramp. Ask the
+		// profile itself what base this rig gets, so the tripwire cannot drift from production.
+		int ridge = dev.alaindustrial.core.environment.WindProfile.ridgeY(sea,
+				Config.windMillMaxBaseEuPerTick, 16, Config.windCloudY);
+		int base = Math.round(Config.windMillMaxBaseEuPerTick
+				* dev.alaindustrial.core.environment.WindProfile.factor(abs.getY(), sea, ridge,
+						Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor));
 		if (base <= 0) {
 			helper.fail("wind-mill rate test region is below the first height base step: absY=" + abs.getY()
 					+ " sea=" + sea + " → base=0 → expected rate is always 0, so the got!=expected assertion "
@@ -124,14 +130,27 @@ public class WindMillGameTest {
 		}
 	}
 
+	/** Rig geometry vs the MOD-347 wind profile — printed when a height-dependent assertion fails. */
+	private static String rigDiagnostics(GameTestHelper helper, BlockPos rel) {
+		BlockPos abs = helper.absolutePos(rel);
+		int sea = helper.getLevel().getSeaLevel();
+		int ridge = dev.alaindustrial.core.environment.WindProfile.ridgeY(sea,
+				Config.windMillMaxBaseEuPerTick, 16, Config.windCloudY);
+		float f = dev.alaindustrial.core.environment.WindProfile.factor(abs.getY(), sea, ridge,
+				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor);
+		return "absY=" + abs.getY() + " sea=" + sea + " ridge=" + ridge + " factor=" + f
+				+ " base=" + Math.round(Config.windMillMaxBaseEuPerTick * f);
+	}
+
 	/** The per-tick EU the mill should produce under the current world state (open sky assumed). */
 	private static int expectedRate(GameTestHelper helper, BlockPos millRel) {
 		Level level = helper.getLevel();
 		BlockPos abs = helper.absolutePos(millRel);
 		return WindMillOutput.euFor(abs.getY(), level.getSeaLevel(), true,
 				level.isRaining(), level.isThundering(),
-				Config.windMillMaxBaseEuPerTick, Config.windMillMaxEuPerTick,
-				Config.windMillRainFactor, Config.windMillThunderFactor);
+				Config.windMillMaxBaseEuPerTick, 16, Config.windMillMaxEuPerTick,
+				Config.windMillRainFactor, Config.windMillThunderFactor,
+				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor);
 	}
 
 	private static long afterGlobalRate(int made) {
@@ -790,25 +809,42 @@ public class WindMillGameTest {
 	}
 
 	/**
-	 * @implements TC-WINDMILL-001-WEAR03 — a rotor in an idle mill (region base 0 → produces 0 EU) does
-	 *     NOT wear even at the aggressive 1-EU-per-point rate: wear accrues only while the mill produces EU.
-	 *     The rotor is pre-damaged to one point from death, so any spurious idle wear would break it.
+	 * @implements TC-WINDMILL-001-WEAR03 — a rotor in an idle mill (produces 0 EU) does NOT wear even at
+	 *     the aggressive 1-EU-per-point rate: wear accrues only while the mill produces EU. The rotor is
+	 *     pre-damaged to one point from death, so any spurious idle wear would break it.
+	 *
+	 *     <p>Idleness is forced with {@code windMillMaxBaseEuPerTick = 0} rather than by relying on the
+	 *     rig sitting below the first height step. It used to rely on that, and MOD-347 broke it: the
+	 *     stepped ramp became the smooth {@code WindProfile} curve, which yields a base of 1 only eight
+	 *     blocks above sea level, so the "idle" mill started generating and chewed through its rotor.
+	 *     Pinning the rate to zero at the source keeps this test about the wear gate
+	 *     ({@code cachedRate > 0}) and immune to future retunes of the altitude curve.
 	 */
 	@GameTest(skyAccess = true, maxTicks = 120)
 	public void tcWindmill001Wear03_noWearWhileIdle(GameTestHelper helper) {
 		int savedRate = Config.windMillRotorEuPerDamage;
+		int savedBase = Config.windMillMaxBaseEuPerTick;
 		try {
 			Config.windMillRotorEuPerDamage = 1;
-			WindMillBlockEntity mill = placeWithoutRotor(helper); // at POS: base 0 → rate 0 even under open sky
+			Config.windMillMaxBaseEuPerTick = 0; // force rate 0 at any height (see javadoc)
+			WindMillBlockEntity mill = placeWithoutRotor(helper);
 			setClear(helper);
 			ItemStack rotor = new ItemStack(ModItems.WINDMILL_ROTOR);
 			int seeded = rotor.getMaxDamage() - 1;
 			rotor.setDamageValue(seeded);
 			mill.setItem(WindMillBlockEntity.ROTOR_SLOT, rotor);
 			drive(mill, helper, Config.windMillSampleTicks * 2 + 5);
+			// Guard against the test passing for the wrong reason: if the mill were somehow producing,
+			// "no wear" would be a genuine bug rather than the expected result.
+			int observedRate = mill.getDataAccess().get(2);
+			if (observedRate != 0) {
+				helper.fail("wear-gate test needs an idle mill but the rig produced " + observedRate
+						+ " EU/t [" + rigDiagnostics(helper, POS) + "]");
+			}
 			ItemStack after = mill.getItem(WindMillBlockEntity.ROTOR_SLOT);
 			if (after.isEmpty()) {
-				helper.fail("idle wind mill (rate 0) wore out its rotor — wear must only accrue while producing EU");
+				helper.fail("idle wind mill (rate 0) wore out its rotor — wear must only accrue while producing EU"
+						+ " [" + rigDiagnostics(helper, POS) + "]");
 			}
 			if (after.getDamageValue() != seeded) {
 				helper.fail("idle wind mill changed rotor damage from " + seeded + " to " + after.getDamageValue()
@@ -817,6 +853,7 @@ public class WindMillGameTest {
 			helper.succeed();
 		} finally {
 			Config.windMillRotorEuPerDamage = savedRate;
+			Config.windMillMaxBaseEuPerTick = savedBase;
 		}
 	}
 

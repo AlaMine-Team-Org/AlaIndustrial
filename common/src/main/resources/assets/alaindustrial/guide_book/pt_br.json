@@ -2432,6 +2432,37 @@
           ]
         },
         {
+          "id": "wind_gauge",
+          "title": "Anemômetro",
+          "icon": "alaindustrial:wind_gauge",
+          "block_id": "alaindustrial:wind_gauge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Anemômetro",
+              "text": "Mede a velocidade do vento onde o jogador está, para escolher a altura de um aerogerador."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:glass_pane",
+                "minecraft:stick",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:tin_ingot",
+                "",
+                "alaindustrial:wooden_gear",
+                ""
+              ],
+              "result_id": "alaindustrial:wind_gauge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_pouch",
           "title": "Bolsa de bateria",
           "icon": "alaindustrial:battery_pouch",

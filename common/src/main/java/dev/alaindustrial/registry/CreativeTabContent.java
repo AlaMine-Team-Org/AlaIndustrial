@@ -56,6 +56,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.TEMPERED_IRON_HOE.get());
 		scythes(out);
 		out.accept(ModContent.NETWORK_ANALYZER.get());
+		out.accept(ModContent.WIND_GAUGE.get());
 		out.accept(ModContent.TELEPORTER_REMOTE.get());
 		out.accept(ModContent.WRENCH.get());
 		out.accept(ModContent.FORGE_HAMMER.get());
@@ -307,6 +308,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.EMERALD_DUST.get());
 		out.accept(ModContent.LAPIS_DUST.get());
 		out.accept(ModContent.NETWORK_ANALYZER.get());
+		out.accept(ModContent.WIND_GAUGE.get());
 		out.accept(ModContent.WRENCH.get());
 		out.accept(ModContent.FORGE_HAMMER.get());
 		out.accept(ModContent.GUIDE_BOOK.get());

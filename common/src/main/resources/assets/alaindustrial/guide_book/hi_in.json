@@ -2432,6 +2432,37 @@
           ]
         },
         {
+          "id": "wind_gauge",
+          "title": "पवन मापी",
+          "icon": "alaindustrial:wind_gauge",
+          "block_id": "alaindustrial:wind_gauge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "पवन मापी",
+              "text": "जहाँ खिलाड़ी खड़ा है वहाँ पवन की गति मापता है, पवनचक्की की ऊँचाई चुनने के लिए।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:stick",
+                "minecraft:glass_pane",
+                "minecraft:stick",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:tin_ingot",
+                "",
+                "alaindustrial:wooden_gear",
+                ""
+              ],
+              "result_id": "alaindustrial:wind_gauge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_pouch",
           "title": "बैटरी थैली",
           "icon": "alaindustrial:battery_pouch",

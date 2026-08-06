@@ -258,6 +258,8 @@ public final class ModContent {
 	public static Supplier<Item> RAW_URANIUM = unbound("RAW_URANIUM");
 	public static Supplier<Item> URANIUM_INGOT = unbound("URANIUM_INGOT");
 	public static Supplier<Item> NETWORK_ANALYZER = unbound("NETWORK_ANALYZER");
+	/** Wind Gauge (MOD-347) — hand instrument that reads the wind flow at the player's position. */
+	public static Supplier<Item> WIND_GAUGE = unbound("WIND_GAUGE");
 	public static Supplier<Item> WRENCH = unbound("WRENCH");
 	public static Supplier<Item> GUIDE_BOOK = unbound("GUIDE_BOOK");
 	/** Teleporter Remote (MOD-092) — hidden from the creative tab until MOD-093 completes the feature. */

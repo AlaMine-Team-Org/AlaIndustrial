@@ -70,7 +70,8 @@ public class HighAltitudeWindMillBlockEntity extends AbstractGeneratorBlockEntit
 				Config.highAltWindMillMaxBaseEuPerTick, Config.highAltWindMillBlocksPerBase,
 				Config.highAltWindMillMaxEuPerTick,
 				// Own weather factors since MOD-345 — this branch trades storm burst for a steady income.
-				Config.highAltWindMillRainFactor, Config.highAltWindMillThunderFactor);
+				Config.highAltWindMillRainFactor, Config.highAltWindMillThunderFactor,
+				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor);
 	}
 
 	private int sampleMode(Level level, BlockPos pos, int rate, boolean obstructed, boolean interfered) {

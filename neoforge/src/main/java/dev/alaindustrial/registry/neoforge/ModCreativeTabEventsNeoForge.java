@@ -3,6 +3,7 @@ package dev.alaindustrial.registry.neoforge;
 import dev.alaindustrial.registry.CreativeTabContent;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.VanillaCreativeTabs;
+import java.util.Collection;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -18,7 +19,8 @@ public final class ModCreativeTabEventsNeoForge {
 		modBus.addListener(ModCreativeTabEventsNeoForge::buildCreativeTabContents);
 	}
 
-	private static void buildCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
+	/** Package-private rather than private so the MOD-349 regression test can drive the real chain. */
+	static void buildCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
 		if (event.getTabKey().equals(VanillaCreativeTabs.COMBAT)) {
 			insertAfter(event, Items.IRON_SWORD.getDefaultInstance(), ModContent.TEMPERED_IRON_SWORD.get().getDefaultInstance());
 			ItemStack helmet = ModContent.TEMPERED_IRON_HELMET.get().getDefaultInstance();
@@ -76,7 +78,52 @@ public final class ModCreativeTabEventsNeoForge {
 		}
 	}
 
-	private static void insertAfter(BuildCreativeModeTabContentsEvent event, ItemStack anchor, ItemStack stack) {
-		event.insertAfter(anchor, stack, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+	/**
+	 * Places {@code stack} directly after {@code anchor}, appending it at the end of the tab instead when
+	 * the anchor is absent.
+	 *
+	 * <p><b>Why the guard.</b> {@link BuildCreativeModeTabContentsEvent#insertAfter} asserts the anchor is
+	 * already in the tab and throws {@link IllegalArgumentException} when it is not — NeoForge documents
+	 * that throw as intended behaviour, so it will not soften upstream. Every anchor this class positions
+	 * against is foreign content (vanilla swords, boots, hoes, a compass), and any other mod may take those
+	 * out of the vanilla tabs. When one does, the throw escapes tab construction and takes the client down
+	 * before the player reaches a world. MOD-349 is exactly that report, against a mod that strips vanilla
+	 * weapons; the same crash is open against several other mods, so it is a live cross-mod hazard rather
+	 * than a theoretical one.
+	 *
+	 * <p><b>Why it cannot change existing placement.</b> The check evaluates the same predicate the assert
+	 * does: NeoForge builds both entry sets with {@code ItemStackLinkedSet.TYPE_AND_TAG} (see
+	 * {@code EventHooks#onCreativeModeTabBuildContents}), a strategy keyed on item type plus components, so
+	 * a freshly built anchor stack matches the entry already in the set. While the anchor is present the
+	 * call is byte-for-byte the old one; only its absence now degrades to an append — which is what
+	 * Fabric's creative-tab API already does on its own, so the two loaders now fail the same way.
+	 *
+	 * <p><b>Why the two sets are guarded separately.</b> {@code insertAfter} asserts against the parent and
+	 * search sets independently, and the sets legitimately differ — vanilla contributes some entries as
+	 * search-only. A single combined check passes on one set and still throws on the other.
+	 *
+	 * <p>Deliberately NOT done here: swallowing {@link RuntimeException} around the whole call, and skipping
+	 * a stack that is already in the tab. Both would also mask the duplicate-entry throw, which is a
+	 * genuine defect detector for our own content — it is how the double-registration in MOD-280 was
+	 * caught. This guard covers the missing anchor only.
+	 */
+	static void insertAfter(BuildCreativeModeTabContentsEvent event, ItemStack anchor, ItemStack stack) {
+		placeOrAppend(event, event.getParentEntries(), anchor, stack,
+				CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
+		placeOrAppend(event, event.getSearchEntries(), anchor, stack,
+				CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+	}
+
+	/**
+	 * {@code entries} is the unmodifiable view over the very set {@code insertAfter} asserts against, so
+	 * {@code contains} here and the assert there can never disagree.
+	 */
+	private static void placeOrAppend(BuildCreativeModeTabContentsEvent event, Collection<ItemStack> entries,
+			ItemStack anchor, ItemStack stack, CreativeModeTab.TabVisibility visibility) {
+		if (entries.contains(anchor)) {
+			event.insertAfter(anchor, stack, visibility);
+		} else {
+			event.accept(stack, visibility);
+		}
 	}
 }

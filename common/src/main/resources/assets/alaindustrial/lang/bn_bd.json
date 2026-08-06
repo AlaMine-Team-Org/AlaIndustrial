@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "হস্তক্ষেপ",
   "gui.alaindustrial.water_mill.mode.no_water": "পানি নেই",
   "gui.alaindustrial.water_mill.mode.obstructed": "বাধাগ্রস্ত",
+  "gui.alaindustrial.wind_gauge.no_wind": "এখানে বাতাস নেই — যন্ত্রটি কেবল সাধারণ জগতে মাপে",
+  "gui.alaindustrial.wind_gauge.reading": "উচ্চতা Y %1$s · বাতাস %2$s কিমি/ঘণ্টা · %3$s · আকাশ: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "ঢাকা",
+  "gui.alaindustrial.wind_gauge.sky.open": "খোলা",
+  "gui.alaindustrial.wind_gauge.weather.clear": "পরিষ্কার",
+  "gui.alaindustrial.wind_gauge.weather.rain": "বৃষ্টি",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "ঝড়",
   "gui.alaindustrial.wind_mill.mode.breeze": "হালকা বাতাস",
   "gui.alaindustrial.wind_mill.mode.calm": "শান্ত",
   "gui.alaindustrial.wind_mill.mode.gale": "তীব্র বাতাস",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "ভ্যাকুয়াম ক্যাপসুল",
   "item.alaindustrial.vacuum_capsule.hint": "পূরণ করতে একটি উৎস তরলে ডান-ক্লিক করুন।",
   "item.alaindustrial.water_mill_wheel": "জলচাকা",
+  "item.alaindustrial.wind_gauge": "বায়ুমাপক",
   "item.alaindustrial.windmill_rotor": "কাঠের রোটর",
   "item.alaindustrial.wooden_gear": "কাঠের গিয়ার",
   "item.alaindustrial.wrench": "রেঞ্চ",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "যুক্ত নয় — স্টেশনে shift+ডান ক্লিক",
   "tooltip.alaindustrial.tier_hv": "স্তর: HV",
   "tooltip.alaindustrial.tier_lv": "স্তর: LV",
-  "tooltip.alaindustrial.tier_mv": "স্তর: MV"
+  "tooltip.alaindustrial.tier_mv": "স্তর: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + ডান ক্লিক: এখানকার বাতাস মাপুন"
 }

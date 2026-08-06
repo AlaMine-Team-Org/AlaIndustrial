@@ -8,6 +8,7 @@ import dev.alaindustrial.core.environment.SolarSky;
 import dev.alaindustrial.core.environment.WindMillClearance;
 import dev.alaindustrial.core.environment.WindMillInterference;
 import dev.alaindustrial.core.environment.WindMillOutput;
+import dev.alaindustrial.core.environment.WindProfile;
 import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -67,8 +68,9 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 	private int sampleRate(Level level, BlockPos pos) {
 		return WindMillOutput.euFor(pos.getY(), level.getSeaLevel(), openSky(level, pos),
 				level.isRaining(), level.isThundering(),
-				Config.stormWindMillMaxBaseEuPerTick, Config.stormWindMillMaxEuPerTick,
-				Config.stormWindMillRainFactor, Config.stormWindMillThunderFactor);
+				Config.stormWindMillMaxBaseEuPerTick, WindProfile.DEFAULT_BLOCKS_PER_BASE, Config.stormWindMillMaxEuPerTick,
+				Config.stormWindMillRainFactor, Config.stormWindMillThunderFactor,
+				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor);
 	}
 
 	private int sampleMode(Level level, BlockPos pos, int rate, boolean obstructed, boolean interfered) {

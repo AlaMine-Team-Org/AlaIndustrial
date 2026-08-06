@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "Завади колеса",
   "gui.alaindustrial.water_mill.mode.no_water": "Немає води",
   "gui.alaindustrial.water_mill.mode.obstructed": "Перешкода",
+  "gui.alaindustrial.wind_gauge.no_wind": "Тут немає вітру — прилад працює лише у Звичайному світі",
+  "gui.alaindustrial.wind_gauge.reading": "Висота Y %1$s · Вітер %2$s км/год · %3$s · Небо: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "закрите",
+  "gui.alaindustrial.wind_gauge.sky.open": "відкрите",
+  "gui.alaindustrial.wind_gauge.weather.clear": "Ясно",
+  "gui.alaindustrial.wind_gauge.weather.rain": "Дощ",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "Гроза",
   "gui.alaindustrial.wind_mill.mode.breeze": "Бриз",
   "gui.alaindustrial.wind_mill.mode.calm": "Штиль",
   "gui.alaindustrial.wind_mill.mode.gale": "Шквал",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "Вакуумна капсула",
   "item.alaindustrial.vacuum_capsule.hint": "ПКМ по джерелу рідини — наповнити.",
   "item.alaindustrial.water_mill_wheel": "Водяне колесо",
+  "item.alaindustrial.wind_gauge": "Анемометр",
   "item.alaindustrial.windmill_rotor": "Ротор вітряка",
   "item.alaindustrial.wooden_gear": "Дерев'яна шестірня",
   "item.alaindustrial.wrench": "Гайковий ключ",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "Не прив’язаний — shift-ПКМ по станції",
   "tooltip.alaindustrial.tier_hv": "Тір: HV",
   "tooltip.alaindustrial.tier_lv": "Рівень: LV",
-  "tooltip.alaindustrial.tier_mv": "Рівень: MV"
+  "tooltip.alaindustrial.tier_mv": "Рівень: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + ПКМ: виміряти вітер тут"
 }

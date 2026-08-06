@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "간섭",
   "gui.alaindustrial.water_mill.mode.no_water": "물 없음",
   "gui.alaindustrial.water_mill.mode.obstructed": "방해물",
+  "gui.alaindustrial.wind_gauge.no_wind": "여기에는 바람이 없습니다 — 이 장비는 일반 세계에서만 측정합니다",
+  "gui.alaindustrial.wind_gauge.reading": "높이 Y %1$s · 풍속 %2$s km/h · %3$s · 하늘: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "막힘",
+  "gui.alaindustrial.wind_gauge.sky.open": "열림",
+  "gui.alaindustrial.wind_gauge.weather.clear": "맑음",
+  "gui.alaindustrial.wind_gauge.weather.rain": "비",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "뇌우",
   "gui.alaindustrial.wind_mill.mode.breeze": "산들바람",
   "gui.alaindustrial.wind_mill.mode.calm": "무풍",
   "gui.alaindustrial.wind_mill.mode.gale": "강풍",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "진공 캡슐",
   "item.alaindustrial.vacuum_capsule.hint": "액체 원천을 우클릭하여 채웁니다.",
   "item.alaindustrial.water_mill_wheel": "물레방아",
+  "item.alaindustrial.wind_gauge": "풍속계",
   "item.alaindustrial.windmill_rotor": "나무 회전날",
   "item.alaindustrial.wooden_gear": "나무 톱니바퀴",
   "item.alaindustrial.wrench": "렌치",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "미연결 — 스테이션에 Shift+우클릭",
   "tooltip.alaindustrial.tier_hv": "등급: HV",
   "tooltip.alaindustrial.tier_lv": "등급: LV",
-  "tooltip.alaindustrial.tier_mv": "등급: MV"
+  "tooltip.alaindustrial.tier_mv": "등급: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + 우클릭: 이곳의 바람 측정"
 }

@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "Interferenz",
   "gui.alaindustrial.water_mill.mode.no_water": "Kein Wasser",
   "gui.alaindustrial.water_mill.mode.obstructed": "Verdeckt",
+  "gui.alaindustrial.wind_gauge.no_wind": "Hier weht kein Wind — das Gerät misst nur in der Oberwelt",
+  "gui.alaindustrial.wind_gauge.reading": "Höhe Y %1$s · Wind %2$s km/h · %3$s · Himmel: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "verdeckt",
+  "gui.alaindustrial.wind_gauge.sky.open": "frei",
+  "gui.alaindustrial.wind_gauge.weather.clear": "Klar",
+  "gui.alaindustrial.wind_gauge.weather.rain": "Regen",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "Gewitter",
   "gui.alaindustrial.wind_mill.mode.breeze": "Brise",
   "gui.alaindustrial.wind_mill.mode.calm": "Windstill",
   "gui.alaindustrial.wind_mill.mode.gale": "Sturm",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "Vakuumkapsel",
   "item.alaindustrial.vacuum_capsule.hint": "Rechtsklick auf eine Quellflüssigkeit zum Befüllen.",
   "item.alaindustrial.water_mill_wheel": "Wasserrad",
+  "item.alaindustrial.wind_gauge": "Windmesser",
   "item.alaindustrial.windmill_rotor": "Windturbinenrotor",
   "item.alaindustrial.wooden_gear": "Holzzahnrad",
   "item.alaindustrial.wrench": "Schraubenschlüssel",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "Ungebunden — Umschalt+Rechtsklick auf eine Station",
   "tooltip.alaindustrial.tier_hv": "Stufe: HV",
   "tooltip.alaindustrial.tier_lv": "Stufe: LV",
-  "tooltip.alaindustrial.tier_mv": "Stufe: MV"
+  "tooltip.alaindustrial.tier_mv": "Stufe: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Umschalt + Rechtsklick: Wind hier messen"
 }

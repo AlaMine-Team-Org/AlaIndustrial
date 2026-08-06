@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "Interferenza",
   "gui.alaindustrial.water_mill.mode.no_water": "Niente acqua",
   "gui.alaindustrial.water_mill.mode.obstructed": "Ostruito",
+  "gui.alaindustrial.wind_gauge.no_wind": "Qui non c'è vento — lo strumento misura solo nel mondo normale",
+  "gui.alaindustrial.wind_gauge.reading": "Altezza Y %1$s · Vento %2$s km/h · %3$s · Cielo: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "coperto",
+  "gui.alaindustrial.wind_gauge.sky.open": "aperto",
+  "gui.alaindustrial.wind_gauge.weather.clear": "Sereno",
+  "gui.alaindustrial.wind_gauge.weather.rain": "Pioggia",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "Temporale",
   "gui.alaindustrial.wind_mill.mode.breeze": "Brezza",
   "gui.alaindustrial.wind_mill.mode.calm": "Calma",
   "gui.alaindustrial.wind_mill.mode.gale": "Burrasca",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "Capsula sottovuoto",
   "item.alaindustrial.vacuum_capsule.hint": "Clic destro su un fluido sorgente per riempirla.",
   "item.alaindustrial.water_mill_wheel": "Ruota idraulica",
+  "item.alaindustrial.wind_gauge": "Anemometro",
   "item.alaindustrial.windmill_rotor": "Rotore in legno",
   "item.alaindustrial.wooden_gear": "Ingranaggio in legno",
   "item.alaindustrial.wrench": "Chiave inglese",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "Non collegato — shift+clic destro su una stazione",
   "tooltip.alaindustrial.tier_hv": "Livello: HV",
   "tooltip.alaindustrial.tier_lv": "Livello: LV",
-  "tooltip.alaindustrial.tier_mv": "Livello: MV"
+  "tooltip.alaindustrial.tier_mv": "Livello: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Maiusc + clic destro: misura il vento qui"
 }

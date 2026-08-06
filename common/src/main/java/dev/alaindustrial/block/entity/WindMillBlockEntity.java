@@ -8,6 +8,7 @@ import dev.alaindustrial.core.environment.SolarSky;
 import dev.alaindustrial.core.environment.WindMillClearance;
 import dev.alaindustrial.core.environment.WindMillInterference;
 import dev.alaindustrial.core.environment.WindMillOutput;
+import dev.alaindustrial.core.environment.WindProfile;
 import dev.alaindustrial.menu.WindMillMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -123,8 +124,10 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	private int sampleRate(Level level, BlockPos pos) {
 		return WindMillOutput.euFor(pos.getY(), level.getSeaLevel(), openSky(level, pos),
 				level.isRaining(), level.isThundering(),
-				Config.windMillMaxBaseEuPerTick, Config.windMillMaxEuPerTick,
-				Config.windMillRainFactor, Config.windMillThunderFactor);
+				Config.windMillMaxBaseEuPerTick, WindProfile.DEFAULT_BLOCKS_PER_BASE, Config.windMillMaxEuPerTick,
+				Config.windMillRainFactor, Config.windMillThunderFactor,
+				// Shared altitude profile (MOD-347): peaks under the clouds, dies above them.
+				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor);
 	}
 
 	@Override

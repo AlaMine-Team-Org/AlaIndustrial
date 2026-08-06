@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "Interferencja",
   "gui.alaindustrial.water_mill.mode.no_water": "Brak wody",
   "gui.alaindustrial.water_mill.mode.obstructed": "Zablokowany",
+  "gui.alaindustrial.wind_gauge.no_wind": "Tu nie ma wiatru — przyrząd mierzy tylko w zwykłym świecie",
+  "gui.alaindustrial.wind_gauge.reading": "Wysokość Y %1$s · Wiatr %2$s km/h · %3$s · Niebo: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "zasłonięte",
+  "gui.alaindustrial.wind_gauge.sky.open": "odsłonięte",
+  "gui.alaindustrial.wind_gauge.weather.clear": "Bezchmurnie",
+  "gui.alaindustrial.wind_gauge.weather.rain": "Deszcz",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "Burza",
   "gui.alaindustrial.wind_mill.mode.breeze": "Bryza",
   "gui.alaindustrial.wind_mill.mode.calm": "Bezwietrznie",
   "gui.alaindustrial.wind_mill.mode.gale": "Szkwał",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "Kapsuła próżniowa",
   "item.alaindustrial.vacuum_capsule.hint": "Kliknij PPM na źródło płynu, aby napełnić.",
   "item.alaindustrial.water_mill_wheel": "Koło wodne",
+  "item.alaindustrial.wind_gauge": "Wiatromierz",
   "item.alaindustrial.windmill_rotor": "Wirnik wiatraka",
   "item.alaindustrial.wooden_gear": "Drewniane koło zębate",
   "item.alaindustrial.wrench": "Klucz",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "Niepowiązany — shift+PPM na stację",
   "tooltip.alaindustrial.tier_hv": "Poziom: HV",
   "tooltip.alaindustrial.tier_lv": "Poziom: LV",
-  "tooltip.alaindustrial.tier_mv": "Poziom: MV"
+  "tooltip.alaindustrial.tier_mv": "Poziom: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + prawy przycisk: zmierz tutaj wiatr"
 }

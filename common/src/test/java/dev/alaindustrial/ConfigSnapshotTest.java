@@ -94,6 +94,12 @@ class ConfigSnapshotTest {
 		SENTINELS.put("geothermalEuPerTick", 41);
 		SENTINELS.put("geothermalBurnTicks", 2222);
 		SENTINELS.put("waterMillEuPerTick", 3);
+		// Wind altitude profile (MOD-347) — shared by the three mills and the Wind Gauge.
+		SENTINELS.put("windCloudY", 200);
+		SENTINELS.put("windDeadY", 270);
+		SENTINELS.put("windRidgeFactor", 0.77f);
+		SENTINELS.put("windTraceFactor", 0.11f);
+		SENTINELS.put("windGaugePeakKmh", 48.5f);
 		SENTINELS.put("windMillMaxBaseEuPerTick", 6);
 		SENTINELS.put("windMillMaxEuPerTick", 13);
 		SENTINELS.put("windMillRainFactor", 1.75f);

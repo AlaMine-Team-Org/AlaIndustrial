@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "Interferência",
   "gui.alaindustrial.water_mill.mode.no_water": "Sem água",
   "gui.alaindustrial.water_mill.mode.obstructed": "Bloqueado",
+  "gui.alaindustrial.wind_gauge.no_wind": "Não há vento aqui — o aparelho mede apenas no mundo normal",
+  "gui.alaindustrial.wind_gauge.reading": "Altura Y %1$s · Vento %2$s km/h · %3$s · Céu: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "coberto",
+  "gui.alaindustrial.wind_gauge.sky.open": "aberto",
+  "gui.alaindustrial.wind_gauge.weather.clear": "Limpo",
+  "gui.alaindustrial.wind_gauge.weather.rain": "Chuva",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "Tempestade",
   "gui.alaindustrial.wind_mill.mode.breeze": "Brisa",
   "gui.alaindustrial.wind_mill.mode.calm": "Calmaria",
   "gui.alaindustrial.wind_mill.mode.gale": "Vendaval",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "Cápsula de vácuo",
   "item.alaindustrial.vacuum_capsule.hint": "Clique com o botão direito em um fluido de origem para enchê-la.",
   "item.alaindustrial.water_mill_wheel": "Roda d'água",
+  "item.alaindustrial.wind_gauge": "Anemômetro",
   "item.alaindustrial.windmill_rotor": "Rotor de Madeira",
   "item.alaindustrial.wooden_gear": "Engrenagem de Madeira",
   "item.alaindustrial.wrench": "Chave inglesa",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "Não vinculado — shift+clique direito numa estação",
   "tooltip.alaindustrial.tier_hv": "Nível: HV",
   "tooltip.alaindustrial.tier_lv": "Nível: LV",
-  "tooltip.alaindustrial.tier_mv": "Nível: MV"
+  "tooltip.alaindustrial.tier_mv": "Nível: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + botão direito: medir o vento aqui"
 }

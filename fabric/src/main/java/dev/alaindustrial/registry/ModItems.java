@@ -165,6 +165,7 @@ public final class ModItems {
 	public static final Item RAW_URANIUM = manifestItem("raw_uranium");
 	public static final Item URANIUM_INGOT = manifestItem("uranium_ingot");
 	public static final Item NETWORK_ANALYZER = networkAnalyzer("network_analyzer");
+	public static final Item WIND_GAUGE = windGauge("wind_gauge");
 	public static final Item WRENCH = wrench("wrench");
 	public static final Item GUIDE_BOOK = guideBook("guide_book");
 	// Teleporter Remote (MOD-092): registered but kept out of the creative tab + no recipe until
@@ -342,6 +343,13 @@ public final class ModItems {
 		// treats a missing component as TRAVERSE instead, and switchMode persists it on first use.
 		return Registry.register(BuiltInRegistries.ITEM, key,
 				new NetworkAnalyzerItem(new Item.Properties().setId(key).stacksTo(1)));
+	}
+
+	/** Wind Gauge (MOD-347) — a read-only hand instrument, so a single unstacked tool like the rest. */
+	private static Item windGauge(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new dev.alaindustrial.item.tool.WindGaugeItem(new Item.Properties().setId(key).stacksTo(1)));
 	}
 
 	private static Item wrench(String path) {
@@ -710,6 +718,7 @@ public final class ModItems {
 		ModContent.RAW_URANIUM = () -> RAW_URANIUM;
 		ModContent.URANIUM_INGOT = () -> URANIUM_INGOT;
 		ModContent.NETWORK_ANALYZER = () -> NETWORK_ANALYZER;
+		ModContent.WIND_GAUGE = () -> WIND_GAUGE;
 		ModContent.GUIDE_BOOK = () -> GUIDE_BOOK;
 		ModContent.WRENCH = () -> WRENCH;
 		ModContent.TELEPORTER_REMOTE = () -> TELEPORTER_REMOTE;

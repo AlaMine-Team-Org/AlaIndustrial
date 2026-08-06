@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "干渉",
   "gui.alaindustrial.water_mill.mode.no_water": "水がありません",
   "gui.alaindustrial.water_mill.mode.obstructed": "障害物あり",
+  "gui.alaindustrial.wind_gauge.no_wind": "ここに風はありません — この計器は通常世界でのみ測定します",
+  "gui.alaindustrial.wind_gauge.reading": "高度 Y %1$s · 風速 %2$s km/h · %3$s · 空: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "塞がれている",
+  "gui.alaindustrial.wind_gauge.sky.open": "開けている",
+  "gui.alaindustrial.wind_gauge.weather.clear": "晴れ",
+  "gui.alaindustrial.wind_gauge.weather.rain": "雨",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "雷雨",
   "gui.alaindustrial.wind_mill.mode.breeze": "そよ風",
   "gui.alaindustrial.wind_mill.mode.calm": "無風",
   "gui.alaindustrial.wind_mill.mode.gale": "強風",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "真空カプセル",
   "item.alaindustrial.vacuum_capsule.hint": "液体源を右クリックで充填します。",
   "item.alaindustrial.water_mill_wheel": "水車",
+  "item.alaindustrial.wind_gauge": "風速計",
   "item.alaindustrial.windmill_rotor": "風力タービンのローター",
   "item.alaindustrial.wooden_gear": "木の歯車",
   "item.alaindustrial.wrench": "レンチ",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "未登録 — ステーションをShift+右クリック",
   "tooltip.alaindustrial.tier_hv": "ティア: HV",
   "tooltip.alaindustrial.tier_lv": "ティア: LV",
-  "tooltip.alaindustrial.tier_mv": "ティア: MV"
+  "tooltip.alaindustrial.tier_mv": "ティア: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + 右クリック: ここの風を測定"
 }

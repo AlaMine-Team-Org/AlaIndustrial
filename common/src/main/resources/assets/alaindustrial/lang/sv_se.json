@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "Interferens",
   "gui.alaindustrial.water_mill.mode.no_water": "Inget vatten",
   "gui.alaindustrial.water_mill.mode.obstructed": "Blockerad",
+  "gui.alaindustrial.wind_gauge.no_wind": "Ingen vind här — instrumentet mäter bara i vanliga världen",
+  "gui.alaindustrial.wind_gauge.reading": "Höjd Y %1$s · Vind %2$s km/h · %3$s · Himmel: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "täckt",
+  "gui.alaindustrial.wind_gauge.sky.open": "öppen",
+  "gui.alaindustrial.wind_gauge.weather.clear": "Klart",
+  "gui.alaindustrial.wind_gauge.weather.rain": "Regn",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "Åska",
   "gui.alaindustrial.wind_mill.mode.breeze": "Bris",
   "gui.alaindustrial.wind_mill.mode.calm": "Vindstilla",
   "gui.alaindustrial.wind_mill.mode.gale": "Kuling",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "Vakuumkapsel",
   "item.alaindustrial.vacuum_capsule.hint": "Högerklicka på en källvätska för att fylla.",
   "item.alaindustrial.water_mill_wheel": "Vattenhjul",
+  "item.alaindustrial.wind_gauge": "Vindmätare",
   "item.alaindustrial.windmill_rotor": "Trärotor",
   "item.alaindustrial.wooden_gear": "Träkugghjul",
   "item.alaindustrial.wrench": "Skiftnyckel",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "Obunden — shift+högerklicka en station",
   "tooltip.alaindustrial.tier_hv": "Nivå: HV",
   "tooltip.alaindustrial.tier_lv": "Nivå: LV",
-  "tooltip.alaindustrial.tier_mv": "Nivå: MV"
+  "tooltip.alaindustrial.tier_mv": "Nivå: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Skift + högerklick: mät vinden här"
 }

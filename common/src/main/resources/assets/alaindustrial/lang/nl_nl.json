@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "Interferentie",
   "gui.alaindustrial.water_mill.mode.no_water": "Geen water",
   "gui.alaindustrial.water_mill.mode.obstructed": "Geblokkeerd",
+  "gui.alaindustrial.wind_gauge.no_wind": "Hier staat geen wind — het apparaat meet alleen in de gewone wereld",
+  "gui.alaindustrial.wind_gauge.reading": "Hoogte Y %1$s · Wind %2$s km/h · %3$s · Hemel: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "afgedekt",
+  "gui.alaindustrial.wind_gauge.sky.open": "open",
+  "gui.alaindustrial.wind_gauge.weather.clear": "Helder",
+  "gui.alaindustrial.wind_gauge.weather.rain": "Regen",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "Onweer",
   "gui.alaindustrial.wind_mill.mode.breeze": "Bries",
   "gui.alaindustrial.wind_mill.mode.calm": "Windstil",
   "gui.alaindustrial.wind_mill.mode.gale": "Storm",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "Vacuümcapsule",
   "item.alaindustrial.vacuum_capsule.hint": "Rechtsklik op een bronvloeistof om te vullen.",
   "item.alaindustrial.water_mill_wheel": "Waterrad",
+  "item.alaindustrial.wind_gauge": "Windmeter",
   "item.alaindustrial.windmill_rotor": "Molenrotor",
   "item.alaindustrial.wooden_gear": "Houten tandwiel",
   "item.alaindustrial.wrench": "Moersleutel",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "Niet gekoppeld — shift+rechtsklik op een station",
   "tooltip.alaindustrial.tier_hv": "Niveau: HV",
   "tooltip.alaindustrial.tier_lv": "Niveau: LV",
-  "tooltip.alaindustrial.tier_mv": "Niveau: MV"
+  "tooltip.alaindustrial.tier_mv": "Niveau: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + rechtsklik: meet hier de wind"
 }

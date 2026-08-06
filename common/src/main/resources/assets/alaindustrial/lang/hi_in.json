@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "रोटर हस्तक्षेप",
   "gui.alaindustrial.water_mill.mode.no_water": "पानी नहीं है",
   "gui.alaindustrial.water_mill.mode.obstructed": "बाधित",
+  "gui.alaindustrial.wind_gauge.no_wind": "यहाँ पवन नहीं है — यह यंत्र केवल सामान्य लोक में मापता है",
+  "gui.alaindustrial.wind_gauge.reading": "ऊँचाई Y %1$s · पवन %2$s किमी/घंटा · %3$s · आकाश: %4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "ढका",
+  "gui.alaindustrial.wind_gauge.sky.open": "खुला",
+  "gui.alaindustrial.wind_gauge.weather.clear": "स्वच्छ",
+  "gui.alaindustrial.wind_gauge.weather.rain": "वर्षा",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "आँधी",
   "gui.alaindustrial.wind_mill.mode.breeze": "हल्की हवा",
   "gui.alaindustrial.wind_mill.mode.calm": "शांत",
   "gui.alaindustrial.wind_mill.mode.gale": "तेज़ हवा",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "वैक्यूम कैप्सूल",
   "item.alaindustrial.vacuum_capsule.hint": "भरने के लिए किसी स्रोत तरल पर राइट-क्लिक करें।",
   "item.alaindustrial.water_mill_wheel": "जलचक्र",
+  "item.alaindustrial.wind_gauge": "पवन मापी",
   "item.alaindustrial.windmill_rotor": "लकड़ी का रोटर",
   "item.alaindustrial.wooden_gear": "लकड़ी का गियर",
   "item.alaindustrial.wrench": "रिंच",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "अनबाउंड — स्टेशन पर shift+दायाँ क्लिक",
   "tooltip.alaindustrial.tier_hv": "श्रेणी: HV",
   "tooltip.alaindustrial.tier_lv": "टियर: LV",
-  "tooltip.alaindustrial.tier_mv": "टियर: MV"
+  "tooltip.alaindustrial.tier_mv": "टियर: MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + दायाँ क्लिक: यहाँ की पवन मापें"
 }

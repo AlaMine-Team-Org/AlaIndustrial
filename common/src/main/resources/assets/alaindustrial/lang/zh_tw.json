@@ -308,6 +308,13 @@
   "gui.alaindustrial.water_mill.mode.interference": "轉子干擾",
   "gui.alaindustrial.water_mill.mode.no_water": "沒有水",
   "gui.alaindustrial.water_mill.mode.obstructed": "受阻",
+  "gui.alaindustrial.wind_gauge.no_wind": "此處沒有風 — 該儀器僅在主世界測量",
+  "gui.alaindustrial.wind_gauge.reading": "高度 Y %1$s · 風速 %2$s 公里/小時 · %3$s · 天空：%4$s",
+  "gui.alaindustrial.wind_gauge.sky.closed": "遮蔽",
+  "gui.alaindustrial.wind_gauge.sky.open": "開闊",
+  "gui.alaindustrial.wind_gauge.weather.clear": "晴朗",
+  "gui.alaindustrial.wind_gauge.weather.rain": "雨",
+  "gui.alaindustrial.wind_gauge.weather.thunder": "雷暴",
   "gui.alaindustrial.wind_mill.mode.breeze": "微風",
   "gui.alaindustrial.wind_mill.mode.calm": "無風",
   "gui.alaindustrial.wind_mill.mode.gale": "大風",
@@ -454,6 +461,7 @@
   "item.alaindustrial.vacuum_capsule": "真空膠囊",
   "item.alaindustrial.vacuum_capsule.hint": "右鍵點擊源液體以填充。",
   "item.alaindustrial.water_mill_wheel": "水輪",
+  "item.alaindustrial.wind_gauge": "風速計",
   "item.alaindustrial.windmill_rotor": "木製轉子",
   "item.alaindustrial.wooden_gear": "木齒輪",
   "item.alaindustrial.wrench": "扳手",
@@ -592,5 +600,6 @@
   "tooltip.alaindustrial.teleporter_remote.unbound": "未綁定 — 潛行右鍵點擊傳送站",
   "tooltip.alaindustrial.tier_hv": "等級：HV",
   "tooltip.alaindustrial.tier_lv": "等級：LV",
-  "tooltip.alaindustrial.tier_mv": "等級：MV"
+  "tooltip.alaindustrial.tier_mv": "等級：MV",
+  "tooltip.alaindustrial.wind_gauge.usage": "Shift + 右鍵：測量此處的風"
 }
