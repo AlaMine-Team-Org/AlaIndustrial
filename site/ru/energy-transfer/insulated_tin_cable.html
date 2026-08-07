@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link active" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link active" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../energy-transfer/index.html">Передача энергии</a><span class="sep">/</span><span>Изолированный оловянный кабель</span></div>
@@ -375,21 +376,39 @@
     </div>
   </div>
 </div>
+
 <blockquote>✅ <strong>Безопасен при касании.</strong> Резиновая оболочка полностью исключает контактный удар током при любом потоке энергии независимо от соседних сегментов и настроек величины урона.</blockquote>
+
 <h2>Сводка</h2>
-<p>Изолированный оловянный кабель — улучшенная резиной версия <a href="tin_cable.html">оловянного кабеля</a>. Он сохраняет узкие параметры олова — 8 EU/FE/тик и 8 EU/FE/пакет, — но вдвое уменьшает затухание: с 0.006 до <strong>0.003 на блок</strong>. Это самый экономичный провод для солнечных ферм и других малых потоков на большой дистанции. Изоляция не превращает олово в замену меди: поток выше 8 EU/FE/тик всё равно требует медной линии. Резиновая оболочка полностью защищает от контактного урона. Старая концепция шерстяной водостойкой изоляции отменена; шерстяного рецепта и водостойкости в нет.</p>
+
+<p>Изолированный оловянный кабель — улучшенная резиной версия <a href="tin_cable.html">оловянного кабеля</a>. Он сохраняет узкие параметры олова — 8 EU/FE/тик и 8 EU/FE/пакет, — но вдвое уменьшает затухание: с 0.006 до <strong>0.003 на блок</strong>. Это самый экономичный провод для солнечных ферм и других малых потоков на большой дистанции.</p>
+
+<p>Изоляция не превращает олово в замену меди: поток выше 8 EU/FE/тик всё равно требует медной линии. Резиновая оболочка полностью защищает от контактного урона. Старая концепция шерстяной водостойкой изоляции отменена; шерстяного рецепта и водостойкости в нет.</p>
+
 <h2>Энергия</h2>
+
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>передача</td></tr><tr><td>Тир</td><td>LV</td></tr><tr><td>Макс. напряжение</td><td>8 EU/FE/пакет</td></tr><tr><td>Пропускная способность</td><td>8 EU/FE/тик = рабочий буфер сегмента</td></tr><tr><td>Потери</td><td><strong>0.003</strong> затухания на блок; при положительном потоке доставляется <code>max(1, ceil(N × 0.997^дистанция))</code> EU/FE/тик</td></tr><tr><td>Изоляция</td><td>резина; полная защита от удара током</td></tr></tbody></table>
-<p>При полном потоке сегмента 8 EU/FE/тик изолированное олово доставляет 8/8/7/6/1 EU/FE через 10/20/50/100/1000 блоков; голое олово — 8/8/6/5/1 EU/FE. Минимум 1 EU/FE сохраняет инвариант точной дозаправки. В смешанной сети больший потолок пакета задаёт сетевой коэффициент. При равном потолке голый сорт имеет приоритет над изолированным, поэтому вставка одного изолированного блока в голую линию не улучшает её целиком. Пониженные 0.003 действуют только в полностью изолированной оловянной сети.</p>
+
+<p>При полном потоке сегмента 8 EU/FE/тик изолированное олово доставляет 8/8/7/6/1 EU/FE через 10/20/50/100/1000 блоков; голое олово — 8/8/6/5/1 EU/FE. Минимум 1 EU/FE сохраняет инвариант точной дозаправки.</p>
+
+<p>В смешанной сети больший потолок пакета задаёт сетевой коэффициент. При равном потолке голый сорт имеет приоритет над изолированным, поэтому вставка одного изолированного блока в голую линию не улучшает её целиком. Пониженные 0.003 действуют только в полностью изолированной оловянной сети.</p>
+
 <h2>Свойства блока</h2>
+
 <p>Тонкий провод с резиновой оболочкой, соединяется с соседними блоками. Ломается любым инструментом, удобнее — кусачками.</p>
+
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>тонкий стержень (6px core + рукава),</td></tr><tr><td>Прочность</td><td>0.2</td></tr><tr><td>Инструмент</td><td>любой / кусачки</td></tr></tbody></table>
+
 <h2>Рецепты</h2>
+
 <p>Крафт 3×3 <code>CCC</code> / <code>RRR</code> / <code>CCCC</code> — оловянный кабель, <code>R</code> — резина; выход — <strong>6</strong> изолированных оловянных кабелей Расход резины — 0.5 на кабель. Шерстяного альтернативного рецепта нет. Рецепты переработки: нет.</p>
+
 <h2>Связанное</h2>
+
 <p><a href="tin_cable.html">Оловянный кабель</a> — дешёвая голая версия. <a href="insulated_copper_cable.html">Изолированный медный кабель</a> — более широкая LV-линия для потоков до 12 EU/FE/тик. <a href="../components/rubber.html">Резина</a> — материал оболочки.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="изолированный оловянный кабель alaindustrial:insulated_tin_cable" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Оловянный кабель"><img src="../assets/item/tin_cable_3d.png" alt="Оловянный кабель" width="32" height="32"></div> <div class="cell" title="Оловянный кабель"><img src="../assets/item/tin_cable_3d.png" alt="Оловянный кабель" width="32" height="32"></div> <div class="cell" title="Оловянный кабель"><img src="../assets/item/tin_cable_3d.png" alt="Оловянный кабель" width="32" height="32"></div> <div class="cell" title="Резина"><img src="../assets/item/rubber.png" alt="Резина" width="32" height="32"></div> <div class="cell" title="Резина"><img src="../assets/item/rubber.png" alt="Резина" width="32" height="32"></div> <div class="cell" title="Резина"><img src="../assets/item/rubber.png" alt="Резина" width="32" height="32"></div> <div class="cell" title="Оловянный кабель"><img src="../assets/item/tin_cable_3d.png" alt="Оловянный кабель" width="32" height="32"></div> <div class="cell" title="Оловянный кабель"><img src="../assets/item/tin_cable_3d.png" alt="Оловянный кабель" width="32" height="32"></div> <div class="cell" title="Оловянный кабель"><img src="../assets/item/tin_cable_3d.png" alt="Оловянный кабель" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Изолированный оловянный кабель"><img src="../assets/item/insulated_tin_cable_3d.png" alt="Изолированный оловянный кабель" width="32" height="32"><span class="count">×6</span></div><div class="result-name">Изолированный оловянный кабель</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="изолированный оловянный кабель alaindustrial:insulated_tin_cable" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Оловянный кабель"><img src="../assets/item/tin_cable_3d.png" alt="Оловянный кабель" width="32" height="32"></div> <div class="cell" title="Оловянный кабель"><img src="../assets/item/tin_cable_3d.png" alt="Оловянный кабель" width="32" height="32"></div> <div class="cell" title="Оловянный кабель"><img src="../assets/item/tin_cable_3d.png" alt="Оловянный кабель" width="32" height="32"></div> <div class="cell" title="Резина"><img src="../assets/item/rubber_3d.png" alt="Резина" width="32" height="32"></div> <div class="cell" title="Резина"><img src="../assets/item/rubber_3d.png" alt="Резина" width="32" height="32"></div> <div class="cell" title="Резина"><img src="../assets/item/rubber_3d.png" alt="Резина" width="32" height="32"></div> <div class="cell" title="Оловянный кабель"><img src="../assets/item/tin_cable_3d.png" alt="Оловянный кабель" width="32" height="32"></div> <div class="cell" title="Оловянный кабель"><img src="../assets/item/tin_cable_3d.png" alt="Оловянный кабель" width="32" height="32"></div> <div class="cell" title="Оловянный кабель"><img src="../assets/item/tin_cable_3d.png" alt="Оловянный кабель" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Изолированный оловянный кабель"><img src="../assets/item/insulated_tin_cable_3d.png" alt="Изолированный оловянный кабель" width="32" height="32"><span class="count">×6</span></div><div class="result-name">Изолированный оловянный кабель</div></div></div></div></div>
   </main>
 </div>
 

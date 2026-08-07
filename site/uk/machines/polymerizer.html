@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="11 сторінок">11</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="12 сторінок">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="13 сторінок">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
@@ -361,13 +362,13 @@
 <div class="group-title">Предмети</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="18 сторінок">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../machines/index.html">Машини</a><span class="sep">/</span><span>Полімеризатор</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/block/polymerizer_top.png" alt="Полімеризатор" width="64" height="64">
+    <img class="icon" src="../assets/item/polymerizer_3d.png" alt="Полімеризатор" width="64" height="64">
     <div class="info">
       <h1>Полімеризатор</h1>
       <div class="block-id">alaindustrial:polymerizer</div>
@@ -376,43 +377,80 @@
   </div>
 </div>
 <h2>Summary</h2>
+
 <p>The <strong>Polymerizer</strong> is the first machine in the mod that eats a <strong>fluid</strong> rather than an item. Inside it sits a ten-bucket oil tank; one run drinks exactly one bucket and hands back a lump of raw rubber. The raw rubber is then combined with sulfur dust in a <a href="vulcanizer.html">Vulcanizer</a>.</p>
+
 <blockquote><strong>Mini-example:</strong> run a pipe from a pump sitting on an oil lake, give the machine power, and it will grind oil into rubber on its own for as long as there is oil in the tank.</blockquote>
+
 <p>You can also fill it by hand: put a bucket (or a capsule) into the top slot — the fluid moves into the tank and the empty container drops into the slot below it.</p>
+
 <h2>Energy</h2>
+
 <p>The Polymerizer only consumes EU/FE and keeps a small buffer for smooth running.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>800 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Consumption</td><td>2 EU/FE/t while working</td></tr></tbody></table>
+
 <p>Energy comes in on the five working faces. The <strong>front face</strong> (the one the machine "looks" toward) is inert — cables don't connect there and hoppers don't work through it.</p>
+
 <h2>Fluid</h2>
+
 <p>The tank takes oil only — ours, and any other oil carrying the conventional <code>c:oil</code> tag.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tank size</td><td>10,000 mB (10 buckets)</td></tr><tr><td>Used per operation</td><td>1000 mB (1 bucket)</td></tr><tr><td>Accepts</td><td>oil (the <code>c:oil</code> tag)</td></tr><tr><td>Gives it back</td><td>no — oil in the tank is feedstock, not storage</td></tr></tbody></table>
+
 <p>There are two ways to fill it and both land in the same tank: a pipe or pump from outside, or a container through the interface slot. There is no mixing — another fluid simply won't go in.</p>
+
 <h2>Processing</h2>
+
 <p>Each operation costs 400 EU/FE and takes 200 ticks (~10 s). The finished rubber doesn't pop out on its own — pick it up by hand or with a hopper.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Duration</td><td>200 ticks (~10 s)</td></tr><tr><td>Cost per operation</td><td>400 EU/FE</td></tr><tr><td>Auto-output</td><td>no</td></tr></tbody></table>
+
 <p>With less than a bucket in the tank the machine simply idles: a partial volume is neither spent nor lost. With the result slot full the operation freezes — and the oil stays in the tank.</p>
+
 <h2>Inventory</h2>
+
 <p>Three slots: a pair for containers and one for the result.</p>
+
 <table><thead><tr><th>Slot</th><th>Takes</th><th>Count</th></tr></thead><tbody><tr><td>(top)</td><td>a full bucket or capsule of oil</td><td>1</td></tr><tr><td>(bottom)</td><td>the empty container after draining</td><td>1</td></tr><tr><td>Output</td><td>raw rubber</td><td>1</td></tr></tbody></table>
+
 <p>Hoppers and pipes may only put containers into the top slot, and may only take from the two lower ones.</p>
+
 <h2>Interface</h2>
+
 <p>On the left is the oil gauge (drawn with the fluid's real texture — hover it to see the volume in mB), on the right the energy bar, and in the middle the container slots, the progress arrow and the result slot.</p>
+
 <h2>Block Properties</h2>
+
 <p>A plain solid block, softer than stone. Any pickaxe breaks it, but it keeps <strong>neither its charge nor its oil</strong> when broken.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge when broken</td><td>no</td></tr></tbody></table>
+
 <h2>Sound</h2>
+
 <p>Silent for now. The Polymerizer has no hum of its own — same as the Compressor, the Pump and the Sawmill; a working sound is a candidate for the future.</p>
+
 <h2>Recipes</h2>
-<p>The Polymerizer is crafted at a table from a <a href="../components/machine_casing.html">machine casing</a>, a bucket, iron and an <a href="../components/electronic_circuit.html">electronic circuit</a> (<code>IBI / IMI / IEI</code>). What it does:</p>
+
+<p>The Polymerizer is crafted at a table from a <a href="../components/machine_casing.html">machine casing</a>, a bucket, iron and an <a href="../components/electronic_circuit.html">electronic circuit</a> (<code>IBI / IMI / IEI</code>).</p>
+
+
 <table><thead><tr><th>Input</th><th>Output</th></tr></thead><tbody><tr><td>1000 mB of oil</td><td>1 raw rubber</td></tr></tbody></table>
+
 <p>The raw rubber then goes into a <a href="vulcanizer.html">Vulcanizer</a> together with sulfur dust:</p>
+
 <table><thead><tr><th>Input</th><th>Output</th></tr></thead><tbody><tr><td>1 raw rubber + 1 sulfur dust</td><td>1 / 2 / 3 rubber depending on heat below</td></tr></tbody></table>
+
 <h2>Progression</h2>
+
 <p>Tier: LV. Built once the player has found oil and set up a pump. Rubber is the material for future insulated cables and MV components. Needs power from an LV source, e.g. the <a href="../generators/generator.html">Generator</a>.</p>
+
 <h2>Related</h2>
+
 <p><a href="../materials/oil.html">Oil</a> — the feedstock and how to get it. <a href="../components/rubber.html">Rubber</a> — what the chain produces. <a href="../fluid-machines/pump.html">Pump</a> — moves oil from a lake into the tank. Portable Tank — a buffer of oil next to the machine.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="полімеризатор alaindustrial:polymerizer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Bucket"><img src="../assets/vanilla/item/bucket.png" alt="Bucket" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Полімеризатор"><img src="../assets/block/polymerizer_top.png" alt="Полімеризатор" width="32" height="32"></div><div class="result-name">Полімеризатор</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="полімеризатор alaindustrial:polymerizer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Bucket"><img src="../assets/item/bucket_3d.png" alt="Bucket" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Полімеризатор"><img src="../assets/item/polymerizer_3d.png" alt="Полімеризатор" width="32" height="32"></div><div class="result-name">Полімеризатор</div></div></div></div></div>
   </main>
 </div>
 

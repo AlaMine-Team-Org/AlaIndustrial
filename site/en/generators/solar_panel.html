@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="18 pages">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../generators/index.html">Generators</a><span class="sep">/</span><span>Solar Panel</span></div>
@@ -376,36 +377,76 @@
   </div>
 </div>
 <h2>Summary</h2>
+
 <p>The <strong>Solar Panel</strong> is your first power source. Place it under the open sky, and during the day it slowly makes EU/FE — enough to run your first machine.</p>
+
 <blockquote><strong>Mini-example:</strong> one panel on a roof → <strong>1 EU/FE/t</strong> by day. A dozen panels fill a Battery Box in a couple of in-game days and keep your machines running into the night.</blockquote>
+
 <p>This is where the whole mod starts: Solar Panel → <a href="../energy-transfer/copper_cable.html">Copper Cable</a> → <a href="../energy-storage/battery_box.html">Battery Box</a> → <a href="../machines/macerator.html">Macerator</a>.</p>
+
 <h2>Energy</h2>
+
 <p>The panel only <strong>produces</strong> power — it never takes any in. It holds up to 8000 EU/FE inside and sends it out on an LV line.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>8000 EU/FE</td></tr><tr><td>Output</td><td>up to 20 EU/FE/t (LV)</td></tr><tr><td>Base output (clear day)</td><td>1 EU/FE/t</td></tr></tbody></table>
+
 <p>Energy leaves through the 4 sides and the bottom. The <strong>top face is the working surface</strong> — it faces the sky, so don't cover it.</p>
+
 <h2>Generation</h2>
+
 <p>Works only in the Overworld, <strong>by day, with open sky above</strong>. A glass roof is fine. Rain, a thunderstorm or a solid roof shut it down.</p>
+
 <table><thead><tr><th>Situation</th><th>Output</th></tr></thead><tbody><tr><td>Clear day, open sky</td><td>1 EU/FE/t</td></tr><tr><td>Glass above (transparent)</td><td>1 EU/FE/t (no change)</td></tr><tr><td>Leaves / cobweb above (partial shade)</td><td>~½ (≈0.5 EU/FE/t)</td></tr><tr><td>Snow layer or snowfall</td><td>1 EU/FE/t (a small trickle)</td></tr><tr><td>Rain or thunder</td><td>0</td></tr><tr><td>Night</td><td>0</td></tr></tbody></table>
-<p>Simple rule: if you can see the sky from the top of the panel and it's not raining, it works. When the buffer is full, the panel keeps looking at the sky but the extra energy is just lost — store it in a <a href="../energy-storage/battery_box.html">Battery Box</a> instead.</p>
+
+<p>Simple rule: if you can see the sky from the top of the panel and it's not raining, it works.</p>
+
+<p>When the buffer is full, the panel keeps looking at the sky but the extra energy is just lost — store it in a <a href="../energy-storage/battery_box.html">Battery Box</a> instead.</p>
+
 <h2>Inventory</h2>
-<p>One slot: <strong>Evolution chip</strong> — turn this panel into a stronger day or night version (see <em>Progression</em>). You can't charge a portable EU/FE item straight from the panel — use a <a href="../energy-storage/battery_box.html">Battery Box</a> for that.</p>
+
+
+<p><strong>Evolution chip</strong> — turn this panel into a stronger day or night version (see <em>Progression</em>).</p>
+
+<p>You can't charge a portable EU/FE item straight from the panel — use a <a href="../energy-storage/battery_box.html">Battery Box</a> for that.</p>
+
 <h2>Interface</h2>
+
 <p>One screen shows everything: how full the buffer is, current output, the sky state, which branch you picked and how far the chip's evolution has come.</p>
+
 <h2>Block Properties</h2>
-<p>A flat slab half a block tall — sits on top of any solid block. Any pickaxe breaks it, and <strong>it keeps its charge when broken</strong>, so you can move it freely.</p>
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>low panel (half-slab)</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge on break</td><td>yes</td></tr></tbody></table>
+
+<p>A flat slab half a block tall — sits on top of any solid block. Any pickaxe breaks it. Stored charge is <strong>not</strong> kept when broken, so drain it into a Battery Box before moving the panel.</p>
+
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>low panel (half-slab)</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge on break</td><td>no</td></tr></tbody></table>
+
 <h2>Sound</h2>
+
 <p>A soft, quiet hum plays only while the panel is actually working (day, open sky). It falls silent at night, in rain or thunder, or under a roof.</p>
+
 <h2>Recipes</h2>
-<p>Crafted at a workbench from photocells, a casing and cable. It's a generator, so it has no processing recipes of its own. In REI/JEI press <strong>R</strong> on the base panel to see the crafting recipe. The upgraded day/night panels aren't crafted — you grow them with a chip (see below).</p>
+
+<p>Crafted at a workbench: a row of glass on top, redstone and an electronic circuit below it, iron ingots and a copper cable at the bottom. It's a generator, so it has no processing recipes of its own.</p>
+
+<p>In REI/JEI press <strong>R</strong> on the base panel to see the crafting recipe. The upgraded day/night panels aren't crafted — you grow them with a chip (see below).</p>
+
 <h2>Progression</h2>
-<p>Drop an <strong>evolution chip</strong> into the slot and let the panel work for a while. It slowly turns into a stronger version, keeping its stored energy and name: <strong>Solar Path (day chip):</strong> works only by day, but much stronger → <a href="daylight_solar_panel.html">Daylight Solar Panel</a>. <strong>Lunar Path (night chip):</strong> works only at night → <a href="moonlit_solar_panel.html">Moonlit Solar Panel</a>. Evolution only ticks while the panel is actually generating (open sky, right time of day, no rain). Expect roughly <strong>3 in-game days</strong> of clear weather to finish. Bad weather stretches the wait.</p>
+
+<p>Drop an <strong>evolution chip</strong> into the slot and let the panel work for a while. It slowly turns into a stronger version, keeping its stored energy and name:</p>
+
+<p><strong>Solar Path (day chip):</strong> works only by day, but much stronger → <a href="daylight_solar_panel.html">Daylight Solar Panel</a>. <strong>Lunar Path (night chip):</strong> works only at night → <a href="moonlit_solar_panel.html">Moonlit Solar Panel</a>.</p>
+
+<p>Evolution only ticks while the panel is actually generating (open sky, right time of day, no rain). Expect roughly <strong>3 in-game days</strong> of clear weather to finish. Bad weather stretches the wait.</p>
+
 <table><thead><tr><th>Tier</th><th>Day branch</th><th>Night branch</th></tr></thead><tbody><tr><td>T1</td><td>Solar Panel (neutral)</td><td>Solar Panel (neutral)</td></tr><tr><td>T2</td><td><a href="daylight_solar_panel.html">Daylight Solar Panel</a></td><td><a href="moonlit_solar_panel.html">Moonlit Solar Panel</a></td></tr></tbody></table>
+
 <p>T3 and T4 panels exist in the mod's plans but aren't available yet.</p>
+
 <h2>Related</h2>
+
 <p><a href="../energy-transfer/copper_cable.html">Copper Cable</a> — carries the EU/FE away. <a href="../energy-storage/battery_box.html">Battery Box</a> — saves daytime EU/FE for the night. <a href="../machines/macerator.html">Macerator</a> — the first thing worth powering.</p>
+
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="solar panel alaindustrial:solar_panel" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Colorless Glass"><img src="../assets/vanilla/block/glass.png" alt="Any Colorless Glass" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Colorless Glass"><img src="../assets/vanilla/block/glass.png" alt="Any Colorless Glass" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Colorless Glass"><img src="../assets/vanilla/block/glass.png" alt="Any Colorless Glass" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/vanilla/item/redstone.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/vanilla/item/redstone.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Solar Panel"><img src="../assets/item/solar_panel_3d.png" alt="Solar Panel" width="32" height="32"></div><div class="result-name">Solar Panel</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="solar panel alaindustrial:solar_panel" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Colorless Glass"><img src="../assets/item/glass_3d.png" alt="Any Colorless Glass" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Colorless Glass"><img src="../assets/item/glass_3d.png" alt="Any Colorless Glass" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Colorless Glass"><img src="../assets/item/glass_3d.png" alt="Any Colorless Glass" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Solar Panel"><img src="../assets/item/solar_panel_3d.png" alt="Solar Panel" width="32" height="32"></div><div class="result-name">Solar Panel</div></div></div></div></div>
   </main>
 </div>
 

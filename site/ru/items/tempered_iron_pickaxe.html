@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../items/index.html">Игровые предметы</a><span class="sep">/</span><span>Закалённая железная кирка</span></div>
@@ -375,25 +376,45 @@
     </div>
   </div>
 </div>
+
 <h2>Сводка</h2>
-<p><strong>Кирка из закалённого железа</strong> — первый ручной инструмент мода Ala Industrial. Крафтится на верстаке из <a href="../components/tempered_iron.html">закалённого железа</a> мода по схеме обычной кирки. По всем характеристикам она <strong>немного лучше</strong> ванильной железной кирки: прочнее на 100 единиц, копает чуть быстрее, наносит чуть больше урона и лучше ловит чары. При этом <strong>она не добывает блоки алмазного уровня</strong> (алмазную руду, обсидиан, древние обломки) — как и железная, так что алмазная прогрессия не обесценивается. Это естественный апгрейд между железной киркой и первой алмазной.</p>
+
+<p><strong>Кирка из закалённого железа</strong> — первый ручной инструмент мода Ala Industrial. Крафтится на верстаке из <a href="../components/tempered_iron.html">закалённого железа</a> мода по схеме обычной кирки.</p>
+
+<p>По всем характеристикам она <strong>немного лучше</strong> ванильной железной кирки: прочнее на 100 единиц, копает чуть быстрее, наносит чуть больше урона и лучше ловит чары. При этом <strong>она не добывает блоки алмазного уровня</strong> (алмазную руду, обсидиан, древние обломки) — как и железная, так что алмазная прогрессия не обесценивается. Это естественный апгрейд между железной киркой и первой алмазной.</p>
+
 <blockquote><strong>Мини-пример:</strong> железо уже есть, алмаз — нет. Переплавьте железо в закалённое, скрафтите эту кирку — и у вас 350 прочности копания на скорости 7.0, хватит, чтобы спокойно дорыть до алмазов.</blockquote>
+
 <h2>Характеристики</h2>
+
 <p>Базовая линия — ванильная железная кирка. Все отличия сведены в одну таблицу:</p>
+
 <table><thead><tr><th>Характеристика</th><th>Железо (ваниль)</th><th>Закалённое железо</th></tr></thead><tbody><tr><td>Прочность</td><td>250</td><td><strong>350</strong> (+100)</td></tr><tr><td>Скорость копания</td><td>6.0</td><td><strong>7.0</strong></td></tr><tr><td>Урон атаки</td><td>4.0</td><td><strong>4.5</strong></td></tr><tr><td>Зачарование</td><td>14</td><td><strong>16</strong></td></tr><tr><td>Скорость атаки</td><td>как у железа</td><td>как у железа</td></tr><tr><td>Уровень добычи</td><td>железо</td><td>железо (алмаз/обсидиан/древние обломки — <strong>нет</strong>)</td></tr><tr><td>Ремонт в наковальне</td><td>железный слиток</td><td>закалённое железо</td></tr></tbody></table>
+
 <p>Кирка не даёт дроп с алмазной руды, глубинного сланца алмаза, обсидиана и древних обломков — точно как железная. Это единственное ограничение, которое отделяет её от алмазной.</p>
+
 <h2>Как работает</h2>
+
 <p><strong>Майнинг:</strong> копает все блоки, которые положено копать киркой, со скоростью 7.0 — чуть быстрее железа. Блоки алмазного уровня (алмазная руда, обсидиан, древние обломки) не дают дропа и копаются медленнее — точно как железной киркой. <strong>Боёвка:</strong> урон 4.5, скорость атаки та же, что у железной кирки. Чуть больший урон — единственное боевое преимущество. <strong>Прочность:</strong> 350 единиц (на 100 больше железа). Расходуется за добычу и удары, как у обычного инструмента. EU/FE не требует — обычный износ. <strong>Зачарование:</strong> на 16 (против 14 у железа) — материал чуть лучше ловит чары. Зачаровывающий стол предлагает полный набор ванильных чар для кирки — Efficiency, Unbreaking, Fortune, Silk Touch, Mending. <strong>Ремонт:</strong> в наковальне закалённым железом; стоимость опыта ванильная.</p>
+
 <h2>Свойства блока</h2>
+
 <p>Не применимо (предмет).</p>
+
 <h2>Рецепты</h2>
+
 <p>Ремонтируется в наковальне закалённым железом, как железный слиток чинит ванильную железную кирку.</p>
+
 <h2>Прогрессия</h2>
+
 <p>Ручной инструмент — не привязан к энергетическим тирам мода. Занимает слот между ванильной железной киркой (250/6.0/4/14) и алмазной (1561/8.0/5/10) — по прочности и скорости ближе к железу, по доступу к блокам алмаз не перекрывает. Появляется, как только игрок начинает массово переплавлять железо в закалённое — естественный апгрейд до первой алмазной кирки.</p>
+
 <h2>Связанное</h2>
+
 <p><a href="../components/tempered_iron.html">Закалённое железо</a> — материал крафта и ремонта. <a href="tempered_iron_tools.html">Инструменты из закалённого железа</a> — остальное семейство инструментов из закалённого железа. Ванильная железная кирка — базовая линия баланса.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="закалённая железная кирка alaindustrial:tempered_iron_pickaxe" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron_3d.png" alt="Закалённое железо" width="32" height="32"></div> <div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron_3d.png" alt="Закалённое железо" width="32" height="32"></div> <div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron_3d.png" alt="Закалённое железо" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Любая палка"><img src="../assets/vanilla/item/stick.png" alt="Любая палка" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Любая палка"><img src="../assets/vanilla/item/stick.png" alt="Любая палка" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Закалённая железная кирка"><img src="../assets/item/tempered_iron_pickaxe_3d.png" alt="Закалённая железная кирка" width="32" height="32"></div><div class="result-name">Закалённая железная кирка</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="закалённая железная кирка alaindustrial:tempered_iron_pickaxe" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron_3d.png" alt="Закалённое железо" width="32" height="32"></div> <div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron_3d.png" alt="Закалённое железо" width="32" height="32"></div> <div class="cell" title="Закалённое железо"><img src="../assets/item/tempered_iron_3d.png" alt="Закалённое железо" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Любая палка"><img src="../assets/item/stick_3d.png" alt="Любая палка" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Любая палка"><img src="../assets/item/stick_3d.png" alt="Любая палка" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Закалённая железная кирка"><img src="../assets/item/tempered_iron_pickaxe_3d.png" alt="Закалённая железная кирка" width="32" height="32"></div><div class="result-name">Закалённая железная кирка</div></div></div></div></div>
   </main>
 </div>
 

@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Items</div>
 <a class="cat-link active" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="18 pages">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../upgrades/index.html">Upgrades</a><span class="sep">/</span><span>Mute Chip</span></div>
@@ -376,28 +377,49 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Mute Chip</strong> is an upgrade item that drops into a machine's upgrade slot (the first, active slot of the upgrade panel). While the chip is installed the machine is <strong>fully silent</strong>: the continuous working hum disappears, and no other sounds from the block itself play either. Pop the chip out and the sound comes back. It's pure convenience — speed, energy use and output are all unchanged. It slots into any of the mod's machines or generators the same way, but you'll only hear the effect on blocks that make sound in the first place (macerator, generator, electric furnace, geothermal generator, solar panels). In a silent machine the chip just sits in the slot doing nothing — which is expected.</p>
+
+<p>The <strong>Mute Chip</strong> is an upgrade item that drops into a machine's upgrade slot (the first, active slot of the upgrade panel). While the chip is installed the machine is <strong>fully silent</strong>: the continuous working hum disappears, and no other sounds from the block itself play either. Pop the chip out and the sound comes back.</p>
+
+<p>It's pure convenience — speed, energy use and output are all unchanged. It slots into any of the mod's machines or generators the same way, but you'll only hear the effect on blocks that make sound in the first place (macerator, generator, electric furnace, geothermal generator, solar panels). In a silent machine the chip just sits in the slot doing nothing — which is expected.</p>
+
 <blockquote><strong>Mini-example:</strong> your macerator bank hums loudly next to your base. Drop a mute chip into each one's upgrade slot and the room goes quiet — grinding speed and EU/FE cost stay exactly the same.</blockquote>
+
 <h2>Energy</h2>
+
 <p>Uses no energy — it's an item with no energy of its own.</p>
+
 <h2>Inventory</h2>
+
 <p>Not applicable (item). It only goes into a machine's active upgrade slot; hoppers and other automation don't see the upgrade slot.</p>
+
 <h2>Block Properties</h2>
+
 <p>Not applicable (item). Stack: 64 in a normal inventory; in the upgrade slot it's 1.</p>
+
 <h2>How it works</h2>
+
 <p>While a mute chip sits in the active upgrade slot, the machine makes no sound at all — neither its working hum nor any other sound the block would normally play. Everything else about the machine is untouched: same speed, same EU/FE use, same output. Take the chip out and the sound returns.</p>
+
 <h2>Recipes</h2>
+
 <p>Crafted at a workbench (shaped 3×3): an <a href="../components/empty_chip.html">empty chip</a> in the centre, ringed by <strong>any wool</strong> on all eight sides.</p>
+
 <pre><code class="lang-">WWW
 WEW
 WWW</code></pre>
+
 <p><code>W</code> — any wool (×8); <code>E</code> — empty chip (×1).</p>
+
 <h2>Progression</h2>
+
 <p>An upgrade with no tier of its own. Built on the <a href="../components/empty_chip.html">empty chip</a> — the shared blank that future upgrade chips will also start from.</p>
+
 <h2>Related</h2>
+
 <p><a href="../components/empty_chip.html">Empty Chip</a> — the blank base this chip is built on. Upgrade system overview — how upgrade slots work.</p>
+
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="mute chip alaindustrial:mute_chip" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Wool"><img src="../assets/vanilla/block/white_wool.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/vanilla/block/white_wool.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/vanilla/block/white_wool.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/vanilla/block/white_wool.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Empty Chip"><img src="../assets/item/empty_chip_3d.png" alt="Empty Chip" width="32" height="32"></div> <div class="cell" title="Any Wool"><img src="../assets/vanilla/block/white_wool.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/vanilla/block/white_wool.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/vanilla/block/white_wool.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/vanilla/block/white_wool.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Mute Chip"><img src="../assets/item/mute_chip_3d.png" alt="Mute Chip" width="32" height="32"></div><div class="result-name">Mute Chip</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="mute chip alaindustrial:mute_chip" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Empty Chip"><img src="../assets/item/empty_chip_3d.png" alt="Empty Chip" width="32" height="32"></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Mute Chip"><img src="../assets/item/mute_chip_3d.png" alt="Mute Chip" width="32" height="32"></div><div class="result-name">Mute Chip</div></div></div></div></div>
   </main>
 </div>
 

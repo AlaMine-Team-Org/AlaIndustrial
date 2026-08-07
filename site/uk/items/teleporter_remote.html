@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="11 сторінок">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="12 сторінок">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="13 сторінок">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предмети</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
-<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="18 сторінок">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../items/index.html">Ігрові предмети</a><span class="sep">/</span><span>Пульт телепорту</span></div>
@@ -376,26 +377,45 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Teleporter Remote</strong> is a handheld beacon-item: it binds to a <a href="../advanced-machines/teleporter.html">Teleporter station</a> via shift-right-click and then triggers a jump that takes the player to the station. The remote itself holds no EU/FE — the energy of the jump is paid by the charged target station. The "station + remote" pair is the entire teleport mechanic: a stationary anchor stores EU/FE, the wearable remote picks the target and pays for the jump out of the station's reserve.</p>
+
+<p>The <strong>Teleporter Remote</strong> is a handheld beacon-item: it binds to a <a href="../advanced-machines/teleporter.html">Teleporter station</a> via shift-right-click and then triggers a jump that takes the player to the station. The remote itself holds no EU/FE — the energy of the jump is paid by the charged target station.</p>
+
+<p>The "station + remote" pair is the entire teleport mechanic: a stationary anchor stores EU/FE, the wearable remote picks the target and pays for the jump out of the station's reserve.</p>
+
 <blockquote><strong>Mini-example:</strong> bind the remote to a station at base → go mining → right-click with the remote → teleport home. EU/FE for the jump comes out of the base, not your inventory.</blockquote>
+
 <h2>Energy</h2>
+
 <p>Stores none. The EU/FE cost of a jump is paid by the <a href="../advanced-machines/teleporter.html">target station</a> out of its own buffer, not by the remote.</p>
+
 <h2>How it's used</h2>
+
 <p>Shift-right-click on a placed <a href="../advanced-machines/teleporter.html">Teleporter station</a> binds the remote to that station. Right-click in the world with a bound remote triggers the jump to the station (if it has enough EU/FE).</p>
+
 <h2>Block Properties</h2>
+
 <p>Not applicable (item). Stack: 1.</p>
+
 <h2>Recipes</h2>
+
 <p>Crafted at a workbench (shaped 3×3): an Ender Pearl in the centre of the top row, <a href="../components/tempered_iron.html">Tempered Iron</a> in a cross, and an <a href="../components/electronic_circuit.html">Electronic Circuit</a> in the centre.</p>
+
 <pre><code class="lang-">E
 TCT
 T</code></pre>
+
 <p><code>E</code> — Ender Pearl (×1); <code>T</code> — tempered iron (×3); <code>C</code> — electronic circuit (×1).</p>
+
 <h2>Progression</h2>
+
 <p>An item-category tool, tier LV (the recipe is available before the HV station — but without a station it's useless). Tied to the HV era: teleportation only opens up after you've built and charged a station.</p>
+
 <h2>Related</h2>
+
 <p><a href="../advanced-machines/teleporter.html">Teleporter (station)</a> — the anchor the remote binds to. <a href="../components/electronic_circuit.html">Electronic Circuit</a> — a crafting component. <a href="../components/tempered_iron.html">Tempered Iron</a> — the body material.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="пульт телепорту alaindustrial:teleporter_remote" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell" title="Ender Pearl"><img src="../assets/vanilla/item/ender_pearl.png" alt="Ender Pearl" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Пульт телепорту"><img src="../assets/item/teleporter_remote_3d.png" alt="Пульт телепорту" width="32" height="32"></div><div class="result-name">Пульт телепорту</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="пульт телепорту alaindustrial:teleporter_remote" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell" title="Ender Pearl"><img src="../assets/item/ender_pearl_3d.png" alt="Ender Pearl" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Пульт телепорту"><img src="../assets/item/teleporter_remote_3d.png" alt="Пульт телепорту" width="32" height="32"></div><div class="result-name">Пульт телепорту</div></div></div></div></div>
   </main>
 </div>
 

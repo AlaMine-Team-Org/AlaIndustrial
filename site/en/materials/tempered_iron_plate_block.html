@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="18 pages">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../materials/index.html">Materials</a><span class="sep">/</span><span>Tempered Iron Plating</span></div>
@@ -376,17 +377,29 @@
   </div>
 </div>
 <h2>Summary</h2>
+
 <p><strong>Tempered Iron Plating</strong> is a decorative building block made from <strong>4 tempered-iron <a href="../components/material_forms.html">plates</a></strong>: a "tech panel" with a screen and lines. It gives the tempered-iron plate a use as high-tech cladding. The cycle is reversible (block → 4 plates) with no loss.</p>
+
 <blockquote><strong>Mini-example:</strong> dress up a control room or reactor hall with the tech panel for a futuristic look; uncraft the block back into plates whenever you need them.</blockquote>
+
 <h2>Block properties</h2>
+
 <p>An ordinary solid block with a metal feel. Broken by any pickaxe.</p>
+
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>any pickaxe</td></tr><tr><td>Drop</td><td>itself</td></tr></tbody></table>
+
 <h2>Recipes</h2>
+
 <p><strong>4 tempered-iron plates → 1 block</strong> (crafting grid, 2x2 <code>PP / PP</code>, <code>P = </code>). <strong>1 block → 4 plates</strong> (crafting grid, shapeless) — reversible, no loss.</p>
+
 <h2>Progression</h2>
+
 <p>A decorative block: a use for the tempered-iron plate as cladding. It carries no mechanic.</p>
+
 <h2>Related</h2>
+
 <p><a href="../components/material_forms.html">Material forms</a> — the tempered-iron plate the block is built from. <a href="silver_plate_block.html">Silver Plating</a> — the second decorative plate block. <a href="../components/machine_casing.html">Machine Casing</a> — the "working" block from iron plates.</p>
+
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="tempered iron plating alaindustrial:tempered_iron_plate_block" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Tempered Iron Plate"><img src="../assets/item/tempered_iron_plate_3d.png" alt="Tempered Iron Plate" width="32" height="32"></div> <div class="cell" title="Tempered Iron Plate"><img src="../assets/item/tempered_iron_plate_3d.png" alt="Tempered Iron Plate" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Tempered Iron Plate"><img src="../assets/item/tempered_iron_plate_3d.png" alt="Tempered Iron Plate" width="32" height="32"></div> <div class="cell" title="Tempered Iron Plate"><img src="../assets/item/tempered_iron_plate_3d.png" alt="Tempered Iron Plate" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Tempered Iron Plating"><img src="../assets/item/tempered_iron_plate_block_3d.png" alt="Tempered Iron Plating" width="32" height="32"></div><div class="result-name">Tempered Iron Plating</div></div></div></div></div>
 <h2>Used in</h2>

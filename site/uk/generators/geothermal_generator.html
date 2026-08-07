@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
 <a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="11 сторінок">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="12 сторінок">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="13 сторінок">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предмети</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="18 сторінок">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../generators/index.html">Генератори</a><span class="sep">/</span><span>Геотермальний генератор</span></div>
@@ -375,31 +376,56 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
-<p>The <strong>Geothermal Generator</strong> burns lava instead of coal. It's twice as strong as the plain <a href="generator.html">Generator</a>, and a single bucket goes a long way — so you spend far less time babysitting fuel. You craft it from a regular Generator, so it's an upgrade, not a first power source.</p>
-<blockquote><strong>Mini-example:</strong> pour one lava bucket in → it runs for a good while at <strong>16 EU/FE/t</strong>, pushing about 16 000 EU/FE into your network. A full 10-bucket tank keeps a small base running almost unattended.</blockquote>
-<h2>Energy</h2>
-<p>The generator only produces power — it never takes any in. It holds up to 4000 EU/FE inside and sends it out on an LV line.</p>
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>4000 EU/FE</td></tr><tr><td>Output</td><td>up to 32 EU/FE/t (LV)</td></tr><tr><td>Output while burning</td><td>16 EU/FE/t</td></tr><tr><td>Energy per lava bucket</td><td>16 000 EU/FE</td></tr></tbody></table>
-<p>Energy leaves through the 5 working faces. The <strong>front face</strong> is inert — cables don't connect there and hoppers don't work through it.</p>
-<h2>Generation</h2>
-<p>Burns lava at a steady 16 EU/FE/t. One bucket holds enough for about 16 000 EU/FE — a much better deal per unit of fuel-handling than coal.</p>
-<table><thead><tr><th>Situation</th><th>Output</th></tr></thead><tbody><tr><td>Lava in the tank, room in buffer</td><td>16 EU/FE/t</td></tr><tr><td>Buffer full</td><td>pauses (waits for room)</td></tr><tr><td>Tank empty</td><td>0</td></tr></tbody></table>
-<h2>Inventory</h2>
-<p>There's an internal <strong>10-bucket lava tank</strong> plus an item slot for filling it.</p>
-<table><thead><tr><th>Slot</th><th>Takes</th><th>Count</th></tr></thead><tbody><tr><td>Lava in</td><td>lava bucket or lava capsule (empty container comes back)</td><td>1</td></tr><tr><td>Output</td><td>empty buckets / empty capsules</td><td>—</td></tr></tbody></table>
-<p>Three ways to fill the tank: Drop a <strong>lava bucket</strong> or <strong>lava capsule</strong> in the slot — the empty container returns to the output slot. Pipe lava in as a fluid (e.g. from an adjacent <a href="../fluid-machines/pump.html">Pump</a>). <strong>Shift-right-click</strong> the block directly with a lava bucket or lava capsule — the lava goes into the tank and the empty container stays in your hand (nothing spills). When the tank is full, any of these is a silent no-op — the container stays full and nothing spills.</p>
-<h2>Interface</h2>
-<p>One screen shows the buffer level, how full the lava tank is, and the output rate.</p>
-<h2>Block Properties</h2>
-<p>An ordinary solid block. Any pickaxe breaks it.</p>
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
-<h2>Recipes</h2>
-<p>Crafted at a workbench from an already-built <a href="generator.html">Generator</a> in a smooth-stone body, with an <a href="../components/electronic_circuit.html">electronic circuit</a> underneath. That makes it an upgrade: you need the LV start cleared first, so it's not a first power source.</p>
-<h2>Progression</h2>
-<p>Tier: LV. An upgrade over the coal <a href="generator.html">Generator</a> — twice the output for far less refueling, at the cost of dealing with lava.</p>
-<h2>Related</h2>
-<p><a href="generator.html">Generator</a> — the solid-fuel baseline, and the part you craft this from. <a href="../fluid-machines/pump.html">Pump</a> — feeds lava into the tank automatically. <a href="../items/vacuum_capsule.html">Vacuum Capsule</a> — a handy way to carry lava for the tank.</p>
+<h2>Зведення</h2>
+
+<p><strong>Геотермальний генератор</strong> палить лаву замість вугілля. Він удвічі потужніший за звичайний <a href="generator.html">Генератор</a>, а лаву можна подавати насосом — тож носити паливо руками вже не треба. Збирається з готового Генератора, тобто це апгрейд, а не перше джерело енергії.</p>
+
+<blockquote><strong>Міні-приклад:</strong> одне відро лави дає <strong>16 000 EU/FE</strong> на швидкості <strong>16 EU/FE/такт</strong>. Повний бак на 10 відер — це 160 000 EU/FE, приблизно вісім хвилин безперервної роботи.</blockquote>
+
+<h2>Енергія</h2>
+
+<p>Генератор лише виробляє енергію — чужої не приймає. Усередині він тримає до 4000 EU/FE й віддає їх у лінію тира LV.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>4000 EU/FE</td></tr><tr><td>Вихід</td><td>до 32 EU/FE/такт (LV)</td></tr><tr><td>Вихід під час горіння</td><td>16 EU/FE/такт</td></tr><tr><td>Енергії з відра лави</td><td>16 000 EU/FE</td></tr></tbody></table>
+
+<p>Енергія виходить крізь 5 робочих граней. Лицьова грань інертна — кабелі до неї не під'єднуються, і лійки крізь неї не працюють.</p>
+
+<h2>Генерація</h2>
+
+<p>Палить лаву рівним темпом 16 EU/FE/такт. Одного відра вистачає приблизно на 16 000 EU/FE.</p>
+
+<table><thead><tr><th>Ситуація</th><th>Виробіток</th></tr></thead><tbody><tr><td>У баку є лава, у буфері є місце</td><td>16 EU/FE/такт</td></tr><tr><td>Буфер повний</td><td>пауза (чекає місця)</td></tr><tr><td>Бак порожній</td><td>0</td></tr></tbody></table>
+
+<h2>Інвентар</h2>
+
+<p>Усередині бак лави на 10 відер плюс предметний слот для його заповнення.</p>
+
+<table><thead><tr><th>Слот</th><th>Приймає</th><th>К-сть</th></tr></thead><tbody><tr><td>Заливання лави</td><td>відро лави або лава-капсула (порожня тара повертається)</td><td>1</td></tr><tr><td>Вихід</td><td>порожні відра / порожні капсули</td><td>—</td></tr></tbody></table>
+
+<p>Залити бак можна трьома способами: покласти відро лави чи лава-капсулу в слот — порожня тара повернеться у вихідний слот; подати лаву як рідину (наприклад, від сусіднього насоса); Shift+ПКМ просто по блоку відром лави чи капсулою — лава піде в бак, а порожня тара лишиться в руці (нічого не виливається перед блоком). Коли бак повний, будь-який зі способів — тихий no-op: тара лишається повною, нічого не проливається.</p>
+
+<h2>Інтерфейс</h2>
+
+<p>На одному екрані видно рівень буфера, наскільки заповнений бак лави та швидкість видачі.</p>
+
+<h2>Властивості блока</h2>
+
+<p>Звичайний суцільний блок. Ламається будь-якою кайлом.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr></tbody></table>
+
+<h2>Рецепти</h2>
+
+<p>Збирається на верстаку з уже готового <a href="generator.html">Генератора</a> у корпусі з гладкого каменю, з електронною схемою знизу. Тому це апгрейд: потрібен пройдений LV-старт, і першим джерелом енергії він бути не може.</p>
+
+<h2>Прогресія</h2>
+
+<p>Тир: LV. Апгрейд над вугільним Генератором — удвічі більший вихід і можливість подавати паливо насосом, ціною поралки з лавою.</p>
+
+<h2>Пов'язане</h2>
+
+<p><a href="generator.html">Генератор</a> — базова альтернатива на твердому паливі й деталь для крафта. <a href="../fluid-machines/pump.html">Насос</a> — автоматично подає лаву в бак. <a href="../items/vacuum_capsule.html">Капсула</a> — зручна тара для перенесення лави в бак.</p>
+
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="геотермальний генератор alaindustrial:geothermal_generator" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Smooth Stone"><img src="../assets/item/smooth_stone_3d.png" alt="Smooth Stone" width="32" height="32"></div> <div class="cell" title="Smooth Stone"><img src="../assets/item/smooth_stone_3d.png" alt="Smooth Stone" width="32" height="32"></div> <div class="cell" title="Smooth Stone"><img src="../assets/item/smooth_stone_3d.png" alt="Smooth Stone" width="32" height="32"></div> <div class="cell" title="Smooth Stone"><img src="../assets/item/smooth_stone_3d.png" alt="Smooth Stone" width="32" height="32"></div> <div class="cell" title="Генератор"><img src="../assets/item/generator_3d.png" alt="Генератор" width="32" height="32"></div> <div class="cell" title="Smooth Stone"><img src="../assets/item/smooth_stone_3d.png" alt="Smooth Stone" width="32" height="32"></div> <div class="cell" title="Smooth Stone"><img src="../assets/item/smooth_stone_3d.png" alt="Smooth Stone" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Smooth Stone"><img src="../assets/item/smooth_stone_3d.png" alt="Smooth Stone" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Геотермальний генератор"><img src="../assets/item/geothermal_3d.png" alt="Геотермальний генератор" width="32" height="32"></div><div class="result-name">Геотермальний генератор</div></div></div></div></div>
   </main>

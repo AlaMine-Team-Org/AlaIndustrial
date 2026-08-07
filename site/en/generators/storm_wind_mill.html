@@ -8,7 +8,67 @@
 <title>Tempest Mill — Ala Industrial — Guide</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
+    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
+    padding:1px 2px; line-height:1; border-radius:0; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
 <style>
   
   @font-face {
@@ -284,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -302,7 +362,7 @@
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="18 pages">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../generators/index.html">Generators</a><span class="sep">/</span><span>Tempest Mill</span></div>
@@ -317,22 +377,45 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Tempest Mill</strong> is the second tier of the tempest branch (T2), an evolution of the <a href="wind_mill.html">basic Wind Turbine</a>. Its base is slightly above T1 (step 16, cap <strong>6</strong>), but the <strong>weather multipliers are stronger</strong>: rain ×2, thunder ×3, with an overall cap of 16 EU/FE/tick. In clear weather it's weaker than the Sky Mill, but in rain and thunder it's an exciting "storm-catcher". It is obtained <strong>only through evolution</strong> of the basic turbine with a <strong>Lunar Evolution Chip</strong>; it has no crafting recipe.</p>
+
+<p>The <strong>Tempest Mill</strong> is the second tier of the tempest branch (T2), an evolution of the <a href="wind_mill.html">basic Wind Turbine</a>. Its base is slightly above T1 (step 16, cap <strong>6</strong>), but the <strong>weather multipliers are stronger</strong>: rain ×2, thunder ×3.5, with an overall cap of 24 EU/FE/tick (the reachable peak is 21). In clear weather it's weaker than the Sky Mill, but in rain and thunder it's an exciting "storm-catcher". It is obtained <strong>only through evolution</strong> of the basic turbine with a <strong>Lunar Evolution Chip</strong>; it has no crafting recipe.</p>
+
 <h2>Energy</h2>
+
 <p>The turbine only produces power and never accepts incoming energy. An 8000 EU/FE buffer, LV-tier output. Energy is emitted <strong>from the back face only</strong> — same as T1, so the cable on the back wall keeps working after evolution. The other 5 faces are inert.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>producer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>8000</td></tr><tr><td>Max input</td><td>n/a (does not accept energy)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>EU/FE/tick</td><td>0–16 (base 0–6 by altitude × stronger weather multiplier, capped at 16)</td></tr></tbody></table>
+
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>producer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>8000</td></tr><tr><td>Max input</td><td>n/a (does not accept energy)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>EU/FE/tick</td><td>0–21 (base 0–6 on the altitude curve, peaking under the clouds × stronger weather multiplier, capped at 24)</td></tr></tbody></table>
+
 <h2>Generation</h2>
-<p>As with T1, the base grows with altitude, but the cap is a bit higher (6) and weather hits harder: in rain the base is multiplied by 2, in thunder by 3, with an overall cap of 16 EU/FE/tick. In rain the Tempest Mill already beats what T1 does in a thunderstorm. In clear weather it's weaker than the Sky Mill (base 6 vs 8).</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Source</td><td>wind: altitude above sea level + open sky + weather</td></tr><tr><td>Working condition</td><td>rotor installed AND open sky above the block AND <strong>blade area is clear</strong> AND buffer not full</td></tr><tr><td>Dimensions</td><td>minecraft:overworld</td></tr><tr><td>EU/FE/tick (base)</td><td>+1 EU/FE/tick per 16 blocks above sea level, up to 6</td></tr><tr><td>Modifiers</td><td>weather: clear ×1, rain ×2.0, thunder ×3.0; result capped at 16 EU/FE/tick</td></tr></tbody></table>
-<p>Altitude, sky and weather are recalculated roughly once every two seconds; between recalculations the rate stays the same. <strong>Blade clearance and rotor interference</strong> are exactly the same as on T1: the rotor needs a clear 2×2 square in front of the turbine, and overlapping blades with a neighbouring turbine stops both (even in a full thunderstorm). Full rules and the diagram are in the <a href="wind_mill.html">T1 spec</a>.</p>
+
+<p>As with T1, the base follows the wind curve (full base only at y 189–192, zero above y = 248), but the cap is a bit higher (6) and weather hits harder: in rain the base is multiplied by 2, in thunder by 3.5, with an overall cap of 24 EU/FE/tick. In rain the Tempest Mill already beats what T1 does in a thunderstorm, and in a thunderstorm in the y 189–192 band it puts out 21 EU/FE/tick — more than any other LV generator. That band is narrow, only 4 heights: at y ≈ 159 the same thunderstorm gives 10 EU/FE/tick. In clear weather it's weaker than the Sky Mill (base 6 vs 8), which is the price of that peak.</p>
+
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Source</td><td>wind: altitude above sea level + open sky + weather</td></tr><tr><td>Working condition</td><td>rotor installed AND open sky above the block AND <strong>blade area is clear</strong> AND buffer not full</td></tr><tr><td>Dimensions</td><td>minecraft:overworld</td></tr><tr><td>EU/FE/tick (base)</td><td>on the wind curve, ridge at +96 blocks; maximum 6 at y 189–192, 0 above y=248</td></tr><tr><td>Modifiers</td><td>weather: clear ×1, rain ×2.0, thunder ×3.5; result capped at 24 EU/FE/tick</td></tr></tbody></table>
+
+<p>Altitude, sky and weather are recalculated roughly once every two seconds; between recalculations the rate stays the same.</p>
+
+<p><strong>Blade clearance and rotor interference</strong> are exactly the same as on T1: the rotor needs a clear 2×2 square in front of the turbine, and overlapping blades with a neighbouring turbine stops both (even in a full thunderstorm). Full rules and the diagram are in the <a href="wind_mill.html">T1 spec</a>.</p>
+
 <h2>Interface</h2>
-<p>Type: container — energy bar (tooltip on hover), the central rotor slot and status indicator in the same positions as the basic turbine. No chip slot and no evolution progress (T2 is a leaf — it doesn't evolve further).</p>
+
+<p>Type: container — energy bar (tooltip on hover), the central rotor slot and status indicator in the same positions as the basic turbine. While the turbine runs, the status row shows the current output in EU/FE/tick; while it is stopped, the reason. No chip slot and no evolution progress (T2 is a leaf — it doesn't evolve further).</p>
+
 <h2>Block Properties</h2>
+
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Placement</td><td>facing the player</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
+
 <h2>Recipes</h2>
-<p>The Tempest Mill isn't craftable. The only way to get it is to grow it from a basic turbine: insert a Lunar Evolution Chip and let it work under open sky with a rotor installed. The stored energy carries over on evolution. <strong>Crafting:</strong> none. The block is not available from a crafting table. <strong>Evolution (the only way to obtain it):</strong> a basic <a href="wind_mill.html">Wind Turbine</a> + rotor installed + <code>alignment_chip_night</code> + accumulated open-sky time → turns into the Tempest Mill, carrying over its NBT (energy).</p>
+
+<p>The Tempest Mill isn't craftable. The only way to get it is to grow it from a basic turbine: insert a Lunar Evolution Chip and let it work under open sky with a rotor installed. The stored energy carries over on evolution.</p>
+
+<p><strong>Crafting:</strong> none. The block is not available from a crafting table. <strong>Evolution (the only way to obtain it):</strong> a basic <a href="wind_mill.html">Wind Turbine</a> + rotor installed + a <strong>moon alignment chip</strong> + accumulated open-sky time → turns into the Tempest Mill, keeping the energy it had stored.</p>
+
 <h2>Related</h2>
+
 <p><a href="wind_mill.html">Wind Turbine</a> — the neutral T1, the source of the evolution. <a href="high_altitude_wind_mill.html">Sky Mill</a> — the mirror of the sky branch.</p>
+
+<h2>How to get it</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="tempest mill" data-type="evolution"><div class="recipe-header"><span class="recipe-type">Evolution</span><span class="recipe-energy">~28 min of active output</span></div><div class="recipe-body"><div class="recipe-grid evolution-grid"><div class="cell" title="Wind Turbine"><img src="../assets/item/wind_mill_3d.png" alt="Wind Turbine" width="32" height="32"></div><div class="cell" title="Lunar Evolution Chip"><img src="../assets/item/alignment_chip_night_3d.png" alt="Lunar Evolution Chip" width="32" height="32"></div></div><div class="recipe-process"><div class="arrow" aria-label="Evolves into">▶</div></div><div class="recipe-result"><div class="cell result" title="Tempest Mill"><img src="../assets/item/storm_wind_mill_3d.png" alt="Tempest Mill" width="32" height="32"></div><div class="result-name">Tempest Mill</div></div></div></div></div>
 
   </main>
 </div>

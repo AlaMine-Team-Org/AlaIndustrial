@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="11 сторінок">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="12 сторінок">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
-<a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="13 сторінок">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предмети</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="18 сторінок">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../materials/index.html">Матеріали</a><span class="sep">/</span><span>Уранова руда</span></div>
@@ -376,21 +377,41 @@
   </div>
 </div>
 <h2>Summary</h2>
+
 <p><strong>Uranium</strong> is the mod's rarest metal, reserved for the <strong>nuclear track</strong> (RTG, reactor, enrichment). Its ore spawns in tiny veins at the very bottom of the world, and unlike the other ores it needs an <strong>iron pickaxe</strong> or better — wood, gold and stone drop nothing.</p>
+
 <blockquote><strong>Mini-example:</strong> same two processing routes as tin — furnace for 1 ingot per ore, Macerator for 2. But uranium is roughly seven times rarer than diamond, so each block and each raw drop matters; macerate, don't furnace.</blockquote>
+
 <p>There is no vanilla uranium, so the ingot is a mod item. Uranium is not sitting idle: its dust goes into the enriched uranium torch, the ingot is part of the teleporter's recipe, and the incubator spends the ingot as an irradiation charge during mutations (one ingot covers three attempts, leaving behind depleted uranium). The full nuclear branch (enrichment, RTG, reactor) will be added later.</p>
+
 <table><thead><tr><th>Form</th><th>How you get it</th></tr></thead><tbody><tr><td>Ore (stone / deepslate)</td><td>mined in the world; pickaxe drops raw, Silk Touch gives the block</td></tr><tr><td>Raw</td><td>the pickaxe drop from the ore; smelts into an ingot</td></tr><tr><td>Dust</td><td>a block of ore (or the raw) grinds into 2 dust; an ingot grinds into 1</td></tr><tr><td>Ingot</td><td>smelting the raw, the ore, or the dust</td></tr></tbody></table>
+
 <h2>Where to find it</h2>
+
 <p>Uranium sits at the very bottom of the world, in tiny veins, about seven times rarer than diamond. Bring an iron pickaxe (or better) — anything weaker drops nothing.</p>
+
 <h2>Block Properties</h2>
+
 <p>Unlike the mod's other ores, uranium needs an <strong>iron pickaxe</strong> or better — wood, gold and stone pickaxes drop nothing. Otherwise it behaves like a vanilla ore: the drop scales with Fortune, and Silk Touch yields the ore block itself.</p>
+
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td><strong>iron pickaxe</strong> or better (wood/gold/stone drop nothing)</td></tr><tr><td>Drop</td><td>raw uranium ×1 (Fortune multiplies; Silk Touch → the block)</td></tr></tbody></table>
+
 <h2>Recipes (processing)</h2>
-<p>Two routes out of one vein. <strong>Furnace route (no machines):</strong> smelt the raw (or the ore) into an ingot — 1 ingot per ore. <strong>Macerator route (doubling):</strong> grind a block of ore (or the raw) into 2 dust, then smelt each dust into an ingot — 2 ingots per ore. Re-processing a finished ingot grinds back down to 1 dust (no doubling). The doubling only applies to the whole ore block (or raw).</p>
+
+<p>Two routes out of one vein.</p>
+
+<p><strong>Furnace route (no machines):</strong> smelt the raw (or the ore) into an ingot — 1 ingot per ore. <strong>Macerator route (doubling):</strong> grind a block of ore (or the raw) into 2 dust, then smelt each dust into an ingot — 2 ingots per ore.</p>
+
+<p>Re-processing a finished ingot grinds back down to 1 dust (no doubling). The doubling only applies to the whole ore block (or raw).</p>
+
 <h2>Progression</h2>
+
 <p>Uranium is reserved for the nuclear track — enrichment, RTG, reactor — which arrives in later phases. But even now it has consumers: the dust goes into the <a href="../utility/enriched_uranium_torch.html">Enriched Uranium Torch</a>, the ingot is part of the <a href="../advanced-machines/teleporter.html">Teleporter</a> recipe, and the <a href="../agriculture/incubator.html">Incubator</a> spends the ingot as an irradiation charge during mutations (one ingot — three attempts, leaving depleted uranium). A spare ingot can also be sold to the industrialist villager for emeralds.</p>
+
 <h2>Related</h2>
+
 <p><a href="../utility/enriched_uranium_torch.html">Enriched Uranium Torch</a> — a use for uranium dust. <a href="../advanced-machines/teleporter.html">Teleporter</a> — its recipe takes a uranium ingot. <a href="../agriculture/incubator.html">Incubator</a> — spends the ingot as an irradiation charge. <a href="tin.html">Tin</a> — the structural sample for an ore material (same processing). <a href="../machines/macerator.html">Macerator</a> — unlocks the doubled-yield route. <a href="silver.html">Silver</a>, <a href="nickel.html">Nickel</a> — the mod's other rare metals.</p>
+
 <h2>Використовується в</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="урановий злиток alaindustrial:uranium_ingot" data-type="minecraft:blasting"><div class="recipe-header"><span class="recipe-type">Blasting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Уранова руда"><img src="../assets/item/uranium_ore_3d.png" alt="Уранова руда" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/iron_furnace_3d.png" alt="Залізна піч" title="Залізна піч" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Урановий злиток"><img src="../assets/item/uranium_ingot_3d.png" alt="Урановий злиток" width="32" height="32"></div><div class="result-name">Урановий злиток</div></div></div></div> <div class="recipe-card" data-name="урановий злиток alaindustrial:uranium_ingot" data-type="minecraft:smelting"><div class="recipe-header"><span class="recipe-type">Smelting (Furnace)</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Уранова руда"><img src="../assets/item/uranium_ore_3d.png" alt="Уранова руда" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/iron_furnace_3d.png" alt="Залізна піч" title="Залізна піч" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Урановий злиток"><img src="../assets/item/uranium_ingot_3d.png" alt="Урановий злиток" width="32" height="32"></div><div class="result-name">Урановий злиток</div></div></div></div></div>
   </main>

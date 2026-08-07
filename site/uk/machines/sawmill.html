@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="11 сторінок">11</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="12 сторінок">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="13 сторінок">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предмети</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="18 сторінок">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../machines/index.html">Машини</a><span class="sep">/</span><span>Лісопилка</span></div>
@@ -376,37 +377,67 @@
   </div>
 </div>
 <h2>Summary</h2>
+
 <p>The <strong>Sawmill</strong> is an LV wood-processing machine. It saws a log (or planks) at a <strong>higher yield</strong> than hand-crafting, and can cut into four different products — it has <strong>4 switchable modes</strong> (GUI buttons): <strong>planks / sticks / slabs / stairs</strong>. Every species yields its own species; sticks are species-agnostic. It is the cheapest operation in the mod by energy — sawing wood is easier than milling stone.</p>
-<blockquote><strong>Mini-example:</strong> put an oak log in "Planks" mode — in ~4 seconds you get <strong>6 oak planks</strong> instead</blockquote>
-<p>of the vanilla 4. Switch to "Sticks" — the same log gives <strong>18 sticks</strong>.</p>
+
+<blockquote><strong>Mini-example:</strong> put an oak log in "Planks" mode — in ~4 seconds you get <strong>6 oak planks</strong> instead of the vanilla 4. Switch to "Sticks" — the same log gives <strong>18 sticks</strong>.</blockquote>
+
 <h2>Energy</h2>
+
 <p>The Sawmill only consumes EU/FE and keeps a small buffer for smooth running.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>800 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Consumption</td><td>2 EU/FE/t while working</td></tr></tbody></table>
+
 <p>An LV machine — it draws up to 32 EU/FE per tick. Energy comes in on the five working faces. The <strong>front face</strong> (the one the machine "looks" toward) is inert — cables don't connect there and hoppers don't work through it.</p>
+
 <h2>Processing</h2>
+
 <p>The sawmill always works only in the <strong>active mode</strong>; the recipes of the other three modes are inactive meanwhile. Switching the mode resets the current progress (the new mode cuts a different product). One cut takes ~80 ticks (~4 s).</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Recipe type</td><td>/ <code>sawing_sticks</code> / <code>sawing_slabs</code> / <code>sawing_stairs</code></td></tr><tr><td>Duration</td><td>~80 ticks (~4 s)</td></tr><tr><td>Cost per cut</td><td>160 EU/FE</td></tr><tr><td>Auto-output</td><td>no</td></tr></tbody></table>
+
 <h2>Inventory</h2>
+
 <p>One input slot, one output slot.</p>
+
 <table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Input</td><td>log/stem/bamboo block of any species; planks (only in "Sticks" mode)</td><td>1</td></tr><tr><td>Output</td><td>the active mode's result</td><td>1</td></tr></tbody></table>
+
 <p>An input is accepted if it matches <strong>any</strong> mode, so an item doesn't get "stuck" when you switch. In a non-matching mode the machine simply sleeps.</p>
+
 <h2>Interface</h2>
+
 <p>The screen has its own GUI: energy buffer, input and output slots, and between them a <strong>saw blade</strong> progress indicator that fills left to right. A row of <strong>4 mode buttons</strong> with ghost icons (plank/stick/slab/stairs) sits below the slots; the active mode is highlighted and each button has a tooltip.</p>
+
 <h2>Block properties</h2>
+
 <p>An ordinary full block, softer than stone. Breaks with any pickaxe, but <strong>does not keep its charge</strong> when broken.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge when broken</td><td>no</td></tr></tbody></table>
+
 <h2>Recipes</h2>
-<p>The Sawmill is crafted at a workbench: <code>III / PCP / PAP</code> — three <strong>iron ingots</strong> on top as saw blades, an <a href="../components/electronic_circuit.html">electronic circuit</a> in the center for control, a <strong>silver ingot</strong> below it (as on every other LV machine) and <strong>planks</strong> (<code>#minecraft:planks</code>) as the wooden body. What it saws (output is <strong>the input's own species</strong>; bamboo yields half — it also gives only 2 planks per block in vanilla):</p>
+
+<p>The Sawmill is crafted at a workbench: <code>III / PCP / PAP</code> — three <strong>iron ingots</strong> on top as saw blades, an <a href="../components/electronic_circuit.html">electronic circuit</a> in the center for control, a <strong>silver ingot</strong> below it (as on every other LV machine) and <strong>planks</strong> (<code>#minecraft:planks</code>) as the wooden body.</p>
+
+<p>What it saws (output is <strong>the input's own species</strong>; bamboo yields half — it also gives only 2 planks</p>
+
 <table><thead><tr><th>Mode</th><th>Input</th><th>Output</th><th>Vanilla (for comparison)</th></tr></thead><tbody><tr><td>Planks</td><td>1 log/stem (per species)</td><td><strong>6 planks</strong></td><td>4</td></tr><tr><td>Planks</td><td>1 bamboo block</td><td><strong>3 bamboo planks</strong></td><td>2</td></tr><tr><td>Sticks</td><td>1 log/stem (<code>#minecraft:logs</code>)</td><td><strong>18 sticks</strong></td><td>~8</td></tr><tr><td>Sticks</td><td>1 bamboo block</td><td><strong>9 sticks</strong></td><td>4</td></tr><tr><td>Sticks</td><td>1 plank (<code>#minecraft:planks</code>)</td><td><strong>3 sticks</strong></td><td>2</td></tr><tr><td>Slabs</td><td>1 log/stem (per species)</td><td><strong>18 slabs</strong></td><td>8</td></tr><tr><td>Slabs</td><td>1 bamboo block</td><td><strong>9 bamboo slabs</strong></td><td>4</td></tr><tr><td>Stairs</td><td>1 log/stem (per species)</td><td><strong>6 stairs</strong></td><td>~2⅔</td></tr><tr><td>Stairs</td><td>1 bamboo block</td><td><strong>3 bamboo stairs</strong></td><td>~1⅓</td></tr></tbody></table>
+
 <p>39 sawing recipes in total (12 species × planks/slabs/stairs + 3 stick recipes). Slabs, stairs and sticks are <strong>not accepted as input</strong> — there is no reverse loop or duping.</p>
+
 <h3>In the recipe viewer</h3>
+
 <p>In JEI/REI the sawmill contributes <strong>4 categories</strong> — one per mode (<code>sawing_planks</code>, <code>sawing_sticks</code>, <code>sawing_slabs</code>, <code>sawing_stairs</code>); the workstation for all of them is the sawmill itself. Clicking the progress arrow opens all four categories at once. Each is titled after its mode — "Sawmill: Planks", "Sawmill: Sticks", "Sawmill: Slabs", "Sawmill: Stairs" — so the tabs can be told apart; the mode name comes from the same translation the machine's own GUI buttons use.</p>
+
 <h2>Progression</h2>
+
 <p>Tier: LV. An early wood-processing machine. Evolves into: none (a base LV machine). Needs power from an LV source, e.g. the <a href="../generators/generator.html">Generator</a>.</p>
+
 <h2>Related</h2>
+
 <p><a href="electric_furnace.html">Electric Furnace</a> — the reused GUI, a neighboring LV machine. <a href="../generators/generator.html">Generator</a> — a power source.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="лісопилка alaindustrial:sawmill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Лісопилка"><img src="../assets/item/sawmill_3d.png" alt="Лісопилка" width="32" height="32"></div><div class="result-name">Лісопилка</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="лісопилка alaindustrial:sawmill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Лісопилка"><img src="../assets/item/sawmill_3d.png" alt="Лісопилка" width="32" height="32"></div><div class="result-name">Лісопилка</div></div></div></div></div>
   </main>
 </div>
 

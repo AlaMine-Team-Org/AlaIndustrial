@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="11 сторінок">11</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="12 сторінок">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="13 сторінок">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предмети</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="18 сторінок">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../machines/index.html">Машини</a><span class="sep">/</span><span>Подрібнювач</span></div>
@@ -376,35 +377,77 @@
   </div>
 </div>
 <h2>Summary</h2>
+
 <p>The <strong>Macerator</strong> is the early-game ore-doubling machine. Feed it ore or metal and it grinds the stuff into dust — and a mined ore block gives you <strong>two</strong> dusts instead of one, which is the whole point of building one. It's the first machine worth running a cable for.</p>
+
 <blockquote><strong>Mini-example:</strong> drop an iron ore block (or the raw drop) in, let it spin, and out come <strong>two iron dusts</strong>. Smelt those and one vein has just paid out two ingots instead of one.</blockquote>
+
 <table><thead><tr><th>Input type</th><th>Example</th><th>Output</th></tr></thead><tbody><tr><td>Ore block</td><td>iron ore (regular + deepslate)</td><td><strong>×2 dust</strong></td></tr><tr><td>Raw ore</td><td>the raw drop from the ore</td><td><strong>×2 dust</strong></td></tr><tr><td>Ingot</td><td>a finished ingot</td><td>×1 dust</td></tr></tbody></table>
+
 <p>Doubling is granted for both an ore block and the raw ore: the macerator doubles whatever you feed it. The ingot stays ×1 (net-zero, otherwise you could loop "ingot → dust → ingot" for free doubling). This is the first machine worth building an energy network for.</p>
+
 <h2>Energy</h2>
+
 <p>The Macerator only consumes EU/FE and holds a little buffer so it keeps grinding smoothly even when the supply is uneven.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>800 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Consumption</td><td>2 EU/FE/t while working</td></tr></tbody></table>
-<p>An LV machine — it draws up to 32 EU/FE per tick. If the network has more energy, the surplus just isn't taken; nothing explodes. Energy comes in on the five working faces. The <strong>front face</strong> (the one the machine "looks" toward) is inert — cables don't connect there and hoppers don't work through it.</p>
+
+<p>An LV machine — it draws up to 32 EU/FE per tick. If the network has more energy, the surplus just isn't taken; nothing explodes.</p>
+
+<p>Energy comes in on the five working faces. The <strong>front face</strong> (the one the machine "looks" toward) is inert — cables don't connect there and hoppers don't work through it.</p>
+
 <h2>Processing</h2>
+
 <p>Each grind takes 150 ticks (~7.5 s) and pulls EU/FE from the buffer. The finished dust doesn't pop into a chest by itself — pick it up by hand or with a hopper.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Duration</td><td>150 ticks (~7.5 s)</td></tr><tr><td>Cost per operation</td><td>300 EU/FE</td></tr><tr><td>Auto-output</td><td>no</td></tr></tbody></table>
+
 <h2>Inventory</h2>
+
 <p>One input slot, one output slot. You can't push anything into the output — it holds only the result.</p>
+
 <table><thead><tr><th>Slot</th><th>Takes</th><th>Count</th></tr></thead><tbody><tr><td>Input</td><td>items the Macerator can grind</td><td>1</td></tr><tr><td>Output</td><td>the result only (insertion blocked)</td><td>1</td></tr></tbody></table>
+
 <h2>Interface</h2>
+
 <p>One screen shows the energy buffer, the progress arrow, the input slot and the output slot.</p>
+
 <h2>Block Properties</h2>
+
 <p>An ordinary solid block, softer than stone. Any pickaxe breaks it, but <strong>it does NOT keep its charge when broken</strong>.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge on break</td><td>no</td></tr></tbody></table>
+
 <h2>Recipes</h2>
-<p>The Macerator itself is crafted at a workbench: a piece of flint on top, cobblestone along the sides and bottom corners, an <a href="../components/electronic_circuit.html">Electronic Circuit</a> in the centre, and a Silver Ingot at the bottom-centre. What it grinds, and what you get back: <strong>Ore block and raw ore → 2 dust.</strong> Doubling is granted for both inputs — this is the macerator's main payoff: two ingots from one vein instead of one, whether you mined the block or the raw drop. <strong>Finished ingot → 1 dust.</strong> Net-zero, so doubling cannot be looped ("ingot → dust → ingot").</p>
+
+<p>The Macerator itself is crafted at a workbench: a piece of flint on top, cobblestone along the sides and bottom corners, an <a href="../components/electronic_circuit.html">Electronic Circuit</a> in the centre, and a Silver Ingot at the bottom-centre.</p>
+
+<p>What it grinds, and what you get back:</p>
+
+<p><strong>Ore block and raw ore → 2 dust.</strong> Doubling is granted for both inputs — this is the macerator's main payoff: two ingots from one vein instead of one, whether you mined the block or the raw drop. <strong>Finished ingot → 1 dust.</strong> Net-zero, so doubling cannot be looped ("ingot → dust → ingot").</p>
+
 <table><thead><tr><th>Input</th><th>Output</th><th>Why</th></tr></thead><tbody><tr><td>Ore block (iron, copper, gold, tin, silver, nickel, uranium — regular + deepslate)</td><td><strong>×2 dust</strong></td><td>the doubling payoff — two ingots from one vein</td></tr><tr><td>Raw ore (the raw drop from the ore)</td><td><strong>×2 dust</strong></td><td>the second doubled form — macerate both the block and the raw</td></tr><tr><td>Finished ingot</td><td>×1 dust</td><td>an intermediate form, ×1 (otherwise doubling would loop)</td></tr></tbody></table>
+
 <p>The same scheme covers non-metal dusts (coal, diamond, emerald, lapis): ore → ×2 dust, the pure item → ×1. One exception worth knowing: <strong>lapis ore → 6 dust</strong> (vanilla lapis ore already drops 4–9, so a plain ×2 would have made grinding pointless).</p>
+
+<h3>Beyond metals: organics and stone</h3>
+
+<p>The macerator grinds ordinary vanilla items too, and gives more than crafting by hand:</p>
+
+<table><thead><tr><th>Input</th><th>By hand</th><th>In the macerator</th><th>Why bother</th></tr></thead><tbody><tr><td>Bone</td><td>3 bone meal</td><td><strong>4</strong></td><td>a third more meal from the same bone</td></tr><tr><td>Bone block</td><td>9 bone meal</td><td><strong>12</strong></td><td>the same +33%; one block is still worth three bones, so there is no loop to exploit</td></tr><tr><td>Cobblestone</td><td>—</td><td><strong>1 sand</strong></td><td><strong>renewable sand</strong> — glass and concrete without strip-mining a desert</td></tr><tr><td>Sandstone</td><td>no reverse recipe</td><td><strong>4 sand</strong></td><td>take sandstone apart, which vanilla cannot</td></tr><tr><td>Blaze rod</td><td>2 powder</td><td><strong>3</strong></td><td>half again as much powder for brewing</td></tr><tr><td>Sugar cane</td><td>1 sugar</td><td><strong>2</strong></td><td>twice the sugar</td></tr><tr><td>Wool (any colour)</td><td>no recipe</td><td><strong>4 string</strong></td><td>wool back into string</td></tr></tbody></table>
+
+<p>All seven cost the standard 300 EU/FE. The one that changes how you play is <strong>cobblestone → sand</strong>: any cobble farm becomes a glass and concrete supply.</p>
+
 <h2>Progression</h2>
+
 <p>Tier: LV. The starter grinder and the reason to build your first energy network. It doesn't evolve into anything in v0.1 — an MV-grade grinder is a separate future block. Needs power from an LV source, e.g. a <a href="../generators/generator.html">Generator</a>.</p>
+
 <h2>Related</h2>
+
 <p><a href="../generators/generator.html">Generator</a> — the typical power source for this machine. <a href="electric_furnace.html">Electric Furnace</a> — smelts the dust back into ingots. <a href="compressor.html">Compressor</a> — closes the loop for non-metal dusts (coal, diamond…). <a href="../components/electronic_circuit.html">Electronic Circuit</a> — the component it's built from.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="подрібнювач alaindustrial:macerator" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Flint"><img src="../assets/vanilla/item/flint.png" alt="Flint" width="32" height="32"></div> <div class="cell" title="Flint"><img src="../assets/vanilla/item/flint.png" alt="Flint" width="32" height="32"></div> <div class="cell" title="Flint"><img src="../assets/vanilla/item/flint.png" alt="Flint" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Подрібнювач"><img src="../assets/item/macerator_3d.png" alt="Подрібнювач" width="32" height="32"></div><div class="result-name">Подрібнювач</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="подрібнювач alaindustrial:macerator" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Flint"><img src="../assets/item/flint_3d.png" alt="Flint" width="32" height="32"></div> <div class="cell" title="Flint"><img src="../assets/item/flint_3d.png" alt="Flint" width="32" height="32"></div> <div class="cell" title="Flint"><img src="../assets/item/flint_3d.png" alt="Flint" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Подрібнювач"><img src="../assets/item/macerator_3d.png" alt="Подрібнювач" width="32" height="32"></div><div class="result-name">Подрібнювач</div></div></div></div></div>
   </main>
 </div>
 

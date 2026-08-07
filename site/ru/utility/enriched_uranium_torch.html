@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -361,13 +362,13 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../utility/index.html">Утилитарные блоки</a><span class="sep">/</span><span>Обогащённый урановый факел</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/block/enriched_uranium_torch.png" alt="Обогащённый урановый факел" width="64" height="64">
+    <img class="icon" src="../assets/item/enriched_uranium_torch_3d.png" alt="Обогащённый урановый факел" width="64" height="64">
     <div class="info">
       <h1>Обогащённый урановый факел</h1>
       <div class="block-id">alaindustrial:enriched_uranium_torch</div>
@@ -375,23 +376,41 @@
     </div>
   </div>
 </div>
+
 <h2>Сводка</h2>
-<p><strong>Обогащённый урановый факел</strong> — декоративный источник света: уровень света 14 (как ванильный факел), но с ярким <strong>зелёным пламенем</strong> и редкими зелёными искрами. Ставится на пол и на стены, как обычный факел. Энергии не требует — это украшение, а не генератор. Главная «фишка» — факел <strong>не гаснет в воде</strong>: его можно ставить подводой, и он продолжает гореть («герметичный уран»).</p>
+
+<p><strong>Обогащённый урановый факел</strong> — декоративный источник света: уровень света 14 (как ванильный факел), но с ярким <strong>зелёным пламенем</strong> и редкими зелёными искрами. Ставится на пол и на стены, как обычный факел. Энергии не требует — это украшение, а не генератор.</p>
+
+<p>Главная «фишка» — факел <strong>не гаснет в воде</strong>: его можно ставить подводой, и он продолжает гореть («герметичный уран»).</p>
+
 <h2>Свойства блока</h2>
+
 <p>Ведёт себя как ванильный факел: ломается мгновенно рукой, не имеет коллизии, поршень ломает его.</p>
+
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Уровень света</td><td>14 (как ванильный факел)</td></tr><tr><td>Пламя</td><td>зелёное, с редкими искрами</td></tr><tr><td>Установка</td><td>на пол (стоячий) или на стену (настенный) — одна иконка, оба варианта</td></tr><tr><td>Под водой</td><td>горит, не гаснет</td></tr><tr><td>Инструмент</td><td>не нужен — ломается рукой мгновенно</td></tr></tbody></table>
+
 <h2>Звук</h2>
+
 <p>Звук размещения и ломания — деревянный, как у ванильного факела.</p>
+
 <h2>Рецепты</h2>
+
 <p>Два рецепта: крафт с нуля (урановая пыль + уголь/древесный уголь + палка → 4 факела) и апгрейд обычного факела (ванильный факел + урановая пыль → 1 факел). Оба открываются, когда у вас есть урановая пыль.</p>
+
 <h2>Совместимость</h2>
+
 <p>Просмотрщики рецептов: JEI, REI, EMI — оба рецепта видны. Можно зачаровывать/выбрасывать как обычный предмет-факел.</p>
+
 <h2>Прогрессия</h2>
+
 <p>Тир: нет (декор). Нужен: <a href="../materials/uranium.html">Уран</a> — урановая пыль для рецепта. Соответственно это поздняя декор-цель, после того как вы нашли и переработали уран.</p>
+
 <h2>Связанное</h2>
+
 <p><a href="../materials/uranium.html">Уран</a> — источник урановой пыли для крафта. <a href="iron_chest.html">Железный сундук</a> — другой «гражданский» блок без энергии.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="обогащённый урановый факел alaindustrial:enriched_uranium_torch" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любая урановая пыль"><img src="../assets/item/uranium_dust_3d.png" alt="Любая урановая пыль" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Любой уголь"><img src="../assets/vanilla/item/coal.png" alt="Любой уголь" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Любая палка"><img src="../assets/vanilla/item/stick.png" alt="Любая палка" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Обогащённый урановый факел"><img src="../assets/block/enriched_uranium_torch.png" alt="Обогащённый урановый факел" width="32" height="32"><span class="count">×4</span></div><div class="result-name">Обогащённый урановый факел</div></div></div></div> <div class="recipe-card" data-name="обогащённый урановый факел alaindustrial:enriched_uranium_torch" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">Бесформенный крафт</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Факел"><img src="../assets/vanilla/item/torch.png" alt="Факел" width="32" height="32"></div> <div class="cell" title="Любая урановая пыль"><img src="../assets/item/uranium_dust_3d.png" alt="Любая урановая пыль" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Обогащённый урановый факел"><img src="../assets/block/enriched_uranium_torch.png" alt="Обогащённый урановый факел" width="32" height="32"></div><div class="result-name">Обогащённый урановый факел</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="обогащённый урановый факел alaindustrial:enriched_uranium_torch" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любая урановая пыль"><img src="../assets/item/uranium_dust_3d.png" alt="Любая урановая пыль" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Любой уголь"><img src="../assets/item/coal_3d.png" alt="Любой уголь" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Любая палка"><img src="../assets/item/stick_3d.png" alt="Любая палка" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Обогащённый урановый факел"><img src="../assets/item/enriched_uranium_torch_3d.png" alt="Обогащённый урановый факел" width="32" height="32"><span class="count">×4</span></div><div class="result-name">Обогащённый урановый факел</div></div></div></div> <div class="recipe-card" data-name="обогащённый урановый факел alaindustrial:enriched_uranium_torch" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">Бесформенный крафт</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Факел"><img src="../assets/item/torch_3d.png" alt="Факел" width="32" height="32"></div> <div class="cell" title="Любая урановая пыль"><img src="../assets/item/uranium_dust_3d.png" alt="Любая урановая пыль" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Обогащённый урановый факел"><img src="../assets/item/enriched_uranium_torch_3d.png" alt="Обогащённый урановый факел" width="32" height="32"></div><div class="result-name">Обогащённый урановый факел</div></div></div></div></div>
   </main>
 </div>
 

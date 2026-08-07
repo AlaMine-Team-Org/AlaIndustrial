@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -361,13 +362,13 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../machines/index.html">Машины</a><span class="sep">/</span><span>Электрованна</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/block/galvanic_bath_top.png" alt="Электрованна" width="64" height="64">
+    <img class="icon" src="../assets/item/galvanic_bath_3d.png" alt="Электрованна" width="64" height="64">
     <div class="info">
       <h1>Электрованна</h1>
       <div class="block-id">alaindustrial:galvanic_bath</div>
@@ -375,31 +376,59 @@
     </div>
   </div>
 </div>
+
 <h2>Сводка</h2>
-<p>Электрованна — LV-машина гальванического осаждения: волокно и серебряная пыль погружаются в воду, через них пропускается ток, и серебро оседает на волокне проводящей дорожкой. На выходе — <strong>Флюкс-нить</strong>, полуфабрикат материала Флюкс-ткань. Это первая машина мода, потребляющая одновременно предметы <strong>и</strong> жидкость, и вход в линейку EU/FE-брони. Волокном служит <strong>ванильная нить или хлопковое волокно</strong> — оба принимаются одним рецептом через тег <code>#</code>. Выбор между фермой пауков и грядкой с хлопком — вопрос стиля игры, а не прогрессии.</p>
+
+<p>Электрованна — LV-машина гальванического осаждения: волокно и серебряная пыль погружаются в воду, через них пропускается ток, и серебро оседает на волокне проводящей дорожкой. На выходе — <strong>Флюкс-нить</strong>, полуфабрикат материала Флюкс-ткань. Это первая машина мода, потребляющая одновременно предметы <strong>и</strong> жидкость, и вход в линейку EU/FE-брони.</p>
+
+<p>Волокном служит <strong>ванильная нить или хлопковое волокно</strong> — оба принимаются одним рецептом через тег <code>#</code>. Выбор между фермой пауков и грядкой с хлопком — вопрос стиля игры, а не прогрессии.</p>
+
 <h2>Энергия</h2>
+
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>потребитель</td></tr><tr><td>Буфер (EU/FE)</td><td>800</td></tr><tr><td>Макс. вход (EU/FE/такт)</td><td>32 (потолок LV)</td></tr><tr><td>Макс. выход (EU/FE/такт)</td><td>н/п</td></tr><tr><td>EU/FE/такт</td><td>2</td></tr></tbody></table>
+
 <p>Пропускная способность: принимает до 32 EU/FE/такт с любой грани, кроме лицевой — та энергетически инертна и не тянет к себе кабельный отвод. Излишек сверх лимита не передаётся, разрушения нет.</p>
+
 <h2>Процессинг</h2>
+
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Тип рецепта</td><td></td></tr><tr><td>Длительность (тики)</td><td>500 = 25 секунд (<code>galvanicBathDuration</code>)</td></tr><tr><td>Расход воды за операцию</td><td>4000 мБ = 4 ведра (<code>galvanicBathWaterPerOp</code>)</td></tr><tr><td>Ёмкость бака</td><td>10 000 мБ (10 вёдер)</td></tr><tr><td>Авто-выгрузка</td><td>false</td></tr></tbody></table>
-<p><strong>Вода не входит в JSON-рецепта.</strong> В моде нет семейства рецептов, принимающего предметы и жидкость одновременно, поэтому объём воды — фиксированная стоимость из конфига, которую машина проверяет и списывает сама. Датапак может переопределить волокно, серебро и цену в EU/FE, но не объём воды. Бак <strong>односторонний</strong>: воду можно влить, но нельзя выкачать — то, что попало внутрь, является сырьём, а не хранилищем, поэтому соседняя помпа не откачает воду обратно.</p>
+
+<p><strong>Вода не входит в JSON-рецепта.</strong> В моде нет семейства рецептов, принимающего предметы и жидкость одновременно, поэтому объём воды — фиксированная стоимость из конфига, которую машина проверяет и списывает сама. Датапак может переопределить волокно, серебро и цену в EU/FE, но не объём воды.</p>
+
+<p>Бак <strong>односторонний</strong>: воду можно влить, но нельзя выкачать — то, что попало внутрь, является сырьём, а не хранилищем, поэтому соседняя помпа не откачает воду обратно.</p>
+
 <h2>Инвентарь</h2>
+
 <table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>Волокно</td><td><code>#</code> (нить, хлопковое волокно)</td><td>1 за операцию</td></tr><tr><td>Серебро</td><td></td><td>1 за операцию</td></tr><tr><td>Заливка (вход)</td><td>любая ёмкость с жидкостью (ведро, вакуум-капсула, ячейка другого мода)</td><td>—</td></tr><tr><td>Заливка (выход)</td><td>опустошённая ёмкость, заполняется машиной</td><td>—</td></tr><tr><td>Результат</td><td>, только машиной</td><td>до 64</td></tr></tbody></table>
+
 <p>Автоматизация может подавать в оба входных слота и в слот заливки; забирать — из слота результата и слота опустевшей тары.</p>
+
 <h2>Интерфейс</h2>
+
 <p>Тип: container Показывает: уровень воды в баке (с названием жидкости и объёмом в мБ при наведении), запас энергии, стрелку прогресса. <strong>Причина простоя</strong> выводится подсказкой на стрелке: «Нужно волокно», «Нужна серебряная пыль», «Нужна вода», «Нет подходящего рецепта», «Выход занят». Отдельная строка нужна потому, что вода не часть рецепта: без неё пустой бак читался бы игроком как «нет рецепта».</p>
+
 <h2>Свойства блока</h2>
+
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Дроп с NBT энергии</td><td>false</td></tr></tbody></table>
+
 <h2>Рецепты</h2>
-<p>Крафт: — машинный корпус, две медные катушки, две электронные схемы и две серебряные пластины. Рецепты переработки: <code>data/alaindustrial/recipe/galvanic_bath/</code></p>
+
+<p>Крафт — машинный корпус, две медные катушки, две электронные схемы и две серебряные пластины.</p>
+
 <h2>Прогрессия</h2>
+
 <p>Тир: LV Требует: <a href="../components/machine_casing.html">машинный корпус</a>, медную катушку, электронную схему, серебряные пластины. Открывает: Флюкс-нить → Флюкс-ткань → LV-броня Fluxweave.</p>
+
 <h2>Совместимость</h2>
+
 <p>Просмотрщики: JEI, REI, EMI Тултипы: Jade, The One Probe</p>
+
 <h2>Связанное</h2>
+
 <p><a href="polymerizer.html">Полимеризатор</a> — эталон машины с баком <a href="vulcanizer.html">Вулканизатор</a> — эталон машины с двумя предметными входами <a href="../agriculture/trellis.html">Жердочка</a> — источник хлопкового волокна</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="электрованна alaindustrial:galvanic_bath" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Медная катушка"><img src="../assets/item/copper_coil_3d.png" alt="Медная катушка" width="32" height="32"></div> <div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Машинный корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинный корпус" width="32" height="32"></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Медная катушка"><img src="../assets/item/copper_coil_3d.png" alt="Медная катушка" width="32" height="32"></div> <div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Электрованна"><img src="../assets/block/galvanic_bath_top.png" alt="Электрованна" width="32" height="32"></div><div class="result-name">Электрованна</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="электрованна alaindustrial:galvanic_bath" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Медная катушка"><img src="../assets/item/copper_coil_3d.png" alt="Медная катушка" width="32" height="32"></div> <div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Машинный корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинный корпус" width="32" height="32"></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Медная катушка"><img src="../assets/item/copper_coil_3d.png" alt="Медная катушка" width="32" height="32"></div> <div class="cell" title="Любая серебряная пластина"><img src="../assets/item/silver_plate_3d.png" alt="Любая серебряная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Электрованна"><img src="../assets/item/galvanic_bath_3d.png" alt="Электрованна" width="32" height="32"></div><div class="result-name">Электрованна</div></div></div></div></div>
   </main>
 </div>
 

@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../components/index.html">Компоненты</a><span class="sep">/</span><span>Сетевой анализатор</span></div>
@@ -375,24 +376,54 @@
     </div>
   </div>
 </div>
+
 <h2>Сводка</h2>
-<p><strong>Сетевой анализатор</strong> — ручной диагностический прибор, дружелюбная альтернатива команде <code>/ala net</code> для игроков без прав оператора. Он не производит и не хранит энергию — только показывает, что происходит в сети. Кликните правой кнопкой по кабелю, и анализатор покажет статистику именно этой сети (а не всего мира): суммарную подачу EU/FE/такт от производителей, суммарный спрос потребителей EU/FE/такт и сколько EU/FE реально переместилось за последний тик. Одновременно он рисует сеть в мире — кабели и подключённые к ним устройства соединяются линиями, а вдоль линий бегут анимированные точки, показывающие направление потока энергии от производителя к потребителю (похоже на визуализацию каналов в Applied Energistics 2).</p>
-<blockquote><strong>Мини-пример:</strong> машины замолчали, и непонятно почему. Кликните анализатором по кабелю от</blockquote>
-<p>генератора: в actionbar появятся подача и спрос, а трасса в мире загорится зелёным у производителя и оранжевым у каждого потребителя — сразу видно, обесточен ли сегмент или отключён.</p>
+
+<p><strong>Сетевой анализатор</strong> — ручной диагностический прибор, дружелюбная альтернатива команде <code>/ala net</code> для игроков без прав оператора. Он не производит и не хранит энергию — только показывает, что происходит в сети.</p>
+
+<p>Кликните правой кнопкой по кабелю, и анализатор покажет статистику именно этой сети (а не всего мира): суммарную подачу EU/FE/такт от производителей, суммарный спрос потребителей EU/FE/такт и сколько EU/FE реально переместилось за последний тик. Одновременно он рисует сеть в мире — кабели и подключённые к ним устройства соединяются линиями, а вдоль линий бегут анимированные точки, показывающие направление потока энергии от производителя к потребителю (похоже на визуализацию каналов в Applied Energistics 2).</p>
+
+<blockquote><strong>Мини-пример:</strong> машины замолчали, и непонятно почему. Кликните анализатором по кабелю от генератора: в actionbar появятся подача и спрос, а трасса в мире загорится зелёным у производителя и оранжевым у каждого потребителя — сразу видно, обесточен ли сегмент или отключён.</blockquote>
+
 <h2>Энергия</h2>
+
 <p>Энергии не использует — никуда не подключается, только читает существующую сеть.</p>
+
 <h2>Инвентарь</h2>
+
 <p>Не применимо (предмет). Стак: 1 (инструмент, не расходуется).</p>
+
 <h2>Свойства блока</h2>
+
 <p>Не применимо (предмет).</p>
+
 <h2>Как работает</h2>
-<p>У прибора есть два режима диагностики. Выбранный режим хранится на самом предмете и сохраняется при выходе из мира. <strong>Сквозной (по умолчанию).</strong> Энергохранилище считается частью сети: анализатор проходит сквозь него и подсвечивает <strong>всю</strong> связанную систему кабелей — даже если топологически это несколько отдельных сетей, соединённых через накопитель. Удобно увидеть энергосистему целиком. <strong>До хранилища.</strong> Показывает ровно одну сеть — ту, где находится кликнутый кабель; обход останавливается на накопителе. Удобно для точечной диагностики одного сегмента. Как переключать и пользоваться: <strong>Shift + правый клик</strong> в воздухе или не по сети (в том числе по чужому блоку) циклит режим 1↔2 и выводит в actionbar название нового режима. <strong>Правый клик по кабелю</strong> (с Shift или без) — сканирование в текущем режиме. Клик по кабелю всегда диагностический, Shift его не переключает. <strong>Правый клик по кабелю другой сети</strong> — заменяет подсветку на новую сеть. <strong>Правый клик вне сети</strong> (в воздух или в блок без сети) — сбрасывает подсветку. Что показывает сканирование: в actionbar выводится строка — число кабелей, источников, потребителей и накопителей, а также подача/спрос EU/FE/такт и сколько EU/FE прошло за прошлый тик (в сквозном режиме — суммарно по всем пройденным сетям). Если в сквозном режиме достигнут лимит сетей, выводится дополнительное предупреждение. Тултип предмета: базовая подсказка видна всегда, под ней — строка текущего режима. Результат последнего сканирования сохраняется на самом приборе и раскрывается под <strong>[SHIFT]</strong>: кабели, источники/потребители/накопители, подача/спрос EU/FE/такт и сколько передано за прошлый тик. Как выглядит подсветка. Это объёмная «трасса», видимая сквозь стены и на расстоянии в несколько чанков (в выгруженных чанках просто не рисуется — отдельного таймера нет). На стыках сети стоят цветные кубики-маркеры: зелёный — производитель, оранжевый — потребитель, голубой — накопитель в сквозном режиме (чтобы выделить «узел-мост»). Вдоль трассы бегут анимированные точки потока от производителя к потребителю; на не запитанных участках (сеть без производителя, изолированный остров) трасса рисуется статично, без анимации. Прибор только читает сеть — он не изменяет её состояние и не влияет на распределение энергии.</p>
+
+<p>У прибора есть два режима диагностики. Выбранный режим хранится на самом предмете и сохраняется при выходе из мира.</p>
+
+<p><strong>Сквозной (по умолчанию).</strong> Энергохранилище считается частью сети: анализатор проходит сквозь него и подсвечивает <strong>всю</strong> связанную систему кабелей — даже если топологически это несколько отдельных сетей, соединённых через накопитель. Удобно увидеть энергосистему целиком. <strong>До хранилища.</strong> Показывает ровно одну сеть — ту, где находится кликнутый кабель; обход останавливается на накопителе. Удобно для точечной диагностики одного сегмента.</p>
+
+
+<p><strong>Shift + правый клик</strong> в воздухе или не по сети (в том числе по чужому блоку) циклит режим 1↔2 и выводит в actionbar название нового режима. <strong>Правый клик по кабелю</strong> (с Shift или без) — сканирование в текущем режиме. Клик по кабелю всегда диагностический, Shift его не переключает. <strong>Правый клик по кабелю другой сети</strong> — заменяет подсветку на новую сеть. <strong>Правый клик вне сети</strong> (в воздух или в блок без сети) — сбрасывает подсветку.</p>
+
+<p>Что показывает сканирование: в actionbar выводится строка — число кабелей, источников, потребителей и накопителей, а также подача/спрос EU/FE/такт и сколько EU/FE прошло за прошлый тик (в сквозном режиме — суммарно по всем пройденным сетям). Если в сквозном режиме достигнут лимит сетей, выводится дополнительное предупреждение.</p>
+
+<p>Тултип предмета: базовая подсказка видна всегда, под ней — строка текущего режима. Результат последнего сканирования сохраняется на самом приборе и раскрывается под <strong>[SHIFT]</strong>: кабели, источники/потребители/накопители, подача/спрос EU/FE/такт и сколько передано за прошлый тик.</p>
+
+<p>Как выглядит подсветка. Это объёмная «трасса», видимая сквозь стены и на расстоянии в несколько чанков (в выгруженных чанках просто не рисуется — отдельного таймера нет). На стыках сети стоят цветные кубики-маркеры: зелёный — производитель, оранжевый — потребитель, голубой — накопитель в сквозном режиме (чтобы выделить «узел-мост»). Вдоль трассы бегут анимированные точки потока от производителя к потребителю; на не запитанных участках (сеть без производителя, изолированный остров) трасса рисуется статично, без анимации.</p>
+
+<p>Прибор только читает сеть — он не изменяет её состояние и не влияет на распределение энергии.</p>
+
 <h2>Прогрессия</h2>
+
 <p>Без энергетического тира — диагностический инструмент, полезен с первой же сети и далее по мере роста сложности сетей.</p>
+
 <h2>Связанное</h2>
+
 <p><a href="electronic_circuit.html">Электронная схема</a> — центральный компонент. <a href="../materials/tin.html">Олово</a> — корпус. <a href="../energy-transfer/copper_cable.html">Медный кабель</a> — по чему кликают прибором.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="сетевой анализатор alaindustrial:network_analyzer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой медный слиток"><img src="../assets/vanilla/item/copper_ingot.png" alt="Любой медный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой медный слиток"><img src="../assets/vanilla/item/copper_ingot.png" alt="Любой медный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой медный слиток"><img src="../assets/vanilla/item/copper_ingot.png" alt="Любой медный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Сетевой анализатор"><img src="../assets/item/network_analyzer_3d.png" alt="Сетевой анализатор" width="32" height="32"></div><div class="result-name">Сетевой анализатор</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="сетевой анализатор alaindustrial:network_analyzer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой медный слиток"><img src="../assets/item/copper_ingot_3d.png" alt="Любой медный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой медный слиток"><img src="../assets/item/copper_ingot_3d.png" alt="Любой медный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой медный слиток"><img src="../assets/item/copper_ingot_3d.png" alt="Любой медный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Сетевой анализатор"><img src="../assets/item/network_analyzer_3d.png" alt="Сетевой анализатор" width="32" height="32"></div><div class="result-name">Сетевой анализатор</div></div></div></div></div>
   </main>
 </div>
 

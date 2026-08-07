@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link active" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../item-transport/index.html">Логистика предметов</a><span class="sep">/</span><span>Предметная труба</span></div>
@@ -375,17 +376,37 @@
     </div>
   </div>
 </div>
+
 <h2>Сводка</h2>
-<p><strong>Предметная труба</strong> носит вещи между сундуками и машинами, чтобы вам не бегать с ними самому. Ставьте трубы в линию от одного сундука к другому, укажите <a href="../items/wrench.html">ключом</a>, откуда забирать и куда класть — дальше труба работает сама. Энергия ей не нужна. Труба переносит <strong>2 предмета в секунду</strong>. Это чуть медленнее хоппера, так что полный стак едет около 32 секунд. Зато труба тянется на любую длину, разветвляется и позволяет настроить каждую сторону — хоппер так не умеет. Нужна скорость — она придёт с более поздними трубами. Если труба забирает сразу из нескольких сундуков (или раздаёт в несколько), она обходит их по очереди — никто не остаётся обделённым.</p>
+
+<p><strong>Предметная труба</strong> носит вещи между сундуками и машинами, чтобы вам не бегать с ними самому. Ставьте трубы в линию от одного сундука к другому, укажите <a href="../items/wrench.html">ключом</a>, откуда забирать и куда класть — дальше труба работает сама. Энергия ей не нужна.</p>
+
+<p>Труба переносит <strong>2 предмета в секунду</strong>. Это чуть медленнее хоппера, так что полный стак едет около 32 секунд. Зато труба тянется на любую длину, разветвляется и позволяет настроить каждую сторону — хоппер так не умеет. Нужна скорость — она придёт с более поздними трубами.</p>
+
+<p>Если труба забирает сразу из нескольких сундуков (или раздаёт в несколько), она обходит их по очереди — никто не остаётся обделённым.</p>
+
 <h2>Стороны и ключ</h2>
+
 <p>У каждой стороны трубы своя роль. Наведитесь на нужную сторону и жмите <strong>ПКМ</strong> ключом — роль переключится на следующую. Меняется только та сторона, по которой кликнули; что получилось, пишется внизу экрана.</p>
+
 <table><thead><tr><th>Режим</th><th>Что делает</th><th>Как выглядит</th></tr></thead><tbody><tr><td><code>NEUTRAL</code></td><td>Обычное соединение: и берёт, и отдаёт.</td><td>простой рукав</td></tr><tr><td><code>EXTRACT</code></td><td>Забирает вещи из соседнего сундука или машины.</td><td>широкий раструб, <strong>оранжевый</strong> торец</td></tr><tr><td><code>INSERT</code></td><td>Кладёт вещи в соседний сундук или машину.</td><td>узкий носик, <strong>бирюзовый</strong> торец</td></tr><tr><td><code>DISABLED</code></td><td>Отключает эту сторону совсем.</td><td>рукава нет</td></tr></tbody></table>
-<p>Роль видно прямо на блоке, ничего открывать не надо: <strong>оранжевый раструб забирает</strong>, <strong>бирюзовый носик отдаёт</strong>, а у отключённой стороны рукава просто нет. Обычный расклад для «сундук → сундук»: со стороны первого сундука поставьте <code>EXTRACT</code>, со стороны второго — <code>INSERT</code>. Всё, вещи поехали. Труба ничего не теряет и не задваивает: если сундук-получатель забился, предмет остаётся там, где лежал, и труба просто ждёт места.</p>
+
+<p>Роль видно прямо на блоке, ничего открывать не надо: <strong>оранжевый раструб забирает</strong>, <strong>бирюзовый носик отдаёт</strong>, а у отключённой стороны рукава просто нет.</p>
+
+<p>Обычный расклад для «сундук → сундук»: со стороны первого сундука поставьте <code>EXTRACT</code>, со стороны второго — <code>INSERT</code>. Всё, вещи поехали.</p>
+
+<p>Труба ничего не теряет и не задваивает: если сундук-получатель забился, предмет остаётся там, где лежал, и труба просто ждёт места.</p>
+
 <blockquote>Shift+ПКМ ключом стороны не настраивает — так труба <strong>разбирается</strong> (как и любой блок мода).</blockquote>
+
 <h3>Труба к трубе</h3>
+
 <p>Там, где труба стыкуется с другой трубой, забирать и класть нечего — это просто участок пути. Поэтому ключ там переключает только «соединено» ↔ «разъединено», а раструб или носик не рисуется: линия из труб остаётся гладкой.</p>
+
 <h2>Рецепт</h2>
+
 <p>Труба: 8 серебряных слитков вокруг железной шестерни, результат — 8 труб.</p>
+
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="предметная труба alaindustrial:item_pipe" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любой серебряный слиток"><img src="../assets/item/silver_ingot_3d.png" alt="Любой серебряный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Любой серебряный слиток"><img src="../assets/item/silver_ingot_3d.png" alt="Любой серебряный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой серебряный слиток"><img src="../assets/item/silver_ingot_3d.png" alt="Любой серебряный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Железная шестерня"><img src="../assets/item/iron_gear_3d.png" alt="Железная шестерня" width="32" height="32"></div> <div class="cell" title="Любой серебряный слиток"><img src="../assets/item/silver_ingot_3d.png" alt="Любой серебряный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой серебряный слиток"><img src="../assets/item/silver_ingot_3d.png" alt="Любой серебряный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Любой серебряный слиток"><img src="../assets/item/silver_ingot_3d.png" alt="Любой серебряный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Предметная труба"><img src="../assets/item/item_pipe_3d.png" alt="Предметная труба" width="32" height="32"><span class="count">×8</span></div><div class="result-name">Предметная труба</div></div></div></div></div>
   </main>

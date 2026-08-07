@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="11 сторінок">11</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="12 сторінок">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="13 сторінок">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
@@ -361,13 +362,13 @@
 <div class="group-title">Предмети</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="18 сторінок">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../machines/index.html">Машини</a><span class="sep">/</span><span>Вулканізатор</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/block/vulcanizer_top.png" alt="Вулканізатор" width="64" height="64">
+    <img class="icon" src="../assets/item/vulcanizer_3d.png" alt="Вулканізатор" width="64" height="64">
     <div class="info">
       <h1>Вулканізатор</h1>
       <div class="block-id">alaindustrial:vulcanizer</div>
@@ -376,28 +377,45 @@
   </div>
 </div>
 <h2>Summary</h2>
+
 <p>The <strong>Vulcanizer</strong> finishes the oil chain. It combines one raw rubber with four sulfur dust and only runs when supplied with EU/FE and a heat source directly below it.</p>
+
 <blockquote><strong>Mini-example:</strong> place it on a lit campfire, put raw rubber in the left slot and four sulfur dust in the right one, connect LV power from the side, and receive one rubber.</blockquote>
+
 <h2>Energy</h2>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>800 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Consumption</td><td>2 EU/FE/t while working</td></tr><tr><td>Cost per operation</td><td>400 EU/FE</td></tr><tr><td>Duration</td><td>200 ticks (~10 s)</td></tr></tbody></table>
+
 <h2>Heat from below</h2>
+
 <table><thead><tr><th>Source</th><th>Level</th><th>Output</th></tr></thead><tbody><tr><td>Lit normal or soul campfire</td><td>1</td><td>1 rubber</td></tr><tr><td>Lava, lava cauldron or magma block</td><td>2</td><td>2 rubber</td></tr><tr><td><a href="electric_heater.html">Electric Heater</a></td><td>3</td><td>3 rubber</td></tr></tbody></table>
+
 <p>Every level consumes exactly <strong>1 raw rubber + 4 sulfur dust</strong>. Heat multiplies the output but not the batch price, so a stronger heat source is the main way to stretch the sulfur you have found. Changing or removing the heat source during an operation safely restarts progress with the current multiplier. Restarting does not consume ingredients, and swapping heat on the last tick cannot upgrade an almost finished batch.</p>
+
 <h2>Inventory and automation</h2>
+
 <table><thead><tr><th>Slot</th><th>Accepts</th></tr></thead><tbody><tr><td>Left input</td><td></td></tr><tr><td>Right input</td><td></td></tr><tr><td>Output</td><td></td></tr></tbody></table>
+
 <p>Inputs are served from above and output from the sides. The bottom face is reserved for heat and is not exposed to item automation.</p>
+
 <h2>Interface</h2>
+
 <p>The screen shows energy, progress, both inputs, output, the heat source and its ×1/×2/×3 multiplier. Its status explains missing ingredients, power, heat or output space.</p>
+
 <h2>Block properties</h2>
+
 <p>Mine with a pickaxe; breaking it drops the block and inventory. Lights up and emits steam only while working. Reacts immediately when the block below changes.</p>
+
 <h2>Recipe</h2>
+
 <p><code>SIS / IMI / IEI</code>: sulfur dust, iron ingots, a machine casing and an electronic circuit.</p>
+
 <h2>Links</h2>
+
 <p><a href="polymerizer.html">Polymerizer</a> <a href="../materials/sulfur.html">Sulfur</a> <a href="../components/rubber.html">Rubber</a></p>
-<h2>Technical notes</h2>
-<p><code>recipe/vulcanizing/rubber.json</code> has two ordered inputs and <code>energy: 400</code>. The JSON result is one rubber; the BlockEntity multiplies it by the captured heat level. The old raw-rubber smelting recipe is removed.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="вулканізатор alaindustrial:vulcanizer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Sulfur Dust"><img src="../assets/item/sulfur_dust.png" alt="Any Sulfur Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Sulfur Dust"><img src="../assets/item/sulfur_dust.png" alt="Any Sulfur Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/vanilla/item/iron_ingot.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Вулканізатор"><img src="../assets/block/vulcanizer_top.png" alt="Вулканізатор" width="32" height="32"></div><div class="result-name">Вулканізатор</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="вулканізатор alaindustrial:vulcanizer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Sulfur Dust"><img src="../assets/item/sulfur_dust_3d.png" alt="Any Sulfur Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Sulfur Dust"><img src="../assets/item/sulfur_dust_3d.png" alt="Any Sulfur Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Вулканізатор"><img src="../assets/item/vulcanizer_3d.png" alt="Вулканізатор" width="32" height="32"></div><div class="result-name">Вулканізатор</div></div></div></div></div>
   </main>
 </div>
 

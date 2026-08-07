@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="18 pages">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../utility/index.html">Utility</a><span class="sep">/</span><span>Industrial Workbench</span></div>
@@ -376,21 +377,41 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Industrial Workbench</strong> is a decorative full block — a steel table with a vise — and the job site of a new villager profession: the <strong>Industrialist</strong>. It works exactly like the vanilla "blast furnace → armorer" pair: place the workbench next to an unemployed adult villager and he will walk over, claim it and become an Industrialist. The Industrialist is a <strong>buyer of the mod's resources</strong>: he pays emeralds for tin, silver, nickel, uranium and dusts, and at the top level sells you the electronic circuit and copper coils — an expensive shortcut for players who would rather not craft them. One workbench = one villager, same as every vanilla profession.</p>
+
+<p>The <strong>Industrial Workbench</strong> is a decorative full block — a steel table with a vise — and the job site of a new villager profession: the <strong>Industrialist</strong>. It works exactly like the vanilla "blast furnace → armorer" pair: place the workbench next to an unemployed adult villager and he will walk over, claim it and become an Industrialist.</p>
+
+<p>The Industrialist is a <strong>buyer of the mod's resources</strong>: he pays emeralds for tin, silver, nickel, uranium and dusts, and at the top level sells you the electronic circuit and copper coils — an expensive shortcut for players who would rather not craft them. One workbench = one villager, same as every vanilla profession.</p>
+
 <h2>Block Properties</h2>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full block (cube)</td></tr><tr><td>Hardness</td><td>2.5 (same as vanilla work stations)</td></tr><tr><td>Tool</td><td>pickaxe (no drop without one)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Energy</td><td>none — this is a villager job site, not a machine</td></tr><tr><td>Role</td><td>POI block of the Industrialist profession (one villager per workbench)</td></tr></tbody></table>
+
 <h2>Industrialist Trades</h2>
-<p>The main direction is buying — you hand over resources, the villager pays emeralds; at Master level he sells components back. Levels unlock through trading, like any vanilla villager. <strong>Variety:</strong> each level has a pool of 3 trades and the villager rolls <strong>2 at random</strong> — just like a vanilla armorer. Different Industrialists therefore offer different combinations.</p>
+
+<p>The main direction is buying — you hand over resources, the villager pays emeralds; at Master level he sells components back. Levels unlock through trading, like any vanilla villager.</p>
+
+<p><strong>Variety:</strong> each level has a pool of 3 trades and the villager rolls <strong>2 at random</strong> — just like a vanilla armorer. Different Industrialists therefore offer different combinations.</p>
+
 <table><thead><tr><th>Level</th><th>Trade pool (2 rolled at random)</th></tr></thead><tbody><tr><td>Novice</td><td>8 × Raw Tin · 24 × Coal Dust · 12 × Copper Dust → Emerald</td></tr><tr><td>Apprentice</td><td>3 × Silver Ingot · 3 × Nickel Ingot · 10 × Lapis Dust → Emerald</td></tr><tr><td>Journeyman</td><td>2 × Uranium Ingot · 4 × Gold Dust · 6 × Iron Dust → Emerald</td></tr><tr><td>Expert</td><td>1 × Tempered Iron Pickaxe → Emerald · 8 × Diamond Dust → Emerald · 6 Emeralds → Tempered Iron</td></tr><tr><td>Master</td><td>5 Emeralds → Electronic Circuit · 3 Emeralds → 2 Copper Coils · 4 Emeralds → Iron Gear</td></tr></tbody></table>
-<p>Every metal is bought in exactly one item form (no raw/ingot double-dipping), and the trades are data-driven (<code>data/alaindustrial/villager_trade/</code>, <code>trade_set/</code>) — server owners can rebalance them with a datapack, no rebuild needed.</p>
+
+<p>Every metal is bought in exactly one item form (no raw/ingot double-dipping), and the trades are data-driven (, <code>trade_set/</code>) — server owners can rebalance them with a datapack, no rebuild needed.</p>
+
 <h2>Village House</h2>
+
 <p>In <strong>newly generated villages of all five biomes</strong> (plains, desert, savanna, snowy, taiga) a small stone <strong>Industrialist house</strong> has a chance to appear — workbench, bed and the villager inside. Already-generated villages and old worlds won't get the house — there you go the vanilla way: craft the workbench and place it next to an unemployed villager.</p>
+
 <h2>Recipes</h2>
+
 <p><strong>Workbench:</strong> 2 × Tin Ingot on top, 4 × any planks below (2×3 shape — like the vanilla smithing table, but built on tin, the mod's early metal).</p>
+
 <h2>Compatibility</h2>
+
 <p>If a zombie infects the Industrialist, the zombie villager keeps the profession outfit; curing him keeps the profession (vanilla behaviour). The Master sell offers do not get cheaper from reputation or curing — a guard against the vanilla discount exploit. A workbench placed at your base acts as a regular job site: a free villager may claim it — that's vanilla, not a bug.</p>
+
 <h2>Progression</h2>
+
 <p>Tier: none (villager job site). Needs: <a href="../materials/tin.html">Tin</a> — two ingots for the recipe. Tin is an early metal, so you can hire an Industrialist right at the start — and his first tin buys fund your first electronic circuit.</p>
+
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="industrial workbench alaindustrial:industrial_workbench" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Industrial Workbench"><img src="../assets/item/industrial_workbench_3d.png" alt="Industrial Workbench" width="32" height="32"></div><div class="result-name">Industrial Workbench</div></div></div></div></div>
   </main>

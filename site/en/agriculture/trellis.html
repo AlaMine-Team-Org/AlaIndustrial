@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -361,13 +362,13 @@
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="18 pages">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../agriculture/index.html">Agriculture</a><span class="sep">/</span><span>Trellis</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/item/trellis.png" alt="Trellis" width="64" height="64">
+    <img class="icon" src="../assets/item/trellis_3d.png" alt="Trellis" width="64" height="64">
     <div class="info">
       <h1>Trellis</h1>
       <div class="block-id">alaindustrial:trellis</div>
@@ -376,35 +377,70 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Trellis</strong> is a support for climbing plants and the mod's first crop. <strong>Cotton</strong> grows on it today, and it is the farming answer to hunting spiders for fibre: grown in a field instead of being knocked out of mobs. The name is deliberately generic — the support is meant for future plants too. The trellis stands <strong>two blocks tall</strong> — the plant climbs it. Place it on tilled soil, then right-click it with <strong>cotton seeds</strong>. From there the plant lives in two phases:</p>
+
+<p>The <strong>Trellis</strong> is a support for climbing plants and the mod's first crop. <strong>Cotton</strong> grows on it today, and it is the farming answer to hunting spiders for fibre: grown in a field instead of being knocked out of mobs. The name is deliberately generic — the support is meant for future plants too.</p>
+
+<p>The trellis stands <strong>two blocks tall</strong> — the plant climbs it. Place it on tilled soil, then right-click it with <strong>cotton seeds</strong>.</p>
+
+<p>From there the plant lives in two phases:</p>
+
 <ul><li><strong>Rooting</strong> — the long phase, and it is walked through <strong>once in the plant's life</strong>. The cotton</li></ul>
 <p>slowly climbs the support until it wraps both blocks.</p>
 <ul><li><strong>Fruiting</strong> — a short cycle that repeats forever. The bush fills with bolls, you pick them with a</li></ul>
-<p>right-click, and it fills again. The point: <strong>harvesting never destroys the plant</strong>. Right-clicking a ripe bush takes the cotton and returns it to its grown, boll-free state — patience is the price of the plant itself, not of every harvest.</p>
+<p>right-click, and it fills again.</p>
+
+<p>The point: <strong>harvesting never destroys the plant</strong>. Right-clicking a ripe bush takes the cotton and returns it to its grown, boll-free state — patience is the price of the plant itself, not of every harvest.</p>
+
 <h2>Growing</h2>
+
 <p>Both phases only advance under two conditions:</p>
+
 <ul><li><strong>tilled and moist</strong> soil under the lower half (farmland next to water);</li><li>enough light, as for vanilla crops.</li></ul>
-<p>If the soil dries out or the light goes, growth <strong>pauses</strong>: the stage is never lost, the plant never dies and never reverts to a seed. Restore the water and it continues from the same stage. This is deliberate — walking away from the game must not wipe out a plantation. <strong>Bone meal</strong> speeds growth up, but buys strictly <strong>one stage</strong> per use, so it cannot turn a bare trellis into a ripe bush on the spot. Plants can be packed as densely as you like: the trellis does not tick like a machine, so a large plantation costs the world nothing.</p>
+
+<p>If the soil dries out or the light goes, growth <strong>pauses</strong>: the stage is never lost, the plant never dies and never reverts to a seed. Restore the water and it continues from the same stage. This is deliberate — walking away from the game must not wipe out a plantation.</p>
+
+<p><strong>Bone meal</strong> speeds growth up, but buys strictly <strong>one stage</strong> per use, so it cannot turn a bare trellis into a ripe bush on the spot.</p>
+
+<p>Plants can be packed as densely as you like: the trellis does not tick like a machine, so a large plantation costs the world nothing.</p>
+
 <h2>Harvesting</h2>
+
 <table><thead><tr><th>Action</th><th>Result</th></tr></thead><tbody><tr><td>Right-click a <strong>ripe</strong> bush</td><td>1–2 <strong>cotton fibre</strong>, 35 % chance of <strong>cotton seeds</strong>; the bush stays and fills again</td></tr><tr><td>Right-click an unripe bush</td><td>nothing happens, the state does not change</td></tr><tr><td>Break the trellis</td><td>the <strong>trellis</strong> comes back, plus the seed if something was planted</td></tr><tr><td>Break tall or short grass</td><td>5 % chance of <strong>cotton seeds</strong> (not while shearing — the same rule vanilla applies to wheat seeds); Fortune raises the count</td></tr></tbody></table>
+
 <p>Grass is the entry point into the chain: clearing a plain finds the first seeds in the same place wheat seeds come from. After that the plantation sustains itself, since harvesting returns seeds too.</p>
+
 <h2>Block properties</h2>
+
 <table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Height</td><td>2 blocks (lower and upper half)</td></tr><tr><td>Base</td><td>tilled soil (<code>#minecraft:supports_crops</code>)</td></tr><tr><td>Hardness</td><td>0.2 — breaks instantly by hand</td></tr><tr><td>Sound</td><td>grass</td></tr><tr><td>Collision</td><td>yes — the trellis blocks movement like a fence post</td></tr><tr><td>Piston</td><td>does not move it (half a multiblock must not be torn from its pair)</td></tr><tr><td>Breaking</td><td>both halves go together; the trellis drops exactly once</td></tr></tbody></table>
+
 <h2>Recipes</h2>
+
 <p>The trellis is sticks tied with string:</p>
+
 <table><thead><tr><th>Ingredients</th><th>Result</th></tr></thead><tbody><tr><td>4 × stick + 2 × string</td><td>1 × trellis</td></tr></tbody></table>
+
 <h2>Balance</h2>
+
 <p>Growth is probabilistic: every random block tick rolls a chance to advance one stage.</p>
+
 <table><thead><tr><th>Parameter</th><th>Value</th><th><code>Config</code> key</th></tr></thead><tbody><tr><td>Rooting stage chance</td><td>1 in 12</td><td><code>cottonRootingChanceDivisor</code></td></tr><tr><td>Fruiting stage chance</td><td>1 in 4</td><td><code>cottonFruitingChanceDivisor</code></td></tr><tr><td>Rooting stages</td><td>3</td><td>—</td></tr><tr><td>Stages per fruiting cycle</td><td>2</td><td>—</td></tr><tr><td>Fibre per harvest</td><td>1–2</td><td>—</td></tr><tr><td>Seed chance per harvest</td><td>35 %</td><td>—</td></tr><tr><td>Seed chance per grass block</td><td>5 %</td><td>—</td></tr></tbody></table>
+
 <p>Rooting is deliberately three times "dearer" than fruiting: the wait is the price of the plant, not of each harvest.</p>
+
 <h2>Progression</h2>
+
 <p>Cotton fibre is the feedstock for the coming Fluxweave line: it gives the farmer the same route the spider's string gives the fighter.</p>
+
 <h2>Compatibility</h2>
+
 <p>The plant sits on vanilla farmland and follows vanilla watering rules, so any mechanic that protects farmland from being trampled covers it too. The scythe only reaps crops listed in its tag, and the trellis is not in it yet.</p>
+
 <h2>Related</h2>
+
 <ul><li>Incubator — seed duplication by irradiation (cotton to be added later).</li><li>Rubber — an example of one spec covering several ids through an alias.</li></ul>
+
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="trellis alaindustrial:trellis" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Wooden Rod"><img src="../assets/vanilla/item/stick.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="Any String" aria-label="Any String"><span>string</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/vanilla/item/stick.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/vanilla/item/stick.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="Any String" aria-label="Any String"><span>string</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/vanilla/item/stick.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Trellis"><img src="../assets/item/trellis.png" alt="Trellis" width="32" height="32"></div><div class="result-name">Trellis</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="trellis alaindustrial:trellis" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="Any String" aria-label="Any String"><span>string</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="Any String" aria-label="Any String"><span>string</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Trellis"><img src="../assets/item/trellis_3d.png" alt="Trellis" width="32" height="32"></div><div class="result-name">Trellis</div></div></div></div></div>
   </main>
 </div>
 

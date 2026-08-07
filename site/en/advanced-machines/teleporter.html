@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link active" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="18 pages">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../advanced-machines/index.html">Advanced Machines</a><span class="sep">/</span><span>Teleporter</span></div>
@@ -376,41 +377,97 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p><strong>The end of the long walk back.</strong> Park a <strong>station</strong> at your base, keep the <strong>remote</strong> in your pocket, and the mine is never far from home again. The station banks the power and pays for the jump itself; the remote only picks where. A trip is exactly as reliable as your base is charged: a full station is good for <strong>25–50 trips home</strong>.</p>
+
+<p><strong>The end of the long walk back.</strong> Park a <strong>station</strong> at your base, keep the <strong>remote</strong> in your pocket, and the mine is never far from home again. The station banks the power and pays for the jump itself; the remote only picks where.</p>
+
+<p>A trip is exactly as reliable as your base is charged: a full station is good for <strong>25–50 trips home</strong>.</p>
+
 <h2>How it works</h2>
+
 <ol><li><strong>Place the station</strong> at your base and wire it up — it quietly banks up to 500,000 EU/FE.</li><li><strong>Shift-right-click it with the remote</strong> — point saved. Name it, or leave it as "Teleporter 1".</li><li><strong>Right-click the remote</strong> anywhere — the list opens with the first point already selected.</li><li><strong>Hit Teleport</strong> — you're home.</li></ol>
+
 <blockquote><strong>The remote works from either hand, and needs no clear sky to point at.</strong> Clicking stone, dirt or any block without its own action opens the list too — a mine has no sky, and a mine is exactly where you need it. Chests, crafting tables and machines still open as normal.</blockquote>
+
 <p>One remote remembers up to <strong>16</strong> stations. Binding the same one twice does nothing — no duplicates.</p>
+
 <h2>The jump</h2>
-<p>Five seconds of wind-up: a purple vortex tightens around you — bystanders see it, and so do you in third person — a hum rises, and in the last second the screen fades almost to black. Then it snaps clear: you're there. <strong>What cancels it:</strong> stepping more than 2 blocks, taking damage, dying, logging out. <strong>A cancelled jump costs nothing</strong> — energy is only spent once you land. You cannot teleport out of a fight; you can absolutely finish mining and leave. After a jump, <strong>one minute of cooldown</strong>. You cannot jump while riding a horse, boat or minecart — dismount first. Pets and leashed mobs stay behind: only you travel.</p>
+
+<p>Five seconds of wind-up: a purple vortex tightens around you — bystanders see it, and so do you in third person — a hum rises, and in the last second the screen fades almost to black. Then it snaps clear: you're there.</p>
+
+<p><strong>What cancels it:</strong> stepping more than 2 blocks, taking damage, dying, logging out. <strong>A cancelled jump costs nothing</strong> — energy is only spent once you land. You cannot teleport out of a fight; you can absolutely finish mining and leave. After a jump, <strong>one minute of cooldown</strong>.</p>
+
+<p>You cannot jump while riding a horse, boat or minecart — dismount first. Pets and leashed mobs stay behind: only you travel.</p>
+
 <h2>What it costs</h2>
+
 <p>The <strong>target station</strong> pays, not the remote. The price grows with <strong>distance</strong> and with <strong>how much you are hauling</strong>: a full inventory doubles the bill.</p>
+
 <pre><code class="lang-">cost = (5000 + distance × 5) × weight, weight = 1.0 (empty) … 2.0 (full inventory)</code></pre>
+
 <table><thead><tr><th>Jump</th><th>Cost</th><th>Trips on a full station</th></tr></thead><tbody><tr><td>100 blocks, travelling light</td><td><strong>5,500 EU/FE</strong></td><td>~90</td></tr><tr><td>1,000 blocks, light</td><td>10,000 EU/FE</td><td>50</td></tr><tr><td>1,000 blocks, full inventory</td><td>20,000 EU/FE</td><td>25</td></tr><tr><td>10,000 blocks, full inventory</td><td><strong>110,000 EU/FE</strong></td><td>4</td></tr></tbody></table>
+
 <p>It is the hungriest block in the mod — for comparison, the <a href="../fluid-machines/pump.html">pump</a> spends 1,000 EU/FE per bucket. An everyday trip home, though, barely dents the buffer.</p>
+
 <blockquote><strong>64 dirt and 64 diamonds weigh the same.</strong> What counts is how full your inventory is, not what is in it — simpler to grasp than a weight table for every item.</blockquote>
+
 <h2>Privacy</h2>
-<p><strong>A stolen remote is useless</strong> — it binds to whoever first uses it, so a thief cannot follow it to your base. <strong>Stations are private by default</strong>: only the owner may jump to one. You can open it to everyone with the switch on its screen, but <strong>only after opening the padlock</strong> beside it — two deliberate clicks instead of one stray one. The lock closes itself again after each change. The same padlock guards the remote's Delete button: removing a point erases the only record of where home was.</p>
+
+<p><strong>A stolen remote is useless</strong> — it binds to whoever first uses it, so a thief cannot follow it to your base.</p>
+
+<p><strong>Stations are private by default</strong>: only the owner may jump to one. You can open it to everyone with the switch on its screen, but <strong>only after opening the padlock</strong> beside it — two deliberate clicks instead of one stray one. The lock closes itself again after each change.</p>
+
+<p>The same padlock guards the remote's Delete button: removing a point erases the only record of where home was.</p>
+
 <h2>Interface</h2>
-<p><strong>Station screen:</strong> charge bar, owner name, and a Private/Public switch behind a padlock. A public station reads "Teleporter — &amp;lt;owner&amp;gt; (public)" in its title. <strong>Remote screen:</strong> your points with names and coordinates, a rename field, Delete (behind the padlock) and Teleport. If a jump will not start — station flat, still cooling down, station gone — the reason appears as a <strong>red band inside the screen</strong> and clears itself.</p>
+
+<p><strong>Station screen:</strong> charge bar, owner name, and a Private/Public switch behind a padlock. A public station reads "Teleporter — &amp;lt;owner&amp;gt; (public)" in its title.</p>
+
+<p><strong>Remote screen:</strong> your points with names and coordinates, a rename field, Delete (behind the padlock) and Teleport. If a jump will not start — station flat, still cooling down, station gone — the reason appears as a <strong>red band inside the screen</strong> and clears itself.</p>
+
 <h2>Energy</h2>
+
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer with a buffer (accepts EU/FE only)</td></tr><tr><td>Buffer (EU/FE)</td><td><strong>500,000</strong> — 25× the battery box</td></tr><tr><td>Max input (EU/FE/tick)</td><td>512 (HV)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>n/a (never gives EU/FE back)</td></tr><tr><td>EU/FE/tick</td><td>0 while idle; one lump sum per jump</td></tr></tbody></table>
+
 <p>The station is an ordinary HV consumer — the network finds it by itself. Idle, it costs nothing.</p>
+
 <blockquote><strong>It charges in minutes, not seconds.</strong> There is no HV infrastructure in the mod yet: a copper cable only carries 12 EU/FE/tick (its ceiling is the segment buffer, not the tier voltage), so a full buffer is <strong>~35 minutes</strong> over copper cable, or <strong>~26 minutes</strong> from a single geothermal generator. That is the intent — the teleporter is slow-charging endgame gear.</blockquote>
+
 <h2>Block properties</h2>
+
 <p>A full 16³ cube, broken with a pickaxe. It keeps its <strong>privacy flag and stored EU/FE</strong> when broken, but <strong>forgets its owner</strong> — replace the block and it is yours. The front face is inert; the other five accept EU/FE.</p>
+
 <h2>Recipes</h2>
-<p>The station (<code>recipe/teleporter.json</code>) is a real endgame recipe:</p>
+
+<p>The station is a real endgame recipe:</p>
+
 <table><thead><tr><th></th><th></th><th></th></tr></thead><tbody><tr><td>electronic circuit</td><td>eye of ender</td><td>electronic circuit</td></tr><tr><td>copper coil</td><td><strong>block of diamond</strong></td><td>copper coil</td></tr><tr><td>uranium ingot</td><td>uranium ingot</td><td>uranium ingot</td></tr></tbody></table>
-<p>The remote (<code>recipe/teleporter_remote.json</code>) is cheaper: an ender pearl, an electronic circuit and 3 tempered iron. A station is useless without one, and a remote leads nowhere without a station.</p>
+
+<p>The remote is cheaper: an ender pearl, an electronic circuit and 3 tempered iron. A station is useless without one, and a remote leads nowhere without a station.</p>
+
 <h2>Progression</h2>
+
 <p>Tier: <strong>HV</strong>, part of the "Beyond MV" cluster (ROADMAP). The gate is <strong>uranium</strong> and an <strong>eye of ender</strong> rather than an HV transformer: no such item exists in the mod, and a recipe cannot point at something that is not there. Grows into: cross-dimension jumps, whitelist privacy, a chunk-loading station mode.</p>
+
+<h2>What charges it</h2>
+
+<p>The station is a <strong>fund</strong>, not a machine: the network feeds working machines first and tops the fund up from what is left. That gives three ways to charge it, at three different speeds.</p>
+
+<table><thead><tr><th>How</th><th>Speed</th><th>Stops when</th></tr></thead><tbody><tr><td>Generator over cable</td><td>whatever the generator makes</td><td>never, while the generator runs</td></tr><tr><td>Storage over cable</td><td><strong>12 EU/FE/tick</strong></td><td>the donor is down to <strong>half</strong> its capacity</td></tr><tr><td>Storage placed <strong>flush</strong> (no cable)</td><td>up to 32 EU/FE/tick</td><td>the donor is empty</td></tr></tbody></table>
+
+<p><strong>Over a cable a store only gives away its surplus — whatever it holds above half.</strong> That is deliberate: the station's buffer is 500 000 EU/FE against a Battery Box's 20 000, and without the floor a single station would drain the whole base bank and leave the machines dark. To fill it outright, put a store <strong>flush against it</strong>: the direct path has neither a rate limit nor a reserve, and it is the player's explicit way of saying "take everything".</p>
+
+<p>Machines always come first: while anything is working on the same network, the station charges only from the remainder.</p>
+
 <h2>Compatibility</h2>
+
 <p>Recipe viewers (JEI/REI/EMI): both the station and the remote. Tooltips (Jade/The One Probe): owner, private/public mode, stored EU/FE.</p>
+
 <h2>Related</h2>
+
 <p><a href="../energy-storage/battery_box.html">Battery box</a> — what charges the station. <a href="../components/index.html">Electronic circuit</a> — a crafting component. <a href="../fluid-machines/pump.html">Pump</a> — for comparison on EU/FE appetite.</p>
+
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="teleporter alaindustrial:teleporter" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Ender Eye"><img src="../assets/vanilla/item/ender_eye.png" alt="Ender Eye" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Diamond Block"><img src="../assets/item/diamond_block_3d.png" alt="Diamond Block" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Any Uranium Ingot"><img src="../assets/item/uranium_ingot_3d.png" alt="Any Uranium Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Uranium Ingot"><img src="../assets/item/uranium_ingot_3d.png" alt="Any Uranium Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Uranium Ingot"><img src="../assets/item/uranium_ingot_3d.png" alt="Any Uranium Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Teleporter"><img src="../assets/item/teleporter_3d.png" alt="Teleporter" width="32" height="32"></div><div class="result-name">Teleporter</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="teleporter alaindustrial:teleporter" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Ender Eye"><img src="../assets/item/ender_eye_3d.png" alt="Ender Eye" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Diamond Block"><img src="../assets/item/diamond_block_3d.png" alt="Diamond Block" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Any Uranium Ingot"><img src="../assets/item/uranium_ingot_3d.png" alt="Any Uranium Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Uranium Ingot"><img src="../assets/item/uranium_ingot_3d.png" alt="Any Uranium Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Uranium Ingot"><img src="../assets/item/uranium_ingot_3d.png" alt="Any Uranium Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Teleporter"><img src="../assets/item/teleporter_3d.png" alt="Teleporter" width="32" height="32"></div><div class="result-name">Teleporter</div></div></div></div></div>
   </main>
 </div>
 

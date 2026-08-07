@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -361,13 +362,13 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../machines/index.html">Машины</a><span class="sep">/</span><span>Полимеризатор</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/block/polymerizer_top.png" alt="Полимеризатор" width="64" height="64">
+    <img class="icon" src="../assets/item/polymerizer_3d.png" alt="Полимеризатор" width="64" height="64">
     <div class="info">
       <h1>Полимеризатор</h1>
       <div class="block-id">alaindustrial:polymerizer</div>
@@ -375,44 +376,80 @@
     </div>
   </div>
 </div>
+
 <h2>Сводка</h2>
+
 <p><strong>Полимеризатор</strong> — первая машина мода, которая ест не предмет, а <strong>жидкость</strong>. Внутри у него бак на десять вёдер нефти; за одну операцию машина выпивает ровно ведро и выдаёт кусок сырого каучука. Сырой каучук затем соединяется с пылью серы в <a href="vulcanizer.html">Вулканизаторе</a>.</p>
-<blockquote><strong>Мини-пример:</strong> подведите к полимеризатору трубу от помпы, стоящей на нефтяном озере, дайте</blockquote>
-<p>питание — и он сам будет молоть нефть в каучук, пока в баке есть нефть. Нефть можно залить и руками: положите ведро (или капсулу) в верхний слот — жидкость уйдёт в бак, а пустая тара упадёт в слот под ним.</p>
+
+<blockquote><strong>Мини-пример:</strong> подведите к полимеризатору трубу от помпы, стоящей на нефтяном озере, дайте питание — и он сам будет молоть нефть в каучук, пока в баке есть нефть.</blockquote>
+
+<p>Нефть можно залить и руками: положите ведро (или капсулу) в верхний слот — жидкость уйдёт в бак, а пустая тара упадёт в слот под ним.</p>
+
 <h2>Энергия</h2>
+
 <p>Полимеризатор только потребляет EU/FE и держит небольшой буфер для ровной работы.</p>
+
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Внутренний буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вход</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Потребление</td><td>2 EU/FE/такт во время работы</td></tr></tbody></table>
+
 <p>Энергия заходит с пяти рабочих граней. <strong>Лицевая грань</strong> (туда «смотрит» морда) инертна — кабели к ней не подключаются, воронки через неё не работают.</p>
+
 <h2>Жидкость</h2>
+
 <p>Бак принимает только нефть — свою и любую другую, помеченную общемодовым тегом <code>c:oil</code>.</p>
+
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Объём бака</td><td>10 000 mB (10 вёдер)</td></tr><tr><td>Расход за операцию</td><td>1000 mB (1 ведро)</td></tr><tr><td>Что принимает</td><td>нефть (тег <code>c:oil</code>)</td></tr><tr><td>Отдаёт ли обратно</td><td>нет — нефть в баке уже сырьё, а не запас</td></tr></tbody></table>
+
 <p>Заполнять бак можно двумя способами, и оба ведут в один и тот же бак: трубой/помпой снаружи или тарой через слот в интерфейсе. Смешивания нет — другая жидкость в бак просто не зальётся.</p>
+
 <h2>Процессинг</h2>
+
 <p>Каждая операция стоит 400 EU/FE и идёт 200 тиков (~10 с). Готовый каучук сам не вылетает — забирайте руками или воронкой.</p>
+
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Длительность</td><td>200 тиков (~10 с)</td></tr><tr><td>Цена операции</td><td>400 EU/FE</td></tr><tr><td>Авто-выгрузка</td><td>нет</td></tr></tbody></table>
+
 <p>Если в баке меньше ведра, машина просто стоит: неполный объём не тратится и не пропадает. Если слот результата забит, операция замирает — нефть при этом остаётся в баке.</p>
+
 <h2>Инвентарь</h2>
+
 <p>Три слота: пара для тары и один для результата.</p>
+
 <table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>Тара (верхний)</td><td>полное ведро или капсула с нефтью</td><td>1</td></tr><tr><td>Тара (нижний)</td><td>пустая тара после слива</td><td>1</td></tr><tr><td>Выход</td><td>сырой каучук</td><td>1</td></tr></tbody></table>
+
 <p>Воронки и трубы кладут тару только в верхний слот, а забирают из двух нижних.</p>
+
 <h2>Интерфейс</h2>
+
 <p>Слева — шкала нефти в баке (рисуется настоящей текстурой жидкости, наведите курсор и увидите объём в mB), справа — запас энергии, посередине — слоты тары, стрелка прогресса и слот результата.</p>
+
 <h2>Свойства блока</h2>
+
 <p>Обычный цельный блок, мягче камня. Ломается любой киркой, но <strong>при сломе заряд и нефть НЕ сохраняет</strong>.</p>
+
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³ (окклюдер)</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Сохраняет заряд при сломе</td><td>нет</td></tr></tbody></table>
+
 <h2>Звук</h2>
+
 <p>Пока молчит. Своего гула у полимеризатора нет — как у компрессора, помпы и лесопилки; кандидат на будущий рабочий звук.</p>
+
 <h2>Рецепты</h2>
-<p>Что он делает:</p>
+
+
 <table><thead><tr><th>Вход</th><th>Выход</th></tr></thead><tbody><tr><td>1000 mB нефти</td><td>1 сырой каучук</td></tr></tbody></table>
+
 <p>Дальше сырой каучук идёт в <a href="vulcanizer.html">Вулканизатор</a> вместе с пылью серы:</p>
+
 <table><thead><tr><th>Вход</th><th>Выход</th></tr></thead><tbody><tr><td>1 сырой каучук + 1 пыль серы</td><td>1 / 2 / 3 резины в зависимости от нагрева снизу</td></tr></tbody></table>
+
 <h2>Прогрессия</h2>
+
 <p>Тир: LV. Ставится после того, как игрок нашёл нефть и построил помпу. Резина — материал для будущих изолированных проводов и MV-компонентов. Требует питание от LV-источника, например <a href="../generators/generator.html">Генератор</a>.</p>
+
 <h2>Связанное</h2>
+
 <p><a href="../materials/oil.html">Нефть</a> — сырьё и как его добыть. <a href="../components/rubber.html">Резина</a> — что получается на выходе цепочки. <a href="../fluid-machines/pump.html">Помпа</a> — качает нефть из озера в бак. Переносной бак — запас нефти рядом с машиной.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="полимеризатор alaindustrial:polymerizer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Ведро"><img src="../assets/vanilla/item/bucket.png" alt="Ведро" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинный корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинный корпус" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Полимеризатор"><img src="../assets/block/polymerizer_top.png" alt="Полимеризатор" width="32" height="32"></div><div class="result-name">Полимеризатор</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="полимеризатор alaindustrial:polymerizer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Ведро"><img src="../assets/item/bucket_3d.png" alt="Ведро" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинный корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинный корпус" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Полимеризатор"><img src="../assets/item/polymerizer_3d.png" alt="Полимеризатор" width="32" height="32"></div><div class="result-name">Полимеризатор</div></div></div></div></div>
   </main>
 </div>
 

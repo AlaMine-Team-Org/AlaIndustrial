@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -361,13 +362,13 @@
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="18 pages">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../machines/index.html">Machines</a><span class="sep">/</span><span>Galvanic Bath</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/block/galvanic_bath_top.png" alt="Galvanic Bath" width="64" height="64">
+    <img class="icon" src="../assets/item/galvanic_bath_3d.png" alt="Galvanic Bath" width="64" height="64">
     <div class="info">
       <h1>Galvanic Bath</h1>
       <div class="block-id">alaindustrial:galvanic_bath</div>
@@ -376,34 +377,68 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The Galvanic Bath is an LV electroplating machine: fibre and silver dust are submerged in water, a current is passed through them, and the silver plates onto the fibre as a conductive track. The result is <strong>flux thread</strong>, the half-product of the Fluxweave material. It is the first machine in the mod to consume items <strong>and</strong> a fluid at once, and it is the entry point to the EU/FE armour line. Fibre means <strong>vanilla string or cotton fibre</strong> — one recipe accepts both through the <code>#</code> tag. Choosing between a spider farm and a cotton trellis is a matter of playstyle, not progression.</p>
+
+<p>The Galvanic Bath is an LV electroplating machine: fibre and silver dust are submerged in water, a current is passed through them, and the silver plates onto the fibre as a conductive track. The result is <strong>flux thread</strong>, the half-product of the Fluxweave material. It is the first machine in the mod to consume items <strong>and</strong> a fluid at once, and it is the entry point to the EU/FE armour line.</p>
+
+<p>Fibre means <strong>vanilla string or cotton fibre</strong> — one recipe accepts both through the <code>#</code> tag. Choosing between a spider farm and a cotton trellis is a matter of playstyle, not progression.</p>
+
 <h2>Energy</h2>
+
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer</td></tr><tr><td>Buffer (EU/FE)</td><td>800</td></tr><tr><td>Max input (EU/FE/tick)</td><td>32 (LV ceiling)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>n/a</td></tr><tr><td>EU/FE/tick</td><td>2</td></tr></tbody></table>
+
 <p>Throughput: accepts up to 32 EU/FE/tick on every face except the front, which is energy-inert and draws no cable arm. Anything above the limit is simply not transferred; nothing breaks.</p>
+
 <h2>Processing</h2>
+
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Recipe type</td><td></td></tr><tr><td>Duration (ticks)</td><td>500, i.e. 25 s (<code>galvanicBathDuration</code>)</td></tr><tr><td>Water per operation</td><td>4000 mB, i.e. 4 buckets (<code>galvanicBathWaterPerOp</code>)</td></tr><tr><td>Tank capacity</td><td>10,000 mB (10 buckets)</td></tr><tr><td>Auto-eject</td><td>false</td></tr></tbody></table>
-<p><strong>The water is not part of the recipe JSON.</strong> No recipe family in the mod takes items and a fluid at the same time, so the water volume is a fixed config cost the machine checks and debits itself. A datapack can override the fibre, the silver and the energy cost, but not the water volume. The tank is <strong>one-way</strong>: water can be poured in but never pulled out. What enters is feedstock, not storage, so a neighbouring pump cannot siphon it back.</p>
+
+<p><strong>The water is not part of the recipe JSON.</strong> No recipe family in the mod takes items and a fluid at the same time, so the water volume is a fixed config cost the machine checks and debits itself. A datapack can override the fibre, the silver and the energy cost, but not the water volume.</p>
+
+<p>The tank is <strong>one-way</strong>: water can be poured in but never pulled out. What enters is feedstock, not storage, so a neighbouring pump cannot siphon it back.</p>
+
 <h2>Inventory</h2>
+
 <table><thead><tr><th>Slot</th><th>Accepts</th><th>Amount</th></tr></thead><tbody><tr><td>Fibre</td><td><code>#</code> (string, cotton fibre)</td><td>1 per operation</td></tr><tr><td>Silver</td><td></td><td>1 per operation</td></tr><tr><td>Fill (in)</td><td>any fluid container: bucket, vacuum capsule, another mod's cell</td><td>—</td></tr><tr><td>Fill (out)</td><td>the emptied container, filled by the machine</td><td>—</td></tr><tr><td>Result</td><td>, machine-filled only</td><td>up to 64</td></tr></tbody></table>
+
 <p>Automation may feed both input slots and the fill slot, and may pull from the result slot and the emptied-container slot.</p>
+
 <h2>Interface</h2>
+
 <p>Type: container Shows: the water level in the tank (with fluid name and millibuckets on hover), the energy buffer and the progress arrow. <strong>The reason it is idle</strong> appears as a tooltip on the arrow: needs fibre, needs silver dust, needs water, no matching recipe, output blocked. Water gets its own line because it is not part of the recipe — without it, an empty tank would read to the player as "no matching recipe".</p>
+
 <h2>Block Properties</h2>
+
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Drops energy NBT</td><td>false</td></tr></tbody></table>
+
 <h2>Recipes</h2>
-<p>Crafting: — a machine casing, two copper coils, two electronic circuits and two silver plates. Processing recipes: <code>data/alaindustrial/recipe/galvanic_bath/</code></p>
+
+<p>Crafting — a machine casing, two copper coils, two electronic circuits and two silver plates.</p>
+
 <h2>Progression</h2>
+
 <p>Tier: LV Requires: machine casing, copper coil, electronic circuit, silver plates. Unlocks: flux thread, then Fluxweave cloth, then the Fluxweave LV armour set.</p>
+
 <h2>Compatibility</h2>
+
 <p>Recipe viewers: JEI, REI, EMI Tooltips: Jade, The One Probe</p>
+
 <h2>Balance</h2>
-<p>1000 EU/FE per flux thread (500 ticks, 25 seconds, at 2 EU/FE/t) makes this both the <strong>most expensive and the slowest operation of the LV family</strong>, twice the polymerizer and the vulcanizer at 400 EU/FE each. That is deliberate: plating silver is the gate into the Fluxweave line and, beyond it, the mod's first full EU/FE armour, so the gate costs more than intermediate steps such as grinding ore. 4000 mB of water per operation is <strong>four buckets per thread</strong>, so a full ten-bucket tank yields only two. Water is infinitely renewable in Minecraft, so this is not a resource limit but an infrastructure requirement — deliberately a greedy one: hauling four buckets per thread gets old fast, which is what pushes the player to pipe it in from a pump.</p>
+
+<p>1000 EU/FE per flux thread (500 ticks, 25 seconds, at 2 EU/FE/t) makes this both the <strong>most expensive and the slowest operation of the LV family</strong>, twice the polymerizer and the vulcanizer at 400 EU/FE each. That is deliberate: plating silver is the gate into the Fluxweave line and, beyond it, the mod's first full EU/FE armour, so the gate costs more than intermediate steps such as grinding ore.</p>
+
+<p>4000 mB of water per operation is <strong>four buckets per thread</strong>, so a full ten-bucket tank yields only two. Water is infinitely renewable in Minecraft, so this is not a resource limit but an infrastructure requirement — deliberately a greedy one: hauling four buckets per thread gets old fast, which is what pushes the player to pipe it in from a pump.</p>
+
+
 <h2>Open Questions</h2>
+
 <p>Whether to add plating recipes for other metals such as copper or gold. The name would stay accurate and the line would gain breadth.</p>
+
 <h2>Related</h2>
+
 <p>Polymerizer — the reference for a machine with a tank Vulcanizer — the reference for a machine with two item inputs Trellis — the source of cotton fibre</p>
+
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="galvanic bath alaindustrial:galvanic_bath" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Machine Casing"><img src="../assets/item/machine_casing_3d.png" alt="Machine Casing" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Galvanic Bath"><img src="../assets/block/galvanic_bath_top.png" alt="Galvanic Bath" width="32" height="32"></div><div class="result-name">Galvanic Bath</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="galvanic bath alaindustrial:galvanic_bath" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Machine Casing"><img src="../assets/item/machine_casing_3d.png" alt="Machine Casing" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Galvanic Bath"><img src="../assets/item/galvanic_bath_3d.png" alt="Galvanic Bath" width="32" height="32"></div><div class="result-name">Galvanic Bath</div></div></div></div></div>
   </main>
 </div>
 

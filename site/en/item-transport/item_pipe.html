@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link active" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="18 pages">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../item-transport/index.html">Item Transport</a><span class="sep">/</span><span>Item Pipe</span></div>
@@ -376,21 +377,45 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Item Pipe</strong> carries things between chests and machines so you don't have to run them across yourself. Lay a line of pipes from one chest to another, tell it with the <a href="../items/wrench.html">wrench</a> where to take from and where to put — and it works on its own. It needs no power. A pipe moves <strong>2 items per second</strong>. That's a touch slower than a hopper, so a full stack takes about 32 seconds. In exchange it runs any distance, branches, and lets you set each side — a hopper does none of that. Want speed: that comes with later pipes. If a pipe pulls from several chests (or feeds several), it takes them in turns — nobody is left out.</p>
+
+<p>The <strong>Item Pipe</strong> carries things between chests and machines so you don't have to run them across yourself. Lay a line of pipes from one chest to another, tell it with the <a href="../items/wrench.html">wrench</a> where to take from and where to put — and it works on its own. It needs no power.</p>
+
+<p>A pipe moves <strong>2 items per second</strong>. That's a touch slower than a hopper, so a full stack takes about 32 seconds. In exchange it runs any distance, branches, and lets you set each side — a hopper does none of that. Want speed: that comes with later pipes.</p>
+
+<p>If a pipe pulls from several chests (or feeds several), it takes them in turns — nobody is left out.</p>
+
 <h2>Sides and the wrench</h2>
+
 <p>Every side of a pipe has a role. Point at the side you want and <strong>right-click</strong> it with the wrench: the role switches to the next one. Only the side you clicked changes, and what it became is printed at the bottom of the screen.</p>
+
 <table><thead><tr><th>Mode</th><th>What it does</th><th>How it looks</th></tr></thead><tbody><tr><td><code>NEUTRAL</code></td><td>A plain connection: takes and gives.</td><td>plain sleeve</td></tr><tr><td><code>EXTRACT</code></td><td>Takes things out of the chest or machine next to it.</td><td>wide mouth, <strong>orange</strong> tip</td></tr><tr><td><code>INSERT</code></td><td>Puts things into the chest or machine next to it.</td><td>narrow nozzle, <strong>teal</strong> tip</td></tr><tr><td><code>DISABLED</code></td><td>Turns this side off entirely.</td><td>no sleeve</td></tr></tbody></table>
-<p>You read the role straight off the block, nothing to open: an <strong>orange mouth takes</strong>, a <strong>teal nozzle gives</strong>, and a disabled side simply has no sleeve. The usual chest-to-chest setup: <code>EXTRACT</code> on the side facing the first chest, <code>INSERT</code> on the side facing the second. That's it — the items are moving. A pipe never loses or duplicates anything: if the destination chest is full, the item stays where it is and the pipe just waits for room.</p>
+
+<p>You read the role straight off the block, nothing to open: an <strong>orange mouth takes</strong>, a <strong>teal nozzle gives</strong>, and a disabled side simply has no sleeve.</p>
+
+<p>The usual chest-to-chest setup: <code>EXTRACT</code> on the side facing the first chest, <code>INSERT</code> on the side facing the second. That's it — the items are moving.</p>
+
+<p>A pipe never loses or duplicates anything: if the destination chest is full, the item stays where it is and the pipe just waits for room.</p>
+
 <blockquote>Shift-right-click with the wrench does not set sides — that <strong>dismantles</strong> the pipe, like any block of this mod.</blockquote>
+
 <h3>Pipe to pipe</h3>
+
 <p>Where a pipe meets another pipe there is nothing to take or give — it's just a stretch of the route. So the wrench only toggles joined ↔ cut there, and no mouth or nozzle is drawn: a run of pipes stays smooth.</p>
+
 <h2>Recipe</h2>
+
 <p>8 silver ingots around an iron gear gives 8 pipes.</p>
+
 <h2>Implementation</h2>
+
 <blockquote>Developer notes; nothing here affects play.</blockquote>
+
 <p>The shared network and face logic live in <code>common</code>; Fabric uses <code>ItemStorage.SIDED</code>, NeoForge . Modes are stored in the block entity's NBT as 2 bits per side. A transfer is atomic: source and destination change inside one transaction (Fabric Transfer API / NeoForge API), so items are never lost or duplicated. NeoForge exposes a transactional capability view for chests and machines, keeping <code>WorldlyContainer</code> side and slot rules intact.</p>
+
 <h2>Related</h2>
+
 <p><a href="../items/wrench.html">Wrench</a> — sets each side, and takes the pipe back apart. <a href="../components/metal_gears.html">Iron Gear</a> — the crafting core. <a href="../materials/silver.html">Silver</a> — the body of the pipe.</p>
+
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="item pipe alaindustrial:item_pipe" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Iron Gear"><img src="../assets/item/iron_gear_3d.png" alt="Iron Gear" width="32" height="32"></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Item Pipe"><img src="../assets/item/item_pipe_3d.png" alt="Item Pipe" width="32" height="32"><span class="count">×8</span></div><div class="result-name">Item Pipe</div></div></div></div></div>
   </main>

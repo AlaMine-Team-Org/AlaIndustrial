@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../items/index.html">Игровые предметы</a><span class="sep">/</span><span>Электромагнит</span></div>
@@ -375,28 +376,54 @@
     </div>
   </div>
 </div>
+
 <h2>Сводка</h2>
-<p><strong>Электромагнит</strong> — заряжаемый на EU/FE предмет-удобство: лежит в <strong>любом слоте</strong> инвентаря (хотбар / основной / вторая рука) и автоматически <strong>притягивает</strong> к игроку лежащие рядом выпавшие предметы — дроп с руды в шахте, куски после взрыва, чужой бесхозный дроп. Это <strong>tier 1</strong>: сферический радиус <strong>5 блоков</strong> (вверх/вниз/ в стороны); за каждый реально сдвинутый предмет магнит тратит <strong>2 EU/FE</strong>. Холостой скан, когда рядом ничего нет, ничего не стоит. Подбор остаётся ванильным: магнит каждый тик <strong>задаёт</strong> предмету скорость прямо к центру тела игрока (seek — предмет «влетает» с любой стороны, в т.ч. снизу вверх), а поднимает его сам игрок, когда тот долетит. Разрядившись, магнит просто молчит (как разряженный <a href="electric_drill.html">электробур</a> копает на скорости руки), пока его не подзарядят. Заряжается там же, где вся электро-семья мода, — в слоте <a href="../energy-storage/battery_box.html">Энергохранилища</a> и от надетого <a href="energy_pack.html">энергоранца</a>. <strong>Тумблер (Shift-ПКМ):</strong> магнит можно выключить, чтобы носить его в инвентаре рядом с фермами, сортировками и трубами, не высасывая из них предметы. Свежекрафтованный магнит включён.</p>
+
+<p><strong>Электромагнит</strong> — заряжаемый на EU/FE предмет-удобство: лежит в <strong>любом слоте</strong> инвентаря (хотбар / основной / вторая рука) и автоматически <strong>притягивает</strong> к игроку лежащие рядом выпавшие предметы — дроп с руды в шахте, куски после взрыва, чужой бесхозный дроп. Это <strong>tier 1</strong>: сферический радиус <strong>5 блоков</strong> (вверх/вниз/ в стороны); за каждый реально сдвинутый предмет магнит тратит <strong>2 EU/FE</strong>. Холостой скан, когда рядом ничего нет, ничего не стоит.</p>
+
+<p>Подбор остаётся ванильным: магнит каждый тик <strong>задаёт</strong> предмету скорость прямо к центру тела игрока (seek — предмет «влетает» с любой стороны, в т.ч. снизу вверх), а поднимает его сам игрок, когда тот долетит. Разрядившись, магнит просто молчит (как разряженный <a href="electric_drill.html">электробур</a> копает на скорости руки), пока его не подзарядят. Заряжается там же, где вся электро-семья мода, — в слоте <a href="../energy-storage/battery_box.html">Энергохранилища</a> и от надетого <a href="energy_pack.html">энергоранца</a>.</p>
+
+<p><strong>Тумблер (Shift-ПКМ):</strong> магнит можно выключить, чтобы носить его в инвентаре рядом с фермами, сортировками и трубами, не высасывая из них предметы. Свежекрафтованный магнит включён.</p>
+
 <h2>Энергия</h2>
+
 <p>Собственный EU/FE-буфер, вне энергосети. Заряжается в слоте Энергохранилища и от надетого ранца; тратит заряд за каждый притянутый предмет.</p>
+
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Роль</td><td>предмет-удобство с EU/FE-буфером: потребитель у зарядника</td></tr><tr><td>Буфер</td><td>5 000 EU/FE (<code>magnetBuffer</code>)</td></tr><tr><td>Зарядка</td><td>слот Энергохранилища / надетый ранец, ≤ 32 EU/FE/тик (<code>magnetInputRate</code>, ограничен потолком LV)</td></tr><tr><td>Расход</td><td>2 EU/FE за каждый притянутый предмет за такт сканирования; холостой скан бесплатен</td></tr><tr><td>Пассивный разряд</td><td>нет (только за фактическое притягивание)</td></tr><tr><td>Компонент</td><td>(Long, persistent + networkSynchronized) — общий компонент всех электро-предметов мода</td></tr></tbody></table>
+
 <p>Расход снимается <strong>только на сервере</strong> (<code>inventoryTick</code> в 26.2 вызывается лишь на <code>ServerLevel</code>). В творческом/наблюдательном режиме заряд не тратится (общее правило <code>ItemEnergy.spend</code>, — магнит при этом всё равно притягивает.</p>
+
 <h2>Инвентарь</h2>
+
 <p>Не применимо — у магнита нет внутреннего хранилища предметов (стак 1). Хранит только заряд EU/FE и флаг вкл/выкл (, absent = включён).</p>
+
 <h2>Свойства блока</h2>
+
 <p>Не применимо (предмет).</p>
+
 <h2>Рецепты</h2>
-<p>Крафт:. <strong>Ремонт</strong> — не применим: у магнита нет прочности; «ремонт» — это зарядка EU/FE (см. «Энергия»).</p>
+
+
+<p><strong>Ремонт</strong> — не применим: у магнита нет прочности; «ремонт» — это зарядка EU/FE (см. «Энергия»).</p>
+
 <h2>Поведение</h2>
+
 <p><strong>Притягивание (seek):</strong> <strong>каждый тик</strong> магнит собирает выпавшие предметы в сферическом радиусе и <strong>задаёт</strong> каждому скорость прямо к центру тела игрока — до 0.55 бл/тик (далёкие летят на максимуме, у игрока пул мягко тормозит). Скорость именно <strong>задаётся</strong> (а не добавляется), поэтому пул перекрывает гравитацию и трение: предмет снизу поднимается вверх к игроку, сверху — опускается. Собственно подбор делает сама ваниль, когда предмет долетает к игроку. <strong>Тариф:</strong> за каждый реально сдвинутый предмет снимается 2 EU/FE/тик, пока он летит. При нехватке заряда магнит «глохнет»; при 0 EU/FE — не притягивает вовсе. За проход обрабатывается не более <strong>64</strong> предметов (защита от лага при массовом дропе). <strong>Что НЕ притягивается:</strong> предметы на задержке подбора — это и свеже выброшенный игроком дроп (магнит не всасывает мгновенно обратно то, что только что выкинули), и «неподбираемые» (задержка 32767); предметы, лежащие в лаве (чтобы не тащить их через огонь); предметы вне радиуса. Рамки/дисплеи не трогаются (фильтр только по выпавшим предметам). <strong>Скорость seek ограничена</strong> <code>SEEK_SPEED</code> (0.55 бл/тик): достаточно быстро, чтобы предмет заметно «влетал», но под окном подбора ваниль — чтобы не проскочить сквозь игрока. <strong>Работает из любого слота:</strong> магнит тикает в хотбаре, основном инвентаре и второй руке (в 26.2 вторая рука тикает через путь экипировки) — носить его можно где угодно, не обязательно в руке. <strong>Тумблер (Shift-ПКМ):</strong> правый клик с зажатым Shift переключает вкл/выкл. Состояние — в компоненте <code>magnet_enabled</code> (absent = включён; выключение пишет <code>false</code>, повторное включение убирает компонент, так что включённый магнит побайтно идентичен свежему). Переключение сопровождается <strong>металлическим щелчком</strong> (<code>copper_bulb</code> on/off — электрический звук, а не тканевый) и сообщением над хотбаром. Выключенный магнит ничего не притягивает и не тратит EU/FE. <strong>Индикация:</strong> полоска под иконкой показывает заряд (жёлтая, LV-цвет). В тултипе — короткие строки: пояснение, статус (зелёное «Активен» / серое «Выключен»), <strong>заряд <code>X / Y EU/FE</code></strong> и строка радиуса/тарифа. <strong>Дроп/смерть/релогин:</strong> заряд и флаг вкл/выкл хранятся в предмете и сохраняются. <strong>В креативе:</strong> заряд не тратится (общее правило электро-семьи,, но притягивание работает.</p>
+
 <h2>Прогрессия</h2>
+
 <p>Предмет-удобство LV-уровня: решает классическую боль тех-мода «иду по шахте — лут сам ко мне». Доступен после <a href="../energy-storage/battery_box.html">Энергохранилища</a> и медной катушки/схемы: без LV-инфраструктуры магнит не скрафтить и не зарядить. Фильтры (whitelist/blacklist по тегам), зоны-глушилки и tier-эволюция радиуса (LV/MV/HV) — будущая работа.</p>
+
 <h2>Совместимость</h2>
+
 <p>Просмотрщики: JEI, REI, EMI (как обычный предмет). <strong>Магнит заряжается от сторонних энергомодов</strong> (как <a href="electric_drill.html">электробур</a>,: он совместим с энергосистемами других модов на своём загрузчике (Fabric или NeoForge), поэтому чужой зарядник пополняет его наравне с <a href="../energy-storage/battery_box.html">Энергохранилищем</a>. Интерфейс работает только на приём. <strong>Известные ограничения (отложено в post-MVP):</strong> <strong>Конвейеры и трубы чужих модов:</strong> магнит пока не учитывает флаг «не тянуть», который другие моды вешают на предметы в своих трубах и конвейерах, — поддержка этой конвенции отложена. <strong>Предметы, зарезервированные конкретным игроком:</strong> магнит видит только позицию предмета и пока не умеет читать, кому он зарезервирован. На практике это безопасно — чужой игрок такой предмет всё равно не подберёт, а магнит может лишь притянуть его ближе. <strong>Расход на недостижимом предмете:</strong> расход энергии списывается за каждый сдвинутый предмет за такт сканирования, поэтому предмет, который магнит тянет, но не может подтащить (например, за стеной), будет понемногу тратить заряд, пока не исчезнет. Проверки прямой видимости нет — магнит тянет предметы в радиусе даже сквозь стены.</p>
+
 <h2>Связанное</h2>
+
 <p><a href="electric_drill.html">Электробур</a> — прецедент EU/FE-расходника; типичный компаньон в шахте. <a href="energy_pack.html">Энергоранец</a> — заряжает магнит в инвентаре на ходу. <a href="../energy-storage/battery_box.html">Энергохранилище</a> — зарядка магнита (слот charge). <a href="../components/copper_coil.html">Медная катушка</a>, <a href="../components/electronic_circuit.html">электронная схема</a> — компоненты крафта.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="электромагнит alaindustrial:electromagnet" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любая красная пыль"><img src="../assets/vanilla/item/redstone.png" alt="Любая красная пыль" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Любой лазурит"><img src="../assets/vanilla/item/lapis_lazuli.png" alt="Любой лазурит" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Медная катушка"><img src="../assets/item/copper_coil_3d.png" alt="Медная катушка" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Электромагнит"><img src="../assets/item/electromagnet_3d.png" alt="Электромагнит" width="32" height="32"></div><div class="result-name">Электромагнит</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="электромагнит alaindustrial:electromagnet" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любая красная пыль"><img src="../assets/item/redstone_3d.png" alt="Любая красная пыль" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Любой лазурит"><img src="../assets/item/lapis_lazuli_3d.png" alt="Любой лазурит" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Медная катушка"><img src="../assets/item/copper_coil_3d.png" alt="Медная катушка" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Электромагнит"><img src="../assets/item/electromagnet_3d.png" alt="Электромагнит" width="32" height="32"></div><div class="result-name">Электромагнит</div></div></div></div></div>
   </main>
 </div>
 

@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../machines/index.html">Машины</a><span class="sep">/</span><span>Дробитель</span></div>
@@ -375,37 +376,81 @@
     </div>
   </div>
 </div>
+
 <h2>Сводка</h2>
+
 <p><strong>Дробитель</strong> — машина раннего удвоения руды. Загрузите в него руду или металл, и он перемелет их в пыль, причём добытый блок руды даёт <strong>две</strong> пыли вместо одной — ради этого его и строят. Это первая машина, ради которой имеет смысл тянуть кабель.</p>
+
 <blockquote><strong>Мини-пример:</strong> бросьте блок железной руды (или сырьё), дайте ему покрутиться — и получите</blockquote>
 <p><strong>две железные пыли</strong>. Переплавьте их, и из одной жилы вышло два слитка вместо одного.</p>
+
 <table><thead><tr><th>Тип входа</th><th>Пример</th><th>Выход</th></tr></thead><tbody><tr><td>Блок руды</td><td>железная руда (обычная + глубинный сланец)</td><td><strong>×2 пыли</strong></td></tr><tr><td>Сырьё</td><td>сырьё (дроп с руды)</td><td><strong>×2 пыли</strong></td></tr><tr><td>Слиток</td><td>готовый слиток</td><td>×1 пыль</td></tr></tbody></table>
+
 <p>Удвоение даётся и за блок руды, и за сырьё: дробилка удваивает что угодно, что в неё положишь. Слиток остаётся ×1 (нетто-ноль, иначе можно было бы зациклить «слиток → пыль → слиток» с удвоением). Это первая машина, ради которой имеет смысл строить энергосеть.</p>
+
 <h2>Энергия</h2>
+
 <p>Дробитель только потребляет EU/FE и держит небольшой буфер, чтобы ровно молоть даже при неровной подаче.</p>
+
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Внутренний буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вход</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Потребление</td><td>2 EU/FE/такт во время работы</td></tr></tbody></table>
-<p>LV-машина: берёт до 32 EU/FE за тик. Если в сети больше энергии, лишнее просто не забирается — ничего не взрывается. Энергия заходит с пяти рабочих граней. <strong>Лицевая грань</strong> (туда «смотрит» морда машины) инертна — кабели к ней не подключаются, воронки через неё не работают.</p>
+
+<p>LV-машина: берёт до 32 EU/FE за тик. Если в сети больше энергии, лишнее просто не забирается — ничего не взрывается.</p>
+
+<p>Энергия заходит с пяти рабочих граней. <strong>Лицевая грань</strong> (туда «смотрит» морда машины) инертна — кабели к ней не подключаются, воронки через неё не работают.</p>
+
 <h2>Процессинг</h2>
+
 <p>Каждое дробление идёт 150 тиков (~7,5 с) и съедает EU/FE из буфера. Готовая пыль сама в сундук не вылетает — забирайте руками или воронкой.</p>
+
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Длительность</td><td>150 тиков (~7,5 с)</td></tr><tr><td>Цена операции</td><td>300 EU/FE</td></tr><tr><td>Авто-выгрузка</td><td>нет</td></tr></tbody></table>
+
 <h2>Инвентарь</h2>
+
 <p>Один слот на вход, один на выход. В выходной ничего вложить нельзя — он только для результата.</p>
+
 <table><thead><tr><th>Слот</th><th>Принимает</th><th>Кол-во</th></tr></thead><tbody><tr><td>Вход</td><td>предметы, которые дробитель умеет молоть</td><td>1</td></tr><tr><td>Выход</td><td>только результат (вставка запрещена)</td><td>1</td></tr></tbody></table>
+
 <h2>Интерфейс</h2>
+
 <p>На одном экране видны запас энергии, стрелка прогресса, слот входа и слот выхода.</p>
+
 <h2>Свойства блока</h2>
+
 <p>Обычный цельный блок, мягче камня. Ломается любой киркой, но <strong>при сломе заряд НЕ сохраняет</strong>.</p>
+
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Сохраняет заряд при сломе</td><td>нет</td></tr></tbody></table>
+
 <h2>Рецепты</h2>
-<p>Дробитель крафтится на верстаке из <a href="../components/machine_casing.html">машинного корпуса</a>: три куска кремня сверху, железная рамка по бокам, корпус в центре, <a href="../components/electronic_circuit.html">электронная схема</a> снизу по центру. Корпус — общая база всех машин. Что он мелет и что получается: <strong>Блок руды и сырьё → 2 пыли.</strong> Удвоение даётся за оба входа — это главная польза дробителя: из одной жилы два слитка вместо одного, независимо от того, добыл ты блок или сырьё. <strong>Готовый слиток → 1 пыль.</strong> Нетто-ноль, чтобы нельзя было зациклить удвоение («слиток → пыль → слиток»).</p>
+
+<p>Дробитель крафтится на верстаке из <a href="../components/machine_casing.html">машинного корпуса</a>: три куска кремня сверху, железная рамка по бокам, корпус в центре, <a href="../components/electronic_circuit.html">электронная схема</a> снизу по центру. Корпус — общая база всех машин.</p>
+
+
+<p><strong>Блок руды и сырьё → 2 пыли.</strong> Удвоение даётся за оба входа — это главная польза дробителя: из одной жилы два слитка вместо одного, независимо от того, добыл ты блок или сырьё. <strong>Готовый слиток → 1 пыль.</strong> Нетто-ноль, чтобы нельзя было зациклить удвоение («слиток → пыль → слиток»).</p>
+
 <table><thead><tr><th>Вход</th><th>Выход</th><th>Зачем</th></tr></thead><tbody><tr><td>Блок руды (железо, медь, золото, олово, серебро, никель, уран — обычная + глубинный сланец)</td><td><strong>×2 пыли</strong></td><td>ради удвоения — два слитка из одной жилы</td></tr><tr><td>Сырьё (дроп с руды)</td><td><strong>×2 пыли</strong></td><td>вторая удваиваемая форма — дробите и блок, и сырьё</td></tr><tr><td>Готовый слиток</td><td>×1 пыль</td><td>промежуточная форма, ×1 (иначе удвоение зацикливалось бы)</td></tr><tr><td><a href="../components/material_forms.html">Пластина</a> (7 металлов, кроме зак. железа)</td><td>×1 пыль</td><td>переработка неудачной пластины обратно в пыль, ×1</td></tr></tbody></table>
+
 <p>Та же схема работает для неметаллических пылей (уголь, алмаз, изумруд, лазурит): руда → ×2 пыли, чистый предмет → ×1. Одно исключение: <strong>лазуритовая руда → 6 пыли</strong> (ванильная руда даёт сразу 4–9 лазуритов, так что простое ×2 обесценило бы дробление).</p>
+
+<h3>Немет металлов: органика и камень</h3>
+
+<p>Дробитель мелет не только руду. Семь рецептов работают с обычными ванильными предметами и дают больше, чем ручной крафт, — ради этого их и ставят на линию:</p>
+
+<table><thead><tr><th>Вход</th><th>Вручную</th><th>В дробителе</th><th>Что это даёт</th></tr></thead><tbody><tr><td>Кость</td><td>3 костной муки</td><td><strong>4</strong></td><td>+33 % муки с той же кости</td></tr><tr><td>Костный блок</td><td>9 костной муки</td><td><strong>12</strong></td><td>тот же +33 %; пропорция «блок = 3 кости» сохранена, зациклить нельзя</td></tr><tr><td>Булыжник</td><td>—</td><td><strong>1 песок</strong></td><td><strong>возобновляемый песок</strong>: стекло и бетон без выкапывания пустынь</td></tr><tr><td>Песчаник</td><td>обратного нет</td><td><strong>4 песка</strong></td><td>разбор песчаника, которого ваниль не умеет</td></tr><tr><td>Огненный стержень</td><td>2 порошка</td><td><strong>3</strong></td><td>+50 % порошка для зелий</td></tr><tr><td>Тростник</td><td>1 сахар</td><td><strong>2</strong></td><td>вдвое больше сахара</td></tr><tr><td>Шерсть (любого цвета)</td><td>рецепта нет</td><td><strong>4 нити</strong></td><td>шерсть обратно в нить</td></tr></tbody></table>
+
+<p>Все семь стоят стандартные <strong>300 EU/FE</strong>, как и остальные рецепты дробителя. Костные рецепты согласованы между собой: 1 блок = 3 кости и в ванили, и здесь, поэтому «блок → мука → блок» не даёт прибыли.</p>
+
+<p>Самый заметный из семи — <strong>булыжник → песок</strong>. До него песок в мире конечен; после него любая булыжникогенератор-ферма превращается в источник стекла и бетона.</p>
+
 <h2>Прогрессия</h2>
+
 <p>Тир: LV. Стартовый дробильщик и повод строить первую энергосеть. Ни во что не развивается в v0.1 — MV-дробилка это отдельный будущий блок. Требует питание от LV-источника, например <a href="../generators/generator.html">Генератор</a>.</p>
+
 <h2>Связанное</h2>
+
 <p><a href="../generators/generator.html">Генератор</a> — типичный источник питания для этой машины. <a href="electric_furnace.html">Электропечь</a> — переплавляет пыль обратно в слитки. <a href="compressor.html">Компрессор</a> — замыкает цикл для неметаллических пылей (уголь, алмаз…). <a href="../components/electronic_circuit.html">Электронная схема</a> — компонент, из которого он собран.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="дробитель alaindustrial:macerator" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Кремень"><img src="../assets/vanilla/item/flint.png" alt="Кремень" width="32" height="32"></div> <div class="cell" title="Кремень"><img src="../assets/vanilla/item/flint.png" alt="Кремень" width="32" height="32"></div> <div class="cell" title="Кремень"><img src="../assets/vanilla/item/flint.png" alt="Кремень" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинный корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинный корпус" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Дробитель"><img src="../assets/item/macerator_3d.png" alt="Дробитель" width="32" height="32"></div><div class="result-name">Дробитель</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="дробитель alaindustrial:macerator" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Кремень"><img src="../assets/item/flint_3d.png" alt="Кремень" width="32" height="32"></div> <div class="cell" title="Кремень"><img src="../assets/item/flint_3d.png" alt="Кремень" width="32" height="32"></div> <div class="cell" title="Кремень"><img src="../assets/item/flint_3d.png" alt="Кремень" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинный корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинный корпус" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Дробитель"><img src="../assets/item/macerator_3d.png" alt="Дробитель" width="32" height="32"></div><div class="result-name">Дробитель</div></div></div></div></div>
   </main>
 </div>
 

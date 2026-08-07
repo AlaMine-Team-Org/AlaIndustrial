@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../materials/index.html">Материалы</a><span class="sep">/</span><span>Урановая руда</span></div>
@@ -375,22 +376,43 @@
     </div>
   </div>
 </div>
+
 <h2>Сводка</h2>
+
 <p><strong>Уран</strong> — самый редкий металл мода, зарезервированный под <strong>ядерный трек</strong> (РИТЭГ, реактор, обогащение). Руда встречается у самого дна мира, крошечными жилами, и в отличие от остальных руд требует <strong>железной кирки</strong> или лучше — деревянная, золотая и каменная кирка не дают дропа.</p>
-<blockquote><strong>Мини-пример:</strong> те же два пути переработки, что у олова — печь даёт 1 слиток с руды, дробитель</blockquote>
-<p>даёт 2. Но уран примерно в семь раз реже алмаза, поэтому каждый блок и каждое сырьё на счету: дробите, не жгите в печи. Ванильного урана в игре нет, поэтому слиток — модовый. Уран не лежит без дела: его пыль идёт на факел обогащённого урана, слиток входит в крафт телепорта, а инкубатор расходует слиток как заряд облучения при мутациях (один слиток — три попытки, после остаётся отработанный уран). Полноценная ядерная ветка (обогащение, РИТЭГ, реактор) добавится позже.</p>
+
+<blockquote><strong>Мини-пример:</strong> те же два пути переработки, что у олова — печь даёт 1 слиток с руды, дробитель даёт 2. Но уран примерно в семь раз реже алмаза, поэтому каждый блок и каждое сырьё на счету: дробите, не жгите в печи.</blockquote>
+
+<p>Ванильного урана в игре нет, поэтому слиток — модовый. Уран не лежит без дела: его пыль идёт на факел обогащённого урана, слиток входит в крафт телепорта, а инкубатор расходует слиток как заряд облучения при мутациях (один слиток — три попытки, после остаётся отработанный уран). Полноценная ядерная ветка (обогащение, РИТЭГ, реактор) добавится позже.</p>
+
 <table><thead><tr><th>Форма</th><th>Как получить</th></tr></thead><tbody><tr><td>Руда (камень / глубосланец)</td><td>добыть в мире; кирка даёт сырьё, Silk Touch — сам блок</td></tr><tr><td>Сырьё</td><td>дроп с руды; плавится в слиток</td></tr><tr><td>Пыль</td><td>блок руды (или сырьё) дробится в 2 пыли; слиток — в 1</td></tr><tr><td>Слиток</td><td>переплавка сырья, руды или пыли</td></tr></tbody></table>
+
 <h2>Где искать</h2>
+
 <p>Уран лежит у самого дна мира, крошечными жилами — примерно в семь раз реже алмаза. Берите железную кирку (или лучше): всё слабее не даёт дропа.</p>
+
 <h2>Свойства блока</h2>
+
 <p>В отличие от остальных руд мода, уран требует <strong>железной кирки</strong> или лучше — деревянная, золотая и каменная кирка не дают дропа. В остальном ведёт себя как ванильная руда: дроп масштабируется от «Удачи», а «Шёлковое касание» даёт сам блок руды.</p>
+
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Инструмент</td><td><strong>железная кирка</strong> и выше (деревянная/золотая/каменная — без дропа)</td></tr><tr><td>Дроп</td><td>сырьё ×1 (Fortune множит; Silk Touch → сам блок)</td></tr></tbody></table>
+
 <h2>Рецепты (переработка)</h2>
-<p>Из одной жилы — два пути. <strong>Путь через печь (без машин):</strong> переплавить сырьё (или руду) в слиток — 1 слиток с руды. <strong>Путь через дробитель (удвоение):</strong> дробить блок руды (или сырьё) в 2 пыли, потом каждую пыль переплавить в слиток — 2 слитка с руды. Готовый слиток дробится обратно в 1 пыль (без удвоения). Удвоение работает для целого блока руды (и сырья).</p>
+
+<p>Из одной жилы — два пути.</p>
+
+<p><strong>Путь через печь (без машин):</strong> переплавить сырьё (или руду) в слиток — 1 слиток с руды. <strong>Путь через дробитель (удвоение):</strong> дробить блок руды (или сырьё) в 2 пыли, потом каждую пыль переплавить в слиток — 2 слитка с руды.</p>
+
+<p>Готовый слиток дробится обратно в 1 пыль (без удвоения). Удвоение работает для целого блока руды (и сырья).</p>
+
 <h2>Прогрессия</h2>
+
 <p>Уран зарезервирован под ядерный трек — обогащение, РИТЭГ, реактор, — который появится в более поздних фазах. Но и сейчас у него есть потребители: пыль идёт на <a href="../utility/enriched_uranium_torch.html">факел обогащённого урана</a>, слиток входит в крафт <a href="../advanced-machines/teleporter.html">телепорта</a>, а <a href="../agriculture/incubator.html">инкубатор</a> расходует слиток как заряд облучения при мутациях (один слиток — три попытки, остаётся отработанный уран). Лишний слиток также можно сбывать жителю-индустриалисту за изумруды.</p>
+
 <h2>Связанное</h2>
+
 <p><a href="../utility/enriched_uranium_torch.html">Факел обогащённого урана</a> — применение пыли урана. <a href="../advanced-machines/teleporter.html">Телепорт</a> — крафт требует урановый слиток. <a href="../agriculture/incubator.html">Инкубатор</a> — расходует слиток как заряд облучения. <a href="tin.html">Олово</a> — структурный образец материала-руды (та же переработка). <a href="../machines/macerator.html">Дробитель</a> — открывает путь с удвоением. <a href="silver.html">Серебро</a>, <a href="nickel.html">Никель</a> — другие редкие металлы мода.</p>
+
 <h2>Используется в</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="урановый слиток alaindustrial:uranium_ingot" data-type="minecraft:blasting"><div class="recipe-header"><span class="recipe-type">Доменная печь</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Урановая руда"><img src="../assets/item/uranium_ore_3d.png" alt="Урановая руда" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/iron_furnace_3d.png" alt="Железная печь" title="Железная печь" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Урановый слиток"><img src="../assets/item/uranium_ingot_3d.png" alt="Урановый слиток" width="32" height="32"></div><div class="result-name">Урановый слиток</div></div></div></div> <div class="recipe-card" data-name="урановый слиток alaindustrial:uranium_ingot" data-type="minecraft:smelting"><div class="recipe-header"><span class="recipe-type">Плавка (печь)</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Урановая руда"><img src="../assets/item/uranium_ore_3d.png" alt="Урановая руда" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/iron_furnace_3d.png" alt="Железная печь" title="Железная печь" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Урановый слиток"><img src="../assets/item/uranium_ingot_3d.png" alt="Урановый слиток" width="32" height="32"></div><div class="result-name">Урановый слиток</div></div></div></div></div>
   </main>

@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="18 pages">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../generators/index.html">Generators</a><span class="sep">/</span><span>Water Mill</span></div>
@@ -376,40 +377,75 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Water Mill</strong> is a passive LV-tier generator: it produces EU/FE as long as there's <strong>flowing</strong> water (a current) next to it. It needs no pump, no tanks and no fluid system — it simply "looks" at the neighbouring water blocks, but only a current counts, not a still pool. Weaker than the fuel Generator, but it never needs fuel: build a stream or a waterfall past it and you get a steady trickle of EU/FE.</p>
+
+<p>The <strong>Water Mill</strong> turns on flowing water and runs around the clock — night and storms mean nothing to it. No fuel, no tanks, no pumps: give it a current past the wheel and it produces EU/FE for as long as the water keeps moving.</p>
+
+<blockquote><strong>Mini-example:</strong> a channel with a waterfall on either side of the wheel → <strong>4 EU/FE/t</strong>, non-stop. Over one in-game day that is <strong>96 000 EU/FE</strong> — eight times what a <a href="solar_panel.html">T1 solar panel</a> makes in the same time (12 000 EU/FE, and only by day).</blockquote>
+
+<p>The one catch: <strong>still water does not count</strong>. Dropping the wheel into a pond or a river is not enough — it needs a real current.</p>
+
 <h2>Energy</h2>
-<p>The mill only produces power. Inside is a 4000 EU/FE buffer, released into an LV-tier network. Energy is emitted from the <strong>back face only</strong> (opposite the front) — like the wind mill: the back face carries an output-port texture (a red dot), so connect your cable or battery there. The front carries the wheel and the sides stand in the water — all of them are inert, for both energy and hoppers.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>producer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>4000</td></tr><tr><td>Max output (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>EU/FE/tick</td><td>0–4 (1 × number of faces with flowing water)</td></tr><tr><td>Energy output</td><td>back face only (opposite the front), with a port texture</td></tr></tbody></table>
+
+<p>The mill only produces power. Output leaves through the <strong>back face</strong>, which carries the connector; the other five faces are inert for energy.</p>
+
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>4000 EU/FE</td></tr><tr><td>Output</td><td>up to 32 EU/FE/t (LV)</td></tr><tr><td>Actual production</td><td>0–4 EU/FE/t (1 per wheel side in a current)</td></tr></tbody></table>
+
 <h2>Generation</h2>
-<p>The mill counts <strong>flowing</strong> water on the four horizontal sides of the block. The wheel is driven by a current, so only flowing/falling water (<code>isSource == false</code> — a stream or a waterfall) counts; a <strong>still source block does NOT</strong>. Just dropping the wheel into a source pool isn't enough — that would be an exploit. Each face touched by flowing water gives 1 EU/FE/tick, up to 4 EU/FE/tick with a current on all four sides, continuously and at no resource cost. The mod's fluid system (tanks, pumps) isn't involved here. <strong>How to power it:</strong> vanilla river/ocean water is still source water, so "just put it in a river" won't work. Supply an actual current: place a source above/beside so the water <strong>flows</strong> past the mill's faces (a waterfall onto a face, or a "source → drain" channel where water runs along the block).</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Source</td><td><strong>flowing</strong> water (flowing/falling, <code>isSource==false</code>) on the horizontal faces; a still source does not count</td></tr><tr><td>Working condition</td><td>water wheel installed, wheel not blocked (see "Wheel clearance"), at least one neighbouring <strong>flowing</strong> water AND buffer not full</td></tr><tr><td>EU/FE/tick (base)</td><td>(1) × number of faces with flowing water (0–4)</td></tr><tr><td>Modifiers</td><td>none; only a current counts, a still source does not</td></tr></tbody></table>
-<h3>Wheel clearance</h3>
-<p>The wheel must be free to spin in an open vertical slot. A solid block in one of the <strong>four</strong> cells around the front cell (in front of the face) — the front cell itself (where the hub sits), the cell above it, or the cell to its <strong>left or right</strong> (where the rim arcs sweep) — <strong>hides the wheel and stops generation</strong>; the GUI shows a "Blocked" status. Water and walk-through "filler" blocks (grass, flowers, snow layers) don't obstruct the wheel — you can run a water channel along the sides. The one exemption is the cell <strong>below</strong>: the lower arc of the wheel is meant to dip into the river, so a solid riverbed under the wheel is fine. The check runs every tick: remove the block and the wheel comes right back.</p>
-<h3>Placing several mills</h3>
-<p>The external water wheel is a large 3D model that sticks out past the block face (rim radius ~1.3 blocks). Placing two mills too close makes their wheels intersect in space — it looks broken (models overlap and z-fight). The mill detects that overlap and, while it lasts, <strong>hides its own wheel, stops generating</strong>, and shows a "Wheel interference" status in the GUI. Interference is symmetric: <strong>both</strong> mills stall — there is no tie-break. Spacing rules (the wheel is larger than the wind-mill rotor, so the gap is wider): <strong>Side by side</strong> (same direction): leave <strong>2 empty blocks</strong> between mills. <strong>Face to face</strong>: at least <strong>2 empty blocks</strong> between them. Directly adjacent (no gap), each wheel runs into the other mill's casing — both stall under the "Wheel clearance" rule (status "Blocked" rather than "Wheel interference"). <strong>Back to back</strong> (wheels facing opposite ways): directly adjacent is fine — the wheels don't meet. A neighbour without a wheel causes no interference (no wheel is rendered), but install a wheel in it and the working mill next to it stalls too.</p>
+
+<p>The wheel hangs <strong>one cell in front</strong> of the block, and water is counted around the <strong>wheel</strong>, not around the mill. The four working cells mirror how real water wheels are driven:</p>
+
+<table><thead><tr><th>Cell</th><th>What it is called</th></tr></thead><tbody><tr><td>Below the wheel</td><td>undershot — the classic; the rim dips into the current</td></tr><tr><td>Above the wheel</td><td>overshot — water poured over the top</td></tr><tr><td>Left and right</td><td>the horizontal sweep of the rim</td></tr></tbody></table>
+
+<p>Each cell with a current gives <strong>1 EU/FE/t</strong>, all four give the maximum <strong>4 EU/FE/t</strong>. The hub cell (directly in front of the mill) does not count: that is where the axle sits.</p>
+
+<p>Only <strong>flowing or falling</strong> water counts. Rivers and oceans are made of source blocks, so "put it in a river" will not work. The reliable trick: place a source <strong>one cell above</strong> the wheel's cell — falling water never becomes a source. Pouring a bucket straight into the wheel's cell is useless, because that cell then becomes a source itself.</p>
+
+<h3>Room for the wheel</h3>
+
+<p>The wheel is large (rim about 2.7 blocks) and needs room to turn. All <strong>nine cells</strong> of the wheel's plane are checked — the front column and both neighbours, each on three levels, bottom row and diagonals included. A solid block in any of them hides the wheel and stops generation: the screen reads "Blocked". Water and passable blocks (grass, flowers, snow) do not obstruct it, so a channel around the wheel works fine. The check runs every tick: remove the block and the wheel is back.</p>
+
+<h3>Several mills together</h3>
+
+<p>If two wheels overlap in space, <strong>both</strong> mills stop with the status "Wheel interference".</p>
+
+<table><thead><tr><th>Arrangement</th><th>Gap needed</th></tr></thead><tbody><tr><td>Side by side</td><td>2 empty blocks</td></tr><tr><td>Face to face</td><td>2 empty blocks</td></tr><tr><td>Back to back</td><td>flush is fine</td></tr></tbody></table>
+
+<p>A neighbour without a wheel causes no trouble — but put a wheel in it and the working mill beside it stops too.</p>
+
 <h2>Inventory</h2>
-<p>One component slot accepts only the <a href="../components/water_mill_wheel.html">water wheel</a>. The wheel stacks to one in this slot and is neither consumed nor damaged. Without an installed wheel, generation is 0 EU/FE/tick and the external 3D wheel model isn't rendered. The four standard upgrade slots follow it.</p>
+
+<p>One slot for the <a href="../components/water_mill_wheel.html">water wheel</a> and four upgrade slots. Without a wheel the mill produces nothing and the external model is not drawn.</p>
+
+<p><strong>The wheel is a consumable.</strong> It only wears while the mill is actually producing EU/FE (no current or an obstruction means no wear) and in proportion to output. A full wheel is worth <strong>320 000 EU/FE</strong>: about an hour of non-stop work at maximum, or <strong>6–7 in-game days</strong> at a typical 2 EU/FE/t. When it runs out the wheel breaks with a sound and generation stops until a new one is fitted.</p>
+
 <h2>Interface</h2>
-<p>Type: dedicated 176×178 energy screen with one component slot Right-click opens a screen with a vertical energy bar on the left, a central water-wheel slot and a status indicator on the right: a white wheel means idle and a blue wheel means active generation Status labels: "Wheel interference" — the wheel intersects a neighbouring mill's wheel; "Blocked" — the wheel is obstructed by a solid block; "No water" — the wheel is installed and free, but no horizontal face has water (a hint to the player,</p>
+
+<p>Energy bar on the left, wheel slot in the centre, indicator on the right: a white wheel means idle, blue means working. The line under the slot shows either the current output or the reason it stopped: "Wheel interference", "Blocked" or "No water". While no wheel is fitted the line is empty — the empty slot says it already.</p>
+
 <h2>Block Properties</h2>
-<p>An ordinary solid block. Any pickaxe breaks it.</p>
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
+
+<p>An ordinary full block, broken with any pickaxe.</p>
+
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full cube</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
+
 <h2>Visual</h2>
-<p>A large open 3D wheel (~2.7 blocks across at the rim) hangs in front of the face: two smooth 24-segment oak rims, eight spokes on each side, twelve compound L-shaped buckets between the rims, a timber hub and a copper axle. The buckets stay entirely inside the circular rim silhouette, with no rectangular teeth or clipped ends protruding beyond it. The wheel is built procedurally from vanilla oak and copper textures (no production PNGs of its own), is lit by the real world light, and spins faster the more flowing water is around it. Without a current, the wheel stands still. The in-world wheel is rendered only while <code>water_mill_wheel</code> is installed. Its item icon is an original 16×16 pixel-art silhouette of a heavy six-spoke oak wheel; the in-world model remains more detailed and uses vanilla oak and copper textures. Reference in-game captures: front, isometric, side, and night lighting.</p>
+
+<p>A large open wheel turns in front of the mill: two 24-segment oak rims, eight spokes on each side, twelve buckets between the rims, a wooden hub and a copper axle. The stronger the current, the faster it spins; with no current the wheel stands still.</p>
+
 <h2>Sound</h2>
-<p>While the wheel turns (a current on a face,, the mill emits a soft water splash/rumble — the loop (pattern <strong>C</strong>, <code>humVolume</code> 0.22, fixed 12-block range). It plays only while the wheel actually spins and falls silent when it stands still: no water, a neighbouring mill's interference, or a blocked wheel.</p>
+
+<p>While the wheel turns you hear a quiet splash of water within about 12 blocks. It falls silent when the wheel stops.</p>
+
 <h2>Recipes</h2>
-<p>Crafted on a workbench (shaped 3×3): planks in the corners, copper ingots top and bottom, copper cable on the sides, a wooden gear in the center. Same logic and cost as the <a href="wind_mill.html">wind mill</a>.</p>
-<pre><code class="lang-">PUP
-CGC
-PUP</code></pre>
-<p><code>P</code> — planks (any, ×4); <code>U</code> — copper ingot (×2); <code>C</code> — copper cable (×2); <code>G</code> — <a href="../components/metal_gears.html">Wooden Gear</a> (×1). Recipe:. The <a href="../components/water_mill_wheel.html">water mill wheel</a> is crafted separately; without it the mill produces no energy.</p>
-<h2>Balance</h2>
-<p>Base output is = 1 EU/FE/tick for each face touching water, up to 4 EU/FE/tick when surrounded. This is weaker than the coal-fired <a href="generator.html">Generator</a> at 8 EU/FE/tick and two to four times weaker than the Geothermal Generator. The trade-off is fully passive output with no fuel or logistics. It is comparable to two to four T1 <a href="solar_panel.html">Solar Panels</a>, but depends on adjacent water instead of daylight and weather.</p>
+
+<p>Crafted at a workbench from planks, copper ingots, a copper cable and a wooden gear. The <a href="../components/water_mill_wheel.html">water wheel</a> is crafted separately — the mill does not work without it.</p>
+
 <h2>Related</h2>
-<p><a href="solar_panel.html">Solar Panel</a> — another passive source, dependent on the sky. <a href="generator.html">Generator</a> — the active, fuel-burning alternative.</p>
+
+<p><a href="solar_panel.html">Solar Panel</a> — the other passive source, but it depends on the sky and the time of day. <a href="generator.html">Generator</a> — twice the output, but it needs fuel. <a href="../components/water_mill_wheel.html">Water Wheel</a> — the consumable the mill cannot run without.</p>
+
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="water mill alaindustrial:water_mill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/vanilla/item/copper_ingot.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="32" height="32"></div> <div class="cell" title="Wooden Gear"><img src="../assets/item/wooden_gear_3d.png" alt="Wooden Gear" width="32" height="32"></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="32" height="32"></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/vanilla/item/copper_ingot.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Water Mill"><img src="../assets/item/water_mill_3d.png" alt="Water Mill" width="32" height="32"></div><div class="result-name">Water Mill</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="water mill alaindustrial:water_mill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="32" height="32"></div> <div class="cell" title="Wooden Gear"><img src="../assets/item/wooden_gear_3d.png" alt="Wooden Gear" width="32" height="32"></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="32" height="32"></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Water Mill"><img src="../assets/item/water_mill_3d.png" alt="Water Mill" width="32" height="32"></div><div class="result-name">Water Mill</div></div></div></div></div>
   </main>
 </div>
 

@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -361,13 +362,13 @@
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="18 pages">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../utility/index.html">Utility</a><span class="sep">/</span><span>Enriched Uranium Torch</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/block/enriched_uranium_torch.png" alt="Enriched Uranium Torch" width="64" height="64">
+    <img class="icon" src="../assets/item/enriched_uranium_torch_3d.png" alt="Enriched Uranium Torch" width="64" height="64">
     <div class="info">
       <h1>Enriched Uranium Torch</h1>
       <div class="block-id">alaindustrial:enriched_uranium_torch</div>
@@ -376,20 +377,37 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Enriched Uranium Torch</strong> is a decorative light source: light level 14 (same as a vanilla torch), but with a bright <strong>green flame</strong> and the occasional green sparkle. Place it on the floor or on a wall, just like a normal torch. It uses no energy — it's decoration, not a generator. The main perk: it <strong>doesn't go out underwater</strong>. You can place it under water and it keeps burning.</p>
+
+<p>The <strong>Enriched Uranium Torch</strong> is a decorative light source: light level 14 (same as a vanilla torch), but with a bright <strong>green flame</strong> and the occasional green sparkle. Place it on the floor or on a wall, just like a normal torch. It uses no energy — it's decoration, not a generator.</p>
+
+<p>The main perk: it <strong>doesn't go out underwater</strong>. You can place it under water and it keeps burning.</p>
+
 <h2>Block Properties</h2>
+
 <p>Behaves like a vanilla torch: breaks instantly by hand, has no collision, a piston will break it.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Light level</td><td>14 (same as a vanilla torch)</td></tr><tr><td>Flame</td><td>green, with occasional sparkles</td></tr><tr><td>Placement</td><td>on the or on a wall — one icon, both forms</td></tr><tr><td>Underwater</td><td>burns, doesn't go out</td></tr><tr><td>Tool</td><td>none — breaks by hand instantly</td></tr></tbody></table>
+
 <h2>Sound</h2>
+
 <p>Wooden placement/break sound, same as a vanilla torch.</p>
+
 <h2>Recipes</h2>
-<p>Two ways to make it, both unlocked once you have uranium dust: <strong>From scratch:</strong> uranium dust on top, coal (or charcoal) in the middle, stick at the bottom → <strong>4 torches</strong>. <strong>Upgrade:</strong> a plain vanilla torch + uranium dust (shapeless) → <strong>1 torch</strong>.</p>
+
+<p>Two ways to make it, both unlocked once you have uranium dust:</p>
+
+<p><strong>From scratch:</strong> uranium dust on top, coal (or charcoal) in the middle, stick at the bottom → <strong>4 torches</strong>. <strong>Upgrade:</strong> a plain vanilla torch + uranium dust (shapeless) → <strong>1 torch</strong>.</p>
+
 <h2>Progression</h2>
+
 <p>Tier: none (decoration). Requires: <a href="../materials/uranium.html">Uranium</a> — its dust for the recipe. So this is a late-game decorative goal, once you've found and processed uranium.</p>
+
 <h2>Related</h2>
+
 <p><a href="../materials/uranium.html">Uranium</a> — the source of uranium dust. <a href="iron_chest.html">Iron Chest</a> — another "civilian" block with no energy.</p>
+
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="enriched uranium torch alaindustrial:enriched_uranium_torch" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Uranium Dust"><img src="../assets/item/uranium_dust_3d.png" alt="Any Uranium Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Coal"><img src="../assets/vanilla/item/coal.png" alt="Any Coal" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/vanilla/item/stick.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Enriched Uranium Torch"><img src="../assets/block/enriched_uranium_torch.png" alt="Enriched Uranium Torch" width="32" height="32"><span class="count">×4</span></div><div class="result-name">Enriched Uranium Torch</div></div></div></div> <div class="recipe-card" data-name="enriched uranium torch alaindustrial:enriched_uranium_torch" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">Shapeless Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Torch"><img src="../assets/vanilla/item/torch.png" alt="Torch" width="32" height="32"></div> <div class="cell" title="Any Uranium Dust"><img src="../assets/item/uranium_dust_3d.png" alt="Any Uranium Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Enriched Uranium Torch"><img src="../assets/block/enriched_uranium_torch.png" alt="Enriched Uranium Torch" width="32" height="32"></div><div class="result-name">Enriched Uranium Torch</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="enriched uranium torch alaindustrial:enriched_uranium_torch" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Uranium Dust"><img src="../assets/item/uranium_dust_3d.png" alt="Any Uranium Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Coal"><img src="../assets/item/coal_3d.png" alt="Any Coal" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Enriched Uranium Torch"><img src="../assets/item/enriched_uranium_torch_3d.png" alt="Enriched Uranium Torch" width="32" height="32"><span class="count">×4</span></div><div class="result-name">Enriched Uranium Torch</div></div></div></div> <div class="recipe-card" data-name="enriched uranium torch alaindustrial:enriched_uranium_torch" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">Shapeless Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Torch"><img src="../assets/item/torch_3d.png" alt="Torch" width="32" height="32"></div> <div class="cell" title="Any Uranium Dust"><img src="../assets/item/uranium_dust_3d.png" alt="Any Uranium Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Enriched Uranium Torch"><img src="../assets/item/enriched_uranium_torch_3d.png" alt="Enriched Uranium Torch" width="32" height="32"></div><div class="result-name">Enriched Uranium Torch</div></div></div></div></div>
   </main>
 </div>
 

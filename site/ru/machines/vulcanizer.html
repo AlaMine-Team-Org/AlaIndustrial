@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -361,13 +362,13 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../machines/index.html">Машины</a><span class="sep">/</span><span>Вулканизатор</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/block/vulcanizer_top.png" alt="Вулканизатор" width="64" height="64">
+    <img class="icon" src="../assets/item/vulcanizer_3d.png" alt="Вулканизатор" width="64" height="64">
     <div class="info">
       <h1>Вулканизатор</h1>
       <div class="block-id">alaindustrial:vulcanizer</div>
@@ -375,30 +376,49 @@
     </div>
   </div>
 </div>
+
 <h2>Сводка</h2>
+
 <p><strong>Вулканизатор</strong> завершает нефтяную цепочку: один сырой каучук и четыре пыли серы превращаются в резину. Машина работает только при подаче EU/FE и наличии источника тепла прямо под ней.</p>
+
 <blockquote><strong>Мини-пример:</strong> поставьте Вулканизатор на зажжённый костёр, положите сырой каучук в левый слот, четыре пыли серы — в правый, подведите LV-кабель сбоку и получите одну резину.</blockquote>
+
 <h2>Энергия</h2>
+
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Внутренний буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вход</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Потребление</td><td>2 EU/FE/такт во время работы</td></tr><tr><td>Цена операции</td><td>400 EU/FE</td></tr><tr><td>Длительность</td><td>200 тиков (~10 с)</td></tr></tbody></table>
+
 <h2>Нагрев снизу</h2>
+
 <p>Источник читается в блоке непосредственно под машиной.</p>
+
 <table><thead><tr><th>Источник</th><th>Уровень</th><th>Выход</th></tr></thead><tbody><tr><td>Зажжённый обычный или душевный костёр</td><td>1</td><td>1 резина</td></tr><tr><td>Лава, лавовый котёл или магматический блок</td><td>2</td><td>2 резины</td></tr><tr><td><a href="electric_heater.html">Электронагреватель</a></td><td>3</td><td>3 резины</td></tr></tbody></table>
+
 <p>На любом уровне расход одинаков: <strong>1 сырой каучук + 4 пыли серы</strong>. Нагрев умножает выход, но не цену партии, поэтому сильный источник тепла — главный способ растянуть найденную серу. Если источник или уровень нагрева меняется во время операции, прогресс безопасно начинается заново с текущим множителем. Ингредиенты при перезапуске не расходуются, а подмена нагрева в последний тик не повышает выход почти завершённой операции.</p>
+
 <h2>Инвентарь и автоматизация</h2>
+
 <table><thead><tr><th>Слот</th><th>Принимает</th></tr></thead><tbody><tr><td>Левый вход</td><td></td></tr><tr><td>Правый вход</td><td></td></tr><tr><td>Выход</td><td></td></tr></tbody></table>
+
 <p>Входы обслуживаются сверху, выход — с боковых граней. Нижняя грань зарезервирована под нагрев и не публикуется предметной автоматизации.</p>
+
 <h2>Интерфейс</h2>
+
 <p>Экран показывает энергию, прогресс, оба входа, выход, источник тепла и множитель ×1/×2/×3. Статус объясняет простой: нет ингредиентов, нет EU/FE, нужен нагрев снизу или занят выход.</p>
+
 <h2>Свойства блока</h2>
+
 <p>Кирка; при разрушении выпадает сам блок и содержимое инвентаря. Светится и выпускает пар только во время работы. Изменение блока снизу замечается сразу.</p>
+
 <h2>Рецепт</h2>
+
 <p><code>SIS / IMI / IEIS</code> — пыль серы, <code>I</code> — железный слиток, <code>M</code> — корпус машины, <code>E</code> — электронная схема.</p>
+
 <h2>Связи</h2>
+
 <p><a href="polymerizer.html">Полимеризатор</a> производит сырой каучук. <a href="../materials/sulfur.html">Сера</a> даёт пыль серы. <a href="../components/rubber.html">Резина</a> описывает продукт и всю цепочку.</p>
-<h2>Технические заметки</h2>
-<p>Рецепт: <code>recipe/vulcanizing/rubber.json</code>, два упорядоченных входа, <code>energy: 400</code>. Базовый результат рецепта равен 1; BlockEntity умножает его на уровень тепла текущего цикла. Печной рецепт <code>rubber_from_smelting_raw_rubber</code> удалён.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="вулканизатор alaindustrial:vulcanizer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любая серная пыль"><img src="../assets/item/sulfur_dust.png" alt="Любая серная пыль" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любая серная пыль"><img src="../assets/item/sulfur_dust.png" alt="Любая серная пыль" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинный корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинный корпус" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/vanilla/item/iron_ingot.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Вулканизатор"><img src="../assets/block/vulcanizer_top.png" alt="Вулканизатор" width="32" height="32"></div><div class="result-name">Вулканизатор</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="вулканизатор alaindustrial:vulcanizer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любая серная пыль"><img src="../assets/item/sulfur_dust_3d.png" alt="Любая серная пыль" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любая серная пыль"><img src="../assets/item/sulfur_dust_3d.png" alt="Любая серная пыль" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинный корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинный корпус" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Вулканизатор"><img src="../assets/item/vulcanizer_3d.png" alt="Вулканизатор" width="32" height="32"></div><div class="result-name">Вулканизатор</div></div></div></div></div>
   </main>
 </div>
 

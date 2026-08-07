@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
 <a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="11 сторінок">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="12 сторінок">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="13 сторінок">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предмети</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="18 сторінок">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../generators/index.html">Генератори</a><span class="sep">/</span><span>Генератор</span></div>
@@ -375,32 +376,58 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
-<p>The <strong>Generator</strong> burns solid fuel — coal, charcoal, a block of coal, anything that burns in a vanilla furnace — and turns it into EU/FE. It's the no-fuss power source you reach for when there's no sun and no wind: it just runs, day or night, rain or shine.</p>
-<blockquote><strong>Mini-example:</strong> drop a piece of coal in, point a cable at it, and you've got <strong>8 EU/FE/t</strong> steady power for your first <a href="../machines/macerator.html">Macerator</a>. It ignores the weather — the only thing it cares about is fuel.</blockquote>
-<h2>Energy</h2>
-<p>The generator only produces power — it never takes any in. It holds up to 4000 EU/FE inside and sends it out on an LV line.</p>
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>4000 EU/FE</td></tr><tr><td>Output</td><td>up to 32 EU/FE/t (LV)</td></tr><tr><td>Output while burning</td><td>8 EU/FE/t</td></tr></tbody></table>
-<p>Energy leaves through the 5 working faces. The <strong>front face</strong> (the one facing you when you place it) is inert — cables don't connect there and hoppers don't work through it.</p>
-<h2>Generation</h2>
-<p>Feed it any vanilla furnace fuel. It burns at a steady 8 EU/FE/t for as long as the fuel lasts; when the buffer is full, it pauses until there's room again.</p>
-<table><thead><tr><th>Situation</th><th>Output</th></tr></thead><tbody><tr><td>Fuel burning, room in buffer</td><td>8 EU/FE/t</td></tr><tr><td>Buffer full</td><td>pauses (waits for room)</td></tr><tr><td>No fuel</td><td>0</td></tr></tbody></table>
-<p>Each unit of fuel gives you its vanilla burn time worth of EU/FE, paid out at 8 EU/FE/t.</p>
-<h2>Inventory</h2>
-<p>One slot, for fuel only.</p>
-<table><thead><tr><th>Slot</th><th>Takes</th><th>Count</th></tr></thead><tbody><tr><td>Fuel</td><td>any vanilla furnace fuel (coal, charcoal, coal block, wood…)</td><td>1</td></tr></tbody></table>
-<p>A lava bucket does <strong>not</strong> go in here — lava belongs to the <a href="geothermal_generator.html">Geothermal Generator</a>.</p>
-<h2>Interface</h2>
-<p>One screen shows the buffer level, how much burn time is left on the current fuel, the fuel slot and the output rate.</p>
-<h2>Block Properties</h2>
-<p>An ordinary solid block. Any pickaxe breaks it, but <strong>it does NOT keep its charge when broken</strong> — drain the energy into a Battery Box before you pick it up.</p>
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge on break</td><td>no</td></tr></tbody></table>
-<h2>Recipes</h2>
-<p>Crafted at a workbench. It's a generator, not a processing machine, so it has no processing recipes of its own.</p>
-<h2>Progression</h2>
-<p>Tier: LV. The starter fuel-burner. It doesn't evolve into anything — the stronger fuel generator (<a href="geothermal_generator.html">Geothermal Generator</a>) is a separate block you craft from this one.</p>
-<h2>Related</h2>
-<p><a href="../machines/macerator.html">Macerator</a> — the typical first LV machine to power. <a href="../energy-storage/battery_box.html">Battery Box</a> — bank the surplus, and drain this block before moving it. <a href="geothermal_generator.html">Geothermal Generator</a> — the lava-burning upgrade. <a href="../energy-transfer/copper_cable.html">Copper Cable</a> — how to route the energy.</p>
+<h2>Зведення</h2>
+
+<p><strong>Генератор</strong> спалює тверде паливо — вугілля, деревне вугілля, блок вугілля, усе, що горить у ванільній печі, — і перетворює його на EU/FE. Це безвідмовне джерело, до якого беруться, коли немає ні сонця, ні вітру: він просто працює, удень і вночі, за будь-якої погоди.</p>
+
+<blockquote><strong>Міні-приклад:</strong> киньте шматок вугілля, підведіть кабель — і ви маєте <strong>8 EU/FE/такт</strong> стабільної потужності для першого <a href="../machines/macerator.html">Подрібнювача</a>. На погоду йому байдуже, турбує лише паливо.</blockquote>
+
+<h2>Енергія</h2>
+
+<p>Генератор лише виробляє енергію — чужої не приймає. Усередині він тримає до 4000 EU/FE й віддає їх у лінію тира LV.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>4000 EU/FE</td></tr><tr><td>Вихід</td><td>до 32 EU/FE/такт (LV)</td></tr><tr><td>Вихід під час горіння</td><td>8 EU/FE/такт</td></tr></tbody></table>
+
+<p>Енергія виходить крізь 5 робочих граней. <strong>Лицьова грань</strong> (та, що дивиться на вас під час встановлення) інертна — кабелі до неї не під'єднуються, і лійки крізь неї не працюють.</p>
+
+<h2>Генерація</h2>
+
+<p>Годуйте його будь-яким ванільним пічним паливом. Він горить рівним темпом 8 EU/FE/такт, доки вистачає палива; коли буфер повний — робить паузу до звільнення місця.</p>
+
+<table><thead><tr><th>Ситуація</th><th>Виробіток</th></tr></thead><tbody><tr><td>Паливо горить, у буфері є місце</td><td>8 EU/FE/такт</td></tr><tr><td>Буфер повний</td><td>пауза (чекає місця)</td></tr><tr><td>Немає палива</td><td>0</td></tr></tbody></table>
+
+<p>Кожна одиниця палива дає стільки EU/FE, скільки тиків вона горіла б у печі, виплачуваних по 8 EU/FE/такт.</p>
+
+<h2>Інвентар</h2>
+
+<p>Один слот, лише під паливо.</p>
+
+<table><thead><tr><th>Слот</th><th>Приймає</th><th>К-сть</th></tr></thead><tbody><tr><td>Паливо</td><td>будь-яке ванільне пічне паливо (вугілля, деревне вугілля, блок вугілля, дерево…)</td><td>1</td></tr></tbody></table>
+
+<p>Відро лави сюди <strong>не класти</strong> — лава потрібна <a href="geothermal_generator.html">Геотермальному генератору</a>.</p>
+
+<h2>Інтерфейс</h2>
+
+<p>На одному екрані видно рівень буфера, скільки часу горіння лишилося в поточного палива, слот палива та швидкість видачі.</p>
+
+<h2>Властивості блока</h2>
+
+<p>Звичайний суцільний блок. Ламається будь-якою кайлом, але <strong>при зламі заряд НЕ зберігає</strong> — злийте енергію в Енергосховище, перш ніж його піднімати.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Зберігає заряд при зламі</td><td>ні</td></tr></tbody></table>
+
+<h2>Рецепти</h2>
+
+<p>Збирається на верстаку. Це генератор, а не машина переробки, тому рецептів переробки в нього немає.</p>
+
+<h2>Прогресія</h2>
+
+<p>Тир: LV. Стартовий паливний генератор. Ні в що не розвивається — потужніший паливний генератор (<a href="geothermal_generator.html">Геотермальний генератор</a>) це окремий блок, який крафтиться з цього.</p>
+
+<h2>Пов'язане</h2>
+
+<p><a href="../machines/macerator.html">Подрібнювач</a> — типова перша LV-машина під живлення. <a href="../energy-storage/battery_box.html">Енергосховище</a> — накопичує надлишки, а заразом приймає заряд перед перенесенням генератора. <a href="geothermal_generator.html">Геотермальний генератор</a> — апгрейд на лаві. <a href="../energy-transfer/copper_cable.html">Мідний кабель</a> — чим розводити енергію.</p>
+
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="генератор alaindustrial:generator" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Cobblestone"><img src="../assets/item/cobblestone_3d.png" alt="Any Cobblestone" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Cobblestone"><img src="../assets/item/cobblestone_3d.png" alt="Any Cobblestone" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Cobblestone"><img src="../assets/item/cobblestone_3d.png" alt="Any Cobblestone" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Cobblestone"><img src="../assets/item/cobblestone_3d.png" alt="Any Cobblestone" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Furnace"><img src="../assets/item/furnace_3d.png" alt="Furnace" width="32" height="32"></div> <div class="cell" title="Any Cobblestone"><img src="../assets/item/cobblestone_3d.png" alt="Any Cobblestone" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Cobblestone"><img src="../assets/item/cobblestone_3d.png" alt="Any Cobblestone" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Cobblestone"><img src="../assets/item/cobblestone_3d.png" alt="Any Cobblestone" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Генератор"><img src="../assets/item/generator_3d.png" alt="Генератор" width="32" height="32"></div><div class="result-name">Генератор</div></div></div></div></div>
 <h2>Використовується в</h2>

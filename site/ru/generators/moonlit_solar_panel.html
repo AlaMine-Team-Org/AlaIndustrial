@@ -8,7 +8,67 @@
 <title>Лунная солнечная панель — Ala Industrial — Гайд</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
+    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
+    padding:1px 2px; line-height:1; border-radius:0; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
 <style>
   
   @font-face {
@@ -284,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
 <a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -302,7 +362,7 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../generators/index.html">Генераторы</a><span class="sep">/</span><span>Лунная солнечная панель</span></div>
@@ -316,31 +376,63 @@
     </div>
   </div>
 </div>
+
 <h2>Сводка</h2>
-<p><strong>Ночная (лунная) панель</strong> — ночной двойник <a href="daylight_solar_panel.html">дневной панели</a>, вторая ступень ночной ветки. Она производит EU/FE <strong>ночью</strong> при открытом небе и ничего днём, так что машины не замолкают с наступлением темноты. Скрафтить её нельзя. Единственный способ — вырастить из базовой панели через <strong>лунный эволюционный чип</strong> (см. <a href="solar_panel.html">Солнечная панель</a> → <em>Прогрессия</em>).</p>
-<blockquote><strong>Мини-пример:</strong> выросшая из базовой панели с ночным чипом → <strong>3 EU/FE/такт</strong> ясной ночью. Поставьте</blockquote>
-<p>рядом дневную панель — и мастерская работает круглые сутки, пока одна заряжает Энергохранилище, вторая спит. Уникальная фишка ночной ветки: даже в дождь и грозу панель продолжает «тлеть» на <strong>1 EU/FE/такт</strong>, так что в непогоду она полностью не замолкает.</p>
+
+<p><strong>Ночная (лунная) панель</strong> — ночной двойник <a href="daylight_solar_panel.html">дневной панели</a>, вторая ступень ночной ветки. Она производит EU/FE <strong>ночью</strong> при открытом небе и ничего днём, так что машины не замолкают с наступлением темноты.</p>
+
+<p>Скрафтить её нельзя. Единственный способ — вырастить из базовой панели через <strong>лунный эволюционный чип</strong> (см. <a href="solar_panel.html">Солнечная панель</a> → <em>Прогрессия</em>).</p>
+
+<blockquote><strong>Мини-пример:</strong> выросшая из базовой панели с ночным чипом → <strong>3 EU/FE/такт</strong> ясной ночью. Поставьте рядом дневную панель — и мастерская работает круглые сутки, пока одна заряжает Энергохранилище, вторая спит.</blockquote>
+
+<p>Уникальная фишка ночной ветки: даже в дождь и грозу панель продолжает работать на минимуме — <strong>1 EU/FE/такт</strong>, так что в непогоду она полностью не замолкает.</p>
+
 <h2>Энергия</h2>
+
 <p>Панель только производит энергию — чужую не принимает. Держит до 8000 EU/FE и отдаёт их в линию LV.</p>
+
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Внутренний буфер</td><td>8000 EU/FE</td></tr><tr><td>Выход</td><td>до 20 EU/FE/такт (LV)</td></tr><tr><td>Базовая выработка (ясная ночь)</td><td>3 EU/FE/такт</td></tr></tbody></table>
+
 <p>Энергия уходит через 4 бока и низ. <strong>Верхняя грань — рабочая поверхность</strong>, не закрывайте её.</p>
+
 <h2>Генерация</h2>
-<p>Зеркальный отражение дневной панели: только обычный мир, только ночью, только при открытом небе. Стекло не мешает.</p>
-<table><thead><tr><th>Ситуация</th><th>Выработка</th></tr></thead><tbody><tr><td>Ясная ночь, открытое небо</td><td>3 EU/FE/такт</td></tr><tr><td>Стекло сверху (прозрачно)</td><td>3 EU/FE/такт (без изменений)</td></tr><tr><td>Листва / паутина сверху (лёгкая тень)</td><td>~2 EU/FE/такт</td></tr><tr><td>Слой снега или снегопад</td><td>1 EU/FE/такт (слабый трикл)</td></tr><tr><td>Дождь или гроза</td><td>1 EU/FE/такт (продолжает тлеть — только у ночной ветки)</td></tr><tr><td>День</td><td>0</td></tr></tbody></table>
+
+<p>Зеркальное отражение дневной панели: только обычный мир, только ночью, только при открытом небе. Стекло не мешает.</p>
+
+<table><thead><tr><th>Ситуация</th><th>Выработка</th></tr></thead><tbody><tr><td>Ясная ночь, открытое небо</td><td>3 EU/FE/такт</td></tr><tr><td>Стекло сверху (прозрачно)</td><td>3 EU/FE/такт (без изменений)</td></tr><tr><td>Листва / паутина сверху (лёгкая тень)</td><td>~2 EU/FE/такт</td></tr><tr><td>Слой снега или снегопад</td><td>1 EU/FE/такт (слабый трикл)</td></tr><tr><td>Дождь или гроза</td><td>1 EU/FE/такт (работает на минимуме — только у ночной ветки)</td></tr><tr><td>День</td><td>0</td></tr></tbody></table>
+
 <p>Этот трикл в дождь и грозу — визитная карточка ночной ветки: там, где дневная панель в шторм падает до нуля, лунная продолжает давать крошечный ток.</p>
+
 <h2>Интерфейс</h2>
+
 <p>На одном экране видно уровень буфера, текущую выработку и состояние неба (ночь / снег / дождь / день).</p>
+
 <h2>Свойства блока</h2>
+
 <p>Плоский слэб в половину блока высотой, как базовая панель. Ломается любой киркой.</p>
+
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>низкая панель (полуслэб)</td></tr><tr><td>Инструмент</td><td>кирка</td></tr></tbody></table>
+
 <h2>Звук</h2>
-<p>Тот же тихий гул, что у базовой панели, но звучит ночью при открытом небе. В отличие от дневных панелей, дождь и гроза его не гасят — лунная панель там продолжает тлеть и остаётся «активной». Подробнее — в <a href="solar_panel.html">базовой панели</a>.</p>
+
+<p>Тот же тихий гул, что у базовой панели, но звучит ночью при открытом небе. В отличие от дневных панелей, дождь и гроза его не гасят — лунная панель там продолжает работать на минимуме и остаётся «активной». Подробнее — в <a href="solar_panel.html">базовой панели</a>.</p>
+
 <h2>Рецепты</h2>
-<p>Не крафтится. Единственный способ получить — вырастить из базовой <a href="solar_panel.html">Солнечной панели</a>: бросьте <strong>лунный эволюционный чип</strong> и дайте панели поработать несколько ясных ночей. Накопленная энергия сохраняется. В REI/JEI нажмите <strong>R</strong>, чтобы открыть информационную страницу с описанием эволюции (это не рецепт крафта).</p>
+
+<p>Не крафтится. Единственный способ получить — вырастить из базовой <a href="solar_panel.html">Солнечной панели</a>: бросьте <strong>лунный эволюционный чип</strong> и дайте панели поработать несколько ясных ночей. Накопленная энергия сохраняется.</p>
+
+<p>В REI/JEI нажмите <strong>R</strong>, чтобы открыть информационную страницу с описанием эволюции (это не рецепт крафта).</p>
+
 <h2>Прогрессия</h2>
+
 <p>Вторая ступень ночной ветки (T2), вырастает из базовой <a href="solar_panel.html">Солнечной панели</a>. Дальше она может развиваться по ночной ветке в будущих тирах.</p>
+
 <h2>Связанное</h2>
+
 <p><a href="solar_panel.html">Солнечная панель</a> — нейтральная T1, из которой её выращивают. <a href="daylight_solar_panel.html">Дневная панель</a> — зеркало дневной ветки. <a href="../energy-storage/battery_box.html">Энергохранилище</a> · <a href="../energy-transfer/copper_cable.html">Провод</a></p>
+
+<h2>Как получить</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="лунная солнечная панель" data-type="evolution"><div class="recipe-header"><span class="recipe-type">Эволюция</span><span class="recipe-energy">~28 мин активной работы</span></div><div class="recipe-body"><div class="recipe-grid evolution-grid"><div class="cell" title="Солнечная панель"><img src="../assets/item/solar_panel_3d.png" alt="Солнечная панель" width="32" height="32"></div><div class="cell" title="Лунный эволюционный чип"><img src="../assets/item/alignment_chip_night_3d.png" alt="Лунный эволюционный чип" width="32" height="32"></div></div><div class="recipe-process"><div class="arrow" aria-label="Превращается в">▶</div></div><div class="recipe-result"><div class="cell result" title="Лунная солнечная панель"><img src="../assets/item/moonlit_solar_panel_3d.png" alt="Лунная солнечная панель" width="32" height="32"></div><div class="result-name">Лунная солнечная панель</div></div></div></div></div>
 
   </main>
 </div>

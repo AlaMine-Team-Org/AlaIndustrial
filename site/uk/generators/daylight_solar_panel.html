@@ -8,7 +8,67 @@
 <title>Денна сонячна панель — Ala Industrial — Гід</title>
 <link rel="icon" href="../favicon.png" type="image/png">
 <script src="../assets/guide-site.js" defer></script>
-
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
+    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
+    padding:1px 2px; line-height:1; border-radius:0; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
 <style>
   
   @font-face {
@@ -284,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
 <a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="11 сторінок">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="12 сторінок">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="13 сторінок">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
@@ -302,7 +362,7 @@
 <div class="group-title">Предмети</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="18 сторінок">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../generators/index.html">Генератори</a><span class="sep">/</span><span>Денна сонячна панель</span></div>
@@ -316,29 +376,54 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
-<p>The <strong>Daylight Solar Panel</strong> is the grown-up version of the <a href="solar_panel.html">base Solar Panel</a> — the second tier of the day branch. It's four times stronger, still runs only by day under open sky, and produces nothing at night. You can't craft it. The only way to get one is to grow it from a base panel with a <strong>Solar Evolution Chip</strong> (see <a href="solar_panel.html">Solar Panel</a> → <em>Progression</em>).</p>
-<blockquote><strong>Mini-example:</strong> evolved from a base panel with a day chip → <strong>4 EU/FE/t</strong> in clear daylight. Two of these on a roof comfortably run a small workshop through the day and charge a Battery Box for the evening.</blockquote>
-<h2>Energy</h2>
-<p>The panel only produces power — it never takes any in. It holds up to 8000 EU/FE and sends it out on an LV line.</p>
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>8000 EU/FE</td></tr><tr><td>Output</td><td>up to 20 EU/FE/t (LV)</td></tr><tr><td>Base output (clear day)</td><td>4 EU/FE/t</td></tr></tbody></table>
-<p>Energy leaves through the 4 sides and the bottom. The <strong>top face is the working surface</strong> — don't cover it.</p>
-<h2>Generation</h2>
-<p>Same rules as the base panel: Overworld only, by day, with open sky above. Glass is fine; rain, thunder or a solid roof shut it down.</p>
-<table><thead><tr><th>Situation</th><th>Output</th></tr></thead><tbody><tr><td>Clear day, open sky</td><td>4 EU/FE/t</td></tr><tr><td>Glass above (transparent)</td><td>4 EU/FE/t (no change)</td></tr><tr><td>Leaves / cobweb above (partial shade)</td><td>~2 EU/FE/t</td></tr><tr><td>Snow layer or snowfall</td><td>1 EU/FE/t (a small trickle)</td></tr><tr><td>Rain or thunder</td><td>0</td></tr><tr><td>Night</td><td>0</td></tr></tbody></table>
-<h2>Interface</h2>
-<p>One screen shows the buffer level, current output and the sky state (day / snow / rain / night).</p>
-<h2>Block Properties</h2>
-<p>A flat slab half a block tall, like the base panel. Any pickaxe breaks it.</p>
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>low panel (half-slab)</td></tr><tr><td>Tool</td><td>pickaxe</td></tr></tbody></table>
-<h2>Sound</h2>
-<p>The same soft hum as the base panel — it plays only while working (day, open sky) and falls silent at night, in bad weather or under a roof. See the <a href="solar_panel.html">base panel</a>.</p>
-<h2>Recipes</h2>
-<p>Not craftable. The only way to get it is to grow it from a base <a href="solar_panel.html">Solar Panel</a>: drop in a <strong>Solar Evolution Chip</strong> and let the panel work for a few clear days. The stored energy carries over. In REI/JEI press <strong>R</strong> to see an informational page describing the evolution (not a crafting recipe).</p>
-<h2>Progression</h2>
-<p>Second tier of the day branch (T2), grown from the base <a href="solar_panel.html">Solar Panel</a>. From here it can evolve further up the day branch in future tiers.</p>
-<h2>Related</h2>
-<p><a href="solar_panel.html">Solar Panel</a> — the neutral T1, the panel you grow this from. <a href="moonlit_solar_panel.html">Moonlit Solar Panel</a> — the mirror of the night branch. <a href="../energy-storage/battery_box.html">Battery Box</a> · <a href="../energy-transfer/copper_cable.html">Copper Cable</a></p>
+<h2>Зведення</h2>
+
+<p><strong>Денна панель</strong> — вирощена версія базової панелі, другий щабель денної гілки. Вчетверо сильніша, як і раніше працює лише вдень за відкритого неба й нічого не дає вночі. Скрафтити її не можна. Єдиний спосіб — виростити з базової панелі через сонячний еволюційний чип (див. Сонячна панель → Прогресія).</p>
+
+<blockquote><strong>Міні-приклад:</strong> вирощена з базової панелі денним чипом → <strong>4 EU/FE/такт</strong> ясного дня. Дві такі на даху спокійно тягнуть денну майстерню й заряджають Енергосховище на вечір.</blockquote>
+
+<h2>Енергія</h2>
+
+<p>Панель лише виробляє енергію — чужої не приймає. Тримає до 8000 EU/FE й віддає їх у лінію LV.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>8000 EU/FE</td></tr><tr><td>Вихід</td><td>до 20 EU/FE/такт (LV)</td></tr><tr><td>Базовий виробіток (ясний день)</td><td>4 EU/FE/такт</td></tr></tbody></table>
+
+<p>Енергія йде крізь 4 боки й низ. Верхня грань — робоча поверхня, не закривайте її.</p>
+
+<h2>Генерація</h2>
+
+<p>Ті самі правила, що й у базової панелі: лише звичайний світ, лише вдень, лише за відкритого неба. Скло не заважає; дощ, гроза чи суцільний дах вимикають генерацію.</p>
+
+<table><thead><tr><th>Ситуація</th><th>Виробіток</th></tr></thead><tbody><tr><td>Ясний день, відкрите небо</td><td>4 EU/FE/такт</td></tr><tr><td>Скло згори (прозоре)</td><td>4 EU/FE/такт (без змін)</td></tr><tr><td>Листя / павутиння згори (легка тінь)</td><td>~2 EU/FE/такт</td></tr><tr><td>Шар снігу або снігопад</td><td>1 EU/FE/такт (слабкий струмінець)</td></tr><tr><td>Дощ або гроза</td><td>0</td></tr><tr><td>Ніч</td><td>0</td></tr></tbody></table>
+
+<h2>Інтерфейс</h2>
+
+<p>На одному екрані видно рівень буфера, поточний виробіток і стан неба (день / сніг / дощ / ніч).</p>
+
+<h2>Властивості блока</h2>
+
+<p>Плаский слеб у половину блока заввишки, як базова панель. Ламається будь-якою кайлом.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Форма</td><td>низька панель (напівслеб)</td></tr><tr><td>Інструмент</td><td>кайло</td></tr></tbody></table>
+
+<h2>Звук</h2>
+
+<p>Те саме тихе гудіння, що й у базової панелі — звучить лише під час роботи (день, відкрите небо) і змовкає вночі, у негоду та під дахом. Докладніше — в базової панелі.</p>
+
+<h2>Рецепти</h2>
+
+<p>Не крафтиться. Єдиний спосіб отримати — виростити з базової <a href="solar_panel.html">Сонячної панелі</a>: киньте сонячний еволюційний чип і дайте панелі попрацювати кілька ясних днів. Накопичена енергія зберігається. У REI/JEI натисніть <strong>R</strong>, щоб відкрити інформаційну сторінку з описом еволюції (це не рецепт крафта).</p>
+
+<h2>Прогресія</h2>
+
+<p>Другий щабель денної гілки (T2), виростає з базової <a href="solar_panel.html">Сонячної панелі</a>. Далі вона може розвиватися по денній гілці в майбутніх тирах.</p>
+
+<h2>Пов'язане</h2>
+
+<p><a href="solar_panel.html">Сонячна панель</a> — нейтральна T1, з якої її вирощують. <a href="moonlit_solar_panel.html">Нічна панель</a> — дзеркало нічної гілки. <a href="../energy-storage/battery_box.html">Енергосховище</a> · <a href="../energy-transfer/copper_cable.html">Дріт</a></p>
+
+<h2>Як отримати</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="денна сонячна панель" data-type="evolution"><div class="recipe-header"><span class="recipe-type">Еволюція</span><span class="recipe-energy">~28 хв активної роботи</span></div><div class="recipe-body"><div class="recipe-grid evolution-grid"><div class="cell" title="Сонячна панель"><img src="../assets/item/solar_panel_3d.png" alt="Сонячна панель" width="32" height="32"></div><div class="cell" title="Сонячний еволюційний чип"><img src="../assets/item/alignment_chip_day_3d.png" alt="Сонячний еволюційний чип" width="32" height="32"></div></div><div class="recipe-process"><div class="arrow" aria-label="Перетворюється на">▶</div></div><div class="recipe-result"><div class="cell result" title="Денна сонячна панель"><img src="../assets/item/daylight_solar_panel_3d.png" alt="Денна сонячна панель" width="32" height="32"></div><div class="result-name">Денна сонячна панель</div></div></div></div></div>
 
   </main>
 </div>

@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="18 pages">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../machines/index.html">Machines</a><span class="sep">/</span><span>Electric Furnace</span></div>
@@ -376,33 +377,68 @@
   </div>
 </div>
 <h2>Summary</h2>
+
 <p>The <strong>Electric Furnace</strong> is a full electrical counterpart to the vanilla furnace. It smelts <strong>everything a regular furnace can</strong> — ores, food, glass, cobblestone — but runs on EU/FE instead of fuel and works twice as fast. On top of the vanilla recipes, the mod adds its own, mainly <strong>dust → ingot</strong>, which closes the ore-doubling loop started by the <a href="macerator.html">Macerator</a>.</p>
+
 <blockquote><strong>Mini-example:</strong> grind iron ore in the Macerator to get two dusts, then drop both in here. In a few seconds you have <strong>two iron ingots</strong> — one vein, doubled, no fuel spent.</blockquote>
+
 <h2>Energy</h2>
+
 <p>The Electric Furnace only consumes EU/FE and keeps a small buffer for smooth running.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>800 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Consumption</td><td>2 EU/FE/t while working</td></tr></tbody></table>
-<p>An LV machine — it draws up to 32 EU/FE per tick. Any surplus in the network isn't taken, nothing is damaged. Energy comes in on the five working faces. The <strong>front face</strong> (the one the machine "looks" toward) is inert — cables don't connect there and hoppers don't work through it.</p>
+
+<p>An LV machine — it draws up to 32 EU/FE per tick. Any surplus in the network isn't taken, nothing is damaged.</p>
+
+<p>Energy comes in on the five working faces. The <strong>front face</strong> (the one the machine "looks" toward) is inert — cables don't connect there and hoppers don't work through it.</p>
+
 <h2>Processing</h2>
+
 <p>The furnace first looks for one of the mod's own recipes, and falls back to vanilla smelting if there is none. When both match the same input, the mod recipe wins. The base smelt takes ~100 ticks (~5 s) — about twice as fast as a vanilla furnace.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Duration</td><td>~100 ticks (~5 s)</td></tr><tr><td>Cost per smelt</td><td>200 EU/FE</td></tr><tr><td>Auto-output</td><td>no</td></tr></tbody></table>
+
 <h2>Inventory</h2>
+
 <p>One input slot, one output slot.</p>
+
 <table><thead><tr><th>Slot</th><th>Takes</th><th>Count</th></tr></thead><tbody><tr><td>Input</td><td>any smeltable item (mod + vanilla)</td><td>1</td></tr><tr><td>Output</td><td>the result</td><td>1</td></tr></tbody></table>
+
 <h2>Interface</h2>
+
 <p>One screen shows the energy buffer, the progress, the input slot and the output slot.</p>
+
 <h2>Block Properties</h2>
+
 <p>An ordinary solid block, softer than stone. Any pickaxe breaks it, but <strong>it does NOT keep its charge when broken</strong>.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge on break</td><td>no</td></tr></tbody></table>
+
 <h2>Recipes</h2>
-<p>The Electric Furnace is crafted at a workbench from <strong>the mod's own <a href="iron_furnace.html">Iron Furnace</a></strong> — it sits in the centre as the smelting core (not a vanilla furnace: this is the next step of the progression iron → Iron Furnace → Electric Furnace). Beside it, an <a href="../components/electronic_circuit.html">Electronic Circuit</a> drives the process and a <a href="../components/battery.html">Battery</a> gives the starting charge. Silver ingots form the casing — three across the top row and three across the bottom (<code>SSS / CFB / SSS</code>). What it smelts:</p>
+
+<p>The Electric Furnace is crafted at a workbench from <strong>the mod's own <a href="iron_furnace.html">Iron Furnace</a></strong> — it sits in the centre as the smelting core (not a vanilla furnace: this is the next step of the progression iron → Iron Furnace → Electric Furnace). Beside it, an <a href="../components/electronic_circuit.html">Electronic Circuit</a> drives the process and a <a href="../components/battery.html">Battery</a> gives the starting charge. Silver ingots form the casing — three across the top row and three across the bottom (<code>SSS / CFB / SSS</code>).</p>
+
+
 <table><thead><tr><th>Input</th><th>Output</th><th>Notes</th></tr></thead><tbody><tr><td>Metal dust (copper, iron, gold, nickel, silver, tin, uranium)</td><td>ingot</td><td>the mod recipe — closes ore-doubling</td></tr><tr><td>Raw ore (raw nickel, raw silver, raw tin, raw uranium)</td><td>ingot</td><td>the mod recipe</td></tr><tr><td>Iron ingot</td><td>tempered iron</td><td>the mod recipe, 200 EU/FE</td></tr><tr><td>Anything else a vanilla furnace smelts (ores, food, sand → glass, cobblestone → stone, raw copper/gold/iron → ingot…)</td><td>as vanilla</td><td>the vanilla fallback, ~5 s</td></tr></tbody></table>
+
 <p>The mod recipes (12 of them, all 200 EU/FE) cover <strong>only</strong> what a vanilla furnace cannot do: the mod's dusts → ingots, the mod's specific ores (nickel/silver/tin/uranium), and iron tempering. Anything that is numerically the same as a vanilla smelt (cobblestone → stone, sand → glass, raw copper/gold/iron → ingot) goes through the single vanilla fallback — no duplicate recipe. Non-metal dusts (coal, diamond, emerald, lapis) are <strong>not</strong> smelted here — the <a href="compressor.html">Compressor</a> handles those.</p>
+
 <h3>In the recipe viewer</h3>
-<p>The Electric Furnace category in JEI/REI lists <strong>everything the machine actually smelts</strong> — the mod's own recipes and every vanilla smelt (ores, food, sand → glass …), each priced as the Electric Furnace runs it: <strong>200 EU/FE · 5 s</strong>, not the vanilla "XP in 10 sec". Clicking the progress arrow opens that category alongside the vanilla one; clicking the Electric Furnace block in the item list does the same. Vanilla recipes enter the category as <strong>mirrors</strong>: they are built for display only and never join the game's recipe registry — at runtime the machine still executes the live vanilla recipe. The numbers you read and the behaviour you get therefore cannot drift apart. Every smelt is listed <strong>exactly once</strong>. The mod does not duplicate with its own recipe anything a vanilla furnace already does with the same input and output (cobblestone → stone, sand → glass, raw copper/gold/iron → ingot): those smelts live only in the vanilla fallback and reach the category as a single mirror. The Mekanism Energized Smelter and Modern Industrialization follow the same rule — a single source of truth for smelts that are numerically identical to vanilla ones (including the 200 EU/FE · 5 s price, which the mirror takes from the same <code>Config.electricFurnaceVanillaSmeltEu</code> the machine ticks). Raw rubber is no longer included after removed its smelting recipe.</p>
+
+<p>The Electric Furnace category in JEI/REI lists <strong>everything the machine actually smelts</strong> — the mod's own recipes and every vanilla smelt (ores, food, sand → glass …), each priced as the Electric Furnace runs it: <strong>200 EU/FE · 5 s</strong>, not the vanilla "XP in 10 sec". Clicking the progress arrow opens that category alongside the vanilla one; clicking the Electric Furnace block in the item list does the same.</p>
+
+<p>Vanilla recipes enter the category as <strong>mirrors</strong>: they are built for display only and never join the game's recipe registry — at runtime the machine still executes the live vanilla recipe. The numbers you read and the behaviour you get therefore cannot drift apart.</p>
+
+<p>Every smelt is listed <strong>exactly once</strong>. The mod does not duplicate with its own recipe anything a vanilla furnace already does with the same input and output (cobblestone → stone, sand → glass, raw copper/gold/iron → ingot): those smelts live only in the vanilla fallback and reach the category as a single mirror. The Mekanism Energized Smelter and Modern Industrialization follow the same rule — a single source of truth for smelts that are numerically identical to vanilla ones (including the 200 EU/FE · 5 s price, which the mirror takes from the same <code>Config.electricFurnaceVanillaSmeltEu</code> the machine ticks). Raw rubber is no longer included after removed its smelting recipe.</p>
+
 <h2>Progression</h2>
+
 <p>Tier: LV. The starter electric smelter and the other half of ore-doubling. Evolves into the Induction Furnace — the MV, faster, hotter evolution of smelting. Needs power from an LV source, e.g. a <a href="../generators/generator.html">Generator</a>.</p>
+
 <h2>Related</h2>
+
 <p><a href="macerator.html">Macerator</a> — produces the dust this furnace smelts back into ingots. Induction Furnace — the MV evolution of smelting. <a href="compressor.html">Compressor</a> — handles the non-metal dusts this furnace can't. <a href="../generators/generator.html">Generator</a> — the power source.</p>
+
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="electric furnace alaindustrial:electric_furnace" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Iron Furnace"><img src="../assets/item/iron_furnace_3d.png" alt="Iron Furnace" width="32" height="32"></div> <div class="cell" title="Battery"><img src="../assets/item/battery_3d.png" alt="Battery" width="32" height="32"></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Electric Furnace"><img src="../assets/item/electric_furnace_3d.png" alt="Electric Furnace" width="32" height="32"></div><div class="result-name">Electric Furnace</div></div></div></div></div>
   </main>

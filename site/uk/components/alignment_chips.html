@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="11 сторінок">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="12 сторінок">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="13 сторінок">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предмети</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="18 сторінок">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../components/index.html">Компоненти</a><span class="sep">/</span><span>Сонячний еволюційний чип</span></div>
@@ -376,28 +377,51 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p><strong>Evolution chips</strong> are crafting components that turn base T1 forms into T2. Two variants: <strong>Solar chip</strong> (day) — evolves the base <a href="../generators/solar_panel.html">solar panel</a> into the <a href="../generators/daylight_solar_panel.html">daylight T2</a> and the base <a href="../generators/wind_mill.html">wind mill</a> into the <a href="../generators/high_altitude_wind_mill.html">sky T2</a>. <strong>Lunar chip</strong> (night) — evolves the base panel into the <a href="../generators/moonlit_solar_panel.html">moonlit T2</a>, and the wind mill into the <a href="../generators/storm_wind_mill.html">tempest T2</a>. Evolution carries accumulated NBT energy: the base block's charge is not lost during the upgrade. The chip itself is consumed in the process.</p>
+
+<p><strong>Evolution chips</strong> are crafting components that turn base T1 forms into T2. Two variants:</p>
+
+<p><strong>Solar chip</strong> (day) — evolves the base <a href="../generators/solar_panel.html">solar panel</a> into the <a href="../generators/daylight_solar_panel.html">daylight T2</a> and the base <a href="../generators/wind_mill.html">wind mill</a> into the <a href="../generators/high_altitude_wind_mill.html">sky T2</a>. <strong>Lunar chip</strong> (night) — evolves the base panel into the <a href="../generators/moonlit_solar_panel.html">moonlit T2</a>, and the wind mill into the <a href="../generators/storm_wind_mill.html">tempest T2</a>.</p>
+
+<p>Evolution carries accumulated NBT energy: the base block's charge is not lost during the upgrade. The chip itself is consumed in the process.</p>
+
 <blockquote><strong>Mini-example:</strong> place a solar panel, accumulate EU/FE, craft a solar chip → evolve the panel to T2 — the charge carries over, the chip is spent, and daytime output quadruples.</blockquote>
+
 <h2>Energy</h2>
+
 <p>Stores none. The chip is a one-shot evolution catalyst; all EU/FE logic lives on the evolving block.</p>
+
 <h2>How it's used</h2>
+
 <p>Applied through the evolution slot/recipe of a base T1 block (solar panel or wind mill). After evolution the chip disappears, the T1 becomes a T2 with its NBT energy preserved.</p>
+
 <h2>Block Properties</h2>
+
 <p>Not applicable (item). Stack: 64.</p>
+
 <h2>Recipes</h2>
-<p>Both chips are crafted at a workbench on the same shaped 3×3 pattern: nickel in the corners, a glowing/lapis block in a cross, and an <a href="electronic_circuit.html">electronic circuit</a> at the centre. <strong>Solar chip</strong> (day): <code>G</code> = glowstone.</p>
+
+<p>Both chips are crafted at a workbench on the same shaped 3×3 pattern: nickel in the corners, a glowing/lapis block in a cross, and an <a href="electronic_circuit.html">electronic circuit</a> at the centre.</p>
+
+<p><strong>Solar chip</strong> (day): <code>G</code> = glowstone.</p>
 <pre><code class="lang-">NGN
 GEG
 NGN</code></pre>
+
 <p><strong>Lunar chip</strong> (night): <code>L</code> = lapis block.</p>
 <pre><code class="lang-">NLN
 LEL
 NLN</code></pre>
+
 <p><code>N</code> — nickel ingot (×4); <code>E</code> — electronic circuit (×1).</p>
+
 <h2>Progression</h2>
+
 <p>Components with no tier of their own. Open the T2 era of solar and wind generation. Nickel + glowstone/lapis is a moderate early gate, reachable after a first Nether trip (glowstone) or deep-cave mining (lapis).</p>
+
 <h2>Related</h2>
+
 <p><a href="../generators/solar_panel.html">Solar Panel</a> and <a href="../generators/wind_mill.html">Wind Mill</a> — the T1 bases. <a href="../generators/daylight_solar_panel.html">Daylight</a> / <a href="../generators/moonlit_solar_panel.html">moonlit</a> T2 panels — the results of evolution with the solar/lunar chip. <a href="../generators/high_altitude_wind_mill.html">Sky</a> / <a href="../generators/storm_wind_mill.html">tempest</a> T2 wind mills — the wind evolution results. <a href="electronic_circuit.html">Electronic Circuit</a> — the chip's central component. <a href="../materials/nickel.html">Nickel</a> — the chip's corners.</p>
+
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="сонячний еволюційний чип alaindustrial:alignment_chip_day" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Nickel Ingot"><img src="../assets/item/nickel_ingot_3d.png" alt="Any Nickel Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Glowstone"><img src="../assets/item/glowstone_3d.png" alt="Glowstone" width="32" height="32"></div> <div class="cell" title="Any Nickel Ingot"><img src="../assets/item/nickel_ingot_3d.png" alt="Any Nickel Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Glowstone"><img src="../assets/item/glowstone_3d.png" alt="Glowstone" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Glowstone"><img src="../assets/item/glowstone_3d.png" alt="Glowstone" width="32" height="32"></div> <div class="cell" title="Any Nickel Ingot"><img src="../assets/item/nickel_ingot_3d.png" alt="Any Nickel Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Glowstone"><img src="../assets/item/glowstone_3d.png" alt="Glowstone" width="32" height="32"></div> <div class="cell" title="Any Nickel Ingot"><img src="../assets/item/nickel_ingot_3d.png" alt="Any Nickel Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Сонячний еволюційний чип"><img src="../assets/item/alignment_chip_day_3d.png" alt="Сонячний еволюційний чип" width="32" height="32"></div><div class="result-name">Сонячний еволюційний чип</div></div></div></div></div>
   </main>

@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../agriculture/index.html">Сельское хозяйство</a><span class="sep">/</span><span>Инкубатор</span></div>
@@ -375,45 +376,105 @@
     </div>
   </div>
 </div>
+
 <h2>Сводка</h2>
-<p><strong>Инкубатор</strong> — мультиблок 1×2: приземистая механическая основа внизу и стеклянный купол сверху. Положите любое стекло (тег <code>c:glass</code>) на основу — оно превратится в объёмную камеру, внутри которой парит и вращается облучаемый предмет. Машина <strong>мутирует</strong> предметы трёх видов: <strong>дублирует</strong> (1 → 2), <strong>превращает</strong> (A → B) или <strong>создаёт новый</strong> материал мода. Каждая операция ест EU/FE (LV) и <strong>заряд облучения</strong>: один <code>uranium_ingot</code> даёт 3 попытки, после чего выгорает в <code>depleted_uranium</code> и оседает в зольном слоте. Режим работы задаёт <strong>мутационный чип</strong> в отдельном слоте — дублирования / трансформации / создания. Без чипа машина не запускается; сам чип не расходуется. Исход вероятностный: при успехе бросается <strong>грейд редкости</strong> — Обычный (70 %) / Редкий (20 %) / Эпический (8 %) / Легендарный (2 %), он красит имя и даёт бонус к будущим мутациям.</p>
+
+<p><strong>Инкубатор</strong> — мультиблок 1×2: приземистая механическая основа внизу и стеклянный купол сверху. Положите любое стекло (тег <code>c:glass</code>) на основу — оно превратится в объёмную камеру, внутри которой парит и вращается облучаемый предмет.</p>
+
+<p>Машина <strong>мутирует</strong> предметы трёх видов: <strong>дублирует</strong> (1 → 2), <strong>превращает</strong> (A → B) или <strong>создаёт новый</strong> материал мода. Каждая операция ест EU/FE (LV) и <strong>заряд облучения</strong>: один <code>uranium_ingot</code> даёт 3 попытки, после чего выгорает в <code>depleted_uranium</code> и оседает в зольном слоте.</p>
+
+<p>Режим работы задаёт <strong>мутационный чип</strong> в отдельном слоте — дублирования / трансформации / создания. Без чипа машина не запускается; сам чип не расходуется. Исход вероятностный: при успехе бросается <strong>грейд редкости</strong> — Обычный (70 %) / Редкий (20 %) / Эпический (8 %) / Легендарный (2 %), он красит имя и даёт бонус к будущим мутациям.</p>
+
 <table><thead><tr><th>Что делает</th><th>Как</th></tr></thead><tbody><tr><td>Собирает мультиблок</td><td>основа + любой блок по тегу <code>c:glass</code> сверху → купол</td></tr><tr><td>Мутирует предметы</td><td>EU/FE (LV) + заряд (1 <code>uranium_ingot</code> = 3 попытки → 1 <code>depleted_uranium</code>)</td></tr><tr><td>Режим</td><td>слот чипа: дублирование / трансформация / создание</td></tr><tr><td>Виды мутаций</td><td>дублирование (×2), трансформация (A→B), создание (A→новый предмет мода)</td></tr><tr><td>Редкость</td><td>на каждом успехе — грейд Обычный / Редкий / Эпический / Легендарный (70/20/8/2 %)</td></tr><tr><td>Шлак</td><td>5 % попыток дают <code>irradiated_slag</code> вместо пустого провала</td></tr></tbody></table>
+
 <h2>Энергия</h2>
+
 <p>Гибридная модель: EU/FE от сети (LV) <strong>плюс</strong> уран как топливо облучения. Уран не исчезает — превращается в <code>depleted_uranium</code>, заготовку под будущую ядерную фазу.</p>
+
 <table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Буфер EU/FE</td><td>8000 — вмещает самую дорогую операцию (<code>create</code>) целиком</td></tr><tr><td>Макс. вход</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Потребление</td><td><strong>8 EU/FE/такт</strong> во время работы — вчетверо выше стандарта машин</td></tr><tr><td>Топливо</td><td>1 <code>uranium_ingot</code> = 3 попытки → 1 <code>depleted_uranium</code> в зольник</td></tr></tbody></table>
+
 <p>Без урана в слоте топлива операция не стартует; EU/FE тратятся только во время цикла.</p>
+
 <h2>Процессинг</h2>
+
 <p>Длительность и цена привязаны к виду мутации. Инкубатор — самая энергоёмкая LV-машина мода: минимум 2400 EU/FE за операцию против 200–300 у обычных машин.</p>
+
 <table><thead><tr><th>Вид</th><th>Шанс успеха</th><th>Тики</th><th>EU/FE/попытку</th><th>При провале</th></tr></thead><tbody><tr><td>Трансформация</td><td>0.75</td><td>300 (15 c)</td><td><strong>2400</strong></td><td>вход теряется, −1 заряд</td></tr><tr><td>Дублирование</td><td>0.45</td><td>500 (25 c)</td><td><strong>4000</strong></td><td>вход теряется, −1 заряд</td></tr><tr><td>Создание</td><td>0.25</td><td>1000 (50 c)</td><td><strong>8000</strong></td><td>вход теряется, −1 заряд</td></tr></tbody></table>
+
 <p><strong>Три исхода попытки:</strong></p>
+
 <table><thead><tr><th>Исход</th><th>Вероятность</th><th>Что происходит</th></tr></thead><tbody><tr><td>Успех</td><td>шанс по виду (+ бонус гена, кап 0.95)</td><td>результат в выходной слот + бросок грейда</td></tr><tr><td>Шлак</td><td>5 %</td><td>вход теряется, в выход падает <code>irradiated_slag</code></td></tr><tr><td>Провал</td><td>остаток</td><td>вход теряется, выход не меняется</td></tr></tbody></table>
-<p>Шлак вычитается из провала, а не из успеха — шанс успеха не падает. Грейд бросается только на успех (шлак всегда обычный). Исход бросается <strong>в конце цикла</strong>: до последнего тика результат неизвестен, отменить его выниманием предмета нельзя. <strong>Грейд.</strong> При успехе бросается редкость: Обычный 70 % / Редкий 20 % / Эпический 8 % / Легендарный 2 %. Обычный не оставляет следов — стакается с ванильными предметами. Редкий и выше ставят компонент <code>mutation_grade</code> и красят имя (жёлтый / голубой / фиолетовый). <strong>Ген входа сгорает.</strong> Грейд входного предмета даёт бонус к шансу успеха (+5 / +10 / +15 п.п. за Редкий / Эпический / Легендарный, суммарный шанс капится на 0.95) и <strong>сгорает</strong> — результат получает свежий бросок грейда. Легендарку нельзя размножить дублированием, только потратить ради повышенного шанса.</p>
+
+<p>Шлак вычитается из провала, а не из успеха — шанс успеха не падает. Грейд бросается только на успех (шлак всегда обычный). Исход бросается <strong>в конце цикла</strong>: до последнего тика результат неизвестен, отменить его выниманием предмета нельзя.</p>
+
+<p><strong>Грейд.</strong> При успехе бросается редкость: Обычный 70 % / Редкий 20 % / Эпический 8 % / Легендарный 2 %. Обычный не оставляет следов — стакается с ванильными предметами. Редкий и выше ставят компонент <code>mutation_grade</code> и красят имя (жёлтый / голубой / фиолетовый).</p>
+
+<p><strong>Ген входа сгорает.</strong> Грейд входного предмета даёт бонус к шансу успеха (+5 / +10 / +15 п.п. за Редкий / Эпический / Легендарный, суммарный шанс капится на 0.95) и <strong>сгорает</strong> — результат получает свежий бросок грейда. Легендарку нельзя размножить дублированием, только потратить ради повышенного шанса.</p>
+
 <h2>Инвентарь</h2>
+
 <p>Пять слотов: чип, топливо (уран), мутируемый предмет, результат, зола. Результат и зола — только для чтения игроком; автоматизация в зольный слот — pull-only.</p>
+
 <table><thead><tr><th>Слот</th><th>Принимает</th><th>Поведение</th></tr></thead><tbody><tr><td>Чип</td><td><code>#</code> (3 чипа)</td><td>1 шт.; не расходуется; задаёт режим; пустой слот = машина не работает; автоматикой не вынимается</td></tr><tr><td>Топливо</td><td><code>#</code> (= <code>uranium_ingot</code>)</td><td>1 слиток изымается сразу при укладке в собранную машину; заряд = 3 попытки</td></tr><tr><td>Вход</td><td>предметы с рецептом мутации в выбранном режиме</td><td>1 стопка; расходуется 1/попытку (теряется при провале)</td></tr><tr><td>Результат</td><td>результат мутации или <code>irradiated_slag</code></td><td>1 стопка; fill-only</td></tr><tr><td>Зола</td><td><code>depleted_uranium</code></td><td>1 стопка; +1 за исчерпанный слиток; pull-only</td></tr></tbody></table>
+
 <h2>Интерфейс</h2>
-<p>Экран показывает: запас EU/FE, прогресс цикла, <strong>заряд облучения (0–3)</strong>, пять слотов и индикатор собранного мультиблока. Полоса энергии — слева, заряд облучения — вертикальный столбик пипсов справа от топливного слота, заполняется снизу вверх. Верхний ряд: чип, вход, стрелка прогресса, результат; нижний — топливо и зола. Слот чипа — верхний левый. Пока он пуст, строка состояния подсказывает, чего не хватает («Нужно стекло сверху» → «Нужен чип»). Замена чипа сбрасывает прогресс текущей операции. Обе половины мультиблока кликабельны: правый клик по куполу открывает то же меню, что и по основе.</p>
+
+<p>Экран показывает: запас EU/FE, прогресс цикла, <strong>заряд облучения (0–3)</strong>, пять слотов и индикатор собранного мультиблока. Полоса энергии — слева, заряд облучения — вертикальный столбик пипсов справа от топливного слота, заполняется снизу вверх. Верхний ряд: чип, вход, стрелка прогресса, результат; нижний — топливо и зола.</p>
+
+<p>Слот чипа — верхний левый. Пока он пуст, строка состояния подсказывает, чего не хватает («Нужно стекло сверху» → «Нужен чип»). Замена чипа сбрасывает прогресс текущей операции.</p>
+
+<p>Обе половины мультиблока кликабельны: правый клик по куполу открывает то же меню, что и по основе.</p>
+
 <h2>Свойства блока</h2>
-<p>Двухъярусный мультиблок с разным силуэтом: тяжёлый механический низ и лёгкий скруглённый верх — не «два куба друг на друге». <strong>Основа</strong> — полный куб с углублённой передней панелью, кольцом-эмиттером по верхней грани и патрубками охлаждения по бокам. Во время работы над ней поднимается свечение эмиттера. <strong>Купол</strong> — объёмная скруглённая камера, ставится автоматически из любого стекла по тегу <code>c:glass</code>. Исходный тип стекла запоминается, поэтому: при разборке мультиблока возвращается <strong>ровно ваше стекло</strong> — ничего не теряется; <strong>цветное стекло тонирует купол</strong> — 17 вариантов окраски без новых рецептов: 16 цветов витражного плюс бесцветный. Каркас и шпиль всегда в тёмном металле. Облучаемый предмет парит по центру камеры и медленно вращается; при работе — частицы и пульсация свечения.</p>
+
+<p>Двухъярусный мультиблок с разным силуэтом: тяжёлый механический низ и лёгкий скруглённый верх — не «два куба друг на друге».</p>
+
+<p><strong>Основа</strong> — полный куб с углублённой передней панелью, кольцом-эмиттером по верхней грани и патрубками охлаждения по бокам. Во время работы над ней поднимается свечение эмиттера. <strong>Купол</strong> — объёмная скруглённая камера, ставится автоматически из любого стекла по тегу <code>c:glass</code>. Исходный тип стекла запоминается, поэтому: при разборке мультиблока возвращается <strong>ровно ваше стекло</strong> — ничего не теряется; <strong>цветное стекло тонирует купол</strong> — 17 вариантов окраски без новых рецептов: 16 цветов витражного плюс бесцветный. Каркас и шпиль всегда в тёмном металле. Облучаемый предмет парит по центру камеры и медленно вращается; при работе — частицы и пульсация свечения.</p>
+
 <h2>Рецепты</h2>
+
 <p><strong>Тип рецепта</strong> — три отдельных типа, по одному на режим: <code>mutation_transform</code>, <code>mutation_duplicate</code>, <code>mutation_create</code>. Каждый JSON описывает один вход → один выход с опциональным <code>chance</code> (override). Топливо в рецепте не упоминается — уран это заряд машины, а не ингредиент.</p>
+
 <h3>Дублирование — 4 класса ценности</h3>
+
 <p>Цена попытки фиксирована (⅓ слитка + 4000 EU/FE + 25 c), поэтому балансный рычаг один — <strong>шанс успеха: чем ценнее предмет, тем ниже шанс.</strong></p>
+
 <table><thead><tr><th>Класс</th><th>Шанс</th><th>Предметы</th></tr></thead><tbody><tr><td>Самоцветы и ценные слитки</td><td>0.45</td><td><code>diamond</code>, <code>emerald</code>, <code>amethyst_shard</code>, <code>gold_ingot</code>, <code>silver_ingot</code>, <code>nickel_ingot</code></td></tr><tr><td>Минералы и рядовые слитки</td><td>0.55</td><td><code>coal</code>, <code>redstone</code>, <code>lapis_lazuli</code>, <code>quartz</code>, <code>glowstone_dust</code>, <code>iron_ingot</code>, <code>copper_ingot</code>, <code>tin_ingot</code>, <code>raw_rubber</code>, <code>rubber</code></td></tr><tr><td>Редкая органика</td><td>0.60</td><td><code>nether_wart</code>, <code>cocoa_beans</code>, <code>glow_berries</code>, <code>torchflower_seeds</code>, <code>pitcher_pod</code></td></tr><tr><td>Базовая агрокультура</td><td>0.85</td><td><code>wheat_seeds</code>, <code>beetroot_seeds</code>, <code>melon_seeds</code>, <code>pumpkin_seeds</code>, <code>carrot</code>, <code>potato</code></td></tr></tbody></table>
-<p><strong>Слитки — да, обработанные детали — нет.</strong> Дублируются ванильные и модовые <strong>слитки</strong> (<code>iron</code>, <code>copper</code>, <code>gold</code>, <code>tin</code>, <code>silver</code>, <code>nickel</code>) — это базовое сырьё. Всё <strong>обработанное</strong> (пыли, пластины, корпус, схемы, чипы, кабели, руда и рудные блоки) не дублируется — иначе обесценилась бы крафт-цепочка. Уран не дублируется (рецепта нет). <strong>Каучук и резина — оговорённое исключение.</strong> Формально это продукт машины, то есть по правилу выше дублироваться не должен. Но нефть — <strong>конечный</strong> ресурс: озёра не восполняются, а превратить воду в нефть нечем, так что без инкубатора запас резины в мире жёстко ограничен числом найденных месторождений. Дублирование даёт дорогой возобновляемый путь, а не халяву: попытка стоит 4000 EU/FE и ⅓ уранового слитка при шансе 0.55, тогда как та же резина из свежей нефти обходится в 400 EU/FE. Пока нефть есть — качать выгоднее в десять раз; инкубатор включается, когда качать уже нечего.</p>
+
+<p><strong>Слитки — да, обработанные детали — нет.</strong> Дублируются ванильные и модовые <strong>слитки</strong> (<code>iron</code>, <code>copper</code>, <code>gold</code>, <code>tin</code>, <code>silver</code>, <code>nickel</code>) — это базовое сырьё. Всё <strong>обработанное</strong> (пыли, пластины, корпус, схемы, чипы, кабели, руда и рудные блоки) не дублируется — иначе обесценилась бы крафт-цепочка. Уран не дублируется (рецепта нет).</p>
+
+<p><strong>Каучук и резина — оговорённое исключение.</strong> Формально это продукт машины, то есть по правилу выше дублироваться не должен. Но нефть — <strong>конечный</strong> ресурс: озёра не восполняются, а превратить воду в нефть нечем, так что без инкубатора запас резины в мире жёстко ограничен числом найденных месторождений. Дублирование даёт дорогой возобновляемый путь, а не халяву: попытка стоит 4000 EU/FE и ⅓ уранового слитка при шансе 0.55, тогда как та же резина из свежей нефти обходится в 400 EU/FE. Пока нефть есть — качать выгоднее в десять раз; инкубатор включается, когда качать уже нечего.</p>
+
 <h3>Трансформация — горизонтальный обмен</h3>
+
 <p><strong>Меняем равноценное на равноценное.</strong> Апгрейд по ценности (железо → золото) запрещён. Все 27 рецептов — шанс 0.75, 300 тиков, 2400 EU/FE. Для семейств из многих предметов (саженцы, цветы, грунты) применяется <strong>кольцо</strong>: каждый предмет превращается в следующий по кругу, пока не выпадет нужный.</p>
+
 <table><thead><tr><th>Категория</th><th>Рецепты</th><th>Кольцо</th></tr></thead><tbody><tr><td>Минералы</td><td>3</td><td><code>lapis_lazuli</code> ↔ <code>redstone</code>, <code>quartz</code> ↔ <code>glowstone_dust</code>, <code>coal</code> ↔ <code>charcoal</code> (все 1:1)</td></tr><tr><td>Саженцы</td><td>8</td><td>дуб → берёза → ель → тропический → акация → тёмный дуб → вишня → мангровый → дуб</td></tr><tr><td>Цветы</td><td>8</td><td>одуванчик → мак → синяя орхидея → лужайник → голубой лепесток → василёк → ландыш → ромашка → одуванчик</td></tr><tr><td>Грунты</td><td>5</td><td>земля → подзол → мицелий → земля; песок ↔ красный песок</td></tr></tbody></table>
+
 <h3>Создание — эволюционные лестницы</h3>
+
 <p>Обычный предмет <strong>эволюционирует</strong> в уникальный материал мода по трёхступенчатой лестнице. Чем выше ступень, тем ниже шанс и дороже операция. На ступенях 2–3 провал <strong>возвращает вход целым</strong> (сгорают только заряд и EU/FE) — иначе никто бы не рисковал подниматься выше первой.</p>
-<table><thead><tr><th>Ветка</th><th>Ступень 1</th><th>Ступень 2</th><th>Ступень 3</th></tr></thead><tbody><tr><td>Алмазная — энергоплотность</td><td><code>diamond</code> → облучённый алмаз</td><td>→ алмазная матрица</td><td>→ ядро сингулярности</td></tr><tr><td>Кристальная — оптика</td><td><code>amethyst_shard</code> → резонирующий осколок</td><td>→ фокусирующая линза</td><td>→ призматическое ядро</td></tr><tr><td>Биологическая — агро</td><td><code>lapis_lazuli</code> → мутаген-пыль</td><td>→ живой мутаген</td><td>→ генная матрица</td></tr><tr><td>Ядерная — топливо</td><td><code>depleted_uranium</code> → нестабильный изотоп</td><td>→ обогащённое ядро</td><td>→ изотопный концентрат</td></tr><tr><td>Ступень</td><td>Шанс</td><td>Тики</td><td>EU/FE</td><td>При провале</td></tr><tr><td>---------</td><td>------</td><td>------</td><td>-----</td><td>-------------</td></tr><tr><td>1 (ваниль → материал мода)</td><td>0.25</td><td>1000</td><td>8000</td><td>вход теряется</td></tr><tr><td>2</td><td>0.15</td><td>1500</td><td>12000</td><td><strong>вход возвращается целым</strong></td></tr><tr><td>3</td><td>0.08</td><td>2000</td><td>16000</td><td><strong>вход возвращается целым</strong></td></tr></tbody></table>
-<p>Ядерная ветка стартует с золы самого инкубатора — отработанный уран становится входом в цепочку, а не мусором. В текущем релизе входят только 4 рецепта ступени 1 (по одному на ветку): <code>diamond</code> → <code>irradiated_diamond</code>, <code>amethyst_shard</code> → <code>resonant_shard</code>, <code>lapis_lazuli</code> → <code>mutagen_dust</code>, <code>depleted_uranium</code> → <code>unstable_isotope</code>. Ступени 2–3 и апгрейд-чипы из верхних материалов — следующий релиз.</p>
+
+<table><thead><tr><th>Ветка</th><th>Ступень 1</th><th>Ступень 2</th><th>Ступень 3</th></tr></thead><tbody><tr><td>Алмазная — энергоплотность</td><td><code>diamond</code> → облучённый алмаз</td><td>→ алмазная матрица</td><td>→ ядро сингулярности</td></tr><tr><td>Кристальная — оптика</td><td><code>amethyst_shard</code> → резонирующий осколок</td><td>→ фокусирующая линза</td><td>→ призматическое ядро</td></tr><tr><td>Биологическая — агро</td><td><code>lapis_lazuli</code> → мутаген-пыль</td><td>→ живой мутаген</td><td>→ генная матрица</td></tr><tr><td>Ядерная — топливо</td><td><code>depleted_uranium</code> → нестабильный изотоп</td><td>→ обогащённое ядро</td><td>→ изотопный концентрат</td></tr></tbody></table>
+
+<table><thead><tr><th>Ступень</th><th>Шанс</th><th>Тики</th><th>EU/FE</th><th>При провале</th></tr></thead><tbody><tr><td>1 (ваниль → материал мода)</td><td>0.25</td><td>1000</td><td>8000</td><td>вход теряется</td></tr><tr><td>2</td><td>0.15</td><td>1500</td><td>12000</td><td><strong>вход возвращается целым</strong></td></tr><tr><td>3</td><td>0.08</td><td>2000</td><td>16000</td><td><strong>вход возвращается целым</strong></td></tr></tbody></table>
+
+<p>Ядерная ветка стартует с золы самого инкубатора — отработанный уран становится входом в цепочку, а не мусором.</p>
+
+<p>В текущем релизе входят только 4 рецепта ступени 1 (по одному на ветку): <code>diamond</code> → <code>irradiated_diamond</code>, <code>amethyst_shard</code> → <code>resonant_shard</code>, <code>lapis_lazuli</code> → <code>mutagen_dust</code>, <code>depleted_uranium</code> → <code>unstable_isotope</code>. Ступени 2–3 и апгрейд-чипы из верхних материалов — следующий релиз.</p>
+
 <h2>Прогрессия</h2>
+
 <p>Тир: LV. Строить после первых машин (macerator/extractor), когда есть стабильная урановая жила и EU/FE-сеть. Вводит 7 новых предметов: <code>depleted_uranium</code>, <code>irradiated_diamond</code>, <code>mutagen_dust</code>, <code>resonant_shard</code>, <code>unstable_isotope</code>, <code>irradiated_slag</code> (побочный продукт 5 % попыток — без потребителей в этом релизе, задел под будущее) + три чипа режимов. <strong>Грейды-«гены»</strong> на материалах дают бонус к шансу повторной мутации (+5/+10/+15 п.п.) — потребители появятся в будущих агро/ядерных фазах. Достижения мутаций: «Что-то изменилось» (любой мутировавший предмет), «Из ничего» (материал режима <code>create</code>), «Один из пятидесяти» (легендарный исход).</p>
+
 <h2>Совместимость</h2>
+
 <p><strong>JEI/REI</strong>: три категории — по одной на режим; в строке под рецептом — цена, длительность и шанс успеха (<code>2400 EU/FE · 15 s · 75 %</code>). Грейды — отдельная инфо-страница на самом инкубаторе. <strong>Тултип предмета</strong>: строка «Грейд мутации: …». <strong>Jade/The One Probe</strong>: прогресс цикла, EU/FE, режим мутации, статус мультиблока, заполнение зольного слота. <strong>Автоматизация</strong>: хопперы/трубы работают с основой (чип — push-only, топливо — push, вход — push, результат — pull, зола — pull). Купол чисто структурный, без инвентаря. Чип автоматикой не вынимается ни с одной грани — это выбор на этапе постройки.</p>
+
 <h2>Связанное</h2>
+
 <p><a href="../materials/uranium.html">Уран</a> — топливный слиток. Ядерная тема — куда пойдёт <code>depleted_uranium</code>. <a href="../advanced-machines/teleporter.html">Телепорт-мультиблок</a> — родственная задача на структуру. <a href="../machines/sawmill.html">Лесопилка</a> — образец машины с переключаемыми режимами. <a href="../generators/solar_panel.html">Солнечная панель</a> — образец слота чипа, задающего режим.</p>
+
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="инкубатор alaindustrial:incubator" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="incubator_dome_glass (tag)" aria-label="incubator_dome_glass (tag)"><span>incuba</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="incubator_dome_glass (tag)" aria-label="incubator_dome_glass (tag)"><span>incuba</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="incubator_dome_glass (tag)" aria-label="incubator_dome_glass (tag)"><span>incuba</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любая урановая пластина"><img src="../assets/item/uranium_plate_3d.png" alt="Любая урановая пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинный корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинный корпус" width="32" height="32"></div> <div class="cell" title="Любая урановая пластина"><img src="../assets/item/uranium_plate_3d.png" alt="Любая урановая пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любая железная пластина"><img src="../assets/item/iron_plate_3d.png" alt="Любая железная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любая железная пластина"><img src="../assets/item/iron_plate_3d.png" alt="Любая железная пластина" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Инкубатор"><img src="../assets/item/incubator_3d.png" alt="Инкубатор" width="32" height="32"></div><div class="result-name">Инкубатор</div></div></div></div></div>
   </main>

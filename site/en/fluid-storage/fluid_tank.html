@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link active" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="18 pages">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../fluid-storage/index.html">Fluid Storage</a><span class="sep">/</span><span>Portable Fluid Tank</span></div>
@@ -376,18 +377,35 @@
   </div>
 </div>
 <h2>Summary</h2>
-<p>The <strong>Portable Fluid Tank</strong> stores up to <strong>8 buckets (8000 mB)</strong> of one fluid. It needs no EU/FE, has no GUI, and does not push fluid automatically. Its glass walls show the actual fluid and fill level. Water, lava, and fluids registered by other mods can move through buckets, Vacuum Capsules, or the native loader fluid capability. Breaking the tank keeps its contents in the dropped item.</p>
+
+<p>The <strong>Portable Fluid Tank</strong> stores up to <strong>8 buckets (8000 mB)</strong> of one fluid. It needs no EU/FE, has no GUI, and does not push fluid automatically. Its glass walls show the actual fluid and fill level.</p>
+
+<p>Water, lava, and fluids registered by other mods can move through buckets, Vacuum Capsules, or the native loader fluid capability. Breaking the tank keeps its contents in the dropped item.</p>
+
 <h2>Fluid storage</h2>
+
 <table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Capacity</td><td>8000 mB (8 buckets)</td></tr><tr><td>Fluids at once</td><td>1</td></tr><tr><td>Input / output</td><td>all 6 faces</td></tr><tr><td>Automatic output</td><td>none</td></tr></tbody></table>
+
 <p>Different fluids never mix. A comparator outputs 0 while empty and 1–15 according to fullness.</p>
+
 <h2>Block properties</h2>
-<p>The full-block footprint contains a sealed frame with 3 px top/bottom plates, four 3×3 px corner posts, and four translucent glass walls. A runtime renderer draws both the glass and the fluid inside it, using the registered fluid texture and tint. The block's shape follows that whole body — plates, posts <strong>and walls</strong> (1 px panes on each of the four sides, y 3–13). The walls must be in the shape even though a renderer, not the model, draws them: without them a click on the glass passes through and lands on the block behind the tank, so a player aiming at the tank empties a bucket of lava at their own feet. The shape is not a full cube on purpose — a full cube would have to occlude to satisfy the block standards, and occlusion paints the tank's own inside black. Empty tank items stack normally. A filled tank carries one atomic <code>fluid_tank_contents</code> component and has a maximum stack size of one. Its inventory icon tints the inner fluid layer from the registered fluid colour, while the standard item bar shows the stored amount relative to 8000 mB.</p>
+
+<p>The full-block footprint contains a sealed frame with 3 px top/bottom plates, four 3×3 px corner posts, and four translucent glass walls. A runtime renderer draws both the glass and the fluid inside it, using the registered fluid texture and tint.</p>
+
+<p>The block's shape follows that whole body — plates, posts <strong>and walls</strong> (1 px panes on each of the four sides, y 3–13). The walls must be in the shape even though a renderer, not the model, draws them: without them a click on the glass passes through and lands on the block behind the tank, so a player aiming at the tank empties a bucket of lava at their own feet. The shape is not a full cube on purpose — a full cube would have to occlude to satisfy the block standards, and occlusion paints the tank's own inside black.</p>
+
+<p>Empty tank items stack normally. A filled tank carries one atomic <code>fluid_tank_contents</code> component and has a maximum stack size of one. Its inventory icon tints the inner fluid layer from the registered fluid colour, while the standard item bar shows the stored amount relative to 8000 mB.</p>
+
 <h2>Recipe</h2>
+
 <p>Crafting table pattern <code>TGT / GIG / TRT</code>: tin ingots (<code>T</code>), glass panes (<code>G</code>), an iron gear (<code>I</code>), and redstone dust (<code>R</code>).</p>
+
 <h2>Related</h2>
+
 <p><a href="../items/vacuum_capsule.html">Vacuum Capsule</a> Fluid transport</p>
+
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="portable fluid tank alaindustrial:fluid_tank" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/vanilla/item/glass_pane.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/vanilla/item/glass_pane.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Iron Gear"><img src="../assets/item/iron_gear_3d.png" alt="Iron Gear" width="32" height="32"></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/vanilla/item/glass_pane.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/vanilla/item/redstone.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Portable Fluid Tank"><img src="../assets/item/fluid_tank_3d.png" alt="Portable Fluid Tank" width="32" height="32"></div><div class="result-name">Portable Fluid Tank</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="portable fluid tank alaindustrial:fluid_tank" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Iron Gear"><img src="../assets/item/iron_gear_3d.png" alt="Iron Gear" width="32" height="32"></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Portable Fluid Tank"><img src="../assets/item/fluid_tank_3d.png" alt="Portable Fluid Tank" width="32" height="32"></div><div class="result-name">Portable Fluid Tank</div></div></div></div></div>
   </main>
 </div>
 

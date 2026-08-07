@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профиль игрока</span></a>
 <div class="group-title">Энергия</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генераторы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="1 страница">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="6 страниц">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопители энергии</span><span class="cat-count" aria-label="3 страницы">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="12 страниц">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="9 страниц">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="13 страниц">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="15 страниц">15</span></a>
-<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="14 страниц">14</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="18 страниц">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../items/index.html">Игровые предметы</a><span class="sep">/</span><span>Батарейный мешок</span></div>
@@ -375,27 +376,49 @@
     </div>
   </div>
 </div>
+
 <h2>Сводка</h2>
-<p><strong>Батарейный мешок</strong> — первый электро-предмет мода: переносное хранилище, которое работает как ванильный мешочек, но вдвое вместительнее и требует заряда. В один слот инвентаря он вмещает <strong>128 веса</strong> предметов (примерно два стака обычных блоков) — выручает в долгих походах и при тесном инвентаре. Подвох в том, что пока внутри лежат предметы, мешок медленно жжёт заряд: <strong>1 EU/FE в секунду</strong>. Когда заряд падает до нуля, срабатывает замок — ни положить, ни достать ничего нельзя, пока мешок не зарядишь. Содержимое при этом не теряется, оно только заперто.</p>
+
+<p><strong>Батарейный мешок</strong> — первый электро-предмет мода: переносное хранилище, которое работает как ванильный мешочек, но вдвое вместительнее и требует заряда. В один слот инвентаря он вмещает <strong>128 веса</strong> предметов (примерно два стака обычных блоков) — выручает в долгих походах и при тесном инвентаре.</p>
+
+<p>Подвох в том, что пока внутри лежат предметы, мешок медленно жжёт заряд: <strong>1 EU/FE в секунду</strong>. Когда заряд падает до нуля, срабатывает замок — ни положить, ни достать ничего нельзя, пока мешок не зарядишь. Содержимое при этом не теряется, оно только заперто.</p>
+
 <blockquote><strong>Мини-пример:</strong> идёте копать на час? Набейте мешок булыжником, рудой, парой инструментов и освободите хотбар. Зарядите мешок на Энергохранилище перед выходом — полного заряда хватит на весь рейс, примерно на 33 минуты ношения.</blockquote>
+
 <h2>Энергия</h2>
+
 <p>У мешка собственный небольшой заряд, отдельный от энергосети. Заряжается на Энергохранилище; тратит заряд только пока внутри лежат предметы и мешок в инвентаре.</p>
+
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Заряд</td><td>2 000 EU/FE</td></tr><tr><td>Зарядка</td><td>слот Энергохранилища — полный заряд примерно за 3 секунды</td></tr><tr><td>Разряд</td><td>1 EU/FE в секунду, только пока внутри есть предметы и мешок в инвентаре</td></tr><tr><td>Хватает на</td><td>~33 минуты ношения предметов</td></tr><tr><td>При нуле</td><td>содержимое запирается (в безопасности) до зарядки</td></tr></tbody></table>
+
 <h2>Содержимое</h2>
+
 <p>Мешок занимает один слот инвентаря и вмещает до <strong>128 веса</strong>. Сколько весит предмет, зависит от того, как он стакається — то же правило, что у ванильного мешочка:</p>
+
 <table><thead><tr><th>Тип предмета</th><th>Вес 1 шт</th><th>Влезает в 128</th></tr></thead><tbody><tr><td>Блоки и ресурсы (стак до 64)</td><td>1</td><td>128 шт (примерно 2 стака)</td></tr><tr><td>Жемчуг, снежки (стак до 16)</td><td>4</td><td>32 шт</td></tr><tr><td>Инструменты, вёдра (без стака)</td><td>64</td><td>2 шт</td></tr></tbody></table>
+
 <h2>Как работает</h2>
+
 <p><strong>Положить:</strong> правый клик стеком по мешку (или мешком по стеку) в инвентаре. Предметы сначала доливаются в уже лежащий неполный стек того же типа, потом занимают новый вес. Остаток, не влезший по весу, остаётся в руке. <strong>Достать:</strong> правый клик мешком в воздухе или по пустому слоту достаёт <strong>целый верхний стек</strong> (последний положенный — первым наружу). <strong>Замок при нуле:</strong> как только заряд садится, обе операции блокируются. Ничего не пропадает — содержимое просто лежит запертым до зарядки. <strong>Что расходует заряд:</strong> 1 EU/FE в секунду, но только пока внутри есть предметы <strong>и</strong> мешок в инвентаре игрока. В сундуке, на земле или в слоте Энергохранилища он не разряжается. <strong>В креативе:</strong> не разряжается вообще — как ванильный инструмент в креативе не теряет прочность. То же правило действует для всей электро-семьи: <a href="energy_pack.html">энергоранец</a> и <a href="electric_drill.html">электробур</a> в креативе тоже не тратят заряд. <strong>Индикатор заряда:</strong> полоска под иконкой показывает заряд (жёлтая). В тултипе — список содержимого сеткой и шкала заполненности «вес / 128 (NN%)» с процентом доли, ниже 10 % заряда — предупреждение, при нуле — красное «разряжен». <strong>Вложенность:</strong> мешок нельзя вложить в другой мешок. В ванильный мешочек или шалкер — можно. <strong>Переименование:</strong> на ванильной наковальне. <strong>При дропе или смерти:</strong> заряд, содержимое и заданное имя сохраняются в предмете.</p>
+
 <h2>Свойства блока</h2>
+
 <p>Не применимо (предмет).</p>
+
 <h2>Рецепты</h2>
+
 <p>Рецепт появляется в книге рецептов, как только у вас есть все компоненты.</p>
+
 <h2>Прогрессия</h2>
+
 <p>Первый электро-предмет мода — вход в линейку переносной техники на батарее. Доступен после <a href="../energy-storage/battery_box.html">Энергохранилища</a>; без него мешок не зарядить. В будущем появятся старшие версии — больше веса, фильтры и линковка между мешками.</p>
+
 <h2>Связанное</h2>
+
 <p><a href="../energy-storage/battery_box.html">Энергохранилище</a> — зарядка со стороны этого мода (слот charge); с. <a href="energy_pack.html">Энергоранец</a> — следующий шаг: надетый ранец подпитывает мешок прямо в инвентаре. <a href="../components/electronic_circuit.html">Электронная схема</a> — компонент крафта. <a href="../materials/tin.html">Олово</a> — застёжка в крафте.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="батарейный мешок alaindustrial:battery_pouch" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любая кожа"><img src="../assets/vanilla/item/leather.png" alt="Любая кожа" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любая кожа"><img src="../assets/vanilla/item/leather.png" alt="Любая кожа" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любая кожа"><img src="../assets/vanilla/item/leather.png" alt="Любая кожа" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Мешок"><img src="../assets/vanilla/item/bundle.png" alt="Мешок" width="32" height="32"></div> <div class="cell" title="Любая кожа"><img src="../assets/vanilla/item/leather.png" alt="Любая кожа" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любая кожа"><img src="../assets/vanilla/item/leather.png" alt="Любая кожа" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любая кожа"><img src="../assets/vanilla/item/leather.png" alt="Любая кожа" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Батарейный мешок"><img src="../assets/item/battery_pouch_3d.png" alt="Батарейный мешок" width="32" height="32"></div><div class="result-name">Батарейный мешок</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="батарейный мешок alaindustrial:battery_pouch" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любая кожа"><img src="../assets/item/leather_3d.png" alt="Любая кожа" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любая кожа"><img src="../assets/item/leather_3d.png" alt="Любая кожа" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любая кожа"><img src="../assets/item/leather_3d.png" alt="Любая кожа" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Мешок"><img src="../assets/item/bundle_3d.png" alt="Мешок" width="32" height="32"></div> <div class="cell" title="Любая кожа"><img src="../assets/item/leather_3d.png" alt="Любая кожа" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любая кожа"><img src="../assets/item/leather_3d.png" alt="Любая кожа" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любая кожа"><img src="../assets/item/leather_3d.png" alt="Любая кожа" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Батарейный мешок"><img src="../assets/item/battery_pouch_3d.png" alt="Батарейный мешок" width="32" height="32"></div><div class="result-name">Батарейный мешок</div></div></div></div></div>
   </main>
 </div>
 

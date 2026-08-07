@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="6 pages">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="9 pages">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="14 pages">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="18 pages">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../generators/index.html">Generators</a><span class="sep">/</span><span>Generator</span></div>
@@ -376,31 +377,57 @@
   </div>
 </div>
 <h2>Summary</h2>
+
 <p>The <strong>Generator</strong> burns solid fuel — coal, charcoal, a block of coal, anything that burns in a vanilla furnace — and turns it into EU/FE. It's the no-fuss power source you reach for when there's no sun and no wind: it just runs, day or night, rain or shine.</p>
+
 <blockquote><strong>Mini-example:</strong> drop a piece of coal in, point a cable at it, and you've got <strong>8 EU/FE/t</strong> steady power for your first <a href="../machines/macerator.html">Macerator</a>. It ignores the weather — the only thing it cares about is fuel.</blockquote>
+
 <h2>Energy</h2>
+
 <p>The generator only produces power — it never takes any in. It holds up to 4000 EU/FE inside and sends it out on an LV line.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>4000 EU/FE</td></tr><tr><td>Output</td><td>up to 32 EU/FE/t (LV)</td></tr><tr><td>Output while burning</td><td>8 EU/FE/t</td></tr></tbody></table>
+
 <p>Energy leaves through the 5 working faces. The <strong>front face</strong> (the one facing you when you place it) is inert — cables don't connect there and hoppers don't work through it.</p>
+
 <h2>Generation</h2>
+
 <p>Feed it any vanilla furnace fuel. It burns at a steady 8 EU/FE/t for as long as the fuel lasts; when the buffer is full, it pauses until there's room again.</p>
+
 <table><thead><tr><th>Situation</th><th>Output</th></tr></thead><tbody><tr><td>Fuel burning, room in buffer</td><td>8 EU/FE/t</td></tr><tr><td>Buffer full</td><td>pauses (waits for room)</td></tr><tr><td>No fuel</td><td>0</td></tr></tbody></table>
+
 <p>Each unit of fuel gives you its vanilla burn time worth of EU/FE, paid out at 8 EU/FE/t.</p>
+
 <h2>Inventory</h2>
+
 <p>One slot, for fuel only.</p>
+
 <table><thead><tr><th>Slot</th><th>Takes</th><th>Count</th></tr></thead><tbody><tr><td>Fuel</td><td>any vanilla furnace fuel (coal, charcoal, coal block, wood…)</td><td>1</td></tr></tbody></table>
+
 <p>A lava bucket does <strong>not</strong> go in here — lava belongs to the <a href="geothermal_generator.html">Geothermal Generator</a>.</p>
+
 <h2>Interface</h2>
+
 <p>One screen shows the buffer level, how much burn time is left on the current fuel, the fuel slot and the output rate.</p>
+
 <h2>Block Properties</h2>
+
 <p>An ordinary solid block. Any pickaxe breaks it, but <strong>it does NOT keep its charge when broken</strong> — drain the energy into a Battery Box before you pick it up.</p>
+
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge on break</td><td>no</td></tr></tbody></table>
+
 <h2>Recipes</h2>
+
 <p>Crafted at a workbench. It's a generator, not a processing machine, so it has no processing recipes of its own.</p>
+
 <h2>Progression</h2>
+
 <p>Tier: LV. The starter fuel-burner. It doesn't evolve into anything — the stronger fuel generator (<a href="geothermal_generator.html">Geothermal Generator</a>) is a separate block you craft from this one.</p>
+
 <h2>Related</h2>
+
 <p><a href="../machines/macerator.html">Macerator</a> — the typical first LV machine to power. <a href="../energy-storage/battery_box.html">Battery Box</a> — bank the surplus, and drain this block before moving it. <a href="geothermal_generator.html">Geothermal Generator</a> — the lava-burning upgrade. <a href="../energy-transfer/copper_cable.html">Copper Cable</a> — how to route the energy.</p>
+
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="generator alaindustrial:generator" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Cobblestone"><img src="../assets/item/cobblestone_3d.png" alt="Any Cobblestone" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Cobblestone"><img src="../assets/item/cobblestone_3d.png" alt="Any Cobblestone" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Cobblestone"><img src="../assets/item/cobblestone_3d.png" alt="Any Cobblestone" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Cobblestone"><img src="../assets/item/cobblestone_3d.png" alt="Any Cobblestone" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Furnace"><img src="../assets/item/furnace_3d.png" alt="Furnace" width="32" height="32"></div> <div class="cell" title="Any Cobblestone"><img src="../assets/item/cobblestone_3d.png" alt="Any Cobblestone" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Cobblestone"><img src="../assets/item/cobblestone_3d.png" alt="Any Cobblestone" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Any Cobblestone"><img src="../assets/item/cobblestone_3d.png" alt="Any Cobblestone" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Generator"><img src="../assets/item/generator_3d.png" alt="Generator" width="32" height="32"></div><div class="result-name">Generator</div></div></div></div></div>
 <h2>Used in</h2>

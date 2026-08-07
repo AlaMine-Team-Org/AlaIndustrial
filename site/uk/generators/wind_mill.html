@@ -21,6 +21,7 @@
   .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
     gap:2px; padding:4px; background:#6a6a6a;
     box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
   .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
   .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
   .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
@@ -343,17 +344,17 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
 <a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="11 сторінок">11</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="12 сторінок">12</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="13 сторінок">13</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
@@ -361,7 +362,7 @@
 <div class="group-title">Предмети</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="18 сторінок">18</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../generators/index.html">Генератори</a><span class="sep">/</span><span>Вітротурбіна</span></div>
@@ -375,40 +376,74 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
-<p>The <strong>Wind Turbine</strong> makes EU/FE from the wind — no fuel, no sun, just altitude and weather. Build it high and it pays off; build it on the ground and it does almost nothing. It rewards players who climb a tower and don't mind a storm. To run, it needs three things: a <strong>Wooden Rotor</strong> in its slot, open sky above, and clear space around the blades. The worse the weather, the more power it makes.</p>
-<blockquote><strong>Mini-example:</strong> one turbine at the top of a tall tower (around y=128) → <strong>4 EU/FE/t</strong> on a clear day, <strong>8 EU/FE/t</strong> in a thunderstorm. A row of them up high is a free, weather-powered backbone for your base.</blockquote>
-<h2>Energy</h2>
-<p>The turbine only produces power — it never takes any in. It holds up to 4000 EU/FE inside and sends it out on an LV line.</p>
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>4000 EU/FE</td></tr><tr><td>Output</td><td>up to 32 EU/FE/t (LV)</td></tr><tr><td>Realistic output</td><td>0–8 EU/FE/t (altitude × weather)</td></tr></tbody></table>
-<p>Energy comes out <strong>only from the back face</strong>. Connect your cable to the turbine's back wall — the other sides output nothing.</p>
-<h2>Generation</h2>
-<p>The higher above sea level and the worse the weather, the more power. The base grows with altitude, and the weather multiplies it.</p>
-<table><thead><tr><th>Altitude / weather</th><th>Output</th></tr></thead><tbody><tr><td>At sea level</td><td>0 (useless on the ground)</td></tr><tr><td>+1 EU/FE/t per ~16 blocks above sea level</td><td>up to 4 EU/FE/t near y=128</td></tr><tr><td>…in rain</td><td>×1.5</td></tr><tr><td>…in a thunderstorm</td><td>×2</td></tr><tr><td>Overall cap</td><td>8 EU/FE/t</td></tr></tbody></table>
-<p>So a turbine near y=128 makes 4 EU/FE/t clear, 6 EU/FE/t in rain, 8 EU/FE/t in a storm — but the moment it's roofed or the blades are blocked, it stops dead. If something's wrong, the screen says so in plain words: "no rotor", "roofed", "blocked", "interference" or "calm". When it's actually generating, the gear indicator lights up.</p>
-<h3>Blade clearance</h3>
-<p>The blades spin in the block <strong>in front of</strong> the turbine and need room around them. Keep these clear: the block in front, one block to each side, and the three blocks directly below (a little pit). If anything solid is there, the turbine shows "blocked" and stops. "Clear" means air, grass, flowers, saplings or snow — anything you could place a block into. Stone, glass, leaves, fences, slabs or the turbine's own support pillar all count as blocked. You don't need to check the air above the blades — a roof is caught separately by the open-sky check.</p>
-<h3>Placing several turbines</h3>
-<p>Simple spacing rules so the blades don't collide: <strong>Same direction, side by side:</strong> leave 1 block of air between them, or both stop. <strong>Back to back:</strong> can sit right next to each other. <strong>Face to face:</strong> need at least 2 blocks between them. When two turbines interfere, <strong>both</strong> stop, no exceptions. A neighbour with no rotor causes no trouble — but the moment you put a rotor in it, a running turbine next door stops too.</p>
-<h2>Inventory</h2>
-<p>Two slots:</p>
-<table><thead><tr><th>Slot</th><th>Takes</th><th>Count</th></tr></thead><tbody><tr><td>Rotor</td><td>Wooden Rotor (required — no rotor, no generation)</td><td>1</td></tr><tr><td>Chip</td><td>evolution chip (solar/lunar) — starts the evolution</td><td>1</td></tr></tbody></table>
-<h2>Interface</h2>
-<p>The screen shows the energy bar (with exact EU/FE on hover), current output, the working mode, the rotor slot in the centre, the chip slot on the right, evolution progress at the bottom and a status indicator on top.</p>
-<h2>Block Properties</h2>
-<p>An ordinary solid block, placed facing the player. Any pickaxe breaks it, and <strong>it keeps its charge when broken</strong>.</p>
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge on break</td><td>yes</td></tr></tbody></table>
-<h2>Sound</h2>
-<p>While the rotor spins, the wind mill softly rustles its sails in the wind — the loop (pattern <strong>C</strong>, <code>humVolume</code> 0.22, fixed 12-block range). It falls silent in calm weather, under a roof, on a neighbouring rotor's interference, or with no rotor installed.</p>
-<h2>Recipes</h2>
-<p>Two crafts at a workbench: <strong>Wind Turbine</strong> — copper ingots in the corners, planks top and bottom, copper cable on the sides, a wooden gear in the centre. <strong>Wooden Rotor</strong> (required to run) — planks in the corners, iron ingots top and bottom, copper cable on the sides, a wooden gear in the centre.</p>
-<h2>Progression</h2>
-<p>The basic turbine is the neutral tier-1 form. Drop in an <strong>evolution chip</strong> (the same one solar panels use) and let it run under open sky with a rotor in, and it turns into a stronger version, keeping its stored energy: <strong>Solar Evolution Chip</strong> → Sky branch: stronger at altitude → <a href="high_altitude_wind_mill.html">Sky Mill</a>. <strong>Lunar Evolution Chip</strong> → Tempest branch: stronger in bad weather → <a href="storm_wind_mill.html">Tempest Mill</a>. Expect roughly <strong>a day and a half</strong> (~28 real minutes). Evolution is weather-independent: the chip keeps accruing progress in any weather, as long as there's open sky above the mill, the blades are clear and the rotor is installed — so, unlike the solar panel, the wind mill evolves at night and in the rain alike.</p>
-<table><thead><tr><th>Tier</th><th>Sky branch (altitude)</th><th>Tempest branch (storm)</th></tr></thead><tbody><tr><td>T1</td><td>Wind Turbine (neutral)</td><td>Wind Turbine (neutral)</td></tr><tr><td>T2</td><td><a href="high_altitude_wind_mill.html">Sky Mill</a></td><td><a href="storm_wind_mill.html">Tempest Mill</a></td></tr></tbody></table>
-<h2>Related</h2>
-<p><a href="high_altitude_wind_mill.html">Sky Mill</a> — T2 sky evolution branch. <a href="storm_wind_mill.html">Tempest Mill</a> — T2 tempest evolution branch. <a href="solar_panel.html">Solar Panel</a> — shares its evolution chips with the turbine. <a href="../energy-storage/battery_box.html">Battery Box</a> · <a href="../energy-transfer/copper_cable.html">Copper Cable</a></p>
+<h2>Зведення</h2>
+
+<p><strong>Вітрогенератор</strong> виробляє EU/FE з вітру — без палива, без сонця, лише висота та погода. Збудуйте його високо — і він окупиться; лишіть на землі — і користі майже не буде. Для роботи потрібні три речі: дерев'яний ротор у слоті, відкрите небо над блоком і вільне місце навколо лопатей. Що гірша погода — то більше енергії.</p>
+
+<blockquote><strong>Міні-приклад:</strong> вітряк у вузькій смузі під хмарами (<strong>y 183–193</strong>) → <strong>4 EU/FE/такт</strong> ясного дня і <strong>8 EU/FE/такт</strong> у грозу. Нижче віддача помітно менша: на y ≈ 128 це вже лише 2 EU/FE/такт.</blockquote>
+
+<h2>Енергія</h2>
+
+<p>Вітряк лише виробляє енергію — чужої не приймає. Усередині він тримає до 4000 EU/FE й віддає їх у лінію тира LV.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>4000 EU/FE</td></tr><tr><td>Вихід</td><td>до 32 EU/FE/такт (LV)</td></tr><tr><td>Реальний виробіток</td><td>0–8 EU/FE/такт (висота × погода)</td></tr></tbody></table>
+
+<p>Енергія виходить лише із задньої грані. Під'єднуйте кабель до задньої стінки вітряка — решта боків енергію не віддають.</p>
+
+<h2>Генерація</h2>
+
+<p>Що ближче до хмар і що гірша погода — то більше енергії. Вітер посилюється з висотою не нескінченно: найсильніший потік іде біля самої кромки хмар, а вище повітря розріджене й вітер стихає. Погода множить результат.</p>
+
+<table><thead><tr><th>Висота / погода</th><th>Виробіток</th></tr></thead><tbody><tr><td>На рівні моря й нижче</td><td>0 (на землі марний)</td></tr><tr><td>y ≈ 100</td><td>1 EU/FE/такт</td></tr><tr><td>y ≈ 127</td><td>2 EU/FE/такт</td></tr><tr><td>y ≈ 175</td><td>3 EU/FE/такт</td></tr><tr><td>y 183–193 (під хмарами)</td><td>4 EU/FE/такт — максимум, усього 11 висот</td></tr><tr><td>y ≈ 210</td><td>2 EU/FE/такт</td></tr><tr><td>y ≥ 248</td><td>0 (повітря надто розріджене)</td></tr><tr><td>…у дощ</td><td>×1.5</td></tr><tr><td>…у грозу</td><td>×2</td></tr><tr><td>Загальна стеля</td><td>8 EU/FE/такт</td></tr></tbody></table>
+
+<p>Тобто вітряк у вузькій смузі під хмарами дає 4 EU/FE/такт ясної погоди, 6 EU/FE/такт у дощ і 8 EU/FE/такт у грозу — але схибити легко: на 20 блоків нижче або вище він уже слабший, а під дахом, із перекритими лопатями чи під самою стелею світу стане зовсім. Де саме краще ставити вежу, показує Анемометр: він читає ту саму криву вітру й міряє її в км/год ще до будівництва. Якщо щось не так, на екрані це написано людською мовою: «немає ротора», «під дахом», «перешкода», «перешкоди ротора» або «штиль». Коли він справді генерує — горить індикатор-шестерня.</p>
+
+<h3>Зазор для лопатей</h3>
+
+<p>Лопаті обертаються у блоці перед вітряком і потребують місця навколо. Лишіть вільними: блок перед вітряком, по одному блоку з кожного боку й три блоки просто під ним (невелику ямку). Якщо там щось тверде — вітряк покаже «перешкода» й зупиниться. «Вільно» — це повітря, трава, квіти, паростки або шар снігу (те, у що можна поставити блок). Камінь, скло, листя, паркани, плити чи власна опора самого вітряка вважаються перешкодою. Повітря над лопатями перевіряти не потрібно — дах згори ловить окрема перевірка відкритого неба.</p>
+
+<h3>Розстановка кількох вітряків</h3>
+
+<p>Прості правила, щоб лопаті не стикалися:</p>
+
+<p><strong>В один бік, пліч-о-пліч:</strong> лишіть 1 блок повітря між ними, інакше зупиняться обидва. <strong>Спина до спини:</strong> можна ставити впритул. <strong>Лицем до лиця:</strong> потрібно щонайменше 2 блоки між ними.</p>
+
+<p>Коли два вітряки заважають одне одному, зупиняються обидва — без винятків. Сусід без ротора перешкод не створює — але щойно вставите в нього ротор, і сусідній робочий вітряк теж стане.</p>
+
+<h2>Інвентар</h2>
+
+<p>Один слот під <strong>дерев'яний ротор</strong> і чотири слоти покращень. Без ротора генерації немає, і зовнішня модель лопатей не відображається. Ротор — витратний матеріал: він зношується, поки вітряк справді дає EU/FE, а в дощ і грозу зношується швидше.</p>
+
+<h2>Інтерфейс</h2>
+
+<p>Смуга енергії, центральний слот ротора та індикатор стану. Поки вітряк працює, у рядку статусу видно поточний виробіток; коли стоїть — причину зупинки.</p>
+
+<h2>Властивості блока</h2>
+
+<p>Звичайний суцільний блок. Ламається будь-якою кайлом.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr></tbody></table>
+
+<h2>Звук</h2>
+
+<p>Поки лопаті обертаються, чути неголосне гудіння вітру. Змовкає, коли вітряк стає.</p>
+
+<h2>Рецепти</h2>
+
+<p>Збирається на верстаку. <strong>Дерев'яний ротор</strong> крафтиться окремо — без нього вітряк не працює.</p>
+
+<h2>Прогресія</h2>
+
+<p>Вітряк — база обох повітряних гілок. З <strong>еволюційним чипом</strong> він виростає у другий щабель:</p>
+
+<p><strong>Сонячний чип</strong> → <a href="high_altitude_wind_mill.html">Небесний вітряк</a>: удвічі більша віддача від висоти, стеля 12 EU/FE/такт, але погода впливає слабше — це вітряк рівного доходу. <strong>Місячний чип</strong> → <a href="storm_wind_mill.html">Буревий вітряк</a>: гілка пікових значень у негоду.</p>
+
+<h2>Пов'язане</h2>
+
+<p><a href="high_altitude_wind_mill.html">Небесний вітряк</a> · <a href="storm_wind_mill.html">Буревий вітряк</a> — гілки T2. <a href="../energy-storage/battery_box.html">Енергосховище</a> — накопичує нерівний вітряний дохід. <a href="solar_panel.html">Сонячна панель</a> — інше джерело, що залежить від неба.</p>
+
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="вітротурбіна alaindustrial:wind_mill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Copper Ingot"><img src="../assets/vanilla/item/copper_ingot.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/vanilla/item/copper_ingot.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/vanilla/item/copper_ingot.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/vanilla/item/copper_ingot.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Вітротурбіна"><img src="../assets/item/wind_mill_3d.png" alt="Вітротурбіна" width="32" height="32"></div><div class="result-name">Вітротурбіна</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="вітротурбіна alaindustrial:wind_mill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Вітротурбіна"><img src="../assets/item/wind_mill_3d.png" alt="Вітротурбіна" width="32" height="32"></div><div class="result-name">Вітротурбіна</div></div></div></div></div>
   </main>
 </div>
 
