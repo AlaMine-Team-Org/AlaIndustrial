@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,38 +375,22 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Electric Chainsaw</strong> is the mod's second powered hand tool and the wood-side mirror of the <a href="electric_drill.html">Electric Drill</a>: an axe that runs on EU/FE instead of durability. With charge it cuts <strong>faster than a diamond axe</strong> (speed 9.0 against 8.0) and spends <strong>30 EU/FE per block</strong>. A full buffer is <strong>10 000 EU/FE</strong> — about <strong>333 blocks</strong> on one charge.</p>
+<p><strong>Електропила</strong> — електроінструмент: працює не на міцності, а на EU/FE. Із зарядом він валить дерево швидше за діамантову сокиру, а коли заряд закінчився — просто перестає копати, ламати його не можна.</p>
 
-<blockquote><strong>Mini-example:</strong> fell a tree, then clear its canopy at the same speed — a third tool rule puts <code>#minecraft:leaves</code> on the axe, which vanilla files under the hoe. When the chainsaw runs flat it doesn't stop; it just cuts at hand speed until you recharge, with the same drops the whole time.</blockquote>
+<h2>Енергія</h2>
 
-<p>Like the mod's other EU/FE items, the chainsaw has <strong>no durability</strong> and never breaks: the bar under the icon shows EU/FE charge (gold), not wear. It charges where the <a href="energy_pack.html">Energy Pack</a> does — in the <a href="../energy-storage/battery_box.html">Battery Box</a> charge slot and from a worn pack.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Буфер</td><td>10 000 EU/FE</td></tr><tr><td>Витрата</td><td>30 EU/FE за блок</td></tr><tr><td>Швидкість заряджання</td><td>32 EU/FE/т</td></tr><tr><td>Повного заряду вистачає на</td><td>~333 блоків</td></tr></tbody></table>
 
-<h2>Energy</h2>
+<p>Заряджається в <a href="../energy-storage/battery_box.html">Енергосховищі</a> або на <a href="../energy-storage/charge_pad.html">Зарядній станції</a>.</p>
 
-<p>Its own EU/FE buffer, outside the energy network. Charges in the Battery Box slot and from a worn pack; spends charge cutting.</p>
+<h2>Пов'язане</h2>
 
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Buffer</td><td>10 000 EU/FE</td></tr><tr><td>Charging</td><td>Battery Box slot / worn pack, fills in ~16 s</td></tr><tr><td>Cost</td><td>30 EU/FE per block broken</td></tr><tr><td>Passive drain</td><td>none</td></tr></tbody></table>
-
-<p>Instant-break blocks — leaves in most configurations, saplings, vines — are <strong>free</strong>, just as they never wear a vanilla axe. In creative no EU/FE is spent.</p>
-
-<h2>How it behaves</h2>
-
-<p><strong>Cutting:</strong> with at least 30 EU/FE it cuts <code>#minecraft:mineable/axe</code> and <code>#minecraft:leaves</code> at speed 9.0. Each such block costs 30 EU/FE. <strong>Flat chainsaw:</strong> below 30 EU/FE it cuts at hand speed (1.0) but keeps its mining level and drops, and spends nothing. Efficiency does not apply there — vanilla only grants it above speed 1.0. <strong>Charging:</strong> the Battery Box charge slot and a worn Energy Pack both accept it automatically, up to 32 EU/FE/t. <strong>Attack:</strong> hits like a diamond axe (6 damage, 1.0 attack speed); attacking spends no EU/FE and causes no wear. <strong>Enchanting:</strong> it sits in <code>#minecraft:axes</code>, so the table and anvil treat it as an axe. <strong>Readout:</strong> the bar shows charge; the tooltip reads the exact numbers, or a red "Empty" at zero, and the texture switches to its unpowered variant. <strong>Log stripping is not supported.</strong> Vanilla stripping lives in <code>AxeItem.useOn</code>, and extending <code>AxeItem</code> would drag in <code>Properties.axe(...)</code>, which sets <code>MAX_DAMAGE</code> and makes the tool breakable — the opposite of the "EU/FE only, never breaks" model. Strip with an ordinary axe.</p>
-
-<h2>Recipes</h2>
-
-<p>The drill's frame with a diamond axe in the middle instead of a diamond pickaxe: iron ingots on top, two batteries at the sides, two copper coils and an electronic circuit below. The recipe unlocks once you obtain a copper coil, an electronic circuit or a diamond axe.</p>
-
-<p>Repair is not applicable — there is no durability; "repair" means recharging.</p>
-
-<h2>Progression</h2>
-
-<p>The second powered tool after the <a href="electric_drill.html">Electric Drill</a>: the drill covers stone, the chainsaw covers wood. Needs LV infrastructure first — without the <a href="../energy-storage/battery_box.html">Battery Box</a> and a battery it can be neither crafted nor charged. LV tier. The remaining electric tools (hoe/saber/nano bow) are future work.</p>
+<p><a href="energy_pack.html">Енергоранець</a> — підживлює інструменти просто в інвентарі. <a href="electric_drill.html">Електробур</a> — камінь.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="електропила alaindustrial:electric_chainsaw" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell placeholder" title="Diamond Axe" aria-label="Diamond Axe"><span>diamon</span></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електропила"><img src="../assets/item/electric_chainsaw_3d.png" alt="Електропила" width="32" height="32"></div><div class="result-name">Електропила</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="електропила alaindustrial:electric_chainsaw" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Diamond Axe"><img src="../assets/item/diamond_axe_3d.png" alt="Diamond Axe" width="32" height="32"></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електропила"><img src="../assets/item/electric_chainsaw_3d.png" alt="Електропила" width="32" height="32"></div><div class="result-name">Електропила</div></div></div></div></div>
   </main>
 </div>
 

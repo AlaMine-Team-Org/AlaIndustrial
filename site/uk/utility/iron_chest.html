@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,46 +375,28 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Iron Chest</strong> is a storage block with <strong>36 slots</strong> (4 rows of 9) — a whole row more than the vanilla chest. It uses no energy; it's just a bigger place to keep your stuff, one tier above the vanilla copper chest.</p>
+<p><strong>Залізна скриня</strong> — перша скриня моду на <strong>36 слотів</strong> (4 рядів по 9). Це вчетверо більше за ванільну скриню на 27 слотів — хоча рядів лише на один більше.</p>
 
-<blockquote><strong>Mini-example:</strong> Copper chest full of ore? Upgrade it: put the copper chest in the center of a crafting grid and surround it with 8 iron ingots → Iron Chest, +9 slots, contents preserved.</blockquote>
+<p>Відкривається як звичайна скриня, кришка так само плавно піднімається. Вміст зберігається при зламі: скриню можна переносити, не розвантажуючи.</p>
 
-<p>It looks like a proper 3D chest with an animated lid (same shape as the vanilla wooden chest, only a different colour) and plays its own metallic open/close sound.</p>
+<h2>Інвентар</h2>
 
-<h2>Inventory</h2>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Слотів</td><td>36</td></tr><tr><td>Розкладка</td><td>4 × 9</td></tr></tbody></table>
 
-<p>Takes any items — 36 slots in 4 rows of 9. Shift-click moves stacks between the chest and your inventory.</p>
+<h2>Властивості блока</h2>
 
-<table><thead><tr><th>Slots</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Storage</td><td>any items</td><td>36 (4 rows × 9)</td></tr></tbody></table>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>будь-яка кайло</td></tr><tr><td>Вміст при зламі</td><td>зберігається</td></tr></tbody></table>
 
-<h2>Interface</h2>
+<h2>Пов'язане</h2>
 
-<p>A normal container window — no energy or progress bars, just the storage grid and your inventory below it. The window is slightly taller than a vanilla chest's because of the 4th row.</p>
-
-<h2>Block Properties</h2>
-
-<p>A short chest block (like all vanilla chests). Any pickaxe breaks it; it drops itself and spills its contents.</p>
-
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>short column (like vanilla chests)</td></tr><tr><td>Tool</td><td>pickaxe (any tier)</td></tr><tr><td>Drops itself</td><td>yes</td></tr></tbody></table>
-
-<h2>Recipes</h2>
-
-<p>Crafted at a workbench: a copper chest in the center, surrounded by 8 iron ingots. Any oxidation stage of copper chest works, including the waxed one — its contents carry over.</p>
-
-<h2>Progression</h2>
-
-<p>The chest line goes: vanilla copper chest (27) → <strong>Iron Chest (36)</strong> → <a href="silver_chest.html">Silver Chest</a> (45) → <a href="gold_chest.html">Gold Chest</a> (54). Higher tiers (diamond) aren't in the mod yet.</p>
-
-<h2>Related</h2>
-
-<p><a href="silver_chest.html">Silver Chest</a> — the next tier up. <a href="stock_display_frame.html">Stock Display Frame</a> — hang one on the chest to see its count at a glance. <a href="../energy-storage/battery_box.html">Battery Box</a> — the mod's other "storage" block, but for energy.</p>
+<p><a href="silver_chest.html">Срібна скриня</a> — наступний щабель, 45 слотів.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="залізна скриня alaindustrial:iron_chest" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Copper Chest"><img src="../assets/item/copper_chest_3d.png" alt="Copper Chest" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Залізна скриня"><img src="../assets/item/iron_chest_3d.png" alt="Залізна скриня" width="32" height="32"></div><div class="result-name">Залізна скриня</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="залізна скриня alaindustrial:iron_chest" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Copper Chest"><img src="../assets/item/copper_chest_3d.png" alt="Copper Chest" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Залізна скриня"><img src="../assets/item/iron_chest_3d.png" alt="Залізна скриня" width="32" height="32"></div><div class="result-name">Залізна скриня</div></div></div></div></div>
 <h2>Використовується в</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="срібна скриня alaindustrial:silver_chest" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Залізна скриня"><img src="../assets/item/iron_chest_3d.png" alt="Залізна скриня" width="32" height="32"></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Срібна скриня"><img src="../assets/item/silver_chest_3d.png" alt="Срібна скриня" width="32" height="32"></div><div class="result-name">Срібна скриня</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="срібна скриня alaindustrial:silver_chest" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Залізна скриня"><img src="../assets/item/iron_chest_3d.png" alt="Залізна скриня" width="32" height="32"></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Срібна скриня"><img src="../assets/item/silver_chest_3d.png" alt="Срібна скриня" width="32" height="32"></div><div class="result-name">Срібна скриня</div></div></div></div></div>
   </main>
 </div>
 

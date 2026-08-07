@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,61 +375,23 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Guide Book</strong> is Ala Industrial's in-game manual. A new player lands in a world with non-trivial mechanics (EU/FE instead of FE, LV/MV/HV voltage tiers, cables with distance loss, machine face ports) and, with no built-in tutorial, is left to guess or read an external wiki. The book removes that entry barrier: the player <strong>receives it in their inventory automatically on first spawn</strong> (exactly once), <strong>opens it with a right-click</strong> — a full-screen view with tabs and page navigation — and works through the chapters up to a first working power grid and machine without leaving the game.</p>
+<p><strong>Книга-путівник</strong> — внутрішньоігровий підручник по моду Ala Industrial. Новий гравець потрапляє у світ з нетривіальною механікою (EU/FE замість FE, тири напруги LV/MV/HV, кабелі з втратами, порти граней у машин) — книга пояснює це на місці, не змушуючи лізти в браузер.</p>
 
-<p>The book <strong>needs no energy</strong> and does nothing mechanically — it is pure reading material. Its content is built from the same source as the mod's wiki site, so the numbers in the book never drift from the game.</p>
+<p>Видається автоматично; крафт існує лише на випадок втрати.</p>
 
-<blockquote><strong>Mini-example:</strong> enter a new world → the "Guide Book" is in your inventory → right-click → a screen opens on the "Getting Started" tab → click the "Solar Panel" link → read how much EU/FE it makes and how to craft it.</blockquote>
+<h2>Властивості предмета</h2>
 
-<h2>How you get it</h2>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Тип</td><td>предмет, не блок</td></tr><tr><td>Стак</td><td>1</td></tr><tr><td>ПКМ</td><td>відкриває екран книги</td></tr></tbody></table>
 
-<p><strong>Auto-given on first join.</strong> The first time a player enters a world, the book is placed in their inventory <strong>exactly once</strong>. The "already given" ledger lives in <strong>per-world saved data</strong> (a <code>SavedData</code> holding a set of UUIDs) — it survives death/respawn/dimension changes and never double-gives on relog. <strong>Existing players get it once on a mod update</strong> too: their UUID isn't in the ledger yet, so the book is given on their first join after the update and the UUID is added. <strong>Recovery if lost</strong> — two safeguards, neither of which gates the auto-give: a <strong>craft</strong> (cheap, LV-accessible, not schematic-gated); the <strong><code>/alaindustrial guide</code></strong> command (reuses the existing <code>/ala</code> command; gives/opens the book). The player is never locked out of the tutorial. If the inventory is full during auto-give, the book drops at the player's feet (never lost).</p>
+<h2>Рецепти</h2>
 
-<h2>Interface</h2>
+<p>Ванільна книга плюс дерев'яна шестерня.</p>
 
-<p>Opened with a right-click — a <strong>full-screen window</strong> (not a chest: no slots, no inventory). It has:</p>
+<h2>Пов'язане</h2>
 
-<p><strong>Tabs (top-level chapters)</strong> that mirror the wiki site's category grouping plus a leading</p>
-<ol><li><strong>Getting Started</strong> — hand-written onboarding: first generator → first cable → first machine;</li><li><strong>Energy</strong> — what EU/FE is, LV/MV/HV tiers, cables and distance loss, face ports;</li><li><strong>Generators</strong>, 4. <strong>Machines</strong>, 5. <strong>Storage</strong>, 6. <strong>Energy Transfer</strong>,</li><li><strong>Materials</strong>, 8. <strong>Items &amp; Tools</strong>, 9. <strong>Components</strong>, 10. <strong>Utilities</strong>.</li></ol>
-<p><strong>Entry list</strong> within a tab (one per block/item/mechanic), scrollable. <strong>Entry page</strong> — a spread with page navigation (next/prev) and a "back" button to the list. <strong>Clickable links</strong> inside the text — jump to another entry (and, in v1.1, to an anchor within it). <strong>Recipe widget</strong> on a page — a crafting/processing grid (draws ingredients + result; works without JEI/REI installed). Text is word-wrapped, and long lists scroll.</p>
-
-<p>Visually it follows the mod style — the same palette and bevel panels as the other interfaces.</p>
-
-<h2>Content</h2>
-
-<p>The book covers every block and item already in the game: for each one, a short description, its stats (tier, EU/FE, buffer) and its crafting recipe. The numbers in the book (EU/FE, tiers, buffers, recipes) come from the same source as the wiki site, so they always match the game — no drift. Planned and not-yet-added blocks are left out: the book never promises what isn't in the game yet. The framing "Getting Started" and "Energy" chapters are written as an introductory tutorial for new players.</p>
-
-<h2>Block Properties</h2>
-
-<p>The book is an <strong>item</strong> (not a block): it can't be placed, stacks to 1, has no EU/FE buffer. Its "shape" is an ordinary item model ( → <code>item/generated</code> with the icon). Right-click opens the GUI (see "Interface"); no block is placed in the world, no collision.</p>
-
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Type</td><td>item, not a block</td></tr><tr><td>Stack</td><td>1</td></tr><tr><td>EU/FE buffer</td><td>none</td></tr><tr><td>Right-click</td><td>opens the book screen (client-side)</td></tr><tr><td>World placement</td><td>none</td></tr></tbody></table>
-
-<h2>Recipes</h2>
-
-<p>The craft is a <strong>dead-simple</strong> shapeless recipe: a vanilla <code>minecraft:book</code> + (the earliest, cheapest mod component). Not schematic-gated (the book is auto-given anyway; the craft only recovers a lost one).</p>
-
-<h2>Progression</h2>
-
-<p>Tier: none (a utility, not part of the energy chain). Available immediately — it's the entry point into progression, not a rung of it. It guides the player through the mod's real progression (ore → generator → cable → machine → tiers).</p>
-
-<h2>Localization</h2>
-
-<p><strong>v1: <code>en_us</code> + <code>ru_ru</code></strong> — full chapter content (<code>en_us</code> is the source, as everywhere in the mod). The other 18 languages get a translated item name, while chapter content is shown in English for now; a full chapter translation comes later. All book text is via lang keys; no hardcoded strings (project rule).</p>
-
-<h2>Compatibility</h2>
-
-<p><strong>Recipe viewers (JEI/REI/EMI):</strong> the book is self-contained (a built-in recipe widget by ID) and doesn't require them. A "open recipe in JEI/REI" deep-link is v2. <strong>Full-text search</strong> of the content is v2.</p>
-
-<h2>Balance</h2>
-
-<p>The book costs no EU/FE and doesn't touch the economy — zero balance risk. Its only obligation: the numbers in chapter text always match the game — they come from a shared source, not hand-retyped.</p>
-
-<h2>Related</h2>
-
-<p>The book is built from the same source as the mod's wiki site: the same content and the same numbers, but right in the player's hands.</p>
+<p><a href="player_profile.html">Особистий кабінет</a> — другий інформаційний екран моду.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="книга-путівник alaindustrial:guide_book" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">Shapeless Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Book"><img src="../assets/item/book_3d.png" alt="Book" width="32" height="32"></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Книга-путівник"><img src="../assets/item/guide_book_3d.png" alt="Книга-путівник" width="32" height="32"></div><div class="result-name">Книга-путівник</div></div></div></div></div>

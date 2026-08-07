@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,50 +375,30 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Mute Chip</strong> is an upgrade item that drops into a machine's upgrade slot (the first, active slot of the upgrade panel). While the chip is installed the machine is <strong>fully silent</strong>: the continuous working hum disappears, and no other sounds from the block itself play either. Pop the chip out and the sound comes back.</p>
+<p><strong>Чип-глушник</strong> — предмет-апгрейд, який вставляється у слот покращень машини (перший, активний слот панелі). Поки чип встановлено, машина <strong>повністю беззвучна</strong>: зникає безперервне гудіння роботи й не програються жодні інші звуки самого блока. Дістанете чип — звук повернеться.</p>
 
-<p>It's pure convenience — speed, energy use and output are all unchanged. It slots into any of the mod's machines or generators the same way, but you'll only hear the effect on blocks that make sound in the first place (macerator, generator, electric furnace, geothermal generator, solar panels). In a silent machine the chip just sits in the slot doing nothing — which is expected.</p>
+<p>Це суто зручність: швидкість, витрата енергії та виробіток не змінюються.</p>
 
-<blockquote><strong>Mini-example:</strong> your macerator bank hums loudly next to your base. Drop a mute chip into each one's upgrade slot and the room goes quiet — grinding speed and EU/FE cost stay exactly the same.</blockquote>
+<p>Чип однаково ставиться в будь-яку машину чи генератор моду, але ефект чути лише в тих блоків, які взагалі видають звук — подрібнювач, генератор, електропіч, геотермальний генератор, сонячні панелі. У беззвучних механізмах чип просто лежить у слоті без ефекту.</p>
 
-<h2>Energy</h2>
+<blockquote><strong>Міні-приклад:</strong> батарея подрібнювачів гучно гуде поруч із базою. Покладіть чип-глушник у слот покращень кожного — і в кімнаті настане тиша, а швидкість помелу та витрата EU/FE лишаться тими ж.</blockquote>
 
-<p>Uses no energy — it's an item with no energy of its own.</p>
+<h2>Енергія</h2>
 
-<h2>Inventory</h2>
+<p>Енергії не використовує — предмет без власного заряду.</p>
 
-<p>Not applicable (item). It only goes into a machine's active upgrade slot; hoppers and other automation don't see the upgrade slot.</p>
+<h2>Інвентар</h2>
 
-<h2>Block Properties</h2>
+<p>Кладеться лише в <strong>активний</strong> слот покращень; решта слотів його не приймають.</p>
 
-<p>Not applicable (item). Stack: 64 in a normal inventory; in the upgrade slot it's 1.</p>
+<h2>Пов'язане</h2>
 
-<h2>How it works</h2>
-
-<p>While a mute chip sits in the active upgrade slot, the machine makes no sound at all — neither its working hum nor any other sound the block would normally play. Everything else about the machine is untouched: same speed, same EU/FE use, same output. Take the chip out and the sound returns.</p>
-
-<h2>Recipes</h2>
-
-<p>Crafted at a workbench (shaped 3×3): an <a href="../components/empty_chip.html">empty chip</a> in the centre, ringed by <strong>any wool</strong> on all eight sides.</p>
-
-<pre><code class="lang-">WWW
-WEW
-WWW</code></pre>
-
-<p><code>W</code> — any wool (×8); <code>E</code> — empty chip (×1).</p>
-
-<h2>Progression</h2>
-
-<p>An upgrade with no tier of its own. Built on the <a href="../components/empty_chip.html">empty chip</a> — the shared blank that future upgrade chips will also start from.</p>
-
-<h2>Related</h2>
-
-<p><a href="../components/empty_chip.html">Empty Chip</a> — the blank base this chip is built on. Upgrade system overview — how upgrade slots work.</p>
+<p><a href="../components/empty_chip.html">Порожній чип</a> — заготовка, з якої він робиться.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="чип-глушник alaindustrial:mute_chip" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Порожній чип"><img src="../assets/item/empty_chip_3d.png" alt="Порожній чип" width="32" height="32"></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Чип-глушник"><img src="../assets/item/mute_chip_3d.png" alt="Чип-глушник" width="32" height="32"></div><div class="result-name">Чип-глушник</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="чип-глушник alaindustrial:mute_chip" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Порожній чип"><img src="../assets/item/empty_chip_3d.png" alt="Порожній чип" width="32" height="32"></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Wool"><img src="../assets/item/white_wool_3d.png" alt="Any Wool" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Чип-глушник"><img src="../assets/item/mute_chip_3d.png" alt="Чип-глушник" width="32" height="32"></div><div class="result-name">Чип-глушник</div></div></div></div></div>
   </main>
 </div>
 

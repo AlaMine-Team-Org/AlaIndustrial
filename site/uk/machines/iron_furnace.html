@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,52 +375,30 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Iron Furnace</strong> is an upgraded fuel furnace that sits between the vanilla furnace and the <a href="electric_furnace.html">Electric Furnace</a>. It's faster than vanilla and smelts everything vanilla does, but still runs on solid fuel (coal, planks, charcoal…) rather than EU/FE. It's an early upgrade for the player who hasn't built a power grid yet but wants to speed up smelting.</p>
+<p><strong>Залізна піч</strong> — покращена паливна піч, що займає нішу між ванільною піччю та <a href="electric_furnace.html">електропіччю</a>. Вона швидша за ванільну й плавить усе те саме, але все ще працює на паливі, а не на EU/FE.</p>
 
-<p>It fully reuses the vanilla furnace UI — only the title differs. Recipes and behaviour match the vanilla furnace (via vanilla smelting), plus it accepts the mod's recipes on the same inputs.</p>
+<h2>Енергія</h2>
 
-<blockquote><strong>Mini-example:</strong> wrap a vanilla furnace in eight iron ingots → get an Iron Furnace. Smelting is noticeably faster, fuel consumption is the same. An intermediate step before the Electric Furnace.</blockquote>
+<p>Печі енергія не потрібна: вона палить звичайне пічне паливо, як ванільна.</p>
 
-<h2>Energy</h2>
+<h2>Властивості блока</h2>
 
-<p>Uses no EU/FE. Fuel is solid (as in a vanilla furnace). This is the key difference from the <a href="electric_furnace.html">Electric Furnace</a>, which runs on EU/FE.</p>
+<p>Звичайний суцільний блок, ламається будь-якою кайлом.</p>
 
-<h2>How it's used</h2>
+<h2>Рецепти</h2>
 
-<p>Placed like a normal furnace. Right-click opens the same UI (smelt slot, fuel slot, flame bar and progress arrow). Accepts all vanilla smelting recipes plus the mod's (dust → ingot, raw → ingot, etc.).</p>
+<p>Збирається на верстаку лише з ванільних інгредієнтів — це найдешевша машина моду.</p>
 
-<h2>Block Properties</h2>
+<h2>Пов'язане</h2>
 
-<p>Cubic block with a front face (lit/unlit states — lit while working). Tier: LV (by the mod's classification — early machine), but actually runs without EU/FE. Hardness and tool: same as a vanilla furnace (stone pickaxe).</p>
-
-<h2>Sound</h2>
-
-<p>While lit, the furnace plays the vanilla fire crackle (<code>FURNACE_FIRE_CRACKLE</code>) — the same ambience as the ordinary furnace (an irregular one-shot via <code>animateTick</code>, not a loop). No custom sample.</p>
-
-<h2>Recipes</h2>
-
-<p>Crafted at a workbench (shaped 3×3): vanilla furnace in the centre, surrounded by 8 iron ingots.</p>
-
-<pre><code class="lang-">III
-IFI
-III</code></pre>
-
-<p><code>I</code> — iron ingot (×8); <code>F</code> — vanilla furnace (×1).</p>
-
-<h2>Progression</h2>
-
-<p>Early machine (tier-stone), no EU/FE. Slots into the chain: vanilla furnace → <strong>Iron Furnace</strong> → <a href="electric_furnace.html">Electric Furnace</a> → Induction Furnace (concept). Each step is faster than the last. Doesn't need a power grid — you can drop it in any cave/mine where you have fuel.</p>
-
-<h2>Related</h2>
-
-<p><a href="electric_furnace.html">Electric Furnace</a> — the next step: switching from fuel to EU/FE. <a href="../utility/iron_chest.html">Iron Chest</a> — a sibling "upgraded vanilla" block.</p>
+<p><a href="electric_furnace.html">Електропіч</a> — наступний щабель, лягає в її рецепт.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="залізна піч alaindustrial:iron_furnace" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Furnace"><img src="../assets/item/furnace_3d.png" alt="Furnace" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Залізна піч"><img src="../assets/item/iron_furnace_3d.png" alt="Залізна піч" width="32" height="32"></div><div class="result-name">Залізна піч</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="залізна піч alaindustrial:iron_furnace" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Furnace"><img src="../assets/item/furnace_3d.png" alt="Furnace" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Залізна піч"><img src="../assets/item/iron_furnace_3d.png" alt="Залізна піч" width="32" height="32"></div><div class="result-name">Залізна піч</div></div></div></div></div>
 <h2>Використовується в</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="електрична піч alaindustrial:electric_furnace" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Залізна піч"><img src="../assets/item/iron_furnace_3d.png" alt="Залізна піч" width="32" height="32"></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електрична піч"><img src="../assets/item/electric_furnace_3d.png" alt="Електрична піч" width="32" height="32"></div><div class="result-name">Електрична піч</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="електрична піч alaindustrial:electric_furnace" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Залізна піч"><img src="../assets/item/iron_furnace_3d.png" alt="Залізна піч" width="32" height="32"></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електрична піч"><img src="../assets/item/electric_furnace_3d.png" alt="Електрична піч" width="32" height="32"></div><div class="result-name">Електрична піч</div></div></div></div></div>
   </main>
 </div>
 

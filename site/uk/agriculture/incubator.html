@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,112 +375,20 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Incubator</strong> is a 1×2 multiblock: a squat mechanical base below and a glass dome above. Place any glass (the <code>c:glass</code> tag) on the base and it turns into a volumetric chamber, with the irradiated item floating and spinning inside.</p>
+<p><strong>Інкубатор</strong> — машина, що вирощує та змінює культури й істот за допомогою чипів мутації. Ставиться під скляним куполом і працює, поки є EU/FE.</p>
 
-<p>The machine <strong>mutates</strong> items in three ways: it <strong>duplicates</strong> (1 → 2), <strong>transforms</strong> (A → B), or <strong>creates</strong> a new mod material. Every operation costs EU/FE (LV) and an <strong>irradiation charge</strong>: one <code>uranium_ingot</code> buys 3 attempts, then burns out into <code>depleted_uranium</code> which settles in the ash slot.</p>
+<h2>Енергія</h2>
 
-<p>The mode by a <strong>mutation chip</strong> in a dedicated slot — duplication / transformation / creation. Without a chip the machine does not run; the chip itself is never consumed. The outcome is probabilistic: on success a <strong>rarity grade</strong> is rolled — Common (70 %) / Rare (20 %) / Epic (8 %) / Legendary (2 %) — which colors the name and grants a bonus to further mutations.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Буфер</td><td>8 000 EU/FE</td></tr><tr><td>Споживання</td><td>8 EU/FE/такт під час роботи</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/т (LV)</td></tr></tbody></table>
 
-<table><thead><tr><th>What it does</th><th>How</th></tr></thead><tbody><tr><td>Forms the multiblock</td><td>base + any <code>c:glass</code> block on top → dome</td></tr><tr><td>Mutates items</td><td>EU/FE (LV) + a charge (1 <code>uranium_ingot</code> = 3 attempts → 1 <code>depleted_uranium</code>)</td></tr><tr><td>Mode</td><td>chip slot: duplication / transformation / creation</td></tr><tr><td>Mutation kinds</td><td>duplicate (×2), transform (A→B), create (A→new mod item)</td></tr><tr><td>Rarity</td><td>every success rolls Common / Rare / Epic / Legendary (70/20/8/2 %)</td></tr><tr><td>Slag</td><td>5 % of attempts yield <code>irradiated_slag</code> instead of an empty failure</td></tr></tbody></table>
+<h2>Пов'язане</h2>
 
-<h2>Energy</h2>
-
-<p>Hybrid model: EU/FE from the grid (LV) <strong>plus</strong> uranium as the irradiation fuel. Uranium is not destroyed — it becomes <code>depleted_uranium</code>, a feedstock for the future nuclear phase.</p>
-
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>EU/FE buffer</td><td>8000 — holds the costliest <code>create</code> operation in full</td></tr><tr><td>Max input</td><td>32 EU/FE/tick (LV)</td></tr><tr><td>Consumption</td><td><strong>8 EU/FE/tick</strong> while running — four times the machine standard</td></tr><tr><td>Fuel</td><td>1 <code>uranium_ingot</code> = 3 attempts → 1 <code>depleted_uranium</code> into the ash slot</td></tr></tbody></table>
-
-<p>Without uranium in the fuel slot an operation will not start; EU/FE is spent only while a cycle runs.</p>
-
-<h2>Processing</h2>
-
-<p>Duration and cost are tied to the mutation kind. The Incubator is the mod's most energy-hungry LV machine: the floor is 2400 EU/FE per operation versus 200–300 for routine machines.</p>
-
-<table><thead><tr><th>Kind</th><th>Success chance</th><th>Ticks</th><th>EU/FE/attempt</th><th>On failure</th></tr></thead><tbody><tr><td>Transform</td><td>0.75</td><td>300 (15 s)</td><td><strong>2400</strong></td><td>input lost, −1 charge</td></tr><tr><td>Duplicate</td><td>0.45</td><td>500 (25 s)</td><td><strong>4000</strong></td><td>input lost, −1 charge</td></tr><tr><td>Create</td><td>0.25</td><td>1000 (50 s)</td><td><strong>8000</strong></td><td>input lost, −1 charge</td></tr></tbody></table>
-
-<p><strong>Three outcomes of an attempt:</strong></p>
-
-<table><thead><tr><th>Outcome</th><th>Probability</th><th>What happens</th></tr></thead><tbody><tr><td>Success</td><td>chance by kind (+ gene bonus, cap 0.95)</td><td>result into the output slot + a grade roll</td></tr><tr><td>Slag</td><td>5 %</td><td>input lost, <code>irradiated_slag</code> drops into the output</td></tr><tr><td>Failure</td><td>the remainder</td><td>input lost, output unchanged</td></tr></tbody></table>
-
-<p>Slag is subtracted from the failure, never from the success — the success chance never drops. A grade is rolled only on success (slag is always Common). The outcome is rolled <strong>at the end of the cycle</strong>: until the last tick the result is unknown and cannot be cancelled by pulling the input.</p>
-
-<p><strong>Grade.</strong> On success a rarity is rolled: Common 70 % / Rare 20 % / Epic 8 % / Legendary 2 %. A Common grade leaves no trace — the item still stacks with vanilla. Rare and above write the <code>mutation_grade</code> component and color the name (yellow / aqua / light purple).</p>
-
-<p><strong>The input gene burns.</strong> The input item's grade grants its chance bonus (+5 / +10 / +15 p.p. for Rare / Epic / Legendary, the total capped at 0.95) and <strong>burns away</strong> — the result always gets a fresh grade roll. A Legendary cannot be multiplied via duplicate; it can only be spent for the higher chance.</p>
-
-<h2>Inventory</h2>
-
-<p>Five slots: chip, fuel (uranium), the item to mutate, the result, and ash. The result and ash slots are read-only for the player; automation into the ash slot is pull-only.</p>
-
-<table><thead><tr><th>Slot</th><th>Accepts</th><th>Behaviour</th></tr></thead><tbody><tr><td>Chip</td><td><code>#</code> (3 chips)</td><td>1 item; not consumed; sets the mode; an empty slot means the machine will not run; automation cannot take it out</td></tr><tr><td>Fuel</td><td><code>#</code> (= <code>uranium_ingot</code>)</td><td>1 ingot is taken the moment it lands in an assembled machine; a charge = 3 attempts</td></tr><tr><td>Input</td><td>items with a mutation recipe in the selected mode</td><td>1 stack; consumes 1/attempt (lost on failure)</td></tr><tr><td>Result</td><td>the mutation result or <code>irradiated_slag</code></td><td>1 stack; fill-only</td></tr><tr><td>Ash</td><td><code>depleted_uranium</code></td><td>1 stack; +1 per exhausted ingot; pull-only</td></tr></tbody></table>
-
-<h2>Interface</h2>
-
-<p>The screen shows: EU/FE storage, cycle progress, the <strong>irradiation charge (0–3)</strong>, the five slots and a <strong>formed</strong> indicator. The energy bar runs down the left edge; the irradiation charge is a vertical column of pips right of the fuel slot, filling from the bottom up. Top row: chip, input, progress arrow, result; bottom row: fuel and ash.</p>
-
-<p>The chip slot is the top left one. While it is empty, the status line names what is missing ("Needs glass on top" → "Needs a chip"). Swapping the chip resets the progress of the current operation.</p>
-
-<p>Both halves of the multiblock are clickable: right-clicking the dome opens the same menu as clicking the base.</p>
-
-<h2>Block Properties</h2>
-
-<p>A two-tier multiblock with deliberately different silhouettes: a heavy mechanical bottom and a light rounded top — not "two cubes stacked on each other".</p>
-
-<p><strong>Base</strong> — a full cube with a recessed front panel, an emitter ring along the top face and cooling ports on the sides. While running, an emitter glow rises above it. <strong>Dome</strong> — a volumetric rounded chamber, placed automatically from any <code>c:glass</code> block. The original glass type is remembered, so: dismantling the multiblock returns <strong>exactly your glass</strong> — nothing is lost; <strong>stained glass tints the dome</strong> — 17 colors with no extra recipes: 16 stained-glass dyes plus an uncolored variant. The frame and the spire always stay the casing's dark metal. The irradiated item floats at the center of the chamber and slowly spins; while running — particles and a pulsing glow.</p>
-
-<h2>Recipes</h2>
-
-<p><strong>Base block</strong> follows the machine-assembly standard, full 3×3 grid: 1 machine casing + 2 uranium plates + 3 glass + 1 electronic circuit + 2 iron plates. The uranium plates gate entry into the mechanic behind an established uranium chain (ore → ingot → plate).</p>
-
-<p><strong>The three mode chips</strong> are crafted from <code>empty_chip</code> plus a thematic filling; a uranium plate in each is the shared "irradiating" element:</p>
-
-<table><thead><tr><th>Chip</th><th>Recipe</th><th>Mode</th></tr></thead><tbody><tr><td><code>mutation_chip_duplicate</code></td><td>empty chip + 2 amethyst shards + uranium plate</td><td>duplicate</td></tr><tr><td><code>mutation_chip_transform</code></td><td>empty chip + redstone + lapis + uranium plate</td><td>transform</td></tr><tr><td><code>mutation_chip_create</code></td><td>empty chip + diamond + echo shard + uranium plate</td><td>create</td></tr></tbody></table>
-
-<p><strong>Recipe type</strong> — three separate types, one per mode: <code>mutation_transform</code>, <code>mutation_duplicate</code>, <code>mutation_create</code>. Each JSON describes one input → one output with an optional <code>chance</code> override. Fuel is not mentioned in the recipe — uranium is the machine's charge, not an ingredient.</p>
-
-<h3>Duplicate — four value classes</h3>
-
-<p>The cost of an attempt is fixed (⅓ of an ingot + 4000 EU/FE + 25 s), so the only balance lever is the <strong>success chance: the more valuable the item, the lower the chance.</strong></p>
-
-<table><thead><tr><th>Class</th><th>Chance</th><th>Items</th></tr></thead><tbody><tr><td>Gems and precious ingots</td><td>0.45</td><td><code>diamond</code>, <code>emerald</code>, <code>amethyst_shard</code>, <code>gold_ingot</code>, <code>silver_ingot</code>, <code>nickel_ingot</code></td></tr><tr><td>Minerals and common ingots</td><td>0.55</td><td><code>coal</code>, <code>redstone</code>, <code>lapis_lazuli</code>, <code>quartz</code>, <code>glowstone_dust</code>, <code>iron_ingot</code>, <code>copper_ingot</code>, <code>tin_ingot</code>, <code>raw_rubber</code>, <code>rubber</code></td></tr><tr><td>Rare organics</td><td>0.60</td><td><code>nether_wart</code>, <code>cocoa_beans</code>, <code>glow_berries</code>, <code>torchflower_seeds</code>, <code>pitcher_pod</code></td></tr><tr><td>Basic crops</td><td>0.85</td><td><code>wheat_seeds</code>, <code>beetroot_seeds</code>, <code>melon_seeds</code>, <code>pumpkin_seeds</code>, <code>carrot</code>, <code>potato</code></td></tr></tbody></table>
-
-<p><strong>Ingots yes, processed parts no.</strong> Vanilla and mod <strong>ingots</strong> are duplicated (<code>iron</code>, <code>copper</code>, <code>gold</code>, <code>tin</code>, <code>silver</code>, <code>nickel</code>) — these are base materials. Anything <strong>processed</strong> (dusts, plates, casings, circuits, chips, cables, raw ore and ore blocks) is not — it would devalue the crafting chain. Uranium is not duplicated (no recipe).</p>
-
-<p><strong>Rubber is a stated exception.</strong> It is a machine product, so by the rule above it should not duplicate. But oil is a <strong>finite</strong> resource — lakes do not refill and nothing turns water into oil — so without the Incubator the amount of rubber in a world is capped by the deposits you happen to find. Duplication is an expensive renewable route, not a free one: an attempt costs 4000 EU/FE and a third of a uranium ingot at a 0.55 chance, while the same rubber made from fresh oil costs 400 EU/FE. While there is oil left, pumping is ten times cheaper; the Incubator matters once there is not.</p>
-
-<h3>Transform — a horizontal exchange</h3>
-
-<p><strong>Like is traded for like.</strong> Upgrading by value (iron → gold) is forbidden. All 27 recipes share a 0.75 chance, 300-tick duration and 2400 EU/FE cost. For families with many members (saplings, flowers, soils) a <strong>ring</strong> is used: each item turns into the next one around the circle until the wanted one comes up.</p>
-
-<table><thead><tr><th>Category</th><th>Recipes</th><th>Ring</th></tr></thead><tbody><tr><td>Minerals</td><td>3</td><td><code>lapis_lazuli</code> ↔ <code>redstone</code>, <code>quartz</code> ↔ <code>glowstone_dust</code>, <code>coal</code> ↔ <code>charcoal</code> (all 1:1)</td></tr><tr><td>Saplings</td><td>8</td><td>oak → birch → spruce → jungle → acacia → dark oak → cherry → mangrove → oak</td></tr><tr><td>Flowers</td><td>8</td><td>dandelion → poppy → blue orchid → allium → azure bluet → cornflower → lily of the valley → oxeye daisy → dandelion</td></tr><tr><td>Soils</td><td>5</td><td>dirt → podzol → mycelium → dirt; sand ↔ red sand</td></tr></tbody></table>
-
-<h3>Create — evolution ladders</h3>
-
-<p>An ordinary item <strong>evolves</strong> into a unique mod material along a three-tier ladder. The higher the tier, the lower the chance and the costlier the operation. From tier 2 onward a failure <strong>returns the input intact</strong> (only the charge and EU/FE burn) — otherwise no one would risk climbing past tier 1.</p>
-
-<table><thead><tr><th>Branch</th><th>Tier 1</th><th>Tier 2</th><th>Tier 3</th></tr></thead><tbody><tr><td>Diamond — energy density</td><td><code>diamond</code> → irradiated diamond</td><td>→ diamond matrix</td><td>→ singularity core</td></tr><tr><td>Crystal — optics</td><td><code>amethyst_shard</code> → resonant shard</td><td>→ focusing lens</td><td>→ prismatic core</td></tr><tr><td>Biological — agriculture</td><td><code>lapis_lazuli</code> → mutagen dust</td><td>→ living mutagen</td><td>→ gene matrix</td></tr><tr><td>Nuclear — fuel</td><td><code>depleted_uranium</code> → unstable isotope</td><td>→ enriched core</td><td>→ isotope concentrate</td></tr></tbody></table>
-
-<table><thead><tr><th>Tier</th><th>Chance</th><th>Ticks</th><th>EU/FE</th><th>On failure</th></tr></thead><tbody><tr><td>1 (vanilla → mod material)</td><td>0.25</td><td>1000</td><td>8000</td><td>input is lost</td></tr><tr><td>2</td><td>0.15</td><td>1500</td><td>12000</td><td><strong>input returned intact</strong></td></tr><tr><td>3</td><td>0.08</td><td>2000</td><td>16000</td><td><strong>input returned intact</strong></td></tr></tbody></table>
-
-<p>The nuclear branch starts from the Incubator's own ash — spent uranium becomes the entry to a chain rather than waste.</p>
-
-<p>The current release ships only the 4 tier-1 recipes (one per branch): <code>diamond</code> → <code>irradiated_diamond</code>, <code>amethyst_shard</code> → <code>resonant_shard</code>, <code>lapis_lazuli</code> → <code>mutagen_dust</code>, <code>depleted_uranium</code> → <code>unstable_isotope</code>. Tiers 2–3 and upgrade chips from the upper materials come in the next release.</p>
-
-<h2>Progression</h2>
-
-<p>Tier: LV. Best built after the first machines (macerator/extractor), once you have a stable uranium vein and an EU/FE grid. Introduces 7 new items: <code>depleted_uranium</code>, <code>irradiated_diamond</code>, <code>mutagen_dust</code>, <code>resonant_shard</code>, <code>unstable_isotope</code>, <code>irradiated_slag</code> (a by-product of 5 % of attempts — no consumers in this release, groundwork for the future) and three mode chips. <strong>Grade "genes"</strong> on materials grant a bonus to further mutation chances (+5/+10/+15 p.p.) — consumers will arrive in future agriculture/nuclear phases. Mutation advancements: first mutation, first <code>create</code> result, first Legendary outcome.</p>
-
-<h2>Compatibility</h2>
-
-<p><strong>JEI/REI</strong>: three categories — one per mode; the line under the recipe shows cost, duration and success chance (<code>2400 EU/FE · 15 s · 75 %</code>). Grades get a separate info page on the Incubator itself. <strong>Item tooltip</strong>: a "Mutation grade: …" line. <strong>Jade/The One Probe</strong>: cycle progress, EU/FE, mutation mode, multiblock status, ash-slot fill. <strong>Automation</strong>: hoppers/pipes work with the base (chip — push only, fuel — push, input — push, result — pull, ash — pull). The dome is purely structural, with no inventory. No face lets automation pull the chip — it is a build-time choice.</p>
-
-<h2>Related</h2>
-
-<p><a href="../materials/uranium.html">Uranium</a> — the fuel ingot. Nuclear theme — where <code>depleted_uranium</code> goes. <a href="../advanced-machines/teleporter.html">Teleporter multiblock</a> — a sibling structural task. <a href="../machines/sawmill.html">Sawmill</a> — the reference machine with switchable modes. <a href="../generators/solar_panel.html">Solar panel</a> — the reference for a chip slot driving machine behaviour.</p>
+<p><a href="trellis.html">Жердинка</a> — опора для витких культур. <a href="garden_drone_station.html">Станція дрона-садівника</a> — автоматичний догляд за грядками.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="інкубатор alaindustrial:incubator" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="incubator_dome_glass (tag)" aria-label="incubator_dome_glass (tag)"><span>incuba</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="incubator_dome_glass (tag)" aria-label="incubator_dome_glass (tag)"><span>incuba</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="incubator_dome_glass (tag)" aria-label="incubator_dome_glass (tag)"><span>incuba</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Uranium Plate"><img src="../assets/item/uranium_plate_3d.png" alt="Any Uranium Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Uranium Plate"><img src="../assets/item/uranium_plate_3d.png" alt="Any Uranium Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Інкубатор"><img src="../assets/item/incubator_3d.png" alt="Інкубатор" width="32" height="32"></div><div class="result-name">Інкубатор</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="інкубатор alaindustrial:incubator" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Dome Glass"><img src="../assets/item/glass_3d.png" alt="Any Dome Glass" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Dome Glass"><img src="../assets/item/glass_3d.png" alt="Any Dome Glass" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Dome Glass"><img src="../assets/item/glass_3d.png" alt="Any Dome Glass" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Uranium Plate"><img src="../assets/item/uranium_plate_3d.png" alt="Any Uranium Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Uranium Plate"><img src="../assets/item/uranium_plate_3d.png" alt="Any Uranium Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Інкубатор"><img src="../assets/item/incubator_3d.png" alt="Інкубатор" width="32" height="32"></div><div class="result-name">Інкубатор</div></div></div></div></div>
   </main>
 </div>
 

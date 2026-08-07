@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,46 +375,34 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Vulcanizer</strong> finishes the oil chain. It combines one raw rubber with four sulfur dust and only runs when supplied with EU/FE and a heat source directly below it.</p>
+<p><strong>Вулканізатор</strong> завершує нафтовий ланцюжок: один сирий каучук і чотири пили сірки перетворюються на гуму. Машина працює лише за подачі EU/FE та наявності джерела тепла просто під нею.</p>
 
-<blockquote><strong>Mini-example:</strong> place it on a lit campfire, put raw rubber in the left slot and four sulfur dust in the right one, connect LV power from the side, and receive one rubber.</blockquote>
+<h2>Енергія</h2>
 
-<h2>Energy</h2>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/т (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/т під час роботи</td></tr></tbody></table>
 
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>800 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Consumption</td><td>2 EU/FE/t while working</td></tr><tr><td>Cost per operation</td><td>400 EU/FE</td></tr><tr><td>Duration</td><td>200 ticks (~10 s)</td></tr></tbody></table>
+<p>Якщо в мережі більше енергії, зайве просто не забирається — нічого не вибухає. Енергія заходить із п'яти робочих граней; лицьова грань інертна.</p>
 
-<h2>Heat from below</h2>
+<h2>Процесинг</h2>
 
-<table><thead><tr><th>Source</th><th>Level</th><th>Output</th></tr></thead><tbody><tr><td>Lit normal or soul campfire</td><td>1</td><td>1 rubber</td></tr><tr><td>Lava, lava cauldron or magma block</td><td>2</td><td>2 rubber</td></tr><tr><td><a href="electric_heater.html">Electric Heater</a></td><td>3</td><td>3 rubber</td></tr></tbody></table>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>200 тиків (~10 с)</td></tr><tr><td>Ціна операції</td><td>400 EU/FE</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
 
-<p>Every level consumes exactly <strong>1 raw rubber + 4 sulfur dust</strong>. Heat multiplies the output but not the batch price, so a stronger heat source is the main way to stretch the sulfur you have found. Changing or removing the heat source during an operation safely restarts progress with the current multiplier. Restarting does not consume ingredients, and swapping heat on the last tick cannot upgrade an almost finished batch.</p>
+<h2>Властивості блока</h2>
 
-<h2>Inventory and automation</h2>
+<p>Звичайний суцільний блок, ламається будь-якою кайлом. Заряд при зламі не зберігає.</p>
 
-<table><thead><tr><th>Slot</th><th>Accepts</th></tr></thead><tbody><tr><td>Left input</td><td></td></tr><tr><td>Right input</td><td></td></tr><tr><td>Output</td><td></td></tr></tbody></table>
+<h2>Рецепти</h2>
 
-<p>Inputs are served from above and output from the sides. The bottom face is reserved for heat and is not exposed to item automation.</p>
+<p>Збирається на верстаку з пилу сірки, залізних зливків, корпусу машини та електронної схеми.</p>
 
-<h2>Interface</h2>
+<h2>Пов'язане</h2>
 
-<p>The screen shows energy, progress, both inputs, output, the heat source and its ×1/×2/×3 multiplier. Its status explains missing ingredients, power, heat or output space.</p>
-
-<h2>Block properties</h2>
-
-<p>Mine with a pickaxe; breaking it drops the block and inventory. Lights up and emits steam only while working. Reacts immediately when the block below changes.</p>
-
-<h2>Recipe</h2>
-
-<p><code>SIS / IMI / IEI</code>: sulfur dust, iron ingots, a machine casing and an electronic circuit.</p>
-
-<h2>Links</h2>
-
-<p><a href="polymerizer.html">Polymerizer</a> <a href="../materials/sulfur.html">Sulfur</a> <a href="../components/rubber.html">Rubber</a></p>
+<p><a href="electric_heater.html">Електронагрівач</a> — джерело тепла під вулканізатором. <a href="polymerizer.html">Полімеризатор</a> — попередній крок ланцюжка.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="вулканізатор alaindustrial:vulcanizer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Sulfur Dust"><img src="../assets/item/sulfur_dust_3d.png" alt="Any Sulfur Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Sulfur Dust"><img src="../assets/item/sulfur_dust_3d.png" alt="Any Sulfur Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Вулканізатор"><img src="../assets/item/vulcanizer_3d.png" alt="Вулканізатор" width="32" height="32"></div><div class="result-name">Вулканізатор</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="вулканізатор alaindustrial:vulcanizer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Sulfur Dust"><img src="../assets/item/sulfur_dust_3d.png" alt="Any Sulfur Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Sulfur Dust"><img src="../assets/item/sulfur_dust_3d.png" alt="Any Sulfur Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Вулканізатор"><img src="../assets/item/vulcanizer_3d.png" alt="Вулканізатор" width="32" height="32"></div><div class="result-name">Вулканізатор</div></div></div></div></div>
   </main>
 </div>
 

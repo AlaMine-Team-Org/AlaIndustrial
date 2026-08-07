@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,46 +375,34 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<blockquote>⚠️ <strong>Електробезпека.</strong> Голий золотий MV- кабель завдає 6 одиниць шкоди гравцеві не лише при прямому дотику, а й у радіусі <strong>0.5 блока</strong> навколо сегмента — але тільки якщо крізь цей сегмент зараз справді рухається енергія. Вимкнена лінія та залишений у буфері заряд безпечні. Звичайна броня зменшує шкоду; вода її не посилює; суцільний блок між кабелем і гравцем гасить удар. Механіку можна вимкнути в налаштуваннях сервера. Знизити шанс удару, не прибираючи його повністю, можна ізолювальною підставкою — або замінити голий сорт на <a href="insulated_gold_cable.html">ізольований золотий кабель</a>, який безпечний зовсім.</blockquote>
 
-<blockquote>⚠️ <strong>Electrical safety:</strong> deals 6 damage not only on direct contact but also within <strong>0.5 blocks</strong> of the segment (<code>bareCableShockProximityRadius</code>, — but only while energy is actually moving through this exact bare MV segment. A disconnected line and retained buffer EU/FE are safe. Normal armor applies; water does not amplify the hit; a solid block between the cable and the player blocks the shock. Servers can disable the mechanic with <code>bareCableShockEnabled</code>. To lower the hit chance without removing the hazard, use an insulating stand — or replace the bare grade with the <a href="insulated_gold_cable.html">Insulated Gold Cable</a>, which is safe outright.</blockquote>
+<h2>Зведення</h2>
 
-<p>The Gold Cable is the top rung of the cable ladder and the mod's first <strong>MV</strong> wire. It carries 48 EU/FE/tick — four times copper — and raises the packet ceiling to 128 EU/FE (against LV's 32).</p>
+<p><strong>Золотий кабель</strong> — перший у моді провід тира <strong>MV</strong>. Він несе 48 EU/FE/тик — учетверо більше за мідь — і піднімає стелю пакета до 128 EU/FE (проти 32 у LV).</p>
 
-<p>The price of that width is <strong>higher loss</strong>: 0.03 per block against copper's 0.02. That is not an oversight but the whole trade: gold wins on short, high-power runs where throughput matters, and loses on long ones where reach matters. The formula is the same <code>max(1, ceil(flow × 0.97^distance))</code>: from its actual 48 EU/FE/tick flow, 36 EU/FE arrives over 10 blocks and 11 EU/FE over 50. Loss never reaches 100%, but gold still belongs close to the load; run long trunks on <a href="copper_cable.html">copper</a> or <a href="tin_cable.html">tin</a>.</p>
+<p>Платою за ширину йдуть <strong>підвищені втрати</strong>: 0.03 частки на блок проти 0.02 у міді. Це суть вибору: золото виграє на коротких потужних лініях і програє на довгих. За фактичного потоку 48 EU/FE/тик через 10 блоків доходить 36 EU/FE, через 50 — 11 EU/FE.</p>
 
-<blockquote><strong>Groundwork.</strong> The mod has no MV machines or MV generators yet that would ask for 128 EU/FE/tick, so on current content the higher packet ceiling has nothing to feed; what helps today is the wide buffer itself (48 EU/FE/tick against 12) on dense LV lines. Gold comes into its own with the MV tier, where it becomes the standard wire.</blockquote>
+<p>Кому він потрібен уже зараз: <a href="../machines/assembler.html">Складальний автомат</a> — перша MV-машина моду — і <a href="../energy-storage/cesu.html">Посилене енергосховище</a>, яке приймає й віддає на MV. Тягнути до них LV-провід безглуздо: він зріже пакет до 32 EU/FE.</p>
 
-<h2>Energy</h2>
+<h2>Енергія</h2>
 
-<p>The cable carries MV energy and connects to neighbouring blocks. Each wire run from a source to a consumer costs a little EU/FE; the exact formula is in the table.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Роль</td><td>передача</td></tr><tr><td>Тир</td><td>MV</td></tr><tr><td>Макс. напруга</td><td>128 EU/FE/пакет</td></tr><tr><td>Пропускна здатність</td><td>48 EU/FE/тик = робочий буфер сегмента</td></tr><tr><td>Втрати</td><td>0.03 затухання на блок; доставляється <code>max(1, ceil(N × 0.97^дистанція))</code> EU/FE/тик</td></tr></tbody></table>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>transfer</td></tr><tr><td>Max voltage</td><td>128 EU/FE/packet (MV tier)</td></tr><tr><td>Throughput</td><td>48 EU/FE/tick = the segment working buffer</td></tr><tr><td>Loss</td><td><strong>0.03</strong> attenuation per block; a consumer receives <code>max(1, ceil(N × 0.97^distance))</code> EU/FE/tick when N &gt; 0</td></tr><tr><td>Insulation</td><td>can be insulated (<a href="insulated_gold_cable.html">Insulated Gold Cable</a>)</td></tr></tbody></table>
+<h2>Властивості блока</h2>
 
-<p>The cable does not explode from overload: 128 EU/FE/packet is only a cap, and anything above it simply does not pass through.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Форма</td><td>тонкий стрижень</td></tr><tr><td>Міцність</td><td>0.2</td></tr><tr><td>Інструмент</td><td>будь-який / кусачки</td></tr></tbody></table>
 
-<blockquote><strong>Mixed networks.</strong> A network takes both its throughput cap <strong>and</strong> its loss from the strongest cable in it. A single gold segment in a copper line moves the whole network to 128 EU/FE/packet — and to gold's 0.03 loss. This is deliberate: otherwise a player could splice in one gold segment for the high ceiling while still paying copper's loss.</blockquote>
+<h2>Рецепти</h2>
 
-<h2>Block Properties</h2>
+<p>Три золоті зливки в ряд дають 3 кабелі. Рецептів переробки немає.</p>
 
-<p>A thin wire that connects to neighbouring blocks. Any tool breaks it, and shears are especially handy.</p>
+<h2>Пов'язане</h2>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>thin rod (6px core + sleeves),</td></tr><tr><td>Hardness</td><td>0.2</td></tr><tr><td>Tool</td><td>any / shears</td></tr></tbody></table>
-
-<h3>Connecting to half blocks</h3>
-
-<p>Like every other cable, gold drops its horizontal sleeve toward a low neighbour (a solar panel, 8/16 tall, and any future half block) so the sleeve hugs the slab's side instead of floating above it. The behaviour is shared by all cables and is derived from the neighbour's shape, not its type.</p>
-
-<h2>Recipes</h2>
-
-<p>Crafting: 3 gold ingots in a row → 3 cables. Processing recipes: none.</p>
-
-<h2>Related</h2>
-
-<p><a href="copper_cable.html">Copper Cable</a> — the universal LV cable. <a href="tin_cable.html">Tin Cable</a> — cheap and nearly lossless, for solar farms. <a href="insulated_gold_cable.html">Insulated Gold Cable</a> — the rubber version: half the loss and safe to touch.</p>
+<p><a href="copper_cable.html">Мідний кабель</a> — LV-основа для довгих магістралей. <a href="insulated_gold_cable.html">Ізольований золотий кабель</a> — удвічі менші втрати й безпека.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="золотий кабель alaindustrial:gold_cable" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Gold Ingot"><img src="../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Gold Ingot"><img src="../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Gold Ingot"><img src="../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Золотий кабель"><img src="../assets/item/gold_cable_3d.png" alt="Золотий кабель" width="32" height="32"><span class="count">×3</span></div><div class="result-name">Золотий кабель</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="золотий кабель alaindustrial:gold_cable" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Gold Ingot"><img src="../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Gold Ingot"><img src="../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Gold Ingot"><img src="../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Золотий кабель"><img src="../assets/item/gold_cable_3d.png" alt="Золотий кабель" width="32" height="32"><span class="count">×3</span></div><div class="result-name">Золотий кабель</div></div></div></div></div>
 <h2>Використовується в</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="ізольований золотий кабель alaindustrial:insulated_gold_cable" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Золотий кабель"><img src="../assets/item/gold_cable_3d.png" alt="Золотий кабель" width="32" height="32"></div> <div class="cell" title="Золотий кабель"><img src="../assets/item/gold_cable_3d.png" alt="Золотий кабель" width="32" height="32"></div> <div class="cell" title="Золотий кабель"><img src="../assets/item/gold_cable_3d.png" alt="Золотий кабель" width="32" height="32"></div> <div class="cell" title="Гума"><img src="../assets/item/rubber_3d.png" alt="Гума" width="32" height="32"></div> <div class="cell" title="Гума"><img src="../assets/item/rubber_3d.png" alt="Гума" width="32" height="32"></div> <div class="cell" title="Гума"><img src="../assets/item/rubber_3d.png" alt="Гума" width="32" height="32"></div> <div class="cell" title="Золотий кабель"><img src="../assets/item/gold_cable_3d.png" alt="Золотий кабель" width="32" height="32"></div> <div class="cell" title="Золотий кабель"><img src="../assets/item/gold_cable_3d.png" alt="Золотий кабель" width="32" height="32"></div> <div class="cell" title="Золотий кабель"><img src="../assets/item/gold_cable_3d.png" alt="Золотий кабель" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Ізольований золотий кабель"><img src="../assets/item/insulated_gold_cable_3d.png" alt="Ізольований золотий кабель" width="32" height="32"><span class="count">×6</span></div><div class="result-name">Ізольований золотий кабель</div></div></div></div></div>
   </main>

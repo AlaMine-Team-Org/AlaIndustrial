@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -390,7 +389,7 @@
 
 <p>The pump is a pure energy consumer: it takes EU/FE in, emits none, and spends 1000 EU/FE per bucket it draws.</p>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>4000 (`Config.) — above, to bank enough for ≥4 buckets at once</td></tr><tr><td>Max input (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>n/a (does not emit)</td></tr><tr><td>EU/FE per bucket</td><td><strong>1000</strong> (`Config.) — one of the most energy-hungry machines</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>4000 — above, to bank enough for ≥4 buckets at once</td></tr><tr><td>Max input (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>n/a (does not emit)</td></tr><tr><td>EU/FE per bucket</td><td><strong>1000</strong> — one of the most energy-hungry machines</td></tr></tbody></table>
 
 <p>The pump connects to the energy network like any consumer — the energy network finds it automatically. Energy is only spent on the tick when fluid was actually taken from the world or a neighbouring tank; filling by hand with buckets and pushing into a receiver cost no EU/FE.</p>
 
@@ -418,13 +417,13 @@
 
 <p>Two slots for buckets — for manually pouring fluid into the tank. This isn't the pump's main way of working, just a handy convenience.</p>
 
-<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Input (0)</td><td>lava bucket / water bucket (<code>Items.LAVA_BUCKET</code>, <code>Items.WATER_BUCKET</code>)</td><td>1</td></tr><tr><td>Output (1)</td><td>empty bucket (<code>Items.BUCKET</code>, extraction only)</td><td>up to a stack</td></tr></tbody></table>
+<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Input (0)</td><td>lava bucket / water bucket (a lava bucket, a water bucket)</td><td>1</td></tr><tr><td>Output (1)</td><td>empty bucket (an empty bucket, extraction only)</td><td>up to a stack</td></tr></tbody></table>
 
 <p>Filling via buckets: a bucket from the input slot is emptied into the tank (1 bucket = 1000 mB), the empty bucket drops into the output slot — same as the Geothermal Generator. This <strong>costs no EU/FE</strong> (manual fill, not the pump). Hoppers can take empty buckets out of the output slot and put fresh fluid buckets into the input slot.</p>
 
 <h2>Internal tank</h2>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Implementation</td><td>neutral (in <code>common</code>, works on Fabric and NeoForge)</td></tr><tr><td>Capacity</td><td><strong>10 buckets</strong> (<code>FluidAmounts.BUCKET * 10</code> = 10000 mB)</td></tr><tr><td>Accepts</td><td>allowlist: lava + water (<code>canInsert</code> → <code>isPumpableFluid</code>)</td></tr><tr><td>Mixing</td><td><strong>forbidden</strong> — the tank is single-variant: while it holds one fluid, the other is rejected (guaranteed by the core's <code>.insert</code>)</td></tr><tr><td>Extraction</td><td>allowed from any side (<code>canExtract</code> → true)</td></tr><tr><td>Access</td><td>per-face via a neutral <code>FluidPort</code>; published on Fabric via the Fluid Transfer API, on NeoForge via the fluid capability</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Implementation</td><td>neutral (in, works on Fabric and NeoForge)</td></tr><tr><td>Capacity</td><td><strong>10 buckets</strong> (10 buckets = 10000 mB)</td></tr><tr><td>Accepts</td><td>allowlist: lava + water (→)</td></tr><tr><td>Mixing</td><td><strong>forbidden</strong> — the tank is single-variant: while it holds one fluid, the other is rejected (guaranteed by the core's <code>.insert</code>)</td></tr><tr><td>Extraction</td><td>allowed from any side (→ true)</td></tr><tr><td>Access</td><td>per-face via a neutral <code>FluidPort</code>; published on Fabric via the Fluid Transfer API, on NeoForge via the fluid capability</td></tr></tbody></table>
 
 <p><strong>Single-variant guarantee.</strong> The tank holds at most one fluid at a time. If empty, it accepts any from the allowlist; if it already holds lava, water is rejected (and vice versa) until it empties. Mixing fluids by accident is impossible — it's built into the tank itself.</p>
 
@@ -448,7 +447,7 @@
 
 <p>An ordinary solid block: a pickaxe breaks it, and on break it does not keep its energy charge (the tank and its fluid are kept — see Internal tank).</p>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Drops with NBT energy</td><td>false</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Drops with NBT energy</td><td>no</td></tr></tbody></table>
 
 <h2>Recipes</h2>
 
@@ -471,18 +470,12 @@
 
 <p>Tier: LV Power: from an LV source, e.g. the <a href="../generators/generator.html">Generator</a>. Purpose: automatically feeding lava to the <a href="../generators/geothermal_generator.html">Geothermal Generator</a> as a fluid instead of by hand; moving water for future fluid chains. Requires: an <a href="../components/index.html">Electronic Circuit</a> to craft.</p>
 
-<h2>Compatibility</h2>
-
-<p>The pump has no processing recipes, so recipe viewers show only its crafting recipe. Tooltip mods can optionally show the energy level and the tank fill.</p>
-
-<p>Recipe viewers (JEI/REI/EMI): crafting only (the pump has no processing recipes). Tooltips (Jade/The One Probe): energy level and tank fluid level (desirable).</p>
-
 <h2>Related</h2>
 
 <p><a href="../generators/geothermal_generator.html">Geothermal Generator</a> — the main consumer of the pump's lava. <a href="../generators/generator.html">Generator</a> — the typical LV power source for the pump. <a href="../components/index.html">Components</a> — the Electronic Circuit for crafting.</p>
 
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="pump alaindustrial:pump" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Bucket"><img src="../assets/item/bucket_3d.png" alt="Bucket" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Bucket"><img src="../assets/item/bucket_3d.png" alt="Bucket" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Pump"><img src="../assets/item/pump_3d.png" alt="Pump" width="32" height="32"></div><div class="result-name">Pump</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="pump alaindustrial:pump" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Bucket"><img src="../assets/item/bucket_3d.png" alt="Bucket" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Bucket"><img src="../assets/item/bucket_3d.png" alt="Bucket" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Pump"><img src="../assets/item/pump_3d.png" alt="Pump" width="32" height="32"></div><div class="result-name">Pump</div></div></div></div></div>
   </main>
 </div>
 

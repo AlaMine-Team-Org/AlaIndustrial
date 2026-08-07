@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -401,7 +400,7 @@
 
 <table><thead><tr><th>Высота (уровень моря 63)</th><th>Ясно</th><th>Дождь</th><th>Гроза</th></tr></thead><tbody><tr><td>Y 63 и ниже</td><td>0.0</td><td>0.0</td><td>0.0</td></tr><tr><td>Y 85</td><td>12.6</td><td>18.9</td><td>25.3</td></tr><tr><td>Y 100</td><td>18.6</td><td>28.0</td><td>37.3</td></tr><tr><td>Y 127</td><td>28.1</td><td>42.2</td><td>56.3</td></tr><tr><td>Y 160</td><td>39.7</td><td>59.6</td><td>79.5</td></tr><tr><td>Y 175</td><td>49.3</td><td>73.9</td><td>98.6</td></tr><tr><td>Y 185</td><td>56.8</td><td>85.2</td><td>113.5</td></tr><tr><td><strong>Y 192 (облака)</strong></td><td>62.5</td><td>93.8</td><td>125.0</td></tr><tr><td>Y 198</td><td>47.1</td><td>70.7</td><td>94.2</td></tr><tr><td>Y 210</td><td>32.8</td><td>49.1</td><td>65.5</td></tr><tr><td>Y 230</td><td>15.9</td><td>23.9</td><td>31.9</td></tr><tr><td>Y 248 и выше</td><td>3.8</td><td>5.6</td><td>7.5</td></tr></tbody></table>
 
-<p>Погода умножает скорость: ясно ×1, дождь ×1.5, гроза ×2. Значения берутся из тех же полей <code>Config</code>, что и выработка ветряков (<code>windCloudY</code>, <code>windDeadY</code>, <code>windRidgeFactor</code>, <code>windTraceFactor</code>, <code>windGaugePeakKmh</code>,,), поэтому разойтись с генерацией показания не могут.</p>
+<p>Погода умножает скорость: ясно ×1, дождь ×1.5, гроза ×2. Значения берутся из тех же полей <code>Config</code>, что и выработка ветряков, поэтому разойтись с генерацией показания не могут.</p>
 
 <h2>Профиль высоты</h2>
 
@@ -428,7 +427,7 @@
 
 <p>У небесной мельницы гребень <strong>совпадает</strong> с T1: 8 ступеней по 8 блоков — те же +64, что и 4 по 16. Эти две ветки отличаются не высотой, а базой под облаками (8 против 4) и погодными множителями. Своим гребнем обладает только штормовая (+96), и для неё разгон растянут — но пик и смерть ветра общие.</p>
 
-<p>Тонкость на случай правки конфига: непрерывность шкалы держится на том, что шаг на блок больше 0.1 км/ч. Сильно растянутый профиль или маленький <code>windGaugePeakKmh</code> вернут одинаковые числа на соседних высотах.</p>
+<p>Тонкость на случай правки конфига: непрерывность шкалы держится на том, что шаг на блок больше 0.1 км/ч. Сильно растянутый профиль или маленький вернут одинаковые числа на соседних высотах.</p>
 
 <h2>Рецепт</h2>
 
@@ -439,7 +438,7 @@
 <p><a href="../generators/wind_mill.html">Ветрогенератор</a> — ветка T1, по которой отшкалирован прибор. <a href="../generators/high_altitude_wind_mill.html">Небесная мельница</a> — T2, тот же гребень, вдвое большая база. <a href="../generators/storm_wind_mill.html">Штормовая мельница</a> — T2, гребень выше.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="анемометр alaindustrial:wind_gauge" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Палка"><img src="../assets/item/stick_3d.png" alt="Палка" width="32" height="32"></div> <div class="cell" title="Стеклянная панель"><img src="../assets/item/glass_pane_3d.png" alt="Стеклянная панель" width="32" height="32"></div> <div class="cell" title="Палка"><img src="../assets/item/stick_3d.png" alt="Палка" width="32" height="32"></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Деревянная шестерня"><img src="../assets/item/wooden_gear_3d.png" alt="Деревянная шестерня" width="32" height="32"></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Деревянная шестерня"><img src="../assets/item/wooden_gear_3d.png" alt="Деревянная шестерня" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Анемометр"><img src="../assets/item/wind_gauge_3d.png" alt="Анемометр" width="32" height="32"></div><div class="result-name">Анемометр</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="анемометр alaindustrial:wind_gauge" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Палка"><img src="../assets/item/stick_3d.png" alt="Палка" width="32" height="32"></div> <div class="cell" title="Стеклянная панель"><img src="../assets/item/glass_pane_3d.png" alt="Стеклянная панель" width="32" height="32"></div> <div class="cell" title="Палка"><img src="../assets/item/stick_3d.png" alt="Палка" width="32" height="32"></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Деревянная шестерня"><img src="../assets/item/wooden_gear_3d.png" alt="Деревянная шестерня" width="32" height="32"></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="Деревянная шестерня"><img src="../assets/item/wooden_gear_3d.png" alt="Деревянная шестерня" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Анемометр"><img src="../assets/item/wind_gauge_3d.png" alt="Анемометр" width="32" height="32"></div><div class="result-name">Анемометр</div></div></div></div></div>
   </main>
 </div>
 

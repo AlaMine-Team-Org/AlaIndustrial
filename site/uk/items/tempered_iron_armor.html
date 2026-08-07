@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,39 +375,13 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p><strong>Tempered-iron armor</strong> is a full four-piece set — helmet, chestplate, leggings and boots. Each piece is tougher than its iron counterpart and is repaired with tempered iron (via the <code>tempered_iron_armor_materials</code> tag). Protection sits a bit above iron and below diamond — a middle ground between the early and late game.</p>
+<p><strong>Броня із загартованого заліза</strong> — звичайна броня без енергії, але міцніша за залізну. Проміжний щабель між залізом і алмазом.</p>
 
-<blockquote><strong>Mini-example:</strong> a full set of tempered-iron armor gives noticeably more protection than an iron set, while being crafted from smelted iron (cheaper than diamond gear). A solid intermediate layer before stepping up to diamond/netherite.</blockquote>
+<h2>Пов'язане</h2>
 
-<h2>Energy</h2>
-
-<p>Not applicable (non-powered armor).</p>
-
-<h2>How it's used</h2>
-
-<p>Equipped into the matching armor slots (helmet, chestplate, leggings, boots). Repaired at an anvil with tempered iron.</p>
-
-<h2>Block Properties</h2>
-
-<p>Not applicable (items). Stack: 1 each.</p>
-
-<h2>Recipes</h2>
-
-<p>All four pieces are crafted at a workbench (shaped 3×3) from <a href="../components/tempered_iron.html">tempered iron</a> on standard vanilla armor patterns:</p>
-
-<p><strong>Helmet</strong> — <code>III / I I</code> <strong>Chestplate</strong> — <code>I I / III / III</code> <strong>Leggings</strong> — <code>III / I I / I I</code> <strong>Boots</strong> — <code>I I / I I</code></p>
-
-<p><code>I</code> — tempered iron ingot.</p>
-
-<h2>Progression</h2>
-
-<p>Item-category armor, no tier of its own. Fills the gap between iron and diamond armor: tougher than iron, available earlier than diamond (via tempering iron in an electric furnace / furnace), repairable.</p>
-
-<h2>Related</h2>
-
-<p><a href="../components/tempered_iron.html">Tempered Iron</a> — the armor and repair material. <a href="tempered_iron_tools.html">Tempered-iron tools</a> — the sibling tool set. <a href="../machines/electric_furnace.html">Electric Furnace</a> — where tempered iron is smelted for crafting.</p>
+<p><a href="../components/tempered_iron.html">Загартоване залізо</a> — матеріал. <a href="fluxweave_armor.html">Броня з Флюкс-тканини</a> — наступний щабель, уже на EU/FE.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="tempered iron chestplate alaindustrial:tempered_iron_chestplate" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Tempered Iron Chestplate"><img src="../assets/item/tempered_iron_chestplate_3d.png" alt="Tempered Iron Chestplate" width="32" height="32"></div><div class="result-name">Tempered Iron Chestplate</div></div></div></div></div>

@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,71 +375,20 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Trellis</strong> is a support for climbing plants and the mod's first crop. <strong>Cotton</strong> grows on it today, and it is the farming answer to hunting spiders for fibre: grown in a field instead of being knocked out of mobs. The name is deliberately generic — the support is meant for future plants too.</p>
+<p><strong>Жердинка</strong> — опора для витких культур: ставиться над грядкою, і рослина росте вгору по ній, займаючи менше місця.</p>
 
-<p>The trellis stands <strong>two blocks tall</strong> — the plant climbs it. Place it on tilled soil, then right-click it with <strong>cotton seeds</strong>.</p>
+<h2>Властивості блока</h2>
 
-<p>From there the plant lives in two phases:</p>
+<p>Легкий блок, ламається будь-яким інструментом.</p>
 
-<ul><li><strong>Rooting</strong> — the long phase, and it is walked through <strong>once in the plant's life</strong>. The cotton</li></ul>
-<p>slowly climbs the support until it wraps both blocks.</p>
-<ul><li><strong>Fruiting</strong> — a short cycle that repeats forever. The bush fills with bolls, you pick them with a</li></ul>
-<p>right-click, and it fills again.</p>
+<h2>Пов'язане</h2>
 
-<p>The point: <strong>harvesting never destroys the plant</strong>. Right-clicking a ripe bush takes the cotton and returns it to its grown, boll-free state — patience is the price of the plant itself, not of every harvest.</p>
-
-<h2>Growing</h2>
-
-<p>Both phases only advance under two conditions:</p>
-
-<ul><li><strong>tilled and moist</strong> soil under the lower half (farmland next to water);</li><li>enough light, as for vanilla crops.</li></ul>
-
-<p>If the soil dries out or the light goes, growth <strong>pauses</strong>: the stage is never lost, the plant never dies and never reverts to a seed. Restore the water and it continues from the same stage. This is deliberate — walking away from the game must not wipe out a plantation.</p>
-
-<p><strong>Bone meal</strong> speeds growth up, but buys strictly <strong>one stage</strong> per use, so it cannot turn a bare trellis into a ripe bush on the spot.</p>
-
-<p>Plants can be packed as densely as you like: the trellis does not tick like a machine, so a large plantation costs the world nothing.</p>
-
-<h2>Harvesting</h2>
-
-<table><thead><tr><th>Action</th><th>Result</th></tr></thead><tbody><tr><td>Right-click a <strong>ripe</strong> bush</td><td>1–2 <strong>cotton fibre</strong>, 35 % chance of <strong>cotton seeds</strong>; the bush stays and fills again</td></tr><tr><td>Right-click an unripe bush</td><td>nothing happens, the state does not change</td></tr><tr><td>Break the trellis</td><td>the <strong>trellis</strong> comes back, plus the seed if something was planted</td></tr><tr><td>Break tall or short grass</td><td>5 % chance of <strong>cotton seeds</strong> (not while shearing — the same rule vanilla applies to wheat seeds); Fortune raises the count</td></tr></tbody></table>
-
-<p>Grass is the entry point into the chain: clearing a plain finds the first seeds in the same place wheat seeds come from. After that the plantation sustains itself, since harvesting returns seeds too.</p>
-
-<h2>Block properties</h2>
-
-<table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Height</td><td>2 blocks (lower and upper half)</td></tr><tr><td>Base</td><td>tilled soil (<code>#minecraft:supports_crops</code>)</td></tr><tr><td>Hardness</td><td>0.2 — breaks instantly by hand</td></tr><tr><td>Sound</td><td>grass</td></tr><tr><td>Collision</td><td>yes — the trellis blocks movement like a fence post</td></tr><tr><td>Piston</td><td>does not move it (half a multiblock must not be torn from its pair)</td></tr><tr><td>Breaking</td><td>both halves go together; the trellis drops exactly once</td></tr></tbody></table>
-
-<h2>Recipes</h2>
-
-<p>The trellis is sticks tied with string:</p>
-
-<table><thead><tr><th>Ingredients</th><th>Result</th></tr></thead><tbody><tr><td>4 × stick + 2 × string</td><td>1 × trellis</td></tr></tbody></table>
-
-<h2>Balance</h2>
-
-<p>Growth is probabilistic: every random block tick rolls a chance to advance one stage.</p>
-
-<table><thead><tr><th>Parameter</th><th>Value</th><th><code>Config</code> key</th></tr></thead><tbody><tr><td>Rooting stage chance</td><td>1 in 12</td><td><code>cottonRootingChanceDivisor</code></td></tr><tr><td>Fruiting stage chance</td><td>1 in 4</td><td><code>cottonFruitingChanceDivisor</code></td></tr><tr><td>Rooting stages</td><td>3</td><td>—</td></tr><tr><td>Stages per fruiting cycle</td><td>2</td><td>—</td></tr><tr><td>Fibre per harvest</td><td>1–2</td><td>—</td></tr><tr><td>Seed chance per harvest</td><td>35 %</td><td>—</td></tr><tr><td>Seed chance per grass block</td><td>5 %</td><td>—</td></tr></tbody></table>
-
-<p>Rooting is deliberately three times "dearer" than fruiting: the wait is the price of the plant, not of each harvest.</p>
-
-<h2>Progression</h2>
-
-<p>Cotton fibre is the feedstock for the coming Fluxweave line: it gives the farmer the same route the spider's string gives the fighter.</p>
-
-<h2>Compatibility</h2>
-
-<p>The plant sits on vanilla farmland and follows vanilla watering rules, so any mechanic that protects farmland from being trampled covers it too. The scythe only reaps crops listed in its tag, and the trellis is not in it yet.</p>
-
-<h2>Related</h2>
-
-<ul><li>Incubator — seed duplication by irradiation (cotton to be added later).</li><li>Rubber — an example of one spec covering several ids through an alias.</li></ul>
+<p><a href="garden_drone_station.html">Станція дрона-садівника</a> — збирає врожай сама.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="жердка alaindustrial:trellis" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="Any String" aria-label="Any String"><span>string</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="Any String" aria-label="Any String"><span>string</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Жердка"><img src="../assets/item/trellis_3d.png" alt="Жердка" width="32" height="32"></div><div class="result-name">Жердка</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="жердка alaindustrial:trellis" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any String"><img src="../assets/item/string_3d.png" alt="Any String" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any String"><img src="../assets/item/string_3d.png" alt="Any String" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Жердка"><img src="../assets/item/trellis_3d.png" alt="Жердка" width="32" height="32"></div><div class="result-name">Жердка</div></div></div></div></div>
   </main>
 </div>
 

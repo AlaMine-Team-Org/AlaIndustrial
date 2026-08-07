@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,34 +375,18 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p><strong>Electrum</strong> is a one-to-one gold-and-silver alloy made by the <a href="../machines/alloy_smelter.html">Alloy Smelter</a>. By materials it is the most expensive recipe the smelter has: both input metals are valuable, and neither of them is ever spare in a chest.</p>
+<p><strong>Електрум</strong> — сплав, який виплавляє <a href="../machines/alloy_smelter.html">Сплавна піч</a>: <strong>один золотий зливок і один срібний</strong> дають <strong>один</strong> зливок електруму.</p>
 
-<blockquote><strong>Mini-example:</strong> put one gold ingot in any input slot of the smelter and one silver ingot in any other. Seven and a half seconds later the output holds one electrum ingot. Slot order does not matter.</blockquote>
+<p>Піч дивиться на набір завантажених зливків цілком, тому порядок слотів не має значення. Одна операція триває 150 тиків (7,5 секунди) і коштує 1200 EU/FE.</p>
 
-<p>The smelter returns a single ingot per operation, so the full 1200 EU/FE is spent on that one ingot. There is no electrum ore: the alloy comes out of the smelter and nowhere else, and a vanilla furnace will not make it.</p>
+<h2>Пов'язане</h2>
 
-<table><thead><tr><th>Form</th><th>How you get it</th></tr></thead><tbody><tr><td>Ingot</td><td>alloying 1 gold + 1 silver ingot in the Alloy Smelter → 1 ingot</td></tr></tbody></table>
-
-<h2>Recipe (alloying)</h2>
-
-<p>The only route is the <a href="../machines/alloy_smelter.html">Alloy Smelter</a>.</p>
-
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Load</td><td>1 gold ingot + 1 silver ingot</td></tr><tr><td>You get</td><td>1 electrum ingot</td></tr><tr><td>Cost per operation</td><td>1200 EU/FE</td></tr><tr><td>Duration</td><td>150 ticks (~7.5 s)</td></tr><tr><td>EU/FE per ingot</td><td>1200</td></tr></tbody></table>
-
-<p>Two ingots in, one out: melting costs metal, and that holds for every alloy in the mod. Gold and silver are accepted through the conventional tags <code>c:ingots/gold</code> and <code>c:ingots/silver</code>, so silver from another mod is taken just like the mod's own.</p>
-
-<h2>Progression</h2>
-
-<p><strong>Electrum has no use yet.</strong> The alloy is already smelted and stacks in your inventory, but no recipe in the mod consumes it so far: items made of alloys — plates, tools, components — are coming in a separate piece of work. The trade-off is real all the same: <a href="silver.html">silver</a> goes into the electronic circuit and through it into nearly every machine and generator, so every ingot spent on electrum is a machine left unbuilt. With no demand for the alloy yet, smelt it out of curiosity rather than to stockpile.</p>
-
-<h2>Related</h2>
-
-<p><a href="../machines/alloy_smelter.html">Alloy Smelter</a> — the only source of electrum. <a href="silver.html">Silver</a> — the second metal in the recipe and the main competitor for it; the gold is vanilla. <a href="bronze.html">Bronze</a>, <a href="invar.html">Invar</a>, <a href="cupronickel.html">Cupronickel</a> — the other three alloys from the same smelter.</p>
+<p><a href="../machines/alloy_smelter.html">Сплавна піч</a> — єдиний спосіб отримати сплав. <a href="silver.html">Срібло</a> — складник. <a href="../energy-transfer/electrum_cable.html">Електрумний кабель</a> — головний споживач.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="електрумовий злиток alaindustrial:electrum_ingot" data-type="alaindustrial:alloying"><div class="recipe-header"><span class="recipe-type">alaindustrial:alloying</span><span class="recipe-energy">Енергія: 1200 EU/FE</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Gold Ingot"><img src="../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-results"><div class="recipe-result"><div class="cell result" title="Електрумовий злиток"><img src="../assets/item/electrum_ingot_3d.png" alt="Електрумовий злиток" width="32" height="32"></div><div class="result-name">Електрумовий злиток</div></div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="електрумовий злиток alaindustrial:electrum_ingot" data-type="alaindustrial:alloying"><div class="recipe-header"><span class="recipe-type">alaindustrial:alloying</span><span class="recipe-energy">Енергія: 1200 EU/FE</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Gold Ingot"><img src="../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-results"><div class="recipe-result"><div class="cell result" title="Електрумовий злиток"><img src="../assets/item/electrum_ingot_3d.png" alt="Електрумовий злиток" width="32" height="32"></div><div class="result-name">Електрумовий злиток</div></div></div></div></div></div>
 <h2>Використовується в</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="електрумовий кабель alaindustrial:electrum_cable" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Електрумовий злиток"><img src="../assets/item/electrum_ingot_3d.png" alt="Електрумовий злиток" width="32" height="32"></div> <div class="cell" title="Алмазний пил"><img src="../assets/item/diamond_dust_3d.png" alt="Алмазний пил" width="32" height="32"></div> <div class="cell" title="Електрумовий злиток"><img src="../assets/item/electrum_ingot_3d.png" alt="Електрумовий злиток" width="32" height="32"></div> <div class="cell" title="Алмазний пил"><img src="../assets/item/diamond_dust_3d.png" alt="Алмазний пил" width="32" height="32"></div> <div class="cell" title="Електрумовий злиток"><img src="../assets/item/electrum_ingot_3d.png" alt="Електрумовий злиток" width="32" height="32"></div> <div class="cell" title="Алмазний пил"><img src="../assets/item/diamond_dust_3d.png" alt="Алмазний пил" width="32" height="32"></div> <div class="cell" title="Електрумовий злиток"><img src="../assets/item/electrum_ingot_3d.png" alt="Електрумовий злиток" width="32" height="32"></div> <div class="cell" title="Алмазний пил"><img src="../assets/item/diamond_dust_3d.png" alt="Алмазний пил" width="32" height="32"></div> <div class="cell" title="Електрумовий злиток"><img src="../assets/item/electrum_ingot_3d.png" alt="Електрумовий злиток" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електрумовий кабель"><img src="../assets/item/electrum_cable_3d.png" alt="Електрумовий кабель" width="32" height="32"><span class="count">×3</span></div><div class="result-name">Електрумовий кабель</div></div></div></div></div>
   </main>

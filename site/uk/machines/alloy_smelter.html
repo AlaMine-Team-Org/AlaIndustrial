@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,60 +375,30 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Alloy Smelter</strong> is the first machine in the mod that combines several different materials into one new material. It has three input slots and all of them are equal: the smelter looks at the whole set of loaded ingots, not at which one sits in which slot.</p>
+<p><strong>Сплавна піч</strong> — перша машина моду, яка об'єднує кілька різних матеріалів в один новий. У неї три вхідні слоти, і всі вони рівноправні: піч дивиться на набір завантажених зливків цілком.</p>
 
-<blockquote><strong>Mini-example:</strong> connect LV power, put three copper ingots in any input slot and one tin ingot in any other, and 7.5 seconds later you get two bronze ingots.</blockquote>
+<h2>Енергія</h2>
 
-<h2>Energy</h2>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/т (LV)</td></tr><tr><td>Споживання</td><td>8 EU/FE/т під час роботи</td></tr></tbody></table>
 
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>800 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Consumption</td><td>8 EU/FE/t while working</td></tr><tr><td>Cost per operation</td><td>1200 EU/FE</td></tr><tr><td>Duration</td><td>150 ticks (~7.5 s)</td></tr></tbody></table>
+<p>Якщо в мережі більше енергії, зайве просто не забирається — нічого не вибухає. Енергія заходить із п'яти робочих граней; лицьова грань інертна.</p>
 
-<p>8 EU/FE/t is exactly what a coal-fired <a href="../generators/generator.html">Generator</a> puts out and two thirds of a copper cable's throughput, so a single smelter occupies most of a starter line. The cost is the same for every alloy: expensive alloys differ not in what the machine charges, but in how many ingots they eat and how few they return.</p>
+<h2>Процесинг</h2>
 
-<h2>Alloys</h2>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>150 тиків (~7,5 с)</td></tr><tr><td>Ціна операції</td><td>1200 EU/FE</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
 
-<table><thead><tr><th>Alloy</th><th>Load</th><th>You get</th><th>EU/FE per ingot</th></tr></thead><tbody><tr><td><a href="../materials/bronze.html">Bronze</a></td><td>3 copper + 1 tin ingot</td><td>2 ingots</td><td>600</td></tr><tr><td><a href="../materials/invar.html">Invar</a></td><td>2 iron + 1 nickel ingot</td><td>1 ingot</td><td>1200</td></tr><tr><td><a href="../materials/cupronickel.html">Cupronickel</a></td><td>1 copper + 1 nickel ingot</td><td>1 ingot</td><td>1200</td></tr><tr><td><a href="../materials/electrum.html">Electrum</a></td><td>1 gold + 1 silver ingot</td><td>1 ingot</td><td>1200</td></tr></tbody></table>
+<h2>Властивості блока</h2>
 
-<p>The output is always smaller than the sum of the inputs — melting costs metal. Bronze stays the bulk alloy (four cheap ingots give two), while invar, cupronickel and electrum are made one at a time: they are expensive both in material and in energy per finished ingot.</p>
+<p>Звичайний суцільний блок, ламається будь-якою кайлом. Заряд при зламі не зберігає.</p>
 
-<p>Inputs are accepted by the conventional tags (<code>c:ingots/copper</code>, <code>c:ingots/tin</code>, <code>c:ingots/iron</code>, <code>c:ingots/nickel</code>, <code>c:ingots/gold</code>, <code>c:ingots/silver</code>), so copper and iron from another mod are taken just like the mod's own.</p>
+<h2>Рецепти</h2>
 
-<h2>How the smelter picks a recipe</h2>
-
-<p>There is one rule: <strong>slot order changes nothing</strong>. The smelter looks for a recipe whose components can be laid out across the occupied slots, one component per slot.</p>
-
-<p>Two behaviours follow from that, and both are worth knowing:</p>
-
-<p><strong>A two-component recipe will not start while a third slot is occupied.</strong> The smelter will not quietly ignore the extra stack: as long as it sits in an input, no two-component alloy counts as a match. This prevents the case where a player drops in the wrong item and never works out why it is "never consumed". <strong>Running short stops the work but does not drop the recipe.</strong> Two copper instead of three, and the smelter waits for the third rather than deciding there is no recipe at all.</p>
-
-<h2>Inventory and automation</h2>
-
-<table><thead><tr><th>Slot</th><th>Accepts</th></tr></thead><tbody><tr><td>Three inputs (left-hand column)</td><td>any ingot used by some alloy recipe</td></tr><tr><td>Output</td><td>the finished alloy</td></tr></tbody></table>
-
-<p>Inputs are served from the top and the sides, the output from the sides. The bottom face is not exposed to item automation.</p>
-
-<p><strong>A hopper cannot jam the machine.</strong> An input slot refuses an item that already sits in another input slot. Without that rule a hopper full of copper would fill all three slots with copper and the smelter would be stuck for good: no recipe has that set, and a hopper cannot pull the surplus back out. With the rule the extra copper stays in the hopper — visibly backing up — and the free slots wait for tin.</p>
-
-<h2>Interface</h2>
-
-<p>The screen shows energy, progress, the three input slots in a column, and the output. The column is deliberate: identical cells stacked one above another read as "put the parts here", where the usual input → output row would suggest an order that does not exist here.</p>
-
-<h2>Block properties</h2>
-
-<p>Pickaxe; drops itself and its inventory when broken. Glows while working (the crucibles on the front face and the shaft on top heat up). Makes no sound.</p>
-
-<h2>Recipe</h2>
-
-<p><code>BBB / IMI / IEIB</code> is a brick, <code>I</code> an iron ingot, <code>M</code> a machine casing, <code>E</code> an electronic circuit. Reachable before any alloy exists, or the smelter could never be built.</p>
-
-<h2>Related</h2>
-
-<p>The <a href="macerator.html">Macerator</a> and the <a href="compressor.html">Compressor</a> form the ore-doubling loop: dust becomes an ingot, and the ingot then goes into the smelter. <a href="../materials/tin.html">Tin</a>, <a href="../materials/nickel.html">Nickel</a> and <a href="../materials/silver.html">Silver</a> are the mod's own metals that go into the alloys.</p>
+<p>Збирається на верстаку з цегли, залізних зливків, корпусу машини та електронної схеми.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="сплавильна піч alaindustrial:alloy_smelter" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Brick"><img src="../assets/item/brick_3d.png" alt="Brick" width="32" height="32"></div> <div class="cell" title="Brick"><img src="../assets/item/brick_3d.png" alt="Brick" width="32" height="32"></div> <div class="cell" title="Brick"><img src="../assets/item/brick_3d.png" alt="Brick" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Сплавильна піч"><img src="../assets/item/alloy_smelter_3d.png" alt="Сплавильна піч" width="32" height="32"></div><div class="result-name">Сплавильна піч</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="сплавильна піч alaindustrial:alloy_smelter" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Brick"><img src="../assets/item/brick_3d.png" alt="Brick" width="32" height="32"></div> <div class="cell" title="Brick"><img src="../assets/item/brick_3d.png" alt="Brick" width="32" height="32"></div> <div class="cell" title="Brick"><img src="../assets/item/brick_3d.png" alt="Brick" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Сплавильна піч"><img src="../assets/item/alloy_smelter_3d.png" alt="Сплавильна піч" width="32" height="32"></div><div class="result-name">Сплавильна піч</div></div></div></div></div>
   </main>
 </div>
 

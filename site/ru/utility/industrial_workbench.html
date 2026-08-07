@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -401,16 +400,12 @@
 
 <p>В <strong>новых деревнях всех пяти биомов</strong> (равнины, пустыня, саванна, снега, тайга) с небольшим шансом генерируется <strong>дом Индустриалиста</strong> — каменный домик с верстаком, кроватью и жителем внутри. В уже сгенерированных деревнях и старых мирах дом не появится — там путь ванили: скрафтите верстак и поставьте его рядом с безработным жителем.</p>
 
-<h2>Совместимость</h2>
-
-<p>Если жителя-Индустриалиста заразит зомби, у зомби-жителя останется фирменная одежда профессии; после лечения профессия сохраняется (ванильное поведение). Обратные продажи Мастера не дешевеют от репутации/лечения — защита от ванильного чита со скидками. Поставленный на базе верстак работает как обычный job-site: свободный житель может его занять — это ваниль, не баг.</p>
-
 <h2>Прогрессия</h2>
 
 <p>Тир: нет (рабочее место жителя). Нужен: <a href="../materials/tin.html">Олово</a> — два слитка на рецепт. Это ранний металл, так что нанять Индустриалиста можно уже в начале игры — и его первые скупки олова дают изумруды на первую электросхему.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="верстак индустриалиста alaindustrial:industrial_workbench" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Любые доски"><img src="../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любые доски"><img src="../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Любые доски"><img src="../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любые доски"><img src="../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Верстак индустриалиста"><img src="../assets/item/industrial_workbench_3d.png" alt="Верстак индустриалиста" width="32" height="32"></div><div class="result-name">Верстак индустриалиста</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="верстак индустриалиста alaindustrial:industrial_workbench" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любой оловянный слиток"><img src="../assets/item/tin_ingot_3d.png" alt="Любой оловянный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="Любые доски"><img src="../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любые доски"><img src="../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="Любые доски"><img src="../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любые доски"><img src="../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Верстак индустриалиста"><img src="../assets/item/industrial_workbench_3d.png" alt="Верстак индустриалиста" width="32" height="32"></div><div class="result-name">Верстак индустриалиста</div></div></div></div></div>
   </main>
 </div>
 

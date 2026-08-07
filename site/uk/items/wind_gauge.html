@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,69 +375,18 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The Wind Gauge is a hand instrument that needs no power. It builds nothing and produces nothing: it tells you the wind speed where you are standing, so a tower site for a <a href="../generators/wind_mill.html">Wind Mill</a> can be chosen <strong>before</strong> you build, instead of building, dismantling and moving it three times.</p>
+<p><strong>Анемометр</strong> — ручний прилад, який показує силу вітру в поточній точці <strong>ще до будівництва</strong> вітряка. Читає ту саму криву висоти, що й самі вітряки, і міряє її в км/год.</p>
 
-<p>The gauge <strong>gives no advice</strong>. No "climb higher", no "this spot is optimal", no "N blocks to the ceiling". It shows a measurement — the conclusion is yours.</p>
+<p>Пік шкали — <strong>62,5 км/год</strong>: він відповідає повній базі вітряка у смузі під хмарами.</p>
 
-<h2>How to use it</h2>
+<h2>Пов'язане</h2>
 
-<p><strong>Shift + right-click</strong> with the gauge in hand, in the air or against any block — it makes no difference. A line appears in the action bar and the instrument chimes:</p>
-
-<pre><code class="lang-">Height Y 118 · Wind 47.8 km/h · Clear · Sky: open</code></pre>
-
-<p>The chime's pitch rises with the reading, so a strengthening wind is audible before the line has been read: climbing a tower, you can simply listen. A dead spot gets the lowest note.</p>
-
-<p>A plain right-click is not intercepted, so the gauge never gets in the way of placing blocks or opening machines. The reading is always taken <strong>where the player stands</strong>, not where the crosshair points.</p>
-
-<h2>The scale</h2>
-
-<p>The reading is a wind speed in km/h to one decimal. It <strong>changes on every block of height</strong>: climb one block and the number is different. Round numbers are rare, and that is not decoration — the wind curve is non-linear, so 24.7 and 47.1 are simply what it yields at those heights.</p>
-
-<p>The wind follows a single curve shared by the gauge and all three mills (see <a href="index.html#the-altitude-profile">the altitude profile</a>). In short: no wind at ground level, a climb towards the clouds, the strongest air right at the cloud deck, and thinning air above it.</p>
-
-<table><thead><tr><th>Height (sea level 63)</th><th>Clear</th><th>Rain</th><th>Thunder</th></tr></thead><tbody><tr><td>Y 63 and below</td><td>0.0</td><td>0.0</td><td>0.0</td></tr><tr><td>Y 85</td><td>12.6</td><td>18.9</td><td>25.3</td></tr><tr><td>Y 100</td><td>18.6</td><td>28.0</td><td>37.3</td></tr><tr><td>Y 127</td><td>28.1</td><td>42.2</td><td>56.3</td></tr><tr><td>Y 160</td><td>39.7</td><td>59.6</td><td>79.5</td></tr><tr><td>Y 175</td><td>49.3</td><td>73.9</td><td>98.6</td></tr><tr><td>Y 185</td><td>56.8</td><td>85.2</td><td>113.5</td></tr><tr><td><strong>Y 192 (clouds)</strong></td><td>62.5</td><td>93.8</td><td>125.0</td></tr><tr><td>Y 198</td><td>47.1</td><td>70.7</td><td>94.2</td></tr><tr><td>Y 210</td><td>32.8</td><td>49.1</td><td>65.5</td></tr><tr><td>Y 230</td><td>15.9</td><td>23.9</td><td>31.9</td></tr><tr><td>Y 248 and above</td><td>3.8</td><td>5.6</td><td>7.5</td></tr></tbody></table>
-
-<p>Weather multiplies the speed: clear ×1, rain ×1.5, thunder ×2. The values come from the same <code>Config</code> fields that drive the mills (<code>windCloudY</code>, <code>windDeadY</code>, <code>windRidgeFactor</code>, <code>windTraceFactor</code>, <code>windGaugePeakKmh</code>,,), so the reading cannot drift away from the generation.</p>
-
-<h2>The altitude profile</h2>
-
-<p>One curve serves the whole mod: the gauge turns it into km/h, the mills turn it into EU/FE/t. Four</p>
-
-<ol><li><strong>Calm</strong> — at or below sea level there is no usable wind.</li><li><strong>Climb</strong> — sea level to the branch's <em>ridge</em>: a fast rise that eases off, reaching 45 % of full</li></ol>
-<p>strength. The ridge is the height at which that branch used to hit its cap (<code>sea level + maxBase × blocksPerBase</code>).</p>
-<ol><li><strong>Shoulder</strong> — ridge to the cloud deck (Y 192): the remaining 55 %, gained on an <strong>accelerating</strong></li></ol>
-<p>curve. That acceleration is what keeps the peak narrow: with a linear shoulder a mill sat at its cap over sixty-seven consecutive heights.</p>
-<ol><li><strong>Thinning</strong> — cloud deck to Y 248: a collapse to 6 % of full strength, steepest immediately above</li></ol>
-<p>the clouds. Higher up only a trace remains: the gauge still shows it (3.8 km/h), but for a mill it is zero.</p>
-
-<p>The practical consequence: <strong>the windiest place in the world is a narrow band right under the clouds</strong>. Full output is available over a handful of heights only: T1 at Y 183–193 (11 blocks), the Sky Mill at Y 188–192 (5), the Tempest Mill at Y 189–192 (4). Neither "a bit higher" nor "at the world ceiling" works: a tower at Y 230 is weaker than one at Y 127.</p>
-
-<h2>Sky and dimension</h2>
-
-<p><strong>A closed sky means 0.0 km/h</strong>, whatever the height and the weather. The gauge tests the sky as strictly as the mill does: the column above the point must be fully transparent. Leaves and cobwebs count as a closed sky — a mill under them is dead, unlike a solar panel, which merely loses part of its output under foliage.</p>
-
-<p>In the Nether and the End the gauge shows no number and says there is no wind here: mills do not work there, and any number would be an invention.</p>
-
-<h2>The reference branch</h2>
-
-<p>The climb segment by a branch's ridge, so the gauge picks one reference: the base Wind Mill (T1), the first one a player builds and the only one that exists by the time the gauge is craftable. Above the ridge every branch shares the same shoulder and the same thinning, so the choice only shapes the climb — not where the wind peaks or where it dies.</p>
-
-<p>The Sky Mill's ridge is <strong>the same</strong> as T1's: 8 steps of 8 blocks is the same +64 as 4 steps of 16. Those two branches differ by their cloud-deck base (8 against 4) and their weather factors, not by altitude. Only the Tempest Mill has a ridge of its own (+96), which stretches its climb — but the peak and the death of the wind are shared.</p>
-
-<p>One caveat if the config is edited: the scale stays continuous only while the per-block step exceeds 0.1 km/h. A heavily stretched profile, or a small <code>windGaugePeakKmh</code>, will make adjacent heights read the same.</p>
-
-<h2>Recipe</h2>
-
-<p>Two sticks, a glass pane, two tin ingots and two wooden gears. No power and no circuits — a plain wooden instrument, built long before the first mill.</p>
-
-<h2>Related</h2>
-
-<p><a href="../generators/wind_mill.html">Wind Mill</a> — the T1 branch the gauge is scaled to. <a href="../generators/high_altitude_wind_mill.html">Sky Mill</a> — T2, same ridge, double the base. <a href="../generators/storm_wind_mill.html">Tempest Mill</a> — T2, a higher ridge.</p>
+<p><a href="../generators/wind_mill.html">Вітрогенератор</a> — заради чого й міряють.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="анемометр alaindustrial:wind_gauge" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Stick"><img src="../assets/item/stick_3d.png" alt="Stick" width="32" height="32"></div> <div class="cell" title="Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Glass Pane" width="32" height="32"></div> <div class="cell" title="Stick"><img src="../assets/item/stick_3d.png" alt="Stick" width="32" height="32"></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Анемометр"><img src="../assets/item/wind_gauge_3d.png" alt="Анемометр" width="32" height="32"></div><div class="result-name">Анемометр</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="анемометр alaindustrial:wind_gauge" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Stick"><img src="../assets/item/stick_3d.png" alt="Stick" width="32" height="32"></div> <div class="cell" title="Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Glass Pane" width="32" height="32"></div> <div class="cell" title="Stick"><img src="../assets/item/stick_3d.png" alt="Stick" width="32" height="32"></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Анемометр"><img src="../assets/item/wind_gauge_3d.png" alt="Анемометр" width="32" height="32"></div><div class="result-name">Анемометр</div></div></div></div></div>
   </main>
 </div>
 

@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,44 +375,22 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Electric Hoe</strong> is the fourth and last powered hand tool in the line: after the <a href="electric_drill.html">Electric Drill</a> (stone), the <a href="electric_chainsaw.html">Electric Chainsaw</a> (wood) and the <a href="electric_shovel.html">Electric Shovel</a> (earth), it covers farmland. Same contract: it runs on EU/FE instead of durability, never breaks, and when it runs flat it keeps working at hand speed with every drop intact.</p>
+<p><strong>Електромотика</strong> — електроінструмент: працює не на міцності, а на EU/FE. Із зарядом він обробляє землю під посів, а коли заряд закінчився — просто перестає копати, ламати його не можна.</p>
 
-<p>It does two things, and both cost <strong>50 EU/FE per use</strong>:</p>
+<h2>Енергія</h2>
 
-<p><strong>Tilling.</strong> Right-click dirt, grass or a dirt path to make farmland; coarse dirt turns to dirt, rooted dirt to dirt plus a hanging root. <strong>Breaking blocks.</strong> It breaks <code>#minecraft:mineable/hoe</code> at speed 9.0 against a diamond hoe's 8.0 — hay bales, leaves, sponge, moss, nether wart block, dried kelp.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Буфер</td><td>10 000 EU/FE</td></tr><tr><td>Витрата</td><td>50 EU/FE за блок</td></tr><tr><td>Швидкість заряджання</td><td>32 EU/FE/т</td></tr><tr><td>Повного заряду вистачає на</td><td>~200 блоків</td></tr></tbody></table>
 
-<p>A full buffer is <strong>10 000 EU/FE</strong> — about <strong>200 uses</strong> on one charge.</p>
+<p>Заряджається в <a href="../energy-storage/battery_box.html">Енергосховищі</a> або на <a href="../energy-storage/charge_pad.html">Зарядній станції</a>.</p>
 
-<p>A flat hoe behaves differently in its two roles, on purpose: it keeps <strong>breaking</strong> at hand speed with every drop intact, but it will not <strong>till</strong> — instead of farmland you get a red "Not enough charge to till" above the hotbar. The <a href="electric_drill.html">Electric Drill</a>'s torch works the same way: mining degrades gracefully, the right-click action needs power.</p>
+<h2>Пов'язане</h2>
 
-<p>Like the mod's other EU/FE items, the hoe has <strong>no durability</strong> and never breaks: the bar under the icon shows EU/FE charge (gold), not wear. It charges where the <a href="energy_pack.html">Energy Pack</a> does — in the <a href="../energy-storage/battery_box.html">Battery Box</a> charge slot and from a worn pack.</p>
-
-<h2>Energy</h2>
-
-<p>Its own EU/FE buffer, outside the energy network. Charges in the Battery Box slot and from a worn pack; spends charge only on breaking blocks.</p>
-
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Buffer</td><td>10 000 EU/FE</td></tr><tr><td>Charging</td><td>Battery Box slot / worn pack, fills in ~16 s</td></tr><tr><td>Cost</td><td>50 EU/FE per block broken, 50 EU/FE per successful till</td></tr><tr><td>Passive drain</td><td>none</td></tr></tbody></table>
-
-<p>In creative no EU/FE is spent.</p>
-
-<h2>How it behaves</h2>
-
-<p><strong>Tilling and the other right-click conversions cost 50 EU/FE.</strong> Dirt, grass and paths become farmland, exactly like a vanilla hoe. The charge is only taken when a conversion actually happened — clicking a stone wall or already-tilled soil costs nothing. <strong>Breaking:</strong> with at least 50 EU/FE it breaks <code>#minecraft:mineable/hoe</code> at speed 9.0. Each such block costs 50 EU/FE. <strong>Flat hoe:</strong> below 50 EU/FE it breaks at hand speed (1.0) but keeps its mining level and drops, and spends nothing. It cannot till — see above. Efficiency does not apply there — vanilla only grants it above speed 1.0. <strong>Charging:</strong> the Battery Box charge slot and a worn Energy Pack both accept it automatically, up to 32 EU/FE/t. <strong>Attack:</strong> like a vanilla hoe, it is not a weapon. Attacking spends no EU/FE and causes no wear. <strong>Enchanting:</strong> it sits in <code>#minecraft:hoes</code>, so the table and anvil treat it as a hoe. <strong>Harvesting is not supported.</strong> That is the <a href="scythe.html">Scythe</a>'s job and it stays there. <strong>Readout:</strong> the bar shows charge; the tooltip reads the exact numbers, or a red "Empty" at zero, and the texture switches to its unpowered variant.</p>
-
-<h2>Recipes</h2>
-
-<p>The same frame as the other three with a diamond hoe in the middle: iron ingots on top, two batteries at the sides, two copper coils and an electronic circuit below. The recipe unlocks once you obtain a copper coil, an electronic circuit or a diamond hoe.</p>
-
-<p>Repair is not applicable — there is no durability; "repair" means recharging.</p>
-
-<h2>Progression</h2>
-
-<p>The fourth and last powered tool: drill for stone, chainsaw for wood, shovel for earth, hoe for farmland. Needs LV infrastructure first — without the <a href="../energy-storage/battery_box.html">Battery Box</a> and a battery it can be neither crafted nor charged. LV tier. The remaining electric items (saber/nano bow/vajra) are future work.</p>
+<p><a href="energy_pack.html">Енергоранець</a> — підживлює інструменти просто в інвентарі. <a href="../agriculture/garden_drone_station.html">Садова станція дронів</a> — автоматичний догляд за грядками.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="електромотика alaindustrial:electric_hoe" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell placeholder" title="Diamond Hoe" aria-label="Diamond Hoe"><span>diamon</span></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електромотика"><img src="../assets/item/electric_hoe_3d.png" alt="Електромотика" width="32" height="32"></div><div class="result-name">Електромотика</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="електромотика alaindustrial:electric_hoe" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Diamond Hoe"><img src="../assets/item/diamond_hoe_3d.png" alt="Diamond Hoe" width="32" height="32"></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електромотика"><img src="../assets/item/electric_hoe_3d.png" alt="Електромотика" width="32" height="32"></div><div class="result-name">Електромотика</div></div></div></div></div>
   </main>
 </div>
 

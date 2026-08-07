@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -423,7 +422,7 @@
 
 <p>Growth is probabilistic: every random block tick rolls a chance to advance one stage.</p>
 
-<table><thead><tr><th>Parameter</th><th>Value</th><th><code>Config</code> key</th></tr></thead><tbody><tr><td>Rooting stage chance</td><td>1 in 12</td><td><code>cottonRootingChanceDivisor</code></td></tr><tr><td>Fruiting stage chance</td><td>1 in 4</td><td><code>cottonFruitingChanceDivisor</code></td></tr><tr><td>Rooting stages</td><td>3</td><td>—</td></tr><tr><td>Stages per fruiting cycle</td><td>2</td><td>—</td></tr><tr><td>Fibre per harvest</td><td>1–2</td><td>—</td></tr><tr><td>Seed chance per harvest</td><td>35 %</td><td>—</td></tr><tr><td>Seed chance per grass block</td><td>5 %</td><td>—</td></tr></tbody></table>
+<table><thead><tr><th>Parameter</th><th>Value</th><th><code>Config</code> key</th></tr></thead><tbody><tr><td>Rooting stage chance</td><td>1 in 12</td><td></td></tr><tr><td>Fruiting stage chance</td><td>1 in 4</td><td></td></tr><tr><td>Rooting stages</td><td>3</td><td>—</td></tr><tr><td>Stages per fruiting cycle</td><td>2</td><td>—</td></tr><tr><td>Fibre per harvest</td><td>1–2</td><td>—</td></tr><tr><td>Seed chance per harvest</td><td>35 %</td><td>—</td></tr><tr><td>Seed chance per grass block</td><td>5 %</td><td>—</td></tr></tbody></table>
 
 <p>Rooting is deliberately three times "dearer" than fruiting: the wait is the price of the plant, not of each harvest.</p>
 
@@ -431,16 +430,12 @@
 
 <p>Cotton fibre is the feedstock for the coming Fluxweave line: it gives the farmer the same route the spider's string gives the fighter.</p>
 
-<h2>Compatibility</h2>
-
-<p>The plant sits on vanilla farmland and follows vanilla watering rules, so any mechanic that protects farmland from being trampled covers it too. The scythe only reaps crops listed in its tag, and the trellis is not in it yet.</p>
-
 <h2>Related</h2>
 
 <ul><li>Incubator — seed duplication by irradiation (cotton to be added later).</li><li>Rubber — an example of one spec covering several ids through an alias.</li></ul>
 
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="trellis alaindustrial:trellis" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="Any String" aria-label="Any String"><span>string</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="Any String" aria-label="Any String"><span>string</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Trellis"><img src="../assets/item/trellis_3d.png" alt="Trellis" width="32" height="32"></div><div class="result-name">Trellis</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="trellis alaindustrial:trellis" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any String"><img src="../assets/item/string_3d.png" alt="Any String" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any String"><img src="../assets/item/string_3d.png" alt="Any String" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Trellis"><img src="../assets/item/trellis_3d.png" alt="Trellis" width="32" height="32"></div><div class="result-name">Trellis</div></div></div></div></div>
   </main>
 </div>
 

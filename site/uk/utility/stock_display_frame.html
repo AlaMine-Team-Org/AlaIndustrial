@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,44 +375,22 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Stock Display Frame</strong> is a frame you hang on any container — a vanilla chest, barrel, or shulker box, or the mod's <a href="iron_chest.html">Iron Chest</a> — and it shows the item count inside <strong>right on the frame, in real time</strong>. It uses no energy: it's a warehouse convenience, "price tags" for rows of chests, so you can read how full they are without opening a window.</p>
+<p><strong>Рамка-індикатор</strong> — рамка, яку вішають на будь-який контейнер (ванільну скриню, бочку, шалкер або модову <a href="iron_chest.html">залізну скриню</a>), і вона <strong>в реальному часі показує просто на собі</strong>, скільки предметів лежить усередині.</p>
 
-<blockquote><strong>Mini-example:</strong> Put a diamond in the frame on your ore chest → it shows how many diamonds are in there. Swap the diamond for iron → it now counts iron ingots. Empty frame → no number at all.</blockquote>
+<p>Покладіть у рамку зразок — і вона рахуватиме саме цей предмет. Поміняли зразок — рахує інший.</p>
 
-<h2>How the number is counted</h2>
+<h2>Властивості блока</h2>
 
-<p><strong>An item is in the frame</strong> → the number equals how many items <em>of that type</em> are in the container (the item acts as a filter). <strong>The frame is empty</strong> → no number is shown (it looks like a plain frame). <strong>No container behind the frame</strong> → no number. <strong>The container is empty</strong> (with a filter in the frame) → shows <code>0</code>.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Розміщення</td><td>на грані контейнера</td></tr><tr><td>Інструмент</td><td>будь-який</td></tr></tbody></table>
 
-<p>Only top-level slots are counted — it does <strong>not</strong> dig into shulkers or bundles sitting inside the chest. A double chest counts as one container: a frame on either half shows the combined total. The frame recounts once per second.</p>
+<h2>Пов'язане</h2>
 
-<h2>Interface</h2>
-
-<p>There's no screen. The number is drawn flat on the frame's face, in its bottom strip — white with a dark outline, no backdrop. It turns with the frame (not a billboard), so it's only visible from the side the frame faces.</p>
-
-<p>Put a filter item in with a right-click → the number appears. Right-click again (or hit the frame) → the filter pops back to you, the number disappears. The filter item is raised and shrunk a little to make room for the digit; with no filter the frame looks like a plain one (item centred). Unlike a vanilla frame, <strong>the item does not rotate</strong> — rotation would just be noise for a filter. Filled maps can't be placed in it. Display distance — up to <strong>24 blocks</strong> (the text hides beyond that, for performance). Formatting: the exact number below 10,000, abbreviated after that — <code>12.3k</code>, <code>1.2M</code>.</p>
-
-<h2>Block Properties</h2>
-
-<p>The frame is an <strong>entity</strong>, not a block (just like the vanilla item frame). It's the same size and behaves the same way: flat, on a wall, no collision. Right-click a block face to hang it, hit it to take it down; break the block behind it and the frame pops off, dropping its own item.</p>
-
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Type</td><td>entity (like a vanilla item frame)</td></tr><tr><td>Placement</td><td>on a wall, floor, or ceiling face</td></tr><tr><td>Drops itself</td><td>yes (as the mod's frame item, plus the filter if any)</td></tr></tbody></table>
-
-<h2>Recipes</h2>
-
-<p>Crafted at a workbench: a vanilla item frame in the center, surrounded by wooden gears, silver ingots and gold dust. The idea is to "upgrade" an ordinary frame into a counting one with precise mechanics and precious electronics.</p>
-
-<h2>Progression</h2>
-
-<p>Tier: LV. Available after your first gears and silver.</p>
-
-<h2>Related</h2>
-
-<p><a href="iron_chest.html">Iron Chest</a> — the frame's main in-mod customer. <a href="silver_chest.html">Silver Chest</a> — another container it can read.</p>
+<p><a href="iron_chest.html">Залізна скриня</a> — типовий контейнер під рамку.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="рамка-індикатор alaindustrial:stock_display_frame" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Gold Dust"><img src="../assets/item/gold_dust_3d.png" alt="Any Gold Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell" title="Any Gold Dust"><img src="../assets/item/gold_dust_3d.png" alt="Any Gold Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Item Frame"><img src="../assets/item/item_frame_3d.png" alt="Item Frame" width="32" height="32"></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Gold Dust"><img src="../assets/item/gold_dust_3d.png" alt="Any Gold Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell" title="Any Gold Dust"><img src="../assets/item/gold_dust_3d.png" alt="Any Gold Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Рамка-індикатор"><img src="../assets/item/stock_display_frame_3d.png" alt="Рамка-індикатор" width="32" height="32"></div><div class="result-name">Рамка-індикатор</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="рамка-індикатор alaindustrial:stock_display_frame" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Gold Dust"><img src="../assets/item/gold_dust_3d.png" alt="Any Gold Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell" title="Any Gold Dust"><img src="../assets/item/gold_dust_3d.png" alt="Any Gold Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Item Frame"><img src="../assets/item/item_frame_3d.png" alt="Item Frame" width="32" height="32"></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Gold Dust"><img src="../assets/item/gold_dust_3d.png" alt="Any Gold Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell" title="Any Gold Dust"><img src="../assets/item/gold_dust_3d.png" alt="Any Gold Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Рамка-індикатор"><img src="../assets/item/stock_display_frame_3d.png" alt="Рамка-індикатор" width="32" height="32"></div><div class="result-name">Рамка-індикатор</div></div></div></div></div>
   </main>
 </div>
 

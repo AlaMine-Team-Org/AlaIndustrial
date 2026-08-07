@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,82 +375,46 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Reinforced Energy Storage</strong> is the second step of the storage line: the same job as the <a href="battery_box.html">Battery Box</a>, one tier up. It holds <strong>100 000 EU/FE</strong> and moves <strong>128 EU/FE/tick</strong> in and out instead of 32.</p>
+<p><strong>Посилене енергосховище</strong> — другий щабель лінійки накопичувачів: те саме призначення, що в Енергосховища, але на тир вище. Воно тримає 100 000 EU/FE і приймає-віддає 128 EU/FE/т замість 32.</p>
 
-<blockquote><strong>Mini-example:</strong> the starter box powers your Macerator overnight, but it runs dry by morning and can't absorb the full daytime output of a solar farm that has since grown. The reinforced one takes the whole flow and lasts through several nights, not one.</blockquote>
+<blockquote><strong>Міні-приклад:</strong> стартове сховище годує нічний подрібнювач, але сідає до ранку й не встигає прийняти весь денний виробіток розрослої сонячної ферми. Посилене приймає потік цілком і переживає не одну, а кілька ночей поспіль.</blockquote>
 
-<p>Like its little brother it's a buffer, not a source — it produces no EU/FE on its own. The only difference is scale: a bigger reserve and a wider throat.</p>
+<p>Як і молодший брат, це буфер, а не джерело. Різниця лише в масштабі: більший запас і ширша горловина.</p>
 
-<p>It's crafted <strong>from a finished Battery Box</strong> — the starter block goes in the centre of the recipe and becomes the core of the new one. The upgrade is literal, not "build it again from ore".</p>
+<p>Збирається з готового стартового сховища — воно лягає в центр рецепта й стає ядром нового блока.</p>
 
-<h2>Energy</h2>
+<h2>Енергія</h2>
 
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Capacity</td><td>100 000 EU/FE</td></tr><tr><td>Max input</td><td>128 EU/FE/t (MV)</td></tr><tr><td>Max output</td><td>128 EU/FE/t (MV)</td></tr></tbody></table>
+<table><thead><tr><th>Параметр</th><th>Значення</th></tr></thead><tbody><tr><td>Ємність</td><td>100 000 EU/FE</td></tr><tr><td>Макс. вхід</td><td>128 EU/FE/т (MV)</td></tr><tr><td>Макс. вихід</td><td>128 EU/FE/т (MV)</td></tr></tbody></table>
 
-<p>Both sides are MV. 128 EU/FE/tick is the <strong>tier ceiling</strong>, not a promised speed: it's what the block will pass if you have something to feed it with. What actually arrives depends on the supply line:</p>
+<p>128 EU/FE/т — це стеля тира, а не обіцяна швидкість. Скільки дійде насправді, вирішує підводка:</p>
 
-<table><thead><tr><th>How it's wired</th><th>Real inflow</th></tr></thead><tbody><tr><td><a href="../energy-transfer/copper_cable.html">Copper cable</a> (LV)</td><td>12 EU/FE/t</td></tr><tr><td><a href="../energy-transfer/gold_cable.html">Gold cable</a> (MV)</td><td>48 EU/FE/t</td></tr><tr><td>Flush against the source, no cable</td><td>up to 128 EU/FE/t</td></tr></tbody></table>
+<table><thead><tr><th>Як підведено</th><th>Реальний приплив</th></tr></thead><tbody><tr><td>Мідний кабель (LV)</td><td>12 EU/FE/т</td></tr><tr><td>Золотий кабель (MV)</td><td>48 EU/FE/т</td></tr><tr><td>Впритул до джерела, без кабелю</td><td>до 128 EU/FE/т</td></tr></tbody></table>
 
-<p>The practical takeaway: <strong>switching to the MV store does not speed up your line by itself</strong>. To feel the difference in speed rather than only in reserve, you need a gold cable — or direct contact with a generator.</p>
+<p>Звідси практичний висновок: сам собою перехід на MV-накопичувач лінію не пришвидшує. Щоб відчути різницю у швидкості, а не лише в запасі, потрібен золотий кабель.</p>
 
-<p>Fill time from empty: about 10 minutes from a fuel generator (8 EU/FE/t); about 1.7 minutes over a gold cable at full tilt (48 EU/FE/t).</p>
+<p>Час заповнення з нуля: від паливного генератора (8 EU/FE/т) — близько 10 хвилин; золотим кабелем на повному ходу (48 EU/FE/т) — близько 1,7 хвилини.</p>
 
-<p>Like the starter box, it connects through <strong>two opposite faces only</strong>: one accepts, the other emits. The four side faces don't connect.</p>
+<h3>Каскад: в одній мережі зі стартовим</h3>
 
-<p>The network-wide priority is unchanged here: while the machines need more than the generators produce, the store <strong>only gives</strong>, and starts charging once the machines are satisfied.</p>
+<p>Вирівнювання банку йде <strong>за частками заповнення</strong>, а не за абсолютними EU/FE. Стартове (20 000) і посилене (100 000) зійдуться не до рівного заряду, а до рівного відсотка — наприклад, обидва до 50 %, тобто 10 000 і 50 000 EU/FE. Відчуття «велика скриня висмоктала маленьку» хибне: маленька віддає рівно свою частку.</p>
 
-<h3>Cascade: sharing a network with the starter box</h3>
+<h2>Інвентар</h2>
 
-<p>The reinforced store takes part in the same bank levelling as the starter one, and levelling works on <strong>fill fractions</strong>, not absolute EU/FE. That matters on a mixed bank: a starter box (20 000) and a reinforced one (100 000) settle at an equal percentage, not an equal charge — both at 50 %, say, which is 10 000 and 50 000 EU/FE. The impression that "the big box drained the small one" is false: the small one gives exactly its share.</p>
+<p>Два слоти для переносних EU/FE-предметів: один заряджає, другий розряджає.</p>
 
-<p>The transfer travels by cable and pays the usual distance loss, so a bank is cheaper kept compact.</p>
+<h2>Властивості блока</h2>
 
-<h2>Inventory</h2>
+<p>Звичайний суцільний блок, ламається будь-якою кайлом. Зберігає заряд при зламі.</p>
 
+<h2>Пов'язане</h2>
 
-<table><thead><tr><th>Slot</th><th>Does</th></tr></thead><tbody><tr><td>Charge</td><td>charges a portable EU/FE item from the buffer</td></tr><tr><td>Discharge</td><td>drains an item's charge back into the buffer</td></tr></tbody></table>
-
-<p>The discharge slot is what the <a href="battery_box.html">Battery Box</a> doesn't have: drop in a charged <a href="../items/energy_pack.html">energy pack</a> or <a href="../items/battery_pouch.html">battery pouch</a> and it hands its reserve to the network. That makes the block an intake for energy carried home from a trip, not just a wall socket.</p>
-
-<p>Both slots are manual — hoppers don't use them, they work from the GUI only.</p>
-
-<h2>Appearance</h2>
-
-<p>The block is built from the same cold steel as the <a href="../components/advanced_machine_casing.html">advanced casing</a> it's made of. The border and banding echo the <a href="battery_box.html">Battery Box</a>, so the two steps read as one line rather than two unrelated blocks.</p>
-
-<table><thead><tr><th>Face</th><th>What's on it</th></tr></thead><tbody><tr><td>Top and bottom</td><td>steel bands — the starter box's pattern, in metal</td></tr><tr><td>Left and right</td><td>a rack of three accumulator cells: you can see the reserve is inside</td></tr><tr><td>Input</td><td>a socket glowing <strong>blue</strong></td></tr><tr><td>Output (back)</td><td>a socket glowing <strong>orange</strong></td></tr></tbody></table>
-
-<p><strong>Input and output differ by colour, not by shape.</strong> That's a deliberate break from the starter box, where the output is a big obvious socket and the input a nondescript lens — players run cable to the socket they can see and hit the output. Here both faces are the same socket and the colour carries the role: blue takes in, orange gives out.</p>
-
-<h2>Block Properties</h2>
-
-<p>An ordinary solid block, a full 16³ cube (occluder). Tougher than the starter box — this is metal, not a plank crate. Breaks with any pickaxe and <strong>keeps its charge when broken</strong>.</p>
-
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>4.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Keeps charge when broken</td><td>yes</td></tr></tbody></table>
-
-<h2>Recipes</h2>
-
-<p>It's a store, not a processor — no processing recipes.</p>
-
-
-<table><thead><tr><th></th><th></th><th></th></tr></thead><tbody><tr><td>Electrum ingot</td><td><a href="../components/advanced_circuit.html">Advanced circuit</a></td><td>Electrum ingot</td></tr><tr><td><a href="../components/advanced_machine_casing.html">Advanced casing</a></td><td><a href="battery_box.html">Battery Box</a></td><td><a href="../components/advanced_machine_casing.html">Advanced casing</a></td></tr><tr><td>Electrum ingot</td><td><a href="../components/advanced_circuit.html">Advanced circuit</a></td><td>Electrum ingot</td></tr></tbody></table>
-
-<p>Four electrum ingots at the corners are the contacts, two advanced circuits manage the charge, two advanced casings form the reinforced shell, and the starter box in the centre is the core.</p>
-
-<p>Electrum is not an arbitrary alloy here: it is gold with silver, the best conductor in the mod, and on a store it sits exactly where current enters and leaves. The corners used to hold rubber, but rubber is an insulator — right on a cable, and meaningless as four lumps in the corners of a battery.</p>
-
-<h2>Progression</h2>
-
-<p>Tier: MV. The second step of the storage line. Predecessor: the <a href="battery_box.html">Battery Box</a> (LV) — not merely "already built", but <strong>consumed</strong> in the recipe. Requires <strong>two</strong> production lines at once: <strong>alloys</strong> — electrum is smelted from gold and silver in the <a href="../machines/alloy_smelter.html">Alloy Smelter</a>; <strong>oil</strong> — still required after rubber left the corners: rubber lives on inside the <a href="../components/advanced_circuit.html">advanced circuit</a>, which this recipe needs both directly and through the advanced casing. The <code>oil → Polymerizer → Vulcanizer</code> gate still holds, just indirectly.</p>
-
-<h2>Related</h2>
-
-<p><a href="battery_box.html">Battery Box</a> — the LV predecessor, and an ingredient. MFSU — the top of the storage line. <a href="../energy-transfer/gold_cable.html">Gold cable</a> — the supply line without which the speed gain is invisible. <a href="../components/advanced_circuit.html">Advanced circuit</a> · <a href="../components/advanced_machine_casing.html">Advanced casing</a> — the MV parts in the recipe.</p>
+<p><a href="battery_box.html">Енергосховище</a> — попередній щабель, лягає в центр рецепта. <a href="../energy-transfer/gold_cable.html">Золотий кабель</a> — щоб відчути MV-швидкість.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="посилене енергосховище alaindustrial:cesu" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="ingots/electrum (tag)" aria-label="ingots/electrum (tag)"><span>ingots</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Просунута схема"><img src="../assets/item/advanced_circuit_3d.png" alt="Просунута схема" width="32" height="32"></div> <div class="cell placeholder" title="ingots/electrum (tag)" aria-label="ingots/electrum (tag)"><span>ingots</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Просунутий машинний корпус"><img src="../assets/item/advanced_machine_casing_3d.png" alt="Просунутий машинний корпус" width="32" height="32"></div> <div class="cell" title="Енергосховище"><img src="../assets/item/battery_box_3d.png" alt="Енергосховище" width="32" height="32"></div> <div class="cell" title="Просунутий машинний корпус"><img src="../assets/item/advanced_machine_casing_3d.png" alt="Просунутий машинний корпус" width="32" height="32"></div> <div class="cell placeholder" title="ingots/electrum (tag)" aria-label="ingots/electrum (tag)"><span>ingots</span><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Просунута схема"><img src="../assets/item/advanced_circuit_3d.png" alt="Просунута схема" width="32" height="32"></div> <div class="cell placeholder" title="ingots/electrum (tag)" aria-label="ingots/electrum (tag)"><span>ingots</span><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Посилене енергосховище"><img src="../assets/item/cesu_3d.png" alt="Посилене енергосховище" width="32" height="32"></div><div class="result-name">Посилене енергосховище</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="посилене енергосховище alaindustrial:cesu" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Electrum Ingot"><img src="../assets/item/electrum_ingot_3d.png" alt="Any Electrum Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Просунута схема"><img src="../assets/item/advanced_circuit_3d.png" alt="Просунута схема" width="32" height="32"></div> <div class="cell" title="Any Electrum Ingot"><img src="../assets/item/electrum_ingot_3d.png" alt="Any Electrum Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Просунутий машинний корпус"><img src="../assets/item/advanced_machine_casing_3d.png" alt="Просунутий машинний корпус" width="32" height="32"></div> <div class="cell" title="Енергосховище"><img src="../assets/item/battery_box_3d.png" alt="Енергосховище" width="32" height="32"></div> <div class="cell" title="Просунутий машинний корпус"><img src="../assets/item/advanced_machine_casing_3d.png" alt="Просунутий машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Electrum Ingot"><img src="../assets/item/electrum_ingot_3d.png" alt="Any Electrum Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Просунута схема"><img src="../assets/item/advanced_circuit_3d.png" alt="Просунута схема" width="32" height="32"></div> <div class="cell" title="Any Electrum Ingot"><img src="../assets/item/electrum_ingot_3d.png" alt="Any Electrum Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Посилене енергосховище"><img src="../assets/item/cesu_3d.png" alt="Посилене енергосховище" width="32" height="32"></div><div class="result-name">Посилене енергосховище</div></div></div></div></div>
   </main>
 </div>
 

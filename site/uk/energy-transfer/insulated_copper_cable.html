@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,39 +375,33 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<blockquote>✅ <strong>Безпечний на дотик.</strong> Гумова оболонка повністю виключає удар струмом за будь-якого потоку енергії — незалежно від сусідніх сегментів і від налаштувань величини шкоди.</blockquote>
 
-<blockquote>✅ <strong>Safe to touch:</strong> the rubber sheath completely prevents contact shock at every energy flow, regardless of neighbouring cable tiers or configured damage.</blockquote>
+<h2>Зведення</h2>
 
-<p>The Insulated Copper Cable is the rubber-upgraded version of the <a href="copper_cable.html">Copper Cable</a>. It retains copper's 12 EU/FE/tick throughput and 32 EU/FE packet cap, but halves attenuation from 0.02 to <strong>0.01 per block</strong>. It is the main long-run LV wire unlocked by the oil, sulfur and Vulcanizer chain.</p>
+<p><strong>Ізольований мідний кабель</strong> — покращена гумою версія <a href="copper_cable.html">мідний кабелья</a>. Він зберігає ті самі параметри — 32 EU/FE/пакет і 12 EU/FE/тик, — але вдвічі зменшує затухання: з 0.02 до <strong>0.01 на блок</strong>.</p>
 
-<p>The rubber sheath also communicates electrical safety and fully prevents energized-cable contact damage. supplies the insulation's energy advantage, while supplies electrical safety. The old wool-and-water-resistance design is retired: wool is not a substitute for rubber, and water resistance is outside this delivery.</p>
+<p>Ізоляція не змінює пропускну здатність: більший потік усе одно потребує старшого сорту. Гумова оболонка захищає від контактної шкоди повністю.</p>
 
-<h2>Energy</h2>
+<h2>Енергія</h2>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>transfer</td></tr><tr><td>Tier</td><td>LV</td></tr><tr><td>Max voltage</td><td>32 EU/FE/packet</td></tr><tr><td>Throughput</td><td>12 EU/FE/tick = the segment working buffer</td></tr><tr><td>Loss</td><td><strong>0.01</strong> attenuation per block; positive flow delivers <code>max(1, ceil(N × 0.99^distance))</code> EU/FE/tick</td></tr><tr><td>Insulation</td><td>rubber; complete shock protection</td></tr></tbody></table>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Роль</td><td>передача</td></tr><tr><td>Тир</td><td>LV</td></tr><tr><td>Макс. напруга</td><td>32 EU/FE/пакет</td></tr><tr><td>Пропускна здатність</td><td>12 EU/FE/тик = робочий буфер сегмента</td></tr><tr><td>Втрати</td><td><strong>0.01</strong> затухання на блок; за додатного потоку доставляється <code>max(1, ceil(N × 0.99^дистанція))</code> EU/FE/тик</td></tr><tr><td>Ізоляція</td><td>гума; повний захист від удару струмом</td></tr></tbody></table>
 
-<p>The formula follows the model: a positive packet always delivers at least 1 EU/FE, so a long line cannot prevent exact storage top-off. At the full 12 EU/FE/tick segment flow, insulated copper delivers 11/10/8/5/1 EU/FE over 10/20/50/100/1000 blocks; bare copper delivers 10/9/5/2/1 EU/FE.</p>
+<p>У змішаній мережі більша стеля пакета задає коефіцієнт усієї мережі. За рівної стелі голий сорт має пріоритет над ізольованим, тому вставка одного ізольованого блока в голу лінію не покращує її цілком. Знижені 0.01 діють лише в повністю ізольованій лінії.</p>
 
-<p>In a mixed network, the cable with the higher packet cap determines the network loss. At equal caps, a bare grade takes priority over its insulated counterpart, so one insulated segment cannot improve a whole bare line. The reduced 0.01 rate therefore applies only to an entirely insulated copper network.</p>
+<h2>Властивості блока</h2>
 
-<h2>Block Properties</h2>
+<p>Тонкий провід у гумовій оболонці, з'єднується із сусідніми блоками. Ламається будь-яким інструментом, зручніше — кусачками.</p>
 
-<p>A thin wire with a rubber sheath that connects to neighbouring blocks. Any tool breaks it, and shears are especially handy.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Форма</td><td>тонкий стрижень</td></tr><tr><td>Міцність</td><td>0.2</td></tr><tr><td>Інструмент</td><td>будь-який / кусачки</td></tr></tbody></table>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>thin rod (6px core + sleeves),</td></tr><tr><td>Hardness</td><td>0.2</td></tr><tr><td>Tool</td><td>any / shears</td></tr></tbody></table>
+<h2>Рецепти</h2>
 
-<h2>Recipes</h2>
+<p>Шість мідних кабелів і три гуми на верстаку дають <strong>6</strong> ізольованих. Витрата гуми — 0.5 на кабель. Вовняного альтернативного рецепта немає. Рецептів переробки немає.</p>
 
-<p>3×3 crafting <code>CCC</code> / <code>RRR</code> / <code>CCC</code>, where <code>C</code> is a copper cable and <code>R</code> is rubber, yielding <strong>6</strong> insulated copper cables — 0.5 rubber per cable. There is no wool alternative: insulation is a consumer of vulcanized rubber. Processing recipes: none.</p>
+<h2>Пов'язане</h2>
 
-<h2>Implementation</h2>
-
-<p>The block uses a dedicated insulated cable type with copper's buffer and packet cap. Its loss is × insulationLossMultiplier<code> = </code>0.02 × 0.5` = 0.01. It is registered for both Fabric and NeoForge and participates in the shared cable network.</p>
-
-<h2>Related</h2>
-
-<p><a href="copper_cable.html">Copper Cable</a> — the cheaper bare version for short runs. <a href="insulated_tin_cable.html">Insulated Tin Cable</a> — a narrower, more efficient option for small flows. <a href="../components/rubber.html">Rubber</a> — the sheath material.</p>
+<p><a href="copper_cable.html">Мідний кабель</a> — дешева гола версія. <a href="../components/rubber.html">Гума</a> — матеріал оболонки.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="ізольований мідний кабель alaindustrial:insulated_copper_cable" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Гума"><img src="../assets/item/rubber_3d.png" alt="Гума" width="32" height="32"></div> <div class="cell" title="Гума"><img src="../assets/item/rubber_3d.png" alt="Гума" width="32" height="32"></div> <div class="cell" title="Гума"><img src="../assets/item/rubber_3d.png" alt="Гума" width="32" height="32"></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Ізольований мідний кабель"><img src="../assets/item/insulated_copper_cable_3d.png" alt="Ізольований мідний кабель" width="32" height="32"><span class="count">×6</span></div><div class="result-name">Ізольований мідний кабель</div></div></div></div></div>

@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -378,7 +377,7 @@
 </div>
 <h2>Summary</h2>
 
-<blockquote>⚠️ <strong>Electrical safety.</strong> The bare electrum HV cable deals <strong>10</strong> damage (the tier ladder runs LV 2 → MV 6 → HV 10, key <code>bareCableShockHvDamage</code>) not only on direct contact but also within <strong>0.5 blocks</strong> of the segment (<code>bareCableShockProximityRadius</code>, — but only while energy is actually moving through this exact bare segment. A disconnected line and retained buffer EU/FE are safe. Normal armor applies; water does not amplify the hit; a solid block between the cable and the player blocks the shock. Servers can disable the mechanic with <code>bareCableShockEnabled</code>.</blockquote>
+<blockquote>⚠️ <strong>Electrical safety.</strong> The bare electrum HV cable deals <strong>10</strong> damage (the tier ladder runs LV 2 → MV 6 → HV 10, key) not only on direct contact but also within <strong>0.5 blocks</strong> of the segment — but only while energy is actually moving through this exact bare segment. A disconnected line and retained buffer EU/FE are safe. Normal armor applies; water does not amplify the hit; a solid block between the cable and the player blocks the shock. Servers can turn the mechanic off in the config.</blockquote>
 
 <p>The <strong>Electrum Cable</strong> is the first <strong>wire</strong> on tier <strong>HV</strong>. The tier itself was never empty: the <a href="../advanced-machines/teleporter.html">Teleporter Station</a> has run on it since as the mod's only HV consumer — with nothing but a gold (MV) cable to feed it. The cable replaces an earlier concept — a "glass fibre EV cable" — same role as the ladder's most expensive, most efficient wire, but on an already-existing tier and with a more grounded in-mod material: the <strong>electrum</strong> alloy (gold + silver, already smelted by the Alloy Smelter since 0.1.67 but with zero consumers so far), finished with a pinch of <strong>diamond dust</strong> that gives the wire its reliability/low losses.</p>
 
@@ -386,7 +385,7 @@
 
 <p>Unlike gold (whose wider buffer is paid for with higher loss), electrum <strong>breaks that trade-off</strong>: its loss is <strong>0.005</strong> per block, lower even than the cheapest tin cable (0.006). This is a deliberate exception — electrum is simply better on every axis, and the price is an expensive craft (rare alloy + diamond), not operating loss.</p>
 
-<blockquote><strong>Where this already shows.</strong> The mod has no HV machines, generators or storage yet, but it does have an HV <strong>consumer</strong>: the <a href="../advanced-machines/teleporter.html">Teleporter Station</a> and its 500,000 EU/FE buffer. Over a gold cable (48 EU/FE/t) it fills in ~10,400 ticks ≈ 8.7 minutes; over electrum (192 EU/FE/t), in ~2,600 ticks ≈ <strong>2.2 minutes</strong>.  The caveat that makes the promise honest: the station is a storage sink, and a storage sink is <strong>never fed from other storage</strong> over a cable (battery boxes only discharge into a machine's deficit). The speed-up is real exactly to the extent that your <strong>generators</strong> together exceed 48 EU/FE/t — below that the wire is not the bottleneck. On the rest of the content (LV/MV) what helps is the wide 192 EU/FE/t buffer itself on dense lines.</blockquote>
+<blockquote><strong>Where this already shows.</strong> The mod has no HV machines, generators or storage yet, but it does have an HV <strong>consumer</strong>: the <a href="../advanced-machines/teleporter.html">Teleporter Station</a> and its 500,000 EU/FE buffer. Over a gold cable (48 EU/FE/t) it fills in ~10,400 ticks ≈ 8.7 minutes; over electrum (192 EU/FE/t), in ~2,600 ticks ≈ <strong>2.2 minutes</strong>. The caveat that makes the promise honest: the station is a storage sink, and a storage sink is <strong>never fed from other storage</strong> over a cable (battery boxes only discharge into a machine's deficit). The speed-up is real exactly to the extent that your <strong>generators</strong> together exceed 48 EU/FE/t — below that the wire is not the bottleneck. On the rest of the content (LV/MV) what helps is the wide 192 EU/FE/t buffer itself on dense lines.</blockquote>
 
 <h2>Energy</h2>
 
@@ -410,23 +409,15 @@
 
 <h2>Recipes</h2>
 
-<p><strong>The ritual 3×3</strong>: <code>EDE</code>/<code>DED</code>/<code>EDE</code>, where <code>E</code> is an electrum ingot (8x) and <code>D</code> is diamond dust (4x) → <strong>3</strong> cables.</p>
+<p><strong>The ritual recipe:</strong> eight electrum ingots around the edge and four diamond dust between them (8x) and <code>D</code> is diamond dust (4x) → <strong>3</strong> cables.</p>
 
 <p>The price is deliberately steep, and that is a balance decision rather than flavour. A mixed network takes both its cap and its loss from the strongest segment present, so a cheap electrum cable would let one block lift a kilometre of copper to 0.005 loss. This wire is laid on key routes, not used to wire a whole base.</p>
 
 <p><strong>The insulated variant</strong> uses the shared recipe: six bare cables and three vulcanized rubber → <strong>6</strong> insulated.</p>
 
-<p>Diamond dust is an existing item (macerator: 1 diamond → 2 dust). Electrum ingot is also an existing item (Alloy Smelter: gold + silver), currently with zero consumers in the game () — this cable becomes its first sink.</p>
+<p>Diamond dust is an existing item (macerator: 1 diamond → 2 dust). Electrum ingot is also an existing item (Alloy Smelter: gold + silver), currently with zero consumers in the game — this cable becomes its first sink.</p>
 
 <p>Processing recipes: none.</p>
-
-<h2>Implementation</h2>
-
-<p>Technically the electrum cable is the same on the shared block entity as every other grade, with its own <code>CableType.ELECTRUM</code> (following the; neither nor <code>CableBlockEntity</code> needed a change for it — both read their numbers from the type. Shipped in</p>
-
-<p>The numbers live in: 192, = 0.005, packet cap from the shared = 512 (the cable has no private key, same as copper and gold), bare-segment damage from <code>bareCableShockHvDamage</code> = 10. That last key was added here: until an HV cable existed, HV shared the MV number.</p>
-
-<p>Tier <strong>HV</strong> was declared in (512 EU/FE) long before this and was already used by the teleporter station — no new enum code was needed.</p>
 
 <h2>Open Questions</h2>
 

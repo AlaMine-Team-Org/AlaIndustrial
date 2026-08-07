@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -404,7 +403,7 @@
 
 <h2>Block Properties</h2>
 
-<p>The book is an <strong>item</strong> (not a block): it can't be placed, stacks to 1, has no EU/FE buffer. Its "shape" is an ordinary item model ( → <code>item/generated</code> with the icon). Right-click opens the GUI (see "Interface"); no block is placed in the world, no collision.</p>
+<p>The book is an <strong>item</strong> (not a block): it can't be placed, stacks to 1, has no EU/FE buffer. Its "shape" is an ordinary item model (→ <code>item/generated</code> with the icon). Right-click opens the GUI (see "Interface"); no block is placed in the world, no collision.</p>
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Type</td><td>item, not a block</td></tr><tr><td>Stack</td><td>1</td></tr><tr><td>EU/FE buffer</td><td>none</td></tr><tr><td>Right-click</td><td>opens the book screen (client-side)</td></tr><tr><td>World placement</td><td>none</td></tr></tbody></table>
 
@@ -419,10 +418,6 @@
 <h2>Localization</h2>
 
 <p><strong>v1: <code>en_us</code> + <code>ru_ru</code></strong> — full chapter content (<code>en_us</code> is the source, as everywhere in the mod). The other 18 languages get a translated item name, while chapter content is shown in English for now; a full chapter translation comes later. All book text is via lang keys; no hardcoded strings (project rule).</p>
-
-<h2>Compatibility</h2>
-
-<p><strong>Recipe viewers (JEI/REI/EMI):</strong> the book is self-contained (a built-in recipe widget by ID) and doesn't require them. A "open recipe in JEI/REI" deep-link is v2. <strong>Full-text search</strong> of the content is v2.</p>
 
 <h2>Balance</h2>
 

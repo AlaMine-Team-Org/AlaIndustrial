@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,52 +375,22 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Water Mill Wheel</strong> is a crafting component: the wheel you place into the wheel slot of a <a href="../generators/water_mill.html">Water Mill</a>. Without a wheel in the slot, the water mill generates nothing. The wheel is a durability component: it wears out only while the mill actually generates EU/FE (proportional to output) and breaks when its durability runs out. The wear bar shows in your inventory and in the mill's slot.</p>
+<p><strong>Водяне колесо</strong> — крафт-компонент: колесо, яке встановлюється у слот <a href="../generators/water_mill.html">водяного млина</a>. Без колеса млин не виробляє енергію.</p>
 
-<p>It's built from planks, copper ingots, sticks and a wooden gear — an early mechanical part, available at the same time as the water mill itself. It's the thematic counterpart to the wind mill rotor, for water generation.</p>
+<p>Колесо — витратний матеріал: зношується лише поки млин справді виробляє EU/FE, і ламається, коли ресурс вичерпано. Смуга зносу видна в інвентарі та у слоті. Повного ресурсу вистачає на <strong>320 000 EU/FE</strong> — близько години безперервної роботи на максимумі або 6–7 ігрових діб за звичних 2 EU/FE/такт.</p>
 
-<blockquote><strong>Mini-example:</strong> a fresh wheel lasts about 6–7 in-game days of continuous work before it wears out — keep a spare crafted so you can swap a worn wheel and the mill keeps turning.</blockquote>
+<h2>Рецепти</h2>
 
-<h2>Energy</h2>
+<p>Збирається з дощок, мідних зливків, палиць і дерев'яної шестерні.</p>
 
-<p>Uses no energy — it's a plain ingredient for the wheel slot.</p>
+<h2>Пов'язане</h2>
 
-<h2>How it's used</h2>
-
-<p>Goes into the dedicated wheel slot of the <a href="../generators/water_mill.html">Water Mill</a>. Rendered in the world as a 3D model — tilted blade-planks, a rim, spokes and a copper axle in the style of Create (rendered on vanilla wood/copper sprites). Wears out while the mill generates EU/FE.</p>
-
-<h2>Block properties</h2>
-
-<p>Not applicable (item). Durability component: max durability 1000, so it does not stack (stack: 1).</p>
-
-<h2>Recipes</h2>
-
-<p>Crafted on a workbench (shaped 3×3): planks in the corners, copper ingots top and bottom, sticks on the sides, a wooden gear in the center.</p>
-
-<pre><code class="lang-">PUP
-SGS
-PUP</code></pre>
-
-<p><code>P</code> — planks (any, ×4); <code>U</code> — copper ingot (×2); <code>S</code> — stick (×2); <code>G</code> — <a href="metal_gears.html">Wooden Gear</a> (×1).</p>
-
-<h2>Progression</h2>
-
-<p>A component with no tier of its own. Gates water generation: without a wheel, the mill stays silent. The wheel itself is crafted from early materials, so it's available alongside the first mill.</p>
-
-<h2>Related</h2>
-
-<p><a href="../generators/water_mill.html">Water Mill</a> — consumer of the wheel slot. <a href="windmill_rotor.html">Wooden Rotor</a> — the thematic counterpart for wind generation. <a href="metal_gears.html">Wooden Gear</a> — the central component of the wheel.</p>
-
-<h2>Implementation</h2>
-
-<p>Technical details for developers (not surfaced in the wiki).</p>
-
-<p>Durability ingredient item: <code>maxDamage</code> = <code>Config.waterMillWheelMaxDamage</code> (1000), so it is non-stackable (stack 1) with the vanilla wear bar. <code>block_id: </code>. Craft — shaped 3×3. Viewers: JEI/REI/EMI see the item as an ingredient. Design goal: a thematic component tying the water mill to wood and gears, paired with the wind mill rotor, and a consumable — wear ∝ output (<code>Config.waterMillWheelEuPerDamage</code>), ~6–7 in-game days of life. The in-world 3D wheel render lives in the water mill's client renderer (see <code>water_mill.md</code>).</p>
+<p><a href="../generators/water_mill.html">Водяний млин</a> — куди воно ставиться.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="водяне колесо alaindustrial:water_mill_wheel" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Водяне колесо"><img src="../assets/item/water_mill_wheel_3d.png" alt="Водяне колесо" width="32" height="32"></div><div class="result-name">Водяне колесо</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="водяне колесо alaindustrial:water_mill_wheel" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Водяне колесо"><img src="../assets/item/water_mill_wheel_3d.png" alt="Водяне колесо" width="32" height="32"></div><div class="result-name">Водяне колесо</div></div></div></div></div>
   </main>
 </div>
 

@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,113 +375,20 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<blockquote><strong>Status:</strong> a public block — present in the creative tab, has a crafting recipe, GUI, and is visible in JEI/REI. It's one of the most energy-hungry machines in the mod (1000 EU/FE per bucket).</blockquote>
+<p><strong>Насос</strong> — машина, що збирає рідину зі світу й віддає її далі: у бак, у трубу або просто сусідній машині. Дістає джерела в радіусі <strong>32 блоків</strong>, тож ставити його впритул до озера не обов'язково.</p>
 
-<p>The <strong>Pump</strong> is an EU/FE-powered LV machine that moves fluids. It finds a lava or water source in the world (starting at the block in front of it and following the flow outward), or draws fluid from an adjacent tank, banks it in an internal <strong>10-bucket</strong> tank, and pushes it on into any neighbouring receiver tank.</p>
+<h2>Енергія</h2>
 
-<p>The tank holds only one fluid at a time: if it already contains lava it won't accept water (and vice versa) until it empties. Mixing is ruled out on purpose — you can't accidentally dump two fluids into one pipe.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Буфер</td><td>4 000 EU/FE</td></tr><tr><td>Витрата</td><td>1 000 EU/FE за відро</td></tr><tr><td>Дальність пошуку</td><td>32 блоки</td></tr></tbody></table>
 
-<p>The main use case is feeding the <a href="../generators/geothermal_generator.html">Geothermal Generator</a> with lava through a pipe instead of hauling buckets by hand; the pump also moves water for future fluid chains.</p>
+<h2>Пов'язане</h2>
 
-<h2>Energy</h2>
-
-<p>The pump is a pure energy consumer: it takes EU/FE in, emits none, and spends 1000 EU/FE per bucket it draws.</p>
-
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>4000 (`Config.) — above, to bank enough for ≥4 buckets at once</td></tr><tr><td>Max input (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>n/a (does not emit)</td></tr><tr><td>EU/FE per bucket</td><td><strong>1000</strong> (`Config.) — one of the most energy-hungry machines</td></tr></tbody></table>
-
-<p>The pump connects to the energy network like any consumer — the energy network finds it automatically. Energy is only spent on the tick when fluid was actually taken from the world or a neighbouring tank; filling by hand with buckets and pushing into a receiver cost no EU/FE.</p>
-
-<p>As an LV machine the pump accepts up to 32 EU/FE per tick. At 1000 EU/FE/bucket and a 32 EU/FE/tick limit, filling the buffer for one bucket takes ~32 ticks; the 4000 EU/FE buffer holds the cost of 4 buckets, so even under bursty energy supply the pump rarely idles.</p>
-
-<p><strong>Per-face energy role.</strong> The pump draws EU/FE on its five working faces; the front face is energy-inert (no port there), like every other horizontal machine. A cable therefore draws an arm toward the five working faces only — not toward the front. Fluid intake is a separate subsystem and still reads the front face directly (see <a href="index.html#processing">Intake</a>), so the front being energy-inert does <strong>not</strong> change which way the pump draws fluid from.</p>
-
-<h2>Processing</h2>
-
-<p>The pump doesn't use the recipe system: it doesn't process items, it moves fluid. Each working tick runs three steps.</p>
-
-<table><thead><tr><th>Step</th><th>Action</th><th>Condition</th></tr></thead><tbody><tr><td>0. Buckets</td><td>empty a fluid bucket from the input slot into the tank</td><td>the input slot has a lava/water bucket, the tank can accept, the output slot is free for the empty bucket</td></tr><tr><td>1. Intake</td><td>take 1 bucket of fluid into the tank</td><td><code>energy.amount ≥ AND the tank has room for a bucket AND </code>scanCooldown ≤ 0`</td></tr><tr><td>2. Push</td><td>push fluid from the tank into neighbouring receivers</td><td>the tank has fluid</td></tr></tbody></table>
-
-<p><strong>Intake.</strong> The pump looks for fluid starting at the block directly in front of it (the face it points at the player). If that block is lava/water itself, or a connected flowing puddle of it, the pump follows the flow to the nearest source. If there's no fluid in the world there, it tries to draw a bucket from a neighbouring tank. Limits on the world source search:</p>
-
-<p><strong>Radius:</strong> up to 32 blocks from the pump; <strong>Visited cap:</strong> up to 512 blocks per scan (lag protection on large spills); <strong>Cooldown:</strong> 1 second (20 ticks) between search attempts — both after a hit and after a miss.</p>
-
-<p>A found source (lava or water) is pulled into the tank by the bucket, and the source block in the world is <strong>irrevocably removed</strong> (drained). Flowing, non-source fluid is not pumped — it only leads the search to the source, and once the source is gone it settles back by vanilla fluid rules. If the tank already holds a different fluid, the search doesn't even start — the pump won't waste a tick.</p>
-
-<p><strong>Push.</strong> The pump pushes fluid out in every direction except the one it just drew from (so it doesn't pump back into the source), and tries to empty the whole tank in one tick to any neighbouring receiver — for example the Geothermal Generator's tank.</p>
-
-<p>While working the pump lights up (lit on any tick where something happened — intake, push, or a bucket fill).</p>
-
-<h2>Inventory</h2>
-
-<p>Two slots for buckets — for manually pouring fluid into the tank. This isn't the pump's main way of working, just a handy convenience.</p>
-
-<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Input (0)</td><td>lava bucket / water bucket (<code>Items.LAVA_BUCKET</code>, <code>Items.WATER_BUCKET</code>)</td><td>1</td></tr><tr><td>Output (1)</td><td>empty bucket (<code>Items.BUCKET</code>, extraction only)</td><td>up to a stack</td></tr></tbody></table>
-
-<p>Filling via buckets: a bucket from the input slot is emptied into the tank (1 bucket = 1000 mB), the empty bucket drops into the output slot — same as the Geothermal Generator. This <strong>costs no EU/FE</strong> (manual fill, not the pump). Hoppers can take empty buckets out of the output slot and put fresh fluid buckets into the input slot.</p>
-
-<h2>Internal tank</h2>
-
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Implementation</td><td>neutral (in <code>common</code>, works on Fabric and NeoForge)</td></tr><tr><td>Capacity</td><td><strong>10 buckets</strong> (<code>FluidAmounts.BUCKET * 10</code> = 10000 mB)</td></tr><tr><td>Accepts</td><td>allowlist: lava + water (<code>canInsert</code> → <code>isPumpableFluid</code>)</td></tr><tr><td>Mixing</td><td><strong>forbidden</strong> — the tank is single-variant: while it holds one fluid, the other is rejected (guaranteed by the core's <code>.insert</code>)</td></tr><tr><td>Extraction</td><td>allowed from any side (<code>canExtract</code> → true)</td></tr><tr><td>Access</td><td>per-face via a neutral <code>FluidPort</code>; published on Fabric via the Fluid Transfer API, on NeoForge via the fluid capability</td></tr></tbody></table>
-
-<p><strong>Single-variant guarantee.</strong> The tank holds at most one fluid at a time. If empty, it accepts any from the allowlist; if it already holds lava, water is rejected (and vice versa) until it empties. Mixing fluids by accident is impossible — it's built into the tank itself.</p>
-
-<p><strong>Unit of volume — the millibucket (mB).</strong> Inside the tank everything is counted in millibuckets: 1 bucket = 1000 mB, and the tank's capacity is 10 000 mB (those same 10 buckets). This value is identical on Fabric and NeoForge — the player sees exactly the same volumes regardless of loader.</p>
-
-<p><strong>Persistence and migration.</strong> After a reload the tank restores both its volume and its fluid type. Worlds saved under the older version of the pump (lava-only) are picked up correctly: if any fluid is present it's read back as lava — the only one the old tank knew.</p>
-
-<h2>Interface</h2>
-
-<p>The pump has a graphical screen with two slots (for buckets) and two indicator bars.</p>
-
-<p>Type: <strong>GUI</strong> with two slots (buckets) and two bars:</p>
-
-<p>Left — fluid level in the tank (grows bottom-up). The sprite colour depends on the fluid type: red for lava, blue for water. Right — energy buffer.</p>
-
-<p>A tooltip on hover shows the volume in mB / fluid type and the EU/FE / buffer capacity.</p>
-
-<p>Block state: the pump turns to "face the player" when placed (that face is where it draws fluid from) and lights up while working.</p>
-
-<h2>Block Properties</h2>
-
-<p>An ordinary solid block: a pickaxe breaks it, and on break it does not keep its energy charge (the tank and its fluid are kept — see Internal tank).</p>
-
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full 16³ cube (occluder)</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Drops with NBT energy</td><td>false</td></tr></tbody></table>
-
-<h2>Recipes</h2>
-
-<p>One workbench recipe: an iron casing, two buckets, and an Electronic Circuit.</p>
-
-
-<pre><code class="lang-json">{
-"type": "minecraft:crafting_shaped",
-"category": "redstone",
-"key": { "I": "minecraft:iron_ingot", "B": "minecraft:bucket", "E": "" },
-"pattern": ["IBI","IBI","IEI"],
-"result": { "id": "" }
-}</code></pre>
-
-<p>The two buckets in the pattern reflect what the block does — moving fluid; the <a href="../components/index.html">Electronic Circuit</a> sets the machine's LV tier.</p>
-
-<h2>Progression</h2>
-
-<p>An early LV machine — placed once a stable generator and an Electronic Circuit for crafting are available. It frees you from hauling lava buckets by hand.</p>
-
-<p>Tier: LV Power: from an LV source, e.g. the <a href="../generators/generator.html">Generator</a>. Purpose: automatically feeding lava to the <a href="../generators/geothermal_generator.html">Geothermal Generator</a> as a fluid instead of by hand; moving water for future fluid chains. Requires: an <a href="../components/index.html">Electronic Circuit</a> to craft.</p>
-
-<h2>Compatibility</h2>
-
-<p>The pump has no processing recipes, so recipe viewers show only its crafting recipe. Tooltip mods can optionally show the energy level and the tank fill.</p>
-
-<p>Recipe viewers (JEI/REI/EMI): crafting only (the pump has no processing recipes). Tooltips (Jade/The One Probe): energy level and tank fluid level (desirable).</p>
-
-<h2>Related</h2>
-
-<p><a href="../generators/geothermal_generator.html">Geothermal Generator</a> — the main consumer of the pump's lava. <a href="../generators/generator.html">Generator</a> — the typical LV power source for the pump. <a href="../components/index.html">Components</a> — the Electronic Circuit for crafting.</p>
+<p><a href="../fluid-storage/fluid_tank.html">Переносний бак</a> — куди складати зібране. <a href="../generators/geothermal_generator.html">Геотермальний генератор</a> — головний споживач лави.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="помпа alaindustrial:pump" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Bucket"><img src="../assets/item/bucket_3d.png" alt="Bucket" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Bucket"><img src="../assets/item/bucket_3d.png" alt="Bucket" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Помпа"><img src="../assets/item/pump_3d.png" alt="Помпа" width="32" height="32"></div><div class="result-name">Помпа</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="помпа alaindustrial:pump" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Bucket"><img src="../assets/item/bucket_3d.png" alt="Bucket" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Bucket"><img src="../assets/item/bucket_3d.png" alt="Bucket" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Помпа"><img src="../assets/item/pump_3d.png" alt="Помпа" width="32" height="32"></div><div class="result-name">Помпа</div></div></div></div></div>
   </main>
 </div>
 

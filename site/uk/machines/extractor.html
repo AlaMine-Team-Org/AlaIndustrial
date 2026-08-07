@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,68 +375,30 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Extractor</strong> is an LV machine that pulls useful material out of raw inputs: dyes from flowers, seeds from pumpkin and melon, blaze powder from blaze rods, flint from gravel. It's nearly always a better deal than the vanilla routes — a flower gives <strong>two</strong> dyes instead of one at the crafting table — which makes it a nice node for hopper-fed auto-farms.</p>
+<p><strong>Екстрактор</strong> — LV-машина, яка витягує корисний матеріал із сировини: барвники з квітів, насіння з гарбуза й кавуна, порошок зі стрижня іфрита, кремінь із гравію. Майже завжди він вигідніший за ванільний спосіб.</p>
 
-<blockquote><strong>Mini-example:</strong> drop a poppy in, get <strong>two red dyes</strong> back instead of the one the crafting table gives. Hook a few up to a flower farm and dyes stop being a chore.</blockquote>
+<h2>Енергія</h2>
 
-<h2>Energy</h2>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/т (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/т під час роботи</td></tr></tbody></table>
 
-<p>The Extractor only consumes EU/FE and keeps a small buffer for smooth running.</p>
+<p>Якщо в мережі більше енергії, зайве просто не забирається — нічого не вибухає. Енергія заходить із п'яти робочих граней; лицьова грань інертна.</p>
 
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Internal buffer</td><td>800 EU/FE</td></tr><tr><td>Max input</td><td>32 EU/FE/t (LV)</td></tr><tr><td>Consumption</td><td>2 EU/FE/t while working</td></tr></tbody></table>
+<h2>Процесинг</h2>
 
-<p>An LV machine — it draws up to 32 EU/FE per tick. Any surplus in the network isn't taken, the block isn't damaged.</p>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>120 тиків (~6 с)</td></tr><tr><td>Ціна операції</td><td>240 EU/FE</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
 
-<p>Energy comes in on the five working faces. The <strong>front face</strong> (the one the machine "looks" toward) is inert — cables don't connect there and hoppers don't work through it.</p>
+<h2>Властивості блока</h2>
 
-<h2>Processing</h2>
+<p>Звичайний суцільний блок, ламається будь-якою кайлом. Заряд при зламі не зберігає.</p>
 
-<p>Each pull costs 240 EU/FE and takes 120 ticks (~6 s). The finished result doesn't pop out on its own — pick it up by hand or with a hopper.</p>
+<h2>Рецепти</h2>
 
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Duration</td><td>120 ticks (~6 s)</td></tr><tr><td>Cost per operation</td><td>240 EU/FE</td></tr><tr><td>Auto-output</td><td>no</td></tr></tbody></table>
-
-<h2>Inventory</h2>
-
-<p>One input slot, one output slot.</p>
-
-<table><thead><tr><th>Slot</th><th>Takes</th><th>Count</th></tr></thead><tbody><tr><td>Input</td><td>items the Extractor can process</td><td>1</td></tr><tr><td>Output</td><td>the result</td><td>1</td></tr></tbody></table>
-
-<h2>Interface</h2>
-
-<p>One screen shows the energy buffer, the progress, the input slot and the output slot.</p>
-
-<h2>Block Properties</h2>
-
-<p>An ordinary solid block, softer than stone. Any pickaxe breaks it, but <strong>it does NOT keep its charge when broken</strong>.</p>
-
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Keeps charge on break</td><td>no</td></tr></tbody></table>
-
-<h2>Sound</h2>
-
-<p>While running (<code>lit</code>), the extractor emits a mechanical grinding hum — the loop (pattern <strong>A</strong>, <code>humVolume</code> 0.18). It falls silent when idle</p>
-
-<h2>Recipes</h2>
-
-<p>The Extractor is crafted at a workbench (the same casing layout as the other LV machines).</p>
-
-<p>What it pulls out, and why it's usually worth it:</p>
-
-<table><thead><tr><th>Input</th><th>Output</th><th>Why it's better</th></tr></thead><tbody><tr><td>Most flowers (poppy, dandelion, cornflower, lily of the valley, sea pickle, cactus)</td><td><strong>×2 dye</strong></td><td>crafting table gives ×1</td></tr><tr><td>Lilac, wither rose</td><td><strong>×3 dye</strong></td><td>the rich sources give a little extra</td></tr><tr><td>Kelp</td><td>×1 green dye</td><td>little pigment — same as crafting</td></tr><tr><td>Pumpkin</td><td><strong>×5 seeds</strong></td><td>crafting table gives ×4</td></tr><tr><td>Melon slice</td><td><strong>×2 seeds</strong></td><td>crafting table gives ×1</td></tr><tr><td>Blaze rod</td><td><strong>×3 blaze powder</strong></td><td>handy bulk route</td></tr><tr><td>Gravel</td><td>flint</td><td>a reliable way to get flint</td></tr></tbody></table>
-
-<p>So the rule of thumb: for plant matter the Extractor always pays a little better than the crafting table, and it's the natural sink for a hopper-fed farm's output.</p>
-
-<h2>Progression</h2>
-
-<p>Tier: LV. A convenience machine — dyes and seeds aren't critical to progression, but the Extractor makes them painless. It doesn't evolve into anything in v0.1. Needs power from an LV source, e.g. a <a href="../generators/generator.html">Generator</a>.</p>
-
-<h2>Related</h2>
-
-<p><a href="compressor.html">Compressor</a> — the neighbouring LV processing machine. <a href="macerator.html">Macerator</a> — the other early grinder (for ores and metals). <a href="../generators/generator.html">Generator</a> — the power source.</p>
+<p>Збирається на верстаку з корпусу машини та електронної схеми.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="екстрактор alaindustrial:extractor" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Hopper"><img src="../assets/item/hopper_3d.png" alt="Hopper" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Hopper"><img src="../assets/item/hopper_3d.png" alt="Hopper" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Екстрактор"><img src="../assets/item/extractor_3d.png" alt="Екстрактор" width="32" height="32"></div><div class="result-name">Екстрактор</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="екстрактор alaindustrial:extractor" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Hopper"><img src="../assets/item/hopper_3d.png" alt="Hopper" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Hopper"><img src="../assets/item/hopper_3d.png" alt="Hopper" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Екстрактор"><img src="../assets/item/extractor_3d.png" alt="Екстрактор" width="32" height="32"></div><div class="result-name">Екстрактор</div></div></div></div></div>
   </main>
 </div>
 

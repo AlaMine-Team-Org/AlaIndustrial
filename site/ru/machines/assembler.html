@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -395,9 +394,9 @@
 
 <h2>Процессинг</h2>
 
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Тип рецепта</td><td><code>minecraft:crafting</code> (shaped + shapeless)</td></tr><tr><td>Длительность (тики)</td><td>40</td></tr><tr><td>E_op (EU/FE)</td><td>480</td></tr><tr><td>Авто-выгрузка</td><td>false</td></tr></tbody></table>
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Что умеет собирать</td><td>любой рецепт верстака — с формой и без</td></tr><tr><td>Длительность (тики)</td><td>40</td></tr><tr><td>Цена операции (EU/FE)</td><td>480</td></tr><tr><td>Авто-выгрузка</td><td>нет</td></tr></tbody></table>
 
-<p><strong>Собственного типа рецептов у автомата нет.</strong> Он решает обычные верстачные рецепты через штатный <code>RecipeType.CRAFTING</code>, а значит автоматически поддерживает ванильные рецепты, рецепты самого мода (они объявлены обычным <code>minecraft:crafting_shaped</code>), рецепты <strong>любого стороннего мода</strong> и датапаков. Теги работают бесплатно: <code>#minecraft:planks</code> в рецепте означает «любые доски» — ровно как в верстаке.</p>
+<p><strong>Собственного типа рецептов у автомата нет.</strong> Он решает обычные верстачные рецепты через штатный обычные верстачные рецепты, а значит автоматически поддерживает ванильные, рецепты самого мода (они объявлены обычным <code>minecraft:crafting_shaped</code>), рецепты <strong>любого стороннего мода</strong> и датапаков. Теги работают бесплатно: <code>#minecraft:planks</code> в рецепте означает «любые доски» — ровно как в верстаке.</p>
 
 <p>Рецепты машин мода (дробление, плавка, экстракция) автомат <strong>не выполняет</strong> — это отдельные типы рецептов и отдельные машины.</p>
 
@@ -513,7 +512,7 @@
 
 <h2>Свойства блока</h2>
 
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Дроп с NBT энергии</td><td>false</td></tr></tbody></table>
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>полный куб 16³</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка</td></tr><tr><td>Дроп с NBT энергии</td><td>нет</td></tr></tbody></table>
 
 <p>При разрушении автомата выпадают схемы из слотов и содержимое выходной зоны. Содержимое склада <strong>остаётся в модулях</strong> — теряется только связность, и модули простаивают до установки нового автомата. Закреплено <code>TC-ASM-026</code>: выпавшее считается точным числом, поэтому видна и потеря схемы (её не скрафтить обратно), и двойной дроп выходной зоны.</p>
 
@@ -540,10 +539,6 @@ G — [Железная шестерня] ×4 — «руки», подающие
 <h2>Прогрессия</h2>
 
 <p>Тир: MV — <strong>первая MV-машина мода</strong>, якорь MV-фазы Требует: <a href="../utility/storage_module.html">Модуль хранения</a> (без склада машине неоткуда брать сырьё) и Схему сборки С требует ещё и пройденную нефтяную линию — не напрямую, а через <a href="../components/advanced_machine_casing.html">продвинутый корпус</a>: в нём теперь стоят 2 <a href="../components/advanced_circuit.html">продвинутые схемы</a>, а каждая из них — 4 резины. Сетка крафта самого автомата не изменилась, но его полная стоимость выросла на эти 2 схемы, и собрать автомат до постройки <a href="polymerizer.html">Полимеризатора</a> и <a href="vulcanizer.html">Вулканизатора</a> больше нельзя Развивается в: нет. Автокрафт «по требованию» (заказ «сделай 64 X» с деревом подкрафтов) — отдельная будущая система, а не апгрейд этой машины</p>
-
-<h2>Совместимость</h2>
-
-<p>Просмотрщики: JEI, REI, EMI — рецепт крафта самой машины Тултипы: Jade, The One Probe — заряд, прогресс, активная схема</p>
 
 <h2>Связанное</h2>
 

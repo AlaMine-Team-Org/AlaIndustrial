@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,88 +375,34 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Charging Station</strong> is a flat plate, a quarter of a block tall, that you simply stand on. While you're on it, it charges <strong>everything</strong> you're carrying at once: tools in your hotbar and backpack, whatever is in your offhand, and your <strong>worn</strong> gear too — the Energy Pack, the Jetpack, a set of Fluxweave armour.</p>
+<p><strong>Зарядна станція</strong> — пласка плита заввишки в чверть блока, на яку гравець просто стає. Поки він стоїть, станція заряджає все його спорядження одразу: інструменти в хотбарі та рюкзаку, предмет у лівій руці, а також надягнуте — енергорюкзак, джетпак, комплект Флюкс-тканини.</p>
 
-<blockquote><strong>Mini-example:</strong> you come back from the mine with a half-empty drill and a low jetpack — step onto the plate by your base entrance, get on with sorting your chests, and your gear tops itself up while you do. Not a single window to open.</blockquote>
+<blockquote><strong>Міні-приклад:</strong> повернулися з шахти з напівпорожнім буром і підсілим джетпаком — стали на плиту біля входу на базу, зайнялися сортуванням скринь, а спорядження тим часом зарядилося саме.</blockquote>
 
-<p>The station has <strong>no interface</strong>: there is nothing to open, and the colour of the indicator under your feet is the entire feedback loop.</p>
+<p>Інтерфейсу в станції немає: відкривати нічого, весь зворотний зв'язок — колір індикатора під ногами.</p>
 
-<h2>Energy</h2>
+<h2>Енергія</h2>
 
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Buffer</td><td>20 000 EU/FE</td></tr><tr><td>Max input</td><td>128 EU/FE/t</td></tr><tr><td>Max output to the player</td><td>128 EU/FE/t</td></tr></tbody></table>
+<table><thead><tr><th>Параметр</th><th>Значення</th></tr></thead><tbody><tr><td>Буфер</td><td>20 000 EU/FE</td></tr><tr><td>Макс. вхід</td><td>128 EU/FE/т</td></tr><tr><td>Макс. вихід гравцеві</td><td>128 EU/FE/т</td></tr></tbody></table>
 
-<p><strong>The station is a capacitor, not a machine.</strong> Its buffer is sized for a <strong>visit</strong> rather than for "one operation": it fills slowly while nobody is around and empties fast into whoever turns up. That is the only way 128 EU/FE/t is ever reached — the grid does not deliver anywhere near that much:</p>
+<p><strong>Станція — конденсатор, а не машина.</strong> Її буфер розрахований на один візит: вона повільно копить енергію, поки нікого немає, і швидко віддає її тому, хто прийшов. Це єдиний спосіб узагалі досягти 128 EU/FE/т — мережа стільки не доставляє:</p>
 
-<table><thead><tr><th>How it's fed</th><th>Actual inflow</th></tr></thead><tbody><tr><td>Copper cable (LV)</td><td>12 EU/FE/t</td></tr><tr><td>Gold cable (MV)</td><td>48 EU/FE/t</td></tr><tr><td>Flush against a Battery Box (its <strong>output</strong> face)</td><td>32 EU/FE/t</td></tr></tbody></table>
+<table><thead><tr><th>Як підведено</th><th>Реальний приплив</th></tr></thead><tbody><tr><td>Мідний кабель (LV)</td><td>12 EU/FE/т</td></tr><tr><td>Золотий кабель (MV)</td><td>48 EU/FE/т</td></tr><tr><td>Впритул до Енергосховища</td><td>32 EU/FE/т</td></tr></tbody></table>
 
-<p>The 128 EU/FE/t input is a <strong>ceiling, not a promise</strong>. It exists so the station doesn't cap a player who has built good infrastructure: the thicker the supply, the faster its reserve comes back. Fed from copper, the station takes noticeably longer to refill after a big visit than it does from gold.</p>
+<p>Вхід у 128 EU/FE/т — це стеля, а не обіцянка. У мережу станція нічого не віддає: вона живить лише гравця.</p>
 
-<p>Every item is still limited to <strong>its own</strong> charge rate (32 EU/FE/t for all of the mod's portable gear), so 128 EU/FE/t is the station's total output shared across everything at once, not the speed of any single item.</p>
+<h2>Властивості блока</h2>
 
-<p><strong>How long it takes.</strong> Don't be fooled by the 128: the pace is limited <strong>not only</strong> by the station but by how fast each item can take charge — 32 EU/FE/t. So 128 EU/FE/t is only ever reached with <strong>four items charging at once</strong>; a single item always draws its own 32 EU/FE/t no matter how much the station offers.</p>
+<p>Плита заввишки в чверть блока. Ламається будь-якою кайлом.</p>
 
-<p><strong>Everything charges at once.</strong> The station splits its output between every item that needs charge rather than serving them in turn: a full set of armour fills together instead of two pieces at a time. The more you are carrying, the slower each piece goes — the station's total rate does not change with their number.</p>
+<h2>Пов'язане</h2>
 
-<p>Which means the time by the biggest thing in your loadout, not by the size of the station's buffer.</p>
-
-<table><thead><tr><th>Item</th><th>Time (from a full station)</th></tr></thead><tbody><tr><td>Battery Pouch (2,000 EU/FE)</td><td>~3 seconds</td></tr><tr><td>Electromagnet (5,000 EU/FE)</td><td>~8 seconds</td></tr><tr><td>Electric Drill (10,000 EU/FE)</td><td>~16 seconds</td></tr><tr><td>Energy Pack (20,000 EU/FE)</td><td>~31 seconds</td></tr><tr><td>Jetpack (30,000 EU/FE)</td><td>~47 seconds</td></tr></tbody></table>
-
-<p>A completely flat loadout — pouch, Energy Pack, drill, electromagnet, jetpack and four pieces of Fluxweave — comes to <strong>127,000 EU/FE</strong>. The first 20,000 come out of the banked buffer, after which the pace drops to whatever the grid supplies, so charging the lot from empty is a matter of minutes rather than seconds.</p>
-
-<p>The point of the station isn't to beat a charge slot for speed — it's that it does <strong>everything at once, with no clicks at all</strong>: your gear fills itself while you sort out your haul.</p>
-
-<p>All six faces accept energy; the station never gives any back to the network.</p>
-
-<h2>Interface</h2>
-
-<p>There isn't one. In its place is a four-state indicator: four lamps at the corners of the plate and a coil ring at its centre, mirrored by a lit strip along its edge so the state reads both from above and from across the room.</p>
-
-<table><thead><tr><th>Indicator</th><th>Meaning</th><th>Light</th></tr></thead><tbody><tr><td>Dark</td><td>Nobody is standing on it</td><td>0</td></tr><tr><td>Blue</td><td>Charging</td><td>10</td></tr><tr><td>Green</td><td>Everything on you is already full — off you go</td><td>10</td></tr><tr><td>Red</td><td>The station is out of power</td><td>3</td></tr></tbody></table>
-
-<p>Red and green are deliberately distinct: they are different problems with different fixes. Green means "you're ready"; red means "the station has nothing to give, go build generation".</p>
-
-<p>Sparks lift off the plate while it is charging.</p>
-
-<h2>Behaviour</h2>
-
-<p>The station <strong>spends energy only when a transfer actually happens</strong>. A station with no visitor, or one whose visitor is already full, spends nothing; left alone, it goes to sleep.</p>
-
-<p>It does refill like any other consumer, including while nobody is standing on it — that is the whole point of the reserve it banks ahead of time. But it queues for energy <strong>behind working machines</strong>: furnaces and macerators on the same network are always served first, so adding a station will not slow them down.</p>
-
-<p>A spectator drifting through the block is charged nothing and costs nothing.</p>
-
-<h3>What the station cannot charge</h3>
-
-<p><strong>Other mods'</strong> items while they are worn. Item energy on both loaders is addressed by <strong>inventory slot index</strong>, and worn armour from another mod has no such index. All of Ala Industrial's own portable gear charges fully, and foreign items sitting in ordinary inventory slots charge normally too.</p>
-
-<p>In creative mode the station still physically spends its reserve, exactly as a machine charges an item in its slot. That is not a bug.</p>
-
-<h2>Block properties</h2>
-
-<p><strong>Shape:</strong> a 16×4×16 plate — the bottom quarter of the block (0 to 4 in height). It has full collision: you stand on it rather than walk through it, and it is low enough that you step over the station instead of jumping onto it. The highlight outline matches exactly what you walk on.</p>
-
-<p>The block does not occlude its neighbours — without that, the faces of blocks around the plate would be culled as if a full cube stood there.</p>
-
-<p>It has no orientation: the station is symmetrical, there is nothing to rotate, and a cable connects to any face.</p>
-
-<p>Placed and broken with a pickaxe; hardness 3.0, blast resistance 6.0, metal sound. Breaking it does <strong>not</strong> preserve the EU/FE buffer — the station loses what it had banked, like any machine in the mod.</p>
-
-<h2>Crafting</h2>
-
-<table><thead><tr><th></th><th></th><th></th></tr></thead><tbody><tr><td>Copper Cable</td><td>Copper Cable</td><td>Copper Cable</td></tr><tr><td>Iron Plate</td><td>Battery</td><td>Iron Plate</td></tr><tr><td>Iron Plate</td><td>Electronic Circuit</td><td>Iron Plate</td></tr></tbody></table>
-
-<p>The copper cables on top are the charging coil, the battery at the centre sets the buffer, and the circuit runs the distribution.</p>
-
-<h2>Balance</h2>
-
-<p>The station is deliberately <strong>no faster</strong> than a machine's charge slot for a single item: a Battery Box slot gives that item the same 32 EU/FE/t. What the station buys you is that it serves <strong>everything at once</strong> and needs no clicks at all. It is convenience, not speed.</p>
-
-<p>Its buffer (20,000 EU/FE) matches the <a href="battery_box.html">Battery Box</a> — the station is essentially a small personal store that spends itself on the player instead of on machines.</p>
+<p><a href="battery_box.html">Енергосховище</a> — типове джерело для станції. <a href="cesu.html">Посилене енергосховище</a> — швидше поповнює її буфер.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="зарядна станція alaindustrial:charge_pad" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Зарядна станція"><img src="../assets/item/charge_pad_3d.png" alt="Зарядна станція" width="32" height="32"></div><div class="result-name">Зарядна станція</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="зарядна станція alaindustrial:charge_pad" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Зарядна станція"><img src="../assets/item/charge_pad_3d.png" alt="Зарядна станція" width="32" height="32"></div><div class="result-name">Зарядна станція</div></div></div></div></div>
   </main>
 </div>
 

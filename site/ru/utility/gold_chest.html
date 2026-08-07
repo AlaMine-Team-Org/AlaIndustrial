@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -395,7 +394,7 @@
 
 <p>Обычное окно контейнера — без индикаторов энергии или прогресса (сундук не машина). Окно выше серебряного из-за шестого ряда; обе подписи — «Золотой сундук» над сеткой и «Инвентарь» под ней — стоят слева.</p>
 
-<p>Тип: container (<code>GoldChestMenu</code>,). Экран выше серебряного на один ряд — из-за шестого ряда слотов. Без индикаторов энергии/прогресса (сундук не машина). <strong>Обе подписи слева:</strong> заголовок «Золотой сундук» над сеткой сундука (<code>titleLabelX = 8</code>) и подпись «Инвентарь» в зазоре между сундуком и инвентарём игрока (<code>inventoryLabelX = 8</code>, <code>inventoryLabelY = 128</code>).</p>
+<p>Тип: container (<code>GoldChestMenu</code>,). Экран выше серебряного на один ряд — из-за шестого ряда слотов. Без индикаторов энергии/прогресса (сундук не машина). <strong>Обе подписи слева:</strong> заголовок «Золотой сундук» над сеткой сундука и подпись «Инвентарь» в зазоре между сундуком и инвентарём игрока.</p>
 
 <h2>Рендер и анимация</h2>
 
@@ -405,19 +404,15 @@
 
 <h2>Звук</h2>
 
-<p>Звук открытия и закрытия <strong>переиспользует семплы железного сундука</strong> (<code>iron_chest_open</code> / <code>iron_chest_close</code>) — металлический звук общий для всех тиров, как ванильный деревянный звук один для всех пород дерева. Отдельных <code>gold_chest_open/close</code> событий нет, поэтому субтитры показывают «Железный сундук открывается/закрывается».</p>
+<p>Звук открытия и закрытия <strong>переиспользует семплы железного сундука</strong> — металлический звук общий для всех тиров, как ванильный деревянный звук один для всех пород дерева. Отдельных <code>gold_chest_open/close</code> событий нет, поэтому субтитры показывают «Железный сундук открывается/закрывается».</p>
 
-<p>Громкость <strong>0.42</strong> (как предыдущие тиры — тише ванильного 0.5), случайный pitch 0.9–1.0. Звуки: <code>ModSounds.IRON_CHEST_OPEN</code> / <code>ModSounds.IRON_CHEST_CLOSE</code> (без отдельных gold-ключей).</p>
+<p>Громкость <strong>0.42</strong> (как предыдущие тиры — тише ванильного 0.5), случайный pitch 0.9–1.0. Звук открытия и закрытия — общий с железным сундуком, отдельного золотого нет.</p>
 
 <h2>Свойства блока</h2>
 
 <p>Сундук приземистый — не полный куб, а колонна 14×14×14 (как все ванильные сундуки и предыдущие тиры). Ломается любой киркой, при разрушении выпадает сам и высыпает всё содержимое. Свойства блока идентичны железному и серебряному сундукам (та же форма, та же прочность).</p>
 
 <table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Форма</td><td>приземистая колонна 14×14×14 (не полный куб, как ванильные сундуки); соседи не отбрасывают к нему грани — рендер корректный, без «рентгена»</td></tr><tr><td>Прочность</td><td>3.0</td></tr><tr><td>Взрывоустойчивость</td><td>6.0</td></tr><tr><td>Инструмент</td><td>кирка (без тир-гейта — любая)</td></tr><tr><td>facing</td><td>горизонтальный, повёрнут к игроку при размещении</td></tr><tr><td>Render shape</td><td><code>MODEL</code> (поверх блока дорисовывается 3D-сундук)</td></tr><tr><td>Дроп</td><td>сам себя через loot table; содержимое инвентаря выпадает при разрушении</td></tr><tr><td>Звуки</td><td><code>iron_chest_open</code> / <code>iron_chest_close</code> (переиспользуются, см. §Звук)</td></tr></tbody></table>
-
-<h2>Совместимость</h2>
-
-<p>Просмотрщики рецептов: JEI, REI, EMI. Воронки и трубы: сундук работает как обычный ванильный контейнер, поэтому воронки и трубы могут вставлять и извлекать предметы стандартным путём. Все слоты одинаковые, стороны симметричные.</p>
 
 <h2>Прогрессия</h2>
 
@@ -428,7 +423,7 @@
 <p><a href="silver_chest.html">Серебряный сундук</a> — предыдущий тир, паттерн для этого блока. <a href="iron_chest.html">Железный сундук</a> — эталонная реализация всех сундучных тиров. <a href="../energy-storage/battery_box.html">Энергохранилище</a> — другой «storage»-блок мода, но энергитический.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="золотой сундук alaindustrial:gold_chest" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Серебряный сундук"><img src="../assets/item/silver_chest_3d.png" alt="Серебряный сундук" width="32" height="32"></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Золотой сундук"><img src="../assets/item/gold_chest_3d.png" alt="Золотой сундук" width="32" height="32"></div><div class="result-name">Золотой сундук</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="золотой сундук alaindustrial:gold_chest" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Серебряный сундук"><img src="../assets/item/silver_chest_3d.png" alt="Серебряный сундук" width="32" height="32"></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Золотой сундук"><img src="../assets/item/gold_chest_3d.png" alt="Золотой сундук" width="32" height="32"></div><div class="result-name">Золотой сундук</div></div></div></div></div>
   </main>
 </div>
 

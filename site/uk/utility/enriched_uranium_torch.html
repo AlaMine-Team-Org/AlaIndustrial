@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,38 +375,20 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Enriched Uranium Torch</strong> is a decorative light source: light level 14 (same as a vanilla torch), but with a bright <strong>green flame</strong> and the occasional green sparkle. Place it on the floor or on a wall, just like a normal torch. It uses no energy — it's decoration, not a generator.</p>
+<p><strong>Збагачений урановий смолоскип</strong> — декоративне джерело світла: рівень світла 14, як у ванільного смолоскипа, але з яскравим <strong>зеленим полум'ям</strong> і рідкісними зеленими іскрами. Ставиться на підлогу й на стіни, як звичайний смолоскип. Енергії не потребує.</p>
 
-<p>The main perk: it <strong>doesn't go out underwater</strong>. You can place it under water and it keeps burning.</p>
+<h2>Властивості блока</h2>
 
-<h2>Block Properties</h2>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Рівень світла</td><td>14</td></tr><tr><td>Розміщення</td><td>підлога і стіна</td></tr><tr><td>Інструмент</td><td>будь-який</td></tr></tbody></table>
 
-<p>Behaves like a vanilla torch: breaks instantly by hand, has no collision, a piston will break it.</p>
+<h2>Пов'язане</h2>
 
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Light level</td><td>14 (same as a vanilla torch)</td></tr><tr><td>Flame</td><td>green, with occasional sparkles</td></tr><tr><td>Placement</td><td>on the or on a wall — one icon, both forms</td></tr><tr><td>Underwater</td><td>burns, doesn't go out</td></tr><tr><td>Tool</td><td>none — breaks by hand instantly</td></tr></tbody></table>
-
-<h2>Sound</h2>
-
-<p>Wooden placement/break sound, same as a vanilla torch.</p>
-
-<h2>Recipes</h2>
-
-<p>Two ways to make it, both unlocked once you have uranium dust:</p>
-
-<p><strong>From scratch:</strong> uranium dust on top, coal (or charcoal) in the middle, stick at the bottom → <strong>4 torches</strong>. <strong>Upgrade:</strong> a plain vanilla torch + uranium dust (shapeless) → <strong>1 torch</strong>.</p>
-
-<h2>Progression</h2>
-
-<p>Tier: none (decoration). Requires: <a href="../materials/uranium.html">Uranium</a> — its dust for the recipe. So this is a late-game decorative goal, once you've found and processed uranium.</p>
-
-<h2>Related</h2>
-
-<p><a href="../materials/uranium.html">Uranium</a> — the source of uranium dust. <a href="iron_chest.html">Iron Chest</a> — another "civilian" block with no energy.</p>
+<p><a href="../materials/uranium.html">Уран</a> — з чого робиться.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="збагачений урановий смолоскип alaindustrial:enriched_uranium_torch" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Uranium Dust"><img src="../assets/item/uranium_dust_3d.png" alt="Any Uranium Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Coal"><img src="../assets/item/coal_3d.png" alt="Any Coal" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Збагачений урановий смолоскип"><img src="../assets/item/enriched_uranium_torch_3d.png" alt="Збагачений урановий смолоскип" width="32" height="32"><span class="count">×4</span></div><div class="result-name">Збагачений урановий смолоскип</div></div></div></div> <div class="recipe-card" data-name="збагачений урановий смолоскип alaindustrial:enriched_uranium_torch" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">Shapeless Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Torch"><img src="../assets/item/torch_3d.png" alt="Torch" width="32" height="32"></div> <div class="cell" title="Any Uranium Dust"><img src="../assets/item/uranium_dust_3d.png" alt="Any Uranium Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Збагачений урановий смолоскип"><img src="../assets/item/enriched_uranium_torch_3d.png" alt="Збагачений урановий смолоскип" width="32" height="32"></div><div class="result-name">Збагачений урановий смолоскип</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="збагачений урановий смолоскип alaindustrial:enriched_uranium_torch" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Uranium Dust"><img src="../assets/item/uranium_dust_3d.png" alt="Any Uranium Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Coal"><img src="../assets/item/coal_3d.png" alt="Any Coal" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Wooden Rod"><img src="../assets/item/stick_3d.png" alt="Any Wooden Rod" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Збагачений урановий смолоскип"><img src="../assets/item/enriched_uranium_torch_3d.png" alt="Збагачений урановий смолоскип" width="32" height="32"><span class="count">×4</span></div><div class="result-name">Збагачений урановий смолоскип</div></div></div></div> <div class="recipe-card" data-name="збагачений урановий смолоскип alaindustrial:enriched_uranium_torch" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">Shapeless Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Torch"><img src="../assets/item/torch_3d.png" alt="Torch" width="32" height="32"></div> <div class="cell" title="Any Uranium Dust"><img src="../assets/item/uranium_dust_3d.png" alt="Any Uranium Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Збагачений урановий смолоскип"><img src="../assets/item/enriched_uranium_torch_3d.png" alt="Збагачений урановий смолоскип" width="32" height="32"></div><div class="result-name">Збагачений урановий смолоскип</div></div></div></div></div>
   </main>
 </div>
 

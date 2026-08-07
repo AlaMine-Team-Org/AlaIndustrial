@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -385,7 +384,7 @@
 
 <h2>Энергия</h2>
 
-<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Буфер (EU/FE)</td><td><strong>15 000</strong> на каждый предмет (<code>fluxweaveBuffer</code>)</td></tr><tr><td>Макс. вход (EU/FE/такт)</td><td><strong>32</strong> (<code>fluxweaveInputRate</code>, потолок LV)</td></tr><tr><td>Пассивный расход</td><td><strong>1 EU/FE/сек</strong> на надетый заряженный предмет (<code>fluxweaveUpkeepEuPerSecond</code>)</td></tr><tr><td>Событийный расход</td><td><strong>200 EU/FE</strong> за пол-сердца регенерации сет-бонуса (<code>fluxweaveRegenEuPerHeal</code>)</td></tr></tbody></table>
+<table><thead><tr><th>Поле</th><th>Значение</th></tr></thead><tbody><tr><td>Буфер (EU/FE)</td><td><strong>15 000</strong> на каждый предмет</td></tr><tr><td>Макс. вход (EU/FE/такт)</td><td><strong>32</strong> (потолок LV)</td></tr><tr><td>Пассивный расход</td><td><strong>1 EU/FE/сек</strong> на надетый заряженный предмет</td></tr><tr><td>Событийный расход</td><td><strong>200 EU/FE</strong> за пол-сердца регенерации сет-бонуса</td></tr></tbody></table>
 
 <p>Заряжается в слоте Энергохранилища, от надетого Энергоранца и сторонними зарядниками через capability (только на вход). Полный буфер при 1 EU/FE/сек — около <strong>4 часов</strong> ношения.</p>
 
@@ -393,7 +392,7 @@
 
 <p>Все бонусы — <strong>атрибуты</strong>, а не зелья: без частиц, без иконок на HUD и без конфликта с настоящими зельями. Действуют, только пока в предмете есть заряд.</p>
 
-<table><thead><tr><th>Слот</th><th>Защита</th><th>Бонус при заряде</th><th>Конфиг</th></tr></thead><tbody><tr><td>Шлем</td><td>2</td><td>Дыхание под водой (шанс не тратить воздух, как Respiration) + скорость плавания</td><td><code>fluxweaveOxygenBonus</code> 3, <code>fluxweaveSwimEfficiency</code> 50</td></tr><tr><td>Нагрудник</td><td>6</td><td>Доп. стойкость к сильным ударам + сопротивление отбрасыванию</td><td><code>fluxweaveChargedToughness</code> 2, <code>fluxweaveKnockbackResistance</code> 10</td></tr><tr><td>Поножи</td><td>5</td><td>Скорость бега (пассивно) + <strong>шаг-ассист по тумблеру</strong></td><td><code>fluxweaveRunSpeedPercent</code> 12, <code>fluxweaveStepHeightBonus</code> 60</td></tr><tr><td>Ботинки</td><td>2</td><td><strong>Частичное</strong> смягчение урона от падения</td><td><code>fluxweaveFallDamageReductionPercent</code> 50</td></tr><tr><td>Сет 4/4</td><td>—</td><td>Мини-регенерация ниже полного здоровья</td><td><code>fluxweaveRegenEuPerHeal</code> 200</td></tr></tbody></table>
+<table><thead><tr><th>Слот</th><th>Защита</th><th>Бонус при заряде</th><th>Конфиг</th></tr></thead><tbody><tr><td>Шлем</td><td>2</td><td>Дыхание под водой (шанс не тратить воздух, как Respiration) + скорость плавания</td><td>3, 50</td></tr><tr><td>Нагрудник</td><td>6</td><td>Доп. стойкость к сильным ударам + сопротивление отбрасыванию</td><td>2, 10</td></tr><tr><td>Поножи</td><td>5</td><td>Скорость бега (пассивно) + <strong>шаг-ассист по тумблеру</strong></td><td>12, 60</td></tr><tr><td>Ботинки</td><td>2</td><td><strong>Частичное</strong> смягчение урона от падения</td><td>50</td></tr><tr><td>Сет 4/4</td><td>—</td><td>Мини-регенерация ниже полного здоровья</td><td>200</td></tr></tbody></table>
 
 <p><strong>Шаг-ассист выключен по умолчанию.</strong> Включается клавишей (по умолчанию <strong>G</strong>, категория Ala Industrial). Флаг хранится на самих поножах, поэтому переживает перезаход и путешествует с предметом. Автоматический шаг меняет ощущение от передвижения, и это не всем удобно — поэтому он ждёт, пока его попросят.</p>
 
@@ -421,10 +420,6 @@
 <h2>Прогрессия</h2>
 
 <p>Тир: LV Требует: <a href="../machines/galvanic_bath.html">Электрованна</a> → Флюкс-нить → Флюкс-ткань, плюс схему, батарейку и закалённое железо. Дальше: nano-комплект (тир 2) — туда осознанно отложены ночное зрение и замедление голода.</p>
-
-<h2>Совместимость</h2>
-
-<p>Просмотрщики: JEI, REI, EMI Зарядка: Энергохранилище, Энергоранец, сторонние зарядники (item energy capability)</p>
 
 <h2>Связанное</h2>
 

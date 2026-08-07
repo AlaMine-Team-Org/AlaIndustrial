@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -384,7 +383,7 @@
 
 <h2>Energy</h2>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Buffer (EU/FE)</td><td><strong>15,000</strong> per piece (<code>fluxweaveBuffer</code>)</td></tr><tr><td>Max input (EU/FE/tick)</td><td><strong>32</strong> (<code>fluxweaveInputRate</code>, LV ceiling)</td></tr><tr><td>Passive upkeep</td><td><strong>1 EU/FE/second</strong> per worn, charged piece (<code>fluxweaveUpkeepEuPerSecond</code>)</td></tr><tr><td>Event cost</td><td><strong>200 EU/FE</strong> per half-heart of set-bonus regeneration (<code>fluxweaveRegenEuPerHeal</code>)</td></tr></tbody></table>
+<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Buffer (EU/FE)</td><td><strong>15,000</strong> per piece</td></tr><tr><td>Max input (EU/FE/tick)</td><td><strong>32</strong> (LV ceiling)</td></tr><tr><td>Passive upkeep</td><td><strong>1 EU/FE/second</strong> per worn, charged piece</td></tr><tr><td>Event cost</td><td><strong>200 EU/FE</strong> per half-heart of set-bonus regeneration</td></tr></tbody></table>
 
 <p>Charges in the Battery Box slot, from a worn Energy Pack, and from other mods' chargers through the item energy capability (insert only). A full buffer at 1 EU/FE/s lasts roughly <strong>four hours</strong> of wear.</p>
 
@@ -392,7 +391,7 @@
 
 <p>Every bonus is an <strong>attribute</strong>, not a potion effect: no particles, no HUD icons, no clash with real potions. They apply only while the piece holds charge.</p>
 
-<table><thead><tr><th>Slot</th><th>Defense</th><th>Bonus while charged</th><th>Config</th></tr></thead><tbody><tr><td>Helmet</td><td>2</td><td>Water breathing (a chance to skip an air tick, Respiration's own mechanic) plus swim speed</td><td><code>fluxweaveOxygenBonus</code> 3, <code>fluxweaveSwimEfficiency</code> 50</td></tr><tr><td>Chestplate</td><td>6</td><td>Extra toughness against heavy hits plus knockback resistance</td><td><code>fluxweaveChargedToughness</code> 2, <code>fluxweaveKnockbackResistance</code> 10</td></tr><tr><td>Leggings</td><td>5</td><td>Run speed (passive) plus a <strong>toggleable step assist</strong></td><td><code>fluxweaveRunSpeedPercent</code> 12, <code>fluxweaveStepHeightBonus</code> 60</td></tr><tr><td>Boots</td><td>2</td><td><strong>Partial</strong> fall-damage softening</td><td><code>fluxweaveFallDamageReductionPercent</code> 50</td></tr><tr><td>Set 4/4</td><td>—</td><td>Slow regeneration below full health</td><td><code>fluxweaveRegenEuPerHeal</code> 200</td></tr></tbody></table>
+<table><thead><tr><th>Slot</th><th>Defense</th><th>Bonus while charged</th><th>Config</th></tr></thead><tbody><tr><td>Helmet</td><td>2</td><td>Water breathing (a chance to skip an air tick, Respiration's own mechanic) plus swim speed</td><td>3, 50</td></tr><tr><td>Chestplate</td><td>6</td><td>Extra toughness against heavy hits plus knockback resistance</td><td>2, 10</td></tr><tr><td>Leggings</td><td>5</td><td>Run speed (passive) plus a <strong>toggleable step assist</strong></td><td>12, 60</td></tr><tr><td>Boots</td><td>2</td><td><strong>Partial</strong> fall-damage softening</td><td>50</td></tr><tr><td>Set 4/4</td><td>—</td><td>Slow regeneration below full health</td><td>200</td></tr></tbody></table>
 
 <p><strong>The step assist starts switched off.</strong> A key binding turns it on (default <strong>G</strong>, under the Ala Industrial category). The flag lives on the leggings themselves, so it survives a relog and travels with the item. Auto-stepping changes how movement feels and does not suit everyone, so it waits to be asked for.</p>
 
@@ -427,10 +426,6 @@
 
 <p>Defense deliberately stays at the iron line. The set's value is its utility, not its armour numbers; its high enchantability (18, above tempered iron) is the intended way to make it survivable.</p>
 
-
-<h2>Compatibility</h2>
-
-<p>Recipe viewers: JEI, REI, EMI Charging: Battery Box, Energy Pack, other mods' chargers via the item energy capability</p>
 
 <h2>Related</h2>
 

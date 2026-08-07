@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,124 +375,26 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Storage Module</strong> is a 27-slot block whose whole point is that it <strong>merges with its neighbours</strong>. Put two modules against each other and you have one 54-slot warehouse behind a single window. Three makes 81. Four makes 108, and that is the ceiling.</p>
+<p><strong>Модуль зберігання</strong> — блок на <strong>27 слотів</strong>, який об'єднується із сусідніми в один склад. Два модулі впритул дають 54 слоти одним списком, три — 81, і так далі: відкриваєте будь-який, а бачите весь склад.</p>
 
-<p>Right-click <strong>any</strong> module and the window shows the whole warehouse, not just the 27 slots of the block you clicked.</p>
+<p>Модуль приєднується до складу, якщо торкається іншого <strong>гранню до грані</strong>. Дотик ребром або кутом не рахується.</p>
 
-<p>No energy, no redstone, any shape you like — a wall, a column, an L. The one rule: modules must touch <strong>face to face</strong>, not along an edge or a corner.</p>
+<h2>Інвентар</h2>
 
-<blockquote><strong>Quick example:</strong> you placed a module, filled it, ran out. Butt a second one against it: open either of the two and you are looking at 54 slots as one list.</blockquote>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Слотів у модулі</td><td>27</td></tr><tr><td>Об'єднання</td><td>грань до грані з сусіднім модулем</td></tr></tbody></table>
 
-<h2>Energy</h2>
+<h2>Властивості блока</h2>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>none</td></tr><tr><td>Buffer (EU/FE)</td><td>0</td></tr><tr><td>Max input (EU/FE/tick)</td><td>n/a</td></tr><tr><td>Max output (EU/FE/tick)</td><td>n/a</td></tr><tr><td>EU/FE/tick</td><td>0</td></tr></tbody></table>
+<p>Звичайний суцільний блок, ламається будь-якою кайлом. Вміст зберігається при зламі.</p>
 
-<p>The module takes no part in the energy network: it neither carries EU/FE nor connects to cables.</p>
+<h2>Пов'язане</h2>
 
-<h2>Inventory</h2>
-
-<table><thead><tr><th>Slot</th><th>Accepts</th><th>Count</th></tr></thead><tbody><tr><td>Module storage</td><td>any items</td><td>27 (3 rows of 9)</td></tr></tbody></table>
-
-<p><strong>Items physically sit in the module they were put into.</strong> There is no master inventory: the warehouse window is a view over every module's inventory at once, not a separate store. Everything else follows from that — what drops when you break one, and what happens when a chunk unloads.</p>
-
-<h3>How the warehouse adds up</h3>
-
-<table><thead><tr><th>Modules adjacent</th><th>Warehouse slots</th><th>Rows total</th><th>Rows shown</th><th>Scroll</th></tr></thead><tbody><tr><td>1</td><td>27</td><td>3</td><td>3</td><td>none</td></tr><tr><td>2</td><td>54</td><td>6</td><td>6</td><td>none (bar drawn inactive)</td></tr><tr><td>3</td><td>81</td><td>9</td><td>6</td><td>3 rows</td></tr><tr><td>4</td><td>108</td><td>12</td><td>6</td><td>6 rows</td></tr><tr><td>5 or more</td><td>108 (cap)</td><td>12</td><td>6</td><td>6 rows</td></tr></tbody></table>
-
-<p>Slots and rows are <strong>unchanged</strong> — only the window is: it shows at most six rows and the rest are reached with the scrollbar on the right. Why six is in the Balance section.</p>
-
-<h3>Merging rules</h3>
-
-<p>A module joins the warehouse if it touches another member <strong>face to face</strong>. Edge and corner contact does not count — so you can build two separate warehouses flush against each other. The set is worked out afresh every time the window opens, walking out from the module you clicked. Nothing is remembered, so placing or breaking a module needs no rebuilding. If a build holds more than four modules, the first four in walk order form the warehouse. Clicking a different module of the same build may give a different four — the window shows how many are connected, so this is visible.</p>
-
-<h2>Interface</h2>
-
-<p>Type: container (<code>StorageModuleMenu</code>), two window sizes: <strong>3 rows</strong> (176x166) for a lone module and <strong>6 rows</strong> (195x220) for anything larger. <strong>A scrollbar</strong> sits to the right of the grid, in the 19 px added to the panel width for it. The mouse wheel, dragging the thumb and clicking the track all work. A two-module warehouse has nothing to scroll to, and the bar is drawn <strong>in its inactive shade</strong> rather than disappearing: a control that comes and goes is harder to read than one visibly off. <strong>Shift-click fills the rows that are off screen too.</strong> Not a detail: vanilla's shift-click moves between menu slots, and the window only has six rows of them, so the obvious implementation would quietly stop halfway and report the warehouse full while half of it was empty. No search — 108 slots is too few to need one.</p>
-
-<p><strong>What is synced.</strong> Two numbers in <code>ContainerData</code>: how many rows the warehouse has in total, and which row the window sits on. The client needs the first to draw the bar and the second to place the thumb; the server owns both. The scroll itself travels on vanilla's <code>clickMenuButton</code>, where the button id IS the requested top row; the server clamps it, so a packet asking for row 500 cannot read past the warehouse.</p>
-
-<p><strong>Why a view rather than moving the slots.</strong> <code>Slot.x</code>/<code>Slot.y</code> are <code>public final</code>, and a menu's slot list is part of the network contract: the indices in <code>ClientboundContainerSetSlot</code> are positions in it, so rebuilding the list under a live menu desynchronises the client. Vanilla's one scrolling display (the creative inventory) does the same thing: the slots never move, what moves is the answer the container behind them gives.</p>
-
-<h2>Block Properties</h2>
-
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full cube 16³</td></tr><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Drops with NBT</td><td>false — contents are <strong>not</strong> kept in the item</td></tr></tbody></table>
-
-<h3>Looks: a warehouse reads as one cabinet</h3>
-
-<p>The module is a steel cabinet with <strong>three drawers</strong> — one per row of nine slots it adds to the window. Top and bottom are not drawers but a body plate with an inset service panel.</p>
-
-<p>Adjacent modules <strong>merge visually as well</strong>. Along the face two modules share, the frame disappears: the drawer fronts run on across the joint, the tops become one continuous bench top, and the border survives only around the outside of the warehouse. A 2x2 wall reads as one six-drawer cabinet, a row of four as one long one.</p>
-
-<p><strong>The merged look means exactly one thing: this is one warehouse.</strong> The moment a build grows past four modules the frames come back <strong>on all of them at once</strong>, and the build looks like separate cabinets again. That is not cosmetic but an honest signal: in a build that size the warehouse depends on which module you click (see "Merging rules"), and no seam could promise that two blocks are one store. Take the extra module away and the merged look returns.</p>
-
-<p>Touching at an edge or a corner merges neither the mechanics nor the picture: two warehouses can stand flush against each other and still look separate.</p>
-
-<p><strong>How it is drawn.</strong> The connection is built into the block model, not laid over it. Every face is cut into non-overlapping rectangles — one band per edge, four one-pixel corners on the cap faces and the middle — and each rectangle is drawn exactly once, from either the framed texture or the open one. Nothing is offset outward and nothing overlaps, so a joint cannot pick up its own lighting or show a step. The first version instead laid patches over the cube, pushed 0.1 blocks proud, and the player saw a raised band running through the bench top and a short black line where a patch ended.</p>
-
-<p>A rim corner on the cap face belongs to two edges at once, so it opens only when <strong>both</strong> of its neighbours are there. Handing it to one edge punches a two-pixel hole in the east/west border at every north-south joint.</p>
-
-<p>The blockstate and its 21 models are <strong>generated</strong> (<code>python tools/gen_storage_module_models.py</code>) and are only edited through the generator. <code>--check</code> (wired into <code>checkAll</code> and the pre-commit hook) compares the files against the generator and separately proves the joint is seamless: every pixel of every face is drawn exactly once, no element leaves the block volume, and the wall and bench top composed from the models are pixel-identical to a reference "one big cabinet" built from the framed texture alone.</p>
-
-<p><strong>Breaking a module drops its own contents and nothing else.</strong> Neighbouring modules are untouched: their items are theirs and never moved.</p>
-
-<p>Breaking a module in the middle of a build simply splits it — each part becomes its own warehouse. Items in the detached modules <strong>do not drop</strong>: they stay put and rejoin the shared window once the connection is restored.</p>
-
-<p>Breaking the <a href="../machines/assembler.html">assembler</a> next to a warehouse gives the player back only what the machine itself held — the blueprint queue and the output area — and leaves the modules alone (<code>TC-ASM-026</code> counts the drops exactly, so both a loss and a double drop show up). Taking the warehouse apart walks the capacity down to zero and never past it (<code>TC-STOR-010</code>; a count that went negative is what crashed <a href="https://github.com/AllTheMods/ATM-10/issues/2271">Functional Storage</a>).</p>
-
-<p><strong>Pipes are pinned by transport, not by the presence of a port.</strong> <code>TC-STOR-012</code> runs sixteen ingots chest -&gt; pipe -&gt; warehouse and back, and separately checks that a dry run (<code>simulate</code>) moves nothing and promises exactly what the committed move then carries — a mismatch between those two numbers is the classic duplication bug (<a href="https://github.com/McJtyMods/XNet/issues/173">XNet #173</a>).</p>
-
-<p><strong>Contents survive a reload.</strong> <code>TC-STOR-013</code> takes a module through NBT — the same path a chunk save and load takes — and checks among other things that slots do not shift: an empty slot left deliberately between two occupied ones has to come back empty.</p>
-
-<h2>Recipes</h2>
-
-<p>Craft — 4 <a href="../components/material_forms.html">iron plates</a> in a cross around a vanilla chest.</p>
-
-<p>The recipe is cheap on purpose: growing the warehouse is a consumable, not a milestone.</p>
-
-<h2>Progression</h2>
-
-<p>Tier: none — no energy required, available as soon as you have plates. Where it sits in the storage line: <a href="iron_chest.html">Iron Chest</a> 36 → <a href="silver_chest.html">Silver</a> 45 → <a href="gold_chest.html">Gold</a> 54 → a module warehouse 108. The chests keep their value: they give their whole capacity in one block, the warehouse needs four. Later: the <a href="../machines/assembler.html">Assembler</a> will draw its materials straight from a warehouse like this.</p>
-
-<h2>Compatibility</h2>
-
-<p>Recipe viewers: JEI, REI, EMI — the module's own craft recipe Tooltips: Jade, The One Probe — how full the warehouse is</p>
-
-<h2>Balance</h2>
-
-<p><strong>27 slots per module</strong> = exactly 3 rows, so every warehouse size yields a whole number of rows.</p>
-
-<p><strong>The 108-slot cap</strong> is not arbitrary: it is the genre's practical ceiling for a single-screen inventory. That is what the Iron Chests diamond chest and the top-tier Sophisticated Storage barrel hold. Mods that went higher (Colossal Chests reaches into the thousands) collected the matching complaints: the window takes seconds to open and the game runs at single-digit FPS afterwards.</p>
-
-<p>One more technical argument: the mod has no partial inventory sync — any slot mutation broadcasts the block's whole contents. At 108 slots that is still acceptable; at 400 it is not.</p>
-
-<h3>The window is 6 rows. The old "108 = one screen" argument was checked and was wrong</h3>
-
-<p>This section used to say the 108-slot cap had been chosen precisely so the whole warehouse fit one screen without scrolling. That was never checked against how much screen the game actually gives, and on a live playtest the twelve-row window ran off the top <strong>and</strong> the bottom: the first row cut, the hotbar clipped.</p>
-
-<p>The honest arithmetic. Panel height is <code>rows x 18 + 112</code>, i.e. 166 / 220 / 274 / <strong>328</strong> px for 3 / 6 / 9 / 12 rows. How much height a window gets by the GUI scale, and at the default ("auto") the game picks it: <code>Window.calculateScale</code> raises the scale <strong>while</strong> <code>height / (scale + 1) &gt;= 240</code>. That</p>
-
-<table><thead><tr><th>Resolution</th><th>Auto scale</th><th>GUI pixels of height</th><th>328 px?</th><th>274 px?</th><th>220 px?</th></tr></thead><tbody><tr><td>1280x720</td><td>3</td><td>240</td><td>no</td><td>no</td><td>yes</td></tr><tr><td>1366x768</td><td>3</td><td>256</td><td>no</td><td>no</td><td>yes</td></tr><tr><td>1600x900</td><td>3</td><td>300</td><td>no</td><td>yes</td><td>yes</td></tr><tr><td>1920x1080</td><td>4</td><td>270</td><td>no</td><td>no</td><td>yes</td></tr><tr><td>2560x1440</td><td>6</td><td>240</td><td>no</td><td>no</td><td>yes</td></tr><tr><td>3840x2160</td><td>9</td><td>240</td><td>no</td><td>no</td><td>yes</td></tr></tbody></table>
-
-<p>The guaranteed floor is exactly <strong>240 px</strong> — the scale keeps rising while the next step would still leave 240, so it is never less, and never much more than 270 either. So the window has to fit 240.</p>
-
-<p>12 rows = 328 px — fits <strong>nowhere</strong>. 9 rows = 274 px — fits only 1600x900. 7 rows = 238 px — technically inside 240, with one pixel to spare; that is not a margin. <strong>6 rows = 220 px</strong> — fits everywhere, and is exactly the height of the vanilla double chest, the tallest container window the game ships itself. The ceiling is taken from the game, not guessed.</p>
-
-<p><strong>Why the capacity was not cut.</strong> Three ways to fit 240 existed: fewer slots per module, fewer modules, or scrolling. The first breaks the block's own picture (three drawers = three rows of nine) and devalues warehouses already built; the second halves the warehouse, while 108 slots remain justified by the arguments above and have nothing to do with the screen. Scrolling removes only the excess height and nothing else — and it is what the player asked for.</p>
-
-<p><strong>What holds this in place.</strong> <code>TC-STOR-002</code> pins the numbers as literals (27 slots, 108 total, 6 rows = 220 px), <code>TC-STOR-008</code> checks that a six-row window really slides over twelve, <code>TC-STOR-009</code> that a shift-click reaches the rows out of sight, and the L3 stand opens the window at <strong>every rung of the capacity ladder</strong> (1/2/3/4 modules — the three-row window and the six-row one over 6, 9 and 12 total rows), photographs each and <strong>measures</strong> it: the panel is no taller than 240 px and sits entirely on screen, hotbar included.</p>
-
-<h2>Open questions</h2>
-
-<p><strong>The warehouse changing while the window is open.</strong> If a neighbour is placed or broken while the window is up, the container behind it changes size. Today the window stays as it was until reopened; whether to force it closed is undecided. <strong>Unloaded chunks.</strong> A module in an unloaded chunk is left out of the warehouse and its chunk is not forced — nothing is lost and nothing is duplicated. Whether to tell the player that part of the warehouse is temporarily away is undecided. The rule itself is pinned by <code>TC-STOR-011</code>, whose limits are worth knowing: a gametest cannot unload the ground it stands on, so it walks from a position a few thousand blocks away that the level genuinely reports as absent and requires the chunk to still be absent afterwards. Without the <code>isLoaded</code> guard the walk falls into <code>getBlockEntity</code>, which loads the chunk — so the test goes red exactly when the guard is removed. It does not reproduce a player breaking a module in an unloaded chunk. <strong>Shape limits.</strong> Whether to forbid a "snake" running across half the base. The only limit today is four modules.</p>
-
-<h2>Related</h2>
-
-<p><a href="gold_chest.html">Gold Chest</a> — the previous storage step <a href="../components/material_forms.html">Material Forms</a> — the plates for the recipe <a href="stock_display_frame.html">Stock Display Frame</a> — the reference for unloaded-chunk safety <a href="../machines/assembler.html">Assembler</a> — the future consumer of the warehouse <a href="../item-transport/item_pipe.html">Item Pipe</a> — fills the warehouse from outside</p>
+<p><a href="iron_chest.html">Залізна скриня</a> — простіша альтернатива без об'єднання.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="модуль зберігання alaindustrial:storage_module" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell placeholder" title="Chest" aria-label="Chest"><span>chest</span></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Модуль зберігання"><img src="../assets/item/storage_module_3d.png" alt="Модуль зберігання" width="32" height="32"></div><div class="result-name">Модуль зберігання</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="модуль зберігання alaindustrial:storage_module" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Chest"><img src="../assets/item/chest_3d.png" alt="Chest" width="32" height="32"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Модуль зберігання"><img src="../assets/item/storage_module_3d.png" alt="Модуль зберігання" width="32" height="32"></div><div class="result-name">Модуль зберігання</div></div></div></div></div>
 <h2>Використовується в</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="складальний автомат alaindustrial:assembler" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Залізна шестірня"><img src="../assets/item/iron_gear_3d.png" alt="Залізна шестірня" width="32" height="32"></div> <div class="cell" title="Crafting Table"><img src="../assets/item/crafting_table_3d.png" alt="Crafting Table" width="32" height="32"></div> <div class="cell" title="Залізна шестірня"><img src="../assets/item/iron_gear_3d.png" alt="Залізна шестірня" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Просунутий машинний корпус"><img src="../assets/item/advanced_machine_casing_3d.png" alt="Просунутий машинний корпус" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Залізна шестірня"><img src="../assets/item/iron_gear_3d.png" alt="Залізна шестірня" width="32" height="32"></div> <div class="cell" title="Модуль зберігання"><img src="../assets/item/storage_module_3d.png" alt="Модуль зберігання" width="32" height="32"></div> <div class="cell" title="Залізна шестірня"><img src="../assets/item/iron_gear_3d.png" alt="Залізна шестірня" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Складальний автомат"><img src="../assets/item/assembler_3d.png" alt="Складальний автомат" width="32" height="32"></div><div class="result-name">Складальний автомат</div></div></div></div></div>
   </main>

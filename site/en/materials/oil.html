@@ -356,21 +356,15 @@
 
 <p>Lava on its own does <strong>not</strong> ignite oil, and that is deliberate. Underground lakes often generate flush against lava lakes, and without this rule any deposit you found would burn away the moment you broke the first block next to it.</p>
 
-<p>The spread across a pool obeys the vanilla <code>fireSpreadRadiusAroundPlayer</code> game rule: with it turned off on a server, a stray fire will not run through your oil. Lighting it by hand always works.</p>
+<p>The spread across a pool obeys the vanilla game rule: with it turned off on a server, a stray fire will not run through your oil. Lighting it by hand always works.</p>
 
-<p>Flammability can be switched off entirely with the <strong><code>oilBurns</code></strong> mod setting (on by default). With it set to <code>false</code> oil is completely inert — neither fire nor flint and steel will light it, which is handy if you keep oil next to your production line.</p>
+<p>Flammability can be switched off entirely with the <strong></strong> mod setting (on by default). With it set to oil is completely inert — neither fire nor flint and steel will light it, which is handy if you keep oil next to your production line.</p>
 
 <h2>Progression</h2>
 
 <p>Oil is the start of the <strong>rubber chain</strong>: oil → raw rubber → vulcanization → rubber. The <a href="../machines/polymerizer.html">Polymerizer</a> takes 1000 mB of oil and 400 EU/FE and returns raw rubber; a <a href="../machines/vulcanizer.html">Vulcanizer</a> combines it with sulfur dust to make <a href="../components/rubber.html">rubber</a>. Rubber itself is not consumed by anything yet — its users (insulated cables and MV components) arrive with the next phase, so it is worth stockpiling what you make.</p>
 
 <p>The practical takeaway: drain a deposit you find into a tank and mark the spot — it will not come back.</p>
-
-<h2>Compatibility</h2>
-
-<p>Oil is declared under the common fluid tags <code>c:oil</code> and <code>c:crude_oil</code>, so machines from other mods that work with "oil" in general accept it with no extra setup. At the same time oil is listed among the fluids that must <strong>not</strong> become an infinite source in other mods' mechanics — the deposit stays finite whatever else is installed.</p>
-
-<p>The biome sets oil generates in (surface and underground lakes are separate) and the list of structures lakes stay out of are both driven by tags, so a modpack can retarget or disable generation without touching code.</p>
 
 <h2>Related</h2>
 

@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,41 +375,27 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p><strong>Silver</strong> is the mod's rare, deep metal, held in reserve for electronics: the material the mid-tier circuits and MV-tier components will be built from. Its ore spawns in stone and in deepslate — deeper and far rarer than tin — and is mined with any stone pickaxe or better.</p>
+<p><strong>Срібло</strong> — метал середини гри: йде на обшивку, Флюкс-нитку та електрум.</p>
 
-<blockquote><strong>Mini-example:</strong> just like tin, a furnace gives you 1 ingot per ore, while the Macerator route grinds a block of ore (or the raw) into 2 dust (2 ingots). But silver is scarce — it pays to macerate every block and raw drop you find rather than furnace it.</blockquote>
+<table><thead><tr><th>Форма</th><th>Як отримати</th></tr></thead><tbody><tr><td>Руда (камінь / глибосланець)</td><td>добути у світі; кайло дає сировину, «Шовковий дотик» — сам блок</td></tr><tr><td>Сировина</td><td>дроп з руди; плавиться на зливок</td></tr><tr><td>Пил</td><td>блок руди або сировина подрібнюються на <strong>2</strong> пили; готовий зливок — на 1</td></tr><tr><td>Зливок</td><td>переплавка сировини, руди або пилу</td></tr></tbody></table>
 
-<p>There is no vanilla silver, so the ingot is a mod item. Silver is not a "bank-it" metal: all of the mod's LV electronics and logistics are already built on it. The electronic circuit takes a silver ingot, and that circuit goes into the generator, macerator, pump and solar panel; silver also goes into the item pipe, the silver chest, the silver gear, the stock display frame, the electric furnace and the sawmill.</p>
+<p>Шлях через <a href="../machines/macerator.html">подрібнювач</a> подвоює вихід: одна жила дає два зливки замість одного.</p>
 
-<table><thead><tr><th>Form</th><th>How you get it</th></tr></thead><tbody><tr><td>Ore (stone / deepslate)</td><td>mined in the world; pickaxe drops raw, Silk Touch gives the block</td></tr><tr><td>Raw</td><td>the pickaxe drop from the ore; smelts into an ingot</td></tr><tr><td>Dust</td><td>a block of ore or the raw grinds into 2 dust; a finished ingot grinds into 1</td></tr><tr><td>Ingot</td><td>smelting the raw, the ore, or the dust</td></tr></tbody></table>
+<h2>Де шукати</h2>
 
-<h2>Where to find it</h2>
+<p>Срібло лежить глибше за олово, ближче до нижньої світу, і трапляється помітно рідше.</p>
 
-<p>Silver is rare and deep: small veins sitting lower than tin, roughly in the band where you would also hunt for gold. Expect to find it only while dedicated deep mining.</p>
+<h2>Властивості блока</h2>
 
-<h2>Block Properties</h2>
+<p>Поводиться як ванільна руда: дроп масштабується від «Удачі», а «Шовковий дотик» дає сам блок руди.</p>
 
-<p>It behaves like a vanilla ore: it needs a stone pickaxe or better, the drop scales with Fortune, and Silk Touch yields the ore block itself.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кам'яне кайло і вище</td></tr><tr><td>Дроп</td><td>сировина</td></tr></tbody></table>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>stone pickaxe or better (wood/gold drop nothing)</td></tr><tr><td>Drop</td><td>raw silver ×1 (Fortune multiplies; Silk Touch → the block)</td></tr></tbody></table>
+<h2>Пов'язане</h2>
 
-<h2>Recipes (processing)</h2>
-
-<p>Two routes out of one vein.</p>
-
-<p><strong>Furnace route (no machines):</strong> smelt the raw (or the ore) into an ingot — 1 ingot per ore. <strong>Macerator route (doubling):</strong> grind a block of ore or the raw into 2 dust, then smelt each dust into an ingot — 2 ingots per ore.</p>
-
-<p>Re-processing a finished ingot grinds back down to 1 dust (no doubling). The doubling applies to both the whole ore block and the raw — macerate either form.</p>
-
-<h2>Progression</h2>
-
-<p>Silver is a key material already at LV, not a "bank-it" metal. The electronic circuit is built on it (and through it, almost every machine and generator), as are the item pipe, the silver chest and the silver gear. The higher MV tier will later demand silver in still larger amounts, so a spare ingot is never wasted.</p>
-
-<h2>Related</h2>
-
-<p><a href="../components/electronic_circuit.html">Electronic Circuit</a> — silver's main LV consumer. <a href="../item-transport/item_pipe.html">Item Pipe</a> — silver-based logistics. <a href="../utility/silver_chest.html">Silver Chest</a> — the 45-slot storage block. <a href="tin.html">Tin</a> — the structural sample for an ore material (same processing). <a href="../machines/macerator.html">Macerator</a> — unlocks the doubled-yield route. <a href="nickel.html">Nickel</a>, <a href="uranium.html">Uranium</a> — the mod's other rare metals.</p>
+<p><a href="../machines/macerator.html">Подрібнювач</a> — подвоює вихід руди. <a href="../machines/electric_furnace.html">Електропіч</a> — плавить сировину та пил.</p>
 
 <h2>Використовується в</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="срібний злиток alaindustrial:silver_ingot" data-type="minecraft:blasting"><div class="recipe-header"><span class="recipe-type">Blasting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Срібна руда"><img src="../assets/item/silver_ore_3d.png" alt="Срібна руда" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/iron_furnace_3d.png" alt="Залізна піч" title="Залізна піч" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Срібний злиток"><img src="../assets/item/silver_ingot_3d.png" alt="Срібний злиток" width="32" height="32"></div><div class="result-name">Срібний злиток</div></div></div></div> <div class="recipe-card" data-name="срібний злиток alaindustrial:silver_ingot" data-type="minecraft:smelting"><div class="recipe-header"><span class="recipe-type">Smelting (Furnace)</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Срібна руда"><img src="../assets/item/silver_ore_3d.png" alt="Срібна руда" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/iron_furnace_3d.png" alt="Залізна піч" title="Залізна піч" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Срібний злиток"><img src="../assets/item/silver_ingot_3d.png" alt="Срібний злиток" width="32" height="32"></div><div class="result-name">Срібний злиток</div></div></div></div></div>

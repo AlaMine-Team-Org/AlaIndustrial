@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,69 +375,30 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The Galvanic Bath is an LV electroplating machine: fibre and silver dust are submerged in water, a current is passed through them, and the silver plates onto the fibre as a conductive track. The result is <strong>flux thread</strong>, the half-product of the Fluxweave material. It is the first machine in the mod to consume items <strong>and</strong> a fluid at once, and it is the entry point to the EU/FE armour line.</p>
+<p><strong>Електрованна</strong> — LV-машина гальванічного осадження: волокно й срібний пил занурюються у воду, крізь них пропускається струм, і срібло осідає на волокні провідною доріжкою. На виході — Флюкс-нитка.</p>
 
-<p>Fibre means <strong>vanilla string or cotton fibre</strong> — one recipe accepts both through the <code>#</code> tag. Choosing between a spider farm and a cotton trellis is a matter of playstyle, not progression.</p>
+<h2>Енергія</h2>
 
-<h2>Energy</h2>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/т (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/т під час роботи</td></tr></tbody></table>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer</td></tr><tr><td>Buffer (EU/FE)</td><td>800</td></tr><tr><td>Max input (EU/FE/tick)</td><td>32 (LV ceiling)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>n/a</td></tr><tr><td>EU/FE/tick</td><td>2</td></tr></tbody></table>
+<h2>Процесинг</h2>
 
-<p>Throughput: accepts up to 32 EU/FE/tick on every face except the front, which is energy-inert and draws no cable arm. Anything above the limit is simply not transferred; nothing breaks.</p>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>500 тиків (25 секунд)</td></tr><tr><td>Витрата води за операцію</td><td>4000 мБ = 4 відра</td></tr><tr><td>Ємність бака</td><td>10 000 мБ (10 відер)</td></tr></tbody></table>
 
-<h2>Processing</h2>
+<p>Вода не входить у рецепт як інгредієнт: її обсяг — фіксована вартість, яку машина перевіряє й списує сама. Бак односторонній: воду можна влити, але не викачати.</p>
 
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Recipe type</td><td></td></tr><tr><td>Duration (ticks)</td><td>500, i.e. 25 s (<code>galvanicBathDuration</code>)</td></tr><tr><td>Water per operation</td><td>4000 mB, i.e. 4 buckets (<code>galvanicBathWaterPerOp</code>)</td></tr><tr><td>Tank capacity</td><td>10,000 mB (10 buckets)</td></tr><tr><td>Auto-eject</td><td>false</td></tr></tbody></table>
+<h2>Властивості блока</h2>
 
-<p><strong>The water is not part of the recipe JSON.</strong> No recipe family in the mod takes items and a fluid at the same time, so the water volume is a fixed config cost the machine checks and debits itself. A datapack can override the fibre, the silver and the energy cost, but not the water volume.</p>
+<p>Звичайний суцільний блок, ламається будь-якою кайлом.</p>
 
-<p>The tank is <strong>one-way</strong>: water can be poured in but never pulled out. What enters is feedstock, not storage, so a neighbouring pump cannot siphon it back.</p>
+<h2>Рецепти</h2>
 
-<h2>Inventory</h2>
-
-<table><thead><tr><th>Slot</th><th>Accepts</th><th>Amount</th></tr></thead><tbody><tr><td>Fibre</td><td><code>#</code> (string, cotton fibre)</td><td>1 per operation</td></tr><tr><td>Silver</td><td></td><td>1 per operation</td></tr><tr><td>Fill (in)</td><td>any fluid container: bucket, vacuum capsule, another mod's cell</td><td>—</td></tr><tr><td>Fill (out)</td><td>the emptied container, filled by the machine</td><td>—</td></tr><tr><td>Result</td><td>, machine-filled only</td><td>up to 64</td></tr></tbody></table>
-
-<p>Automation may feed both input slots and the fill slot, and may pull from the result slot and the emptied-container slot.</p>
-
-<h2>Interface</h2>
-
-<p>Type: container Shows: the water level in the tank (with fluid name and millibuckets on hover), the energy buffer and the progress arrow. <strong>The reason it is idle</strong> appears as a tooltip on the arrow: needs fibre, needs silver dust, needs water, no matching recipe, output blocked. Water gets its own line because it is not part of the recipe — without it, an empty tank would read to the player as "no matching recipe".</p>
-
-<h2>Block Properties</h2>
-
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Hardness</td><td>3.0</td></tr><tr><td>Blast resistance</td><td>6.0</td></tr><tr><td>Tool</td><td>pickaxe</td></tr><tr><td>Drops energy NBT</td><td>false</td></tr></tbody></table>
-
-<h2>Recipes</h2>
-
-<p>Crafting — a machine casing, two copper coils, two electronic circuits and two silver plates.</p>
-
-<h2>Progression</h2>
-
-<p>Tier: LV Requires: machine casing, copper coil, electronic circuit, silver plates. Unlocks: flux thread, then Fluxweave cloth, then the Fluxweave LV armour set.</p>
-
-<h2>Compatibility</h2>
-
-<p>Recipe viewers: JEI, REI, EMI Tooltips: Jade, The One Probe</p>
-
-<h2>Balance</h2>
-
-<p>1000 EU/FE per flux thread (500 ticks, 25 seconds, at 2 EU/FE/t) makes this both the <strong>most expensive and the slowest operation of the LV family</strong>, twice the polymerizer and the vulcanizer at 400 EU/FE each. That is deliberate: plating silver is the gate into the Fluxweave line and, beyond it, the mod's first full EU/FE armour, so the gate costs more than intermediate steps such as grinding ore.</p>
-
-<p>4000 mB of water per operation is <strong>four buckets per thread</strong>, so a full ten-bucket tank yields only two. Water is infinitely renewable in Minecraft, so this is not a resource limit but an infrastructure requirement — deliberately a greedy one: hauling four buckets per thread gets old fast, which is what pushes the player to pipe it in from a pump.</p>
-
-
-<h2>Open Questions</h2>
-
-<p>Whether to add plating recipes for other metals such as copper or gold. The name would stay accurate and the line would gain breadth.</p>
-
-<h2>Related</h2>
-
-<p>Polymerizer — the reference for a machine with a tank Vulcanizer — the reference for a machine with two item inputs Trellis — the source of cotton fibre</p>
+<p>Збирається на верстаку з корпусу машини, мідної котушки та електронної схеми.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="електрованна alaindustrial:galvanic_bath" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електрованна"><img src="../assets/item/galvanic_bath_3d.png" alt="Електрованна" width="32" height="32"></div><div class="result-name">Електрованна</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="електрованна alaindustrial:galvanic_bath" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електрованна"><img src="../assets/item/galvanic_bath_3d.png" alt="Електрованна" width="32" height="32"></div><div class="result-name">Електрованна</div></div></div></div></div>
   </main>
 </div>
 

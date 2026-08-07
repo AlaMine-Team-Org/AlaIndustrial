@@ -323,11 +323,11 @@
 
 <blockquote><strong>Мини-пример:</strong> создайте мир с «Bonus Chest: ON». В сундуке у спавна, помимо ванильных брёвен и яблок, может оказаться парочка enriched_uranium_torch'ей, иногда — деревянная коса, а с везением — батарейка или tempered_iron-топор.</blockquote>
 
-<table><thead><tr><th>Параметр</th><th>Значение</th></tr></thead><tbody><tr><td>Тип</td><td>модификация ванильной loot-таблицы (add pool)</td></tr><tr><td>Цель</td><td><code>minecraft:chests/spawn_bonus_chest</code></td></tr><tr><td>Ванильные пулы</td><td>сохраняются</td></tr><tr><td>Подход</td><td>add-инъекция: общая JSON-суб-таблица + Fabric <code>LootTableEvents.MODIFY</code> v3 (reference) / NeoForge GLM <code>add_table</code></td></tr><tr><td>Тир</td><td>n/a (контент смешанных тиров)</td></tr></tbody></table>
+<table><thead><tr><th>Параметр</th><th>Значение</th></tr></thead><tbody><tr><td>Тип</td><td>модификация ванильной loot-таблицы (add pool)</td></tr><tr><td>Цель</td><td><code>minecraft:chests/spawn_bonus_chest</code></td></tr><tr><td>Ванильные пулы</td><td>сохраняются</td></tr><tr><td>Подход</td><td>добавление в ванильный бонус-сундук, без замены его содержимого</td></tr><tr><td>Тир</td><td>n/a (контент смешанных тиров)</td></tr></tbody></table>
 
 <h2>Энергия</h2>
 
-<p>Не применимо — это не блок и не машина. EU/FE здесь не участвует; лишь некоторые предметы в пулах сами по себе являются EU/FE-предметами (<code>battery</code>, <code>battery_pouch</code>) и попадают в сундук <strong>без начального заряда</strong> (как из крафта).</p>
+<p>Не применимо — это не блок и не машина. EU/FE здесь не участвует; лишь некоторые предметы в пулах сами по себе являются EU/FE-предметами и попадают в сундук <strong>без начального заряда</strong> (как из крафта).</p>
 
 <h2>Процессинг</h2>
 
@@ -354,10 +354,6 @@
 <h2>Прогрессия</h2>
 
 <p>Это стартовая фича — даёт игроку первый контакт с инструментами мода до какой-либо прогрессии. Редкие tempered_iron-инструменты — <strong>намеренно малый шанс</strong>, чтобы не обесценить крафт.</p>
-
-<h2>Совместимость</h2>
-
-<p><strong>Multiloader.</strong> Fabric использует <code>LootTableEvents.MODIFY</code> (<code>net.fabricmc.fabric.api.loot.v3</code> — <strong>v3</strong>, не v2), NeoForge — <strong>Global Loot Modifier</strong> <code>neoforge:add_table</code> (событие <code>ModifyLootTableEvent</code> в NeoForge 26.2 удалено). Общий код — не Java-билдер пулов, а <strong>одна ссылаются оба загрузчика (Fabric через <code>NestedLootTable</code>-reference, NeoForge через <code>add_table</code>). </strong>Совместимость с другими модами.<strong> Подход «add pool» (не «replace») гарантирует, что другие моды, модифицирующие тот же бонусный сундук, продолжат работать — мы не перезаписываем их пулы. </strong>JEI/REI/EMI:<strong> нет своей категории — лут просмотру через recipe-viewer не подлежит. </strong>Сиды:** детерминированность сохраняется (на одном seed один и тот же лут; <code>LootPool</code> rolls использует рандом мира).</p>
 
 <h2>Связанное</h2>
 

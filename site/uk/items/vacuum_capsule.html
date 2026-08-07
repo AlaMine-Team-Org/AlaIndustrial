@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,46 +375,18 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Vacuum Capsule</strong> is a stackable fluid container. It solves the vanilla-bucket problem: buckets don't stack, so each one eats a whole slot, and carrying any real volume of fluid becomes awkward.</p>
+<p><strong>Вакуумна капсула</strong> — тара для рідин, зручніша за відро: не займає стільки місця й акуратно віддає вміст машинам.</p>
 
-<p>The capsule comes in two forms. <strong>Empty</strong>, it is an ordinary item that stacks to 64. <strong>Filled</strong>, it holds exactly <strong>1 bucket (1000 mB)</strong> of one fluid, and filled capsules of the same fluid stack <strong>up to 16</strong> in a single slot — so one stack is up to 16 buckets. Different fluids never merge into one stack: a stack of water capsules and a stack of lava capsules sit apart.</p>
+<p>Лава-капсула, наприклад, заливається просто в <a href="../generators/geothermal_generator.html">Геотермальний генератор</a>.</p>
 
-<p>You fill a capsule from a fluid source in the world (like a bucket) or from a machine's tank — and empty it back with the same click.</p>
+<h2>Пов'язане</h2>
 
-<blockquote><strong>Mini-example:</strong> building a lava power setup far from your pump? Stack 16 empty capsules, fill them all at the pump's tank in a few clicks, and carry 16 buckets of lava home in a single inventory slot — the kind of trip that would take 16 slots with plain buckets.</blockquote>
-
-<h2>Contents</h2>
-
-<p>A filled capsule holds exactly one fluid — the same volume as a bucket. How they stack:</p>
-
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Volume per capsule</td><td>1 bucket (1000 mB)</td></tr><tr><td>Stack size, empty</td><td>64</td></tr><tr><td>Stack size, filled</td><td>16, of one fluid only</td></tr><tr><td>Different fluids</td><td>never merge — each fluid keeps its own stack</td></tr></tbody></table>
-
-<p>Two capsules of the same fluid are always equal and stack together, and the contents survive a drop, death, or transfer.</p>
-
-<h2>How it behaves</h2>
-
-<p><strong>Fill from the world:</strong> right-click a fluid source with an empty capsule (water, lava, another mod's fluid). The capsule takes the source and becomes filled, just like a vanilla bucket. <strong>Fill from a tank:</strong> right-click the face of a tank block — the mod's pump or geothermal generator, or any fluid port, including other mods' machines — to pull exactly 1 bucket into the capsule. No partial fills: a whole bucket, or nothing. <strong>Empty into the world:</strong> right-click with a filled capsule to place the fluid (some exotic fluids with no block form can only go into tanks, not into the world). Water evaporates in the Nether, just like from a bucket. <strong>Empty into a tank:</strong> right-click a tank face with a filled capsule to pour its bucket in; if the tank accepts a whole bucket, the capsule comes back empty. <strong>The swap:</strong> filling or emptying swaps the empty capsule for a filled one and back. In creative the source stack is not consumed, like a vanilla bucket. <strong>Name:</strong> a filled capsule has a dynamic name — "Capsule: &lt;fluid&gt;" — and the tooltip reads "1000 mB (1 bucket)". <strong>Pipes and tanks:</strong> the capsule plays nicely with other mods — their pipes and tanks can fill and drain it right in a slot.</p>
-
-<h2>Block Properties</h2>
-
-<p>Not applicable (item).</p>
-
-<h2>Recipes</h2>
-
-<p>Crafted at a workbench: a tin body and clasps, two glass-pane windows, and a copper cable with redstone at the base. The recipe shows up in your recipe book once you have all the parts, and it yields one empty capsule.</p>
-
-<h2>Progression</h2>
-
-<p>Available early: tin is a Phase 1 metal, the copper cable arrives with the energy network, and redstone and glass are vanilla. The capsule needs no tempered iron or electronic circuit, so it comes before the <a href="battery_pouch.html">Battery Pouch</a>. It pairs with the mod's fluid machines — the <a href="../fluid-machines/pump.html">pump</a> and the geothermal generator — as a portable, stackable 16-charge bucket.</p>
-
-<h2>Related</h2>
-
-<p><a href="../fluid-machines/pump.html">Pump</a> — pumps fluid into its tank; the capsule fills from it and pours back. <a href="../energy-transfer/copper_cable.html">Copper Cable</a> — a crafting component. <a href="../materials/tin.html">Tin</a> — the body and clasps in the crafting. <a href="battery_pouch.html">Battery Pouch</a> — the mod's other stackable carrying item.</p>
+<p><a href="../generators/geothermal_generator.html">Геотермальний генератор</a> — головний споживач лави.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="вакуумна капсула alaindustrial:vacuum_capsule" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Вакуумна капсула"><img src="../assets/item/vacuum_capsule_3d.png" alt="Вакуумна капсула" width="32" height="32"></div><div class="result-name">Вакуумна капсула</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="вакуумна капсула alaindustrial:vacuum_capsule" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Вакуумна капсула"><img src="../assets/item/vacuum_capsule_3d.png" alt="Вакуумна капсула" width="32" height="32"></div><div class="result-name">Вакуумна капсула</div></div></div></div></div>
   </main>
 </div>
 

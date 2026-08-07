@@ -332,7 +332,9 @@
 
 <p>Charging storage blocks, teleporter jumps and <strong>pumping fluid</strong> earn no mastery whatsoever. A pump runs unattended and an oil vein holds thousands of buckets: at one point per bucket a single AFK session would skip one or two ranks, so raw extraction does not count as "useful work" — processing what you pumped does.</p>
 
-<table><thead><tr><th>Parameter</th><th>Value</th><th>Config</th></tr></thead><tbody><tr><td>EU/FE→mastery rate (machines)</td><td>1,000 EU/FE of work = 1 mastery point</td><td><code>euPerXp</code></td></tr><tr><td>EU/FE→mastery rate (generators)</td><td>20,000 EU/FE produced = 1 point</td><td><code>euPerXpGenerated</code></td></tr><tr><td>Level curve</td><td>exponential, x1.18 per level</td><td><code>levelXpMultiplier</code>, <code>xpLevelOneCost</code></td></tr><tr><td>Levels</td><td>40 (8 ranks x 5 sub-levels)</td><td>—</td></tr><tr><td>Sub-level</td><td>Roman numerals (I...V)</td><td>—</td></tr><tr><td>Level-up notice</td><td>sound only</td><td>—</td></tr></tbody></table>
+<p><strong>"Earns no mastery" is not "goes uncounted".</strong> The <strong>Consumed</strong> counter answers "where did my energy go", not "what earned me points", so it is wider than the progression: it covers machine work <strong>and the price of teleport jumps</strong>. A player living on the teleporter used to see a flat zero there next to a healthy Produced figure — the station drains its buffer directly, bypassing the machine cycle, and that spending never reached the profile. A jump is booked to <strong>whoever jumped</strong> (not to the station's owner, so a hop onto someone else's public station still shows up in your own profile), once, and only on success: an aborted warmup or a refusal for lack of power books nothing.</p>
+
+<table><thead><tr><th>Parameter</th><th>Value</th><th>Config</th></tr></thead><tbody><tr><td>EU/FE→mastery rate (machines)</td><td>1,000 EU/FE of work = 1 mastery point</td><td></td></tr><tr><td>EU/FE→mastery rate (generators)</td><td>20,000 EU/FE produced = 1 point</td><td></td></tr><tr><td>Level curve</td><td>exponential, x1.18 per level</td><td>,</td></tr><tr><td>Levels</td><td>40 (8 ranks x 5 sub-levels)</td><td>—</td></tr><tr><td>Sub-level</td><td>Roman numerals (I...V)</td><td>—</td></tr><tr><td>Level-up notice</td><td>sound only</td><td>—</td></tr></tbody></table>
 
 <p>Mastery is a <strong>derived</strong> value: it is computed from the two career EU/FE counters rather than stored on its own, so retuning the rates in the config can never eat mastery you already earned. A rank you have reached is never taken away by a balance change — the highest level reached is remembered.</p>
 
@@ -362,7 +364,7 @@
 
 <h2>Beyond the first version</h2>
 
-<p>A quest system, milestone buffs (when they arrive — on machines and the grid only, never on the player), a shareable server profile card, and wider statistics categories (crafting, mining by ore, teleportation) are separate future tasks.</p>
+<p>A quest system, milestone buffs (when they arrive — on machines and the grid only, never on the player), a shareable server profile card, and wider statistics categories (crafting, mining by ore, a per-purpose breakdown of spending) are separate future tasks. Teleportation has since left that list: jumps count toward Consumed, they just have no row of their own on the screen.</p>
 
 
   </main>

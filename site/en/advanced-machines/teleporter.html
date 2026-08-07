@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -458,16 +457,12 @@
 
 <p>Machines always come first: while anything is working on the same network, the station charges only from the remainder.</p>
 
-<h2>Compatibility</h2>
-
-<p>Recipe viewers (JEI/REI/EMI): both the station and the remote. Tooltips (Jade/The One Probe): owner, private/public mode, stored EU/FE.</p>
-
 <h2>Related</h2>
 
 <p><a href="../energy-storage/battery_box.html">Battery box</a> — what charges the station. <a href="../components/index.html">Electronic circuit</a> — a crafting component. <a href="../fluid-machines/pump.html">Pump</a> — for comparison on EU/FE appetite.</p>
 
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="teleporter alaindustrial:teleporter" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Ender Eye"><img src="../assets/item/ender_eye_3d.png" alt="Ender Eye" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Diamond Block"><img src="../assets/item/diamond_block_3d.png" alt="Diamond Block" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Any Uranium Ingot"><img src="../assets/item/uranium_ingot_3d.png" alt="Any Uranium Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Uranium Ingot"><img src="../assets/item/uranium_ingot_3d.png" alt="Any Uranium Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Uranium Ingot"><img src="../assets/item/uranium_ingot_3d.png" alt="Any Uranium Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Teleporter"><img src="../assets/item/teleporter_3d.png" alt="Teleporter" width="32" height="32"></div><div class="result-name">Teleporter</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="teleporter alaindustrial:teleporter" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Ender Eye"><img src="../assets/item/ender_eye_3d.png" alt="Ender Eye" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Diamond Block"><img src="../assets/item/diamond_block_3d.png" alt="Diamond Block" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Any Uranium Ingot"><img src="../assets/item/uranium_ingot_3d.png" alt="Any Uranium Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Uranium Ingot"><img src="../assets/item/uranium_ingot_3d.png" alt="Any Uranium Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Uranium Ingot"><img src="../assets/item/uranium_ingot_3d.png" alt="Any Uranium Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Teleporter"><img src="../assets/item/teleporter_3d.png" alt="Teleporter" width="32" height="32"></div><div class="result-name">Teleporter</div></div></div></div></div>
   </main>
 </div>
 

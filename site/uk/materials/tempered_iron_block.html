@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,37 +375,17 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p>The <strong>Tempered Iron Block</strong> is a storage block: 9 tempered-iron ingots compressed into a single full block. It exists to save chest space — instead of 9 stacks of ingots, you keep one stack of blocks.</p>
+<p><strong>Блок загартованого заліза</strong> — компактне зберігання: дев'ять зливків <a href="../components/tempered_iron.html">загартованого заліза</a> в одному блоці. Розбирається назад без втрат.</p>
 
-<blockquote><strong>Mini-example:</strong> short on chest room? Craft a stack of ingots into blocks, and when you need the ingots back, uncraft the block — the cycle is strictly lossless, just like the vanilla iron or gold block.</blockquote>
+<h2>Властивості блока</h2>
 
-<p>On its own it produces no energy and does nothing — it is simply a compact form of the metal and a decorative building block.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>будь-яке кайло</td></tr><tr><td>Дроп</td><td>сам себе</td></tr></tbody></table>
 
-<table><thead><tr><th>Form</th><th>How you get it</th></tr></thead><tbody><tr><td>Block (full cube)</td><td>crafting 9 ingots → 1 block; uncrafting 1 block → 9 ingots</td></tr></tbody></table>
+<h2>Пов'язане</h2>
 
-<h2>Block Properties</h2>
-
-<p>An ordinary solid block with the same feel as the vanilla iron block. Any pickaxe breaks it.</p>
-
-<table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Tool</td><td>any pickaxe</td></tr><tr><td>Drop</td><td>itself (the block drops itself)</td></tr></tbody></table>
-
-<h2>Recipes (processing)</h2>
-
-<p>No processing recipes — just two workbench recipes that move metal in and out of the block form. The cycle is strictly reversible and lossless.</p>
-
-<p><strong>9 ingots → 1 block</strong> (workbench, 3×3 grid of ingots). <strong>1 block → 9 ingots</strong> (workbench, shapeless — put the block in to get the 9 ingots back).</p>
-
-<p>The source ingot is <a href="../components/tempered_iron.html">tempered iron</a>.</p>
-
-<h2>Progression</h2>
-
-<p>For now the block is a compact storage form and a decorative building block. Future uses (beacon compatibility, an MV casing from a tempered block, and so on) are planned but not yet in the game.</p>
-
-<h2>Related</h2>
-
-<p><a href="../components/tempered_iron.html">Tempered Iron</a> — the ingot the block is assembled from. <a href="../items/tempered_iron_tools.html">Tempered Iron tools</a> — the main consumer of the ingots. <a href="tin.html">Tin</a>, <a href="silver.html">Silver</a>, <a href="nickel.html">Nickel</a>, <a href="uranium.html">Uranium</a> — the mod's other materials.</p>
+<p><a href="../components/tempered_iron.html">Загартоване залізо</a> — зі зливків складається блок.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="блок загартованого заліза alaindustrial:tempered_iron_block" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Блок загартованого заліза"><img src="../assets/item/tempered_iron_block_3d.png" alt="Блок загартованого заліза" width="32" height="32"></div><div class="result-name">Блок загартованого заліза</div></div></div></div></div>

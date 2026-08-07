@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -400,7 +399,7 @@
 
 <table><thead><tr><th>Height (sea level 63)</th><th>Clear</th><th>Rain</th><th>Thunder</th></tr></thead><tbody><tr><td>Y 63 and below</td><td>0.0</td><td>0.0</td><td>0.0</td></tr><tr><td>Y 85</td><td>12.6</td><td>18.9</td><td>25.3</td></tr><tr><td>Y 100</td><td>18.6</td><td>28.0</td><td>37.3</td></tr><tr><td>Y 127</td><td>28.1</td><td>42.2</td><td>56.3</td></tr><tr><td>Y 160</td><td>39.7</td><td>59.6</td><td>79.5</td></tr><tr><td>Y 175</td><td>49.3</td><td>73.9</td><td>98.6</td></tr><tr><td>Y 185</td><td>56.8</td><td>85.2</td><td>113.5</td></tr><tr><td><strong>Y 192 (clouds)</strong></td><td>62.5</td><td>93.8</td><td>125.0</td></tr><tr><td>Y 198</td><td>47.1</td><td>70.7</td><td>94.2</td></tr><tr><td>Y 210</td><td>32.8</td><td>49.1</td><td>65.5</td></tr><tr><td>Y 230</td><td>15.9</td><td>23.9</td><td>31.9</td></tr><tr><td>Y 248 and above</td><td>3.8</td><td>5.6</td><td>7.5</td></tr></tbody></table>
 
-<p>Weather multiplies the speed: clear ×1, rain ×1.5, thunder ×2. The values come from the same <code>Config</code> fields that drive the mills (<code>windCloudY</code>, <code>windDeadY</code>, <code>windRidgeFactor</code>, <code>windTraceFactor</code>, <code>windGaugePeakKmh</code>,,), so the reading cannot drift away from the generation.</p>
+<p>Weather multiplies the speed: clear ×1, rain ×1.5, thunder ×2. The values come from the same <code>Config</code> fields that drive the mills, so the reading cannot drift away from the generation.</p>
 
 <h2>The altitude profile</h2>
 
@@ -427,7 +426,7 @@
 
 <p>The Sky Mill's ridge is <strong>the same</strong> as T1's: 8 steps of 8 blocks is the same +64 as 4 steps of 16. Those two branches differ by their cloud-deck base (8 against 4) and their weather factors, not by altitude. Only the Tempest Mill has a ridge of its own (+96), which stretches its climb — but the peak and the death of the wind are shared.</p>
 
-<p>One caveat if the config is edited: the scale stays continuous only while the per-block step exceeds 0.1 km/h. A heavily stretched profile, or a small <code>windGaugePeakKmh</code>, will make adjacent heights read the same.</p>
+<p>One caveat if the config is edited: the scale stays continuous only while the per-block step exceeds 0.1 km/h. A heavily stretched profile, or a small, will make adjacent heights read the same.</p>
 
 <h2>Recipe</h2>
 
@@ -438,7 +437,7 @@
 <p><a href="../generators/wind_mill.html">Wind Mill</a> — the T1 branch the gauge is scaled to. <a href="../generators/high_altitude_wind_mill.html">Sky Mill</a> — T2, same ridge, double the base. <a href="../generators/storm_wind_mill.html">Tempest Mill</a> — T2, a higher ridge.</p>
 
 <h2>Crafting</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="wind gauge alaindustrial:wind_gauge" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Stick"><img src="../assets/item/stick_3d.png" alt="Stick" width="32" height="32"></div> <div class="cell" title="Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Glass Pane" width="32" height="32"></div> <div class="cell" title="Stick"><img src="../assets/item/stick_3d.png" alt="Stick" width="32" height="32"></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Wooden Gear"><img src="../assets/item/wooden_gear_3d.png" alt="Wooden Gear" width="32" height="32"></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell" title="Wooden Gear"><img src="../assets/item/wooden_gear_3d.png" alt="Wooden Gear" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Wind Gauge"><img src="../assets/item/wind_gauge_3d.png" alt="Wind Gauge" width="32" height="32"></div><div class="result-name">Wind Gauge</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="wind gauge alaindustrial:wind_gauge" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Stick"><img src="../assets/item/stick_3d.png" alt="Stick" width="32" height="32"></div> <div class="cell" title="Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Glass Pane" width="32" height="32"></div> <div class="cell" title="Stick"><img src="../assets/item/stick_3d.png" alt="Stick" width="32" height="32"></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Wooden Gear"><img src="../assets/item/wooden_gear_3d.png" alt="Wooden Gear" width="32" height="32"></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="Wooden Gear"><img src="../assets/item/wooden_gear_3d.png" alt="Wooden Gear" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Wind Gauge"><img src="../assets/item/wind_gauge_3d.png" alt="Wind Gauge" width="32" height="32"></div><div class="result-name">Wind Gauge</div></div></div></div></div>
   </main>
 </div>
 

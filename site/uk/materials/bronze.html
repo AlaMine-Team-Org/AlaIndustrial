@@ -42,9 +42,8 @@
   .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
     border:1px solid var(--line2); font-size:13px; padding:0 3px;
     color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
-  .cell .tag-mark { position:absolute; top:-5px; right:-5px; background:var(--aqua);
-    color:#0b0e14; font-family:'Press Start 2P',monospace; font-size:6px;
-    padding:1px 2px; line-height:1; border-radius:0; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
   .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
     font-family:'VT323',monospace; line-height:1.05; }
   .ricon-ph { font-size:16px; color:var(--muted2); }
@@ -376,34 +375,18 @@
     </div>
   </div>
 </div>
-<h2>Summary</h2>
+<h2>Зведення</h2>
 
-<p><strong>Bronze</strong> is the cheapest and the most mass-produced of the mod's four alloys. The <a href="../machines/alloy_smelter.html">Alloy Smelter</a> melts it out of copper and tin — two metals you have usually piled up well before the smelter itself is built.</p>
+<p><strong>Бронза</strong> — сплав, який виплавляє <a href="../machines/alloy_smelter.html">Сплавна піч</a>: <strong>три мідні зливки й один олов'яний</strong> дають <strong>два</strong> зливки бронзи.</p>
 
-<blockquote><strong>Mini-example:</strong> put three copper ingots in any input slot of the smelter and one tin ingot in any other. Seven and a half seconds later the output holds two bronze ingots. Slot order does not matter.</blockquote>
+<p>Піч дивиться на набір завантажених зливків цілком, тому порядок слотів не має значення. Одна операція триває 150 тиків (7,5 секунди) і коштує 1200 EU/FE.</p>
 
-<p>Bronze is the only alloy the smelter returns two ingots at a time, which is why it costs half the energy per ingot the other three do. There is no bronze ore: the alloy comes out of the smelter and nowhere else, and a vanilla furnace will not make it.</p>
+<h2>Пов'язане</h2>
 
-<table><thead><tr><th>Form</th><th>How you get it</th></tr></thead><tbody><tr><td>Ingot</td><td>alloying 3 copper + 1 tin ingot in the Alloy Smelter → 2 ingots</td></tr></tbody></table>
-
-<h2>Recipe (alloying)</h2>
-
-<p>The only route is the <a href="../machines/alloy_smelter.html">Alloy Smelter</a>.</p>
-
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Load</td><td>3 copper ingots + 1 tin ingot</td></tr><tr><td>You get</td><td>2 bronze ingots</td></tr><tr><td>Cost per operation</td><td>1200 EU/FE</td></tr><tr><td>Duration</td><td>150 ticks (~7.5 s)</td></tr><tr><td>EU/FE per ingot</td><td>600</td></tr></tbody></table>
-
-<p>Four ingots in, two out: melting costs metal, and that holds for every alloy in the mod. Copper and tin are accepted through the conventional tags <code>c:ingots/copper</code> and <code>c:ingots/tin</code>, so copper from another mod is taken just like the mod's own.</p>
-
-<h2>Progression</h2>
-
-<p><strong>Bronze has no use yet.</strong> The alloy is already smelted, stacks in your inventory and keeps, but no recipe in the mod consumes it so far: items made of alloys — plates, tools, components — are coming in a separate piece of work. Stockpiling it early is still worth it: per ingot it is the cheapest of the four and the easiest to put into steady production.</p>
-
-<h2>Related</h2>
-
-<p><a href="../machines/alloy_smelter.html">Alloy Smelter</a> — the only source of bronze. <a href="tin.html">Tin</a> — the second metal in the recipe; the copper is vanilla. <a href="invar.html">Invar</a>, <a href="cupronickel.html">Cupronickel</a>, <a href="electrum.html">Electrum</a> — the other three alloys from the same smelter.</p>
+<p><a href="../machines/alloy_smelter.html">Сплавна піч</a> — єдиний спосіб отримати сплав. <a href="tin.html">Олово</a> · <a href="https://minecraft.wiki">Мідь</a> — складники.</p>
 
 <h2>Крафт</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="бронзовий злиток alaindustrial:bronze_ingot" data-type="alaindustrial:alloying"><div class="recipe-header"><span class="recipe-type">alaindustrial:alloying</span><span class="recipe-energy">Енергія: 1200 EU/FE</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true">tag</span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-results"><div class="recipe-result"><div class="cell result" title="Бронзовий злиток"><img src="../assets/item/bronze_ingot_3d.png" alt="Бронзовий злиток" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Бронзовий злиток</div></div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="бронзовий злиток alaindustrial:bronze_ingot" data-type="alaindustrial:alloying"><div class="recipe-header"><span class="recipe-type">alaindustrial:alloying</span><span class="recipe-energy">Енергія: 1200 EU/FE</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-results"><div class="recipe-result"><div class="cell result" title="Бронзовий злиток"><img src="../assets/item/bronze_ingot_3d.png" alt="Бронзовий злиток" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Бронзовий злиток</div></div></div></div></div></div>
   </main>
 </div>
 
