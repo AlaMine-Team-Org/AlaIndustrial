@@ -3,6 +3,7 @@ package dev.alaindustrial.registry;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
+import dev.alaindustrial.block.entity.CesuBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
@@ -71,6 +72,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<FluidPipeBlockEntity> FLUID_PIPE;
 	public static BlockEntityType<MaceratorBlockEntity> MACERATOR;
 	public static BlockEntityType<BatteryBoxBlockEntity> BATTERY_BOX;
+	public static BlockEntityType<CesuBlockEntity> CESU;
 	public static BlockEntityType<TeleporterBlockEntity> TELEPORTER;
 	public static BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE;
 	// Iron furnace is fuel-burning, not an EnergyPort — so no Team Reborn EnergyStorage.SIDED line below.
@@ -112,6 +114,7 @@ public final class ModBlockEntities {
 		FLUID_PIPE = register(ContentManifest.blockEntity("fluid_pipe", FluidPipeBlockEntity.class));
 		MACERATOR = register(ContentManifest.blockEntity("macerator", MaceratorBlockEntity.class));
 		BATTERY_BOX = register(ContentManifest.blockEntity("battery_box", BatteryBoxBlockEntity.class));
+		CESU = register(ContentManifest.blockEntity("cesu", CesuBlockEntity.class));
 		TELEPORTER = register(ContentManifest.blockEntity("teleporter", TeleporterBlockEntity.class));
 		ELECTRIC_FURNACE = register(ContentManifest.blockEntity("electric_furnace", ElectricFurnaceBlockEntity.class));
 		IRON_FURNACE = register(ContentManifest.blockEntity("iron_furnace", IronFurnaceBlockEntity.class));
@@ -154,6 +157,7 @@ public final class ModBlockEntities {
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),COPPER_CABLE);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),MACERATOR);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),BATTERY_BOX);
+			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),CESU);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),TELEPORTER);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ELECTRIC_FURNACE);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),EXTRACTOR);
@@ -187,6 +191,7 @@ public final class ModBlockEntities {
 		ModContent.FLUID_PIPE_BE = () -> FLUID_PIPE;
 		ModContent.MACERATOR_BE = () -> MACERATOR;
 		ModContent.BATTERY_BOX_BE = () -> BATTERY_BOX;
+		ModContent.CESU_BE = () -> CESU;
 		ModContent.TELEPORTER_BE = () -> TELEPORTER;
 		ModContent.ELECTRIC_FURNACE_BE = () -> ELECTRIC_FURNACE;
 		ModContent.IRON_FURNACE_BE = () -> IRON_FURNACE;

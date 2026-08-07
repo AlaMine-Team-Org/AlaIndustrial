@@ -213,6 +213,8 @@ public final class CreativeTabContent {
 
 	private static void storageAndCables(Sink out) {
 		out.accept(ModContent.BATTERY_BOX_ITEM.get());
+		// Reinforced Energy Storage (MOD-351) — the MV step, directly after the LV box it is built from.
+		out.accept(ModContent.CESU_ITEM.get());
 		// The Charging Station (MOD-274) banks EU exactly like the box above and exists to spend it on
 		// the player, so it belongs next to storage rather than among the processing machines.
 		out.accept(ModContent.CHARGE_PAD_ITEM.get());

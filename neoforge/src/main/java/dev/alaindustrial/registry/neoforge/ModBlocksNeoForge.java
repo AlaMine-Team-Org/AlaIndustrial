@@ -3,6 +3,7 @@ package dev.alaindustrial.registry.neoforge;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.AssemblerBlock;
 import dev.alaindustrial.block.BatteryBoxBlock;
+import dev.alaindustrial.block.CesuBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.ChargePadBlock;
@@ -82,6 +83,8 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("macerator", MaceratorBlock::new, props("macerator"));
 	public static final DeferredBlock<BatteryBoxBlock> BATTERY_BOX =
 			BLOCKS.registerBlock("battery_box", BatteryBoxBlock::new, props("battery_box"));
+	public static final DeferredBlock<CesuBlock> CESU =
+			BLOCKS.registerBlock("cesu", CesuBlock::new, props("cesu"));
 
 	// Teleporter station (MOD-091); visible since MOD-093.
 	public static final DeferredBlock<TeleporterBlock> TELEPORTER =
@@ -263,6 +266,7 @@ public final class ModBlocksNeoForge {
 		ModContent.DAYLIGHT_SOLAR_PANEL = DAYLIGHT_SOLAR_PANEL::get;
 		ModContent.MACERATOR = MACERATOR::get;
 		ModContent.BATTERY_BOX = BATTERY_BOX::get;
+		ModContent.CESU = CESU::get;
 		ModContent.TELEPORTER = TELEPORTER::get;
 		ModContent.ELECTRIC_FURNACE = ELECTRIC_FURNACE::get;
 		ModContent.IRON_FURNACE = IRON_FURNACE::get;

@@ -194,6 +194,29 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		return false;
 	}
 
+	/**
+	 * EU/tick this block may draw from a <b>store</b> over cable when nothing else on the segment is
+	 * asking for power (MOD-353). Default 0 — the channel is opt-in, so no existing block changes.
+	 *
+	 * <p>This is the third and last of a trio that is easy to confuse, so state all three together:
+	 * <ul>
+	 *   <li>{@link #isEnergyStorageSink()} — "serve me after the working machines". It says nothing about
+	 *       where the energy may come from.</li>
+	 *   <li>{@link #acceptsCascade()} — "another store may equalise into me by fill fraction".
+	 *       Proportional, and therefore refused to anything with a buffer far larger than a Battery
+	 *       Box (MOD-314 R3).</li>
+	 *   <li>{@code storageFeedRate()} — "a store may trickle into me at this flat rate, and only from
+	 *       what it holds above its own reserve". Absolute, capped and reserve-guarded, which is exactly
+	 *       what makes it safe for the blocks the cascade must keep refusing.</li>
+	 * </ul>
+	 *
+	 * <p>A block that is <em>not</em> an {@link #isEnergyStorageSink()} has no use for this: an ordinary
+	 * machine already creates machine demand, which opens the existing backup-discharge stage.
+	 */
+	public long storageFeedRate() {
+		return 0L;
+	}
+
 	public EnergyTier getTier() {
 		return tier;
 	}

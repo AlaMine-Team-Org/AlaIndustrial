@@ -1,18 +1,17 @@
-## 0.1.74
+## 0.1.75
 
-<p><img alt="Water mill interface showing its live output" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.74/release-media/v0.1.74/changelog.png" width="720"></p>
+<p><img alt="Reinforced Energy Storage block placed in the world" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.75/release-media/v0.1.75/changelog.png" width="720"></p>
 
-The water mill now tells you how much it makes, and its wheel finally respects the blocks around it.
+A bigger battery for your base, and teleporters that finally charge from one.
 
 ### New
 
-- **See what the mill makes.** The screen shows `Output: N EU/t` while the wheel turns. Block part of the current and watch the number drop.
+- **Reinforced Energy Storage — five times the room.** Holds 100 000 EU against the Battery Box's 20 000, and moves 128 EU/t.
+- **Built from the box you already have.** Battery Box in the centre, electrum ingots in the corners, advanced casings and circuits around it.
+- **A slot that takes charge back.** The right slot drains a powered item into the block — come home with a full energy pack and hand it to the base.
+- **You can tell the sockets apart.** Blue takes power in, orange gives it out.
 
 ### Fixed
 
-- **Water has to reach the wheel, not the block.** Pouring water around the visible wheel used to do nothing. The four cells around the wheel drive it now: above, below, and one on each side. Still up to 4 EU/t.
-- **The wheel no longer spins through terrain.** Burying it in the ground or packing blocks against it kept it turning through solid rock. Now it hides and the screen reads "Blocked".
-
-### Heads up
-
-- Mills fed only from the sides or the back of the block, and wheels buried in terrain, need a quick rebuild — dig the wheel out and let the water run past it.
+- **Teleporters and charging stations charge from storage again.** Wire one to a battery box and it stayed empty forever, no matter how long you waited. Now it draws 12 EU/t.
+- **Your bank keeps half for the machines.** A store only gives away what it holds above 50 %, so one teleporter can't drink the base dry. Want it filled outright? Put the store flush against it — that path has no limit.

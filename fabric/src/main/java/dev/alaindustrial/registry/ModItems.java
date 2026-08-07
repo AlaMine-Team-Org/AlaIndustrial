@@ -244,6 +244,7 @@ public final class ModItems {
 	public static final BlockItem FLUID_PIPE_ITEM = fluidPipeItem("fluid_pipe", ModBlocks.FLUID_PIPE);
 	public static final BlockItem MACERATOR_ITEM = blockItem("macerator", ModBlocks.MACERATOR);
 	public static final BlockItem BATTERY_BOX_ITEM = blockItem("battery_box", ModBlocks.BATTERY_BOX);
+	public static final BlockItem CESU_ITEM = blockItem("cesu", ModBlocks.CESU);
 	public static final BlockItem TELEPORTER_ITEM = blockItem("teleporter", ModBlocks.TELEPORTER);
 	public static final BlockItem ELECTRIC_FURNACE_ITEM = blockItem("electric_furnace", ModBlocks.ELECTRIC_FURNACE);
 	public static final BlockItem EXTRACTOR_ITEM = blockItem("extractor", ModBlocks.EXTRACTOR);
@@ -773,6 +774,7 @@ public final class ModItems {
 		ModContent.FLUID_PIPE_ITEM = () -> FLUID_PIPE_ITEM;
 		ModContent.MACERATOR_ITEM = () -> MACERATOR_ITEM;
 		ModContent.BATTERY_BOX_ITEM = () -> BATTERY_BOX_ITEM;
+		ModContent.CESU_ITEM = () -> CESU_ITEM;
 		ModContent.TELEPORTER_ITEM = () -> TELEPORTER_ITEM;
 		ModContent.ELECTRIC_FURNACE_ITEM = () -> ELECTRIC_FURNACE_ITEM;
 		ModContent.EXTRACTOR_ITEM = () -> EXTRACTOR_ITEM;

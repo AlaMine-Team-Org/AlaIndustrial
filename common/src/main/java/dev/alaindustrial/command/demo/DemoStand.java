@@ -391,6 +391,9 @@ public final class DemoStand {
 		// MOD-292 puts the MV casing directly on top of the LV one so the tier step is visible side by side.
 		set(level, origin, 30, 3, 10, ModContent.ADVANCED_MACHINE_CASING.get());
 		set(level, origin, 30, 2, 10, ModContent.MACHINE_CASING.get());
+		// Reinforced Energy Storage (MOD-351): next to the MV casing it is built from, so the shelf reads
+		// as the MV column — casing, and the first block assembled on top of it.
+		set(level, origin, 31, 3, 10, ModContent.CESU.get());
 		set(level, origin, 31, 2, 10, ModContent.SILVER_PLATE_BLOCK.get());
 		set(level, origin, 32, 2, 10, ModContent.TEMPERED_IRON_PLATE_BLOCK.get());
 		// Industrial Workbench (MOD-062): the Industrialist villager's job-site block on display.

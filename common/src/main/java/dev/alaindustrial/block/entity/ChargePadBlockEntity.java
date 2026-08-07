@@ -162,6 +162,22 @@ public final class ChargePadBlockEntity extends MachineBlockEntity {
 	}
 
 	/**
+	 * MOD-353: the station accepts a slow trickle from stores over cable.
+	 *
+	 * <p>It had the same defect as the Teleporter and for the same reason — a storage sink outside the
+	 * cascade creates no machine demand, so a Battery Box wired to it discharged nothing and the plate
+	 * sat dead. That was worse here than on the Teleporter: the documented workaround ("stand a store
+	 * flush against it") is far less obvious for a floor plate the player walks onto.
+	 *
+	 * <p>{@link #acceptsCascade()} still stays false — see the note above; this channel is the absolute,
+	 * reserve-guarded one, not the proportional cascade.
+	 */
+	@Override
+	public long storageFeedRate() {
+		return dev.alaindustrial.Config.storageFeedRate;
+	}
+
+	/**
 	 * Intake on every face. The station is a pure consumer, so no face may extract: left at the
 	 * inherited {@link EnergyRole#BOTH} its ports would advertise extraction, and the network would
 	 * enumerate a block that never produces anything as a candidate producer.

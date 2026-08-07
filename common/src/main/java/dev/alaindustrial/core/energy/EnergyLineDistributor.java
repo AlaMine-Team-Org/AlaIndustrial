@@ -214,6 +214,33 @@ final class EnergyLineDistributor {
 	void chargeAndPropagateLine(List<LiveProducer> generators, List<LiveProducer> storageSources,
 			long machineDemand, long genSupply, long packetCap, EnergyPort.Txn tx, int rotation,
 			Map<BlockPos, Long> cascadeAllowances) {
+		chargeAndPropagateLine(generators, storageSources, machineDemand, genSupply, packetCap, tx,
+				rotation, cascadeAllowances, java.util.Map.of());
+	}
+
+	/**
+	 * Full form with the MOD-353 feed stage.
+	 *
+	 * <p><b>Storage discharges through exactly one of three stages per tick, never two.</b> They are
+	 * ordered by how strong the claim on the energy is, and each one {@code return}s so the next cannot
+	 * also run:
+	 * <ol>
+	 *   <li><b>backup power</b> — machines are asking and generators fall short;</li>
+	 *   <li><b>cascade</b> (MOD-314) — no machine demand, but another store is proportionally emptier;</li>
+	 *   <li><b>feed</b> (MOD-353) — neither of the above, and a non-cascade sink (Teleporter, Charging
+	 *       Station) is waiting.</li>
+	 * </ol>
+	 *
+	 * <p>The exclusivity is not stylistic. Each stage starts a fresh per-source {@code fromThis} budget
+	 * inside {@link #chargeLineFrom}, so two stages in one tick would let a single store inject
+	 * 2 × {@code packetCap} and quietly break the tier ceiling this class documents. The caller
+	 * independently guarantees the same thing by only computing the later allowances when the earlier
+	 * stages are closed; stating it in both places is deliberate, because a future fourth stage will be
+	 * added at exactly one of them.
+	 */
+	void chargeAndPropagateLine(List<LiveProducer> generators, List<LiveProducer> storageSources,
+			long machineDemand, long genSupply, long packetCap, EnergyPort.Txn tx, int rotation,
+			Map<BlockPos, Long> cascadeAllowances, Map<BlockPos, Long> feedAllowances) {
 		propagateLineOneHop(packetCap, tx, rotation);
 		// Generators fill the line freely (free energy → inertia); only their draw is docked from the
 		// supply left for storage sinks.
@@ -236,11 +263,24 @@ final class EnergyLineDistributor {
 		// single scalar would let a donor that is NOT proportionally fuller spend a budget opened by one
 		// that is — washing energy backwards while looking like a cascade. Iterating `storageSources`
 		// rather than the map keeps the order the topology fixed (MOD-304).
-		if (cascadeAllowances == null || cascadeAllowances.isEmpty()) {
+		if (cascadeAllowances != null && !cascadeAllowances.isEmpty()) {
+			for (LiveProducer donor : storageSources) {
+				Long allowance = cascadeAllowances.get(donor.pos());
+				if (allowance != null && allowance > 0) {
+					chargeLineFrom(List.of(donor), packetCap, allowance, tx, rotation);
+				}
+			}
+			return;
+		}
+		// MOD-353: stage three — a store trickling into a sink the cascade refuses. Reached only when the
+		// two stages above moved nothing, so the "one source ≤ packetCap per tick" invariant holds.
+		// Per-donor budgets for the same reason the cascade uses them: a single shared scalar would let a
+		// donor below its own reserve spend an allowance opened by one that is above it.
+		if (feedAllowances == null || feedAllowances.isEmpty()) {
 			return;
 		}
 		for (LiveProducer donor : storageSources) {
-			Long allowance = cascadeAllowances.get(donor.pos());
+			Long allowance = feedAllowances.get(donor.pos());
 			if (allowance != null && allowance > 0) {
 				chargeLineFrom(List.of(donor), packetCap, allowance, tx, rotation);
 			}

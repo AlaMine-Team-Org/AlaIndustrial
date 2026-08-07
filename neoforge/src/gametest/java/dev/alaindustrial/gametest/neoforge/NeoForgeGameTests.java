@@ -14,6 +14,7 @@ import dev.alaindustrial.gametest.ChargePadScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.GeneratorEnergyScenarios;
 import dev.alaindustrial.gametest.MachineEnergyScenarios;
+import dev.alaindustrial.gametest.CesuScenarios;
 import dev.alaindustrial.gametest.StorageEnergyScenarios;
 import dev.alaindustrial.gametest.RecipeTagScenarios;
 import dev.alaindustrial.gametest.AssemblerScenarios;
@@ -141,6 +142,15 @@ public final class NeoForgeGameTests {
 		// fix — ModDataComponentsNeoForge). Fabric covers this via BatteryBoxGameTest; NeoForge world lane's first.
 		registerTest(event, "battery_box_drop_carries_energy", 40, true,
 				StorageEnergyScenarios::batteryBoxDropCarriesEnergy);
+		// Reinforced Energy Storage (MOD-351): the short-overflow guard has to run on BOTH loaders —
+		// ContainerData is vanilla, but each loader builds its own menu/BE registration around it, and
+		// this bug was invisible until a client actually rendered the number.
+		registerTest(event, "cesu_sync_channels_fit_short", 40, true,
+				CesuScenarios::cesu01SyncChannelsFitShort);
+		registerTest(event, "cesu_scaled_channels_match_buffer", 40, true,
+				CesuScenarios::cesu02ScaledChannelsMatchBuffer);
+		registerTest(event, "cesu_discharge_slot_fills_buffer", 40, true,
+				CesuScenarios::cesu03DischargeSlotFillsBuffer);
 		// Teleporter station (MOD-091): its face roles and its teleporter_private data component are
 		// per-loader seams (energy adapter + frozen-registry), so the Fabric suite cannot vouch for them.
 		registerTest(event, "teleporter_face_roles", 40, true,

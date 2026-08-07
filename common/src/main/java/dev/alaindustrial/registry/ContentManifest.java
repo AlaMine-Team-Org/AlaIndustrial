@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
+import dev.alaindustrial.block.entity.CesuBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
@@ -42,6 +43,7 @@ import dev.alaindustrial.item.misc.HintItem;
 import dev.alaindustrial.item.misc.MutationChipItem;
 import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
+import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import dev.alaindustrial.menu.ElectricFurnaceMenu;
@@ -174,6 +176,7 @@ public final class ContentManifest {
 			menu("alloy_smelter", AlloySmelterMenu::new, s -> ModContent.ALLOY_SMELTER_MENU = s),
 			menu("galvanic_bath", GalvanicBathMenu::new, s -> ModContent.GALVANIC_BATH_MENU = s),
 			menu("battery_box", BatteryBoxMenu::new, s -> ModContent.BATTERY_BOX_MENU = s),
+			menu("cesu", CesuMenu::new, s -> ModContent.CESU_MENU = s),
 			menu("teleporter_station", TeleporterStationMenu::new, s -> ModContent.TELEPORTER_STATION_MENU = s),
 			menu("teleporter_remote", TeleporterRemoteMenu::new, s -> ModContent.TELEPORTER_REMOTE_MENU = s),
 			menu("daylight_solar_panel", DaylightSolarPanelMenu::new, s -> ModContent.DAYLIGHT_SOLAR_PANEL_MENU = s),
@@ -239,6 +242,8 @@ public final class ContentManifest {
 			Map.entry("fluid_pipe", machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion())),
 			Map.entry("macerator", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("battery_box", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.WOOD))),
+			// Metal, and tougher than the LV box it is built from — this tier is a steel shell, not a crate.
+			Map.entry("cesu", machine(p -> p.strength(4.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("teleporter", machine(p -> p.strength(5.0f, 12.0f).sound(SoundType.METAL))),
 			Map.entry("electric_furnace", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("iron_furnace", machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.METAL)
@@ -499,6 +504,7 @@ public final class ContentManifest {
 			blockEntity("fluid_pipe", FluidPipeBlockEntity.class, FluidPipeBlockEntity::new, "fluid_pipe"),
 			blockEntity("macerator", MaceratorBlockEntity.class, MaceratorBlockEntity::new, "macerator"),
 			blockEntity("battery_box", BatteryBoxBlockEntity.class, BatteryBoxBlockEntity::new, "battery_box"),
+			blockEntity("cesu", CesuBlockEntity.class, CesuBlockEntity::new, "cesu"),
 			blockEntity("teleporter", TeleporterBlockEntity.class, TeleporterBlockEntity::new, "teleporter"),
 			blockEntity("electric_furnace", ElectricFurnaceBlockEntity.class, ElectricFurnaceBlockEntity::new, "electric_furnace"),
 			blockEntity("iron_furnace", IronFurnaceBlockEntity.class, IronFurnaceBlockEntity::new, "iron_furnace"),

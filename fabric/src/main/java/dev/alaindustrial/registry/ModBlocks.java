@@ -3,6 +3,7 @@ package dev.alaindustrial.registry;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.AssemblerBlock;
 import dev.alaindustrial.block.BatteryBoxBlock;
+import dev.alaindustrial.block.CesuBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.ChargePadBlock;
@@ -152,6 +153,8 @@ public final class ModBlocks {
 
 	public static final ResourceKey<Block> BATTERY_BOX_KEY = key("battery_box");
 	public static final Block BATTERY_BOX = register(BATTERY_BOX_KEY, new BatteryBoxBlock(props(BATTERY_BOX_KEY)));
+	public static final ResourceKey<Block> CESU_KEY = key("cesu");
+	public static final Block CESU = register(CESU_KEY, new CesuBlock(props(CESU_KEY)));
 
 	// Teleporter station (MOD-091); visible since MOD-093 completed the feature.
 	public static final ResourceKey<Block> TELEPORTER_KEY = key("teleporter");
@@ -353,6 +356,7 @@ public final class ModBlocks {
 		ModContent.FLUID_PIPE = () -> FLUID_PIPE;
 		ModContent.MACERATOR = () -> MACERATOR;
 		ModContent.BATTERY_BOX = () -> BATTERY_BOX;
+		ModContent.CESU = () -> CESU;
 		ModContent.TELEPORTER = () -> TELEPORTER;
 		ModContent.ELECTRIC_FURNACE = () -> ELECTRIC_FURNACE;
 		ModContent.EXTRACTOR = () -> EXTRACTOR;

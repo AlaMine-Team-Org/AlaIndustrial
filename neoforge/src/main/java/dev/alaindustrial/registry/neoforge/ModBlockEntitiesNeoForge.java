@@ -3,6 +3,7 @@ package dev.alaindustrial.registry.neoforge;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
+import dev.alaindustrial.block.entity.CesuBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
@@ -88,6 +89,8 @@ public final class ModBlockEntitiesNeoForge {
 			register(ContentManifest.blockEntity("macerator", MaceratorBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BatteryBoxBlockEntity>> BATTERY_BOX =
 			register(ContentManifest.blockEntity("battery_box", BatteryBoxBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CesuBlockEntity>> CESU =
+			register(ContentManifest.blockEntity("cesu", CesuBlockEntity.class));
 
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TeleporterBlockEntity>> TELEPORTER =
 			register(ContentManifest.blockEntity("teleporter", TeleporterBlockEntity.class));
@@ -170,6 +173,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.FLUID_PIPE_BE = FLUID_PIPE::get;
 		ModContent.MACERATOR_BE = MACERATOR::get;
 		ModContent.BATTERY_BOX_BE = BATTERY_BOX::get;
+		ModContent.CESU_BE = CESU::get;
 		ModContent.TELEPORTER_BE = TELEPORTER::get;
 		ModContent.ELECTRIC_FURNACE_BE = ELECTRIC_FURNACE::get;
 		ModContent.IRON_FURNACE_BE = IRON_FURNACE::get;

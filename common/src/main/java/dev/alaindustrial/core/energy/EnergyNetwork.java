@@ -345,6 +345,59 @@ public final class EnergyNetwork {
 	}
 
 	/**
+	 * MOD-353 — how much each donor store may release to sinks that are OUTSIDE the cascade
+	 * (Teleporter, Charging Station), when nothing else on the segment wants power.
+	 *
+	 * <p>Deliberately a separate aggregate from {@code machineDemand}: folding these sinks into machine
+	 * demand would have been two lines, but it also feeds the MOD-255 self-serve guard, the cascade's
+	 * mutual exclusion and {@code storageBudget} — so a Teleporter with room would silently close the
+	 * box↔box cascade, which is the MOD-314 regression this must not cause.
+	 *
+	 * <p>Unlike the cascade this compares nothing proportionally. Each donor offers a flat rate out of
+	 * what it holds above its own reserve, so a 500 000 EU fund cannot pull harder than a 20 000 EU box
+	 * would — that asymmetry is precisely why the cascade refuses these blocks in the first place.
+	 */
+	private Map<BlockPos, Long> computeFeedAllowances(List<EnergyLineDistributor.LiveProducer> donors,
+			List<EnergyLineDistributor.LiveConsumer> sinks, long packetCap) {
+		Map<BlockPos, Long> allowances = new LinkedHashMap<>();
+		for (EnergyLineDistributor.LiveProducer donor : donors) {
+			// A donor that would itself accept this feed is a store, not a fund: those level out through
+			// the cascade, and letting them use this channel too would give one pair two ways to move EU
+			// in the same tick.
+			if (feedRate(donor.pos()) > 0) {
+				continue;
+			}
+			long donorAmount = donor.storage().getAmount();
+			long donorCapacity = donor.storage().getCapacity();
+			long best = 0L;
+			for (EnergyLineDistributor.LiveConsumer sink : sinks) {
+				if (sink.pos().equals(donor.pos())) {
+					continue;
+				}
+				long rate = feedRate(sink.pos());
+				if (rate <= 0) {
+					continue;
+				}
+				long allowance = StorageFeedShare.feedAllowance(donorAmount, donorCapacity,
+						dev.alaindustrial.Config.storageFeedReserveFraction, sink.room(), rate, packetCap);
+				if (allowance > best) {
+					best = allowance;
+				}
+			}
+			if (best > 0) {
+				allowances.put(donor.pos(), best);
+			}
+		}
+		return allowances;
+	}
+
+	/** {@code storageFeedRate()} of the block at {@code pos}, or 0 when it is not a mod machine. */
+	private long feedRate(BlockPos pos) {
+		return topology.level().getBlockEntity(pos) instanceof MachineBlockEntity mbe
+				? mbe.storageFeedRate() : 0L;
+	}
+
+	/**
 	 * Can the block at {@code pos} ACCEPT energy through the face pointing in {@code face} (MOD-255)? The
 	 * distributor finds an endpoint's cables by adjacency, which says nothing about the role of the face
 	 * they touch; this is the per-face permission behind that adjacency. Neutral on purpose — resolved
@@ -497,6 +550,15 @@ public final class EnergyNetwork {
 					packetCap);
 		}
 
+		// MOD-353: the third and last way a store may discharge — into a sink that the cascade refuses.
+		// Computed only when BOTH earlier stages are closed, which is what keeps the three mutually
+		// exclusive: backup power (machine demand), cascade (fill fractions), feed (flat rate + reserve).
+		Map<BlockPos, Long> feedAllowances = new LinkedHashMap<>();
+		if (storageDischarge == 0 && cascadeAllowances.isEmpty()
+				&& !storageSources.isEmpty() && !sinks.isEmpty()) {
+			feedAllowances = computeFeedAllowances(storageSources, sinks, packetCap);
+		}
+
 		// MOD-255 + MOD-314: a storage node that discharges into this line THIS tick — as backup power OR
 		// as a cascade donor — must not also be served from it, or it drinks its own discharge back out of
 		// the neighbouring cable. Before MOD-314 this read `storageDischarge > 0` alone, which is zero in
@@ -517,6 +579,11 @@ public final class EnergyNetwork {
 			} else if (!cascadeAllowances.isEmpty()) {
 				Map<BlockPos, Long> discharging = cascadeAllowances;
 				sinks.removeIf(c -> discharging.containsKey(c.pos()));
+			} else if (!feedAllowances.isEmpty()) {
+				// Same rule for the feed stage (MOD-353): a store that pushes into the line this tick must
+				// not be served from it, or it drinks its own discharge back out of the neighbouring cable.
+				Map<BlockPos, Long> feeding = feedAllowances;
+				sinks.removeIf(c -> feeding.containsKey(c.pos()));
 			}
 		}
 
@@ -560,6 +627,7 @@ public final class EnergyNetwork {
 		long finalMachineDemand = machineDemand;
 		long finalGenSupply = genSupply;
 		Map<BlockPos, Long> finalCascadeAllowances = cascadeAllowances;
+		Map<BlockPos, Long> finalFeedAllowances = feedAllowances;
 		EnergyTransactions.get().runCommitting(tx -> {
 			// Serve ALL consumers from the line — machines first (MOD-009 priority), then storage sinks.
 			// Both drain the cable buffers they touch, so a cable between a source and ANY consumer
@@ -572,7 +640,7 @@ public final class EnergyNetwork {
 			// short of (backup power), never to hoard buffers or wash into another battery. With no
 			// generator present, storage discharges nothing, so two batteries can't drain each other.
 			distributor.chargeAndPropagateLine(generators, storageSources, finalMachineDemand, finalGenSupply,
-					packetCap, tx, producerCursor, finalCascadeAllowances);
+					packetCap, tx, producerCursor, finalCascadeAllowances, finalFeedAllowances);
 		});
 		// Advance the rotation cursor so the next tick starts at a different producer / face. Monotonic and
 		// masked non-negative (MOD-254); every use site re-applies the modulus against its own list size.

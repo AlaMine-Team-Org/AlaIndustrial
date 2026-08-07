@@ -2,6 +2,7 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
+import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import dev.alaindustrial.menu.ElectricFurnaceMenu;
@@ -119,6 +120,8 @@ public final class ModContent {
 	public static Supplier<Block> FLUID_PIPE = unbound("FLUID_PIPE");
 	public static Supplier<Block> MACERATOR = unbound("MACERATOR");
 	public static Supplier<Block> BATTERY_BOX = unbound("BATTERY_BOX");
+	/** MV Reinforced Energy Storage (MOD-351) — second step of the storage line. */
+	public static Supplier<Block> CESU = unbound("CESU");
 	/** Teleporter station (MOD-091) — registered but hidden from the creative tab until MOD-093. */
 	public static Supplier<Block> TELEPORTER = unbound("TELEPORTER");
 	public static Supplier<Block> ELECTRIC_FURNACE = unbound("ELECTRIC_FURNACE");
@@ -359,6 +362,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> FLUID_PIPE_ITEM = unbound("FLUID_PIPE_ITEM");
 	public static Supplier<BlockItem> MACERATOR_ITEM = unbound("MACERATOR_ITEM");
 	public static Supplier<BlockItem> BATTERY_BOX_ITEM = unbound("BATTERY_BOX_ITEM");
+	public static Supplier<BlockItem> CESU_ITEM = unbound("CESU_ITEM");
 	public static Supplier<BlockItem> TELEPORTER_ITEM = unbound("TELEPORTER_ITEM");
 	public static Supplier<BlockItem> ELECTRIC_FURNACE_ITEM = unbound("ELECTRIC_FURNACE_ITEM");
 	public static Supplier<BlockItem> EXTRACTOR_ITEM = unbound("EXTRACTOR_ITEM");
@@ -419,6 +423,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> FLUID_PIPE_BE = unbound("FLUID_PIPE_BE");
 	public static Supplier<BlockEntityType<?>> MACERATOR_BE = unbound("MACERATOR_BE");
 	public static Supplier<BlockEntityType<?>> BATTERY_BOX_BE = unbound("BATTERY_BOX_BE");
+	public static Supplier<BlockEntityType<?>> CESU_BE = unbound("CESU_BE");
 	public static Supplier<BlockEntityType<?>> TELEPORTER_BE = unbound("TELEPORTER_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_FURNACE_BE = unbound("ELECTRIC_FURNACE_BE");
 	public static Supplier<BlockEntityType<?>> EXTRACTOR_BE = unbound("EXTRACTOR_BE");
@@ -465,6 +470,7 @@ public final class ModContent {
 	public static Supplier<MenuType<GalvanicBathMenu>> GALVANIC_BATH_MENU = unbound("GALVANIC_BATH_MENU");
 	public static Supplier<MenuType<IncubatorMenu>> INCUBATOR_MENU = unbound("INCUBATOR_MENU");
 	public static Supplier<MenuType<BatteryBoxMenu>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");
+	public static Supplier<MenuType<CesuMenu>> CESU_MENU = unbound("CESU_MENU");
 	/** Teleporter station screen (MOD-093): EU bar, owner, private/public toggle. */
 	public static Supplier<MenuType<TeleporterStationMenu>> TELEPORTER_STATION_MENU =
 			unbound("TELEPORTER_STATION_MENU");

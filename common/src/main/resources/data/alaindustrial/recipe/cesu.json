@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "RAR",
+    "CBC",
+    "RAR"
+  ],
+  "key": {
+    "R": "#c:ingots/electrum",
+    "A": "alaindustrial:advanced_circuit",
+    "C": "alaindustrial:advanced_machine_casing",
+    "B": "alaindustrial:battery_box"
+  },
+  "result": {
+    "id": "alaindustrial:cesu",
+    "count": 1
+  }
+}

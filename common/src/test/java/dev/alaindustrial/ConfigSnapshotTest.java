@@ -142,6 +142,10 @@ class ConfigSnapshotTest {
 		SENTINELS.put("teleporterMaxPoints", 24);
 		// Buffers (minimum=1 — sentinel stays >= 1).
 		SENTINELS.put("batteryBoxBuffer", 22_222);
+		// MOD-351 / MOD-353 — the MV store and the storage→fund feed channel.
+		SENTINELS.put("cesuBuffer", 111_111);
+		SENTINELS.put("storageFeedRate", 17);
+		SENTINELS.put("storageFeedReserveFraction", 0.25);
 		SENTINELS.put("maceratorBuffer", 1600);
 		SENTINELS.put("machineBuffer", 1601);
 		SENTINELS.put("electricHeaterBuffer", 1602);

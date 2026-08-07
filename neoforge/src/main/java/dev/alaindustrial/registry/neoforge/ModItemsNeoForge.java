@@ -325,6 +325,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("macerator", ModBlocksNeoForge.MACERATOR);
 	public static final DeferredItem<BlockItem> BATTERY_BOX_ITEM =
 			ITEMS.registerSimpleBlockItem("battery_box", ModBlocksNeoForge.BATTERY_BOX);
+	public static final DeferredItem<BlockItem> CESU_ITEM =
+			ITEMS.registerSimpleBlockItem("cesu", ModBlocksNeoForge.CESU);
 
 	public static final DeferredItem<BlockItem> TELEPORTER_ITEM =
 			ITEMS.registerSimpleBlockItem("teleporter", ModBlocksNeoForge.TELEPORTER);
@@ -574,6 +576,7 @@ public final class ModItemsNeoForge {
 		ModContent.DAYLIGHT_SOLAR_PANEL_ITEM = DAYLIGHT_SOLAR_PANEL_ITEM;
 		ModContent.MACERATOR_ITEM = MACERATOR_ITEM;
 		ModContent.BATTERY_BOX_ITEM = BATTERY_BOX_ITEM;
+		ModContent.CESU_ITEM = CESU_ITEM;
 		ModContent.TELEPORTER_ITEM = TELEPORTER_ITEM;
 		ModContent.ELECTRIC_FURNACE_ITEM = ELECTRIC_FURNACE_ITEM;
 		ModContent.IRON_FURNACE_ITEM = IRON_FURNACE_ITEM;

@@ -73,14 +73,28 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 	 * <em>proportionally to demand</em>, so as a plain machine the station would win a 512:32 split
 	 * and take ~94 % of a shared grid — the player would plug in a teleporter and watch every
 	 * macerator stall. As a sink it charges from the surplus instead, which also matches what it is:
-	 * a fund that banks EU, not a machine that does work. It still fills fine — a jump costs
-	 * ~10–20 k EU against a 500 k buffer, and a player who wants it charged now can put a generator
-	 * or a battery box flush against it (the direct, cable-less path in
-	 * {@link dev.alaindustrial.core.energy.DirectAdjacencyDistributor#distribute} ignores this flag entirely).
+	 * a fund that banks EU, not a machine that does work.
+	 *
+	 * <p><b>What this used to cost (MOD-353).</b> This flag also meant the station created no
+	 * {@code machineDemand}, so on a segment fed only by a Battery Box the backup-discharge stage never
+	 * opened and the station charged at a hard, permanent zero — while an electric furnace on the same
+	 * wiring filled normally. The comment here used to claim "it still fills fine"; that was true only of
+	 * a generator or a flush-mounted box. Cable-fed storage now reaches it through
+	 * {@link #storageFeedRate()}, at a flat rate and only above the donor's reserve.
 	 */
 	@Override
 	public boolean isEnergyStorageSink() {
 		return true;
+	}
+
+	/**
+	 * MOD-353: the station accepts a slow trickle from stores over cable. Flat rate, capped by the
+	 * donor's reserve — deliberately NOT the cascade, which stays closed to this block (MOD-314 R3)
+	 * because equalising a 20 000 EU box against a 500 000 EU fund by fill fraction would empty the box.
+	 */
+	@Override
+	public long storageFeedRate() {
+		return dev.alaindustrial.Config.storageFeedRate;
 	}
 
 	public boolean isPrivate() {

@@ -229,6 +229,35 @@ public final class Config {
 
 	// --- Storage / per-block buffers (EU) ---
 	public static int batteryBoxBuffer = 20_000;
+	/**
+	 * Reinforced Energy Storage (MV) EU buffer — five times the Battery Box (MOD-350/MOD-351). Its own
+	 * knob rather than the tier default: {@code tierMvCapacity} stays the default for MV
+	 * <em>machines</em>, and a store is deliberately larger than one machine's buffer (the LV pair sits
+	 * at the same ratio, 20 000 against 10 000). The transfer rate is NOT a knob here — it comes from
+	 * {@code EnergyTier.MV.maxVoltage()} so retuning {@code tierMvVoltage} moves the store with the tier.
+	 */
+	public static int cesuBuffer = 100_000;
+
+	/**
+	 * EU/tick a store hands to a NON-CASCADE sink over cable (MOD-353) — the Teleporter and the Charging
+	 * Station today. 0 disables the channel.
+	 *
+	 * <p>Named for the mechanism, not for the Teleporter, because the defect it fixes is a class: any
+	 * block that is an {@code isEnergyStorageSink} but outside the cascade was unreachable from a store
+	 * over cable. 12 is the copper cable's throughput, so the store feeds a sink no faster than the wire
+	 * to it would carry anyway, and it is the number already printed in the Teleporter spec.
+	 */
+	public static int storageFeedRate = 12;
+
+	/**
+	 * Share of its capacity a donor store keeps for itself on that channel, 0..1 (MOD-353).
+	 *
+	 * <p>This is the guarantee that replaces "the fund is simply excluded from the cascade" (MOD-314 R3):
+	 * below this line the channel is shut, so a Teleporter can never drain the base's bank. At 0.5 the
+	 * player always keeps half their stored EU for machines. Setting it to 0 restores drain-dry
+	 * behaviour and is NOT recommended — it makes this channel a slow version of the MOD-314 bug.
+	 */
+	public static double storageFeedReserveFraction = 0.5;
 	public static int maceratorBuffer = 800;
 	/** Shared buffer for ordinary LV processing machines: electric furnace, compressor, extractor,
 	 * sawmill, polymerizer and vulcanizer. */
@@ -924,6 +953,12 @@ public final class Config {
 				() -> teleporterMaxPoints, v -> teleporterMaxPoints = v, 1),
 			new IntField("batteryBoxBuffer", "Battery Box EU buffer. Applies to newly placed blocks (already-placed keep their capacity until the chunk reloads).",
 				() -> batteryBoxBuffer, v -> batteryBoxBuffer = v, 1),
+			new IntField("cesuBuffer", "Reinforced Energy Storage (MV) EU buffer. Applies to newly placed blocks (already-placed keep their capacity until the chunk reloads).",
+				() -> cesuBuffer, v -> cesuBuffer = v, 1),
+			new IntField("storageFeedRate", "EU/tick a storage block feeds a non-cascade sink (teleporter, charging station) over cable. 0 disables the channel.",
+				() -> storageFeedRate, v -> storageFeedRate = v, 0),
+			new DoubleField("storageFeedReserveFraction", "Share of its capacity a storage block keeps for itself when feeding a non-cascade sink over cable (0..1). Below this line the channel is shut, so a teleporter can never drain the base's bank.",
+				() -> storageFeedReserveFraction, v -> storageFeedReserveFraction = v, 0.0, 1.0),
 			new IntField("maceratorBuffer", "Macerator EU buffer. Applies to newly placed blocks.",
 				() -> maceratorBuffer, v -> maceratorBuffer = v, 1),
 			new IntField("machineBuffer", "Shared EU buffer for ordinary LV processing machines: electric furnace, compressor, extractor, sawmill, polymerizer and vulcanizer. Applies to newly placed blocks.",

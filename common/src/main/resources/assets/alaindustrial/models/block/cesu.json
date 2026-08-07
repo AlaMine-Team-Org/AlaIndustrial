@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "alaindustrial:block/cesu_side",
+    "down": "alaindustrial:block/cesu_bottom",
+    "up": "alaindustrial:block/cesu_top",
+    "north": "alaindustrial:block/cesu_port_in",
+    "south": "alaindustrial:block/cesu_port_out",
+    "east": "alaindustrial:block/cesu_side",
+    "west": "alaindustrial:block/cesu_side"
+  }
+}
