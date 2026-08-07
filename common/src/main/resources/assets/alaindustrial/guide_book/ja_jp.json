@@ -377,6 +377,44 @@
           ]
         },
         {
+          "id": "cesu",
+          "title": "強化エネルギー貯蔵庫",
+          "icon": "alaindustrial:cesu",
+          "block_id": "alaindustrial:cesu",
+          "pages": [
+            {
+              "type": "text",
+              "title": "強化エネルギー貯蔵庫",
+              "text": "MV蓄電ブロック。100 000 EUを蓄え、初期バッファの5倍の容量を128 EU/tickで4倍速く出し入れします。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 100 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:battery_box",
+                "alaindustrial:advanced_machine_casing",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum"
+              ],
+              "result_id": "alaindustrial:cesu",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "エネルギー貯蔵庫",
           "icon": "alaindustrial:battery_box",
@@ -571,6 +609,45 @@
           ]
         },
         {
+          "id": "insulated_electrum_cable",
+          "title": "絶縁エレクトラムケーブル",
+          "icon": "alaindustrial:insulated_electrum_cable",
+          "block_id": "alaindustrial:insulated_electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "絶縁エレクトラムケーブル",
+              "text": "ゴム被覆のエレクトラムHVケーブル。Mod内で最も損失が低く、接触感電を完全に防ぎます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: ≤512 EU/パケット",
+                "バッファ: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable"
+              ],
+              "result_id": "alaindustrial:insulated_electrum_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "銅ケーブル",
           "icon": "alaindustrial:copper_cable",
@@ -644,6 +721,45 @@
                 ""
               ],
               "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "electrum_cable",
+          "title": "エレクトラムケーブル",
+          "icon": "alaindustrial:electrum_cable",
+          "block_id": "alaindustrial:electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "エレクトラムケーブル",
+              "text": "エレクトラムインゴットとダイヤモンドダストの芯からなる裸のHVケーブル。系列で最も太く、損失も最小ですが、レシピは高価です。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: ≤512 EU/パケット",
+                "バッファ: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
             }
           ]

@@ -377,6 +377,44 @@
           ]
         },
         {
+          "id": "cesu",
+          "title": "उन्नत बैटरी बॉक्स",
+          "icon": "alaindustrial:cesu",
+          "block_id": "alaindustrial:cesu",
+          "pages": [
+            {
+              "type": "text",
+              "title": "उन्नत बैटरी बॉक्स",
+              "text": "MV भंडारण ब्लॉक — 100 000 EU रखता है, शुरुआती बफ़र से पाँच गुना, और उन्हें 128 EU/टिक पर चार गुना तेज़ी से भेजता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 100 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:battery_box",
+                "alaindustrial:advanced_machine_casing",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum"
+              ],
+              "result_id": "alaindustrial:cesu",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "बैटरी बॉक्स",
           "icon": "alaindustrial:battery_box",
@@ -571,6 +609,45 @@
           ]
         },
         {
+          "id": "insulated_electrum_cable",
+          "title": "रोधित इलेक्ट्रम की केबल",
+          "icon": "alaindustrial:insulated_electrum_cable",
+          "block_id": "alaindustrial:insulated_electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "रोधित इलेक्ट्रम की केबल",
+              "text": "रबर से ढकी इलेक्ट्रम HV केबल: मॉड में सबसे कम हानि और संपर्क झटके से पूरी सुरक्षा।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: ≤512 EU/पैकेट",
+                "बफ़र: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable"
+              ],
+              "result_id": "alaindustrial:insulated_electrum_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "तांबे की केबल",
           "icon": "alaindustrial:copper_cable",
@@ -644,6 +721,45 @@
                 ""
               ],
               "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "electrum_cable",
+          "title": "इलेक्ट्रम की केबल",
+          "icon": "alaindustrial:electrum_cable",
+          "block_id": "alaindustrial:electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "इलेक्ट्रम की केबल",
+              "text": "हीरे के चूर्ण के कोर वाली इलेक्ट्रम पिंडों से बनी नंगी HV केबल — सीढ़ी की सबसे चौड़ी और सबसे कम हानि वाली केबल, महँगी विधि की कीमत पर।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: ≤512 EU/पैकेट",
+                "बफ़र: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
             }
           ]

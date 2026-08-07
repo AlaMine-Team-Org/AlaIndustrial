@@ -1,0 +1,38 @@
+{
+	"parent": "minecraft:recipes/root",
+	"criteria": {
+		"has_electrum_cable": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:electrum_cable"
+					}
+				]
+			}
+		},
+		"has_rubber": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:rubber"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_electrum_cable"
+		],
+		[
+			"has_rubber"
+		]
+	],
+	"rewards": {
+		"recipes": [
+			"alaindustrial:insulated_electrum_cable"
+		]
+	}
+}

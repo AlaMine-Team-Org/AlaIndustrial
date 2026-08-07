@@ -377,6 +377,44 @@
           ]
         },
         {
+          "id": "cesu",
+          "title": "Güçlendirilmiş Enerji Deposu",
+          "icon": "alaindustrial:cesu",
+          "block_id": "alaindustrial:cesu",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Güçlendirilmiş Enerji Deposu",
+              "text": "MV depolama bloğu — 100 000 EU tutar, başlangıç tamponunun beş katı, ve bunu 128 EU/tik ile dört kat hızlı taşır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 100 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:battery_box",
+                "alaindustrial:advanced_machine_casing",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum"
+              ],
+              "result_id": "alaindustrial:cesu",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "Enerji Deposu",
           "icon": "alaindustrial:battery_box",
@@ -571,6 +609,45 @@
           ]
         },
         {
+          "id": "insulated_electrum_cable",
+          "title": "Yalıtımlı Elektrum Kablo",
+          "icon": "alaindustrial:insulated_electrum_cable",
+          "block_id": "alaindustrial:insulated_electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Yalıtımlı Elektrum Kablo",
+              "text": "Kauçuk kaplı elektrum HV kablosu: moddaki en düşük kayıp ve temas çarpmasına karşı tam koruma."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: ≤512 EU/paket",
+                "Tampon: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable"
+              ],
+              "result_id": "alaindustrial:insulated_electrum_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Bakır Kablo",
           "icon": "alaindustrial:copper_cable",
@@ -644,6 +721,45 @@
                 ""
               ],
               "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "electrum_cable",
+          "title": "Elektrum Kablo",
+          "icon": "alaindustrial:electrum_cable",
+          "block_id": "alaindustrial:electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrum Kablo",
+              "text": "Elmas tozu çekirdekli elektrum külçelerinden çıplak HV kablosu — merdivenin en geniş ve en az kayıplı kablosu, pahalı bir tarif karşılığında."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: ≤512 EU/paket",
+                "Tampon: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
             }
           ]

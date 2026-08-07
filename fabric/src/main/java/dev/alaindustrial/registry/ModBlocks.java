@@ -127,6 +127,10 @@ public final class ModBlocks {
 	public static final Block GOLD_CABLE =
 			register(GOLD_CABLE_KEY, new CableBlock(CableType.GOLD, props(GOLD_CABLE_KEY)));
 
+	public static final ResourceKey<Block> ELECTRUM_CABLE_KEY = key("electrum_cable");
+	public static final Block ELECTRUM_CABLE =
+			register(ELECTRUM_CABLE_KEY, new CableBlock(CableType.ELECTRUM, props(ELECTRUM_CABLE_KEY)));
+
 	// Rubber insulation keeps the conductor's tier/cap/buffer but halves its attenuation (MOD-259).
 	public static final ResourceKey<Block> INSULATED_COPPER_CABLE_KEY = key("insulated_copper_cable");
 	public static final Block INSULATED_COPPER_CABLE =
@@ -142,6 +146,11 @@ public final class ModBlocks {
 	public static final Block INSULATED_GOLD_CABLE =
 			register(INSULATED_GOLD_CABLE_KEY,
 					new CableBlock(CableType.INSULATED_GOLD, props(INSULATED_GOLD_CABLE_KEY)));
+
+	public static final ResourceKey<Block> INSULATED_ELECTRUM_CABLE_KEY = key("insulated_electrum_cable");
+	public static final Block INSULATED_ELECTRUM_CABLE =
+			register(INSULATED_ELECTRUM_CABLE_KEY,
+					new CableBlock(CableType.INSULATED_ELECTRUM, props(INSULATED_ELECTRUM_CABLE_KEY)));
 
 	public static final ResourceKey<Block> ITEM_PIPE_KEY = key("item_pipe");
 	public static final Block ITEM_PIPE = register(ITEM_PIPE_KEY, new ItemPipeBlock(props(ITEM_PIPE_KEY)));
@@ -349,9 +358,11 @@ public final class ModBlocks {
 		ModContent.COPPER_CABLE = () -> COPPER_CABLE;
 		ModContent.TIN_CABLE = () -> TIN_CABLE;
 		ModContent.GOLD_CABLE = () -> GOLD_CABLE;
+		ModContent.ELECTRUM_CABLE = () -> ELECTRUM_CABLE;
 		ModContent.INSULATED_COPPER_CABLE = () -> INSULATED_COPPER_CABLE;
 		ModContent.INSULATED_TIN_CABLE = () -> INSULATED_TIN_CABLE;
 		ModContent.INSULATED_GOLD_CABLE = () -> INSULATED_GOLD_CABLE;
+		ModContent.INSULATED_ELECTRUM_CABLE = () -> INSULATED_ELECTRUM_CABLE;
 		ModContent.ITEM_PIPE = () -> ITEM_PIPE;
 		ModContent.FLUID_PIPE = () -> FLUID_PIPE;
 		ModContent.MACERATOR = () -> MACERATOR;

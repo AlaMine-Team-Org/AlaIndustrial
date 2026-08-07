@@ -1,0 +1,38 @@
+{
+	"parent": "minecraft:recipes/root",
+	"criteria": {
+		"has_electrum_ingot": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:electrum_ingot"
+					}
+				]
+			}
+		},
+		"has_diamond_dust": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:diamond_dust"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_electrum_ingot"
+		],
+		[
+			"has_diamond_dust"
+		]
+	],
+	"rewards": {
+		"recipes": [
+			"alaindustrial:electrum_cable"
+		]
+	}
+}

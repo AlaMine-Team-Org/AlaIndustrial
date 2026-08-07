@@ -377,6 +377,44 @@
           ]
         },
         {
+          "id": "cesu",
+          "title": "Reinforced Energy Storage",
+          "icon": "alaindustrial:cesu",
+          "block_id": "alaindustrial:cesu",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reinforced Energy Storage",
+              "text": "The MV storage block — holds 100 000 EU, five times the starter buffer, and moves it four times faster at 128 EU/tick."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 100 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:battery_box",
+                "alaindustrial:advanced_machine_casing",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum"
+              ],
+              "result_id": "alaindustrial:cesu",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "Battery Box",
           "icon": "alaindustrial:battery_box",
@@ -571,6 +609,45 @@
           ]
         },
         {
+          "id": "insulated_electrum_cable",
+          "title": "Insulated Electrum Cable",
+          "icon": "alaindustrial:insulated_electrum_cable",
+          "block_id": "alaindustrial:insulated_electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Insulated Electrum Cable",
+              "text": "A rubber-sheathed electrum HV cable: the lowest loss in the mod and complete immunity to contact shock."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: ≤512 EU/packet",
+                "Buffer: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable"
+              ],
+              "result_id": "alaindustrial:insulated_electrum_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Copper Cable",
           "icon": "alaindustrial:copper_cable",
@@ -644,6 +721,45 @@
                 ""
               ],
               "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "electrum_cable",
+          "title": "Electrum Cable",
+          "icon": "alaindustrial:electrum_cable",
+          "block_id": "alaindustrial:electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Electrum Cable",
+              "text": "A bare HV cable of electrum ingots with a diamond-dust core — the ladder's widest wire and its lowest losses, at the price of an expensive craft."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: ≤512 EU/packet",
+                "Buffer: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
             }
           ]

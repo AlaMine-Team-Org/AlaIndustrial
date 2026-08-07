@@ -1,6 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
@@ -193,9 +194,20 @@ public final class CableEnergyScenarios {
 	 * and the two inequalities below would both fail.
 	 */
 	public static void cableGradesCarryTheirOwnBuffer(GameTestHelper helper) {
+		long electrum = fillAndReadMidCable(helper, ModContent.ELECTRUM_CABLE.get());
 		long gold = fillAndReadMidCable(helper, ModContent.GOLD_CABLE.get());
 		long copper = fillAndReadMidCable(helper, ModContent.COPPER_CABLE.get());
 		long tin = fillAndReadMidCable(helper, ModContent.TIN_CABLE.get());
+
+		if (electrum <= gold) {
+			helper.fail("electrum cable buffered " + electrum + " EU vs gold's " + gold
+					+ " — the HV cable must carry strictly more, otherwise the top rung is fiction");
+		}
+		if (electrum != CableType.ELECTRUM.segmentBuffer()) {
+			helper.fail("electrum line settled at " + electrum + " EU instead of its full "
+					+ CableType.ELECTRUM.segmentBuffer() + " — the run did not saturate, so this "
+					+ "comparison measures the drive length rather than the wire");
+		}
 
 		if (gold <= copper) {
 			helper.fail("gold cable buffered " + gold + " EU vs copper's " + copper
@@ -206,9 +218,10 @@ public final class CableEnergyScenarios {
 					+ " — tin is meant to be the narrow grade");
 		}
 		// Each grade must also respect its own per-segment ceiling, not some shared one.
-		if (gold > CableType.GOLD.segmentBuffer() || copper > CableType.COPPER.segmentBuffer()
-				|| tin > CableType.TIN.segmentBuffer()) {
-			helper.fail("a cable exceeded its grade's segment buffer (gold=" + gold + "/"
+		if (electrum > CableType.ELECTRUM.segmentBuffer() || gold > CableType.GOLD.segmentBuffer()
+				|| copper > CableType.COPPER.segmentBuffer() || tin > CableType.TIN.segmentBuffer()) {
+			helper.fail("a cable exceeded its grade's segment buffer (electrum=" + electrum + "/"
+					+ CableType.ELECTRUM.segmentBuffer() + ", gold=" + gold + "/"
 					+ CableType.GOLD.segmentBuffer() + ", copper=" + copper + "/"
 					+ CableType.COPPER.segmentBuffer() + ", tin=" + tin + "/"
 					+ CableType.TIN.segmentBuffer() + ")");
@@ -232,9 +245,15 @@ public final class CableEnergyScenarios {
 		if (be(helper, FLOW_GEN) instanceof GeneratorBlockEntity gen) {
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
 		}
-		// Enough ticks to both burn the EU (8 EU/t) and walk it down the line (~1 hop/tick): the widest
-		// grade needs 5 segments × 48 EU = 240 EU to saturate.
-		driveFlow(helper, 120);
+		// The drive length is DERIVED from the grade, not a constant. A fixed 120 ticks was enough while
+		// gold (5 × 48 = 240 EU at 8 EU/t = 30 ticks) was the widest grade, but electrum needs 5 × 192 =
+		// 960 EU = 120 ticks of generation before a single tick of travel — the run would have stopped
+		// exactly at saturation and this helper would have silently measured the drive length instead of
+		// the wire. Doubling the fill time and adding a flat margin covers the segment-to-segment walk
+		// (~1 hop/tick) and keeps the helper correct through any future rebalance of the ladder.
+		long fillEu = (long) FLOW_CABLES.length * CableBlock.typeOf(cable.defaultBlockState()).segmentBuffer();
+		int ticks = (int) (2 * fillEu / Math.max(1, Config.fuelEuPerTick)) + 120;
+		driveFlow(helper, ticks);
 		long mid = cableAmount(helper, FLOW_CABLES[2]);
 		// Tear the line down so the next grade starts from a clean network rather than inheriting this
 		// one's cables (the topology cache keys off the block entities that are actually present).

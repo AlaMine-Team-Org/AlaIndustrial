@@ -727,6 +727,13 @@ public final class Config {
 	/** Contact damage from an energized bare MV (gold) cable, in half-hearts. */
 	public static float bareCableShockMvDamage = 6.0f;
 	/**
+	 * Contact damage from an energized bare HV (electrum) cable, in half-hearts. Continues the
+	 * 2 → 6 → 10 ladder (MOD-358). HV shared the MV number until the electrum cable existed, because
+	 * no HV cable did; the teleporter station is an HV consumer but not a cable, so it never touched
+	 * this path.
+	 */
+	public static float bareCableShockHvDamage = 10.0f;
+	/**
 	 * Extra blocks the shock hazard reaches beyond the bare cable segment's own cell, in every
 	 * direction (proximity check, on top of the direct-contact shape). {@code 0} keeps the original
 	 * direct-touch-only behaviour.
@@ -763,7 +770,8 @@ public final class Config {
 	 */
 	public static int shockGuardGraceTicks = 20;
 
-	// --- Cable grades: tin (cheap/narrow) and gold (MV/wide), see core.energy.CableType (MOD-219) ---
+	// --- Cable grades: tin (cheap/narrow), gold (MV/wide) and electrum (HV/widest),
+	// see core.energy.CableType (MOD-219, MOD-358) ---
 	/**
 	 * Per-segment buffer of a tin cable — and therefore its real throughput (MOD-070: a cable carries its
 	 * buffer per tick). 8 EU/t is deliberately below copper's 12: tin is the cheap wire, narrower than
@@ -802,6 +810,27 @@ public final class Config {
 	 * a strict upgrade. Its packet cap is the shared {@link #tierMvVoltage}, not a private knob.
 	 */
 	public static double goldCableLossPerBlock = 0.03;
+	/**
+	 * Per-segment buffer of an electrum cable — its real throughput. 192 EU/t is 4× gold's 48, the same
+	 * ×4 step every previous rung of the ladder takes, so HV is the next rung rather than a leap. Its
+	 * packet cap is the shared {@link #tierHvVoltage} (512), not a private knob — same arrangement as
+	 * copper and gold; only tin owns a cap below its tier.
+	 *
+	 * <p><b>The "no battery from wires" invariant does not scale here</b> and is not meant to: that
+	 * ceiling ({@link #cableBuffer} × 1000 &lt; {@link #batteryBoxBuffer}) is a copper-scale rule about
+	 * the wire players run by the thousand. A 1000-segment electrum grid would bank 192 000 EU, but it
+	 * costs ~2 667 electrum ingots and ~1 333 diamonds to build — the craft, not the buffer, is what
+	 * keeps it out of reach. Gold already sits the same way (48 000 EU per 1000 segments).
+	 */
+	public static int electrumCableBuffer = 192;
+	/**
+	 * Fraction of throughput lost per electrum cable block traversed. {@code 0.005} is the lowest in the
+	 * mod — below even tin's 0.006 — and is a deliberate exception to the "wider pipe pays in distance"
+	 * rule that gold follows (research §3): electrum beats every other grade on every axis at once, and
+	 * pays for it purely in craft cost. Halved again by {@link #insulationLossMultiplier} on the
+	 * insulated variant, giving 0.0025.
+	 */
+	public static double electrumCableLossPerBlock = 0.005;
 
 	// --- Energy network ---
 	/** Max awake energy networks processed per server tick; the rest are deferred round-robin. */
@@ -1188,6 +1217,8 @@ public final class Config {
 				() -> bareCableShockLvDamage, v -> bareCableShockLvDamage = v, 0.0f),
 			new FloatField("bareCableShockMvDamage", "Damage from direct contact with an energized bare MV cable, in half-hearts.",
 				() -> bareCableShockMvDamage, v -> bareCableShockMvDamage = v, 0.0f),
+			new FloatField("bareCableShockHvDamage", "Damage from direct contact with an energized bare HV cable, in half-hearts.",
+				() -> bareCableShockHvDamage, v -> bareCableShockHvDamage = v, 0.0f),
 			new DoubleField("bareCableShockProximityRadius", "Extra blocks the shock hazard reaches beyond a bare cable segment's own cell in every direction (0 = direct-touch only).",
 				() -> bareCableShockProximityRadius, v -> bareCableShockProximityRadius = v, 0.0, 0.0),
 			new DoubleField("insulationLossMultiplier", "Multiplier applied to bare-cable attenuation for rubber-insulated tin/copper cables (0.5 = half the loss; throughput and packet cap are unchanged).",
@@ -1210,6 +1241,10 @@ public final class Config {
 				() -> goldCableBuffer, v -> goldCableBuffer = v, 1),
 			new DoubleField("goldCableLossPerBlock", "Fraction of throughput attenuated per gold cable block (0.03 = 3% of the remaining flow per block; worse than copper by design - gold buys throughput, not distance).",
 				() -> goldCableLossPerBlock, v -> goldCableLossPerBlock = v, 0.0, 0.0),
+			new IntField("electrumCableBuffer", "Per-segment working EU buffer of an electrum (HV) cable = its real throughput (192 EU/t, 4x gold).",
+				() -> electrumCableBuffer, v -> electrumCableBuffer = v, 1),
+			new DoubleField("electrumCableLossPerBlock", "Fraction of throughput attenuated per electrum cable block (0.005 = 0.5% of the remaining flow per block; the lowest in the mod - electrum pays in craft cost, not in distance).",
+				() -> electrumCableLossPerBlock, v -> electrumCableLossPerBlock = v, 0.0, 0.0),
 			new IntField("networksPerTick", "Max awake energy networks processed per server tick; the rest are deferred round-robin.",
 				() -> networksPerTick, v -> networksPerTick = v, 1),
 			new IntField("networkAnalyzerMaxTraversedNetworks", "Cap on networks the Network Analyzer's Traverse mode walks (visualization only, never affects energy).",

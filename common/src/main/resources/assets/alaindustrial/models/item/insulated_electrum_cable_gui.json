@@ -1,0 +1,4 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": { "layer0": "alaindustrial:item/preview_3d/insulated_electrum_cable" }
+}

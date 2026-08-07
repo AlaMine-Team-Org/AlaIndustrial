@@ -110,6 +110,37 @@ public final class CableInsulationScenarios {
 	}
 
 	/**
+	 * Fifty insulated electrum segments out-deliver fifty bare electrum ones (MOD-358).
+	 *
+	 * <p>Comparative for the same reason as its gold sibling, only more so: electrum is HV, two tiers
+	 * above the LV fixture that drives this line, so any literal EU/t here would pin how the network
+	 * resolves that mismatch rather than the insulation contract.
+	 */
+	public static void insulatedElectrumLosesLessThanBare(GameTestHelper helper) {
+		LineResult bare = runLine(helper, ModContent.ELECTRUM_CABLE.get(), -1);
+		LineResult insulated = runLine(helper, ModContent.INSULATED_ELECTRUM_CABLE.get(), -1);
+
+		if (bare.midpointType() != CableType.ELECTRUM
+				|| insulated.midpointType() != CableType.INSULATED_ELECTRUM) {
+			helper.fail("electrum fixture built the wrong grades: bare=" + bare.midpointType()
+					+ ", insulated=" + insulated.midpointType());
+			return;
+		}
+		if (bare.deliveredPerTick() <= 0 || insulated.deliveredPerTick() <= 0) {
+			helper.fail("electrum line delivered nothing: bare=" + bare.deliveredPerTick()
+					+ " EU/t, insulated=" + insulated.deliveredPerTick() + " EU/t");
+			return;
+		}
+		if (insulated.deliveredPerTick() <= bare.deliveredPerTick()) {
+			helper.fail("insulation did not reduce electrum loss: bare delivered "
+					+ bare.deliveredPerTick() + " EU/t, insulated delivered "
+					+ insulated.deliveredPerTick() + " EU/t");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
 	 * One bare copper segment keeps the bare tariff for an equal-cap mixed network, independent of
 	 * whether it sits at the source or sink end.
 	 */
@@ -136,6 +167,8 @@ public final class CableInsulationScenarios {
 				ModContent.INSULATED_TIN_CABLE_ITEM.get(), "insulated_tin_cable");
 		assertInsulationRecipe(helper, ModContent.GOLD_CABLE_ITEM.get(),
 				ModContent.INSULATED_GOLD_CABLE_ITEM.get(), "insulated_gold_cable");
+		assertInsulationRecipe(helper, ModContent.ELECTRUM_CABLE_ITEM.get(),
+				ModContent.INSULATED_ELECTRUM_CABLE_ITEM.get(), "insulated_electrum_cable");
 
 		List<Item> visible = new ArrayList<>();
 		CreativeTabContent.main(item -> visible.add(item.asItem()));
@@ -145,12 +178,15 @@ public final class CableInsulationScenarios {
 				"insulated_tin_cable");
 		assertVisibleExactlyOnce(helper, visible, ModContent.INSULATED_GOLD_CABLE_ITEM.get(),
 				"insulated_gold_cable");
+		assertVisibleExactlyOnce(helper, visible, ModContent.INSULATED_ELECTRUM_CABLE_ITEM.get(),
+				"insulated_electrum_cable");
 
 		for (Supplier<? extends ItemLike> hidden : RecipeViewerInfo.hiddenFromRecipeViewerItems()) {
 			Item item = hidden.get().asItem();
 			if (item == ModContent.INSULATED_COPPER_CABLE_ITEM.get()
 					|| item == ModContent.INSULATED_TIN_CABLE_ITEM.get()
-					|| item == ModContent.INSULATED_GOLD_CABLE_ITEM.get()) {
+					|| item == ModContent.INSULATED_GOLD_CABLE_ITEM.get()
+					|| item == ModContent.INSULATED_ELECTRUM_CABLE_ITEM.get()) {
 				helper.fail("public insulated cable remains hidden from REI/JEI: " + item);
 				return;
 			}

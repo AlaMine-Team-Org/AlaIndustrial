@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"E": "alaindustrial:electrum_ingot",
+		"D": "alaindustrial:diamond_dust"
+	},
+	"pattern": [
+		"EDE",
+		"DED",
+		"EDE"
+	],
+	"result": {
+		"id": "alaindustrial:electrum_cable",
+		"count": 3
+	}
+}

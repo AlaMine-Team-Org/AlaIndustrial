@@ -377,6 +377,44 @@
           ]
         },
         {
+          "id": "cesu",
+          "title": "Verstärkter Energiespeicher",
+          "icon": "alaindustrial:cesu",
+          "block_id": "alaindustrial:cesu",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Verstärkter Energiespeicher",
+              "text": "Der MV-Speicherblock — fasst 100 000 EU, das Fünffache des Anfangspuffers, und bewegt sie mit 128 EU/Tick viermal schneller."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 100 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:battery_box",
+                "alaindustrial:advanced_machine_casing",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum"
+              ],
+              "result_id": "alaindustrial:cesu",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "Energiespeicher",
           "icon": "alaindustrial:battery_box",
@@ -571,6 +609,45 @@
           ]
         },
         {
+          "id": "insulated_electrum_cable",
+          "title": "Isoliertes Elektrumkabel",
+          "icon": "alaindustrial:insulated_electrum_cable",
+          "block_id": "alaindustrial:insulated_electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Isoliertes Elektrumkabel",
+              "text": "Ein gummiummanteltes Elektrum-HV-Kabel: der niedrigste Verlust der Mod und vollständiger Schutz vor Berührungsschlägen."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: ≤512 EU/Paket",
+                "Puffer: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable"
+              ],
+              "result_id": "alaindustrial:insulated_electrum_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Kupferkabel",
           "icon": "alaindustrial:copper_cable",
@@ -644,6 +721,45 @@
                 ""
               ],
               "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "electrum_cable",
+          "title": "Elektrumkabel",
+          "icon": "alaindustrial:electrum_cable",
+          "block_id": "alaindustrial:electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrumkabel",
+              "text": "Ein blankes HV-Kabel aus Elektrumbarren mit Diamantstaub-Kern — das breiteste Kabel der Leiter mit den geringsten Verlusten, zum Preis eines teuren Rezepts."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: ≤512 EU/Paket",
+                "Puffer: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
             }
           ]

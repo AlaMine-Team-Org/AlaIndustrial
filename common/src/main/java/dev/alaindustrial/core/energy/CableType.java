@@ -5,8 +5,8 @@ import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 
 /**
- * The three conductor grades, plus the rubber-insulated LV variants, and the balance numbers that
- * make them different (MOD-219/MOD-259).
+ * The four conductor grades, each with its rubber-insulated variant, and the balance numbers that
+ * make them different (MOD-219/MOD-259/MOD-268/MOD-358).
  *
  * <p>Before this existed, all cable blocks shared one {@code CableBlockEntity} hardcoded to
  * {@link EnergyTier#LV}, {@link Config#cableBuffer} and {@link Config#copperCableLossPerBlock}, so
@@ -42,7 +42,17 @@ import java.util.function.IntSupplier;
  *       <td>Wide pipe: 4× copper's throughput, paid for with the highest loss per block</td></tr>
  *   <tr><td>{@link #INSULATED_GOLD}</td><td>MV</td><td>48 EU/t</td><td>128 EU/t</td><td>0.015</td>
  *       <td>Rubber upgrade: gold's throughput with half the loss</td></tr>
+ *   <tr><td>{@link #ELECTRUM}</td><td>HV</td><td>192 EU/t</td><td>512 EU/t</td><td>0.005</td>
+ *       <td>The trunk line: 4× gold's throughput <b>and</b> the lowest loss in the mod — the one grade
+ *       that does not trade distance for width, paying in craft cost instead (MOD-358)</td></tr>
+ *   <tr><td>{@link #INSULATED_ELECTRUM}</td><td>HV</td><td>192 EU/t</td><td>512 EU/t</td><td>0.0025</td>
+ *       <td>Rubber upgrade: half of the lowest loss there is</td></tr>
  * </table>
+ *
+ * <p><b>Electrum breaks the "wider pipe, higher toll" pattern on purpose.</b> Tin→copper→gold each buy
+ * throughput with loss; electrum is strictly better than all of them on every axis. That is not an
+ * oversight but the shape of the top rung: its cost is the recipe (electrum ingots — an alloy with no
+ * other consumer — plus diamond dust), not a running penalty.
  *
  * <p>All numbers are read <b>live</b> from {@link Config} (same contract as
  * {@link EnergyTier#maxVoltage()}), so a server operator can retune them from
@@ -77,7 +87,14 @@ public enum CableType {
 			() -> Config.goldCableLossPerBlock, false),
 	/** Rubber-insulated gold: unchanged MV throughput with half the attenuation. */
 	INSULATED_GOLD("insulated_gold", EnergyTier.MV, () -> Config.tierMvVoltage, () -> Config.goldCableBuffer,
-			() -> Config.goldCableLossPerBlock * Config.insulationLossMultiplier, true);
+			() -> Config.goldCableLossPerBlock * Config.insulationLossMultiplier, true),
+	/** HV grade: 4× gold throughput AND the lowest loss in the mod — pays in craft cost instead. */
+	ELECTRUM("electrum", EnergyTier.HV, () -> Config.tierHvVoltage, () -> Config.electrumCableBuffer,
+			() -> Config.electrumCableLossPerBlock, false),
+	/** Rubber-insulated electrum: unchanged HV throughput with half of the mod's lowest attenuation. */
+	INSULATED_ELECTRUM("insulated_electrum", EnergyTier.HV, () -> Config.tierHvVoltage,
+			() -> Config.electrumCableBuffer,
+			() -> Config.electrumCableLossPerBlock * Config.insulationLossMultiplier, true);
 
 	private final String name;
 	private final EnergyTier tier;
@@ -132,11 +149,16 @@ public enum CableType {
 		return insulated;
 	}
 
-	/** Player contact damage for this cable's voltage tier, in vanilla half-heart units. */
+	/**
+	 * Player contact damage for this cable's voltage tier, in vanilla half-heart units. HV shared MV's
+	 * number until MOD-358, for the simple reason that no HV cable existed to ask for one — the
+	 * teleporter station is an HV consumer, not a cable, so it never reached this path.
+	 */
 	public float shockDamage() {
 		return switch (tier) {
 			case LV -> Config.bareCableShockLvDamage;
-			case MV, HV -> Config.bareCableShockMvDamage;
+			case MV -> Config.bareCableShockMvDamage;
+			case HV -> Config.bareCableShockHvDamage;
 		};
 	}
 

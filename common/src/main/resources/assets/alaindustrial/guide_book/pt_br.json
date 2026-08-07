@@ -377,6 +377,44 @@
           ]
         },
         {
+          "id": "cesu",
+          "title": "Reservatório de Energia Reforçado",
+          "icon": "alaindustrial:cesu",
+          "block_id": "alaindustrial:cesu",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reservatório de Energia Reforçado",
+              "text": "O bloco de armazenamento MV — guarda 100 000 EU, cinco vezes o buffer inicial, e os move quatro vezes mais rápido, a 128 EU/tick."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 100 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:battery_box",
+                "alaindustrial:advanced_machine_casing",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum"
+              ],
+              "result_id": "alaindustrial:cesu",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "Reservatório de Energia",
           "icon": "alaindustrial:battery_box",
@@ -571,6 +609,45 @@
           ]
         },
         {
+          "id": "insulated_electrum_cable",
+          "title": "Cabo de Electro Isolado",
+          "icon": "alaindustrial:insulated_electrum_cable",
+          "block_id": "alaindustrial:insulated_electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cabo de Electro Isolado",
+              "text": "Um cabo de electro HV revestido de borracha: a menor perda do mod e imunidade total a choques por contato."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: ≤512 EU/pacote",
+                "Buffer: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable"
+              ],
+              "result_id": "alaindustrial:insulated_electrum_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Cabo de Cobre",
           "icon": "alaindustrial:copper_cable",
@@ -644,6 +721,45 @@
                 ""
               ],
               "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "electrum_cable",
+          "title": "Cabo de Electro",
+          "icon": "alaindustrial:electrum_cable",
+          "block_id": "alaindustrial:electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cabo de Electro",
+              "text": "Um cabo HV nu de lingotes de electro com núcleo de pó de diamante — o cabo mais largo da escada e o de menores perdas, ao preço de uma receita cara."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: ≤512 EU/pacote",
+                "Buffer: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
             }
           ]

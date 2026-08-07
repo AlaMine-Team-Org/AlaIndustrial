@@ -1,17 +1,14 @@
-## 0.1.75
+## 0.1.76
 
-<p><img alt="Reinforced Energy Storage block placed in the world" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.75/release-media/v0.1.75/changelog.png" width="720"></p>
+<p><img alt="Electrum and insulated electrum cables running across a snowy field" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.76/release-media/v0.1.76/changelog.png" width="720"></p>
 
-A bigger battery for your base, and teleporters that finally charge from one.
+The cable ladder finally reaches high voltage — and the top rung has no downside except its price.
 
 ### New
 
-- **Reinforced Energy Storage — five times the room.** Holds 100 000 EU against the Battery Box's 20 000, and moves 128 EU/t.
-- **Built from the box you already have.** Battery Box in the centre, electrum ingots in the corners, advanced casings and circuits around it.
-- **A slot that takes charge back.** The right slot drains a powered item into the block — come home with a full energy pack and hand it to the base.
-- **You can tell the sockets apart.** Blue takes power in, orange gives it out.
-
-### Fixed
-
-- **Teleporters and charging stations charge from storage again.** Wire one to a battery box and it stayed empty forever, no matter how long you waited. Now it draws 12 EU/t.
-- **Your bank keeps half for the machines.** A store only gives away what it holds above 50 %, so one teleporter can't drink the base dry. Want it filled outright? Put the store flush against it — that path has no limit.
+- **Electrum Cable — the first high-voltage wire.** Carries **192 EU/tick**, four times the gold cable.
+- **It loses the least, too.** Half a percent per block, beating even the tin cable's six tenths. Every other wide wire pays for its width in losses; this one doesn't.
+- **The price is the craft.** 8 electrum ingots + 4 diamond dusts = 3 cables. Electrum ingots finally have a use — the Alloy Smelter could make them, but nothing consumed them.
+- **Insulated Electrum Cable** ships with it: same 192 EU/tick, half the loss, no shock. 6 bare cables + 3 rubber = 6 insulated.
+- **Bare electrum bites hardest:** 10 damage against gold's 6. Wear the rubber version indoors.
+- **The Teleporter Station feels it most.** Its half-million EU buffer now fills in roughly 2 minutes instead of 9 — as long as your generators can actually supply that much.

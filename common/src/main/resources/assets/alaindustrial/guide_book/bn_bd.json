@@ -377,6 +377,44 @@
           ]
         },
         {
+          "id": "cesu",
+          "title": "উন্নত ব্যাটারি বাক্স",
+          "icon": "alaindustrial:cesu",
+          "block_id": "alaindustrial:cesu",
+          "pages": [
+            {
+              "type": "text",
+              "title": "উন্নত ব্যাটারি বাক্স",
+              "text": "MV সঞ্চয় ব্লক — 100 000 EU ধরে, শুরুর বাফারের পাঁচ গুণ, এবং 128 EU/টিক গতিতে চার গুণ দ্রুত আদান-প্রদান করে।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 100 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:battery_box",
+                "alaindustrial:advanced_machine_casing",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum"
+              ],
+              "result_id": "alaindustrial:cesu",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "ব্যাটারি বাক্স",
           "icon": "alaindustrial:battery_box",
@@ -571,6 +609,45 @@
           ]
         },
         {
+          "id": "insulated_electrum_cable",
+          "title": "অন্তরিত ইলেকট্রামের কেবল",
+          "icon": "alaindustrial:insulated_electrum_cable",
+          "block_id": "alaindustrial:insulated_electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "অন্তরিত ইলেকট্রামের কেবল",
+              "text": "রাবারে মোড়া ইলেকট্রাম HV কেবল: মডের সর্বনিম্ন ক্ষতি এবং স্পর্শে বিদ্যুৎস্পৃষ্ট হওয়ার সম্পূর্ণ সুরক্ষা।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: ≤512 EU/packet",
+                "বাফার: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable"
+              ],
+              "result_id": "alaindustrial:insulated_electrum_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "তামার কেবল",
           "icon": "alaindustrial:copper_cable",
@@ -644,6 +721,45 @@
                 ""
               ],
               "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "electrum_cable",
+          "title": "ইলেকট্রামের কেবল",
+          "icon": "alaindustrial:electrum_cable",
+          "block_id": "alaindustrial:electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ইলেকট্রামের কেবল",
+              "text": "হীরার গুঁড়োর কোরসহ ইলেকট্রামের পিণ্ড দিয়ে তৈরি খোলা HV কেবল — সিঁড়ির সবচেয়ে চওড়া এবং সবচেয়ে কম ক্ষতির তার, দামি রেসিপির বিনিময়ে।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: ≤512 EU/packet",
+                "বাফার: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
             }
           ]

@@ -170,7 +170,7 @@ public final class NeoForgeGameTests {
 				CableEnergyScenarios::lineAccumulatesInSegments);
 		registerTest(event, "break_retains_at_source", 100, true,
 				CableEnergyScenarios::breakRetainsAtSource);
-		// MOD-219: each cable grade carries its own segment buffer, so gold > copper > tin in throughput.
+		// MOD-219/MOD-358: each grade carries its own segment buffer — electrum > gold > copper > tin.
 		registerTest(event, "cable_grades_carry_their_own_buffer", 260, true,
 				CableEnergyScenarios::cableGradesCarryTheirOwnBuffer);
 		registerTest(event, "mixed_network_takes_loss_from_strongest_cable", 220, true,
@@ -181,6 +181,8 @@ public final class NeoForgeGameTests {
 				CableInsulationScenarios::insulatedTinLosesLessThanBare);
 		registerTest(event, "mod268_insulated_gold_loses_less_than_bare", 400, true,
 				CableInsulationScenarios::insulatedGoldLosesLessThanBare);
+		registerTest(event, "mod358_insulated_electrum_loses_less_than_bare", 400, true,
+				CableInsulationScenarios::insulatedElectrumLosesLessThanBare);
 		registerTest(event, "mod259_mixed_copper_uses_bare_loss_deterministically", 400, true,
 				CableInsulationScenarios::mixedCopperUsesBareLossDeterministically);
 		registerTest(event, "mod259_recipes_and_visibility", 40, true,

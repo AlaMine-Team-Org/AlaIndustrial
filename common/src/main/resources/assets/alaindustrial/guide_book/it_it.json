@@ -377,6 +377,44 @@
           ]
         },
         {
+          "id": "cesu",
+          "title": "Deposito di energia rinforzato",
+          "icon": "alaindustrial:cesu",
+          "block_id": "alaindustrial:cesu",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Deposito di energia rinforzato",
+              "text": "Il blocco di accumulo MV: contiene 100 000 EU, cinque volte il buffer iniziale, e li muove quattro volte più in fretta, a 128 EU/tick."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: 100 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:battery_box",
+                "alaindustrial:advanced_machine_casing",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum"
+              ],
+              "result_id": "alaindustrial:cesu",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "Deposito di energia",
           "icon": "alaindustrial:battery_box",
@@ -571,6 +609,45 @@
           ]
         },
         {
+          "id": "insulated_electrum_cable",
+          "title": "Cavo di elettro isolato",
+          "icon": "alaindustrial:insulated_electrum_cable",
+          "block_id": "alaindustrial:insulated_electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cavo di elettro isolato",
+              "text": "Un cavo di elettro HV rivestito in gomma: la perdita più bassa della mod e immunità totale alle scosse da contatto."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: ≤512 EU/pacchetto",
+                "Buffer: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable"
+              ],
+              "result_id": "alaindustrial:insulated_electrum_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Cavo di rame",
           "icon": "alaindustrial:copper_cable",
@@ -644,6 +721,45 @@
                 ""
               ],
               "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "electrum_cable",
+          "title": "Cavo di elettro",
+          "icon": "alaindustrial:electrum_cable",
+          "block_id": "alaindustrial:electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cavo di elettro",
+              "text": "Un cavo HV nudo di lingotti di elettro con anima in polvere di diamante: il cavo più ampio della scala e con le perdite minori, al prezzo di una ricetta costosa."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: ≤512 EU/pacchetto",
+                "Buffer: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
             }
           ]

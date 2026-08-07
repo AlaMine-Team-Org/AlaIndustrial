@@ -377,6 +377,44 @@
           ]
         },
         {
+          "id": "cesu",
+          "title": "Wzmocniony magazyn energii",
+          "icon": "alaindustrial:cesu",
+          "block_id": "alaindustrial:cesu",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Wzmocniony magazyn energii",
+              "text": "Blok magazynowy MV — mieści 100 000 EU, pięciokrotność bufora startowego, i przesyła je cztery razy szybciej, po 128 EU/tik."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 100 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:battery_box",
+                "alaindustrial:advanced_machine_casing",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum"
+              ],
+              "result_id": "alaindustrial:cesu",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "Magazyn energii",
           "icon": "alaindustrial:battery_box",
@@ -571,6 +609,45 @@
           ]
         },
         {
+          "id": "insulated_electrum_cable",
+          "title": "Izolowany kabel elektrumowy",
+          "icon": "alaindustrial:insulated_electrum_cable",
+          "block_id": "alaindustrial:insulated_electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Izolowany kabel elektrumowy",
+              "text": "Kabel elektrumowy HV w gumowej osłonie: najniższe straty w modzie i pełna odporność na porażenie przy dotknięciu."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: ≤512 EU/pakiet",
+                "Bufor: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable"
+              ],
+              "result_id": "alaindustrial:insulated_electrum_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Kabel miedziany",
           "icon": "alaindustrial:copper_cable",
@@ -644,6 +721,45 @@
                 ""
               ],
               "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "electrum_cable",
+          "title": "Kabel elektrumowy",
+          "icon": "alaindustrial:electrum_cable",
+          "block_id": "alaindustrial:electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kabel elektrumowy",
+              "text": "Goły kabel HV ze sztabek elektrum z rdzeniem z pyłu diamentowego — najszerszy kabel drabinki i o najniższych stratach, w cenie drogiej receptury."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: ≤512 EU/pakiet",
+                "Bufor: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
             }
           ]

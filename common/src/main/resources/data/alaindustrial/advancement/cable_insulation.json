@@ -17,7 +17,11 @@
     "insulated_gold": {
       "trigger": "minecraft:inventory_changed",
       "conditions": { "items": [ { "items": "alaindustrial:insulated_gold_cable" } ] }
+    },
+    "insulated_electrum": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": "alaindustrial:insulated_electrum_cable" } ] }
     }
   },
-  "requirements": [[ "insulated_copper", "insulated_tin", "insulated_gold" ]]
+  "requirements": [[ "insulated_copper", "insulated_tin", "insulated_gold", "insulated_electrum" ]]
 }

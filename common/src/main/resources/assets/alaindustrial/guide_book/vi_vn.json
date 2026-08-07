@@ -377,6 +377,44 @@
           ]
         },
         {
+          "id": "cesu",
+          "title": "Hộp pin gia cố",
+          "icon": "alaindustrial:cesu",
+          "block_id": "alaindustrial:cesu",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Hộp pin gia cố",
+              "text": "Khối lưu trữ MV — chứa 100 000 EU, gấp năm lần bộ đệm khởi đầu, và truyền nhanh gấp bốn lần ở 128 EU/tick."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 100 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:battery_box",
+                "alaindustrial:advanced_machine_casing",
+                "#c:ingots/electrum",
+                "alaindustrial:advanced_circuit",
+                "#c:ingots/electrum"
+              ],
+              "result_id": "alaindustrial:cesu",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "battery_box",
           "title": "Hộp pin",
           "icon": "alaindustrial:battery_box",
@@ -571,6 +609,45 @@
           ]
         },
         {
+          "id": "insulated_electrum_cable",
+          "title": "Cáp Electrum cách điện",
+          "icon": "alaindustrial:insulated_electrum_cable",
+          "block_id": "alaindustrial:insulated_electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cáp Electrum cách điện",
+              "text": "Cáp Electrum HV bọc cao su: tổn hao thấp nhất trong mod và miễn nhiễm hoàn toàn với điện giật khi chạm."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: ≤512 EU/gói",
+                "Bộ đệm: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable",
+                "alaindustrial:electrum_cable"
+              ],
+              "result_id": "alaindustrial:insulated_electrum_cable",
+              "result_count": 6
+            }
+          ]
+        },
+        {
           "id": "copper_cable",
           "title": "Cáp Đồng",
           "icon": "alaindustrial:copper_cable",
@@ -644,6 +721,45 @@
                 ""
               ],
               "result_id": "alaindustrial:tin_cable",
+              "result_count": 3
+            }
+          ]
+        },
+        {
+          "id": "electrum_cable",
+          "title": "Cáp Electrum",
+          "icon": "alaindustrial:electrum_cable",
+          "block_id": "alaindustrial:electrum_cable",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cáp Electrum",
+              "text": "Cáp HV trần làm từ thỏi electrum với lõi bụi kim cương — sợi cáp rộng nhất của bậc thang và tổn hao thấp nhất, đổi lại là công thức đắt đỏ."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: ≤512 EU/gói",
+                "Bộ đệm: 192 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:diamond_dust",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:electrum_cable",
               "result_count": 3
             }
           ]

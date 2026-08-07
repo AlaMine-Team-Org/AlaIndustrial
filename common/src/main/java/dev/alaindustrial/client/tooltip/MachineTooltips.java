@@ -631,7 +631,7 @@ public final class MachineTooltips {
 		};
 	}
 
-	/** HV tier line — the teleporter station is the mod's only HV block (MOD-091). */
+	/** HV tier line — the teleporter station (MOD-091) and the electrum cable (MOD-358). */
 	private static Component tierHv() {
 		return Component.translatable("tooltip.alaindustrial.tier_hv")
 				.withStyle(ChatFormatting.LIGHT_PURPLE);

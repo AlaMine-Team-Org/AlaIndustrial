@@ -149,6 +149,9 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("tin_cable", p -> new CableBlock(CableType.TIN, p), props("tin_cable"));
 	public static final DeferredBlock<CableBlock> GOLD_CABLE =
 			BLOCKS.registerBlock("gold_cable", p -> new CableBlock(CableType.GOLD, p), props("gold_cable"));
+	public static final DeferredBlock<CableBlock> ELECTRUM_CABLE =
+			BLOCKS.registerBlock("electrum_cable", p -> new CableBlock(CableType.ELECTRUM, p),
+					props("electrum_cable"));
 	public static final DeferredBlock<CableBlock> INSULATED_COPPER_CABLE =
 			BLOCKS.registerBlock("insulated_copper_cable", p -> new CableBlock(CableType.INSULATED_COPPER, p),
 					props("insulated_copper_cable"));
@@ -158,6 +161,9 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<CableBlock> INSULATED_GOLD_CABLE =
 			BLOCKS.registerBlock("insulated_gold_cable", p -> new CableBlock(CableType.INSULATED_GOLD, p),
 					props("insulated_gold_cable"));
+	public static final DeferredBlock<CableBlock> INSULATED_ELECTRUM_CABLE =
+			BLOCKS.registerBlock("insulated_electrum_cable", p -> new CableBlock(CableType.INSULATED_ELECTRUM, p),
+					props("insulated_electrum_cable"));
 	public static final DeferredBlock<ItemPipeBlock> ITEM_PIPE =
 			BLOCKS.registerBlock("item_pipe", ItemPipeBlock::new, props("item_pipe"));
 	public static final DeferredBlock<FluidPipeBlock> FLUID_PIPE =
@@ -294,9 +300,11 @@ public final class ModBlocksNeoForge {
 		ModContent.COPPER_CABLE = COPPER_CABLE::get;
 		ModContent.TIN_CABLE = TIN_CABLE::get;
 		ModContent.GOLD_CABLE = GOLD_CABLE::get;
+		ModContent.ELECTRUM_CABLE = ELECTRUM_CABLE::get;
 		ModContent.INSULATED_COPPER_CABLE = INSULATED_COPPER_CABLE::get;
 		ModContent.INSULATED_TIN_CABLE = INSULATED_TIN_CABLE::get;
 		ModContent.INSULATED_GOLD_CABLE = INSULATED_GOLD_CABLE::get;
+		ModContent.INSULATED_ELECTRUM_CABLE = INSULATED_ELECTRUM_CABLE::get;
 		ModContent.ITEM_PIPE = ITEM_PIPE::get;
 		ModContent.FLUID_PIPE = FLUID_PIPE::get;
 		ModContent.TIN_ORE = TIN_ORE::get;

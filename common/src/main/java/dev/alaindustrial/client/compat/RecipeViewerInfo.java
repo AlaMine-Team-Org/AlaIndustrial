@@ -53,8 +53,9 @@ public final class RecipeViewerInfo {
 	 *
 	 * <p>Today: only the recipe-less filled vacuum capsule. The base
 	 * {@code water_mill}, {@code wind_mill}, both T2 wind mills (restored in MOD-172 — recipe-less,
-	 * obtained by evolution) and all three shipped cable grades — {@code tin_cable}, {@code copper_cable},
-	 * {@code gold_cable} (MOD-219), plus both insulated LV upgrades (MOD-259), stay visible.
+	 * obtained by evolution) and every shipped cable grade — {@code tin_cable}, {@code copper_cable},
+	 * {@code gold_cable} (MOD-219), {@code electrum_cable} (MOD-358) and all four insulated variants
+	 * (MOD-259/MOD-268/MOD-358) — stay visible.
 	 * Each entry is the same {@code Supplier<? extends ItemLike>} used everywhere else in the mod, so
 	 * the Fabric and NeoForge recipe viewers read one source and cannot drift.
 	 */

@@ -382,12 +382,16 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("tin_cable", ModBlocksNeoForge.TIN_CABLE);
 	public static final DeferredItem<BlockItem> GOLD_CABLE_ITEM =
 			ITEMS.registerSimpleBlockItem("gold_cable", ModBlocksNeoForge.GOLD_CABLE);
+	public static final DeferredItem<BlockItem> ELECTRUM_CABLE_ITEM =
+			ITEMS.registerSimpleBlockItem("electrum_cable", ModBlocksNeoForge.ELECTRUM_CABLE);
 	public static final DeferredItem<BlockItem> INSULATED_COPPER_CABLE_ITEM =
 			ITEMS.registerSimpleBlockItem("insulated_copper_cable", ModBlocksNeoForge.INSULATED_COPPER_CABLE);
 	public static final DeferredItem<BlockItem> INSULATED_TIN_CABLE_ITEM =
 			ITEMS.registerSimpleBlockItem("insulated_tin_cable", ModBlocksNeoForge.INSULATED_TIN_CABLE);
 	public static final DeferredItem<BlockItem> INSULATED_GOLD_CABLE_ITEM =
 			ITEMS.registerSimpleBlockItem("insulated_gold_cable", ModBlocksNeoForge.INSULATED_GOLD_CABLE);
+	public static final DeferredItem<BlockItem> INSULATED_ELECTRUM_CABLE_ITEM =
+			ITEMS.registerSimpleBlockItem("insulated_electrum_cable", ModBlocksNeoForge.INSULATED_ELECTRUM_CABLE);
 	// MOD-108: not registerSimpleBlockItem — the pipe needs its own BlockItem subclass to carry a
 	// tooltip (plain hint + Shift for the throughput numbers).
 	public static final DeferredItem<BlockItem> ITEM_PIPE_ITEM =
@@ -623,9 +627,11 @@ public final class ModItemsNeoForge {
 		ModContent.COPPER_CABLE_ITEM = COPPER_CABLE_ITEM;
 		ModContent.TIN_CABLE_ITEM = TIN_CABLE_ITEM;
 		ModContent.GOLD_CABLE_ITEM = GOLD_CABLE_ITEM;
+		ModContent.ELECTRUM_CABLE_ITEM = ELECTRUM_CABLE_ITEM;
 		ModContent.INSULATED_COPPER_CABLE_ITEM = INSULATED_COPPER_CABLE_ITEM;
 		ModContent.INSULATED_TIN_CABLE_ITEM = INSULATED_TIN_CABLE_ITEM;
 		ModContent.INSULATED_GOLD_CABLE_ITEM = INSULATED_GOLD_CABLE_ITEM;
+		ModContent.INSULATED_ELECTRUM_CABLE_ITEM = INSULATED_ELECTRUM_CABLE_ITEM;
 		ModContent.ITEM_PIPE_ITEM = ITEM_PIPE_ITEM;
 		ModContent.FLUID_PIPE_ITEM = FLUID_PIPE_ITEM;
 		ModContent.TIN_ORE_ITEM = TIN_ORE_ITEM;

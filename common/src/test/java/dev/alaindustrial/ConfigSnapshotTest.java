@@ -256,6 +256,8 @@ class ConfigSnapshotTest {
 		SENTINELS.put("tinCableLossPerBlock", 0.012);
 		SENTINELS.put("goldCableBuffer", 64);
 		SENTINELS.put("goldCableLossPerBlock", 0.045);
+		SENTINELS.put("electrumCableBuffer", 208);
+		SENTINELS.put("electrumCableLossPerBlock", 0.0075);
 		// Network / worldgen.
 		SENTINELS.put("networksPerTick", 1024);
 		SENTINELS.put("networkAnalyzerMaxTraversedNetworks", 64);
@@ -289,6 +291,7 @@ class ConfigSnapshotTest {
 		// Gson's rendering matches Float.toString in the snapshot assertion.
 		SENTINELS.put("bareCableShockLvDamage", 3.25f);
 		SENTINELS.put("bareCableShockMvDamage", 7.75f);
+		SENTINELS.put("bareCableShockHvDamage", 11.25f);
 		SENTINELS.put("bareCableShockProximityRadius", 0.85);
 		SENTINELS.put("insulationLossMultiplier", 0.35);
 		SENTINELS.put("shockGuardWoodHitChance", 0.62);

@@ -306,37 +306,48 @@ public final class DemoStand {
 	}
 
 	/**
-	 * Zone <b>cables</b> (rows z=14..24, one per cable type): a fully charged battery box
-	 * feeds a 6-cable run into an electric furnace with input — a live network per row, so the
-	 * energy visibly flows (and the resistive loss of each material is observable in the GUI).
+	 * Zone <b>cables</b> (rows z=14..20, in <b>two columns</b>: bare grades at x=16..23, their insulated
+	 * counterparts at x=25..32): a fully charged battery box feeds a 6-cable run into an electric furnace
+	 * with input — a live network per run, so the energy visibly flows (and the resistive loss of each
+	 * material is observable in the GUI).
+	 *
+	 * <p>One column of eight runs does not fit. Rows must stay two apart or adjacent runs would connect
+	 * into a single network, and at that spacing eight grades reach z=28 — past the z=26 item/fluid row
+	 * (which is placed after this loop and would silently overwrite the seventh run) and past
+	 * {@link #DEPTH} entirely for the eighth. Pairing each conductor with its insulated version side by
+	 * side also reads better than a list: the loss difference is one glance away instead of four rows.
 	 */
 	private static void buildCableRuns(ServerLevel level, BlockPos origin) {
-		Block[] cables = {ModContent.COPPER_CABLE.get(), ModContent.TIN_CABLE.get(),
-				ModContent.GOLD_CABLE.get(),
-				ModContent.INSULATED_COPPER_CABLE.get(), ModContent.INSULATED_TIN_CABLE.get(),
-				ModContent.INSULATED_GOLD_CABLE.get()};
+		Block[][] cables = {
+			{ModContent.COPPER_CABLE.get(), ModContent.INSULATED_COPPER_CABLE.get()},
+			{ModContent.TIN_CABLE.get(), ModContent.INSULATED_TIN_CABLE.get()},
+			{ModContent.GOLD_CABLE.get(), ModContent.INSULATED_GOLD_CABLE.get()},
+			{ModContent.ELECTRUM_CABLE.get(), ModContent.INSULATED_ELECTRUM_CABLE.get()},
+		};
 		int z = 14;
-		for (Block cable : cables) {
-			// The box's rotation is load-bearing: single-axis IO (MOD-006) emits ONLY from the face
-			// opposite FACING. The cable run sits to the box's east (x=17..22), so the box must face
-			// WEST for its output face to meet the cables. Placed with the default state (FACING=NORTH)
-			// it would emit southward into thin air, the cables would not connect, and the whole row
-			// would sit dead (MOD-103) — the same fix pattern as the misc zone's teleporter box.
-			level.setBlockAndUpdate(origin.offset(16, 1, z), ModContent.BATTERY_BOX.get().defaultBlockState()
-					.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
-			chargeBuffer(level, origin, 16, 1, z);
-			for (int x = 17; x <= 22; x++) {
-				set(level, origin, x, 1, z, cable);
+		for (Block[] row : cables) {
+			for (int column = 0; column < row.length; column++) {
+				int x0 = 16 + column * 9;
+				// The box's rotation is load-bearing: single-axis IO (MOD-006) emits ONLY from the face
+				// opposite FACING. The cable run sits to the box's east, so the box must face WEST for its
+				// output face to meet the cables. Placed with the default state (FACING=NORTH) it would emit
+				// southward into thin air, the cables would not connect, and the whole row would sit dead
+				// (MOD-103) — the same fix pattern as the misc zone's teleporter box.
+				level.setBlockAndUpdate(origin.offset(x0, 1, z), ModContent.BATTERY_BOX.get().defaultBlockState()
+						.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+				chargeBuffer(level, origin, x0, 1, z);
+				for (int x = x0 + 1; x <= x0 + 6; x++) {
+					set(level, origin, x, 1, z, row[column]);
+				}
+				set(level, origin, x0 + 7, 1, z, ModContent.ELECTRIC_FURNACE.get());
+				fillSlot(level, origin, x0 + 7, 1, z, 0, new ItemStack(Items.RAW_COPPER, 64));
 			}
-			set(level, origin, 23, 1, z, ModContent.ELECTRIC_FURNACE.get());
-			fillSlot(level, origin, 23, 1, z, 0, new ItemStack(Items.RAW_COPPER, 64));
 			z += 2;
 		}
 		// MOD-104: a short item-pipe run between two chests. The two end faces remain neutral
 		// in the stand; the wrench is used by the player to demonstrate extract/insert arrows.
-		// Sits one row past the last cable row. That boundary keeps moving as grades are added —
-		// gold (MOD-219) pushed the cable loop to z=22, insulated gold (MOD-268) to z=24 — so this
-		// row now starts at z=26 instead of being overwritten by the loop's last iteration.
+		// Sits well past the last cable row (z=20 since MOD-358 paired the grades into two columns;
+		// before that the single column kept creeping toward this row as grades were added).
 		set(level, origin, 16, 1, 26, ModContent.IRON_CHEST.get());
 		fillSlot(level, origin, 16, 1, 26, 0, new ItemStack(Items.IRON_INGOT, 32));
 		for (int x = 17; x <= 21; x++) set(level, origin, x, 1, 26, ModContent.ITEM_PIPE.get());

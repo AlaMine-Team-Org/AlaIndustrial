@@ -230,13 +230,15 @@ public final class CreativeTabContent {
 		out.accept(ModContent.GOLD_CHEST_ITEM.get());
 		out.accept(ModContent.STORAGE_MODULE_ITEM.get());
 		out.accept(ModContent.STOCK_DISPLAY_FRAME_ITEM.get());
-		// The conductor ladder and its rubber-insulated LV upgrades (MOD-219/MOD-259).
+		// The conductor ladder and its rubber-insulated upgrades (MOD-219/MOD-259/MOD-358).
 		out.accept(ModContent.TIN_CABLE_ITEM.get());
 		out.accept(ModContent.INSULATED_TIN_CABLE_ITEM.get());
 		out.accept(ModContent.COPPER_CABLE_ITEM.get());
 		out.accept(ModContent.INSULATED_COPPER_CABLE_ITEM.get());
 		out.accept(ModContent.GOLD_CABLE_ITEM.get());
 		out.accept(ModContent.INSULATED_GOLD_CABLE_ITEM.get());
+		out.accept(ModContent.ELECTRUM_CABLE_ITEM.get());
+		out.accept(ModContent.INSULATED_ELECTRUM_CABLE_ITEM.get());
 		out.accept(ModContent.ITEM_PIPE_ITEM.get());
 		out.accept(ModContent.FLUID_PIPE_ITEM.get());
 	}

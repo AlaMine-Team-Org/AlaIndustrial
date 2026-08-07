@@ -1263,6 +1263,11 @@ public class NetworkGameTest {
 	}
 
 	@GameTest(maxTicks = 400)
+	public void mod358_insulatedElectrumLosesLessThanBare(GameTestHelper helper) {
+		CableInsulationScenarios.insulatedElectrumLosesLessThanBare(helper);
+	}
+
+	@GameTest(maxTicks = 400)
 	public void mod259_mixedCopperUsesBareLossDeterministically(GameTestHelper helper) {
 		CableInsulationScenarios.mixedCopperUsesBareLossDeterministically(helper);
 	}
