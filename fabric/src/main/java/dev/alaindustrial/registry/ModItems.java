@@ -6,6 +6,7 @@ import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
+import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
@@ -187,6 +188,8 @@ public final class ModItems {
 	public static final Item ELECTRIC_SHOVEL = electricShovel("electric_shovel");
 	// Electric Hoe (MOD-342): the farming member of the same line — an EU hoe that tills for free.
 	public static final Item ELECTRIC_HOE = electricHoe("electric_hoe");
+	// Electric Saber (MOD-149): the line's first weapon — EU per hit, plain sword when flat or off.
+	public static final Item ELECTRIC_SABER = electricSaber("electric_saber");
 	// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
 	public static final Item ELECTROMAGNET = magnet("electromagnet");
 	// Jetpack (MOD-148): worn EU flight — thrust on held jump, powerless glide when drained.
@@ -438,6 +441,16 @@ public final class ModItems {
 	// Electric Hoe (MOD-342). Same shape as the three above — a plain-Item subclass whose properties
 	// come from a common static factory (hand-built TOOL component + EU-item bar, no MAX_DAMAGE; see
 	// ElectricHoeItem.electricHoeProperties for why it is not a HoeItem).
+	// Electric Saber (MOD-149). Same shape as the four tools above — a plain-Item subclass whose
+	// properties come from a common static factory (hand-built TOOL + WEAPON components, no MAX_DAMAGE;
+	// see ElectricSaberItem.electricSaberProperties for why it is not built with Properties.sword).
+	private static Item electricSaber(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new ElectricSaberItem(
+						ElectricSaberItem.electricSaberProperties(new Item.Properties().setId(key))));
+	}
+
 	private static Item electricHoe(String path) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
@@ -736,6 +749,7 @@ public final class ModItems {
 		ModContent.ELECTRIC_CHAINSAW = () -> ELECTRIC_CHAINSAW;
 		ModContent.ELECTRIC_SHOVEL = () -> ELECTRIC_SHOVEL;
 		ModContent.ELECTRIC_HOE = () -> ELECTRIC_HOE;
+		ModContent.ELECTRIC_SABER = () -> ELECTRIC_SABER;
 		ModContent.ELECTROMAGNET = () -> ELECTROMAGNET;
 		ModContent.JETPACK = () -> JETPACK;
 		ModContent.VACUUM_CAPSULE = () -> VACUUM_CAPSULE;

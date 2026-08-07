@@ -72,6 +72,8 @@ public final class ModDataComponentsNeoForge {
 			DATA_COMPONENTS.register("magnet_enabled", ModDataComponents::createMagnetEnabled);
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> STEP_ASSIST_ENABLED =
 			DATA_COMPONENTS.register("step_assist_enabled", ModDataComponents::createStepAssistEnabled);
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> SABER_ACTIVE =
+			DATA_COMPONENTS.register("saber_active", ModDataComponents::createSaberActive);
 
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<MutationGrade>> MUTATION_GRADE =
 			DATA_COMPONENTS.register("mutation_grade", ModDataComponents::createMutationGrade);
@@ -93,6 +95,7 @@ public final class ModDataComponentsNeoForge {
 		ModDataComponents.TELEPORTER_POINTS = TELEPORTER_POINTS;
 		ModDataComponents.MAGNET_ENABLED = MAGNET_ENABLED;
 		ModDataComponents.STEP_ASSIST_ENABLED = STEP_ASSIST_ENABLED;
+		ModDataComponents.SABER_ACTIVE = SABER_ACTIVE;
 		ModDataComponents.MUTATION_GRADE = MUTATION_GRADE;
 	}
 

@@ -471,6 +471,22 @@ public final class Config {
 	/** Max EU/tick the hoe accepts while sitting in a charge slot — the LV ceiling, like its siblings. */
 	public static int electricHoeInputRate = 32;
 
+	// --- Electric Saber (MOD-149, the line's first weapon) ---
+	/** Electric Saber EU buffer — the same reservoir as the four hand tools, so the whole LV line
+	 * charges and lasts alike. At {@link #electricSaberEuPerHit} per hit this is 100 powered swings. */
+	public static int electricSaberBuffer = 10_000;
+	/** EU drained per hit on a living target while the saber is charged and switched on. Below it the
+	 * saber still hits, but as a plain sword and for free — see ElectricSaberItem. Twice the drill's
+	 * per-block 50 and half the LV machine floor (200 EU/op): a swing that outdamages every vanilla
+	 * sword should cost more than breaking a block. */
+	public static int electricSaberEuPerHit = 100;
+	/** Max EU/tick the saber accepts while sitting in a charge slot — the LV ceiling, like its siblings. */
+	public static int electricSaberInputRate = 32;
+	/** Seconds of Slowness II the electric discharge leaves on a target struck by a live saber. Short on
+	 * purpose: two seconds read as a jolt, and the same number lands on players in PvP. 0 disables the
+	 * effect entirely, leaving the saber a pure damage weapon. */
+	public static int electricSaberShockSeconds = 2;
+
 	// --- Electromagnet (MOD-132, item-pull convenience) ---
 	/** Electromagnet EU buffer (tier 1). A modest LV reservoir: at {@link #magnetEuPerItem} per pulled
 	 * item·tick it reaps hundreds of drops before a recharge, and tops up in ~8 s at an LV charger. */
@@ -1082,6 +1098,14 @@ public final class Config {
 				() -> electricHoeTillEuCost, v -> electricHoeTillEuCost = v, 0),
 			new IntField("electricHoeInputRate", "Max EU/t the hoe accepts while charging in a slot.",
 				() -> electricHoeInputRate, v -> electricHoeInputRate = v, 1),
+			new IntField("electricSaberBuffer", "Electric Saber EU buffer.",
+				() -> electricSaberBuffer, v -> electricSaberBuffer = v, 1),
+			new IntField("electricSaberEuPerHit", "EU the saber spends per powered hit (below this it hits as a plain sword for free).",
+				() -> electricSaberEuPerHit, v -> electricSaberEuPerHit = v, 1),
+			new IntField("electricSaberInputRate", "Max EU/t the saber accepts while charging in a slot.",
+				() -> electricSaberInputRate, v -> electricSaberInputRate = v, 1),
+			new IntField("electricSaberShockSeconds", "Seconds of Slowness II a powered saber hit leaves on the target (0 disables).",
+				() -> electricSaberShockSeconds, v -> electricSaberShockSeconds = v, 0),
 			new IntField("fluxweaveBuffer", "EU buffer of each Fluxweave armour piece.",
 				() -> fluxweaveBuffer, v -> fluxweaveBuffer = v, 1),
 			new IntField("fluxweaveInputRate", "Max EU/t a Fluxweave piece accepts while charging in a slot.",

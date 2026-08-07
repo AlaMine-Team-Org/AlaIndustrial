@@ -399,15 +399,15 @@
               "title": "রেসিপি",
               "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
               "grid": [
-                "#c:ingots/electrum",
+                "alaindustrial:electrum_ingot",
                 "alaindustrial:advanced_circuit",
-                "#c:ingots/electrum",
+                "alaindustrial:electrum_ingot",
                 "alaindustrial:advanced_machine_casing",
                 "alaindustrial:battery_box",
                 "alaindustrial:advanced_machine_casing",
-                "#c:ingots/electrum",
+                "alaindustrial:electrum_ingot",
                 "alaindustrial:advanced_circuit",
-                "#c:ingots/electrum"
+                "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:cesu",
               "result_count": 1
@@ -1659,9 +1659,9 @@
               "title": "রেসিপি",
               "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
               "grid": [
-                "#alaindustrial:incubator_dome_glass",
-                "#alaindustrial:incubator_dome_glass",
-                "#alaindustrial:incubator_dome_glass",
+                "minecraft:glass",
+                "minecraft:glass",
+                "minecraft:glass",
                 "alaindustrial:uranium_plate",
                 "alaindustrial:machine_casing",
                 "alaindustrial:uranium_plate",
@@ -2389,15 +2389,15 @@
               "title": "রেসিপি",
               "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
               "grid": [
-                "#c:plates/tempered_iron",
-                "#c:plates/tempered_iron",
-                "#c:plates/tempered_iron",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
                 "alaindustrial:advanced_circuit",
                 "alaindustrial:machine_casing",
                 "alaindustrial:advanced_circuit",
-                "#c:plates/tempered_iron",
-                "#c:plates/tempered_iron",
-                "#c:plates/tempered_iron"
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate"
               ],
               "result_id": "alaindustrial:advanced_machine_casing",
               "result_count": 1
@@ -3368,6 +3368,44 @@
                 "alaindustrial:copper_coil"
               ],
               "result_id": "alaindustrial:electric_chainsaw",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "electric_saber",
+          "title": "বৈদ্যুতিক তরবারি",
+          "icon": "alaindustrial:electric_saber",
+          "block_id": "alaindustrial:electric_saber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "বৈদ্যুতিক তরবারি",
+              "text": "রিচার্জযোগ্য EU অস্ত্র — ফলা জ্বললে ১২ ক্ষতি এবং এক ব্লক বাড়তি নাগাল; প্রতি আঘাতে ১০০ EU, আর স্রাব লক্ষ্যকে ধীর করে। Shift+ডান-ক্লিকে বন্ধ হয়; কখনও ভাঙে না।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "বাফার: 10 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:battery",
+                "minecraft:diamond_sword",
+                "alaindustrial:battery",
+                "alaindustrial:copper_coil",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_coil"
+              ],
+              "result_id": "alaindustrial:electric_saber",
               "result_count": 1
             }
           ]

@@ -30,6 +30,7 @@ import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
+import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.JetpackItem;
@@ -101,6 +102,10 @@ public final class MachineTooltips {
 		}
 		if (stack.getItem() instanceof ElectricHoeItem) {
 			addElectricHoeTooltip(stack, lines);
+			return;
+		}
+		if (stack.getItem() instanceof ElectricSaberItem) {
+			addElectricSaberTooltip(stack, lines);
 			return;
 		}
 		if (stack.getItem() instanceof JetpackItem) {
@@ -385,6 +390,34 @@ public final class MachineTooltips {
 	 * line names tilling first because that is the action players reach for, and both it and breaking a
 	 * block cost the same figure, so one number covers the whole tool.
 	 */
+	/**
+	 * Saber lines: what a powered swing costs, whether the blade is switched on, and the charge. The
+	 * on/off state comes first among the two state lines because it is the half the player controls —
+	 * a saber that "does nothing" is far more often switched off than empty.
+	 *
+	 * <p>Damage and reach are deliberately absent here: both are real attribute modifiers, so vanilla
+	 * already prints them under the item, and they follow the same charge this block reports.
+	 */
+	private static void addElectricSaberTooltip(ItemStack stack, List<Component> lines) {
+		lines.add(Component.translatable("tooltip.alaindustrial.electric_saber.usage",
+						Config.electricSaberEuPerHit)
+				.withStyle(ChatFormatting.GRAY));
+		boolean on = ElectricSaberItem.isEnabled(stack);
+		lines.add(Component.translatable(on
+						? "tooltip.alaindustrial.electric_saber.state_on"
+						: "tooltip.alaindustrial.electric_saber.state_off")
+				.withStyle(on ? ChatFormatting.GREEN : ChatFormatting.GRAY));
+		long eu = ItemEnergy.get(stack);
+		long cap = ItemEnergy.capacity(stack);
+		if (eu < Config.electricSaberEuPerHit) {
+			lines.add(Component.translatable("tooltip.alaindustrial.electric_saber.depleted")
+					.withStyle(ChatFormatting.RED));
+		} else {
+			lines.add(Component.translatable("tooltip.alaindustrial.electric_saber.charge", eu, cap)
+					.withStyle(ChatFormatting.GOLD));
+		}
+	}
+
 	private static void addElectricHoeTooltip(ItemStack stack, List<Component> lines) {
 		lines.add(Component.translatable("tooltip.alaindustrial.electric_hoe.usage",
 						Config.electricHoeEuPerBlock)

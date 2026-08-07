@@ -56,6 +56,7 @@ public final class ModDataComponents {
 	public static final Identifier FLUID_TANK_CONTENTS_ID = Industrialization.id("fluid_tank_contents");
 	public static final Identifier MAGNET_ENABLED_ID = Industrialization.id("magnet_enabled");
 	public static final Identifier STEP_ASSIST_ENABLED_ID = Industrialization.id("step_assist_enabled");
+	public static final Identifier SABER_ACTIVE_ID = Industrialization.id("saber_active");
 
 	/** Rarity grade rolled by the incubator on a successful mutation (MOD-118). */
 	public static final Identifier MUTATION_GRADE_ID = Industrialization.id("mutation_grade");
@@ -225,6 +226,28 @@ public final class ModDataComponents {
 
 	/** Build the {@code step_assist_enabled} type both loaders register (MOD-127). */
 	public static DataComponentType<Boolean> createStepAssistEnabled() {
+		return DataComponentType.<Boolean>builder()
+				.persistent(Codec.BOOL)
+				.networkSynchronized(ByteBufCodecs.BOOL)
+				.build();
+	}
+
+	/**
+	 * Whether the Electric Saber's blade is switched on (MOD-149). Absent means <b>on</b>, like
+	 * {@link #MAGNET_ENABLED} and unlike {@link #STEP_ASSIST_ENABLED}: a freshly crafted saber is a
+	 * working weapon, and switching it off — the deliberate act — is what writes {@code false}. Two new
+	 * sabers therefore stay component-identical and stack in a chest slot as one.
+	 *
+	 * <p>The flag lives on the stack, so it survives world reloads and travels with the weapon.
+	 * Read/written only via {@link dev.alaindustrial.item.tool.ElectricSaberItem}, which rebuilds the
+	 * attribute set on every write.
+	 */
+	public static Supplier<DataComponentType<Boolean>> SABER_ACTIVE = () -> {
+		throw new IllegalStateException("ModDataComponents.SABER_ACTIVE read before its loader bound it");
+	};
+
+	/** Build the {@code saber_active} type both loaders register (MOD-149). */
+	public static DataComponentType<Boolean> createSaberActive() {
 		return DataComponentType.<Boolean>builder()
 				.persistent(Codec.BOOL)
 				.networkSynchronized(ByteBufCodecs.BOOL)

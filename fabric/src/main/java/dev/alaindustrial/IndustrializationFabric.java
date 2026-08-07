@@ -156,6 +156,8 @@ public class IndustrializationFabric implements ModInitializer {
 				ModDataComponents.MAGNET_ENABLED_ID, ModDataComponents.createMagnetEnabled());
 		ModDataComponents.STEP_ASSIST_ENABLED = registerDataComponent(
 				ModDataComponents.STEP_ASSIST_ENABLED_ID, ModDataComponents.createStepAssistEnabled());
+		ModDataComponents.SABER_ACTIVE = registerDataComponent(
+				ModDataComponents.SABER_ACTIVE_ID, ModDataComponents.createSaberActive());
 		ModDataComponents.MUTATION_GRADE = registerDataComponent(
 				ModDataComponents.MUTATION_GRADE_ID, ModDataComponents.createMutationGrade());
 		ModDataComponents.TELEPORTER_OWNER = registerDataComponent(

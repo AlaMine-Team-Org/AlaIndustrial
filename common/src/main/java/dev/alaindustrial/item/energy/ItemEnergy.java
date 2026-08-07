@@ -3,6 +3,7 @@ package dev.alaindustrial.item.energy;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
+import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.tool.MagnetItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
@@ -65,6 +66,9 @@ public final class ItemEnergy {
 		if (stack.getItem() instanceof ElectricHoeItem) {
 			return Config.electricHoeBuffer;
 		}
+		if (stack.getItem() instanceof ElectricSaberItem) {
+			return Config.electricSaberBuffer;
+		}
 		if (stack.getItem() instanceof MagnetItem) {
 			return Config.magnetBuffer;
 		}
@@ -105,6 +109,9 @@ public final class ItemEnergy {
 		}
 		if (stack.getItem() instanceof ElectricHoeItem) {
 			return Config.electricHoeInputRate;
+		}
+		if (stack.getItem() instanceof ElectricSaberItem) {
+			return Config.electricSaberInputRate;
 		}
 		if (stack.getItem() instanceof MagnetItem) {
 			return Config.magnetInputRate;
@@ -148,6 +155,11 @@ public final class ItemEnergy {
 			// The armour swaps BOTH its worn asset and its attribute modifiers with the charge, so the
 			// active bonuses can never disagree with the number in the tooltip.
 			FluxweaveArmorItem.refreshWorn(stack, clamped);
+		}
+		if (stack.getItem() instanceof ElectricSaberItem) {
+			// Same contract as the armour: damage, attack speed and reach follow the charge from the one
+			// place charge changes, so the tooltip can never promise a hit the weapon cannot land.
+			ElectricSaberItem.refreshAttributes(stack, clamped);
 		}
 	}
 

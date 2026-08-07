@@ -1,0 +1,31 @@
+{
+	"parent": "alaindustrial:electric_drill",
+	"display": {
+		"icon": {
+			"id": "alaindustrial:electric_saber"
+		},
+		"title": {
+			"translate": "advancements.alaindustrial.electric_saber.title"
+		},
+		"description": {
+			"translate": "advancements.alaindustrial.electric_saber.description"
+		}
+	},
+	"criteria": {
+		"electric_saber": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "alaindustrial:electric_saber"
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"electric_saber"
+		]
+	]
+}

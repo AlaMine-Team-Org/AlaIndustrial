@@ -5,6 +5,7 @@ import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
+import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
@@ -241,6 +242,10 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<ElectricHoeItem> ELECTRIC_HOE =
 			ITEMS.registerItem("electric_hoe", ElectricHoeItem::new,
 					ElectricHoeItem::electricHoeProperties);
+	// Electric Saber (MOD-149): the line's first weapon — EU per hit, plain sword when flat or off.
+	public static final DeferredItem<ElectricSaberItem> ELECTRIC_SABER =
+			ITEMS.registerItem("electric_saber", ElectricSaberItem::new,
+					ElectricSaberItem::electricSaberProperties);
 	// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
 	public static final DeferredItem<dev.alaindustrial.item.tool.MagnetItem> ELECTROMAGNET =
 			ITEMS.registerItem("electromagnet", dev.alaindustrial.item.tool.MagnetItem::new, p -> p.stacksTo(1));
@@ -551,6 +556,7 @@ public final class ModItemsNeoForge {
 		ModContent.ELECTRIC_CHAINSAW = ELECTRIC_CHAINSAW::get;
 		ModContent.ELECTRIC_SHOVEL = ELECTRIC_SHOVEL::get;
 		ModContent.ELECTRIC_HOE = ELECTRIC_HOE::get;
+		ModContent.ELECTRIC_SABER = ELECTRIC_SABER::get;
 		ModContent.ELECTROMAGNET = ELECTROMAGNET::get;
 		ModContent.JETPACK = JETPACK::get;
 		ModContent.VACUUM_CAPSULE = VACUUM_CAPSULE::get;
