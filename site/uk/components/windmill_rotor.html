@@ -377,17 +377,31 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Дерев'яний ротор</strong> — крафт-компонент: лопаті, які встановлюються у слот ротора будь-якого вітряка (T1 базовий, T2 небесний і буревий). Без ротора вітряк не виробляє енергію.</p>
+<p><strong>Дерев'яний ротор</strong> — крафт-компонент: лопаті, які встановлюються у слот ротора будь-якого вітряка (T1 базовий, T2 небесний/буревий). Без ротора у слоті вітряк не виробляє енергію. Ротор — витратний матеріал із міцністю: зношується, лише поки вітряк реально виробляє EU/FE (пропорційно виробітку; у дощ/грозу швидше), і ламається, коли міцність вичерпано. Смуга зносу видна в інвентарі та у слоті. Повного ресурсу вистачає на <strong>480 000 EU/FE</strong> — близько години роботи вітряка на пікових 8 EU/FE/такт, помітно довше на слабкому вітрі. Однаково для всіх трьох вітряків; при еволюції T1→T2 накопичений знос зберігається (див. <a href="../generators/wind_mill.html">вітряк</a>).</p>
 
-<p>Ротор — витратний матеріал: зношується лише поки вітряк справді виробляє EU/FE, у дощ і грозу швидше. Повного ресурсу вистачає на <strong>480 000 EU/FE</strong> — близько години на пікових 8 EU/FE/такт, помітно довше за слабкого вітру.</p>
+<p>Зроблений з дерева, заліза й дерев'яної шестерні — ранній механічний вузол, доступний одразу, щойно ви об'єднуєте базові матеріали старту гри.</p>
 
-<h2>Рецепти</h2>
+<blockquote><strong>Міні-приклад:</strong> свіжого ротора вистачає приблизно на 5 внутрішньоігрових діб безперервної генерації — тримайте запасний скрафченим, щоб замінити зношений і вітряк продовжував крутитися.</blockquote>
 
-<p>Збирається з дерева, заліза й дерев'яної шестерні.</p>
+<h2>Енергія</h2>
+
+<p>Енергії не використовує — звичайний інгредієнт для слота ротора.</p>
+
+<h2>Як використовується</h2>
+
+<p>Ставиться у спеціальний слот ротора блоків <a href="../generators/wind_mill.html">вітряків</a> (T1), а після еволюції — <a href="../generators/high_altitude_wind_mill.html">небесного</a> і <a href="../generators/storm_wind_mill.html">буревого</a> (T2). Один ротор обслуговує будь-яку вітрову установку моду.</p>
+
+<h2>Властивості блока</h2>
+
+<p>Не застосовно (предмет).</p>
+
+<h2>Прогресія</h2>
+
+<p>Компонент без власного тира. Гейт вітрової генерації: поки немає ротора, вітряк мовчить. При цьому сам ротор крафтиться з ранніх матеріалів, тому доступний разом із першим вітряком.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="../generators/wind_mill.html">Вітрогенератор</a> — куди він ставиться.</p>
+<p><a href="../generators/wind_mill.html">Вітряк</a> — базовий споживач ротора. <a href="../generators/high_altitude_wind_mill.html">Небесний вітряк T2</a> і <a href="../generators/storm_wind_mill.html">буревий вітряк T2</a> — еволюційні споживачі. <a href="metal_gears.html">Дерев'яна шестерня</a> — центральний компонент ротора.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="ротор вітряка alaindustrial:windmill_rotor" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Planks"><img src="../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Ротор вітряка"><img src="../assets/item/windmill_rotor_3d.png" alt="Ротор вітряка" width="32" height="32"></div><div class="result-name">Ротор вітряка</div></div></div></div></div>

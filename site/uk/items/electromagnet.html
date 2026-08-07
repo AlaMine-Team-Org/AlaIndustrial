@@ -377,17 +377,45 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Електромагніт</strong> притягує предмети, що лежать поруч, просто у ваш інвентар. Радіус — <strong>5 блоків</strong>, кожен піднятий предмет коштує <strong>2 EU/FE</strong>.</p>
+<p><strong>Електромагніт</strong> — заряджуваний на EU/FE предмет-зручність: лежить у <strong>будь-якому слоті</strong> інвентаря (хотбар / основний / друга рука) й автоматично <strong>притягує</strong> до гравця предмети, що лежать поруч — дроп з руди в шахті, шматки після вибуху, чужий безхазяйний дроп. Це <strong>tier 1</strong>: сферичний радіус <strong>5 блоків</strong> (вгору/вниз/убік); за кожен реально зрушений предмет магніт витрачає <strong>2 EU/FE</strong>. Холостий скан, коли поруч нічого немає, нічого не коштує.</p>
 
-<p>Вмикається й вимикається клацанням: увімкнений магніт витрачає заряд лише тоді, коли справді щось підбирає.</p>
+<p>Підбір лишається ванільним: магніт щотика <strong>задає</strong> предмету швидкість прямо до центру тіла гравця (предмет «влітає» з будь-якого боку, зокрема знизу вгору), а піднімає його сам гравець, коли той долетить. Розрядившись, магніт просто мовчить, доки його не підзарядять. Заряджається там само, де вся електро-родина моду, — у слоті <a href="../energy-storage/battery_box.html">Енергосховища</a> і від надягнутого <a href="energy_pack.html">енергоранця</a>.</p>
+
+<p><strong>Тумблер (Shift-ПКМ):</strong> магніт можна вимкнути, щоб носити його в інвентарі поруч із фермами, сортуваннями й трубами, не висмоктуючи з них предмети. Свіжоскрафчений магніт увімкнений.</p>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Буфер</td><td>5 000 EU/FE</td></tr><tr><td>Витрата</td><td>2 EU/FE за предмет</td></tr><tr><td>Радіус</td><td>5 блоків</td></tr></tbody></table>
+<p>Власний EU/FE-буфер, поза енергомережею. Заряджається у слоті Енергосховища й від надягнутого ранця; витрачає заряд за кожен притягнутий предмет.</p>
+
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Роль</td><td>предмет-зручність з EU/FE-буфером: споживач біля зарядника</td></tr><tr><td>Буфер</td><td>5 000 EU/FE</td></tr><tr><td>Заряджання</td><td>слот Енергосховища / надягнутий ранець, ≤ 32 EU/FE/тик (стеля LV)</td></tr><tr><td>Витрата</td><td>2 EU/FE за кожен притягнутий предмет за такт сканування; холостий скан безкоштовний</td></tr><tr><td>Пасивний розряд</td><td>немає (лише за фактичне притягування)</td></tr></tbody></table>
+
+<p>Витрата знімається <strong>лише на сервері</strong>. У творчому/спостережному режимі заряд не витрачається — магніт при цьому все одно притягує.</p>
+
+<h2>Інвентар</h2>
+
+<p>Не застосовно — у магніта немає внутрішнього сховища предметів (стек 1). Зберігає лише заряд EU/FE і прапорець увімк./вимк.</p>
+
+<h2>Властивості блока</h2>
+
+<p>Не застосовно (предмет).</p>
+
+<h2>Рецепти</h2>
+
+<p>Крафт відкривається, щойно у вас є мідна котушка й електронна схема.</p>
+
+<p><strong>Ремонт</strong> — не застосовний: у магніта немає міцності; «ремонт» — це заряджання EU/FE.</p>
+
+<h2>Поведінка</h2>
+
+<p><strong>Притягування:</strong> <strong>щотика</strong> магніт збирає предмети у сферичному радіусі й <strong>задає</strong> кожному швидкість прямо до центру тіла гравця — до 0.55 бл/тик. Швидкість саме <strong>задається</strong> (а не додається), тому притягування перекриває гравітацію й тертя: предмет знизу піднімається вгору до гравця, зверху — опускається. Власне підбір робить сама ваніль, коли предмет долітає до гравця. <strong>Тариф:</strong> за кожен реально зрушений предмет знімається 2 EU/FE/тик, поки він летить. При браку заряду магніт «глухне»; при 0 EU/FE — не притягує зовсім. За прохід обробляється не більше <strong>64</strong> предметів (захист від лагу при масовому дропі). <strong>Що НЕ притягується:</strong> предмети на затримці підбору — це і щойно викинутий гравцем дроп (магніт не всмоктує миттєво назад те, що щойно викинули), і «непідбирані»; предмети, що лежать у лаві (щоб не тягти їх крізь вогонь); предмети поза радіусом. Рамки/дисплеї не чіпаються. <strong>Швидкість притягування обмежена</strong> 0.55 бл/тик: достатньо швидко, щоб предмет помітно «влітав», але під вікном підбору ванілі — щоб не проскочити крізь гравця. <strong>Працює з будь-якого слота:</strong> магніт тікає в хотбарі, основному інвентарі й другій руці — носити його можна де завгодно, не обов'язково в руці. <strong>Тумблер (Shift-ПКМ):</strong> правий клік із затиснутим Shift перемикає увімк./вимк. Перемикання супроводжується <strong>металевим клацанням</strong> і повідомленням над хотбаром. Вимкнений магніт нічого не притягує й не витрачає EU/FE. <strong>Індикація:</strong> смужка під іконкою показує заряд (жовта, LV-колір). У тултипі — короткі рядки: пояснення, статус (зелене «Активний» / сіре «Вимкнений»), <strong>заряд <code>X / Y EU/FE</code></strong> і рядок радіуса/тарифу. <strong>Дроп/смерть/релогін:</strong> заряд і прапорець увімк./вимк. зберігаються у предметі. <strong>У креативі:</strong> заряд не витрачається, але притягування працює.</p>
+
+<h2>Прогресія</h2>
+
+<p>Предмет-зручність LV-рівня: розв'язує класичний біль тех-моду «іду шахтою — лут сам до мене». Доступний після <a href="../energy-storage/battery_box.html">Енергосховища</a> і мідної котушки/схеми: без LV-інфраструктури магніт не скрафтити й не зарядити. Фільтри (whitelist/blacklist за теґами), зони-глушилки та tier-еволюція радіуса (LV/MV/HV) — майбутня робота.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="energy_pack.html">Енергоранець</a> — тримає магніт зарядженим.</p>
+<p><a href="electric_drill.html">Електробур</a> — прецедент EU/FE-витратника; типовий компаньйон у шахті. <a href="energy_pack.html">Енергоранець</a> — заряджає магніт в інвентарі на ходу. <a href="../energy-storage/battery_box.html">Енергосховище</a> — заряджання магніта (слот charge). <a href="../components/copper_coil.html">Мідна котушка</a>, <a href="../components/electronic_circuit.html">електронна схема</a> — компоненти крафта.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="електромагніт alaindustrial:electromagnet" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="Any Lapis Lazuli"><img src="../assets/item/lapis_lazuli_3d.png" alt="Any Lapis Lazuli" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електромагніт"><img src="../assets/item/electromagnet_3d.png" alt="Електромагніт" width="32" height="32"></div><div class="result-name">Електромагніт</div></div></div></div></div>

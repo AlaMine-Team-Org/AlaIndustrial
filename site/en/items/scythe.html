@@ -344,6 +344,18 @@
 
 <p>In this plain (decor) mode it deliberately does <strong>not</strong> touch crops — that is what Shift + right-click (harvest mode, above) is for — nor pumpkin and melon stems, bamboo, kelp, logs, dirt, or the moss block. Cactus and sugar cane are also left alone in decor mode; harvest mode only takes the block(s) above their base, keeping the base alive to regrow. Melon and pumpkin stems are never harvested in either mode — they are not the crop itself, just a growing vine that fruits on a neighbouring block.</p>
 
+<h2>What shift-mode collects (the AOE sickle)</h2>
+
+<p>Holding <strong>shift</strong> switches the scythe into harvest mode. In that mode it takes **mature crops and</p>
+
+<p><strong>Anything in <code>#minecraft:crops</code> at the maximum value of its own <code>AGE</code> property</strong> — wheat, carrots, potatoes, beetroot, torchflower crop, pitcher crop and so on. Unripe seedlings are left to grow. <strong>Sweet berry bushes</strong> — only ripe ones (age 2 or above, the stages that actually bear berries). <strong>Cactus and sugar cane</strong> — only the blocks <strong>above the base</strong> one standing on the ground. The base keeps growing, exactly as when you cut the top by hand.</p>
+
+<p>Harvest mode deliberately does <strong>not</strong> take:</p>
+
+<p><strong>Melon and pumpkin stems</strong> — a stem is not a crop but a growing vine that produces its fruit on the neighbouring block, so it is left alone. Unripe crops and berry bushes — they are given time to finish growing. Decorative vegetation, dirt, logs, water and everything else. That is decor mode's job (plain right-click), and the two modes never overlap.</p>
+
+<p>Durability is spent per block actually cut, the same as in decor mode, and the per-swing block limit of the tier still applies.</p>
+
 <h2>Block Properties</h2>
 
 <p>Not applicable (item).</p>

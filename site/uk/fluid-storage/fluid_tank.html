@@ -377,15 +377,33 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Переносний бак</strong> — ємність на <strong>8 000 мБ</strong> (8 відер). Зберігає вміст при зламі, тож бак можна переносити повним.</p>
+<p><strong>Переносний бак</strong> зберігає до <strong>8 відер (8000 мБ)</strong> однієї рідини. Він не витрачає EU/FE, не перекачує рідину самостійно й не має GUI: рівень і тип рідини видно прямо крізь скляні стінки корпусу.</p>
+
+<p>Бак приймає воду, лаву й рідини інших модів через відро, вакуумну капсулу або ємності інших модів. При руйнуванні вміст лишається у випалому предметі й відновлюється після встановлення.</p>
+
+<h2>Рідина</h2>
+
+<table><thead><tr><th>Параметр</th><th>Значення</th></tr></thead><tbody><tr><td>Місткість</td><td>8000 мБ (8 відер)</td></tr><tr><td>Варіантів одночасно</td><td>1</td></tr><tr><td>Ввід / вивід</td><td>усі 6 граней</td></tr><tr><td>Автоматична видача</td><td>немає</td></tr><tr><td>Одиниця ядра</td><td>мБ, 1000 мБ = 1 відро</td></tr></tbody></table>
+
+<p>Рідини не змішуються: поки всередині є вода, лава чи інший варіант не приймається. Fabric рахує обсяг у мілібакетах (мБ), і на NeoForge бак працює так само.</p>
+
+<h2>Взаємодія</h2>
+
+<p>Відро води або лави переносить у бак рівно 1000 мБ, якщо є місце. Порожнє відро забирає 1000 мБ, лише якщо в баку є ціле відро води або лави. <a href="../items/vacuum_capsule.html">Вакуумна капсула</a> заповнює й спорожняє бак. Труби й контейнери інших модів можуть вставляти й видобувати рідину через будь-яку грань. Компаратор видає 0 для порожнього бака й 1–15 пропорційно заповненню.</p>
 
 <h2>Властивості блока</h2>
 
-<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Ємність</td><td>8 000 мБ = 8 відер</td></tr><tr><td>Вміст при зламі</td><td>зберігається</td></tr></tbody></table>
+<p>Корпус займає повний блок: нижня й верхня пластини по 3 px, чотири кутові стійки 3×3 px і чотири напівпрозорі скляні стінки. Скло й рідина малюються окремою моделлю всередині рами, без накладань.</p>
+
+<p><strong>Форма</strong> повторює корпус цілком: пластини, стійки <strong>і стінки</strong>. Стінки обов'язково є у формі, хоча їх малює renderer, а не модель: без них клік по склу проходить наскрізь і потрапляє в блок за баком — гравець цілиться в бак, а виливає відро лави собі під ноги.</p>
+
+<table><thead><tr><th>Параметр</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Міцність / вибухостійкість</td><td>3 / 6</td></tr><tr><td>Зберігає вміст</td><td>так</td></tr><tr><td>Порожній предмет стекається</td><td>так</td></tr><tr><td>Заповнений предмет стекається</td><td>ні, максимум 1</td></tr></tbody></table>
+
+<p>Заповнений предмет зберігає тип і обсяг одним атомарним компонентом. Це виключає стан, де обсяг відділився від типу рідини при копіюванні або розділенні стека. В інвентарі внутрішній шар іконки фарбується зареєстрованим кольором рідини, а стандартна нижня шкала предмета показує частку заповнення відносно 8000 мБ.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="../fluid-machines/pump.html">Насос</a> — наповнює бак. <a href="../fluid-transport/fluid_pipe.html">Рідинна труба</a> — переганяє рідину між баками.</p>
+<p><a href="../items/vacuum_capsule.html">Вакуумна капсула</a> — ручний контейнер на одне відро. Рідинні труби — майбутня автоматизація транспортування.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="переносний бак для рідини alaindustrial:fluid_tank" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Залізна шестірня"><img src="../assets/item/iron_gear_3d.png" alt="Залізна шестірня" width="32" height="32"></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Переносний бак для рідини"><img src="../assets/item/fluid_tank_3d.png" alt="Переносний бак для рідини" width="32" height="32"></div><div class="result-name">Переносний бак для рідини</div></div></div></div></div>

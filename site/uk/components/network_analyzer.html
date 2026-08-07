@@ -377,13 +377,48 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Мережевий аналізатор</strong> — ручний діагностичний прилад, дружня альтернатива команді для гравців без прав оператора. Він не виробляє й не зберігає енергію — лише показує, що відбувається в мережі.</p>
+<p><strong>Мережевий аналізатор</strong> — ручний діагностичний прилад, дружня альтернатива команді <code>/ala net</code> для гравців без прав оператора. Він не виробляє й не зберігає енергію — лише показує, що відбувається в мережі.</p>
 
-<p>Клацніть правою кнопкою по кабелю, і аналізатор покаже статистику саме цієї мережі: сумарну подачу від виробників, сумарний попит споживачів і скільки EU/FE насправді перемістилося.</p>
+<p>Клацніть правою кнопкою по кабелю, і аналізатор покаже статистику саме цієї мережі (а не всього світу): сумарну подачу EU/FE/такт від виробників, сумарний попит споживачів EU/FE/такт і скільки EU/FE реально перемістилося за останній тик. Одночасно він малює мережу у світі — кабелі та підключені до них пристрої з'єднуються лініями, а вздовж ліній біжать анімовані точки, що показують напрямок потоку енергії від виробника до споживача.</p>
+
+<blockquote><strong>Міні-приклад:</strong> машини замовкли, і незрозуміло чому. Клацніть аналізатором по кабелю від генератора: в actionbar з'являться подача й попит, а траса у світі загориться зеленим біля виробника й помаранчевим біля кожного споживача — одразу видно, чи знеструмлений сегмент, чи вимкнений.</blockquote>
+
+<h2>Енергія</h2>
+
+<p>Енергії не використовує — нікуди не підключається, лише читає наявну мережу.</p>
+
+<h2>Інвентар</h2>
+
+<p>Не застосовно (предмет). Стек: 1 (інструмент, не витрачається).</p>
+
+<h2>Властивості блока</h2>
+
+<p>Не застосовно (предмет).</p>
+
+<h2>Як працює</h2>
+
+<p>У приладу є два режими діагностики. Обраний режим зберігається на самому предметі й переживає вихід зі світу.</p>
+
+<p><strong>Наскрізний (типово).</strong> Енергосховище вважається частиною мережі: аналізатор проходить крізь нього й підсвічує <strong>всю</strong> пов'язану систему кабелів — навіть якщо топологічно це кілька окремих мереж, з'єднаних через накопичувач. Зручно побачити енергосистему цілком. <strong>До сховища.</strong> Показує рівно одну мережу — ту, де перебуває клацнутий кабель; обхід зупиняється на накопичувачі. Зручно для точкової діагностики одного сегмента.</p>
+
+
+<p><strong>Shift + правий клік</strong> у повітрі або не по мережі (зокрема по чужому блоку) циклить режим 1↔2 і виводить в actionbar назву нового режиму. <strong>Правий клік по кабелю</strong> (з Shift чи без) — сканування в поточному режимі. Клік по кабелю завжди діагностичний, Shift його не перемикає. <strong>Правий клік по кабелю іншої мережі</strong> — замінює підсвітку на нову мережу. <strong>Правий клік поза мережею</strong> (у повітря або в блок без мережі) — скидає підсвітку.</p>
+
+<p>Що показує сканування: в actionbar виводиться рядок — число кабелів, джерел, споживачів і накопичувачів, а також подача/попит EU/FE/такт і скільки EU/FE пройшло за минулий тик (у наскрізному режимі — сумарно по всіх пройдених мережах). Якщо в наскрізному режимі досягнуто ліміту мереж, виводиться додаткове попередження.</p>
+
+<p>Тултип предмета: базова підказка видна завжди, під нею — рядок поточного режиму. Результат останнього сканування зберігається на самому приладі й розкривається під <strong>[SHIFT]</strong>: кабелі, джерела/споживачі/накопичувачі, подача/попит EU/FE/такт і скільки передано за минулий тик.</p>
+
+<p>Як виглядає підсвітка. Це об'ємна «траса», видима крізь стіни й на відстані кількох чанків (у вивантажених чанках просто не малюється — окремого таймера немає). На стиках мережі стоять кольорові кубики-маркери: зелений — виробник, помаранчевий — споживач, блакитний — накопичувач у наскрізному режимі (щоб виділити «вузол-міст»). Уздовж траси біжать анімовані точки потоку від виробника до споживача; на не запитаних ділянках (мережа без виробника, ізольований острів) траса малюється статично, без анімації.</p>
+
+<p>Прилад лише читає мережу — він не змінює її стан і не впливає на розподіл енергії.</p>
+
+<h2>Прогресія</h2>
+
+<p>Без енергетичного тира — діагностичний інструмент, корисний із першої ж мережі й далі в міру зростання складності мереж.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="../energy-transfer/copper_cable.html">Мідний кабель</a> — по ньому й клацають.</p>
+<p><a href="electronic_circuit.html">Електронна схема</a> — центральний компонент. <a href="../materials/tin.html">Олово</a> — корпус. <a href="../energy-transfer/copper_cable.html">Мідний кабель</a> — по чому клацають приладом.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="аналізатор мережі alaindustrial:network_analyzer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Copper Ingot"><img src="../assets/item/copper_ingot_3d.png" alt="Any Copper Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Аналізатор мережі"><img src="../assets/item/network_analyzer_3d.png" alt="Аналізатор мережі" width="32" height="32"></div><div class="result-name">Аналізатор мережі</div></div></div></div></div>

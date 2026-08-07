@@ -379,13 +379,31 @@
 
 <p><strong>Еволюційні чипи</strong> — крафт-компоненти, які перетворюють базові T1-форми на T2. Два варіанти:</p>
 
-<p><strong>Сонячний чип</strong> (день) — перетворює базову <a href="../generators/solar_panel.html">сонячну панель</a> на <a href="../generators/daylight_solar_panel.html">денну T2</a>, а <a href="../generators/wind_mill.html">вітряк</a> — на <a href="../generators/high_altitude_wind_mill.html">небесний</a>. <strong>Місячний чип</strong> (ніч) — перетворює панель на <a href="../generators/moonlit_solar_panel.html">нічну</a>, а вітряк — на <a href="../generators/storm_wind_mill.html">буревий</a>.</p>
+<p><strong>Сонячний чип</strong> (день) — перетворює базову <a href="../generators/solar_panel.html">сонячну панель</a> на <a href="../generators/daylight_solar_panel.html">денну T2</a>, а базовий <a href="../generators/wind_mill.html">вітряк</a> — на <a href="../generators/high_altitude_wind_mill.html">небесний T2</a>. <strong>Місячний чип</strong> (ніч) — перетворює базову панель на <a href="../generators/moonlit_solar_panel.html">нічну T2</a>, а вітряк — на <a href="../generators/storm_wind_mill.html">буревий T2</a>.</p>
 
-<p>Чип кладеться у слот блока, і той поступово перетворюється, зберігаючи накопичену енергію.</p>
+<p>Еволюція переносить накопичений заряд: заряд базового блока не втрачається при апгрейді. Сам чип витрачається в процесі.</p>
+
+<blockquote><strong>Міні-приклад:</strong> поставили сонячну панель, накопичили EU/FE, скрафтили сонячний чип → еволюціонували панель у T2 — заряд перенісся, чип витрачено, денний виробіток виріс учетверо.</blockquote>
+
+<h2>Енергія</h2>
+
+<p>Не зберігає. Чип — одноразовий каталізатор еволюції; уся EU/FE-логіка у блока, що еволюціонує.</p>
+
+<h2>Як використовується</h2>
+
+<p>Застосовується через еволюційний слот/рецепт базового T1-блока (сонячна панель або вітряк). Після еволюції чип зникає, T1 перетворюється на T2 зі збереженням накопиченого заряду.</p>
+
+<h2>Властивості блока</h2>
+
+<p>Не застосовно (предмет). Стек: 64.</p>
+
+<h2>Прогресія</h2>
+
+<p>Компоненти без власного тира. Відкривають T2-епоху сонячної та вітрової генерації. Нікель + світлокамінь/лазурит — помірний ранній гейт, доступний після першої експедиції в Незер (світлокамінь) або глибоких печер (лазурит).</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="empty_chip.html">Порожній чип</a> — заготовка.</p>
+<p><a href="../generators/solar_panel.html">Сонячна панель</a> і <a href="../generators/wind_mill.html">вітряк</a> — базові T1. <a href="../generators/daylight_solar_panel.html">Денна</a> / <a href="../generators/moonlit_solar_panel.html">нічна</a> панелі T2 — результати еволюції сонячним/місячним чипом. <a href="../generators/high_altitude_wind_mill.html">Небесний</a> / <a href="../generators/storm_wind_mill.html">буревий</a> вітряки T2 — результати еволюції. <a href="electronic_circuit.html">Електронна схема</a> — центральний компонент чипа. <a href="../materials/nickel.html">Нікель</a> — кути чипа.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="сонячний еволюційний чип alaindustrial:alignment_chip_day" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Nickel Ingot"><img src="../assets/item/nickel_ingot_3d.png" alt="Any Nickel Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Glowstone"><img src="../assets/item/glowstone_3d.png" alt="Glowstone" width="32" height="32"></div> <div class="cell" title="Any Nickel Ingot"><img src="../assets/item/nickel_ingot_3d.png" alt="Any Nickel Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Glowstone"><img src="../assets/item/glowstone_3d.png" alt="Glowstone" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Glowstone"><img src="../assets/item/glowstone_3d.png" alt="Glowstone" width="32" height="32"></div> <div class="cell" title="Any Nickel Ingot"><img src="../assets/item/nickel_ingot_3d.png" alt="Any Nickel Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Glowstone"><img src="../assets/item/glowstone_3d.png" alt="Glowstone" width="32" height="32"></div> <div class="cell" title="Any Nickel Ingot"><img src="../assets/item/nickel_ingot_3d.png" alt="Any Nickel Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Сонячний еволюційний чип"><img src="../assets/item/alignment_chip_day_3d.png" alt="Сонячний еволюційний чип" width="32" height="32"></div><div class="result-name">Сонячний еволюційний чип</div></div></div></div></div>

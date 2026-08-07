@@ -377,17 +377,55 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Електромотика</strong> — електроінструмент: працює не на міцності, а на EU/FE. Із зарядом він обробляє землю під посів, а коли заряд закінчився — просто перестає копати, ламати його не можна.</p>
+<p><strong>Електромотика</strong> — четвертий і останній ручний електроінструмент лінійки: після <a href="electric_drill.html">бура</a> (камінь), <a href="electric_chainsaw.html">пили</a> (дерево) і <a href="electric_shovel.html">лопати</a> (земля) вона закриває грядки. Контракт той самий: працює на EU/FE замість міцності, не ламається, при розряді продовжує працювати на швидкості руки з повним дропом.</p>
+
+<p>Мотика робить дві речі, і обидві коштують <strong>50 EU/FE за застосування</strong>:</p>
+
+<p><strong>Оранка.</strong> ПКМ по землі, траві або стежці робить грядку; вугільний дерен перетворюється на землю, коренева земля — на землю з висячим коренем. <strong>Ламання блоків.</strong> Мотика ламає сіно, листя, губку, мох, незер-бородавчастий блок і сушену ламінарію на швидкості 9.0 проти 8.0 в алмазної.</p>
+
+<p>Повний буфер — <strong>10 000 EU/FE</strong>, близько <strong>200 застосувань</strong> на одне заряджання.</p>
+
+<p>Розряджена мотика поводиться по-різному у двох своїх ролях, і це навмисно:</p>
+
+<p><strong>ламати</strong> вона продовжує — на швидкості руки (1.0), рівень видобутку й увесь дроп зберігаються; <strong>зорати</strong> не може — замість грядки в рядку над хотбаром з'явиться червоний напис «Недостатньо заряду для оранки».</p>
+
+<p>Оранка — це вся суть мотики, і якби вона була безкоштовною, інструмент не витратив би жодного EU/FE за всю гру.</p>
+
+<p>Як і решта EU/FE-предметів моду, мотика <strong>не має міцності</strong> й не ламається: смуга під іконкою показує не знос, а заряд EU/FE (жовта, колір LV).</p>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Буфер</td><td>10 000 EU/FE</td></tr><tr><td>Витрата</td><td>50 EU/FE за блок</td></tr><tr><td>Швидкість заряджання</td><td>32 EU/FE/т</td></tr><tr><td>Повного заряду вистачає на</td><td>~200 блоків</td></tr></tbody></table>
+<p>Власний EU/FE-буфер, поза енергомережею. Заряджається у слоті Енергосховища й від надягнутого ранця; витрачає заряд на і оранку, і ламання блоків.</p>
 
-<p>Заряджається в <a href="../energy-storage/battery_box.html">Енергосховищі</a> або на <a href="../energy-storage/charge_pad.html">Зарядній станції</a>.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Роль</td><td>ручний інструмент з EU/FE-буфером: споживач біля зарядника</td></tr><tr><td>Буфер</td><td>10 000 EU/FE</td></tr><tr><td>Заряджання</td><td>слот Енергосховища / надягнутий ранець, ≤ 32 EU/FE/тик (стеля LV) → повний заряд ~16 с</td></tr><tr><td>Витрата</td><td>50 EU/FE за успішно зламаний блок і 50 EU/FE за успішну оранку</td></tr><tr><td>Пасивний розряд</td><td>немає</td></tr></tbody></table>
+
+<p>Витрата знімається <strong>лише на сервері</strong> й <strong>лише за блоки з ненульовою твердістю</strong>. У творчому режимі заряд не витрачається.</p>
+
+<h2>Інвентар</h2>
+
+<p>Не застосовно — внутрішнього сховища предметів немає (стек 1).</p>
+
+<h2>Властивості блока</h2>
+
+<p>Не застосовно (предмет).</p>
+
+<h2>Рецепти</h2>
+
+<p>Крафт: той самий каркас, що в решти трьох, але в центрі алмазна мотика: ряд залізних зливків зверху, дві <a href="battery_pouch.html">батареї</a> з боків, знизу дві <a href="../components/copper_coil.html">мідні котушки</a> та <a href="../components/electronic_circuit.html">електронна схема</a>.</p>
+
+<p><strong>Ремонт</strong> — не застосовний: міцності немає, лагодити нічого; «ремонт» — це заряджання EU/FE.</p>
+
+<h2>Поведінка</h2>
+
+<p><strong>Оранка та інші перетворення по ПКМ — коштують 50 EU/FE.</strong> Земля, трава й стежка → грядка; вугільний дерен → земля; коренева земля → земля + висячий корінь. Заряд знімається <strong>лише коли перетворення справді відбулося</strong>: клік по кам'яній стіні чи по вже зораній грядці буфер не чіпає. При браку заряду мотика не оре й пише про це над хотбаром. Перетворення з інших модів працюють самі собою. <strong>Ламання блоків:</strong> поки заряд ≥ 50 EU/FE, мотика ламає свої блоки на швидкості 9.0 (алмазна — 8.0). За кожен такий блок знімається 50 EU/FE. <strong>Розряджена мотика:</strong> при заряді нижче 50 EU/FE ламає на швидкості руки (1.0), але рівень видобутку й дроп зберігаються, і EU/FE не витрачається. Зорати розрядженою мотикою не можна — див. вище. <strong>Заряджання:</strong> слот заряджання Енергосховища й надягнутий енергоранець приймають мотику автоматично, до 32 EU/FE/тик. <strong>Атака:</strong> як ванільна мотика — зброєю не є (шкода 1, швидкість атаки 4). Удари <strong>не витрачають EU/FE</strong>. <strong>Чари:</strong> мотика входить у теґ мотик, тому стіл зачарування й ковадло працюють з нею як з мотикою. <strong>Збір урожаю — не підтримується.</strong> Це робота <a href="scythe.html">Коси</a>, вона для цього й зроблена. <strong>Індикація:</strong> смужка під іконкою показує заряд. У тултипі — «Заряд: X / 10 000 EU/FE», при нулі — червоне «Розряджена». <strong>Дроп/смерть/релогін:</strong> заряд зберігається у предметі. <strong>У креативі:</strong> заряд не витрачається.</p>
+
+<h2>Прогресія</h2>
+
+<p>Четвертий і останній електроінструмент лінійки: бур — камінь, пила — дерево, лопата — земля, мотика — грядки. Доступна після <a href="../energy-storage/battery_box.html">Енергосховища</a> і батареї. LV-рівень.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="energy_pack.html">Енергоранець</a> — підживлює інструменти просто в інвентарі. <a href="../agriculture/garden_drone_station.html">Садова станція дронів</a> — автоматичний догляд за грядками.</p>
+<p><a href="electric_drill.html">Електробур</a> — кам'яна частина лінійки, та сама витрата за блок. <a href="electric_chainsaw.html">Електропила</a> — дерев'яна частина лінійки. <a href="electric_shovel.html">Електролопата</a> — земляна частина; той самий прийом із делегуванням ПКМ, але в неї дія безкоштовна, а в мотики платна. <a href="scythe.html">Коса</a> — інструмент для збору врожаю, мотика її не замінює. <a href="../energy-storage/battery_box.html">Енергосховище</a> — заряджання мотики (слот charge).</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="електромотика alaindustrial:electric_hoe" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Diamond Hoe"><img src="../assets/item/diamond_hoe_3d.png" alt="Diamond Hoe" width="32" height="32"></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електромотика"><img src="../assets/item/electric_hoe_3d.png" alt="Електромотика" width="32" height="32"></div><div class="result-name">Електромотика</div></div></div></div></div>

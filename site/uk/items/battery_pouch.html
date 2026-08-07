@@ -377,15 +377,43 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Батарейний мішок</strong> — переносний буфер на <strong>2 000 EU/FE</strong>, який вміщує до <strong>128</strong> батарей і підзаряджає їх сам.</p>
+<p><strong>Батарейний мішок</strong> — перший електро-предмет моду: переносне сховище, яке працює як ванільний мішечок, але вдвічі місткіше й потребує заряду. В один слот інвентаря він вміщує <strong>128 ваги</strong> предметів (приблизно два стеки звичайних блоків) — виручає в довгих походах і при тісному інвентарі.</p>
+
+<p>Підступ у тому, що поки всередині лежать предмети, мішок повільно палить заряд: <strong>1 EU/FE за секунду</strong>. Коли заряд падає до нуля, спрацьовує замок — ні покласти, ні дістати нічого не можна, доки мішок не зарядиш. Вміст при цьому не губиться, він лише замкнений.</p>
+
+<blockquote><strong>Міні-приклад:</strong> ідете копати на годину? Набийте мішок брукняком, рудою, парою інструментів і звільніть хотбар. Зарядіть мішок на Енергосховищі перед виходом — повного заряду вистачить на весь рейс, приблизно на 33 хвилини носіння.</blockquote>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Буфер</td><td>2 000 EU/FE</td></tr><tr><td>Місткість</td><td>128 батарей</td></tr></tbody></table>
+<p>У мішка власний невеликий заряд, окремий від енергомережі. Заряджається на Енергосховищі; витрачає заряд лише поки всередині лежать предмети й мішок в інвентарі.</p>
+
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Заряд</td><td>2 000 EU/FE</td></tr><tr><td>Заряджання</td><td>слот Енергосховища — повний заряд приблизно за 3 секунди</td></tr><tr><td>Розряд</td><td>1 EU/FE за секунду, лише поки всередині є предмети й мішок в інвентарі</td></tr><tr><td>Вистачає на</td><td>~33 хвилини носіння предметів</td></tr><tr><td>При нулі</td><td>вміст замикається (у безпеці) до заряджання</td></tr></tbody></table>
+
+<h2>Вміст</h2>
+
+<p>Мішок займає один слот інвентаря й вміщує до <strong>128 ваги</strong>. Скільки важить предмет, залежить від того, як він стекається — те саме правило, що у ванільного мішечка:</p>
+
+<table><thead><tr><th>Тип предмета</th><th>Вага 1 шт</th><th>Влазить у 128</th></tr></thead><tbody><tr><td>Блоки й ресурси (стек до 64)</td><td>1</td><td>128 шт (приблизно 2 стеки)</td></tr><tr><td>Перли, сніжки (стек до 16)</td><td>4</td><td>32 шт</td></tr><tr><td>Інструменти, відра (без стека)</td><td>64</td><td>2 шт</td></tr></tbody></table>
+
+<h2>Як працює</h2>
+
+<p><strong>Покласти:</strong> правий клік стеком по мішку (або мішком по стеку) в інвентарі. Предмети спочатку доливаються в уже наявний неповний стек того самого типу, потім займають нову вагу. Залишок, що не вліз за вагою, лишається в руці. <strong>Дістати:</strong> правий клік мішком у повітрі або по порожньому слоту дістає <strong>цілий верхній стек</strong> (останній покладений — першим назовні). <strong>Замок при нулі:</strong> щойно заряд сідає, обидві операції блокуються. Нічого не зникає — вміст просто лежить замкненим до заряджання. <strong>Що витрачає заряд:</strong> 1 EU/FE за секунду, але лише поки всередині є предмети <strong>і</strong> мішок в інвентарі гравця. У скрині, на землі або в слоті Енергосховища він не розряджається. <strong>У креативі:</strong> не розряджається взагалі — як ванільний інструмент у креативі не втрачає міцність. Те саме правило діє для всієї електро-родини. <strong>Індикатор заряду:</strong> смужка під іконкою показує заряд (жовта). У тултипі — список вмісту сіткою й шкала заповненості «вага / 128 (NN%)», нижче 10 % заряду — попередження, при нулі — червоне «розряджений». <strong>Вкладеність:</strong> мішок не можна вкласти в інший мішок. У ванільний мішечок або шалкер — можна. <strong>Перейменування:</strong> на ванільному ковадлі. <strong>При дропі або смерті:</strong> заряд, вміст і задане ім'я зберігаються у предметі.</p>
+
+<h2>Властивості блока</h2>
+
+<p>Не застосовно (предмет).</p>
+
+<h2>Рецепти</h2>
+
+<p>Рецепт з'являється в книзі рецептів, щойно у вас є всі компоненти.</p>
+
+<h2>Прогресія</h2>
+
+<p>Перший електро-предмет моду — вхід у лінійку переносної техніки на батареї. Доступний після <a href="../energy-storage/battery_box.html">Енергосховища</a>; без нього мішок не зарядити. Згодом з'являться старші версії — більше ваги, фільтри й лінковка між мішками.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="../components/battery.html">Батарея</a> — що лежить усередині. <a href="energy_pack.html">Енергоранець</a> — не дає мішку сісти в нуль.</p>
+<p><a href="../energy-storage/battery_box.html">Енергосховище</a> — заряджання з боку цього моду (слот charge); мішок заряджають і чужі зарядники. <a href="energy_pack.html">Енергоранець</a> — наступний крок: надягнутий ранець підживлює мішок прямо в інвентарі. <a href="../components/electronic_circuit.html">Електронна схема</a> — компонент крафта. <a href="../materials/tin.html">Олово</a> — застібка в крафті.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="батарейний мішок alaindustrial:battery_pouch" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Leather"><img src="../assets/item/leather_3d.png" alt="Any Leather" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Leather"><img src="../assets/item/leather_3d.png" alt="Any Leather" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Leather"><img src="../assets/item/leather_3d.png" alt="Any Leather" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Bundle"><img src="../assets/item/bundle_3d.png" alt="Bundle" width="32" height="32"></div> <div class="cell" title="Any Leather"><img src="../assets/item/leather_3d.png" alt="Any Leather" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Leather"><img src="../assets/item/leather_3d.png" alt="Any Leather" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Leather"><img src="../assets/item/leather_3d.png" alt="Any Leather" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Батарейний мішок"><img src="../assets/item/battery_pouch_3d.png" alt="Батарейний мішок" width="32" height="32"></div><div class="result-name">Батарейний мішок</div></div></div></div></div>

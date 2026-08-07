@@ -377,29 +377,43 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Вулканізатор</strong> завершує нафтовий ланцюжок: один сирий каучук і чотири пили сірки перетворюються на гуму. Машина працює лише за подачі EU/FE та наявності джерела тепла просто під нею.</p>
+<p><strong>Вулканізатор</strong> завершує нафтовий ланцюжок: один сирий каучук і чотири пили сірки перетворюються на гуму. Машина працює лише при подачі EU/FE і наявності джерела тепла прямо під нею.</p>
+
+<blockquote><strong>Міні-приклад:</strong> поставте Вулканізатор на запалене багаття, покладіть сирий каучук у лівий слот, чотири пили сірки — у правий, підведіть LV-кабель збоку й отримайте одну гуму.</blockquote>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/т (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/т під час роботи</td></tr></tbody></table>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/такт під час роботи</td></tr><tr><td>Ціна операції</td><td>400 EU/FE</td></tr><tr><td>Тривалість</td><td>200 тиків (~10 с)</td></tr></tbody></table>
 
-<p>Якщо в мережі більше енергії, зайве просто не забирається — нічого не вибухає. Енергія заходить із п'яти робочих граней; лицьова грань інертна.</p>
+<h2>Нагрів знизу</h2>
 
-<h2>Процесинг</h2>
+<p>Джерело читається в блоці безпосередньо під машиною.</p>
 
-<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>200 тиків (~10 с)</td></tr><tr><td>Ціна операції</td><td>400 EU/FE</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
+<table><thead><tr><th>Джерело</th><th>Рівень</th><th>Вихід</th></tr></thead><tbody><tr><td>Запалене звичайне або душевне багаття</td><td>1</td><td>1 гума</td></tr><tr><td>Лава, лавовий казан або магматичний блок</td><td>2</td><td>2 гуми</td></tr><tr><td><a href="electric_heater.html">Електронагрівач</a></td><td>3</td><td>3 гуми</td></tr></tbody></table>
+
+<p>На будь-якому рівні витрата однакова: <strong>1 сирий каучук + 4 пили сірки</strong>. Нагрів множить вихід, але не ціну партії, тому сильне джерело тепла — головний спосіб розтягнути знайдену сірку. Якщо джерело або рівень нагріву змінюється під час операції, прогрес безпечно починається заново з поточним множником. Інгредієнти при перезапуску не витрачаються, а підміна нагріву в останній тик не підвищує вихід майже завершеної операції.</p>
+
+<h2>Інвентар і автоматизація</h2>
+
+<table><thead><tr><th>Слот</th><th>Приймає</th></tr></thead><tbody><tr><td>Лівий вхід</td><td>сирий каучук</td></tr><tr><td>Правий вхід</td><td>пил сірки</td></tr><tr><td>Вихід</td><td>гума</td></tr></tbody></table>
+
+<p>Входи обслуговуються зверху, вихід — з бічних граней. Нижня грань зарезервована під нагрів і не публікується предметній автоматизації.</p>
+
+<h2>Інтерфейс</h2>
+
+<p>Екран показує енергію, прогрес, обидва входи, вихід, джерело тепла й множник ×1/×2/×3. Статус пояснює простій: немає інгредієнтів, немає EU/FE, потрібен нагрів знизу або зайнятий вихід.</p>
 
 <h2>Властивості блока</h2>
 
-<p>Звичайний суцільний блок, ламається будь-якою кайлом. Заряд при зламі не зберігає.</p>
+<p>Кайло; при руйнуванні випадає сам блок і вміст інвентаря. Світиться й випускає пару лише під час роботи. Зміна блока знизу помічається одразу.</p>
 
-<h2>Рецепти</h2>
+<h2>Рецепт</h2>
 
 <p>Збирається на верстаку з пилу сірки, залізних зливків, корпусу машини та електронної схеми.</p>
 
-<h2>Пов'язане</h2>
+<h2>Зв'язки</h2>
 
-<p><a href="electric_heater.html">Електронагрівач</a> — джерело тепла під вулканізатором. <a href="polymerizer.html">Полімеризатор</a> — попередній крок ланцюжка.</p>
+<p><a href="polymerizer.html">Полімеризатор</a> виробляє сирий каучук. <a href="../materials/sulfur.html">Сірка</a> дає пил сірки. <a href="../components/rubber.html">Гума</a> описує продукт і весь ланцюжок.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="вулканізатор alaindustrial:vulcanizer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Sulfur Dust"><img src="../assets/item/sulfur_dust_3d.png" alt="Any Sulfur Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Sulfur Dust"><img src="../assets/item/sulfur_dust_3d.png" alt="Any Sulfur Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Вулканізатор"><img src="../assets/item/vulcanizer_3d.png" alt="Вулканізатор" width="32" height="32"></div><div class="result-name">Вулканізатор</div></div></div></div></div>

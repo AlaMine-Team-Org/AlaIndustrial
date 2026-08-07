@@ -377,15 +377,50 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Батарея</strong> — перший носій енергії в моді: маленький акумулятор на <strong>2 000 EU/FE</strong>, який можна заряджати, розряджати й носити з собою пачкою. Вона ж лишається компонентом крафта.</p>
+<p><strong>Батарея</strong> — перший носій енергії в моді: маленький акумулятор на <strong>2 000 EU/FE</strong>, який можна заряджати, розряджати й носити з собою пачкою. Вона ж лишається компонентом крафта: з батарей збираються <a href="../items/energy_pack.html">енергоранець</a>, <a href="../items/electric_drill.html">електробур</a>, <a href="../items/jetpack.html">джетпак</a>, <a href="../items/fluxweave_armor.html">броня «Флюкс-тканина»</a> та інші електро-речі.</p>
+
+<p>Головна відмінність від решти електро-предметів моду: батарея <strong>стекається</strong>, і стекається за рівнем заряду. Розряджені в нуль лягають в один стек із щойно скрафченими, однаково заряджені — одна з одною, а батареї з різним зарядом лежать окремо. Так по інвентарю одразу видно, де повні, а де порожні.</p>
+
+<blockquote><strong>Міні-приклад:</strong> зарядили пачку батарей в Енергосховищі перед виходом, пішли копати. Бур сів — дістали батарею, ПКМ по буру, і він знову повний. Повернулися додому — залишки поклали в слот розрядки, і енергія пішла назад у мережу.</blockquote>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Параметр</th><th>Значення</th></tr></thead><tbody><tr><td>Ємність</td><td>2 000 EU/FE</td></tr><tr><td>Швидкість заряджання</td><td>32 EU/FE/т</td></tr><tr><td>Віддача за одне використання</td><td>500 EU/FE</td></tr></tbody></table>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Заряд</td><td><strong>2 000 EU/FE</strong> на одну батарею</td></tr><tr><td>Стек</td><td>до <strong>16</strong> штук — повний стек несе 32 000 EU/FE</td></tr><tr><td>Прийом</td><td><strong>32 EU/FE/т</strong> (стеля LV)</td></tr><tr><td>Перелив по ПКМ</td><td><strong>500 EU/FE</strong> за клік</td></tr></tbody></table>
+
+<p>Заряд зберігається <strong>на кожній батареї окремо</strong>. Тому стек із шістнадцяти заряджається в шістнадцять разів довше за одну — блок платить за кожну, а не за стек цілком.</p>
+
+<h2>Як використовується</h2>
+
+<p><strong>Зарядити</strong> можна трьома способами:</p>
+
+<p>слот заряджання <a href="../energy-storage/battery_box.html">Енергосховища</a> — доступний із самого початку; слот заряджання <a href="../energy-storage/cesu.html">посиленого енергосховища</a>; стати на <a href="../energy-storage/charge_pad.html">зарядну станцію</a> — вона заряджає батареї прямо в інвентарі.</p>
+
+<p>Надягнутий <a href="../items/energy_pack.html">енергоранець</a> батареї <strong>не</strong> заряджає: повний стек вміщує більше за сам ранець, і він спорожнявся б у запасні батареї замість того, щоб живити інструменти.</p>
+
+
+<p>слот розрядки <a href="../energy-storage/battery_box.html">Енергосховища</a>; слот розрядки <a href="../energy-storage/cesu.html">посиленого енергосховища</a>; <strong>ПКМ</strong>, тримаючи батарею в одній руці та предмет для заряджання в іншій — за клік переливається 500 EU/FE. Перелив працює лише коли в обох руках по одному предмету: заряд рахується поштучно, і «перелити зі стека» не мало б однозначного сенсу.</p>
+
+<h2>Заряд у крафті</h2>
+
+<p>Рецепти, де батарея вбудовується в електро-предмет, <strong>переносять її заряд у результат</strong>: зібрали бур із двох повних батарей — бур одразу з 4 000 EU/FE. Сума обмежена буфером результату, надлишок втрачається. Розряджена батарея працює в тих самих рецептах рівно як раніше — результат виходить порожнім.</p>
+
+<p>Рецепти, де результат не зберігає EU/FE (<a href="../energy-storage/battery_box.html">Енергосховище</a>, <a href="../energy-storage/cesu.html">посилене енергосховище</a>, <a href="../energy-storage/charge_pad.html">зарядна станція</a>, <a href="../machines/electric_furnace.html">електропіч</a>), заряд <strong>не</strong> переносять — він втрачається. Збирайте їх із розряджених батарей.</p>
+
+<h2>Властивості блока</h2>
+
+<p>Не застосовно (предмет). Стек: 16.</p>
+
+<h2>Рецепти</h2>
+
+<p>Збирається на верстаку (shaped 3×3). Ключові матеріали — олово, редстоун і <a href="../energy-transfer/copper_cable.html">мідний дріт</a>.</p>
+
+<h2>Прогресія</h2>
+
+<p>Перший щабель лінійки носіїв EU/FE: батарея → (у планах) енергокристал → лапотрон-кристал. З'являється на LV, до енергоранця, і лишається компонентом усіх наступних електро-речей.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="../energy-storage/battery_box.html">Енергосховище</a> — стаціонарний накопичувач.</p>
+<p><a href="../energy-storage/battery_box.html">Енергосховище</a> — заряджає й розряджає батареї. <a href="../energy-storage/cesu.html">Посилене енергосховище</a> — те саме на MV-швидкості. <a href="../energy-storage/charge_pad.html">Зарядна станція</a> — заряджає батареї в інвентарі. <a href="../items/energy_pack.html">Енергоранець</a> — носимий буфер, який збирається з трьох батарей. <a href="../items/battery_pouch.html">Батарейний мішок</a> — сусідній електро-предмет того самого тира.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="батарея alaindustrial:battery" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div><div class="result-name">Батарея</div></div></div></div></div>

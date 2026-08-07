@@ -395,6 +395,14 @@
 
 <p><strong>Cutting:</strong> with at least 30 EU/FE it cuts <code>#minecraft:mineable/axe</code> and <code>#minecraft:leaves</code> at speed 9.0. Each such block costs 30 EU/FE. <strong>Flat chainsaw:</strong> below 30 EU/FE it cuts at hand speed (1.0) but keeps its mining level and drops, and spends nothing. Efficiency does not apply there — vanilla only grants it above speed 1.0. <strong>Charging:</strong> the Battery Box charge slot and a worn Energy Pack both accept it automatically, up to 32 EU/FE/t. <strong>Attack:</strong> hits like a diamond axe (6 damage, 1.0 attack speed); attacking spends no EU/FE and causes no wear. <strong>Enchanting:</strong> it sits in <code>#minecraft:axes</code>, so the table and anvil treat it as an axe. <strong>Readout:</strong> the bar shows charge; the tooltip reads the exact numbers, or a red "Empty" at zero, and the texture switches to its unpowered variant. <strong>Log stripping is not supported.</strong> Vanilla stripping lives in <code>AxeItem.useOn</code>, and extending <code>AxeItem</code> would drag in <code>Properties.axe(...)</code>, which sets <code>MAX_DAMAGE</code> and makes the tool breakable — the opposite of the "EU/FE only, never breaks" model. Strip with an ordinary axe.</p>
 
+<h2>Inventory</h2>
+
+<p>Not applicable — the chainsaw has no internal item storage (stack size 1).</p>
+
+<h2>Block Properties</h2>
+
+<p>Not applicable (item).</p>
+
 <h2>Recipes</h2>
 
 <p>The drill's frame with a diamond axe in the middle instead of a diamond pickaxe: iron ingots on top, two batteries at the sides, two copper coils and an electronic circuit below. The recipe unlocks once you obtain a copper coil, an electronic circuit or a diamond axe.</p>
@@ -404,6 +412,10 @@
 <h2>Progression</h2>
 
 <p>The second powered tool after the <a href="electric_drill.html">Electric Drill</a>: the drill covers stone, the chainsaw covers wood. Needs LV infrastructure first — without the <a href="../energy-storage/battery_box.html">Battery Box</a> and a battery it can be neither crafted nor charged. LV tier. The remaining electric tools (hoe/saber/nano bow) are future work.</p>
+
+<h2>Related</h2>
+
+<p><a href="electric_drill.html">Electric Drill</a> — the stone half of the pair; the same no-durability EU/FE contract. <a href="energy_pack.html">Energy Pack</a> — charges the chainsaw right in your inventory. <a href="../energy-storage/battery_box.html">Battery Box</a> — charges the chainsaw (charge slot). <a href="../components/electronic_circuit.html">Electronic Circuit</a> — a crafting component.</p>
 
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="electric chainsaw alaindustrial:electric_chainsaw" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Battery"><img src="../assets/item/battery_3d.png" alt="Battery" width="32" height="32"></div> <div class="cell" title="Diamond Axe"><img src="../assets/item/diamond_axe_3d.png" alt="Diamond Axe" width="32" height="32"></div> <div class="cell" title="Battery"><img src="../assets/item/battery_3d.png" alt="Battery" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Copper Coil"><img src="../assets/item/copper_coil_3d.png" alt="Copper Coil" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Electric Chainsaw"><img src="../assets/item/electric_chainsaw_3d.png" alt="Electric Chainsaw" width="32" height="32"></div><div class="result-name">Electric Chainsaw</div></div></div></div></div>

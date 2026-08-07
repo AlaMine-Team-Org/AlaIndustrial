@@ -377,17 +377,35 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Рамка-індикатор</strong> — рамка, яку вішають на будь-який контейнер (ванільну скриню, бочку, шалкер або модову <a href="iron_chest.html">залізну скриню</a>), і вона <strong>в реальному часі показує просто на собі</strong>, скільки предметів лежить усередині.</p>
+<p><strong>Рамка-індикатор</strong> — це рамка, яку вішають на будь-який контейнер (ванільну скриню, бочку, шалкер або модову <a href="iron_chest.html">залізну скриню</a>), і вона <strong>в реальному часі показує просто на собі, скільки предметів лежить усередині</strong>. Енергії не потребує — це зручність для складу: «цінники» на рядах скринь, наповнення видно без відкриття вікна.</p>
 
-<p>Покладіть у рамку зразок — і вона рахуватиме саме цей предмет. Поміняли зразок — рахує інший.</p>
+<blockquote><strong>Міні-приклад:</strong> покладіть алмаз у рамку на рудній скрині → вона покаже, скільки алмазів усередині. Поміняйте алмаз на залізо → почне рахувати залізні зливки. Порожня рамка → числа немає зовсім.</blockquote>
+
+<h2>Як рахується число</h2>
+
+<p><strong>у рамці лежить предмет</strong> → число дорівнює кількості предметів <em>цього типу</em> в контейнері (предмет працює як фільтр); <strong>рамка порожня</strong> → число не відображається (рамка виглядає як звичайна); <strong>за рамкою немає контейнера</strong> → число не відображається; <strong>контейнер порожній</strong> (за наявності фільтра в рамці) → показується <code>0</code>.</p>
+
+<p>Рахуються лише слоти верхнього рівня — <strong>без залізання</strong> в шалкери й мішечки всередині скрині. Подвійна скриня рахується як один контейнер: рамка на будь-якій половині показує загальну суму. Рамка перераховує вміст раз на секунду.</p>
+
+<h2>Інтерфейс</h2>
+
+<p>Вікна немає. Число малюється <strong>плоско на лицьовому боці рамки</strong>, у її нижній смузі — біле з чорною обвідкою, без підкладки. Воно повернуте разом із рамкою (не «білбордом»), тож видно лише з того боку, куди рамка дивиться.</p>
+
+<p>ПКМ покладіть предмет-фільтр → з'являється число. ПКМ ще раз (або удар) → фільтр повертається в інвентар, число зникає. Предмет-фільтр трохи піднятий і зменшений, щоб звільнити місце під цифру; без фільтра рамка виглядає як звичайна (предмет по центру). На відміну від ванільної рамки, <strong>предмет не повертається</strong> — поворот для фільтра лише шум. Карти в рамку класти не можна. Дистанція показу — до <strong>24 блоків</strong> (далі текст ховається заради продуктивності). Форматування: точне число до 10 000, далі скорочення — <code>12.3k</code>, <code>1.2M</code>.</p>
 
 <h2>Властивості блока</h2>
 
-<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Розміщення</td><td>на грані контейнера</td></tr><tr><td>Інструмент</td><td>будь-який</td></tr></tbody></table>
+<p>Рамка — це <strong>сутність</strong>, а не блок (як ванільна рамка). Той самий розмір і поведінка: плоска, на стіні, без колізій. ПКМ по грані блока — повісити, удар — зняти; зламаєте опорний блок — рамка відвалиться й випаде своїм предметом.</p>
+
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Тип</td><td>сутність (як ванільна item frame)</td></tr><tr><td>Розміщення</td><td>на грані стіни, підлоги чи стелі</td></tr><tr><td>Випадає сама</td><td>так (предмет рамки + фільтр, якщо був)</td></tr></tbody></table>
+
+<h2>Прогресія</h2>
+
+<p>Тир LV: доступна після перших шестерень і срібла.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="iron_chest.html">Залізна скриня</a> — типовий контейнер під рамку.</p>
+<p><a href="iron_chest.html">Залізна скриня</a> — основний «клієнт» рамки в моді. <a href="silver_chest.html">Срібна скриня</a> — ще один контейнер, який вона читає.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="рамка-індикатор alaindustrial:stock_display_frame" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Gold Dust"><img src="../assets/item/gold_dust_3d.png" alt="Any Gold Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell" title="Any Gold Dust"><img src="../assets/item/gold_dust_3d.png" alt="Any Gold Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Item Frame"><img src="../assets/item/item_frame_3d.png" alt="Item Frame" width="32" height="32"></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Gold Dust"><img src="../assets/item/gold_dust_3d.png" alt="Any Gold Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Дерев&#x27;яна шестірня"><img src="../assets/item/wooden_gear_3d.png" alt="Дерев&#x27;яна шестірня" width="32" height="32"></div> <div class="cell" title="Any Gold Dust"><img src="../assets/item/gold_dust_3d.png" alt="Any Gold Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Рамка-індикатор"><img src="../assets/item/stock_display_frame_3d.png" alt="Рамка-індикатор" width="32" height="32"></div><div class="result-name">Рамка-індикатор</div></div></div></div></div>

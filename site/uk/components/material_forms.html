@@ -377,11 +377,51 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Форми матеріалів</strong> — сімейство предметів-напівфабрикатів: пил, а згодом пластина, болванка й дріт, — на які машини й рецепти перетворюють руди та зливки. У першій фазі ви зустрічаєте лише <strong>пил</strong>: його видає <a href="../machines/macerator.html">Подрібнювач</a>.</p>
+<p><strong>Форми матеріалів</strong> — родина предметів-напівфабрикатів: пил, а згодом пластина, болванка й дріт, — на які машини та рецепти перетворюють руди й зливки. У першій фазі ви зустрічаєте лише <strong>пил</strong>: його видає <a href="../machines/macerator.html">Подрібнювач</a>, і саме він дає «подвоєння руди» (блок руди або сира руда → 2 пили → 2 зливки).</p>
+
+<p>Друга форма — <strong>пластина</strong>: пласка заготовка зі зливка. Її кують вручну <a href="../items/forge_hammer.html">ковальським молотом</a> (зливок + молот → пластина) ще до електрики, а згодом штампують масово в <a href="../machines/compressor.html">Компресорі</a> (зливок → пластина, 260 EU/FE). Пластини — заготовка для <a href="machine_casing.html">корпусу машини</a> і майбутніх схем; невдалу пластину можна повернути в пил ×1 у <a href="../machines/macerator.html">Подрібнювачі</a>. Решта форм (болванка, дріт) тієї самої родини додаються згодом, у міру появи машин, що їх споживають. Самі форми енергії не зберігають — це напівфабрикати.</p>
+
+<blockquote><strong>Міні-приклад:</strong> добули одну залізну руду — прогнали через <a href="../machines/macerator.html">Подрібнювач</a>, отримали 2 залізні пили, а потім переплавили кожен у печі. Підсумок — 2 зливки з однієї руди замість звичного одного.</blockquote>
+
+<h2>Енергія</h2>
+
+<p>Енергії не використовують — звичайні інгредієнти для крафта.</p>
+
+<h2>Як використовується</h2>
+
+<p>Пил — вузол ланцюжка переробки руди:</p>
+
+<p><strong>Металевий пил</strong> (залізо, мідь, золото, а також олово/срібло/нікель/уран моду) <strong>переплавляється</strong> у ванільній печі, доменній печі або <a href="../machines/electric_furnace.html">Електропечі</a> назад на зливок. Так замикається цикл подвоєння: руда → 2 пили → 2 зливки. <strong>Неметалевий пил</strong> (вугілля, алмаз, смарагд, лазурит) <strong>спресовується</strong> назад на самоцвіт або предмет у <a href="../machines/compressor.html">Компресорі</a> — не переплавляється. Та сама форма циклу: руда → 2 пили → 2 предмети.</p>
+
+<p>Дюпу матеріалу немає. Помел готового зливка дає всього 1 пил, тому <code>зливок → пил → зливок</code> виходить у нуль — витрачається лише енергія.</p>
+
+<h2>Інвентар</h2>
+
+<p>Не застосовно (предмети). Стек: 64.</p>
+
+<h2>Властивості блока</h2>
+
+<p>Не застосовно (предмети).</p>
+
+<h2>Правила переробки</h2>
+
+<p>Скільки пилу видасть Подрібнювач, залежить від того, що в нього поклали:</p>
+
+<table><thead><tr><th>Вхід</th><th>Пилу на виході</th></tr></thead><tbody><tr><td>Блок руди (камінь або глибинний сланець)</td><td><strong>×2</strong></td></tr><tr><td>Сира руда</td><td><strong>×2</strong></td></tr><tr><td>Готовий предмет (зливок, або чистий самоцвіт/вугілля)</td><td>×1</td></tr></tbody></table>
+
+<p>Єдиний виняток — <strong>лазурит</strong>: лазуритова руда дає <strong>×6 пилу</strong>. Ванільна руда лазуриту й так падає 4–9, тож звичайне ×2 знецінило б дроблення; 6 — гарантований вихід вище за середній дроп кайла, що й виправдовує витрату енергії.</p>
+
+<h2>Рецепти</h2>
+
+<p><strong>Отримання пилу:</strong> дроблення руди або металу в <a href="../machines/macerator.html">Подрібнювачі</a> (вартість енергії на рецепт — на сторінці подрібнювача). <strong>Металевий пил → зливок:</strong> переплавка або випал (ванільна піч / доменна піч), або <a href="../machines/electric_furnace.html">Електропіч</a> моду. <strong>Неметалевий пил → предмет:</strong> пресування в <a href="../machines/compressor.html">Компресорі</a>.</p>
+
+<h2>Прогресія</h2>
+
+<p>Предмети без власного тира. Увесь сенс будувати першу енергомережу: саме пил перетворює Подрібнювач із машини на подвоювач руди. Неметалеві пили дають те саме для вугілля й самоцвітів.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="../machines/macerator.html">Подрібнювач</a> — робить пил. <a href="machine_casing.html">Корпус машини</a> — головний споживач пластин.</p>
+<p><a href="../machines/macerator.html">Подрібнювач</a> — виробляє пил (подвоєння руди). <a href="../machines/electric_furnace.html">Електропіч</a> — плавить металевий пил назад на зливки. <a href="../machines/compressor.html">Компресор</a> — спресовує неметалевий пил назад на самоцвіти/вугілля. <a href="electronic_circuit.html">Електронна схема</a> — інший ключовий ранній компонент.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="залізний пил alaindustrial:iron_dust" data-type="alaindustrial:maceration"><div class="recipe-header"><span class="recipe-type">Maceration</span><span class="recipe-energy">Енергія: 300 EU/FE</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Iron Ore"><img src="../assets/item/iron_ingot_3d.png" alt="Iron Ore" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/macerator_3d.png" alt="Подрібнювач" title="Подрібнювач" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-results"><div class="recipe-result"><div class="cell result" title="Залізний пил"><img src="../assets/item/iron_dust_3d.png" alt="Залізний пил" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Залізний пил</div></div></div></div></div> <div class="recipe-card" data-name="залізний пил alaindustrial:iron_dust" data-type="alaindustrial:maceration"><div class="recipe-header"><span class="recipe-type">Maceration</span><span class="recipe-energy">Енергія: 300 EU/FE</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/macerator_3d.png" alt="Подрібнювач" title="Подрібнювач" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-results"><div class="recipe-result"><div class="cell result" title="Залізний пил"><img src="../assets/item/iron_dust_3d.png" alt="Залізний пил" width="32" height="32"></div><div class="result-name">Залізний пил</div></div></div></div></div> <div class="recipe-card" data-name="залізний пил alaindustrial:iron_dust" data-type="alaindustrial:maceration"><div class="recipe-header"><span class="recipe-type">Maceration</span><span class="recipe-energy">Енергія: 300 EU/FE</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/macerator_3d.png" alt="Подрібнювач" title="Подрібнювач" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-results"><div class="recipe-result"><div class="cell result" title="Залізний пил"><img src="../assets/item/iron_dust_3d.png" alt="Залізний пил" width="32" height="32"></div><div class="result-name">Залізний пил</div></div></div></div></div> <div class="recipe-card" data-name="залізний пил alaindustrial:iron_dust" data-type="alaindustrial:maceration"><div class="recipe-header"><span class="recipe-type">Maceration</span><span class="recipe-energy">Енергія: 300 EU/FE</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell" title="Any Raw Iron"><img src="../assets/item/raw_iron_3d.png" alt="Any Raw Iron" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/macerator_3d.png" alt="Подрібнювач" title="Подрібнювач" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-results"><div class="recipe-result"><div class="cell result" title="Залізний пил"><img src="../assets/item/iron_dust_3d.png" alt="Залізний пил" width="32" height="32"><span class="count">×2</span></div><div class="result-name">Залізний пил</div></div></div></div></div></div>

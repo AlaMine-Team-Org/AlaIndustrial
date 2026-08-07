@@ -377,13 +377,41 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Вакуумна капсула</strong> — тара для рідин, зручніша за відро: не займає стільки місця й акуратно віддає вміст машинам.</p>
+<p><strong>Вакуумна капсула</strong> — стековний контейнер для рідин. Розв'язує проблему ванільних відер: вони не стекаються й займають по слоту на відро, через що носити великі обсяги рідини незручно.</p>
 
-<p>Лава-капсула, наприклад, заливається просто в <a href="../generators/geothermal_generator.html">Геотермальний генератор</a>.</p>
+<p>Капсула буває у двох формах. <strong>Порожня</strong> — звичайний предмет, стекається до 64. <strong>Заповнена</strong> — вміщує рівно <strong>1 відро (1000 мБ)</strong> однієї рідини, а заповнені капсули однієї й тієї самої рідини стекаються <strong>до 16</strong> в одному слоті. Тобто один стек = до 16 відер. Різні рідини в один стек не змішуються: стек капсул з водою і стек капсул з лавою лежать окремо.</p>
+
+<p>Наповнити капсулу можна з джерела рідини у світі (як відром) або з бака машини моду — і спорожнити назад тим самим кліком.</p>
+
+<blockquote><strong>Міні-приклад:</strong> будуєте лавову електростанцію далеко від насоса? Візьміть 16 порожніх капсул в одному стеку, наповніть їх усі біля бака насоса за пару кліків і несіть 16 відер лави додому в одному слоті інвентаря — поїздка, яка зайняла б 16 слотів звичайними відрами.</blockquote>
+
+<h2>Вміст</h2>
+
+<p>Заповнена капсула тримає рівно одну рідину — стільки ж, скільки відро. Як стекаються:</p>
+
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Обсяг на капсулу</td><td>1 відро (1000 мБ)</td></tr><tr><td>Стек, порожня</td><td>64</td></tr><tr><td>Стек, заповнена</td><td>16, лише однієї рідини</td></tr><tr><td>Різні рідини</td><td>ніколи не зливаються — у кожної рідини свій стек</td></tr></tbody></table>
+
+<p>Дві капсули з однаковою рідиною завжди рівні й стекаються разом; вміст зберігається при дропі, смерті й перенесенні.</p>
+
+<h2>Як працює</h2>
+
+<p><strong>Наповнення зі світу:</strong> правий клік порожньою капсулою по джерелу рідини (вода, лава, рідина іншого моду). Капсула забирає джерело й перетворюється на заповнену, як ванільне відро. <strong>Наповнення з бака:</strong> правий клік по грані блока-бака — насос або геотермальний генератор моду, чи будь-який fluid-порт, зокрема машини інших модів — видобуває рівно 1 відро в капсулу. Часткового забору немає: тільки ціле відро або нічого. <strong>Спорожнення у світ:</strong> правий клік заповненою капсулою розміщує рідину (деякі екзотичні рідини без блочної форми можна залити лише в баки, не у світ). У пеклі вода випаровується, як із відра. <strong>Спорожнення в бак:</strong> правий клік заповненою капсулою по грані бака заливає її відро; якщо бак прийняв ціле відро — капсула стає порожньою. <strong>Обмін предмета:</strong> наповнення або спорожнення міняє порожню капсулу на заповнену й навпаки. У творчому режимі вихідний стек не витрачається, як у ванільного відра. <strong>Ім'я:</strong> у заповненої капсули динамічне ім'я «Капсула: &lt;рідина&gt;», у тултипі — «1000 мБ (1 відро)». <strong>Труби й баки:</strong> капсула ладнає з іншими модами — їхні труби й баки можуть наповнювати й спорожняти її прямо в слоті.</p>
+
+<h2>Властивості блока</h2>
+
+<p>Не застосовно (предмет).</p>
+
+<h2>Рецепти</h2>
+
+<p>Рецепт з'являється в книзі рецептів, щойно у вас є всі компоненти, і дає одну порожню капсулу.</p>
+
+<h2>Прогресія</h2>
+
+<p>Доступна рано: олово — метал Phase 1, мідний кабель приходить з енергомережею, редстоун і скло ванільні. Капсула не вимагає загартованого заліза чи електронної схеми, тому з'являється раніше за <a href="battery_pouch.html">Батарейний мішок</a>. Працює в парі з рідинними машинами моду — <a href="../fluid-machines/pump.html">насосом</a> і геотермальним генератором — як переносне стековне відро на 16 зарядів.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="../generators/geothermal_generator.html">Геотермальний генератор</a> — головний споживач лави.</p>
+<p><a href="../fluid-machines/pump.html">Насос</a> — качає рідину у свій бак; капсула наповнюється з нього й заливає назад. <a href="../energy-transfer/copper_cable.html">Мідний кабель</a> — компонент крафта. <a href="../materials/tin.html">Олово</a> — корпус і застібки в крафті. <a href="battery_pouch.html">Батарейний мішок</a> — інший стековний предмет-сховище моду.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="вакуумна капсула alaindustrial:vacuum_capsule" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Colorless Glass Pane"><img src="../assets/item/glass_pane_3d.png" alt="Any Colorless Glass Pane" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Tin Ingot"><img src="../assets/item/tin_ingot_3d.png" alt="Any Tin Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Мідний кабель"><img src="../assets/item/copper_cable_3d.png" alt="Мідний кабель" width="32" height="32"></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Вакуумна капсула"><img src="../assets/item/vacuum_capsule_3d.png" alt="Вакуумна капсула" width="32" height="32"></div><div class="result-name">Вакуумна капсула</div></div></div></div></div>

@@ -377,17 +377,47 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Електролопата</strong> — електроінструмент: працює не на міцності, а на EU/FE. Із зарядом він копає землю швидше за діамантову лопату, а коли заряд закінчився — просто перестає копати, ламати його не можна.</p>
+<p><strong>Електролопата</strong> — третій ручний електроінструмент моду й земляна частина лінійки після <a href="electric_drill.html">електробура</a> (камінь) та <a href="electric_chainsaw.html">електропили</a> (дерево). Працює на EU/FE замість міцності: поки заряду вистачає на блок, лопата копає <strong>швидше за алмазну лопату</strong> (швидкість 9.0 проти 8.0) і витрачає <strong>20 EU/FE</strong> за кожен успішно зламаний блок. Повний буфер — <strong>10 000 EU/FE</strong>, близько <strong>500 блоків</strong> на одне заряджання.</p>
+
+<p>Одного правила інструмента вистачає: земля, пісок, гравій, глина, сніг, пісок душ і кольоровий бетонний порошок — усе це ваніль уже тримає під теґом лопати, тому лопаті, на відміну від пили, не потрібно додавати свій теґ.</p>
+
+<p>Розрядившись, лопата не перетворюється на непотрібний предмет: вона продовжує копати <strong>на швидкості руки</strong> (1.0), рівень видобутку й увесь дроп зберігаються — просто повільно, доки не підзарядите.</p>
+
+<p>Як і решта EU/FE-предметів моду, лопата <strong>не має міцності</strong> й не ламається: смуга під іконкою показує не знос, а заряд EU/FE (жовта, колір LV).</p>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Буфер</td><td>10 000 EU/FE</td></tr><tr><td>Витрата</td><td>20 EU/FE за блок</td></tr><tr><td>Швидкість заряджання</td><td>32 EU/FE/т</td></tr><tr><td>Повного заряду вистачає на</td><td>~500 блоків</td></tr></tbody></table>
+<p>Власний EU/FE-буфер, поза енергомережею. Заряджається у слоті Енергосховища й від надягнутого ранця; витрачає заряд на копання блоків.</p>
 
-<p>Заряджається в <a href="../energy-storage/battery_box.html">Енергосховищі</a> або на <a href="../energy-storage/charge_pad.html">Зарядній станції</a>.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Роль</td><td>ручний інструмент з EU/FE-буфером: споживач біля зарядника</td></tr><tr><td>Буфер</td><td>10 000 EU/FE</td></tr><tr><td>Заряджання</td><td>слот Енергосховища / надягнутий ранець, ≤ 32 EU/FE/тик (стеля LV) → повний заряд ~16 с</td></tr><tr><td>Витрата</td><td>20 EU/FE за успішно зламаний блок</td></tr><tr><td>Пасивний розряд</td><td>немає</td></tr></tbody></table>
+
+<p>Витрата знімається <strong>лише на сервері</strong> й <strong>лише за блоки з ненульовою твердістю</strong>. У творчому режимі заряд не витрачається.</p>
+
+<h2>Інвентар</h2>
+
+<p>Не застосовно — внутрішнього сховища предметів немає (стек 1).</p>
+
+<h2>Властивості блока</h2>
+
+<p>Не застосовно (предмет).</p>
+
+<h2>Рецепти</h2>
+
+<p>Крафт: той самий каркас, що в решти трьох, але в центрі алмазна лопата: ряд залізних зливків зверху, дві <a href="battery_pouch.html">батареї</a> з боків, знизу дві <a href="../components/copper_coil.html">мідні котушки</a> та <a href="../components/electronic_circuit.html">електронна схема</a>.</p>
+
+<p><strong>Ремонт</strong> — не застосовний: міцності немає, лагодити нічого; «ремонт» — це заряджання EU/FE.</p>
+
+<h2>Поведінка</h2>
+
+<p><strong>Копання:</strong> поки заряд ≥ 20 EU/FE, лопата копає землю, пісок, гравій і решту на швидкості 9.0 (алмазна — 8.0). За кожен такий блок знімається 20 EU/FE. <strong>Розряджена лопата:</strong> при заряді нижче 20 EU/FE копає на швидкості руки (1.0), але рівень видобутку й дроп зберігаються, і EU/FE не витрачається. <strong>Стежка й гасіння багаття</strong> по ПКМ працюють як у ванільної лопати — і <strong>безкоштовно</strong>, заряд за них не знімається. <strong>Заряджання:</strong> слот заряджання Енергосховища й надягнутий енергоранець приймають лопату автоматично, до 32 EU/FE/тик. <strong>Атака:</strong> як ванільна алмазна лопата; удари <strong>не витрачають EU/FE</strong>. <strong>Чари:</strong> лопата входить у теґ лопат, тому стіл зачарування й ковадло працюють з нею як з лопатою. <strong>Індикація:</strong> смужка під іконкою показує заряд. У тултипі — «Заряд: X / 10 000 EU/FE», при нулі — червоне «Розряджена». <strong>Дроп/смерть/релогін:</strong> заряд зберігається у предметі. <strong>У креативі:</strong> заряд не витрачається.</p>
+
+<h2>Прогресія</h2>
+
+<p>Третій електроінструмент лінійки: бур — камінь, пила — дерево, лопата — земля. Доступна після <a href="../energy-storage/battery_box.html">Енергосховища</a> і батареї. LV-рівень.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="energy_pack.html">Енергоранець</a> — підживлює інструменти просто в інвентарі. <a href="electric_drill.html">Електробур</a> — камінь.</p>
+<p><a href="electric_drill.html">Електробур</a> — кам'яна частина лінійки. <a href="electric_chainsaw.html">Електропила</a> — дерев'яна частина лінійки. <a href="electric_hoe.html">Електромотика</a> — грядкова частина лінійки. <a href="../energy-storage/battery_box.html">Енергосховище</a> — заряджання лопати (слот charge).</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="електролопата alaindustrial:electric_shovel" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Diamond Shovel"><img src="../assets/item/diamond_shovel_3d.png" alt="Diamond Shovel" width="32" height="32"></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електролопата"><img src="../assets/item/electric_shovel_3d.png" alt="Електролопата" width="32" height="32"></div><div class="result-name">Електролопата</div></div></div></div></div>

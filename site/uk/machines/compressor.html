@@ -377,25 +377,57 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Компресор</strong> — LV-машина, яка стискає сировину в щільніші форми: металевий пил — на зливки, вугільний і самоцвітний пил — назад у предмети, лід і сніг — у щільніші блоки.</p>
+<p><strong>Компресор</strong> — LV-машина, яка стискає сировину у щільніші форми: металевий пил — на зливки, вугільний і самоцвітний пил — назад на предмети, лід і сніг — на щільніші блоки, тростину — на папір. Її головна робота — замкнути цикл подвоєння руди для <strong>неметалів</strong>: це єдина машина, яка відновлює вугільний, алмазний, смарагдовий і лазуритовий пил у придатний предмет, тому схема руда → 2 пили → 2 предмети працює і для них.</p>
+
+<blockquote><strong>Міні-приклад:</strong> перемеліть алмазну руду в <a href="macerator.html">Подрібнювачі</a> — отримаєте дві алмазні пили, — і проженіть обидві через компресор. З однієї руди вийшло <strong>два алмази</strong>, і цей останній крок уміє тільки він.</blockquote>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/т (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/т під час роботи</td></tr></tbody></table>
+<p>Компресор лише споживає EU/FE і тримає невеликий буфер, щоб не смикатися при ривках подачі.</p>
 
-<p>Якщо в мережі більше енергії, зайве просто не забирається — нічого не вибухає. Енергія заходить із п'яти робочих граней; лицьова грань інертна.</p>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/такт під час роботи</td></tr></tbody></table>
+
+<p>LV-машина: бере до 32 EU/FE за тик. Зайва енергія мережі не забирається, блок не страждає.</p>
+
+<p>Енергія заходить із п'яти робочих граней. <strong>Лицьова грань</strong> (туди «дивиться» морда) інертна — кабелі до неї не підключаються, лійки крізь неї не працюють.</p>
 
 <h2>Процесинг</h2>
 
+<p>Кожне стиснення йде 130 тиків (~6,5 с) і коштує 260 EU/FE. Готовий результат сам не вилітає — забирайте руками або лійкою.</p>
+
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>130 тиків (~6,5 с)</td></tr><tr><td>Ціна операції</td><td>260 EU/FE</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
+
+<h2>Інвентар</h2>
+
+<p>Один слот на вхід, один на вихід.</p>
+
+<table><thead><tr><th>Слот</th><th>Приймає</th><th>К-сть</th></tr></thead><tbody><tr><td>Вхід</td><td>предмети, які компресор уміє стискати</td><td>1</td></tr><tr><td>Вихід</td><td>результат</td><td>1</td></tr></tbody></table>
+
+<h2>Інтерфейс</h2>
+
+<p>На одному екрані видно запас енергії, прогрес, слот входу й слот виходу.</p>
 
 <h2>Властивості блока</h2>
 
-<p>Звичайний суцільний блок, ламається будь-якою кайлом. Заряд при зламі не зберігає.</p>
+<p>Звичайний суцільний блок, м'якший за камінь. Ламається будь-яким кайлом, але <strong>при зламі заряд НЕ зберігає</strong>.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Зберігає заряд при зламі</td><td>ні</td></tr></tbody></table>
 
 <h2>Рецепти</h2>
 
-<p>Збирається на верстаку з корпусу машини та електронної схеми.</p>
+<p>Що він стискає, згруповано за задачами:</p>
+
+<table><thead><tr><th>Вхід</th><th>Вихід</th><th>Чому це важливо</th></tr></thead><tbody><tr><td>Неметалевий пил (вугілля, алмаз, смарагд, лазурит)</td><td>назад на предмет</td><td><strong>єдина машина, яка їх відновлює</strong> — замикає неметалеве подвоєння</td></tr><tr><td>Металевий пил (мідь, залізо, золото)</td><td>зливок</td><td>альт. шлях замість електропечі</td></tr><tr><td>Зливок (8 металів)</td><td><a href="../components/material_forms.html">пластина</a></td><td>машинний шлях кування пластин, альтернатива <a href="../items/forge_hammer.html">ковальському молоту</a></td></tr><tr><td>Кулька глини</td><td>цегла</td><td>випал глини тиском</td></tr><tr><td>Лід</td><td>щільний лід</td><td>1:1, замість 9 льоду на верстаку</td></tr><tr><td>Щільний лід</td><td>синій лід</td><td>1:1, замість 9 щільного льоду на верстаку</td></tr><tr><td>Сніговий блок</td><td>лід</td><td>новий шлях до льоду, без циклу назад</td></tr><tr><td>Тростина</td><td>папір</td><td>1:1, замість крафта 3→3</td></tr></tbody></table>
+
+<p>Головне: для <strong>вугілля, алмазу, смарагду й лазуриту</strong> компресор — <em>єдиний</em> спосіб повернути пил назад на предмет, <a href="electric_furnace.html">Електропіч</a> їх не плавить. Саме тому він — напарник, що замикає подвоєння для неметалів. (Лазуритовий пил усе одно дає ×1 назад за пил, тож зайвого дюпу немає: предмет → 1 пил → 1 предмет.)</p>
+
+<h2>Прогресія</h2>
+
+<p>Тир: LV. Машина ущільнення й замикач неметалевого циклу подвоєння. Ні у що не розвивається у v0.1. Потребує живлення від LV-джерела, наприклад <a href="../generators/generator.html">Генератора</a>.</p>
+
+<h2>Пов'язане</h2>
+
+<p><a href="macerator.html">Подрібнювач</a> — дає пил, який ця машина стискає назад на предмети. <a href="electric_furnace.html">Електропіч</a> — плавить металевий пил (компресор — неметалева пара до неї). <a href="../components/electronic_circuit.html">Електронна схема</a> — компонент за ланцюжком переробки. <a href="../generators/generator.html">Генератор</a> — джерело живлення.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="компресор alaindustrial:compressor" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Piston"><img src="../assets/item/piston_3d.png" alt="Piston" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Piston"><img src="../assets/item/piston_3d.png" alt="Piston" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Компресор"><img src="../assets/item/compressor_3d.png" alt="Компресор" width="32" height="32"></div><div class="result-name">Компресор</div></div></div></div></div>

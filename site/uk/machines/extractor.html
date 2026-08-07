@@ -377,25 +377,61 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Екстрактор</strong> — LV-машина, яка витягує корисний матеріал із сировини: барвники з квітів, насіння з гарбуза й кавуна, порошок зі стрижня іфрита, кремінь із гравію. Майже завжди він вигідніший за ванільний спосіб.</p>
+<p><strong>Екстрактор</strong> — LV-машина, яка витягує корисний матеріал із сировини: барвники з квітів, насіння з гарбуза й кавуна, порошок зі стрижня іфрита, кремінь із гравію. Майже завжди він вигідніший за ванільні способи — з квітки виходить <strong>два</strong> барвники замість одного на верстаку — тому це зручний вузол для автоферм на лійках.</p>
+
+<blockquote><strong>Міні-приклад:</strong> киньте мак — і отримаєте <strong>два червоні барвники</strong> замість одного, як на верстаку. Поставте пару штук на квіткову ферму, і барвники перестануть бути рутиною.</blockquote>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/т (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/т під час роботи</td></tr></tbody></table>
+<p>Екстрактор лише споживає EU/FE і тримає невеликий буфер для рівної роботи.</p>
 
-<p>Якщо в мережі більше енергії, зайве просто не забирається — нічого не вибухає. Енергія заходить із п'яти робочих граней; лицьова грань інертна.</p>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/такт під час роботи</td></tr></tbody></table>
+
+<p>LV-машина: бере до 32 EU/FE за тик. Зайва енергія мережі не забирається, блок не страждає.</p>
+
+<p>Енергія заходить із п'яти робочих граней. <strong>Лицьова грань</strong> (туди «дивиться» морда) інертна — кабелі до неї не підключаються, лійки крізь неї не працюють.</p>
 
 <h2>Процесинг</h2>
 
+<p>Кожне видобування коштує 240 EU/FE і йде 120 тиків (~6 с). Готовий результат сам не вилітає — забирайте руками або лійкою.</p>
+
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>120 тиків (~6 с)</td></tr><tr><td>Ціна операції</td><td>240 EU/FE</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
+
+<h2>Інвентар</h2>
+
+<p>Один слот на вхід, один на вихід.</p>
+
+<table><thead><tr><th>Слот</th><th>Приймає</th><th>К-сть</th></tr></thead><tbody><tr><td>Вхід</td><td>предмети, які екстрактор уміє обробляти</td><td>1</td></tr><tr><td>Вихід</td><td>результат</td><td>1</td></tr></tbody></table>
+
+<h2>Інтерфейс</h2>
+
+<p>На одному екрані видно запас енергії, прогрес, слот входу й слот виходу.</p>
 
 <h2>Властивості блока</h2>
 
-<p>Звичайний суцільний блок, ламається будь-якою кайлом. Заряд при зламі не зберігає.</p>
+<p>Звичайний суцільний блок, м'якший за камінь. Ламається будь-яким кайлом, але <strong>при зламі заряд НЕ зберігає</strong>.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Зберігає заряд при зламі</td><td>ні</td></tr></tbody></table>
+
+<h2>Звук</h2>
+
+<p>Під час роботи екстрактор видає неголосний механічний гул перемелювання. Замовкає, коли машина простоює.</p>
 
 <h2>Рецепти</h2>
 
-<p>Збирається на верстаку з корпусу машини та електронної схеми.</p>
+<p>Що він витягує й чому це зазвичай вигідніше:</p>
+
+<table><thead><tr><th>Вхід</th><th>Вихід</th><th>Чому вигідніше</th></tr></thead><tbody><tr><td>Більшість квітів (мак, кульбаба, волошка, конвалія, морський огірок, кактус)</td><td><strong>×2 барвники</strong></td><td>на верстаку ×1</td></tr><tr><td>Бузок, троянда Візера</td><td><strong>×3 барвники</strong></td><td>«жирні» джерела дають трохи більше</td></tr><tr><td>Ламінарія</td><td>×1 зелений барвник</td><td>мало пігменту — як на верстаку</td></tr><tr><td>Гарбуз</td><td><strong>×5 насінин</strong></td><td>на верстаку ×4</td></tr><tr><td>Скибка кавуна</td><td><strong>×2 насінини</strong></td><td>на верстаку ×1</td></tr><tr><td>Стрижень іфрита</td><td><strong>×3 порошки іфрита</strong></td><td>зручний масовий шлях</td></tr><tr><td>Гравій</td><td>кремінь</td><td>надійний спосіб добути кремінь</td></tr></tbody></table>
+
+<p>Правило просте: для рослинної сировини екстрактор завжди платить трохи краще за верстак, і це природний стік для продукції лійкової ферми.</p>
+
+<h2>Прогресія</h2>
+
+<p>Тир: LV. Машина зручності — барвники й насіння не критичні для прогресії, але екстрактор робить їх невтомними. Ні у що не розвивається у v0.1. Потребує живлення від LV-джерела, наприклад <a href="../generators/generator.html">Генератора</a>.</p>
+
+<h2>Пов'язане</h2>
+
+<p><a href="compressor.html">Компресор</a> — сусідня LV-машина переробки. <a href="macerator.html">Подрібнювач</a> — інший ранній подрібнювач (для руд і металів). <a href="../generators/generator.html">Генератор</a> — джерело живлення.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="екстрактор alaindustrial:extractor" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Hopper"><img src="../assets/item/hopper_3d.png" alt="Hopper" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Hopper"><img src="../assets/item/hopper_3d.png" alt="Hopper" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Екстрактор"><img src="../assets/item/extractor_3d.png" alt="Екстрактор" width="32" height="32"></div><div class="result-name">Екстрактор</div></div></div></div></div>

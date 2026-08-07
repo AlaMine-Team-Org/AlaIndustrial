@@ -377,29 +377,74 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Полімеризатор</strong> — перша машина моду, яка їсть не предмет, а <strong>рідину</strong>. Усередині в нього бак на десять відер нафти; за одну операцію машина випиває рівно відро й видає шматок сирого каучуку.</p>
+<p><strong>Полімеризатор</strong> — перша машина моду, яка їсть не предмет, а <strong>рідину</strong>. Усередині в нього бак на десять відер нафти; за одну операцію машина випиває рівно відро й видає шматок сирого каучуку. Сирий каучук потім з'єднується з пилом сірки у <a href="vulcanizer.html">Вулканізаторі</a>.</p>
+
+<blockquote><strong>Міні-приклад:</strong> підведіть до полімеризатора трубу від помпи, що стоїть на нафтовому озері, дайте живлення — і він сам молотиме нафту на каучук, поки в баку є нафта.</blockquote>
+
+<p>Нафту можна залити й руками: покладіть відро (або капсулу) у верхній слот — рідина піде в бак, а порожня тара впаде у слот під ним.</p>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/т (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/т під час роботи</td></tr></tbody></table>
+<p>Полімеризатор лише споживає EU/FE і тримає невеликий буфер для рівної роботи.</p>
 
-<p>Якщо в мережі більше енергії, зайве просто не забирається — нічого не вибухає. Енергія заходить із п'яти робочих граней; лицьова грань інертна.</p>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/такт під час роботи</td></tr></tbody></table>
+
+<p>Енергія заходить із п'яти робочих граней. <strong>Лицьова грань</strong> (туди «дивиться» морда) інертна — кабелі до неї не підключаються, лійки крізь неї не працюють.</p>
+
+<h2>Рідина</h2>
+
+<p>Бак приймає лише нафту — свою й будь-яку іншу, позначену спільномодовим теґом.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Обсяг бака</td><td>10 000 мБ (10 відер)</td></tr><tr><td>Витрата за операцію</td><td>1000 мБ (1 відро)</td></tr><tr><td>Що приймає</td><td>нафта</td></tr><tr><td>Чи віддає назад</td><td>ні — нафта в баку вже сировина, а не запас</td></tr></tbody></table>
+
+<p>Заповнювати бак можна двома способами, і обидва ведуть в один і той самий бак: трубою/помпою ззовні або тарою через слот в інтерфейсі. Змішування немає — інша рідина в бак просто не заллється.</p>
 
 <h2>Процесинг</h2>
 
+<p>Кожна операція коштує 400 EU/FE і йде 200 тиків (~10 с). Готовий каучук сам не вилітає — забирайте руками або лійкою.</p>
+
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>200 тиків (~10 с)</td></tr><tr><td>Ціна операції</td><td>400 EU/FE</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
+
+<p>Якщо в баку менше за відро, машина просто стоїть: неповний обсяг не витрачається й не зникає. Якщо слот результату забитий, операція завмирає — нафта при цьому лишається в баку.</p>
+
+<h2>Інвентар</h2>
+
+<p>Три слоти: пара для тари й один для результату.</p>
+
+<table><thead><tr><th>Слот</th><th>Приймає</th><th>К-сть</th></tr></thead><tbody><tr><td>Тара (верхній)</td><td>повне відро або капсула з нафтою</td><td>1</td></tr><tr><td>Тара (нижній)</td><td>порожня тара після зливу</td><td>1</td></tr><tr><td>Вихід</td><td>сирий каучук</td><td>1</td></tr></tbody></table>
+
+<p>Лійки й труби кладуть тару лише у верхній слот, а забирають із двох нижніх.</p>
+
+<h2>Інтерфейс</h2>
+
+<p>Ліворуч — шкала нафти в баку (малюється справжньою текстурою рідини, наведіть курсор і побачите обсяг у мБ), праворуч — запас енергії, посередині — слоти тари, стрілка прогресу й слот результату.</p>
 
 <h2>Властивості блока</h2>
 
-<p>Звичайний суцільний блок, ламається будь-якою кайлом. Заряд при зламі не зберігає.</p>
+<p>Звичайний суцільний блок, м'якший за камінь. Ламається будь-яким кайлом, але <strong>при зламі заряд і нафту НЕ зберігає</strong>.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Форма</td><td>повний куб (окклюдер)</td></tr><tr><td>Міцність</td><td>3.0</td></tr><tr><td>Вибухостійкість</td><td>6.0</td></tr><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Зберігає заряд при зламі</td><td>ні</td></tr></tbody></table>
+
+<h2>Звук</h2>
+
+<p>Поки мовчить. Свого гулу в полімеризатора немає — як у компресора, помпи й лісопилки; кандидат на майбутній робочий звук.</p>
 
 <h2>Рецепти</h2>
 
-<p>Збирається на верстаку з корпусу машини, відра, заліза та електронної схеми.</p>
+
+<table><thead><tr><th>Вхід</th><th>Вихід</th></tr></thead><tbody><tr><td>1000 мБ нафти</td><td>1 сирий каучук</td></tr></tbody></table>
+
+<p>Далі сирий каучук іде у <a href="vulcanizer.html">Вулканізатор</a> разом із пилом сірки:</p>
+
+<table><thead><tr><th>Вхід</th><th>Вихід</th></tr></thead><tbody><tr><td>1 сирий каучук + 4 пили сірки</td><td>1 / 2 / 3 гуми залежно від нагріву знизу</td></tr></tbody></table>
+
+<h2>Прогресія</h2>
+
+<p>Тир: LV. Ставиться після того, як гравець знайшов нафту й побудував помпу. Гума — матеріал для майбутніх ізольованих проводів і MV-компонентів. Потребує живлення від LV-джерела, наприклад <a href="../generators/generator.html">Генератора</a>.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="vulcanizer.html">Вулканізатор</a> — наступний крок: сирий каучук у гуму.</p>
+<p><a href="../materials/oil.html">Нафта</a> — сировина і як її добути. <a href="../components/rubber.html">Гума</a> — що виходить на виході ланцюжка. <a href="../fluid-machines/pump.html">Помпа</a> — качає нафту з озера в бак. <a href="../fluid-storage/fluid_tank.html">Переносний бак</a> — запас нафти поруч із машиною.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="полімеризатор alaindustrial:polymerizer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Bucket"><img src="../assets/item/bucket_3d.png" alt="Bucket" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Полімеризатор"><img src="../assets/item/polymerizer_3d.png" alt="Полімеризатор" width="32" height="32"></div><div class="result-name">Полімеризатор</div></div></div></div></div>

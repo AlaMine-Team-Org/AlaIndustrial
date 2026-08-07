@@ -377,25 +377,49 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Електрованна</strong> — LV-машина гальванічного осадження: волокно й срібний пил занурюються у воду, крізь них пропускається струм, і срібло осідає на волокні провідною доріжкою. На виході — Флюкс-нитка.</p>
+<p>Електрованна — LV-машина гальванічного осадження: волокно й срібний пил занурюються у воду, крізь них пропускається струм, і срібло осідає на волокні провідною доріжкою. На виході — <strong>Флюкс-нитка</strong>, напівфабрикат матеріалу Флюкс-тканина. Це перша машина моду, що споживає одночасно предмети <strong>й</strong> рідину, і вхід у лінійку EU/FE-броні.</p>
+
+<p>Волокном слугує <strong>ванільна нитка або бавовняне волокно</strong> — обидва приймаються одним рецептом через спільний теґ. Вибір між фермою павуків і грядкою з бавовною — питання стилю гри, а не прогресії.</p>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/т (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/т під час роботи</td></tr></tbody></table>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Роль</td><td>споживач</td></tr><tr><td>Буфер (EU/FE)</td><td>800</td></tr><tr><td>Макс. вхід (EU/FE/такт)</td><td>32 (стеля LV)</td></tr><tr><td>Макс. вихід (EU/FE/такт)</td><td>н/з</td></tr><tr><td>EU/FE/такт</td><td>2</td></tr></tbody></table>
+
+<p>Пропускна здатність: приймає до 32 EU/FE/такт з будь-якої грані, крім лицьової — та енергетично інертна й не тягне до себе кабельний відвід. Надлишок понад ліміт не передається, руйнування немає.</p>
 
 <h2>Процесинг</h2>
 
-<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>500 тиків (25 секунд)</td></tr><tr><td>Витрата води за операцію</td><td>4000 мБ = 4 відра</td></tr><tr><td>Ємність бака</td><td>10 000 мБ (10 відер)</td></tr></tbody></table>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість (тики)</td><td>500 = 25 секунд</td></tr><tr><td>Витрата води за операцію</td><td>4000 мБ = 4 відра</td></tr><tr><td>Місткість бака</td><td>10 000 мБ (10 відер)</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
 
-<p>Вода не входить у рецепт як інгредієнт: її обсяг — фіксована вартість, яку машина перевіряє й списує сама. Бак односторонній: воду можна влити, але не викачати.</p>
+<p><strong>Вода не входить у JSON-рецепта.</strong> У моді немає родини рецептів, що приймає предмети й рідину одночасно, тому обсяг води — фіксована вартість із конфіга, яку машина перевіряє й списує сама. Датапак може перевизначити волокно, срібло й ціну в EU/FE, але не обсяг води.</p>
+
+<p>Бак <strong>односторонній</strong>: воду можна влити, але не можна викачати — те, що потрапило всередину, є сировиною, а не сховищем, тому сусідня помпа не відкачає воду назад.</p>
+
+<h2>Інвентар</h2>
+
+<table><thead><tr><th>Слот</th><th>Приймає</th><th>К-сть</th></tr></thead><tbody><tr><td>Волокно</td><td>нитка або бавовняне волокно</td><td>1 за операцію</td></tr><tr><td>Срібло</td><td>срібний пил</td><td>1 за операцію</td></tr><tr><td>Заливка (вхід)</td><td>будь-яка ємність з рідиною (відро, вакуум-капсула, комірка іншого моду)</td><td>—</td></tr><tr><td>Заливка (вихід)</td><td>спорожнена ємність, заповнюється машиною</td><td>—</td></tr><tr><td>Результат</td><td>Флюкс-нитка, лише машиною</td><td>до 64</td></tr></tbody></table>
+
+<p>Автоматизація може подавати в обидва вхідні слоти й у слот заливки; забирати — зі слота результату й слота спорожнілої тари.</p>
+
+<h2>Інтерфейс</h2>
+
+<p>Тип: container Показує: рівень води в баку (з назвою рідини й обсягом у мБ при наведенні), запас енергії, стрілку прогресу. <strong>Причина простою</strong> виводиться підказкою на стрілці: «Потрібне волокно», «Потрібен срібний пил», «Потрібна вода», «Немає відповідного рецепта», «Вихід зайнятий». Окремий рядок потрібен тому, що вода не частина рецепта: без неї порожній бак читався б гравцем як «немає рецепта».</p>
 
 <h2>Властивості блока</h2>
 
-<p>Звичайний суцільний блок, ламається будь-якою кайлом.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Міцність</td><td>3.0</td></tr><tr><td>Вибухостійкість</td><td>6.0</td></tr><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Дроп з NBT енергії</td><td>немає</td></tr></tbody></table>
 
 <h2>Рецепти</h2>
 
-<p>Збирається на верстаку з корпусу машини, мідної котушки та електронної схеми.</p>
+<p>Крафт: корпус машини, дві мідні котушки, дві електронні схеми й дві срібні пластини. Рецепт переробки: волокно + срібний пил + вода → Флюкс-нитка.</p>
+
+<h2>Прогресія</h2>
+
+<p>Тир: LV Потребує: <a href="../components/machine_casing.html">корпус машини</a>, мідну котушку, електронну схему, срібні пластини. Відкриває: Флюкс-нитка → Флюкс-тканина → LV-броня Fluxweave.</p>
+
+<h2>Пов'язане</h2>
+
+<p><a href="polymerizer.html">Полімеризатор</a> — еталон машини з баком <a href="vulcanizer.html">Вулканізатор</a> — еталон машини з двома предметними входами <a href="../agriculture/trellis.html">Жердинка</a> — джерело бавовняного волокна</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="електрованна alaindustrial:galvanic_bath" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Any Silver Plate"><img src="../assets/item/silver_plate_3d.png" alt="Any Silver Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електрованна"><img src="../assets/item/galvanic_bath_3d.png" alt="Електрованна" width="32" height="32"></div><div class="result-name">Електрованна</div></div></div></div></div>

@@ -377,23 +377,30 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Електронагрівач</strong> ставиться просто під <a href="vulcanizer.html">Вулканізатором</a> і дає рівень тепла 3. Завдяки цьому одна операція з одного каучуку та однієї пили сірки видає три гуми.</p>
+<p><strong>Електронагрівач</strong> ставиться прямо під <a href="vulcanizer.html">Вулканізатором</a> і дає рівень тепла</p>
+<ol><li>Завдяки цьому одна операція з одного каучуку й одного пилу сірки видає три гуми.</li></ol>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/т (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/т, поки гріє</td></tr></tbody></table>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/такт на запит</td></tr><tr><td>Холоста витрата</td><td>0 EU/FE</td></tr></tbody></table>
+
+<p>Нагрівач списує енергію лише в той тик, коли Вулканізатор безпосередньо над ним реально просуває операцію. Немає рецепта, живлення в машини або місця у виході — нагрівач не витрачає EU/FE й не світиться.</p>
+
+<h2>Інтерфейс</h2>
+
+<p>GUI немає. Стан видно за свіченням блока й індикатором тепла в екрані Вулканізатора.</p>
 
 <h2>Властивості блока</h2>
 
-<p>Звичайний суцільний блок, ламається будь-якою кайлом.</p>
+<p>Джерело тепла рівня 3 лише для блока безпосередньо згори. EU/FE-споживач LV; приймає енергію через доступні бічні грані. Кайло; при руйнуванні випадає сам блок.</p>
 
-<h2>Рецепти</h2>
+<h2>Рецепт</h2>
 
 <p>Збирається на верстаку з червоного пилу, золотого зливка, залізних зливків, корпусу машини та електронної схеми.</p>
 
-<h2>Пов'язане</h2>
+<h2>Зв'язки</h2>
 
-<p><a href="vulcanizer.html">Вулканізатор</a> — ставиться просто над нагрівачем.</p>
+<p><a href="vulcanizer.html">Вулканізатор</a> — єдиний поточний споживач тепла. Лава й магматичний блок дають безкоштовний рівень 2; багаття — рівень 1.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="електронагрівач alaindustrial:electric_heater" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Gold Ingot"><img src="../assets/item/gold_ingot_3d.png" alt="Any Gold Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Redstone Dust"><img src="../assets/item/redstone_3d.png" alt="Any Redstone Dust" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електронагрівач"><img src="../assets/item/electric_heater_3d.png" alt="Електронагрівач" width="32" height="32"></div><div class="result-name">Електронагрівач</div></div></div></div></div>

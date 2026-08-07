@@ -377,29 +377,64 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Електропіч</strong> — повний електричний аналог ванільної печі. Вона плавить <strong>усе те саме, що й звичайна піч</strong> — руди, їжу, скло, брук — але живиться EU/FE замість палива й працює вдвічі швидше.</p>
+<p><strong>Електропіч</strong> — повний електричний аналог ванільної печі. Вона плавить <strong>усе те саме, що й звичайна піч</strong> — руди, їжу, скло, брукняк — але живиться EU/FE замість палива й працює вдвічі швидше. Поверх ванільних рецептів мод додає свої, насамперед <strong>пил → зливок</strong>, що замикає цикл подвоєння руди, розпочатий <a href="macerator.html">Подрібнювачем</a>.</p>
+
+<blockquote><strong>Міні-приклад:</strong> перемеліть залізну руду в подрібнювачі — отримаєте два пили, — і киньте їх сюди. Через пару секунд у вас <strong>два залізні зливки</strong>: одна жила, подвоєна, без жодного шматка палива.</blockquote>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/т (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/т під час роботи</td></tr></tbody></table>
+<p>Електропіч лише споживає EU/FE і тримає невеликий буфер для рівної роботи.</p>
 
-<p>Якщо в мережі більше енергії, зайве просто не забирається — нічого не вибухає. Енергія заходить із п'яти робочих граней; лицьова грань інертна.</p>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/такт під час роботи</td></tr></tbody></table>
+
+<p>LV-машина: бере до 32 EU/FE за тик. Зайва енергія мережі не забирається, блок не страждає.</p>
+
+<p>Енергія заходить із п'яти робочих граней. <strong>Лицьова грань</strong> (туди «дивиться» морда) інертна — кабелі до неї не підключаються, лійки крізь неї не працюють.</p>
 
 <h2>Процесинг</h2>
 
-<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>100 тиків (~5 с)</td></tr><tr><td>Ціна операції</td><td>200 EU/FE</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
+<p>Спочатку піч шукає рецепт моду, а якщо його немає — бере ванільну плавку. Якщо на один вхід є і мод-, і ванільний рецепт, мод-рецепт виграє. Базова плавка йде ~100 тиків (~5 с) — приблизно вдвічі швидше за ванільну піч.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>~100 тиків (~5 с)</td></tr><tr><td>Ціна плавки</td><td>200 EU/FE</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
+
+<h2>Інвентар</h2>
+
+<p>Один слот на вхід, один на вихід.</p>
+
+<table><thead><tr><th>Слот</th><th>Приймає</th><th>К-сть</th></tr></thead><tbody><tr><td>Вхід</td><td>будь-який предмет, що плавиться (мод + ваніль)</td><td>1</td></tr><tr><td>Вихід</td><td>результат</td><td>1</td></tr></tbody></table>
+
+<h2>Інтерфейс</h2>
+
+<p>На одному екрані видно запас енергії, прогрес, слот входу й слот виходу.</p>
 
 <h2>Властивості блока</h2>
 
-<p>Звичайний суцільний блок, ламається будь-якою кайлом. Заряд при зламі не зберігає.</p>
+<p>Звичайний суцільний блок, м'якший за камінь. Ламається будь-яким кайлом, але <strong>при зламі заряд НЕ зберігає</strong>.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Зберігає заряд при зламі</td><td>ні</td></tr></tbody></table>
 
 <h2>Рецепти</h2>
 
-<p>Збирається на верстаку з готової <a href="iron_furnace.html">залізної печі</a>, батареї та електронної схеми.</p>
+
+<table><thead><tr><th>Вхід</th><th>Вихід</th><th>Примітка</th></tr></thead><tbody><tr><td>Металевий пил (мідь, залізо, золото, нікель, срібло, олово, уран)</td><td>зливок</td><td>рецепт моду — замикає подвоєння</td></tr><tr><td>Необроблена руда (нікель, срібло, олово, уран)</td><td>зливок</td><td>рецепт моду</td></tr><tr><td>Залізний зливок</td><td>загартоване залізо</td><td>рецепт моду, 200 EU/FE</td></tr><tr><td>Усе інше, що плавить ванільна піч (руди, їжа, пісок → скло, брукняк → камінь…)</td><td>як у ванілі</td><td>ванільна плавка, ~5 с</td></tr></tbody></table>
+
+<p>Рецепти моду (12 штук, усі 200 EU/FE) покривають <strong>лише</strong> те, чого ванільна піч робити не вміє: пил моду → зливок, специфічні руди моду (нікель/срібло/олово/уран) і загартування заліза. Усе, що чисельно збігається з ванільною плавкою, іде через єдиний ванільний шлях — без дубля-рецепта. Неметалеві пили (вугілля, алмаз, смарагд, лазурит) тут <strong>не</strong> плавляться — їх бере <a href="compressor.html">Компресор</a>.</p>
+
+<h3>У переглядачі рецептів</h3>
+
+<p>Категорія «Електропіч» у JEI/REI показує <strong>все, що машина реально плавить</strong> — і рецепти моду, і всі ванільні переплавки, причому кожна з ціною електропечі: <strong>200 EU/FE · 5 с</strong> замість ванільних «XP за 10 сек». Клік по стрілці прогресу відкриває цю категорію разом із ванільною.</p>
+
+<p>Ванільні рецепти потрапляють у категорію як <strong>дзеркала</strong>: вони будуються лише для показу й у ігровий реєстр рецептів не додаються — машина в роботі й далі виконує живий ванільний рецепт. Тому числа в інтерфейсі й реальна поведінка не можуть розійтися.</p>
+
+<p>Кожна плавка показана <strong>рівно один раз</strong>. Мод не дублює власним рецептом те, що ванільна піч уже робить з тим самим входом і виходом: такі плавки живуть лише у ванільній плавці й потрапляють у категорію єдиним дзеркалом.</p>
+
+<h2>Прогресія</h2>
+
+<p>Тир: LV. Замикає металевий цикл подвоєння руди й звільняє від палива. Вбудовується в ланцюжок: ванільна піч → <a href="iron_furnace.html">залізна піч</a> → <strong>електропіч</strong>. Потребує живлення від LV-джерела.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="iron_furnace.html">Залізна піч</a> — попередній щабель, лягає в рецепт.</p>
+<p><a href="macerator.html">Подрібнювач</a> — дає пил, який ця піч плавить на зливки. <a href="compressor.html">Компресор</a> — неметалева пара: відновлює вугілля й самоцвіти. <a href="iron_furnace.html">Залізна піч</a> — попередній щабель, ще на паливі. <a href="../components/tempered_iron.html">Загартоване залізо</a> — рецепт моду на цій печі.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="електрична піч alaindustrial:electric_furnace" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Залізна піч"><img src="../assets/item/iron_furnace_3d.png" alt="Залізна піч" width="32" height="32"></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електрична піч"><img src="../assets/item/electric_furnace_3d.png" alt="Електрична піч" width="32" height="32"></div><div class="result-name">Електрична піч</div></div></div></div></div>

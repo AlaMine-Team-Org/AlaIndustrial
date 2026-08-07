@@ -431,6 +431,14 @@
 
 <p><strong>Persistence and migration.</strong> After a reload the tank restores both its volume and its fluid type. Worlds saved under the older version of the pump (lava-only) are picked up correctly: if any fluid is present it's read back as lava — the only one the old tank knew.</p>
 
+<h2>Exchanging with capsules and foreign containers</h2>
+
+<p>The internal tank is not sealed off: it exchanges fluid with any container held in your hand.</p>
+
+<p><strong><a href="../items/vacuum_capsule.html">Vacuum capsule</a>.</strong> Right-click the pump with an empty capsule and it takes exactly one bucket out of the tank; right-click with a filled one and the bucket goes in. Partial transfers never happen — a whole bucket or nothing. <strong>Vanilla bucket</strong> works the same way, one bucket per click. <strong>Containers from other mods</strong> are accepted through the standard fluid-container interface, so another mod's tank, tube or backpack fills and empties the pump without any dedicated compatibility code.</p>
+
+<p>The pump never accepts a fluid that differs from what is already in the tank — mixing is impossible. Empty the tank first if you need to switch fluids.</p>
+
 <h2>Interface</h2>
 
 <p>The pump has a graphical screen with two slots (for buckets) and two indicator bars.</p>

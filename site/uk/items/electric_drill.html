@@ -377,17 +377,51 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Електробур</strong> — електроінструмент: працює не на міцності, а на EU/FE. Із зарядом він копає камінь швидше за діамантове кайло, а коли заряд закінчився — просто перестає копати, ламати його не можна.</p>
+<p><strong>Електробур</strong> — перший ручний електроінструмент моду: алмазне кайло, яке працює на EU/FE замість міцності. Поки заряду вистачає на блок, бур копає <strong>трохи швидше за алмазне кайло</strong> (швидкість 8.5 проти 8.0, рівень видобутку алмазу) і витрачає <strong>50 EU/FE</strong> за кожен успішно зламаний блок. Повний буфер — <strong>10 000 EU/FE</strong>, тобто близько <strong>200 блоків</strong> на одне заряджання.</p>
+
+<p>Розрядившись, бур не перетворюється на непотрібний предмет: він продовжує копати <strong>на швидкості руки</strong> (1.0), але рівень видобутку й увесь дроп зберігаються — просто повільно, доки не підзарядите. Це той самий цикл «заряджання → робота → підзарядка», що й в <a href="energy_pack.html">енергоранця</a>.</p>
+
+<p>Як і інші EU/FE-предмети моду (<a href="battery_pouch.html">мішок</a>, <a href="energy_pack.html">ранець</a>), бур <strong>не має міцності</strong> й не ламається: смуга під іконкою показує не знос, а заряд EU/FE (жовта, колір LV). Заряджається там само, де вони, — у слоті <a href="../energy-storage/battery_box.html">Енергосховища</a> і від надягнутого <a href="energy_pack.html">енергоранця</a>.</p>
+
+<p>У бура є другий щабель — <strong>електробур з алмазним напиленням</strong>: той самий інструмент, але копає швидше й уміє перемикати видобуток у режим шовкового дотику.</p>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Буфер</td><td>10 000 EU/FE</td></tr><tr><td>Витрата</td><td>50 EU/FE за блок</td></tr><tr><td>Швидкість заряджання</td><td>32 EU/FE/т</td></tr><tr><td>Повного заряду вистачає на</td><td>~200 блоків</td></tr></tbody></table>
+<p>Власний EU/FE-буфер, поза енергомережею. Заряджається у слоті Енергосховища й від надягнутого ранця; витрачає заряд на копання блоків.</p>
 
-<p>Заряджається в <a href="../energy-storage/battery_box.html">Енергосховищі</a> або на <a href="../energy-storage/charge_pad.html">Зарядній станції</a>.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Роль</td><td>ручний інструмент з EU/FE-буфером: споживач біля зарядника</td></tr><tr><td>Буфер</td><td>10 000 EU/FE</td></tr><tr><td>Заряджання</td><td>слот Енергосховища / надягнутий ранець, ≤ 32 EU/FE/тик (стеля LV) → повний заряд ~16 с</td></tr><tr><td>Витрата</td><td>50 EU/FE за успішно зламаний блок</td></tr><tr><td>Пасивний розряд</td><td>немає</td></tr></tbody></table>
+
+<p>Витрата знімається <strong>лише на сервері</strong> й <strong>лише за блоки з ненульовою твердістю</strong>. У творчому режимі заряд не витрачається.</p>
+
+<h2>Інвентар</h2>
+
+<p>Не застосовно — внутрішнього сховища предметів немає (стек 1).</p>
+
+<h2>Властивості блока</h2>
+
+<p>Не застосовно (предмет).</p>
+
+<h2>Рецепти</h2>
+
+<p>Крафт: у центрі алмазне кайло, ряд залізних зливків зверху, дві <a href="battery_pouch.html">батареї</a> з боків, знизу дві <a href="../components/copper_coil.html">мідні котушки</a> та <a href="../components/electronic_circuit.html">електронна схема</a>.</p>
+
+<p><strong>Ремонт</strong> — не застосовний: міцності немає, лагодити нічого; «ремонт» — це заряджання EU/FE.</p>
+
+<h2>Поведінка</h2>
+
+<p><strong>Копання:</strong> поки заряд ≥ 50 EU/FE, бур копає на швидкості 8.5 з рівнем видобутку алмазу. За кожен такий блок знімається 50 EU/FE. <strong>Розряджений бур:</strong> при заряді нижче 50 EU/FE копає на швидкості руки (1.0), але рівень видобутку й дроп зберігаються, і EU/FE не витрачається. Чара Efficiency при цьому не діє. <strong>Заряджання:</strong> слот заряджання Енергосховища й надягнутий енергоранець приймають бур автоматично, до 32 EU/FE/тик. <strong>Атака:</strong> б'є як алмазне кайло, але удари <strong>не витрачають EU/FE</strong> і не зношують бур. <strong>Чари:</strong> бур входить у теґ кайл, тому стіл зачарування й ковадло працюють з ним як з кайлом. Unbreaking/Mending на неламкому бурі марні, але нешкідливі. <strong>Індикація:</strong> смужка під іконкою показує заряд. У тултипі — «Заряд: X / 10 000 EU/FE», при нулі — червоне «Розряджений». <strong>Дроп/смерть/релогін:</strong> заряд зберігається у предметі. <strong>У креативі:</strong> заряд не витрачається.</p>
+
+<h2>Алмазне напилення (апгрейд)</h2>
+
+<p>Другий щабель бура: той самий контракт на EU/FE, але вища швидкість копання й перемикання в режим <strong>шовкового дотику</strong> — блок падає цілим замість того, щоб розсипатися на дроп. Перемикання відбувається на самому інструменті й не потребує окремого предмета.</p>
+
+<h2>Прогресія</h2>
+
+<p>Перший електроінструмент моду — з нього починається лінійка EU/FE-інструментів. Доступний після <a href="../energy-storage/battery_box.html">Енергосховища</a> і батареї: без LV-інфраструктури бур не скрафтити й не зарядити. LV-рівень.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="energy_pack.html">Енергоранець</a> — підживлює інструменти просто в інвентарі. <a href="electric_chainsaw.html">Електропила</a> · <a href="electric_shovel.html">Електролопата</a> — та сама лінійка.</p>
+<p><a href="electric_chainsaw.html">Електропила</a> — дерев'яна половина пари. <a href="electric_shovel.html">Електролопата</a> · <a href="electric_hoe.html">Електромотика</a> — решта лінійки. <a href="energy_pack.html">Енергоранець</a> — заряджає бур прямо в інвентарі. <a href="../energy-storage/battery_box.html">Енергосховище</a> — заряджання бура (слот charge). <a href="../components/copper_coil.html">Мідна котушка</a> — компонент крафта.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="електробур alaindustrial:electric_drill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Diamond Pickaxe"><img src="../assets/item/diamond_pickaxe_3d.png" alt="Diamond Pickaxe" width="32" height="32"></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електробур"><img src="../assets/item/electric_drill_3d.png" alt="Електробур" width="32" height="32"></div><div class="result-name">Електробур</div></div></div></div></div>

@@ -377,13 +377,33 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Пульт телепорта</strong> — ручний предмет-маяк: зв'язується зі станцією телепорта через Shift+ПКМ і потім запускає стрибок гравця до станції. Сам пульт EU/FE не зберігає — енергія стрибка списується із зарядженої станції-цілі.</p>
+<p><strong>Пульт телепорта</strong> — ручний предмет-маяк: зв'язується зі <a href="../advanced-machines/teleporter.html">станцією телепорта</a> через shift-ПКМ і потім запускає стрибок гравця до станції. Сам пульт EU/FE не зберігає — енергія стрибка списується із зарядженої станції-цілі.</p>
 
 <p>Один пульт пам'ятає до <strong>16</strong> станцій — прив'язка однієї й тієї самої двічі нічого не змінює, дублікатів не буде.</p>
 
+<p>Пара «станція + пульт» — це і є вся механіка телепорта: стаціонарний якір копить EU/FE, носимий пульт обирає ціль і платить за стрибок із запасу станції.</p>
+
+<blockquote><strong>Міні-приклад:</strong> зв'язали пульт зі станцією на базі → пішли в шахту → натиснули ПКМ із пультом → телепортувалися додому. EU/FE за стрибок зняли з бази, не з інвентаря.</blockquote>
+
+<h2>Енергія</h2>
+
+<p>Не зберігає. Витрату EU/FE за стрибок платить <a href="../advanced-machines/teleporter.html">станція-ціль</a> зі свого буфера, не сам пульт.</p>
+
+<h2>Як використовується</h2>
+
+<p>Shift-ПКМ по розміщеній <a href="../advanced-machines/teleporter.html">станції телепорта</a> — зв'язує пульт із цією станцією. ПКМ із прив'язаним пультом у світі — запускає телепортацію до станції (якщо на ній вистачає EU/FE).</p>
+
+<h2>Властивості блока</h2>
+
+<p>Не застосовно (предмет). Стек: 1.</p>
+
+<h2>Прогресія</h2>
+
+<p>Предмет категорії item, тир LV (доступний за крафтом раніше, ніж HV-станція — але без станції марний). Пов'язаний із HV-епохою: телепортація відкривається лише після побудови й заряджання станції.</p>
+
 <h2>Пов'язане</h2>
 
-<p><a href="../advanced-machines/teleporter.html">Телепорт</a> — станція, до якої прив'язується пульт.</p>
+<p><a href="../advanced-machines/teleporter.html">Телепорт (станція)</a> — якір, до якого прив'язується пульт. <a href="../components/electronic_circuit.html">Електронна схема</a> — компонент крафта. <a href="../components/tempered_iron.html">Загартоване залізо</a> — матеріал корпусу.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="пульт телепорту alaindustrial:teleporter_remote" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell" title="Ender Pearl"><img src="../assets/item/ender_pearl_3d.png" alt="Ender Pearl" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="Загартоване залізо"><img src="../assets/item/tempered_iron_3d.png" alt="Загартоване залізо" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Пульт телепорту"><img src="../assets/item/teleporter_remote_3d.png" alt="Пульт телепорту" width="32" height="32"></div><div class="result-name">Пульт телепорту</div></div></div></div></div>

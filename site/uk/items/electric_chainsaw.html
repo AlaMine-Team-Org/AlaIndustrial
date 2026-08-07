@@ -377,17 +377,49 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Електропила</strong> — електроінструмент: працює не на міцності, а на EU/FE. Із зарядом він валить дерево швидше за діамантову сокиру, а коли заряд закінчився — просто перестає копати, ламати його не можна.</p>
+<p><strong>Електропила</strong> — другий ручний електроінструмент моду й дзеркало <a href="electric_drill.html">електробура</a> по дереву: сокира, яка працює на EU/FE замість міцності. Поки заряду вистачає на блок, пила валить дерево <strong>швидше за алмазну сокиру</strong> (швидкість 9.0 проти 8.0) і витрачає <strong>30 EU/FE</strong> за кожен успішно зламаний блок. Повний буфер — <strong>10 000 EU/FE</strong>, близько <strong>333 блоків</strong> на одне заряджання.</p>
+
+<p>Пила б'є не лише по колодах: окреме правило додає <strong>листя</strong> на тій самій швидкості, тому крона прибирається так само швидко, як стовбур. Без цього правила листя пиляли б повільно — ваніль відносить його до мотики, а не до сокири.</p>
+
+<p>Розрядившись, пила не перетворюється на непотрібний предмет: вона продовжує пиляти <strong>на швидкості руки</strong> (1.0), рівень видобутку й увесь дроп зберігаються — просто повільно, доки не підзарядите.</p>
+
+<p>Як і решта EU/FE-предметів моду, пила <strong>не має міцності</strong> й не ламається: смуга під іконкою показує не знос, а заряд EU/FE (жовта, колір LV).</p>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Буфер</td><td>10 000 EU/FE</td></tr><tr><td>Витрата</td><td>30 EU/FE за блок</td></tr><tr><td>Швидкість заряджання</td><td>32 EU/FE/т</td></tr><tr><td>Повного заряду вистачає на</td><td>~333 блоків</td></tr></tbody></table>
+<p>Власний EU/FE-буфер, поза енергомережею. Заряджається у слоті Енергосховища й від надягнутого ранця; витрачає заряд на пиляння блоків.</p>
 
-<p>Заряджається в <a href="../energy-storage/battery_box.html">Енергосховищі</a> або на <a href="../energy-storage/charge_pad.html">Зарядній станції</a>.</p>
+<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Роль</td><td>ручний інструмент з EU/FE-буфером: споживач біля зарядника</td></tr><tr><td>Буфер</td><td>10 000 EU/FE</td></tr><tr><td>Заряджання</td><td>слот Енергосховища / надягнутий ранець, ≤ 32 EU/FE/тик (стеля LV) → повний заряд ~16 с</td></tr><tr><td>Витрата</td><td>30 EU/FE за успішно зламаний блок</td></tr><tr><td>Пасивний розряд</td><td>немає</td></tr></tbody></table>
+
+<p>Витрата знімається <strong>лише на сервері</strong> й <strong>лише за блоки з ненульовою твердістю</strong>. У творчому режимі заряд не витрачається.</p>
+
+<p>Листя й саджанці, які ламаються миттєво, безкоштовні — рівно як вони не зношують ванільну сокиру.</p>
+
+<h2>Інвентар</h2>
+
+<p>Не застосовно — внутрішнього сховища предметів немає (стек 1).</p>
+
+<h2>Властивості блока</h2>
+
+<p>Не застосовно (предмет).</p>
+
+<h2>Рецепти</h2>
+
+<p>Крафт: той самий каркас, що в бура, але в центрі алмазна сокира замість алмазного кайла: ряд залізних зливків зверху, дві <a href="battery_pouch.html">батареї</a> з боків, знизу дві <a href="../components/copper_coil.html">мідні котушки</a> та <a href="../components/electronic_circuit.html">електронна схема</a>.</p>
+
+<p><strong>Ремонт</strong> — не застосовний: міцності немає, лагодити нічого; «ремонт» — це заряджання EU/FE.</p>
+
+<h2>Поведінка</h2>
+
+<p><strong>Пиляння:</strong> поки заряд ≥ 30 EU/FE, пила ріже дерево й листя на швидкості 9.0 (алмазна сокира — 8.0). За кожен такий блок знімається 30 EU/FE. <strong>Розряджена пила:</strong> при заряді нижче 30 EU/FE пиляє на швидкості руки (1.0), але рівень видобутку й дроп зберігаються, і EU/FE не витрачається. Чара Efficiency при цьому не діє. <strong>Заряджання:</strong> слот заряджання Енергосховища й надягнутий енергоранець приймають пилу автоматично, до 32 EU/FE/тик. <strong>Атака:</strong> б'є як алмазна сокира (6 шкоди, швидкість атаки 1.0), але удари <strong>не витрачають EU/FE</strong> і не зношують пилу. <strong>Чари:</strong> пила входить у теґ сокир, тому стіл зачарування й ковадло працюють з нею як із сокирою. <strong>Індикація:</strong> смужка під іконкою показує заряд. У тултипі — «Заряд: X / 10 000 EU/FE», при нулі — червоне «Розряджена». Текстура міняється на «згаслий» варіант при нульовому заряді. <strong>Дроп/смерть/релогін:</strong> заряд зберігається у предметі. <strong>Обкорування колод — не підтримується.</strong> Обкоровуйте звичайною сокирою. <strong>У креативі:</strong> заряд не витрачається.</p>
+
+<h2>Прогресія</h2>
+
+<p>Другий електроінструмент моду після <a href="electric_drill.html">електробура</a>: бур закриває камінь, пила — дерево. Доступна після <a href="../energy-storage/battery_box.html">Енергосховища</a> і батареї. LV-рівень.</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="energy_pack.html">Енергоранець</a> — підживлює інструменти просто в інвентарі. <a href="electric_drill.html">Електробур</a> — камінь.</p>
+<p><a href="electric_drill.html">Електробур</a> — прецедент EU/FE-інструмента без міцності; кам'яна половина пари. <a href="energy_pack.html">Енергоранець</a> — заряджає пилу прямо в інвентарі. <a href="../energy-storage/battery_box.html">Енергосховище</a> — заряджання пили (слот charge). <a href="../components/electronic_circuit.html">Електронна схема</a> — компонент крафта.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="електропила alaindustrial:electric_chainsaw" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Diamond Axe"><img src="../assets/item/diamond_axe_3d.png" alt="Diamond Axe" width="32" height="32"></div> <div class="cell" title="Батарея"><img src="../assets/item/battery_3d.png" alt="Батарея" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електропила"><img src="../assets/item/electric_chainsaw_3d.png" alt="Електропила" width="32" height="32"></div><div class="result-name">Електропила</div></div></div></div></div>

@@ -377,15 +377,53 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Рідинна труба</strong> переганяє рідину між машинами й баками. Як і кабель, це не телепорт: у кожного сегмента є власний невеликий буфер на <strong>50 мБ</strong>, і рідина рухається лінією від сегмента до сегмента.</p>
+<p><strong>Рідинна труба</strong> носить воду, лаву, нафту й будь-які інші рідини між баками, насосом і машинами — замість того щоб бігати з відрами. Ставте труби в лінію, вкажіть <a href="../items/wrench.html">ключем</a>, звідки забирати й куди зливати, далі труба працює сама. Енергія їй не потрібна.</p>
+
+<p>Труба переносить <strong>одне відро за секунду</strong>. Насос викачує повільніше, тож на звичайній лінії вузьким місцем лишається він, а не труба.</p>
+
+<p>Рідина справді тече трубою, а не з'являється одразу на іншому кінці: кожен сегмент тримає невеликий об'єм і передає його далі. Тому довга лінія наповнюється поступово — видно, як фронт рідини йде трубою.</p>
+
+<h2>Рідина</h2>
+
+<table><thead><tr><th>Властивість</th><th>Значення</th></tr></thead><tbody><tr><td>Об'єм одного сегмента</td><td>50 мБ</td></tr><tr><td>Пропускна здатність</td><td>50 мБ за тик (1 відро за секунду)</td></tr><tr><td>Рідин одночасно</td><td>одна на сегмент</td></tr><tr><td>Витрата енергії</td><td>немає</td></tr></tbody></table>
+
+<p>Один сегмент несе лише одну рідину за раз. Поки в ньому є вода, лава туди не піде — лінію з двома різними рідинами зібрати не вийде, і змішати їх випадково теж.</p>
+
+<p>Об'єм сегмента маленький навмисно: труба переносить рідину, а не зберігає її. Для зберігання є <a href="../fluid-storage/fluid_tank.html">бак</a>.</p>
+
+<blockquote>Якщо зламати трубу, рідина з неї зникає. Це менше за половину відра на сегмент, зате не доводиться ловити розлив.</blockquote>
+
+<h2>Сторони і ключ</h2>
+
+<p>Сторони налаштовуються так само, як у <a href="../item-transport/item_pipe.html">предметної труби</a> — тим самим ключем і тим самим порядком, щоб не доводилося запам'ятовувати два різні правила.</p>
+
+<table><thead><tr><th>Режим</th><th>Що робить</th><th>Як виглядає</th></tr></thead><tbody><tr><td><code>NEUTRAL</code></td><td>Звичайне з'єднання.</td><td>простий рукав</td></tr><tr><td><code>EXTRACT</code></td><td>Забирає рідину із сусіднього бака або машини.</td><td>широкий розтруб, <strong>помаранчевий</strong> торець</td></tr><tr><td><code>INSERT</code></td><td>Зливає рідину в сусідній бак або машину.</td><td>вузький носик, <strong>бірюзовий</strong> торець</td></tr><tr><td><code>DISABLED</code></td><td>Вимикає цю сторону.</td><td>рукава немає</td></tr></tbody></table>
+
+<p>Звичайний розклад «бак → бак»: з боку першого бака поставте <code>EXTRACT</code>, з боку другого — <code>INSERT</code>.</p>
+
+<blockquote>Shift+ПКМ ключем сторони не налаштовує — так труба <strong>розбирається</strong>, як і будь-який блок моду.</blockquote>
+
+<h3>Труба до труби</h3>
+
+<p>Там, де труба стикується з іншою трубою, забирати й зливати нічого — це просто ділянка шляху. Тому ключ там перемикає лише «з'єднано» ↔ «роз'єднано». Роз'єднали й з'єднали назад — лінія знову працює.</p>
 
 <h2>Властивості блока</h2>
 
-<table><thead><tr><th>Поле</th><th>Значення</th></tr></thead><tbody><tr><td>Буфер сегмента</td><td>50 мБ</td></tr><tr><td>Інструмент</td><td>будь-який</td></tr></tbody></table>
+<p>Труба — не повний куб: ядро 4×4×4 в центрі блока плюс рукав до кожної підключеної сторони. Ставиться й ламається кайлом, міцність 0.2, вибухостійкість 0.5, звук міді. Блок прозорий для світла, крізь нього видно сусідні блоки.</p>
+
+<p>Усередині корпусу видно рідину — вона пофарбована в колір того, що тече трубою: вода синя, лава помаранчева, нафта чорна. Рідини з інших модів теж відображаються своїм кольором.</p>
+
+<h2>Рецепт</h2>
+
+<p>8 срібних зливків навколо скла, результат — 8 труб. Скло тут не випадкове: саме крізь нього видно, що тече всередині.</p>
+
+<h2>Прогресія</h2>
+
+<p>Базова труба тира LV. Далі за планом — посилена (більша пропускна здатність) і фільтрувальна (пропускає лише задану рідину).</p>
 
 <h2>Пов'язане</h2>
 
-<p><a href="../fluid-storage/fluid_tank.html">Переносний бак</a> · <a href="../fluid-machines/pump.html">Насос</a> — кінці лінії.</p>
+<p><a href="../fluid-storage/fluid_tank.html">Переносний бак</a> — зберігання рідини <a href="../fluid-machines/pump.html">Насос</a> — видобуток рідини зі світу <a href="../item-transport/item_pipe.html">Предметна труба</a> — той самий ключ і ті самі режими сторін <a href="../items/wrench.html">Ключ</a></p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="рідинна труба alaindustrial:fluid_pipe" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Colorless Glass"><img src="../assets/item/glass_3d.png" alt="Any Colorless Glass" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="Any Silver Ingot"><img src="../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Рідинна труба"><img src="../assets/item/fluid_pipe_3d.png" alt="Рідинна труба" width="32" height="32"><span class="count">×8</span></div><div class="result-name">Рідинна труба</div></div></div></div></div>

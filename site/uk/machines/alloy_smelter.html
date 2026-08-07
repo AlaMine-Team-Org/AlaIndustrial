@@ -377,25 +377,55 @@
 </div>
 <h2>Зведення</h2>
 
-<p><strong>Сплавна піч</strong> — перша машина моду, яка об'єднує кілька різних матеріалів в один новий. У неї три вхідні слоти, і всі вони рівноправні: піч дивиться на набір завантажених зливків цілком.</p>
+<p><strong>Сплавна піч</strong> — перша машина моду, яка об'єднує кілька різних матеріалів в один новий. У неї три вхідні слоти, і всі вони рівноправні: піч дивиться на набір завантажених зливків цілком, а не на те, який з них у якому слоті лежить.</p>
+
+<blockquote><strong>Міні-приклад:</strong> підведіть LV-кабель, покладіть три мідні зливки в будь-який вхідний слот і один олов'яний — у будь-який інший, і через 7,5 секунди отримаєте два зливки бронзи.</blockquote>
 
 <h2>Енергія</h2>
 
-<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/т (LV)</td></tr><tr><td>Споживання</td><td>8 EU/FE/т під час роботи</td></tr></tbody></table>
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Споживання</td><td>8 EU/FE/такт під час роботи</td></tr><tr><td>Ціна операції</td><td>1200 EU/FE</td></tr><tr><td>Тривалість</td><td>150 тиків (~7,5 с)</td></tr></tbody></table>
 
-<p>Якщо в мережі більше енергії, зайве просто не забирається — нічого не вибухає. Енергія заходить із п'яти робочих граней; лицьова грань інертна.</p>
+<p>8 EU/FE/такт — це рівно виробіток <a href="../generators/generator.html">генератора</a> на вугіллі й дві третини пропускної здатності мідного кабелю, тому одна піч займає стартову лінію майже цілком. Витрата однакова для всіх сплавів: дорогі сплави відрізняються не ціною операції, а тим, скільки зливків вони з'їдають і скільки віддають.</p>
 
-<h2>Процесинг</h2>
+<h2>Сплави</h2>
 
-<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>150 тиків (~7,5 с)</td></tr><tr><td>Ціна операції</td><td>1200 EU/FE</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
+<table><thead><tr><th>Сплав</th><th>Завантажити</th><th>Вийде</th><th>EU/FE за зливок</th></tr></thead><tbody><tr><td><a href="../materials/bronze.html">Бронза</a></td><td>3 мідні + 1 олов'яний зливок</td><td>2 зливки</td><td>600</td></tr><tr><td><a href="../materials/invar.html">Інвар</a></td><td>2 залізні + 1 нікелевий зливок</td><td>1 зливок</td><td>1200</td></tr><tr><td><a href="../materials/cupronickel.html">Купронікель</a></td><td>1 мідний + 1 нікелевий зливок</td><td>1 зливок</td><td>1200</td></tr><tr><td><a href="../materials/electrum.html">Електрум</a></td><td>1 золотий + 1 срібний зливок</td><td>1 зливок</td><td>1200</td></tr></tbody></table>
+
+<p>Вихід завжди менший за суму входів — переплавка коштує металу. Бронза лишається масовим сплавом (чотири дешеві зливки дають два), а інвар, купронікель та електрум штучні: вони дорогі і за сировиною, і за енергією за готовий зливок.</p>
+
+<p>Входи приймаються за спільними теґами, тому мідь і залізо з іншого моду піч прийме нарівні зі своїми.</p>
+
+<h2>Як піч підбирає рецепт</h2>
+
+<p>Правило одне: <strong>порядок слотів не впливає ні на що</strong>. Піч шукає рецепт, компоненти якого можна розкласти по зайнятих слотах — по одному компоненту на слот.</p>
+
+<p>З цього випливають дві поведінки, які варто знати:</p>
+
+<p><strong>Рецепт із двох компонентів не запуститься, якщо зайнятий третій слот.</strong> Піч не стане мовчки ігнорувати зайвий стек: поки він лежить у вході, жоден двокомпонентний сплав не вважається придатним. Це захищає від ситуації, коли гравець поклав щось не те й роками не розуміє, чому це «не витрачається». <strong>Брак кількості зупиняє роботу, але не скидає рецепт.</strong> Дві міді замість трьох — піч чекає, поки докинуть третю, а не починає вважати, що рецепта немає.</p>
+
+<h2>Інвентар і автоматизація</h2>
+
+<table><thead><tr><th>Слот</th><th>Приймає</th></tr></thead><tbody><tr><td>Три входи (стовпчик ліворуч)</td><td>будь-який зливок, який входить у якийсь рецепт сплаву</td></tr><tr><td>Вихід</td><td>готовий сплав</td></tr></tbody></table>
+
+<p>Входи обслуговуються зверху й з боків, вихід — з боків. Нижня грань предметної автоматизації не публікується.</p>
+
+<p><strong>Лійка не забиває машину.</strong> Вхідний слот не прийме предмет, який уже лежить в іншому вхідному слоті. Без цього правила лійка з міддю залила б міддю всі три слоти, і піч стала б намертво: такого набору немає в жодному рецепті, а витягти зайве лійка не вміє. З правилом зайва мідь лишається в лійці — видно, що вона накопичується, — а вільні слоти чекають олово.</p>
+
+<h2>Інтерфейс</h2>
+
+<p>Екран показує енергію, прогрес, три вхідні слоти стовпчиком і вихід. Стовпчик обрано навмисно: однакові комірки одна під одною читаються як «сюди покласти складові частини», тоді як звичний ряд «вхід → вихід» натякав би на порядок, якого тут немає.</p>
 
 <h2>Властивості блока</h2>
 
-<p>Звичайний суцільний блок, ламається будь-якою кайлом. Заряд при зламі не зберігає.</p>
+<p>Кайло; при руйнуванні випадає сам блок і вміст інвентаря. Світиться під час роботи (тиглі на передній грані й шахта зверху розжарюються). Не видає звуку.</p>
 
-<h2>Рецепти</h2>
+<h2>Рецепт</h2>
 
-<p>Збирається на верстаку з цегли, залізних зливків, корпусу машини та електронної схеми.</p>
+<p>Збирається на верстаку з цегли, залізних зливків, корпусу машини й електронної схеми. Доступний до появи будь-якого сплаву, інакше піч не можна було б побудувати.</p>
+
+<h2>Зв'язки</h2>
+
+<p><a href="macerator.html">Подрібнювач</a> і <a href="compressor.html">Компресор</a> дають цикл подвоєння руди: пил → зливок, а зливок уже йде в піч. <a href="../materials/tin.html">Олово</a>, <a href="../materials/nickel.html">Нікель</a> і <a href="../materials/silver.html">Срібло</a> — власні метали моду, що входять у сплави.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="сплавильна піч alaindustrial:alloy_smelter" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Brick"><img src="../assets/item/brick_3d.png" alt="Brick" width="32" height="32"></div> <div class="cell" title="Brick"><img src="../assets/item/brick_3d.png" alt="Brick" width="32" height="32"></div> <div class="cell" title="Brick"><img src="../assets/item/brick_3d.png" alt="Brick" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Сплавильна піч"><img src="../assets/item/alloy_smelter_3d.png" alt="Сплавильна піч" width="32" height="32"></div><div class="result-name">Сплавильна піч</div></div></div></div></div>
