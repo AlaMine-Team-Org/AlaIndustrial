@@ -44,6 +44,16 @@ public class TeleporterJumpGameTest {
 	}
 
 	@GameTest
+	public void tcTele002Nrg02_jumpCountsAsSpending(GameTestHelper helper) {
+		TeleporterJumpScenarios.tcTele002Nrg02_jumpCountsAsSpending(helper);
+	}
+
+	@GameTest
+	public void tcTele002Nrg03_refusedJumpBooksNoSpending(GameTestHelper helper) {
+		TeleporterJumpScenarios.tcTele002Nrg03_refusedJumpBooksNoSpending(helper);
+	}
+
+	@GameTest
 	public void tcTele002Sec02_remoteBindsToOwner(GameTestHelper helper) {
 		TeleporterJumpScenarios.tcTele002Sec02_remoteBindsToOwner(helper);
 	}

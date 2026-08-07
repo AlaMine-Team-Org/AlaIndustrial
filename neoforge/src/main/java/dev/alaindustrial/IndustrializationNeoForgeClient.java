@@ -260,7 +260,7 @@ public final class IndustrializationNeoForgeClient {
 		// this single registration covers every grade — and it is the first renderer bound to that type,
 		// so nothing is being displaced.
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.COPPER_CABLE.get(),
-				dev.alaindustrial.client.render.CableShockGuardBlockEntityRenderer::new);
+				dev.alaindustrial.client.render.CableAccessoryBlockEntityRenderer::new);
 		// Stock Display Frame (MOD-066): the mod's first entity renderer — NeoForge counterpart to
 		// the Fabric EntityRenderers.register call in IndustrializationClient.
 		event.registerEntityRenderer(

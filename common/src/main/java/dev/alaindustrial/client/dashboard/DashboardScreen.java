@@ -165,8 +165,10 @@ public final class DashboardScreen extends Screen {
 		int rowY = y + 18;
 		rowY = statRow(g, Component.translatable("gui.alaindustrial.dashboard.produced_label"),
 				compact(stats.euProducedTotal()) + " EU", inX, rowY, inRight);
+		// Everything the player spent, machine work and teleport jumps alike (MOD-361) — the row answers
+		// "where did my energy go", not "what earned me mastery".
 		rowY = statRow(g, Component.translatable("gui.alaindustrial.dashboard.consumed_label"),
-				compact(stats.euUsefulConsumedTotal()) + " EU", inX, rowY, inRight);
+				compact(stats.euConsumedTotal()) + " EU", inX, rowY, inRight);
 		statRow(g, Component.translatable("gui.alaindustrial.dashboard.active_label"),
 				formatDuration(stats.activeTicks() / 1200), inX, rowY, inRight);
 		return y + h;

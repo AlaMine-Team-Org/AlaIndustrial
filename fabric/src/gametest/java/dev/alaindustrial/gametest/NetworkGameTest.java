@@ -1288,6 +1288,31 @@ public class NetworkGameTest {
 	}
 
 	@GameTest(maxTicks = 80)
+	public void tcBrk001Nrg01_openBreakerCutsTheLine(GameTestHelper helper) {
+		CableBreakerScenarios.tcBrk001Nrg01_openBreakerCutsTheLine(helper);
+	}
+
+	@GameTest(maxTicks = 80)
+	public void tcBrk001Sta01_openBreakerSurvivesCableTicks(GameTestHelper helper) {
+		CableBreakerScenarios.tcBrk001Sta01_openBreakerSurvivesCableTicks(helper);
+	}
+
+	@GameTest(maxTicks = 80)
+	public void tcBrk001Sec01_openBreakerDisarmsTheShock(GameTestHelper helper) {
+		CableBreakerScenarios.tcBrk001Sec01_openBreakerDisarmsTheShock(helper);
+	}
+
+	@GameTest(maxTicks = 80)
+	public void tcBrk001Fun01_removingBreakerRestoresTheLine(GameTestHelper helper) {
+		CableBreakerScenarios.tcBrk001Fun01_removingBreakerRestoresTheLine(helper);
+	}
+
+	@GameTest(maxTicks = 80)
+	public void tcBrk001Vis01_openBreakerGapsTheRun(GameTestHelper helper) {
+		CableBreakerScenarios.tcBrk001Vis01_openBreakerGapsTheRun(helper);
+	}
+
+	@GameTest(maxTicks = 80)
 	public void mod260_retainedBufferIsSafe(GameTestHelper helper) {
 		CableShockScenarios.retainedBufferIsSafe(helper);
 	}

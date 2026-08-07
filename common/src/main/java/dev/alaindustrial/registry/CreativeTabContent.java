@@ -131,6 +131,8 @@ public final class CreativeTabContent {
 		out.accept(ModContent.ALIGNMENT_CHIP_NIGHT.get());
 		out.accept(ModContent.EMPTY_CHIP.get());
 		out.accept(ModContent.MUTE_CHIP.get());
+		// Cable breaker (MOD-276): a cable accessory, listed with the components it is crafted from.
+		out.accept(ModContent.CABLE_BREAKER.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
 		out.accept(ModContent.WATER_MILL_WHEEL.get());
 		out.accept(ModContent.WOODEN_GEAR.get());
@@ -297,6 +299,8 @@ public final class CreativeTabContent {
 		out.accept(ModContent.FLUX_THREAD.get());
 		out.accept(ModContent.FLUXWEAVE_CLOTH.get());
 		out.accept(ModContent.MUTE_CHIP.get());
+		// Cable breaker (MOD-276): a cable accessory, listed with the components it is crafted from.
+		out.accept(ModContent.CABLE_BREAKER.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
 		out.accept(ModContent.WATER_MILL_WHEEL.get());
 		out.accept(ModContent.WOODEN_GEAR.get());

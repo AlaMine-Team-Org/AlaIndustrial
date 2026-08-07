@@ -92,6 +92,8 @@ public final class ModItems {
 	public static final Item FLUXWEAVE_CLOTH = manifestItem("fluxweave_cloth");
 	public static final Item UNSTABLE_ISOTOPE = manifestItem("unstable_isotope");
 	public static final Item MUTE_CHIP = manifestItem("mute_chip");
+	/** Cable breaker (MOD-276): clamps onto a laid cable to cut the line for maintenance. */
+	public static final Item CABLE_BREAKER = manifestItem("cable_breaker");
 	// Rotor / wheel (MOD-189): durability components — wear shows as a vanilla durability bar and, being
 	// damageable, they are automatically non-stackable. maxDamage from Config (registration-time).
 	public static final Item WINDMILL_ROTOR = manifestItem("windmill_rotor");
@@ -678,6 +680,7 @@ public final class ModItems {
 		ModContent.ALIGNMENT_CHIP_NIGHT = () -> ALIGNMENT_CHIP_NIGHT;
 		ModContent.EMPTY_CHIP = () -> EMPTY_CHIP;
 		ModContent.MUTE_CHIP = () -> MUTE_CHIP;
+		ModContent.CABLE_BREAKER = () -> CABLE_BREAKER;
 		ModContent.WINDMILL_ROTOR = () -> WINDMILL_ROTOR;
 		ModContent.WATER_MILL_WHEEL = () -> WATER_MILL_WHEEL;
 		ModContent.WOODEN_GEAR = () -> WOODEN_GEAR;

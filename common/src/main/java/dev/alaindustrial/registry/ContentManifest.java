@@ -419,6 +419,10 @@ public final class ContentManifest {
 		// Upgrade chips (MOD-080): the blank and the mute upgrade, each with its hint lines.
 		defs.put("empty_chip", hintItem("empty_chip"));
 		defs.put("mute_chip", hintItem("mute_chip"));
+		// Cable breaker (MOD-276): clamps onto a laid cable and cuts the line for maintenance. A hint
+		// item because the whole control scheme (install / throw / pry off) is gestures on the wire,
+		// with no GUI anywhere to explain itself.
+		defs.put("cable_breaker", hintItem("cable_breaker"));
 		// Incubator mode chips (MOD-118) — the mode binding lives in the item.
 		defs.put("mutation_chip_transform", p -> new MutationChipItem(p, IncubatorMode.TRANSFORM));
 		defs.put("mutation_chip_duplicate", p -> new MutationChipItem(p, IncubatorMode.DUPLICATE));

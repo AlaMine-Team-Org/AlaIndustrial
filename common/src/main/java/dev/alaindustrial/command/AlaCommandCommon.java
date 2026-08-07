@@ -168,9 +168,12 @@ public final class AlaCommandCommon {
 							// A QA command must be able to move DOWN too, so highestLevelReached is overwritten
 							// rather than max()'d — the no-demotion rule protects players, not the op tool.
 							int level = LevelMath.levelForXp(targetXp, Config.xpLevelOneCost, Config.levelXpMultiplier);
+							// euOtherSpentTotal is carried over untouched: it is spending, not an XP term, so
+							// solving for a target XP has no business rewriting it.
 							PlayerStatsStore.set(player, new PlayerModStats(
 									before.euProducedTotal(), consumed, level,
-									before.producedByGenerator(), before.activeTicks()));
+									before.producedByGenerator(), before.activeTicks(),
+									before.euOtherSpentTotal()));
 							ctx.getSource().sendSuccess(() -> Component.literal(
 									"Set mod XP to " + targetXp + " (level " + level + ").").withStyle(HEADER), false);
 							return Command.SINGLE_SUCCESS;
@@ -190,6 +193,7 @@ public final class AlaCommandCommon {
 		msg.append("\n").append(field(Component.literal("XP").withStyle(LABEL), val(xp)));
 		msg.append("\n").append(field(Component.literal("EU produced").withStyle(LABEL), val(stats.euProducedTotal())));
 		msg.append("\n").append(field(Component.literal("EU useful-consumed").withStyle(LABEL), val(stats.euUsefulConsumedTotal())));
+		msg.append("\n").append(field(Component.literal("EU spent (no XP)").withStyle(LABEL), val(stats.euOtherSpentTotal())));
 		msg.append("\n").append(field(Component.literal("Active minutes").withStyle(LABEL), val(stats.activeTicks() / 1200)));
 		msg.append("\n").append(field(Component.literal("Generator types").withStyle(LABEL), val(stats.producedByGenerator().size())));
 		return msg;

@@ -3,6 +3,7 @@ package dev.alaindustrial.block.entity;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.core.energy.CableType;
+import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.energy.ShockGuardMaterial;
@@ -68,6 +69,21 @@ public class CableBlockEntity extends MachineBlockEntity {
 	private Block shockGuard;
 
 	/**
+	 * Whether a breaker is clamped onto this segment, and whether it is currently closed (MOD-276).
+	 *
+	 * <p>Two flags rather than a tri-state enum because they answer two independent questions: an
+	 * installed breaker is an item the player paid for (it must persist and drop back), while
+	 * open/closed is the switch position. Both persist — a line left dead for maintenance must still
+	 * be dead after a relog, otherwise a player logs back in to a live wire they believed they had
+	 * isolated.
+	 *
+	 * <p>{@code breakerClosed} defaults to {@code true} so a freshly installed breaker leaves the line
+	 * working: installing a switch must not black out a base by surprise.
+	 */
+	private boolean breakerInstalled;
+	private boolean breakerClosed = true;
+
+	/**
 	 * Persist the cable-segment buffer and the insulating stand — NOT the full machine-path keys. The
 	 * cable has no inventory (0 slots), no processing state (progress is always 0) and no owner
 	 * (transport, not a working machine), so the base class's {@code Progress}/{@code MaxProgress}/
@@ -85,7 +101,7 @@ public class CableBlockEntity extends MachineBlockEntity {
 	 * <p>This slim path is also what carries the stand to the <b>client</b>: the inherited
 	 * {@code getUpdateTag} is {@code saveWithoutMetadata}, which routes through this very method, so
 	 * writing the key here is all the renderer needs — no bespoke packet (see
-	 * {@code CableShockGuardBlockEntityRenderer}).
+	 * {@code CableAccessoryBlockEntityRenderer}).
 	 */
 	@Override
 	protected void saveAdditional(ValueOutput output) {
@@ -94,6 +110,12 @@ public class CableBlockEntity extends MachineBlockEntity {
 		if (shockGuard != null) {
 			output.putString("ShockGuard", BuiltInRegistries.BLOCK.getKey(shockGuard).toString());
 		}
+		// Only written when a breaker is actually installed: the overwhelming majority of segments have
+		// none, and this NBT is paid per cable on a base that may hold hundreds of them.
+		if (breakerInstalled) {
+			output.putBoolean("Breaker", true);
+			output.putBoolean("BreakerClosed", breakerClosed);
+		}
 	}
 
 	@Override
@@ -101,6 +123,10 @@ public class CableBlockEntity extends MachineBlockEntity {
 		// Intentionally NOT calling super.loadAdditional — see saveAdditional above.
 		loadEnergyOnly(input);
 		shockGuard = readShockGuard(input.getStringOr("ShockGuard", ""));
+		breakerInstalled = input.getBooleanOr("Breaker", false);
+		// Default true, mirroring the field: a save from before MOD-276 has neither key and must read
+		// back as "no breaker, line closed" — the state every existing world is in.
+		breakerClosed = input.getBooleanOr("BreakerClosed", true);
 	}
 
 	/**
@@ -353,9 +379,135 @@ public class CableBlockEntity extends MachineBlockEntity {
 	 * {@link dev.alaindustrial.block.CableBlock#setPlacedBy}.
 	 */
 	public void ensureRegistered() {
+		// An open breaker keeps this segment out of the graph (MOD-276). The gate belongs HERE, not only
+		// in the toggle handler: onServerTick calls this every tick unconditionally, so an open segment
+		// would re-register itself one tick after being cut out and the switch would do nothing at all.
+		if (isBreakerOpen()) {
+			return;
+		}
 		if (!registered && level instanceof ServerLevel) {
 			NetworkManager.register(this);
 			registered = true;
+		}
+	}
+
+	/** True when a breaker is installed here and switched off — this segment is cut out of the grid. */
+	public boolean isBreakerOpen() {
+		return breakerInstalled && !breakerClosed;
+	}
+
+	/**
+	 * Every face goes inert while the breaker is open (MOD-276).
+	 *
+	 * <p><b>Leaving the graph is not enough on its own.</b> A cable that is only unregistered is still a
+	 * block entity exposing an energy port on all six faces, and the networks on either side then treat
+	 * it as an ordinary neighbouring machine: the upstream grid charges its buffer as a consumer, the
+	 * downstream grid drains it as a source, and energy keeps crossing the open switch one segment
+	 * buffer at a time. Measured on the first run of this feature: the load past an "open" breaker
+	 * still drew 180 EU. Reporting {@link EnergyRole#NONE} is what actually opens the circuit —
+	 * {@code EnergyTopologyCache} skips a null port outright, so the segment joins neither
+	 * {@code producers} nor {@code consumers} of either side.
+	 */
+	@Override
+	public EnergyRole energyRoleForFace(Direction worldFace) {
+		return isBreakerOpen() ? EnergyRole.NONE : super.energyRoleForFace(worldFace);
+	}
+
+	/** Whether a breaker is clamped onto this segment at all (MOD-276). */
+	public boolean hasBreaker() {
+		return breakerInstalled;
+	}
+
+	/** The switch position of an installed breaker; meaningless (and always {@code true}) without one. */
+	public boolean isBreakerClosed() {
+		return breakerClosed;
+	}
+
+	/**
+	 * Install or remove the breaker accessory. Removing one always restores the segment to the grid —
+	 * a switch that is gone cannot keep a line dead, which is what makes "just break the thing off" a
+	 * reliable escape hatch if a player forgets which of a dozen breakers is the open one.
+	 */
+	public void setBreakerInstalled(boolean installed) {
+		if (breakerInstalled == installed) {
+			return;
+		}
+		breakerInstalled = installed;
+		if (!installed) {
+			breakerClosed = true;
+		}
+		applyBreakerToNetwork();
+		setChanged();
+		syncBlockEntityToClient();
+	}
+
+	/**
+	 * Throw the switch. Closing re-joins this segment to its neighbours through the ordinary
+	 * {@link NetworkManager#register} path — the very call a newly placed cable makes — and opening
+	 * cuts it out through {@link NetworkManager#unregister}, exactly as breaking the cable would.
+	 * Reusing those two entry points is what keeps this feature out of {@code core/energy}: splitting
+	 * and merging components is code that has been carrying the grid since day one.
+	 *
+	 * <p>Early-returns when nothing changes, so a double click costs nothing.
+	 */
+	public void setBreakerClosed(boolean closed) {
+		if (!breakerInstalled || breakerClosed == closed) {
+			return;
+		}
+		breakerClosed = closed;
+		applyBreakerToNetwork();
+		setChanged();
+		syncBlockEntityToClient();
+	}
+
+	/**
+	 * Reconcile graph membership with the switch position. Note the asymmetry with {@link #registered}:
+	 * it tracks whether {@code NetworkManager} currently knows this cable, and both branches keep it
+	 * truthful, so {@link #setRemoved()} never double-unregisters an already-cut segment.
+	 */
+	private void applyBreakerToNetwork() {
+		if (!(level instanceof ServerLevel)) {
+			return;
+		}
+		if (isBreakerOpen()) {
+			if (registered) {
+				NetworkManager.unregister(this);
+				registered = false;
+			}
+		} else {
+			ensureRegistered();
+		}
+		applyBreakerToShape();
+	}
+
+	/**
+	 * Mirror the switch position into the blockstate and re-derive this segment's six connection flags
+	 * (MOD-276), so an open breaker leaves a real gap in the run rather than a wire that merely looks
+	 * whole while carrying nothing.
+	 *
+	 * <p>Both halves are needed. The {@code BREAKER_OPEN} flag is what the <em>neighbours</em> read
+	 * through {@code isCableConnectable}, and writing it with {@code UPDATE_ALL} is what makes them
+	 * re-run {@code updateShape} and retract their own arms. This segment's own flags are not covered
+	 * by that — {@code updateShape} fires on the neighbours, not on the block that changed — so they
+	 * are recomputed here: all-false while open, re-derived from the world when closed again.
+	 */
+	private void applyBreakerToShape() {
+		if (!(level instanceof ServerLevel serverLevel)) {
+			return;
+		}
+		BlockState current = serverLevel.getBlockState(worldPosition);
+		if (!(current.getBlock() instanceof CableBlock)) {
+			return;
+		}
+		boolean open = isBreakerOpen();
+		BlockState updated = current.setValue(CableBlock.BREAKER_OPEN, open);
+		for (Direction dir : Direction.values()) {
+			BooleanProperty prop = PipeBlock.PROPERTY_BY_DIRECTION.get(dir);
+			boolean connected = !open && CableBlock.shouldConnectTo(serverLevel, worldPosition, dir);
+			updated = updated.setValue(prop, connected);
+		}
+		if (updated != current) {
+			serverLevel.setBlock(worldPosition, updated, Block.UPDATE_ALL);
 		}
 	}
 
@@ -405,10 +557,18 @@ public class CableBlockEntity extends MachineBlockEntity {
 		}
 		BlockState corrected = live;
 		boolean changed = false;
+		// An open breaker keeps every arm retracted (MOD-276) — this migration re-derives connections
+		// from the neighbours, which are perfectly connectable, so without the gate it would helpfully
+		// reconnect the gap the switch is supposed to leave, on the first tick after every world load.
+		boolean open = isBreakerOpen();
+		if (corrected.getValue(CableBlock.BREAKER_OPEN) != open) {
+			corrected = corrected.setValue(CableBlock.BREAKER_OPEN, open);
+			changed = true;
+		}
 		// Six connection flags (one per face): re-derive from the live connectsTo contract.
 		for (Direction dir : Direction.values()) {
 			BooleanProperty prop = PipeBlock.PROPERTY_BY_DIRECTION.get(dir);
-			boolean expected = CableBlock.shouldConnectTo(serverLevel, pos, dir);
+			boolean expected = !open && CableBlock.shouldConnectTo(serverLevel, pos, dir);
 			if (corrected.getValue(prop) != expected) {
 				corrected = corrected.setValue(prop, expected);
 				changed = true;

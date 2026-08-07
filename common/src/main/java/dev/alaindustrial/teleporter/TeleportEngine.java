@@ -3,6 +3,7 @@ package dev.alaindustrial.teleporter;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.item.teleport.TeleportPoint;
+import dev.alaindustrial.stats.PlayerStatsTracker;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -167,6 +168,12 @@ public final class TeleportEngine {
 		player.setOnGround(true);
 		station.getEnergyStorage().amount -= cost;
 		station.setChanged();
+		// The jump is paid for; book it against the player who made it (MOD-361). The station drains its
+		// buffer straight from here rather than through a machine cycle, so nothing else would ever tell
+		// the dashboard this EU was spent — a player living on the teleporter saw "Consumed: 0 EU".
+		// Booked here, next to the deduction and behind the same success guard, so a refused or aborted
+		// jump can never leave a phantom entry; it is spending, not work, so it grants no mastery.
+		PlayerStatsTracker.get().recordSpending(level.getServer(), player.getUUID(), cost);
 		return true;
 	}
 }

@@ -5,6 +5,9 @@ import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.item.teleport.TeleportPoint;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
+import dev.alaindustrial.stats.PlayerModStats;
+import dev.alaindustrial.stats.PlayerStatsStore;
+import dev.alaindustrial.stats.PlayerStatsTracker;
 import dev.alaindustrial.teleporter.TeleportEngine;
 import dev.alaindustrial.teleporter.TeleportWarmupManager;
 import java.util.UUID;
@@ -13,6 +16,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameType;
 
 /**
  * L2 suite for the jump itself (MOD-092): the price, the policy gate, and the one thing that must
@@ -193,6 +197,102 @@ public final class TeleporterJumpScenarios {
 		BlockPos expected = helper.absolutePos(STATION).above();
 		if (!landed.equals(expected)) {
 			helper.fail("player landed at " + landed + ", expected on top of the station at " + expected);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-361: a paid jump shows up in the jumper's career spending — and only there.
+	 *
+	 * <p>The station drains its buffer from inside {@code execute}, never through a machine cycle, so
+	 * before this hook existed the dashboard's "Consumed" stayed at zero for a player who lived on
+	 * the teleporter. Three things are pinned at once, and each of them fails on its own:
+	 *
+	 * <ul>
+	 *   <li><b>the amount</b> lands in {@code euOtherSpentTotal} exactly once, at the quoted price;</li>
+	 *   <li><b>no mastery</b> — {@code euUsefulConsumedTotal} stays untouched, because MOD-133 keeps
+	 *       jumps out of the XP terms; routing this through {@code recordUsefulWork} turns this red;</li>
+	 *   <li><b>the jumper, not the owner</b> — the station here belongs to {@link #STRANGER}, so a
+	 *       station-owner attribution would credit nobody and leave the total at zero.</li>
+	 * </ul>
+	 *
+	 * <p>The success of the jump itself is asserted first: without that control the two zero-checks
+	 * would pass just as green on a jump that never fired.
+	 *
+	 * @implements TC-TELE-002-NRG02 — a successful jump is booked as the jumper's EU spending, without XP.
+	 */
+	public static void tcTele002Nrg02_jumpCountsAsSpending(GameTestHelper helper) {
+		PlayerStatsTracker.get().clear(); // isolate from any prior scenario's pending deltas
+		TeleporterBlockEntity station = station(helper);
+		ServerPlayer player = playerNearStation(helper);
+		player.setGameMode(GameType.SURVIVAL); // the mock defaults to creative, where EU is free
+		if (helper.getLevel().getServer().getPlayerList().getPlayer(player.getUUID()) == null) {
+			helper.fail("mock jumper is not in the server player list — attribution can't resolve it");
+			return;
+		}
+		// Someone else's public station: the EU is theirs, the statistic must still be the jumper's.
+		station.setOwner(STRANGER, "Someone");
+		station.setPrivate(false);
+		station.getEnergyStorage().amount = station.getEnergyStorage().getCapacity();
+
+		PlayerModStats before = PlayerStatsStore.get(player);
+		TeleportPoint point = pointAt(helper, STATION);
+		long cost = TeleportEngine.computeCost(player, point);
+		if (!TeleportEngine.execute(player, point, cost)) {
+			helper.fail("the jump did not fire — the spending assertions below would be vacuous");
+			return;
+		}
+		PlayerStatsTracker.get().flush(helper.getLevel().getServer());
+
+		PlayerModStats after = PlayerStatsStore.get(player);
+		long spent = after.euOtherSpentTotal() - before.euOtherSpentTotal();
+		if (spent != cost) {
+			helper.fail("jump booked " + spent + " EU of spending, quoted " + cost);
+			return;
+		}
+		if (after.euConsumedTotal() - before.euConsumedTotal() != cost) {
+			helper.fail("the dashboard total must grow by the jump price: "
+					+ (after.euConsumedTotal() - before.euConsumedTotal()) + " != " + cost);
+			return;
+		}
+		if (after.euUsefulConsumedTotal() != before.euUsefulConsumedTotal()) {
+			helper.fail("a jump must not credit useful work (MOD-133 keeps jumps out of mastery): "
+					+ before.euUsefulConsumedTotal() + " -> " + after.euUsefulConsumedTotal());
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * The mirror of the case above: EU that was never spent must never be booked.
+	 *
+	 * <p>A jump refused for lack of power leaves the station's buffer alone (TC-TELE-002-NRG01), and it
+	 * must leave the jumper's career alone too — otherwise a player could inflate their "Consumed"
+	 * by repeatedly triggering jumps a flat station cannot pay for.
+	 *
+	 * @implements TC-TELE-002-NRG03 — a refused jump books no spending.
+	 */
+	public static void tcTele002Nrg03_refusedJumpBooksNoSpending(GameTestHelper helper) {
+		PlayerStatsTracker.get().clear();
+		TeleporterBlockEntity station = station(helper);
+		ServerPlayer player = playerNearStation(helper);
+		player.setGameMode(GameType.SURVIVAL);
+		station.setPrivate(false);
+
+		TeleportPoint point = pointAt(helper, STATION);
+		long cost = TeleportEngine.computeCost(player, point);
+		station.getEnergyStorage().amount = cost - 1; // one EU short: the engine must refuse
+
+		long before = PlayerStatsStore.get(player).euOtherSpentTotal();
+		if (TeleportEngine.execute(player, point, cost)) {
+			helper.fail("a jump must not fire when the station cannot pay for it");
+			return;
+		}
+		PlayerStatsTracker.get().flush(helper.getLevel().getServer());
+		long after = PlayerStatsStore.get(player).euOtherSpentTotal();
+		if (after != before) {
+			helper.fail("a refused jump wrongly booked spending: " + before + " -> " + after);
+			return;
 		}
 		helper.succeed();
 	}

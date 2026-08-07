@@ -8,6 +8,7 @@ import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.energy.ShockGuardMaterial;
+import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModCriteria;
 import dev.alaindustrial.registry.ModDamageTypes;
 import java.util.EnumMap;
@@ -155,6 +156,17 @@ public class CableBlock extends AbstractMachineBlock {
 		return LOW_FLAGS.get(dir);
 	}
 
+	/**
+	 * Whether a breaker on this segment is thrown open (MOD-276).
+	 *
+	 * <p><b>Why this lives in the blockstate and not only in the block entity.</b> Connection arms are
+	 * decided by {@link AbstractMachineBlock#isCableConnectable(BlockState, Direction)}, which reads a
+	 * {@link BlockState} and deliberately never touches a block entity (no load race — see that
+	 * method's contract). An open breaker has to physically break the run — the wire must show a gap,
+	 * not merely stop conducting — so the state the neighbours consult must be in the palette.
+	 */
+	public static final BooleanProperty BREAKER_OPEN = BooleanProperty.create("breaker_open");
+
 	public CableBlock(CableType type, Properties properties) {
 		super(properties);
 		this.type = type;
@@ -165,7 +177,18 @@ public class CableBlock extends AbstractMachineBlock {
 		for (BooleanProperty prop : LOW_FLAGS.values()) {
 			state = state.setValue(prop, false);
 		}
-		registerDefaultState(state);
+		registerDefaultState(state.setValue(BREAKER_OPEN, false));
+	}
+
+	/**
+	 * An open breaker makes the whole segment inert to cable arms: neighbours stop drawing an arm
+	 * toward it, and it draws none itself, so the run visibly gaps at the switch (MOD-276). This is the
+	 * same one-way rule inert machine faces already follow, so {@code CableFaceParityScenarios} covers
+	 * it for free.
+	 */
+	@Override
+	public boolean isCableConnectable(BlockState state, Direction side) {
+		return !state.getValue(BREAKER_OPEN) && super.isCableConnectable(state, side);
 	}
 
 	@Override
@@ -314,6 +337,19 @@ public class CableBlock extends AbstractMachineBlock {
 	@Override
 	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
 			Player player, InteractionHand hand, BlockHitResult hit) {
+		// Breaker first (MOD-276): its item is not a stand material, so the two claims cannot overlap.
+		if (stack.is(ModContent.CABLE_BREAKER.get())
+				&& level.getBlockEntity(pos) instanceof CableBlockEntity cable
+				&& !cable.hasBreaker()) {
+			if (level instanceof ServerLevel serverLevel) {
+				cable.setBreakerInstalled(true);
+				if (!player.getAbilities().instabuild) {
+					stack.shrink(1);
+				}
+				serverLevel.playSound(null, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 0.7f, 1.4f);
+			}
+			return InteractionResult.SUCCESS;
+		}
 		ShockGuardMaterial material = shockGuardMaterialFor(stack);
 		if (material.isPresent() && canHoldShockGuard(state)
 				&& level.getBlockEntity(pos) instanceof CableBlockEntity cable
@@ -342,6 +378,29 @@ public class CableBlock extends AbstractMachineBlock {
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
 			Player player, BlockHitResult hit) {
+		// An installed breaker claims the empty hand (MOD-276): plain click throws the switch, sneak
+		// pries it back off. It takes precedence over the stand's removal gesture because throwing the
+		// switch is the frequent action and the stand is still reachable — pry the breaker off first.
+		if (player.getMainHandItem().isEmpty()
+				&& level.getBlockEntity(pos) instanceof CableBlockEntity breakerCable
+				&& breakerCable.hasBreaker()) {
+			if (level instanceof ServerLevel serverLevel) {
+				if (player.isSecondaryUseActive()) {
+					breakerCable.setBreakerInstalled(false);
+					if (!player.getAbilities().instabuild) {
+						Block.popResource(serverLevel, pos, new ItemStack(ModContent.CABLE_BREAKER.get()));
+					}
+					serverLevel.playSound(null, pos, SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.7f, 1.4f);
+				} else {
+					boolean closed = !breakerCable.isBreakerClosed();
+					breakerCable.setBreakerClosed(closed);
+					// Pitch carries the state for anyone not looking straight at the lever: up = live.
+					serverLevel.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS,
+							0.8f, closed ? 1.0f : 0.6f);
+				}
+			}
+			return InteractionResult.SUCCESS;
+		}
 		if (player.getMainHandItem().isEmpty()
 				&& level.getBlockEntity(pos) instanceof CableBlockEntity cable
 				&& cable.shockGuardBlock() != null) {
@@ -357,6 +416,31 @@ public class CableBlock extends AbstractMachineBlock {
 			return InteractionResult.SUCCESS;
 		}
 		return super.useWithoutItem(state, level, pos, player, hit);
+	}
+
+	/**
+	 * Hand back whatever was clamped onto the segment when a player breaks it (MOD-276).
+	 *
+	 * <p>Both accessories are returned: the breaker, and the insulating stand that until now vanished
+	 * silently on break — the stand had a drop path only for the DOWN-arm collision
+	 * ({@link CableBlockEntity#dropShockGuardIfObstructed}), never for the wire simply being mined.
+	 * The cable itself still comes from its loot table, so nothing here can duplicate it.
+	 *
+	 * <p>{@code playerWillDestroy} rather than a removal hook: it fires while the block entity is still
+	 * present and only for a real player break, so a chunk unload or a piston does not scatter items.
+	 */
+	@Override
+	public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+		if (level instanceof ServerLevel serverLevel && !player.getAbilities().instabuild
+				&& serverLevel.getBlockEntity(pos) instanceof CableBlockEntity cable) {
+			if (cable.hasBreaker()) {
+				Block.popResource(serverLevel, pos, new ItemStack(ModContent.CABLE_BREAKER.get()));
+			}
+			if (cable.shockGuardBlock() != null) {
+				Block.popResource(serverLevel, pos, new ItemStack(cable.shockGuardBlock()));
+			}
+		}
+		return super.playerWillDestroy(level, pos, state, player);
 	}
 
 	/**
@@ -410,6 +494,7 @@ public class CableBlock extends AbstractMachineBlock {
 		super.createBlockStateDefinition(builder);
 		PipeBlock.PROPERTY_BY_DIRECTION.values().forEach(builder::add);
 		LOW_FLAGS.values().forEach(builder::add);
+		builder.add(BREAKER_OPEN);
 	}
 
 	@Override
@@ -431,8 +516,12 @@ public class CableBlock extends AbstractMachineBlock {
 	protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess,
 			BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState,
 			RandomSource random) {
+		// An open breaker holds every arm retracted (MOD-276). This gate is load-bearing, not defensive:
+		// writing BREAKER_OPEN with UPDATE_ALL makes the neighbours re-run this method on THIS block too,
+		// and without the check the very update that opens the switch immediately re-derives the arms
+		// from the (perfectly connectable) neighbours and re-joins the gap.
 		state = state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction),
-				connectsTo(level, pos, direction));
+				!state.getValue(BREAKER_OPEN) && connectsTo(level, pos, direction));
 		BooleanProperty lowFlag = LOW_FLAGS.get(direction);
 		if (lowFlag != null) {
 			// Re-read at neighborPos so the shape sees any neighbour-dependent (updateShape) state,

@@ -45,6 +45,7 @@ public final class PlayerStatsTracker {
 	private static final class Delta {
 		long euProduced;
 		long euConsumed;
+		long euOtherSpent;
 		long activeTicks;
 		final Map<Identifier, Long> byGenerator = new HashMap<>();
 	}
@@ -117,6 +118,24 @@ public final class PlayerStatsTracker {
 		pending.computeIfAbsent(owner, k -> new Delta()).euConsumed += eu;
 	}
 
+	/**
+	 * Record EU the player spent on something that is <em>not</em> machine work — today only a
+	 * teleport jump (MOD-361). Lands in {@link PlayerModStats#euOtherSpentTotal}, so the dashboard's
+	 * "Consumed" accounts for it while mastery does not: MOD-133 deliberately keeps jumps (as well
+	 * as charging storage and pumping fluid) out of the XP terms, and routing this through
+	 * {@link #recordUsefulWork} instead would have made teleport hops a levelling mechanic.
+	 *
+	 * <p>Attribution differs from machines on purpose: this credits the <em>acting player</em>, not a
+	 * block owner, because the jump is the player's own action — including a jump onto somebody else's
+	 * public station. The same online/creative gate applies.
+	 */
+	public void recordSpending(MinecraftServer server, UUID player, long eu) {
+		if (eu <= 0 || eligibleOwner(server, player) == null) {
+			return;
+		}
+		pending.computeIfAbsent(player, k -> new Delta()).euOtherSpent += eu;
+	}
+
 	/** Server-tick driver: resets the per-tick active-dedup set and flushes on the configured cadence. */
 	public void onServerTick(MinecraftServer server) {
 		activeThisTick.clear();
@@ -159,6 +178,7 @@ public final class PlayerStatsTracker {
 		long newConsumed = before.euUsefulConsumedTotal() + delta.euConsumed;
 		long newProduced = before.euProducedTotal() + delta.euProduced;
 		// Both career totals feed the level, so a generator-only gain can also trigger the chime.
+		// euOtherSpent is not among them (MOD-361): spending is shown, never levelled.
 		long newXp = LevelMath.xpOf(newConsumed, newProduced, Config.euPerXp, Config.euPerXpGenerated);
 		int newLevel = LevelMath.levelForXp(newXp, Config.xpLevelOneCost, Config.levelXpMultiplier);
 		// Everyone starts at level 1 — never chime for "reaching" level 1 from a fresh (0) state.
@@ -170,7 +190,8 @@ public final class PlayerStatsTracker {
 				newConsumed,
 				highest,
 				mergedGenerators,
-				before.activeTicks() + delta.activeTicks));
+				before.activeTicks() + delta.activeTicks,
+				before.euOtherSpentTotal() + delta.euOtherSpent));
 
 		if (highest > prevHighest) {
 			playLevelUp(player); // one chime per flush, regardless of how many levels were crossed
@@ -203,7 +224,7 @@ public final class PlayerStatsTracker {
 	 */
 	public long pendingEuFor(UUID owner) {
 		Delta delta = pending.get(owner);
-		return delta == null ? 0L : delta.euConsumed + delta.euProduced;
+		return delta == null ? 0L : delta.euConsumed + delta.euProduced + delta.euOtherSpent;
 	}
 
 	/** Drop all in-memory state (server stop / integrated-server world switch). */

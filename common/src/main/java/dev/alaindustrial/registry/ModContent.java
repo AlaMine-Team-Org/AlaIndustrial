@@ -215,6 +215,8 @@ public final class ModContent {
 	public static Supplier<Item> MUTAGEN_DUST = unbound("MUTAGEN_DUST");
 	public static Supplier<Item> UNSTABLE_ISOTOPE = unbound("UNSTABLE_ISOTOPE");
 	public static Supplier<Item> MUTE_CHIP = unbound("MUTE_CHIP");
+	// Cable breaker (MOD-276): the maintenance switch clamped onto a laid cable — see CableBlockEntity.
+	public static Supplier<Item> CABLE_BREAKER = unbound("CABLE_BREAKER");
 	public static Supplier<Item> WINDMILL_ROTOR = unbound("WINDMILL_ROTOR");
 	public static Supplier<Item> WATER_MILL_WHEEL = unbound("WATER_MILL_WHEEL");
 	public static Supplier<Item> WOODEN_GEAR = unbound("WOODEN_GEAR");

@@ -264,7 +264,7 @@ public class IndustrializationClient implements ClientModInitializer {
 		// this single registration covers every grade — and it is the first renderer bound to that type,
 		// so nothing is being displaced.
 		BlockEntityRendererRegistry.register(ModBlockEntities.COPPER_CABLE,
-				dev.alaindustrial.client.render.CableShockGuardBlockEntityRenderer::new);
+				dev.alaindustrial.client.render.CableAccessoryBlockEntityRenderer::new);
 
 		// Stock Display Frame (MOD-066): the mod's first entity renderer. Vanilla EntityRenderers.register
 		// is the path Fabric's own docs recommend (their EntityRendererRegistry is a thin legacy wrapper).

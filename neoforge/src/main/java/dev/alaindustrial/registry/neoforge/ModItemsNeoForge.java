@@ -65,6 +65,9 @@ public final class ModItemsNeoForge {
 			manifestItem("empty_chip");
 	public static final DeferredItem<Item> MUTE_CHIP =
 			manifestItem("mute_chip");
+	/** Cable breaker (MOD-276): clamps onto a laid cable to cut the line for maintenance. */
+	public static final DeferredItem<Item> CABLE_BREAKER =
+			manifestItem("cable_breaker");
 
 	// Incubator (MOD-118): mode chips, by-products and the tier-1 evolution materials.
 	public static final DeferredItem<Item> MUTATION_CHIP_TRANSFORM =
@@ -487,6 +490,7 @@ public final class ModItemsNeoForge {
 		ModContent.ALIGNMENT_CHIP_NIGHT = ALIGNMENT_CHIP_NIGHT;
 		ModContent.EMPTY_CHIP = EMPTY_CHIP;
 		ModContent.MUTE_CHIP = MUTE_CHIP;
+		ModContent.CABLE_BREAKER = CABLE_BREAKER;
 		ModContent.WINDMILL_ROTOR = WINDMILL_ROTOR;
 		ModContent.WATER_MILL_WHEEL = WATER_MILL_WHEEL;
 		ModContent.WOODEN_GEAR = WOODEN_GEAR;

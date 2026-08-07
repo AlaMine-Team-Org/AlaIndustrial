@@ -9,6 +9,7 @@ import dev.alaindustrial.gametest.FluidPipeScenarios;
 import dev.alaindustrial.gametest.CableEnergyScenarios;
 import dev.alaindustrial.gametest.AdvancedCircuitScenarios;
 import dev.alaindustrial.gametest.CableInsulationScenarios;
+import dev.alaindustrial.gametest.CableBreakerScenarios;
 import dev.alaindustrial.gametest.CableShockScenarios;
 import dev.alaindustrial.gametest.ChargePadScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
@@ -211,6 +212,16 @@ public final class NeoForgeGameTests {
 				AdvancedCircuitScenarios::recipesAndVisibility);
 		registerTest(event, "mod260_energized_bare_only", 80, true,
 				CableShockScenarios::energizedBareOnly);
+		registerTest(event, "tc_brk001_nrg01_open_breaker_cuts_the_line", 80, true,
+				CableBreakerScenarios::tcBrk001Nrg01_openBreakerCutsTheLine);
+		registerTest(event, "tc_brk001_sta01_open_breaker_survives_cable_ticks", 80, true,
+				CableBreakerScenarios::tcBrk001Sta01_openBreakerSurvivesCableTicks);
+		registerTest(event, "tc_brk001_sec01_open_breaker_disarms_the_shock", 80, true,
+				CableBreakerScenarios::tcBrk001Sec01_openBreakerDisarmsTheShock);
+		registerTest(event, "tc_brk001_fun01_removing_breaker_restores_the_line", 80, true,
+				CableBreakerScenarios::tcBrk001Fun01_removingBreakerRestoresTheLine);
+		registerTest(event, "tc_brk001_vis01_open_breaker_gaps_the_run", 80, true,
+				CableBreakerScenarios::tcBrk001Vis01_openBreakerGapsTheRun);
 		registerTest(event, "mod260_retained_buffer_is_safe", 80, true,
 				CableShockScenarios::retainedBufferIsSafe);
 		registerTest(event, "mod269_proximity_radius_respects_cover_and_config", 80, true,
@@ -1372,6 +1383,10 @@ public final class NeoForgeGameTests {
 				TeleporterJumpScenarios::tcTele002Nrg01_failedJumpCostsNothing);
 		registerTest(event, "tc_tele002_fun03_success_moves_and_charges", 40, true,
 				TeleporterJumpScenarios::tcTele002Fun03_successMovesAndCharges);
+		registerTest(event, "tc_tele002_nrg02_jump_counts_as_spending", 40, true,
+				TeleporterJumpScenarios::tcTele002Nrg02_jumpCountsAsSpending);
+		registerTest(event, "tc_tele002_nrg03_refused_jump_books_no_spending", 40, true,
+				TeleporterJumpScenarios::tcTele002Nrg03_refusedJumpBooksNoSpending);
 		registerTest(event, "tc_tele002_sec02_remote_binds_to_owner", 40, true,
 				TeleporterJumpScenarios::tcTele002Sec02_remoteBindsToOwner);
 		registerTest(event, "tc_tele002_sta01_warmup_state_starts_clean", 40, true,
