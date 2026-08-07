@@ -2127,7 +2127,14 @@
             {
               "type": "text",
               "title": "ব্যাটারি",
-              "text": "একটি নিষ্ক্রিয় শক্তি কোষ — যা থেকে এনার্জি ব্যাকপ্যাক ক্রাফট করা হয় সেই ফাঁকা ভিত্তি; নিজে থেকে কোনো EU ধরে রাখে না।"
+              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 2 000 EU"
+              ]
             },
             {
               "type": "recipe",

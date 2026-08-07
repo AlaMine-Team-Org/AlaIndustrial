@@ -36,10 +36,19 @@ public final class ItemEnergy {
 	private ItemEnergy() {
 	}
 
-	/** Max EU the item can hold; 0 for items without an energy buffer. */
+	/**
+	 * Max EU the item can hold, <b>per item</b>; 0 for items without an energy buffer.
+	 *
+	 * <p>"Per item" only matters for the Battery (MOD-083), the one powered item that stacks — everything
+	 * else is {@code stacksTo(1)}, where per-item and per-stack are the same number. Callers that move
+	 * energy into or out of a whole stack must go through {@link #stackAdd} and friends.
+	 */
 	public static long capacity(ItemStack stack) {
 		if (stack.getItem() instanceof PouchItem) {
 			return Config.lvPouchBuffer;
+		}
+		if (stack.getItem() instanceof BatteryItem) {
+			return Config.batteryBuffer;
 		}
 		if (stack.getItem() instanceof EnergyPackItem) {
 			return Config.energyPackBuffer;
@@ -78,6 +87,9 @@ public final class ItemEnergy {
 	public static long inputRate(ItemStack stack) {
 		if (stack.getItem() instanceof PouchItem) {
 			return EnergyTier.LV.maxVoltage();
+		}
+		if (stack.getItem() instanceof BatteryItem) {
+			return Config.batteryInputRate;
 		}
 		if (stack.getItem() instanceof EnergyPackItem) {
 			return Config.energyPackInputRate;
@@ -183,8 +195,55 @@ public final class ItemEnergy {
 		return owner instanceof Player player && (player.hasInfiniteMaterials() || player.isSpectator());
 	}
 
-	/** Free space in the buffer: {@code capacity - stored}. */
+	/** Free space in the buffer, per item: {@code capacity - stored}. */
 	public static long room(ItemStack stack) {
 		return capacity(stack) - get(stack);
+	}
+
+	// ── Whole-stack arithmetic (MOD-083) ──────────────────────────────────────────────────────────
+	//
+	// Everything above is per item. The Battery is the one powered item that stacks, and its charge is
+	// stored per item, so a charger facing a stack of 16 has to pay sixteen times — and, crucially, may
+	// only move amounts that divide evenly by the count. Anything else would round energy into or out of
+	// existence on every transfer, which over a few thousand ticks is a dupe or a leak.
+	//
+	// For a stacksTo(1) item every function here is the identity of its per-item twin, so call sites can
+	// use the stack-aware form unconditionally.
+
+	/** EU held by the whole stack: per-item charge × count. */
+	public static long stackGet(ItemStack stack) {
+		return get(stack) * stack.getCount();
+	}
+
+	/** Free space in the whole stack: per-item room × count. */
+	public static long stackRoom(ItemStack stack) {
+		return room(stack) * stack.getCount();
+	}
+
+	/**
+	 * Move up to {@code eu} into (positive) or out of (negative) the <b>whole stack</b> and return what
+	 * actually moved, signed. The result is always a multiple of {@code count}, and never exceeds the
+	 * requested budget in magnitude: the per-item share is computed by integer division, which truncates
+	 * toward zero, so a budget that does not divide evenly moves slightly less rather than slightly more.
+	 *
+	 * <p>Consequence worth knowing: a budget smaller than {@code count} moves nothing at all. That is why
+	 * the battery stacks to 16 and not 64 — the LV ceiling is 32 EU/t, so a full stack still gets 2 EU per
+	 * item per tick, while at 64 the share would round to zero and the stack would never charge.
+	 */
+	public static long stackAdd(ItemStack stack, long eu) {
+		int count = stack.getCount();
+		if (count <= 0 || eu == 0 || capacity(stack) <= 0) {
+			return 0L;
+		}
+		long perItem = eu / count;
+		if (perItem == 0) {
+			return 0L;
+		}
+		perItem = perItem > 0 ? Math.min(perItem, room(stack)) : Math.max(perItem, -get(stack));
+		if (perItem == 0) {
+			return 0L;
+		}
+		add(stack, perItem);
+		return perItem * count;
 	}
 }

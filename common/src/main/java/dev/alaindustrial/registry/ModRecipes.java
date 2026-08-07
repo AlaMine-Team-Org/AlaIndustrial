@@ -6,6 +6,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.AlloyRecipeInput;
 import dev.alaindustrial.recipe.AlloyingRecipe;
+import dev.alaindustrial.recipe.ChargedCraftRecipe;
 import dev.alaindustrial.recipe.FluidRecipeInput;
 import dev.alaindustrial.recipe.FluidOutputRecipe;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
@@ -397,6 +398,8 @@ public final class ModRecipes {
 	 * {@code DeferredRegister} (see {@code ModRecipesNeoForge}).
 	 */
 	public static void init() {
+		bindChargedCraft(Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,
+				Industrialization.id(CHARGED_CRAFT_ID), createChargedCraftSerializer()));
 		for (Kind kind : ALL) {
 			Identifier id = Industrialization.id(kind.id);
 			RecipeType<AlaProcessingRecipe> type = Registry.register(BuiltInRegistries.RECIPE_TYPE, id, createType(kind));
@@ -410,6 +413,40 @@ public final class ModRecipes {
 		for (AlloyKind<?> kind : ALLOY_ALL) {
 			registerAlloy(kind);
 		}
+	}
+
+	// ── Charge-carrying crafting recipe (MOD-083) ────────────────────────────────────────────────
+	//
+	// Unlike everything above this is a CRAFTING recipe: the type is vanilla's, so only a serializer is
+	// registered. It still goes through this facade because the two loaders register serializers
+	// differently (Fabric eagerly, NeoForge through a DeferredRegister), and the recipe class needs one
+	// place to read its serializer back from.
+
+	/** Registry path of the charge-carrying crafting serializer — also its {@code "type"} in JSON. */
+	public static final String CHARGED_CRAFT_ID = "crafting_shaped_charge_transfer";
+
+	private static Supplier<RecipeSerializer<ChargedCraftRecipe>> chargedCraft = () -> {
+		throw new IllegalStateException("ModRecipes charged-craft serializer read before its loader bound it");
+	};
+
+	/** Build the serializer instance both loaders register. */
+	public static RecipeSerializer<ChargedCraftRecipe> createChargedCraftSerializer() {
+		return new RecipeSerializer<>(ChargedCraftRecipe.MAP_CODEC, ChargedCraftRecipe.STREAM_CODEC);
+	}
+
+	/** Bind the registered serializer; called once per loader during its registration. */
+	public static void bindChargedCraft(RecipeSerializer<ChargedCraftRecipe> serializer) {
+		chargedCraft = () -> serializer;
+	}
+
+	/** Bind the registered serializer lazily (NeoForge hands out a holder, not the instance). */
+	public static void bindChargedCraft(Supplier<RecipeSerializer<ChargedCraftRecipe>> serializer) {
+		chargedCraft = serializer;
+	}
+
+	/** The serializer every {@link ChargedCraftRecipe} reports as its own. */
+	public static RecipeSerializer<ChargedCraftRecipe> chargedCraftSerializer() {
+		return chargedCraft.get();
 	}
 
 	private static <R extends Recipe<FluidRecipeInput>> void registerFluid(FluidKind<R> kind) {

@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
+import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.assembler.BlueprintPattern;
 import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.recipe.CraftingGridMapping;
@@ -556,6 +557,13 @@ public class AssemblerBlockEntity extends MachineBlockEntity implements MenuProv
 	 * <p>A blueprint written before results were cached has nothing to compare against; those fall back
 	 * to the recipe's own idea of its output for the recorded layout, which is the same thing the machine
 	 * would have made without substitution.
+	 *
+	 * <p><b>Charge is excluded from the comparison</b> (MOD-083). A charge-carrying recipe hands the
+	 * result the EU its batteries brought, so the stack this operation makes legitimately differs from
+	 * the one the blueprint recorded whenever the warehouse's batteries hold a different amount — and a
+	 * component-exact comparison would read that as "this makes something else" and stall the machine on
+	 * NO_MATERIALS while staring at a full warehouse. That is the exact failure AE2 hit automating IC2's
+	 * RE-Battery, and it is why the two stacks are compared blind to their charge.
 	 */
 	private boolean substitutionHolds(ServerLevel server, ItemStack blueprint, CraftingRecipe recipe,
 			CraftingInput input, ItemStack result) {
@@ -572,7 +580,21 @@ public class AssemblerBlockEntity extends MachineBlockEntity implements MenuProv
 			promised = recipe.assemble(CraftingInput.ofPositioned(
 					BlueprintPattern.GRID_WIDTH, BlueprintPattern.GRID_WIDTH, recordedGrid).input());
 		}
-		return ItemStack.matches(promised, result);
+		return ItemStack.matches(withoutCharge(promised), withoutCharge(result));
+	}
+
+	/**
+	 * The stack as it would look with an empty buffer — the form in which two results of a
+	 * charge-carrying recipe can be compared for "is this the same thing". Returns the stack itself when
+	 * there is nothing to strip, so the common case allocates nothing.
+	 */
+	private static ItemStack withoutCharge(ItemStack stack) {
+		if (ItemEnergy.capacity(stack) <= 0 || ItemEnergy.get(stack) <= 0) {
+			return stack;
+		}
+		ItemStack blind = stack.copy();
+		ItemEnergy.set(blind, 0L);
+		return blind;
 	}
 
 	/**

@@ -523,7 +523,8 @@ public final class IndustrializationNeoForge {
 		// fill them. Insert-only — see StackAsEnergyHandler.
 		event.registerItem(Capabilities.Energy.ITEM,
 				(stack, access) -> new dev.alaindustrial.core.neoforge.StackAsEnergyHandler(access),
-				ModItemsNeoForge.BATTERY_POUCH.get(), ModItemsNeoForge.ENERGY_PACK.get(),
+				ModItemsNeoForge.BATTERY_POUCH.get(), ModItemsNeoForge.BATTERY.get(),
+				ModItemsNeoForge.ENERGY_PACK.get(),
 				ModItemsNeoForge.ELECTRIC_DRILL.get(), ModItemsNeoForge.ELECTRIC_DRILL_DIAMOND_TIP.get(),
 				ModItemsNeoForge.ELECTROMAGNET.get(),
 				ModItemsNeoForge.JETPACK.get(),

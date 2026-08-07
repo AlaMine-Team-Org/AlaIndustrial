@@ -2127,7 +2127,14 @@
             {
               "type": "text",
               "title": "Bateria",
-              "text": "Bierne ogniwo energetyczne — półprodukt, z którego wytwarza się Plecak energetyczny; samo nie przechowuje EU."
+              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 2 000 EU"
+              ]
             },
             {
               "type": "recipe",

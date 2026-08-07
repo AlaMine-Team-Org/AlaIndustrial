@@ -33,6 +33,7 @@ import dev.alaindustrial.item.tool.ElectricHoeItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.JetpackItem;
+import dev.alaindustrial.item.energy.BatteryItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.tool.NetworkAnalyzerItem;
 import dev.alaindustrial.item.tool.NetworkScanData;
@@ -76,6 +77,10 @@ public final class MachineTooltips {
 		}
 		if (stack.getItem() instanceof PouchItem) {
 			addPouchTooltip(stack, lines, detailed);
+			return;
+		}
+		if (stack.getItem() instanceof BatteryItem) {
+			addBatteryTooltip(stack, lines);
 			return;
 		}
 		if (stack.getItem() instanceof EnergyPackItem) {
@@ -229,6 +234,32 @@ public final class MachineTooltips {
 		}
 		// No tier line: the Battery Pouch is a tier-less consumer item; its charge state and item
 		// bar (LV gold) already convey everything the player needs.
+	}
+
+	/**
+	 * Tooltip text for the Battery (MOD-083): what it is for, its charge, and — when the player is
+	 * holding more than one — what the whole stack is worth.
+	 *
+	 * <p>The stack line exists because the battery is the only powered item that stacks, and its charge is
+	 * stored per item: without it, sixteen full batteries would read as "2 000 EU" and the player would
+	 * have no way to see the 32 000 they are actually carrying.
+	 */
+	private static void addBatteryTooltip(ItemStack stack, List<Component> lines) {
+		lines.add(Component.translatable("tooltip.alaindustrial.battery.usage")
+				.withStyle(ChatFormatting.GRAY));
+		long eu = ItemEnergy.get(stack);
+		long cap = ItemEnergy.capacity(stack);
+		if (eu <= 0) {
+			lines.add(Component.translatable("tooltip.alaindustrial.battery.depleted")
+					.withStyle(ChatFormatting.RED));
+		} else {
+			lines.add(Component.translatable("tooltip.alaindustrial.battery.charge", eu, cap)
+					.withStyle(ChatFormatting.GOLD));
+			if (stack.getCount() > 1) {
+				lines.add(Component.translatable("tooltip.alaindustrial.battery.stack_total",
+						stack.getCount(), ItemEnergy.stackGet(stack)).withStyle(ChatFormatting.DARK_GRAY));
+			}
+		}
 	}
 
 	/**

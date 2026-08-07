@@ -14,6 +14,7 @@ import dev.alaindustrial.gametest.ChargePadScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.GeneratorEnergyScenarios;
 import dev.alaindustrial.gametest.MachineEnergyScenarios;
+import dev.alaindustrial.gametest.BatteryScenarios;
 import dev.alaindustrial.gametest.CesuScenarios;
 import dev.alaindustrial.gametest.StorageEnergyScenarios;
 import dev.alaindustrial.gametest.RecipeTagScenarios;
@@ -151,6 +152,25 @@ public final class NeoForgeGameTests {
 				CesuScenarios::cesu02ScaledChannelsMatchBuffer);
 		registerTest(event, "cesu_discharge_slot_fills_buffer", 40, true,
 				CesuScenarios::cesu03DischargeSlotFillsBuffer);
+		// Battery (MOD-083): the stacking EU carrier. The per-stack arithmetic and the charge-carrying
+		// recipe both run through loader-registered surfaces (item capability, recipe serializer), so
+		// the NeoForge lane has to run the same bodies rather than trust the Fabric suite.
+		registerTest(event, "battery_charging_a_stack_costs_per_item", 40, true,
+				BatteryScenarios::battery01ChargingAStackCostsPerItem);
+		registerTest(event, "battery_full_stack_still_charges", 40, true,
+				BatteryScenarios::battery02FullStackStillCharges);
+		registerTest(event, "battery_discharge_slot_drains_stack", 40, true,
+				BatteryScenarios::battery03DischargeSlotDrainsStack);
+		registerTest(event, "battery_stacking_follows_charge", 40, true,
+				BatteryScenarios::battery04StackingFollowsCharge);
+		registerTest(event, "battery_craft_carries_charge", 40, true,
+				BatteryScenarios::battery05CraftCarriesChargeIntoResult);
+		registerTest(event, "battery_excluded_from_auto_charge", 40, true,
+				BatteryScenarios::battery06BatteryIsExcludedFromAutoCharge);
+		registerTest(event, "battery_repeated_assembly_no_accumulation", 40, true,
+				BatteryScenarios::battery07RepeatedAssemblyDoesNotAccumulate);
+		registerTest(event, "battery_assembler_carries_charge", 40, true,
+				BatteryScenarios::battery08AssemblerCarriesChargeThrough);
 		// Teleporter station (MOD-091): its face roles and its teleporter_private data component are
 		// per-loader seams (energy adapter + frozen-registry), so the Fabric suite cannot vouch for them.
 		registerTest(event, "teleporter_face_roles", 40, true,

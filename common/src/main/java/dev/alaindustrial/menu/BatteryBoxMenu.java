@@ -17,6 +17,10 @@ public class BatteryBoxMenu extends MachineMenu {
 	public static final int CHARGE_SLOT_X = 21;
 	public static final int CHARGE_SLOT_Y = 32;
 
+	/** Discharge slot (MOD-083), mirrored to the right of the battery — same coordinates as the CESU's. */
+	public static final int DISCHARGE_SLOT_X = 139;
+	public static final int DISCHARGE_SLOT_Y = 32;
+
 	/** Server side. */
 	public BatteryBoxMenu(int syncId, Inventory playerInventory, MachineBlockEntity be, ContainerLevelAccess access) {
 		super(ModContent.BATTERY_BOX_MENU.get(), syncId, playerInventory, be, be.getDataAccess(), access, ModContent.BATTERY_BOX.get());
@@ -24,7 +28,8 @@ public class BatteryBoxMenu extends MachineMenu {
 
 	/** Client side. */
 	public BatteryBoxMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.BATTERY_BOX_MENU.get(), syncId, playerInventory, new SimpleContainer(1 + UPGRADE_SLOT_COUNT),
+		super(ModContent.BATTERY_BOX_MENU.get(), syncId, playerInventory,
+				new SimpleContainer(BatteryBoxBlockEntity.MACHINE_SLOTS + UPGRADE_SLOT_COUNT),
 				new SimpleContainerData(BatteryBoxBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.BATTERY_BOX.get());
 	}
 
@@ -33,6 +38,13 @@ public class BatteryBoxMenu extends MachineMenu {
 		// Powered-item filter in BOTH mayPlace (client prediction) and the BE's canPlaceItem (server /
 		// hoppers) — only the server check causes a visible item flicker (generator lava-slot lesson).
 		addSlot(new Slot(machine, BatteryBoxBlockEntity.CHARGE_SLOT, CHARGE_SLOT_X, CHARGE_SLOT_Y) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				return ItemEnergy.capacity(stack) > 0;
+			}
+		});
+		// Discharge slot (MOD-083): the mirror of the one above — same filter, opposite direction of flow.
+		addSlot(new Slot(machine, BatteryBoxBlockEntity.DISCHARGE_SLOT, DISCHARGE_SLOT_X, DISCHARGE_SLOT_Y) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return ItemEnergy.capacity(stack) > 0;

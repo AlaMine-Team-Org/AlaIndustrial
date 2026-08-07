@@ -266,9 +266,12 @@ public final class PlayerEuDistributor {
 		}
 		long headroom;
 		if (ItemEnergy.capacity(stack) > 0) {
-			headroom = ItemEnergy.room(stack);
+			// Stack-aware since MOD-083: the Battery stacks and stores its charge per item, so a stack of
+			// sixteen has sixteen times the room and accepts sixteen times the rate. Every stacksTo(1)
+			// item is unaffected — for count 1 these are the per-item numbers.
+			headroom = ItemEnergy.stackRoom(stack);
 			if (policy.respectInputRate()) {
-				headroom = Math.min(headroom, ItemEnergy.inputRate(stack));
+				headroom = Math.min(headroom, ItemEnergy.inputRate(stack) * stack.getCount());
 			}
 			if (headroom <= 0) {
 				return;
@@ -351,15 +354,16 @@ public final class PlayerEuDistributor {
 			return 0L;
 		}
 		if (ItemEnergy.capacity(target) > 0) {
-			long move = Math.min(ItemEnergy.room(target), budget);
+			long move = Math.min(ItemEnergy.stackRoom(target), budget);
 			if (policy.respectInputRate()) {
-				move = Math.min(move, ItemEnergy.inputRate(target));
+				move = Math.min(move, ItemEnergy.inputRate(target) * target.getCount());
 			}
 			if (move <= 0) {
 				return 0L;
 			}
-			ItemEnergy.add(target, move);
-			return move;
+			// stackAdd moves a whole multiple of the count and reports what actually landed, so a budget
+			// that does not divide evenly across a stack under-delivers rather than inventing EU.
+			return ItemEnergy.stackAdd(target, move);
 		}
 		if (slot == NO_SLOT) {
 			return 0L;

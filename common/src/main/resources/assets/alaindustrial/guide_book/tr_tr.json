@@ -2127,7 +2127,14 @@
             {
               "type": "text",
               "title": "Pil",
-              "text": "Etkisiz bir enerji hücresi — Enerji Sırt Çantası'nın üretildiği boş temel; kendi başına EU tutmaz."
+              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 2 000 EU"
+              ]
             },
             {
               "type": "recipe",

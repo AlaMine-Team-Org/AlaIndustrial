@@ -2127,7 +2127,14 @@
             {
               "type": "text",
               "title": "배터리",
-              "text": "비활성 에너지 셀 — 에너지 팩을 제작하는 데 쓰이는 미가공품이며; 자체로는 EU를 담지 않습니다."
+              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 2 000 EU"
+              ]
             },
             {
               "type": "recipe",

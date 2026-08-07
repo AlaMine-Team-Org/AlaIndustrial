@@ -39,6 +39,7 @@ import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
+import dev.alaindustrial.item.energy.BatteryItem;
 import dev.alaindustrial.item.misc.HintItem;
 import dev.alaindustrial.item.misc.MutationChipItem;
 import dev.alaindustrial.menu.AssemblerMenu;
@@ -396,7 +397,7 @@ public final class ContentManifest {
 		// Plain items: crafting components, dusts, plates, ingots, raw ores, by-products. Nothing but
 		// `new Item(properties)` — the largest and most duplicated group.
 		for (String id : List.of(
-				"advanced_circuit", "alignment_chip_day", "alignment_chip_night", "battery",
+				"advanced_circuit", "alignment_chip_day", "alignment_chip_night",
 				// MOD-064 alloys: the four products of the alloy smelter.
 				"bronze_ingot", "cupronickel_ingot", "electrum_ingot", "invar_ingot",
 				"coal_dust", "copper_coil", "copper_dust", "copper_plate", "cotton_fiber",
@@ -412,6 +413,9 @@ public final class ContentManifest {
 				"wooden_gear")) {
 			defs.put(id, Item::new);
 		}
+		// Battery (MOD-083): the stackable EU carrier. Charge is per item, so the stack size is what
+		// keeps stack transfers exact — see BatteryItem for why 16 and not 64.
+		defs.put("battery", p -> new BatteryItem(p.stacksTo(BatteryItem.MAX_STACK)));
 		// Upgrade chips (MOD-080): the blank and the mute upgrade, each with its hint lines.
 		defs.put("empty_chip", hintItem("empty_chip"));
 		defs.put("mute_chip", hintItem("mute_chip"));

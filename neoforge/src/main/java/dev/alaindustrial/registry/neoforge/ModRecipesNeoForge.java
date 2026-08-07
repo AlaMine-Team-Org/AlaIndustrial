@@ -3,6 +3,7 @@ package dev.alaindustrial.registry.neoforge;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.AlloyRecipeInput;
+import dev.alaindustrial.recipe.ChargedCraftRecipe;
 import dev.alaindustrial.recipe.FluidRecipeInput;
 import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.ModRecipes.AlloyKind;
@@ -10,6 +11,7 @@ import dev.alaindustrial.registry.ModRecipes.FluidKind;
 import dev.alaindustrial.registry.ModRecipes.Kind;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -41,6 +43,10 @@ public final class ModRecipesNeoForge {
 	private static final List<Runnable> ALLOY_BINDERS = new ArrayList<>();
 
 	static {
+		// MOD-083: a crafting recipe, so only a serializer — the type is vanilla's CRAFTING.
+		DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ChargedCraftRecipe>> chargedCraft =
+				SERIALIZERS.register(ModRecipes.CHARGED_CRAFT_ID, ModRecipes::createChargedCraftSerializer);
+		ModRecipes.bindChargedCraft((Supplier<RecipeSerializer<ChargedCraftRecipe>>) chargedCraft);
 		for (Kind kind : ModRecipes.kinds()) {
 			DeferredHolder<RecipeType<?>, RecipeType<AlaProcessingRecipe>> type =
 					TYPES.register(kind.id(), () -> ModRecipes.createType(kind));

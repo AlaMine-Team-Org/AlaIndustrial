@@ -23,21 +23,31 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
 
 /**
  * LV BatteryBox (spec: alaindustrial:battery_box) — the first energy store. Buffers up to 20 000 EU,
- * accepts LV in and pushes LV out, stabilising the early network. Since MOD-052 it also has the
+ * accepts LV in and pushes LV out, stabilising the early network. Since MOD-052 it has the
  * charge slot the spec deferred "until a portable EU item exists": slot 0 accepts any powered item —
- * the Battery Pouch (MOD-052) and the Energy Pack (MOD-065) today — and refills its
+ * the Battery Pouch (MOD-052), the Energy Pack (MOD-065), the Battery (MOD-083) — and refills its
  * {@code pouch_energy} from the buffer at the lower of the LV ceiling (32 EU/t) and the item's own
- * intake. GUI-only — hoppers can neither feed nor drain the slot. The discharge slot stays future work.
+ * intake.
+ *
+ * <p>Since MOD-083 it also has a <b>discharge slot</b> (slot 1), the mirror of the charge one. The
+ * Battery is available at LV, so without it the only way to get charge back out of a battery would be
+ * the MV store — a whole tier away from the item that needs it. Both slots are GUI-only: hoppers can
+ * neither feed nor drain them.
  */
 public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuProvider {
 	/** Slot 0 — the pouch charge slot (MOD-052). */
 	public static final int CHARGE_SLOT = 0;
+	/** Slot 1 — drain a powered item into the buffer (MOD-083). */
+	public static final int DISCHARGE_SLOT = 1;
+	/** Machine slots (charge + discharge); the upgrade slots are appended after these by the base. */
+	public static final int MACHINE_SLOTS = 2;
 
 	public BatteryBoxBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.BATTERY_BOX_BE.get(), pos, state, EnergyTier.LV, 1,
+		super(ModContent.BATTERY_BOX_BE.get(), pos, state, EnergyTier.LV, MACHINE_SLOTS,
 				Config.batteryBoxBuffer, EnergyTier.LV.maxVoltage(), EnergyTier.LV.maxVoltage());
 	}
 
@@ -46,39 +56,96 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 		// Direct push to cable-less adjacent machines only; the cabled path is owned by the
 		// EnergyNetwork, which treats the battery_box as both a producer and a consumer endpoint.
 		DirectAdjacencyDistributor.distribute(level, pos, this, true);
-		chargePouch();
+		chargeItem();
+		dischargeItem();
 		// Storage keeps pushing every tick (a neighbour may appear with no wake event), so never sleeps.
 		return 0;
 	}
 
 	/**
 	 * Refill the powered item in the charge slot from the buffer. The rate is the lower of the box's
-	 * own LV ceiling and the item's intake ({@link ItemEnergy#inputRate}) — a pouch charges at 32 EU/t,
-	 * an Energy Pack at its own rate, and neither can be force-fed faster than it accepts.
+	 * own LV ceiling and what the stack accepts ({@link ItemEnergy#inputRate} per item × its count) — a
+	 * pouch charges at 32 EU/t, an Energy Pack at its own rate, and neither can be force-fed faster
+	 * than it accepts.
+	 *
+	 * <p>All arithmetic goes through the stack-aware helpers (MOD-083): the Battery stacks, and its
+	 * charge is per item, so a stack of sixteen costs sixteen times as much to fill. For every
+	 * {@code stacksTo(1)} item those helpers are the identity of their per-item twins.
 	 */
-	private void chargePouch() {
+	private void chargeItem() {
 		ItemStack target = getItem(CHARGE_SLOT);
 		if (target.isEmpty() || energy.amount <= 0) {
 			return;
 		}
-		long rate = Math.min(EnergyTier.LV.maxVoltage(), ItemEnergy.inputRate(target));
-		long move = Math.min(Math.min(ItemEnergy.room(target), energy.amount), rate);
-		if (move <= 0) {
+		long rate = Math.min(EnergyTier.LV.maxVoltage(), ItemEnergy.inputRate(target) * target.getCount());
+		long budget = Math.min(Math.min(ItemEnergy.stackRoom(target), energy.amount), rate);
+		long moved = ItemEnergy.stackAdd(target, budget);
+		if (moved <= 0) {
 			return;
 		}
-		energy.amount -= move;
-		ItemEnergy.add(target, move);
+		energy.amount -= moved;
 		setChanged();
 	}
 
 	/**
-	 * The charge slot takes any powered item — a Battery Pouch (MOD-052), an Energy Pack (MOD-065),
-	 * and whatever gains a buffer later; {@code capacity > 0} is the single test for "this holds EU"
-	 * (manual/GUI path; hoppers are cut off below).
+	 * Drain the powered item in the discharge slot into the buffer (MOD-083) — the mirror of
+	 * {@link #chargeItem()}, bounded by the LV ceiling, what the stack still holds and the room left in
+	 * the buffer, so a flat item or a full store simply stops instead of spinning a no-op every tick.
+	 *
+	 * <p>Moves the charge with the stack-aware {@code add}, never {@code spend}: spending carries the
+	 * creative guard (EU is treated as tool wear, and creative does not wear tools down), which is right
+	 * for an item being <em>used</em> and wrong here — this is a transfer the player asked for by putting
+	 * the item in the slot. Same rule the CESU discharge slot follows.
+	 */
+	private void dischargeItem() {
+		ItemStack source = getItem(DISCHARGE_SLOT);
+		if (source.isEmpty()) {
+			return;
+		}
+		long room = energy.getCapacity() - energy.amount;
+		if (room <= 0) {
+			return;
+		}
+		long budget = Math.min(Math.min(ItemEnergy.stackGet(source), room), EnergyTier.LV.maxVoltage());
+		long moved = -ItemEnergy.stackAdd(source, -budget);
+		if (moved <= 0) {
+			return;
+		}
+		energy.amount += moved;
+		setChanged();
+	}
+
+	/**
+	 * Both slots take any powered item — a Battery Pouch (MOD-052), an Energy Pack (MOD-065), a Battery
+	 * (MOD-083), and whatever gains a buffer later; {@code capacity > 0} is the single test for "this
+	 * holds EU" (manual/GUI path; hoppers are cut off below). The discharge slot accepts the same set,
+	 * because "can hold EU" and "can give EU back" are the same thing here.
 	 */
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
-		return slot == CHARGE_SLOT && ItemEnergy.capacity(stack) > 0;
+		return (slot == CHARGE_SLOT || slot == DISCHARGE_SLOT) && ItemEnergy.capacity(stack) > 0;
+	}
+
+	/**
+	 * Reads the container, then migrates a pre-MOD-083 save (C-20).
+	 *
+	 * <p>Upgrade slots are numbered <em>after</em> the machine slots, so adding the discharge slot moved
+	 * them from 1…4 to 2…5. A box saved before this change therefore loads its first upgrade chip into
+	 * what is now the discharge slot. The tell is unambiguous, because {@link #canPlaceItem} has always
+	 * refused anything without an EU buffer: a non-powered item sitting in the discharge slot can only
+	 * have come from the old numbering. When that is what we see, shift the whole run one slot up.
+	 */
+	@Override
+	protected void loadAdditional(ValueInput input) {
+		super.loadAdditional(input);
+		ItemStack inDischarge = getItem(DISCHARGE_SLOT);
+		if (inDischarge.isEmpty() || ItemEnergy.capacity(inDischarge) > 0) {
+			return;
+		}
+		for (int slot = getContainerSize() - 1; slot > DISCHARGE_SLOT; slot--) {
+			setItem(slot, getItem(slot - 1));
+		}
+		setItem(DISCHARGE_SLOT, ItemStack.EMPTY);
 	}
 
 	/**

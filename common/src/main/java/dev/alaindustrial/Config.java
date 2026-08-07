@@ -354,6 +354,18 @@ public final class Config {
 	 * pouch locks (no insert, no extract) until recharged in the Battery Box slot. */
 	public static int lvPouchDrainPerSecond = 1;
 
+	// --- Battery (MOD-083, the stackable EU carrier) ---
+	/** EU one battery holds. Deliberately the same size as the pouch (a pouch's whole charge fits in one
+	 * battery), so the battery reads as "the first EU you can carry" and does not compete with the
+	 * 20 000 EU Energy Pack. Charge is stored PER ITEM: a full stack of 16 carries 32 000 EU. */
+	public static int batteryBuffer = 2000;
+	/** Max EU/tick one battery accepts in a charge slot. At the LV ceiling (32) a whole stack of 16
+	 * still divides evenly — 2 EU per item per tick — which is what keeps stack charging exact. */
+	public static int batteryInputRate = 32;
+	/** EU one right-click hands from the battery to the item in the other hand. A full battery empties
+	 * into a tool in four clicks, so a manual top-up stays a deliberate act rather than a reflex. */
+	public static int batteryTransferPerUse = 500;
+
 	// --- Energy Pack (MOD-065, worn LV buffer) ---
 	/** Energy Pack EU buffer — 10 pouches' worth, the same size as the Battery Box (LV tier). Charging
 	 * it from a Battery Box at the LV ceiling (32 EU/t) takes ~625 ticks (~31 s). */
@@ -1030,6 +1042,12 @@ public final class Config {
 				() -> lvPouchBuffer, v -> lvPouchBuffer = v, 1),
 			new IntField("lvPouchDrainPerSecond", "EU the pouch drains per second while carried and holding items (locks at 0 EU until recharged).",
 				() -> lvPouchDrainPerSecond, v -> lvPouchDrainPerSecond = v, 0),
+			new IntField("batteryBuffer", "Battery EU buffer, PER ITEM (a stack of 16 carries 16x this).",
+				() -> batteryBuffer, v -> batteryBuffer = v, 1),
+			new IntField("batteryInputRate", "Max EU/t one battery accepts while charging in a slot.",
+				() -> batteryInputRate, v -> batteryInputRate = v, 1),
+			new IntField("batteryTransferPerUse", "EU one right-click moves from the battery into the item in the other hand.",
+				() -> batteryTransferPerUse, v -> batteryTransferPerUse = v, 1),
 			new IntField("energyPackBuffer", "Energy Pack (worn) EU buffer.",
 				() -> energyPackBuffer, v -> energyPackBuffer = v, 1),
 			new IntField("energyPackInputRate", "Max EU/t the Energy Pack accepts while charging in a slot.",

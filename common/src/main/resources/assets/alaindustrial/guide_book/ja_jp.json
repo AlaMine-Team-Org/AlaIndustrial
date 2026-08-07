@@ -2127,7 +2127,14 @@
             {
               "type": "text",
               "title": "電池",
-              "text": "不活性なエネルギーセル — エネルギーパックの素材となる素体で、それ自体はEUを蓄えません。"
+              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 2 000 EU"
+              ]
             },
             {
               "type": "recipe",

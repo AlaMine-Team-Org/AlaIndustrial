@@ -167,6 +167,10 @@ class ConfigSnapshotTest {
 		SENTINELS.put("lvPouchCapacity", 200);
 		SENTINELS.put("lvPouchBuffer", 3000);
 		SENTINELS.put("lvPouchDrainPerSecond", 2);
+		// Battery (MOD-083) — the one powered item that stacks; buffer and rate are per item.
+		SENTINELS.put("batteryBuffer", 2500);
+		SENTINELS.put("batteryInputRate", 33);
+		SENTINELS.put("batteryTransferPerUse", 600);
 		SENTINELS.put("energyPackBuffer", 22_000);
 		SENTINELS.put("energyPackInputRate", 48);
 		SENTINELS.put("energyPackOutputRate", 49);

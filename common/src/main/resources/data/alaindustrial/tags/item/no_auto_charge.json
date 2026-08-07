@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "alaindustrial:energy_pack"
+    "alaindustrial:energy_pack",
+    "alaindustrial:battery"
   ]
 }

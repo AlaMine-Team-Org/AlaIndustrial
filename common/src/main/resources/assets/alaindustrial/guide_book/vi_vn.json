@@ -2127,7 +2127,14 @@
             {
               "type": "text",
               "title": "Pin",
-              "text": "Một cục năng lượng trơ — phôi để chế tạo Ba lô năng lượng; bản thân không chứa EU."
+              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 2 000 EU"
+              ]
             },
             {
               "type": "recipe",

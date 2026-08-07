@@ -24,6 +24,7 @@
 			"dev.alaindustrial.gametest.TrellisGameTest",
 			"dev.alaindustrial.gametest.SolarPanelGameTest",
 			"dev.alaindustrial.gametest.BatteryBoxGameTest",
+			"dev.alaindustrial.gametest.BatteryGameTest",
 			"dev.alaindustrial.gametest.CesuGameTest",
 			"dev.alaindustrial.gametest.Mod353DiagnosticGameTest",
 			"dev.alaindustrial.gametest.TeleporterStationGameTest",

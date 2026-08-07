@@ -1,5 +1,5 @@
 {
-	"type": "minecraft:crafting_shaped",
+	"type": "alaindustrial:crafting_shaped_charge_transfer",
 	"category": "equipment",
 	"key": {
 		"F": "alaindustrial:fluxweave_cloth",

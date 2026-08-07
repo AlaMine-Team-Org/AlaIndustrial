@@ -69,13 +69,13 @@ public class CesuBlockEntity extends MachineBlockEntity implements MenuProvider 
 		if (target.isEmpty() || energy.amount <= 0) {
 			return;
 		}
-		long rate = Math.min(EnergyTier.MV.maxVoltage(), ItemEnergy.inputRate(target));
-		long move = Math.min(Math.min(ItemEnergy.room(target), energy.amount), rate);
-		if (move <= 0) {
+		long rate = Math.min(EnergyTier.MV.maxVoltage(), ItemEnergy.inputRate(target) * target.getCount());
+		long budget = Math.min(Math.min(ItemEnergy.stackRoom(target), energy.amount), rate);
+		long moved = ItemEnergy.stackAdd(target, budget);
+		if (moved <= 0) {
 			return;
 		}
-		energy.amount -= move;
-		ItemEnergy.add(target, move);
+		energy.amount -= moved;
 		setChanged();
 	}
 
@@ -99,12 +99,12 @@ public class CesuBlockEntity extends MachineBlockEntity implements MenuProvider 
 		if (room <= 0) {
 			return;
 		}
-		long move = Math.min(Math.min(ItemEnergy.get(source), room), EnergyTier.MV.maxVoltage());
-		if (move <= 0) {
+		long budget = Math.min(Math.min(ItemEnergy.stackGet(source), room), EnergyTier.MV.maxVoltage());
+		long moved = -ItemEnergy.stackAdd(source, -budget);
+		if (moved <= 0) {
 			return;
 		}
-		ItemEnergy.add(source, -move);
-		energy.amount += move;
+		energy.amount += moved;
 		setChanged();
 	}
 

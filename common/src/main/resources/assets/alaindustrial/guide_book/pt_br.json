@@ -2127,7 +2127,14 @@
             {
               "type": "text",
               "title": "Bateria",
-              "text": "Uma célula de energia inerte — a base a partir da qual a Mochila de energia é fabricada; não guarda EU sozinha."
+              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 2 000 EU"
+              ]
             },
             {
               "type": "recipe",

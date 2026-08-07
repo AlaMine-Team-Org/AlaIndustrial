@@ -2127,7 +2127,14 @@
             {
               "type": "text",
               "title": "बैटरी",
-              "text": "एक निष्क्रिय ऊर्जा सेल — वह खाली आधार जिससे ऊर्जा बैकपैक बनता है; अपने आप में कोई EU नहीं रखती।"
+              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 2 000 EU"
+              ]
             },
             {
               "type": "recipe",

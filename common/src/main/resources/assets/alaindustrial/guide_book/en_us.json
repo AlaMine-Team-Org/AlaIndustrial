@@ -2127,7 +2127,14 @@
             {
               "type": "text",
               "title": "Battery",
-              "text": "An inert energy cell — the blank from which the Energy Pack is crafted; holds no EU on its own."
+              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 2 000 EU"
+              ]
             },
             {
               "type": "recipe",

@@ -1,5 +1,5 @@
 {
-	"type": "minecraft:crafting_shaped",
+	"type": "alaindustrial:crafting_shaped_charge_transfer",
 	"category": "redstone",
 	"key": {
 		"L": "#c:leathers",

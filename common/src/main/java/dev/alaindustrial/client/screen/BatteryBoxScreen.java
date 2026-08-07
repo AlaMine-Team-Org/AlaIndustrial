@@ -40,6 +40,8 @@ public class BatteryBoxScreen extends MachineScreen<BatteryBoxMenu> {
     // Pouch charge-slot niche (MOD-052): 18×18 box left of the battery, centred on its rows;
     // top-left = item position (BatteryBoxMenu.CHARGE_SLOT_X/Y) minus 1. Vanilla slot palette.
     private static final int SLOT_X = 20, SLOT_Y = 31;
+    // Discharge-slot niche (MOD-083): the mirror of the one above, right of the battery.
+    private static final int DISCHARGE_SLOT_X = 138, DISCHARGE_SLOT_Y = 31;
     private static final int SLOT_DARK = 0xFF373737, SLOT_LIGHT = 0xFFFFFFFF, SLOT_FACE = 0xFF8B8B8B;
 
     public BatteryBoxScreen(BatteryBoxMenu menu, Inventory inventory, Component title) {
@@ -88,9 +90,10 @@ public class BatteryBoxScreen extends MachineScreen<BatteryBoxMenu> {
         // Step 2b — pouch charge-slot niche (MOD-052), drawn AFTER the frame because the texture is
         // opaque there (it predates the slot). Classic vanilla three-fill inset: dark top/left,
         // light bottom/right, gray interior; the slot item renders on top at (21,32).
-        graphics.fill(x + SLOT_X, y + SLOT_Y, x + SLOT_X + 18, y + SLOT_Y + 18, SLOT_DARK);
-        graphics.fill(x + SLOT_X + 1, y + SLOT_Y + 1, x + SLOT_X + 18, y + SLOT_Y + 18, SLOT_LIGHT);
-        graphics.fill(x + SLOT_X + 1, y + SLOT_Y + 1, x + SLOT_X + 17, y + SLOT_Y + 17, SLOT_FACE);
+        drawSlotNiche(graphics, x + SLOT_X, y + SLOT_Y);
+
+        // Step 2c — discharge-slot niche (MOD-083), same treatment, right of the battery.
+        drawSlotNiche(graphics, x + DISCHARGE_SLOT_X, y + DISCHARGE_SLOT_Y);
 
         // Step 3 — numeric readout in the gap between the battery (ends y=53) and the inventory
         // label (y=72): stored / capacity (with %) on one line, the output cap on the next.
@@ -99,6 +102,17 @@ public class BatteryBoxScreen extends MachineScreen<BatteryBoxMenu> {
         Component output = Component.translatable("gui.alaindustrial.output", this.menu.getOutputRate());
         drawCentered(graphics, charge, x, y + 55, GuiStyle.TEXT);
         drawCentered(graphics, output, x, y + 64, GuiStyle.TEXT_DIM);
+    }
+
+    /**
+     * Classic vanilla three-fill slot inset at screen position {@code (x, y)}: dark top/left, light
+     * bottom/right, gray interior. Drawn by hand because the battery_box texture predates both slots
+     * and is opaque where they sit; the slot's item renders on top at {@code (x + 1, y + 1)}.
+     */
+    private static void drawSlotNiche(GuiGraphicsExtractor graphics, int x, int y) {
+        graphics.fill(x, y, x + 18, y + 18, SLOT_DARK);
+        graphics.fill(x + 1, y + 1, x + 18, y + 18, SLOT_LIGHT);
+        graphics.fill(x + 1, y + 1, x + 17, y + 17, SLOT_FACE);
     }
 
     /** Draw {@code text} horizontally centered across the GUI face at row {@code y}. */
