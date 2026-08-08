@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh_cn" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>新手入门 — Ala Industrial — 指南</title>
+<link rel="icon" href="favicon.png" type="image/png">
+<script src="assets/guide-site.js" defer></script>
+
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="index.html"><img class="brand-icon" src="favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="assets/platform/github.svg" alt="GitHub"></a>
+    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="assets/platform/discord.svg" alt="Discord"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../en/getting-started.html">EN</a><a href="../ru/getting-started.html">RU</a><a href="../uk/getting-started.html">UA</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">浏览</div>
+<a class="cat-link active" href="getting-started.html"><img class="nav-icon" src="assets/item/tempered_iron_pickaxe.png" alt=""><span>新手入门</span></a>
+<a class="cat-link" href="recipes.html"><img class="nav-icon" src="assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
+<a class="cat-link" href="utility/player_profile.html"><img class="nav-icon" src="assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
+<div class="group-title">能源</div>
+<a class="cat-link" href="generators/index.html"><img class="nav-icon" src="assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="energy-storage/index.html"><img class="nav-icon" src="assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="energy-transfer/index.html"><img class="nav-icon" src="assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="machines/index.html"><img class="nav-icon" src="assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="12 个页面">12</span></a>
+<a class="cat-link" href="fluid-machines/index.html"><img class="nav-icon" src="assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="item-transport/index.html"><img class="nav-icon" src="assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="fluid-transport/index.html"><img class="nav-icon" src="assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="fluid-storage/index.html"><img class="nav-icon" src="assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">世界与自动化</div>
+<a class="cat-link" href="materials/index.html"><img class="nav-icon" src="assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="13 个页面">13</span></a>
+<a class="cat-link" href="agriculture/index.html"><img class="nav-icon" src="assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="advanced-machines/index.html"><img class="nav-icon" src="assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">其他</div>
+<a class="cat-link" href="utility/index.html"><img class="nav-icon" src="assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="10 个页面">10</span></a>
+<div class="group-title">物品</div>
+<a class="cat-link" href="upgrades/index.html"><img class="nav-icon" src="assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="components/index.html"><img class="nav-icon" src="assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<a class="cat-link" href="items/index.html"><img class="nav-icon" src="assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="19 个页面">19</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="index.html">首页</a><span class="sep">/</span><span>新手入门</span></div>
+<div class="block-card"><img class="icon" src="assets/item/solar_panel_3d.png" alt="" width="128" height="128"><div class="info">
+  <h1>新手入门</h1>
+  <p style="color:var(--muted);margin:8px 0 0">Ala Industrial 是一款关于能源与自动化的工业科技模组。它带来一套基于 EU/FE（能量单位）的能量系统、生产 EU/FE 的发电机、消耗 EU/FE 的机器，以及用于传输能量的储能装置与电缆。本页介绍上手所需的最低限度知识。</p>
+</div></div>
+
+<h2>关键术语</h2>
+<table><thead><tr><th>术语</th><th>含义</th></tr></thead>
+<tbody><tr><td><code>EU/FE</code></td><td>能量单位 —— 本模组的能量货币。由发电机产出，存放在缓存中，被机器消耗。</td></tr><tr><td><code>刻（Tick）</code></td><td>游戏刻（一秒的 1/20）。EU/FE/刻（EU/FE/t）是标准速率 —— 发电、耗电与传输都以 EU/FE/t 衡量。</td></tr><tr><td><code>LV / MV / HV</code></td><td>电压等级：低压 LV（32 EU/FE/t）、中压 MV（128 EU/FE/t）、高压 HV（512 EU/FE/t）。每种发电机、电缆和机器都属于某个等级；安全地混用等级是进阶的核心。</td></tr><tr><td><code>缓存</code></td><td>某个方块（发电机、机器或储能箱）内部的 EU/FE 存储。容量因方块而异。</td></tr><tr><td><code>等级</code></td><td>方块的电压等级。低压（LV）机器只能接受 ≤32 EU/FE/t；从更高等级的电源输入更多能量也无济于事（它们受自身上限限制）。</td></tr></tbody></table>
+
+<h2>你的第一条能量链路</h2>
+<p>起步流程是由四个方块构成的循环。按以下顺序搭建，你就能拥有一套可用的矿石翻倍装置：</p>
+<ul class="concept-list intro-list"><a class="concept-card" style="--c:#fcd12a" href="generators/solar_panel.html"><div class="cc-body"><div class="cc-title">太阳能板</div><div class="cc-desc">白天在露天环境下产出 EU/FE。你的第一个能量来源。</div></div></a><a class="concept-card" style="--c:#fcd12a" href="energy-transfer/copper_cable.html"><div class="cc-body"><div class="cc-title">铜电缆</div><div class="cc-desc">廉价的低压导线，把 EU/FE 从太阳能板输送到你的机器。</div></div></a><a class="concept-card" style="--c:#fcd12a" href="energy-storage/battery_box.html"><div class="cc-body"><div class="cc-title">储能库</div><div class="cc-desc">把 EU/FE 储存到夜间使用，让机器在太阳能板休眠时仍能运行。</div></div></a><a class="concept-card" style="--c:#fcd12a" href="machines/macerator.html"><div class="cc-body"><div class="cc-title">粉碎机</div><div class="cc-desc">把矿石研磨成粉 —— 让金属产量翻倍。第一个真正消耗 EU/FE 的设备。</div></div></a></ul>
+
+<h2>你的第一台发电机</h2>
+<p>能量总要有个来源。从最廉价、最简单的发电机起步，再逐步扩张 —— 以下是最早可用的选项：</p>
+<ul class="concept-list intro-list"><a class="concept-card" style="--c:#7bd88f" href="generators/generator.html"><div class="cc-body"><div class="cc-title">发电机（LV）</div><div class="cc-desc">最简单的起步：按需燃烧煤炭产出 EU/FE —— 夜间同样可用。</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/solar_panel.html"><div class="cc-body"><div class="cc-title">太阳能板</div><div class="cc-desc">露天白昼下免费产出 EU/FE；夜间会休眠 —— 请搭配储能库使用。</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/water_mill.html"><div class="cc-body"><div class="cc-title">水车 / 风车</div><div class="cc-desc">依靠流动的水或风获得被动低压能量 —— 无需燃料。</div></div></a><a class="concept-card" style="--c:#7bd88f" href="generators/geothermal_generator.html"><div class="cc-body"><div class="cc-title">地热发电机</div><div class="cc-desc">更强的低压输出，由岩浆驱动 —— 等你有了稳定来源后是稳妥的下一步。</div></div></a></ul>
+
+<h2>实用提示</h2>
+<ul><li>在太阳能板上方保留开阔天空 —— 任何不透明方块都会让发电完全停止。</li><li>打粉机对矿石方块和粗矿都能翻倍产出（每种各出 2 份粉）。只有成品锭研磨后只得到 1 份粉 —— 这种情况不会翻倍。</li><li>电缆不会因过载而爆炸；它们只会达到自身上限，多余的能量不会被传输。</li><li>在同一条线路上混用了不同等级的电缆？整张网络会按其中最强的电缆运行 —— 既采用它的传输上限，也承担它更高的损耗。一段金电缆就会重新决定整条线路的标准。</li><li>机器的 5 个面都能输入能量；朝向的前面通常对 EU/FE 是惰性的。</li><li>把白天产出的 EU/FE 存进储能箱 —— 没有它，太阳一落山你的机器就会停摆。</li></ul>
+
+<h2>接下来去哪</h2>
+<p>当你的第一条链路运转起来后，去探索侧边栏中的各个分类 —— 更多发电机、机器和材料加工会随着发展逐步解锁。</p>
+  </main>
+</div>
+
+</body>
+</html>

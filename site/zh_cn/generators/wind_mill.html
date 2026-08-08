@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh_cn" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>风力涡轮机 — Ala Industrial — 指南</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/generators/wind_mill.html">EN</a><a href="../../ru/generators/wind_mill.html">RU</a><a href="../../uk/generators/wind_mill.html">UA</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">浏览</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>新手入门</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
+<div class="group-title">能源</div>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="12 个页面">12</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">世界与自动化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="13 个页面">13</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">其他</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="10 个页面">10</span></a>
+<div class="group-title">物品</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="19 个页面">19</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../generators/index.html">发电机</a><span class="sep">/</span><span>风力涡轮机</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/item/wind_mill_3d.png" alt="风力涡轮机" width="64" height="64">
+    <div class="info">
+      <h1>风力涡轮机</h1>
+      <div class="block-id">alaindustrial:wind_mill</div>
+      <div class="tags"><span class="tag cat" style="background:#f0b429">发电机</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">tier-lv</span><span class="tag">energy</span><span class="tag">wind</span></div>
+    </div>
+  </div>
+</div>
+<h2>概览</h2>
+
+<p><strong>风力涡轮机</strong> 用风产出 EU/FE——不要燃料，不要阳光，只要高度和天气。把它建得高高的——它就会回报丰厚；扔在地上——几乎一无用处。它奖励那些爬上高塔、不惧雷暴的人。</p>
+
+<p>工作需要三件事：槽中的 <strong>木质转子</strong>、方块上方的露天天空、以及桨叶周围有足够空间。天气越恶劣，发电越多。</p>
+
+<blockquote><strong>小例子：</strong>云层下方一条狭窄高度带（<strong>y 183–193</strong>）内的风机 → 晴天 <strong>4 EU/FE/t</strong>， 雷暴 <strong>8 EU/FE/t</strong>。再低就明显少很多：在 y ≈ 128 只有 2 EU/FE/t。</blockquote>
+
+<h2>能量</h2>
+
+<p>风机只产出能量——不接受外来能量。内部最多容纳 4000 EU/FE，并将其输出到 LV 等级的线路。</p>
+
+<table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>内部缓存</td><td>4000 EU/FE</td></tr><tr><td>输出</td><td>最高 32 EU/FE/t（LV）</td></tr><tr><td>实际发电</td><td>0–8 EU/FE/t（高度 × 天气）</td></tr></tbody></table>
+
+<p>能量 <strong>只从背面</strong> 输出。把电缆接到风机的背面——其余面不输出能量。</p>
+
+<h2>发电</h2>
+
+<p>越靠近云层、天气越糟，发电越多。风随高度增强 <strong>但有上限</strong>：最强的风就在云层边缘（y ≈ 192），再往上空气稀薄、风力减弱。天气会进一步乘上倍率。</p>
+
+<table><thead><tr><th>高度 / 天气</th><th>发电量</th></tr></thead><tbody><tr><td>海平面及以下</td><td>0（地面毫无用处）</td></tr><tr><td>y ≈ 100</td><td>1 EU/FE/t</td></tr><tr><td>y ≈ 127</td><td>2 EU/FE/t</td></tr><tr><td>y ≈ 175</td><td>3 EU/FE/t</td></tr><tr><td><strong>y 183–193（云层下方）</strong></td><td><strong>4 EU/FE/t——峰值，仅这 11 个高度</strong></td></tr><tr><td>y ≈ 210</td><td>2 EU/FE/t</td></tr><tr><td>y ≥ 248</td><td>0（空气过于稀薄）</td></tr><tr><td>…下雨时</td><td>×1.5</td></tr><tr><td>…雷暴时</td><td>×2</td></tr><tr><td>综合上限</td><td>8 EU/FE/t</td></tr></tbody></table>
+
+<p>也就是说云层下狭窄带里的风机晴天 4 EU/FE/t、雨天 6 EU/FE/t、雷暴 8 EU/FE/t——但很容易错过最佳点：上下偏 20 格就变弱；屋顶下、桨叶受阻或贴近世界顶部则会完全停转。</p>
+
+<p><a href="../items/wind_gauge.html">风速计</a> 能告诉你塔该建在哪里：它读取同一条风曲线，并能在动工前就以 km/h 显示。</p>
+
+<p>如果出了状况，屏幕会用大白话写明："无转子"、"屋顶下"、"受阻挡"、"转子受阻挡"或"无风"。真正在发电时，齿轮图标会亮起。</p>
+
+<h3>桨叶间隙</h3>
+
+<p>桨叶在风机 <strong>前方</strong> 的方块内旋转，需要周围有空间。请留空：风机前那一格、两侧各一格以及其正下方 3 格（一个小坑）。任何位置出现固体方块——风机会显示"受阻挡"并停转。</p>
+
+<p>"留空"指空气、草、花、树苗或雪层（即可放置方块的位置）。石头、玻璃、树叶、栅栏、台阶或风机自身的支柱都算阻挡。桨叶上方的空气无需检查——上方的屋顶由另一项露天天空检查负责。</p>
+
+<h3>多台风机的排布</h3>
+
+<p>避免桨叶相撞的简单规则：</p>
+
+<p><strong>朝同一方向并排：</strong> 它们之间留 1 格空气，否则两台都停。 <strong>背对背：</strong> 可紧贴。 <strong>面对面：</strong> 至少需要 2 格间距。</p>
+
+<p>当两台风机相互干扰时，<strong>两台都停</strong>——无一例外。没有转子的邻居不造成干扰——但只要给它装上转子，相邻正在工作的风机也会停。</p>
+
+<h2>物品栏</h2>
+
+<p>两个槽位：</p>
+
+<table><thead><tr><th>槽位</th><th>接受</th><th>数量</th></tr></thead><tbody><tr><td>转子</td><td>木质转子（必需——否则不发电）</td><td>1</td></tr><tr><td>芯片</td><td>进化芯片（日光/月光）—— 启动进化</td><td>1</td></tr></tbody></table>
+
+<h2>界面</h2>
+
+<p>屏幕上可见能量条（悬停时显示精确 EU/FE 数）、当前发电量、工作模式、中央的转子槽、右侧的芯片槽、底部的进化进度以及顶部的状态指示器。</p>
+
+<h2>方块属性</h2>
+
+<p>普通实心方块，放置时正面朝向玩家。任意镐均可破坏，且 <strong>破坏时保留电荷</strong>。</p>
+
+<table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>工具</td><td>镐</td></tr><tr><td>破坏时保留电荷</td><td>是</td></tr></tbody></table>
+
+<h2>声音</h2>
+
+<p>转子旋转时，风机会发出低低的桨叶呼啸声（半径约 12 方块）。在无风、屋顶下、相邻转子干扰或未装转子时静音（）。</p>
+
+<h2>配方</h2>
+
+<p>工作台上两个合成：</p>
+
+<p><strong>风力涡轮机</strong> —— 四角为铜锭，上下为木板，两侧为铜缆，中央为木齿轮。 <strong>木质转子</strong>（工作所必需） —— 四角为木板，上下为铁锭，两侧为铜缆，中央为木齿轮。</p>
+
+<h2>进阶</h2>
+
+<p>基础风机是第一阶的中性形态。扔进 <strong>进化芯片</strong>（与太阳能板共用），让它在露天、装好转子的条件下工作一段时间——它会进化为强化版本，保留已积累的能量：</p>
+
+<p><strong>日光进化芯片</strong> → 天空分支：在高处更强 → <a href="high_altitude_wind_mill.html">天空风车</a>。 <strong>月光进化芯片</strong> → 风暴分支：在恶劣天气下更强 → <a href="storm_wind_mill.html">风暴风车</a>。</p>
+
+<p>折算下来约需 <strong>约一个半游戏日</strong>（~28 真实分钟）。进化与天气无关：芯片在任何天气下都会积累进度，只要风头上方露天、桨叶不被阻挡、转子已装上——因此与太阳能板不同，风机在夜里和雨中也能进化。</p>
+
+<table><thead><tr><th>等级</th><th>天空分支（高度）</th><th>风暴分支（雷暴）</th></tr></thead><tbody><tr><td>T1</td><td>风力涡轮机（中性）</td><td>风力涡轮机（中性）</td></tr><tr><td>T2</td><td><a href="high_altitude_wind_mill.html">天空风车</a></td><td><a href="storm_wind_mill.html">风暴风车</a></td></tr></tbody></table>
+
+<h2>相关内容</h2>
+
+<p><a href="high_altitude_wind_mill.html">天空风车</a> —— 进化的 T2 天空分支。 <a href="storm_wind_mill.html">风暴风车</a> —— 进化的 T2 风暴分支。 <a href="solar_panel.html">太阳能板</a> —— 与风机共用进化芯片。 <a href="../energy-storage/battery_box.html">储能库</a> · <a href="../energy-transfer/copper_cable.html">铜缆</a></p>
+
+<h2>合成</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="风力涡轮机 alaindustrial:wind_mill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意铜锭"><img src="../assets/item/copper_ingot_3d.png" alt="任意铜锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意木板"><img src="../assets/item/oak_planks_3d.png" alt="任意木板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铜锭"><img src="../assets/item/copper_ingot_3d.png" alt="任意铜锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="铜缆"><img src="../assets/item/copper_cable_3d.png" alt="铜缆" width="32" height="32"></div> <div class="cell" title="木齿轮"><img src="../assets/item/wooden_gear_3d.png" alt="木齿轮" width="32" height="32"></div> <div class="cell" title="铜缆"><img src="../assets/item/copper_cable_3d.png" alt="铜缆" width="32" height="32"></div> <div class="cell" title="任意铜锭"><img src="../assets/item/copper_ingot_3d.png" alt="任意铜锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意木板"><img src="../assets/item/oak_planks_3d.png" alt="任意木板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铜锭"><img src="../assets/item/copper_ingot_3d.png" alt="任意铜锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="风力涡轮机"><img src="../assets/item/wind_mill_3d.png" alt="风力涡轮机" width="32" height="32"></div><div class="result-name">风力涡轮机</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

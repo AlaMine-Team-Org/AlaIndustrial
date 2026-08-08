@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh_cn" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>组件 — Ala Industrial — 指南</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/components/index.html">EN</a><a href="../../ru/components/index.html">RU</a><a href="../../uk/components/index.html">UA</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">浏览</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>新手入门</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
+<div class="group-title">能源</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="12 个页面">12</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">世界与自动化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="13 个页面">13</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">其他</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="10 个页面">10</span></a>
+<div class="group-title">物品</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="19 个页面">19</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><span>组件</span></div>
+<div class="block-card">
+  <img class="icon" src="../assets/item/electronic_circuit_3d.png" alt="" width="128" height="128">
+  <div class="info">
+    <h1>组件</h1>
+    <p style="color:var(--muted);margin:8px 0 0">电路、外壳、齿轮、线圈。</p>
+    <div class="tags"><span class="tag tier">15 个页面</span></div>
+  </div>
+</div>
+<ul class="concept-list">
+<li><a class="concept-card" style="--c:#94a3b8" href="material_forms.html"><div class="cc-icon"><img src="../assets/item/iron_dust_3d.png" alt="铁粉" width="40" height="40"></div><div class="cc-body"><div class="cc-title">铁粉</div><div class="cc-desc">材料形态 是一组半成品物品：粉，以及之后的板、坯料和导线，是机器和配方把矿石和锭变成的东西。在第一阶段，你只会接触到 粉：它由 粉碎机 产出，也正是它带来了“矿石翻倍”（矿石方块或粗矿 → 2 份粉 → 2 个锭）。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="tempered_iron.html"><div class="cc-icon"><img src="../assets/item/tempered_iron_3d.png" alt="回火铁" width="40" height="40"></div><div class="cc-body"><div class="cc-title">回火铁</div><div class="cc-desc">回火铁 是把一个原版铁锭熔炼后得到的锭。配方严格是 1:1 的，但产出已经是另一种材料——“回火”过的铁，由它可以做出比铁稍好的物品。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="metal_gears.html"><div class="cc-icon"><img src="../assets/item/iron_gear_3d.png" alt="铁齿轮" width="40" height="40"></div><div class="cc-body"><div class="cc-title">铁齿轮</div><div class="cc-desc">金属齿轮 是一组合成组件：石齿轮、铁齿轮、金齿轮和银齿轮。四种齿轮都由同一种坯料——木齿轮——加上十字形排列的本等级材料压制而成。它们都是物品，而非方块：只作为原料存在。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="electronic_circuit.html"><div class="cc-icon"><img src="../assets/item/electronic_circuit_3d.png" alt="电子电路" width="40" height="40"></div><div class="cc-body"><div class="cc-title">电子电路</div><div class="cc-desc">电子电路 是模组的基础合成组件，几乎所有早期（LV）机器和储能方块的“大脑”。它是一个物品，而非方块：只作为原料出现在机器的配方中。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="machine_casing.html"><div class="cc-icon"><img src="../assets/item/machine_casing_3d.png" alt="机器外壳" width="40" height="40"></div><div class="cc-body"><div class="cc-title">机器外壳</div><div class="cc-desc">机器外壳 是用于组装机器的基础方块。它由 8 块铁 板（工作台上的边框）锻造而成，随后成为 LV 机器的本体：机器的配方就是“外壳 + 专用零件”。由此串起一条清晰的链路：锭 → 板 → 外壳 → 机器。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="copper_coil.html"><div class="cc-icon"><img src="../assets/item/copper_coil_3d.png" alt="铜线圈" width="40" height="40"></div><div class="cc-body"><div class="cc-title">铜线圈</div><div class="cc-desc">铜线圈 是一种合成组件：把铜缆绕在锡芯上制成的线圈。它是一个物品，而非方块——只作为原料出现在配方中。第一次用到它的是 电钻，其配方最下面一排放两只线圈。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="battery.html"><div class="cc-icon"><img src="../assets/item/battery_3d.png" alt="电池" width="40" height="40"></div><div class="cc-body"><div class="cc-title">电池</div><div class="cc-desc">电池 是模组中的第一种能量载体：一个容量为 2 000 EU/FE 的小型蓄电池，可以充电、放电、整摞带在身上。它同时也是合成组件：能量背包（能量背包）、电钻、喷气背包、通量织物护甲 等电气物品都由电池组装而成。</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="water_mill_wheel.html"><div class="cc-icon"><img src="../assets/item/water_mill_wheel_3d.png" alt="水轮" width="40" height="40"></div><div class="cc-body"><div class="cc-title">水轮</div><div class="cc-desc">水轮 是一种合成组件：安放在 水车 轮槽里的轮子。槽里没有轮子时，水车不发电。轮子是带耐久的消耗品（MOD-189，与风力涡轮机的转子一致）：只在水车实际产出 EU/FE 时（与产出成正比地）磨损，耐久耗尽时损坏。磨损条在物品栏和槽位中都能看到。一个完整的耐久周期可承载 320 000 EU/FE ——约等于水车满负荷连续运转一小时，或在通常的 2 EU/FE/刻下运转…</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="windmill_rotor.html"><div class="cc-icon"><img src="../assets/item/windmill_rotor_3d.png" alt="木质转子" width="40" height="40"></div><div class="cc-body"><div class="cc-title">木质转子</div><div class="cc-desc">木质转子 是一种合成组件：安放在任何风力涡轮机（T1 基础，T2 天空/风暴）转子槽里的叶片。槽里没有转子时，风力涡轮机不发电。转子是带耐久的消耗品（MOD-189）：只在风力涡轮机实际产出 EU/FE 时（与产出成正比地）磨损（雨天/雷雨天更快），耐久耗尽时损坏。磨损条在物品栏和槽位中都能看到。一个完整的耐久周期可承载 480 000 EU/FE ——在峰值 8…</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="network_analyzer.html"><div class="cc-icon"><img src="../assets/item/network_analyzer_3d.png" alt="电网分析仪" width="40" height="40"></div><div class="cc-body"><div class="cc-title">电网分析仪</div><div class="cc-desc">电网分析仪 是一件手持诊断工具，对于没有操作员权限的玩家而言，它是 /ala net 命令的友好替代。它不生产也不储存能量——只显示网络里发生了什么。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="empty_chip.html"><div class="cc-icon"><img src="../assets/item/empty_chip_3d.png" alt="空白芯片" width="40" height="40"></div><div class="cc-body"><div class="cc-title">空白芯片</div><div class="cc-desc">空白芯片 是一种合成组件，是搭建功能性升级芯片所用的坯料。它是一个物品，而非方块。它本身什么也不做，也 不能 放进机器的升级槽（升级槽会拒绝它）。它唯一的角色是共同的起点，由它组装出真正的芯片；其中的第一种是 静音芯片。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="alignment_chips.html"><div class="cc-icon"><img src="../assets/item/alignment_chip_day_3d.png" alt="日光进化芯片" width="40" height="40"></div><div class="cc-body"><div class="cc-title">日光进化芯片</div><div class="cc-desc">进化芯片 是一种合成组件，可以把基础的 T1 形态变为 T2。有两种：</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="rubber.html"><div class="cc-icon"><img src="../assets/item/rubber_3d.png" alt="橡胶" width="40" height="40"></div><div class="cc-body"><div class="cc-title">橡胶</div><div class="cc-desc">橡胶 是石油链路的最终产物：</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="advanced_circuit.html"><div class="cc-icon"><img src="../assets/item/advanced_circuit_3d.png" alt="高级电路" width="40" height="40"></div><div class="cc-body"><div class="cc-title">高级电路</div><div class="cc-desc">高级电路 是 电子电路 的第二阶段，也是第一个让人必须把石油链路走到底的零件。它是一个物品，而非方块：只作为 MV 等级配方的原料出现。</div><div class="cc-badges"><span class="badge">MV</span><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="advanced_machine_casing.html"><div class="cc-icon"><img src="../assets/item/advanced_machine_casing_3d.png" alt="高级机器外壳" width="40" height="40"></div><div class="cc-body"><div class="cc-title">高级机器外壳</div><div class="cc-desc">高级机器外壳 与 机器外壳 是一回事，只是高出一个等级：用于组装中压（MV）等级的机器。它由普通外壳组装而来，上下覆有 6 块 回火铁板，两侧各装 2 块 高级电路（MOD-299）。</div><div class="cc-badges"><span class="badge">MV</span><span class="badge" style="background:#22c55e;color:#0a0d12">已实现</span></div></div></a></li>
+</ul><h2>更多可用物品</h2><div class="item-showcase"><div class="item-showcase-card"><img src="../assets/item/windmill_rotor.png" alt="" width="64" height="64"><span>木质转子</span></div><div class="item-showcase-card"><img src="../assets/item/wooden_gear.png" alt="" width="64" height="64"><span>木齿轮</span></div></div>
+  </main>
+</div>
+
+</body>
+</html>
