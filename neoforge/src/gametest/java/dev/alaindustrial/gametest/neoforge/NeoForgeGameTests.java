@@ -25,6 +25,7 @@ import dev.alaindustrial.gametest.WorldContentScenarios;
 import dev.alaindustrial.gametest.CapsuleScenarios;
 import dev.alaindustrial.gametest.GeothermalLavaInputScenarios;
 import dev.alaindustrial.gametest.ElectricChainsawScenarios;
+import dev.alaindustrial.gametest.ElectricHoeScenarios;
 import dev.alaindustrial.gametest.ElectricDrillScenarios;
 import dev.alaindustrial.gametest.ElectricSaberScenarios;
 import dev.alaindustrial.gametest.MagnetScenarios;
@@ -768,6 +769,14 @@ public final class NeoForgeGameTests {
 		registerTest(event, "chainsaw_diamond_tip_speed_and_tier", 40, true, ElectricChainsawScenarios::fun01DiamondTipSpeedAndTier);
 		registerTest(event, "chainsaw_diamond_tip_silk_toggle_leaves", 40, true, ElectricChainsawScenarios::fun02DiamondTipSilkToggleOnLeaves);
 		registerTest(event, "chainsaw_base_has_no_silk_mode", 40, true, ElectricChainsawScenarios::fun03BaseChainsawHasNoSilkMode);
+
+		// MOD-378 (TC-HOE-001-FUN01..04): the hoe's diamond-tipped upgrade breaks faster at the same tier
+		// and hands every plot it tills full moisture, while the base hoe leaves plots dry and a flat
+		// upgrade cannot water farmland it did not just create.
+		registerTest(event, "hoe_diamond_tip_speed_and_tier", 40, true, ElectricHoeScenarios::fun01DiamondTipSpeedAndTier);
+		registerTest(event, "hoe_diamond_tip_till_waters_plot", 40, true, ElectricHoeScenarios::fun02DiamondTipTillLeavesPlotWatered);
+		registerTest(event, "hoe_base_leaves_plot_dry", 40, true, ElectricHoeScenarios::fun03BaseHoeLeavesPlotDry);
+		registerTest(event, "hoe_flat_upgrade_cannot_water_farmland", 40, true, ElectricHoeScenarios::fun04FlatUpgradeCannotWaterExistingFarmland);
 
 		// MOD-132 Electromagnet (suite TC-MAGNET-001) — same neutral bodies as the Fabric MagnetGameTest.
 		registerTest(event, "magnet_pulls_nearby_drop", 40, true, MagnetScenarios::fun01PullsNearbyDrop);

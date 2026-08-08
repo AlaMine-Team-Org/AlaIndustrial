@@ -44,6 +44,7 @@
 			"dev.alaindustrial.gametest.EnergyPackGameTest",
 			"dev.alaindustrial.gametest.ElectricDrillGameTest",
 			"dev.alaindustrial.gametest.ElectricChainsawGameTest",
+			"dev.alaindustrial.gametest.ElectricHoeGameTest",
 			"dev.alaindustrial.gametest.ElectricSaberGameTest",
 			"dev.alaindustrial.gametest.MagnetGameTest",
 			"dev.alaindustrial.gametest.JetpackGameTest",

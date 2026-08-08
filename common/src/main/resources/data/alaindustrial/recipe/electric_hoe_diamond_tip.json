@@ -1,0 +1,16 @@
+{
+	"type": "alaindustrial:crafting_shaped_charge_transfer",
+	"category": "equipment",
+	"key": {
+		"D": "alaindustrial:diamond_dust",
+		"C": "alaindustrial:cupronickel_ingot",
+		"U": "alaindustrial:electric_hoe",
+		"L": "alaindustrial:lapis_dust"
+	},
+	"pattern": [
+		"DDD",
+		"CUC",
+		" L "
+	],
+	"result": { "id": "alaindustrial:electric_hoe_diamond_tip" }
+}

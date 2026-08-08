@@ -30,6 +30,7 @@ import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
+import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
@@ -441,6 +442,14 @@ public final class MachineTooltips {
 		} else {
 			lines.add(Component.translatable("tooltip.alaindustrial.electric_hoe.charge", eu, cap)
 					.withStyle(ChatFormatting.GOLD));
+		}
+		// MOD-378: the diamond-tipped upgrade waters every plot it tills. Unlike the drill's and the
+		// chainsaw's Silk Touch, this perk has no off state and nothing in the vanilla UI hints at it —
+		// wet farmland just looks like farmland next to water — so the tooltip is the only place a player
+		// can learn the upgrade does anything beyond digging faster.
+		if (stack.getItem() instanceof ElectricHoeDiamondTipItem) {
+			lines.add(Component.translatable("tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation")
+					.withStyle(ChatFormatting.AQUA));
 		}
 	}
 

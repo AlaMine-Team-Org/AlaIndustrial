@@ -6,6 +6,7 @@ import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
+import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
@@ -193,6 +194,10 @@ public final class ModItems {
 	public static final Item ELECTRIC_SHOVEL = electricShovel("electric_shovel");
 	// Electric Hoe (MOD-342): the farming member of the same line — an EU hoe that tills for free.
 	public static final Item ELECTRIC_HOE = electricHoe("electric_hoe");
+	// Diamond-Tipped Electric Hoe (MOD-378): the hoe's upgrade tier — faster, and the plots it tills
+	// come out already watered.
+	public static final Item ELECTRIC_HOE_DIAMOND_TIP =
+			electricHoeDiamondTip("electric_hoe_diamond_tip");
 	// Electric Saber (MOD-149): the line's first weapon — EU per hit, plain sword when flat or off.
 	public static final Item ELECTRIC_SABER = electricSaber("electric_saber");
 	// Electromagnet (MOD-132): EU item in any inventory slot that pulls loose drops toward the carrier.
@@ -473,6 +478,16 @@ public final class ModItems {
 						ElectricHoeItem.electricHoeProperties(new Item.Properties().setId(key))));
 	}
 
+	// Diamond-Tipped Electric Hoe (MOD-378). Same shape as the base hoe above, with its own properties
+	// factory (higher breaking speed); the irrigation perk is behaviour in useOn, not a property.
+	private static Item electricHoeDiamondTip(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new ElectricHoeDiamondTipItem(
+						ElectricHoeDiamondTipItem.electricHoeDiamondTipProperties(
+								new Item.Properties().setId(key))));
+	}
+
 	// Electromagnet (MOD-132). A plain-Item subclass; stacksTo(1) because it carries per-item state
 	// (EU + on/off). No pouch_energy default — ItemEnergy reads an absent component as 0 EU.
 	private static Item magnet(String path) {
@@ -681,6 +696,7 @@ public final class ModItems {
 					output.accept(ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP.get());
 					output.accept(ModContent.ELECTRIC_SHOVEL.get());
 					output.accept(ModContent.ELECTRIC_HOE.get());
+					output.accept(ModContent.ELECTRIC_HOE_DIAMOND_TIP.get());
 					output.accept(ModContent.ELECTROMAGNET.get());
 					output.accept(ModContent.JETPACK.get());
 				});
@@ -766,6 +782,7 @@ public final class ModItems {
 		ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP = () -> ELECTRIC_CHAINSAW_DIAMOND_TIP;
 		ModContent.ELECTRIC_SHOVEL = () -> ELECTRIC_SHOVEL;
 		ModContent.ELECTRIC_HOE = () -> ELECTRIC_HOE;
+		ModContent.ELECTRIC_HOE_DIAMOND_TIP = () -> ELECTRIC_HOE_DIAMOND_TIP;
 		ModContent.ELECTRIC_SABER = () -> ELECTRIC_SABER;
 		ModContent.ELECTROMAGNET = () -> ELECTROMAGNET;
 		ModContent.JETPACK = () -> JETPACK;

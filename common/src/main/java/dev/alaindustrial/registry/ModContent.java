@@ -291,6 +291,9 @@ public final class ModContent {
 	public static Supplier<Item> ELECTRIC_SHOVEL = unbound("ELECTRIC_SHOVEL");
 	// Electric Hoe (MOD-342) — the farming member of the same line: an EU hoe that tills for free.
 	public static Supplier<Item> ELECTRIC_HOE = unbound("ELECTRIC_HOE");
+	// Diamond-Tipped Electric Hoe (MOD-378) — the hoe's upgrade tier: faster, and every plot it tills
+	// comes out fully watered. Shares the base hoe's EU buffer and charging behaviour.
+	public static Supplier<Item> ELECTRIC_HOE_DIAMOND_TIP = unbound("ELECTRIC_HOE_DIAMOND_TIP");
 	// Electric Saber (MOD-149) — the line's first weapon: EU per hit, degrades to a plain sword when flat.
 	public static Supplier<Item> ELECTRIC_SABER = unbound("ELECTRIC_SABER");
 	// Electromagnet (MOD-132) — EU item in any inventory slot that draws loose drops toward the carrier.

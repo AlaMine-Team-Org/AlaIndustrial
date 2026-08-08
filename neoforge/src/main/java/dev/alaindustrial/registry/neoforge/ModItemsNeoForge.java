@@ -5,6 +5,9 @@ import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
+import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
+import dev.alaindustrial.item.tool.neoforge.ElectricHoeDiamondTipItemNeoForge;
+import dev.alaindustrial.item.tool.neoforge.ElectricHoeItemNeoForge;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
@@ -246,9 +249,17 @@ public final class ModItemsNeoForge {
 			ITEMS.registerItem("electric_shovel", ElectricShovelItem::new,
 					ElectricShovelItem::electricShovelProperties);
 	// Electric Hoe (MOD-342): the farming member of the same line — an EU hoe that tills for free.
-	public static final DeferredItem<ElectricHoeItem> ELECTRIC_HOE =
-			ITEMS.registerItem("electric_hoe", ElectricHoeItem::new,
+	// MOD-378: both hoes are registered as their NeoForge subclasses, which exist only to declare the
+	// HOE_TILL item ability. Without it NeoForge's patched HoeItem.useOn refuses to till at all — a
+	// defect the base hoe shipped with; see ElectricHoeItemNeoForge for the full mechanism.
+	public static final DeferredItem<ElectricHoeItemNeoForge> ELECTRIC_HOE =
+			ITEMS.registerItem("electric_hoe", ElectricHoeItemNeoForge::new,
 					ElectricHoeItem::electricHoeProperties);
+	// Diamond-Tipped Electric Hoe (MOD-378): the hoe's upgrade tier — faster, and the plots it tills come
+	// out already watered. Same wiring as the base hoe; the properties factory differs only in the speed.
+	public static final DeferredItem<ElectricHoeDiamondTipItemNeoForge> ELECTRIC_HOE_DIAMOND_TIP =
+			ITEMS.registerItem("electric_hoe_diamond_tip", ElectricHoeDiamondTipItemNeoForge::new,
+					ElectricHoeDiamondTipItem::electricHoeDiamondTipProperties);
 	// Electric Saber (MOD-149): the line's first weapon — EU per hit, plain sword when flat or off.
 	public static final DeferredItem<ElectricSaberItem> ELECTRIC_SABER =
 			ITEMS.registerItem("electric_saber", ElectricSaberItem::new,
@@ -564,6 +575,7 @@ public final class ModItemsNeoForge {
 		ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP = ELECTRIC_CHAINSAW_DIAMOND_TIP::get;
 		ModContent.ELECTRIC_SHOVEL = ELECTRIC_SHOVEL::get;
 		ModContent.ELECTRIC_HOE = ELECTRIC_HOE::get;
+		ModContent.ELECTRIC_HOE_DIAMOND_TIP = ELECTRIC_HOE_DIAMOND_TIP::get;
 		ModContent.ELECTRIC_SABER = ELECTRIC_SABER::get;
 		ModContent.ELECTROMAGNET = ELECTROMAGNET::get;
 		ModContent.JETPACK = JETPACK::get;
