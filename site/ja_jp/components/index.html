@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ja_jp" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>部品 — Ala Industrial — ガイド</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="メニューを開く" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">日本語</summary><div class="language-popover"><span>日本語</span><a href="../../en/components/index.html">EN</a><a href="../../ru/components/index.html">RU</a><a href="../../uk/components/index.html">UA</a><a href="../../zh_cn/components/index.html">中文</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">ブラウズ</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>はじめに</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
+<div class="group-title">エネルギー</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="12 ページ">12</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">世界と自動化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="13 ページ">13</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">その他</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="10 ページ">10</span></a>
+<div class="group-title">アイテム</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="15 ページ">15</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="19 ページ">19</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><span>部品</span></div>
+<div class="block-card">
+  <img class="icon" src="../assets/item/electronic_circuit_3d.png" alt="" width="128" height="128">
+  <div class="info">
+    <h1>部品</h1>
+    <p style="color:var(--muted);margin:8px 0 0">回路、ケース、歯車、コイル。</p>
+    <div class="tags"><span class="tag tier">15 ページ</span></div>
+  </div>
+</div>
+<ul class="concept-list">
+<li><a class="concept-card" style="--c:#94a3b8" href="material_forms.html"><div class="cc-icon"><img src="../assets/item/iron_dust_3d.png" alt="鉄の粉" width="40" height="40"></div><div class="cc-body"><div class="cc-title">鉄の粉</div><div class="cc-desc">マテリアルの形態 は、中間製品アイテムのファミリーです。粉、後に板、インゴット、ワイヤなど、マシンやレシピが鉱石やインゴットを変換したものです。第1フェーズで出会うのは 粉 だけです。粉砕機 がこれを出力し、「鉱石倍化」を実現します（鉱石ブロックまたは原石 → 粉2個 → インゴット2個）。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="tempered_iron.html"><div class="cc-icon"><img src="../assets/item/tempered_iron_3d.png" alt="焼き入れ鉄" width="40" height="40"></div><div class="cc-body"><div class="cc-title">焼き入れ鉄</div><div class="cc-desc">焼き入れ鉄 は、バニラの鉄インゴット1個を精錬して得られるインゴットです。レシピは厳密に1:1ですが、出力はすでに別の素材、「焼き入れられた」鉄で、これから鉄より少し優れたアイテムが作られます。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="metal_gears.html"><div class="cc-icon"><img src="../assets/item/iron_gear_3d.png" alt="鉄の歯車" width="40" height="40"></div><div class="cc-body"><div class="cc-title">鉄の歯車</div><div class="cc-desc">金属歯車 はクラフトコンポーネントのファミリーです: 石、鉄、金、銀。4つすべてが同じブランクである 木の歯車 を、そのレベルの素材で十字に囲んで組み立てます。これらはアイテムであり、ブロックではありません。材料としてのみ存在します。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="electronic_circuit.html"><div class="cc-icon"><img src="../assets/item/electronic_circuit_3d.png" alt="電子回路" width="40" height="40"></div><div class="cc-body"><div class="cc-title">電子回路</div><div class="cc-desc">電子回路 はモッドの基本クラフトコンポーネントで、ほぼすべての初期（LV）マシンと貯蔵ブロックの「頭脳」です。これはアイテムであり、ブロックではありません。マシンのレシピには材料としてのみ登場します。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="machine_casing.html"><div class="cc-icon"><img src="../assets/item/machine_casing_3d.png" alt="マシンケース" width="40" height="40"></div><div class="cc-body"><div class="cc-title">マシンケース</div><div class="cc-desc">マシンケース は、マシンを組み立てる元になる基本ブロックです。8枚の鉄 板 から鍛造され（作業台で枠状）、その後LVマシンの本体になります。マシンのレシピはケース + 専用パーツです。これにより、インゴット → 板 → ケース → マシンという分かりやすいチェーンが構築されます。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="copper_coil.html"><div class="cc-icon"><img src="../assets/item/copper_coil_3d.png" alt="銅コイル" width="40" height="40"></div><div class="cc-body"><div class="cc-title">銅コイル</div><div class="cc-desc">銅コイル はクラフトコンポーネントです。銅ケーブルをスズの芯に巻き付けたものです。これはアイテムであり、ブロックではありません。レシピには材料としてのみ登場します。最初の用途は 電動ドリル で、そのレシピの最下段に2つのコイルが並びます。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="battery.html"><div class="cc-icon"><img src="../assets/item/battery_3d.png" alt="電池" width="40" height="40"></div><div class="cc-body"><div class="cc-title">電池</div><div class="cc-desc">電池 はモッド内で最初のエネルギー媒体です。2 000 EU/FE の小さな蓄電池で、充電・放電でき、束ねて持ち運べます。また、クラフトコンポーネントでもあり、電池から エネルギーパック、電動ドリル、ジェットパック、フラックス織の防具 などその他の電装アイテムが組み立てられます。</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="water_mill_wheel.html"><div class="cc-icon"><img src="../assets/item/water_mill_wheel_3d.png" alt="水車" width="40" height="40"></div><div class="cc-body"><div class="cc-title">水車</div><div class="cc-desc">水車 はクラフトコンポーネントで、水車…</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="windmill_rotor.html"><div class="cc-icon"><img src="../assets/item/windmill_rotor_3d.png" alt="風力タービンのローター" width="40" height="40"></div><div class="cc-body"><div class="cc-title">風力タービンのローター</div><div class="cc-desc">風力タービンのローター…</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="network_analyzer.html"><div class="cc-icon"><img src="../assets/item/network_analyzer_3d.png" alt="ネットワークアナライザー" width="40" height="40"></div><div class="cc-body"><div class="cc-title">ネットワークアナライザー</div><div class="cc-desc">ネットワークアナライザー は携帯型の診断ツールで、オペレーター権限のないプレイヤー向けの /ala net コマンドの親しみやすい代替です。エネルギーを生産も保存もせず、ネットワークで何が起きているかを表示するだけです。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="empty_chip.html"><div class="cc-icon"><img src="../assets/item/empty_chip_3d.png" alt="空のチップ" width="40" height="40"></div><div class="cc-body"><div class="cc-title">空のチップ</div><div class="cc-desc">空のチップ はクラフトコンポーネントで、機能的なアップグレードチップが構築される土台となるベースブランクです。これはアイテムであり、ブロックではありません。それ自体では何もせず、マシンのアップグレードスロットにも セットできません（スロットはこれを拒否します）。唯一の役割は、本物のチップが組み立てられる共通の出発点であり、最初の1つは 消音チップ です。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="alignment_chips.html"><div class="cc-icon"><img src="../assets/item/alignment_chip_day_3d.png" alt="太陽進化チップ" width="40" height="40"></div><div class="cc-body"><div class="cc-title">太陽進化チップ</div><div class="cc-desc">進化チップ は基本のT1形態をT2に変えるクラフトコンポーネントです。2つのバリアントがあります:</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="rubber.html"><div class="cc-icon"><img src="../assets/item/rubber_3d.png" alt="ゴム" width="40" height="40"></div><div class="cc-body"><div class="cc-title">ゴム</div><div class="cc-desc">ゴム は石油チェーンの最終産物です:</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="advanced_circuit.html"><div class="cc-icon"><img src="../assets/item/advanced_circuit_3d.png" alt="高度な回路" width="40" height="40"></div><div class="cc-body"><div class="cc-title">高度な回路</div><div class="cc-desc">高度な回路 は 電子回路 の第2段階であり、石油チェーンを最後まで進める初めてのパーツです。これはアイテムであり、ブロックではありません。MVティアのレシピでは材料としてのみ登場します。</div><div class="cc-badges"><span class="badge">MV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#94a3b8" href="advanced_machine_casing.html"><div class="cc-icon"><img src="../assets/item/advanced_machine_casing_3d.png" alt="高度なマシンケース" width="40" height="40"></div><div class="cc-body"><div class="cc-title">高度なマシンケース</div><div class="cc-desc">高度なマシンケース は マシンケース と同じですが、一段上の段階で、中程度（MV）レベルのマシンはこの上に組み立てられます。通常のケースに 6枚の 焼き入れ鉄 の板 を上下から覆い、両脇に 2つの 高度な回路 を配してクラフトします（MOD-299）。</div><div class="cc-badges"><span class="badge">MV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li>
+</ul><h2>その他のアイテム</h2><div class="item-showcase"><div class="item-showcase-card"><img src="../assets/item/windmill_rotor.png" alt="" width="64" height="64"><span>風力タービンのローター</span></div><div class="item-showcase-card"><img src="../assets/item/wooden_gear.png" alt="" width="64" height="64"><span>木の歯車</span></div></div>
+  </main>
+</div>
+
+</body>
+</html>

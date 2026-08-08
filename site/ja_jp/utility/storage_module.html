@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ja_jp" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>ストレージモジュール — Ala Industrial — ガイド</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="メニューを開く" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">日本語</summary><div class="language-popover"><span>日本語</span><a href="../../en/utility/storage_module.html">EN</a><a href="../../ru/utility/storage_module.html">RU</a><a href="../../uk/utility/storage_module.html">UA</a><a href="../../zh_cn/utility/storage_module.html">中文</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">ブラウズ</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>はじめに</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
+<div class="group-title">エネルギー</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="12 ページ">12</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">世界と自動化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="13 ページ">13</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">その他</div>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="10 ページ">10</span></a>
+<div class="group-title">アイテム</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="15 ページ">15</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="19 ページ">19</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../utility/index.html">ユーティリティ</a><span class="sep">/</span><span>ストレージモジュール</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../assets/item/storage_module_3d.png" alt="ストレージモジュール" width="64" height="64">
+    <div class="info">
+      <h1>ストレージモジュール</h1>
+      <div class="block-id">alaindustrial:storage_module</div>
+      <div class="tags"><span class="tag cat" style="background:#14b8a6">ユーティリティ</span><span class="tag lifecycle" style="background:#22c55e">実装済み</span><span class="tag">storage</span><span class="tag">multiblock</span><span class="tag">automation</span><span class="tag">utility</span></div>
+    </div>
+  </div>
+</div>
+<h2>概要</h2>
+
+<p><strong>ストレージモジュール</strong>は 27 スロットのブロックで、最大の特徴は <strong>隣接する仲間と結合できる</strong> ことです。 2 つのモジュールをぴったりと置けば、共通ウィンドウで 54 スロットの 1 つの収納になります。3 つで 81。 4 つで 108、これが上限です。</p>
+
+<p><strong>どの</strong> モジュールをクリックしても開きます：ウィンドウは常に倉庫全体を表示し、クリックした ブロックの 27 スロットだけを示すわけではありません。</p>
+
+<p>エネルギー不要、レッドストーン不要、形状は自由 — 壁、柱、L 字。唯一のルール：モジュールは <strong>面で</strong> 接しなければならず、辺や角ではありません。</p>
+
+<blockquote><strong>ミニ例：</strong> モジュールを置き、詰め切れなくなった。2 つ目を隣接して増設：どちらを開いても 中は 54 スロットの一覧。</blockquote>
+
+<h2>エネルギー</h2>
+
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>なし</td></tr><tr><td>バッファ（EU/FE）</td><td>0</td></tr><tr><td>最大入力（EU/FE/ティック）</td><td>n/a</td></tr><tr><td>最大出力（EU/FE/ティック）</td><td>n/a</td></tr><tr><td>EU/FE/ティック</td><td>0</td></tr></tbody></table>
+
+<p>モジュールはエネルギーネットワークに参加しません：EU/FE を伝導せず、ケーブルに接続されません。</p>
+
+<h2>インベントリ</h2>
+
+<table><thead><tr><th>スロット</th><th>受け入れ</th><th>数</th></tr></thead><tbody><tr><td>モジュールの収納</td><td>あらゆるアイテム</td><td>27（3 段 × 9）</td></tr></tbody></table>
+
+<p><strong>アイテムは物理的に置いたモジュールの中にあります。</strong> 共通の「メイン」インベントリはありません： 倉庫のウィンドウは全モジュールのインベントリを一覧できるビューであり、独立した収納ではありません。 ここから他の挙動が派生します：破壊時に何がドロップするか、チャンクがアンロードされた時に何が起きるか。</p>
+
+<h3>共通倉庫の積み上げ方</h3>
+
+<table><thead><tr><th>隣接モジュール数</th><th>倉庫のスロット</th><th>全段数</th><th>表示される段数</th><th>スクロール</th></tr></thead><tbody><tr><td>1</td><td>27</td><td>3</td><td>3</td><td>なし</td></tr><tr><td>2</td><td>54</td><td>6</td><td>6</td><td>なし（バーは非活性）</td></tr><tr><td>3</td><td>81</td><td>9</td><td>6</td><td>3 段</td></tr><tr><td>4</td><td>108</td><td>12</td><td>6</td><td>6 段</td></tr><tr><td>5 以上</td><td>108（上限）</td><td>12</td><td>6</td><td>6 段</td></tr></tbody></table>
+
+<p>スロットと段数は <strong>変わっていません</strong> — 変わったのはウィンドウだけです：6 段以上は表示せず、 残りは右側のスクロールバーで表示します。なぜ 6 段なのかは「バランス」の節で。</p>
+
+<h3>結合ルール</h3>
+
+<p>モジュールは、倉庫の別のモジュールに <strong>面で</strong> 接する場合に倉庫へ入ります。辺や角での接触は カウントされません — これで 2 つの独立した倉庫をぴったりと並べられます。 セットはウィンドウを開くたびに再計算されます：クリックしたモジュールから走査します。 何も記憶されないため、モジュールの設置や撤去は再構築を一切不要とします。 構造内にモジュールが 4 個より多い場合、走査順の最初の 4 個が倉庫に入ります。同じ構造の別の モジュールをクリックすると別の 4 個になる可能性があります — ウィンドウは接続されたモジュール数を 表示するため、見えます。</p>
+
+<h2>インターフェース</h2>
+
+<p>タイプ：container（<code>StorageModuleMenu</code>）、2 つのウィンドウサイズ：単体モジュールは <strong>3 段</strong>（176×166）、 それより大きい倉庫は <strong>6 段</strong>（195×220）。 <strong>スクロールバー</strong> — グリッドの右、パネル幅に追加された 19 px。マウスホイール、つまみのドラッグ、 レールのクリックに対応します。 2 モジュールの倉庫にはスクロール対象がなく、バーは <strong>非活性の色合い</strong> で描かれます。消えるのでは ありません：あるかないか分かりにくい要素より、見えて無効な方が読みやすいです。 <strong>Shift クリックは画面にない段にもアイテムを置きます。</strong> これは些細なことではありません：バニラの shift クリックはメニュースロットで動作し、ウィンドウには 6 段しかないため、「自明な」実装は倉庫の 中途で静かに止まり、半分空いているのに「満杯」と報告していました。 検索はありません — 108 スロットには小さすぎます。</p>
+
+<p><strong>何が同期されるか。</strong> <code>ContainerData</code> の 2 つの数値：倉庫の全段数と、ウィンドウが位置する段。 前者はクライアントがバーを描くのに必要で、後者はつまみを置くのに必要です。両方の所有者はサーバーです。 スクロール自体はバニラの で動き、ボタン番号が希望の最上段です。サーバーがそれを クランプするため、「500 段目を見せて」パケットが倉庫の範囲外を読むことはありません。</p>
+
+<p><strong>なぜビューであって、スロットの引っ越しかでないか。</strong> <code>Slot.x</code>/<code>Slot.y</code> は <code>public final</code> で、 メニューのスロットリストはネットワーク契約の一部です：<code>ClientboundContainerSetSlot</code> のインデックスは その中の位置であり、稼働中のメニュー下でリストを再構築するとクライアントを同期不全にします。 バニラで唯一のスクロール可能なショーケース（クリエイティブインベントリ）も同じ解決策です： スロットは動かず、動くのは後ろのコンテナが応答する対象です。</p>
+
+<h2>ブロックの性質</h2>
+
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>完全な立方体 16³</td></tr><tr><td>硬度</td><td>3.0</td></tr><tr><td>爆発耐性</td><td>6.0</td></tr><tr><td>ツール</td><td>ツルハシ</td></tr><tr><td>NBT ドロップ</td><td>false — 中身はアイテムに <strong>保存されない</strong></td></tr></tbody></table>
+
+<h3>外観：倉庫は 1 つのキャビネットに見える</h3>
+
+<p>モジュールは <strong>3 つの引き出し</strong> を持つ鋼のキャビネットです：ウィンドウに追加する 9 スロットの段につき 1 つの引き出し。上下は引き出示ではなく、奥まったサービスパネル付きの本体のスラブです。</p>
+
+<p>隣接するモジュールは <strong>外見的にも結合</strong> します。2 つのモジュールが接する面ではフレームが消えます： 引き出しの化粧板が継ぎ目を越えて続き、カバーが 1 つの天板に融合し、フレームは倉庫の外周にのみ残ります。 2×2 の壁は 6 引き出しの 1 つのキャビネットに、4 つ並びは 1 つの長いキャビネットに見えます。</p>
+
+<p><strong>結合した外観は、倉庫が 1 つであることを正確に意味します。</strong> 構造内のモジュールが 4 個を超えると <strong>すべて同時に</strong> フレームが戻り、構造は再び個別のキャビネットの集まりに見えます。これは化粧ではなく、 正確なシグナルです：そのような構造では倉庫はどのモジュールをクリックしたか次第（「結合ルール」参照） で決まり、どんな継ぎ目も 2 つのブロックが 1 つの収納であると保証できません。余分なモジュールを 外せば結合した外観が戻ります。</p>
+
+<p>辺や角での接触は機構も画像も結合させません：2 つの倉庫をぴったりと置けば、視覚的に別のままです。</p>
+
+<p><strong>どう描かれるか。</strong> 結合はブロックモデル自体に組み込まれ、その上に重ねられていません。各面は 重複しない矩形に分割されます — 各辺に 1 つの帯、カバーの四隅のピクセル 4 個、そして中央 — 各矩形はちょうど 1 回だけ描画されます：フレーム付きテクスチャからか、「開いた」テクスチャからか。 何も外側にずれず、何も何にも重ならないため、継ぎ目が別の平面で光ることも、段差ができることもありません。 初版では代わりにキューブの上に 0.1 ブロックずらしたパッチを置き、プレイヤーは天板に継ぎ目沿いの 盛り上がった帯と、パッチが終わる短い黒い線を見ていました。</p>
+
+<p>カバーのフレームの角は 2 つの辺にまたがるため、<strong>両方の</strong> 隣接がある場合にのみ外されます。 一方の辺に渡すことはできません：「北-南」の継ぎ目が西と東のフレームに 2 ピクセルの穴を開けます。</p>
+
+<p>ブロックステートと 21 個のモデルは <strong>生成</strong> され（<code>python tools/gen_storage_module_models.py</code>）、 ジェネレータ経由でのみ編集されます。<code>--check</code>（ と pre-commit に入る）はファイルを ジェネレータと照合し、別途シームレスさを証明します：各面の各ピクセルはちょうど 1 回描画され、 どの要素もブロックのボリュームを越えず、モデルから組み立てた壁と天板は、フレーム付きテクスチャ だけから作った「1 つの大きなキャビネット」のリファレンスとピクセル単位で一致します。</p>
+
+<p><strong>モジュールを破壊すると自身の中身だけがドロップします。</strong> 隣接モジュールは影響を受けません： アイテムはそこにあり、どこへも引っ越していません。</p>
+
+<p>構造の途中のモジュールを破壊すると、構造を単に分割します — 各部分は独立した倉庫になります。 切り離されたモジュール内のアイテムは <strong>ドロップしません</strong>：所定の位置にあり、接続が回復すると再び 共通ウィンドウに現れます。</p>
+
+<p>隣にある<a href="../machines/assembler.html">組立機</a>自体を破壊すると、プレイヤーに戻るのはその自身の中身だけ — 設計図キューと出力ゾーン — であり、モジュールには触れません（<code>TC-ASM-026</code> はドロップした数を 正確な数値として数え、損失も双重ドロップも見えます）。 倉庫解体時の容量カウンタはゼロまで下がり、マイナスに離れません（<code>TC-STOR-010</code> — <a href="https://github.com/AllTheMods/ATM-10/issues/2271">Functional Storage</a> の負のカウンタはクラッシュで終わっていました）。</p>
+
+<p><strong>パイプによる充填と取出しは、ポートの有無でなく転送で固定されています。</strong> <code>TC-STOR-012</code> は 16 個のインゴットをチェスト → パイプ → 倉庫へ、そして戻し、別途「ドライラン」（）が 何も動かさず、実際の操作が後に運ぶ量とちょうど同じ量を約束することを検証します — この 2 つの数の乖離こそ古典的な複製バグです（<a href="https://github.com/McJtyMods/XNet/issues/173">XNet #173</a>）。</p>
+
+<p><strong>中身は再読み込みを生き残ります。</strong> <code>TC-STOR-013</code> はモジュールを NBT 経由で（チャンクの保存と 読み込みと同じ経路で）駆動し、スロットがずれないことも検証します：2 つの占有スロットの間に意図的に 空けたスロットは空のままでなければなりません。</p>
+
+<h2>レシピ</h2>
+
+<p>クラフト： — <a href="../components/material_forms.html">鉄板</a> 4 個を バニラのチェストの周りに十字に。</p>
+
+<p>レシピは意図的に安価です：容量増設は進行の節目ではなく、消耗品です。</p>
+
+<h2>進行</h2>
+
+<p>ティア：なし — エネルギー不要、最初の板の直後に利用可能。 収納の系譜での位置：<a href="iron_chest.html">鉄のチェスト</a> 36 → <a href="silver_chest.html">銀のチェスト</a> 45 → <a href="gold_chest.html">金のチェスト</a> 54 → モジュールの 倉庫 108。チェストは価値を下げません：1 ブロックで全容量を与え、倉庫は 4 個を要します。 次：<a href="../machines/assembler.html">組立機</a>がこの倉庫から直接原料を取れるようになります。</p>
+
+<h2>関連項目</h2>
+
+<p><a href="gold_chest.html">金のチェスト</a> — 前段の収納 <a href="../components/material_forms.html">材料の形態</a> — クラフト用の板 <a href="stock_display_frame.html">在庫表示額縁</a> — アンロード済みチャンク対策の見本 <a href="../machines/assembler.html">組立機</a> — 倉庫の将来の消費者 <a href="../item-transport/item_pipe.html">アイテムパイプ</a> — 倉庫を外から充填</p>
+
+<h2>クラフト</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="ストレージモジュール alaindustrial:storage_module" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell empty"></div> <div class="cell" title="いずれかの鉄板"><img src="../assets/item/iron_plate_3d.png" alt="いずれかの鉄板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="いずれかの鉄板"><img src="../assets/item/iron_plate_3d.png" alt="いずれかの鉄板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Chest"><img src="../assets/item/chest_3d.png" alt="Chest" width="32" height="32"></div> <div class="cell" title="いずれかの鉄板"><img src="../assets/item/iron_plate_3d.png" alt="いずれかの鉄板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div> <div class="cell" title="いずれかの鉄板"><img src="../assets/item/iron_plate_3d.png" alt="いずれかの鉄板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="ストレージモジュール"><img src="../assets/item/storage_module_3d.png" alt="ストレージモジュール" width="32" height="32"></div><div class="result-name">ストレージモジュール</div></div></div></div></div>
+<h2>用途</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="組立機 alaindustrial:assembler" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="鉄の歯車"><img src="../assets/item/iron_gear_3d.png" alt="鉄の歯車" width="32" height="32"></div> <div class="cell" title="Crafting Table"><img src="../assets/item/crafting_table_3d.png" alt="Crafting Table" width="32" height="32"></div> <div class="cell" title="鉄の歯車"><img src="../assets/item/iron_gear_3d.png" alt="鉄の歯車" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="高度なマシンケース"><img src="../assets/item/advanced_machine_casing_3d.png" alt="高度なマシンケース" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="鉄の歯車"><img src="../assets/item/iron_gear_3d.png" alt="鉄の歯車" width="32" height="32"></div> <div class="cell" title="ストレージモジュール"><img src="../assets/item/storage_module_3d.png" alt="ストレージモジュール" width="32" height="32"></div> <div class="cell" title="鉄の歯車"><img src="../assets/item/iron_gear_3d.png" alt="鉄の歯車" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="組立機"><img src="../assets/item/assembler_3d.png" alt="組立機" width="32" height="32"></div><div class="result-name">組立機</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

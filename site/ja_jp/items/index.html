@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ja_jp" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>ゲームアイテム — Ala Industrial — ガイド</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="メニューを開く" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">日本語</summary><div class="language-popover"><span>日本語</span><a href="../../en/items/index.html">EN</a><a href="../../ru/items/index.html">RU</a><a href="../../uk/items/index.html">UA</a><a href="../../zh_cn/items/index.html">中文</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">ブラウズ</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>はじめに</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
+<div class="group-title">エネルギー</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="12 ページ">12</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">世界と自動化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="13 ページ">13</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">その他</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="10 ページ">10</span></a>
+<div class="group-title">アイテム</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="15 ページ">15</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="19 ページ">19</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><span>ゲームアイテム</span></div>
+<div class="block-card">
+  <img class="icon" src="../assets/item/battery_pouch.png" alt="" width="128" height="128">
+  <div class="info">
+    <h1>ゲームアイテム</h1>
+    <p style="color:var(--muted);margin:8px 0 0">電動アイテムと手持ち工具：バッテリーポーチ、焼き入れ鉄。</p>
+    <div class="tags"><span class="tag tier">19 ページ</span></div>
+  </div>
+</div>
+<ul class="concept-list">
+<li><a class="concept-card" style="--c:#d97706" href="forge_hammer.html"><div class="cc-icon"><img src="../assets/item/forge_hammer_3d.png" alt="鍛冶ハンマー" width="40" height="40"></div><div class="cc-body"><div class="cc-title">鍛冶ハンマー</div><div class="cc-desc">鍛造ハンマーは機械による自動化が現れる前に金属プレートを作るための早期段階の手動ツールです。作業台にハンマーとインゴットを置くと、その金属のプレートが得られます。ハンマーは材料として消費されず、クラフトグリッドに残り、プレートごとに 1 ポイント…</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="wrench.html"><div class="cc-icon"><img src="../assets/item/wrench_3d.png" alt="レンチ" width="40" height="40"></div><div class="cc-body"><div class="cc-title">レンチ</div><div class="cc-desc">レンチは消費されず、2つのことができます。アイテムパイプの面の向きを設定することと、本MODのブロックを解体することです。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="tempered_iron_pickaxe.html"><div class="cc-icon"><img src="../assets/item/tempered_iron_pickaxe_3d.png" alt="調質鉄のツルハシ" width="40" height="40"></div><div class="cc-body"><div class="cc-title">調質鉄のツルハシ</div><div class="cc-desc">焼き入れ鉄のツルハシは Ala Industrial MOD初の手動ツールです。MODの焼き入れ鉄から通常のツルハシのパターンで作業台でクラフトします。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="tempered_iron_tools.html"><div class="cc-icon"><img src="../assets/item/tempered_iron_axe_3d.png" alt="Tempered Iron Tools" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Tempered Iron Tools</div><div class="cc-desc">焼き入れ鉄の道具は Ala Industrial MODの5つの手持ちツールのセットです。ツルハシ、斧、クワ、シャベル、剣。それぞれがバニラの対応物と同じようにクラフトされますが、鉄インゴットの代わりにMODの焼き入れ鉄を使います。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="tempered_iron_armor.html"><div class="cc-icon"><img src="../assets/item/tempered_iron_chestplate_3d.png" alt="Tempered Iron Chestplate" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Tempered Iron Chestplate</div><div class="cc-desc">焼き入れ鉄の防具は4つのアイテムからなる完全なセットです。ヘルメット、チェストプレート、レギンス、ブーツ。各部位は対応する鉄製のものより耐久値が高く、焼き入れ鉄で修理できます（タグ tempered_iron_armor_materials 経由）。防御値は鉄よりわずかに高いですが、ダイヤモンドより低く、ゲーム序盤と終盤の中間に位置します。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="scythe.html"><div class="cc-icon"><img src="../assets/item/scythe_iron_3d.png" alt="Scythe" width="40" height="40"></div><div class="cc-body"><div class="cc-title">Scythe</div><div class="cc-desc">大鎌は装飾植被の迅速なクリアリングと収穫を行う手持ちツールです。ブロックを右クリックすると、前方の平らな範囲内の適切な植被——葉、草、花、シダ、キノコ、ツタ、根、苗木——をすべて刈り取り、各ブロックを手で壊したのと同じ通常ドロップを落とします。Shift を押しながらだと、大鎌が AOE…</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="battery_pouch.html"><div class="cc-icon"><img src="../assets/item/battery_pouch_3d.png" alt="バッテリーポーチ" width="40" height="40"></div><div class="cc-body"><div class="cc-title">バッテリーポーチ</div><div class="cc-desc">バッテリーポーチは本MOD初の電力アイテムです。バニラのバンドルと同じように使える携帯収納で、容量は2倍になり、充電が必要になります。インベントリのスロット1つ分だけで 128 の重さ のアイテム（一般的なブロックで約2スタック分）を収納でき、長距離遠征やインベントリが圧迫されがちな場面で重宝します。</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="vacuum_capsule.html"><div class="cc-icon"><img src="../assets/item/vacuum_capsule_3d.png" alt="真空カプセル" width="40" height="40"></div><div class="cc-body"><div class="cc-title">真空カプセル</div><div class="cc-desc">真空カプセルはスタック可能な液体コンテナです。バニラのバケツの問題を解決します。バケツはスタックできず、バケツごとにスロットを占めるため、大量の液体を運ぶのが不便です。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="electric_drill.html"><div class="cc-icon"><img src="../assets/item/electric_drill_3d.png" alt="電動ドリル" width="40" height="40"></div><div class="cc-body"><div class="cc-title">電動ドリル</div><div class="cc-desc">電動ドリルは本MOD初の手持ち電動ツールです。耐久値の代わりに EU/FE で動くダイヤモンドのツルハシです。ブロック1つあたりの充電が足りている間、ドリルはダイヤモンドのツルハシよりわずかに速く（速度 8.5 対 8.0、採掘レベルはダイヤモンド）採掘し、正常に破壊したブロックごとに 50 EU/FE を消費します。満充電時のバッファは 10 000 EU/FE…</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="electric_shovel.html"><div class="cc-icon"><img src="../assets/item/electric_shovel_3d.png" alt="電動シャベル" width="40" height="40"></div><div class="cc-body"><div class="cc-title">電動シャベル</div><div class="cc-desc">電動ショベルは本MOD3つ目の手持ち電動ツールで、電動ドリル（石）と電動チェーンソー（木）に続く土担当のツールです。耐久値の代わりに EU/FE で動作します。ブロック1つあたりの充電が足りている間、ショベルは #minecraft:mineable/shovel をダイヤモンドのシャベルより速く（速度 9.0 対 8.0）採掘し、正常に破壊したブロックごとに…</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="electric_chainsaw.html"><div class="cc-icon"><img src="../assets/item/electric_chainsaw_3d.png" alt="電動チェーンソー" width="40" height="40"></div><div class="cc-body"><div class="cc-title">電動チェーンソー</div><div class="cc-desc">電動チェーンソーは本MOD2つ目の手持ち電動ツールで、木材における電動ドリルの鏡像です。耐久値の代わりに EU/FE で動く斧です。ブロック1つあたりの充電が足りている間、チェーンソーは #minecraft:mineable/axe をダイヤモンドの斧より速く（速度 9.0 対 8.0）伐採し、正常に破壊したブロックごとに 30 EU/FE…</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="electric_hoe.html"><div class="cc-icon"><img src="../assets/item/electric_hoe_3d.png" alt="電動クワ" width="40" height="40"></div><div class="cc-body"><div class="cc-title">電動クワ</div><div class="cc-desc">電動クワは同ラインの4つ目で最後の手持ち電動ツールです。ドリル（石）、チェーンソー（木）、ショベル（土）に続いて、農地を担当します。契約は同じで、耐久値の代わりに EU/FE で動作し、壊れず、放電時は素手速度でフルドロップとともに動作し続けます。</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="electromagnet.html"><div class="cc-icon"><img src="../assets/item/electromagnet_3d.png" alt="電磁石" width="40" height="40"></div><div class="cc-body"><div class="cc-title">電磁石</div><div class="cc-desc">電磁石は EU/FE で充電できる利便性アイテムです。インベントリの任意のスロット（ホットバー／メイン／オフハンド）に配置され、周辺の落ちているドロップアイテムをプレイヤーに自動的に引き寄せます。坑内での鉱石ドロップ、爆発後の破片、他人の放置ドロップなどが対象です。これは ティア 1 で、5 ブロックの球状半径（上下・左右）を持ち、実際に移動したアイテムごとに…</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="energy_pack.html"><div class="cc-icon"><img src="../assets/item/energy_pack_3d.png" alt="エネルギーパック" width="40" height="40"></div><div class="cc-body"><div class="cc-title">エネルギーパック</div><div class="cc-desc">エネルギーパックは装着可能なエネルギーバッファです。チェストプレートのスロットに装備し、着用している間、毎秒インベントリ内のすべての電力アイテムを充電します。現在、そのようなアイテムはバッテリーポーチのみです。パックを背負えば、ポーチは遠征中にゼロまで放電してロックされることはありません。</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="jetpack.html"><div class="cc-icon"><img src="../assets/item/jetpack_3d.png" alt="ジェットパック" width="40" height="40"></div><div class="cc-body"><div class="cc-title">ジェットパック</div><div class="cc-desc">ジェットパックは飛行用の装着可能な EU/FE アイテムです。（防具の代わりに）チェストプレートのスロットを占め、30 000 EU/FE（jetpackBuffer）のバッファを搭載します。空中でジャンプを押し続けると、エンジンが上向きの推力を与え、50 EU/FE/ティック（jetpackEuPerTick）を消費します。満充電で約 30 秒間…</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="fluxweave_armor.html"><div class="cc-icon"><img src="../assets/item/fluxweave_chestplate_3d.png" alt="フラックス織のチェストプレート" width="40" height="40"></div><div class="cc-body"><div class="cc-title">フラックス織のチェストプレート</div><div class="cc-desc">フラックスウィーブ防具は本MOD初の完全な EU/FE セットであり、繊維 → フラックスの糸 → フラックス織布という連鎖の到達点です。これはタンクではなく、ユーティリティスーツです。防御は鉄レベルで、プレイヤーはアイテムに充電がある間オンになるボーナス一式のために支払います。</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="wind_gauge.html"><div class="cc-icon"><img src="../assets/item/wind_gauge_3d.png" alt="風速計" width="40" height="40"></div><div class="cc-body"><div class="cc-title">風速計</div><div class="cc-desc">風速計はエネルギー不要の手持ち機器です。建てるわけでも、何かを生産するわけでもありません。あなたが立っている地点の風速を示します。風力タービン用の塔を建設前に選ぶためであり、3回も解体して建て直すためではありません。</div><div class="cc-badges"><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="teleporter_remote.html"><div class="cc-icon"><img src="../assets/item/teleporter_remote_3d.png" alt="テレポーターリモコン" width="40" height="40"></div><div class="cc-body"><div class="cc-title">テレポーターリモコン</div><div class="cc-desc">テレポーターリモコンは携帯型ビーコンアイテムです。Shift+右クリックでテレポーター局とペアリングし、その後プレイヤーを局へジャンプさせます。リモコン自体は EU/FE を保持せず、ジャンプのエネルギーは充電されたターゲット局から差し引かれます。</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li><li><a class="concept-card" style="--c:#d97706" href="electric_saber.html"><div class="cc-icon"><img src="../assets/item/electric_saber_3d.png" alt="電動サーベル" width="40" height="40"></div><div class="cc-body"><div class="cc-title">電動サーベル</div><div class="cc-desc">電動サーベルは電力装備ラインの5つ目のアイテムで、初の武器です。ドリル（石）、チェーンソー（木）、ショベル（土）、クワ（農地）に続いて、戦闘の番です。ラインの契約は同じで、耐久値の代わりに EU/FE で動作し、壊れず、充電ゼロではオフになるのではなく性能が低下します。</div><div class="cc-badges"><span class="badge">LV</span><span class="badge" style="background:#22c55e;color:#0a0d12">実装済み</span></div></div></a></li>
+</ul><h2>その他のアイテム</h2><div class="item-showcase"><div class="item-showcase-card"><img src="../assets/item/tempered_iron_axe.png" alt="" width="64" height="64"><span>調質鉄の斧</span></div><div class="item-showcase-card"><img src="../assets/item/tempered_iron_shovel.png" alt="" width="64" height="64"><span>調質鉄のシャベル</span></div><div class="item-showcase-card"><img src="../assets/item/tempered_iron_hoe.png" alt="" width="64" height="64"><span>調質鉄のクワ</span></div><div class="item-showcase-card"><img src="../assets/item/tempered_iron_sword.png" alt="" width="64" height="64"><span>調質鉄の剣</span></div><div class="item-showcase-card"><img src="../assets/item/tempered_iron_helmet.png" alt="" width="64" height="64"><span>Tempered Iron Helmet</span></div><div class="item-showcase-card"><img src="../assets/item/tempered_iron_chestplate.png" alt="" width="64" height="64"><span>Tempered Iron Chestplate</span></div><div class="item-showcase-card"><img src="../assets/item/tempered_iron_leggings.png" alt="" width="64" height="64"><span>Tempered Iron Leggings</span></div><div class="item-showcase-card"><img src="../assets/item/tempered_iron_boots.png" alt="" width="64" height="64"><span>Tempered Iron Boots</span></div></div>
+  </main>
+</div>
+
+</body>
+</html>
