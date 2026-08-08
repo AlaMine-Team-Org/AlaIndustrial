@@ -77,10 +77,12 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 	private int scanCounter;
 	private boolean cachedInterfered;
 	/**
-	 * Current generation rate in EU/t, projected on sync channel 4 (MOD-348). Transient: it is recomputed
-	 * from the world every tick by {@link #produce}, so it is never serialised and never read off a client
-	 * block entity — the open screen gets it through the menu's {@link ContainerData} sync, not through the
-	 * block-entity update packet.
+	 * Effective generation rate in EU/t, projected on sync channel 4 (MOD-348). "Effective" = after
+	 * {@link Config#globalEuRateMultiplier} (MOD-356), i.e. the rate the buffer gains while it has room,
+	 * rather than {@link #produce}'s mechanical output. Transient: it is recomputed every tick — see
+	 * {@link #publishEffectiveRate} — so it is never serialised and never read off a client block entity;
+	 * the open screen gets it through the menu's {@link ContainerData} sync, not through the block-entity
+	 * update packet.
 	 */
 	private int productionRate;
 
@@ -136,7 +138,7 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 			// No wheel → nothing rendered, nothing to clash with. Force a rescan when a wheel returns.
 			cachedInterfered = false;
 			scanCounter = 0;
-			setState(0, MODE_OK, 0);
+			setState(0, MODE_OK);
 			return 0;
 		}
 		Direction facing = state.hasProperty(HorizontalMachineBlock.FACING)
@@ -157,23 +159,23 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 		scanCounter++;
 		if (obstructed) {
 			// Wheel hidden by the renderer, generation halted until the blocking block is removed.
-			setState(0, MODE_OBSTRUCTED, 0);
+			setState(0, MODE_OBSTRUCTED);
 			return 0;
 		}
 		if (cachedInterfered) {
 			// Wheel hidden by the renderer, generation halted — both interfering mills stall (symmetric).
-			setState(0, MODE_INTERFERENCE, 0);
+			setState(0, MODE_INTERFERENCE);
 			return 0;
 		}
 		int sides = waterSides(level, pos, facing);
 		if (sides == 0) {
 			// Wheel present and free, but no current reaches it: show the "no water" hint instead of a
 			// silent idle (MOD-179 feedback) — the player sees exactly what is missing.
-			setState(0, MODE_NO_WATER, 0);
+			setState(0, MODE_NO_WATER);
 			return 0;
 		}
 		int made = WaterMillOutput.euFor(sides, Config.waterMillEuPerTick);
-		setState(sides, MODE_OK, made);
+		setState(sides, MODE_OK);
 		// Wheel wear (MOD-189): wear accrues only while the wheel actually turns water into EU (made > 0).
 		// No weather stress on the water mill, so the multiplier is a flat 1.0.
 		wearComponent(level, pos, WHEEL_SLOT, made, 1.0f, Config.waterMillWheelEuPerDamage);
@@ -206,19 +208,26 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 	 * chunk-load value (usually 0) — the wheel would freeze or stay visible during interference. Sync only
 	 * on change, so a steady water setup does not spam block updates (mirrors the wind-mill rotor fix).
 	 */
-	private void setState(int sides, int mode, int rate) {
-		// The rate (MOD-348) is assigned unconditionally and deliberately left OUT of the change test
-		// below: it reaches an open screen through the menu's ContainerData sync, which runs every tick
-		// on its own, and no client-side consumer reads it off the block entity. Including it would only
-		// widen the block-update trigger — and it could not widen it in practice anyway, since
-		// rate == waterMillEuPerTick × sides moves in lockstep with `sides`. Every early return in
-		// produce() routes through here with rate 0, so a mill that stops never leaves a stale reading.
-		this.productionRate = rate;
+	private void setState(int sides, int mode) {
 		if (this.progress != sides || this.maxProgress != mode) {
 			this.progress = sides;
 			this.maxProgress = mode;
 			syncBlockEntityToClient();
 		}
+	}
+
+	/**
+	 * The mill's readout rides channel 4 (MOD-348), which since MOD-356 carries the <b>effective</b> rate —
+	 * {@link #produce}'s mechanical output after {@link Config#globalEuRateMultiplier}, i.e. the rate the
+	 * buffer gains while it has room. Assigned unconditionally and deliberately kept out of {@link #setState}'s
+	 * change test: it reaches an open screen through the menu's ContainerData sync, which runs every tick
+	 * on its own, and no client-side consumer reads it off the block entity, so folding it into the test
+	 * would only widen the block-update trigger. The base generator calls this every tick — including with
+	 * 0 on every early return in {@code produce()} — so a mill that stops never leaves a stale reading.
+	 */
+	@Override
+	protected void publishEffectiveRate(int effectiveEuPerTick) {
+		this.productionRate = effectiveEuPerTick;
 	}
 
 	/**
@@ -228,8 +237,8 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 	public static final int DATA_COUNT = 5;
 
 	/**
-	 * Five-wide data: the shared base 0..3 (energy, capacity, water-face count, mode) plus the current
-	 * production rate on channel 4 (MOD-348).
+	 * Five-wide data: the shared base 0..3 (energy, capacity, water-face count, mode) plus the effective
+	 * production rate on channel 4 (MOD-348, made post-multiplier by MOD-356).
 	 *
 	 * <p><b>Why the rate needs a channel of its own.</b> Channel 2 already carries the <em>water-face
 	 * count</em> (0..4), which {@code WaterMillWheelBlockEntityRenderer} turns into the wheel's angular

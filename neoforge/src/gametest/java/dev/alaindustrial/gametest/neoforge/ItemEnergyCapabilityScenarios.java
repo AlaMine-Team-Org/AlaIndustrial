@@ -1,11 +1,13 @@
 package dev.alaindustrial.gametest.neoforge;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.gametest.PoweredItemCatalog;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.neoforge.ModItemsNeoForge;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
@@ -13,6 +15,9 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * L2 functional bodies for the NeoForge half of the cross-mod item energy bridge (MOD-084, suite
@@ -92,6 +97,61 @@ public final class ItemEnergyCapabilityScenarios {
 		}
 		if (ItemEnergy.get(pack) != Config.energyPackBuffer - budget) {
 			helper.fail("the pack must be debited exactly what the foreign item took");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Mirrors TC-XMOD-001-REG01 on the NeoForge lane (MOD-372) — EVERY powered item of the mod is
+	 * reachable through {@code Capabilities.Energy.ITEM} and really takes a first insert into its own
+	 * {@code pouch_energy}. The expected set comes from {@link PoweredItemCatalog} (registry ∩
+	 * {@code ItemEnergy.capacity > 0}), never from the literal list inside
+	 * {@code IndustrializationNeoForge}: a guard reading the list under test could only confirm itself.
+	 * The case id is claimed by the Fabric twin; see {@link #fun01ForeignChargerFillsPouch}.
+	 */
+	public static void reg01EveryPoweredItemExposesCapability(GameTestHelper helper) {
+		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+		List<Item> powered = PoweredItemCatalog.poweredItems();
+		if (powered.size() < PoweredItemCatalog.MIN_POWERED_ITEMS) {
+			helper.fail("the powered-item roster collapsed to " + powered.size() + " item(s) — expected at"
+					+ " least " + PoweredItemCatalog.MIN_POWERED_ITEMS + "; a guard over a shrunken set"
+					+ " proves nothing. Found: " + PoweredItemCatalog.idsOf(powered));
+			return;
+		}
+		List<String> broken = new ArrayList<>();
+		for (Item item : powered) {
+			player.getInventory().setItem(0, new ItemStack(item));
+			EnergyHandler handler = handlerInSlotZero(player);
+			if (handler == null) {
+				broken.add(PoweredItemCatalog.idOf(item) + " (no Capabilities.Energy.ITEM)");
+				continue;
+			}
+			long expectedEu = PoweredItemCatalog.expectedFirstInsert(item);
+			if (expectedEu <= 0L) {
+				// An item with a buffer but no input rate is chargeable by nothing at all. Asserting
+				// "inserted 0 == expected 0" below would wave it through — see expectedFirstInsert.
+				broken.add(PoweredItemCatalog.idOf(item) + " (input rate 0 — nothing can charge it)");
+				continue;
+			}
+			// The offer is deliberately far above the ceiling. Keep the multiply in long and clamp: the
+			// NeoForge API takes an int, and an overflowed negative would throw instead of failing the
+			// assertion the Fabric twin makes.
+			int expected = (int) Math.min(expectedEu, Integer.MAX_VALUE);
+			int offered = (int) Math.min(expectedEu * 100L, Integer.MAX_VALUE);
+			int inserted;
+			try (Transaction transaction = Transaction.openRoot()) {
+				inserted = handler.insert(offered, transaction);
+				transaction.commit();
+			}
+			long charge = ItemEnergy.get(player.getInventory().getItem(0));
+			if (inserted != expected || charge != expected) {
+				broken.add(PoweredItemCatalog.idOf(item) + " (inserted " + inserted + ", charge " + charge
+						+ ", expected " + expected + ")");
+			}
+		}
+		if (!broken.isEmpty()) {
+			helper.fail("every powered item must be chargeable by a foreign mod (MOD-084) — broken: "
+					+ String.join(", ", broken));
 		}
 		helper.succeed();
 	}

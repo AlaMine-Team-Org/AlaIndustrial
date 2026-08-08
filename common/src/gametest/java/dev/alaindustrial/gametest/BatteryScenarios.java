@@ -337,6 +337,82 @@ public final class BatteryScenarios {
 	}
 
 	/**
+	 * BATTERY-09 — upgrading a charged drill carries its EU into the upgrade (MOD-373).
+	 *
+	 * <p>The other charge-transfer scenarios all feed the grid <em>batteries</em>. This one is the case
+	 * that slipped through MOD-083 precisely because it has none: the energy carrier is the player's own
+	 * tool. The recipe accepted a charged drill from day one — a vanilla {@code Ingredient} ignores
+	 * components — and burned every EU in it, up to a full 10 000 buffer, silently.
+	 *
+	 * <p>The recipe is taken out of the {@code RecipeManager} rather than built here, so this goes red if
+	 * the JSON ever reverts to {@code minecraft:crafting_shaped} — which is the whole point of the test.
+	 */
+	public static void battery09DrillUpgradeCarriesChargeIntoResult(GameTestHelper helper) {
+		Optional<RecipeHolder<?>> found = helper.getLevel().getServer().getRecipeManager()
+				.byKey(ResourceKey.create(Registries.RECIPE, Industrialization.id("electric_drill_diamond_tip")));
+		if (found.isEmpty()) {
+			helper.fail("electric_drill_diamond_tip recipe not loaded — cannot test charge transfer");
+			return;
+		}
+		if (!(found.get().value() instanceof CraftingRecipe recipe)) {
+			helper.fail("electric_drill_diamond_tip recipe is not a crafting recipe");
+			return;
+		}
+		long charge = Config.electricDrillBuffer;
+		if (charge <= 0) {
+			helper.fail("the drill's configured buffer is " + charge + " — this test would prove nothing");
+			return;
+		}
+		ItemStack drill = new ItemStack(ModContent.ELECTRIC_DRILL.get());
+		ItemEnergy.set(drill, charge);
+		// The real 3×3 layout: DDD / IUI / _G_ — filled completely, so matches() is exercised too and the
+		// test proves a CHARGED drill still satisfies the recipe, not just that the arithmetic works.
+		List<ItemStack> grid = new ArrayList<>(List.of(
+				new ItemStack(ModContent.DIAMOND_DUST.get()), new ItemStack(ModContent.DIAMOND_DUST.get()),
+				new ItemStack(ModContent.DIAMOND_DUST.get()),
+				new ItemStack(ModContent.INVAR_INGOT.get()), drill, new ItemStack(ModContent.INVAR_INGOT.get()),
+				ItemStack.EMPTY, new ItemStack(ModContent.SILVER_GEAR.get()), ItemStack.EMPTY));
+		CraftingInput input = CraftingInput.of(3, 3, grid);
+		if (!recipe.matches(input, helper.getLevel())) {
+			helper.fail("recipe refuses a grid whose drill is charged — components must be ignored");
+			return;
+		}
+		ItemStack result = recipe.assemble(input);
+		if (result.isEmpty()) {
+			helper.fail("recipe assembled nothing");
+			return;
+		}
+		// The upgrade is a subclass of the base drill, so ItemEnergy gives it the same 10 000 buffer and
+		// the clamp cannot bite. Asserted rather than assumed: a future buffer split would make the
+		// expected value wrong, and a test that quietly re-derived it from the result would never notice.
+		long capacity = ItemEnergy.capacity(result);
+		if (capacity != charge) {
+			helper.fail("the upgrade's buffer is " + capacity + " EU, expected the base drill's " + charge
+					+ " — the expected transfer below is no longer a full one");
+			return;
+		}
+		long carried = ItemEnergy.get(result);
+		if (carried != charge) {
+			helper.fail("upgrading a drill charged to " + charge + " EU produced " + carried
+					+ " EU — the charge is being burned instead of carried over");
+			return;
+		}
+		// And an empty drill has to give exactly the item it always did: no charge component at all,
+		// otherwise fresh upgrades would stop being interchangeable with crafted-from-empty ones.
+		grid.set(4, new ItemStack(ModContent.ELECTRIC_DRILL.get()));
+		ItemStack plain = recipe.assemble(CraftingInput.of(3, 3, new ArrayList<>(grid)));
+		if (ItemEnergy.get(plain) != 0) {
+			helper.fail("upgrading a drained drill produced a charged result: " + ItemEnergy.get(plain));
+			return;
+		}
+		if (!ItemStack.matches(plain, new ItemStack(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get()))) {
+			helper.fail("upgrading a drained drill no longer gives the plain item: " + plain.getComponents());
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
 	 * BATTERY-06 — the battery is excluded from automatic charging.
 	 *
 	 * <p>A worn Energy Pack holds 20 000 EU and a full stack of batteries holds 32 000: without the tag

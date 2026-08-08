@@ -24,6 +24,7 @@ import dev.alaindustrial.gametest.StorageClusterScenarios;
 import dev.alaindustrial.gametest.WorldContentScenarios;
 import dev.alaindustrial.gametest.CapsuleScenarios;
 import dev.alaindustrial.gametest.GeothermalLavaInputScenarios;
+import dev.alaindustrial.gametest.ElectricChainsawScenarios;
 import dev.alaindustrial.gametest.ElectricDrillScenarios;
 import dev.alaindustrial.gametest.ElectricSaberScenarios;
 import dev.alaindustrial.gametest.MagnetScenarios;
@@ -173,6 +174,8 @@ public final class NeoForgeGameTests {
 				BatteryScenarios::battery07RepeatedAssemblyDoesNotAccumulate);
 		registerTest(event, "battery_assembler_carries_charge", 40, true,
 				BatteryScenarios::battery08AssemblerCarriesChargeThrough);
+			registerTest(event, "battery_drill_upgrade_carries_charge", 40, true,
+					BatteryScenarios::battery09DrillUpgradeCarriesChargeIntoResult);
 		// Teleporter station (MOD-091): its face roles and its teleporter_private data component are
 		// per-loader seams (energy adapter + frozen-registry), so the Fabric suite cannot vouch for them.
 		registerTest(event, "teleporter_face_roles", 40, true,
@@ -384,6 +387,16 @@ public final class NeoForgeGameTests {
 		// Wind mill: thunder multiplies the rate on a raised rig (weather wiring end-to-end).
 		registerTest(event, "wind_mill_thunder_multiplies_rate", 120, true,
 				GeneratorEnergyScenarios::windMillThunderMultipliesRate);
+
+		// MOD-356: the GUI readout must equal what the buffer actually gains under a retuned
+		// globalEuRateMultiplier — and on the wind mill, channel 2 must stay the mechanical rate the
+		// rotor renderer spins on.
+		registerTest(event, "solar_panel_readout_matches_buffer_gain", 60, true,
+				GeneratorEnergyScenarios::solarPanelReadoutMatchesBufferGain);
+		registerTest(event, "wind_mill_readout_matches_buffer_gain", 120, true,
+				GeneratorEnergyScenarios::windMillReadoutMatchesBufferGain);
+		registerTest(event, "t2_wind_mill_readouts_match_buffer_gain", 120, true,
+				GeneratorEnergyScenarios::t2WindMillReadoutsMatchBufferGain);
 
 		// Generator: full buffer pauses burn (R-NRG-11, no fuel waste) + exact EU/t rate (canon 8).
 		registerTest(event, "generator_full_buffer_pauses_burn", 40, true,
@@ -680,6 +693,10 @@ public final class NeoForgeGameTests {
 				ItemEnergyCapabilityScenarios::neg01ForeignMachineCannotDrain);
 		registerTest(event, "xmod_pack_charges_foreign_item", 40, true,
 				ItemEnergyCapabilityScenarios::fun02PackChargesForeignItem);
+		// MOD-372: the roster guard — every powered item of the mod must be reachable through
+		// Capabilities.Energy.ITEM, not just the ones someone remembered to add to the literal list.
+		registerTest(event, "xmod_every_powered_item_exposes_capability", 40, true,
+				ItemEnergyCapabilityScenarios::reg01EveryPoweredItemExposesCapability);
 		registerTest(event, "pack_worn_asset_follows_charge", 40, true, EnergyPackScenarios::fun06WornAssetFollowsCharge);
 		registerTest(event, "pack_inventory_tick_transfers", 60, true, EnergyPackScenarios::fun07InventoryTickDrivesTransfer);
 		registerTest(event, "pack_component_charge_fixes_look", 40, true, EnergyPackScenarios::fun08ChargedByComponentFixesItsLook);
@@ -744,6 +761,13 @@ public final class NeoForgeGameTests {
 		registerTest(event, "drill_diamond_tip_speed_and_tier", 40, true, ElectricDrillScenarios::fun10DiamondTipSpeedAndTier);
 		registerTest(event, "drill_diamond_tip_silk_toggle", 40, true, ElectricDrillScenarios::fun11DiamondTipSilkToggle);
 		registerTest(event, "drill_upgrade_recipe_any_state", 40, true, ElectricDrillScenarios::fun12UpgradeRecipeAcceptsAnyDrillState);
+
+		// MOD-374 (TC-CHAINSAW-001-FUN01..03): the chainsaw's diamond-tipped upgrade cuts faster at the
+		// same tier, its sneak-toggled Silk Touch mode flips the real leaf loot table both ways, and the
+		// base chainsaw stays free of the mode entirely.
+		registerTest(event, "chainsaw_diamond_tip_speed_and_tier", 40, true, ElectricChainsawScenarios::fun01DiamondTipSpeedAndTier);
+		registerTest(event, "chainsaw_diamond_tip_silk_toggle_leaves", 40, true, ElectricChainsawScenarios::fun02DiamondTipSilkToggleOnLeaves);
+		registerTest(event, "chainsaw_base_has_no_silk_mode", 40, true, ElectricChainsawScenarios::fun03BaseChainsawHasNoSilkMode);
 
 		// MOD-132 Electromagnet (suite TC-MAGNET-001) — same neutral bodies as the Fabric MagnetGameTest.
 		registerTest(event, "magnet_pulls_nearby_drop", 40, true, MagnetScenarios::fun01PullsNearbyDrop);
@@ -1244,6 +1268,12 @@ public final class NeoForgeGameTests {
 				WaterMillWheelScenarios::waterMillWheel_noWearWhileDry);
 		registerTest(event, "water_mill_production_rate_channel_tracks_output", 40, true,
 				WaterMillWheelScenarios::waterMill_productionRateChannelTracksOutput);
+		registerTest(event, "water_mill_production_rate_channel_follows_global_multiplier", 40, true,
+				WaterMillWheelScenarios::waterMill_productionRateChannelFollowsGlobalMultiplier);
+		registerTest(event, "water_mill_readout_keeps_floor_under_tiny_multiplier", 40, true,
+				WaterMillWheelScenarios::waterMill_readoutKeepsFloorUnderTinyMultiplier);
+		registerTest(event, "water_mill_wheel_wear_follows_mechanical_rate", 40, true,
+				WaterMillWheelScenarios::waterMillWheel_wearFollowsMechanicalRateNotMultiplier);
 		registerTest(event, "water_mill_block_neighbours_do_not_drive_wheel", 40, true,
 				WaterMillWheelScenarios::waterMill_blockNeighboursDoNotDriveWheel);
 		registerTest(event, "water_mill_all_four_wheel_cells_drive", 40, true,

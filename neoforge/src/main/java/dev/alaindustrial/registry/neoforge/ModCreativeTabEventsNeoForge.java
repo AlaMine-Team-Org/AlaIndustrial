@@ -65,6 +65,10 @@ public final class ModCreativeTabEventsNeoForge {
 			event.accept(ModContent.ENERGY_PACK.get());
 			event.accept(ModContent.ELECTRIC_DRILL.get());
 			event.accept(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get());
+			// MOD-374: mirrors the Fabric list, which already accepts the chainsaw here. (The base
+			// chainsaw, shovel and hoe are still Fabric-only in this vanilla tab — a pre-existing
+			// asymmetry left alone deliberately; the mod's own tab carries all of them on both loaders.)
+			event.accept(ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP.get());
 			event.accept(ModContent.ELECTROMAGNET.get());
 			event.accept(ModContent.JETPACK.get());
 		} else if (event.getTabKey().equals(VanillaCreativeTabs.INGREDIENTS)) {

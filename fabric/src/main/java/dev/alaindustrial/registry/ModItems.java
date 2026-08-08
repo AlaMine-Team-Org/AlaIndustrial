@@ -2,6 +2,7 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
+import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
@@ -184,6 +185,10 @@ public final class ModItems {
 	public static final Item ELECTRIC_DRILL_DIAMOND_TIP = electricDrillDiamondTip("electric_drill_diamond_tip");
 	// Electric Chainsaw (MOD-337): the drill's wood-side counterpart — an EU axe for logs and leaves.
 	public static final Item ELECTRIC_CHAINSAW = electricChainsaw("electric_chainsaw");
+	// Diamond-Tipped Electric Chainsaw (MOD-374): the chainsaw's upgrade tier — faster, with a
+	// switchable Silk Touch mode that drops leaves as blocks.
+	public static final Item ELECTRIC_CHAINSAW_DIAMOND_TIP =
+			electricChainsawDiamondTip("electric_chainsaw_diamond_tip");
 	// Electric Shovel (MOD-338): the earth-side member of the same line — an EU shovel for loose ground.
 	public static final Item ELECTRIC_SHOVEL = electricShovel("electric_shovel");
 	// Electric Hoe (MOD-342): the farming member of the same line — an EU hoe that tills for free.
@@ -428,6 +433,16 @@ public final class ModItems {
 						ElectricChainsawItem.electricChainsawProperties(new Item.Properties().setId(key))));
 	}
 
+	// Diamond-Tipped Electric Chainsaw (MOD-374). Same shape as the base chainsaw above, with its own
+	// properties factory (higher cutting speed); the Silk Touch mode is per-stack state, not a property.
+	private static Item electricChainsawDiamondTip(String path) {
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
+		return Registry.register(BuiltInRegistries.ITEM, key,
+				new ElectricChainsawDiamondTipItem(
+						ElectricChainsawDiamondTipItem.electricChainsawDiamondTipProperties(
+								new Item.Properties().setId(key))));
+	}
+
 	// Electric Shovel (MOD-338). Same shape as the two above — a plain-Item subclass whose properties
 	// come from a common static factory (hand-built TOOL component + EU-item bar, no MAX_DAMAGE; see
 	// ElectricShovelItem.electricShovelProperties for why it is not a ShovelItem).
@@ -663,6 +678,7 @@ public final class ModItems {
 					output.accept(ModContent.ELECTRIC_DRILL.get());
 					output.accept(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get());
 					output.accept(ModContent.ELECTRIC_CHAINSAW.get());
+					output.accept(ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP.get());
 					output.accept(ModContent.ELECTRIC_SHOVEL.get());
 					output.accept(ModContent.ELECTRIC_HOE.get());
 					output.accept(ModContent.ELECTROMAGNET.get());
@@ -747,6 +763,7 @@ public final class ModItems {
 		ModContent.ELECTRIC_DRILL = () -> ELECTRIC_DRILL;
 		ModContent.ELECTRIC_DRILL_DIAMOND_TIP = () -> ELECTRIC_DRILL_DIAMOND_TIP;
 		ModContent.ELECTRIC_CHAINSAW = () -> ELECTRIC_CHAINSAW;
+		ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP = () -> ELECTRIC_CHAINSAW_DIAMOND_TIP;
 		ModContent.ELECTRIC_SHOVEL = () -> ELECTRIC_SHOVEL;
 		ModContent.ELECTRIC_HOE = () -> ELECTRIC_HOE;
 		ModContent.ELECTRIC_SABER = () -> ELECTRIC_SABER;

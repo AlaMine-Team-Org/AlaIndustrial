@@ -26,6 +26,7 @@ import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.item.misc.MutationGrades;
 import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.item.tool.AnalyzerMode;
+import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
@@ -361,6 +362,16 @@ public final class MachineTooltips {
 		} else {
 			lines.add(Component.translatable("tooltip.alaindustrial.electric_chainsaw.charge", eu, cap)
 					.withStyle(ChatFormatting.GOLD));
+		}
+		// MOD-374: the diamond-tipped upgrade adds its Silk Touch state. Shown in BOTH states on purpose —
+		// while the mode is on vanilla already prints "Silk Touch I" from the real enchantment, but with it
+		// off nothing would hint that the toggle exists at all.
+		if (stack.getItem() instanceof ElectricChainsawDiamondTipItem) {
+			boolean silk = ElectricChainsawDiamondTipItem.isSilkMode(stack);
+			lines.add(Component.translatable(silk
+					? "tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_on"
+					: "tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_off")
+					.withStyle(silk ? ChatFormatting.AQUA : ChatFormatting.GRAY));
 		}
 	}
 

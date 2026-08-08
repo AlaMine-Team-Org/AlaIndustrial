@@ -10,10 +10,14 @@ import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
 import team.reborn.energy.api.EnergyStorage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * L2 functional suite for the Fabric half of the cross-mod item energy bridge (MOD-084, suite
@@ -117,6 +121,63 @@ public class ItemEnergyCapabilityGameTest {
 		}
 		if (ItemEnergy.get(pack) != Config.energyPackBuffer) {
 			helper.fail("a pack with nothing to charge must not lose EU");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-XMOD-001-REG01 — EVERY powered item of the mod is reachable through
+	 *             {@code EnergyStorage.ITEM} and really takes a first insert into its own
+	 *             {@code pouch_energy} (MOD-372). The per-operation ceiling itself is pinned by the
+	 *             independent literal in FUN01; here the amount is derived, see
+	 *             {@link PoweredItemCatalog#expectedFirstInsert}.
+	 *
+	 *             <p>The bridge is wired by naming items in a literal list inside
+	 *             {@code StackAsEnergyStorage.register()}, and that list fell behind the item roster
+	 *             twice — chainsaw, shovel, hoe and saber shipped with specs promising foreign charging
+	 *             and nothing behind it. The expected set therefore comes from
+	 *             {@link PoweredItemCatalog} (registry ∩ {@code ItemEnergy.capacity > 0}), never from the
+	 *             list under test: a guard reading the same literal could only ever confirm itself.
+	 */
+	@GameTest
+	public void tcXmod001Reg01_everyPoweredItemExposesCapability(GameTestHelper helper) {
+		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+		List<Item> powered = PoweredItemCatalog.poweredItems();
+		if (powered.size() < PoweredItemCatalog.MIN_POWERED_ITEMS) {
+			helper.fail("the powered-item roster collapsed to " + powered.size() + " item(s) — expected at"
+					+ " least " + PoweredItemCatalog.MIN_POWERED_ITEMS + "; a guard over a shrunken set"
+					+ " proves nothing. Found: " + PoweredItemCatalog.idsOf(powered));
+			return;
+		}
+		List<String> broken = new ArrayList<>();
+		for (Item item : powered) {
+			player.getInventory().setItem(0, new ItemStack(item));
+			EnergyStorage storage = storageInSlotZero(player);
+			if (storage == null) {
+				broken.add(PoweredItemCatalog.idOf(item) + " (no EnergyStorage.ITEM)");
+				continue;
+			}
+			long expected = PoweredItemCatalog.expectedFirstInsert(item);
+			if (expected <= 0L) {
+				// An item with a buffer but no input rate is chargeable by nothing at all. Asserting
+				// "inserted 0 == expected 0" below would wave it through — see expectedFirstInsert.
+				broken.add(PoweredItemCatalog.idOf(item) + " (input rate 0 — nothing can charge it)");
+				continue;
+			}
+			long inserted;
+			try (Transaction transaction = Transaction.openOuter()) {
+				inserted = storage.insert(expected * 100L, transaction);
+				transaction.commit();
+			}
+			long charge = ItemEnergy.get(player.getInventory().getItem(0));
+			if (inserted != expected || charge != expected) {
+				broken.add(PoweredItemCatalog.idOf(item) + " (inserted " + inserted + ", charge " + charge
+						+ ", expected " + expected + ")");
+			}
+		}
+		if (!broken.isEmpty()) {
+			helper.fail("every powered item must be chargeable by a foreign mod (MOD-084) — broken: "
+					+ String.join(", ", broken));
 		}
 		helper.succeed();
 	}

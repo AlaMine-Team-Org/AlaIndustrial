@@ -55,9 +55,11 @@ import net.minecraft.world.level.storage.ValueOutput;
  * <p>Height/sky/weather are not sampled every tick: a transient tick counter recomputes the rate every
  * {@link Config#windMillSampleTicks} ticks and {@link #produce} returns the cached rate in between.
  *
- * <p>Sync channels: 0 energy, 1 capacity, 2 production (EU/t), 3 mode, 4 evolution progress
- * (permille 0..1000), 5 denominator (constant 1000). Permille avoids the 16-bit DataSlot overflow
- * that {@code windMillEvolveTicks} = 33 600 would otherwise cause (mirrors SolarPanelBlockEntity).
+ * <p>Sync channels: 0 energy, 1 capacity, 2 mechanical rate (EU/t — also the rotor's spin speed),
+ * 3 mode, 4 evolution progress (permille 0..1000), 5 denominator (constant 1000), 6 effective rate
+ * (EU/t after {@link Config#globalEuRateMultiplier} — the number the GUI prints, MOD-356). Permille
+ * avoids the 16-bit DataSlot overflow that {@code windMillEvolveTicks} = 33 600 would otherwise cause
+ * (mirrors SolarPanelBlockEntity).
  *
  * <p>Mode codes: {@code no_rotor} (no rotor), {@code roofed} (no open sky), {@code obstructed}
  * (a block stalls the blades), {@code interference} (a neighbouring mill's rotor disc overlaps ours,
@@ -92,6 +94,17 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	private int cachedRate = 0;
 	private int cachedMode = MODE_NO_ROTOR;
 	private boolean cachedInterfered = false;
+
+	/**
+	 * Effective EU/t for the GUI readout (MOD-356): {@link #cachedRate} after
+	 * {@link Config#globalEuRateMultiplier}, i.e. what actually reaches the buffer. Kept apart from
+	 * {@code cachedRate}/{@code progress} because channel 2 doubles as the rotor's spin speed, and an
+	 * EU-economy knob must not make the blades visibly turn faster (the same MOD-189 line that keeps
+	 * rotor wear on the mechanical rate). Transient: recomputed every tick by the base generator and
+	 * delivered to an open screen through the menu's ContainerData sync, so it is never serialised and
+	 * never read off a client block entity.
+	 */
+	private int effectiveRate = 0;
 
 	private int evolveProgress;
 
@@ -206,6 +219,15 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	}
 
 	/**
+	 * The mill's readout rides {@link #RATE_CHANNEL}, not channel 2: channel 2 stays the mechanical rate
+	 * because {@code WindMillRotorBlockEntityRenderer} turns it into the blades' angular speed (MOD-356).
+	 */
+	@Override
+	protected void publishEffectiveRate(int effectiveEuPerTick) {
+		this.effectiveRate = effectiveEuPerTick;
+	}
+
+	/**
 	 * Map the current sky/obstruction/rate/weather state to a GUI mode code. Order is the priority of
 	 * failure reasons: a roofed mill is dead for a more fundamental reason (no sky at all) than an
 	 * obstructed one, so ROOFED masks OBSTRUCTED — the player should fix the roof first. Obstruction
@@ -265,15 +287,26 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	}
 
 	/**
-	 * Six-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so {@code WindMillBlockEntity.DATA_COUNT}
+	 * Seven-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so {@code WindMillBlockEntity.DATA_COUNT}
 	 * names this machine's width for the bridge below and for {@code WindMillMenu}'s client stub (MOD-235).
 	 */
-	public static final int DATA_COUNT = 6;
+	public static final int DATA_COUNT = 7;
+
+	/** Channel carrying the effective (post-multiplier) EU/t the GUI prints — see {@link #effectiveRate}. */
+	public static final int RATE_CHANNEL = 6;
 
 	/**
-	 * Six-wide data: base 0..3 plus evolution progress (4) and denominator (5), mirroring
-	 * SolarPanelBlockEntity. The evolution channels are scaled to <b>permille (0..1000)</b> to stay
-	 * 16-bit-DataSlot-safe.
+	 * Seven-wide data: base 0..3 plus evolution progress (4), denominator (5) and the effective
+	 * generation rate (6), mirroring SolarPanelBlockEntity. The evolution channels are scaled to
+	 * <b>permille (0..1000)</b> to stay 16-bit-DataSlot-safe.
+	 *
+	 * <p><b>Why the rate needs a channel of its own (MOD-356).</b> Channel 2 carries the <em>mechanical</em>
+	 * rate, which {@code WindMillRotorBlockEntityRenderer} turns into the blades' angular speed via
+	 * {@code Math.min(production, 16)} — so it cannot also carry the post-multiplier number without an
+	 * EU-economy knob speeding up the rotor and, past ~2×, pinning it to that cap so wind strength stops
+	 * reading off the spin at all. Scaling on the client instead is not an option either: {@link Config}
+	 * is loaded per side and never synced, so a dedicated server with a retuned multiplier would feed
+	 * every client a number from its own local config file. Same split, same reasons, as the water mill.
 	 */
 	private final ContainerData windMillData = new ContainerData() {
 		@Override
@@ -282,13 +315,14 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 				case 4 -> evolveProgress <= 0 ? 0
 						: Math.max(1, (int) Math.min((long) evolveProgress * 1000 / Config.windMillEvolveTicks, 1000));
 				case 5 -> 1000;
+				case RATE_CHANNEL -> effectiveRate;
 				default -> WindMillBlockEntity.this.dataAccess.get(index);
 			};
 		}
 
 		@Override
 		public void set(int index, int value) {
-			if (index != 4 && index != 5) {
+			if (index != 4 && index != 5 && index != RATE_CHANNEL) {
 				WindMillBlockEntity.this.dataAccess.set(index, value);
 			}
 		}

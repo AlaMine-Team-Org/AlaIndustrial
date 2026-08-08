@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricChainsawItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
@@ -233,6 +234,12 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<ElectricChainsawItem> ELECTRIC_CHAINSAW =
 			ITEMS.registerItem("electric_chainsaw", ElectricChainsawItem::new,
 					ElectricChainsawItem::electricChainsawProperties);
+	// Diamond-Tipped Electric Chainsaw (MOD-374): the chainsaw's upgrade tier — faster, with a
+	// switchable Silk Touch mode that drops leaves as blocks. Same wiring as the base chainsaw; the
+	// properties factory differs only in the cutting speed.
+	public static final DeferredItem<ElectricChainsawDiamondTipItem> ELECTRIC_CHAINSAW_DIAMOND_TIP =
+			ITEMS.registerItem("electric_chainsaw_diamond_tip", ElectricChainsawDiamondTipItem::new,
+					ElectricChainsawDiamondTipItem::electricChainsawDiamondTipProperties);
 	// Electric Shovel (MOD-338): the earth-side member of the same line — an EU shovel for loose ground.
 	// Same wiring; the properties factory carries the shovel TOOL rules.
 	public static final DeferredItem<ElectricShovelItem> ELECTRIC_SHOVEL =
@@ -554,6 +561,7 @@ public final class ModItemsNeoForge {
 		ModContent.ELECTRIC_DRILL = ELECTRIC_DRILL::get;
 		ModContent.ELECTRIC_DRILL_DIAMOND_TIP = ELECTRIC_DRILL_DIAMOND_TIP::get;
 		ModContent.ELECTRIC_CHAINSAW = ELECTRIC_CHAINSAW::get;
+		ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP = ELECTRIC_CHAINSAW_DIAMOND_TIP::get;
 		ModContent.ELECTRIC_SHOVEL = ELECTRIC_SHOVEL::get;
 		ModContent.ELECTRIC_HOE = ELECTRIC_HOE::get;
 		ModContent.ELECTRIC_SABER = ELECTRIC_SABER::get;

@@ -92,10 +92,19 @@ public class MoonlitSolarPanelBlockEntity extends AbstractGeneratorBlockEntity i
 				}
 			}
 		}
-		// Surface production rate + mode to the GUI via the generic sync channels.
-		this.progress = production;
+		// Surface the mode to the GUI via the generic sync channel; the rate is published separately below.
 		this.maxProgress = mode;
 		return production;
+	}
+
+	/**
+	 * Rate on channel 2 ({@code progress}), written after the global multiplier rather than inside
+	 * {@link #produce} so the GUI shows the rate the buffer gains while it has room (MOD-356). Mirrors the
+	 * T1 panel: no renderer or sound gate reads channel 2 on a panel, so it doubles as the readout channel.
+	 */
+	@Override
+	protected void publishEffectiveRate(int effectiveEuPerTick) {
+		this.progress = effectiveEuPerTick;
 	}
 
 	@Override

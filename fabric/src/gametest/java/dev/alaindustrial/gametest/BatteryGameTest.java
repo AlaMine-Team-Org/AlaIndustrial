@@ -77,4 +77,13 @@ public class BatteryGameTest {
 	public void tcBattery001Fun08_assemblerCarriesChargeThrough(GameTestHelper helper) {
 		BatteryScenarios.battery08AssemblerCarriesChargeThrough(helper);
 	}
+
+	/**
+	 * @implements TC-BATTERY-001-FUN09 — upgrading a charged Electric Drill to the diamond tip carries
+	 *     its EU into the upgrade instead of burning it (MOD-373).
+	 */
+	@GameTest
+	public void tcBattery001Fun09_drillUpgradeCarriesChargeIntoResult(GameTestHelper helper) {
+		BatteryScenarios.battery09DrillUpgradeCarriesChargeIntoResult(helper);
+	}
 }

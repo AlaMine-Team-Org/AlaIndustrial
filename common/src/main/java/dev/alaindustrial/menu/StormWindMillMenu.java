@@ -21,7 +21,8 @@ public class StormWindMillMenu extends MachineMenu {
 	/** Client side. */
 	public StormWindMillMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.STORM_WIND_MILL_MENU.get(), syncId, playerInventory, new SimpleContainer(1 + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(MachineBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.STORM_WIND_MILL.get());
+				new SimpleContainerData(StormWindMillBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
+				ModContent.STORM_WIND_MILL.get());
 	}
 
 	@Override
@@ -49,9 +50,13 @@ public class StormWindMillMenu extends MachineMenu {
 		return 154;
 	}
 
-	/** Current production rate (EU/t), carried on the progress channel. */
+	/**
+	 * Effective production rate (EU/t) — the rate the buffer gains while it has room, i.e. after
+	 * {@link dev.alaindustrial.Config#globalEuRateMultiplier}. It rides its own channel rather than the
+	 * progress channel, which stays the mechanical rate that drives the rotor's spin speed (MOD-356).
+	 */
 	public int getProductionRate() {
-		return getProgress();
+		return data.get(StormWindMillBlockEntity.RATE_CHANNEL);
 	}
 
 	/** Wind mode: 0 no rotor, 1 roofed, 2 calm, 3 breeze, 4 gale, 5 storm. */

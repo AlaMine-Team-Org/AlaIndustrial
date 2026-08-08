@@ -521,11 +521,18 @@ public final class IndustrializationNeoForge {
 
 		// MOD-084: item-side energy capability on the mod's powered items, so other mods' chargers can
 		// fill them. Insert-only — see StackAsEnergyHandler.
+		// The list must cover EVERY powered item: it is hand-written and twice fell behind the item list
+		// (MOD-372). ItemEnergyCapabilityScenarios.reg01EveryPoweredItemExposesCapability derives the
+		// expected set from ItemEnergy.capacity(stack) > 0 and reddens the lane on the next omission.
 		event.registerItem(Capabilities.Energy.ITEM,
 				(stack, access) -> new dev.alaindustrial.core.neoforge.StackAsEnergyHandler(access),
 				ModItemsNeoForge.BATTERY_POUCH.get(), ModItemsNeoForge.BATTERY.get(),
 				ModItemsNeoForge.ENERGY_PACK.get(),
 				ModItemsNeoForge.ELECTRIC_DRILL.get(), ModItemsNeoForge.ELECTRIC_DRILL_DIAMOND_TIP.get(),
+				ModItemsNeoForge.ELECTRIC_CHAINSAW.get(),
+				ModItemsNeoForge.ELECTRIC_CHAINSAW_DIAMOND_TIP.get(),
+				ModItemsNeoForge.ELECTRIC_SHOVEL.get(), ModItemsNeoForge.ELECTRIC_HOE.get(),
+				ModItemsNeoForge.ELECTRIC_SABER.get(),
 				ModItemsNeoForge.ELECTROMAGNET.get(),
 				ModItemsNeoForge.JETPACK.get(),
 				ModItemsNeoForge.FLUXWEAVE_HELMET.get(), ModItemsNeoForge.FLUXWEAVE_CHESTPLATE.get(),

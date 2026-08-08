@@ -382,6 +382,16 @@ sourceSets {
     gametest {
         compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
     }
+    // MOD-362 — the visual-test toolkit (dev.alaindustrial.visual: pixel maths, missing-texture
+    // detection, diff rendering) lives in `gametest` so it never ships, but it is pure Minecraft-free
+    // logic and therefore MUST be unit-testable from L1. Without this line `common/src/test` cannot
+    // see it and the toolkit would be the one piece of test infrastructure nobody tests — exactly the
+    // "the ruler itself is unmeasured" gap MOD-362 closes. The dependency is one-way: gametest knows
+    // nothing about test.
+    test {
+        compileClasspath += sourceSets.gametest.output
+        runtimeClasspath += sourceSets.gametest.output
+    }
 }
 
 // Keep the gametest sources type-checked by the ordinary :common lifecycle — without this,

@@ -75,6 +75,22 @@ loom {
             if (devTitle != null && !devTitle.toString().isBlank()) {
                 vmArg("-Dalaindustrial.devtitle=${devTitle}")
             }
+            // MOD-362 — CI provenance for the shot manifest. Without it every frame is stamped
+            // commit=unknown, which makes an archived run impossible to trace back to a build:
+            //   ./gradlew :fabric:runClientGameTest -Pshotcommit=$GITHUB_SHA
+            def shotCommit = project.findProperty("shotcommit")
+            if (shotCommit != null && !shotCommit.toString().isBlank()) {
+                vmArg("-Dalaindustrial.commit=${shotCommit}")
+            }
+            // MOD-362 — CI only, game-test runs only. Fabric documents its client-gametest network
+            // synchronizer as failing specifically on GitHub Actions runners; this flag is the
+            // upstream-documented workaround. It cannot be passed from the workflow, because loom builds
+            // the run configuration here — so without this line the nightly `visual` job would die
+            // before the first frame. Matched by name rather than named('...') because the run
+            // configuration is created by loom's configureTests and its exact id is not ours to assume.
+            if (System.getenv("CI") != null && name.toLowerCase().contains("gametest")) {
+                vmArg("-Dfabric.client.gametest.disableNetworkSynchronizer=true")
+            }
         }
     }
 }

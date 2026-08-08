@@ -4,6 +4,9 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
+import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
+import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.registry.ModContent;
@@ -13,6 +16,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -463,6 +467,235 @@ public final class GeneratorEnergyScenarios {
 			return;
 		}
 		helper.succeed();
+	}
+
+	// ── MOD-356: the GUI readout must equal what the buffer actually gains ─────────────────────────
+
+	/**
+	 * A solar panel's readout channel must carry the <b>effective</b> rate — the EU the buffer really
+	 * gains — not {@code produce()}'s mechanical figure from before {@link Config#globalEuRateMultiplier}.
+	 *
+	 * <p><b>Why the multiplier override is load-bearing.</b> At the shipped default of 1.0 the two numbers
+	 * are identical, which is exactly why this bug shipped: every existing generator test is green while
+	 * the GUI on a retuned server shows half (or a third) of the truth. Driving at 2.0 separates them —
+	 * on the pre-fix code the panel gains 2 EU in the measured tick while the channel still reads 1.
+	 *
+	 * <p>The buffer is zeroed and exactly ONE tick is measured, so "what the channel says" and "what the
+	 * buffer gained" are the same tick's numbers rather than an average over a window.
+	 */
+	public static void solarPanelReadoutMatchesBufferGain(GameTestHelper helper) {
+		float savedMultiplier = Config.globalEuRateMultiplier;
+		try {
+			Config.globalEuRateMultiplier = 2.0f;
+			helper.setBlock(SOLAR, ModContent.SOLAR_PANEL.get());
+			setClearDay(helper);
+			if (!(be(helper, SOLAR) instanceof dev.alaindustrial.block.entity.SolarPanelBlockEntity panel)) {
+				helper.fail("solar panel block entity missing");
+				return;
+			}
+			ServerLevel level = helper.getLevel();
+			BlockState state = level.getBlockState(panel.getBlockPos());
+			// One warm-up tick populates the sky/weather cache, then measure a single clean tick.
+			panel.serverTick(level, panel.getBlockPos(), state);
+			panel.getEnergyStorage().amount = 0;
+			panel.serverTick(level, panel.getBlockPos(), state);
+
+			long gained = panel.getEnergyStorage().getAmount();
+			int shown = panel.getDataAccess().get(2);
+			if (gained <= 0) {
+				helper.fail("solar panel gained no EU in the measured tick — the rig is not generating,"
+						+ " so this test could never catch a wrong readout");
+				return;
+			}
+			if (gained == Config.solarEuPerTick) {
+				helper.fail("globalEuRateMultiplier=2.0 did not reach the buffer (gained " + gained
+						+ " EU, the mechanical rate) — the readout comparison below would be vacuous");
+				return;
+			}
+			if (shown != gained) {
+				helper.fail("solar panel readout says " + shown + " EU/t but the buffer gained " + gained
+						+ " EU in the same tick (globalEuRateMultiplier=2.0)");
+				return;
+			}
+			helper.succeed();
+		} finally {
+			Config.globalEuRateMultiplier = savedMultiplier;
+		}
+	}
+
+	/**
+	 * The wind mill's readout must equal the buffer gain, <b>and</b> channel 2 must stay the mechanical
+	 * rate. Both halves matter: the mill is the one generator where the rate channel is not free, because
+	 * {@code WindMillRotorBlockEntityRenderer} turns channel 2 into the blades' angular speed. Publishing
+	 * the multiplied number there would fix the text and break the picture — an EU-economy knob would make
+	 * the rotor visibly spin faster and, past ~2×, pin it to the renderer's {@code min(rate, 16)} cap so
+	 * wind strength stops reading off the spin at all. So the fix has to split the two, and this test
+	 * fails if either half regresses.
+	 *
+	 * <p>The last leg covers the {@code max(1, ...)} floor: at a multiplier small enough to round the rate
+	 * to zero, a mill that is genuinely turning must still report at least 1 EU/t, never 0.
+	 */
+	public static void windMillReadoutMatchesBufferGain(GameTestHelper helper) {
+		float savedMultiplier = Config.globalEuRateMultiplier;
+		try {
+			WindMillBlockEntity mill = placeWindRaised(helper);
+			if (mill == null) {
+				helper.fail("raised wind mill block entity missing");
+				return;
+			}
+			ServerLevel level = helper.getLevel();
+			BlockPos pos = mill.getBlockPos();
+			level.getWeatherData().setRaining(false);
+			level.getWeatherData().setThundering(false);
+			level.setRainLevel(0.0f);
+
+			// Warm the sampling cache at the shipped multiplier and read off the mechanical rate.
+			Config.globalEuRateMultiplier = 1.0f;
+			int warmUp = Math.max(1, Config.windMillSampleTicks);
+			for (int i = 0; i < warmUp; i++) {
+				mill.serverTick(level, pos, level.getBlockState(pos));
+			}
+			int mechanical = mill.getDataAccess().get(2);
+			if (mechanical <= 0) {
+				helper.fail("raised wind mill produced nothing over " + warmUp + " ticks — raise the rig"
+						+ " further so the height base is above 0, otherwise this test cannot fail");
+				return;
+			}
+
+			// ×2 — one measured tick.
+			Config.globalEuRateMultiplier = 2.0f;
+			mill.getEnergyStorage().amount = 0;
+			mill.serverTick(level, pos, level.getBlockState(pos));
+			long gained = mill.getEnergyStorage().getAmount();
+			if (gained != mechanical * 2L) {
+				helper.fail("globalEuRateMultiplier=2.0 did not reach the buffer: gained " + gained
+						+ " EU on a mechanical rate of " + mechanical + " (expected " + (mechanical * 2L) + ")");
+				return;
+			}
+			int shown = mill.getDataAccess().get(WindMillBlockEntity.RATE_CHANNEL);
+			if (shown != gained) {
+				helper.fail("wind mill readout says " + shown + " EU/t but the buffer gained " + gained
+						+ " EU in the same tick (globalEuRateMultiplier=2.0)");
+				return;
+			}
+			int rotorChannel = mill.getDataAccess().get(2);
+			if (rotorChannel != mechanical) {
+				helper.fail("channel 2 changed to " + rotorChannel + " under a 2.0 multiplier (mechanical rate is "
+						+ mechanical + ") — it drives the rotor's spin speed and must stay mechanical,"
+						+ " an EU-economy knob may not speed up the blades");
+				return;
+			}
+
+			// Floor: a multiplier small enough to round to zero still reports a turning mill as ≥ 1 EU/t.
+			Config.globalEuRateMultiplier = 0.1f;
+			mill.getEnergyStorage().amount = 0;
+			mill.serverTick(level, pos, level.getBlockState(pos));
+			long floorGain = mill.getEnergyStorage().getAmount();
+			int floorShown = mill.getDataAccess().get(WindMillBlockEntity.RATE_CHANNEL);
+			if (floorGain < 1) {
+				helper.fail("a turning mill credited " + floorGain + " EU at multiplier 0.1 — the max(1, ...)"
+						+ " floor is gone");
+				return;
+			}
+			if (floorShown != floorGain) {
+				helper.fail("at multiplier 0.1 the readout says " + floorShown + " EU/t but the buffer gained "
+						+ floorGain + " EU — the floor must apply to the readout too, never showing 0"
+						+ " while the mill turns");
+				return;
+			}
+			helper.succeed();
+		} finally {
+			Config.globalEuRateMultiplier = savedMultiplier;
+		}
+	}
+
+	/**
+	 * The same readout contract on both <b>T2</b> mills, which MOD-356 gave a {@code ContainerData} bridge
+	 * of their own — before it they had none and inherited the base four channels.
+	 *
+	 * <p>Without this the two riskiest pieces of that commit were untested: a wrong {@code RATE_CHANNEL}
+	 * index or a forgotten {@code publishEffectiveRate} override would leave the bridge serving a silent 0,
+	 * and nothing else would notice — the T2 mills have no other L2 coverage at all, and the width guard in
+	 * {@code MenuDataWidthScenarios} checks how many channels there are, never what is in them.
+	 *
+	 * <p>The two mills are exercised one after another on the same pillar (the second replaces the first)
+	 * rather than side by side: two rotor discs within the same scan cube would trip the MOD-051
+	 * interference rule and stall both.
+	 */
+	public static void t2WindMillReadoutsMatchBufferGain(GameTestHelper helper) {
+		float savedMultiplier = Config.globalEuRateMultiplier;
+		try {
+			for (int y = 2; y < WIND_RAISED.getY(); y++) {
+				helper.setBlock(new BlockPos(WIND_RAISED.getX(), y, WIND_RAISED.getZ()), Blocks.GLASS);
+			}
+			ServerLevel level = helper.getLevel();
+			level.getWeatherData().setRaining(false);
+			level.getWeatherData().setThundering(false);
+			level.setRainLevel(0.0f);
+			if (!assertT2Readout(helper, ModContent.HIGH_ALTITUDE_WIND_MILL.get(),
+					HighAltitudeWindMillBlockEntity.RATE_CHANNEL, "high-altitude wind mill")) {
+				return;
+			}
+			if (!assertT2Readout(helper, ModContent.STORM_WIND_MILL.get(),
+					StormWindMillBlockEntity.RATE_CHANNEL, "storm wind mill")) {
+				return;
+			}
+			helper.succeed();
+		} finally {
+			Config.globalEuRateMultiplier = savedMultiplier;
+		}
+	}
+
+	/**
+	 * Place {@code block} on the shared pillar with a rotor, then assert its rate channel equals the buffer
+	 * gain at a 2.0 multiplier while channel 2 stays mechanical. Returns false once it has failed the test.
+	 */
+	private static boolean assertT2Readout(GameTestHelper helper, Block block, int rateChannel, String label) {
+		ServerLevel level = helper.getLevel();
+		helper.setBlock(WIND_RAISED, block);
+		MachineBlockEntity mill = helper.getBlockEntity(WIND_RAISED, MachineBlockEntity.class);
+		if (mill == null) {
+			helper.fail(label + ": block entity missing");
+			return false;
+		}
+		// Slot 0 is ROTOR_SLOT on both T2 branches (they declare it separately, same index as the T1 mill).
+		mill.setItem(0, new ItemStack(ModContent.WINDMILL_ROTOR.get()));
+
+		Config.globalEuRateMultiplier = 1.0f;
+		int warmUp = Math.max(1, Config.windMillSampleTicks);
+		for (int i = 0; i < warmUp; i++) {
+			mill.serverTick(level, WIND_RAISED, level.getBlockState(WIND_RAISED));
+		}
+		int mechanical = mill.getDataAccess().get(2);
+		if (mechanical <= 0) {
+			helper.fail(label + ": produced nothing over " + warmUp + " ticks — raise the rig further,"
+					+ " otherwise this test cannot fail");
+			return false;
+		}
+
+		Config.globalEuRateMultiplier = 2.0f;
+		mill.getEnergyStorage().amount = 0;
+		mill.serverTick(level, WIND_RAISED, level.getBlockState(WIND_RAISED));
+		long gained = mill.getEnergyStorage().getAmount();
+		if (gained != mechanical * 2L) {
+			helper.fail(label + ": multiplier 2.0 banked " + gained + " EU on a mechanical rate of "
+					+ mechanical + " (expected " + (mechanical * 2L) + ")");
+			return false;
+		}
+		int shown = mill.getDataAccess().get(rateChannel);
+		if (shown != gained) {
+			helper.fail(label + ": readout channel " + rateChannel + " says " + shown
+					+ " EU/t but the buffer gained " + gained + " EU in the same tick");
+			return false;
+		}
+		if (mill.getDataAccess().get(2) != mechanical) {
+			helper.fail(label + ": channel 2 became " + mill.getDataAccess().get(2) + " under a 2.0 multiplier"
+					+ " (mechanical rate is " + mechanical + ") — it drives the rotor's spin speed and must"
+					+ " stay mechanical on the T2 branches too");
+			return false;
+		}
+		helper.setBlock(WIND_RAISED, Blocks.AIR); // free the pillar for the next mill (MOD-051 interference)
+		return true;
 	}
 
 	// ── scenario 15: generator full buffer pauses burn (R-NRG-11) ──────────────────────────────────

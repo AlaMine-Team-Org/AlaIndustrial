@@ -283,6 +283,10 @@ public final class ModContent {
 	public static Supplier<Item> ELECTRIC_DRILL_DIAMOND_TIP = unbound("ELECTRIC_DRILL_DIAMOND_TIP");
 	// Electric Chainsaw (MOD-337) — the drill's wood-side counterpart: an EU axe for logs and leaves.
 	public static Supplier<Item> ELECTRIC_CHAINSAW = unbound("ELECTRIC_CHAINSAW");
+	// Diamond-Tipped Electric Chainsaw (MOD-374) — the chainsaw's upgrade tier: faster, with a
+	// switchable Silk Touch mode that makes leaves drop as blocks. Shares the base chainsaw's EU
+	// buffer and charging behaviour.
+	public static Supplier<Item> ELECTRIC_CHAINSAW_DIAMOND_TIP = unbound("ELECTRIC_CHAINSAW_DIAMOND_TIP");
 	// Electric Shovel (MOD-338) — the earth-side member of the same line: an EU shovel for loose ground.
 	public static Supplier<Item> ELECTRIC_SHOVEL = unbound("ELECTRIC_SHOVEL");
 	// Electric Hoe (MOD-342) — the farming member of the same line: an EU hoe that tills for free.

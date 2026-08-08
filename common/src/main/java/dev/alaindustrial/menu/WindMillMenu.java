@@ -66,9 +66,13 @@ public class WindMillMenu extends MachineMenu {
 		return 154;
 	}
 
-	/** Current production rate (EU/t), carried on the progress channel. */
+	/**
+	 * Effective production rate (EU/t) — the rate the buffer gains while it has room, i.e. after
+	 * {@link dev.alaindustrial.Config#globalEuRateMultiplier}. It rides its own channel rather than the
+	 * progress channel, which stays the mechanical rate that drives the rotor's spin speed (MOD-356).
+	 */
 	public int getProductionRate() {
-		return getProgress();
+		return data.get(WindMillBlockEntity.RATE_CHANNEL);
 	}
 
 	/** Wind mode: 0 no rotor, 1 roofed, 2 calm, 3 breeze, 4 gale, 5 storm; carried on the maxProgress channel. */
@@ -87,8 +91,13 @@ public class WindMillMenu extends MachineMenu {
 	}
 
 	/**
-	 * Visual regression test helper — injects all six ContainerData fields without a server-side
+	 * Visual regression test helper — injects all seven ContainerData fields without a server-side
 	 * block entity. Only call this from client-game-test code.
+	 *
+	 * <p>{@code production} lands on both rate channels: channel 2 (mechanical — what a rotor renderer
+	 * would spin from) and {@link WindMillBlockEntity#RATE_CHANNEL} (effective — what the screen prints).
+	 * A shot taken through this helper therefore stands for a server at the default multiplier, where the
+	 * two are equal; pass the post-multiplier number if you need to photograph a retuned one.
 	 */
 	public void injectWindMillTestData(int energy, int capacity, int production, int mode,
 			int evolveProgress, int evolveMax) {
@@ -98,5 +107,6 @@ public class WindMillMenu extends MachineMenu {
 		data.set(3, mode);
 		data.set(4, evolveProgress);
 		data.set(5, evolveMax);
+		data.set(WindMillBlockEntity.RATE_CHANNEL, production);
 	}
 }

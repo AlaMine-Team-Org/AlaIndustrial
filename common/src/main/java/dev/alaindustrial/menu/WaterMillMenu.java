@@ -24,11 +24,11 @@ public class WaterMillMenu extends MachineMenu {
 	}
 
 	/**
-	 * Current generation in EU/t, carried on channel 4 (MOD-348). Unlike the wind mill and the solar
-	 * panels — whose rate rides the {@code progress} channel — the water mill's channel 2 is taken by the
-	 * water-face count the wheel renderer spins on, so the rate needed a channel of its own; see
-	 * {@link WaterMillBlockEntity#DATA_COUNT}. Like those generators, this is the mechanical rate before
-	 * {@code Config.globalEuRateMultiplier} is applied.
+	 * Effective generation in EU/t, carried on channel 4 (MOD-348) — the rate the buffer gains while it
+	 * has room, i.e. after {@code Config.globalEuRateMultiplier} (MOD-356). Unlike the solar panels — whose rate
+	 * rides the {@code progress} channel — the water mill's channel 2 is taken by the water-face count the
+	 * wheel renderer spins on, so the rate needed a channel of its own; see
+	 * {@link WaterMillBlockEntity#DATA_COUNT}. The wind mills split theirs for the same reason.
 	 */
 	public int getProductionRate() {
 		return data.get(4);

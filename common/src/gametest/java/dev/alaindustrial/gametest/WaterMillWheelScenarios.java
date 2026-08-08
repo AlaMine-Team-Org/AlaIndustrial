@@ -691,6 +691,151 @@ public final class WaterMillWheelScenarios {
 		}
 	}
 
+	/**
+	 * MOD-356: channel 4 must carry the <b>effective</b> rate — what the buffer really gains — not
+	 * {@code produce()}'s mechanical figure from before {@link Config#globalEuRateMultiplier}.
+	 *
+	 * <p>Both overrides are load-bearing. The multiplier at 2.0 separates the mechanical rate from the
+	 * credited one (at the shipped 1.0 they are equal, which is why the bug went unnoticed); 3 EU per face
+	 * keeps the rate distinct from the face count on channel 2, so a regression that collapses the two
+	 * channels back together cannot pass. On the pre-fix code the mill banks 6 EU in the measured tick
+	 * while channel 4 still reads 3.
+	 */
+	public static void waterMill_productionRateChannelFollowsGlobalMultiplier(GameTestHelper helper) {
+		int savedPerSide = Config.waterMillEuPerTick;
+		float savedMultiplier = Config.globalEuRateMultiplier;
+		try {
+			Config.waterMillEuPerTick = 3;
+			Config.globalEuRateMultiplier = 2.0f;
+			WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
+			driveOneSide(helper);
+			AlaGameTestHelper.drive(mill, helper, 3);
+
+			mill.getEnergyStorage().amount = 0;
+			AlaGameTestHelper.drive(mill, helper, 1);
+			long gained = mill.getEnergyStorage().getAmount();
+			int shown = mill.getDataAccess().get(4);
+			if (gained != 6) {
+				helper.fail("one driven side at 3 EU/face and multiplier 2.0 banked " + gained
+						+ " EU in a tick, expected 6 — the readout comparison below would be vacuous");
+				return;
+			}
+			if (shown != gained) {
+				helper.fail("water mill readout says " + shown + " EU/t but the buffer gained " + gained
+						+ " EU in the same tick (globalEuRateMultiplier=2.0)");
+				return;
+			}
+			int faces = mill.getDataAccess().get(2);
+			if (faces != 1) {
+				helper.fail("water-face channel = " + faces + ", expected 1 — channel 2 must stay the wheel"
+						+ " renderer's face count and must not follow the EU multiplier");
+				return;
+			}
+			helper.succeed();
+		} finally {
+			Config.waterMillEuPerTick = savedPerSide;
+			Config.globalEuRateMultiplier = savedMultiplier;
+		}
+	}
+
+	/**
+	 * The {@code max(1, ...)} floor reaches the READOUT, not just the buffer: at a multiplier small enough
+	 * to round the rate to zero, a mill that is genuinely turning reports 1 EU/t — never 0, and never the
+	 * un-multiplied mechanical figure.
+	 *
+	 * <p>8 EU per face against a 0.05 multiplier is what gives this test teeth: {@code round(8 × 0.05) = 0},
+	 * so the floor is the only thing keeping the number off zero, and the three candidate answers are all
+	 * distinct — 1 (correct), 8 (the MOD-356 bug: mechanical rate published) and 0 (floor dropped from the
+	 * readout). A gentler multiplier collapses them together and proves nothing.
+	 */
+	public static void waterMill_readoutKeepsFloorUnderTinyMultiplier(GameTestHelper helper) {
+		int savedPerSide = Config.waterMillEuPerTick;
+		float savedMultiplier = Config.globalEuRateMultiplier;
+		try {
+			Config.waterMillEuPerTick = 8;
+			Config.globalEuRateMultiplier = 0.05f;
+			WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
+			driveOneSide(helper);
+			AlaGameTestHelper.drive(mill, helper, 3);
+
+			mill.getEnergyStorage().amount = 0;
+			AlaGameTestHelper.drive(mill, helper, 1);
+			long gained = mill.getEnergyStorage().getAmount();
+			int shown = mill.getDataAccess().get(4);
+			if (gained != 1) {
+				helper.fail("a turning mill banked " + gained + " EU at 8 EU/face × 0.05, expected the"
+						+ " max(1, ...) floor to give exactly 1");
+				return;
+			}
+			if (shown != 1) {
+				helper.fail("readout says " + shown + " EU/t while the mill banks 1 EU/t at a 0.05 multiplier"
+						+ " — expected 1 (8 would mean the un-multiplied mechanical rate, 0 a lost floor)");
+				return;
+			}
+			helper.succeed();
+		} finally {
+			Config.waterMillEuPerTick = savedPerSide;
+			Config.globalEuRateMultiplier = savedMultiplier;
+		}
+	}
+
+	/**
+	 * Wheel wear stays charged on the <b>mechanical</b> rate even when the EU economy is scaled up
+	 * (MOD-189, re-guarded for MOD-356): the multiplier is an economy knob, so doubling EU output must not
+	 * double how fast the wheel physically wears out.
+	 *
+	 * <p>Built as a one-bit discriminator. At 1 EU per face, 1 EU per durability point and a wheel two
+	 * points from death, a single active tick spends exactly one point and the wheel SURVIVES. If wear were
+	 * charged on the effective rate instead, the 2.0 multiplier would spend two points in that same tick and
+	 * the wheel would break and vanish from the slot — the assertion below then fails loudly. Nothing else
+	 * in the suite covers this: every other wear test runs at the default multiplier, where the mechanical
+	 * and effective rates are identical and the regression is invisible.
+	 */
+	public static void waterMillWheel_wearFollowsMechanicalRateNotMultiplier(GameTestHelper helper) {
+		int savedPerDamage = Config.waterMillWheelEuPerDamage;
+		int savedPerSide = Config.waterMillEuPerTick;
+		float savedMultiplier = Config.globalEuRateMultiplier;
+		try {
+			Config.waterMillWheelEuPerDamage = 1; // 1 EU of production spends 1 durability point
+			Config.waterMillEuPerTick = 1;        // one driven side → mechanical 1 EU/t, effective 2 EU/t
+			Config.globalEuRateMultiplier = 2.0f;
+			WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
+			driveOneSide(helper);
+
+			ItemStack wheel = new ItemStack(ModContent.WATER_MILL_WHEEL.get());
+			int seeded = wheel.getMaxDamage() - 2; // two active ticks from death at the mechanical rate
+			wheel.setDamageValue(seeded);
+			mill.setItem(WaterMillBlockEntity.WHEEL_SLOT, wheel);
+
+			AlaGameTestHelper.drive(mill, helper, 1);
+			ItemStack after = mill.getItem(WaterMillBlockEntity.WHEEL_SLOT);
+			if (after.isEmpty()) {
+				helper.fail("the wheel broke in a single tick at a 2.0 multiplier — wear is being charged on"
+						+ " the multiplied rate; it must follow the mechanical one (MOD-189)");
+				return;
+			}
+			int spent = after.getDamageValue() - seeded;
+			if (spent != 1) {
+				helper.fail("one active tick spent " + spent + " durability points at a 2.0 multiplier,"
+						+ " expected 1 — wear must not scale with the EU economy knob");
+				return;
+			}
+			// Sanity: the mill really was producing at the doubled rate this tick, so the check above was
+			// exercised rather than passing on an idle wheel.
+			if (mill.getDataAccess().get(4) != 2) {
+				helper.fail("expected the doubled readout of 2 EU/t while wearing, got "
+						+ mill.getDataAccess().get(4) + " — the multiplier never took effect,"
+						+ " so the wear assertion proved nothing");
+				return;
+			}
+			helper.succeed();
+		} finally {
+			Config.waterMillWheelEuPerDamage = savedPerDamage;
+			Config.waterMillEuPerTick = savedPerSide;
+			Config.globalEuRateMultiplier = savedMultiplier;
+		}
+	}
+
 	/** Assert both readout channels at once: 4 = EU/t for the GUI, 2 = water faces for the renderer. */
 	private static void assertRate(GameTestHelper helper, WaterMillBlockEntity mill, String label,
 			int expectedEu, int expectedFaces) {

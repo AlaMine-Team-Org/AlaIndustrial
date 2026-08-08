@@ -13,7 +13,8 @@
 			"dev.alaindustrial.gametest.ForeignMaterialMod"
 		],
 		"fabric-client-gametest": [
-			"dev.alaindustrial.gametest.GuiClientGameTest"
+			"dev.alaindustrial.gametest.GuiClientGameTest",
+			"dev.alaindustrial.gametest.ScreensClientGameTest"
 		],
 		"fabric-gametest": [
 			"dev.alaindustrial.gametest.AlaCommonGameTest",
@@ -42,6 +43,7 @@
 			"dev.alaindustrial.gametest.PouchGameTest",
 			"dev.alaindustrial.gametest.EnergyPackGameTest",
 			"dev.alaindustrial.gametest.ElectricDrillGameTest",
+			"dev.alaindustrial.gametest.ElectricChainsawGameTest",
 			"dev.alaindustrial.gametest.ElectricSaberGameTest",
 			"dev.alaindustrial.gametest.MagnetGameTest",
 			"dev.alaindustrial.gametest.JetpackGameTest",
@@ -52,28 +54,28 @@
 			"dev.alaindustrial.gametest.StockDisplayFrameGameTest",
 			"dev.alaindustrial.gametest.ScytheGameTest",
 			"dev.alaindustrial.gametest.MuteChipGameTest",
-			"dev.alaindustrial.gametest.WaterMillWheelGameTest"
-			,"dev.alaindustrial.gametest.ItemPipeGameTest",
-			"dev.alaindustrial.gametest.FluidPipeGameTest"
-			,"dev.alaindustrial.gametest.FluidTankGameTest"
-			,"dev.alaindustrial.gametest.GuideBookGameTest"
-			,"dev.alaindustrial.gametest.MobSpawnEquipmentGameTest"
-			,"dev.alaindustrial.gametest.PlayerStatsGameTest"
-			,"dev.alaindustrial.gametest.PlayerStatsAttachmentGameTest"
-			,"dev.alaindustrial.gametest.EnrichedUraniumTorchGameTest"
-			,"dev.alaindustrial.gametest.RecipeCoverageGameTest"
-			,"dev.alaindustrial.gametest.StorageClusterGameTest"
-			,"dev.alaindustrial.gametest.AssemblerGameTest"
-			,"dev.alaindustrial.gametest.RecipeTagGameTest"
-			,"dev.alaindustrial.gametest.IndustrialistVillagerGameTest"
-			,"dev.alaindustrial.gametest.HammerGameTest"
-			,"dev.alaindustrial.gametest.OilGameTest"
-			,"dev.alaindustrial.gametest.PolymerizerGameTest"
-			,"dev.alaindustrial.gametest.GalvanicBathGameTest"
-			,"dev.alaindustrial.gametest.AlloySmelterGameTest"
-			,"dev.alaindustrial.gametest.FluxweaveArmorGameTest"
-			,"dev.alaindustrial.gametest.VulcanizerGameTest"
-			,"dev.alaindustrial.gametest.ChargePadGameTest"
+			"dev.alaindustrial.gametest.WaterMillWheelGameTest",
+			"dev.alaindustrial.gametest.ItemPipeGameTest",
+			"dev.alaindustrial.gametest.FluidPipeGameTest",
+			"dev.alaindustrial.gametest.FluidTankGameTest",
+			"dev.alaindustrial.gametest.GuideBookGameTest",
+			"dev.alaindustrial.gametest.MobSpawnEquipmentGameTest",
+			"dev.alaindustrial.gametest.PlayerStatsGameTest",
+			"dev.alaindustrial.gametest.PlayerStatsAttachmentGameTest",
+			"dev.alaindustrial.gametest.EnrichedUraniumTorchGameTest",
+			"dev.alaindustrial.gametest.RecipeCoverageGameTest",
+			"dev.alaindustrial.gametest.StorageClusterGameTest",
+			"dev.alaindustrial.gametest.AssemblerGameTest",
+			"dev.alaindustrial.gametest.RecipeTagGameTest",
+			"dev.alaindustrial.gametest.IndustrialistVillagerGameTest",
+			"dev.alaindustrial.gametest.HammerGameTest",
+			"dev.alaindustrial.gametest.OilGameTest",
+			"dev.alaindustrial.gametest.PolymerizerGameTest",
+			"dev.alaindustrial.gametest.GalvanicBathGameTest",
+			"dev.alaindustrial.gametest.AlloySmelterGameTest",
+			"dev.alaindustrial.gametest.FluxweaveArmorGameTest",
+			"dev.alaindustrial.gametest.VulcanizerGameTest",
+			"dev.alaindustrial.gametest.ChargePadGameTest"
 		]
 	}
 }

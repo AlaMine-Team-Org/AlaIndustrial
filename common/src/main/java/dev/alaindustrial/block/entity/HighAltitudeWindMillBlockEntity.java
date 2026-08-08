@@ -17,6 +17,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -40,6 +41,14 @@ public class HighAltitudeWindMillBlockEntity extends AbstractGeneratorBlockEntit
 	private int sampleCounter = 0;
 	private int cachedRate = 0;
 	private int cachedMode = WindMillBlockEntity.MODE_NO_ROTOR;
+
+	/**
+	 * Effective EU/t for the GUI readout (MOD-356): {@link #cachedRate} after
+	 * {@link Config#globalEuRateMultiplier}. Kept off channel 2, which stays the mechanical rate because
+	 * the rotor renderer derives the blades' spin speed from it — see {@link WindMillBlockEntity}'s data
+	 * javadoc for the full reasoning. Transient, never serialised, never read off a client block entity.
+	 */
+	private int effectiveRate = 0;
 
 	public HighAltitudeWindMillBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.HIGH_ALTITUDE_WIND_MILL_BE.get(), pos, state, EnergyTier.LV, 1, Config.t2WindMillBuffer, MAX_EXTRACT);
@@ -145,6 +154,58 @@ public class HighAltitudeWindMillBlockEntity extends AbstractGeneratorBlockEntit
 			wearComponent(level, pos, ROTOR_SLOT, cachedRate, weather, Config.windMillRotorEuPerDamage);
 		}
 		return cachedRate;
+	}
+
+	/**
+	 * The readout rides {@link #RATE_CHANNEL}, not channel 2: channel 2 stays the mechanical rate because
+	 * the rotor renderer turns it into the blades' angular speed (MOD-356).
+	 */
+	@Override
+	protected void publishEffectiveRate(int effectiveEuPerTick) {
+		this.effectiveRate = effectiveEuPerTick;
+	}
+
+	/**
+	 * Five-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so
+	 * {@code HighAltitudeWindMillBlockEntity.DATA_COUNT} names this machine's width for the bridge below
+	 * and for {@code HighAltitudeWindMillMenu}'s client stub (MOD-235).
+	 */
+	public static final int DATA_COUNT = 5;
+
+	/** Channel carrying the effective (post-multiplier) EU/t the GUI prints — see {@link #effectiveRate}. */
+	public static final int RATE_CHANNEL = 4;
+
+	/**
+	 * Five-wide data: the shared base 0..3 (energy, capacity, mechanical rate, mode) plus the effective
+	 * generation rate on channel 4. The split exists because channel 2 drives the rotor's spin speed —
+	 * the full reasoning lives on {@link WindMillBlockEntity}'s data javadoc.
+	 */
+	private final ContainerData highAltitudeWindMillData = new ContainerData() {
+		@Override
+		public int get(int index) {
+			return index == RATE_CHANNEL
+					? effectiveRate
+					: HighAltitudeWindMillBlockEntity.this.dataAccess.get(index);
+		}
+
+		@Override
+		public void set(int index, int value) {
+			// Channel 4 is a server-authoritative projection: it is recomputed every tick from the
+			// world and the config, so nothing writes it back through the ContainerData.
+			if (index != RATE_CHANNEL) {
+				HighAltitudeWindMillBlockEntity.this.dataAccess.set(index, value);
+			}
+		}
+
+		@Override
+		public int getCount() {
+			return DATA_COUNT;
+		}
+	};
+
+	@Override
+	public ContainerData getDataAccess() {
+		return highAltitudeWindMillData;
 	}
 
 	@Override

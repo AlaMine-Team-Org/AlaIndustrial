@@ -118,9 +118,19 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 				}
 			}
 		}
-		this.progress = production;
 		this.maxProgress = mode;
 		return production;
+	}
+
+	/**
+	 * The panel's rate channel is plain channel 2 ({@code progress}): unlike the wind mills (rotor spin
+	 * speed) and the water mill (water-face count), nothing else on a solar panel reads it, so the
+	 * effective rate can land there directly. Written here rather than in {@link #produce} so the number is
+	 * the post-multiplier one — the rate the buffer gains while it has room (MOD-356).
+	 */
+	@Override
+	protected void publishEffectiveRate(int effectiveEuPerTick) {
+		this.progress = effectiveEuPerTick;
 	}
 
 	/** Replace this panel with its evolved branch, carrying stored energy; ONE chip is consumed. */

@@ -1,10 +1,19 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.gametest.visual.ShotGroup;
+import dev.alaindustrial.gametest.visual.ShotRecorder;
+import dev.alaindustrial.gametest.visual.VisualWorld;
+import dev.alaindustrial.visual.DiffImage;
+import dev.alaindustrial.visual.PixelGrid;
+import dev.alaindustrial.visual.PixelMath;
+import dev.alaindustrial.visual.PngIo;
+import dev.alaindustrial.visual.Tolerance;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
+import dev.alaindustrial.client.screen.WaterMillScreen;
 import dev.alaindustrial.menu.MachineMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.registry.ModItems;
@@ -48,6 +57,7 @@ import org.slf4j.LoggerFactory;
  *   <li>R-PHY-10   — {@link #checkHitboxes}               — hitbox shape matches block model
  *   <li>MOD-024    — {@link #checkWaterMillWheel}       — the water wheel BlockEntityRenderer draws into the frame
  *   <li>MOD-232    — {@link #checkWindMillRotor}       — the wind mill rotor BlockEntityRenderer draws into the frame
+ *   <li>MOD-354    — {@link #checkWaterMillStatusRow} — the water mill's GUI status row draws, and draws a different label per state
  *   <li>MOD-275    — {@link #assertBlueprintPreviewInFrame} — the assembler's read-only blueprint preview reaches the frame
  *   <li>MOD-275    — {@link #assertBlueprintIconShowsProduct} — a recorded blueprint's own icon carries its product
  *   <li>MOD-287    — {@link #checkStorageModuleSeams}  — storage-module connected textures (frames for review)
@@ -60,7 +70,9 @@ import org.slf4j.LoggerFactory;
  * non-empty PNG was written — a frame missing a whole renderer still passes. Any stand that claims to
  * cover rendering must additionally assert the thing it photographs, the way
  * {@link #checkWaterMillWheel} and {@link #checkWindMillRotor} do; otherwise name it for what it is,
- * a screenshot for a human to look at.
+ * a screenshot for a human to look at. The same applies to a GUI: {@link #checkWaterMillStatusRow}
+ * shows how to assert a text row — compare it against the state where it is deliberately blank, and
+ * against the other states it is supposed to distinguish.
  */
 @SuppressWarnings("UnstableApiUsage")
 public class GuiClientGameTest implements FabricClientGameTest {
@@ -75,8 +87,13 @@ public class GuiClientGameTest implements FabricClientGameTest {
 
     @Override
     public void runTest(ClientGameTestContext context) {
-        try (TestSingleplayerContext singleplayer = context.worldBuilder().create()) {
+        // MOD-362 — consistent world settings: the same seed and generator on every machine, so a frame
+        // can eventually be compared against something other than itself.
+        try (TestSingleplayerContext singleplayer = context.worldBuilder()
+                .setUseConsistentSettings(true)
+                .create()) {
             configureVisualTestClient(context, singleplayer);
+            ShotRecorder.begin(context);
             singleplayer.getClientLevel().waitForChunksRender();
 
             if (!GUI_ONLY) {
@@ -100,6 +117,16 @@ public class GuiClientGameTest implements FabricClientGameTest {
 
             // ── GUI screenshots (always runs) ─────────────────────────────────────────
             shootGuiScreenshots(context);
+
+            // Leave the world the way a player leaves it: with no container open. The last frame of this
+            // lane is a GUI, and closing the world while the server still believes a container is open
+            // hung the client on the handover to the next client-gametest class (observed in the MOD-362
+            // shakedown: the log stopped dead right after this lane's last frame).
+            VisualWorld.awaitNoScreen(context);
+
+            // Writes shots-manifest.json beside the frames: what each one is, which rule it serves and
+            // which build produced it. Without it an archived run is 148 anonymous PNGs.
+            ShotRecorder.finish();
         }
     }
 
@@ -195,6 +222,9 @@ public class GuiClientGameTest implements FabricClientGameTest {
      * no face is black/missing, front ≠ back ≠ side textures where they should differ.
      *
      * <p>Platform centred at (60, 99, 60) — isolated from other rigs.
+     *
+     * @implements R-VIS-04 - all six block faces are visible and distinguishable
+     * @covers R-VIS-04
      */
     private static void checkSixFaceSurvey(ClientGameTestContext context, TestSingleplayerContext singleplayer) {
         TestServerContext server = singleplayer.getServer();
@@ -266,6 +296,9 @@ public class GuiClientGameTest implements FabricClientGameTest {
      * block entity's internal NBT layout.
      * Energy injection uses {@code /data merge block … {energy:…L}} (Team Reborn convention).
      * Platform centred at (80, 99, 80).
+     *
+     * @implements R-VIS-01 - the texture switches between the working and idle states
+     * @covers R-VIS-01
      */
     private static void checkActiveIdleTextures(ClientGameTestContext context, TestSingleplayerContext singleplayer) {
         TestServerContext server = singleplayer.getServer();
@@ -336,6 +369,9 @@ public class GuiClientGameTest implements FabricClientGameTest {
      * </ol>
      *
      * Platform centred at (100, 99, 100).
+     *
+     * @implements R-VIS-12 - the cable's multipart model assembles from its neighbours
+     * @covers R-VIS-12, R-CON-03
      */
     private static void checkCableConnectivity(ClientGameTestContext context, TestSingleplayerContext singleplayer) {
         TestServerContext server = singleplayer.getServer();
@@ -542,9 +578,33 @@ public class GuiClientGameTest implements FabricClientGameTest {
         if (wheelDelta < required) {
             throw new AssertionError("[GUITEST][WMILL] removing the wheel changed only " + wheelDelta
                     + " px (animation baseline " + animationNoise + " px, required > " + required
-                    + ") — the BlockEntityRenderer's geometry is NOT in the captured frame. Compare "
-                    + withWheel.getFileName() + " with " + noWheelA.getFileName() + ".");
+                    + ") — the BlockEntityRenderer's geometry is NOT in the captured frame. "
+                    + explainWithDiff(withWheel, noWheelA));
         }
+    }
+
+    /**
+     * Writes a diff picture for a failing pixel gate and returns the sentence that points at it.
+     *
+     * <p>A failing gate used to say "compare A.png with B.png" and leave the reviewer to spot the
+     * difference between two 1280x720 screenshots by eye. The diff marks the changed pixels in red on a
+     * dimmed background, so the answer is visible at a glance (MOD-362).
+     */
+    private static String explainWithDiff(Path expected, Path actual) {
+        try {
+            PixelGrid before = PngIo.read(expected);
+            PixelGrid after = PngIo.read(actual);
+            Path diff = PngIo.writeDiffBeside(actual, DiffImage.render(before, after, Tolerance.CHANNEL_24));
+            if (diff != null) {
+                return "Compare " + expected.getFileName() + " with " + actual.getFileName()
+                        + "; the marked-up difference is in " + diff.getFileName() + ".";
+            }
+        } catch (RuntimeException e) {
+            // The diff is triage material. If it cannot be produced, the real assertion must still be
+            // the thing that gets reported — never mask a gate failure with an I/O failure.
+            LOG.warn("[GUITEST] could not render the diff image for {} vs {}", expected, actual, e);
+        }
+        return "Compare " + expected.getFileName() + " with " + actual.getFileName() + ".";
     }
 
     /** Pixels whose colour differs by more than 24/255 in any channel. Shared by every pixel gate. */
@@ -573,14 +633,17 @@ public class GuiClientGameTest implements FabricClientGameTest {
         }
     }
 
-    /** The single "these two pixels differ" rule every pixel gate in this suite shares. */
+    /**
+     * The single "these two pixels differ" rule every pixel gate in this suite shares.
+     *
+     * <p>Delegates to {@link Tolerance#CHANNEL_24} instead of carrying its own copy of the literal 24
+     * (MOD-362). The threshold used to be written out here AND in {@link #differsFrom}, so "the shared
+     * rule" was in fact two independent numbers that happened to agree — changing the strictness of the
+     * suite meant finding every copy. Now there is one, and it is unit-tested on both sides of its
+     * boundary in {@code common/src/test/java/dev/alaindustrial/visual/ToleranceTest.java}.
+     */
     private static boolean differsAt(BufferedImage a, BufferedImage b, int x, int y) {
-        int pa = a.getRGB(x, y);
-        int pb = b.getRGB(x, y);
-        int dr = Math.abs(((pa >> 16) & 0xFF) - ((pb >> 16) & 0xFF));
-        int dg = Math.abs(((pa >> 8) & 0xFF) - ((pb >> 8) & 0xFF));
-        int db = Math.abs((pa & 0xFF) - (pb & 0xFF));
-        return Math.max(dr, Math.max(dg, db)) > 24;
+        return Tolerance.CHANNEL_24.differs(a.getRGB(x, y), b.getRGB(x, y));
     }
 
     // ────────────────────────────────────────────────────────────────────────────────
@@ -1019,7 +1082,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 };
             }
         });
-        context.waitTicks(5);
+        awaitMenuScreen(context);
         Path frame = takeCleanScreenshot(context, "gui_storage_warehouse_" + modules + "_modules");
         LOG.info("[GUITEST][STORAGE] window frame ({} modules) -> {}", modules, frame.toAbsolutePath());
         context.runOnClient(mc -> mc.setScreenAndShow(null));
@@ -1094,8 +1157,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
             throw new AssertionError("[GUITEST][WINDMILL] removing the rotor from alaindustrial:"
                     + mill[0] + " changed only " + rotorDelta + " px (static baseline " + staticNoise
                     + " px, required > " + required + ") — WindMillRotorBlockEntityRenderer's geometry "
-                    + "is NOT in the captured frame. Compare " + withRotor.getFileName() + " with "
-                    + noRotorA.getFileName() + ".");
+                    + "is NOT in the captured frame. " + explainWithDiff(withRotor, noRotorA));
         }
     }
 
@@ -1320,6 +1382,9 @@ public class GuiClientGameTest implements FabricClientGameTest {
      * <p>Capacity=4000 EU, maxProgress=200 ticks mirrors the default balance config values.
      *
      * <p>When adding a new machine: add one {@code shootMenu} line here. That's all.
+     *
+     * @implements R-GUI-03 - the energy and progress bars match the values behind them
+     * @covers R-GUI-01, R-GUI-03
      */
     private static void shootGuiScreenshots(ClientGameTestContext context) {
         final int CAP  = 4000;
@@ -1370,6 +1435,9 @@ public class GuiClientGameTest implements FabricClientGameTest {
         // State 15: same first-tick minimum for the night branch (blue bar, 1px).
         shootSolarPanel(context, "gui_solar_panel_evo_night_start", 2000, 8000, 0, 0, 1, 33600,
                 ModItems.ALIGNMENT_CHIP_NIGHT);
+
+        // ── Water Mill — the status row in every state it can show (MOD-354) ─────────
+        checkWaterMillStatusRow(context);
 
         // ── Machines without custom screens (one shot each) ──────────────────────────
         shootMenu(context, "gui_moonlit_solar_panel", ModContent.MOONLIT_SOLAR_PANEL_MENU.get(), "Moonlit Solar Panel");
@@ -1566,7 +1634,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 menu.getSlot(0).container.setItem(0, pouch);
             }
         });
-        context.waitTicks(5);
+        awaitMenuScreen(context);
         java.nio.file.Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
     }
@@ -1589,7 +1657,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 menu.getSlot(0).container.setItem(0, pack);
             }
         });
-        context.waitTicks(5);
+        awaitMenuScreen(context);
         java.nio.file.Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
     }
@@ -1606,7 +1674,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 menu.injectTestData(energy, capacity, progress, maxProgress);
             }
         });
-        context.waitTicks(5);
+        awaitMenuScreen(context);
         java.nio.file.Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
     }
@@ -1632,7 +1700,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 menu.injectTestChannel(6, formed);
             }
         });
-        context.waitTicks(5);
+        awaitMenuScreen(context);
         java.nio.file.Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
     }
@@ -1673,7 +1741,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 }
             }
         });
-        context.waitTicks(5);
+        awaitMenuScreen(context);
         java.nio.file.Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST][MOD-275] screenshot {} -> {}", name, path.toAbsolutePath());
     }
@@ -1714,7 +1782,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                         : new ItemStack(ModContent.ASSEMBLY_BLUEPRINT.get()));
             }
         });
-        context.waitTicks(5);
+        awaitMenuScreen(context);
         Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST][MOD-275] screenshot {} -> {}", name, path.toAbsolutePath());
         return path;
@@ -2499,17 +2567,13 @@ public class GuiClientGameTest implements FabricClientGameTest {
 
     /** Rec. 709 luminance of an ARGB pixel. */
     private static double luminance(int argb) {
-        return 0.2126 * ((argb >> 16) & 0xFF) + 0.7152 * ((argb >> 8) & 0xFF) + 0.0722 * (argb & 0xFF);
+        return PixelMath.luminance(argb);
     }
 
     /** True when the framebuffer pixel is a different colour than {@code expected} (same slack as
      * {@link #differsAt}, so driver dithering never registers as product). */
     private static boolean differsFrom(BufferedImage image, int x, int y, int expected) {
-        int actual = image.getRGB(x, y);
-        int dr = Math.abs(((actual >> 16) & 0xFF) - ((expected >> 16) & 0xFF));
-        int dg = Math.abs(((actual >> 8) & 0xFF) - ((expected >> 8) & 0xFF));
-        int db = Math.abs((actual & 0xFF) - (expected & 0xFF));
-        return Math.max(dr, Math.max(dg, db)) > 24;
+        return Tolerance.CHANNEL_24.differs(image.getRGB(x, y), expected);
     }
 
     /** Closes any open screen, puts {@code held} in the selected hotbar slot and shoots the world. */
@@ -2585,7 +2649,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                                   MenuType<?> type, String displayName) {
         LOG.info("[GUITEST] opening {}", name);
         context.runOnClient(mc -> MenuScreens.create(type, mc, 0, Component.literal(displayName)));
-        context.waitTicks(5);
+        awaitMenuScreen(context);
         java.nio.file.Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
     }
@@ -2619,7 +2683,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 }
             }
         });
-        context.waitTicks(5);
+        awaitMenuScreen(context);
         java.nio.file.Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST][MOD-080] screenshot {} -> {}", name, path.toAbsolutePath());
     }
@@ -2668,9 +2732,247 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 }
             }
         });
-        context.waitTicks(5);
+        awaitMenuScreen(context);
         java.nio.file.Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
+    }
+
+    // ────────────────────────────────────────────────────────────────────────────────
+    // Water mill — the GUI status row (MOD-354)
+    // ────────────────────────────────────────────────────────────────────────────────
+
+    /**
+     * The water mill window as {@code {leftPos, topPos, imageWidth, guiScaledWidth}} in GUI-scaled
+     * units, captured inside {@code runOnClient} by {@link #shootWaterMill}.
+     */
+    private static int[] waterMillWindowBox;
+
+    /**
+     * Height of the cropped band, in GUI-scaled units. The vanilla font is 9 units tall; the extra
+     * three units are margin, so a row that shifts by a pixel or grows a descender stays inside the
+     * measured area instead of silently falling out of it and reading as "nothing drew".
+     */
+    private static final int WATER_MILL_ROW_H = 12;
+
+    /**
+     * Where the band starts inside the window, in GUI-scaled units. Not zero, because the energy bar
+     * ({@code EnergyBarSpec.LEFT_WINDMILL}) spans x 17..26 and y 32..75 — it crosses this row, and its
+     * fill height is a function of the stored EU. Every gate below asks "do these two frames differ", so a
+     * bar left inside the band could answer that question by itself and let a broken row pass. Starting at
+     * 28 clears the bar with a two-unit margin and still leaves 148 units for the text: the longest label
+     * ("Wheel interference") is about 96 units wide and, being centred, starts around x 40.
+     */
+    private static final int WATER_MILL_ROW_X = 28;
+
+    /**
+     * Two different labels are two different pictures: the mill's shortest label is "No water", which
+     * lights well over a hundred physical pixels at GUI scale 2. A floor this high cannot be met by
+     * driver dithering, and cannot be met at all by a row that did not draw.
+     */
+    private static final int MIN_ROW_DELTA = 100;
+
+    /**
+     * Floor for the one comparison where the two rows differ by a single glyph ("Output: 4 EU/t" vs
+     * "Output: 1 EU/t"). Minecraft's digits are fixed-width, so the string does not re-centre and the
+     * only pixels that can move are the digit itself — roughly 40 at GUI scale 2. Kept well under that,
+     * and still an order of magnitude above the dithering floor {@link #differsAt} already absorbs.
+     */
+    private static final int MIN_GLYPH_DELTA = 20;
+
+    /**
+     * Every state the water mill's status row can be in, photographed and then measured (MOD-354).
+     *
+     * <p>The screen was the only one in the generator family with no frame at all: when MOD-348 added the
+     * output row to it, the only way to see whether the row drew, fit, or collided with the wheel slot was
+     * to launch a client by hand. That is the class of defect this stand exists for — a row that renders
+     * off-window, renders empty, or renders the same text for every state is invisible to every server-side
+     * L2 test in the suite.
+     *
+     * <p><b>Why the menu is built client-side.</b> Every frame here opens through {@code MenuScreens.create}
+     * and injects into the client's own {@code ContainerData}, deliberately, rather than right-clicking a
+     * placed mill. The water mill is a <em>generator</em>: a real one recomputes its state every tick and
+     * broadcasts it, so an injected value survives at most one tick before the server overwrites it and the
+     * frame shows whatever the world happened to produce. A client-only menu has no server behind it, so the
+     * state under test is the state photographed.
+     *
+     * <p><b>Why this is a test and not a photo album.</b> A screenshot on its own asserts nothing beyond
+     * "a file appeared" (see {@link #takeCleanScreenshot}). Six frames are compared inside the status row
+     * and nowhere else, against a noise floor measured from two identical frames:
+     * <ul>
+     *   <li>each label differs from the <b>blank</b> row — proves the row draws at all;
+     *   <li>running differs from idle, and the three idle reasons differ from each other — proves the
+     *       screen switches on {@code getMode()} instead of showing one hardcoded string;
+     *   <li>4 EU/t differs from 1 EU/t — proves the number is the menu's rate channel and not a constant.
+     * </ul>
+     * Cropping to the row is not a way of hiding an inconvenient signal: it is the only band the row can
+     * draw in, and every gate here asks whether two frames <em>differ</em>, so anything else that can
+     * legitimately differ between these states has to be outside the band or it could satisfy a gate on
+     * its own while the row was broken. Excluded on purpose: the wheel slot (y 23..38), the status gear
+     * (y 22..37) and the energy bar — which is the subtle one. {@code LEFT_WINDMILL.barBottom()} is 76 and
+     * the fill grows <em>upward</em> from it, so the bar occupies y 32..75 and genuinely overlaps this row;
+     * it is kept out by starting the band to the right of it, not by the row's y range.
+     */
+    private static void checkWaterMillStatusRow(ClientGameTestContext context) {
+        final int CAP = dev.alaindustrial.Config.waterMillBuffer;
+        // One energy level for every frame. The bar is cropped out horizontally, so this is not what makes
+        // the gates sound — it keeps the shots comparable by eye, which is what a human reviewing the
+        // gallery actually does.
+        final int E = CAP / 2;
+        final int OK = WaterMillBlockEntity.MODE_OK;
+
+        // Wheel installed, all four drive cells carrying a current — the mill at its maximum, 4 EU/t at
+        // the default rate multiplier. The exact number is not what is under test; that it reaches the
+        // row, and that a different number draws differently, is.
+        Path running = shootWaterMill(context, "running",
+                "Running at maximum: the status row reads \"Output: 4 EU/t\", centred, clear of the wheel "
+                        + "slot above it, and the status gear beside the slot is lit",
+                E, 4, OK, 4, true);
+        // Same running state at one drive cell: only the digit in the row may change.
+        Path oneSide = shootWaterMill(context, "running_one_side",
+                "Running at one drive cell: the same row now reads 1 EU/t - only the digit differs from the "
+                        + "frame above, because Minecraft's digits are fixed-width",
+                E, 1, OK, 1, true);
+        // Wheel installed and free, but no current reaches it.
+        Path noWater = shootWaterMill(context, "no_water",
+                "Wheel installed and free, but no current reaches it: the row reads \"No water\" in the dim "
+                        + "colour, and the status gear is dark",
+                E, 0, WaterMillBlockEntity.MODE_NO_WATER, 0, true);
+        // A neighbouring mill's wheel overlaps ours; both stall.
+        Path interference = shootWaterMill(context, "interference",
+                "A neighbouring wheel overlaps ours: the row reads \"Wheel interference\" - the longest of "
+                        + "the four labels, so this is the frame a HUMAN should check for the label running "
+                        + "past the window edge. The gates below cannot see that: the label is centred, so "
+                        + "an overlong one spills outside the measured band on both sides",
+                E, 0, WaterMillBlockEntity.MODE_INTERFERENCE, 0, true);
+        // A solid block sits in the swept area.
+        Path obstructed = shootWaterMill(context, "obstructed",
+                "A solid block sits in the swept area: the row reads \"Blocked\"",
+                E, 0, WaterMillBlockEntity.MODE_OBSTRUCTED, 0, true);
+        // No wheel: the block entity reports MODE_OK because a bare mill has nothing to clash with, and the
+        // screen deliberately leaves the row EMPTY rather than claiming an output of 0. That blank row is the
+        // reference every other frame is measured against.
+        Path noWheel = shootWaterMill(context, "no_wheel",
+                "No wheel: the row is deliberately EMPTY - the empty slot is the message, and a mill with no "
+                        + "wheel must not claim an output of 0",
+                E, 0, OK, 0, false);
+        Path noWheelB = shootWaterMill(context, "no_wheel_again",
+                "The blank row shot a second time: the noise floor every threshold below is measured against",
+                E, 0, OK, 0, false);
+
+        // Nothing in this band animates, so the honest expectation is zero. Measuring it anyway is what
+        // turns every threshold below into a claim about the row instead of a claim about the driver.
+        int noise = differingPixelsInStatusRow(noWheel, noWheelB);
+        LOG.info("[GUITEST][MOD-354] status-row noise floor: {} px", noise);
+
+        assertStatusRowDiffers("running label vs blank row", running, noWheel, noise, MIN_ROW_DELTA);
+        assertStatusRowDiffers("\"no water\" vs blank row", noWater, noWheel, noise, MIN_ROW_DELTA);
+        assertStatusRowDiffers("\"interference\" vs blank row", interference, noWheel, noise, MIN_ROW_DELTA);
+        assertStatusRowDiffers("\"obstructed\" vs blank row", obstructed, noWheel, noise, MIN_ROW_DELTA);
+
+        assertStatusRowDiffers("running label vs \"no water\"", running, noWater, noise, MIN_ROW_DELTA);
+        assertStatusRowDiffers("\"no water\" vs \"interference\"", noWater, interference, noise, MIN_ROW_DELTA);
+        assertStatusRowDiffers("\"interference\" vs \"obstructed\"", interference, obstructed, noise, MIN_ROW_DELTA);
+
+        assertStatusRowDiffers("4 EU/t vs 1 EU/t", running, oneSide, noise, MIN_GLYPH_DELTA);
+    }
+
+    /**
+     * One water mill frame: opens the screen, fills the five sync channels the machine owns and puts (or
+     * leaves out) the wheel, then photographs it.
+     *
+     * @param sides drive cells carrying a current (0..4) — channel 2, the wheel renderer's spin input and
+     *              the screen's gate for lighting the status gear
+     * @param mode  one of {@code WaterMillBlockEntity.MODE_*} — carried by the {@code maxProgress} channel
+     * @param rate  effective generation in EU/t — channel 4 (MOD-348), after the global rate multiplier
+     *              since MOD-356; injected straight into the channel here, so what the screen prints is
+     *              exactly this number and the gates never depend on how the machine would compute it
+     * @param wheel whether the component slot holds a water wheel; an empty slot blanks the row
+     */
+    private static Path shootWaterMill(ClientGameTestContext context, String state, String checks,
+                                       int energy, int sides, int mode, int rate, boolean wheel) {
+        LOG.info("[GUITEST][MOD-354] opening water_mill/{} (E={} sides={} mode={} rate={} wheel={})",
+                state, energy, sides, mode, rate, wheel);
+        context.runOnClient(mc -> {
+            MenuScreens.create(ModContent.WATER_MILL_MENU.get(), mc, 0, Component.literal("Water Mill"));
+            // No silent fallback. Every gate below asks whether two frames DIFFER, and a frame shot with
+            // no state injected differs from the others just as readily as a correct one — so a quiet
+            // no-op here would keep the suite green while measuring nothing.
+            if (!(mc.gui.screen() instanceof AbstractContainerScreen<?> acs)
+                    || !(acs.getMenu() instanceof MachineMenu menu)) {
+                throw new AssertionError("[GUITEST][MOD-354] MenuScreens.create did not open a machine "
+                        + "screen for water_mill/" + state + " — the screen binding in MenuScreenManifest "
+                        + "is missing, so there is nothing to photograph.");
+            }
+            menu.injectTestData(energy, dev.alaindustrial.Config.waterMillBuffer, sides, mode);
+            menu.injectTestChannel(4, rate);
+            // Straight into the client-side SimpleContainer behind slot 0, the same way the solar panel
+            // stand injects its chip: the screen reads the slot synchronously, so no server is involved.
+            menu.getSlot(0).container.setItem(0, wheel
+                    ? new ItemStack(ModContent.WATER_MILL_WHEEL.get())
+                    : ItemStack.EMPTY);
+            var pos = (dev.alaindustrial.mixin.client.AbstractContainerScreenAccessor) acs;
+            waterMillWindowBox = new int[] {
+                    pos.alaindustrial$getLeftPos(),
+                    pos.alaindustrial$getTopPos(),
+                    pos.alaindustrial$getImageWidth(),
+                    mc.getWindow().getGuiScaledWidth(),
+            };
+        });
+        // Wait for the screen to actually be up, not for a guessed number of ticks (MOD-362): a fixed
+        // waitTicks that runs out early photographs whatever was on screen before, and this suite's gates
+        // would accept that frame — it differs from the others exactly like a correct one does.
+        awaitMenuScreen(context);
+        Path path = ShotRecorder.captureScreen("water_mill", state,
+                ShotRecorder.rules("R-GUI-01", "R-GUI-03"), checks);
+        LOG.info("[GUITEST][MOD-354] screenshot water_mill/{} -> {}", state, path.toAbsolutePath());
+        return path;
+    }
+
+    /** Pixels that differ inside the water mill's status row, and nowhere else. */
+    private static int differingPixelsInStatusRow(Path first, Path second) {
+        if (waterMillWindowBox == null) {
+            throw new AssertionError("[GUITEST][MOD-354] the water mill window was never measured");
+        }
+        try {
+            BufferedImage a = ImageIO.read(first.toFile());
+            BufferedImage b = ImageIO.read(second.toFile());
+            if (a == null || b == null) {
+                throw new AssertionError("[GUITEST][MOD-354] could not decode " + first + " / " + second);
+            }
+            // Screenshots are in physical pixels, the box in GUI-scaled units.
+            int scale = Math.max(1, a.getWidth() / waterMillWindowBox[3]);
+            int x0 = (waterMillWindowBox[0] + WATER_MILL_ROW_X) * scale;
+            int y0 = (waterMillWindowBox[1] + WaterMillScreen.STATUS_TEXT_Y - 1) * scale;
+            int x1 = Math.min(a.getWidth(), (waterMillWindowBox[0] + waterMillWindowBox[2]) * scale);
+            int y1 = Math.min(a.getHeight(), y0 + WATER_MILL_ROW_H * scale);
+            int differing = 0;
+            for (int y = Math.max(0, y0); y < y1; y++) {
+                for (int x = Math.max(0, x0); x < x1; x++) {
+                    if (differsAt(a, b, x, y)) {
+                        differing++;
+                    }
+                }
+            }
+            return differing;
+        } catch (IOException e) {
+            throw new AssertionError("[GUITEST][MOD-354] could not read screenshots for the status-row gate", e);
+        }
+    }
+
+    /** Requires two status rows to be visibly different pictures, above the measured noise floor. */
+    private static void assertStatusRowDiffers(String what, Path first, Path second, int noise, int floor) {
+        int delta = differingPixelsInStatusRow(first, second);
+        int required = Math.max(4 * noise, floor);
+        LOG.info("[GUITEST][MOD-354] {}: delta={} px, noise={} px, required>{}", what, delta, noise, required);
+        if (delta < required) {
+            throw new AssertionError("[GUITEST][MOD-354] " + what + " changed only " + delta
+                    + " px in the status row (noise floor " + noise + " px, required > " + required
+                    + ") — the two states draw the same row, or the row does not draw at all. The band is "
+                    + "x " + WATER_MILL_ROW_X + "..176, y " + (WaterMillScreen.STATUS_TEXT_Y - 1) + ".."
+                    + (WaterMillScreen.STATUS_TEXT_Y - 1 + WATER_MILL_ROW_H) + " inside the window; if the "
+                    + "layout moved, move STATUS_TEXT_Y with it rather than widening this gate. Compare "
+                    + first.getFileName() + " with " + second.getFileName() + ".");
+        }
     }
 
     private static void configureVisualTestClient(ClientGameTestContext context, TestSingleplayerContext singleplayer) {
@@ -2693,37 +2995,57 @@ public class GuiClientGameTest implements FabricClientGameTest {
         context.waitTicks(3);
     }
 
-    private static java.nio.file.Path takeCleanScreenshot(ClientGameTestContext context, String name) {
-        context.runOnClient(mc -> mc.gui.toastManager().clear());
+    /**
+     * Waits until the menu screen just created is actually on screen and has had a tick to lay itself
+     * out (MOD-362).
+     *
+     * <p>Replaces the {@code waitTicks(5)} that used to follow every {@code MenuScreens.create}: five
+     * ticks was a guess, and on a slower machine — a CI runner on a software rasteriser, say — the
+     * capture could happen before the screen finished drawing. The result would not be a failure; it
+     * would be a screenshot of the wrong thing, in a green run. Waiting on the condition is both
+     * correct and faster, because a ready screen no longer costs the full five ticks.
+     */
+    private static void awaitMenuScreen(ClientGameTestContext context) {
+        context.waitFor(mc -> mc.gui.screen() instanceof AbstractContainerScreen<?>);
+        // One tick after the screen exists: menu data injected in the same runOnClient block is applied
+        // to the widgets on the next layout pass, and the frame is only meaningful after that.
         context.waitTicks(1);
-        java.nio.file.Path path = context.takeScreenshot(name);
-        // Regression guard: previously this method returned a path that nothing ever asserted on, so
-        // the whole L3 suite stayed green even if the screenshot file was never written or came out as
-        // a 0-byte / all-black frame (e.g. MenuScreens.create silently no-op'd, the screen closed before
-        // capture, the renderer threw inside the framebuffer). Asserting existence + a minimum byte size
-        // catches every "screenshot not produced" and "blank frame" failure mode without requiring a
-        // pixel-diff baseline. A non-trivial PNG of a real Minecraft frame is a few KB at minimum; a
-        // cleared/empty framebuffer compresses to a few hundred bytes. The threshold is deliberately
-        // generous so headless-driver variance never flakes a healthy capture.
-        if (!java.nio.file.Files.exists(path)) {
-            throw new AssertionError("[GUITEST] screenshot '" + name + "' was not written to " + path
-                    + " — the capture path is broken (renderer threw, screen never opened, or the headless "
-                    + "framebuffer is misconfigured). This used to pass silently; now it fails the L3 suite.");
+    }
+
+    /**
+     * Captures one frame through the shared recorder (MOD-362).
+     *
+     * <p>This used to hold its own copy of the "the file exists and is bigger than 2 KiB" gate and
+     * nothing else. Routing every frame through {@link ShotRecorder} gives all 148 of them three things
+     * they did not have: the missing-texture gate (a machine rendering as a pink cube used to pass),
+     * an entry in {@code shots-manifest.json}, and a duplicate-name check.
+     */
+    private static java.nio.file.Path takeCleanScreenshot(ClientGameTestContext context, String name) {
+        return ShotRecorder.capture(name, groupOf(name), null, java.util.List.of(), "");
+    }
+
+    /**
+     * Classifies a legacy frame by its name prefix.
+     *
+     * <p>The frames written before MOD-362 carry their subject in the name — {@code gui_*} for screens,
+     * {@code wmill_*}/{@code windmill_*}/{@code incubator_ber_*} for block-entity renderers, and so on.
+     * Reading the group off the name keeps the change to this file small; frames written from here on
+     * pass their group explicitly.
+     */
+    private static ShotGroup groupOf(String name) {
+        if (name.startsWith("gui_")) {
+            return ShotGroup.GUI;
         }
-        try {
-            long size = java.nio.file.Files.size(path);
-            // 2 KiB: a real GUI/world frame is ≥ several KB compressed; an empty framebuffer PNG is a
-            // few hundred bytes. Keeps the gate robust against headless-driver compression variance.
-            final long MIN_SCREENSHOT_BYTES = 2 * 1024L;
-            if (size < MIN_SCREENSHOT_BYTES) {
-                throw new AssertionError("[GUITEST] screenshot '" + name + "' is only " + size
-                        + " bytes (< " + MIN_SCREENSHOT_BYTES + ") — likely a blank/cleared framebuffer, "
-                        + "not a rendered frame. Capture path: " + path);
-            }
-            LOG.info("[GUITEST] screenshot {} ({} bytes) OK", name, size);
-        } catch (java.io.IOException e) {
-            throw new AssertionError("[GUITEST] could not stat screenshot '" + name + "' at " + path, e);
+        if (name.startsWith("adv_")) {
+            return ShotGroup.ADVANCEMENT;
         }
-        return path;
+        if (name.startsWith("worn_") || name.startsWith("hud_") || name.contains("_in_hand_")) {
+            return ShotGroup.ITEM;
+        }
+        if (name.contains("_ber_") || name.startsWith("wmill_") || name.startsWith("windmill_")
+                || name.startsWith("incubator_")) {
+            return ShotGroup.BER;
+        }
+        return ShotGroup.WORLD;
     }
 }

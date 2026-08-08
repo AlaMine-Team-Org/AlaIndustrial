@@ -1,0 +1,16 @@
+{
+	"type": "alaindustrial:crafting_shaped_charge_transfer",
+	"category": "equipment",
+	"key": {
+		"D": "alaindustrial:diamond_dust",
+		"B": "alaindustrial:bronze_ingot",
+		"U": "alaindustrial:electric_chainsaw",
+		"G": "alaindustrial:gold_gear"
+	},
+	"pattern": [
+		"DDD",
+		"BUB",
+		" G "
+	],
+	"result": { "id": "alaindustrial:electric_chainsaw_diamond_tip" }
+}

@@ -53,6 +53,11 @@ public final class StackAsEnergyStorage implements EnergyStorage {
 	 * <p>{@code ITEM.registerForItems} is used here rather than the capsule's {@code combinedItemApiProvider}:
 	 * that helper is a fluid-specific convenience with no energy equivalent — Team Reborn documents
 	 * {@code EnergyStorage.ITEM} as the item path.
+	 *
+	 * <p><b>The list below must cover every powered item of the mod.</b> It is hand-written, and twice it
+	 * silently fell behind the item list (MOD-372: chainsaw, shovel, hoe and saber were missing while their
+	 * specs promised foreign charging). {@code ItemEnergyCapabilityGameTest.tcXmod001Reg01_*} now derives the
+	 * expected set from {@code ItemEnergy.capacity(stack) > 0} and fails the build on the next omission.
 	 */
 	public static void register() {
 		EnergyStorage.ITEM.registerForItems((stack, context) -> {
@@ -63,7 +68,10 @@ public final class StackAsEnergyStorage implements EnergyStorage {
 			return new DelegatingEnergyStorage(new StackAsEnergyStorage(context),
 					() -> context.getItemVariant().isOf(startingItem) && context.getAmount() > 0);
 		}, ModItems.BATTERY_POUCH, ModItems.BATTERY, ModItems.ENERGY_PACK, ModItems.ELECTRIC_DRILL,
-				ModItems.ELECTRIC_DRILL_DIAMOND_TIP, ModItems.ELECTROMAGNET,
+				ModItems.ELECTRIC_DRILL_DIAMOND_TIP, ModItems.ELECTRIC_CHAINSAW,
+				ModItems.ELECTRIC_CHAINSAW_DIAMOND_TIP, ModItems.ELECTRIC_SHOVEL,
+				ModItems.ELECTRIC_HOE, ModItems.ELECTRIC_SABER,
+				ModItems.ELECTROMAGNET,
 				ModItems.JETPACK,
 				ModItems.FLUXWEAVE_HELMET, ModItems.FLUXWEAVE_CHESTPLATE, ModItems.FLUXWEAVE_LEGGINGS,
 				ModItems.FLUXWEAVE_BOOTS);

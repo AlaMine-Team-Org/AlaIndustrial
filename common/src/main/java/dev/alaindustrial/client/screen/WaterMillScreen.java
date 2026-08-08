@@ -25,8 +25,14 @@ public class WaterMillScreen extends MachineScreen<WaterMillMenu> {
 	private static final float STATUS_UV_X = 176.0F;
 	private static final float STATUS_UV_Y = 0.0F;
 
-	/** Baseline (relative to topPos) of the centered status label: current output, or the idle reason. */
-	private static final int STATUS_TEXT_Y = 44;
+	/**
+	 * Baseline (relative to topPos) of the centered status label: current output, or the idle reason.
+	 *
+	 * <p>Public because the L3 status-row gate (MOD-354) crops its pixel comparison to exactly this row.
+	 * A copy of the number in the test would drift the moment the layout moves, and the gate would then
+	 * measure an empty band and pass while the row itself was broken.
+	 */
+	public static final int STATUS_TEXT_Y = 44;
 
 	public WaterMillScreen(WaterMillMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title, IMAGE_WIDTH, IMAGE_HEIGHT);

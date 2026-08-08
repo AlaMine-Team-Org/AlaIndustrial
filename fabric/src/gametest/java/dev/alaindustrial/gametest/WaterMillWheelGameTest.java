@@ -150,6 +150,21 @@ public class WaterMillWheelGameTest {
 	}
 
 	@GameTest
+	public void waterMill_productionRateChannelFollowsGlobalMultiplier(GameTestHelper helper) {
+		WaterMillWheelScenarios.waterMill_productionRateChannelFollowsGlobalMultiplier(helper);
+	}
+
+	@GameTest
+	public void waterMill_readoutKeepsFloorUnderTinyMultiplier(GameTestHelper helper) {
+		WaterMillWheelScenarios.waterMill_readoutKeepsFloorUnderTinyMultiplier(helper);
+	}
+
+	@GameTest
+	public void waterMillWheel_wearFollowsMechanicalRateNotMultiplier(GameTestHelper helper) {
+		WaterMillWheelScenarios.waterMillWheel_wearFollowsMechanicalRateNotMultiplier(helper);
+	}
+
+	@GameTest
 	public void waterMillWheel_wearsOutAndBreaks(GameTestHelper helper) {
 		WaterMillWheelScenarios.waterMillWheel_wearsOutAndBreaks(helper);
 	}

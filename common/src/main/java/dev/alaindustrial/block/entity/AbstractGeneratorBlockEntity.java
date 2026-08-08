@@ -45,6 +45,39 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 	protected abstract int produce(Level level, BlockPos pos, BlockState state);
 
 	/**
+	 * Publish the <b>effective</b> generation rate: {@link #produce}'s mechanical rate after
+	 * {@link Config#globalEuRateMultiplier} and its {@code max(1, ...)} floor. Called every server tick,
+	 * including with 0 when the generator is idle, so a stopped generator never leaves a stale reading.
+	 *
+	 * <p><b>Rate produced, not EU banked.</b> This is what the generator makes this tick, which is what the
+	 * buffer gains <em>while it has room</em> — it is deliberately not the capped {@code credited} figure
+	 * computed further down {@link #onServerTick}. A generator whose buffer is full still reports its rate
+	 * rather than dropping to 0, for the same reason component wear keeps accruing there (MOD-189): the
+	 * wheel is still turning, and a readout that fell to zero the moment a line saturated would read as a
+	 * broken build. Career statistics are the opposite case and use {@code credited} instead (MOD-133).
+	 *
+	 * <p><b>Why this exists (MOD-356).</b> Generators publish their rate from inside {@code produce()},
+	 * which runs <em>before</em> the multiplier is applied, so every GUI showed the mechanical rate while
+	 * the buffer filled at the multiplied one. On a server that raised the knob to 2.0 the reading was
+	 * half the truth — and that reading exists precisely so a player can verify a build.
+	 *
+	 * <p><b>Why it must happen server-side.</b> {@link Config} is loaded per side and never synced
+	 * (see {@code docs/SERVER_CONFIG.md}), so a client cannot scale the number itself: on a dedicated
+	 * server it would multiply by its own local file — or by the compiled default — and lie again.
+	 *
+	 * <p><b>Where the value lands is the subclass's call.</b> Channel 2 ({@code progress}) is a generic
+	 * per-machine channel, and on some generators it is already spoken for: the wind mills drive the rotor's
+	 * spin speed from it and the water mill carries its water-face count there. Those keep channel 2
+	 * <em>mechanical</em> and expose the effective rate on a channel of their own — an economy knob must not
+	 * change how fast a rotor visibly turns (the same MOD-189 line that keeps component wear on the
+	 * mechanical rate). Generators with nothing else on channel 2 (the solar panels) simply land it there.
+	 * The default is a no-op: a generator whose channel 2 means something unrelated — fuel burn ticks, lava
+	 * ticks — has no EU/t readout to correct.
+	 */
+	protected void publishEffectiveRate(int effectiveEuPerTick) {
+	}
+
+	/**
 	 * Wear the consumable component in {@code slot} by one active tick (MOD-189) — call only when the
 	 * generator actually produced EU this tick ({@code producedEu > 0}). Wear is proportional to the EU
 	 * produced (times {@code weatherFactor} for adverse-weather stress); each {@link Config} EU-per-damage
@@ -107,10 +140,20 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 		return facingAwareRole(worldFace, EnergyRole.OUT);
 	}
 
+	/**
+	 * Declared {@code final}: every generator's readout, wear and buffer credit run through this one tick
+	 * body, so a subclass that overrode it and forgot {@code super} would silently freeze all of them at
+	 * their last value (MOD-356). Express a generator's behaviour in {@link #produce} instead.
+	 */
 	@Override
-	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
-		int made = produce(level, pos, state);
-		made = (made > 0) ? Math.max(1, Math.round(made * Config.globalEuRateMultiplier)) : 0;
+	protected final int onServerTick(Level level, BlockPos pos, BlockState state) {
+		// The mechanical rate — what the blades/wheel/panel physically make. Component wear is charged on
+		// this one (MOD-189); the global multiplier on the next line is an EU-economy knob layered on top.
+		int mechanical = produce(level, pos, state);
+		int made = (mechanical > 0) ? Math.max(1, Math.round(mechanical * Config.globalEuRateMultiplier)) : 0;
+		// MOD-356: the GUI has to show what actually reaches the buffer, so the effective rate is published
+		// here — after the multiplier — and not from inside produce(), which only knows the mechanical one.
+		publishEffectiveRate(made);
 		boolean changed = false;
 		if (made > 0) {
 			// MOD-156: "active in the mod" time is credited whenever the generator is RUNNING, before and
