@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "তামার কেবল",
-              "text": "একটি সস্তা, নির্ভরযোগ্য LV কেবল; যতক্ষণ সত্যিই শক্তি প্রবাহিত হয়, অনাবৃত তার স্পর্শকারী খেলোয়াড়কে শক দেয়।"
+              "text": "একটি সস্তা, নির্ভরযোগ্য LV কেবল; বিদ্যুৎ-সরবরাহ পাওয়া গ্রিডে যুক্ত হয়ে সচল থাকা অবস্থায় অনাবৃত তার স্পর্শকারী খেলোয়াড়কে শক দেয়।"
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "পাতন স্তম্ভ",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "পাতন স্তম্ভ",
+              "text": "১×১×৩ একটি টাওয়ার যা অপরিশোধিত তেলকে ডিজেল ও জ্বালানি তেলে ভাগ করে। মডের প্রথম মাল্টিব্লক — তিনটি অংশ হাতে সাজিয়ে গড়া হয়; হালকা ভগ্নাংশ উপর দিয়ে, ভারীটি নিচ দিয়ে বের হয়, আর খুলে ফেললে ভিত্তি তার তরল ধরে রাখে।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 400 EU/ক্রিয়া",
+                "বাফার: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "ডিজেল",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ডিজেল",
+              "text": "তেল পাতনের হালকা ভগ্নাংশ — সোনালি-হলুদ একটি তরল, স্তম্ভের লক্ষ্য-পণ্য। তরল জ্বালানি জেনারেটরের ভবিষ্যৎ জ্বালানি (12 EU/t)।"
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "ইনভারের পিণ্ড",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "কিউপ্রোনিকেলের পিণ্ড",
               "text": "এক-এক অনুপাতে তামা-নিকেলের সংকর ধাতু, একবারে একটি পিণ্ড — উপকরণের হিসাবে নিকেলকে কাজে লাগানোর সবচেয়ে সস্তা উপায়।"
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "জ্বালানি তেল",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "জ্বালানি তেল",
+              "text": "তেল পাতনের ভারী অবশেষ — ঘন, গাঢ় বাদামি একটি তরল। ডিজেলের চেয়ে দুর্বল জ্বালানি (6 EU/t), তবে কিছুই নষ্ট হয় না — সবটাই পুড়ে যায়।"
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "গার্ডেন ড্রোন স্টেশন",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "EU-বাফারযুক্ত একটি LV স্টেশন, যেখান থেকে একটি অ্যানিমেটেড ড্রোন উড়ে ৯ ব্লক ব্যাসার্ধের কৃষিজমিতে টহল দেয় — খালি মাটি চাষ করে, বীজ বোনে, অপরিণত ফসলে সার দেয় এবং পাকা ফসল স্টেশনে ফিরিয়ে আনে।"
             },
             {
               "type": "stats",
@@ -1873,13 +1938,13 @@
             {
               "type": "text",
               "title": "স্টোরেজ মডিউল",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "২৭-স্লটের একটি স্টোরেজ ব্লক: পাশাপাশি বসানো মডিউলগুলো একটিমাত্র জানালার পেছনে ১০৮ স্লট পর্যন্ত একটি একক গুদাম হিসেবে কাজ করে।"
             },
             {
               "type": "stats",
               "title": "পরিসংখ্যান",
               "lines": [
-                "Buffer: 0 EU"
+                "বাফার: 0 EU"
               ]
             },
             {
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "ব্যাটারি",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "প্রথম EU বাহক — 2 000 EU-এর একটি রিচার্জযোগ্য ব্যাটারি, যা চার্জের মাত্রা অনুযায়ী স্ট্যাক হয় এবং তার শক্তি গ্রিডে বা অন্য কোনো আইটেমে ফিরিয়ে দেয়।"
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "উন্নত সার্কিট",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "সার্কিটের MV স্তর — মূল বোর্ডটি সোনা দিয়ে নতুন করে ওয়্যারিং করে রাবারে সিল করা।"
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "উন্নত মেশিন কেসিং",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "MV মেশিনের জন্য একটি পূর্ণ-ঘন ভিত্তি ব্লক — দুটি উন্নত সার্কিটসহ একটি সাধারণ কেসিং, ৬টি টেম্পার্ড লোহার পাতে মোড়ানো।"
             },
             {
               "type": "recipe",

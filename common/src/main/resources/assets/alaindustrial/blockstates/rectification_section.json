@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "lit=false": { "model": "alaindustrial:block/rectification_section" },
+    "lit=true": { "model": "alaindustrial:block/rectification_section_on" }
+  }
+}

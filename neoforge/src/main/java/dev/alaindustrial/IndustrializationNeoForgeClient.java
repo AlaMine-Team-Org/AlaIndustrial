@@ -104,16 +104,18 @@ public final class IndustrializationNeoForgeClient {
 		// custom fluid registers its own FluidModel.Unbaked. NeoForge counterpart to the Fabric
 		// FluidRenderingRegistry call in IndustrializationClient; one model shared by still + flowing,
 		// overlay/tint null exactly like vanilla lava (the textures carry their colour).
-		modBus.addListener((net.neoforged.neoforge.client.event.RegisterFluidModelsEvent event) ->
-				event.register(
-						new net.minecraft.client.renderer.block.FluidModel.Unbaked(
-								new net.minecraft.client.resources.model.sprite.Material(
-										Industrialization.id("block/oil_still")),
-								new net.minecraft.client.resources.model.sprite.Material(
-										Industrialization.id("block/oil_flow")),
-								null, null),
-						dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.OIL,
-						dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLOWING_OIL));
+		modBus.addListener((net.neoforged.neoforge.client.event.RegisterFluidModelsEvent event) -> {
+			event.register(fluidModel("oil"),
+					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.OIL,
+					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLOWING_OIL);
+			// MOD-251: the two distillation fractions, same registration shape as oil.
+			event.register(fluidModel("diesel"),
+					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.DIESEL,
+					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLOWING_DIESEL);
+			event.register(fluidModel("fuel_oil"),
+					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FUEL_OIL,
+					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLOWING_FUEL_OIL);
+		});
 		// MOD-085: green flame particle provider for the Enriched Uranium Torch. registerSpriteSet =
 		// json-backed particle (assets/alaindustrial/particles/enriched_uranium_flame.json); reuses the
 		// vanilla FlameParticle provider (like soul_fire_flame), colour comes from the particle texture.
@@ -199,6 +201,16 @@ public final class IndustrializationNeoForgeClient {
 		NeoForge.EVENT_BUS.addListener(
 				(net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent.LoggingOut event) ->
 						dev.alaindustrial.client.hud.TeleportFadeHud.reset());
+	}
+
+	/** One fluid's {@code FluidModel.Unbaked} built from {@code block/<name>_still|_flow} (MOD-251). */
+	private static net.minecraft.client.renderer.block.FluidModel.Unbaked fluidModel(String name) {
+		return new net.minecraft.client.renderer.block.FluidModel.Unbaked(
+				new net.minecraft.client.resources.model.sprite.Material(
+						Industrialization.id("block/" + name + "_still")),
+				new net.minecraft.client.resources.model.sprite.Material(
+						Industrialization.id("block/" + name + "_flow")),
+				null, null);
 	}
 
 	/**

@@ -111,5 +111,21 @@ public final class ModTags {
 		 */
 		public static final TagKey<Fluid> C_OIL =
 				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "oil"));
+
+		/** Diesel (MOD-251) — {@code c:diesel}, still + flowing, same convention as {@link #C_OIL}. */
+		public static final TagKey<Fluid> C_DIESEL =
+				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "diesel"));
+
+		/** Fuel oil (MOD-251) — {@code c:fuel_oil}, still + flowing. */
+		public static final TagKey<Fluid> C_FUEL_OIL =
+				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "fuel_oil"));
+
+		/**
+		 * Every fluid the liquid fuel generator burns (MOD-251 ships the tag, MOD-261 reads it):
+		 * diesel + fuel oil + vanilla lava. Lava is the one member the mod does not own — it is in the
+		 * tag so one filter covers the whole family.
+		 */
+		public static final TagKey<Fluid> C_COMBUSTION_FUELS =
+				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "combustion_fuels"));
 	}
 }

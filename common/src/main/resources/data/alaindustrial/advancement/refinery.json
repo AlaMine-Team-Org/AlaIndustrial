@@ -1,0 +1,15 @@
+{
+  "parent": "alaindustrial:first_oil",
+  "display": {
+    "icon": { "id": "alaindustrial:distillation_column" },
+    "title": { "translate": "advancements.alaindustrial.refinery.title" },
+    "description": { "translate": "advancements.alaindustrial.refinery.description" }
+  },
+  "criteria": {
+    "column": {
+      "trigger": "minecraft:placed_block",
+      "conditions": { "location": [{ "condition": "minecraft:block_state_property", "block": "alaindustrial:distillation_column" }] }
+    }
+  },
+  "requirements": [["column"]]
+}

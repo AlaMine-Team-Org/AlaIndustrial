@@ -105,7 +105,7 @@ public final class UpgradePanelController {
 		AlaClientConfig.savePanelPosition(this.panelDX, this.panelDY);
 	}
 
-	public int gearX(int leftPos) { return leftPos + BTN_X; }
+	public int gearX(int leftPos) { return leftPos + menu.panelAnchorX() + (BTN_X - MachineMenu.PANEL_X); }
 	public int gearY(int topPos) { return topPos + BTN_Y; }
 
 	public boolean isOverGear(double mx, double my, int leftPos, int topPos) {
@@ -121,13 +121,13 @@ public final class UpgradePanelController {
 	}
 
 	public boolean isOverPanel(double mx, double my, int leftPos, int topPos) {
-		double px = leftPos + MachineMenu.PANEL_X + this.panelDX;
+		double px = leftPos + menu.panelAnchorX() + this.panelDX;
 		double py = topPos + MachineMenu.PANEL_Y + this.panelDY;
 		return mx >= px && mx < px + PANEL_W && my >= py && my < py + PANEL_H;
 	}
 
 	public int closeX(int leftPos) {
-		return leftPos + MachineMenu.PANEL_X + this.panelDX + (CLOSE_U - PANEL_U);
+		return leftPos + menu.panelAnchorX() + this.panelDX + (CLOSE_U - PANEL_U);
 	}
 
 	public int closeY(int topPos) {
@@ -139,12 +139,12 @@ public final class UpgradePanelController {
 	}
 
 	public Rect2i panelArea(int leftPos, int topPos) {
-		return new Rect2i(leftPos + MachineMenu.PANEL_X + this.panelDX,
+		return new Rect2i(leftPos + menu.panelAnchorX() + this.panelDX,
 				topPos + MachineMenu.PANEL_Y + this.panelDY, PANEL_W, PANEL_H);
 	}
 
-	private int minPanelDX(int leftPos) { return -(leftPos + MachineMenu.PANEL_X); }
-	private int maxPanelDX(int leftPos, int screenWidth) { return screenWidth - PANEL_W - (leftPos + MachineMenu.PANEL_X); }
+	private int minPanelDX(int leftPos) { return -(leftPos + menu.panelAnchorX()); }
+	private int maxPanelDX(int leftPos, int screenWidth) { return screenWidth - PANEL_W - (leftPos + menu.panelAnchorX()); }
 	private int minPanelDY(int topPos) { return -(topPos + MachineMenu.PANEL_Y); }
 	private int maxPanelDY(int topPos, int screenHeight) { return screenHeight - PANEL_H - (topPos + MachineMenu.PANEL_Y); }
 }

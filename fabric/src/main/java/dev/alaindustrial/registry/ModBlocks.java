@@ -191,6 +191,22 @@ public final class ModBlocks {
 	public static final Block ASSEMBLER = register(ASSEMBLER_KEY, new AssemblerBlock(props(ASSEMBLER_KEY)));
 	public static final ResourceKey<Block> POLYMERIZER_KEY = key("polymerizer");
 	public static final Block POLYMERIZER = register(POLYMERIZER_KEY, new PolymerizerBlock(props(POLYMERIZER_KEY)));
+
+	// Distillation Column (MOD-251): the 1×1×3 tower. Only the base has a BlockItem; the two segment
+	// blocks are placed by the base (setPlacedBy) and are never carried.
+	public static final ResourceKey<Block> DISTILLATION_COLUMN_KEY = key("distillation_column");
+	public static final Block DISTILLATION_COLUMN = register(DISTILLATION_COLUMN_KEY,
+			new dev.alaindustrial.block.DistillationColumnBlock(props(DISTILLATION_COLUMN_KEY)));
+	public static final ResourceKey<Block> DISTILLATION_COLUMN_MIDDLE_KEY = key("distillation_column_middle");
+	public static final Block DISTILLATION_COLUMN_MIDDLE = register(DISTILLATION_COLUMN_MIDDLE_KEY,
+			new dev.alaindustrial.block.DistillationColumnMiddleBlock(props(DISTILLATION_COLUMN_MIDDLE_KEY)));
+	public static final ResourceKey<Block> DISTILLATION_COLUMN_TOP_KEY = key("distillation_column_top");
+	public static final Block DISTILLATION_COLUMN_TOP = register(DISTILLATION_COLUMN_TOP_KEY,
+			new dev.alaindustrial.block.DistillationColumnTopBlock(props(DISTILLATION_COLUMN_TOP_KEY)));
+	// Rectification Section (MOD-251 round 2): the optional fourth storey, crafted and placed by hand.
+	public static final ResourceKey<Block> RECTIFICATION_SECTION_KEY = key("rectification_section");
+	public static final Block RECTIFICATION_SECTION = register(RECTIFICATION_SECTION_KEY,
+			new dev.alaindustrial.block.RectificationSectionBlock(props(RECTIFICATION_SECTION_KEY)));
 	public static final ResourceKey<Block> ALLOY_SMELTER_KEY = key("alloy_smelter");
 	public static final Block ALLOY_SMELTER =
 			register(ALLOY_SMELTER_KEY, new AlloySmelterBlock(props(ALLOY_SMELTER_KEY)));
@@ -316,6 +332,16 @@ public final class ModBlocks {
 	public static final ResourceKey<Block> OIL_KEY = key("oil");
 	public static final Block OIL = register(OIL_KEY, new OilLiquidBlock(ModFluids.OIL, props(OIL_KEY)));
 
+	// Distillation fractions (MOD-251): plain vanilla LiquidBlocks — the fractions are water-like
+	// machine products with no world hazard, so no OilLiquidBlock-style burning subclass.
+	public static final ResourceKey<Block> DIESEL_KEY = key("diesel");
+	public static final Block DIESEL = register(DIESEL_KEY,
+			new net.minecraft.world.level.block.LiquidBlock(ModFluids.DIESEL, props(DIESEL_KEY)));
+
+	public static final ResourceKey<Block> FUEL_OIL_KEY = key("fuel_oil");
+	public static final Block FUEL_OIL = register(FUEL_OIL_KEY,
+			new net.minecraft.world.level.block.LiquidBlock(ModFluids.FUEL_OIL, props(FUEL_OIL_KEY)));
+
 	private static ResourceKey<Block> key(String path) {
 		return ResourceKey.create(Registries.BLOCK, Industrialization.id(path));
 	}
@@ -375,6 +401,10 @@ public final class ModBlocks {
 		ModContent.SAWMILL = () -> SAWMILL;
 		ModContent.ASSEMBLER = () -> ASSEMBLER;
 		ModContent.POLYMERIZER = () -> POLYMERIZER;
+		ModContent.DISTILLATION_COLUMN = () -> DISTILLATION_COLUMN;
+		ModContent.DISTILLATION_COLUMN_MIDDLE = () -> DISTILLATION_COLUMN_MIDDLE;
+		ModContent.DISTILLATION_COLUMN_TOP = () -> DISTILLATION_COLUMN_TOP;
+		ModContent.RECTIFICATION_SECTION = () -> RECTIFICATION_SECTION;
 		ModContent.VULCANIZER = () -> VULCANIZER;
 		ModContent.ALLOY_SMELTER = () -> ALLOY_SMELTER;
 		ModContent.GALVANIC_BATH = () -> GALVANIC_BATH;
@@ -407,5 +437,7 @@ public final class ModBlocks {
 		ModContent.ENRICHED_URANIUM_TORCH = () -> ENRICHED_URANIUM_TORCH;
 		ModContent.ENRICHED_URANIUM_WALL_TORCH = () -> ENRICHED_URANIUM_WALL_TORCH;
 		ModContent.OIL_BLOCK = () -> OIL;
+		ModContent.DIESEL_BLOCK = () -> DIESEL;
+		ModContent.FUEL_OIL_BLOCK = () -> FUEL_OIL;
 	}
 }

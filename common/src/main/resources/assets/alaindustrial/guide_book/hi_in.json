@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "तांबे की केबल",
-              "text": "एक सस्ती, भरोसेमंद LV केबल; जब तक इसमें वास्तव में ऊर्जा बह रही हो, नंगा तार छूने वाले खिलाड़ी को झटका देता है।"
+              "text": "एक सस्ती, भरोसेमंद LV केबल; जब तक नंगा तार किसी संचालित ग्रिड से जुड़कर सक्रिय है, वह छूने वाले खिलाड़ी को झटका देता है।"
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "आसवन स्तंभ",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "आसवन स्तंभ",
+              "text": "1×1×3 का टावर जो कच्चे तेल को डीज़ल और ईंधन तेल में विभाजित करता है। मॉड का पहला मल्टीब्लॉक — तीन खंडों से हाथ से जोड़ा जाता है; हल्का अंश ऊपर से निकलता है, भारी नीचे से, और खोलने पर आधार अपने तरल सुरक्षित रखता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 400 EU/संचालन",
+                "बफ़र: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "डीज़ल",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "डीज़ल",
+              "text": "तेल आसवन का हल्का अंश — सुनहरा-पीला तरल, स्तंभ का लक्षित उत्पाद। तरल ईंधन जनरेटर का भावी ईंधन (12 EU/t)।"
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "इन्वार का पिंड",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "क्यूप्रोनिकल का पिंड",
               "text": "एक-से-एक अनुपात वाली तांबे-निकल की मिश्रधातु, एक बार में एक पिंड — सामग्री के हिसाब से निकल को काम में लाने का सबसे सस्ता तरीका।"
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "ईंधन तेल",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ईंधन तेल",
+              "text": "तेल आसवन का भारी अवशेष — गाढ़ा, गहरा भूरा तरल। डीज़ल से कमज़ोर ईंधन (6 EU/t), पर कुछ भी बेकार नहीं जाता — सब जल जाता है।"
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "गार्डन ड्रोन स्टेशन",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "EU-बफ़र वाला एक LV स्टेशन, जहाँ से एक एनिमेटेड ड्रोन उड़ान भरकर 9 ब्लॉक की त्रिज्या में खेतों की गश्त करता है — खाली मिट्टी जोतता है, बीज बोता है, अपरिपक्व फ़सलों में खाद डालता है और पकी फ़सल स्टेशन तक वापस लाता है।"
             },
             {
               "type": "stats",
@@ -1873,13 +1938,13 @@
             {
               "type": "text",
               "title": "भंडारण मॉड्यूल",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "27 स्लॉट वाला एक भंडारण ब्लॉक: एक-दूसरे से सटाकर रखे मॉड्यूल एक ही खिड़की के पीछे 108 स्लॉट तक के एक ही गोदाम की तरह काम करते हैं।"
             },
             {
               "type": "stats",
               "title": "आँकड़े",
               "lines": [
-                "Buffer: 0 EU"
+                "बफ़र: 0 EU"
               ]
             },
             {
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "बैटरी",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "पहला EU वाहक — 2 000 EU की रिचार्जेबल बैटरी, जो चार्ज स्तर के अनुसार स्टैक होती है और अपनी ऊर्जा ग्रिड या किसी दूसरे आइटम को लौटा देती है।"
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "उन्नत सर्किट",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "सर्किट का MV स्तर — आधार बोर्ड, जिसे सोने से दोबारा वायर करके रबर में सील किया गया है।"
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "उन्नत मशीन केसिंग",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "MV मशीनों के लिए पूर्ण-घन आधार ब्लॉक — दो उन्नत सर्किट वाला सादा आवरण, 6 टेम्पर्ड लोहे की प्लेटों से मढ़ा हुआ।"
             },
             {
               "type": "recipe",

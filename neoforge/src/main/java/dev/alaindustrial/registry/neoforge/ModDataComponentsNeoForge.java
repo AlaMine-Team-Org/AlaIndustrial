@@ -59,6 +59,9 @@ public final class ModDataComponentsNeoForge {
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<FluidTankContents>> FLUID_TANK_CONTENTS =
 			DATA_COMPONENTS.register("fluid_tank_contents", ModDataComponents::createFluidTankContents);
 
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<dev.alaindustrial.item.fluid.DistillationColumnContents>> DISTILLATION_COLUMN_CONTENTS =
+			DATA_COMPONENTS.register("distillation_column_contents", ModDataComponents::createDistillationColumnContents);
+
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> TELEPORTER_PRIVATE =
 			DATA_COMPONENTS.register("teleporter_private", ModDataComponents::createTeleporterPrivate);
 
@@ -90,6 +93,7 @@ public final class ModDataComponentsNeoForge {
 		ModDataComponents.BLUEPRINT_SUBSTITUTE = BLUEPRINT_SUBSTITUTE;
 		ModDataComponents.CAPSULE_FLUID = CAPSULE_FLUID;
 		ModDataComponents.FLUID_TANK_CONTENTS = FLUID_TANK_CONTENTS;
+		ModDataComponents.DISTILLATION_COLUMN_CONTENTS = DISTILLATION_COLUMN_CONTENTS;
 		ModDataComponents.TELEPORTER_PRIVATE = TELEPORTER_PRIVATE;
 		ModDataComponents.TELEPORTER_OWNER = TELEPORTER_OWNER;
 		ModDataComponents.TELEPORTER_POINTS = TELEPORTER_POINTS;

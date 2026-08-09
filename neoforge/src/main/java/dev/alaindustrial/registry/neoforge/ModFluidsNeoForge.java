@@ -1,6 +1,8 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.fluid.DieselFluid;
+import dev.alaindustrial.fluid.FuelOilFluid;
 import dev.alaindustrial.fluid.OilFluid;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.registries.Registries;
@@ -74,6 +76,50 @@ public final class ModFluidsNeoForge {
 	public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_OIL =
 			FLUIDS.register("flowing_oil", Flowing::new);
 
+	// --- Distillation fractions (MOD-251) ---
+
+	/**
+	 * Diesel's {@link FluidType}: light and thin next to crude (density/viscosity between water and
+	 * oil). Entity-physics fields are pinned explicitly for the same reason as
+	 * {@link #oilTypeProperties()} — the fractions behave like water-that-does-nothing on both
+	 * loaders, and must keep doing so if NeoForge re-enables its fluid-type entity integration.
+	 * {@code descriptionId} points at the block key (translated in all 20 locales), not the derived
+	 * {@code fluid_type.*} key which has no translation.
+	 */
+	public static final DeferredHolder<FluidType, FluidType> DIESEL_TYPE =
+			FLUID_TYPES.register("diesel", () -> new FluidType(distillateTypeProperties(
+					"block.alaindustrial.diesel", 850, 1200)));
+
+	/** Fuel oil's {@link FluidType}: the heavy residue — denser and thicker than diesel. */
+	public static final DeferredHolder<FluidType, FluidType> FUEL_OIL_TYPE =
+			FLUID_TYPES.register("fuel_oil", () -> new FluidType(distillateTypeProperties(
+					"block.alaindustrial.fuel_oil", 950, 2400)));
+
+	/** Shared water-like-but-inert property chain for the two fractions (see {@link #DIESEL_TYPE}). */
+	public static FluidType.Properties distillateTypeProperties(String descriptionId, int density,
+			int viscosity) {
+		return FluidType.Properties.create()
+				.descriptionId(descriptionId)
+				.density(density)
+				.viscosity(viscosity)
+				.canConvertToSource(false)
+				.canSwim(false)
+				.canDrown(false)
+				.canPushEntity(false)
+				.motionScale(0.0D)
+				.fallDistanceModifier(1.0F)
+				.supportsBoating(false);
+	}
+
+	public static final DeferredHolder<Fluid, FlowingFluid> DIESEL =
+			FLUIDS.register("diesel", DieselStill::new);
+	public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_DIESEL =
+			FLUIDS.register("flowing_diesel", DieselFlowing::new);
+	public static final DeferredHolder<Fluid, FlowingFluid> FUEL_OIL =
+			FLUIDS.register("fuel_oil", FuelOilStill::new);
+	public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_FUEL_OIL =
+			FLUIDS.register("flowing_fuel_oil", FuelOilFlowing::new);
+
 	private ModFluidsNeoForge() {
 	}
 
@@ -93,6 +139,38 @@ public final class ModFluidsNeoForge {
 		}
 	}
 
+	/** Still diesel with NeoForge's mandatory {@code getFluidType()} attached. */
+	public static final class DieselStill extends DieselFluid.Source {
+		@Override
+		public FluidType getFluidType() {
+			return DIESEL_TYPE.get();
+		}
+	}
+
+	/** Flowing diesel with NeoForge's mandatory {@code getFluidType()} attached. */
+	public static final class DieselFlowing extends DieselFluid.Flowing {
+		@Override
+		public FluidType getFluidType() {
+			return DIESEL_TYPE.get();
+		}
+	}
+
+	/** Still fuel oil with NeoForge's mandatory {@code getFluidType()} attached. */
+	public static final class FuelOilStill extends FuelOilFluid.Source {
+		@Override
+		public FluidType getFluidType() {
+			return FUEL_OIL_TYPE.get();
+		}
+	}
+
+	/** Flowing fuel oil with NeoForge's mandatory {@code getFluidType()} attached. */
+	public static final class FuelOilFlowing extends FuelOilFluid.Flowing {
+		@Override
+		public FluidType getFluidType() {
+			return FUEL_OIL_TYPE.get();
+		}
+	}
+
 	/**
 	 * Binds the fluid {@code DeferredHolder}s into the loader-neutral {@link ModContent} facade,
 	 * mirroring the Fabric {@code ModFluids.init()}. Called from the {@code @Mod} constructor after
@@ -101,5 +179,9 @@ public final class ModFluidsNeoForge {
 	public static void init() {
 		ModContent.OIL = OIL::get;
 		ModContent.FLOWING_OIL = FLOWING_OIL::get;
+		ModContent.DIESEL = DIESEL::get;
+		ModContent.FLOWING_DIESEL = FLOWING_DIESEL::get;
+		ModContent.FUEL_OIL = FUEL_OIL::get;
+		ModContent.FLOWING_FUEL_OIL = FLOWING_FUEL_OIL::get;
 	}
 }

@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "Cáp Đồng",
-              "text": "Cáp LV rẻ và bền bỉ; khi năng lượng đang thực sự chảy qua, dây trần sẽ giật người chơi chạm vào."
+              "text": "Cáp LV rẻ và bền bỉ; dây trần sẽ giật người chơi chừng nào nó còn mang điện nhờ nối vào lưới đang được cấp năng lượng."
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "Tháp Chưng Cất",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tháp Chưng Cất",
+              "text": "Tháp 1×1×3 chưng cất dầu thô thành dầu diesel và dầu mazut. Khối đa phần đầu tiên của mod — lắp thủ công từ ba khối; phần nhẹ thoát ra ở đỉnh, phần nặng ở đáy, và phần đế giữ lại chất lỏng khi tháo dỡ."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 400 EU/thao tác",
+                "Bộ đệm: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "Dầu Diesel",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Dầu Diesel",
+              "text": "Phân đoạn nhẹ của quá trình chưng cất dầu — chất lỏng màu vàng óng, sản phẩm chính của tháp. Nhiên liệu tương lai của máy phát điện nhiên liệu lỏng (12 EU/t)."
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "Thỏi Invar",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "Thỏi Đồng Niken",
               "text": "Hợp kim đồng–niken theo tỉ lệ một đối một, mỗi lần chỉ ra một thỏi — xét về nguyên liệu, đây là cách rẻ nhất để dùng đến niken."
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "Dầu Mazut",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Dầu Mazut",
+              "text": "Cặn nặng của quá trình chưng cất dầu — chất lỏng sệt màu nâu sẫm. Nhiên liệu yếu hơn dầu diesel (6 EU/t), nhưng không gì bị lãng phí — tất cả đều cháy được."
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "Trạm Drone Làm Vườn",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "Trạm LV có bộ đệm EU, nơi một drone hoạt họa cất cánh và tuần tra đất nông trại trong bán kính 9 khối — cày đất trống, gieo hạt, bón phân cho cây chưa trưởng thành và mang nông sản chín về trạm."
             },
             {
               "type": "stats",
@@ -1873,13 +1938,13 @@
             {
               "type": "text",
               "title": "Mô-đun Lưu Trữ",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "Khối lưu trữ 27 ô: các mô-đun đặt sát nhau hoạt động như một nhà kho duy nhất lên tới 108 ô sau một cửa sổ."
             },
             {
               "type": "stats",
               "title": "Thông số",
               "lines": [
-                "Buffer: 0 EU"
+                "Bộ đệm: 0 EU"
               ]
             },
             {
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "Pin",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "Vật mang EU đầu tiên — pin sạc 2 000 EU, xếp chồng theo mức sạc và trả năng lượng về lưới điện hoặc sang vật phẩm khác."
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "Mạch Tiên Tiến",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "Bậc MV của mạch — bo mạch cơ sở được đi dây lại bằng vàng và bọc kín trong cao su."
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "Khung Máy Nâng Cao",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "Khối cơ sở lập phương đầy cho máy MV — vỏ máy trơn với hai Mạch Tiên Tiến, ốp 6 tấm sắt tôi."
             },
             {
               "type": "recipe",

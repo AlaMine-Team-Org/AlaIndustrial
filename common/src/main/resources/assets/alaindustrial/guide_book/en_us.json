@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "Copper Cable",
-              "text": "A cheap workhorse LV cable; while energy is actually flowing, the bare wire shocks players on contact."
+              "text": "A cheap workhorse LV cable; the bare wire shocks players while it is live off a powered grid."
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "Distillation Column",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Distillation Column",
+              "text": "A 1×1×3 tower that fractions crude oil into diesel and fuel oil. The mod's first multiblock — hand-assembled from three segments; the light fraction leaves at the top, the heavy one at the bottom, and the base keeps its fluids through disassembly."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 400 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "Diesel",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Diesel",
+              "text": "The light fraction of oil distillation — a golden-yellow fluid, the column's target product. Future fuel of the liquid fuel generator (12 EU/t)."
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "Invar Ingot",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "Cupronickel Ingot",
               "text": "A one-to-one copper-nickel alloy made a single ingot at a time — the cheapest way, by materials, to put nickel to work."
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "Fuel Oil",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fuel Oil",
+              "text": "The heavy residue of oil distillation — a thick dark-brown fluid. Weaker fuel than diesel (6 EU/t), but nothing goes to waste — it all burns."
             }
           ]
         },

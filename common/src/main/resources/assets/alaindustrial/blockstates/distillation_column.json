@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "formed=false,lit=false": { "model": "alaindustrial:block/distillation_column_middle" },
+    "formed=false,lit=true": { "model": "alaindustrial:block/distillation_column_middle" },
+    "formed=true,lit=false": { "model": "alaindustrial:block/distillation_column" },
+    "formed=true,lit=true": { "model": "alaindustrial:block/distillation_column_on" }
+  }
+}

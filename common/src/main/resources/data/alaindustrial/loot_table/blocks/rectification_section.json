@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:block",
+  "pools": [{
+    "rolls": 1.0,
+    "entries": [{ "type": "minecraft:item", "name": "alaindustrial:rectification_section" }],
+    "conditions": [{ "condition": "minecraft:survives_explosion" }]
+  }]
+}

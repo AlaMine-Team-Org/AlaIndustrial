@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "銅ケーブル",
-              "text": "安価で実用的なLVケーブル。実際に電力が流れている間は、むき出しの導線に触れたプレイヤーが感電します。"
+              "text": "安価で実用的なLVケーブル。給電中の送電網につながって通電している間は、むき出しの導線に触れたプレイヤーが感電します。"
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "蒸留塔",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "蒸留塔",
+              "text": "原油をディーゼルと重油に分留する1×1×3の塔。MOD初のマルチブロック — 3つのセグメントを手で積んで組み立てる。軽い留分は上から、重い留分は下から出て、分解しても基部が液体を保持する。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 400 EU/処理",
+                "バッファ: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "ディーゼル",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ディーゼル",
+              "text": "石油蒸留の軽質留分 — 黄金色の液体で、蒸留塔の目標産物。液体燃料発電機（12 EU/t）の将来の燃料です。"
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "インバーインゴット",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "白銅インゴット",
               "text": "1対1の銅とニッケルの合金で、1個ずつしか作れません — 素材で見れば、ニッケルを活かす最も安上がりな道です。"
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "重油",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "重油",
+              "text": "石油蒸留の重い残渣 — どろりとした暗褐色の液体。ディーゼルより弱い燃料（6 EU/t）ですが、無駄は一切なし — すべて燃やせます。"
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "ガーデンドローンステーション",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "EUバッファを備えたLVステーション。ここからアニメーション表示のドローンが飛び立ち、半径9ブロックの農地を巡回します — 空いた土を耕し、種を植え、未成熟の作物に肥料をやり、実った収穫物をステーションへ持ち帰ります。"
             },
             {
               "type": "stats",
@@ -1873,13 +1938,13 @@
             {
               "type": "text",
               "title": "ストレージモジュール",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "27スロットの収納ブロック。隣接して置いたモジュール同士は、1つの窓の向こうで最大108スロットの1つの倉庫として機能します。"
             },
             {
               "type": "stats",
               "title": "ステータス",
               "lines": [
-                "Buffer: 0 EU"
+                "バッファ: 0 EU"
               ]
             },
             {
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "電池",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "最初のEUキャリア — 充電式の2 000 EU電池。充電量ごとにスタックし、蓄えたエネルギーを送電網や他のアイテムに返します。"
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "高度な回路",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "回路のMV段階 — 基本基板を金で配線し直し、ゴムで封止したもの。"
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "高度なマシンケース",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "MV機械のための完全な立方体の土台ブロック — 高度な回路2枚を組み込んだ簡素な筐体を、焼き入れ鉄のプレート6枚で覆ったもの。"
             },
             {
               "type": "recipe",

@@ -182,6 +182,10 @@ pitest {
                      // RecipeViewerInfo) are MC-coupled, and `recipe` holds nine of which eight
                      // implement Recipe<…>. A glob over either package would drag those in and
                      // manufacture exactly the guaranteed-NO_COVERAGE mutants this task is removing.
+                     // MOD-251: the distillation column's status enum — MC-free by the same design
+                     // as the four status enums above; added here WITH the class and its L1 suite
+                     // (DistillationColumnStatusTest), not a release later.
+                     'dev.alaindustrial.block.entity.DistillationColumnStatus',
                      'dev.alaindustrial.block.entity.GalvanicBathStatus',
                      'dev.alaindustrial.block.entity.GardenDroneAction',
                      'dev.alaindustrial.block.entity.GardenDroneStatus',

@@ -92,6 +92,11 @@ public final class AlaJeiPlugin implements IModPlugin {
 		Block alloySmelter = ModBlocksNeoForge.ALLOY_SMELTER.get();
 		registration.addRecipeCategories(new AlloyingJeiCategory(AlaJeiRecipeTypes.ALLOYING,
 				alloySmelter, alloySmelter.getName(), guiHelper));
+		// MOD-251: the distillation column's fluid → two-fluids family (the MOD-257 contract,
+		// registered now that the real workstation exists).
+		Block column = ModBlocksNeoForge.DISTILLATION_COLUMN.get();
+		registration.addRecipeCategories(new FluidOutputJeiCategory(AlaJeiRecipeTypes.DISTILLING,
+				column, column.getName(), guiHelper));
 	}
 
 	@Override
@@ -119,6 +124,11 @@ public final class AlaJeiPlugin implements IModPlugin {
 		Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI recipe(s) for {}", alloying.size(),
 				ModRecipes.ALLOYING.id());
 		registration.addRecipes(AlaJeiRecipeTypes.ALLOYING, alloying);
+		// MOD-251: likewise the distillation column's own recipe class.
+		List<RecipeHolder<dev.alaindustrial.recipe.FluidOutputRecipe>> distilling = distillingRecipes(recipes);
+		Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI recipe(s) for {}", distilling.size(),
+				ModRecipes.DISTILLING.id());
+		registration.addRecipes(AlaJeiRecipeTypes.DISTILLING, distilling);
 		// Informational pages (MOD-043): for blocks/items with no crafting recipe — the solar panel
 		// evolution line today — JEI's built-in ingredient info gives a paginated, auto-wrapping page.
 		// Title + lines come from the same loader-neutral source the Fabric REI integration uses.
@@ -150,6 +160,9 @@ public final class AlaJeiPlugin implements IModPlugin {
 				(ItemLike) ModBlocksNeoForge.POLYMERIZER.get());
 		registration.addCraftingStation(AlaJeiRecipeTypes.ALLOYING,
 				(ItemLike) ModBlocksNeoForge.ALLOY_SMELTER.get());
+		// MOD-251: the distillation column performs the distilling family.
+		registration.addCraftingStation(AlaJeiRecipeTypes.DISTILLING,
+				(ItemLike) ModBlocksNeoForge.DISTILLATION_COLUMN.get());
 		// MOD-076: the electric furnace also performs vanilla smelting — ElectricFurnaceBlockEntity
 		// falls back to RecipeType.SMELTING when no alaindustrial:smelting recipe matches — so it is a
 		// crafting station for JEI's built-in minecraft:smelting category too (ore smelting,
@@ -206,13 +219,14 @@ public final class AlaJeiPlugin implements IModPlugin {
 						AlaJeiRecipeTypes.byKind(target.kind()));
 			}
 		}
-		// MOD-019: fluid-fed machines carry their own recipe type, so they list separately.
+		// MOD-019: fluid-fed machines carry their own recipe type, so they list separately —
+		// resolved per kind since MOD-251 added a second fluid family (distilling).
 		for (MachineRecipeViewerTargets.FluidTarget target : MachineRecipeViewerTargets.FLUID_ALL) {
 			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
 			registration.addRecipeClickArea(
 					target.screenClass(),
 					rect.x(), rect.y(), rect.width(), rect.height(),
-					AlaJeiRecipeTypes.POLYMERIZING);
+					AlaJeiRecipeTypes.byFluidKind(target.kind()));
 		}
 		// MOD-064: the alloy smelter carries its own recipe type too.
 		for (MachineRecipeViewerTargets.AlloyTarget target : MachineRecipeViewerTargets.ALLOY_ALL) {
@@ -269,6 +283,20 @@ public final class AlaJeiPlugin implements IModPlugin {
 			if (holder.value() instanceof PolymerizingRecipe) {
 				@SuppressWarnings("unchecked")
 				RecipeHolder<PolymerizingRecipe> typed = (RecipeHolder<PolymerizingRecipe>) holder;
+				result.add(typed);
+			}
+		}
+		return result;
+	}
+
+	/** The distilling family's recipes (MOD-251) — the {@link #polymerizingRecipes} twin. */
+	private static List<RecipeHolder<dev.alaindustrial.recipe.FluidOutputRecipe>> distillingRecipes(RecipeMap recipes) {
+		List<RecipeHolder<dev.alaindustrial.recipe.FluidOutputRecipe>> result = new ArrayList<>();
+		for (RecipeHolder<?> holder : recipes.values()) {
+			if (holder.value() instanceof dev.alaindustrial.recipe.FluidOutputRecipe) {
+				@SuppressWarnings("unchecked")
+				RecipeHolder<dev.alaindustrial.recipe.FluidOutputRecipe> typed =
+						(RecipeHolder<dev.alaindustrial.recipe.FluidOutputRecipe>) holder;
 				result.add(typed);
 			}
 		}

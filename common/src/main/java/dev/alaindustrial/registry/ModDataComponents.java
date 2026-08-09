@@ -54,6 +54,7 @@ public final class ModDataComponents {
 	public static final Identifier TELEPORTER_OWNER_ID = Industrialization.id("teleporter_owner");
 	public static final Identifier TELEPORTER_POINTS_ID = Industrialization.id("teleporter_points");
 	public static final Identifier FLUID_TANK_CONTENTS_ID = Industrialization.id("fluid_tank_contents");
+	public static final Identifier DISTILLATION_COLUMN_CONTENTS_ID = Industrialization.id("distillation_column_contents");
 	public static final Identifier MAGNET_ENABLED_ID = Industrialization.id("magnet_enabled");
 	public static final Identifier STEP_ASSIST_ENABLED_ID = Industrialization.id("step_assist_enabled");
 	public static final Identifier SABER_ACTIVE_ID = Industrialization.id("saber_active");
@@ -162,6 +163,14 @@ public final class ModDataComponents {
 	/** Portable fluid tank's atomic item-form contents: registry fluid + positive amount in mB. */
 	public static Supplier<DataComponentType<FluidTankContents>> FLUID_TANK_CONTENTS = () -> {
 		throw new IllegalStateException("ModDataComponents.FLUID_TANK_CONTENTS read before its loader bound it");
+	};
+
+	/**
+	 * The Distillation Column's three tanks on its item form (MOD-251) — the tower drops with its
+	 * fluids preserved, the portable tank's mechanism generalized to three positional slots.
+	 */
+	public static Supplier<DataComponentType<dev.alaindustrial.item.fluid.DistillationColumnContents>> DISTILLATION_COLUMN_CONTENTS = () -> {
+		throw new IllegalStateException("ModDataComponents.DISTILLATION_COLUMN_CONTENTS read before its loader bound it");
 	};
 
 	/**
@@ -391,6 +400,15 @@ public final class ModDataComponents {
 		return DataComponentType.<FluidTankContents>builder()
 				.persistent(FluidTankContents.CODEC)
 				.networkSynchronized(FluidTankContents.STREAM_CODEC)
+				.cacheEncoding()
+				.build();
+	}
+
+	/** Build the distillation column contents type (MOD-251). */
+	public static DataComponentType<dev.alaindustrial.item.fluid.DistillationColumnContents> createDistillationColumnContents() {
+		return DataComponentType.<dev.alaindustrial.item.fluid.DistillationColumnContents>builder()
+				.persistent(dev.alaindustrial.item.fluid.DistillationColumnContents.CODEC)
+				.networkSynchronized(dev.alaindustrial.item.fluid.DistillationColumnContents.STREAM_CODEC)
 				.cacheEncoding()
 				.build();
 	}

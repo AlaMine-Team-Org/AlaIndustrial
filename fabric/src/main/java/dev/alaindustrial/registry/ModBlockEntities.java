@@ -10,6 +10,8 @@ import dev.alaindustrial.block.entity.ChargePadBlockEntity;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
+import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
+import dev.alaindustrial.block.entity.DistillationColumnSegmentBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
@@ -82,6 +84,8 @@ public final class ModBlockEntities {
 	public static BlockEntityType<SawmillBlockEntity> SAWMILL;
 	public static BlockEntityType<AssemblerBlockEntity> ASSEMBLER;
 	public static BlockEntityType<PolymerizerBlockEntity> POLYMERIZER;
+	public static BlockEntityType<DistillationColumnBlockEntity> DISTILLATION_COLUMN;
+	public static BlockEntityType<DistillationColumnSegmentBlockEntity> DISTILLATION_COLUMN_SEGMENT;
 	public static BlockEntityType<VulcanizerBlockEntity> VULCANIZER;
 	public static BlockEntityType<AlloySmelterBlockEntity> ALLOY_SMELTER;
 	public static BlockEntityType<GalvanicBathBlockEntity> GALVANIC_BATH;
@@ -123,6 +127,8 @@ public final class ModBlockEntities {
 		SAWMILL = register(ContentManifest.blockEntity("sawmill", SawmillBlockEntity.class));
 		ASSEMBLER = register(ContentManifest.blockEntity("assembler", AssemblerBlockEntity.class));
 		POLYMERIZER = register(ContentManifest.blockEntity("polymerizer", PolymerizerBlockEntity.class));
+		DISTILLATION_COLUMN = register(ContentManifest.blockEntity("distillation_column", DistillationColumnBlockEntity.class));
+		DISTILLATION_COLUMN_SEGMENT = register(ContentManifest.blockEntity("distillation_column_segment", DistillationColumnSegmentBlockEntity.class));
 		VULCANIZER = register(ContentManifest.blockEntity("vulcanizer", VulcanizerBlockEntity.class));
 		ALLOY_SMELTER = register(ContentManifest.blockEntity("alloy_smelter", AlloySmelterBlockEntity.class));
 		GALVANIC_BATH = register(ContentManifest.blockEntity("galvanic_bath", GalvanicBathBlockEntity.class));
@@ -166,6 +172,8 @@ public final class ModBlockEntities {
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ASSEMBLER);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),INCUBATOR);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),POLYMERIZER);
+			// MOD-251: energy enters the tower ONLY at the base — the segments expose no energy port.
+			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),DISTILLATION_COLUMN);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),VULCANIZER);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ALLOY_SMELTER);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GALVANIC_BATH);
@@ -200,6 +208,8 @@ public final class ModBlockEntities {
 		ModContent.SAWMILL_BE = () -> SAWMILL;
 		ModContent.ASSEMBLER_BE = () -> ASSEMBLER;
 		ModContent.POLYMERIZER_BE = () -> POLYMERIZER;
+		ModContent.DISTILLATION_COLUMN_BE = () -> DISTILLATION_COLUMN;
+		ModContent.DISTILLATION_COLUMN_SEGMENT_BE = () -> DISTILLATION_COLUMN_SEGMENT;
 		ModContent.VULCANIZER_BE = () -> VULCANIZER;
 		ModContent.ALLOY_SMELTER_BE = () -> ALLOY_SMELTER;
 		ModContent.GALVANIC_BATH_BE = () -> GALVANIC_BATH;
@@ -228,6 +238,12 @@ public final class ModBlockEntities {
 		FluidStorage.SIDED.registerForBlockEntity((be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), POLYMERIZER);
 		FluidStorage.SIDED.registerForBlockEntity(
 				(be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), GALVANIC_BATH);
+		// MOD-251: the tower's three tanks — the base exposes fuel oil (+ oil on a null side), the
+		// segment proxies forward oil (middle) and diesel (top) to the master below them.
+		FluidStorage.SIDED.registerForBlockEntity(
+				(be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), DISTILLATION_COLUMN);
+		FluidStorage.SIDED.registerForBlockEntity(
+				(be, dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), DISTILLATION_COLUMN_SEGMENT);
 	}
 
 	/**

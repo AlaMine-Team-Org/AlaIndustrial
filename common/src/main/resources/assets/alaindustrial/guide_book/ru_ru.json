@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "Медный кабель",
-              "text": "Дешёвый рабочий LV-кабель; при реальном потоке энергии голый провод бьёт игрока током при касании."
+              "text": "Дешёвый рабочий LV-кабель; голый провод бьёт игрока током, пока он под напряжением от работающей сети."
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "Перегонная колонна",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Перегонная колонна",
+              "text": "Вышка 1×1×3 — разгоняет нефть на дизель и мазут. Первый мультиблок мода — собирается из трёх сегментов руками, лёгкая фракция выходит сверху, тяжёлая снизу; при разборке основание сохраняет жидкость."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 400 EU/оп",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "Дизель",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Дизель",
+              "text": "Лёгкая фракция перегонки нефти — золотисто-жёлтая жидкость, целевой продукт колонны. Будущее топливо жидкотопливного генератора (12 EU/такт)."
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "Инваровый слиток",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "Купроникелевый слиток",
               "text": "Штучный сплав меди и никеля в отношении один к одному — самый дешёвый по сырью способ пустить никель в дело."
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "Мазут",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Мазут",
+              "text": "Тяжёлый остаток перегонки нефти — густая тёмно-бурая жидкость. Топливо похуже дизеля (6 EU/такт), но выбрасывать нечего — в топку идёт всё."
             }
           ]
         },

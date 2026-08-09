@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "Kabel miedziany",
-              "text": "Tani, uniwersalny kabel LV; gdy faktycznie płynie przez niego energia, goły przewód poraża gracza przy dotknięciu."
+              "text": "Tani, uniwersalny kabel LV; goły przewód poraża graczy, dopóki jest pod napięciem, podłączony do zasilanej sieci."
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "Kolumna destylacyjna",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kolumna destylacyjna",
+              "text": "Wieża 1×1×3, która rozdziela ropę na diesel i mazut. Pierwszy multiblok moda — składana ręcznie z trzech segmentów; lekka frakcja wychodzi górą, ciężka dołem, a podstawa zachowuje płyny przy rozbiórce."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 400 EU/op",
+                "Bufor: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "Olej napędowy",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Olej napędowy",
+              "text": "Lekka frakcja destylacji ropy — złocistożółty płyn, docelowy produkt kolumny. Przyszłe paliwo generatora na paliwo ciekłe (12 EU/t)."
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "Sztabka inwaru",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "Sztabka miedzioniklu",
               "text": "Stop miedzi z niklem w proporcji jeden do jednego, wytapiany po jednej sztabce — materiałowo najtańszy sposób, by wykorzystać nikiel."
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "Mazut",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Mazut",
+              "text": "Ciężka pozostałość po destylacji ropy — gęsty, ciemnobrązowy płyn. Słabsze paliwo niż olej napędowy (6 EU/t), ale nic się nie marnuje — spala się wszystko."
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "Stacja drona ogrodnika",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "Stacja LV z buforem EU, z której startuje animowany dron patrolujący pola uprawne w promieniu 9 bloków — orze wolną ziemię, sadzi nasiona, nawozi niedojrzałe uprawy i znosi dojrzałe plony z powrotem do stacji."
             },
             {
               "type": "stats",
@@ -1873,13 +1938,13 @@
             {
               "type": "text",
               "title": "Moduł magazynowy",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "Blok magazynowy na 27 miejsc: moduły ustawione jeden przy drugim działają jak jeden magazyn do 108 miejsc za jednym oknem."
             },
             {
               "type": "stats",
               "title": "Statystyki",
               "lines": [
-                "Buffer: 0 EU"
+                "Bufor: 0 EU"
               ]
             },
             {
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "Bateria",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "Pierwszy nośnik EU — akumulator 2 000 EU wielokrotnego ładowania, który łączy się w stosy według poziomu naładowania i oddaje energię z powrotem do sieci albo innemu przedmiotowi."
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "Zaawansowany obwód",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "Poziom MV obwodu — bazowa płytka, na nowo okablowana złotem i zalana gumą."
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "Zaawansowana obudowa maszyny",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "Pełny sześcian jako blok bazowy dla maszyn MV — prosta obudowa z dwoma zaawansowanymi obwodami, poszyta 6 płytami z hartowanego żelaza."
             },
             {
               "type": "recipe",

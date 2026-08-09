@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "구리 케이블",
-              "text": "저렴하고 든든한 LV 케이블입니다. 실제로 에너지가 흐르는 동안에는 피복 없는 도선이 닿은 플레이어를 감전시킵니다."
+              "text": "저렴하고 든든한 LV 케이블입니다. 전력이 공급되는 전력망에 연결되어 통전 중인 동안에는 피복 없는 도선이 닿은 플레이어를 감전시킵니다."
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "증류탑",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "증류탑",
+              "text": "원유를 디젤과 중유로 분류하는 1×1×3 증류탑. 모드 최초의 멀티블록 — 세 개의 세그먼트를 손으로 쌓아 조립합니다. 가벼운 유분은 위로, 무거운 유분은 아래로 나오며, 해체해도 기단이 액체를 보존합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 400 EU/작업",
+                "버퍼: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "디젤",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "디젤",
+              "text": "석유 증류의 가벼운 유분 — 황금빛 노란 유체로, 증류탑의 목표 산물입니다. 액체 연료 발전기(12 EU/t)의 미래 연료입니다."
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "인바 주괴",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "백동 주괴",
               "text": "1대1 비율의 구리·니켈 합금으로, 한 번에 주괴 하나씩만 나옵니다 — 재료로 따지면 니켈을 활용하는 가장 값싼 길입니다."
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "중유",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "중유",
+              "text": "석유 증류의 무거운 잔여물 — 걸쭉한 짙은 갈색 유체입니다. 디젤보다 약한 연료(6 EU/t)지만 버릴 것이 없습니다 — 전부 태울 수 있습니다."
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "정원 드론 스테이션",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "EU 버퍼를 갖춘 LV 스테이션으로, 여기서 애니메이션 드론이 이륙해 반경 9블록의 농지를 순찰합니다 — 빈 흙을 갈고, 씨앗을 심고, 덜 자란 작물에 비료를 주고, 익은 수확물을 스테이션으로 가져옵니다."
             },
             {
               "type": "stats",
@@ -1873,13 +1938,13 @@
             {
               "type": "text",
               "title": "저장 모듈",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "27칸 저장 블록: 서로 맞붙여 놓은 모듈은 하나의 창 뒤에서 최대 108칸의 단일 창고로 작동합니다."
             },
             {
               "type": "stats",
               "title": "정보",
               "lines": [
-                "Buffer: 0 EU"
+                "버퍼: 0 EU"
               ]
             },
             {
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "배터리",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "최초의 EU 운반체 — 충전량 단계에 따라 겹쳐지고, 저장한 에너지를 전력망이나 다른 아이템에 되돌려 주는 2 000 EU 충전식 배터리입니다."
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "고급 회로",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "회로의 MV 단계 — 기본 기판을 금으로 다시 배선하고 고무로 밀봉한 것입니다."
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "고급 기계 케이스",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "MV 기계를 위한 완전한 정육면체 기초 블록 — 고급 회로 2개를 넣은 수수한 케이스를 담금질된 철판 6장으로 덮었습니다."
             },
             {
               "type": "recipe",

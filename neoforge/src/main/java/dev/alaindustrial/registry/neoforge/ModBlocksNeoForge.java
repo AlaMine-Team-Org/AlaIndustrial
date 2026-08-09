@@ -105,6 +105,19 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("assembler", AssemblerBlock::new, props("assembler"));
 	public static final DeferredBlock<PolymerizerBlock> POLYMERIZER =
 			BLOCKS.registerBlock("polymerizer", PolymerizerBlock::new, props("polymerizer"));
+	// Distillation Column (MOD-251): the 1×1×3 tower — base with item, two segment blocks without.
+	public static final DeferredBlock<dev.alaindustrial.block.DistillationColumnBlock> DISTILLATION_COLUMN =
+			BLOCKS.registerBlock("distillation_column",
+					dev.alaindustrial.block.DistillationColumnBlock::new, props("distillation_column"));
+	public static final DeferredBlock<dev.alaindustrial.block.DistillationColumnMiddleBlock> DISTILLATION_COLUMN_MIDDLE =
+			BLOCKS.registerBlock("distillation_column_middle",
+					dev.alaindustrial.block.DistillationColumnMiddleBlock::new, props("distillation_column_middle"));
+	public static final DeferredBlock<dev.alaindustrial.block.DistillationColumnTopBlock> DISTILLATION_COLUMN_TOP =
+			BLOCKS.registerBlock("distillation_column_top",
+					dev.alaindustrial.block.DistillationColumnTopBlock::new, props("distillation_column_top"));
+	public static final DeferredBlock<dev.alaindustrial.block.RectificationSectionBlock> RECTIFICATION_SECTION =
+			BLOCKS.registerBlock("rectification_section",
+					dev.alaindustrial.block.RectificationSectionBlock::new, props("rectification_section"));
 	public static final DeferredBlock<AlloySmelterBlock> ALLOY_SMELTER =
 			BLOCKS.registerBlock("alloy_smelter", AlloySmelterBlock::new, props("alloy_smelter"));
 	public static final DeferredBlock<VulcanizerBlock> VULCANIZER =
@@ -245,6 +258,16 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<OilLiquidBlock> OIL =
 			BLOCKS.registerBlock("oil", p -> new OilLiquidBlock(ModFluidsNeoForge.OIL.get(), p), props("oil"));
 
+	// Distillation fractions (MOD-251): plain vanilla LiquidBlocks (water-like, no burning subclass).
+	public static final DeferredBlock<net.minecraft.world.level.block.LiquidBlock> DIESEL =
+			BLOCKS.registerBlock("diesel",
+					p -> new net.minecraft.world.level.block.LiquidBlock(ModFluidsNeoForge.DIESEL.get(), p),
+					props("diesel"));
+	public static final DeferredBlock<net.minecraft.world.level.block.LiquidBlock> FUEL_OIL =
+			BLOCKS.registerBlock("fuel_oil",
+					p -> new net.minecraft.world.level.block.LiquidBlock(ModFluidsNeoForge.FUEL_OIL.get(), p),
+					props("fuel_oil"));
+
 	private ModBlocksNeoForge() {
 	}
 
@@ -281,6 +304,10 @@ public final class ModBlocksNeoForge {
 		ModContent.SAWMILL = SAWMILL::get;
 		ModContent.ASSEMBLER = ASSEMBLER::get;
 		ModContent.POLYMERIZER = POLYMERIZER::get;
+		ModContent.DISTILLATION_COLUMN = DISTILLATION_COLUMN::get;
+		ModContent.DISTILLATION_COLUMN_MIDDLE = DISTILLATION_COLUMN_MIDDLE::get;
+		ModContent.DISTILLATION_COLUMN_TOP = DISTILLATION_COLUMN_TOP::get;
+		ModContent.RECTIFICATION_SECTION = RECTIFICATION_SECTION::get;
 		ModContent.VULCANIZER = VULCANIZER::get;
 		ModContent.ALLOY_SMELTER = ALLOY_SMELTER::get;
 		ModContent.GALVANIC_BATH = GALVANIC_BATH::get;
@@ -330,5 +357,7 @@ public final class ModBlocksNeoForge {
 		ModContent.ENRICHED_URANIUM_TORCH = ENRICHED_URANIUM_TORCH::get;
 		ModContent.ENRICHED_URANIUM_WALL_TORCH = ENRICHED_URANIUM_WALL_TORCH::get;
 		ModContent.OIL_BLOCK = OIL::get;
+		ModContent.DIESEL_BLOCK = DIESEL::get;
+		ModContent.FUEL_OIL_BLOCK = FUEL_OIL::get;
 	}
 }

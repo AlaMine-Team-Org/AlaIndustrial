@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:diesel",
+    "alaindustrial:flowing_diesel",
+    "alaindustrial:fuel_oil",
+    "alaindustrial:flowing_fuel_oil",
+    "minecraft:lava",
+    "minecraft:flowing_lava"
+  ]
+}

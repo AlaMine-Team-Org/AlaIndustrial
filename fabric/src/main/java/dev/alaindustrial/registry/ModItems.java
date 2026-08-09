@@ -239,7 +239,10 @@ public final class ModItems {
 	public static final Item FORGE_HAMMER = forgeHammer("forge_hammer");
 	// Oil Bucket (MOD-238): the vanilla WATER_BUCKET pattern — BucketItem(fluid, props with
 	// craftRemainder(BUCKET).stacksTo(1)). Referencing ModFluids.OIL keeps fluid-before-item order.
-	public static final Item OIL_BUCKET = oilBucket("oil_bucket");
+	public static final Item OIL_BUCKET = fluidBucket("oil_bucket", ModFluids.OIL);
+	// Distillation fraction buckets (MOD-251) — same pattern, filled by the column's output tanks.
+	public static final Item DIESEL_BUCKET = fluidBucket("diesel_bucket", ModFluids.DIESEL);
+	public static final Item FUEL_OIL_BUCKET = fluidBucket("fuel_oil_bucket", ModFluids.FUEL_OIL);
 
 	// Block items.
 	public static final BlockItem GENERATOR_ITEM = blockItem("generator", ModBlocks.GENERATOR);
@@ -269,6 +272,11 @@ public final class ModItems {
 	public static final BlockItem SAWMILL_ITEM = blockItem("sawmill", ModBlocks.SAWMILL);
 	public static final BlockItem ASSEMBLER_ITEM = blockItem("assembler", ModBlocks.ASSEMBLER);
 	public static final BlockItem POLYMERIZER_ITEM = blockItem("polymerizer", ModBlocks.POLYMERIZER);
+	// Distillation Column (MOD-251): one item raises the whole 1×1×3 tower; segments have no items.
+	public static final BlockItem DISTILLATION_COLUMN_ITEM =
+			blockItem("distillation_column", ModBlocks.DISTILLATION_COLUMN);
+	public static final BlockItem RECTIFICATION_SECTION_ITEM =
+			blockItem("rectification_section", ModBlocks.RECTIFICATION_SECTION);
 	public static final BlockItem VULCANIZER_ITEM = blockItem("vulcanizer", ModBlocks.VULCANIZER);
 	public static final BlockItem ALLOY_SMELTER_ITEM =
 			blockItem("alloy_smelter", ModBlocks.ALLOY_SMELTER);
@@ -590,11 +598,14 @@ public final class ModItems {
 						new Item.Properties().setId(key)));
 	}
 
-	/** The oil bucket (MOD-238) — built exactly like vanilla {@code Items.WATER_BUCKET}. */
-	private static Item oilBucket(String path) {
+	/**
+	 * A filled mod-fluid bucket (MOD-238 oil, MOD-251 diesel/fuel oil) — built exactly like vanilla
+	 * {@code Items.WATER_BUCKET}.
+	 */
+	private static Item fluidBucket(String path, net.minecraft.world.level.material.FlowingFluid fluid) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Industrialization.id(path));
 		return Registry.register(BuiltInRegistries.ITEM, key,
-				new net.minecraft.world.item.BucketItem(ModFluids.OIL,
+				new net.minecraft.world.item.BucketItem(fluid,
 						new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).setId(key)));
 	}
 
@@ -807,6 +818,8 @@ public final class ModItems {
 		ModContent.TEMPERED_IRON_PLATE = () -> TEMPERED_IRON_PLATE;
 		ModContent.FORGE_HAMMER = () -> FORGE_HAMMER;
 		ModContent.OIL_BUCKET = () -> OIL_BUCKET;
+		ModContent.DIESEL_BUCKET = () -> DIESEL_BUCKET;
+		ModContent.FUEL_OIL_BUCKET = () -> FUEL_OIL_BUCKET;
 
 		ModContent.GENERATOR_ITEM = () -> GENERATOR_ITEM;
 		ModContent.GEOTHERMAL_GENERATOR_ITEM = () -> GEOTHERMAL_GENERATOR_ITEM;
@@ -837,6 +850,8 @@ public final class ModItems {
 		ModContent.SAWMILL_ITEM = () -> SAWMILL_ITEM;
 		ModContent.ASSEMBLER_ITEM = () -> ASSEMBLER_ITEM;
 		ModContent.POLYMERIZER_ITEM = () -> POLYMERIZER_ITEM;
+		ModContent.DISTILLATION_COLUMN_ITEM = () -> DISTILLATION_COLUMN_ITEM;
+		ModContent.RECTIFICATION_SECTION_ITEM = () -> RECTIFICATION_SECTION_ITEM;
 		ModContent.VULCANIZER_ITEM = () -> VULCANIZER_ITEM;
 		ModContent.ALLOY_SMELTER_ITEM = () -> ALLOY_SMELTER_ITEM;
 		ModContent.GALVANIC_BATH_ITEM = () -> GALVANIC_BATH_ITEM;

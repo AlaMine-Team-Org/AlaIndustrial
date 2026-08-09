@@ -38,6 +38,8 @@ public class AlaReiCommonPlugin implements REICommonPlugin {
 		// MOD-064: the alloy smelter's multi-component card is its own display type (AlloyKind, not
 		// Kind, and per-component counts), so it carries its own serializer.
 		registry.register(Industrialization.id("alloying"), AlloyingDisplay.SERIALIZER);
+		// MOD-251: the distillation column's fluid → two-fluids card (the MOD-257 contract).
+		registry.register(Industrialization.id("fluid_output"), FluidOutputDisplay.SERIALIZER);
 	}
 
 	@Override
@@ -65,5 +67,8 @@ public class AlaReiCommonPlugin implements REICommonPlugin {
 		// MOD-064: the alloy smelter's family — two or three sized components in, one alloy out.
 		registry.beginRecipeFiller(AlloyingRecipe.class)
 				.fill(holder -> new AlloyingDisplay(holder.value()));
+		// MOD-251: the distillation column's family — one fluid volume in, two fractions out.
+		registry.beginRecipeFiller(dev.alaindustrial.recipe.FluidOutputRecipe.class)
+				.fill(holder -> new FluidOutputDisplay(holder.value()));
 	}
 }

@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "Cabo de Cobre",
-              "text": "Um cabo LV barato e versátil; enquanto a energia está de fato fluindo, o fio desencapado dá choque em quem encostar."
+              "text": "Um cabo LV barato e versátil; o fio desencapado dá choque nos jogadores enquanto está energizado, ligado a uma rede alimentada."
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "Coluna de Destilação",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Coluna de Destilação",
+              "text": "Uma torre 1×1×3 que fraciona o petróleo bruto em diesel e óleo combustível. O primeiro multibloco do mod — montada à mão com três segmentos; a fração leve sai por cima, a pesada por baixo, e a base mantém seus fluidos na desmontagem."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 400 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "Diesel",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Diesel",
+              "text": "A fração leve da destilação do petróleo — um fluido amarelo-dourado, o produto-alvo da coluna. Futuro combustível do gerador de combustível líquido (12 EU/t)."
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "Lingote de Invar",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "Lingote de Cuproníquel",
               "text": "Uma liga de cobre e níquel na proporção de um para um, feita um lingote por vez — o jeito mais barato, em materiais, de pôr o níquel para trabalhar."
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "Óleo Combustível",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Óleo Combustível",
+              "text": "O resíduo pesado da destilação do petróleo — um fluido espesso marrom-escuro. Combustível mais fraco que o diesel (6 EU/t), mas nada se perde — tudo queima."
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "Estação de drone jardineiro",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "Uma estação LV com buffer de EU da qual decola um drone animado que patrulha as lavouras num raio de 9 blocos — ara a terra livre, planta sementes, fertiliza cultivos imaturos e leva a colheita madura de volta à estação."
             },
             {
               "type": "stats",
@@ -1873,7 +1938,7 @@
             {
               "type": "text",
               "title": "Módulo de Armazenamento",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "Um bloco de armazenamento de 27 espaços: módulos colocados uns contra os outros funcionam como um único armazém de até 108 espaços atrás de uma só janela."
             },
             {
               "type": "stats",
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "Bateria",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "O primeiro portador de EU — uma bateria recarregável de 2 000 EU que empilha por nível de carga e devolve sua energia à rede ou a outro item."
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "Circuito Avançado",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "O nível MV do circuito — a placa base religada com ouro e selada em borracha."
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "Estrutura de Máquina Avançada",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "Um bloco base de cubo completo para máquinas MV — uma carcaça simples com dois circuitos avançados, revestida com 6 placas de ferro temperado."
             },
             {
               "type": "recipe",

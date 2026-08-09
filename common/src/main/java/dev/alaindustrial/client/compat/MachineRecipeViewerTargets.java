@@ -66,9 +66,13 @@ public final class MachineRecipeViewerTargets {
 			GuiRect progressArea) {
 	}
 
-	/** Fluid-fed machines' click targets. The rect tracks {@code PolymerizerScreen.ARROW_*}. */
+	/** Fluid-fed machines' click targets. Each rect tracks its screen's {@code ARROW_*} constants. */
 	public static final List<FluidTarget> FLUID_ALL = List.of(
-			new FluidTarget(PolymerizerScreen.class, ModRecipes.POLYMERIZING, new GuiRect(79, 35, 24, 17)));
+			new FluidTarget(PolymerizerScreen.class, ModRecipes.POLYMERIZING, new GuiRect(79, 35, 24, 17)),
+			// MOD-251 round 2: the distillation column — the click target is the tower schematic
+			// in the GUI's centre (the plain arrow is gone).
+			new FluidTarget(dev.alaindustrial.client.screen.DistillationColumnScreen.class,
+					ModRecipes.DISTILLING, new GuiRect(59, 40, 24, 56)));
 
 	/**
 	 * The same again for the multi-component alloying family ({@link ModRecipes.AlloyKind}) — a third

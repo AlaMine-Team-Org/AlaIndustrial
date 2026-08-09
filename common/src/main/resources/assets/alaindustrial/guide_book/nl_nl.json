@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "Koperen kabel",
-              "text": "Een goedkope, degelijke LV-kabel; zolang er daadwerkelijk energie door stroomt, geeft de blanke draad spelers een schok bij aanraking."
+              "text": "Een goedkope, degelijke LV-kabel; de blanke draad geeft spelers een schok zolang hij onder spanning staat via een gevoed net."
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "Destillatiekolom",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Destillatiekolom",
+              "text": "Een 1×1×3-toren die ruwe aardolie fractioneert in diesel en stookolie. Het eerste multiblok van de mod — met de hand opgebouwd uit drie segmenten; de lichte fractie verlaat de toren bovenaan, de zware onderaan, en de basis behoudt zijn vloeistoffen bij demontage."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 400 EU/bew.",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "Diesel",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Diesel",
+              "text": "De lichte fractie van de oliedestillatie — een goudgele vloeistof, het doelproduct van de kolom. Toekomstige brandstof van de generator op vloeibare brandstof (12 EU/t)."
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "Invarstaaf",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "Cupronikkelstaaf",
               "text": "Een koper-nikkellegering in de verhouding één op één, staaf voor staaf gemaakt — qua materiaal de goedkoopste manier om nikkel aan het werk te zetten."
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "Stookolie",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Stookolie",
+              "text": "Het zware residu van de oliedestillatie — een dikke, donkerbruine vloeistof. Zwakkere brandstof dan diesel (6 EU/t), maar niets gaat verloren — alles verbrandt."
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "Tuindrone-station",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "Een LV-station met EU-buffer waarvandaan een geanimeerde drone opstijgt en het akkerland binnen een straal van 9 blokken patrouilleert — hij ploegt vrije aarde om, plant zaden, bemest onrijpe gewassen en brengt rijpe oogst terug naar het station."
             },
             {
               "type": "stats",
@@ -1873,7 +1938,7 @@
             {
               "type": "text",
               "title": "Opslagmodule",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "Een opslagblok met 27 vakken: modules die tegen elkaar aan staan werken als één magazijn van maximaal 108 vakken achter één venster."
             },
             {
               "type": "stats",
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "Batterij",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "De eerste EU-drager — een oplaadbare batterij van 2 000 EU die per laadniveau stapelt en zijn energie teruggeeft aan het net of aan een ander voorwerp."
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "Geavanceerd circuit",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "Het MV-niveau van het circuit — de basisprintplaat, opnieuw bedraad met goud en verzegeld in rubber."
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "Geavanceerde machinebehuizing",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "Een volledig kubusvormig basisblok voor MV-machines — een eenvoudige behuizing met twee geavanceerde circuits, bekleed met 6 platen van gehard ijzer."
             },
             {
               "type": "recipe",

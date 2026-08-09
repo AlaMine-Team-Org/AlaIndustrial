@@ -434,6 +434,8 @@ public final class IndustrializationNeoForge {
 					ModBlockEntitiesNeoForge.SAWMILL,
 					ModBlockEntitiesNeoForge.ASSEMBLER,
 					ModBlockEntitiesNeoForge.POLYMERIZER,
+					// MOD-251: only the tower's base BE — the segments expose no energy port.
+					ModBlockEntitiesNeoForge.DISTILLATION_COLUMN,
 					ModBlockEntitiesNeoForge.GALVANIC_BATH,
 					ModBlockEntitiesNeoForge.VULCANIZER,
 					ModBlockEntitiesNeoForge.ALLOY_SMELTER,
@@ -464,6 +466,10 @@ public final class IndustrializationNeoForge {
 		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.FLUID_TANK);
 		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.POLYMERIZER);
 		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.GALVANIC_BATH);
+		// MOD-251: the tower's three tanks — base (fuel oil; oil on a null side) + segment proxies
+		// (middle → oil intake, top → diesel output), both forwarding to the master BE.
+		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.DISTILLATION_COLUMN);
+		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.DISTILLATION_COLUMN_SEGMENT);
 		registerFluidPort(event, fluidCap, ModBlockEntitiesNeoForge.FLUID_PIPE);
 
 		// MOD-104: publish transactional, side-aware item views for mod containers. This is required

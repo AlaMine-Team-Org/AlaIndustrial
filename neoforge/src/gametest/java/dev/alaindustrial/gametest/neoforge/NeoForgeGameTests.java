@@ -34,6 +34,7 @@ import dev.alaindustrial.gametest.OilScenarios;
 import dev.alaindustrial.gametest.FluxweaveArmorScenarios;
 import dev.alaindustrial.gametest.AlloySmelterScenarios;
 import dev.alaindustrial.gametest.GalvanicBathScenarios;
+import dev.alaindustrial.gametest.DistillationColumnScenarios;
 import dev.alaindustrial.gametest.PolymerizerScenarios;
 import dev.alaindustrial.gametest.VulcanizerScenarios;
 import dev.alaindustrial.gametest.GardenDroneScenarios;
@@ -1167,6 +1168,33 @@ public final class NeoForgeGameTests {
 				PolymerizerScenarios::con03NeighbourFillsThroughFluidPort);
 		registerTest(event, "polymerizer_nbt_round_trip_preserves_tank", 60, true,
 				PolymerizerScenarios::sta01NbtRoundTripPreservesTank);
+
+		// Distillation Column (MOD-251, suite TC-DIST-001) — same bodies as the Fabric wrappers:
+		// the first 1×1×3 multiblock, per-segment fluid ports, warm-up gate, fluid-preserving drop.
+		registerTest(event, "distillation_column_oil_splits_into_fractions", 600, true,
+				DistillationColumnScenarios::fun01OilSplitsIntoFractions);
+		registerTest(event, "distillation_column_warmup_gates_distillation", 400, true,
+				DistillationColumnScenarios::fun02WarmupGatesDistillation);
+		registerTest(event, "distillation_column_full_diesel_tank_freezes", 600, true,
+				DistillationColumnScenarios::con01FullDieselTankFreezes);
+		registerTest(event, "distillation_column_drain_slot_bottles_diesel", 60, true,
+				DistillationColumnScenarios::fun03DrainSlotBottlesDiesel);
+		registerTest(event, "distillation_column_break_middle_degrades_tower", 100, true,
+				DistillationColumnScenarios::seg01BreakMiddleDegradesTower);
+		registerTest(event, "distillation_column_three_blanks_form_tower", 60, true,
+				DistillationColumnScenarios::frm01ThreeBlanksFormTheTower);
+		registerTest(event, "distillation_column_segment_ports_match_layout", 60, true,
+				DistillationColumnScenarios::prt01SegmentPortsMatchLayout);
+		registerTest(event, "distillation_column_null_side_port_is_oil_tank", 60, true,
+				DistillationColumnScenarios::prt02NullSidePortIsOilTank);
+		registerTest(event, "distillation_column_nbt_round_trip", 60, true,
+				DistillationColumnScenarios::sta01NbtRoundTripPreservesTanksAndHeat);
+		registerTest(event, "distillation_column_fuel_oil_cracks_into_diesel", 700, true,
+				DistillationColumnScenarios::crk01FuelOilCracksIntoDiesel);
+		registerTest(event, "distillation_column_section_boosts_diesel", 600, true,
+				DistillationColumnScenarios::sec01SectionBoostsDiesel);
+		registerTest(event, "distillation_column_fouled_stops_until_cleaned", 1000, true,
+				DistillationColumnScenarios::fou01FouledStopsUntilCleaned);
 
 		// Vulcanizer + external heat (MOD-258, suite TC-VULC-001). These are the same bodies as the
 		// Fabric wrappers and cover the two-input recipe, heat multipliers, demand-driven electric

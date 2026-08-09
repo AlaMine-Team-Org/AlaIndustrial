@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "Cavo di rame",
-              "text": "Un cavo LV economico e affidabile; finché l'energia scorre davvero, il filo nudo dà la scossa a chi lo tocca."
+              "text": "Un cavo LV economico e affidabile; il filo nudo dà la scossa ai giocatori finché è sotto tensione, collegato a una rete alimentata."
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "Colonna di distillazione",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Colonna di distillazione",
+              "text": "Una torre 1×1×3 che fraziona il petrolio greggio in diesel e olio combustibile. Il primo multiblocco della mod — assemblata a mano da tre segmenti; la frazione leggera esce in alto, quella pesante in basso, e la base conserva i fluidi allo smontaggio."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: 400 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "Diesel",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Diesel",
+              "text": "La frazione leggera della distillazione del petrolio — un fluido giallo dorato, il prodotto obiettivo della colonna. Futuro combustibile del generatore a combustibile liquido (12 EU/t)."
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "Lingotto d'invar",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "Lingotto di cupronichel",
               "text": "Una lega rame-nichel uno a uno, prodotta un lingotto alla volta — il modo più economico, in materiali, per mettere al lavoro il nichel."
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "Olio combustibile",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Olio combustibile",
+              "text": "Il residuo pesante della distillazione del petrolio — un fluido denso marrone scuro. Combustibile più debole del diesel (6 EU/t), ma nulla va sprecato: brucia tutto."
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "Stazione del drone giardiniere",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "Una stazione LV con buffer di EU da cui decolla un drone animato che pattuglia i campi in un raggio di 9 blocchi — ara la terra libera, pianta i semi, fertilizza le colture immature e riporta il raccolto maturo alla stazione."
             },
             {
               "type": "stats",
@@ -1873,7 +1938,7 @@
             {
               "type": "text",
               "title": "Modulo di stoccaggio",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "Un blocco di stoccaggio da 27 slot: i moduli affiancati l'uno all'altro funzionano come un unico magazzino fino a 108 slot dietro una sola finestra."
             },
             {
               "type": "stats",
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "Batteria",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "Il primo vettore di EU — una batteria ricaricabile da 2 000 EU che si impila per livello di carica e restituisce la sua energia alla rete o a un altro oggetto."
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "Circuito avanzato",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "Il livello MV del circuito — la scheda di base ricablata con l'oro e sigillata nella gomma."
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "Telaio della macchina avanzato",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "Un blocco base a cubo pieno per le macchine MV — un semplice involucro con due circuiti avanzati, rivestito di 6 piastre di ferro temprato."
             },
             {
               "type": "recipe",

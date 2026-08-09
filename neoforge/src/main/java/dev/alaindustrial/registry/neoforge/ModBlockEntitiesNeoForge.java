@@ -10,6 +10,8 @@ import dev.alaindustrial.block.entity.ChargePadBlockEntity;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
+import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
+import dev.alaindustrial.block.entity.DistillationColumnSegmentBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
@@ -108,6 +110,10 @@ public final class ModBlockEntitiesNeoForge {
 			register(ContentManifest.blockEntity("assembler", AssemblerBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PolymerizerBlockEntity>> POLYMERIZER =
 			register(ContentManifest.blockEntity("polymerizer", PolymerizerBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DistillationColumnBlockEntity>> DISTILLATION_COLUMN =
+			register(ContentManifest.blockEntity("distillation_column", DistillationColumnBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DistillationColumnSegmentBlockEntity>> DISTILLATION_COLUMN_SEGMENT =
+			register(ContentManifest.blockEntity("distillation_column_segment", DistillationColumnSegmentBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VulcanizerBlockEntity>> VULCANIZER =
 			register(ContentManifest.blockEntity("vulcanizer", VulcanizerBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AlloySmelterBlockEntity>> ALLOY_SMELTER =
@@ -182,6 +188,8 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.SAWMILL_BE = SAWMILL::get;
 		ModContent.ASSEMBLER_BE = ASSEMBLER::get;
 		ModContent.POLYMERIZER_BE = POLYMERIZER::get;
+		ModContent.DISTILLATION_COLUMN_BE = DISTILLATION_COLUMN::get;
+		ModContent.DISTILLATION_COLUMN_SEGMENT_BE = DISTILLATION_COLUMN_SEGMENT::get;
 		ModContent.VULCANIZER_BE = VULCANIZER::get;
 		ModContent.ALLOY_SMELTER_BE = ALLOY_SMELTER::get;
 		ModContent.GALVANIC_BATH_BE = GALVANIC_BATH::get;

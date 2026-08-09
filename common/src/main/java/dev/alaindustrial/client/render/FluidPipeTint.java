@@ -58,8 +58,12 @@ public final class FluidPipeTint implements BlockTintSource {
 		}
 		var tintSource = model.tintSource();
 		if (tintSource == null) {
-			// Lava and anything else that paints itself from its texture rather than a tint.
-			return UNTINTED;
+			// Lava, oil, the distillation fractions — fluids that paint themselves from their texture
+			// declare no tint, which used to leave the pipe core UNTINTED (a white pipe carrying
+			// bright-yellow diesel, the MOD-251 playtest report). Fall back to the mod's own fluid
+			// colour table instead: lava turns lava-orange, oil near-black, diesel golden.
+			return 0xFF000000
+					| (dev.alaindustrial.item.fluid.FluidTankVisuals.fallbackColor(fluid) & 0x00FFFFFF);
 		}
 		BlockState legacy = fluid.defaultFluidState().createLegacyBlock();
 		return 0xFF000000 | (tintSource.colorInWorld(legacy, level, pos) & 0x00FFFFFF);

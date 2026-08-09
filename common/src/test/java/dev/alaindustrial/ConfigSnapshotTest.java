@@ -228,6 +228,8 @@ class ConfigSnapshotTest {
 		SENTINELS.put("sawmillDuration", 130);
 		SENTINELS.put("polymerizerDuration", 333);
 		SENTINELS.put("vulcanizerDuration", 334);
+		SENTINELS.put("distillationColumnDuration", 335);
+		SENTINELS.put("distillationColumnWarmupTicks", 336);
 		SENTINELS.put("galvanicBathDuration", 335);
 		SENTINELS.put("galvanicBathWaterPerOp", 336);
 		// Fluxweave armour (MOD-127).

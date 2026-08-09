@@ -103,6 +103,13 @@ public class AlaReiPlugin implements REIClientPlugin {
 		// MOD-019: the Polymerizer's fluid → item family. One category, its own display type.
 		registry.add(new PolymerizingCategory(ModBlocks.POLYMERIZER, ModBlocks.POLYMERIZER.getName()));
 		registry.addWorkstations(PolymerizingDisplay.CATEGORY, EntryStacks.of(ModBlocks.POLYMERIZER));
+		// MOD-251: the Distillation Column's fluid → two-fluids family (the MOD-257 display contract,
+		// registered now that the real workstation exists).
+		registry.add(new FluidOutputCategory(
+				CategoryIdentifier.of(Industrialization.id(ModRecipes.DISTILLING.id())),
+				ModBlocks.DISTILLATION_COLUMN, ModBlocks.DISTILLATION_COLUMN.getName()));
+		registry.addWorkstations(CategoryIdentifier.of(Industrialization.id(ModRecipes.DISTILLING.id())),
+				EntryStacks.of(ModBlocks.DISTILLATION_COLUMN));
 		// MOD-064: the alloy smelter's multi-component family. One category, its own display type.
 		registry.add(new AlloyingCategory(ModBlocks.ALLOY_SMELTER, ModBlocks.ALLOY_SMELTER.getName()));
 		registry.addWorkstations(AlloyingDisplay.CATEGORY, EntryStacks.of(ModBlocks.ALLOY_SMELTER));
@@ -168,7 +175,9 @@ public class AlaReiPlugin implements REIClientPlugin {
 		// MOD-019: fluid-fed machines carry their own display type, so they list separately.
 		for (MachineRecipeViewerTargets.FluidTarget target : MachineRecipeViewerTargets.FLUID_ALL) {
 			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
-			registerClickArea(registry, target.screenClass(), rect, PolymerizingDisplay.CATEGORY);
+			// Per-kind category id (MOD-251): polymerizing and distilling each open their own card.
+			registerClickArea(registry, target.screenClass(), rect,
+					CategoryIdentifier.of(Industrialization.id(target.kind().id())));
 		}
 		// MOD-064: the alloy smelter likewise carries its own display type.
 		for (MachineRecipeViewerTargets.AlloyTarget target : MachineRecipeViewerTargets.ALLOY_ALL) {

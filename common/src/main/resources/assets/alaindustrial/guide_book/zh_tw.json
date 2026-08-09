@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "銅纜線",
-              "text": "廉價又耐用的 LV 纜線；在電流實際流動時，裸露的導線會電擊觸碰它的玩家。"
+              "text": "廉價又耐用的 LV 纜線；只要它連接著受供電的電網、處於帶電狀態，裸露的導線就會電擊觸碰它的玩家。"
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "蒸餾塔",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "蒸餾塔",
+              "text": "一座 1×1×3 的塔，把原油分餾為柴油和重油。本模組的第一個多方塊結構——由三個塔段手工堆疊組裝；輕餾分從頂部輸出，重餾分從底部輸出，拆解時基座會保留其中的液體。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：400 EU/操作",
+                "緩衝：800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "柴油",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "柴油",
+              "text": "石油蒸餾的輕餾分——金黃色的流體，蒸餾塔的目標產物。液態燃料發電機（12 EU/t）的未來燃料。"
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "因瓦錠",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "白銅錠",
               "text": "一比一的銅鎳合金，每次只產出一個錠——就材料而言，這是讓鎳派上用場最便宜的途徑。"
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "重油",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "重油",
+              "text": "石油蒸餾的重質殘餘——黏稠的深棕色流體。燃燒值比柴油低（6 EU/t），但毫不浪費——全都能燒。"
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "園藝無人機基站",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "帶 EU 緩衝的 LV 基站，一架動畫無人機從這裡起飛，巡邏半徑 9 格內的農田——翻耕空地、播種、替未成熟的作物施肥，並把成熟的收成運回基站。"
             },
             {
               "type": "stats",
@@ -1873,13 +1938,13 @@
             {
               "type": "text",
               "title": "儲存模組",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "擁有 27 個格子的儲存方塊：彼此相鄰放置的模組會作為一個倉庫運作，在同一個視窗內最多 108 個格子。"
             },
             {
               "type": "stats",
               "title": "數據",
               "lines": [
-                "Buffer: 0 EU"
+                "緩衝：0 EU"
               ]
             },
             {
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "電池",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "第一種 EU 載體——一塊 2 000 EU 的可充電電池，按電量檔位堆疊，並能把儲存的能量交還給電網或其他物品。"
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "高級電路",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "電路的 MV 級——用金重新佈線並以橡膠密封的基礎電路板。"
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "進階機器外殼",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "MV 機器的實心方塊底座——一個裝有兩塊高級電路的樸素外殼，外覆 6 塊回火鐵板。"
             },
             {
               "type": "recipe",

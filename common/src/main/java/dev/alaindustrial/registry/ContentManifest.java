@@ -9,6 +9,8 @@ import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
+import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
+import dev.alaindustrial.block.entity.DistillationColumnSegmentBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.ExtractorBlockEntity;
@@ -47,6 +49,7 @@ import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
+import dev.alaindustrial.menu.DistillationColumnMenu;
 import dev.alaindustrial.menu.ElectricFurnaceMenu;
 import dev.alaindustrial.menu.ExtractorMenu;
 import dev.alaindustrial.menu.GeneratorMenu;
@@ -172,6 +175,9 @@ public final class ContentManifest {
 			menu("assembler", AssemblerMenu::new, s -> ModContent.ASSEMBLER_MENU = s),
 			menu("incubator", IncubatorMenu::new, s -> ModContent.INCUBATOR_MENU = s),
 			menu("polymerizer", PolymerizerMenu::new, s -> ModContent.POLYMERIZER_MENU = s),
+			// MOD-251 — the distillation column: three tank gauges, warm-up bar, status line.
+			menu("distillation_column", DistillationColumnMenu::new,
+					s -> ModContent.DISTILLATION_COLUMN_MENU = s),
 			menu("vulcanizer", VulcanizerMenu::new, s -> ModContent.VULCANIZER_MENU = s),
 			// MOD-064 — the alloy smelter: three interchangeable component slots, one result slot.
 			menu("alloy_smelter", AlloySmelterMenu::new, s -> ModContent.ALLOY_SMELTER_MENU = s),
@@ -261,6 +267,18 @@ public final class ContentManifest {
 			// MOD-275: the assembler has no lit model, so no lightLevel — a plain metal machine cube.
 			Map.entry("assembler", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("polymerizer", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			// MOD-251 — the distillation tower: all three segments share the machine chain, glowing
+			// windows while working (litLight). The base drops the item; the segments have no loot.
+			// noOcclusion: the tower is a chamfered ~12px column (round-2 voxel models), not a full
+			// cube — a non-full collision shape MUST not occlude (R-PHY-05).
+			Map.entry("distillation_column", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.noOcclusion().lightLevel(ModBlockProperties::litLight))),
+			Map.entry("distillation_column_middle", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.noOcclusion().lightLevel(ModBlockProperties::litLight))),
+			Map.entry("distillation_column_top", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.noOcclusion().lightLevel(ModBlockProperties::litLight))),
+			Map.entry("rectification_section", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.noOcclusion().lightLevel(ModBlockProperties::litLight))),
 			Map.entry("galvanic_bath", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("vulcanizer", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.lightLevel(ModBlockProperties::litLight))),
@@ -312,6 +330,14 @@ public final class ContentManifest {
 			Map.entry("industrial_workbench", machine(p -> p.strength(2.5f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("enriched_uranium_torch", ModBlockProperties::applyTorch),
 			Map.entry("enriched_uranium_wall_torch", ModBlockProperties::applyTorch),
+			// Distillation fractions (MOD-251): same vanilla liquid-block chain as oil, their own
+			// map colours (diesel golden-yellow, fuel oil dark brown).
+			Map.entry("diesel", p -> p.mapColor(MapColor.COLOR_YELLOW).replaceable().noCollision()
+					.strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().liquid()
+					.sound(SoundType.EMPTY)),
+			Map.entry("fuel_oil", p -> p.mapColor(MapColor.TERRACOTTA_BROWN).replaceable().noCollision()
+					.strength(100.0F).pushReaction(PushReaction.DESTROY).noLootTable().liquid()
+					.sound(SoundType.EMPTY)),
 			// Oil (MOD-238): the vanilla liquid-block chain (see Blocks.WATER in 26.2), dark map colour.
 			// Not machine(...) - a liquid needs no tool and has no drops.
 			Map.entry("oil", p -> p.mapColor(MapColor.COLOR_BLACK).replaceable().noCollision()
@@ -523,6 +549,12 @@ public final class ContentManifest {
 			blockEntity("sawmill", SawmillBlockEntity.class, SawmillBlockEntity::new, "sawmill"),
 			blockEntity("assembler", AssemblerBlockEntity.class, AssemblerBlockEntity::new, "assembler"),
 			blockEntity("polymerizer", PolymerizerBlockEntity.class, PolymerizerBlockEntity::new, "polymerizer"),
+			// MOD-251 — the tower: master BE on the base, one shared proxy type on both segments.
+			blockEntity("distillation_column", DistillationColumnBlockEntity.class,
+					DistillationColumnBlockEntity::new, "distillation_column"),
+			blockEntity("distillation_column_segment", DistillationColumnSegmentBlockEntity.class,
+					DistillationColumnSegmentBlockEntity::new,
+					"distillation_column_middle", "distillation_column_top"),
 			blockEntity("vulcanizer", VulcanizerBlockEntity.class, VulcanizerBlockEntity::new, "vulcanizer"),
 			blockEntity("alloy_smelter", AlloySmelterBlockEntity.class, AlloySmelterBlockEntity::new, "alloy_smelter"),
 			blockEntity("galvanic_bath", GalvanicBathBlockEntity.class, GalvanicBathBlockEntity::new, "galvanic_bath"),

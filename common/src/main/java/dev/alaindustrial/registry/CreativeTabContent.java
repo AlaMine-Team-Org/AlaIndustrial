@@ -205,6 +205,10 @@ public final class CreativeTabContent {
 		out.accept(ModContent.GARDEN_DRONE_STATION_ITEM.get());
 		out.accept(ModContent.GARDEN_DRONE.get());
 		out.accept(ModContent.POLYMERIZER_ITEM.get());
+		// MOD-251: the distillation tower — one item, three blocks tall when placed.
+		out.accept(ModContent.DISTILLATION_COLUMN_ITEM.get());
+		// MOD-251 round 2: the optional fourth storey — losses 10 % → 5 %.
+		out.accept(ModContent.RECTIFICATION_SECTION_ITEM.get());
 		out.accept(ModContent.VULCANIZER_ITEM.get());
 		out.accept(ModContent.GALVANIC_BATH_ITEM.get());
 		out.accept(ModContent.ALLOY_SMELTER_ITEM.get());
@@ -338,6 +342,9 @@ public final class CreativeTabContent {
 		out.accept(ModContent.VACUUM_CAPSULE.get());
 		// Oil Bucket (MOD-238) — the hand-carried form of the worldgen oil lakes.
 		out.accept(ModContent.OIL_BUCKET.get());
+		// Distillation fractions (MOD-251) — the column's two outputs, in recipe order.
+		out.accept(ModContent.DIESEL_BUCKET.get());
+		out.accept(ModContent.FUEL_OIL_BUCKET.get());
 	}
 
 	private static void temperedIron(Sink out) {

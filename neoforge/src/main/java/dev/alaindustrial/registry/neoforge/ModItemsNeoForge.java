@@ -343,6 +343,16 @@ public final class ModItemsNeoForge {
 					p -> new net.minecraft.world.item.BucketItem(ModFluidsNeoForge.OIL.get(), p),
 					p -> p.craftRemainder(Items.BUCKET).stacksTo(1));
 
+	// Distillation fraction buckets (MOD-251) — same WATER_BUCKET pattern as the oil bucket.
+	public static final DeferredItem<Item> DIESEL_BUCKET =
+			ITEMS.registerItem("diesel_bucket",
+					p -> new net.minecraft.world.item.BucketItem(ModFluidsNeoForge.DIESEL.get(), p),
+					p -> p.craftRemainder(Items.BUCKET).stacksTo(1));
+	public static final DeferredItem<Item> FUEL_OIL_BUCKET =
+			ITEMS.registerItem("fuel_oil_bucket",
+					p -> new net.minecraft.world.item.BucketItem(ModFluidsNeoForge.FUEL_OIL.get(), p),
+					p -> p.craftRemainder(Items.BUCKET).stacksTo(1));
+
 	// --- Block items ---
 	public static final DeferredItem<BlockItem> GENERATOR_ITEM =
 			ITEMS.registerSimpleBlockItem("generator", ModBlocksNeoForge.GENERATOR);
@@ -375,6 +385,11 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("assembler", ModBlocksNeoForge.ASSEMBLER);
 	public static final DeferredItem<BlockItem> POLYMERIZER_ITEM =
 			ITEMS.registerSimpleBlockItem("polymerizer", ModBlocksNeoForge.POLYMERIZER);
+	// MOD-251: only the tower's base has an item; the segments are placed by the base.
+	public static final DeferredItem<BlockItem> DISTILLATION_COLUMN_ITEM =
+			ITEMS.registerSimpleBlockItem("distillation_column", ModBlocksNeoForge.DISTILLATION_COLUMN);
+	public static final DeferredItem<BlockItem> RECTIFICATION_SECTION_ITEM =
+			ITEMS.registerSimpleBlockItem("rectification_section", ModBlocksNeoForge.RECTIFICATION_SECTION);
 	public static final DeferredItem<BlockItem> ALLOY_SMELTER_ITEM =
 			ITEMS.registerSimpleBlockItem("alloy_smelter", ModBlocksNeoForge.ALLOY_SMELTER);
 	public static final DeferredItem<BlockItem> VULCANIZER_ITEM =
@@ -608,6 +623,8 @@ public final class ModItemsNeoForge {
 		ModContent.TEMPERED_IRON_PLATE = TEMPERED_IRON_PLATE;
 		ModContent.FORGE_HAMMER = FORGE_HAMMER::get;
 		ModContent.OIL_BUCKET = OIL_BUCKET::get;
+		ModContent.DIESEL_BUCKET = DIESEL_BUCKET::get;
+		ModContent.FUEL_OIL_BUCKET = FUEL_OIL_BUCKET::get;
 
 		ModContent.GENERATOR_ITEM = GENERATOR_ITEM;
 		ModContent.SOLAR_PANEL_ITEM = SOLAR_PANEL_ITEM;
@@ -624,6 +641,8 @@ public final class ModItemsNeoForge {
 		ModContent.SAWMILL_ITEM = SAWMILL_ITEM;
 		ModContent.ASSEMBLER_ITEM = ASSEMBLER_ITEM;
 		ModContent.POLYMERIZER_ITEM = POLYMERIZER_ITEM;
+		ModContent.DISTILLATION_COLUMN_ITEM = DISTILLATION_COLUMN_ITEM;
+		ModContent.RECTIFICATION_SECTION_ITEM = RECTIFICATION_SECTION_ITEM;
 		ModContent.VULCANIZER_ITEM = VULCANIZER_ITEM;
 		ModContent.ALLOY_SMELTER_ITEM = ALLOY_SMELTER_ITEM;
 		ModContent.GALVANIC_BATH_ITEM = GALVANIC_BATH_ITEM;

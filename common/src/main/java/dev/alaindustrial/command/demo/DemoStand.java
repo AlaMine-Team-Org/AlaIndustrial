@@ -303,6 +303,15 @@ public final class DemoStand {
 				new ItemStack(Items.COPPER_INGOT, 64));
 		fillSlot(level, origin, 5, 1, 12, AlloySmelterBlockEntity.INPUT_SLOT_2,
 				new ItemStack(ModContent.TIN_INGOT.get(), 64));
+		// Distillation Column (MOD-251): the 1×1×3 tower on the second machines row. The three
+		// segments are placed explicitly — DemoStand.set uses setBlockAndUpdate, which never calls
+		// setPlacedBy, so relying on the base's own placement hook would leave an orphan bottom
+		// segment (the MOD-015 gametest lesson). HEIGHT=9 leaves ample headroom on this row.
+		dev.alaindustrial.block.DistillationColumnBlock.placeTower(level,
+				origin.offset(8, 1, 12));
+		chargeBuffer(level, origin, 8, 1, 12);
+		// Round 2: the Rectification Section on top — the stand shows the full 4-storey refinery.
+		set(level, origin, 8, 4, 12, ModContent.RECTIFICATION_SECTION.get());
 	}
 
 	/**
@@ -416,6 +425,12 @@ public final class DemoStand {
 		// on fire (OilLiquidBlock ignition mechanic) and the stand would showcase a fire block instead.
 		set(level, origin, 34, -1, 12, FLOOR);
 		set(level, origin, 34, 0, 12, ModContent.OIL_BLOCK.get());
+		// Distillation fractions (MOD-251): the same sunken-pool pattern for diesel and fuel oil —
+		// water-like fluids, so no ignition spacing worries; two more one-block basins along z=12.
+		set(level, origin, 36, -1, 12, FLOOR);
+		set(level, origin, 36, 0, 12, ModContent.DIESEL_BLOCK.get());
+		set(level, origin, 38, -1, 12, FLOOR);
+		set(level, origin, 38, 0, 12, ModContent.FUEL_OIL_BLOCK.get());
 		set(level, origin, 34, 1, 10, ModContent.PUMP.get());
 		chargeBuffer(level, origin, 34, 1, 10);
 		set(level, origin, 35, 1, 10, ModContent.GEOTHERMAL_GENERATOR.get());

@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "Kupferkabel",
-              "text": "Ein günstiges LV-Allzweckkabel; solange tatsächlich Energie fließt, versetzt der blanke Draht Spielern bei Berührung einen Stromschlag."
+              "text": "Ein günstiges LV-Allzweckkabel; der blanke Draht versetzt Spielern Stromschläge, solange er über ein versorgtes Netz unter Spannung steht."
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "Destillationskolonne",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Destillationskolonne",
+              "text": "Ein 1×1×3-Turm, der Rohöl in Diesel und Heizöl zerlegt. Der erste Multiblock der Mod — von Hand aus drei Segmenten zusammengesetzt; die leichte Fraktion tritt oben aus, die schwere unten, und die Basis behält ihre Flüssigkeiten beim Zerlegen."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 400 EU/Vorgang",
+                "Puffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "Diesel",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Diesel",
+              "text": "Die leichte Fraktion der Öldestillation — eine goldgelbe Flüssigkeit, das Zielprodukt der Kolonne. Künftiger Brennstoff des Flüssigbrennstoff-Generators (12 EU/t)."
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "Invarbarren",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "Kupfernickelbarren",
               "text": "Eine Kupfer-Nickel-Legierung im Verhältnis eins zu eins, immer nur ein Barren auf einmal — der vom Material her günstigste Weg, Nickel einzusetzen."
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "Heizöl",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Heizöl",
+              "text": "Der schwere Rückstand der Öldestillation — eine dickflüssige, dunkelbraune Flüssigkeit. Schwächerer Brennstoff als Diesel (6 EU/t), aber nichts wird verschwendet — alles verbrennt."
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "Gartendrohnen-Station",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "Eine LV-Station mit EU-Puffer, von der eine animierte Drohne abhebt und das Ackerland im Umkreis von 9 Blöcken patrouilliert — sie pflügt freie Erde, sät Saatgut, düngt unreife Pflanzen und bringt reife Ernte zurück zur Station."
             },
             {
               "type": "stats",
@@ -1873,13 +1938,13 @@
             {
               "type": "text",
               "title": "Lagermodul",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "Ein Lagerblock mit 27 Plätzen: aneinandergesetzte Module arbeiten als ein Lager mit bis zu 108 Plätzen hinter einem Fenster."
             },
             {
               "type": "stats",
               "title": "Werte",
               "lines": [
-                "Buffer: 0 EU"
+                "Puffer: 0 EU"
               ]
             },
             {
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "Batterie",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "Der erste EU-Träger — eine wiederaufladbare 2 000-EU-Batterie, die sich nach Ladestand stapelt und ihre Energie ans Netz oder an einen anderen Gegenstand zurückgibt."
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "Fortgeschrittene Schaltung",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "Die MV-Stufe der Schaltung — die Basisplatine, mit Gold neu verdrahtet und in Gummi versiegelt."
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "Fortschrittliches Maschinengehäuse",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "Ein voller Würfel als Basisblock für MV-Maschinen — ein schlichtes Gehäuse mit zwei fortgeschrittenen Schaltungen, verkleidet mit 6 Platten aus gehärtetem Eisen."
             },
             {
               "type": "recipe",

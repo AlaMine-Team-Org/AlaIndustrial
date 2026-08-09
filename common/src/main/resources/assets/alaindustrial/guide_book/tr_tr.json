@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "Bakır Kablo",
-              "text": "Ucuz, iş gören bir LV kablo; içinden gerçekten enerji akarken çıplak tel dokunan oyuncuyu çarpar."
+              "text": "Ucuz, iş gören bir LV kablo; çıplak tel, beslenen bir şebekeye bağlı olarak gerilim altındayken dokunan oyuncuları çarpar."
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "Damıtma Kolonu",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Damıtma Kolonu",
+              "text": "Ham petrolü dizel ve fuel oile ayrıştıran 1×1×3 bir kule. Modun ilk çoklu bloğu — üç parçadan elle kurulur; hafif fraksiyon üstten, ağır olan alttan çıkar ve söküldüğünde taban sıvılarını korur."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 400 EU/işlem",
+                "Tampon: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "Dizel",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Dizel",
+              "text": "Petrol damıtmasının hafif fraksiyonu — altın sarısı bir sıvı, kolonun hedef ürünü. Sıvı yakıt jeneratörünün gelecekteki yakıtı (12 EU/t)."
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "İnvar Külçesi",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "Kupronikel Külçesi",
               "text": "Bire bir oranında, seferde tek külçe üretilen bakır-nikel alaşımı — malzeme açısından nikeli işe koşmanın en ucuz yolu."
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "Fuel Oil",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fuel Oil",
+              "text": "Petrol damıtmasının ağır kalıntısı — koyu kahverengi, yoğun bir sıvı. Dizelden daha zayıf bir yakıt (6 EU/t), ama hiçbir şey ziyan olmaz — hepsi yanar."
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "Bahçe Dronu İstasyonu",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "İçinden animasyonlu bir dronun havalanıp 9 blokluk yarıçaptaki tarlalarda devriye gezdiği, EU tamponlu bir LV istasyonu — boş toprağı sürer, tohum eker, olgunlaşmamış ekinleri gübreler ve olgun hasadı istasyona geri taşır."
             },
             {
               "type": "stats",
@@ -1873,13 +1938,13 @@
             {
               "type": "text",
               "title": "Depolama Modülü",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "27 yuvalı bir depolama bloğu: birbirine bitişik yerleştirilen modüller, tek pencere arkasında 108 yuvaya kadar tek bir ambar gibi çalışır."
             },
             {
               "type": "stats",
               "title": "İstatistikler",
               "lines": [
-                "Buffer: 0 EU"
+                "Tampon: 0 EU"
               ]
             },
             {
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "Pil",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "İlk EU taşıyıcısı — şarj seviyesine göre istiflenen ve enerjisini şebekeye ya da başka bir eşyaya geri veren, şarj edilebilir 2 000 EU'luk bir pil."
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "Gelişmiş Devre",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "Devrenin MV kademesi — altınla yeniden kablolanıp kauçukla mühürlenmiş temel kart."
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "Gelişmiş Makine Gövdesi",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "MV makineleri için tam küp temel blok — iki gelişmiş devreli sade bir gövde, 6 su verilmiş demir levhayla kaplı."
             },
             {
               "type": "recipe",

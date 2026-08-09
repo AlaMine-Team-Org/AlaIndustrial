@@ -76,6 +76,8 @@ public class ScreensClientGameTest implements FabricClientGameTest {
      */
     private static final List<Screen> SCREENS = List.of(
             new Screen("polymerizer", "polymerizer", "Polymerizer"),
+            // MOD-251: the tower's base opens the shared menu; RMB on the base block is enough.
+            new Screen("distillation_column", "distillation_column", "Distillation Column"),
             new Screen("vulcanizer", "vulcanizer", "Vulcanizer"),
             new Screen("alloy_smelter", "alloy_smelter", "Alloy Smelter"),
             new Screen("galvanic_bath", "galvanic_bath", "Galvanic Bath"),

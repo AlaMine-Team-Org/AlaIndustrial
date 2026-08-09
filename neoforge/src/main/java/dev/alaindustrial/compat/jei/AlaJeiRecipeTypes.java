@@ -53,6 +53,17 @@ final class AlaJeiRecipeTypes {
 	private AlaJeiRecipeTypes() {
 	}
 
+	/** The fluid-fed families' viewer types by kind (MOD-251) — the FluidKind twin of {@link #byKind}. */
+	static IRecipeHolderType<?> byFluidKind(ModRecipes.FluidKind<?> kind) {
+		if (kind == ModRecipes.POLYMERIZING) {
+			return POLYMERIZING;
+		}
+		if (kind == ModRecipes.DISTILLING) {
+			return DISTILLING;
+		}
+		throw new IllegalArgumentException("Unknown Ala fluid recipe kind: " + kind.id());
+	}
+
 	static IRecipeHolderType<AlaProcessingRecipe> byKind(ModRecipes.Kind kind) {
 		if (kind == ModRecipes.MACERATION) {
 			return MACERATION;

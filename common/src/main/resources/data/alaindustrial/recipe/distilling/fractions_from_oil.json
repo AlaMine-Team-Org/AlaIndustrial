@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:distilling",
+	"fluid": "#c:oil",
+	"amount": 1000,
+	"fluid_results": [
+		{ "fluid": "alaindustrial:diesel", "amount": 700 },
+		{ "fluid": "alaindustrial:fuel_oil", "amount": 200 }
+	],
+	"energy": 400
+}

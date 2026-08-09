@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "Kabel Tembaga",
-              "text": "Kabel LV murah dan andal; selama energi benar-benar mengalir, kawat telanjangnya menyetrum pemain yang menyentuhnya."
+              "text": "Kabel LV murah dan andal; kawat telanjangnya menyetrum pemain selama masih bertegangan karena tersambung ke jaringan yang dialiri daya."
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "Kolom Distilasi",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kolom Distilasi",
+              "text": "Menara 1×1×3 yang memfraksinasi minyak mentah menjadi diesel dan minyak bakar. Multiblok pertama mod ini — dirakit manual dari tiga segmen; fraksi ringan keluar di atas, yang berat di bawah, dan dasarnya menyimpan cairan saat dibongkar."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 400 EU/op",
+                "Bufer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "Diesel",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Diesel",
+              "text": "Fraksi ringan hasil distilasi minyak — cairan kuning keemasan, produk utama kolom. Bahan bakar masa depan generator bahan bakar cair (12 EU/t)."
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "Batangan Invar",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "Batangan Kupronikel",
               "text": "Paduan tembaga-nikel satu banding satu yang dibuat sebatang demi sebatang — cara termurah, dari sisi bahan, untuk memanfaatkan nikel."
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "Minyak Bakar",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Minyak Bakar",
+              "text": "Residu berat hasil distilasi minyak — cairan kental cokelat tua. Bahan bakar yang lebih lemah daripada diesel (6 EU/t), tetapi tak ada yang terbuang — semuanya habis terbakar."
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "Stasiun Drone Kebun",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "Stasiun LV dengan bufer EU tempat drone animasi lepas landas dan berpatroli di lahan pertanian dalam radius 9 blok — mencangkul tanah kosong, menanam benih, memupuk tanaman yang belum matang, dan mengangkut panen yang sudah masak kembali ke stasiun."
             },
             {
               "type": "stats",
@@ -1873,13 +1938,13 @@
             {
               "type": "text",
               "title": "Modul Penyimpanan",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "Blok penyimpanan 27 slot: modul yang dipasang saling menempel bekerja sebagai satu gudang hingga 108 slot di balik satu jendela."
             },
             {
               "type": "stats",
               "title": "Statistik",
               "lines": [
-                "Buffer: 0 EU"
+                "Bufer: 0 EU"
               ]
             },
             {
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "Baterai",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "Pembawa EU pertama — baterai isi ulang 2 000 EU yang menumpuk menurut tingkat dayanya dan mengembalikan energinya ke jaringan atau ke benda lain."
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "Sirkuit Canggih",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "Tingkat MV dari sirkuit — papan dasar yang dikabeli ulang dengan emas dan disegel dalam karet."
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "Rangka Mesin Canggih",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "Blok dasar kubus penuh untuk mesin MV — selubung polos dengan dua sirkuit canggih, dilapisi 6 pelat besi temper."
             },
             {
               "type": "recipe",

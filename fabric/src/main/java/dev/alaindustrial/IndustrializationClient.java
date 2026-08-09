@@ -92,14 +92,24 @@ public class IndustrializationClient implements ClientModInitializer {
 	 * the oil textures carry their colour themselves.
 	 */
 	private void registerFluidRendering() {
-		net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderingRegistry.register(
-				dev.alaindustrial.registry.ModFluids.OIL,
-				dev.alaindustrial.registry.ModFluids.FLOWING_OIL,
+		registerFluidModel(dev.alaindustrial.registry.ModFluids.OIL,
+				dev.alaindustrial.registry.ModFluids.FLOWING_OIL, "oil");
+		// MOD-251: the two distillation fractions, same registration shape as oil.
+		registerFluidModel(dev.alaindustrial.registry.ModFluids.DIESEL,
+				dev.alaindustrial.registry.ModFluids.FLOWING_DIESEL, "diesel");
+		registerFluidModel(dev.alaindustrial.registry.ModFluids.FUEL_OIL,
+				dev.alaindustrial.registry.ModFluids.FLOWING_FUEL_OIL, "fuel_oil");
+	}
+
+	/** One still+flowing pair → its {@code FluidModel.Unbaked} built from {@code block/<name>_still|_flow}. */
+	private static void registerFluidModel(net.minecraft.world.level.material.FlowingFluid still,
+			net.minecraft.world.level.material.FlowingFluid flowing, String name) {
+		net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderingRegistry.register(still, flowing,
 				new net.minecraft.client.renderer.block.FluidModel.Unbaked(
 						new net.minecraft.client.resources.model.sprite.Material(
-								Industrialization.id("block/oil_still")),
+								Industrialization.id("block/" + name + "_still")),
 						new net.minecraft.client.resources.model.sprite.Material(
-								Industrialization.id("block/oil_flow")),
+								Industrialization.id("block/" + name + "_flow")),
 						null, null));
 	}
 

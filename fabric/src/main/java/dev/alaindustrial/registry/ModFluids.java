@@ -1,6 +1,8 @@
 package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.fluid.DieselFluid;
+import dev.alaindustrial.fluid.FuelOilFluid;
 import dev.alaindustrial.fluid.OilFluid;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,6 +30,19 @@ public final class ModFluids {
 
 	public static final ResourceKey<Fluid> FLOWING_OIL_KEY = key("flowing_oil");
 	public static final FlowingFluid FLOWING_OIL = register(FLOWING_OIL_KEY, new OilFluid.Flowing());
+
+	// Distillation fractions (MOD-251): diesel + fuel oil, registered in the same still/flowing pairs.
+	public static final ResourceKey<Fluid> DIESEL_KEY = key("diesel");
+	public static final FlowingFluid DIESEL = register(DIESEL_KEY, new DieselFluid.Source());
+
+	public static final ResourceKey<Fluid> FLOWING_DIESEL_KEY = key("flowing_diesel");
+	public static final FlowingFluid FLOWING_DIESEL = register(FLOWING_DIESEL_KEY, new DieselFluid.Flowing());
+
+	public static final ResourceKey<Fluid> FUEL_OIL_KEY = key("fuel_oil");
+	public static final FlowingFluid FUEL_OIL = register(FUEL_OIL_KEY, new FuelOilFluid.Source());
+
+	public static final ResourceKey<Fluid> FLOWING_FUEL_OIL_KEY = key("flowing_fuel_oil");
+	public static final FlowingFluid FLOWING_FUEL_OIL = register(FLOWING_FUEL_OIL_KEY, new FuelOilFluid.Flowing());
 
 	private static ResourceKey<Fluid> key(String path) {
 		return ResourceKey.create(Registries.FLUID, Industrialization.id(path));
@@ -57,5 +72,9 @@ public final class ModFluids {
 	private static void bind() {
 		ModContent.OIL = () -> OIL;
 		ModContent.FLOWING_OIL = () -> FLOWING_OIL;
+		ModContent.DIESEL = () -> DIESEL;
+		ModContent.FLOWING_DIESEL = () -> FLOWING_DIESEL;
+		ModContent.FUEL_OIL = () -> FUEL_OIL;
+		ModContent.FLOWING_FUEL_OIL = () -> FLOWING_FUEL_OIL;
 	}
 }

@@ -30,13 +30,26 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	// 97,0): item xy = PANEL + (slotAtlas − panelOrigin) + 1 (the +1 steps inside the 18×18 slot frame).
 	public static final int PANEL_X = 176 - 4;
 	public static final int PANEL_Y = 4;
-	/** Item (inner) x,y of each upgrade slot, relative to leftPos/topPos. Index 0 = active LEFT (mute). */
-	private static final int[][] UPGRADE_SLOT_XY = {
-			{ PANEL_X + 17, PANEL_Y + 66 },  // 0 — LEFT (active, mute chip; atlas 113,65)
-			{ PANEL_X + 71, PANEL_Y + 16 },  // 1 — TOP (locked; atlas 167,15)
-			{ PANEL_X + 125, PANEL_Y + 66 }, // 2 — RIGHT (locked; atlas 221,65)
-			{ PANEL_X + 71, PANEL_Y + 115 }, // 3 — BOTTOM (locked; atlas 167,114)
-	};
+
+	/**
+	 * The panel's docked left anchor, relative to {@code leftPos}. Default {@link #PANEL_X} fits the
+	 * standard 176px frames; a wider GUI (the 200px distillation column, MOD-251) overrides this so
+	 * the gear tab and panel dock to ITS right edge instead of floating inside the frame.
+	 */
+	public int panelAnchorX() {
+		return PANEL_X;
+	}
+
+	/** Item (inner) x,y of upgrade slot {@code i}, relative to leftPos/topPos (anchor-aware). */
+	private int[] upgradeSlotXY(int i) {
+		int px = panelAnchorX();
+		return switch (i) {
+			case 0 -> new int[] { px + 17, PANEL_Y + 66 };   // LEFT (active, mute chip; atlas 113,65)
+			case 1 -> new int[] { px + 71, PANEL_Y + 16 };   // TOP (locked; atlas 167,15)
+			case 2 -> new int[] { px + 125, PANEL_Y + 66 };  // RIGHT (locked; atlas 221,65)
+			default -> new int[] { px + 71, PANEL_Y + 115 }; // BOTTOM (locked; atlas 167,114)
+		};
+	}
 
 	protected final Container machine;
 	protected final ContainerData data;
@@ -81,7 +94,8 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 		}
 		for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
 			boolean active = (i == MachineBlockEntity.ACTIVE_UPGRADE_INDEX);
-			addSlot(new UpgradeSlot(machine, start + i, UPGRADE_SLOT_XY[i][0], UPGRADE_SLOT_XY[i][1],
+			int[] xy = upgradeSlotXY(i);
+			addSlot(new UpgradeSlot(machine, start + i, xy[0], xy[1],
 					this::isPanelOpen, active));
 		}
 	}
@@ -100,8 +114,9 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 		for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
 			int menuIndex = start + i;
 			boolean active = (i == MachineBlockEntity.ACTIVE_UPGRADE_INDEX);
+			int[] xy = upgradeSlotXY(i);
 			UpgradeSlot moved = new UpgradeSlot(machine, menuIndex,
-					UPGRADE_SLOT_XY[i][0] + dx, UPGRADE_SLOT_XY[i][1] + dy, this::isPanelOpen, active);
+					xy[0] + dx, xy[1] + dy, this::isPanelOpen, active);
 			moved.index = menuIndex;
 			slots.set(menuIndex, moved);
 		}

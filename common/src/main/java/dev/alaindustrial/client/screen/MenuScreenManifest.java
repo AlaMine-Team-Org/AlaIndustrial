@@ -104,6 +104,7 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.ASSEMBLER_MENU.get(), AssemblerScreen::new),
 			screen(() -> ModContent.INCUBATOR_MENU.get(), IncubatorScreen::new),
 			screen(() -> ModContent.POLYMERIZER_MENU.get(), PolymerizerScreen::new),
+			screen(() -> ModContent.DISTILLATION_COLUMN_MENU.get(), DistillationColumnScreen::new),
 			screen(() -> ModContent.VULCANIZER_MENU.get(), VulcanizerScreen::new),
 			screen(() -> ModContent.ALLOY_SMELTER_MENU.get(), AlloySmelterScreen::new),
 			screen(() -> ModContent.GALVANIC_BATH_MENU.get(), GalvanicBathScreen::new),

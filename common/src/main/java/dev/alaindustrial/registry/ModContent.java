@@ -5,6 +5,7 @@ import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
+import dev.alaindustrial.menu.DistillationColumnMenu;
 import dev.alaindustrial.menu.ElectricFurnaceMenu;
 import dev.alaindustrial.menu.ExtractorMenu;
 import dev.alaindustrial.menu.GeneratorMenu;
@@ -134,6 +135,12 @@ public final class ModContent {
 	public static Supplier<Block> ASSEMBLER = unbound("ASSEMBLER");
 	/** Polymerizer (MOD-019) — the first machine fed by a fluid: oil in the tank, raw rubber out. */
 	public static Supplier<Block> POLYMERIZER = unbound("POLYMERIZER");
+	/** Distillation Column (MOD-251) — the 1×1×3 tower: base (master) + two proxy segments. */
+	public static Supplier<Block> DISTILLATION_COLUMN = unbound("DISTILLATION_COLUMN");
+	public static Supplier<Block> DISTILLATION_COLUMN_MIDDLE = unbound("DISTILLATION_COLUMN_MIDDLE");
+	public static Supplier<Block> DISTILLATION_COLUMN_TOP = unbound("DISTILLATION_COLUMN_TOP");
+	/** Rectification Section (MOD-251 round 2) — the optional fourth storey: losses 10 % → 5 %. */
+	public static Supplier<Block> RECTIFICATION_SECTION = unbound("RECTIFICATION_SECTION");
 	public static Supplier<Block> VULCANIZER = unbound("VULCANIZER");
 	/** Alloy Smelter (MOD-064) — three interchangeable component slots melt into one alloy. */
 	public static Supplier<Block> ALLOY_SMELTER = unbound("ALLOY_SMELTER");
@@ -183,12 +190,20 @@ public final class ModContent {
 	public static Supplier<Block> ENRICHED_URANIUM_WALL_TORCH = unbound("ENRICHED_URANIUM_WALL_TORCH");
 	// Oil (MOD-238): the in-world liquid block. No block item — a liquid block is never held.
 	public static Supplier<Block> OIL_BLOCK = unbound("OIL_BLOCK");
+	// Distillation fractions (MOD-251): the in-world liquid blocks. No block items either.
+	public static Supplier<Block> DIESEL_BLOCK = unbound("DIESEL_BLOCK");
+	public static Supplier<Block> FUEL_OIL_BLOCK = unbound("FUEL_OIL_BLOCK");
 
 	// --- Fluids ---
 	// Oil (MOD-238): still + flowing. OilFluid (common) reads these at runtime for its
 	// getSource()/getFlowing() cross-references; NeoForge binds FluidType-carrying subclasses.
 	public static Supplier<FlowingFluid> OIL = unbound("OIL");
 	public static Supplier<FlowingFluid> FLOWING_OIL = unbound("FLOWING_OIL");
+	// Distillation fractions (MOD-251): diesel + fuel oil, same still/flowing pairs as oil.
+	public static Supplier<FlowingFluid> DIESEL = unbound("DIESEL");
+	public static Supplier<FlowingFluid> FLOWING_DIESEL = unbound("FLOWING_DIESEL");
+	public static Supplier<FlowingFluid> FUEL_OIL = unbound("FUEL_OIL");
+	public static Supplier<FlowingFluid> FLOWING_FUEL_OIL = unbound("FLOWING_FUEL_OIL");
 
 	// --- Items (crafting components + tools) ---
 	public static Supplier<Item> ELECTRONIC_CIRCUIT = unbound("ELECTRONIC_CIRCUIT");
@@ -333,6 +348,9 @@ public final class ModContent {
 	public static Supplier<Item> FORGE_HAMMER = unbound("FORGE_HAMMER");
 	// Oil Bucket (MOD-238): a vanilla-pattern BucketItem carrying the still oil fluid.
 	public static Supplier<Item> OIL_BUCKET = unbound("OIL_BUCKET");
+	// Distillation fraction buckets (MOD-251) — same vanilla WATER_BUCKET pattern as the oil bucket.
+	public static Supplier<Item> DIESEL_BUCKET = unbound("DIESEL_BUCKET");
+	public static Supplier<Item> FUEL_OIL_BUCKET = unbound("FUEL_OIL_BUCKET");
 	// Oil → rubber chain: the polymerizer makes raw rubber; the vulcanizer cures it with sulfur and heat.
 	public static Supplier<Item> RAW_RUBBER = unbound("RAW_RUBBER");
 	public static Supplier<Item> RUBBER = unbound("RUBBER");
@@ -385,6 +403,9 @@ public final class ModContent {
 	public static Supplier<BlockItem> SAWMILL_ITEM = unbound("SAWMILL_ITEM");
 	public static Supplier<BlockItem> ASSEMBLER_ITEM = unbound("ASSEMBLER_ITEM");
 	public static Supplier<BlockItem> POLYMERIZER_ITEM = unbound("POLYMERIZER_ITEM");
+	// Distillation Column (MOD-251): only the base has an item; the segments are never carried.
+	public static Supplier<BlockItem> DISTILLATION_COLUMN_ITEM = unbound("DISTILLATION_COLUMN_ITEM");
+	public static Supplier<BlockItem> RECTIFICATION_SECTION_ITEM = unbound("RECTIFICATION_SECTION_ITEM");
 	public static Supplier<BlockItem> VULCANIZER_ITEM = unbound("VULCANIZER_ITEM");
 	public static Supplier<BlockItem> ALLOY_SMELTER_ITEM = unbound("ALLOY_SMELTER_ITEM");
 	public static Supplier<BlockItem> GALVANIC_BATH_ITEM = unbound("GALVANIC_BATH_ITEM");
@@ -446,6 +467,9 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> SAWMILL_BE = unbound("SAWMILL_BE");
 	public static Supplier<BlockEntityType<?>> ASSEMBLER_BE = unbound("ASSEMBLER_BE");
 	public static Supplier<BlockEntityType<?>> POLYMERIZER_BE = unbound("POLYMERIZER_BE");
+	// Distillation Column (MOD-251): master BE (base) + one shared proxy type (middle/top segments).
+	public static Supplier<BlockEntityType<?>> DISTILLATION_COLUMN_BE = unbound("DISTILLATION_COLUMN_BE");
+	public static Supplier<BlockEntityType<?>> DISTILLATION_COLUMN_SEGMENT_BE = unbound("DISTILLATION_COLUMN_SEGMENT_BE");
 	public static Supplier<BlockEntityType<?>> VULCANIZER_BE = unbound("VULCANIZER_BE");
 	public static Supplier<BlockEntityType<?>> ALLOY_SMELTER_BE = unbound("ALLOY_SMELTER_BE");
 	public static Supplier<BlockEntityType<?>> GALVANIC_BATH_BE = unbound("GALVANIC_BATH_BE");
@@ -480,6 +504,7 @@ public final class ModContent {
 	public static Supplier<MenuType<SawmillMenu>> SAWMILL_MENU = unbound("SAWMILL_MENU");
 	public static Supplier<MenuType<AssemblerMenu>> ASSEMBLER_MENU = unbound("ASSEMBLER_MENU");
 	public static Supplier<MenuType<PolymerizerMenu>> POLYMERIZER_MENU = unbound("POLYMERIZER_MENU");
+	public static Supplier<MenuType<DistillationColumnMenu>> DISTILLATION_COLUMN_MENU = unbound("DISTILLATION_COLUMN_MENU");
 	public static Supplier<MenuType<VulcanizerMenu>> VULCANIZER_MENU = unbound("VULCANIZER_MENU");
 	public static Supplier<MenuType<AlloySmelterMenu>> ALLOY_SMELTER_MENU = unbound("ALLOY_SMELTER_MENU");
 	public static Supplier<MenuType<GalvanicBathMenu>> GALVANIC_BATH_MENU = unbound("GALVANIC_BATH_MENU");

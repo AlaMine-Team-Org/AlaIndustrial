@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "Cable de cobre",
-              "text": "Un cable LV barato y resistente; mientras la energía circula de verdad, el hilo desnudo electrocuta a quien lo toca."
+              "text": "Un cable LV barato y resistente; el hilo desnudo electrocuta a los jugadores mientras está bajo tensión, conectado a una red alimentada."
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "Columna de destilación",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Columna de destilación",
+              "text": "Una torre de 1×1×3 que fracciona el petróleo crudo en diésel y fueloil. El primer multibloque del mod: se monta a mano con tres segmentos; la fracción ligera sale por arriba, la pesada por abajo, y la base conserva sus líquidos al desmontarla."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 400 EU/op",
+                "Búfer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "Diésel",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Diésel",
+              "text": "La fracción ligera de la destilación del petróleo — un fluido amarillo dorado, el producto objetivo de la columna. Futuro combustible del generador de combustible líquido (12 EU/t)."
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "Lingote de invar",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "Lingote de cuproníquel",
               "text": "Una aleación de cobre y níquel uno a uno, fabricada de lingote en lingote: la forma más barata, en materiales, de dar uso al níquel."
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "Fuelóleo",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fuelóleo",
+              "text": "El residuo pesado de la destilación del petróleo — un fluido espeso de color marrón oscuro. Combustible más débil que el diésel (6 EU/t), pero nada se desperdicia: todo arde."
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "Estación de dron jardinero",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "Una estación LV con búfer de EU desde la que despega un dron animado que patrulla los cultivos en un radio de 9 bloques — ara la tierra libre, planta semillas, fertiliza los cultivos inmaduros y lleva la cosecha madura de vuelta a la estación."
             },
             {
               "type": "stats",
@@ -1873,13 +1938,13 @@
             {
               "type": "text",
               "title": "Módulo de almacenamiento",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "Un bloque de almacenamiento de 27 ranuras: los módulos colocados unos contra otros funcionan como un solo almacén de hasta 108 ranuras tras una única ventana."
             },
             {
               "type": "stats",
               "title": "Estadísticas",
               "lines": [
-                "Buffer: 0 EU"
+                "Búfer: 0 EU"
               ]
             },
             {
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "Batería",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "El primer portador de EU — una batería recargable de 2 000 EU que se apila por nivel de carga y devuelve su energía a la red o a otro objeto."
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "Circuito avanzado",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "El nivel MV del circuito — la placa base recableada con oro y sellada en caucho."
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "Carcasa de máquina avanzada",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "Un bloque base de cubo completo para máquinas MV — una carcasa sencilla con dos circuitos avanzados, revestida con 6 placas de hierro templado."
             },
             {
               "type": "recipe",

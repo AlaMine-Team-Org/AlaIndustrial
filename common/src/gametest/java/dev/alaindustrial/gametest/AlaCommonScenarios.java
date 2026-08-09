@@ -128,6 +128,13 @@ public final class AlaCommonScenarios {
 			if (id.getPath().equals("incubator_dome")) {
 				continue;
 			}
+			// The Distillation Column's middle/top segments (MOD-251) are placed by the base and have
+			// empty loot tables on purpose: breaking ANY segment drops the whole tower as the base's
+			// item (with tank contents). The one-drop contract is asserted in the column's own gametest.
+			if (id.getPath().equals("distillation_column_middle")
+					|| id.getPath().equals("distillation_column_top")) {
+				continue;
+			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);
 			// Liquid blocks (MOD-238 oil): like vanilla water/lava, the in-world block form of a fluid
 			// has no item and no loot — it is scooped with a bucket, never mined (LiquidBlock#getDrops
@@ -234,6 +241,12 @@ public final class AlaCommonScenarios {
 			// not by the player, and returns the original glass when broken. Occlusion is still asserted
 			// for it below by the base rule; only the block-item invariant is waived.
 			if (id.getPath().equals("incubator_dome")) {
+				continue;
+			}
+			// The Distillation Column's middle/top segments (MOD-251): no block items on purpose — the
+			// base's item raises the whole tower; their loot tables are empty (the base drops for all).
+			if (id.getPath().equals("distillation_column_middle")
+					|| id.getPath().equals("distillation_column_top")) {
 				continue;
 			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);

@@ -581,6 +581,14 @@ public final class Config {
 	/** Vulcanizer (MOD-258): ticks per operation at 1.0 speed. The shipped recipe costs 400 EU, so at
 	 * the ordinary-machine rate of 2 EU/t the operation takes 200 ticks at every heat tier. */
 	public static int vulcanizerDuration = 200;
+	/** Distillation Column (MOD-251): fallback ticks per distillation at 1.0 speed. The shipped recipe
+	 * costs 400 EU, so at the ordinary-machine rate of 2 EU/t one run takes 200 ticks — deliberately
+	 * the Polymerizer's exact tier: both turn one bucket of pumped crude into product. */
+	public static int distillationColumnDuration = 200;
+	/** Distillation Column (MOD-251): ticks a cold column heats before it can distil. It draws the
+	 * ordinary machine rate while heating, so one cold start costs ~warmup × machineEuPerTick EU
+	 * (~400 EU at defaults — one distillation's worth). Cooling runs at half this rate. */
+	public static int distillationColumnWarmupTicks = 200;
 	/** Galvanic Bath (MOD-127): fallback ticks per operation at 1.0 speed. The shipped recipe costs
 	 * 1000 EU, so at the ordinary-machine rate of 2 EU/t the operation takes 500 ticks (25 s) — by far
 	 * the slowest of the LV processing family, because plating silver onto fibre is the gate into the
@@ -1211,6 +1219,10 @@ public final class Config {
 				() -> polymerizerDuration, v -> polymerizerDuration = v, 1),
 			new IntField("vulcanizerDuration", "Fallback ticks a vulcanizer operation takes at 1.0 speed; shipped recipe energy 400 / machineEuPerTick 2 = 200.",
 				() -> vulcanizerDuration, v -> vulcanizerDuration = v, 1),
+			new IntField("distillationColumnDuration", "Fallback ticks one distillation takes at 1.0 speed; shipped recipe energy 400 / machineEuPerTick 2 = 200.",
+				() -> distillationColumnDuration, v -> distillationColumnDuration = v, 1),
+			new IntField("distillationColumnWarmupTicks", "Ticks a cold distillation column heats (at machineEuPerTick) before it can distil; cooling is twice as slow.",
+				() -> distillationColumnWarmupTicks, v -> distillationColumnWarmupTicks = v, 1),
 			new IntField("galvanicBathDuration", "Fallback ticks a galvanic bath operation takes at 1.0 speed; shipped recipe energy 1000 / machineEuPerTick 2 = 500.",
 				() -> galvanicBathDuration, v -> galvanicBathDuration = v, 1),
 			new IntField("alloySmelterEuPerTick", "EU/t the alloy smelter draws while running (MOD-064). Four times the machine standard, like the incubator.",

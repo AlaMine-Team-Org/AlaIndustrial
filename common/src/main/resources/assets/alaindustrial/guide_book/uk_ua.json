@@ -656,7 +656,7 @@
             {
               "type": "text",
               "title": "Мідний кабель",
-              "text": "Дешевий робочий LV-кабель; доки енергія справді тече, голий провід б’є струмом гравця при дотику."
+              "text": "Дешевий робочий LV-кабель; голий провід б'є гравців струмом, доки він під напругою від живленої мережі."
             },
             {
               "type": "stats",
@@ -1267,6 +1267,45 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "distillation_column",
+          "title": "Перегінна колона",
+          "icon": "alaindustrial:distillation_column",
+          "block_id": "alaindustrial:distillation_column",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Перегінна колона",
+              "text": "Вежа 1×1×3, що розганяє нафту на дизель і мазут. Перший мультиблок мода — збирається вручну з трьох сегментів; легка фракція виходить згори, важка знизу, а основа зберігає рідини під час розбирання."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 400 EU/оп",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:distillation_column",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },
@@ -1427,6 +1466,19 @@
           ]
         },
         {
+          "id": "diesel",
+          "title": "Дизель",
+          "icon": "alaindustrial:diesel_bucket",
+          "block_id": "alaindustrial:diesel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Дизель",
+              "text": "Легка фракція перегонки нафти — золотисто-жовта рідина, цільовий продукт колони. Майбутнє паливо генератора на рідкому паливі (12 EU/t)."
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "Інваровий злиток",
           "icon": "alaindustrial:invar_ingot",
@@ -1449,6 +1501,19 @@
               "type": "text",
               "title": "Купронікелевий злиток",
               "text": "Мідно-нікелевий сплав один до одного, який виплавляється по злитку за раз — найдешевший за матеріалами спосіб прилаштувати нікель до справи."
+            }
+          ]
+        },
+        {
+          "id": "fuel_oil",
+          "title": "Мазут",
+          "icon": "alaindustrial:fuel_oil_bucket",
+          "block_id": "alaindustrial:fuel_oil",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Мазут",
+              "text": "Важкий залишок перегонки нафти — густа темно-коричнева рідина. Слабше паливо, ніж дизель (6 EU/t), але ніщо не пропадає — згоряє все."
             }
           ]
         },
@@ -1683,7 +1748,7 @@
             {
               "type": "text",
               "title": "Станція дрона-садівника",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 9-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "LV-станція з буфером EU, з якої злітає анімований дрон і патрулює поля в радіусі 9 блоків — оре вільну землю, садить насіння, удобрює недозрілі посіви й носить стиглий урожай назад до станції."
             },
             {
               "type": "stats",
@@ -1873,13 +1938,13 @@
             {
               "type": "text",
               "title": "Модуль зберігання",
-              "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
+              "text": "Блок зберігання на 27 комірок: модулі, поставлені впритул один до одного, працюють як один склад до 108 комірок за одним вікном."
             },
             {
               "type": "stats",
               "title": "Характеристики",
               "lines": [
-                "Buffer: 0 EU"
+                "Буфер: 0 EU"
               ]
             },
             {
@@ -2127,7 +2192,7 @@
             {
               "type": "text",
               "title": "Батарея",
-              "text": "The first EU carrier — a 2 000 EU rechargeable battery that stacks by charge level and gives its energy back to the grid or to another item."
+              "text": "Перший носій EU — акумуляторна батарея на 2 000 EU, що складається в стоси за рівнем заряду й віддає енергію назад у мережу або іншому предмету."
             },
             {
               "type": "stats",
@@ -2351,7 +2416,7 @@
             {
               "type": "text",
               "title": "Просунута схема",
-              "text": "The MV tier of the circuit — the base board rewired with gold and sealed in rubber."
+              "text": "MV-рівень схеми — базова плата, перемонтована золотом і запечатана в гуму."
             },
             {
               "type": "recipe",
@@ -2382,7 +2447,7 @@
             {
               "type": "text",
               "title": "Просунутий машинний корпус",
-              "text": "A full-cube base block for MV machines — a plain casing with two advanced circuits, clad in 6 tempered-iron plates."
+              "text": "Базовий блок-повний куб для MV-машин — простий корпус із двома просунутими схемами, обшитий 6 пластинами із загартованого заліза."
             },
             {
               "type": "recipe",
