@@ -11,6 +11,7 @@ import dev.alaindustrial.item.tool.neoforge.ElectricHoeItemNeoForge;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.item.tool.ElectricShovelItem;
+import dev.alaindustrial.item.tool.neoforge.ElectricShovelItemNeoForge;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
 import dev.alaindustrial.item.fluid.FluidTankBlockItem;
@@ -245,8 +246,12 @@ public final class ModItemsNeoForge {
 					ElectricChainsawDiamondTipItem::electricChainsawDiamondTipProperties);
 	// Electric Shovel (MOD-338): the earth-side member of the same line — an EU shovel for loose ground.
 	// Same wiring; the properties factory carries the shovel TOOL rules.
-	public static final DeferredItem<ElectricShovelItem> ELECTRIC_SHOVEL =
-			ITEMS.registerItem("electric_shovel", ElectricShovelItem::new,
+	// MOD-379: registered as its NeoForge subclass, which exists only to declare the SHOVEL_FLATTEN and
+	// SHOVEL_DOUSE item abilities. Without them NeoForge's patched ShovelItem.useOn makes no dirt paths
+	// and douses no campfires — the same defect the base hoe shipped with, one item later; see
+	// ElectricShovelItemNeoForge for the full mechanism.
+	public static final DeferredItem<ElectricShovelItemNeoForge> ELECTRIC_SHOVEL =
+			ITEMS.registerItem("electric_shovel", ElectricShovelItemNeoForge::new,
 					ElectricShovelItem::electricShovelProperties);
 	// Electric Hoe (MOD-342): the farming member of the same line — an EU hoe that tills for free.
 	// MOD-378: both hoes are registered as their NeoForge subclasses, which exist only to declare the

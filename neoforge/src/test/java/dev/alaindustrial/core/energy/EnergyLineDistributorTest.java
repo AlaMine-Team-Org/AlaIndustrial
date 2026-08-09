@@ -170,6 +170,12 @@ class EnergyLineDistributorTest {
 		 * answers null everywhere and the fork split is plain proportional.
 		 */
 		final Map<BlockPos, Integer> machinePotential = new HashMap<>();
+		/**
+		 * MOD-318 stranded-fill configuration. Empty by default, so every fixture that is not about that
+		 * pass drives exactly the pre-MOD-318 kernel and its expectations keep their original meaning.
+		 */
+		List<BlockPos> strandedOrder = List.of();
+		final Map<BlockPos, Integer> producerDistance = new HashMap<>();
 
 		void cable(BlockPos p, int potential, long capacity, long fill) {
 			cables.add(p);
@@ -205,7 +211,9 @@ class EnergyLineDistributorTest {
 					machinePotential::get,
 					order,
 					canDraw,
-					canFeed);
+					canFeed,
+					strandedOrder,
+					producerDistance::get);
 		}
 	}
 
@@ -751,5 +759,144 @@ class EnergyLineDistributorTest {
 		assertEquals(96L, total, "per-source cap: 3 sources each give 32 → total 96, not a merged 32");
 		assertEquals(total, line.buffers.get(cable).amount,
 				"all drawn EU lands in the cable buffer");
+	}
+
+	// --- MOD-318: segments the downhill rule can never reach ---
+
+	/**
+	 * The five-cable spur rig shared by the MOD-318 cases. Potential is distance to the waiting sink,
+	 * producer distance is hops from the generator:
+	 *
+	 * <pre>
+	 *   sink ── c1(p1,d3) ── c2(p2,d2) ── c3(p3,d1) ── generator
+	 *                                      └── s1(p4,d2) ── s2(p5,d3)
+	 * </pre>
+	 *
+	 * <p>Nothing waits on the s-branch, so every cable on it sits ABOVE the only cable that could feed it.
+	 */
+	private static final BlockPos C1 = new BlockPos(1, 0, 0);
+	private static final BlockPos C2 = new BlockPos(2, 0, 0);
+	private static final BlockPos C3 = new BlockPos(3, 0, 0);
+	private static final BlockPos S1 = new BlockPos(3, 1, 0);
+	private static final BlockPos S2 = new BlockPos(3, 2, 0);
+	private static final BlockPos GEN = new BlockPos(4, 0, 0);
+	/** Hops from the generator — the direction the stranded fill walks. */
+	private static final Map<BlockPos, Integer> PRODUCER_DISTANCE =
+			Map.of(C3, 1, C2, 2, C1, 3, S1, 2, S2, 3);
+	/** Farthest from the generator first, so a claimant is visited before the cable that feeds it. */
+	private static final List<BlockPos> STRANDED_ORDER = List.of(S2, S1);
+
+	private static LineFixture spurRig() {
+		LineFixture line = new LineFixture();
+		line.cable(C1, 1, 12, 0);
+		line.cable(C2, 2, 12, 0);
+		line.cable(C3, 3, 12, 0);
+		line.cable(S1, 4, 12, 0);
+		line.cable(S2, 5, 12, 0);
+		return line;
+	}
+
+	/**
+	 * The defect itself, pinned as behaviour (MOD-318). Energy only ever moves to a STRICTLY lower flow
+	 * potential and a cable is only ever charged directly if it touches a producer, so a branch with
+	 * nothing waiting on it has no filling path at all — it reads 0 EU forever while the far end of the
+	 * very same line is demonstrably full. This is the negative control for the fill pass below: without
+	 * it, {@code fillStrandedOneHop} could be a no-op and its tests would still pass.
+	 */
+	@Test
+	void chargeAndPropagateLine_strandsASpurWithNothingWaitingOnIt() {
+		LineFixture line = spurRig();
+		StubPort gen = new StubPort(GEN, 10_000, 10_000, true, false);
+		EnergyLineDistributor d = line.distributor(Map.of());
+		for (int i = 0; i < 20; i++) {
+			d.chargeAndPropagateLine(List.of(new EnergyLineDistributor.LiveProducer(GEN, gen)), List.of(),
+					0L, 10_000L, 32, txns.txn, 0);
+		}
+
+		assertEquals(12, line.buffers.get(C1).amount, "negative control: the corridor saturates end to end");
+		assertEquals(12, line.buffers.get(C3).amount, "negative control: the source-side cable is full");
+		assertEquals(0, line.buffers.get(S1).amount, "MOD-318: the spur has no downhill path and stays dead");
+		assertEquals(0, line.buffers.get(S2).amount, "MOD-318: and so does the rest of it");
+	}
+
+	/**
+	 * The fix, driven through the real tick shape: once the corridor is saturated, the surplus reaches the
+	 * stranded branch too. Same rig as the test above — the ONLY difference is that the kernel is given the
+	 * stranded set — so the pair is a clean before/after on one layout.
+	 *
+	 * <p>Also the regression guard on stage order: with the fill running after the sources instead of
+	 * before them, the spur and the corridor swap one packet back and forth forever and {@code S2} stays
+	 * at 0 no matter how many ticks pass.
+	 */
+	@Test
+	void fillStrandedOneHop_energizesTheSpurTheDownhillRuleAbandoned() {
+		LineFixture line = spurRig();
+		line.strandedOrder = STRANDED_ORDER;
+		line.producerDistance.putAll(PRODUCER_DISTANCE);
+		StubPort gen = new StubPort(GEN, 10_000, 10_000, true, false);
+		EnergyLineDistributor d = line.distributor(Map.of());
+		for (int i = 0; i < 20; i++) {
+			d.chargeAndPropagateLine(List.of(new EnergyLineDistributor.LiveProducer(GEN, gen)), List.of(),
+					0L, 10_000L, 32, txns.txn, 0);
+		}
+
+		assertEquals(12, line.buffers.get(S1).amount, "the stranded segment now carries charge");
+		assertEquals(12, line.buffers.get(S2).amount, "and the fill front reached the end of the spur");
+		assertEquals(12, line.buffers.get(C1).amount, "the corridor is still served end to end");
+		assertEquals(12, line.buffers.get(C2).amount, "the fill pass did not rob the corridor");
+	}
+
+	/**
+	 * One hop per pass, the same inertia the downhill sweep has. Without a generator there is exactly one
+	 * packet in the rig, so where it sits after each pass is unambiguous — a pass that filled the whole
+	 * spur at once would put 12 EU in {@code S2} on the first call.
+	 */
+	@Test
+	void fillStrandedOneHop_advancesTheFillFrontOneCablePerPass() {
+		LineFixture line = spurRig();
+		line.buffers.get(C3).amount = 12; // brim-full donor, nothing else in the rig
+
+		EnergyLineDistributor d = line.distributor(Map.of());
+		d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
+		assertEquals(12, line.buffers.get(S1).amount, "pass 1: the packet advanced exactly one hop");
+		assertEquals(0, line.buffers.get(S2).amount, "pass 1: it must NOT skip down the whole spur");
+		assertEquals(0, line.buffers.get(C3).amount, "pass 1: it came out of the saturated corridor cable");
+
+		d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
+		assertEquals(12, line.buffers.get(S2).amount, "pass 2: one more hop outward");
+		assertEquals(0, line.buffers.get(S1).amount, "pass 2: still exactly one hop per pass");
+	}
+
+	/**
+	 * Surplus only. A donor below its capacity is still moving energy toward demand, and tapping it would
+	 * make this pass compete with delivery instead of mopping up after it — the throughput regression that
+	 * sank the alternative designs for this task.
+	 */
+	@Test
+	void fillStrandedOneHop_leavesADonorThatIsNotBrimFullAlone() {
+		LineFixture line = spurRig();
+		line.buffers.get(C3).amount = 11; // one EU short of full: still working for the machines
+
+		EnergyLineDistributor d = line.distributor(Map.of());
+		d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
+
+		assertEquals(11, line.buffers.get(C3).amount, "a partly drained donor must not be tapped");
+		assertEquals(0, line.buffers.get(S1).amount, "so the spur waits for genuine surplus");
+	}
+
+	/** The pass moves EU between buffers and neither mints nor destroys any. */
+	@Test
+	void fillStrandedOneHop_conservesEu() {
+		LineFixture line = spurRig();
+		line.buffers.get(C3).amount = 12;
+		long before = line.buffers.values().stream().mapToLong(b -> b.amount).sum();
+
+		EnergyLineDistributor d = line.distributor(Map.of());
+		for (int i = 0; i < 5; i++) {
+			d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
+		}
+
+		assertEquals(before, line.buffers.values().stream().mapToLong(b -> b.amount).sum(),
+				"the stranded fill must neither create nor destroy EU");
 	}
 }

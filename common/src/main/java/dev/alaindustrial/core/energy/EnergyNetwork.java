@@ -74,6 +74,19 @@ public final class EnergyNetwork {
 	private int producerCursor;
 	/** EU actually delivered by the most recent {@link #tick()} (0 if asleep/never ticked). */
 	private long lastTickMoved;
+	/**
+	 * Game time of the last tick on which a GENERATOR actually held EU to give (MOD-318). Read by
+	 * {@link dev.alaindustrial.block.entity.CableBlockEntity#isEnergizedForShock()} to answer "is this
+	 * wire's grid live", so a bare segment that merely holds a retained buffer is a hazard only while
+	 * something is still powering the grid it belongs to.
+	 *
+	 * <p>A timestamp rather than a boolean, and deliberately so: networks are split and merged as cables
+	 * come and go, and a surviving instance would otherwise carry a stale {@code true} into a component
+	 * that no longer has a source — which is exactly the isolated line an open breaker creates, and the
+	 * one case where reporting "live" would be a safety defect rather than a cosmetic one. A stamp goes
+	 * stale on its own after one tick without supply, so the flag cannot outlive the fact it records.
+	 */
+	private long lastSupplyTick = Long.MIN_VALUE;
 
 	public EnergyNetwork(ServerLevel level) {
 		this.topology = new EnergyTopologyCache(level);
@@ -174,6 +187,22 @@ public final class EnergyNetwork {
 	/** EU actually delivered by the most recent {@link #tick()} (0 if never ticked or asleep). */
 	public long lastTickMoved() {
 		return lastTickMoved;
+	}
+
+	/**
+	 * Was a generator holding EU to give on the current or immediately preceding tick (MOD-318)? The
+	 * one-tick grace is the same one {@code isEnergizedForShock} uses, and for the same reason: the
+	 * cable and the network are ticked by different systems, so an exact-equality test would flicker
+	 * with collision order. Storage sources deliberately do NOT count — {@code supplyingProducers} is
+	 * filled from generators only — so a line left holding charge next to a Battery Box reads as dead,
+	 * which is what makes an isolated segment safe to work on.
+	 */
+	public boolean hasLiveSupply(long gameTime) {
+		if (lastSupplyTick == Long.MIN_VALUE) {
+			return false;
+		}
+		long age = gameTime - lastSupplyTick;
+		return age >= 0 && age <= 1;
 	}
 
 	/**
@@ -618,11 +647,24 @@ public final class EnergyNetwork {
 		// cable buffer is split (machines before storage, geometrically) and nothing else — the flow field
 		// above stays seeded from every waiting endpoint, so reachability is untouched.
 		topology.updateLiveEndpoints(supplyingProducers, sinkSeeds, machineSeeds);
+		// MOD-318: stamp "a generator had EU this tick" for the shock rule. Set here rather than at the
+		// end of the method so it lands on the same tick the cables are actually being fed, and only from
+		// `supplyingProducers`, which holds generators only — a Battery Box sitting on an isolated stretch
+		// must not keep that stretch reading as a live hazard.
+		boolean hasSupply = !supplyingProducers.isEmpty();
+		if (hasSupply) {
+			lastSupplyTick = topology.level().getGameTime();
+		}
 
 		EnergyLineDistributor distributor = new EnergyLineDistributor(
 				topology, this::cableBufferAt,
 				topology::consumerDistance, topology::flowPotentialOrNull, topology::machinePotentialOrNull,
-				topology.propagationOrder(), this::faceAccepts, this::faceEmits);
+				topology.propagationOrder(), this::faceAccepts, this::faceEmits,
+				// MOD-318: the segments the downhill rule cannot reach. Handed over only while a GENERATOR
+				// is actually supplying — the pass moves EU that is already in the wires, and without the
+				// gate a lone Battery Box's backup discharge would be dragged out into dead-end spurs it
+				// can only get back slowly (MOD-070's "a lone storage source does not fill the line").
+				hasSupply ? topology.strandedFillOrder() : List.of(), topology::producerDistanceOrNull);
 		long[] movedEu = {0L};
 		long finalMachineDemand = machineDemand;
 		long finalGenSupply = genSupply;

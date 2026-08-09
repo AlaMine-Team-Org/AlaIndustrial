@@ -232,16 +232,50 @@ public class CableBlockEntity extends MachineBlockEntity {
 	}
 
 	/**
-	 * Whether energy actually moved through this exact segment on the current or immediately preceding
-	 * server tick. The one-tick grace makes collision order independent while still becoming safe as
-	 * soon as a disconnected line stops moving; retained buffer energy alone never energizes a cable.
+	 * Whether this segment is a live hazard: energy moved through it on the current or immediately
+	 * preceding server tick, OR it holds charge and its grid still has a generator behind it (MOD-318).
+	 * The one-tick grace makes collision order independent while still becoming safe as soon as a
+	 * disconnected line stops moving.
+	 *
+	 * <p>The second clause was added because "current flowed through this exact segment" is not what a
+	 * player reads off a wire. A spur that has filled to capacity carries no current precisely BECAUSE it
+	 * is full, so the movement test alone declared a brim-full bare cable safe to sit on while the same
+	 * line a few blocks away was lethal. Charge on a powered grid is voltage, and voltage is the hazard.
+	 * The grid half of the test is what keeps this from making every abandoned wire dangerous forever —
+	 * see {@link #gridHasLiveSupply()}.
 	 */
 	public boolean isEnergizedForShock() {
-		if (level == null || lastEnergyTransferTick == Long.MIN_VALUE) {
+		if (level == null) {
 			return false;
 		}
-		long age = level.getGameTime() - lastEnergyTransferTick;
-		return age >= 0 && age <= 1;
+		if (lastEnergyTransferTick != Long.MIN_VALUE) {
+			long age = level.getGameTime() - lastEnergyTransferTick;
+			if (age >= 0 && age <= 1) {
+				return true;
+			}
+		}
+		return getEnergyStorage().getAmount() > 0 && gridHasLiveSupply();
+	}
+
+	/**
+	 * Is this segment's grid still being powered by a generator on this or the previous tick (MOD-318)?
+	 *
+	 * <p>This is the half of the shock rule that keeps "holds charge" from meaning "always dangerous".
+	 * A cable buffer persists — a line whose generator was removed, or whose breaker was opened, keeps
+	 * whatever it was holding indefinitely — so charge alone would make every abandoned wire in the world
+	 * a permanent hazard, and would specifically defeat the breaker, whose whole purpose is to make a run
+	 * safe for maintenance ({@code tcBrk001Sec01}). An open breaker takes its segment out of the graph and
+	 * splits the rest off into a component with no generator in it, so both of those read as dead here.
+	 *
+	 * <p>O(1): a map lookup in {@link NetworkManager} plus a timestamp compare, on a path already gated by
+	 * {@code bareCableShockEnabled} and by the cable being uninsulated.
+	 */
+	private boolean gridHasLiveSupply() {
+		if (!(level instanceof ServerLevel server)) {
+			return false;
+		}
+		var network = NetworkManager.networkAt(server, worldPosition);
+		return network != null && network.hasLiveSupply(server.getGameTime());
 	}
 
 	/** Transport, not a working machine (MOD-133): no owner, no player stats, no per-segment UUID ballast. */

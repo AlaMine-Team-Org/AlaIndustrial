@@ -48,9 +48,12 @@ import net.neoforged.neoforge.common.ItemAbility;
  * shared {@code common/} logic — including the upgrade's irrigation in
  * {@code ElectricHoeDiamondTipItem.useOn} — needs no NeoForge-specific branch at all.
  *
- * <p>The sibling {@code ElectricShovelItem} has the same defect through the same mechanism
- * ({@code ShovelItem.useOn} gates on {@code SHOVEL_FLATTEN}/{@code SHOVEL_DOUSE}); it is deliberately
- * left alone here and tracked separately.
+ * <p>The sibling {@code ElectricShovelItem} had the same defect through the same mechanism
+ * ({@code ShovelItem.useOn} gates on {@code SHOVEL_FLATTEN}/{@code SHOVEL_DOUSE}). It was fixed the same
+ * way in MOD-379 — see {@link ElectricShovelItemNeoForge}. That the defect recurred at all is why
+ * {@code docs/tools/arch_check.py} now fails the build when an item whose {@code useOn} delegates to a
+ * vanilla tool is registered on NeoForge without such a subclass: a javadoc note like this one is not a
+ * gate, and it did not stop the second occurrence.
  */
 public class ElectricHoeItemNeoForge extends ElectricHoeItem {
 

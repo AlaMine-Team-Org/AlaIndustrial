@@ -15,7 +15,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
-/** Whole-bucket manual exchange for the portable tank (MOD-111). */
+/**
+ * Whole-bucket manual exchange for the portable tank (MOD-111).
+ *
+ * <p>Which buckets are recognised is {@link BucketFluids}' business, not this route's (MOD-380).
+ * Both directions used to carry their own water-or-lava list, which left every other fluid — the
+ * mod's own oil above all — falling through to {@code PASS} and out onto the floor.
+ */
 public final class FluidTankBucketInteractions {
 	private FluidTankBucketInteractions() {
 	}
@@ -23,8 +29,7 @@ public final class FluidTankBucketInteractions {
 	public static InteractionResult exchange(Level level, BlockPos pos, Player player, InteractionHand hand,
 			FluidTankBlockEntity tank) {
 		ItemStack held = player.getItemInHand(hand);
-		Fluid incoming = held.is(Items.WATER_BUCKET) ? Fluids.WATER
-				: held.is(Items.LAVA_BUCKET) ? Fluids.LAVA : Fluids.EMPTY;
+		Fluid incoming = BucketFluids.content(held);
 		if (incoming != Fluids.EMPTY) {
 			if (level.isClientSide()) {
 				return InteractionResult.SUCCESS;
@@ -48,8 +53,7 @@ public final class FluidTankBucketInteractions {
 			return InteractionResult.PASS;
 		}
 		Fluid stored = tank.fluidTank.fluid().fluid();
-		ItemStack filled = stored == Fluids.WATER ? new ItemStack(Items.WATER_BUCKET)
-				: stored == Fluids.LAVA ? new ItemStack(Items.LAVA_BUCKET) : ItemStack.EMPTY;
+		ItemStack filled = BucketFluids.filledBucket(stored);
 		if (filled.isEmpty()) {
 			return InteractionResult.SUCCESS;
 		}

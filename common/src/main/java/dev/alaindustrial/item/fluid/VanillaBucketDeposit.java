@@ -92,11 +92,17 @@ public final class VanillaBucketDeposit {
 	}
 
 	/**
-	 * The fluid a supported vanilla filled bucket carries, or {@link Fluids#EMPTY} if {@code stack} is not a
-	 * bucket we deposit. Scoped to lava for now (the geothermal generator's fuel — MOD-077); the target tank
-	 * still decides acceptance, so extending this map never forces an unwanted deposit.
+	 * The fluid a filled bucket carries, or {@link Fluids#EMPTY} if {@code stack} is not a bucket we
+	 * deposit — see {@link BucketFluids#content} for what that excludes and why.
+	 *
+	 * <p>Scoped to lava while only the geothermal generator consumed a bucket (MOD-077); opened up to
+	 * every fluid in MOD-380, once the portable tank made "any bucket into any tank" a real player
+	 * action and a bucket of oil shift-clicked at a tank spilled onto the floor. Widening it forces
+	 * nothing: the target tank's own filter still decides, so a water bucket at the lava-only
+	 * geothermal generator remains a no-op — a silent one now rather than a spill, exactly as a lava
+	 * bucket at a full tank has always behaved.
 	 */
 	private static Fluid bucketFluid(ItemStack stack) {
-		return stack.is(Items.LAVA_BUCKET) ? Fluids.LAVA : Fluids.EMPTY;
+		return BucketFluids.content(stack);
 	}
 }

@@ -189,6 +189,13 @@ final class EnergyTopologyCache {
 	private Set<BlockPos> flowMachineSeeds = Set.of();
 
 	/**
+	 * Cables the downhill rule cannot reach, farthest from the source first — see {@link #strandedFillOrder()}.
+	 * Rebuilt beside {@link #propagationOrder}, off the same field changes, so it costs one extra O(cables)
+	 * walk on a topology or supply/demand change and nothing at all per tick.
+	 */
+	private final List<BlockPos> strandedFillOrder = new ArrayList<>();
+
+	/**
 	 * Publish this tick's live supply and demand endpoints. Recomputes each distance field only when its
 	 * own seed set actually changed — supply changes on day/night, fuel running out, a battery emptying;
 	 * demand changes when a machine tops off or starts working. Both are rare next to every tick, and the
@@ -197,6 +204,40 @@ final class EnergyTopologyCache {
 	 * @param machineSeeds the machine subset of {@code sinkSeeds} (MOD-254); it seeds the fork tie-break
 	 *     field only and never takes part in choosing the propagation order or the reachable set.
 	 */
+	/**
+	 * The cables no downhill path can ever reach, farthest from the source first (MOD-318).
+	 *
+	 * <p>{@code propagateLineOneHop} only ever moves EU to a STRICTLY lower flow potential, and a cable is
+	 * only ever charged directly if it touches a producer. In sink mode the potential is the distance to
+	 * the nearest waiting sink, so the set of cables that can be filled at all is exactly "reachable from
+	 * a supplying producer's own cable by strictly descending sink distance" — the union of the shortest
+	 * paths from the generators to the demand. Everything else — a spur with no consumer on it, the run
+	 * past the last consumer, a stretch behind the generators — sits above every cable that could feed it
+	 * and stays at 0 EU for as long as anything on the network is asking for energy. That is MOD-318: the
+	 * player sees a dead segment in the middle of a line whose far end is demonstrably powered.
+	 *
+	 * <p>The condition is topological, not geometric: a long line that simply runs from a generator to a
+	 * consumer is entirely reachable however much it climbs and dives, and is not affected by any of this.
+	 *
+	 * <p>Empty in fallback mode by construction — with nothing waiting, the field is already seeded from
+	 * the producers and spreads outward to every cable, which is the behaviour this list exists to restore
+	 * for the sink-mode case.
+	 */
+	List<BlockPos> strandedFillOrder() {
+		return strandedFillOrder;
+	}
+
+	/**
+	 * BFS distance from this cable to the nearest supplying producer, or {@code null} when it is off that
+	 * field. Drives the stranded-fill hop direction (MOD-318) — outward from the source, the one direction
+	 * that is well defined for a cable the demand-seeded field has abandoned.
+	 *
+	 * <p>Does not refresh the cache — see {@link #consumerDistance(BlockPos)} for why.
+	 */
+	Integer producerDistanceOrNull(BlockPos pos) {
+		return producerDistance.get(pos);
+	}
+
 	void updateLiveEndpoints(Set<BlockPos> supplying, Set<BlockPos> sinkSeeds, Set<BlockPos> machineSeeds) {
 		refreshIfDirty();
 		boolean changed = false;
@@ -515,5 +556,60 @@ final class EnergyTopologyCache {
 			propagationOrder.addAll(producerDistance.keySet());
 			propagationOrder.sort((a, b) -> Integer.compare(producerDistance.get(b), producerDistance.get(a)));
 		}
+		rebuildStrandedOrder();
+	}
+
+	/**
+	 * Work out which cables the downhill sweep can never fill, and in what order to top them up (MOD-318).
+	 *
+	 * <p>Reachability is walked exactly the way {@code propagateLineOneHop} moves energy — start on the
+	 * cables a supplying producer touches (the only ones a source charges directly) and step to strictly
+	 * lower sink potential — so the complement really is "cannot be filled", not an approximation of it.
+	 *
+	 * <p>Sorted by DESCENDING producer distance, which is the same claimant-before-donor schedule
+	 * {@link #propagationOrder} relies on, read for the other direction: a stranded cable is visited before
+	 * the cable that feeds it, so a unit still advances at most one hop per tick and the fill front crawls
+	 * outward from the source instead of teleporting down the whole spur in a single tick. Ties break on
+	 * {@link #BLOCK_POS_ORDER} rather than on set order, for the MOD-304 reason: {@code cables} is a hash
+	 * set, and letting its order through would make the same layout behave differently at different world
+	 * coordinates.
+	 */
+	private void rebuildStrandedOrder() {
+		strandedFillOrder.clear();
+		// Fallback mode already spreads outward from the producers and reaches every cable — there is
+		// nothing stranded to rescue, and running the extra pass there would double-hop the same field.
+		if (!sinkMode || producerDistance.isEmpty()) {
+			return;
+		}
+		Set<BlockPos> reachable = new LinkedHashSet<>();
+		Queue<BlockPos> queue = new ArrayDeque<>();
+		for (Map.Entry<BlockPos, Integer> entry : producerDistance.entrySet()) {
+			// Distance 1 == "touches a supplying producer": the seeds of computeProducerField, i.e. exactly
+			// the cables chargeLineFrom pours into.
+			if (entry.getValue() == 1 && sinkDistance.containsKey(entry.getKey())
+					&& reachable.add(entry.getKey())) {
+				queue.add(entry.getKey());
+			}
+		}
+		while (!queue.isEmpty()) {
+			BlockPos cur = queue.poll();
+			int potential = sinkDistance.get(cur);
+			for (Direction dir : DIRECTIONS) {
+				BlockPos np = cur.relative(dir);
+				Integer next = sinkDistance.get(np);
+				if (next != null && next < potential && reachable.add(np)) {
+					queue.add(np);
+				}
+			}
+		}
+		for (BlockPos cable : cables) {
+			if (!reachable.contains(cable) && producerDistance.containsKey(cable)) {
+				strandedFillOrder.add(cable);
+			}
+		}
+		strandedFillOrder.sort((a, b) -> {
+			int byDistance = Integer.compare(producerDistance.get(b), producerDistance.get(a));
+			return byDistance != 0 ? byDistance : BLOCK_POS_ORDER.compare(a, b);
+		});
 	}
 }

@@ -74,6 +74,14 @@ final class EnergyLineDistributor {
 	/** Can the source at this position FEED energy through the face pointing this way (MOD-255)? Mirror of {@link #canDrawFace}. */
 	private final BiPredicate<BlockPos, Direction> canFeedFace;
 
+	/**
+	 * The cables the downhill rule cannot reach, farthest from the source first, and the field that gives
+	 * them a direction (MOD-318). Empty by default: a caller that has no stranded segments — every fixture
+	 * in the L1.5 suite, and any network in fallback mode — gets exactly the pre-MOD-318 behaviour.
+	 */
+	private final List<BlockPos> strandedOrder;
+	private final Function<BlockPos, Integer> strandedProducerDistance;
+
 	EnergyLineDistributor(
 			EnergyTopologyCache topology,
 			Function<BlockPos, EnergyBuffer> cableBufferAt,
@@ -82,9 +90,11 @@ final class EnergyLineDistributor {
 			Function<BlockPos, Integer> machinePotential,
 			List<BlockPos> propagationOrder,
 			BiPredicate<BlockPos, Direction> canDrawFace,
-			BiPredicate<BlockPos, Direction> canFeedFace) {
+			BiPredicate<BlockPos, Direction> canFeedFace,
+			List<BlockPos> strandedOrder,
+			Function<BlockPos, Integer> strandedProducerDistance) {
 		this(topology::contains, cableBufferAt, consumerDistance, flowPotential, machinePotential,
-				propagationOrder, canDrawFace, canFeedFace);
+				propagationOrder, canDrawFace, canFeedFace, strandedOrder, strandedProducerDistance);
 	}
 
 	/**
@@ -102,7 +112,11 @@ final class EnergyLineDistributor {
 			Function<BlockPos, Integer> machinePotential,
 			List<BlockPos> propagationOrder,
 			BiPredicate<BlockPos, Direction> canDrawFace,
-			BiPredicate<BlockPos, Direction> canFeedFace) {
+			BiPredicate<BlockPos, Direction> canFeedFace,
+			List<BlockPos> strandedOrder,
+			Function<BlockPos, Integer> strandedProducerDistance) {
+		this.strandedOrder = strandedOrder;
+		this.strandedProducerDistance = strandedProducerDistance;
 		this.isCable = isCable;
 		this.cableBufferAt = cableBufferAt;
 		this.consumerDistance = consumerDistance;
@@ -242,6 +256,18 @@ final class EnergyLineDistributor {
 			long machineDemand, long genSupply, long packetCap, EnergyPort.Txn tx, int rotation,
 			Map<BlockPos, Long> cascadeAllowances, Map<BlockPos, Long> feedAllowances) {
 		propagateLineOneHop(packetCap, tx, rotation);
+		// MOD-318 — top up the segments the downhill rule cannot reach. THE POSITION OF THIS CALL IS
+		// LOAD-BEARING: it must sit after the sweep and BEFORE the sources recharge the line.
+		//
+		// The pass takes a saturated cable's whole packet, so the cable it drew from ends up with room —
+		// and one tick later that is indistinguishable from room made by a machine drinking. Run it after
+		// chargeLineFrom and the spur hands its charge straight back down the gradient on the next sweep,
+		// takes it again on the next fill, and oscillates one packet forever without ever advancing past
+		// the first stranded segment. Run it here and the sources close the tick by refilling the corridor,
+		// so the next sweep finds no room, the spur keeps what it was given, and the fill front moves on.
+		// Guarded by fillStrandedOneHop_energizesTheSpurTheDownhillRuleAbandoned, which failed on exactly
+		// that oscillation while this call sat one line lower.
+		fillStrandedOneHop(strandedOrder, strandedProducerDistance, packetCap, tx);
 		// Generators fill the line freely (free energy → inertia); only their draw is docked from the
 		// supply left for storage sinks.
 		chargeLineFrom(generators, packetCap, Long.MAX_VALUE, tx, rotation);
@@ -518,6 +544,76 @@ final class EnergyLineDistributor {
 
 	private static long weightOf(boolean machineWard) {
 		return machineWard ? MACHINE_WARD_WEIGHT : 1L;
+	}
+
+	/**
+	 * Top up the cables {@link #propagateLineOneHop} can never reach, one hop per tick (MOD-318).
+	 *
+	 * <p>The downhill rule fills a cable only if it lies on a strictly descending path from a producer's
+	 * own cable to waiting demand. A spur with no consumer on it, the run past the last consumer, the
+	 * stretch behind the generators — all of it sits ABOVE everything that could feed it and reads 0 EU
+	 * for as long as anything on the network wants energy, while the far end of the same line is visibly
+	 * powered. This pass gives those segments the only well-defined direction they have left: outward from
+	 * the source, along {@code producerDistance}, which is exactly the pre-MOD-252 fill restricted to the
+	 * cables MOD-252 stopped filling.
+	 *
+	 * <p><b>Receiver-centric, and surplus-only.</b> A stranded cable pulls, and only from a neighbour that
+	 * is brim-full. A donor below its capacity is still moving energy toward demand, and taking from it
+	 * would make this pass compete with delivery rather than mop up after it; requiring a full donor makes
+	 * "machines first" hold by construction instead of by tuning. It also makes the pass mutually exclusive
+	 * with the sweep above on any given pair — that one moves energy out of a stranded cable when the
+	 * corridor has ROOM, this one moves energy in when the corridor is FULL, and a cable cannot be both.
+	 * So when demand rises the spur drains back toward the machines on its own, and the wire behaves as
+	 * the buffer MOD-070 made it.
+	 *
+	 * <p>Loss-free, like every other cable-to-cable move: the resistive cost is charged once, per consumer,
+	 * on delivery.
+	 *
+	 * @param strandedOrder the unreachable cables, farthest from the source first, so a claimant is always
+	 *     visited before the cable that feeds it and no unit advances two hops in one tick.
+	 * @param producerDistance BFS distance to the nearest supplying producer; {@code null} off the field.
+	 *     Only cables carry an entry, so a non-null answer doubles as the "is a cable" test.
+	 */
+	void fillStrandedOneHop(List<BlockPos> strandedOrder, Function<BlockPos, Integer> producerDistance,
+			long packetCap, EnergyPort.Txn tx) {
+		for (BlockPos pos : strandedOrder) {
+			EnergyBuffer to = cableBufferAt.apply(pos);
+			if (to == null) {
+				continue;
+			}
+			// Capped by the tier packet for the same reason the sweep above caps it: one hop, one packet.
+			long room = Math.min(to.getCapacity() - to.amount, packetCap);
+			Integer toDistance = producerDistance.apply(pos);
+			if (room <= 0 || toDistance == null) {
+				continue;
+			}
+			for (Direction dir : DIRECTIONS) {
+				if (room <= 0) {
+					break;
+				}
+				BlockPos np = pos.relative(dir);
+				Integer fromDistance = producerDistance.apply(np);
+				if (fromDistance == null || fromDistance >= toDistance) {
+					continue; // only pull from strictly closer to the source
+				}
+				EnergyBuffer from = cableBufferAt.apply(np);
+				if (from == null || from.amount < from.getCapacity()) {
+					continue; // surplus only — see the contract above
+				}
+				long got = from.extract(Math.min(room, from.amount), tx);
+				if (got <= 0) {
+					continue;
+				}
+				long inserted = to.insert(got, tx);
+				if (inserted < got) {
+					// Hand back what the claimant would not take. The sweep above can assume insert()
+					// swallows everything because a cable's capacity sits below its own maxInsert; not
+					// leaning on that here keeps this pass EU-neutral by construction rather than by luck.
+					from.insert(got - inserted, tx);
+				}
+				room -= inserted;
+			}
+		}
 	}
 
 	/**

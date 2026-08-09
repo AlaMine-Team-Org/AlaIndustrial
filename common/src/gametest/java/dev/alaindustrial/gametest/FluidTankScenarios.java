@@ -6,6 +6,7 @@ import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.item.fluid.FluidTankContents;
 import dev.alaindustrial.item.fluid.ItemFluid;
+import dev.alaindustrial.item.fluid.VanillaBucketDeposit;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.core.BlockPos;
@@ -21,6 +22,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
@@ -202,6 +204,89 @@ public final class FluidTankScenarios {
 		FluidTankBlockEntity tank = helper.getBlockEntity(target, FluidTankBlockEntity.class);
 		if (tank.fluidTank.amount != FluidAmounts.BUCKET || !tank.fluidTank.fluid.is(Fluids.WATER)) {
 			helper.fail("placing a filled tank lost its contents");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A bucket of the mod's own fluid round-trips through the tank on both click routes, and a bucket
+	 * that carries more than its fluid is refused (MOD-380).
+	 *
+	 * <p>Every assertion here fails on the pre-MOD-380 code, and each for the defect it names. The two
+	 * manual bucket routes resolved the held item against a hard-coded water-or-lava list, so an oil
+	 * bucket resolved to {@code EMPTY}, the route returned {@code PASS}, and vanilla completed the
+	 * interaction by running {@code BucketItem#use} — the oil went onto the floor beside the tank and
+	 * the tank stayed empty. Extraction was broken symmetrically and more quietly: a tank holding oil
+	 * had no bucket to hand back, so an empty bucket clicked on it was a no-op.
+	 *
+	 * <p>The last leg is the guard rather than the fix. Resolving a bucket generically has one trap:
+	 * a bucket of cod is a {@code MobBucketItem extends BucketItem} that reports plain water, so a
+	 * resolver that trusted {@code instanceof BucketItem} would deposit water, return an ordinary empty
+	 * bucket, and delete the fish. Asserting the tank stays empty and the bucket stays in hand is what
+	 * keeps that trap shut.
+	 */
+	public static void tcFluidTank001Fun03_modFluidBucketRoundTripsAndMobBucketIsRefused(
+			GameTestHelper helper) {
+		FluidTankBlockEntity tank = place(helper);
+		ServerPlayer player = helper.makeMockServerPlayerInLevel();
+		player.setGameMode(GameType.SURVIVAL);
+		player.getAbilities().instabuild = false;
+		BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(tank.getBlockPos()), Direction.UP,
+				tank.getBlockPos(), false);
+
+		// Plain right-click, oil in: the exact click a player makes, through the real routing.
+		player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModContent.OIL_BUCKET.get()));
+		InteractionResult oilIn = player.gameMode.useItemOn(player, helper.getLevel(),
+				player.getMainHandItem(), InteractionHand.MAIN_HAND, hit);
+		if (!oilIn.consumesAction() || !player.getMainHandItem().is(Items.BUCKET)
+				|| tank.fluidTank.amount != FluidAmounts.BUCKET
+				|| !tank.fluidTank.fluid.is(ModContent.OIL.get())) {
+			helper.fail("oil bucket did not deposit 1000 mB through the real click route: hand="
+					+ player.getMainHandItem() + " tank=" + tank.fluidTank.amount
+					+ " fluid=" + tank.fluidTank.fluid);
+			return;
+		}
+
+		// …and back out: the tank has to know which bucket its fluid belongs in.
+		InteractionResult oilOut = player.gameMode.useItemOn(player, helper.getLevel(),
+				player.getMainHandItem(), InteractionHand.MAIN_HAND, hit);
+		if (!oilOut.consumesAction() || !player.getMainHandItem().is(ModContent.OIL_BUCKET.get())
+				|| tank.fluidTank.amount != 0) {
+			helper.fail("empty bucket did not retrieve oil from the tank: hand="
+					+ player.getMainHandItem() + " tank=" + tank.fluidTank.amount);
+			return;
+		}
+
+		// Shift-right-click is a different route entirely (VanillaBucketDeposit on the loader's early
+		// interaction seam, because sneaking with a full hand makes vanilla bypass the block's hooks).
+		// It was lava-only, so this is the leg that spilled oil in the reported bug.
+		Player sneaking = helper.makeMockPlayer(GameType.SURVIVAL);
+		sneaking.setShiftKeyDown(true);
+		sneaking.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModContent.OIL_BUCKET.get()));
+		InteractionResult shifted = VanillaBucketDeposit.tryDeposit(helper.getLevel(), sneaking,
+				InteractionHand.MAIN_HAND, hit);
+		if (!shifted.consumesAction()
+				|| !sneaking.getItemInHand(InteractionHand.MAIN_HAND).is(Items.BUCKET)
+				|| tank.fluidTank.amount != FluidAmounts.BUCKET
+				|| !tank.fluidTank.fluid.is(ModContent.OIL.get())) {
+			helper.fail("shift-clicking an oil bucket did not load the tank: result=" + shifted
+					+ " hand=" + sneaking.getItemInHand(InteractionHand.MAIN_HAND)
+					+ " tank=" + tank.fluidTank.amount);
+			return;
+		}
+
+		// A bucket carrying a mob must never be treated as a bucket of its fluid. Drain the tank first
+		// so a refusal cannot be mistaken for "the tank was simply full".
+		tank.fluidTank.amount = 0;
+		tank.fluidTank.fluid = FluidHolder.EMPTY;
+		player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.COD_BUCKET));
+		player.gameMode.useItemOn(player, helper.getLevel(), player.getMainHandItem(),
+				InteractionHand.MAIN_HAND, hit);
+		if (tank.fluidTank.amount != 0 || !player.getMainHandItem().is(Items.COD_BUCKET)) {
+			helper.fail("a bucket of cod must not be emptied into the tank as water: hand="
+					+ player.getMainHandItem() + " tank=" + tank.fluidTank.amount
+					+ " fluid=" + tank.fluidTank.fluid);
+			return;
 		}
 		helper.succeed();
 	}

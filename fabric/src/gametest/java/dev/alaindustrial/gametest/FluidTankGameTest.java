@@ -115,4 +115,9 @@ public final class FluidTankGameTest {
 	public void tcFluidTank001Fun01_bucketAndCapsuleUseRealClickRouting(GameTestHelper helper) {
 		FluidTankScenarios.tcFluidTank001Fun01_bucketAndCapsuleUseRealClickRouting(helper);
 	}
+
+	@GameTest
+	public void tcFluidTank001Fun03_modFluidBucketRoundTripsAndMobBucketIsRefused(GameTestHelper helper) {
+		FluidTankScenarios.tcFluidTank001Fun03_modFluidBucketRoundTripsAndMobBucketIsRefused(helper);
+	}
 }

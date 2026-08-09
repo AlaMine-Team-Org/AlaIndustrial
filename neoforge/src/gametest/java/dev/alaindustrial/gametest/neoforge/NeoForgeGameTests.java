@@ -26,6 +26,7 @@ import dev.alaindustrial.gametest.CapsuleScenarios;
 import dev.alaindustrial.gametest.GeothermalLavaInputScenarios;
 import dev.alaindustrial.gametest.ElectricChainsawScenarios;
 import dev.alaindustrial.gametest.ElectricHoeScenarios;
+import dev.alaindustrial.gametest.ElectricShovelScenarios;
 import dev.alaindustrial.gametest.ElectricDrillScenarios;
 import dev.alaindustrial.gametest.ElectricSaberScenarios;
 import dev.alaindustrial.gametest.MagnetScenarios;
@@ -778,6 +779,14 @@ public final class NeoForgeGameTests {
 		registerTest(event, "hoe_base_leaves_plot_dry", 40, true, ElectricHoeScenarios::fun03BaseHoeLeavesPlotDry);
 		registerTest(event, "hoe_flat_upgrade_cannot_water_farmland", 40, true, ElectricHoeScenarios::fun04FlatUpgradeCannotWaterExistingFarmland);
 
+		// MOD-379 (TC-SHOVEL-001-FUN01..04): the shovel's right-click interactions. This lane is the one
+		// that matters — the shovel could not path or douse on NeoForge at all until the item declared
+		// DEFAULT_SHOVEL_ACTIONS, and it shipped that way because it had no gametest on either loader.
+		registerTest(event, "shovel_makes_dirt_path", 40, true, ElectricShovelScenarios::fun01ShovelMakesDirtPath);
+		registerTest(event, "shovel_vanilla_paths_same_fixture", 40, true, ElectricShovelScenarios::fun02VanillaShovelPathsTheSameFixture);
+		registerTest(event, "shovel_path_making_is_free", 40, true, ElectricShovelScenarios::fun03PathMakingIsFree);
+		registerTest(event, "shovel_douses_lit_campfire", 40, true, ElectricShovelScenarios::fun04ShovelDousesLitCampfire);
+
 		// MOD-132 Electromagnet (suite TC-MAGNET-001) — same neutral bodies as the Fabric MagnetGameTest.
 		registerTest(event, "magnet_pulls_nearby_drop", 40, true, MagnetScenarios::fun01PullsNearbyDrop);
 		registerTest(event, "magnet_flat_inert", 40, true, MagnetScenarios::fun02FlatMagnetInert);
@@ -1491,6 +1500,9 @@ public final class NeoForgeGameTests {
 				FluidTankScenarios::tcFluidTank001Per02_placingAFilledTankKeepsItsContents);
 		registerTest(event, "tc_fluid_tank001_fun01_bucket_and_capsule_use_real_click_routing", 40, true,
 				FluidTankScenarios::tcFluidTank001Fun01_bucketAndCapsuleUseRealClickRouting);
+		registerTest(event, "tc_fluid_tank001_fun03_mod_fluid_bucket_round_trips_and_mob_bucket_is_refused",
+				40, true,
+				FluidTankScenarios::tcFluidTank001Fun03_modFluidBucketRoundTripsAndMobBucketIsRefused);
 
 		// End-to-end content invariants: block registry, loot, the /ala command, c: tags.
 		registerTest(event, "every_block_places_and_breaks", 40, true,
