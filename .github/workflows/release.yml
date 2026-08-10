@@ -18,9 +18,39 @@ on:
   push:
     tags:
       - 'v*'
+  # Manual escape hatch. On 2026-08-06 a GitHub incident delayed webhook delivery:
+  # tag v0.1.74 sat on the remote but its push event never arrived, so the release
+  # could not be started at all — the only trigger was the one thing that was broken.
+  # Dispatching with the TAG as the ref bypasses webhook delivery and reproduces a
+  # tag run exactly:
+  #   gh workflow run release.yml -R AlaMine-Team-Org/AlaIndustrial --ref vX.Y.Z
+  # (UI: Run workflow -> "Use workflow from" -> Tags tab -> vX.Y.Z).
+  # GitHub resolves the workflow FILE from the dispatched ref, so a tag offers that
+  # Tags entry only if its own tree already carries this trigger — i.e. every tag cut
+  # after this change, which is exactly the recovery case. Older tags use the input.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: >-
+          Optional. Leave EMPTY when the ref selected above is already the tag — that is
+          the normal path. Fill it in only to publish a tag whose own copy of this file
+          predates the workflow_dispatch trigger; then leave the ref on main and this
+          value decides what is checked out and published.
+        required: false
+        type: string
+        default: ''
 
 permissions:
   contents: write   # needed to create the GitHub Release
+
+# A delayed tag-push event can be delivered AFTER a manual recovery run has started —
+# that is precisely the incident shape above. Two concurrent runs for the same tag would
+# both pass the "target does not exist yet" pre-checks and both upload. Serialize per tag
+# instead of cancelling: the second run then sees the published targets and skips every
+# upload step.
+concurrency:
+  group: release-${{ github.event.inputs.tag || github.ref_name }}
+  cancel-in-progress: false
 
 env:
   # Standard release mode. Keep this explicit so accidental one-loader releases
@@ -31,9 +61,36 @@ env:
 jobs:
   release:
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.rel.outputs.tag }}
     steps:
+      # Single source of truth for tag and version, identical for both triggers.
+      # Deliberately BEFORE checkout: it needs no files, so a wrong ref costs seconds
+      # rather than a full Build plus both gametest lanes (~6 CI minutes).
+      # `github.event.inputs` is used rather than the `inputs` context because the
+      # latter does not exist on a push event. The value travels through env, never
+      # straight into the shell, so a crafted tag string cannot inject commands.
+      - name: Resolve release tag
+        id: rel
+        env:
+          DISPATCH_TAG: ${{ github.event.inputs.tag }}
+        run: |
+          TAG="${DISPATCH_TAG:-$GITHUB_REF_NAME}"
+          case "$TAG" in
+            v[0-9]*.[0-9]*.[0-9]*) ;;
+            *) echo "::error::'$TAG' is not a release tag (expected vX.Y.Z). Select the tag under 'Use workflow from' -> Tags, or fill in the 'tag' input."; exit 1 ;;
+          esac
+          echo "tag=$TAG"         >> "$GITHUB_OUTPUT"
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+          echo "Releasing $TAG (event: $GITHUB_EVENT_NAME, ref: $GITHUB_REF)"
+
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Pin to the tag. On a tag push this is what checkout picks anyway; on a manual
+          # run started from a branch it is the difference between publishing the tagged
+          # tree and publishing whatever HEAD happens to be.
+          ref: ${{ steps.rel.outputs.tag }}
 
       - name: Set up JDK 25
         uses: actions/setup-java@v4
@@ -84,7 +141,7 @@ jobs:
       - name: Resolve & validate artifacts
         id: meta
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          VERSION="${{ steps.rel.outputs.version }}"
           FABRIC_JAR=$(ls fabric/build/libs/*.jar | grep -vE -- '-(dev|sources|javadoc)\.jar$' | head -1)
           NEOFORGE_JAR=$(ls neoforge/build/libs/*.jar | grep -vE -- '-(dev|sources|javadoc)\.jar$' | head -1)
           for f in "$FABRIC_JAR" "$NEOFORGE_JAR"; do
@@ -284,7 +341,7 @@ jobs:
         env:
           CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           JAR: ${{ steps.meta.outputs.fabric_jar }}
-          DISPLAY_NAME: Ala Industrial ${{ github.ref_name }} [Fabric]
+          DISPLAY_NAME: Ala Industrial ${{ steps.rel.outputs.tag }} [Fabric]
         run: |
           metadata=$(jq -n \
             --rawfile changelog CHANGELOG.md \
@@ -319,7 +376,7 @@ jobs:
           CF_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           JAR: ${{ steps.meta.outputs.neoforge_jar }}
           NEOFORGE_ID: ${{ steps.loaders.outputs.neoforge_id }}
-          DISPLAY_NAME: Ala Industrial ${{ github.ref_name }} [NeoForge]
+          DISPLAY_NAME: Ala Industrial ${{ steps.rel.outputs.tag }} [NeoForge]
         run: |
           metadata=$(jq -n \
             --rawfile changelog CHANGELOG.md \
@@ -355,8 +412,8 @@ jobs:
             fabric/build/libs/!(*-@(dev|sources|javadoc)).jar
             neoforge/build/libs/!(*-@(dev|sources|javadoc)).jar
             release-manifest.json
-          name: Ala Industrial ${{ github.ref_name }}
-          version: ${{ github.ref_name }}
+          name: Ala Industrial ${{ steps.rel.outputs.tag }}
+          version: ${{ steps.rel.outputs.tag }}
           version-type: release
           changelog-file: CHANGELOG.md
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -371,5 +428,6 @@ jobs:
     if: success()
     uses: ./.github/workflows/announce.yml
     with:
-      tag: ${{ github.ref_name }}
+      # From `needs`, not `steps`: a job-level `with:` cannot see another job's steps.
+      tag: ${{ needs.release.outputs.tag }}
     secrets: inherit
