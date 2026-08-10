@@ -222,6 +222,23 @@ public final class ShotRecorder {
     }
 
     /**
+     * The frame names this run actually wrote to disk.
+     *
+     * <p>Exists so a lane can assert it photographed everything it set out to photograph (MOD-388).
+     * The recorder is the only place that knows what was really captured: a catalogue entry states an
+     * intention, and an intention is what silently went unmet when the run died two screens in.
+     *
+     * <p>Names, not menu ids, and that distinction is load-bearing. Every lane in the process shares
+     * this recorder, and several menus are photographed by more than one of them — {@code water_mill}
+     * carries seven frames from the wind/water lane before this one ever opens it. Asking "does any
+     * frame carry this menu id" would therefore answer yes for a screen this lane never reached, which
+     * is precisely the failure being guarded against.
+     */
+    public static Set<String> capturedNames() {
+        return Set.copyOf(USED_NAMES);
+    }
+
+    /**
      * Writes {@code shots-manifest.json} beside the frames. Safe to call when nothing was captured — it
      * says so rather than writing an empty manifest that would read as a successful empty run.
      */

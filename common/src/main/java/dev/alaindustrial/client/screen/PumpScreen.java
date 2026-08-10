@@ -9,6 +9,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
 
 /**
@@ -68,6 +70,22 @@ public class PumpScreen extends MachineScreen<PumpMenu> {
 
 		// Energy fill (right bar): blit the segmented orange sprite (bottom-up) via the shared helper.
 		renderEnergyBar(graphics, EnergyBarSpec.RIGHT);
+	}
+
+	/**
+	 * The 2×2 grid is two operations, not four slots, and which row does what is invisible on the
+	 * frame. The hints spell it out: a <em>full</em> bucket goes in the top-left to fill the tank, an
+	 * <em>empty</em> one in the bottom-right to draw from it; the two slots facing them are where the
+	 * machine puts the swapped container back.
+	 *
+	 * <p>The fill hint is a water bucket by convention, not by rule — the tank takes any fluid
+	 * ({@link PumpBlockEntity} accepts every non-empty one), so this picture names the commonest case
+	 * rather than a restriction, exactly as the empty bucket stands in for any container.
+	 */
+	@Override
+	protected void drawGhostHints(GuiGraphicsExtractor graphics) {
+		ghostHint(graphics, PumpBlockEntity.FILL_INPUT_SLOT, new ItemStack(Items.WATER_BUCKET));
+		ghostHint(graphics, PumpBlockEntity.DRAIN_INPUT_SLOT, new ItemStack(Items.BUCKET));
 	}
 
 	@Override

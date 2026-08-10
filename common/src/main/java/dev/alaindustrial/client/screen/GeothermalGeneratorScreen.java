@@ -1,11 +1,14 @@
 package dev.alaindustrial.client.screen;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
 import dev.alaindustrial.menu.GeothermalGeneratorMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
 
 /**
@@ -55,6 +58,16 @@ public class GeothermalGeneratorScreen extends MachineScreen<GeothermalGenerator
 
 		// Energy fill (right bar): blit the segmented orange sprite (bottom-up) via the shared helper.
 		renderEnergyBar(graphics, EnergyBarSpec.RIGHT);
+	}
+
+	/**
+	 * A lava bucket in the intake slot: the generator burns lava and nothing else, and the two bare
+	 * slots said none of that. The emptied bucket lands in the slot beside it and needs no hint —
+	 * the machine puts it there.
+	 */
+	@Override
+	protected void drawGhostHints(GuiGraphicsExtractor graphics) {
+		ghostHint(graphics, GeothermalGeneratorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET));
 	}
 
 	@Override

@@ -1,11 +1,13 @@
 package dev.alaindustrial.gametest;
 
+import dev.alaindustrial.block.DistillationColumnBlock;
 import dev.alaindustrial.gametest.visual.MenuState;
 import dev.alaindustrial.gametest.visual.ShotGroup;
 import dev.alaindustrial.gametest.visual.ShotRecorder;
 import dev.alaindustrial.gametest.visual.VisualWorld;
 import dev.alaindustrial.menu.MachineMenu;
 import java.util.List;
+import java.util.Set;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
@@ -76,7 +78,8 @@ public class ScreensClientGameTest implements FabricClientGameTest {
      */
     private static final List<Screen> SCREENS = List.of(
             new Screen("polymerizer", "polymerizer", "Polymerizer"),
-            // MOD-251: the tower's base opens the shared menu; RMB on the base block is enough.
+            // MOD-251/MOD-388: a multiblock. Only the FORMED base opens the menu, so the rig raises
+            // the whole tower — see placeScreenBlock.
             new Screen("distillation_column", "distillation_column", "Distillation Column"),
             new Screen("vulcanizer", "vulcanizer", "Vulcanizer"),
             new Screen("alloy_smelter", "alloy_smelter", "Alloy Smelter"),
@@ -137,7 +140,44 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             captureItemRenderContexts(context, singleplayer);
 
             ShotRecorder.finish();
+            assertEveryScreenPhotographed();
         }
+    }
+
+    /**
+     * Every catalogued screen must have left a frame behind — checked against what the recorder really
+     * captured, not against the catalogue itself (MOD-388).
+     *
+     * <p>The gap this closes is not "a menu has no catalogue entry" — {@code menu_shot_parity_check.py}
+     * already fails the build on that, and it fails it from a source file, without a client. The gap is
+     * the other half: a catalogue entry is a promise to photograph something, and nothing checked the
+     * promise was kept. When the Distillation Column stopped opening, the run died on screen 2 of 18 and
+     * the other 16 went unphotographed — the declaration gate stayed green throughout, because every
+     * frame was still declared.
+     *
+     * <p>Runs AFTER {@code finish()} on purpose: a partial run's manifest is exactly the triage material
+     * somebody needs, and it must be on disk before this throws.
+     *
+     * <p>What is looked for is THIS lane's own frame — {@code gui_<menu>_opened}, the one
+     * {@link #captureEveryScreen} takes right after the block interaction — not "any frame carrying
+     * this menu id". Several of these menus are also photographed by the wind/water lane earlier in the
+     * same process ({@code water_mill} has seven such frames), so the looser question would answer
+     * "photographed" for a screen this lane never got to.
+     */
+    private static void assertEveryScreenPhotographed() {
+        Set<String> captured = ShotRecorder.capturedNames();
+        List<String> missing = SCREENS.stream()
+                .map(Screen::menuId)
+                .filter(menuId -> !captured.contains("gui_" + menuId + "_opened"))
+                .toList();
+        if (!missing.isEmpty()) {
+            throw new AssertionError("[SCREENS] " + missing.size() + " of " + SCREENS.size()
+                    + " catalogued screens were never photographed: " + String.join(", ", missing)
+                    + ". The catalogue promises a frame per entry; these entries did not deliver one — "
+                    + "either the loop stopped early, or a capture was removed without its catalogue "
+                    + "entry. Frames that WERE taken are in build/run/clientGameTest/screenshots/.");
+        }
+        LOG.info("[SCREENS] all {} catalogued screens photographed", SCREENS.size());
     }
 
     /** Clears the arena and puts one block per screen in a straight, evenly spaced row. */
@@ -156,13 +196,45 @@ public class ScreensClientGameTest implements FabricClientGameTest {
                 + (lastX + 2) + " " + (BLOCK_Y + 4) + " " + (STAND_Z + 2) + " minecraft:air");
 
         for (int i = 0; i < SCREENS.size(); i++) {
-            Screen screen = SCREENS.get(i);
-            server.runCommand("setblock " + xOf(i) + " " + BLOCK_Y + " " + RIG_Z
-                    + " alaindustrial:" + screen.blockId());
+            placeScreenBlock(server, SCREENS.get(i), xOf(i));
         }
         server.runCommand("tp @p " + xOf(0) + ".5 " + BLOCK_Y + " " + STAND_Z + ".5 180 0");
         singleplayer.getClientLevel().waitForChunksRender();
+
+        // The one block in the rig that can stand there looking finished and still be the wrong
+        // thing: a Distillation Column blank is the same block id as the tower's base, so waiting on
+        // the id alone (as captureEveryScreen does) cannot tell them apart. The segment above it only
+        // exists when the tower is really assembled, which is why THAT is what is checked — a failure
+        // here names the cause instead of surfacing as a menu timeout two steps later (MOD-388).
+        VisualWorld.awaitBlockOnClient(context,
+                new BlockPos(xOf(indexOf("distillation_column")), BLOCK_Y + 2, RIG_Z),
+                "alaindustrial:distillation_column_top");
+
         LOG.info("[SCREENS] rig built: {} blocks from x={} to x={}", SCREENS.size(), FIRST_X, lastX);
+    }
+
+    /**
+     * Puts the block that opens one screen at {@code x} — the whole multiblock where the screen
+     * belongs to one.
+     *
+     * <p><b>Why this is not a plain {@code setblock} for every entry (MOD-388).</b> The Distillation
+     * Column is a hand-built multiblock (MOD-251 round 3): a lone {@code distillation_column} is an
+     * inert <i>blank</i> ({@code formed=false}) that deliberately opens no menu — it shows a
+     * "stack three of these" hint instead. Its tower self-assembles in {@code setPlacedBy}, which
+     * {@code /setblock} never calls, so the rig used to stand a permanent blank here and the run died
+     * on a 10-second timeout at the SECOND screen of eighteen — every screen after it went
+     * unphotographed. The tower is raised through the block's own {@code placeTower} helper (the one
+     * the demo stand and the server gametests use) rather than three hand-written {@code setblock}s,
+     * so a change to the tower's layout cannot silently desync this rig again.
+     */
+    private static void placeScreenBlock(TestServerContext server, Screen screen, int x) {
+        if (screen.blockId().equals("distillation_column")) {
+            server.runOnServer(mc ->
+                    DistillationColumnBlock.placeTower(mc.overworld(), new BlockPos(x, BLOCK_Y, RIG_Z)));
+            return;
+        }
+        server.runCommand("setblock " + x + " " + BLOCK_Y + " " + RIG_Z
+                + " alaindustrial:" + screen.blockId());
     }
 
     /**

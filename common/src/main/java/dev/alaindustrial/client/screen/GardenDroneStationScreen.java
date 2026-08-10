@@ -1,13 +1,17 @@
 package dev.alaindustrial.client.screen;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.block.entity.GardenDroneStatus;
 import dev.alaindustrial.menu.GardenDroneStationMenu;
+import dev.alaindustrial.registry.ModContent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 /**
  * Texture-backed screen for the Garden Drone Station (MOD-277).
@@ -53,6 +57,22 @@ public class GardenDroneStationScreen extends MachineScreen<GardenDroneStationMe
 		super.extractContents(graphics, mouseX, mouseY, partialTick);
 		graphics.text(this.font, statusLine(), this.leftPos + STATUS_X, this.topPos + STATUS_Y,
 				0xFF404040, false);
+	}
+
+	/**
+	 * The three things the station cannot start without: the drone that flies the job, the hoe it tills
+	 * with and the bone meal it feeds the crops. The seed slot is left unhinted — it takes any plantable
+	 * block item, so no single picture would be honest about what belongs there.
+	 *
+	 * <p>The hoe shows as the iron one and stands for the whole {@code #minecraft:hoes} tag; bone meal is
+	 * exact, being the only fertiliser the slot accepts.
+	 */
+	@Override
+	protected void drawGhostHints(GuiGraphicsExtractor graphics) {
+		ghostHint(graphics, GardenDroneStationBlockEntity.DRONE_SLOT,
+				new ItemStack(ModContent.GARDEN_DRONE.get()));
+		ghostHint(graphics, GardenDroneStationBlockEntity.HOE_SLOT, new ItemStack(Items.IRON_HOE));
+		ghostHint(graphics, GardenDroneStationBlockEntity.FERTILIZER_SLOT, new ItemStack(Items.BONE_MEAL));
 	}
 
 	@Override

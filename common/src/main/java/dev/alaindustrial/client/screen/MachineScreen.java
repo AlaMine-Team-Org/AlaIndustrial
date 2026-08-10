@@ -163,10 +163,56 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		}
 	}
 
+	// --- Ghost hints: "what goes here" pictures in empty machine slots (MOD-251, generalised MOD-387) ---
+
+	/**
+	 * Background-tinted wash laid over a hint item so it reads as a suggestion, not as contents. The
+	 * colour is the GUI's own slot grey at ~69 % alpha: the item keeps its silhouette but loses its
+	 * saturation, which is what separates "put a bucket here" from "there is a bucket here".
+	 */
+	private static final int GHOST_WASH = 0xB0C6C6C6;
+
+	/** Inner side of a vanilla slot — the area an item (and therefore a hint) occupies. */
+	private static final int SLOT_INNER = 16;
+
+	/**
+	 * Declare this machine's ghost hints with {@link #ghostHint} calls. Called every frame after the
+	 * slots and their items are drawn, and <em>before</em> the upgrade panel — so a hint never paints
+	 * over a panel the player has dragged across the slot it belongs to.
+	 */
+	protected void drawGhostHints(GuiGraphicsExtractor graphics) {
+	}
+
+	/**
+	 * Draw {@code hint} translucently in the machine's {@code containerSlot} while that slot is empty,
+	 * as the wordless answer to "what goes here". Occupied slots are left alone, so a real item is
+	 * never drawn over.
+	 *
+	 * <p>{@code containerSlot} is the block entity's own {@code *_SLOT} constant; the on-screen position
+	 * comes from the resolved {@link Slot} rather than from repeated coordinates, so moving a slot in the
+	 * menu moves its hint with it and the two cannot drift apart.
+	 *
+	 * <p>Only hint slots the <em>player</em> fills. A machine-filled slot ({@code mayPlace == false})
+	 * showing a picture of what will appear there reads as a promise the player is meant to act on.
+	 */
+	protected void ghostHint(GuiGraphicsExtractor graphics, int containerSlot, ItemStack hint) {
+		Slot slot = this.menu.machineSlot(containerSlot);
+		if (slot == null || !slot.isActive() || slot.hasItem()) {
+			return;
+		}
+		int x = this.leftPos + slot.x;
+		int y = this.topPos + slot.y;
+		graphics.item(hint, x, y);
+		graphics.fill(x, y, x + SLOT_INNER, y + SLOT_INNER, GHOST_WASH);
+	}
+
 	@Override
 	public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		panel.finishCloseIfReady();
 		super.extractContents(graphics, mouseX, mouseY, partialTick);
+		// Above the slots (so a hint is not hidden by the slot art), below the panel (so a dragged
+		// panel covers it like it covers everything else).
+		drawGhostHints(graphics);
 		// Overlay pass — above the GUI's slots, items and labels.
 		if (this.menu.isPanelOpen()) {
 			drawPanel(graphics, mouseX, mouseY);

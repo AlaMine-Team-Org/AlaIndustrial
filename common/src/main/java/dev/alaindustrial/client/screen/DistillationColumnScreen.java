@@ -4,6 +4,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnStatus;
 import dev.alaindustrial.menu.DistillationColumnMenu;
+import dev.alaindustrial.registry.ModContent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -11,6 +12,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
 
 /**
@@ -135,7 +138,6 @@ public class DistillationColumnScreen extends MachineScreen<DistillationColumnMe
 	@Override
 	public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		super.extractContents(graphics, mouseX, mouseY, partialTick);
-		drawGhostHints(graphics);
 		graphics.text(this.font, statusLine(), this.leftPos + STATUS_X, this.topPos + STATUS_Y,
 				0xFF404040, false);
 		drawVolumesLine(graphics);
@@ -143,28 +145,16 @@ public class DistillationColumnScreen extends MachineScreen<DistillationColumnMe
 
 	/**
 	 * Ghost items in the empty IN slots — the "what goes here" hint, no words needed: an oil bucket
-	 * in the intake slot, an empty bucket in each drain slot. Drawn translucent (a background-tinted
-	 * wash over the item) so a ghost never reads as real contents.
+	 * in the intake slot, an empty bucket in each drain slot.
 	 */
-	private void drawGhostHints(GuiGraphicsExtractor graphics) {
-		ghost(graphics, DistillationColumnBlockEntity.OIL_FILL_INPUT_SLOT, 30, 28,
-				new net.minecraft.world.item.ItemStack(
-						dev.alaindustrial.registry.ModContent.OIL_BUCKET.get()));
-		ghost(graphics, DistillationColumnBlockEntity.DIESEL_DRAIN_INPUT_SLOT, 122, 24,
-				new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.BUCKET));
-		ghost(graphics, DistillationColumnBlockEntity.FUEL_OIL_DRAIN_INPUT_SLOT, 122, 62,
-				new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.BUCKET));
-	}
-
-	private void ghost(GuiGraphicsExtractor graphics, int slotIndex, int slotX, int slotY,
-			net.minecraft.world.item.ItemStack hint) {
-		if (!this.menu.slots.get(slotIndex).getItem().isEmpty()) {
-			return;
-		}
-		int x = this.leftPos + slotX;
-		int y = this.topPos + slotY;
-		graphics.item(hint, x, y);
-		graphics.fill(x, y, x + 16, y + 16, 0xB0C6C6C6);
+	@Override
+	protected void drawGhostHints(GuiGraphicsExtractor graphics) {
+		ghostHint(graphics, DistillationColumnBlockEntity.OIL_FILL_INPUT_SLOT,
+				new ItemStack(ModContent.OIL_BUCKET.get()));
+		ghostHint(graphics, DistillationColumnBlockEntity.DIESEL_DRAIN_INPUT_SLOT,
+				new ItemStack(Items.BUCKET));
+		ghostHint(graphics, DistillationColumnBlockEntity.FUEL_OIL_DRAIN_INPUT_SLOT,
+				new ItemStack(Items.BUCKET));
 	}
 
 	/** Exact tank volumes without hovering: a colour dot + mB number per tank, one compact line. */

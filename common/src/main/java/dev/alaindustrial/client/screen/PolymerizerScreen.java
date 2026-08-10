@@ -3,12 +3,14 @@ package dev.alaindustrial.client.screen;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.menu.PolymerizerMenu;
+import dev.alaindustrial.registry.ModContent;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 
 /**
@@ -73,6 +75,17 @@ public class PolymerizerScreen extends MachineScreen<PolymerizerMenu> {
 					x + ARROW_X, y + ARROW_Y, (float) ARROW_U, (float) ARROW_V,
 					filled, ARROW_H, TEX_SIZE, TEX_SIZE);
 		}
+	}
+
+	/**
+	 * The fill slot is the machine's only player-facing input, and nothing on the frame says it wants
+	 * oil rather than any bucket — so an oil bucket sits in it as a ghost until the player fills it.
+	 * The emptied-container slot below gets none: the machine puts the container there, not the player.
+	 */
+	@Override
+	protected void drawGhostHints(GuiGraphicsExtractor graphics) {
+		ghostHint(graphics, PolymerizerBlockEntity.FILL_INPUT_SLOT,
+				new ItemStack(ModContent.OIL_BUCKET.get()));
 	}
 
 	@Override

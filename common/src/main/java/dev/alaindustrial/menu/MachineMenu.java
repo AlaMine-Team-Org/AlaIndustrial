@@ -83,6 +83,26 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	}
 
 	/**
+	 * The menu slot bound to the machine container's slot {@code containerSlot} (the {@code *_SLOT}
+	 * constants on the block entity), or {@code null} if this menu does not show it.
+	 *
+	 * <p><b>Why this exists instead of {@code slots.get(index)}.</b> The menu's slot list is in
+	 * <em>insertion</em> order, which is not the container's slot order: {@code GalvanicBathMenu} adds
+	 * the bucket pair before the fibre and silver slots, so {@code slots.get(FIBER_SLOT)} — index 0 —
+	 * hands back the <em>fill</em> slot instead. Matching on {@link Slot#getContainerSlot()} asks the
+	 * question the caller actually means, and the container identity check keeps a player-inventory
+	 * slot (whose indices run 0..35 over a different container) from answering for a machine slot.
+	 */
+	public final Slot machineSlot(int containerSlot) {
+		for (Slot slot : this.slots) {
+			if (slot.container == machine && slot.getContainerSlot() == containerSlot) {
+				return slot;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Append the shared upgrade slots (MOD-080) at the tail of the container, laid out as a cross around
 	 * the panel. Only slot 0 (LEFT) is active on the MVP panel and accepts a mute chip; slots 1–3 are
 	 * present but never accept an item. All are hidden (inactive) while the panel is collapsed.

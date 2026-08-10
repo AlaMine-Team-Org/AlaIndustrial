@@ -10,6 +10,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
 
 /**
@@ -38,18 +40,6 @@ public class GalvanicBathScreen extends MachineScreen<GalvanicBathMenu> {
 	private static final int ARROW_U = 176, ARROW_V = 48, ARROW_W = 24, ARROW_H = 17;
 	private static final int ARROW_X = 86, ARROW_Y = 35;
 
-	/**
-	 * Slots whose background carries a "what goes here" hint, and the plain patch that covers it.
-	 *
-	 * <p>The hints are baked into the GUI texture, so an item sitting in the slot is drawn on top of one
-	 * — and anything smaller than 16x16, like the Vacuum Capsule, leaves the hint showing around its
-	 * edges as visual noise. Stamping the result slot's own interior (the one square of plain slot
-	 * background in the atlas) over an occupied hint keeps the hint for empty slots and a clean
-	 * background for filled ones.
-	 */
-	private static final int[][] HINTED_SLOTS = {{40, 23}, {62, 23}, {40, 47}, {62, 47}};
-	private static final int PLAIN_U = 117, PLAIN_V = 35, SLOT_INNER = 16;
-
 	/** Tank capacity in mB for the tooltip — read from the block entity so the two cannot drift. */
 	private static final int TANK_MB = (int) GalvanicBathBlockEntity.TANK_CAPACITY;
 
@@ -75,14 +65,6 @@ public class GalvanicBathScreen extends MachineScreen<GalvanicBathMenu> {
 			FluidGauge.draw(graphics, tankFluid(), x + FLUID_X, y + FLUID_BOTTOM - fluidFill, FLUID_W, fluidFill);
 		}
 
-		// Cover the background hint of any slot that now holds something (see HINTED_SLOTS).
-		for (int[] slot : HINTED_SLOTS) {
-			if (isSlotOccupied(slot[0], slot[1])) {
-				graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x + slot[0], y + slot[1],
-						(float) PLAIN_U, (float) PLAIN_V, SLOT_INNER, SLOT_INNER, TEX_SIZE, TEX_SIZE);
-			}
-		}
-
 		// Energy fill (right bar).
 		renderEnergyBar(graphics, EnergyBarSpec.RIGHT);
 
@@ -97,6 +79,20 @@ public class GalvanicBathScreen extends MachineScreen<GalvanicBathMenu> {
 					x + ARROW_X, y + ARROW_Y, (float) ARROW_U, (float) ARROW_V,
 					filled, ARROW_H, TEX_SIZE, TEX_SIZE);
 		}
+	}
+
+	/**
+	 * Only the water slot is hinted. The tank is the non-obvious input — water is not part of the
+	 * recipe, so nothing else on the screen says the machine wants any — while the fibre and silver
+	 * slots are the recipe itself and read fine from the recipe viewer.
+	 *
+	 * <p>These three used to be painted into the GUI texture, which cost a per-frame patch to hide them
+	 * again once a slot filled up: a picture baked at slot size cannot get out of the way of an item
+	 * smaller than 16×16. The baked art is gone; the two unhinted slots are now plain.
+	 */
+	@Override
+	protected void drawGhostHints(GuiGraphicsExtractor graphics) {
+		ghostHint(graphics, GalvanicBathBlockEntity.FILL_INPUT_SLOT, new ItemStack(Items.WATER_BUCKET));
 	}
 
 	@Override
@@ -125,19 +121,6 @@ public class GalvanicBathScreen extends MachineScreen<GalvanicBathMenu> {
 			graphics.setTooltipForNextFrame(this.font,
 					Component.translatable(status.translationKey()), mouseX, mouseY);
 		}
-	}
-
-	/**
-	 * Whether the menu slot drawn at these GUI coordinates currently holds an item. Matched by position
-	 * rather than by index so the check keeps working if the slot order in the menu ever changes.
-	 */
-	private boolean isSlotOccupied(int slotX, int slotY) {
-		for (net.minecraft.world.inventory.Slot slot : this.menu.slots) {
-			if (slot.x == slotX && slot.y == slotY) {
-				return slot.hasItem();
-			}
-		}
-		return false;
 	}
 
 	/** The gauge's fill height in pixels, or 0 when the tank is empty. */
