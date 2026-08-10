@@ -44,12 +44,23 @@ permissions:
   contents: write   # needed to create the GitHub Release
 
 # A delayed tag-push event can be delivered AFTER a manual recovery run has started —
-# that is precisely the incident shape above. Two concurrent runs for the same tag would
-# both pass the "target does not exist yet" pre-checks and both upload. Serialize per tag
-# instead of cancelling: the second run then sees the published targets and skips every
-# upload step.
+# that is precisely the incident shape above. Two CONCURRENT runs would both pass the
+# "target does not exist yet" pre-checks and both upload. Serializing per tag (rather
+# than cancelling) makes the second run start only once the first has finished, so its
+# pre-checks query state that already includes the first run's uploads.
+#
+# What this does and does not buy, precisely — do not read it as "no duplicates ever":
+#   * Modrinth: safe. The pre-check queries the official API for an exact version_number.
+#   * GitHub Release: safe. mc-publish updates an existing release, replacing assets by name.
+#   * CurseForge: BEST EFFORT ONLY. Its pre-check reads the third-party cfwidget index,
+#     which lags from minutes to hours, so a serialized second run can still miss a file
+#     the first one just uploaded and publish a duplicate. Serialization narrows the
+#     window; it does not close it. Closing it needs the Core API with an x-api-key.
+#   * Discord announcement: NOT idempotent at all. A second successful run posts again.
 concurrency:
-  group: release-${{ github.event.inputs.tag || github.ref_name }}
+  # Prefixed with the workflow name: concurrency groups are repository-global, so an
+  # unprefixed "release-vX.Y.Z" could collide with another workflow's group.
+  group: ${{ github.workflow }}-${{ github.event.inputs.tag || github.ref_name }}
   cancel-in-progress: false
 
 env:
@@ -76,10 +87,13 @@ jobs:
           DISPATCH_TAG: ${{ github.event.inputs.tag }}
         run: |
           TAG="${DISPATCH_TAG:-$GITHUB_REF_NAME}"
-          case "$TAG" in
-            v[0-9]*.[0-9]*.[0-9]*) ;;
-            *) echo "::error::'$TAG' is not a release tag (expected vX.Y.Z). Select the tag under 'Use workflow from' -> Tags, or fill in the 'tag' input."; exit 1 ;;
-          esac
+          # Anchored regex, NOT a `case` glob: in a glob `*` matches any character, so a
+          # pattern like v[0-9]*.[0-9]*.[0-9]* happily accepts `v1.2.3; rm -rf /`. The tag
+          # flows into later steps, so it must be pinned to exactly vMAJOR.MINOR.PATCH.
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::'$TAG' is not a release tag (expected vX.Y.Z). Select the tag under 'Use workflow from' -> Tags, or fill in the 'tag' input."
+            exit 1
+          fi
           echo "tag=$TAG"         >> "$GITHUB_OUTPUT"
           echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
           echo "Releasing $TAG (event: $GITHUB_EVENT_NAME, ref: $GITHUB_REF)"
@@ -140,8 +154,13 @@ jobs:
       #     [NeoForge] label can never be pinned to the wrong artifact.
       - name: Resolve & validate artifacts
         id: meta
+        env:
+          # Through env, never `VERSION="${{ … }}"` straight into the script: an expression
+          # interpolated into a run block is substituted before bash sees it, so the value
+          # would be executed as source. Same reason the tag is read from env one step above.
+          RELEASE_VERSION: ${{ steps.rel.outputs.version }}
         run: |
-          VERSION="${{ steps.rel.outputs.version }}"
+          VERSION="$RELEASE_VERSION"
           FABRIC_JAR=$(ls fabric/build/libs/*.jar | grep -vE -- '-(dev|sources|javadoc)\.jar$' | head -1)
           NEOFORGE_JAR=$(ls neoforge/build/libs/*.jar | grep -vE -- '-(dev|sources|javadoc)\.jar$' | head -1)
           for f in "$FABRIC_JAR" "$NEOFORGE_JAR"; do
@@ -169,9 +188,10 @@ jobs:
         id: modrinth
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          RELEASE_VERSION: ${{ steps.meta.outputs.version }}
         run: |
           [ -n "$MODRINTH_TOKEN" ] || { echo "::error::MODRINTH_TOKEN secret is missing or empty"; exit 1; }
-          VERSION="${{ steps.meta.outputs.version }}"
+          VERSION="$RELEASE_VERSION"
           versions=$(curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 \
             "https://api.modrinth.com/v2/project/ACLWFBlU/version" \
             -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0")
@@ -299,8 +319,10 @@ jobs:
       # duplicate files because the upload API has no documented "list files" route.
       - name: Check CurseForge upload targets
         id: curseforge
+        env:
+          RELEASE_VERSION: ${{ steps.meta.outputs.version }}
         run: |
-          VERSION="${{ steps.meta.outputs.version }}"
+          VERSION="$RELEASE_VERSION"
           # The index goes to a FILE, never into argv or an env var. It carries every file the
           # project ever published, so it grows with each release: at 171 files it reached 131 KiB
           # and crossed the kernel's 128 KiB limit for a single argument, killing the step with
