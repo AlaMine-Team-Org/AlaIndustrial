@@ -244,24 +244,37 @@ jobs:
         id: curseforge
         run: |
           VERSION="${{ steps.meta.outputs.version }}"
-          widget=$(curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 \
+          # The index goes to a FILE, never into argv or an env var. It carries every file the
+          # project ever published, so it grows with each release: at 171 files it reached 131 KiB
+          # and crossed the kernel's 128 KiB limit for a single argument, killing the step with
+          # "Argument list too long" (exit 126) before either upload could run — that is what
+          # stranded v0.1.84 with Modrinth published and CurseForge empty. A file has no such limit,
+          # so this scales no matter how many releases accumulate.
+          curl -sSf --retry 5 --retry-delay 15 --retry-all-errors --connect-timeout 20 --max-time 180 \
             "https://api.cfwidget.com/minecraft/mc-mods/1597723" \
-            -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0")
-          python - "$VERSION" "$widget" <<'PY' >> "$GITHUB_OUTPUT"
+            -H "User-Agent: AlaMine-Team-Org/AlaIndustrial-release/1.0" \
+            -o cfwidget.json
+          python - "$VERSION" <<'PY' > cf_targets.env
           import json, sys
           version = sys.argv[1]
-          data = json.loads(sys.argv[2])
+          with open("cfwidget.json", encoding="utf-8") as fh:
+              data = json.load(fh)
           names = []
           for f in data.get("files", []):
               names.append(str(f.get("display", "")))
               names.append(str(f.get("name", "")))
-          fabric = any(f"v{version} [Fabric]" in name or f"{version} [Fabric]" in name for name in names)
-          neoforge = any(f"v{version} [NeoForge]" in name or f"{version} [NeoForge]" in name for name in names)
-          print(f"fabric_exists={str(fabric).lower()}")
-          print(f"neoforge_exists={str(neoforge).lower()}")
+          def has(loader):
+              return any(f"v{version} [{loader}]" in name or f"{version} [{loader}]" in name
+                         for name in names)
+          print(f"fabric_exists={str(has('Fabric')).lower()}")
+          print(f"neoforge_exists={str(has('NeoForge')).lower()}")
           PY
-          echo "CurseForge Fabric target exists: $(grep '^fabric_exists=' "$GITHUB_OUTPUT" | cut -d= -f2)"
-          echo "CurseForge NeoForge target exists: $(grep '^neoforge_exists=' "$GITHUB_OUTPUT" | cut -d= -f2)"
+          cat cf_targets.env >> "$GITHUB_OUTPUT"
+          # Read the echo values back from OUR file, not from $GITHUB_OUTPUT: the Modrinth step
+          # writes keys of the same name earlier in the job, so grepping the shared file printed
+          # Modrinth's answer while CurseForge's own value sat further down.
+          echo "CurseForge Fabric target $VERSION exists: $(grep '^fabric_exists=' cf_targets.env | cut -d= -f2)"
+          echo "CurseForge NeoForge target $VERSION exists: $(grep '^neoforge_exists=' cf_targets.env | cut -d= -f2)"
 
       # Two CurseForge uploads, one per loader, as SEPARATE steps so a partial
       # failure (one loader up, the other down) is unambiguous in the job log and
