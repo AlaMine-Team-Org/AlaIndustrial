@@ -543,6 +543,7 @@
   "message.alaindustrial.item_pipe.mode.neutral": "Neutraal",
   "modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — een EU/FE-technologiemod voor Minecraft 26.2 (Fabric en NeoForge). Bouw een industrieel stroomnetwerk met wind-, zonne- en watergeneratoren, kabels en een energieopslag, verwerk erts in vermalers, extractoren en een elektrische oven, delf vier nieuwe metalen — tin, zilver, nikkel en uranium — en sla alles op in de ijzeren kist. Niveau LV klaar, MV/HV gepland.",
   "modmenu.summaryTranslation.alaindustrial": "EU/FE-technologiemod (Fabric + NeoForge): stroomnetwerk, ertsverwerking, vier nieuwe metalen en opslag.",
+  "subtitles.alaindustrial.compressor_hum": "Compressor stampt",
   "subtitles.alaindustrial.electric_furnace": "Elektrische oven gonst",
   "subtitles.alaindustrial.extractor_hum": "Extractor maalt",
   "subtitles.alaindustrial.garden_drone_fly": "Drone zoemt",

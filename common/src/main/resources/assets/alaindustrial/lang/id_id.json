@@ -543,6 +543,7 @@
   "message.alaindustrial.item_pipe.mode.neutral": "Netral",
   "modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — mod teknologi EU/FE untuk Minecraft 26.2 (Fabric dan NeoForge). Bangun jaringan listrik industri dengan generator angin, surya dan air, kabel dan sebuah Kotak Baterai, olah bijih di Penggiling, ekstraktor dan tungku listrik, tambang empat logam baru — timah, perak, nikel dan uranium — dan simpan semuanya di Peti Besi. Tingkat LV siap, MV/HV direncanakan.",
   "modmenu.summaryTranslation.alaindustrial": "Mod teknologi EU/FE (Fabric + NeoForge): jaringan listrik, pengolahan bijih, empat logam baru dan penyimpanan.",
+  "subtitles.alaindustrial.compressor_hum": "Kompresor menghentak",
   "subtitles.alaindustrial.electric_furnace": "Tungku Listrik bergemuruh",
   "subtitles.alaindustrial.extractor_hum": "Ekstraktor menggiling",
   "subtitles.alaindustrial.garden_drone_fly": "Dron berdengung",

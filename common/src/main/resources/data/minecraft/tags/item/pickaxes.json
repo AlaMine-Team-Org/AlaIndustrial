@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "alaindustrial:tempered_iron_pickaxe",
-    "alaindustrial:electric_drill"
+    "alaindustrial:electric_drill",
+    "alaindustrial:electric_drill_diamond_tip"
   ]
 }

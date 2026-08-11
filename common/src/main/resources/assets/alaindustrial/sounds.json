@@ -4,7 +4,8 @@
     "sounds": [
       {
         "name": "alaindustrial:macerator_grind",
-        "stream": false
+        "stream": false,
+        "preload": true
       }
     ]
   },
@@ -13,7 +14,8 @@
     "sounds": [
       {
         "name": "alaindustrial:generator_hum",
-        "stream": false
+        "stream": false,
+        "preload": true
       }
     ]
   },
@@ -22,7 +24,8 @@
     "sounds": [
       {
         "name": "alaindustrial:electric_furnace",
-        "stream": false
+        "stream": false,
+        "preload": true
       }
     ]
   },
@@ -31,7 +34,8 @@
     "sounds": [
       {
         "name": "alaindustrial:solar_panel_hum",
-        "stream": false
+        "stream": false,
+        "preload": true
       }
     ]
   },
@@ -40,7 +44,8 @@
     "sounds": [
       {
         "name": "alaindustrial:iron_chest_open",
-        "stream": false
+        "stream": false,
+        "preload": true
       }
     ]
   },
@@ -49,7 +54,8 @@
     "sounds": [
       {
         "name": "alaindustrial:iron_chest_close",
-        "stream": false
+        "stream": false,
+        "preload": true
       }
     ]
   },
@@ -58,7 +64,8 @@
     "sounds": [
       {
         "name": "alaindustrial:scythe_swing",
-        "stream": false
+        "stream": false,
+        "preload": true
       }
     ]
   },
@@ -67,7 +74,8 @@
     "sounds": [
       {
         "name": "alaindustrial:extractor_hum",
-        "stream": false
+        "stream": false,
+        "preload": true
       }
     ]
   },
@@ -76,7 +84,8 @@
     "sounds": [
       {
         "name": "alaindustrial:water_mill_hum",
-        "stream": false
+        "stream": false,
+        "preload": true
       }
     ]
   },
@@ -90,12 +99,23 @@
       }
     ]
   },
+  "compressor_hum": {
+    "subtitle": "subtitles.alaindustrial.compressor_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:compressor_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
   "garden_drone_fly": {
     "subtitle": "subtitles.alaindustrial.garden_drone_fly",
     "sounds": [
       {
         "name": "alaindustrial:garden_drone_fly",
-        "stream": false
+        "stream": false,
+        "preload": true
       }
     ]
   }

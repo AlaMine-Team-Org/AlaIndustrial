@@ -543,6 +543,7 @@
   "message.alaindustrial.item_pipe.mode.neutral": "Nötr",
   "modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — Minecraft 26.2 (Fabric ve NeoForge) için EU/FE teknoloji modu. Rüzgar, güneş ve su jeneratörleri, kablolar ve bir Enerji Deposu ile endüstriyel bir güç ağı kur, cevheri öğütücülerde, çıkarıcılarda ve elektrikli fırında işle, dört yeni metal — kalay, gümüş, nikel ve uranyum — çıkar ve hepsini Demir Sandık'ta sakla. LV kademesi hazır, MV/HV planlandı.",
   "modmenu.summaryTranslation.alaindustrial": "EU/FE teknoloji modu (Fabric + NeoForge): güç ağı, cevher işleme, dört yeni metal ve depolama.",
+  "subtitles.alaindustrial.compressor_hum": "Sıkıştırıcı gümbürdüyor",
   "subtitles.alaindustrial.electric_furnace": "Elektrikli Fırın kükriyor",
   "subtitles.alaindustrial.extractor_hum": "Ayrıştırıcı öğütüyor",
   "subtitles.alaindustrial.garden_drone_fly": "Dron vızıldıyor",

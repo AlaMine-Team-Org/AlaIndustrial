@@ -1,7 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.gametest.visual.ShotGroup;
+import dev.alaindustrial.visual.ShotGroup;
 import dev.alaindustrial.gametest.visual.ShotRecorder;
 import dev.alaindustrial.gametest.visual.VisualWorld;
 import dev.alaindustrial.visual.DiffImage;
@@ -608,8 +608,16 @@ public class GuiClientGameTest implements FabricClientGameTest {
         return "Compare " + expected.getFileName() + " with " + actual.getFileName() + ".";
     }
 
-    /** Pixels whose colour differs by more than 24/255 in any channel. Shared by every pixel gate. */
+    /**
+     * Pixels whose colour differs by more than 24/255 in any channel. Shared by every pixel gate.
+     *
+     * <p>Registers the comparison against BOTH frames (MOD-362 round 3). Doing it here rather than at
+     * the ~25 call sites is what keeps the manifest honest by construction: a pixel gate added later
+     * is recorded without anybody remembering to record it, and the alternative — a marker call per
+     * site — is a line that gets copied without its neighbour and quietly understates the suite.
+     */
     private static int differingPixels(Path first, Path second) {
+        ShotRecorder.markComparedFiles(first, second);
         try {
             BufferedImage a = ImageIO.read(first.toFile());
             BufferedImage b = ImageIO.read(second.toFile());
@@ -1985,6 +1993,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
      * viewer would also absorb a genuinely leaking slot.
      */
     private static int differingPixelsInWindow(Path first, Path second) {
+        ShotRecorder.markComparedFiles(first, second);
         if (assemblerWindowBox == null) {
             throw new AssertionError("[GUITEST][MOD-275] the Assembler window was never measured");
         }
@@ -2997,6 +3006,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
 
     /** Pixels that differ inside the water mill's status row, and nowhere else. */
     private static int differingPixelsInStatusRow(Path first, Path second) {
+        ShotRecorder.markComparedFiles(first, second);
         if (waterMillWindowBox == null) {
             throw new AssertionError("[GUITEST][MOD-354] the water mill window was never measured");
         }
@@ -3086,33 +3096,13 @@ public class GuiClientGameTest implements FabricClientGameTest {
      * nothing else. Routing every frame through {@link ShotRecorder} gives all 148 of them three things
      * they did not have: the missing-texture gate (a machine rendering as a pink cube used to pass),
      * an entry in {@code shots-manifest.json}, and a duplicate-name check.
+     *
+     * <p>Round 3 added the fourth: the frame's group, its {@code R-*} rule and its reviewer caption now
+     * come from {@link dev.alaindustrial.visual.ShotFamilies}, keyed on the name. Until then every frame
+     * captured through here went in with {@code null, List.of(), ""} — 148 of the 236 frames in the
+     * 2026-08-11 nightly had no rule and no caption, which is a picture, not a check.
      */
     private static java.nio.file.Path takeCleanScreenshot(ClientGameTestContext context, String name) {
-        return ShotRecorder.capture(name, groupOf(name), null, java.util.List.of(), "");
-    }
-
-    /**
-     * Classifies a legacy frame by its name prefix.
-     *
-     * <p>The frames written before MOD-362 carry their subject in the name — {@code gui_*} for screens,
-     * {@code wmill_*}/{@code windmill_*}/{@code incubator_ber_*} for block-entity renderers, and so on.
-     * Reading the group off the name keeps the change to this file small; frames written from here on
-     * pass their group explicitly.
-     */
-    private static ShotGroup groupOf(String name) {
-        if (name.startsWith("gui_")) {
-            return ShotGroup.GUI;
-        }
-        if (name.startsWith("adv_")) {
-            return ShotGroup.ADVANCEMENT;
-        }
-        if (name.startsWith("worn_") || name.startsWith("hud_") || name.contains("_in_hand_")) {
-            return ShotGroup.ITEM;
-        }
-        if (name.contains("_ber_") || name.startsWith("wmill_") || name.startsWith("windmill_")
-                || name.startsWith("incubator_")) {
-            return ShotGroup.BER;
-        }
-        return ShotGroup.WORLD;
+        return ShotRecorder.capture(name);
     }
 }

@@ -3,14 +3,19 @@ package dev.alaindustrial.gametest.visual;
 import dev.alaindustrial.visual.MissingTextureDetector;
 import dev.alaindustrial.visual.PixelGrid;
 import dev.alaindustrial.visual.PngIo;
+import dev.alaindustrial.visual.ShotChecks;
+import dev.alaindustrial.visual.ShotFamilies;
+import dev.alaindustrial.visual.ShotGroup;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.loader.api.FabricLoader;
@@ -61,15 +66,25 @@ public final class ShotRecorder {
     private static ClientGameTestContext context;
     private static final List<Entry> ENTRIES = new ArrayList<>();
     private static final Set<String> USED_NAMES = new LinkedHashSet<>();
+    /** Frame name -> how the state on it came about; see {@link #state}. */
+    private static final Map<String, String> STATES = new LinkedHashMap<>();
     private static Path screenshotDir;
     private static String locale = "en_us";
 
     private ShotRecorder() {
     }
 
-    /** One captured frame, as it will appear in the manifest. */
+    /**
+     * One captured frame, as it will appear in the manifest.
+     *
+     * <p>{@code applied} is deliberately mutable: the frame-level gates run inside {@link #capture},
+     * but a pixel comparison happens later — the gate needs a SECOND frame that does not exist yet
+     * when the first one is written. Letting a later call add to this set is what lets the manifest
+     * state the strongest check a frame actually received rather than only the ones available at
+     * capture time (MOD-362 round 3).
+     */
     private record Entry(int index, String file, String name, String group, String menuId, String locale,
-            List<String> rules, String checks, String gate, long bytes) {
+            List<String> rules, String checks, Set<String> applied, long bytes) {
     }
 
     /**
@@ -94,20 +109,27 @@ public final class ShotRecorder {
         locale = localeCode;
     }
 
-    /** A frame with no rule attached — the plain replacement for the old helper. */
-    public static Path capture(String name, ShotGroup group) {
-        return capture(name, group, null, List.of(), "");
+    /**
+     * A frame whose group, rules and caption all come from its name (see {@link ShotFamilies}).
+     *
+     * <p>The plain replacement for the old helper, which passed {@code null, List.of(), ""} and left
+     * 148 of 236 frames with no rule and no caption.
+     */
+    public static Path capture(String name) {
+        return capture(name, null, null, List.of(), "");
     }
 
     /**
      * Captures, gates and records one frame.
      *
      * @param name   file stem; must be unique across the run
-     * @param group  what is being photographed
+     * @param group  what is being photographed, or {@code null} to take it from the frame's family
      * @param menuId registry id of the menu on screen, or {@code null} for world/item frames — this is
      *               what the menu-to-shot parity gate reads
-     * @param rules  {@code R-*} ids from docs/testing/RULES.md that this frame serves
-     * @param checks one sentence telling a human reviewer what to look at
+     * @param rules  {@code R-*} ids from docs/testing/RULES.md that this frame serves; empty to take
+     *               them from the frame's family
+     * @param checks one sentence telling a human reviewer what to look at; empty to take it from the
+     *               frame's family
      */
     public static Path capture(String name, ShotGroup group, String menuId, List<String> rules, String checks) {
         if (context == null) {
@@ -120,6 +142,11 @@ public final class ShotRecorder {
                     + "every report that keys on names.");
         }
 
+        ShotFamilies.Family family = resolveFamily(name, group, rules, checks);
+        ShotGroup effectiveGroup = group != null ? group : family.group();
+        List<String> effectiveRules = rules.isEmpty() ? family.rules() : List.copyOf(rules);
+        String effectiveChecks = checks == null || checks.isBlank() ? family.checks() : checks;
+
         context.runOnClient(mc -> mc.gui.toastManager().clear());
         context.waitTicks(1);
         Path path = context.takeScreenshot(name);
@@ -127,20 +154,128 @@ public final class ShotRecorder {
         long bytes = gateFileIsARealFrame(name, path);
         PixelGrid frame = decode(name, path);
         gateFrameIsNotBlank(name, frame);
-        String gate = gateNoMissingTexture(name, group, frame, path) ? "missing-texture" : "blank";
+        boolean scanned = gateNoMissingTexture(name, effectiveGroup, frame, path);
 
         if (screenshotDir == null) {
             screenshotDir = path.getParent();
         }
-        ENTRIES.add(new Entry(ENTRIES.size(), path.getFileName().toString(), name, group.id(), menuId,
-                locale, List.copyOf(rules), checks, gate, bytes));
-        LOG.info("[SHOT] {} ({}) {} bytes -> {}", name, group.id(), bytes, path.getFileName());
+        ENTRIES.add(new Entry(ENTRIES.size(), path.getFileName().toString(), name, effectiveGroup.id(),
+                menuId, locale, effectiveRules, effectiveChecks, ShotChecks.baseline(scanned), bytes));
+        LOG.info("[SHOT] {} ({}) {} bytes -> {}", name, effectiveGroup.id(), bytes, path.getFileName());
         return path;
     }
 
     /** Convenience for a machine screen: the menu id doubles as the frame-name prefix. */
     public static Path captureScreen(String menuId, String stateName, List<String> rules, String checks) {
         return capture("gui_" + menuId + "_" + stateName, ShotGroup.GUI, menuId, rules, checks);
+    }
+
+    /**
+     * The family a frame belongs to, or a failure that names the frame.
+     *
+     * <p>A caller that supplies its own group, rules AND caption needs no family — that is the path
+     * every deliberately annotated frame takes. Everything else falls back to the name-based table,
+     * and a name the table does not know is a build failure rather than a frame that quietly captures
+     * with empty metadata. That silence is the exact defect being closed: 148 of 236 frames in the
+     * 2026-08-11 nightly carried no rule, and nothing anywhere said so.
+     */
+    private static ShotFamilies.Family resolveFamily(String name, ShotGroup group, List<String> rules,
+            String checks) {
+        boolean complete = group != null && !rules.isEmpty() && checks != null && !checks.isBlank();
+        ShotFamilies.Family family = ShotFamilies.of(name);
+        if (family == null && !complete) {
+            throw new AssertionError("[SHOT] frame '" + name + "' belongs to no known family, and the "
+                    + "call site did not supply a group, an R-* rule and a reviewer caption itself. A "
+                    + "frame with no rule is a picture: it is captured, archived and reviewed by nobody. "
+                    + "Add a prefix for it to ShotFamilies.TABLE (known prefixes: "
+                    + String.join(", ", ShotFamilies.knownPrefixes()) + ") or pass the metadata here.");
+        }
+        return family;
+    }
+
+    /**
+     * Records that these frames were compared pixel-for-pixel against each other.
+     *
+     * <p>Called by the pixel gates, which live outside this class because they need two frames and a
+     * tolerance. Without this the manifest could only ever report the frame-level gates, and the
+     * gallery's "checked by a machine" badge meant "a PNG was written" for all 236 frames alike.
+     */
+    public static void markCompared(String... names) {
+        mark(ShotChecks.PIXEL_DIFF, names);
+    }
+
+    /** Records that this frame was matched against a reference stored in the repository. */
+    public static void markReferenced(String... names) {
+        mark(ShotChecks.STORED_TEMPLATE, names);
+    }
+
+    /**
+     * Records HOW the state on a frame came about: {@code injected} (the test set it and the screen
+     * kept it) or {@code server-driven} (a live machine overwrote it, so the frame shows reality).
+     *
+     * <p>Without this the two are indistinguishable in the manifest, and a frame captioned "empty" can
+     * legitimately show a half-charged buffer. Recording it makes a reviewer's question — "is this the
+     * state we asked for?" — answerable without re-running the lane.
+     */
+    public static void state(String name, String howItCameAbout) {
+        for (Entry entry : ENTRIES) {
+            if (entry.name().equals(name)) {
+                STATES.put(name, howItCameAbout);
+                return;
+            }
+        }
+        throw new AssertionError("[SHOT] cannot record the state of '" + name + "' — no frame by that "
+                + "name was captured.");
+    }
+
+    /**
+     * Same as {@link #markCompared}, addressed by the file the gate is holding.
+     *
+     * <p>The pixel gates in {@code GuiClientGameTest} work with {@link Path}s returned by the capture
+     * helper, not with frame names — the numbered file name ({@code 0155_gui_polymerizer_opened.png})
+     * is what they have in hand. Resolving it here rather than making every gate remember the name it
+     * used is what lets the registration live in the three shared comparison helpers instead of at
+     * every call site.
+     *
+     * <p>A file with no entry behind it is a hard failure for the same reason as in {@link #mark}: it
+     * means a gate is checking something the recorder never captured.
+     */
+    public static void markComparedFiles(Path... files) {
+        for (Path file : files) {
+            String fileName = file.getFileName().toString();
+            boolean found = false;
+            for (Entry entry : ENTRIES) {
+                if (entry.file().equals(fileName)) {
+                    entry.applied().add(ShotChecks.PIXEL_DIFF);
+                    found = true;
+                }
+            }
+            if (!found) {
+                throw new AssertionError("[SHOT] a pixel gate compared " + fileName + ", which this run "
+                        + "never captured through the recorder. Either the frame was written by a path "
+                        + "that bypasses ShotRecorder (it would then have no manifest entry and no "
+                        + "missing-texture gate either), or the two have drifted apart.");
+            }
+        }
+    }
+
+    private static void mark(String check, String... names) {
+        for (String name : names) {
+            boolean found = false;
+            for (Entry entry : ENTRIES) {
+                if (entry.name().equals(name)) {
+                    entry.applied().add(check);
+                    found = true;
+                }
+            }
+            if (!found) {
+                // Not a warning: a gate claiming to have checked a frame that was never captured means
+                // the two have drifted apart, and the manifest would understate the suite from then on.
+                throw new AssertionError("[SHOT] cannot mark '" + name + "' as " + check + " — no frame "
+                        + "by that name was captured. The gate and the capture have drifted apart; the "
+                        + "manifest would report this check against nothing.");
+            }
+        }
     }
 
     private static long gateFileIsARealFrame(String name, Path path) {
@@ -252,6 +387,9 @@ public final class ShotRecorder {
         try {
             Files.writeString(target, json, StandardCharsets.UTF_8);
             LOG.info("[SHOT] manifest for {} frames -> {}", ENTRIES.size(), target.toAbsolutePath());
+            // Printed at the end of every run because it is the honest one-line summary of the lane:
+            // how many frames were merely rendered vs actually compared against something.
+            LOG.info("[SHOT] verification depth {}", renderDepthCounts());
         } catch (IOException e) {
             // The manifest is review material, not a gate: losing it must not turn a good run red.
             LOG.error("[SHOT] could not write the manifest to {}", target, e);
@@ -260,7 +398,11 @@ public final class ShotRecorder {
 
     private static String renderManifest() {
         StringBuilder sb = new StringBuilder(4096);
-        sb.append("{\n  \"schema\": 1,\n  \"run\": {\n");
+        // schema 2 (MOD-362 round 3): `gate` — one string that read the same on every frame — is
+        // replaced by the list of checks that really ran plus the depth they add up to. Consumers
+        // (gen_shot_gallery.py, compare_shot_runs.py) read `depth`; the version is what tells them a
+        // manifest from before this change has neither field.
+        sb.append("{\n  \"schema\": 2,\n  \"run\": {\n");
         sb.append("    \"modVersion\": ").append(quote(modVersion())).append(",\n");
         sb.append("    \"minecraftVersion\": ").append(quote(minecraftVersion())).append(",\n");
         sb.append("    \"loader\": \"fabric\",\n");
@@ -270,7 +412,8 @@ public final class ShotRecorder {
         sb.append("    \"windowWidth\": ").append(window[0]).append(",\n");
         sb.append("    \"windowHeight\": ").append(window[1]).append(",\n");
         sb.append("    \"guiScale\": ").append(window[2]).append(",\n");
-        sb.append("    \"shotCount\": ").append(ENTRIES.size()).append("\n  },\n  \"shots\": [\n");
+        sb.append("    \"shotCount\": ").append(ENTRIES.size()).append(",\n");
+        sb.append("    \"depthCounts\": ").append(renderDepthCounts()).append("\n  },\n  \"shots\": [\n");
         for (int i = 0; i < ENTRIES.size(); i++) {
             Entry e = ENTRIES.get(i);
             sb.append("    {")
@@ -282,12 +425,34 @@ public final class ShotRecorder {
                     .append(", \"locale\": ").append(quote(e.locale()))
                     .append(", \"rules\": ").append(quoteList(e.rules()))
                     .append(", \"checks\": ").append(quote(e.checks()))
-                    .append(", \"gate\": ").append(quote(e.gate()))
+                    .append(", \"applied\": ").append(quoteList(List.copyOf(e.applied())))
+                    .append(", \"depth\": ").append(quote(ShotChecks.depthOf(e.applied())))
+                    .append(", \"state\": ").append(quote(STATES.get(e.name())))
                     .append(", \"bytes\": ").append(e.bytes())
                     .append("}").append(i + 1 < ENTRIES.size() ? "," : "").append("\n");
         }
         sb.append("  ]\n}\n");
         return sb.toString();
+    }
+
+    /**
+     * How many frames sit on each rung of the depth ladder.
+     *
+     * <p>This one line is the answer to the question the old {@code gate} field could not answer: of
+     * everything the lane shot tonight, how much was actually compared against anything.
+     */
+    private static String renderDepthCounts() {
+        StringBuilder sb = new StringBuilder("{");
+        List<String> depths = ShotChecks.DEPTHS;
+        for (int i = 0; i < depths.size(); i++) {
+            String depth = depths.get(i);
+            long count = ENTRIES.stream().filter(e -> ShotChecks.depthOf(e.applied()).equals(depth)).count();
+            sb.append(quote(depth)).append(": ").append(count);
+            if (i + 1 < depths.size()) {
+                sb.append(", ");
+            }
+        }
+        return sb.append('}').toString();
     }
 
     private static int[] windowGeometry() {

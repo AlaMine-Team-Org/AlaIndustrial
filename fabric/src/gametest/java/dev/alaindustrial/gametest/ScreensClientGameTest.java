@@ -2,7 +2,7 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.DistillationColumnBlock;
 import dev.alaindustrial.gametest.visual.MenuState;
-import dev.alaindustrial.gametest.visual.ShotGroup;
+import dev.alaindustrial.visual.ShotGroup;
 import dev.alaindustrial.gametest.visual.ShotRecorder;
 import dev.alaindustrial.gametest.visual.VisualWorld;
 import dev.alaindustrial.menu.MachineMenu;
@@ -328,30 +328,67 @@ public class ScreensClientGameTest implements FabricClientGameTest {
         final int capacity = 4000;
         final int duration = 200;
 
-        applyState(context, MenuState.empty(capacity));
-        ShotRecorder.captureScreen(screen.menuId(), "empty",
-                ShotRecorder.rules("R-GUI-03"),
+        captureInjectedState(context, screen, "empty", MenuState.empty(capacity),
                 "Idle machine: the energy bar is empty with no artefacts, the progress bar has not started");
-
-        applyState(context, MenuState.working(capacity, duration, 0.5));
-        ShotRecorder.captureScreen(screen.menuId(), "half",
-                ShotRecorder.rules("R-GUI-03"),
+        captureInjectedState(context, screen, "half", MenuState.working(capacity, duration, 0.5),
                 "Half charge, half progress: both bars sit around the middle of their tracks");
-
-        applyState(context, MenuState.full(capacity, duration));
-        ShotRecorder.captureScreen(screen.menuId(), "full",
-                ShotRecorder.rules("R-GUI-03"),
+        captureInjectedState(context, screen, "full", MenuState.full(capacity, duration),
                 "Everything at maximum: bars are completely full and do NOT overflow their track");
     }
 
-    private static void applyState(ClientGameTestContext context, MenuState state) {
+    /**
+     * Injects one state, checks the screen really ADOPTED it, and photographs what is truly on screen.
+     *
+     * <p><b>The defect this closes (MOD-362 round 3).</b> {@code injectTestData} writes into the
+     * CLIENT's copy of the menu data. For a machine that is standing still that value survives — the
+     * server only sends an update when its own value changes. For a machine that produces on its own —
+     * a solar panel at noon, the three wind mills — the server sends an update every tick and
+     * overwrites the injection before the shutter opens. The frame was still captured, still named
+     * {@code gui_wind_mill_empty}, and still filed in the manifest exactly like an honest one. A
+     * reviewer comparing it against yesterday's would be comparing two different unknown states.
+     *
+     * <p>So the state is now verified rather than assumed. If the menu holds the requested values, the
+     * frame says {@code injected}. If the machine overwrites them, that is not an error — it is a live
+     * machine, which is a perfectly good thing to photograph — but the frame says {@code server-driven}
+     * and carries the numbers that were actually on screen. Nothing is passed off as something it is not.
+     */
+    private static void captureInjectedState(ClientGameTestContext context, Screen screen,
+            String stateName, MenuState requested, String checks) {
         context.runOnClient(mc -> {
             if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
                     && acs.getMenu() instanceof MachineMenu menu) {
-                state.applyTo(menu);
+                requested.applyTo(menu);
             }
         });
+        // One tick for the widgets to lay out against the new numbers, which is what the frame shows.
         context.waitTicks(2);
+
+        int[] actual = readEnergy(context);
+        boolean held = actual[0] == requested.energy() && actual[1] == requested.capacity();
+        String note = held
+                ? checks
+                : checks + " [server-driven: this machine produces on its own, so the requested "
+                        + requested.energy() + "/" + requested.capacity() + " EU did not survive - the "
+                        + "frame shows the real " + actual[0] + "/" + actual[1] + " EU]";
+
+        ShotRecorder.captureScreen(screen.menuId(), stateName, ShotRecorder.rules("R-GUI-03"), note);
+        ShotRecorder.state("gui_" + screen.menuId() + "_" + stateName, held ? "injected" : "server-driven");
+        if (!held) {
+            LOG.info("[SCREENS] {} {}: injection overwritten by the server, captured the real state "
+                    + "{}/{} EU instead of {}/{}", screen.menuId(), stateName, actual[0], actual[1],
+                    requested.energy(), requested.capacity());
+        }
+    }
+
+    /** The energy/capacity pair the open machine screen is really showing, or {@code -1/-1}. */
+    private static int[] readEnergy(ClientGameTestContext context) {
+        return context.computeOnClient(mc -> {
+            if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                    && acs.getMenu() instanceof MachineMenu menu) {
+                return new int[] {menu.getEnergy(), menu.getCapacity()};
+            }
+            return new int[] {-1, -1};
+        });
     }
 
     /**
@@ -589,6 +626,9 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             try {
                 Vector2i at = context.assertScreenshotContains(
                         TestScreenshotComparisonOptions.of(entry[1]));
+                // The strongest check the suite can make, and the manifest has to say so: this is the
+                // only frame in a 236-frame run compared against a reference that outlives the run.
+                ShotRecorder.markReferenced("item_" + itemId + "_icon");
                 LOG.info("[ITEMS] {} icon matched template {} at {},{}", itemId, entry[1], at.x, at.y);
             } catch (RuntimeException e) {
                 throw new AssertionError("[ITEMS] the inventory icon of '" + itemId + "' no longer "

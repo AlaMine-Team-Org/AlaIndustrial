@@ -543,6 +543,7 @@
   "message.alaindustrial.item_pipe.mode.neutral": "Neutral",
   "modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — en EU/FE-teknikmod för Minecraft 26.2 (Fabric och NeoForge). Bygg ett industriellt elnät med vind-, sol- och vattengeneratorer, kablar och ett energilager, bearbeta malm i krossare, extraktorer och en elektrisk ugn, bryt fyra nya metaller — tenn, silver, nickel och uran — och förvara allt i järnkistan. LV-nivån klar, MV/HV planerad.",
   "modmenu.summaryTranslation.alaindustrial": "EU/FE-teknikmod (Fabric + NeoForge): elnät, malmbearbetning, fyra nya metaller och lagring.",
+  "subtitles.alaindustrial.compressor_hum": "Kompressorn dunkar",
   "subtitles.alaindustrial.electric_furnace": "Elektrisk ugn dånar",
   "subtitles.alaindustrial.extractor_hum": "Extraktorn maler",
   "subtitles.alaindustrial.garden_drone_fly": "Drönaren surrar",

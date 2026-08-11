@@ -543,6 +543,7 @@
   "message.alaindustrial.item_pipe.mode.neutral": "Neutre",
   "modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — un mod technologique EU/FE pour Minecraft 26.2 (Fabric et NeoForge). Construisez un réseau électrique industriel avec des générateurs éoliens, solaires et à eau, des câbles et un coffre à batteries, traitez le minerai dans des broyeurs, extracteurs et un four électrique, extrayez quatre nouveaux métaux — étain, argent, nickel et uranium — et stockez tout dans le coffre en fer. Niveau LV prêt, MV/HV planifié.",
   "modmenu.summaryTranslation.alaindustrial": "Mod technologique EU/FE (Fabric + NeoForge) : réseau électrique, traitement du minerai, quatre nouveaux métaux et stockage.",
+  "subtitles.alaindustrial.compressor_hum": "Le compresseur cogne",
   "subtitles.alaindustrial.electric_furnace": "Four électrique qui rugit",
   "subtitles.alaindustrial.extractor_hum": "L'extracteur broie",
   "subtitles.alaindustrial.garden_drone_fly": "Le drone vrombit",

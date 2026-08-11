@@ -47,6 +47,9 @@ public final class ModSoundsNeoForge {
 	public static final DeferredHolder<SoundEvent, SoundEvent> WIND_MILL_HUM =
 			SOUNDS.register("wind_mill_hum", ModSounds::createWindMillHum);
 
+	public static final DeferredHolder<SoundEvent, SoundEvent> COMPRESSOR_HUM =
+			SOUNDS.register("compressor_hum", ModSounds::createCompressorHum);
+
 	public static final DeferredHolder<SoundEvent, SoundEvent> GARDEN_DRONE_FLY =
 			SOUNDS.register("garden_drone_fly", ModSounds::createGardenDroneFly);
 
@@ -62,6 +65,7 @@ public final class ModSoundsNeoForge {
 		ModSounds.EXTRACTOR_HUM = EXTRACTOR_HUM;
 		ModSounds.WATER_MILL_HUM = WATER_MILL_HUM;
 		ModSounds.WIND_MILL_HUM = WIND_MILL_HUM;
+		ModSounds.COMPRESSOR_HUM = COMPRESSOR_HUM;
 		ModSounds.GARDEN_DRONE_FLY = GARDEN_DRONE_FLY;
 	}
 

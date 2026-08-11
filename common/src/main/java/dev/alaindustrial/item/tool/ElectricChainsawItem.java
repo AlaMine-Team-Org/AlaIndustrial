@@ -60,10 +60,10 @@ import net.minecraft.world.level.block.state.BlockState;
  * {@code Player.getDestroySpeed} only applies Efficiency when the tool reports {@code > 1.0F}, so a
  * flat chainsaw is a plain hand and the enchantment cannot revive it.</li>
  * <li>{@link #mineBlock}: drains {@link Config#electricChainsawEuPerBlock} per block actually
- * mined, server-side only, only for blocks with non-zero hardness (so instant-break leaves and
- * saplings are free, just as they never wear a vanilla axe), and only when there was enough EU to
- * run at tool speed in the first place. Creative is dropped inside {@link ItemEnergy#spend}
- * (MOD-081).</li>
+ * mined, server-side only, only for blocks with non-zero hardness (so instant-break saplings are free,
+ * just as they never wear a vanilla axe — <b>leaves are not</b>, see {@link #mineBlock}), and only when
+ * there was enough EU to run at tool speed in the first place. Creative is dropped inside
+ * {@link ItemEnergy#spend} (MOD-081).</li>
  * </ul>
  */
 public class ElectricChainsawItem extends Item {
@@ -140,9 +140,15 @@ public class ElectricChainsawItem extends Item {
 	 * Drains EU for the block just broken. The two guards mirror vanilla's durability gate in
 	 * {@code Item.mineBlock}: {@code !isClientSide} because {@code mineBlock} runs on both sides and the
 	 * charge must only move on the server (the client picks the new value up from the synced
-	 * {@code pouch_energy} component), and non-zero hardness so instant-break blocks — leaves in most
-	 * configurations, saplings, vines — cost nothing. The drain is only taken when there was enough EU
-	 * to mine at tool speed, so a block chewed through at hand speed is free.
+	 * {@code pouch_energy} component), and non-zero hardness so instant-break blocks cost nothing.
+	 *
+	 * <p><b>Which blocks that actually is, from the 26.2 sources</b> (MOD-389 — the earlier wording here
+	 * claimed leaves and vines were free, and they are not): {@code SaplingBlock} is {@code .instabreak()},
+	 * hardness {@code 0.0} → free. {@code leavesProperties()} is {@code .strength(0.2F)} and {@code VINE}
+	 * is {@code 0.2} as well → both are charged the full per-block cost. The gate reads
+	 * {@code getDestroySpeed}, not a block tag, so "leafy" has nothing to do with it: only a genuine
+	 * zero-hardness block is free. This matters when balancing the chainsaw — a canopy is not free
+	 * clearing.
 	 */
 	@Override
 	public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity owner) {

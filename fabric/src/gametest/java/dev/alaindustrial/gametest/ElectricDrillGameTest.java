@@ -101,6 +101,16 @@ public class ElectricDrillGameTest {
 	}
 
 	/**
+	 * @implements TC-DRILL-001-NEG02 — a flat drill clicking a spot where no torch can stand returns PASS
+	 *     (the off-hand still runs, no "no charge" line), and a charged drill reaches the same verdict at
+	 *     the same spot — which is what pins the dry probe to vanilla's own answer (MOD-398).
+	 */
+	@GameTest
+	public void tcDrill001Neg02_flatDrillOnUnplaceableSpotDoesNotSwallowClick(GameTestHelper helper) {
+		ElectricDrillScenarios.neg02FlatDrillOnUnplaceableSpotDoesNotSwallowClick(helper);
+	}
+
+	/**
 	 * @implements TC-DRILL-001-PER01 — charge survives a stack copy, 0 EU removes the component, and
 	 *     writes clamp at capacity.
 	 */

@@ -77,9 +77,10 @@ import net.minecraft.world.level.block.state.BlockState;
  * {@code Player.getDestroySpeed} only applies Efficiency when the tool reports {@code > 1.0F}, so a
  * flat shovel is a plain hand and the enchantment cannot revive it.</li>
  * <li>{@link #mineBlock}: drains {@link Config#electricShovelEuPerBlock} per block actually dug,
- * server-side only, only for blocks with non-zero hardness (so instant-break snow layers cost
- * nothing, just as they never wear a vanilla shovel), and only when there was enough EU to run at tool
- * speed in the first place. Creative is dropped inside {@link ItemEnergy#spend} (MOD-081).</li>
+ * server-side only, only for blocks with non-zero hardness (so genuinely instant-break blocks cost
+ * nothing, just as they never wear a vanilla shovel — <b>a snow layer is not one of them</b>, see
+ * {@link #mineBlock}), and only when there was enough EU to run at tool speed in the first place.
+ * Creative is dropped inside {@link ItemEnergy#spend} (MOD-081).</li>
  * </ul>
  */
 public class ElectricShovelItem extends Item {
@@ -171,9 +172,13 @@ public class ElectricShovelItem extends Item {
 	 * Drains EU for the block just dug. The two guards mirror vanilla's durability gate in
 	 * {@code Item.mineBlock}: {@code !isClientSide} because {@code mineBlock} runs on both sides and the
 	 * charge must only move on the server (the client picks the new value up from the synced
-	 * {@code pouch_energy} component), and non-zero hardness so instant-break blocks — snow layers,
-	 * grass — cost nothing. The drain is only taken when there was enough EU to dig at tool speed, so a
-	 * block scraped through at hand speed is free.
+	 * {@code pouch_energy} component), and non-zero hardness so instant-break blocks cost nothing.
+	 *
+	 * <p><b>Snow layers are not among them</b> (MOD-389 — the earlier wording here said they were):
+	 * {@code Blocks.SNOW} is {@code .strength(0.1F)} in the 26.2 sources, so every layer costs the full
+	 * per-block drain. Short grass ({@code .instabreak()}, {@code 0.0}) is genuinely free, but it is not a
+	 * shovel block either. The gate reads {@code getDestroySpeed}, so the only free blocks are the ones with
+	 * hardness exactly {@code 0.0}.
 	 */
 	@Override
 	public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity owner) {

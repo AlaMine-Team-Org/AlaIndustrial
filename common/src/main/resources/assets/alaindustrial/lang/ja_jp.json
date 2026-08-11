@@ -543,6 +543,7 @@
   "message.alaindustrial.item_pipe.mode.neutral": "中立",
   "modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — Minecraft 26.2（FabricとNeoForge）向けのEU/FE技術MOD。風力・太陽光・水力発電機、ケーブル、エネルギー貯蔵庫で産業用電力網を構築し、粉砕機・抽出機・電気かまどで鉱石を加工し、4種の新金属（スズ・銀・ニッケル・ウラン）を採掘して、すべてを鉄のチェストに保管しよう。LVティア実装済み、MV/HV計画中。",
   "modmenu.summaryTranslation.alaindustrial": "EU/FE技術MOD（Fabric + NeoForge）：電力網、鉱石加工、4種の新金属、ストレージ。",
+  "subtitles.alaindustrial.compressor_hum": "圧縮機がドスンと鳴る",
   "subtitles.alaindustrial.electric_furnace": "電気かまどが唸る",
   "subtitles.alaindustrial.extractor_hum": "抽出機が挽く",
   "subtitles.alaindustrial.garden_drone_fly": "ドローンの羽音",

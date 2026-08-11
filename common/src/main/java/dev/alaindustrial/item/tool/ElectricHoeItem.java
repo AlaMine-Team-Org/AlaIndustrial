@@ -149,11 +149,16 @@ public class ElectricHoeItem extends Item {
 	 * whole job — if it were free the hoe would never spend a single EU in normal play, which is exactly
 	 * the defect this replaced.
 	 *
-	 * <p>Two details that are easy to get wrong:
+	 * <p>Three details that are easy to get wrong:
 	 * <ul>
+	 * <li><b>Applicability is decided before the charge, not after</b> (MOD-389). The charge gate used to
+	 * be the first thing in the method, so a flat hoe answered {@code CONSUME} to a right-click on
+	 * <i>anything</i> — stone, a chest, a door — and shouted "not enough charge" at a player who was never
+	 * tilling. Worse, {@code CONSUME} means "handled", so the click never reached the off-hand: no block
+	 * placed, no food eaten. {@link #wouldTill} is asked first and returns {@code PASS} for a block a hoe
+	 * cannot convert, exactly as vanilla would have.</li>
 	 * <li>The charge is taken <b>after</b> the vanilla call and only when it reports
-	 * {@code consumesAction()} — right-clicking a stone wall, or soil that is already farmland, must not
-	 * drain the buffer.</li>
+	 * {@code consumesAction()} — soil that is already farmland must not drain the buffer.</li>
 	 * <li>The spend is server-side only. {@code useOn} runs on both sides and the client picks the new
 	 * value up from the synced {@code pouch_energy} component.</li>
 	 * </ul>
@@ -164,6 +169,11 @@ public class ElectricHoeItem extends Item {
 	public InteractionResult useOn(UseOnContext context) {
 		Player player = context.getPlayer();
 		ItemStack hoe = context.getItemInHand();
+
+		// MOD-389: not a tillable block → this tool has nothing to say. PASS, so the off-hand still runs.
+		if (!wouldTill(context)) {
+			return InteractionResult.PASS;
+		}
 
 		if (player != null && !player.getAbilities().instabuild
 				&& ItemEnergy.get(hoe) < Config.electricHoeTillEuCost) {
@@ -181,6 +191,25 @@ public class ElectricHoeItem extends Item {
 			ItemEnergy.spend(hoe, Config.electricHoeTillEuCost, player);
 		}
 		return result;
+	}
+
+	/**
+	 * Would a hoe convert the clicked block? Asked <b>before</b> the charge gate in {@link #useOn} so a flat
+	 * hoe neither swallows an unrelated right-click nor reports an empty buffer to a player who was not
+	 * tilling (MOD-389). Reads the world, changes nothing.
+	 *
+	 * <p>This is the one place where the two loaders genuinely disagree, so it is overridable rather than
+	 * static. The implementation here is vanilla's — {@link VanillaTillables} reads the real
+	 * {@code HoeItem.TILLABLES}, so modded tillables count too — and it is what Fabric runs. NeoForge
+	 * patches that map out of the flow and answers from the block instead, so
+	 * {@code ElectricHoeItemNeoForge} (and the upgrade's own NeoForge subclass, which cannot inherit it)
+	 * override this with {@code getToolModifiedState(…, HOE_TILL, simulate = true)}. A single shared
+	 * implementation would be wrong on one loader either way: vanilla's map misses what a NeoForge mod adds
+	 * through {@code BlockToolModificationEvent}, and NeoForge's copy of the rules drops vanilla's DOWN-face
+	 * check.
+	 */
+	protected boolean wouldTill(UseOnContext context) {
+		return VanillaTillables.wouldTill(context);
 	}
 
 	// --- breaking: full speed while charged, hand speed when flat (drops kept either way) ---

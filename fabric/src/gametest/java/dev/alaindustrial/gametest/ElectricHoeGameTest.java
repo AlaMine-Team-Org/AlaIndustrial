@@ -47,4 +47,23 @@ public class ElectricHoeGameTest {
 	public void tcHoe001Fun04_flatUpgradeCannotWaterExistingFarmland(GameTestHelper helper) {
 		ElectricHoeScenarios.fun04FlatUpgradeCannotWaterExistingFarmland(helper);
 	}
+
+	/**
+	 * @implements TC-HOE-001-NEG01 — a flat hoe right-clicking a block no hoe can till returns PASS, so it
+	 *     neither shouts "not enough charge" at a player who was not tilling nor swallows the click that
+	 *     the off-hand item was meant to get (MOD-389).
+	 */
+	@GameTest
+	public void tcHoe001Neg01_flatHoeOnNonTillableDoesNotSwallowClick(GameTestHelper helper) {
+		ElectricHoeScenarios.neg01FlatHoeOnNonTillableDoesNotSwallowClick(helper);
+	}
+
+	/**
+	 * @implements TC-HOE-001-FUN05 — on a block that IS tillable, a flat hoe still refuses with CONSUME and
+	 *     leaves the plot untilled, so the MOD-389 fix cannot degenerate into "always PASS".
+	 */
+	@GameTest
+	public void tcHoe001Fun05_flatHoeOnTillableStillRefuses(GameTestHelper helper) {
+		ElectricHoeScenarios.fun05FlatHoeOnTillableStillRefuses(helper);
+	}
 }

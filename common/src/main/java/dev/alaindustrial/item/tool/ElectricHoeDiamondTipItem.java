@@ -59,11 +59,14 @@ import net.minecraft.world.level.block.state.BlockState;
  * <ul>
  * <li><b>{@code CONSUME} counts as a consumed action.</b> In 26.2 {@code InteractionResult.CONSUME} is an
  * {@code InteractionResult.Success}, whose {@code consumesAction()} returns {@code true} — and
- * {@link ElectricHoeItem#useOn} returns exactly {@code CONSUME} on the "not enough charge" path. Gating
- * the watering on {@code consumesAction()} alone would therefore let a <b>flat</b> hoe water existing
- * farmland for free, forever. Hence the {@code alreadyFarmland} snapshot below: the perk only fires on a
- * block that was <i>not</i> farmland before the call and <i>is</i> farmland after it, which is only true
- * for a till that actually happened and actually got paid for.</li>
+ * {@link ElectricHoeItem#useOn} still returns exactly {@code CONSUME} on the "not enough charge" path.
+ * Since MOD-389 that path is reached only for a block a hoe could actually convert, so the original
+ * exploit route (a flat hoe clicking <i>existing farmland</i>, which is not tillable and now answers
+ * {@code PASS}) is closed one layer earlier. The {@code alreadyFarmland} snapshot below stays as the guard
+ * that does not depend on that ordering: the perk fires only on a block that was <i>not</i> farmland before
+ * the call and <i>is</i> farmland after it, which is only true for a till that happened and got paid for.
+ * Do not "simplify" it back to {@code consumesAction()} alone — that is one reordering away from free
+ * irrigation again.</li>
  * <li><b>Not every tillable turns into farmland.</b> {@code HoeItem.TILLABLES} in 26.2 maps grass block,
  * dirt path and dirt to farmland, but coarse dirt and rooted dirt to plain <i>dirt</i>. The
  * {@code hasProperty} check covers that, and covers modded farmland that reuses the vanilla property —

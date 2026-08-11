@@ -543,6 +543,7 @@
   "message.alaindustrial.item_pipe.mode.neutral": "Нейтральна",
   "modmenu.descriptionTranslation.alaindustrial": "Ala Industrial — EU/FE тех-мод для Minecraft 26.2 (Fabric і NeoForge). Будуйте промислову енергомережу: вітряні, сонячні та водяні генератори, кабелі та Battery Box; переробляйте руду в макераторах, екстракторах та електропечі; добувайте чотири нові метали — олово, срібло, нікель та уран — і зберігайте все в Iron Chest. LV-тир готовий, MV/HV у планах.",
   "modmenu.summaryTranslation.alaindustrial": "EU/FE тех-мод (Fabric + NeoForge): енергомережа, переробка руди, чотири нові метали та сховище.",
+  "subtitles.alaindustrial.compressor_hum": "Компресор гупає",
   "subtitles.alaindustrial.electric_furnace": "Електропіч гудить",
   "subtitles.alaindustrial.extractor_hum": "Екстрактор перемелює",
   "subtitles.alaindustrial.garden_drone_fly": "Дрон дзижчить",

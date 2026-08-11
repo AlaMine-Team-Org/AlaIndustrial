@@ -2,6 +2,7 @@ package dev.alaindustrial.item.tool.neoforge;
 
 import dev.alaindustrial.item.tool.ElectricHoeItem;
 import net.minecraft.world.item.ItemInstance;
+import net.minecraft.world.item.context.UseOnContext;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 
@@ -64,5 +65,23 @@ public class ElectricHoeItemNeoForge extends ElectricHoeItem {
 	@Override
 	public boolean canPerformAction(ItemInstance stack, ItemAbility itemAbility) {
 		return ItemAbilities.DEFAULT_HOE_ACTIONS.contains(itemAbility);
+	}
+
+	/**
+	 * The NeoForge answer to "would a hoe convert this block?" (MOD-389). The common implementation reads
+	 * vanilla's {@code HoeItem.TILLABLES}, which is exactly the map this loader patches out of the flow, so
+	 * it would answer for a table nobody consults here — missing every block a mod contributes through
+	 * {@code BlockToolModificationEvent}.
+	 *
+	 * <p>{@code simulate = true} is the whole point of the flag and not a stylistic choice: with
+	 * {@code false}, probing rooted dirt would <b>pop a hanging root</b> before we have decided whether the
+	 * hoe can even pay for the till. The call still routes through the same
+	 * {@code canPerformAction(HOE_TILL)} gate declared above, so it answers for this item, not a generic
+	 * one.
+	 */
+	@Override
+	protected boolean wouldTill(UseOnContext context) {
+		return context.getLevel().getBlockState(context.getClickedPos())
+				.getToolModifiedState(context, ItemAbilities.HOE_TILL, /*simulate*/ true) != null;
 	}
 }

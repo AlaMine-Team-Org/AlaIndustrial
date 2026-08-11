@@ -83,8 +83,17 @@ public final class ElectricDrillScenarios {
 
 	/** Simulates a right-click of the drill's main-hand stack on the top face of {@code target}. */
 	private static InteractionResult useOnBlock(GameTestHelper helper, ServerPlayer player, BlockPos target) {
+		return useOnFace(helper, player, target, Direction.UP);
+	}
+
+	/**
+	 * Same, but on an arbitrary face — {@code DOWN} is what MOD-398 needs: the placement cell then sits
+	 * <i>below</i> the clicked block, where a torch has nothing to stand on.
+	 */
+	private static InteractionResult useOnFace(GameTestHelper helper, ServerPlayer player, BlockPos target,
+			Direction face) {
 		BlockPos abs = helper.absolutePos(target);
-		BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(abs), Direction.UP, abs, false);
+		BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(abs), face, abs, false);
 		return player.getMainHandItem().useOn(new UseOnContext(player, InteractionHand.MAIN_HAND, hit));
 	}
 
@@ -391,6 +400,77 @@ public final class ElectricDrillScenarios {
 		if (ItemEnergy.get(drillStack) != belowCost) {
 			helper.fail("a refused placement must not touch the drill's charge, left "
 					+ ItemEnergy.get(drillStack));
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * NEG02 (MOD-398): a flat drill clicking a spot where <b>no</b> torch could ever stand answers
+	 * {@code PASS} — it neither shouts "not enough charge" at a player who was not placing a torch nor
+	 * swallows the click the off-hand item was meant to get.
+	 *
+	 * <p>The shipped defect this pins: the MOD-097 charge gate used to run before anything looked at the
+	 * target cell, so a flat drill with torches in the bag returned {@code CONSUME} — an
+	 * {@code InteractionResult.Success}, i.e. "handled" — for a right-click on anything at all. Asserting
+	 * on the result <b>is</b> the off-hand assertion: that value is what
+	 * {@code ServerPlayerGameMode.useItemOn} hands back to the interaction chain, and {@code PASS} is the
+	 * only one that lets the chain continue. Run against the pre-MOD-398 code the first check fails.
+	 *
+	 * <p>The second half is the guard that makes the fix honest rather than merely green: the SAME click
+	 * is repeated with a <b>fully charged</b> drill, which takes the real vanilla {@code place()} path. Its
+	 * answer must be {@code PASS} too. That is what pins the dry probe ({@code wouldPlaceTorch}) to
+	 * vanilla's own verdict — if the two ever drift apart, the flat drill would start refusing spots a
+	 * charged drill happily lights, and this half goes red. Its counterpart lives one test up:
+	 * {@link #neg01TorchRefusedBelowCost} clicks a spot that IS valid and requires {@code CONSUME} there,
+	 * so the fix cannot degenerate into "always PASS".
+	 *
+	 * <p>Geometry: a single stone block floating in the rig's air, clicked on its <b>bottom</b> face. The
+	 * placement cell is the air below it — nothing under it for a standing torch, nothing beside it for a
+	 * wall torch.
+	 */
+	public static void neg02FlatDrillOnUnplaceableSpotDoesNotSwallowClick(GameTestHelper helper) {
+		BlockPos ceiling = new BlockPos(1, 4, 2);
+		BlockPos torchAt = ceiling.below();
+		helper.setBlock(ceiling, Blocks.STONE);
+		// The cells a torch could have attached to must be empty, or the spot would be placeable after all.
+		helper.assertBlockPresent(Blocks.AIR, torchAt);
+		helper.assertBlockPresent(Blocks.AIR, torchAt.below());
+
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		ItemStack flatDrill = drill(0);
+		player.setItemInHand(InteractionHand.MAIN_HAND, flatDrill);
+		player.getInventory().setItem(1, new ItemStack(Items.TORCH, 8));
+
+		InteractionResult flat = useOnFace(helper, player, ceiling, Direction.DOWN);
+		if (flat != InteractionResult.PASS) {
+			helper.fail("a flat drill clicking a spot no torch can occupy must return PASS so the off-hand "
+					+ "still runs, got " + flat);
+		}
+		helper.assertBlockPresent(Blocks.AIR, torchAt);
+		if (player.getInventory().countItem(Items.TORCH) != 8) {
+			helper.fail("nothing was placed, so no torch may leave the inventory (8 left), got "
+					+ player.getInventory().countItem(Items.TORCH));
+		}
+		if (ItemEnergy.get(flatDrill) != 0) {
+			helper.fail("fixture error: the drill under test must be flat");
+		}
+
+		// Same click, charged drill: vanilla's own place() must refuse this spot too. This is the assertion
+		// that keeps the dry probe honest — it fails the moment the two answers disagree.
+		ItemStack chargedDrill = drill(Config.electricDrillBuffer);
+		player.setItemInHand(InteractionHand.MAIN_HAND, chargedDrill);
+
+		InteractionResult charged = useOnFace(helper, player, ceiling, Direction.DOWN);
+		if (charged != InteractionResult.PASS) {
+			helper.fail("a charged drill must reach the same verdict on the same spot (PASS), got " + charged);
+		}
+		helper.assertBlockPresent(Blocks.AIR, torchAt);
+		if (player.getInventory().countItem(Items.TORCH) != 8) {
+			helper.fail("a refused placement must consume no torch (8 left), got "
+					+ player.getInventory().countItem(Items.TORCH));
+		}
+		if (ItemEnergy.get(chargedDrill) != Config.electricDrillBuffer) {
+			helper.fail("a refused placement must not drain the drill, left " + ItemEnergy.get(chargedDrill));
 		}
 		helper.succeed();
 	}

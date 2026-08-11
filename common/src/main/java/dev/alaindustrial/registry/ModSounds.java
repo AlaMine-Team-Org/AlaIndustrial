@@ -158,6 +158,19 @@ public final class ModSounds {
 		return SoundEvent.createFixedRangeEvent(WIND_MILL_HUM_ID, 12.0f);
 	}
 
+	/** The registry id for the compressor working loop (MOD-143) — a single lit machine, pattern A. */
+	public static final Identifier COMPRESSOR_HUM_ID = Industrialization.id("compressor_hum");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> COMPRESSOR_HUM = () -> {
+		throw new IllegalStateException("ModSounds.COMPRESSOR_HUM read before its loader bound it");
+	};
+
+	/** Build the compressor-hum event instance both loaders register (variable range, like the macerator). */
+	public static SoundEvent createCompressorHum() {
+		return SoundEvent.createVariableRangeEvent(COMPRESSOR_HUM_ID);
+	}
+
 	/** The registry id for the garden drone's flight loop (MOD-329) — plays while the drone is airborne. */
 	public static final Identifier GARDEN_DRONE_FLY_ID = Industrialization.id("garden_drone_fly");
 

@@ -9,6 +9,7 @@ import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -32,8 +33,10 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
 
 /**
  * Electric Drill (MOD-079) — the first powered hand tool: a diamond-tier pickaxe that runs on EU
@@ -194,7 +197,10 @@ public class ElectricDrillItem extends Item {
 	 * that holds less than the cost refuses the placement instead of giving a free torch (MOD-097): it
 	 * places nothing, consumes nothing, and shows a one-line action-bar notice so the player knows why.
 	 * Creative is exempt (the spend is a no-op there anyway). The check sits before {@code place()}, so by
-	 * the time the spend runs the drill is guaranteed to afford it. No cooldown: vanilla
+	 * the time the spend runs the drill is guaranteed to afford it — but <b>after</b>
+	 * {@link #wouldPlaceTorch}, so it only ever fires where a charged drill would really have placed
+	 * something: on a spot no torch can occupy the drill stays out of the way entirely and answers
+	 * {@code PASS}, leaving the click to the off-hand (MOD-398). No cooldown: vanilla
 	 * {@code BlockItem.place} already can't spam-place a single position, so a cooldown would only slow
 	 * legitimate tunnel lighting.
 	 */
@@ -226,20 +232,6 @@ public class ElectricDrillItem extends Item {
 			return InteractionResult.PASS;
 		}
 
-		// MOD-097: a torch from the drill is powered, not free. Below the EU cost the drill places nothing
-		// and tells the player on the action bar, instead of the old graceful-degradation freebie. Creative
-		// is exempt — the spend is dropped there anyway (MOD-081). CONSUME eats the click (no off-hand
-		// fallback, no place, no swing) while the drill keeps the torch in the inventory.
-		if (!player.getAbilities().instabuild && ItemEnergy.get(drill) < Config.electricDrillTorchEuCost) {
-			if (player instanceof ServerPlayer serverPlayer) {
-				serverPlayer.sendSystemMessage(
-						Component.translatable("item.alaindustrial.electric_drill.torch_no_charge")
-								.withStyle(ChatFormatting.RED),
-						true);
-			}
-			return InteractionResult.CONSUME;
-		}
-
 		// Delegate to the torch's vanilla place() via a 1-item copy, so vanilla consumes from the copy
 		// (not the drill) and we keep floor/wall selection, canSurvive, waterlogged, sound and events.
 		// BlockItem.place() returns exactly SUCCESS (placement happened) or FAIL (no support / water /
@@ -252,6 +244,32 @@ public class ElectricDrillItem extends Item {
 		BlockHitResult hit = new BlockHitResult(
 				context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside());
 		BlockPlaceContext placeCtx = new BlockPlaceContext(player, context.getHand(), proxy, hit);
+
+		// MOD-398: applicability is decided BEFORE the charge, not after. The charge gate below used to sit
+		// here, so a flat drill with torches in the bag answered CONSUME to a right-click on a spot where no
+		// torch could ever stand — a ceiling, water, the face of a block the torch cannot attach to. CONSUME
+		// means "handled", so that click never reached the off-hand (no block placed, no food eaten), and the
+		// player got a red "no charge" line for a torch they were not placing. Same defect class as the flat
+		// hoe's (MOD-389). A spot the torch would refuse anyway is PASS, exactly as the vanilla branch below
+		// answers for a charged drill.
+		if (!wouldPlaceTorch(placeCtx, torchItem)) {
+			return InteractionResult.PASS;
+		}
+
+		// MOD-097: a torch from the drill is powered, not free. Below the EU cost the drill places nothing
+		// and tells the player on the action bar, instead of the old graceful-degradation freebie. Creative
+		// is exempt — the spend is dropped there anyway (MOD-081). CONSUME eats the click (no off-hand
+		// fallback, no place, no swing) while the drill keeps the torch in the inventory — but only now that
+		// the spot is known to be one where a charged drill would have placed something (MOD-398).
+		if (!player.getAbilities().instabuild && ItemEnergy.get(drill) < Config.electricDrillTorchEuCost) {
+			if (player instanceof ServerPlayer serverPlayer) {
+				serverPlayer.sendSystemMessage(
+						Component.translatable("item.alaindustrial.electric_drill.torch_no_charge")
+								.withStyle(ChatFormatting.RED),
+						true);
+			}
+			return InteractionResult.CONSUME;
+		}
 
 		if (!torchItem.place(placeCtx).consumesAction()) {
 			// Invalid spot (no support, water for a vanilla torch, protection veto, …) → consume nothing.
@@ -274,6 +292,73 @@ public class ElectricDrillItem extends Item {
 		// unconditional; ItemEnergy.spend still drops the debit for a creative owner (MOD-081).
 		ItemEnergy.spend(drill, Config.electricDrillTorchEuCost, player);
 		return InteractionResult.SUCCESS;
+	}
+
+	/**
+	 * Would the torch actually land here? A read-only probe asked <b>before</b> the MOD-097 charge gate, so
+	 * a flat drill neither swallows a right-click meant for the off-hand nor reports an empty buffer to a
+	 * player who was not placing a torch (MOD-398). Reads the world, writes nothing: no block, no sound, no
+	 * game event, no torch, no EU.
+	 *
+	 * <h2>Why the check is re-derived instead of delegated</h2>
+	 * The authoritative answer is {@code BlockItem.place()}, but that answer only exists <i>after</i> the
+	 * block is already in the world — it is the mutation. Its dry half, {@code getPlacementState}, is
+	 * {@code protected} (verified with {@code javap -p} against {@code minecraft-common.jar}, 26.2), and the
+	 * {@link net.minecraft.world.item.StandingAndWallBlockItem} override that torches actually use is
+	 * {@code protected} too. The {@code VanillaTillables} trick from MOD-389 — a never-instantiated subclass
+	 * reading a {@code protected static} field — does not carry over: this needs an <i>instance</i> method
+	 * of the torch item, and Java's protected access would only allow calling it on our own subclass, not on
+	 * the registered vanilla item. Constructing a throwaway probe item is not an option either: in 26.2
+	 * {@code Item}'s constructor calls {@code properties.itemIdOrThrow()} and writes into
+	 * {@code BuiltInRegistries.DATA_COMPONENT_INITIALIZERS}, so a fake item would either throw or pollute a
+	 * registry.
+	 *
+	 * <p>So the body below mirrors, line for line, the two vanilla methods it stands in for —
+	 * {@code BlockItem.place}'s early returns ({@code isEnabled}, {@code canPlace}) and
+	 * {@code StandingAndWallBlockItem.getPlacementState} (first fitting direction wins, {@code canSurvive},
+	 * then {@code isUnobstructed} on the chosen state). Both torch items are built with
+	 * {@code attachmentDirection = Direction.DOWN} (vanilla {@code Items.TORCH} and our
+	 * {@code standingAndWallBlockItem} helper), which is why {@code UP} — its opposite — is the skipped
+	 * direction and {@code DOWN} is the one that picks the standing variant. The <b>states</b> come from the
+	 * real blocks ({@code getStateForPlacement}), so the uranium torch's waterlogging and any block-level
+	 * rule are the blocks' own answer, not a copy of it.
+	 *
+	 * <p>The one thing a dry probe cannot ask is a protection mod's veto, which vanilla itself only raises
+	 * while placing. A vetoed spot therefore answers {@code CONSUME} + "no charge" for a flat drill instead
+	 * of {@code PASS}; a charged drill is unaffected (it still runs the real {@code place()} and returns
+	 * {@code PASS} on the veto). The pairing is pinned by gametests: whatever this returns must match what
+	 * a charged drill does at the same spot.
+	 *
+	 * <p>Both loaders run this same body. Unlike the hoe's tillability probe (MOD-389), placement is not a
+	 * spot where NeoForge patches vanilla out: its {@code StandingAndWallBlockItem} and {@code BlockItem}
+	 * carry the same flow (checked against {@code minecraft-patched-26.2.0.8-beta-sources.jar}), so there is
+	 * no loader override here — and no reason to add one.
+	 */
+	private static boolean wouldPlaceTorch(BlockPlaceContext placeCtx, BlockItem torchItem) {
+		boolean uranium = torchItem == ModContent.ENRICHED_URANIUM_TORCH_ITEM.get();
+		Block standing = uranium ? ModContent.ENRICHED_URANIUM_TORCH.get() : Blocks.TORCH;
+		Block wall = uranium ? ModContent.ENRICHED_URANIUM_WALL_TORCH.get() : Blocks.WALL_TORCH;
+
+		Level level = placeCtx.getLevel();
+		if (!standing.isEnabled(level.enabledFeatures()) || !placeCtx.canPlace()) {
+			return false;
+		}
+
+		BlockPos pos = placeCtx.getClickedPos();
+		BlockState wallState = wall.getStateForPlacement(placeCtx);
+		for (Direction direction : placeCtx.getNearestLookingDirections()) {
+			if (direction == Direction.UP) {
+				// The opposite of the torches' attachment direction (DOWN) — vanilla never considers it.
+				continue;
+			}
+			BlockState candidate = direction == Direction.DOWN
+					? standing.getStateForPlacement(placeCtx)
+					: wallState;
+			if (candidate != null && candidate.canSurvive(level, pos)) {
+				return level.isUnobstructed(candidate, pos, CollisionContext.empty());
+			}
+		}
+		return false;
 	}
 
 	/**

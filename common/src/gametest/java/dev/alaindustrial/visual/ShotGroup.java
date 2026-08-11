@@ -1,4 +1,4 @@
-package dev.alaindustrial.gametest.visual;
+package dev.alaindustrial.visual;
 
 /**
  * What a frame photographs. Drives grouping in the review gallery and lets a run be filtered down to

@@ -27,6 +27,7 @@ import dev.alaindustrial.gametest.CapsuleScenarios;
 import dev.alaindustrial.gametest.GeothermalLavaInputScenarios;
 import dev.alaindustrial.gametest.ElectricChainsawScenarios;
 import dev.alaindustrial.gametest.ElectricHoeScenarios;
+import dev.alaindustrial.gametest.ElectricToolTagScenarios;
 import dev.alaindustrial.gametest.ElectricShovelScenarios;
 import dev.alaindustrial.gametest.ElectricDrillScenarios;
 import dev.alaindustrial.gametest.ElectricSaberScenarios;
@@ -776,6 +777,12 @@ public final class NeoForgeGameTests {
 		registerTest(event, "drill_place_torch_on_replaceable_block", 40, true, ElectricDrillScenarios::fun09PlaceTorchOnReplaceableBlock);
 		// MOD-097 (TC-DRILL-001-NEG01): a drill below the torch cost refuses to place instead of a freebie.
 		registerTest(event, "drill_torch_refused_below_cost", 40, true, ElectricDrillScenarios::neg01TorchRefusedBelowCost);
+		// MOD-398 (TC-DRILL-001-NEG02): the mirror image — a spot no torch can occupy must be PASS for a
+		// flat drill, so the click still reaches the off-hand. The body also re-clicks with a charged drill
+		// and requires the same verdict, which is what keeps the dry probe tied to vanilla's place(); this
+		// lane matters because that agreement is exactly what a loader patch could break on one side only.
+		registerTest(event, "drill_flat_on_unplaceable_spot_passes", 40, true,
+				ElectricDrillScenarios::neg02FlatDrillOnUnplaceableSpotDoesNotSwallowClick);
 		// MOD-321 (TC-DRILL-001-FUN10/11): the diamond-tipped upgrade digs faster at the same tier, and its
 		// sneak-toggled Silk Touch mode flips the real loot-table drop both ways.
 		registerTest(event, "drill_diamond_tip_speed_and_tier", 40, true, ElectricDrillScenarios::fun10DiamondTipSpeedAndTier);
@@ -796,6 +803,19 @@ public final class NeoForgeGameTests {
 		registerTest(event, "hoe_diamond_tip_till_waters_plot", 40, true, ElectricHoeScenarios::fun02DiamondTipTillLeavesPlotWatered);
 		registerTest(event, "hoe_base_leaves_plot_dry", 40, true, ElectricHoeScenarios::fun03BaseHoeLeavesPlotDry);
 		registerTest(event, "hoe_flat_upgrade_cannot_water_farmland", 40, true, ElectricHoeScenarios::fun04FlatUpgradeCannotWaterExistingFarmland);
+
+		// MOD-389 (TC-HOE-001-NEG01, -FUN05): a flat hoe must not answer CONSUME to a right-click on a
+		// block no hoe can till — that swallowed the click and the off-hand item with it. This lane is
+		// the load-bearing one: the tillability probe is the single place where the loaders genuinely
+		// differ (vanilla TILLABLES vs getToolModifiedState), so a NeoForge-only regression is possible.
+		registerTest(event, "hoe_flat_on_non_tillable_passes", 40, true, ElectricHoeScenarios::neg01FlatHoeOnNonTillableDoesNotSwallowClick);
+		registerTest(event, "hoe_flat_on_tillable_still_refuses", 40, true, ElectricHoeScenarios::fun05FlatHoeOnTillableStillRefuses);
+
+		// MOD-389 (TC-ETOOL-001-FUN01..02): the three diamond-tipped upgrades belong to the same
+		// membership tags as their base tools, so the enchanting table accepts them — a recurrence of the
+		// MOD-057 defect, caught here on both loaders.
+		registerTest(event, "electric_tool_tip_membership_tags", 40, true, ElectricToolTagScenarios::fun01TipMembershipTags);
+		registerTest(event, "electric_tool_tip_enchantment_accepted", 40, true, ElectricToolTagScenarios::fun02TipEnchantmentAccepted);
 
 		// MOD-379 (TC-SHOVEL-001-FUN01..04): the shovel's right-click interactions. This lane is the one
 		// that matters — the shovel could not path or douse on NeoForge at all until the item declared

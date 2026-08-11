@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
@@ -77,10 +78,10 @@ public final class ElectricHoeScenarios {
 	 * the full vanilla path — {@code BlockState.useItemOn} → {@code useWithoutItem} → PASS →
 	 * {@code ItemStack.useOn} → our {@code useOn} — which behaves the same on both loaders.
 	 */
-	private static void useOnSoil(GameTestHelper helper, ServerPlayer player) {
+	private static InteractionResult useOnSoil(GameTestHelper helper, ServerPlayer player) {
 		BlockPos abs = helper.absolutePos(SOIL);
 		BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(abs), Direction.UP, abs, false);
-		player.gameMode.useItemOn(player, helper.getLevel(), player.getMainHandItem(),
+		return player.gameMode.useItemOn(player, helper.getLevel(), player.getMainHandItem(),
 				InteractionHand.MAIN_HAND, hit);
 	}
 
@@ -186,6 +187,11 @@ public final class ElectricHoeScenarios {
 	 * An implementation that watered on {@code consumesAction()} alone would therefore hand a player with
 	 * a dead battery unlimited free irrigation of any plot they click. The upgrade instead only waters a
 	 * block that was not farmland before the click, which is what this asserts.
+	 *
+	 * <p>Since MOD-389 the click in this scenario also stops one step earlier — farmland is not tillable,
+	 * so {@code useOn} answers {@code PASS} before the charge gate is even reached. The assertion is kept
+	 * exactly as it was: it must hold whichever layer stops the exploit, and it is the only one of the two
+	 * that survives a future reordering of the gate.
 	 */
 	public static void fun04FlatUpgradeCannotWaterExistingFarmland(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -202,6 +208,60 @@ public final class ElectricHoeScenarios {
 		if (moisture != 0) {
 			helper.fail("a flat upgrade must not water existing farmland, moisture became " + moisture);
 		}
+		helper.succeed();
+	}
+
+	// ── MOD-389 — a flat hoe must not swallow every right-click ─────────────────────────────────────
+
+	/**
+	 * TC-HOE-001-NEG01 — a flat hoe right-clicking a block no hoe can till answers {@code PASS}.
+	 *
+	 * <p>The shipped defect this pins: the charge gate used to run <b>before</b> anything looked at the
+	 * block, so an empty hoe returned {@code CONSUME} for a click on stone — which in 26.2 is an
+	 * {@code InteractionResult.Success}, i.e. "handled". The player got a red "not enough charge" line
+	 * they never asked for, and the click never reached the off-hand: no block placed, no food eaten.
+	 *
+	 * <p>Asserting on the {@code InteractionResult} <b>is</b> the off-hand assertion — that result is
+	 * exactly what {@code ServerPlayerGameMode.useItemOn} returns to the interaction chain, and
+	 * {@code PASS} is the only value that lets the chain continue. Run against the pre-MOD-389 code this
+	 * body fails on the first check.
+	 */
+	public static void neg01FlatHoeOnNonTillableDoesNotSwallowClick(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		player.setItemInHand(InteractionHand.MAIN_HAND, hoe(0));
+		prepareSoil(helper, Blocks.STONE);
+
+		InteractionResult result = useOnSoil(helper, player);
+
+		if (result != InteractionResult.PASS) {
+			helper.fail("a flat hoe clicking stone must return PASS so the off-hand still runs, got " + result);
+		}
+		helper.assertBlockPresent(Blocks.STONE, SOIL);
+		if (ItemEnergy.get(player.getMainHandItem()) != 0) {
+			helper.fail("fixture error: the hoe under test must be flat");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-HOE-001-FUN05 — the other half of NEG01: on a block a hoe <i>can</i> till, a flat hoe still
+	 * refuses loudly. {@code CONSUME} is the "handled, and I told you why" answer, and the plot must stay
+	 * dirt.
+	 *
+	 * <p>Without this, MOD-389 could have been "fixed" by returning {@code PASS} everywhere when flat —
+	 * green NEG01, and the player silently loses the only feedback that says the hoe needs charging.
+	 */
+	public static void fun05FlatHoeOnTillableStillRefuses(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		player.setItemInHand(InteractionHand.MAIN_HAND, hoe(0));
+		prepareSoil(helper, Blocks.DIRT);
+
+		InteractionResult result = useOnSoil(helper, player);
+
+		if (result != InteractionResult.CONSUME) {
+			helper.fail("a flat hoe clicking tillable dirt must return CONSUME (refusal + message), got " + result);
+		}
+		helper.assertBlockPresent(Blocks.DIRT, SOIL);
 		helper.succeed();
 	}
 }

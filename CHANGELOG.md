@@ -1,18 +1,19 @@
-## 0.1.86
+## 0.1.87
 
-<p><img alt="Three tiers of double chests next to a vanilla double chest" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.86/release-media/v0.1.86/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial fix patch banner" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.87/release-media/v0.1.87/changelog.jpeg" width="720"></p>
 
-Chests now merge into double chests, and every chest tier gained a comparator output and waterlogging.
+A fix release: the Compressor finally has a sound, machine hums no longer break on the first world load, and two tools stopped eating your right-clicks.
 
 ### New
 
-- **Double chests.** Put two chests of the same tier side by side, facing the same way — they become one big chest. Iron gives 72 slots, silver 90, gold 108. Sneak while placing to keep them separate. Different tiers never merge.
-- **Comparator support.** A comparator next to any chest now reads how full it is. A double chest reads as one, from either half.
-- **Waterlogging.** Chests can be placed in water and stay waterlogged, just like the vanilla one.
+- **The Compressor has a sound.** A dull mechanical thump while it presses, silence when it idles. The Mute Chip quiets it like any other machine.
+
+### Fixed
+
+- **Machine hums no longer break on the first world load.** A machine heard in the first seconds after a world loads used to sound ragged and broken up, then play fine after a rejoin. Fixed for every machine whose hum can greet you on the way in — macerator, generator, electric furnace, extractor, compressor, solar panels, water mill and the garden drone.
+- **A flat Electric Drill no longer wastes your right-click.** With torches in your inventory, a drill out of charge swallowed the click even where a torch could not have gone anyway, so your off-hand item never fired. Where a torch can actually go, it still tells you the drill needs charging.
+- **Diamond-tipped tools can be enchanted again**, and a flat Electric Hoe no longer eats a right-click on a block it cannot till.
 
 ### Improved
 
-- The double chest's window shows six rows and scrolls to the rest, so it fits the screen at any GUI scale. Shift-click reaches the hidden rows too.
-- Hoppers, droppers and pipes treat a double chest as one inventory: fill one half and items keep flowing into the other.
-- Both halves open and close together, with a single sound from where they meet.
-- A stock display frame on either half counts both.
+- **Guide site:** four new item pages — energy clots, mutation chips, flux thread and cloth, and the incubator's mutation products — plus corrected numbers and cleaner text in every language.
