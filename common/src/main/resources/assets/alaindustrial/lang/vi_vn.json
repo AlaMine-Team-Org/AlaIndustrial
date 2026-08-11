@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "Đã làm sạch tháp: +%s than",
   "gui.alaindustrial.distillation_column.fouling": "Cáu bẩn: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "Xếp chồng ba khối để lắp tháp",
-  "block.alaindustrial.energy_condenser": "Máy Cô Đặc Năng Lượng"
+  "block.alaindustrial.energy_condenser": "Máy Cô Đặc Năng Lượng",
+  "container.alaindustrial.iron_chest_double": "Rương Sắt Đôi",
+  "container.alaindustrial.silver_chest_double": "Rương Bạc Đôi",
+  "container.alaindustrial.gold_chest_double": "Rương Vàng Đôi"
 }

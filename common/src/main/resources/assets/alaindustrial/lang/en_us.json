@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "Column cleaned: +%s coal",
   "gui.alaindustrial.distillation_column.fouling": "Fouling: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "Stack three segments to assemble the tower",
-  "block.alaindustrial.energy_condenser": "Energy Condenser"
+  "block.alaindustrial.energy_condenser": "Energy Condenser",
+  "container.alaindustrial.iron_chest_double": "Double Iron Chest",
+  "container.alaindustrial.silver_chest_double": "Double Silver Chest",
+  "container.alaindustrial.gold_chest_double": "Double Gold Chest"
 }

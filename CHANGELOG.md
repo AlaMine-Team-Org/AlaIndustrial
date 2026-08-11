@@ -1,14 +1,18 @@
-## 0.1.85
+## 0.1.86
 
-<p><img alt="Ala Industrial 0.1.85 — Energy Condenser and energy clots" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.85/release-media/v0.1.85/changelog.png" width="720"></p>
+<p><img alt="Three tiers of double chests next to a vanilla double chest" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.86/release-media/v0.1.86/changelog.png" width="720"></p>
 
-Spare power stops going to waste — bank it, and turn it into machine upgrades.
+Chests now merge into double chests, and every chest tier gained a comparator output and waterlogging.
 
 ### New
 
-- **The Energy Condenser banks your surplus.** Wire it into a grid that makes more than it spends and it fills up on its own.
-- **When you take the clot decides what you get.** 250,000 EU gives tier I, a million tier II, four million tier III — and pulling out early burns everything banked above that price.
-- **It never steals from a working machine** and never drains your batteries. Only spare power reaches it.
-- **Overclocker chips, in three tiers.** Made from clots, they slot into a machine's upgrade panel and shorten every operation it runs.
-- **Speed has a price.** Each tier doubles the energy drawn per tick, and a low-voltage machine hits its ceiling sooner than a strong one.
-- **Generators and storage refuse the chip.** Their upgrade arm stays locked, so a chip can never sit somewhere it would do nothing.
+- **Double chests.** Put two chests of the same tier side by side, facing the same way — they become one big chest. Iron gives 72 slots, silver 90, gold 108. Sneak while placing to keep them separate. Different tiers never merge.
+- **Comparator support.** A comparator next to any chest now reads how full it is. A double chest reads as one, from either half.
+- **Waterlogging.** Chests can be placed in water and stay waterlogged, just like the vanilla one.
+
+### Improved
+
+- The double chest's window shows six rows and scrolls to the rest, so it fits the screen at any GUI scale. Shift-click reaches the hidden rows too.
+- Hoppers, droppers and pipes treat a double chest as one inventory: fill one half and items keep flowing into the other.
+- Both halves open and close together, with a single sound from where they meet.
+- A stock display frame on either half counts both.

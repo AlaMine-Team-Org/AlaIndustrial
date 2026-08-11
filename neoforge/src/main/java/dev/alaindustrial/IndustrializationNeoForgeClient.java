@@ -299,6 +299,19 @@ public final class IndustrializationNeoForgeClient {
 				ChestModel::createSingleBodyLayer);
 		event.registerLayerDefinition(ChestBlockEntityRenderer.GOLD_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
+		// MOD-391: the double-chest halves — 15-wide vanilla left/right bodies, per tier.
+		event.registerLayerDefinition(ChestBlockEntityRenderer.IRON_CHEST_LEFT_LAYER,
+				ChestModel::createDoubleBodyLeftLayer);
+		event.registerLayerDefinition(ChestBlockEntityRenderer.IRON_CHEST_RIGHT_LAYER,
+				ChestModel::createDoubleBodyRightLayer);
+		event.registerLayerDefinition(ChestBlockEntityRenderer.SILVER_CHEST_LEFT_LAYER,
+				ChestModel::createDoubleBodyLeftLayer);
+		event.registerLayerDefinition(ChestBlockEntityRenderer.SILVER_CHEST_RIGHT_LAYER,
+				ChestModel::createDoubleBodyRightLayer);
+		event.registerLayerDefinition(ChestBlockEntityRenderer.GOLD_CHEST_LEFT_LAYER,
+				ChestModel::createDoubleBodyLeftLayer);
+		event.registerLayerDefinition(ChestBlockEntityRenderer.GOLD_CHEST_RIGHT_LAYER,
+				ChestModel::createDoubleBodyRightLayer);
 		event.registerLayerDefinition(WaterMillWheelBlockEntityRenderer.MODEL_LAYER,
 				WaterMillWheelBlockEntityRenderer::createLayer);
 	}

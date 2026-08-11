@@ -76,6 +76,7 @@ public class IndustrializationFabric implements ModInitializer {
 		registerSounds();
 		verifyContentBound();
 		dev.alaindustrial.stats.fabric.FabricPlayerStats.init(); // MOD-133 player-stats attachment + store seam
+		registerChestStorage();
 		registerNetworkPayloads();
 		registerServerLifecycle();
 		registerGameplayHooks();
@@ -418,6 +419,30 @@ public class IndustrializationFabric implements ModInitializer {
 			ItemNetworkManager.clearAll();
 			dev.alaindustrial.stats.PlayerStatsTracker.get().clear();
 		});
+	}
+
+	/**
+	 * MOD-391: the double chest is ONE inventory to the mod's item pipes and other transfer-API mods.
+	 * Fabric's generic {@code ItemStorage.SIDED} fallback would not deliver this: its
+	 * {@code WorldlyContainerHolder} branch calls {@code getContainer} twice and requires the SAME
+	 * object back (a reference-stability guard, verified against the 26.2 transfer-api bytecode), and
+	 * the chest adapter is built per query — so the fallback would quietly degrade to the per-half
+	 * block-entity branch. An explicit provider has priority over the fallback and resolves the pair
+	 * on every query via {@code combinedContainer} (right half first — the same slot order the menu
+	 * and the NeoForge capability use). The VANILLA hopper/dropper/crafter need none of this: their
+	 * container lookup has no such guard and takes the {@code WorldlyContainerHolder} path directly.
+	 */
+	private void registerChestStorage() {
+		net.fabricmc.fabric.api.transfer.v1.item.ItemStorage.SIDED.registerForBlocks(
+				(level, pos, state, blockEntity, side) -> {
+					if (!(state.getBlock() instanceof dev.alaindustrial.block.AbstractModChestBlock chest)) {
+						return null;
+					}
+					net.minecraft.world.Container joined = chest.combinedContainer(state, level, pos);
+					return joined == null ? null
+							: net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(joined, side);
+				},
+				ModBlocks.IRON_CHEST, ModBlocks.SILVER_CHEST, ModBlocks.GOLD_CHEST);
 	}
 
 	/**

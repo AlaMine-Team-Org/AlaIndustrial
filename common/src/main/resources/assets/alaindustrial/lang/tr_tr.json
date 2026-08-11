@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "Kule temizlendi: +%s kömür",
   "gui.alaindustrial.distillation_column.fouling": "Kirlenme: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "Kuleyi kurmak için üç parçayı üst üste koyun",
-  "block.alaindustrial.energy_condenser": "Enerji Yoğunlaştırıcı"
+  "block.alaindustrial.energy_condenser": "Enerji Yoğunlaştırıcı",
+  "container.alaindustrial.iron_chest_double": "Çift Demir Sandık",
+  "container.alaindustrial.silver_chest_double": "Çift Gümüş Sandık",
+  "container.alaindustrial.gold_chest_double": "Çift Altın Sandık"
 }

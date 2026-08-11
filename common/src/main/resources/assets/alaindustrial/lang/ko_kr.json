@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "증류탑 청소 완료: 석탄 +%s",
   "gui.alaindustrial.distillation_column.fouling": "오염도: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "세그먼트 3개를 쌓으면 탑이 조립됩니다",
-  "block.alaindustrial.energy_condenser": "에너지 응축기"
+  "block.alaindustrial.energy_condenser": "에너지 응축기",
+  "container.alaindustrial.iron_chest_double": "대형 철 상자",
+  "container.alaindustrial.silver_chest_double": "대형 은 상자",
+  "container.alaindustrial.gold_chest_double": "대형 금 상자"
 }

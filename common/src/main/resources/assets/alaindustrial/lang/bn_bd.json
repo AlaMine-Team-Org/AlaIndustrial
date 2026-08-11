@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "স্তম্ভ পরিষ্কার হয়েছে: +%s কয়লা",
   "gui.alaindustrial.distillation_column.fouling": "জমাট: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "টাওয়ার গড়তে তিনটি অংশ একটির উপর একটি বসান",
-  "block.alaindustrial.energy_condenser": "শক্তি ঘনীভবক"
+  "block.alaindustrial.energy_condenser": "শক্তি ঘনীভবক",
+  "container.alaindustrial.iron_chest_double": "ডাবল আয়রন চেস্ট",
+  "container.alaindustrial.silver_chest_double": "ডাবল রূপা চেস্ট",
+  "container.alaindustrial.gold_chest_double": "ডাবল সোনার চেস্ট"
 }

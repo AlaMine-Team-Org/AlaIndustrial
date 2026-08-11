@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "Kolom gereinigd: +%s steenkool",
   "gui.alaindustrial.distillation_column.fouling": "Vervuiling: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "Stapel drie segmenten om de toren te bouwen",
-  "block.alaindustrial.energy_condenser": "Energiecondensator"
+  "block.alaindustrial.energy_condenser": "Energiecondensator",
+  "container.alaindustrial.iron_chest_double": "Dubbele ijzeren kist",
+  "container.alaindustrial.silver_chest_double": "Dubbele zilveren kist",
+  "container.alaindustrial.gold_chest_double": "Dubbele gouden kist"
 }

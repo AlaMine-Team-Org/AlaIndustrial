@@ -5,6 +5,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.gametest.AssemblerPerfScenarios;
 import dev.alaindustrial.gametest.ForeignMaterialScenarios;
 import dev.alaindustrial.gametest.CableFaceParityScenarios;
+import dev.alaindustrial.gametest.DoubleChestScenarios;
 import dev.alaindustrial.gametest.FluidPipeScenarios;
 import dev.alaindustrial.gametest.CableEnergyScenarios;
 import dev.alaindustrial.gametest.AdvancedCircuitScenarios;
@@ -651,6 +652,19 @@ public final class NeoForgeGameTests {
 
 		// Guide Book (MOD-067, TC-GUIDE-001) — auto-give ledger; same body as the Fabric GuideBookGameTest.
 		registerTest(event, "guide_book_give_once", 40, true, GuideBookGiverScenarios::giveOnce);
+
+		// Double chest (MOD-391, TC-CHEST-001) — same loader-neutral bodies as the Fabric suite.
+		registerTest(event, "double_chest_pair_forms_and_joins", 40, true, DoubleChestScenarios::fun01PairFormsAndJoins);
+		registerTest(event, "double_chest_cross_tier_never_pairs", 40, true, DoubleChestScenarios::fun02CrossTierNeverPairs);
+		registerTest(event, "double_chest_sneak_stays_single", 40, true, DoubleChestScenarios::fun03PlacementSneakStaysSingle);
+		registerTest(event, "double_chest_break_reverts_partner", 40, true, DoubleChestScenarios::fun04BreakHalfRevertsPartner);
+		registerTest(event, "double_chest_hopper_overflow", 100, true, DoubleChestScenarios::fun05HopperOverflowsIntoSecondHalf);
+		registerTest(event, "double_chest_comparator_joined", 40, true, DoubleChestScenarios::fun06ComparatorReadsJoined);
+		registerTest(event, "double_chest_window_scrolls", 40, true, DoubleChestScenarios::fun07WindowScrollsHiddenRows);
+		registerTest(event, "double_chest_shift_click_hidden_rows", 40, true, DoubleChestScenarios::fun08ShiftClickReachesHiddenRows);
+		registerTest(event, "double_chest_waterlogged_break", 40, true, DoubleChestScenarios::fun09WaterloggedSurvivesBreak);
+		registerTest(event, "double_chest_break_closes_window", 40, true, DoubleChestScenarios::fun10BreakingHalfClosesWindow);
+		registerTest(event, "double_chest_nbt_round_trip", 40, true, DoubleChestScenarios::per01ItemsSurviveNbtRoundTrip);
 
 		// Stock Display Frame (MOD-066, TC-FRAME-001) — same loader-neutral bodies as the Fabric suite.
 		registerTest(event, "stock_frame_counts_whole_container", 60, true, StockDisplayFrameScenarios::fun01CountsWholeContainer);

@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "Колону прочищено: +%s вугілля",
   "gui.alaindustrial.distillation_column.fouling": "Забруднення: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "Поставте три сегменти один на одний — вежа збереться",
-  "block.alaindustrial.energy_condenser": "Згущувач енергії"
+  "block.alaindustrial.energy_condenser": "Згущувач енергії",
+  "container.alaindustrial.iron_chest_double": "Подвійна залізна скриня",
+  "container.alaindustrial.silver_chest_double": "Подвійна срібна скриня",
+  "container.alaindustrial.gold_chest_double": "Подвійна золота скриня"
 }

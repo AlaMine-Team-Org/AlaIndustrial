@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "Colonne nettoyée : +%s charbon",
   "gui.alaindustrial.distillation_column.fouling": "Encrassement : %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "Empilez trois segments pour assembler la tour",
-  "block.alaindustrial.energy_condenser": "Condenseur d'énergie"
+  "block.alaindustrial.energy_condenser": "Condenseur d'énergie",
+  "container.alaindustrial.iron_chest_double": "Double coffre en fer",
+  "container.alaindustrial.silver_chest_double": "Double coffre en argent",
+  "container.alaindustrial.gold_chest_double": "Double coffre en or"
 }

@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "Колонна прочищена: +%s угля",
   "gui.alaindustrial.distillation_column.fouling": "Засорение: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "Поставьте три сегмента друг на друга — башня соберётся",
-  "block.alaindustrial.energy_condenser": "Сгущатель энергии"
+  "block.alaindustrial.energy_condenser": "Сгущатель энергии",
+  "container.alaindustrial.iron_chest_double": "Двойной железный сундук",
+  "container.alaindustrial.silver_chest_double": "Двойной серебряный сундук",
+  "container.alaindustrial.gold_chest_double": "Двойной золотой сундук"
 }

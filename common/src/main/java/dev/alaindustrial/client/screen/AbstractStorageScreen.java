@@ -1,6 +1,6 @@
 package dev.alaindustrial.client.screen;
 
-import dev.alaindustrial.menu.StorageModuleMenu;
+import dev.alaindustrial.menu.AbstractScrollingChestMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -10,8 +10,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 /**
- * Shared drawing for the modular-warehouse window (MOD-287). Two sizes, each pinning its own atlas:
- * 3 rows in a 176x166 panel for a lone module, 6 rows in a 195x220 panel for anything larger.
+ * Shared drawing for every scrolling chest-style window: the modular warehouse (MOD-287, two sizes —
+ * 3 rows in a 176x166 panel for a lone module, 6 rows in a 195x220 panel for anything larger) and
+ * the double chest (MOD-391, always the 6-row scrolling panel). Since MOD-391 the menu bound is the
+ * scrolling base rather than the warehouse menu, so both families share this one screen.
  *
  * <h2>Why the window stops at six rows</h2>
  *
@@ -30,7 +32,7 @@ import net.minecraft.world.entity.player.Inventory;
  *
  * @param <M> the concrete menu size this screen is paired with
  */
-public abstract class AbstractStorageScreen<M extends StorageModuleMenu> extends AbstractContainerScreen<M> {
+public abstract class AbstractStorageScreen<M extends AbstractScrollingChestMenu> extends AbstractContainerScreen<M> {
 	/** Frame + player inventory + hotbar around the storage rows (see {@code AbstractChestMenu}). */
 	private static final int HEIGHT_BASE = 112;
 	private static final int ROW_HEIGHT = 18;

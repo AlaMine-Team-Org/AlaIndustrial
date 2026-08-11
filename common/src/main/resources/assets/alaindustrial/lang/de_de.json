@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "Kolonne gereinigt: +%s Kohle",
   "gui.alaindustrial.distillation_column.fouling": "Verschmutzung: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "Stapel drei Segmente — der Turm setzt sich zusammen",
-  "block.alaindustrial.energy_condenser": "Energieverdichter"
+  "block.alaindustrial.energy_condenser": "Energieverdichter",
+  "container.alaindustrial.iron_chest_double": "Doppelte Eisentruhe",
+  "container.alaindustrial.silver_chest_double": "Doppelte Silbertruhe",
+  "container.alaindustrial.gold_chest_double": "Doppelte Goldtruhe"
 }

@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "Columna limpiada: +%s carbón",
   "gui.alaindustrial.distillation_column.fouling": "Ensuciamiento: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "Apila tres segmentos para montar la torre",
-  "block.alaindustrial.energy_condenser": "Condensador de energía"
+  "block.alaindustrial.energy_condenser": "Condensador de energía",
+  "container.alaindustrial.iron_chest_double": "Cofre de hierro doble",
+  "container.alaindustrial.silver_chest_double": "Cofre de plata doble",
+  "container.alaindustrial.gold_chest_double": "Cofre de oro doble"
 }

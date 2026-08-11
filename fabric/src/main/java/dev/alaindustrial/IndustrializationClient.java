@@ -249,12 +249,25 @@ public class IndustrializationClient implements ClientModInitializer {
 		BlockEntityRendererRegistry.register(ModBlockEntities.IRON_CHEST, ChestBlockEntityRenderer::iron);
 		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.IRON_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
+		// MOD-391: the double-chest halves — 15-wide vanilla left/right bodies, per tier.
+		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.IRON_CHEST_LEFT_LAYER,
+				ChestModel::createDoubleBodyLeftLayer);
+		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.IRON_CHEST_RIGHT_LAYER,
+				ChestModel::createDoubleBodyRightLayer);
 		BlockEntityRendererRegistry.register(ModBlockEntities.SILVER_CHEST, ChestBlockEntityRenderer::silver);
 		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.SILVER_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
+		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.SILVER_CHEST_LEFT_LAYER,
+				ChestModel::createDoubleBodyLeftLayer);
+		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.SILVER_CHEST_RIGHT_LAYER,
+				ChestModel::createDoubleBodyRightLayer);
 		BlockEntityRendererRegistry.register(ModBlockEntities.GOLD_CHEST, ChestBlockEntityRenderer::gold);
 		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.GOLD_CHEST_LAYER,
 				ChestModel::createSingleBodyLayer);
+		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.GOLD_CHEST_LEFT_LAYER,
+				ChestModel::createDoubleBodyLeftLayer);
+		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.GOLD_CHEST_RIGHT_LAYER,
+				ChestModel::createDoubleBodyRightLayer);
 		ModelLayerRegistry.registerModelLayer(WaterMillWheelBlockEntityRenderer.MODEL_LAYER,
 				WaterMillWheelBlockEntityRenderer::createLayer);
 		BlockEntityRendererRegistry.register(ModBlockEntities.WATER_MILL, WaterMillWheelBlockEntityRenderer::new);

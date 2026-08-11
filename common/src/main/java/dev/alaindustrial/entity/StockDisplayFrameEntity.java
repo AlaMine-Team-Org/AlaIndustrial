@@ -114,15 +114,19 @@ public class StockDisplayFrameEntity extends ItemFrame {
 	}
 
 	/**
-	 * The {@link Container} at {@code target}, or null. Chests go through
-	 * {@link ChestBlock#getContainer} so a double chest is counted as one combined container from
-	 * either half; everything else (barrel, shulker box, iron chest, third-party containers) is
+	 * The {@link Container} at {@code target}, or null. Vanilla chests go through
+	 * {@link ChestBlock#getContainer} and the mod's chests (MOD-391) through their own
+	 * {@code combinedContainer}, so a double chest of either family is counted as one combined
+	 * container from either half; everything else (barrel, shulker box, third-party containers) is
 	 * matched by its block entity implementing {@link Container}.
 	 */
 	private static @Nullable Container resolveContainer(ServerLevel level, BlockPos target) {
 		BlockState state = level.getBlockState(target);
 		if (state.getBlock() instanceof ChestBlock chest) {
 			return ChestBlock.getContainer(chest, state, level, target, false);
+		}
+		if (state.getBlock() instanceof dev.alaindustrial.block.AbstractModChestBlock chest) {
+			return chest.combinedContainer(state, level, target);
 		}
 		BlockEntity be = level.getBlockEntity(target);
 		return be instanceof Container container ? container : null;

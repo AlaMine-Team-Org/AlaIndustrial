@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "स्तंभ साफ़ हुआ: +%s कोयला",
   "gui.alaindustrial.distillation_column.fouling": "जमाव: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "टावर जोड़ने के लिए तीन खंड एक के ऊपर एक रखें",
-  "block.alaindustrial.energy_condenser": "ऊर्जा संघनित्र"
+  "block.alaindustrial.energy_condenser": "ऊर्जा संघनित्र",
+  "container.alaindustrial.iron_chest_double": "डबल आयरन चेस्ट",
+  "container.alaindustrial.silver_chest_double": "डबल सिल्वर चेस्ट",
+  "container.alaindustrial.gold_chest_double": "डबल गोल्ड चेस्ट"
 }

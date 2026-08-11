@@ -5,7 +5,6 @@ import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -25,10 +24,5 @@ public class IronChestBlockEntity extends AbstractChestBlockEntity {
 	@Override
 	protected AbstractContainerMenu createMenu(int syncId, Inventory playerInventory) {
 		return new IronChestMenu(syncId, playerInventory, this);
-	}
-
-	/** Client ticker — drives the lid interpolation each client tick. */
-	public static void lidAnimateTick(Level level, BlockPos pos, BlockState state, IronChestBlockEntity entity) {
-		entity.tickLid();
 	}
 }

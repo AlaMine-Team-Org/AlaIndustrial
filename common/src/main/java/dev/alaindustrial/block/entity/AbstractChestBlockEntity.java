@@ -1,12 +1,17 @@
 package dev.alaindustrial.block.entity;
 
+import dev.alaindustrial.block.AbstractModChestBlock;
 import dev.alaindustrial.menu.AbstractChestMenu;
 import dev.alaindustrial.registry.ModSounds;
+import dev.alaindustrial.storage.StorageWindow;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.CompoundContainer;
+import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +22,7 @@ import net.minecraft.world.level.block.entity.ChestLidController;
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.entity.LidBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.item.ItemStack;
@@ -64,12 +70,12 @@ public abstract class AbstractChestBlockEntity extends BaseContainerBlockEntity 
 	private final ContainerOpenersCounter openersCounter = new ContainerOpenersCounter() {
 		@Override
 		protected void onOpen(Level level, BlockPos pos, BlockState state) {
-			playSound(level, pos, ModSounds.IRON_CHEST_OPEN.get());
+			playSound(level, pos, state, ModSounds.IRON_CHEST_OPEN.get());
 		}
 
 		@Override
 		protected void onClose(Level level, BlockPos pos, BlockState state) {
-			playSound(level, pos, ModSounds.IRON_CHEST_CLOSE.get());
+			playSound(level, pos, state, ModSounds.IRON_CHEST_CLOSE.get());
 		}
 
 		@Override
@@ -80,8 +86,18 @@ public abstract class AbstractChestBlockEntity extends BaseContainerBlockEntity 
 
 		@Override
 		public boolean isOwnContainer(Player player) {
-			return player.containerMenu instanceof AbstractChestMenu menu
-					&& menu.getContainer() == AbstractChestBlockEntity.this;
+			// A double's menu wraps CompoundContainer in a scrolling StorageWindow — unwrap first,
+			// then match either directly (single) or through the compound (double), like vanilla.
+			if (!(player.containerMenu instanceof AbstractChestMenu menu)) {
+				return false;
+			}
+			Container container = menu.getContainer();
+			if (container instanceof StorageWindow window) {
+				container = window.warehouse();
+			}
+			return container == AbstractChestBlockEntity.this
+					|| container instanceof CompoundContainer compound
+							&& compound.contains(AbstractChestBlockEntity.this);
 		}
 	};
 
@@ -134,21 +150,57 @@ public abstract class AbstractChestBlockEntity extends BaseContainerBlockEntity 
 	}
 
 	/**
-	 * Client-tick lid interpolation. Each tier exposes its own {@code lidAnimateTick} static entry
-	 * point because {@code BlockEntityTicker<T>} pins the concrete type at the block's {@code getTicker};
-	 * those one-line entry points all delegate here.
+	 * Client-tick lid interpolation, driven by the shared ticker in
+	 * {@link AbstractModChestBlock#getTicker} (public since MOD-391 — the per-tier static entry
+	 * points are gone with the per-tier tickers).
 	 */
-	protected void tickLid() {
+	public void tickLid() {
 		chestLidController.tickLid();
 	}
 
-	/** Play an open/close sound at the chest's centre: BLOCKS channel, slight random pitch. */
-	private static void playSound(Level level, BlockPos pos, SoundEvent sound) {
+	/**
+	 * Play an open/close sound: BLOCKS channel, slight random pitch. For a double chest the pair
+	 * speaks once, from the seam (vanilla rule, MOD-391): the LEFT half stays silent and the RIGHT
+	 * half shifts the source half a block toward its partner. Both halves' opener counters fire
+	 * their own onOpen/onClose — without this gate the double would sound twice.
+	 */
+	private static void playSound(Level level, BlockPos pos, BlockState state, SoundEvent sound) {
+		ChestType type = state.hasProperty(AbstractModChestBlock.TYPE)
+				? state.getValue(AbstractModChestBlock.TYPE)
+				: ChestType.SINGLE;
+		if (type == ChestType.LEFT) {
+			return;
+		}
 		double x = pos.getX() + 0.5;
 		double y = pos.getY() + 0.5;
 		double z = pos.getZ() + 0.5;
+		if (type == ChestType.RIGHT) {
+			Direction toPartner = AbstractModChestBlock.getConnectedDirection(state);
+			x += toPartner.getStepX() * 0.5;
+			z += toPartner.getStepZ() * 0.5;
+		}
 		float pitch = level.getRandom().nextFloat() * SOUND_PITCH_SPREAD + SOUND_PITCH_BASE;
 		level.playSound(null, x, y, z, sound, SoundSource.BLOCKS, SOUND_VOLUME, pitch);
+	}
+
+	/**
+	 * A property-only state change — pairing up or falling back to single — must invalidate the
+	 * NeoForge capability caches, which only a <em>block</em> change invalidates automatically.
+	 * Mirrors the vanilla NeoForge chest patch through the {@link ChestPairHooks} loader seam
+	 * (no-op on Fabric).
+	 */
+	@Override
+	public void setBlockState(BlockState blockState) {
+		BlockState old = getBlockState();
+		super.setBlockState(blockState);
+		if (old.hasProperty(AbstractModChestBlock.TYPE) && blockState.hasProperty(AbstractModChestBlock.TYPE)
+				&& (old.getValue(AbstractModChestBlock.TYPE) != blockState.getValue(AbstractModChestBlock.TYPE)
+						|| old.getValue(AbstractModChestBlock.FACING) != blockState.getValue(AbstractModChestBlock.FACING))) {
+			ChestPairHooks.CapabilityInvalidator hook = ChestPairHooks.CAP_INVALIDATOR;
+			if (hook != null) {
+				hook.invalidate(this);
+			}
+		}
 	}
 
 	/** Re-evaluate who has the chest open (scheduled-tick callback on the server). */

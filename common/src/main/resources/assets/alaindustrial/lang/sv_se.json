@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "Kolonnen rengjord: +%s kol",
   "gui.alaindustrial.distillation_column.fouling": "Nedsmutsning: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "Stapla tre segment för att montera tornet",
-  "block.alaindustrial.energy_condenser": "Energikondensator"
+  "block.alaindustrial.energy_condenser": "Energikondensator",
+  "container.alaindustrial.iron_chest_double": "Dubbel järnkista",
+  "container.alaindustrial.silver_chest_double": "Dubbel silverkista",
+  "container.alaindustrial.gold_chest_double": "Dubbel guldkista"
 }

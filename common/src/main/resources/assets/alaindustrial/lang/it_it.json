@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "Colonna pulita: +%s carbone",
   "gui.alaindustrial.distillation_column.fouling": "Incrostazione: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "Impila tre segmenti per assemblare la torre",
-  "block.alaindustrial.energy_condenser": "Condensatore di energia"
+  "block.alaindustrial.energy_condenser": "Condensatore di energia",
+  "container.alaindustrial.iron_chest_double": "Baule di ferro doppio",
+  "container.alaindustrial.silver_chest_double": "Baule d'argento doppio",
+  "container.alaindustrial.gold_chest_double": "Baule d'oro doppio"
 }

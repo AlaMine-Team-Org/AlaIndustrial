@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "Coluna limpa: +%s carvão",
   "gui.alaindustrial.distillation_column.fouling": "Incrustação: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "Empilhe três segmentos para montar a torre",
-  "block.alaindustrial.energy_condenser": "Condensador de energia"
+  "block.alaindustrial.energy_condenser": "Condensador de energia",
+  "container.alaindustrial.iron_chest_double": "Baú de Ferro Duplo",
+  "container.alaindustrial.silver_chest_double": "Baú de Prata Duplo",
+  "container.alaindustrial.gold_chest_double": "Baú de Ouro Duplo"
 }

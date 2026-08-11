@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "塔を清掃した: 石炭+%s",
   "gui.alaindustrial.distillation_column.fouling": "汚れ: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "セグメントを3つ積むと塔が組み上がる",
-  "block.alaindustrial.energy_condenser": "エネルギー凝縮器"
+  "block.alaindustrial.energy_condenser": "エネルギー凝縮器",
+  "container.alaindustrial.iron_chest_double": "ラージ鉄のチェスト",
+  "container.alaindustrial.silver_chest_double": "ラージ銀のチェスト",
+  "container.alaindustrial.gold_chest_double": "ラージ金のチェスト"
 }

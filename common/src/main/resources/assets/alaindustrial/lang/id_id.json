@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "Kolom dibersihkan: +%s batu bara",
   "gui.alaindustrial.distillation_column.fouling": "Kerak: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "Tumpuk tiga segmen untuk merakit menara",
-  "block.alaindustrial.energy_condenser": "Kondensor Energi"
+  "block.alaindustrial.energy_condenser": "Kondensor Energi",
+  "container.alaindustrial.iron_chest_double": "Peti Besi Ganda",
+  "container.alaindustrial.silver_chest_double": "Peti Perak Ganda",
+  "container.alaindustrial.gold_chest_double": "Peti Emas Ganda"
 }

@@ -124,6 +124,10 @@ public final class IndustrializationNeoForge {
 		// MOD-022 Phase 3: install the NeoForge packet-send seam so content code dispatches through the
 		// neutral NetworkDispatcher instead of PacketDistributor directly.
 		NetworkDispatcher.install(new NeoForgeNetworkDispatcher());
+		// MOD-391: a chest pairing up / falling back to single is a property-only state change, which
+		// does NOT auto-invalidate the capability caches (only a block change does) — mirror the
+		// vanilla NeoForge ChestBlockEntity.setBlockState patch through the common hook.
+		dev.alaindustrial.block.entity.ChestPairHooks.CAP_INVALIDATOR = BlockEntity::invalidateCapabilities;
 	}
 
 	/** Registers every {@code DeferredRegister} on the mod bus. Must run before {@link #bindContentFacade}. */
@@ -497,9 +501,14 @@ public final class IndustrializationNeoForge {
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.PUMP);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GARDEN_DRONE_STATION);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.IRON_CHEST);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SILVER_CHEST);
-		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.GOLD_CHEST);
+		// MOD-391: a double chest is ONE inventory to automation. The chest capability resolves the
+		// pair on every query (combinedContainer walks to the partner), so the mod's item pipes and
+		// other cap-based mods see the joined 72/90/108 slots from either half — the same view the
+		// vanilla hopper gets through WorldlyContainerHolder. The pairing/unpairing cache
+		// invalidation is the ChestPairHooks seam installed in installLoaderSeams().
+		registerChestContainer(event, itemCap, ModBlockEntitiesNeoForge.IRON_CHEST);
+		registerChestContainer(event, itemCap, ModBlockEntitiesNeoForge.SILVER_CHEST);
+		registerChestContainer(event, itemCap, ModBlockEntitiesNeoForge.GOLD_CHEST);
 		// MOD-287: the warehouse module. Without this line the pipe is blind to it on this loader
 		// only — Fabric wraps any Container through a global fallback — which is exactly the
 		// asymmetry the MOD-193 note below describes.
@@ -564,5 +573,25 @@ public final class IndustrializationNeoForge {
 			RegisterCapabilitiesEvent event, BlockCapability<ResourceHandler<ItemResource>, Direction> capability,
 			DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> type) {
 		event.registerBlockEntity(capability, type.get(), ContainerAsItemResourceHandler::of);
+	}
+
+	/**
+	 * MOD-391: like {@link #registerItemContainer}, but the handler wraps whatever the chest block's
+	 * {@code combinedContainer} resolves — the block entity itself when single, the two halves as one
+	 * {@code CompoundContainer} (right half first, vanilla FIRST/SECOND order — the same slot order
+	 * the double's menu shows) when paired. Resolved per query, so it can never serve a stale pair;
+	 * {@code BlockCapabilityCache} consumers are refreshed by the {@code ChestPairHooks} invalidation.
+	 */
+	private static <T extends BlockEntity & net.minecraft.world.Container> void registerChestContainer(
+			RegisterCapabilitiesEvent event, BlockCapability<ResourceHandler<ItemResource>, Direction> capability,
+			DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> type) {
+		event.registerBlockEntity(capability, type.get(), (be, side) -> {
+			net.minecraft.world.level.block.state.BlockState state = be.getBlockState();
+			net.minecraft.world.Container joined =
+					be.getLevel() != null && state.getBlock() instanceof dev.alaindustrial.block.AbstractModChestBlock chest
+							? chest.combinedContainer(state, be.getLevel(), be.getBlockPos())
+							: null;
+			return ContainerAsItemResourceHandler.of(joined != null ? joined : be, side);
+		});
 	}
 }

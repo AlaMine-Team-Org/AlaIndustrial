@@ -126,5 +126,7 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.STORAGE_MODULE_MENU_3.get(), StorageScreen3::new),
 			screen(() -> ModContent.STORAGE_MODULE_MENU_6.get(), StorageScreen6::new),
 			screen(() -> ModContent.SILVER_CHEST_MENU.get(), SilverChestScreen::new),
-			screen(() -> ModContent.GOLD_CHEST_MENU.get(), GoldChestScreen::new));
+			screen(() -> ModContent.GOLD_CHEST_MENU.get(), GoldChestScreen::new),
+			// MOD-391 — the double chest's scrolling window, one screen for all three tiers.
+			screen(() -> ModContent.DOUBLE_CHEST_MENU.get(), DoubleChestScreen::new));
 }

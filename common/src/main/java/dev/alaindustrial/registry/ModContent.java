@@ -7,6 +7,7 @@ import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import dev.alaindustrial.menu.DistillationColumnMenu;
+import dev.alaindustrial.menu.DoubleChestMenu;
 import dev.alaindustrial.menu.ElectricFurnaceMenu;
 import dev.alaindustrial.menu.ExtractorMenu;
 import dev.alaindustrial.menu.GeneratorMenu;
@@ -554,6 +555,9 @@ public final class ModContent {
 	public static Supplier<MenuType<StorageMenu6>> STORAGE_MODULE_MENU_6 = unbound("STORAGE_MODULE_MENU_6");
 	public static Supplier<MenuType<SilverChestMenu>> SILVER_CHEST_MENU = unbound("SILVER_CHEST_MENU");
 	public static Supplier<MenuType<GoldChestMenu>> GOLD_CHEST_MENU = unbound("GOLD_CHEST_MENU");
+	// MOD-391 — one double-chest window for all three tiers: the visible size is always 6 rows and
+	// the total row count travels via ContainerData, so nothing tier-specific is left for the type.
+	public static Supplier<MenuType<DoubleChestMenu>> DOUBLE_CHEST_MENU = unbound("DOUBLE_CHEST_MENU");
 
 	/** A placeholder handle that throws if read before the loader populated it. */
 	private static <T> Supplier<T> unbound(String name) {

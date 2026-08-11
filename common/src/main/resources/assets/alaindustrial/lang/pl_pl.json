@@ -681,5 +681,8 @@
   "gui.alaindustrial.distillation_column.cleaned": "Kolumna wyczyszczona: +%s węgla",
   "gui.alaindustrial.distillation_column.fouling": "Zanieczyszczenie: %s%%",
   "gui.alaindustrial.distillation_column.build_hint": "Ustaw trzy segmenty jeden na drugim — wieża się złoży",
-  "block.alaindustrial.energy_condenser": "Kondensator energii"
+  "block.alaindustrial.energy_condenser": "Kondensator energii",
+  "container.alaindustrial.iron_chest_double": "Podwójna żelazna skrzynia",
+  "container.alaindustrial.silver_chest_double": "Podwójna srebrna skrzynia",
+  "container.alaindustrial.gold_chest_double": "Podwójna złota skrzynia"
 }

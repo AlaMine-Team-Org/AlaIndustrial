@@ -101,7 +101,11 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             new Screen("storm_wind_mill", "storm_wind_mill", "Storm Wind Mill"),
             new Screen("iron_chest", "iron_chest", "Iron Chest"),
             new Screen("silver_chest", "silver_chest", "Silver Chest"),
-            new Screen("gold_chest", "gold_chest", "Gold Chest"));
+            new Screen("gold_chest", "gold_chest", "Gold Chest"),
+            // MOD-391: the double chest's shared 6-row scrolling window. The stand is a PAIR of iron
+            // chests (see placeScreenBlock) and the click lands on the right half — the menu joins
+            // both, so the frame shows the scrollbar and the per-tier "Double Iron Chest" title.
+            new Screen("double_chest", "iron_chest", "Double Iron Chest"));
 
     /**
      * Screens re-shot under a long locale. Russian labels run noticeably longer than English ones, so a
@@ -234,6 +238,15 @@ public class ScreensClientGameTest implements FabricClientGameTest {
         if (screen.blockId().equals("distillation_column")) {
             server.runOnServer(mc ->
                     DistillationColumnBlock.placeTower(mc.overworld(), new BlockPos(x, BLOCK_Y, RIG_Z)));
+            return;
+        }
+        if (screen.menuId().equals("double_chest")) {
+            // MOD-391: the double window only exists over a PAIR — the clicked (right) half at x, its
+            // LEFT partner one block east. Explicit halves, because /setblock never runs placement.
+            server.runCommand("setblock " + x + " " + BLOCK_Y + " " + RIG_Z
+                    + " alaindustrial:iron_chest[facing=south,type=right]");
+            server.runCommand("setblock " + (x + 1) + " " + BLOCK_Y + " " + RIG_Z
+                    + " alaindustrial:iron_chest[facing=south,type=left]");
             return;
         }
         server.runCommand("setblock " + x + " " + BLOCK_Y + " " + RIG_Z
