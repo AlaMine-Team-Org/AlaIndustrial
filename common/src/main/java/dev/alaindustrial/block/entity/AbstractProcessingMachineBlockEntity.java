@@ -44,7 +44,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * result placement (stack-merge up to {@code min(OUTPUT_MAX, maxStackSize)}), the EU drain, and the
  * lit-state toggle.
  */
-public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockEntity {
+public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockEntity implements Overclockable {
 	/** Output stack cap; per-recipe energy sets the duration. Shared across all processing machines. */
 	protected static final int OUTPUT_MAX = 64;
 
@@ -90,6 +90,7 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 		this.maxProgress = Config.scaledDuration(defaultDuration);
 	}
 
+
 	/**
 	 * Resolve the current input against the machine's recipe source(s). Subclasses override this to
 	 * return a {@link RecipeSolution} (use {@link RecipeSolution#of} for a matched
@@ -101,14 +102,14 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 
 	@Override
 	protected final int onServerTick(Level level, BlockPos pos, BlockState state) {
-		int euPerTick = Config.machineEuPerTickEffective();
+		int euPerTick = effectiveEuPerTick(Config.machineEuPerTick);
 		ItemStack input = items.get(INPUT_SLOT);
 		RecipeSolution solution = level instanceof ServerLevel sl
 				? resolveInput(sl, input) : RecipeSolution.empty();
 
 		int baseDuration = solution.hasRecipe() && solution.energy() > 0
 				? Math.max(1, solution.energy() / Config.machineEuPerTick) : defaultDuration;
-		this.maxProgress = Config.scaledDuration(baseDuration);
+		this.maxProgress = effectiveDuration(baseDuration);
 		boolean canWork = solution.hasRecipe() && energy.amount >= euPerTick && canOutput(solution.result());
 
 		updateLit(canWork);

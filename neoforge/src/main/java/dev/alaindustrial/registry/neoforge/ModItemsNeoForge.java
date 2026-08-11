@@ -71,6 +71,14 @@ public final class ModItemsNeoForge {
 			manifestItem("empty_chip");
 	public static final DeferredItem<Item> MUTE_CHIP =
 			manifestItem("mute_chip");
+	/** Overclocker chips (MOD-392/393): three tiers trading energy for machine speed. */
+	public static final DeferredItem<Item> OVERCLOCKER_CHIP_I = manifestItem("overclocker_chip_i");
+	public static final DeferredItem<Item> OVERCLOCKER_CHIP_II = manifestItem("overclocker_chip_ii");
+	public static final DeferredItem<Item> OVERCLOCKER_CHIP_III = manifestItem("overclocker_chip_iii");
+	/** Energy clots (MOD-393): surplus grid power packed into an item by the energy condenser. */
+	public static final DeferredItem<Item> ENERGY_CLOT_I = manifestItem("energy_clot_i");
+	public static final DeferredItem<Item> ENERGY_CLOT_II = manifestItem("energy_clot_ii");
+	public static final DeferredItem<Item> ENERGY_CLOT_III = manifestItem("energy_clot_iii");
 	/** Cable breaker (MOD-276): clamps onto a laid cable to cut the line for maintenance. */
 	public static final DeferredItem<Item> CABLE_BREAKER =
 			manifestItem("cable_breaker");
@@ -400,6 +408,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("electric_heater", ModBlocksNeoForge.ELECTRIC_HEATER);
 	public static final DeferredItem<BlockItem> CHARGE_PAD_ITEM =
 			ITEMS.registerSimpleBlockItem("charge_pad", ModBlocksNeoForge.CHARGE_PAD);
+	public static final DeferredItem<BlockItem> ENERGY_CONDENSER_ITEM =
+			ITEMS.registerSimpleBlockItem("energy_condenser", ModBlocksNeoForge.ENERGY_CONDENSER);
 	public static final DeferredItem<BlockItem> INCUBATOR_ITEM =
 			ITEMS.registerSimpleBlockItem("incubator", ModBlocksNeoForge.INCUBATOR);
 	public static final DeferredItem<BlockItem> TRELLIS_ITEM =
@@ -533,6 +543,12 @@ public final class ModItemsNeoForge {
 		ModContent.ALIGNMENT_CHIP_NIGHT = ALIGNMENT_CHIP_NIGHT;
 		ModContent.EMPTY_CHIP = EMPTY_CHIP;
 		ModContent.MUTE_CHIP = MUTE_CHIP;
+		ModContent.OVERCLOCKER_CHIP_I = OVERCLOCKER_CHIP_I;
+		ModContent.OVERCLOCKER_CHIP_II = OVERCLOCKER_CHIP_II;
+		ModContent.OVERCLOCKER_CHIP_III = OVERCLOCKER_CHIP_III;
+		ModContent.ENERGY_CLOT_I = ENERGY_CLOT_I;
+		ModContent.ENERGY_CLOT_II = ENERGY_CLOT_II;
+		ModContent.ENERGY_CLOT_III = ENERGY_CLOT_III;
 		ModContent.CABLE_BREAKER = CABLE_BREAKER;
 		ModContent.WINDMILL_ROTOR = WINDMILL_ROTOR;
 		ModContent.WATER_MILL_WHEEL = WATER_MILL_WHEEL;
@@ -648,6 +664,7 @@ public final class ModItemsNeoForge {
 		ModContent.GALVANIC_BATH_ITEM = GALVANIC_BATH_ITEM;
 		ModContent.ELECTRIC_HEATER_ITEM = ELECTRIC_HEATER_ITEM;
 		ModContent.CHARGE_PAD_ITEM = CHARGE_PAD_ITEM;
+		ModContent.ENERGY_CONDENSER_ITEM = ENERGY_CONDENSER_ITEM;
 		ModContent.INCUBATOR_ITEM = INCUBATOR_ITEM;
 		ModContent.TRELLIS_ITEM = TRELLIS_ITEM;
 		ModContent.MUTATION_CHIP_TRANSFORM = MUTATION_CHIP_TRANSFORM;

@@ -185,6 +185,11 @@ pitest {
                      // MOD-251: the distillation column's status enum — MC-free by the same design
                      // as the four status enums above; added here WITH the class and its L1 suite
                      // (DistillationColumnStatusTest), not a release later.
+                     // MOD-392: the overclock marker. Targeted like the port contracts and listed in
+                     // NO_MUTABLE_BYTECODE next to them — a members-less interface cannot carry a
+                     // mutant, but it must still be inside a glob so the day it grows a default method
+                     // that method is mutated instead of silently uncounted.
+                     'dev.alaindustrial.block.entity.Overclockable',
                      'dev.alaindustrial.block.entity.DistillationColumnStatus',
                      'dev.alaindustrial.block.entity.GalvanicBathStatus',
                      'dev.alaindustrial.block.entity.GardenDroneAction',

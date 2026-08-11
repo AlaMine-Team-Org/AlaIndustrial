@@ -2,6 +2,7 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
+import dev.alaindustrial.menu.EnergyCondenserMenu;
 import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
@@ -148,6 +149,8 @@ public final class ModContent {
 	public static Supplier<Block> ELECTRIC_HEATER = unbound("ELECTRIC_HEATER");
 	/** Charging Station (MOD-274) — the plate that tops up the gear of whoever stands on it. */
 	public static Supplier<Block> CHARGE_PAD = unbound("CHARGE_PAD");
+	// Energy condenser (MOD-393): banks the grid's surplus and packs it into an energy clot.
+	public static Supplier<Block> ENERGY_CONDENSER = unbound("ENERGY_CONDENSER");
 	public static Supplier<Block> INCUBATOR = unbound("INCUBATOR");
 	public static Supplier<Block> INCUBATOR_DOME = unbound("INCUBATOR_DOME");
 	/** Cotton trellis (MOD-280) — the mod's first crop: a two-block support carrying a perennial plant. */
@@ -230,6 +233,17 @@ public final class ModContent {
 	public static Supplier<Item> MUTAGEN_DUST = unbound("MUTAGEN_DUST");
 	public static Supplier<Item> UNSTABLE_ISOTOPE = unbound("UNSTABLE_ISOTOPE");
 	public static Supplier<Item> MUTE_CHIP = unbound("MUTE_CHIP");
+	// Overclocker chips (MOD-392/393): three tiers, one per panel arm slot. Each shortens the operation
+	// and raises the draw; the machine's own voltage tier caps which of them it can actually feed
+	// (MachineBlockEntity.overclockerCap).
+	public static Supplier<Item> OVERCLOCKER_CHIP_I = unbound("OVERCLOCKER_CHIP_I");
+	public static Supplier<Item> OVERCLOCKER_CHIP_II = unbound("OVERCLOCKER_CHIP_II");
+	public static Supplier<Item> OVERCLOCKER_CHIP_III = unbound("OVERCLOCKER_CHIP_III");
+	// Energy clots (MOD-393): surplus grid power packed into an item by the energy condenser. Which
+	// tier comes out depends on how much was banked at the moment the player took it.
+	public static Supplier<Item> ENERGY_CLOT_I = unbound("ENERGY_CLOT_I");
+	public static Supplier<Item> ENERGY_CLOT_II = unbound("ENERGY_CLOT_II");
+	public static Supplier<Item> ENERGY_CLOT_III = unbound("ENERGY_CLOT_III");
 	// Cable breaker (MOD-276): the maintenance switch clamped onto a laid cable — see CableBlockEntity.
 	public static Supplier<Item> CABLE_BREAKER = unbound("CABLE_BREAKER");
 	public static Supplier<Item> WINDMILL_ROTOR = unbound("WINDMILL_ROTOR");
@@ -411,6 +425,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> GALVANIC_BATH_ITEM = unbound("GALVANIC_BATH_ITEM");
 	public static Supplier<BlockItem> ELECTRIC_HEATER_ITEM = unbound("ELECTRIC_HEATER_ITEM");
 	public static Supplier<BlockItem> CHARGE_PAD_ITEM = unbound("CHARGE_PAD_ITEM");
+	public static Supplier<BlockItem> ENERGY_CONDENSER_ITEM = unbound("ENERGY_CONDENSER_ITEM");
 	public static Supplier<BlockItem> INCUBATOR_ITEM = unbound("INCUBATOR_ITEM");
 	public static Supplier<BlockItem> TRELLIS_ITEM = unbound("TRELLIS_ITEM");
 	public static Supplier<BlockItem> PUMP_ITEM = unbound("PUMP_ITEM");
@@ -475,6 +490,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> GALVANIC_BATH_BE = unbound("GALVANIC_BATH_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
+	public static Supplier<BlockEntityType<?>> ENERGY_CONDENSER_BE = unbound("ENERGY_CONDENSER_BE");
 	public static Supplier<BlockEntityType<?>> INCUBATOR_BE = unbound("INCUBATOR_BE");
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
 	public static Supplier<BlockEntityType<?>> GARDEN_DRONE_STATION_BE = unbound("GARDEN_DRONE_STATION_BE");
@@ -510,6 +526,7 @@ public final class ModContent {
 	public static Supplier<MenuType<GalvanicBathMenu>> GALVANIC_BATH_MENU = unbound("GALVANIC_BATH_MENU");
 	public static Supplier<MenuType<IncubatorMenu>> INCUBATOR_MENU = unbound("INCUBATOR_MENU");
 	public static Supplier<MenuType<BatteryBoxMenu>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");
+	public static Supplier<MenuType<EnergyCondenserMenu>> ENERGY_CONDENSER_MENU = unbound("ENERGY_CONDENSER_MENU");
 	public static Supplier<MenuType<CesuMenu>> CESU_MENU = unbound("CESU_MENU");
 	/** Teleporter station screen (MOD-093): EU bar, owner, private/public toggle. */
 	public static Supplier<MenuType<TeleporterStationMenu>> TELEPORTER_STATION_MENU =

@@ -61,6 +61,9 @@ import dev.alaindustrial.gametest.TeleporterStationScenarios;
 import dev.alaindustrial.gametest.TeleporterGuiScenarios;
 import dev.alaindustrial.gametest.TeleporterJumpScenarios;
 import dev.alaindustrial.gametest.OreScenarios;
+import dev.alaindustrial.gametest.EnergyCondenserScenarios;
+import dev.alaindustrial.gametest.OverclockerEffectScenarios;
+import dev.alaindustrial.gametest.OverclockerPanelScenarios;
 import dev.alaindustrial.gametest.MuteChipScenarios;
 import dev.alaindustrial.gametest.FluidTankScenarios;
 import dev.alaindustrial.gametest.AlaCommonScenarios;
@@ -1512,6 +1515,47 @@ public final class NeoForgeGameTests {
 				MuteChipScenarios::muteChip_menuSlotFilterAndQuickMove);
 		registerTest(event, "mute_chip_crafting_recipes_resolve", 40, true,
 				MuteChipScenarios::muteChip_craftingRecipesResolve);
+		// Overclocker chip (MOD-392): the speed/energy trade, the tier cap, generators opting out.
+		registerTest(event, "overclocker_speeds_up_and_costs_more", 40, true,
+				MuteChipScenarios::overclocker_speedsUpAndCostsMore);
+		registerTest(event, "overclocker_tier_caps_the_chips", 40, true,
+				MuteChipScenarios::overclocker_tierCapsTheChips);
+		registerTest(event, "overclocker_generator_is_not_overclockable", 40, true,
+				MuteChipScenarios::overclocker_generatorIsNotOverclockable);
+		// Energy condenser (MOD-393): tier thresholds, the whole-bank cost of taking a clot, face
+		// split, and the negative controls that keep it from competing with machines.
+		registerTest(event, "condenser_tier_follows_the_bank", 40, true,
+				EnergyCondenserScenarios::condenser_tierFollowsTheBank);
+		registerTest(event, "condenser_taking_spends_the_whole_bank", 40, true,
+				EnergyCondenserScenarios::condenser_takingSpendsTheWholeBank);
+		registerTest(event, "condenser_faces_are_split_between_power_and_items", 40, true,
+				EnergyCondenserScenarios::condenser_facesAreSplitBetweenPowerAndItems);
+		registerTest(event, "condenser_cannot_compete_with_machines", 40, true,
+				EnergyCondenserScenarios::condenser_cannotCompeteWithMachines);
+		registerTest(event, "condenser_menu_slots_stay_inside_the_container", 40, true,
+				EnergyCondenserScenarios::condenser_menuSlotsStayInsideTheContainer);
+		registerTest(event, "condenser_has_no_upgrade_panel", 40, true,
+				EnergyCondenserScenarios::condenser_hasNoUpgradePanel);
+		// 200 driven ticks, so it needs a longer budget than the static checks above.
+		registerTest(event, "condenser_banks_what_the_grid_offers", 260, true,
+				EnergyCondenserScenarios::condenser_banksWhatTheGridOffers);
+		registerTest(event, "condenser_does_not_starve_a_machine", 200, true,
+				EnergyCondenserScenarios::condenser_doesNotStarveAMachine);
+		registerTest(event, "condenser_does_not_drain_a_charged_store", 200, true,
+				EnergyCondenserScenarios::condenser_doesNotDrainAChargedStore);
+		registerTest(event, "condenser_cannot_be_reached_by_a_flush_store", 40, true,
+				EnergyCondenserScenarios::condenser_cannotBeReachedByAFlushStore);
+		// MOD-392: the overclock arm must refuse the chip on machines that cannot use it.
+		registerTest(event, "overclocker_generator_refuses_the_chip", 40, true,
+				OverclockerPanelScenarios::overclocker_generatorRefusesTheChip);
+		registerTest(event, "overclocker_refusal_survives_a_panel_drag", 40, true,
+				OverclockerPanelScenarios::overclocker_refusalSurvivesAPanelDrag);
+		registerTest(event, "overclocker_manifest_matches_the_block_entity", 40, true,
+				OverclockerPanelScenarios::overclocker_manifestMatchesTheBlockEntity);
+		registerTest(event, "overclocker_chip_speeds_the_machine_and_costs_more", 900, true,
+				OverclockerEffectScenarios::overclocker_chipSpeedsTheMachineAndCostsMore);
+		registerTest(event, "overclocker_chip_and_progress_survive_reload", 40, true,
+				OverclockerEffectScenarios::overclocker_chipAndProgressSurviveReload);
 
 		// Fluid tank: contents codec, NBT + component, item atomicity.
 		registerTest(event, "tc_fluid_tank001_fun02_glass_wall_stops_a_click", 40, true,

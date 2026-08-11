@@ -9,6 +9,7 @@ import dev.alaindustrial.client.tooltip.MachineTooltips;
 import dev.alaindustrial.client.ModKeyMappings;
 import dev.alaindustrial.client.screen.SolarPanelScreen;
 import dev.alaindustrial.client.render.GardenDroneBlockEntityRenderer;
+import dev.alaindustrial.client.render.EnergyCondenserBlockEntityRenderer;
 import dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer;
 import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
 import dev.alaindustrial.registry.ModBlockEntities;
@@ -257,6 +258,9 @@ public class IndustrializationClient implements ClientModInitializer {
 		ModelLayerRegistry.registerModelLayer(WaterMillWheelBlockEntityRenderer.MODEL_LAYER,
 				WaterMillWheelBlockEntityRenderer::createLayer);
 		BlockEntityRendererRegistry.register(ModBlockEntities.WATER_MILL, WaterMillWheelBlockEntityRenderer::new);
+		// MOD-393: the orb inside the condenser frame — its speed and glow are the block's gauge.
+		BlockEntityRendererRegistry.register(ModBlockEntities.ENERGY_CONDENSER,
+				EnergyCondenserBlockEntityRenderer::new);
 		// Garden Drone (MOD-277): the drone is geometry this renderer places above its station, not an entity.
 		ModelLayerRegistry.registerModelLayer(GardenDroneBlockEntityRenderer.MODEL_LAYER,
 				GardenDroneBlockEntityRenderer::createLayer);

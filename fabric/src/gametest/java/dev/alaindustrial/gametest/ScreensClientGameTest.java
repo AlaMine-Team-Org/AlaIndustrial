@@ -85,6 +85,9 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             new Screen("alloy_smelter", "alloy_smelter", "Alloy Smelter"),
             new Screen("galvanic_bath", "galvanic_bath", "Galvanic Bath"),
             new Screen("cesu", "cesu", "CESU"),
+            // MOD-393: the condenser's readout IS its mechanic (which tier now, how far to the
+            // next), so the frame is what guards those two lines against silently vanishing.
+            new Screen("energy_condenser", "energy_condenser", "Energy Condenser"),
             new Screen("teleporter_station", "teleporter", "Teleporter Station"),
             // Already had frames before MOD-362, but only under the historical name gui_geothermal_*
             // and only through data injection. Listed here so it is opened the real way like the rest.

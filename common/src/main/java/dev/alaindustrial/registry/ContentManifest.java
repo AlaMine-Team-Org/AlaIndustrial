@@ -7,6 +7,7 @@ import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CesuBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
+import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
@@ -29,6 +30,7 @@ import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
+import dev.alaindustrial.block.entity.Overclockable;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
@@ -44,8 +46,10 @@ import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.item.energy.BatteryItem;
 import dev.alaindustrial.item.misc.HintItem;
 import dev.alaindustrial.item.misc.MutationChipItem;
+import dev.alaindustrial.item.misc.OverclockerChipItem;
 import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
+import dev.alaindustrial.menu.EnergyCondenserMenu;
 import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
@@ -183,6 +187,7 @@ public final class ContentManifest {
 			menu("alloy_smelter", AlloySmelterMenu::new, s -> ModContent.ALLOY_SMELTER_MENU = s),
 			menu("galvanic_bath", GalvanicBathMenu::new, s -> ModContent.GALVANIC_BATH_MENU = s),
 			menu("battery_box", BatteryBoxMenu::new, s -> ModContent.BATTERY_BOX_MENU = s),
+			menu("energy_condenser", EnergyCondenserMenu::new, s -> ModContent.ENERGY_CONDENSER_MENU = s),
 			menu("cesu", CesuMenu::new, s -> ModContent.CESU_MENU = s),
 			menu("teleporter_station", TeleporterStationMenu::new, s -> ModContent.TELEPORTER_STATION_MENU = s),
 			menu("teleporter_remote", TeleporterRemoteMenu::new, s -> ModContent.TELEPORTER_REMOTE_MENU = s),
@@ -289,6 +294,11 @@ public final class ContentManifest {
 			// — see ChargePadState.
 			Map.entry("charge_pad", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.noOcclusion().lightLevel(ModBlockProperties::chargePadLight))),
+			// Energy condenser (MOD-393): an open frame, so noOcclusion — otherwise it culls its
+			// neighbours' faces as if it were solid, and you would see through the world past the orb.
+			// It glows while the bank holds anything, which is also the "it is working" signal.
+			Map.entry("energy_condenser", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.noOcclusion().lightLevel(ModBlockProperties::litLight))),
 			// The emitter ring lights the chamber while an operation runs, so the block emits too.
 			Map.entry("incubator", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.lightLevel(ModBlockProperties::litLight))),
@@ -408,6 +418,12 @@ public final class ContentManifest {
 				"item.alaindustrial." + id + ".hint2");
 	}
 
+	/** An overclocker chip of a fixed tier (MOD-393) — a hint item that also carries its step count. */
+	private static Function<Item.Properties, ? extends Item> overclockerChip(String id, int tier) {
+		return p -> new OverclockerChipItem(p, tier, "item.alaindustrial." + id + ".hint",
+				"item.alaindustrial." + id + ".hint2");
+	}
+
 	/**
 	 * A wearing machine component (MOD-189): {@code durability(max)} sets the vanilla {@code max_damage}
 	 * component, so wear renders as the standard durability bar and the item becomes non-stackable.
@@ -445,6 +461,14 @@ public final class ContentManifest {
 		// Upgrade chips (MOD-080): the blank and the mute upgrade, each with its hint lines.
 		defs.put("empty_chip", hintItem("empty_chip"));
 		defs.put("mute_chip", hintItem("mute_chip"));
+		defs.put("overclocker_chip_i", overclockerChip("overclocker_chip_i", 1));
+		defs.put("overclocker_chip_ii", overclockerChip("overclocker_chip_ii", 2));
+		defs.put("overclocker_chip_iii", overclockerChip("overclocker_chip_iii", 3));
+		// Energy clots (MOD-393): what the condenser packs surplus grid power into. Three tiers, told
+		// apart by how much was banked when the player pulled it out.
+		defs.put("energy_clot_i", hintItem("energy_clot_i"));
+		defs.put("energy_clot_ii", hintItem("energy_clot_ii"));
+		defs.put("energy_clot_iii", hintItem("energy_clot_iii"));
 		// Cable breaker (MOD-276): clamps onto a laid cable and cuts the line for maintenance. A hint
 		// item because the whole control scheme (install / throw / pry off) is gestures on the wire,
 		// with no GUI anywhere to explain itself.
@@ -560,6 +584,8 @@ public final class ContentManifest {
 			blockEntity("galvanic_bath", GalvanicBathBlockEntity.class, GalvanicBathBlockEntity::new, "galvanic_bath"),
 			blockEntity("electric_heater", ElectricHeaterBlockEntity.class, ElectricHeaterBlockEntity::new, "electric_heater"),
 			blockEntity("charge_pad", ChargePadBlockEntity.class, ChargePadBlockEntity::new, "charge_pad"),
+			blockEntity("energy_condenser", EnergyCondenserBlockEntity.class,
+					EnergyCondenserBlockEntity::new, "energy_condenser"),
 			blockEntity("incubator", IncubatorBlockEntity.class, IncubatorBlockEntity::new, "incubator"),
 			blockEntity("pump", PumpBlockEntity.class, PumpBlockEntity::new, "pump"),
 			blockEntity("garden_drone_station", GardenDroneStationBlockEntity.class, GardenDroneStationBlockEntity::new, "garden_drone_station"),
@@ -592,5 +618,29 @@ public final class ContentManifest {
 			}
 		}
 		throw new IllegalArgumentException("No BLOCK_ENTITIES entry for block-entity id '" + id + "'");
+	}
+
+	/**
+	 * Does an overclocker chip do anything in {@code block}? Answered from the block alone, so the
+	 * upgrade panel can refuse the chip on the CLIENT, where the menu is backed by a dummy container
+	 * with no block entity to ask (MOD-392: a generator used to accept the chip and then ignore it).
+	 *
+	 * <p>Derived from {@link Overclockable} on the block entity class rather than from a second,
+	 * hand-written list of blocks: the manifest already maps blocks to their BE class, so there is
+	 * exactly one place to declare that a machine overclocks, and the slot cannot drift from the effect.
+	 * Blocks with no block entity at all — every plain building block — answer {@code false}.
+	 */
+	public static boolean isOverclockable(Block block) {
+		Identifier key = BuiltInRegistries.BLOCK.getKey(block);
+		if (!Industrialization.MOD_ID.equals(key.getNamespace())) {
+			return false;
+		}
+		String path = key.getPath();
+		for (BlockEntityDef<?> def : BLOCK_ENTITIES) {
+			if (def.blocks().contains(path)) {
+				return Overclockable.class.isAssignableFrom(def.type());
+			}
+		}
+		return false;
 	}
 }

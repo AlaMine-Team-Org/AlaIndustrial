@@ -83,7 +83,7 @@ public class WaterMillScreen extends MachineScreen<WaterMillMenu> {
 			label = Component.translatable(modeKey);
 		} else if (this.menu.getSlot(0).hasItem()) {
 			// MODE_OK with a wheel installed — the mill is running, so show what it makes (MOD-348).
-			label = Component.translatable("gui.alaindustrial.output", this.menu.getProductionRate());
+			label = outputLine(this.menu.getProductionRate());
 		} else {
 			// MODE_OK with an EMPTY slot is the "no wheel yet" state, not a running mill: the block entity
 			// reports MODE_OK there because a bare mill has nothing to clash with. The empty slot itself is

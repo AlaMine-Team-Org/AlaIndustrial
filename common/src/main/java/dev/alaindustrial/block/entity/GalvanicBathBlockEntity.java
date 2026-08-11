@@ -61,7 +61,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * <p><b>Fibre is a tag.</b> The shipped recipe accepts {@code #alaindustrial:fiber} — vanilla string
  * or our own cotton fibre (MOD-280) — so a spider farm and a trellis are equally valid ways in.
  */
-public class GalvanicBathBlockEntity extends MachineBlockEntity implements FluidPortHost, MenuProvider {
+public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overclockable, FluidPortHost, MenuProvider {
 	/** Fibre input: vanilla string or cotton fibre, matched by tag through the recipe. */
 	public static final int FIBER_SLOT = 0;
 	/** The silver that gets deposited onto the fibre. */
@@ -124,6 +124,7 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Fluid
 		return facingAwareRole(worldFace, EnergyRole.IN);
 	}
 
+
 	/** Every face exposes the same tank — the bath has no per-face fluid restriction. */
 	@Override
 	public FluidPort fluidPort(Direction side) {
@@ -137,7 +138,7 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Fluid
 		boolean filled = ItemFluidBridge.get()
 				.drainSlotIntoTank(this, FILL_INPUT_SLOT, FILL_OUTPUT_SLOT, fluidTank, FluidAmounts.BUCKET) > 0;
 
-		int euPerTick = Config.machineEuPerTickEffective();
+		int euPerTick = effectiveEuPerTick(Config.machineEuPerTick);
 		ProcessingRecipeInput input =
 				new ProcessingRecipeInput(items.get(FIBER_SLOT), items.get(SILVER_SLOT));
 		AlaProcessingRecipe recipe = level instanceof ServerLevel server
@@ -147,7 +148,7 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Fluid
 		int baseDuration = recipe != null && recipe.energy() > 0
 				? Math.max(1, recipe.energy() / Config.machineEuPerTick)
 				: Config.galvanicBathDuration;
-		this.maxProgress = Config.scaledDuration(baseDuration);
+		this.maxProgress = effectiveDuration(baseDuration);
 
 		ItemStack result = recipe != null ? recipe.resultStack() : ItemStack.EMPTY;
 		long waterPerOp = waterPerOperation();

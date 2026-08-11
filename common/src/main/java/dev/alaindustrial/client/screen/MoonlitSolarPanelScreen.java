@@ -67,7 +67,7 @@ public class MoonlitSolarPanelScreen extends MachineScreen<MoonlitSolarPanelMenu
         // Text overlay
         graphics.text(this.font, Component.translatable("gui.alaindustrial.energy", energy, capacity),
                 x + 30, y + 22, GuiStyle.TEXT, false);
-        graphics.text(this.font, Component.translatable("gui.alaindustrial.output", this.menu.getProductionRate()),
+        graphics.text(this.font, outputLine(this.menu.getProductionRate()),
                 x + 30, y + 34, GuiStyle.TEXT, false);
         graphics.text(this.font, Component.translatable("gui.alaindustrial.mode", modeLabel(mode)),
                 x + 30, y + 46, GuiStyle.TEXT_DIM, false);

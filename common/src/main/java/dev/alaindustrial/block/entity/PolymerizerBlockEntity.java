@@ -57,7 +57,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * geothermal generator's lava): oil that entered the machine is feedstock, not storage, so a neighbour
  * cannot siphon it out and the machine cannot be used as a fluid buffer.
  */
-public class PolymerizerBlockEntity extends MachineBlockEntity implements FluidPortHost, MenuProvider {
+public class PolymerizerBlockEntity extends MachineBlockEntity implements Overclockable, FluidPortHost, MenuProvider {
 	/** Filled-container input: an oil bucket (or capsule/foreign cell) placed here is emptied into the tank. */
 	public static final int FILL_INPUT_SLOT = 0;
 	/** The emptied container drops here after its fluid moved into the tank. */
@@ -118,6 +118,7 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements FluidP
 		return facingAwareRole(worldFace, EnergyRole.IN);
 	}
 
+
 	/** Every face exposes the same tank — the machine has no per-face fluid restriction. */
 	@Override
 	public FluidPort fluidPort(Direction side) {
@@ -134,11 +135,11 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements FluidP
 		// 2) Resolve what the tank's contents make. A recipe only matches once the tank holds at least the
 		//    recipe's volume, so a half-filled tank simply idles.
 		PolymerizingRecipe recipe = level instanceof ServerLevel serverLevel ? resolveRecipe(serverLevel) : null;
-		int euPerTick = Config.machineEuPerTickEffective();
+		int euPerTick = effectiveEuPerTick(Config.machineEuPerTick);
 		int baseDuration = recipe != null && recipe.energy() > 0
 				? Math.max(1, recipe.energy() / Config.machineEuPerTick)
 				: Config.polymerizerDuration;
-		this.maxProgress = Config.scaledDuration(baseDuration);
+		this.maxProgress = effectiveDuration(baseDuration);
 
 		ItemStack result = recipe != null ? recipe.resultStack() : ItemStack.EMPTY;
 		boolean canWork = recipe != null && energy.amount >= euPerTick && canOutput(result);

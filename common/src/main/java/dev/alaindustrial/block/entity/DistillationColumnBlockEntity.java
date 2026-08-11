@@ -72,7 +72,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * the second to the bottom (fuel-oil) tank — deterministic for datapacks, and the reason the two
  * output tanks carry no fluid filter of their own.
  */
-public class DistillationColumnBlockEntity extends MachineBlockEntity implements FluidPortHost, MenuProvider {
+public class DistillationColumnBlockEntity extends MachineBlockEntity implements Overclockable, FluidPortHost, MenuProvider {
 	/** Filled oil container in — emptied into the middle (oil) tank. */
 	public static final int OIL_FILL_INPUT_SLOT = 0;
 	/** The emptied oil container drops here. */
@@ -170,6 +170,7 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 				&& PolymerizingRecipe.isSourceFluid(fluid.fluid());
 	}
 
+
 	/** Consumer on every face of the bottom segment — the tower has no FACING, so no inert front. */
 	@Override
 	public EnergyRole energyRoleForFace(Direction worldFace) {
@@ -220,11 +221,11 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 		// 2) Resolve the recipe and this run's duration (recipe energy is authoritative, Config is
 		//    the fallback — the polymerizer's exact convention).
 		FluidOutputRecipe recipe = level instanceof ServerLevel serverLevel ? resolveRecipe(serverLevel) : null;
-		int euPerTick = Config.machineEuPerTickEffective();
+		int euPerTick = effectiveEuPerTick(Config.machineEuPerTick);
 		int baseDuration = recipe != null && recipe.energy() > 0
 				? Math.max(1, recipe.energy() / Config.machineEuPerTick)
 				: Config.distillationColumnDuration;
-		this.maxProgress = Config.scaledDuration(baseDuration);
+		this.maxProgress = effectiveDuration(baseDuration);
 
 		int warmup = Math.max(1, Config.distillationColumnWarmupTicks);
 		heat = Math.min(heat, warmup); // a lowered config value must not leave phantom heat

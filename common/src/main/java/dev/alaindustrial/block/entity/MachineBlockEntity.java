@@ -1,5 +1,6 @@
 package dev.alaindustrial.block.entity;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.core.energy.EnergyBuffer;
 import dev.alaindustrial.core.energy.EnergyPort;
@@ -7,6 +8,8 @@ import dev.alaindustrial.core.energy.EnergyPortHost;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.energy.FaceEnergyPort;
+import dev.alaindustrial.core.upgrade.OverclockMath;
+import dev.alaindustrial.item.misc.OverclockerChipItem;
 import dev.alaindustrial.registry.ModContent;
 // MOD-022 Phase 2: the energy spine now runs on the common EnergyPort/EnergyBuffer abstraction — no
 // loader energy API is imported here, so this base class (and its content subclasses) can live in
@@ -89,13 +92,29 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		// existing indices (0=input, 1=output, …)
 		// and their gametests untouched. `this instanceof` is well-defined here: the object's runtime
 		// type is the concrete subclass throughout super-construction.
-		int total = slots + (this instanceof MenuProvider ? UPGRADE_SLOT_COUNT : 0);
+		int total = slots + (this instanceof MenuProvider && hasUpgradePanel() ? UPGRADE_SLOT_COUNT : 0);
 		this.items = NonNullList.withSize(total, ItemStack.EMPTY);
 		// The onCommit hook fires once when the outermost transaction that moved energy through this
 		// buffer commits (was MachineEnergyStorage.onFinalCommit): persist + GUI-sync, then wake. A
 		// committed insert/extract is external delivery/draw, which must wake an idle consumer (R-29);
 		// internal per-tick drain mutates `energy.amount` directly (no transaction) and never fires this.
 		this.energy = new EnergyBuffer(capacity, maxInsert, maxExtract, this::onEnergyTransactionCommitted);
+	}
+
+	/**
+	 * Whether this block gets the four upgrade slots. Default true for every GUI machine (MOD-080).
+	 *
+	 * <p>Opt-out exists because a panel is a promise: a block that shows upgrade slots is telling the
+	 * player those upgrades do something there. The Energy Condenser (MOD-393) is the first block for
+	 * which that would be a lie — it is meant to sip surplus, and an overclocker in it would turn it
+	 * into a pump on the grid.
+	 *
+	 * <p>Called from the constructor, so an override MUST be a constant — it cannot read subclass
+	 * fields, which are not initialised yet. Same contract as the {@code instanceof MenuProvider} test
+	 * beside it.
+	 */
+	public boolean hasUpgradePanel() {
+		return true;
 	}
 
 	/**
@@ -531,14 +550,120 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 	}
 
 	/**
-	 * Whether a mute chip sits in the active upgrade slot. Single source of truth for silencing this
+	 * Whether a mute chip sits in ANY upgrade slot. Single source of truth for silencing this
 	 * machine: the client hum manager and any future machine sound MUST honor it. Safe to read
 	 * client-side — upgrade-slot contents sync with the block entity (getUpdateTag), so no extra
 	 * networking is needed.
+	 *
+	 * <p>Scans every slot rather than only {@link #ACTIVE_UPGRADE_INDEX}: since MOD-392 all four
+	 * slots accept upgrades, so the player may park the mute chip anywhere in the panel.
 	 */
 	public boolean isMuted() {
-		return hasUpgradeSlots()
-				&& getUpgradeStack(ACTIVE_UPGRADE_INDEX).is(ModContent.MUTE_CHIP.get());
+		if (!hasUpgradeSlots()) {
+			return false;
+		}
+		for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
+			if (getUpgradeStack(i).is(ModContent.MUTE_CHIP.get())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// --- Overclocking (MOD-392): speed chips in the upgrade panel ---
+
+	/**
+	 * Base EU/t this machine draws while working, BEFORE the global speed multiplier and any
+	 * overclocker chip. Default is the shared processing rate; machines with their own tariff (alloy
+	 * smelter, assembler, incubator, electric heater) override it.
+	 *
+	 * <p>Read live from {@link Config} rather than cached, so a config reload takes effect without a
+	 * world restart — and so {@link #overclockerCap()} re-derives against the current value.
+	 */
+	public int baseEuPerTick() {
+		return Config.machineEuPerTick;
+	}
+
+	/**
+	 * Whether overclocker chips do anything in this block — declared by implementing
+	 * {@link Overclockable}, not by overriding this.
+	 *
+	 * <p>Opt-in on purpose: a block that has not routed its tick through
+	 * {@link #effectiveEuPerTick}/{@link #effectiveDuration} must not advertise a chip slot that
+	 * silently does nothing — a dead upgrade reads as a bug, and a machine added later would inherit
+	 * the lie for free. Generators, storage and transport stay {@code false}.
+	 *
+	 * <p>{@code final}, and reading a marker interface rather than a per-class boolean, because the
+	 * upgrade panel has to answer the same question on the CLIENT, where there is no block entity at
+	 * all — see {@link Overclockable} and
+	 * {@link dev.alaindustrial.registry.ContentManifest#isOverclockable}. Two independently maintained
+	 * answers to one question is exactly how the slot and the effect would drift apart.
+	 */
+	public final boolean supportsOverclock() {
+		return this instanceof Overclockable;
+	}
+
+	/**
+	 * How many overclocker chips this machine can actually use.
+	 *
+	 * <p>Not a flat constant: a machine may hold no more chips than its own voltage tier can feed.
+	 * Beyond that point the block would demand more EU/t than {@link EnergyTier#maxVoltage()} lets it
+	 * accept in a tick, so the extra chips could never pay off — the machine would simply starve while
+	 * the player believes they bought speed. Derived by stepping the factor instead of a logarithm, so
+	 * a retuned {@link Config#overclockerEuFactor} cannot drift the two apart through rounding.
+	 */
+	public int overclockerCap() {
+		if (!supportsOverclock() || !hasUpgradeSlots()) {
+			return 0;
+		}
+		return OverclockMath.cap(baseEuPerTick(), tier.maxVoltage(),
+				Config.overclockerEuFactor, Config.overclockerMaxPerMachine);
+	}
+
+	/**
+	 * Steps of overclocking actually in effect: the tier of the chip in the panel, clamped to
+	 * {@link #overclockerCap()}.
+	 *
+	 * <p>The tier rides on the item (three separate chips) rather than on a stack size, so "how much
+	 * speed" is a property of what the player crafted, not of how many copies they crammed into a slot.
+	 * The clamp still applies: a machine whose voltage tier cannot feed the chip runs at what it can.
+	 */
+	public int overclockerCount() {
+		int cap = overclockerCap();
+		if (cap <= 0) {
+			return 0;
+		}
+		int tier = 0;
+		for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
+			tier = Math.max(tier, OverclockerChipItem.tierOf(getUpgradeStack(i)));
+		}
+		return Math.min(tier, cap);
+	}
+
+	/**
+	 * The EU/t this machine actually draws: its base rate scaled by the global speed multiplier and
+	 * then by one {@link Config#overclockerEuFactor} per installed chip.
+	 *
+	 * <p>Machines MUST call this instead of {@code Config.machineEuPerTickEffective()} — that method is
+	 * static and knows nothing about a specific block, so it can never see the chips. Enforced by
+	 * {@code docs/tools/arch_check.py}.
+	 */
+	public int effectiveEuPerTick(int baseEuPerTick) {
+		return OverclockMath.euPerTick(baseEuPerTick, Config.globalMachineSpeedMultiplier,
+				Config.overclockerEuFactor, overclockerCount());
+	}
+
+	/**
+	 * The operation length in ticks: the base duration after the global speed multiplier, then one
+	 * {@link Config#overclockerSpeedFactor} per installed chip.
+	 *
+	 * <p>{@code baseTicks} must be the UNSCALED duration (recipe energy divided by the machine's raw
+	 * tariff, not by the multiplied one) — scaling twice is the classic way to make a retuned server
+	 * silently run at the square of its configured speed.
+	 */
+	public int effectiveDuration(int baseTicks) {
+		return OverclockMath.duration(Config.scaledDuration(baseTicks),
+				Config.overclockerSpeedFactor, overclockerCount());
 	}
 
 	// --- Sided automation (R-GUI-05/R-GUI-07): hoppers/pipes must respect slot roles ---

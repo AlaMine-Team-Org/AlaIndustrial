@@ -109,6 +109,7 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.ALLOY_SMELTER_MENU.get(), AlloySmelterScreen::new),
 			screen(() -> ModContent.GALVANIC_BATH_MENU.get(), GalvanicBathScreen::new),
 			screen(() -> ModContent.BATTERY_BOX_MENU.get(), BatteryBoxScreen::new),
+			screen(() -> ModContent.ENERGY_CONDENSER_MENU.get(), EnergyCondenserScreen::new),
 			screen(() -> ModContent.CESU_MENU.get(), CesuScreen::new),
 			screen(() -> ModContent.TELEPORTER_STATION_MENU.get(), TeleporterStationScreen::new),
 			screen(() -> ModContent.TELEPORTER_REMOTE_MENU.get(), TeleporterRemoteScreen::new),

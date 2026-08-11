@@ -73,6 +73,21 @@ public final class ModTags {
 		public static final TagKey<Item> MUTATION_CHIP = key("mutation_chip");
 
 		/**
+		 * Everything a machine's upgrade panel accepts anywhere (MOD-392). A tag rather than a hardcoded
+		 * item list: before this the slot tested {@code stack.is(MUTE_CHIP)} in three separate places, so
+		 * every new upgrade meant hunting all three down. Used for the coarse "is this an upgrade at all"
+		 * question (shift-click routing); WHICH arm takes it is decided by the per-kind tags below.
+		 * Backed by {@code data/alaindustrial/tags/item/machine_upgrade.json}.
+		 */
+		public static final TagKey<Item> MACHINE_UPGRADE = key("machine_upgrade");
+
+		/** Upgrades that belong in the mute arm of the panel (MOD-393). */
+		public static final TagKey<Item> UPGRADE_MUTE = key("upgrade/mute");
+
+		/** Upgrades that belong in the overclocker arm — the three tiers of the chip (MOD-393). */
+		public static final TagKey<Item> UPGRADE_OVERCLOCK = key("upgrade/overclock");
+
+		/**
 		 * Fibre the Galvanic Bath plates with silver to make flux thread (MOD-127): vanilla string and
 		 * our own cotton fibre (MOD-280). A tag rather than two recipes because the two are meant to be
 		 * interchangeable by design — string comes from a spider farm, cotton from a trellis, and the

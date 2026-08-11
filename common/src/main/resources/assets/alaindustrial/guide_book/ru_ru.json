@@ -377,6 +377,44 @@
           ]
         },
         {
+          "id": "energy_condenser",
+          "title": "Сгущатель энергии",
+          "icon": "alaindustrial:energy_condenser",
+          "block_id": "alaindustrial:energy_condenser",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Сгущатель энергии",
+              "text": "Ловит избыток сети и сгущает его в сгусток энергии; какой тир получится — решает игрок моментом изъятия."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 12 EU/т приём"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:gold_ingot",
+                "alaindustrial:iron_plate",
+                "minecraft:gold_ingot",
+                "alaindustrial:battery",
+                "minecraft:gold_ingot",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:energy_condenser",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "cesu",
           "title": "Усиленное энергохранилище",
           "icon": "alaindustrial:cesu",
@@ -2150,8 +2188,39 @@
     {
       "id": "items",
       "title": "Предметы",
-      "icon": "alaindustrial:mute_chip",
+      "icon": "alaindustrial:overclocker_chip_i",
       "entries": [
+        {
+          "id": "overclocker_chip_i",
+          "title": "Чип ускорения I",
+          "icon": "alaindustrial:overclocker_chip_i",
+          "block_id": "alaindustrial:overclocker_chip_i",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Чип ускорения I",
+              "text": "Апгрейд из трёх ступеней: каждая режет время операции и удваивает расход энергии. Делается из сгустков энергии."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "",
+                "alaindustrial:energy_clot_i",
+                "",
+                "minecraft:gold_ingot",
+                "alaindustrial:empty_chip",
+                "minecraft:gold_ingot",
+                "",
+                "minecraft:redstone",
+                ""
+              ],
+              "result_id": "alaindustrial:overclocker_chip_i",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "mute_chip",
           "title": "Чип-глушитель",

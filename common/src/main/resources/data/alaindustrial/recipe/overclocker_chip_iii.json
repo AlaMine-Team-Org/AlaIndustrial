@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"C": "alaindustrial:energy_clot_iii",
+		"G": "#c:ingots/gold",
+		"P": "alaindustrial:overclocker_chip_ii"
+	},
+	"pattern": [
+		" C ",
+		"GPG",
+		" G "
+	],
+	"result": {
+		"id": "alaindustrial:overclocker_chip_iii"
+	}
+}

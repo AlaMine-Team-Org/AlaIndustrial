@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "lit=false": { "model": "alaindustrial:block/energy_condenser" },
+    "lit=true": { "model": "alaindustrial:block/energy_condenser_lit" }
+  }
+}

@@ -131,6 +131,12 @@ public final class CreativeTabContent {
 		out.accept(ModContent.ALIGNMENT_CHIP_NIGHT.get());
 		out.accept(ModContent.EMPTY_CHIP.get());
 		out.accept(ModContent.MUTE_CHIP.get());
+		out.accept(ModContent.OVERCLOCKER_CHIP_I.get());
+		out.accept(ModContent.OVERCLOCKER_CHIP_II.get());
+		out.accept(ModContent.OVERCLOCKER_CHIP_III.get());
+		out.accept(ModContent.ENERGY_CLOT_I.get());
+		out.accept(ModContent.ENERGY_CLOT_II.get());
+		out.accept(ModContent.ENERGY_CLOT_III.get());
 		// Cable breaker (MOD-276): a cable accessory, listed with the components it is crafted from.
 		out.accept(ModContent.CABLE_BREAKER.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
@@ -224,6 +230,7 @@ public final class CreativeTabContent {
 		// The Charging Station (MOD-274) banks EU exactly like the box above and exists to spend it on
 		// the player, so it belongs next to storage rather than among the processing machines.
 		out.accept(ModContent.CHARGE_PAD_ITEM.get());
+		out.accept(ModContent.ENERGY_CONDENSER_ITEM.get());
 		out.accept(ModContent.FLUID_TANK_ITEM.get());
 		// Teleporter (MOD-091/092/093): hidden until the feature was whole — the station banks EU with
 		// no way to spend it until the remote existed, and the remote had no list until the screen did.
@@ -303,6 +310,12 @@ public final class CreativeTabContent {
 		out.accept(ModContent.FLUX_THREAD.get());
 		out.accept(ModContent.FLUXWEAVE_CLOTH.get());
 		out.accept(ModContent.MUTE_CHIP.get());
+		out.accept(ModContent.OVERCLOCKER_CHIP_I.get());
+		out.accept(ModContent.OVERCLOCKER_CHIP_II.get());
+		out.accept(ModContent.OVERCLOCKER_CHIP_III.get());
+		out.accept(ModContent.ENERGY_CLOT_I.get());
+		out.accept(ModContent.ENERGY_CLOT_II.get());
+		out.accept(ModContent.ENERGY_CLOT_III.get());
 		// Cable breaker (MOD-276): a cable accessory, listed with the components it is crafted from.
 		out.accept(ModContent.CABLE_BREAKER.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());

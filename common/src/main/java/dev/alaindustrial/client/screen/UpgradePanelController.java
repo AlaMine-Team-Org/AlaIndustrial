@@ -31,7 +31,14 @@ public final class UpgradePanelController {
 	static final int PANEL_U = 97, PANEL_V = 0, PANEL_W = 159, PANEL_H = 145;
 	static final int CLOSE_U = 162, CLOSE_V = 60, CLOSE_W = 28, CLOSE_H = 28;
 	static final int ACT_U = 0, ACT_V = 48, ACT_W = 7, ACT_H = 7;
-	static final int ACTIVE_IND_DX = 4, ACTIVE_IND_DY = 52;
+	/**
+	 * Panel-relative position of each slot's rivet indicator, in slot order (LEFT, TOP, RIGHT, BOTTOM).
+	 * Was a single hardcoded point back when only slot 0 could hold anything; since MOD-392 all four
+	 * slots work, so the lit rivet has to follow the slot that actually holds a chip rather than always
+	 * lighting the left arm.
+	 */
+	static final int[][] IND_XY = { { 4, 52 }, { 96, 4 }, { 148, 52 }, { 96, 134 } };
+	/** Greys out a reserved arm so it reads as "not yet", rather than as an arm that refuses your chip. */
 	static final int LOCK_TINT = 0x90101010;
 	static final int HOVER_TINT = 0x80FFFFFF;
 	static final int PRESS_DARKEN = 0x30000000;

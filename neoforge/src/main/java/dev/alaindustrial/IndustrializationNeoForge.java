@@ -441,6 +441,7 @@ public final class IndustrializationNeoForge {
 					ModBlockEntitiesNeoForge.ALLOY_SMELTER,
 					ModBlockEntitiesNeoForge.ELECTRIC_HEATER,
 					ModBlockEntitiesNeoForge.CHARGE_PAD,
+					ModBlockEntitiesNeoForge.ENERGY_CONDENSER,
 					ModBlockEntitiesNeoForge.INCUBATOR,
 					ModBlockEntitiesNeoForge.GEOTHERMAL_GENERATOR,
 					ModBlockEntitiesNeoForge.PUMP,
@@ -482,6 +483,8 @@ public final class IndustrializationNeoForge {
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.EXTRACTOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.COMPRESSOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SAWMILL);
+		// MOD-393: the condenser's output slot, so a pipe or hopper can take the clot on NeoForge too.
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.ENERGY_CONDENSER);
 		// MOD-275: the assembler's blueprint queue and output area. Fabric gets this for free from
 		// ItemStorage.SIDED's global Container fallback; here it must be named, or the machine is
 		// invisible to the item pipe on this loader only (the MOD-193 asymmetry).

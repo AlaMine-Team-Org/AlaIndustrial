@@ -50,7 +50,7 @@ import org.jetbrains.annotations.Nullable;
  *     a small share of misses yields slag; the rest consume the input for nothing.</li>
  * </ul>
  */
-public final class IncubatorBlockEntity extends MachineBlockEntity implements MenuProvider {
+public final class IncubatorBlockEntity extends MachineBlockEntity implements Overclockable, MenuProvider {
 
 	public static final int CHIP_SLOT = 0;
 	public static final int FUEL_SLOT = 1;
@@ -181,8 +181,8 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Me
 
 		int euPerTick = euPerTick();
 		this.maxProgress = mode == null
-				? Config.scaledDuration(Config.mutationDurationTransform)
-				: Config.scaledDuration(durationOf(mode, recipe, euPerTick));
+				? effectiveDuration(Config.mutationDurationTransform)
+				: effectiveDuration(durationOf(mode, recipe, euPerTick));
 
 		if (recipe == null) {
 			pendingOutcome = null;
@@ -276,8 +276,15 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Me
 		return status;
 	}
 
+	/** The incubator's own tariff — four times the shared machine rate (MOD-118). */
+	@Override
+	public int baseEuPerTick() {
+		return Config.incubatorEuPerTick;
+	}
+
+
 	private int euPerTick() {
-		return Math.max(1, Math.round(Config.incubatorEuPerTick * Config.globalMachineSpeedMultiplier));
+		return effectiveEuPerTick(Config.incubatorEuPerTick);
 	}
 
 	/** Recipe energy wins when it is set, so a per-recipe override changes the length of the cycle. */

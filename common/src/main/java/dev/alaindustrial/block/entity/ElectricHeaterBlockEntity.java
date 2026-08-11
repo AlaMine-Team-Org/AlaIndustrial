@@ -34,7 +34,16 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity {
 	 * discovery, so the Vulcanizer must only advance when it returns true.
 	 */
 	public boolean consumeHeatTick() {
-		int cost = Config.electricHeaterEuPerTickEffective();
+		return consumeHeatTick(0);
+	}
+
+	/**
+	 * As above, but billed at the overclocker multiple of the machine it heats (MOD-392). The heater has
+	 * no upgrade panel of its own — it is not a {@code MenuProvider} — so the rate rides in from above.
+	 */
+	public boolean consumeHeatTick(int overclockers) {
+		int cost = Math.max(1, Math.round(Config.electricHeaterEuPerTickEffective()
+				* (float) Math.pow(Config.overclockerEuFactor, Math.max(0, overclockers))));
 		if (energy.amount < cost) {
 			return false;
 		}

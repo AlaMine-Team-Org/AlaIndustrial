@@ -1,7 +1,9 @@
 package dev.alaindustrial.menu;
 
 import dev.alaindustrial.block.entity.MachineBlockEntity;
-import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.item.misc.OverclockerChipItem;
+import dev.alaindustrial.registry.ContentManifest;
+import dev.alaindustrial.registry.ModTags;
 import java.util.function.BooleanSupplier;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -76,10 +78,24 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 
 	/**
 	 * Number of machine-specific slots (excludes upgrade slots). Derived from the container so it is the
-	 * same client- and server-side: every {@code MachineMenu} container is sized {@code base + N} slots.
+	 * same client- and server-side: a {@code MachineMenu} container is sized {@code base + N} slots.
+	 *
+	 * <p>A machine may opt out of the panel entirely ({@code hasUpgradePanel() == false} — the Energy
+	 * Condenser, MOD-393); then the container holds only its own slots and there is nothing to subtract.
+	 * Which case applies is read from {@link #hasUpgradePanel()} rather than guessed from the size, so
+	 * both sides agree even though the client is backed by a dummy container.
 	 */
 	protected final int baseSlotCount() {
-		return machine.getContainerSize() - UPGRADE_SLOT_COUNT;
+		return hasUpgradePanel() ? machine.getContainerSize() - UPGRADE_SLOT_COUNT : machine.getContainerSize();
+	}
+
+	/**
+	 * Whether this menu shows the upgrade panel. Default true; a menu whose block entity opted out of
+	 * the panel overrides it. Must answer identically on client and server — the slot indices depend
+	 * on it.
+	 */
+	public boolean hasUpgradePanel() {
+		return true;
 	}
 
 	/**
@@ -104,20 +120,45 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 
 	/**
 	 * Append the shared upgrade slots (MOD-080) at the tail of the container, laid out as a cross around
-	 * the panel. Only slot 0 (LEFT) is active on the MVP panel and accepts a mute chip; slots 1–3 are
-	 * present but never accept an item. All are hidden (inactive) while the panel is collapsed.
+	 * the panel. Each arm is TYPED ({@link UpgradeSlotKind}): the left one takes the mute chip, the top
+	 * one an overclocker, the other two are reserved for the modules of MOD-286. The atlas carries a hint
+	 * glyph per arm, so the layout explains itself without text — and a typed arm caps stacking for free
+	 * (one overclocker per machine, because there is one arm that takes one). All are hidden (inactive)
+	 * while the panel is collapsed.
 	 */
 	private void addUpgradeSlots() {
+		if (!hasUpgradePanel()) {
+			return; // this machine opted out of the panel (MOD-393)
+		}
 		int start = baseSlotCount();
 		if (start < 0) {
 			return; // defensive: a container smaller than the upgrade block (should not happen)
 		}
 		for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
-			boolean active = (i == MachineBlockEntity.ACTIVE_UPGRADE_INDEX);
 			int[] xy = upgradeSlotXY(i);
 			addSlot(new UpgradeSlot(machine, start + i, xy[0], xy[1],
-					this::isPanelOpen, active));
+					this::isPanelOpen, upgradeSlotKind(i)));
 		}
+	}
+
+	/**
+	 * The kind of panel arm {@code i} on THIS machine.
+	 *
+	 * <p>Both places that build the arms go through here, and that is the point: the panel formula
+	 * already existed twice (docked and dragged), and the last time only one copy was fixed the slots
+	 * worked until the player dragged the panel and then stopped. One method, one answer.
+	 *
+	 * <p>The only per-machine difference is arm 1: a machine the overclocker does nothing to gets a
+	 * locked arm instead of one that accepts a chip and ignores it. Decided from the BLOCK, so the
+	 * client — which has no block entity behind this menu — reaches the same answer as the server and
+	 * the chip does not snap back after appearing to fit.
+	 */
+	protected UpgradeSlotKind upgradeSlotKind(int i) {
+		UpgradeSlotKind kind = UpgradeSlotKind.byIndex(i);
+		if (kind == UpgradeSlotKind.OVERCLOCK && !ContentManifest.isOverclockable(block)) {
+			return UpgradeSlotKind.OVERCLOCK_UNSUPPORTED;
+		}
+		return kind;
 	}
 
 	/**
@@ -127,16 +168,23 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	 * nothing is lost. The server never calls this (it does not render).
 	 */
 	public void repositionUpgradeSlots(int dx, int dy) {
+		if (!hasUpgradePanel()) {
+			// This machine opted out of the panel (MOD-393). Without the guard the method would build
+			// UpgradeSlots at menu indices base..base+3 and splice them over the PLAYER-inventory slots
+			// that live there instead — each bound to a machine container that has no such slot. The
+			// first ClientboundContainerSetContent then writes past the end of it and the client dies.
+			// The screen calls this on init to restore a dragged panel position, so it is not a rare path.
+			return;
+		}
 		int start = baseSlotCount();
 		if (start < 0) {
 			return;
 		}
 		for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
 			int menuIndex = start + i;
-			boolean active = (i == MachineBlockEntity.ACTIVE_UPGRADE_INDEX);
 			int[] xy = upgradeSlotXY(i);
 			UpgradeSlot moved = new UpgradeSlot(machine, menuIndex,
-					xy[0] + dx, xy[1] + dy, this::isPanelOpen, active);
+					xy[0] + dx, xy[1] + dy, this::isPanelOpen, upgradeSlotKind(i));
 			moved.index = menuIndex;
 			slots.set(menuIndex, moved);
 		}
@@ -145,6 +193,28 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	/** Client-only upgrade-panel state (see {@link #panelOpen}). */
 	public boolean isPanelOpen() {
 		return panelOpen;
+	}
+
+	/**
+	 * Tier of the overclocker chip sitting in the panel, or 0 (MOD-393). Read from the container rather
+	 * than the block entity so it answers the same on both sides: client-side the container is the
+	 * menu's dummy, which vanilla keeps in sync with the real inventory — the block entity itself is not
+	 * reachable here.
+	 *
+	 * <p>This is what the player has INSTALLED, which is what the gear tooltip reports. What actually
+	 * takes effect is additionally capped by the machine's voltage tier
+	 * ({@link MachineBlockEntity#overclockerCap()}) and lives server-side.
+	 */
+	public int installedOverclockerTier() {
+		int start = baseSlotCount();
+		if (start < 0) {
+			return 0;
+		}
+		int tier = 0;
+		for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
+			tier = Math.max(tier, OverclockerChipItem.tierOf(machine.getItem(start + i)));
+		}
+		return tier;
 	}
 
 	/** Toggle the upgrade panel (screen-driven); returns the new state. */
@@ -236,21 +306,21 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 		if (slot != null && slot.hasItem()) {
 			ItemStack stack = slot.getItem();
 			result = stack.copy();
-			// Menu slot layout: [0..base) machine, [base..base+N) upgrades, then 36 player-inventory slots.
+			// Menu slot layout: [0..base) machine, [base..base+N) upgrades (absent when the machine opted
+			// out of the panel), then 36 player-inventory slots.
 			int base = baseSlotCount();
-			int invStart = base + UPGRADE_SLOT_COUNT;
+			int invStart = base + (hasUpgradePanel() ? UPGRADE_SLOT_COUNT : 0);
 			int invEnd = invStart + 36;
 			if (index < invStart) {
 				// A machine or upgrade slot → dump into the player inventory.
 				if (!moveItemStackTo(stack, invStart, invEnd, true)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (stack.is(ModContent.MUTE_CHIP.get())) {
-				// A mute chip from the inventory shift-clicks straight into the active upgrade slot
-				// (MOD-080): only that slot, only a mute chip, only one (the slot caps at 1). If it is
-				// already occupied, leave the chips in the inventory — never spill into machine slots.
-				int activeSlot = base + MachineBlockEntity.ACTIVE_UPGRADE_INDEX;
-				if (!moveItemStackTo(stack, activeSlot, activeSlot + 1, false)) {
+			} else if (stack.is(ModTags.Items.MACHINE_UPGRADE)) {
+				// An upgrade chip from the inventory shift-clicks into the panel (MOD-080, widened by
+				// MOD-392 from "the one active slot" to all four). If every slot is full, leave the chips
+				// in the inventory — never spill into machine slots.
+				if (!moveItemStackTo(stack, base, invStart, false)) {
 					return ItemStack.EMPTY;
 				}
 			} else if (!moveItemStackTo(stack, 0, base, false)) {
@@ -270,17 +340,18 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	/**
 	 * An upgrade-panel slot (MOD-080). Hidden (inactive → not rendered, not hoverable, not clickable —
 	 * vanilla {@code AbstractContainerScreen} gates all three on {@link Slot#isActive()}) while the panel
-	 * is collapsed. Holds at most one item. The active slot accepts only a mute chip; locked slots accept
-	 * nothing. Hoppers never reach these — the block entity omits them from {@code getSlotsForFace}.
+	 * is collapsed. Accepts anything tagged {@link ModTags.Items#MACHINE_UPGRADE}. Hoppers never reach
+	 * these — the block entity omits them from {@code getSlotsForFace}.
 	 */
 	public static final class UpgradeSlot extends Slot {
 		private final BooleanSupplier visible;
-		private final boolean acceptsChip;
+		private final UpgradeSlotKind kind;
 
-		public UpgradeSlot(Container container, int index, int x, int y, BooleanSupplier visible, boolean acceptsChip) {
+		public UpgradeSlot(Container container, int index, int x, int y, BooleanSupplier visible,
+				UpgradeSlotKind kind) {
 			super(container, index, x, y);
 			this.visible = visible;
-			this.acceptsChip = acceptsChip;
+			this.kind = kind;
 		}
 
 		@Override
@@ -288,11 +359,20 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 			return visible.getAsBoolean();
 		}
 
-		/** A locked slot (never accepts an item) — the MVP panel's slots 1–3, reserved for future upgrades. */
-		public boolean isLocked() {
-			return !acceptsChip;
+		/** Which upgrade this arm of the panel takes; the screen draws its hint and lock from this. */
+		public UpgradeSlotKind kind() {
+			return kind;
 		}
 
+		/** A reserved arm — visible, greyed out, accepts nothing until MOD-286 fills it. */
+		public boolean isLocked() {
+			return !kind.isOpen();
+		}
+
+		/**
+		 * One module per arm, always. Tiers of the overclocker are three distinct items rather than a
+		 * stack, so "how much speed" is read off the item itself instead of a count in a slot.
+		 */
 		@Override
 		public int getMaxStackSize() {
 			return 1;
@@ -300,7 +380,7 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 
 		@Override
 		public boolean mayPlace(ItemStack stack) {
-			return acceptsChip && stack.is(ModContent.MUTE_CHIP.get());
+			return kind.accepts(stack);
 		}
 	}
 }

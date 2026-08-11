@@ -377,6 +377,44 @@
           ]
         },
         {
+          "id": "energy_condenser",
+          "title": "Energy Condenser",
+          "icon": "alaindustrial:energy_condenser",
+          "block_id": "alaindustrial:energy_condenser",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Energy Condenser",
+              "text": "Catches the grid's surplus and packs it into an energy clot; which tier you get is decided by when you take it."
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "Energy: 12 EU/т приём"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:gold_ingot",
+                "alaindustrial:iron_plate",
+                "minecraft:gold_ingot",
+                "alaindustrial:battery",
+                "minecraft:gold_ingot",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:energy_condenser",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "cesu",
           "title": "强化储能库",
           "icon": "alaindustrial:cesu",
@@ -2150,8 +2188,39 @@
     {
       "id": "items",
       "title": "物品",
-      "icon": "alaindustrial:mute_chip",
+      "icon": "alaindustrial:overclocker_chip_i",
       "entries": [
+        {
+          "id": "overclocker_chip_i",
+          "title": "Overclocker Chip I",
+          "icon": "alaindustrial:overclocker_chip_i",
+          "block_id": "alaindustrial:overclocker_chip_i",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Overclocker Chip I",
+              "text": "A three-tier upgrade: each tier shortens the operation and doubles the energy draw. Made from energy clots."
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "",
+                "alaindustrial:energy_clot_i",
+                "",
+                "minecraft:gold_ingot",
+                "alaindustrial:empty_chip",
+                "minecraft:gold_ingot",
+                "",
+                "minecraft:redstone",
+                ""
+              ],
+              "result_id": "alaindustrial:overclocker_chip_i",
+              "result_count": 1
+            }
+          ]
+        },
         {
           "id": "mute_chip",
           "title": "静音芯片",

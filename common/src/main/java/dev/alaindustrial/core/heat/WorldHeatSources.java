@@ -42,10 +42,21 @@ public final class WorldHeatSources {
 	 * The resolver has already checked availability; a false return handles a same-tick competing draw.
 	 */
 	public static boolean consumeForProgress(Level level, BlockPos machinePos, HeatSource source) {
+		return consumeForProgress(level, machinePos, source, 0);
+	}
+
+	/**
+	 * As above, but the heated machine passes its own overclocker count (MOD-392) so the heater below
+	 * charges the same multiple. The Electric Heater is not a {@code MenuProvider} and therefore has no
+	 * upgrade panel of its own; without this it would keep billing one flat tick while the machine above
+	 * finished the batch in fewer of them — making a sped-up vulcanizer pay LESS for heat overall.
+	 */
+	public static boolean consumeForProgress(Level level, BlockPos machinePos, HeatSource source,
+			int overclockers) {
 		if (source != HeatSource.ELECTRIC_HEATER) {
 			return source.level() > 0;
 		}
 		return level.getBlockEntity(machinePos.below()) instanceof ElectricHeaterBlockEntity heater
-				&& heater.consumeHeatTick();
+				&& heater.consumeHeatTick(overclockers);
 	}
 }

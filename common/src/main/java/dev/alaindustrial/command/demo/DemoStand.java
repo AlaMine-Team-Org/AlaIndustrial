@@ -469,7 +469,10 @@ public final class DemoStand {
 		// Sits at floor level under the wall torch's post; it is a 4px plate, so nothing above it moves.
 		set(level, origin, 38, 1, 10, ModContent.CHARGE_PAD.get());
 		chargeBuffer(level, origin, 38, 1, 10);
-		set(level, origin, 39, 1, 10, FLOOR);
+		// Energy condenser (MOD-393): banked full, so the stand's copy shows the orb spinning at speed
+		// and a tier-III clot already sitting in its slot — an empty one would just be a dark frame.
+		set(level, origin, 39, 1, 10, ModContent.ENERGY_CONDENSER.get());
+		chargeBuffer(level, origin, 39, 1, 10);
 		set(level, origin, 39, 2, 10, FLOOR);
 		level.setBlockAndUpdate(origin.offset(38, 2, 10),
 				ModContent.ENRICHED_URANIUM_WALL_TORCH.get().defaultBlockState()

@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"P": "#c:plates/iron",
+		"G": "#c:ingots/gold",
+		"E": "alaindustrial:electronic_circuit",
+		"B": "alaindustrial:battery"
+	},
+	"pattern": [
+		"PGP",
+		"GBG",
+		"PEP"
+	],
+	"result": {
+		"id": "alaindustrial:energy_condenser"
+	}
+}

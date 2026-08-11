@@ -595,6 +595,60 @@ public final class Config {
 	 * Fluxweave line and its armour. */
 	public static int galvanicBathDuration = 500;
 
+	// --- Overclocker chip (MOD-392): the per-chip speed/energy trade, applied per machine. ---
+	/**
+	 * Duration multiplier per installed overclocker chip: each chip shortens one operation to 80 % of
+	 * its previous length. Deliberately paired with a HARSHER {@link #overclockerEuFactor}, so the
+	 * chip is not a re-skin of {@link #globalMachineSpeedMultiplier} — that knob is energy-neutral by
+	 * design (EU/t up, duration down, E_op unchanged), whereas a chip must make speed genuinely
+	 * expensive: 0.8 × 2.0 means every chip raises the energy PER OPERATION by 60 %.
+	 */
+	public static float overclockerSpeedFactor = 0.8f;
+	/**
+	 * EU/t multiplier per installed overclocker chip — each chip doubles the draw. Together with
+	 * {@link #overclockerSpeedFactor} one chip buys 1.25× speed for 1.6× the energy per operation, and
+	 * four chips buy 2.46× speed for 6.55×. Doubling is also what makes the tier ceiling bite at a
+	 * round number: a 2 EU/t machine reaches exactly {@code tierLvVoltage} (32) on its fourth chip.
+	 */
+	public static float overclockerEuFactor = 2.0f;
+	/**
+	 * Highest overclocker tier that exists — three chips are crafted (I, II, III), so three steps.
+	 * On top of this sits the per-machine tier cap, and that is usually the one that bites: a machine
+	 * may run no more steps than its voltage tier can actually feed
+	 * ({@code base × euFactor^n ≤ tier.maxVoltage()}), so an 8 EU/t LV machine stops at II even holding
+	 * a tier-III chip, while a 2 EU/t one runs all three.
+	 */
+	public static int overclockerMaxPerMachine = 3;
+
+	// --- Energy condenser (MOD-393): surplus grid power banked, then packed into an item. ---
+	/**
+	 * Ceiling of the condenser's bank. Equals the tier-III threshold on purpose: past it there is
+	 * nothing left to reach, so the block stops drawing instead of hoarding energy no one can spend.
+	 */
+	public static int condenserCapacity = 4_000_000;
+	/**
+	 * EU/t the condenser will accept — one MV packet ({@link #tierMvVoltage}), so a farm of ~32 basic
+	 * solar panels saturates exactly one condenser and the ratio is something a player can eyeball.
+	 *
+	 * <p>It was copper scale (12) at first, on the belief that a narrow intake was the only thing
+	 * keeping the condenser from outrunning a machine sitting further from the generator. That was
+	 * simply wrong: {@code EnergyNetwork#tick} serves the two consumer classes in two separate passes,
+	 * machines first, so a machine drinks from the line before any storage sink is offered a drop. The
+	 * intake never was the guard — it was only a throttle, and at 12 EU/t it throttled the mechanic
+	 * itself: an 85-panel farm producing 1580 EU/t still banked 12, so building more generation — the
+	 * one thing this block is supposed to reward — changed nothing at all.
+	 *
+	 * <p>Scaling therefore belongs to the BANK of condensers, not to a hidden cap inside one: absorbing
+	 * a bigger surplus means placing more of them.
+	 */
+	public static int condenserInputRate = 128;
+	/** Banked EU at which the condenser can yield a tier-I clot; below this its output stays empty. */
+	public static int clotThresholdI = 250_000;
+	/** Banked EU for a tier-II clot — four times tier I. */
+	public static int clotThresholdII = 1_000_000;
+	/** Banked EU for a tier-III clot — four times tier II, and the bank's ceiling. */
+	public static int clotThresholdIII = 4_000_000;
+
 	// --- MOD-064 alloy smelter. Its own rate, like the incubator and the assembler: melting several
 	// metals into one is a hotter job than milling a single ore. 8 EU/t x 150 ticks = 1200 EU per
 	// operation (7.5 s) for every alloy — one price across the family, so the four alloys differ by what
@@ -1225,6 +1279,22 @@ public final class Config {
 				() -> distillationColumnWarmupTicks, v -> distillationColumnWarmupTicks = v, 1),
 			new IntField("galvanicBathDuration", "Fallback ticks a galvanic bath operation takes at 1.0 speed; shipped recipe energy 1000 / machineEuPerTick 2 = 500.",
 				() -> galvanicBathDuration, v -> galvanicBathDuration = v, 1),
+			new FloatField("overclockerSpeedFactor", "MOD-392: duration multiplier per overclocker chip (0.8 = each chip cuts one operation to 80% of its length).",
+				() -> overclockerSpeedFactor, v -> overclockerSpeedFactor = v, 0.0f),
+			new FloatField("overclockerEuFactor", "MOD-392: EU/t multiplier per overclocker chip (2.0 = each chip doubles the draw). With 0.8 speed this makes every chip cost 60% more energy per operation.",
+				() -> overclockerEuFactor, v -> overclockerEuFactor = v, 1.0f),
+			new IntField("overclockerMaxPerMachine", "MOD-392: absolute ceiling on overclocker chips in one machine; the tier cap (base EU/t x factor^n <= tier voltage) usually bites first.",
+				() -> overclockerMaxPerMachine, v -> overclockerMaxPerMachine = v, 0),
+			new IntField("condenserCapacity", "MOD-393: ceiling of the energy condenser's bank; equals the tier-III clot threshold, so it stops drawing once nothing higher is reachable.",
+				() -> condenserCapacity, v -> condenserCapacity = v, 1),
+			new IntField("condenserInputRate", "MOD-393: EU/t the energy condenser accepts — one MV packet, about 32 basic solar panels. Machines are protected by the network's serve order, not by this number; absorbing a bigger surplus means placing more condensers.",
+				() -> condenserInputRate, v -> condenserInputRate = v, 1),
+			new IntField("clotThresholdI", "MOD-393: banked EU needed before the condenser can yield a tier-I energy clot.",
+				() -> clotThresholdI, v -> clotThresholdI = v, 1),
+			new IntField("clotThresholdII", "MOD-393: banked EU for a tier-II clot (four times tier I).",
+				() -> clotThresholdII, v -> clotThresholdII = v, 1),
+			new IntField("clotThresholdIII", "MOD-393: banked EU for a tier-III clot (four times tier II).",
+				() -> clotThresholdIII, v -> clotThresholdIII = v, 1),
 			new IntField("alloySmelterEuPerTick", "EU/t the alloy smelter draws while running (MOD-064). Four times the machine standard, like the incubator.",
 				() -> alloySmelterEuPerTick, v -> alloySmelterEuPerTick = v, 1),
 			new IntField("alloySmelterDuration", "Fallback ticks one alloying operation takes at 1.0 speed (MOD-064); shipped recipe energy 1200 / alloySmelterEuPerTick 8 = 150.",

@@ -19,6 +19,7 @@ import dev.alaindustrial.client.screen.MoonlitSolarPanelScreen;
 import dev.alaindustrial.client.screen.SolarPanelScreen;
 import dev.alaindustrial.client.screen.WaterMillScreen;
 import dev.alaindustrial.client.render.GardenDroneBlockEntityRenderer;
+import dev.alaindustrial.client.render.EnergyCondenserBlockEntityRenderer;
 import dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer;
 import dev.alaindustrial.client.screen.WindMillScreen;
 import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
@@ -246,6 +247,10 @@ public final class IndustrializationNeoForgeClient {
 	 * counterpart to the Fabric {@code BlockEntityRendererRegistry.register} call.
 	 */
 	private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+		// MOD-393: the orb inside the condenser frame. Registered on BOTH loaders — NeoForge has no
+		// client test lane, so a missing line here would first be noticed by a player.
+		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.ENERGY_CONDENSER.get(),
+				EnergyCondenserBlockEntityRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.IRON_CHEST.get(),
 				ChestBlockEntityRenderer::iron);
 		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.SILVER_CHEST.get(),

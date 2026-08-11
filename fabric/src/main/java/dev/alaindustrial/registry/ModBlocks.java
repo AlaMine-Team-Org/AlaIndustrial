@@ -7,6 +7,7 @@ import dev.alaindustrial.block.CesuBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.ChargePadBlock;
+import dev.alaindustrial.block.EnergyCondenserBlock;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
@@ -220,6 +221,10 @@ public final class ModBlocks {
 			register(ELECTRIC_HEATER_KEY, new ElectricHeaterBlock(props(ELECTRIC_HEATER_KEY)));
 	public static final ResourceKey<Block> CHARGE_PAD_KEY = key("charge_pad");
 	public static final Block CHARGE_PAD = register(CHARGE_PAD_KEY, new ChargePadBlock(props(CHARGE_PAD_KEY)));
+	/** Energy condenser (MOD-393): banks grid surplus into energy clots. */
+	public static final ResourceKey<Block> ENERGY_CONDENSER_KEY = key("energy_condenser");
+	public static final Block ENERGY_CONDENSER =
+			register(ENERGY_CONDENSER_KEY, new EnergyCondenserBlock(props(ENERGY_CONDENSER_KEY)));
 
 	public static final ResourceKey<Block> INCUBATOR_KEY = key("incubator");
 	public static final Block INCUBATOR = register(INCUBATOR_KEY, new IncubatorBlock(props(INCUBATOR_KEY)));
@@ -410,6 +415,7 @@ public final class ModBlocks {
 		ModContent.GALVANIC_BATH = () -> GALVANIC_BATH;
 		ModContent.ELECTRIC_HEATER = () -> ELECTRIC_HEATER;
 		ModContent.CHARGE_PAD = () -> CHARGE_PAD;
+		ModContent.ENERGY_CONDENSER = () -> ENERGY_CONDENSER;
 		ModContent.INCUBATOR = () -> INCUBATOR;
 		ModContent.INCUBATOR_DOME = () -> INCUBATOR_DOME;
 		ModContent.TRELLIS = () -> TRELLIS;

@@ -67,7 +67,7 @@ public class HighAltitudeWindMillScreen extends MachineScreen<HighAltitudeWindMi
 		Component label = modeLabel(mode);
 		boolean idle = label != null;
 		if (!idle) {
-			label = Component.translatable("gui.alaindustrial.output", this.menu.getProductionRate());
+			label = outputLine(this.menu.getProductionRate());
 		}
 		int tx = x + (this.imageWidth - this.font.width(label)) / 2;
 		graphics.text(this.font, label, tx, y + STATUS_TEXT_Y, idle ? GuiStyle.TEXT_DIM : GuiStyle.TEXT, false);

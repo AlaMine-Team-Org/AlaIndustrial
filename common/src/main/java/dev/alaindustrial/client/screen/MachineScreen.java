@@ -1,9 +1,12 @@
 package dev.alaindustrial.client.screen;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.menu.MachineMenu;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -11,6 +14,7 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
@@ -93,6 +97,27 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	 * and by {@link #renderEnergyBar} (via the subclass's drawMachineFrame call site).
 	 */
 	protected abstract Identifier texture();
+
+	/**
+	 * A generator's output line — or the reason there is no output.
+	 *
+	 * <p>{@code gui.alaindustrial.output} states the rate the generator <em>could</em> deliver, and on a
+	 * full buffer that reads as a plain lie: the block is delivering nothing, and the player sees a
+	 * healthy number next to 8000/8000. On a farm with more generation than the grid consumes — the
+	 * normal state of any solar array — this is what makes idle panels look broken. They are not: the
+	 * grid moves only what something asks for, and a generator whose buffer is full has nowhere to put
+	 * the next EU.
+	 *
+	 * <p>So a full buffer says so instead. The moment anything draws the buffer down, the rate returns
+	 * on its own; nothing here changes how much energy moves.
+	 */
+	protected Component outputLine(int productionRate) {
+		int capacity = this.menu.getCapacity();
+		if (capacity > 0 && this.menu.getEnergy() >= capacity) {
+			return Component.translatable("gui.alaindustrial.output_idle");
+		}
+		return Component.translatable("gui.alaindustrial.output", productionRate);
+	}
 
 	/**
 	 * Standard opening blit — the visible {@code imageWidth × imageHeight} region at the top-left of
@@ -214,13 +239,16 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		// panel covers it like it covers everything else).
 		drawGhostHints(graphics);
 		// Overlay pass — above the GUI's slots, items and labels.
-		if (this.menu.isPanelOpen()) {
+		if (this.menu.hasUpgradePanel() && this.menu.isPanelOpen()) {
 			drawPanel(graphics, mouseX, mouseY);
 		}
-		// The gear tab is always drawn and clickable. It sits at a fixed position anchored to the
-		// screen (panel.gearX/gearY take leftPos/topPos), tucked into the panel's transparent top-left
-		// corner when open, so it never covers panel content.
-		drawTabButton(graphics);
+		// The gear tab is drawn and clickable on every machine that HAS a panel. It sits at a fixed
+		// position anchored to the screen (panel.gearX/gearY take leftPos/topPos), tucked into the
+		// panel's transparent top-left corner when open, so it never covers panel content. A machine
+		// that opted out (MOD-393) shows no gear — a button that opens nothing reads as broken.
+		if (this.menu.hasUpgradePanel()) {
+			drawTabButton(graphics);
+		}
 	}
 
 	/** Skip the upgrade slots in the normal slot pass — they are painted in the panel overlay instead. */
@@ -233,7 +261,10 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	}
 
 	private void drawPanel(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		int px = this.leftPos + MachineMenu.PANEL_X + panel.panelDX();
+		// Anchor-aware (not the flat PANEL_X constant): a wider GUI overrides panelAnchorX(), and the
+		// hit-boxes, slots and close button already follow it — the background used to be the one piece
+		// that did not, so on the 200px distillation column the panel art sat 24px left of its own slots.
+		int px = this.leftPos + this.menu.panelAnchorX() + panel.panelDX();
 		int py = this.topPos + MachineMenu.PANEL_Y + panel.panelDY();
 		graphics.blit(RenderPipelines.GUI_TEXTURED, UPGRADES_ATLAS, px, py,
 				(float) UpgradePanelController.PANEL_U, (float) UpgradePanelController.PANEL_V,
@@ -241,7 +272,7 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 				UpgradePanelController.ATLAS, UpgradePanelController.ATLAS);
 
 		Slot hovered = upgradeSlotAt(mouseX, mouseY);
-		boolean activeHasChip = false;
+		int upgradeIndex = 0;
 		for (Slot slot : this.menu.slots) {
 			if (!(slot instanceof MachineMenu.UpgradeSlot up) || !up.isActive()) {
 				continue;
@@ -250,9 +281,8 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 			int sy = this.topPos + slot.y;
 			ItemStack item = slot.getItem();
 			if (up.isLocked()) {
+				// Reserved for a MOD-286 module: dim it so the baked hint reads as "later", not "broken".
 				graphics.fill(sx, sy, sx + 16, sy + 16, UpgradePanelController.LOCK_TINT);
-			} else if (!item.isEmpty()) {
-				activeHasChip = true;
 			}
 			if (slot == hovered) {
 				graphics.fill(sx, sy, sx + 16, sy + 16, UpgradePanelController.HOVER_TINT);
@@ -260,15 +290,18 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 			if (!item.isEmpty()) {
 				graphics.item(item, sx, sy);
 				graphics.itemDecorations(this.font, item, sx, sy, null);
+				// Light THIS arm's rivet, not a fixed one: the slots are added in panel order, so the
+				// running index maps straight onto IND_XY.
+				if (upgradeIndex < UpgradePanelController.IND_XY.length) {
+					int[] ind = UpgradePanelController.IND_XY[upgradeIndex];
+					graphics.blit(RenderPipelines.GUI_TEXTURED, UPGRADES_ATLAS,
+							px + ind[0], py + ind[1],
+							(float) UpgradePanelController.ACT_U, (float) UpgradePanelController.ACT_V,
+							UpgradePanelController.ACT_W, UpgradePanelController.ACT_H,
+							UpgradePanelController.ATLAS, UpgradePanelController.ATLAS);
+				}
 			}
-		}
-		// Active-slot indicator: swap the grey rivet for the orange one while a chip is installed.
-		if (activeHasChip) {
-			graphics.blit(RenderPipelines.GUI_TEXTURED, UPGRADES_ATLAS,
-					px + UpgradePanelController.ACTIVE_IND_DX, py + UpgradePanelController.ACTIVE_IND_DY,
-					(float) UpgradePanelController.ACT_U, (float) UpgradePanelController.ACT_V,
-					UpgradePanelController.ACT_W, UpgradePanelController.ACT_H,
-					UpgradePanelController.ATLAS, UpgradePanelController.ATLAS);
+			upgradeIndex++;
 		}
 
 		int cx = panel.closeX(this.leftPos);
@@ -302,9 +335,24 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		if (panel.isOverGear(mouseX, mouseY, this.leftPos, this.topPos)) {
-			graphics.setTooltipForNextFrame(this.font, Component.translatable("gui.alaindustrial.upgrades"),
-					mouseX, mouseY);
+		if (this.menu.hasUpgradePanel() && panel.isOverGear(mouseX, mouseY, this.leftPos, this.topPos)) {
+			int chips = this.menu.installedOverclockerTier();
+			if (chips <= 0) {
+				graphics.setTooltipForNextFrame(this.font,
+						Component.translatable("gui.alaindustrial.upgrades"), mouseX, mouseY);
+				return;
+			}
+			// Relative multipliers only — never an absolute EU/t figure. Config is not synced to the
+			// client, so an absolute number would quietly lie on a server that retuned its balance;
+			// the ratios are pure functions of the chip tier and hold everywhere.
+			double speed = 1.0 / Math.pow(Config.overclockerSpeedFactor, chips);
+			double draw = Math.pow(Config.overclockerEuFactor, chips);
+			List<FormattedCharSequence> lines = new ArrayList<>();
+			lines.addAll(this.font.split(Component.translatable("gui.alaindustrial.upgrades"), 200));
+			lines.addAll(this.font.split(Component.translatable("gui.alaindustrial.upgrades.overclock",
+					chips, String.format(Locale.ROOT, "%.2f", speed),
+					String.format(Locale.ROOT, "%.0f", draw)).withStyle(ChatFormatting.GRAY), 200));
+			graphics.setTooltipForNextFrame(this.font, lines, mouseX, mouseY);
 			return;
 		}
 		if (this.menu.isPanelOpen() && panel.isOverPanel(mouseX, mouseY, this.leftPos, this.topPos)) {
@@ -347,7 +395,8 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
 		int btn = event.button();
 		// The gear always toggles the panel (it stays visible in the panel's transparent corner).
-		if (btn == 0 && panel.isOverGear(event.x(), event.y(), this.leftPos, this.topPos)) {
+		if (btn == 0 && this.menu.hasUpgradePanel()
+				&& panel.isOverGear(event.x(), event.y(), this.leftPos, this.topPos)) {
 			panel.onGearClick();
 			return true;
 		}

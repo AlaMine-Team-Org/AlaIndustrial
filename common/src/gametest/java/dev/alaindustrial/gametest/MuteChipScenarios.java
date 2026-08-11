@@ -41,9 +41,92 @@ public final class MuteChipScenarios {
 
 	private static final BlockPos POS = new BlockPos(1, 2, 1);
 
-	/** Container index of the active (mute) upgrade slot: the first slot appended after the base slots. */
+	/** Container index of the mute arm: the first slot appended after the base slots. */
 	private static int activeUpgradeSlot(MachineBlockEntity be) {
 		return be.upgradeSlotStart() + MachineBlockEntity.ACTIVE_UPGRADE_INDEX;
+	}
+
+	/** Panel arm that takes overclockers (MOD-393) — index 1, the top arm. */
+	private static final int OVERCLOCK_ARM = 1;
+
+	// --- Overclocker chip (MOD-392) ---
+
+	/**
+	 * A macerator with a tier-II chip runs the operation at 0.8² of its length and draws 2² the EU — and
+	 * the energy it actually spends on the operation goes UP, which is the whole point of the upgrade.
+	 *
+	 * <p>Measures the real drain from the buffer rather than trusting the config, so a chip that
+	 * shortened the run without charging for it would fail here even if the numbers looked right.
+	 */
+	public static void overclocker_speedsUpAndCostsMore(GameTestHelper helper) {
+		MaceratorBlockEntity be = AlaGameTestHelper.place(helper, POS, ModContent.MACERATOR.get(),
+				MaceratorBlockEntity.class);
+		int plain = be.effectiveDuration(dev.alaindustrial.Config.maceratorDuration);
+		int plainDraw = be.effectiveEuPerTick(dev.alaindustrial.Config.machineEuPerTick);
+
+		be.setItem(be.upgradeSlotStart() + OVERCLOCK_ARM,
+				new ItemStack(ModContent.OVERCLOCKER_CHIP_II.get()));
+		if (be.overclockerCount() != 2) {
+			helper.fail("expected tier 2 in effect, got " + be.overclockerCount());
+		}
+		int fast = be.effectiveDuration(dev.alaindustrial.Config.maceratorDuration);
+		int fastDraw = be.effectiveEuPerTick(dev.alaindustrial.Config.machineEuPerTick);
+
+		if (fast >= plain) {
+			helper.fail("tier II did not shorten the operation: " + plain + " -> " + fast);
+		}
+		if (fastDraw <= plainDraw) {
+			helper.fail("tier II did not raise the draw: " + plainDraw + " -> " + fastDraw);
+		}
+		// E_op must RISE — speed bought with energy, not a free lunch (and not merely energy-neutral,
+		// which is what globalMachineSpeedMultiplier already does).
+		long plainOp = (long) plain * plainDraw;
+		long fastOp = (long) fast * fastDraw;
+		if (fastOp <= plainOp) {
+			helper.fail("energy per operation must grow with the tier: " + plainOp + " -> " + fastOp);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * The cap follows the machine's tier, not a flat number: an alloy smelter draws 8 EU/t, so on LV
+	 * (32 EU/t) it can use only two chips however many the player stuffs into the panel. Without this
+	 * the third chip would demand 64 EU/t on a tier that can never deliver it, and the machine would
+	 * starve while the player believed they had bought speed.
+	 */
+	public static void overclocker_tierCapsTheChips(GameTestHelper helper) {
+		MachineBlockEntity smelter = AlaGameTestHelper.place(helper, POS, ModContent.ALLOY_SMELTER.get());
+		if (smelter.overclockerCap() != 2) {
+			helper.fail("alloy smelter (8 EU/t on LV) should cap at tier 2, got " + smelter.overclockerCap());
+		}
+		smelter.setItem(smelter.upgradeSlotStart() + OVERCLOCK_ARM,
+				new ItemStack(ModContent.OVERCLOCKER_CHIP_III.get()));
+		if (smelter.overclockerCount() != 2) {
+			helper.fail("a tier-III chip must still act as tier 2 here, got " + smelter.overclockerCount());
+		}
+		int draw = smelter.effectiveEuPerTick(dev.alaindustrial.Config.alloySmelterEuPerTick);
+		if (draw > dev.alaindustrial.core.energy.EnergyTier.LV.maxVoltage()) {
+			helper.fail("capped draw " + draw + " still exceeds the LV tier ceiling");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A generator has the same four panel slots (every MenuProvider does) but must not be overclockable:
+	 * its output is governed by a different knob entirely, so a chip there would be a dead upgrade.
+	 */
+	public static void overclocker_generatorIsNotOverclockable(GameTestHelper helper) {
+		MachineBlockEntity solar = AlaGameTestHelper.place(helper, POS, ModContent.SOLAR_PANEL.get());
+		if (solar.supportsOverclock()) {
+			helper.fail("a solar panel must not advertise overclocking");
+		}
+		solar.setItem(solar.upgradeSlotStart() + OVERCLOCK_ARM,
+				new ItemStack(ModContent.OVERCLOCKER_CHIP_III.get()));
+		if (solar.overclockerCap() != 0 || solar.overclockerCount() != 0) {
+			helper.fail("chips must not count in a generator: cap=" + solar.overclockerCap()
+					+ " tier=" + solar.overclockerCount());
+		}
+		helper.succeed();
 	}
 
 	/** isMuted() is false empty and with an empty chip, true only with a mute chip in the active slot. */
@@ -59,6 +142,14 @@ public final class MuteChipScenarios {
 		be.setItem(activeUpgradeSlot(be), new ItemStack(ModContent.MUTE_CHIP.get()));
 		if (!be.isMuted()) {
 			helper.fail("mute chip in the active slot must mute");
+		}
+		// An overclocker is not a mute chip: the panel must not go silent just because SOME upgrade sits
+		// in it. (Which arm accepts what is covered by the menu-filter scenario.)
+		be.setItem(activeUpgradeSlot(be), ItemStack.EMPTY);
+		be.setItem(be.upgradeSlotStart() + OVERCLOCK_ARM,
+				new ItemStack(ModContent.OVERCLOCKER_CHIP_I.get()));
+		if (be.isMuted()) {
+			helper.fail("an overclocker must not silence the machine");
 		}
 		helper.succeed();
 	}
@@ -141,9 +232,9 @@ public final class MuteChipScenarios {
 	}
 
 	/**
-	 * Menu-level filter + quick-move (MOD-080): the active upgrade slot accepts only a mute chip, the
-	 * locked slots accept nothing, a mute chip shift-clicked from the inventory installs into the active
-	 * slot (exactly one), and a non-chip item never lands in an upgrade slot.
+	 * Menu-level filter + quick-move (MOD-080, typed per arm in MOD-393): each arm takes only its own
+	 * kind of upgrade, the reserved arms take nothing, a mute chip shift-clicked from the inventory
+	 * installs exactly one, and a non-chip item never lands in an upgrade slot.
 	 */
 	public static void muteChip_menuSlotFilterAndQuickMove(GameTestHelper helper) {
 		MachineBlockEntity be = AlaGameTestHelper.place(helper, POS, ModContent.MACERATOR.get());
@@ -152,19 +243,25 @@ public final class MuteChipScenarios {
 				ContainerLevelAccess.create(helper.getLevel(), be.getBlockPos()));
 
 		int base = be.upgradeSlotStart(); // first upgrade slot's menu index too (base slots come first)
-		Slot active = menu.getSlot(base);
-		Slot locked = menu.getSlot(base + 1);
 		ItemStack mute = new ItemStack(ModContent.MUTE_CHIP.get());
+		ItemStack overclocker = new ItemStack(ModContent.OVERCLOCKER_CHIP_I.get());
 		ItemStack empty = new ItemStack(ModContent.EMPTY_CHIP.get());
 
-		if (!active.mayPlace(mute)) {
-			helper.fail("active upgrade slot rejects a mute chip");
+		// Each arm is typed: mute goes left, overclockers go top, the other two take nothing yet. This
+		// is what caps overclocking at one chip per machine without a separate rule.
+		Slot muteArm = menu.getSlot(base + MachineBlockEntity.ACTIVE_UPGRADE_INDEX);
+		Slot overclockArm = menu.getSlot(base + OVERCLOCK_ARM);
+		if (!muteArm.mayPlace(mute) || muteArm.mayPlace(overclocker) || muteArm.mayPlace(empty)) {
+			helper.fail("mute arm must take the mute chip and nothing else");
 		}
-		if (active.mayPlace(empty)) {
-			helper.fail("active upgrade slot wrongly accepts an empty chip");
+		if (!overclockArm.mayPlace(overclocker) || overclockArm.mayPlace(mute)) {
+			helper.fail("overclock arm must take an overclocker and nothing else");
 		}
-		if (locked.mayPlace(mute)) {
-			helper.fail("a locked upgrade slot wrongly accepts a mute chip");
+		for (int i = 2; i < MachineBlockEntity.UPGRADE_SLOT_COUNT; i++) {
+			Slot reserved = menu.getSlot(base + i);
+			if (reserved.mayPlace(mute) || reserved.mayPlace(overclocker) || reserved.mayPlace(empty)) {
+				helper.fail("reserved arm " + i + " must accept nothing until MOD-286 fills it");
+			}
 		}
 
 		// Shift-clicking a mute chip from the inventory installs exactly one into the active slot (#10).

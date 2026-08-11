@@ -35,7 +35,7 @@ import net.minecraft.world.level.block.state.BlockState;
  *
  * <p>The one genuinely new rule here is the input filter — see {@link #canPlaceItem}.
  */
-public final class AlloySmelterBlockEntity extends MachineBlockEntity implements MenuProvider {
+public final class AlloySmelterBlockEntity extends MachineBlockEntity implements Overclockable, MenuProvider {
 	public static final int INPUT_SLOT_0 = 0;
 	public static final int INPUT_SLOT_1 = 1;
 	public static final int INPUT_SLOT_2 = 2;
@@ -53,12 +53,19 @@ public final class AlloySmelterBlockEntity extends MachineBlockEntity implements
 		this.maxProgress = Config.scaledDuration(Config.alloySmelterDuration);
 	}
 
+	/** The smelter's own tariff — four times the shared machine rate (MOD-064). */
+	@Override
+	public int baseEuPerTick() {
+		return Config.alloySmelterEuPerTick;
+	}
+
+
 	/**
-	 * EU drawn per working tick — the smelter's own tariff, scaled by the global speed knob so one
-	 * operation keeps costing what the recipe says (see {@link #onServerTick}).
+	 * EU drawn per working tick — the smelter's own tariff, scaled by the global speed knob and by any
+	 * overclocker chips, so one operation keeps costing what the recipe says (see {@link #onServerTick}).
 	 */
-	private static int euPerTick() {
-		return Math.max(1, Math.round(Config.alloySmelterEuPerTick * Config.globalMachineSpeedMultiplier));
+	private int euPerTick() {
+		return effectiveEuPerTick(Config.alloySmelterEuPerTick);
 	}
 
 	/** The three input slots as the recipe layer sees them — position carries no meaning. */
@@ -87,7 +94,7 @@ public final class AlloySmelterBlockEntity extends MachineBlockEntity implements
 		int baseDuration = recipe != null && recipe.energy() > 0
 				? Math.max(1, recipe.energy() / Math.max(1, Config.alloySmelterEuPerTick))
 				: Config.alloySmelterDuration;
-		maxProgress = Config.scaledDuration(baseDuration);
+		maxProgress = effectiveDuration(baseDuration);
 
 		if (recipe == null) {
 			if (progress != 0) {

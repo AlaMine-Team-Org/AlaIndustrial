@@ -7,6 +7,7 @@ import dev.alaindustrial.block.CesuBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.ChargePadBlock;
+import dev.alaindustrial.block.EnergyCondenserBlock;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
@@ -128,6 +129,9 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("electric_heater", ElectricHeaterBlock::new, props("electric_heater"));
 	public static final DeferredBlock<ChargePadBlock> CHARGE_PAD =
 			BLOCKS.registerBlock("charge_pad", ChargePadBlock::new, props("charge_pad"));
+	/** Energy condenser (MOD-393): banks grid surplus into energy clots. */
+	public static final DeferredBlock<EnergyCondenserBlock> ENERGY_CONDENSER =
+			BLOCKS.registerBlock("energy_condenser", EnergyCondenserBlock::new, props("energy_condenser"));
 	public static final DeferredBlock<IncubatorBlock> INCUBATOR =
 			BLOCKS.registerBlock("incubator", IncubatorBlock::new, props("incubator"));
 	public static final DeferredBlock<IncubatorDomeBlock> INCUBATOR_DOME =
@@ -313,6 +317,7 @@ public final class ModBlocksNeoForge {
 		ModContent.GALVANIC_BATH = GALVANIC_BATH::get;
 		ModContent.ELECTRIC_HEATER = ELECTRIC_HEATER::get;
 		ModContent.CHARGE_PAD = CHARGE_PAD::get;
+		ModContent.ENERGY_CONDENSER = ENERGY_CONDENSER::get;
 		ModContent.INCUBATOR = INCUBATOR::get;
 		ModContent.INCUBATOR_DOME = INCUBATOR_DOME::get;
 		ModContent.TRELLIS = TRELLIS::get;

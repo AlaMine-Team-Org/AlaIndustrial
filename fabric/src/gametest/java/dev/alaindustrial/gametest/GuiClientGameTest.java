@@ -108,6 +108,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 checkWaterMillWheel(context, singleplayer);     // MOD-024 BER visual regression
                 checkWindMillRotor(context, singleplayer);      // MOD-232 BER visual regression
                 checkIncubatorDome(context, singleplayer);      // MOD-118 BER visual regression
+                checkEnergyCondenserOrb(context, singleplayer); // MOD-393 BER visual regression
                 checkStorageModuleSeams(context, singleplayer); // MOD-287 connected textures
                 // R-PHY-10: mc.debugHitboxes removed in MC 26.2; re-enable when API is found.
             }
@@ -667,6 +668,72 @@ public class GuiClientGameTest implements FabricClientGameTest {
     /** Y and Z shared by every mill in the rig (the X of each is in {@link #WIND_MILLS}). */
     private static final int WIND_MILL_Y = 102;
     private static final int WIND_MILL_Z = 150;
+
+
+    /** Where the condenser stands for {@link #checkEnergyCondenserOrb}. */
+    private static final int ORB_X = 170;
+    private static final int ORB_Y = 101;
+    private static final int ORB_Z = 150;
+
+    /**
+     * MOD-393: proves the condenser's orb actually reaches the captured frame.
+     *
+     * <p>The toggle is the bank itself, not the block. {@code EnergyCondenserBlockEntityRenderer}
+     * draws nothing at zero — a deliberate rule, because a glowing orb inside an empty condenser
+     * claims the machine is working — so filling and emptying the bank turns the renderer on and off
+     * while leaving the block, its frame model and every pixel around it untouched. Photographing the
+     * block against bare ground instead would compare the whole machine and pass even if the orb never
+     * drew a single triangle, which is the failure this exists to catch (MOD-231).
+     *
+     * <p>That makes one gate cover two things: the orb renders, AND it obeys the empty-bank rule.
+     */
+    private static void checkEnergyCondenserOrb(ClientGameTestContext context,
+            TestSingleplayerContext singleplayer) {
+        TestServerContext server = singleplayer.getServer();
+        // Rain and night both put moving or dimming pixels into the baseline pair; the noise floor has
+        // to be driver dithering alone or the gate loses the ability to fail (MOD-232).
+        server.runCommand("weather clear");
+        server.runCommand("time set day");
+        server.runCommand("fill " + (ORB_X - 3) + " " + (ORB_Y - 1) + " " + (ORB_Z - 3) + " "
+                + (ORB_X + 3) + " " + (ORB_Y - 1) + " " + (ORB_Z + 3) + " minecraft:smooth_stone");
+        server.runCommand("fill " + (ORB_X - 3) + " " + ORB_Y + " " + (ORB_Z - 3) + " "
+                + (ORB_X + 3) + " " + (ORB_Y + 3) + " " + (ORB_Z + 3) + " minecraft:air");
+        server.runCommand("setblock " + ORB_X + " " + ORB_Y + " " + ORB_Z
+                + " alaindustrial:energy_condenser");
+        // Banked past tier I, so the orb is at a healthy size and brightness rather than its dimmest.
+        server.runCommand("data merge block " + ORB_X + " " + ORB_Y + " " + ORB_Z + " {Energy: 700000L}");
+
+        // Close in: the orb is a 0.6-block ball inside the frame, an order of magnitude smaller than
+        // the wind mill's rotor quad, so the camera has to be near enough for it to own real pixels.
+        server.runCommand("tp @p " + (ORB_X + 0.5) + " " + (ORB_Y + 0.3) + " " + (ORB_Z + 2.2) + " 180 5");
+        server.runCommand("gamemode spectator @p");
+        singleplayer.getClientLevel().waitForChunksRender();
+        context.waitTicks(10);
+
+        Path withOrb = takeCleanScreenshot(context, "condenser_orb");
+        LOG.info("[GUITEST][CONDENSER] condenser_orb -> {}", withOrb.toAbsolutePath());
+
+        server.runCommand("data merge block " + ORB_X + " " + ORB_Y + " " + ORB_Z + " {Energy: 0L}");
+        context.waitTicks(10);
+        Path emptyA = takeCleanScreenshot(context, "condenser_orb_empty_a");
+        context.waitTicks(5);
+        Path emptyB = takeCleanScreenshot(context, "condenser_orb_empty_b");
+
+        int orbDelta = differingPixels(withOrb, emptyA);
+        int staticNoise = differingPixels(emptyA, emptyB);
+        // 4x the measured floor, and at least 400 px. Lower than the rotor's 2000 on purpose: the orb
+        // is a much smaller object, and a threshold it cannot clear on a healthy build is a gate that
+        // gets deleted rather than fixed.
+        int required = Math.max(4 * staticNoise, 400);
+        LOG.info("[GUITEST][CONDENSER] orb pixel gate: delta={} px, static baseline={} px, required>{}",
+                orbDelta, staticNoise, required);
+        if (orbDelta < required) {
+            throw new AssertionError("[GUITEST][CONDENSER] emptying the bank changed only " + orbDelta
+                    + " px (static baseline " + staticNoise + " px, required > " + required + ") — either "
+                    + "EnergyCondenserBlockEntityRenderer's geometry is not in the captured frame, or the "
+                    + "orb no longer hides on an empty bank. " + explainWithDiff(withOrb, emptyA));
+        }
+    }
 
     /**
      * MOD-232: photographs the rotor of all three wind mills and proves the rotor geometry actually
@@ -2676,7 +2743,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 menu.injectTestData(energy, capacity, 0, 0);
                 menu.togglePanel();
                 for (net.minecraft.world.inventory.Slot s : menu.slots) {
-                    if (s instanceof MachineMenu.UpgradeSlot up && !up.isLocked()) {
+                    if (s instanceof MachineMenu.UpgradeSlot) {
                         s.set(new ItemStack(dev.alaindustrial.registry.ModContent.MUTE_CHIP.get()));
                         break;
                     }

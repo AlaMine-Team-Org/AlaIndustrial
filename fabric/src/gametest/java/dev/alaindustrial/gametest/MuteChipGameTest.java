@@ -47,4 +47,19 @@ public class MuteChipGameTest {
 	public void muteChip_craftingRecipesResolve(GameTestHelper helper) {
 		MuteChipScenarios.muteChip_craftingRecipesResolve(helper);
 	}
+
+	@GameTest
+	public void overclocker_speedsUpAndCostsMore(GameTestHelper helper) {
+		MuteChipScenarios.overclocker_speedsUpAndCostsMore(helper);
+	}
+
+	@GameTest
+	public void overclocker_tierCapsTheChips(GameTestHelper helper) {
+		MuteChipScenarios.overclocker_tierCapsTheChips(helper);
+	}
+
+	@GameTest
+	public void overclocker_generatorIsNotOverclockable(GameTestHelper helper) {
+		MuteChipScenarios.overclocker_generatorIsNotOverclockable(helper);
+	}
 }

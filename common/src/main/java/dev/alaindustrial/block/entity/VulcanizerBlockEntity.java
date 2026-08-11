@@ -29,7 +29,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 /** Two-input LV processing machine: raw rubber + sulfur dust + external heat → rubber. */
-public final class VulcanizerBlockEntity extends MachineBlockEntity implements MenuProvider {
+public final class VulcanizerBlockEntity extends MachineBlockEntity implements Overclockable, MenuProvider {
 	public static final int RAW_RUBBER_SLOT = 0;
 	public static final int SULFUR_SLOT = 1;
 	public static final int OUTPUT_SLOT = 2;
@@ -51,9 +51,10 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity implements M
 		this.maxProgress = Config.scaledDuration(Config.vulcanizerDuration);
 	}
 
+
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
-		int euPerTick = Config.machineEuPerTickEffective();
+		int euPerTick = effectiveEuPerTick(Config.machineEuPerTick);
 		ProcessingRecipeInput input = new ProcessingRecipeInput(items.get(RAW_RUBBER_SLOT), items.get(SULFUR_SLOT));
 		AlaProcessingRecipe recipe = level instanceof ServerLevel server
 				? ModRecipes.lookup(recipeCheck, server, input)
@@ -64,7 +65,7 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity implements M
 		int baseDuration = recipe != null && recipe.energy() > 0
 				? Math.max(1, recipe.energy() / Config.machineEuPerTick)
 				: Config.vulcanizerDuration;
-		maxProgress = Config.scaledDuration(baseDuration);
+		maxProgress = effectiveDuration(baseDuration);
 
 		if (recipe == null) {
 			if (progress != 0 || cycleHeatLevel != 0) {
@@ -85,7 +86,7 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity implements M
 		boolean canWork = heatEnough && recipe.hasEnough(input)
 				&& energy.amount >= euPerTick && canOutput(result);
 
-		if (canWork && !WorldHeatSources.consumeForProgress(level, pos, heatSource)) {
+		if (canWork && !WorldHeatSources.consumeForProgress(level, pos, heatSource, overclockerCount())) {
 			canWork = false;
 			heatSource = HeatSource.NONE;
 		}

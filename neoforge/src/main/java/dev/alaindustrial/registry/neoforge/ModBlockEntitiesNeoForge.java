@@ -7,6 +7,7 @@ import dev.alaindustrial.block.entity.CesuBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
+import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
@@ -124,6 +125,8 @@ public final class ModBlockEntitiesNeoForge {
 			register(ContentManifest.blockEntity("electric_heater", ElectricHeaterBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ChargePadBlockEntity>> CHARGE_PAD =
 			register(ContentManifest.blockEntity("charge_pad", ChargePadBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnergyCondenserBlockEntity>> ENERGY_CONDENSER =
+			register(ContentManifest.blockEntity("energy_condenser", EnergyCondenserBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IncubatorBlockEntity>> INCUBATOR =
 			register(ContentManifest.blockEntity("incubator", IncubatorBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeothermalGeneratorBlockEntity>> GEOTHERMAL_GENERATOR =
@@ -195,6 +198,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.GALVANIC_BATH_BE = GALVANIC_BATH::get;
 		ModContent.ELECTRIC_HEATER_BE = ELECTRIC_HEATER::get;
 		ModContent.CHARGE_PAD_BE = CHARGE_PAD::get;
+		ModContent.ENERGY_CONDENSER_BE = ENERGY_CONDENSER::get;
 		ModContent.INCUBATOR_BE = INCUBATOR::get;
 		ModContent.GEOTHERMAL_GENERATOR_BE = GEOTHERMAL_GENERATOR::get;
 		ModContent.PUMP_BE = PUMP::get;

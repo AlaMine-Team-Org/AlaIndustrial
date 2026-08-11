@@ -6,6 +6,7 @@ import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
 import dev.alaindustrial.item.assembler.BlueprintPattern;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModTags;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.server.level.ServerPlayer;
@@ -486,9 +487,11 @@ public class AssemblerMenu extends MachineMenu {
 			if (!moveItemStackTo(stack, PLAYER_SLOT_START, invEnd, true)) {
 				return ItemStack.EMPTY;
 			}
-		} else if (stack.is(ModContent.MUTE_CHIP.get())) {
-			int activeSlot = UPGRADE_SLOT_START + MachineBlockEntity.ACTIVE_UPGRADE_INDEX;
-			if (!moveItemStackTo(stack, activeSlot, activeSlot + 1, false)) {
+		} else if (stack.is(ModTags.Items.MACHINE_UPGRADE)) {
+			// Any upgrade chip lands in the panel — all four slots since MOD-392, not just the one that
+			// used to be reserved for the mute chip.
+			if (!moveItemStackTo(stack, UPGRADE_SLOT_START,
+					UPGRADE_SLOT_START + MachineBlockEntity.UPGRADE_SLOT_COUNT, false)) {
 				return ItemStack.EMPTY;
 			}
 		} else if (stack.is(ModContent.ASSEMBLY_BLUEPRINT.get())) {

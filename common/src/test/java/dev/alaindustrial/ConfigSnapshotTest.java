@@ -232,6 +232,18 @@ class ConfigSnapshotTest {
 		SENTINELS.put("distillationColumnWarmupTicks", 336);
 		SENTINELS.put("galvanicBathDuration", 335);
 		SENTINELS.put("galvanicBathWaterPerOp", 336);
+		// Overclocker chip (MOD-392). The EU factor must stay above its own minimum of 1.0, and the
+		// speed factor above 0.0 — a sentinel that trips the clamp would be silently rewritten on load.
+		SENTINELS.put("overclockerSpeedFactor", 0.55f);
+		SENTINELS.put("overclockerEuFactor", 3.5f);
+		SENTINELS.put("overclockerMaxPerMachine", 6);
+		// Energy condenser (MOD-393). Distinct from the defaults, non-zero, above each field's own
+		// minimum — a sentinel that trips a clamp would be rewritten on load and prove nothing.
+		SENTINELS.put("condenserCapacity", 3_111_111);
+		SENTINELS.put("condenserInputRate", 17);
+		SENTINELS.put("clotThresholdI", 222_222);
+		SENTINELS.put("clotThresholdII", 888_888);
+		SENTINELS.put("clotThresholdIII", 3_555_555);
 		// Fluxweave armour (MOD-127).
 		SENTINELS.put("fluxweaveBuffer", 15_101);
 		SENTINELS.put("fluxweaveInputRate", 337);

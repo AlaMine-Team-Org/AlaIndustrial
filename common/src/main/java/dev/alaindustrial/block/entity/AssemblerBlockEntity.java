@@ -59,7 +59,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * followed here: a multi-slot machine on the raw base, with its own tick, status enum and widened
  * {@link ContainerData}.
  */
-public class AssemblerBlockEntity extends MachineBlockEntity implements MenuProvider {
+public class AssemblerBlockEntity extends MachineBlockEntity implements Overclockable, MenuProvider {
 	/** First blueprint slot; the queue occupies {@code [0, BLUEPRINT_SLOT_COUNT)}. */
 	public static final int BLUEPRINT_SLOT_START = 0;
 	/** Queue length. Three, following Immersive Engineering's assembler — see the OKF spec. */
@@ -167,6 +167,25 @@ public class AssemblerBlockEntity extends MachineBlockEntity implements MenuProv
 		return facingAwareRole(worldFace, EnergyRole.IN);
 	}
 
+	/** The assembler's own MV tariff — six times an LV machine (MOD-275). */
+	@Override
+	public int baseEuPerTick() {
+		return Config.assemblerEuPerTick;
+	}
+
+
+	/**
+	 * EU per working tick, chips and the global speed knob included.
+	 *
+	 * <p>Note this also closes an older inconsistency: the duration has always gone through
+	 * {@code scaledDuration} (in the constructor) while the rate was read raw, so on a server that
+	 * retuned {@code globalMachineSpeedMultiplier} the assembler's energy per craft drifted away from
+	 * what {@code PERFORMANCE.md} and the recipe viewers both print. Both halves now move together.
+	 */
+	private int euPerTick() {
+		return effectiveEuPerTick(Config.assemblerEuPerTick);
+	}
+
 	/**
 	 * One tick of the crafting cycle.
 	 *
@@ -206,8 +225,12 @@ public class AssemblerBlockEntity extends MachineBlockEntity implements MenuProv
 			abortOperation();
 			return IDLE_SLEEP_TICKS;
 		}
+		// Re-derived every tick, not once in the constructor: a chip dropped into the panel mid-run has
+		// to take effect now, and the old constructor-only value could not see it at all.
+		int euPerTick = euPerTick();
+		this.maxProgress = effectiveDuration(Config.assemblerDuration);
 		if (progress < maxProgress) {
-			if (energy.amount < Config.assemblerEuPerTick) {
+			if (energy.amount < euPerTick) {
 				// Wait, keeping the progress: the ingredients are still in the warehouse (they are only
 				// taken at the finish), so nothing is lost and nothing is burnt. Sleeping here rather than
 				// re-checking every tick is free — any delivery into the buffer commits a transaction,
@@ -215,7 +238,7 @@ public class AssemblerBlockEntity extends MachineBlockEntity implements MenuProv
 				setStatus(AssemblerStatus.NO_ENERGY);
 				return IDLE_SLEEP_TICKS;
 			}
-			energy.amount -= Config.assemblerEuPerTick;
+			energy.amount -= euPerTick;
 			progress++;
 			setStatus(AssemblerStatus.READY);
 			markDirtyAndSync();
@@ -230,7 +253,7 @@ public class AssemblerBlockEntity extends MachineBlockEntity implements MenuProv
 			return IDLE_SLEEP_TICKS;
 		}
 		op.commit();
-		creditUsefulWork(server, (long) Config.assemblerEuPerTick * maxProgress); // MOD-133: op → XP
+		creditUsefulWork(server, (long) euPerTick * maxProgress); // MOD-133: op → XP
 		progress = 0;
 		activeSlot = -1;
 		setStatus(AssemblerStatus.READY);
