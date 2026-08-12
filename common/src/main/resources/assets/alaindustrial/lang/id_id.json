@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "Kapsul Vakum",
   "item.alaindustrial.vacuum_capsule.hint": "Klik kanan pada sumber fluida untuk mengisi.",
   "item.alaindustrial.water_mill_wheel": "Roda air",
+  "item.alaindustrial.water_mill_wheel_reinforced": "Roda Air Diperkuat",
+  "item.alaindustrial.water_mill_wheel_advanced": "Roda Air Canggih",
   "item.alaindustrial.wind_gauge": "Pengukur Angin",
   "item.alaindustrial.windmill_rotor": "Rotor Kayu",
+  "item.alaindustrial.windmill_rotor_reinforced": "Rotor Diperkuat",
+  "item.alaindustrial.windmill_rotor_advanced": "Rotor Canggih",
   "item.alaindustrial.wooden_gear": "Roda Gigi Kayu",
   "item.alaindustrial.wrench": "Kunci Pas",
   "item.alaindustrial.wrench.hint": "Shift + klik kanan: bongkar blok",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "Kondensor Energi",
   "container.alaindustrial.iron_chest_double": "Peti Besi Ganda",
   "container.alaindustrial.silver_chest_double": "Peti Perak Ganda",
-  "container.alaindustrial.gold_chest_double": "Peti Emas Ganda"
+  "container.alaindustrial.gold_chest_double": "Peti Emas Ganda",
+  "tag.item.alaindustrial.water_mill_wheels": "Roda Kincir Air",
+  "tag.item.alaindustrial.windmill_rotors": "Rotor Kincir Angin"
 }

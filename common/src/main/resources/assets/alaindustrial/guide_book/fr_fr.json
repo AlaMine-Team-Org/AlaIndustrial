@@ -2330,68 +2330,6 @@
           ]
         },
         {
-          "id": "water_mill_wheel",
-          "title": "Roue à eau",
-          "icon": "alaindustrial:water_mill_wheel",
-          "block_id": "alaindustrial:water_mill_wheel",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Roue à eau",
-              "text": "La roue d'un moulin à eau — placée dans l'emplacement de roue du moulin à eau ; sans elle, aucune production. S'use pendant la production."
-            },
-            {
-              "type": "recipe",
-              "title": "Recette",
-              "recipe_type": "Fabrication façonnée",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks",
-                "minecraft:stick",
-                "alaindustrial:wooden_gear",
-                "minecraft:stick",
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:water_mill_wheel",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "Rotor en bois",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Rotor en bois",
-              "text": "Les pales d'éolienne — placées dans l'emplacement de rotor de tout moulin à vent T1/T2 ; sans lui, aucune production. S'usent pendant la production."
-            },
-            {
-              "type": "recipe",
-              "title": "Recette",
-              "recipe_type": "Fabrication façonnée",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "tempered_iron",
           "title": "Fer trempé",
           "icon": "alaindustrial:tempered_iron",
@@ -2419,6 +2357,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "water_mill_wheel",
+          "title": "Roue à eau",
+          "icon": "alaindustrial:water_mill_wheel",
+          "block_id": "alaindustrial:water_mill_wheel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Roue à eau",
+              "text": "Roue de moulin à eau — à placer dans l'emplacement de roue d'un moulin à eau ; sans elle, aucune production. Trois qualités : une meilleure roue produit plus d'EU et dure bien plus longtemps. S'use pendant la production."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks",
+                "minecraft:stick",
+                "alaindustrial:wooden_gear",
+                "minecraft:stick",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
             }
           ]
         },
@@ -2662,6 +2631,37 @@
               "type": "text",
               "title": "Caoutchouc",
               "text": "Un matériau tiré du pétrole et du soufre — le Polymériseur produit du caoutchouc brut, puis un Vulcaniseur chauffé le transforme en caoutchouc."
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "Rotor en bois",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rotor en bois",
+              "text": "Pales d'éolienne — à placer dans l'emplacement de rotor de n'importe quelle éolienne T1/T2 ; sans elles, aucune production. Trois qualités : un meilleur rotor produit plus d'EU et dure bien plus longtemps. S'use pendant la production."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
             }
           ]
         },

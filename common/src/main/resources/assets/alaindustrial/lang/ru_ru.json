@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "Вакуумная капсула",
   "item.alaindustrial.vacuum_capsule.hint": "ПКМ по источнику жидкости — наполнить.",
   "item.alaindustrial.water_mill_wheel": "Водяное колесо",
+  "item.alaindustrial.water_mill_wheel_reinforced": "Усиленное водяное колесо",
+  "item.alaindustrial.water_mill_wheel_advanced": "Электронное водяное колесо",
   "item.alaindustrial.wind_gauge": "Анемометр",
   "item.alaindustrial.windmill_rotor": "Деревянный ротор",
+  "item.alaindustrial.windmill_rotor_reinforced": "Усиленный ротор",
+  "item.alaindustrial.windmill_rotor_advanced": "Электронный ротор",
   "item.alaindustrial.wooden_gear": "Деревянная шестерня",
   "item.alaindustrial.wrench": "Гаечный ключ",
   "item.alaindustrial.wrench.hint": "Shift + ПКМ: свинтить блок",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "Сгущатель энергии",
   "container.alaindustrial.iron_chest_double": "Двойной железный сундук",
   "container.alaindustrial.silver_chest_double": "Двойной серебряный сундук",
-  "container.alaindustrial.gold_chest_double": "Двойной золотой сундук"
+  "container.alaindustrial.gold_chest_double": "Двойной золотой сундук",
+  "tag.item.alaindustrial.water_mill_wheels": "Колёса водяной мельницы",
+  "tag.item.alaindustrial.windmill_rotors": "Роторы ветряка"
 }

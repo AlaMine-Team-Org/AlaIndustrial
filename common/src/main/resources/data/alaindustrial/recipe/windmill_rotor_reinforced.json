@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"pattern": [
+		"TTT",
+		"IRI",
+		" G "
+	],
+	"key": {
+		"T": "alaindustrial:tempered_iron_plate",
+		"I": "alaindustrial:tempered_iron",
+		"R": "alaindustrial:windmill_rotor",
+		"G": "alaindustrial:iron_gear"
+	},
+	"result": {
+		"id": "alaindustrial:windmill_rotor_reinforced"
+	}
+}

@@ -47,10 +47,12 @@ public final class WindMillOutput {
 	 * @param deadY         where the wind dies out ({@code Config.windDeadY})
 	 * @param ridgeFactor   fraction of full strength at the ridge ({@code Config.windRidgeFactor})
 	 * @param traceFactor   fraction of full strength above {@code deadY} ({@code Config.windTraceFactor})
+	 * @param rotorFactor   the installed rotor grade's output scale (MOD-385;
+	 *                      {@code ComponentTier.outputMultiplier()}, 1.0 for the plain wooden rotor)
 	 */
 	public static int euFor(int y, int seaLevel, boolean openSky, boolean raining, boolean thundering,
 			int maxBase, int blocksPerBase, int maxOutput, float rainFactor, float thunderFactor,
-			int cloudY, int deadY, float ridgeFactor, float traceFactor) {
+			int cloudY, int deadY, float ridgeFactor, float traceFactor, float rotorFactor) {
 		if (!openSky) {
 			return 0; // roofed / below the sky column → dead, height and storm irrelevant
 		}
@@ -61,6 +63,11 @@ public final class WindMillOutput {
 			return 0; // sea level and below, or thin air above the clouds: nothing for a rotor to turn
 		}
 		float weather = thundering ? thunderFactor : (raining ? rainFactor : 1.0f);
-		return Math.min(Math.round(base * weather), maxOutput);
+		// The rotor grade multiplies here, INSIDE the clamp, and never outside it (MOD-385). Scaling the
+		// value this method already returned would put the multiplier after Math.min, making "a better
+		// rotor must not raise the cap" a property of the current numbers instead of the code: today's
+		// ×1.5 happens to stay under every ceiling, and the next balance pass would break that silently.
+		// Folded in before the clamp, the ceiling holds for ANY multiplier an operator can configure.
+		return Math.min(Math.round(base * weather * rotorFactor), maxOutput);
 	}
 }

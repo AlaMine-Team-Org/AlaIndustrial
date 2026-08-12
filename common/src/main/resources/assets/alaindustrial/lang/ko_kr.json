@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "진공 캡슐",
   "item.alaindustrial.vacuum_capsule.hint": "액체 원천을 우클릭하여 채웁니다.",
   "item.alaindustrial.water_mill_wheel": "물레방아",
+  "item.alaindustrial.water_mill_wheel_reinforced": "강화 물레방아",
+  "item.alaindustrial.water_mill_wheel_advanced": "고급 물레방아",
   "item.alaindustrial.wind_gauge": "풍속계",
   "item.alaindustrial.windmill_rotor": "나무 회전날",
+  "item.alaindustrial.windmill_rotor_reinforced": "강화 회전날",
+  "item.alaindustrial.windmill_rotor_advanced": "고급 회전날",
   "item.alaindustrial.wooden_gear": "나무 톱니바퀴",
   "item.alaindustrial.wrench": "렌치",
   "item.alaindustrial.wrench.hint": "Shift + 우클릭: 블록 분해",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "에너지 응축기",
   "container.alaindustrial.iron_chest_double": "대형 철 상자",
   "container.alaindustrial.silver_chest_double": "대형 은 상자",
-  "container.alaindustrial.gold_chest_double": "대형 금 상자"
+  "container.alaindustrial.gold_chest_double": "대형 금 상자",
+  "tag.item.alaindustrial.water_mill_wheels": "물레방아 바퀴",
+  "tag.item.alaindustrial.windmill_rotors": "풍차 회전날"
 }

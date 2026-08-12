@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"pattern": [
+		"TET",
+		"CRC",
+		" G "
+	],
+	"key": {
+		"T": "alaindustrial:tempered_iron_plate",
+		"E": "alaindustrial:electronic_circuit",
+		"C": "alaindustrial:copper_cable",
+		"R": "alaindustrial:windmill_rotor_reinforced",
+		"G": "alaindustrial:silver_gear"
+	},
+	"result": {
+		"id": "alaindustrial:windmill_rotor_advanced"
+	}
+}

@@ -150,7 +150,7 @@ public class WindMillGameTest {
 				level.isRaining(), level.isThundering(),
 				Config.windMillMaxBaseEuPerTick, 16, Config.windMillMaxEuPerTick,
 				Config.windMillRainFactor, Config.windMillThunderFactor,
-				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor);
+				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor, 1.0f);
 	}
 
 	private static long afterGlobalRate(int made) {

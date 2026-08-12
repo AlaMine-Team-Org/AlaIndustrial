@@ -109,6 +109,11 @@ public final class ModItems {
 	// damageable, they are automatically non-stackable. maxDamage from Config (registration-time).
 	public static final Item WINDMILL_ROTOR = manifestItem("windmill_rotor");
 	public static final Item WATER_MILL_WHEEL = manifestItem("water_mill_wheel");
+	// MOD-385: upper grades — richer craft, higher output, longer life. See core.machine.ComponentTier.
+	public static final Item WINDMILL_ROTOR_REINFORCED = manifestItem("windmill_rotor_reinforced");
+	public static final Item WINDMILL_ROTOR_ADVANCED = manifestItem("windmill_rotor_advanced");
+	public static final Item WATER_MILL_WHEEL_REINFORCED = manifestItem("water_mill_wheel_reinforced");
+	public static final Item WATER_MILL_WHEEL_ADVANCED = manifestItem("water_mill_wheel_advanced");
 	public static final Item WOODEN_GEAR = manifestItem("wooden_gear");
 	// Metal gears (MOD-105): crafting components for machinery still to come.
 	public static final Item STONE_GEAR = manifestItem("stone_gear");
@@ -757,6 +762,10 @@ public final class ModItems {
 		ModContent.CABLE_BREAKER = () -> CABLE_BREAKER;
 		ModContent.WINDMILL_ROTOR = () -> WINDMILL_ROTOR;
 		ModContent.WATER_MILL_WHEEL = () -> WATER_MILL_WHEEL;
+		ModContent.WINDMILL_ROTOR_REINFORCED = () -> WINDMILL_ROTOR_REINFORCED;
+		ModContent.WINDMILL_ROTOR_ADVANCED = () -> WINDMILL_ROTOR_ADVANCED;
+		ModContent.WATER_MILL_WHEEL_REINFORCED = () -> WATER_MILL_WHEEL_REINFORCED;
+		ModContent.WATER_MILL_WHEEL_ADVANCED = () -> WATER_MILL_WHEEL_ADVANCED;
 		ModContent.WOODEN_GEAR = () -> WOODEN_GEAR;
 		ModContent.STONE_GEAR = () -> STONE_GEAR;
 		ModContent.IRON_GEAR = () -> IRON_GEAR;

@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "Viên nang chân không",
   "item.alaindustrial.vacuum_capsule.hint": "Chuột phải vào nguồn chất lỏng để đổ đầy.",
   "item.alaindustrial.water_mill_wheel": "Bánh xe nước",
+  "item.alaindustrial.water_mill_wheel_reinforced": "Bánh xe nước Gia Cố",
+  "item.alaindustrial.water_mill_wheel_advanced": "Bánh xe nước Tiên Tiến",
   "item.alaindustrial.wind_gauge": "Máy đo gió",
   "item.alaindustrial.windmill_rotor": "Rotor gỗ",
+  "item.alaindustrial.windmill_rotor_reinforced": "Rotor Gia Cố",
+  "item.alaindustrial.windmill_rotor_advanced": "Rotor Tiên Tiến",
   "item.alaindustrial.wooden_gear": "Bánh Răng Gỗ",
   "item.alaindustrial.wrench": "Cờ lê",
   "item.alaindustrial.wrench.hint": "Shift + chuột phải: tháo khối",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "Máy Cô Đặc Năng Lượng",
   "container.alaindustrial.iron_chest_double": "Rương Sắt Đôi",
   "container.alaindustrial.silver_chest_double": "Rương Bạc Đôi",
-  "container.alaindustrial.gold_chest_double": "Rương Vàng Đôi"
+  "container.alaindustrial.gold_chest_double": "Rương Vàng Đôi",
+  "tag.item.alaindustrial.water_mill_wheels": "Bánh xe cối xay nước",
+  "tag.item.alaindustrial.windmill_rotors": "Rotor cối xay gió"
 }

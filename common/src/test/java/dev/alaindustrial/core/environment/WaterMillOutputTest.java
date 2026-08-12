@@ -7,7 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 /**
- * L1 unit tests for {@link WaterMillOutput#euFor(int, int)} — the pure "(water faces × perSide) → EU/t"
+ * L1 unit tests for {@link WaterMillOutput#euFor(int, int, float)} — the pure "(water faces × perSide) → EU/t"
  * mapping that backs the water mill's {@code produce()}. No Minecraft runtime; deterministic. Mirrors the
  * {@link WindMillOutputTest} pattern — the production mapping is a pure function and the arithmetic
  * invariants (the {@code 0..4} clamp and the {@code perSide × sides} product) are what matter.
@@ -20,12 +20,12 @@ class WaterMillOutputTest {
 
 	@Test
 	void zeroSidesProducesNothing() {
-		assertEquals(0, WaterMillOutput.euFor(0, 1), "no water faces → 0 EU/t");
+		assertEquals(0, WaterMillOutput.euFor(0, 1, 1.0f), "no water faces → 0 EU/t");
 	}
 
 	@Test
 	void fourSidesIsTheCap() {
-		assertEquals(4, WaterMillOutput.euFor(4, 1), "fully surrounded → 4 EU/t at perSide=1");
+		assertEquals(4, WaterMillOutput.euFor(4, 1, 1.0f), "fully surrounded → 4 EU/t at perSide=1");
 	}
 
 	/**
@@ -35,7 +35,7 @@ class WaterMillOutputTest {
 	@ParameterizedTest
 	@CsvSource({ "5, 1, 4", "6, 1, 4", "8, 1, 4", "100, 1, 4", "1_000_000, 1, 4" })
 	void aboveFourSidesClampsToFour(int waterSides, int perSide, int expected) {
-		assertEquals(expected, WaterMillOutput.euFor(waterSides, perSide),
+		assertEquals(expected, WaterMillOutput.euFor(waterSides, perSide, 1.0f),
 				"waterSides > 4 clamps to 4 — fully-surrounded is the ceiling");
 	}
 
@@ -46,7 +46,7 @@ class WaterMillOutputTest {
 	@ParameterizedTest
 	@CsvSource({ "-1, 1, 0", "-5, 1, 0", "-100, 3, 0" })
 	void negativeSidesClampsToZero(int waterSides, int perSide, int expected) {
-		assertEquals(expected, WaterMillOutput.euFor(waterSides, perSide),
+		assertEquals(expected, WaterMillOutput.euFor(waterSides, perSide, 1.0f),
 				"negative waterSides clamps to 0 — no negative production");
 	}
 
@@ -58,15 +58,15 @@ class WaterMillOutputTest {
 	 */
 	@Test
 	void multipliesPerSideByClampedSides() {
-		assertEquals(6, WaterMillOutput.euFor(2, 3), "2 water faces × 3 perSide → 6");
-		assertEquals(9, WaterMillOutput.euFor(3, 3), "3 water faces × 3 perSide → 9");
-		assertEquals(12, WaterMillOutput.euFor(4, 3), "4 water faces × 3 perSide → 12 (capped sides)");
-		assertEquals(8, WaterMillOutput.euFor(2, 4), "2 water faces × 4 perSide → 8");
+		assertEquals(6, WaterMillOutput.euFor(2, 3, 1.0f), "2 water faces × 3 perSide → 6");
+		assertEquals(9, WaterMillOutput.euFor(3, 3, 1.0f), "3 water faces × 3 perSide → 9");
+		assertEquals(12, WaterMillOutput.euFor(4, 3, 1.0f), "4 water faces × 3 perSide → 12 (capped sides)");
+		assertEquals(8, WaterMillOutput.euFor(2, 4, 1.0f), "2 water faces × 4 perSide → 8");
 	}
 
 	@Test
 	void zeroPerSideProducesNothingEvenWhenSurrounded() {
-		assertEquals(0, WaterMillOutput.euFor(4, 0), "perSide=0 → 0 regardless of sides");
+		assertEquals(0, WaterMillOutput.euFor(4, 0, 1.0f), "perSide=0 → 0 regardless of sides");
 	}
 
 	/**
@@ -75,6 +75,6 @@ class WaterMillOutputTest {
 	 */
 	@Test
 	void canonicalOneEuPerSideFullySurrounded() {
-		assertEquals(4, WaterMillOutput.euFor(4, 1), "Config.waterMillEuPerTick=1 × 4 sides → 4 EU/t");
+		assertEquals(4, WaterMillOutput.euFor(4, 1, 1.0f), "Config.waterMillEuPerTick=1 × 4 sides → 4 EU/t");
 	}
 }

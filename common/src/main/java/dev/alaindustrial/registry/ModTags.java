@@ -108,6 +108,20 @@ public final class ModTags {
 		public static final TagKey<Item> C_INGOTS =
 				TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots"));
 
+		/**
+		 * Every grade of wind mill rotor (MOD-385) — what the three wind mills' rotor slot accepts.
+		 *
+		 * <p>A tag rather than a list of {@code ModContent} comparisons: the check lives in
+		 * <b>three</b> block entities (T1 plus both T2 branches), so an explicit list would have to
+		 * name all three grades in all three files and would drift the moment a fourth grade appears.
+		 * The slot rule itself is unchanged — anything outside the tag is still rejected, both by hand
+		 * and through a face (MOD-179).
+		 */
+		public static final TagKey<Item> WINDMILL_ROTORS = key("windmill_rotors");
+
+		/** Every grade of water mill wheel (MOD-385) — the wheel slot's filter. Twin of {@link #WINDMILL_ROTORS}. */
+		public static final TagKey<Item> WATER_MILL_WHEELS = key("water_mill_wheels");
+
 		private static TagKey<Item> key(String path) {
 			return TagKey.create(Registries.ITEM, Industrialization.id(path));
 		}

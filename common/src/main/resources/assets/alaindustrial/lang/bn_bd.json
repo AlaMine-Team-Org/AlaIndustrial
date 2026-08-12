@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "ভ্যাকুয়াম ক্যাপসুল",
   "item.alaindustrial.vacuum_capsule.hint": "পূরণ করতে একটি উৎস তরলে ডান-ক্লিক করুন।",
   "item.alaindustrial.water_mill_wheel": "জলচাকা",
+  "item.alaindustrial.water_mill_wheel_reinforced": "শক্তিশালী জলচাকা",
+  "item.alaindustrial.water_mill_wheel_advanced": "উন্নত জলচাকা",
   "item.alaindustrial.wind_gauge": "বায়ুমাপক",
   "item.alaindustrial.windmill_rotor": "কাঠের রোটর",
+  "item.alaindustrial.windmill_rotor_reinforced": "শক্তিশালী রোটর",
+  "item.alaindustrial.windmill_rotor_advanced": "উন্নত রোটর",
   "item.alaindustrial.wooden_gear": "কাঠের গিয়ার",
   "item.alaindustrial.wrench": "রেঞ্চ",
   "item.alaindustrial.wrench.hint": "Shift + ডান-ক্লিক: ব্লক খুলে ফেলুন",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "শক্তি ঘনীভবক",
   "container.alaindustrial.iron_chest_double": "ডাবল আয়রন চেস্ট",
   "container.alaindustrial.silver_chest_double": "ডাবল রূপা চেস্ট",
-  "container.alaindustrial.gold_chest_double": "ডাবল সোনার চেস্ট"
+  "container.alaindustrial.gold_chest_double": "ডাবল সোনার চেস্ট",
+  "tag.item.alaindustrial.water_mill_wheels": "জলকলের চাকা",
+  "tag.item.alaindustrial.windmill_rotors": "বায়ুকলের রোটর"
 }

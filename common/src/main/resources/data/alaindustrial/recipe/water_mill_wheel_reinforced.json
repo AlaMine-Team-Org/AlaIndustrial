@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"pattern": [
+		"TTT",
+		"URU",
+		" G "
+	],
+	"key": {
+		"T": "alaindustrial:tempered_iron_plate",
+		"U": "#c:ingots/copper",
+		"R": "alaindustrial:water_mill_wheel",
+		"G": "alaindustrial:iron_gear"
+	},
+	"result": {
+		"id": "alaindustrial:water_mill_wheel_reinforced"
+	}
+}

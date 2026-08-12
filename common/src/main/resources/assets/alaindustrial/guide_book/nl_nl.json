@@ -2330,68 +2330,6 @@
           ]
         },
         {
-          "id": "water_mill_wheel",
-          "title": "Waterrad",
-          "icon": "alaindustrial:water_mill_wheel",
-          "block_id": "alaindustrial:water_mill_wheel",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Waterrad",
-              "text": "Het rad van een watermolen — geplaatst in de radsleuf van de watermolen; zonder rad geen opwekking. Slijt tijdens het opwekken."
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Gevormd vervaardigen",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks",
-                "minecraft:stick",
-                "alaindustrial:wooden_gear",
-                "minecraft:stick",
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:water_mill_wheel",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "Molenrotor",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Molenrotor",
-              "text": "Windturbinebladen — geplaatst in de rotorsleuf van elke T1/T2-windmolen; zonder rotor geen opwekking. Slijten tijdens het opwekken."
-            },
-            {
-              "type": "recipe",
-              "title": "Recept",
-              "recipe_type": "Gevormd vervaardigen",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "tempered_iron",
           "title": "Gehard ijzer",
           "icon": "alaindustrial:tempered_iron",
@@ -2419,6 +2357,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "water_mill_wheel",
+          "title": "Waterrad",
+          "icon": "alaindustrial:water_mill_wheel",
+          "block_id": "alaindustrial:water_mill_wheel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Waterrad",
+              "text": "Waterrad — wordt in de radsleuf van een watermolen geplaatst; zonder dit is er geen opwekking. Drie klassen: een beter rad levert meer EU en gaat veel langer mee. Slijt tijdens het opwekken."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks",
+                "minecraft:stick",
+                "alaindustrial:wooden_gear",
+                "minecraft:stick",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
             }
           ]
         },
@@ -2662,6 +2631,37 @@
               "type": "text",
               "title": "Rubber",
               "text": "Een materiaal uit aardolie en zwavel — de Polymerisator maakt ruwe rubber, waarna een verwarmde Vulkanisator die in rubber omzet."
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "Molenrotor",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Molenrotor",
+              "text": "Windturbinebladen — worden in de rotorsleuf van elke T1/T2-windmolen geplaatst; zonder deze is er geen opwekking. Drie klassen: een betere rotor levert meer EU en gaat veel langer mee. Slijt tijdens het opwekken."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
             }
           ]
         },

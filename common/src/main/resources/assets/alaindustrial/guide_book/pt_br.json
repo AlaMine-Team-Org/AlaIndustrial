@@ -2330,68 +2330,6 @@
           ]
         },
         {
-          "id": "water_mill_wheel",
-          "title": "Roda d'água",
-          "icon": "alaindustrial:water_mill_wheel",
-          "block_id": "alaindustrial:water_mill_wheel",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Roda d'água",
-              "text": "A roda de um moinho de água — colocada no espaço de roda do moinho de água; sem ela, não há geração. Desgasta-se enquanto gera."
-            },
-            {
-              "type": "recipe",
-              "title": "Receita",
-              "recipe_type": "Fabricação com forma",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks",
-                "minecraft:stick",
-                "alaindustrial:wooden_gear",
-                "minecraft:stick",
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:water_mill_wheel",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "Rotor de Madeira",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Rotor de Madeira",
-              "text": "As pás da turbina eólica — colocadas no espaço de rotor de qualquer moinho de vento T1/T2; sem ela, não há geração. Desgastam-se enquanto geram."
-            },
-            {
-              "type": "recipe",
-              "title": "Receita",
-              "recipe_type": "Fabricação com forma",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "tempered_iron",
           "title": "Ferro Temperado",
           "icon": "alaindustrial:tempered_iron",
@@ -2419,6 +2357,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "water_mill_wheel",
+          "title": "Roda d'água",
+          "icon": "alaindustrial:water_mill_wheel",
+          "block_id": "alaindustrial:water_mill_wheel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Roda d'água",
+              "text": "Roda do moinho d'água — colocada no compartimento da roda de um moinho d'água; sem ela, não há geração. Três graus: uma roda melhor produz mais EU e dura muito mais. Desgasta-se enquanto gera."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks",
+                "minecraft:stick",
+                "alaindustrial:wooden_gear",
+                "minecraft:stick",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
             }
           ]
         },
@@ -2662,6 +2631,37 @@
               "type": "text",
               "title": "Borracha",
               "text": "Um material feito de petróleo e enxofre: o Polimerizador produz borracha bruta e depois um Vulcanizador aquecido a transforma em borracha."
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "Rotor de Madeira",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rotor de Madeira",
+              "text": "Pás da turbina eólica — colocadas no compartimento do rotor de qualquer moinho de vento T1/T2; sem elas, não há geração. Três graus: um rotor melhor produz mais EU e dura muito mais. Desgasta-se enquanto gera."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
             }
           ]
         },

@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.machine.ComponentTier;
 import dev.alaindustrial.core.environment.SolarSky;
 import dev.alaindustrial.core.environment.WindMillClearance;
 import dev.alaindustrial.core.environment.WindMillInterference;
@@ -11,6 +12,7 @@ import dev.alaindustrial.core.environment.WindMillOutput;
 import dev.alaindustrial.core.environment.WindProfile;
 import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -74,12 +76,14 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 				&& SolarSky.classify(level, pos) == SolarSky.Access.CLEAR;
 	}
 
-	private int sampleRate(Level level, BlockPos pos) {
+	private int sampleRate(Level level, BlockPos pos, float rotorFactor) {
 		return WindMillOutput.euFor(pos.getY(), level.getSeaLevel(), openSky(level, pos),
 				level.isRaining(), level.isThundering(),
 				Config.stormWindMillMaxBaseEuPerTick, WindProfile.DEFAULT_BLOCKS_PER_BASE, Config.stormWindMillMaxEuPerTick,
 				Config.stormWindMillRainFactor, Config.stormWindMillThunderFactor,
-				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor);
+				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor,
+				// Rotor grade (MOD-385) — folded in before euFor's cap, so it never lifts the ceiling.
+				rotorFactor);
 	}
 
 	private int sampleMode(Level level, BlockPos pos, int rate, boolean obstructed, boolean interfered) {
@@ -122,6 +126,8 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 			this.maxProgress = WindMillBlockEntity.MODE_NO_ROTOR;
 			return 0;
 		}
+		// Rotor grade (MOD-385): read from the slot each tick so a swap takes effect at the next sample.
+		ComponentTier rotorTier = tierOf(rotor, ComponentTier.WINDMILL_ROTOR);
 		if (sampleCounter % Config.windMillSampleTicks == 0) {
 			// Blade clearance: a solid block in the rotor disc stalls the blades (rate 0), regardless
 			// of height or weather. Only meaningful under open sky — a roof above is already fatal.
@@ -135,7 +141,7 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 			boolean interfered = sky && !obstructed && WindMillInterference.hasInterference(level, pos, facing);
 			int previousRate = cachedRate;
 			int previousMode = cachedMode;
-			cachedRate = obstructed || interfered ? 0 : sampleRate(level, pos);
+			cachedRate = obstructed || interfered ? 0 : sampleRate(level, pos, rotorTier.outputMultiplier());
 			cachedMode = sampleMode(level, pos, cachedRate, obstructed, interfered);
 			// Mirror the T1 mill: push rate/mode changes to watching clients so the rotor renderer
 			// reacts (spin speed, and hiding the blades on MODE_INTERFERENCE) without a GUI open.
@@ -150,7 +156,8 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 		// high output wears the rotor fast) with the shared storm-weather stress multiplier on top.
 		if (cachedRate > 0) {
 			float weather = (level.isThundering() || level.isRaining()) ? Config.windMillStormWearFactor : 1.0f;
-			wearComponent(level, pos, ROTOR_SLOT, cachedRate, weather, Config.windMillRotorEuPerDamage);
+			// Grade-specific EU-per-damage (MOD-385): cachedRate already carries the grade's multiplier.
+			wearComponent(level, pos, ROTOR_SLOT, cachedRate, weather, rotorTier.euPerDamage());
 		}
 		return cachedRate;
 	}
@@ -209,7 +216,8 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
-		return slot == ROTOR_SLOT && stack.is(ModContent.WINDMILL_ROTOR.get());
+		// MOD-385: accepts every rotor grade via the shared tag (see ModTags.Items.WINDMILL_ROTORS).
+		return slot == ROTOR_SLOT && stack.is(ModTags.Items.WINDMILL_ROTORS);
 	}
 
 	@Override

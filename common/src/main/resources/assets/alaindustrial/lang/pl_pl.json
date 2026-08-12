@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "Kapsuła próżniowa",
   "item.alaindustrial.vacuum_capsule.hint": "Kliknij PPM na źródło płynu, aby napełnić.",
   "item.alaindustrial.water_mill_wheel": "Koło wodne",
+  "item.alaindustrial.water_mill_wheel_reinforced": "Wzmocnione koło wodne",
+  "item.alaindustrial.water_mill_wheel_advanced": "Zaawansowane koło wodne",
   "item.alaindustrial.wind_gauge": "Wiatromierz",
   "item.alaindustrial.windmill_rotor": "Wirnik wiatraka",
+  "item.alaindustrial.windmill_rotor_reinforced": "Wzmocniony wirnik",
+  "item.alaindustrial.windmill_rotor_advanced": "Zaawansowany wirnik",
   "item.alaindustrial.wooden_gear": "Drewniane koło zębate",
   "item.alaindustrial.wrench": "Klucz",
   "item.alaindustrial.wrench.hint": "Shift + PPM: zdemontuj blok",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "Kondensator energii",
   "container.alaindustrial.iron_chest_double": "Podwójna żelazna skrzynia",
   "container.alaindustrial.silver_chest_double": "Podwójna srebrna skrzynia",
-  "container.alaindustrial.gold_chest_double": "Podwójna złota skrzynia"
+  "container.alaindustrial.gold_chest_double": "Podwójna złota skrzynia",
+  "tag.item.alaindustrial.water_mill_wheels": "Koła młyna wodnego",
+  "tag.item.alaindustrial.windmill_rotors": "Wirniki wiatraka"
 }

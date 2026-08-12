@@ -34,7 +34,7 @@ class WindMillOutputTest {
 
 	private static int eu(int y, boolean sky, boolean rain, boolean thunder) {
 		return WindMillOutput.euFor(y, SEA, sky, rain, thunder, MAX_BASE, BLOCKS_PER_BASE, MAX_OUT,
-				RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F);
+				RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F, 1.0f);
 	}
 
 	@Test
@@ -85,7 +85,7 @@ class WindMillOutputTest {
 		assertEquals(MAX_OUT, eu(CLOUD, true, false, true), "base 4 × thunder 2.0 → 8 (cap)");
 		// With a higher base the product would exceed the cap, so verify the min() clamp explicitly.
 		assertEquals(8, WindMillOutput.euFor(CLOUD, SEA, true, false, true, 6, BLOCKS_PER_BASE, 8,
-				RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F),
+				RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F, 1.0f),
 				"base 6 × thunder 2.0 = 12 clamps to maxOutput 8");
 	}
 
@@ -111,13 +111,13 @@ class WindMillOutputTest {
 		int t2MaxOut = 16;
 		int midT1 = eu(150, true, false, false);
 		int midT2 = WindMillOutput.euFor(150, SEA, true, false, false, t2MaxBase, t2Blocks, t2MaxOut,
-				RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F);
+				RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F, 1.0f);
 		assertTrue(midT2 > midT1, "T2 out-produces T1 at the same height: " + midT2 + " vs " + midT1);
 		assertEquals(t2MaxBase, WindMillOutput.euFor(CLOUD, SEA, true, false, false, t2MaxBase, t2Blocks,
-				t2MaxOut, RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F),
+				t2MaxOut, RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F, 1.0f),
 				"T2 reaches its full base at the cloud deck");
 		assertEquals(t2MaxOut, WindMillOutput.euFor(CLOUD, SEA, true, false, true, t2MaxBase, t2Blocks,
-				t2MaxOut, RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F),
+				t2MaxOut, RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F, 1.0f),
 				"T2 base 8 × thunder → 16 (cap)");
 	}
 
@@ -130,12 +130,12 @@ class WindMillOutputTest {
 	@Test
 	void zeroOrNegativeBlocksPerBaseStaysFinite_notDivideByZero() {
 		int zero = WindMillOutput.euFor(SEA + 16, SEA, true, false, false, MAX_BASE, 0, MAX_OUT,
-				RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F);
+				RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F, 1.0f);
 		int negative = WindMillOutput.euFor(SEA + 16, SEA, true, false, false, MAX_BASE, -4, MAX_OUT,
-				RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F);
+				RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F, 1.0f);
 		assertTrue(zero >= 0 && zero <= MAX_OUT, "blocksPerBase=0 stays in range, got " + zero);
 		assertTrue(negative >= 0 && negative <= MAX_OUT, "negative blocksPerBase stays in range, got " + negative);
 		assertEquals(0, WindMillOutput.euFor(SEA, SEA, true, false, false, MAX_BASE, 0, MAX_OUT,
-				RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F), "blocksPerBase=0 at sea level → 0");
+				RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F, 1.0f), "blocksPerBase=0 at sea level → 0");
 	}
 }

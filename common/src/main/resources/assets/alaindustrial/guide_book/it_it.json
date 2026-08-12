@@ -2330,68 +2330,6 @@
           ]
         },
         {
-          "id": "water_mill_wheel",
-          "title": "Ruota idraulica",
-          "icon": "alaindustrial:water_mill_wheel",
-          "block_id": "alaindustrial:water_mill_wheel",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Ruota idraulica",
-              "text": "La ruota di un mulino ad acqua — va nello slot della ruota del mulino ad acqua; senza di essa, nessuna generazione. Si consuma durante la generazione."
-            },
-            {
-              "type": "recipe",
-              "title": "Ricetta",
-              "recipe_type": "Fabbricazione sagomata",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks",
-                "minecraft:stick",
-                "alaindustrial:wooden_gear",
-                "minecraft:stick",
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:water_mill_wheel",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "Rotore in legno",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Rotore in legno",
-              "text": "Pale per turbina eolica — vanno nello slot del rotore di qualsiasi turbina T1/T2; senza di esse, nessuna generazione. Si consumano durante la generazione."
-            },
-            {
-              "type": "recipe",
-              "title": "Ricetta",
-              "recipe_type": "Fabbricazione sagomata",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "tempered_iron",
           "title": "Ferro temprato",
           "icon": "alaindustrial:tempered_iron",
@@ -2419,6 +2357,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "water_mill_wheel",
+          "title": "Ruota idraulica",
+          "icon": "alaindustrial:water_mill_wheel",
+          "block_id": "alaindustrial:water_mill_wheel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ruota idraulica",
+              "text": "Ruota del mulino ad acqua: si inserisce nello slot della ruota di un mulino ad acqua; senza di essa non c'è generazione. Tre gradi: una ruota migliore produce più EU e dura molto più a lungo. Si consuma durante la generazione."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks",
+                "minecraft:stick",
+                "alaindustrial:wooden_gear",
+                "minecraft:stick",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
             }
           ]
         },
@@ -2662,6 +2631,37 @@
               "type": "text",
               "title": "Gomma",
               "text": "Un materiale ricavato da petrolio e zolfo: il Polimerizzatore produce caucciù grezzo, poi un Vulcanizzatore riscaldato lo trasforma in gomma."
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "Rotore in legno",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rotore in legno",
+              "text": "Pale della turbina eolica: si inseriscono nello slot del rotore di qualsiasi mulino a vento T1/T2; senza di esse non c'è generazione. Tre gradi: un rotore migliore produce più EU e dura molto più a lungo. Si consuma durante la generazione."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
             }
           ]
         },

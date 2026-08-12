@@ -1,22 +1,16 @@
-## 0.1.88
+## 0.1.89
 
-<p><img alt="Canning Machine turning assorted food into stacked rations" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.88/release-media/v0.1.88/changelog.webp" width="720"></p>
+<p><img alt="Ala Industrial 0.1.89 rotor grades preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.89/release-media/v0.1.89/changelog.png" width="720"></p>
 
-Food finally gets an industrial answer: one machine turns a drawer of leftovers into a single stack.
+Wind mills and water mills can now be upgraded: the rotor and the wheel come in three grades.
 
 ### New
 
-- **Canning Machine — any food in, identical rations out.** Berries, bread, carrots, harvest
-  scraps: a dozen slots collapse into one.
-- **Rations always stack together**, whatever they were made from. That is the whole point.
-- **Empty cans** are crafted from tin plates and a glass pane, so tin finally has something to
-  spend itself on.
+- **Reinforced rotor and wheel.** +25% power and about four times the service life.
+- **Advanced rotor and wheel.** +50% power and nine times the service life of the wooden part.
+- **Every grade is built from the one below it.** The wooden rotor goes in the middle of the reinforced recipe — no skipping a step.
+- **The grade shows on the machine.** Upgraded blades and wheels look different, so you can read a farm's level from across the valley.
 
 ### Good to know
 
-- A ration restores 8 hunger but does not hold you for long, and it is quicker to eat than
-  ordinary food.
-- Rich food buys more rations than scraps, and canning always costs a little value — it is a
-  convenience, not free food.
-- Side effects are lost in processing: a canned golden apple only feeds you.
-- Hazardous food is refused — raw chicken, rotten flesh, poisonous potato, pufferfish, spider eye.
+- A better part reaches a generator's output ceiling sooner, but never raises it. In peak wind all three grades cap out the same and only the service life still differs.

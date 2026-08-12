@@ -1,10 +1,12 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.core.energy.DirectAdjacencyDistributor;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.machine.ComponentTier;
 import dev.alaindustrial.core.machine.ComponentWear;
 import dev.alaindustrial.stats.PlayerStatsTracker;
 import java.util.Map;
@@ -43,6 +45,33 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 
 	/** EU generated this tick (before buffer capping). Subclasses may also update progress here. */
 	protected abstract int produce(Level level, BlockPos pos, BlockState state);
+
+	/**
+	 * The grade of the consumable component sitting in {@code stack} (MOD-385) — the single place the
+	 * mod turns "which rotor/wheel is installed" into balance numbers. All four generators call it, so
+	 * a new grade is one entry in {@link ComponentTier} rather than an {@code if/else} arm in each of
+	 * them (the shape that would have to be edited in four files and would inevitably drift).
+	 *
+	 * <p>Resolution is by registry id, not by comparing against {@code ModContent} suppliers: that keeps
+	 * {@link ComponentTier} free of Minecraft types (so the L1 suite can assert the whole ladder without
+	 * the game on the classpath) and behaves identically on both loaders, whose item handles are
+	 * different types. The namespace is checked here because the enum matches on the path alone.
+	 *
+	 * @param stack the component slot's contents; empty or unrecognised falls back
+	 * @param fallback the grade to assume when {@code stack} names no known component — always this
+	 *     family's T1, so an unreadable slot degrades to baseline behaviour instead of zero output
+	 */
+	protected static ComponentTier tierOf(ItemStack stack, ComponentTier fallback) {
+		if (stack.isEmpty()) {
+			return fallback;
+		}
+		Identifier id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+		if (id == null || !Industrialization.MOD_ID.equals(id.getNamespace())) {
+			return fallback;
+		}
+		ComponentTier tier = ComponentTier.forItemPath(id.getPath());
+		return tier != null ? tier : fallback;
+	}
 
 	/**
 	 * Publish the <b>effective</b> generation rate: {@link #produce}'s mechanical rate after

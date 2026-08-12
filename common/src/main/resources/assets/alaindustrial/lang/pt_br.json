@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "Cápsula de vácuo",
   "item.alaindustrial.vacuum_capsule.hint": "Clique com o botão direito em um fluido de origem para enchê-la.",
   "item.alaindustrial.water_mill_wheel": "Roda d'água",
+  "item.alaindustrial.water_mill_wheel_reinforced": "Roda d'água Reforçada",
+  "item.alaindustrial.water_mill_wheel_advanced": "Roda d'água Avançada",
   "item.alaindustrial.wind_gauge": "Anemômetro",
   "item.alaindustrial.windmill_rotor": "Rotor de Madeira",
+  "item.alaindustrial.windmill_rotor_reinforced": "Rotor Reforçado",
+  "item.alaindustrial.windmill_rotor_advanced": "Rotor Avançado",
   "item.alaindustrial.wooden_gear": "Engrenagem de Madeira",
   "item.alaindustrial.wrench": "Chave inglesa",
   "item.alaindustrial.wrench.hint": "Shift + clique direito: desmontar bloco",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "Condensador de energia",
   "container.alaindustrial.iron_chest_double": "Baú de Ferro Duplo",
   "container.alaindustrial.silver_chest_double": "Baú de Prata Duplo",
-  "container.alaindustrial.gold_chest_double": "Baú de Ouro Duplo"
+  "container.alaindustrial.gold_chest_double": "Baú de Ouro Duplo",
+  "tag.item.alaindustrial.water_mill_wheels": "Rodas de moinho d'água",
+  "tag.item.alaindustrial.windmill_rotors": "Rotores de moinho de vento"
 }

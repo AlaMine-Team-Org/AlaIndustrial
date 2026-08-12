@@ -8,8 +8,10 @@ import dev.alaindustrial.core.environment.WaterMillClearance;
 import dev.alaindustrial.core.environment.WaterMillInterference;
 import dev.alaindustrial.core.environment.WaterMillOutput;
 import dev.alaindustrial.core.environment.WaterMillWheelGeometry;
+import dev.alaindustrial.core.machine.ComponentTier;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -174,11 +176,15 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 			setState(0, MODE_NO_WATER);
 			return 0;
 		}
-		int made = WaterMillOutput.euFor(sides, Config.waterMillEuPerTick);
+		// Wheel grade (MOD-385): resolved from the slot, folded into euFor so a better wheel raises the
+		// rate itself rather than being applied on top of an already-computed number.
+		ComponentTier wheelTier = tierOf(items.get(WHEEL_SLOT), ComponentTier.WATER_MILL_WHEEL);
+		int made = WaterMillOutput.euFor(sides, Config.waterMillEuPerTick, wheelTier.outputMultiplier());
 		setState(sides, MODE_OK);
 		// Wheel wear (MOD-189): wear accrues only while the wheel actually turns water into EU (made > 0).
-		// No weather stress on the water mill, so the multiplier is a flat 1.0.
-		wearComponent(level, pos, WHEEL_SLOT, made, 1.0f, Config.waterMillWheelEuPerDamage);
+		// No weather stress on the water mill, so the weather multiplier is a flat 1.0. EU-per-damage is
+		// the grade's own (MOD-385) — `made` already carries the grade's output multiplier.
+		wearComponent(level, pos, WHEEL_SLOT, made, 1.0f, wheelTier.euPerDamage());
 		return made;
 	}
 
@@ -276,7 +282,9 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
-		return slot == WHEEL_SLOT && stack.is(ModContent.WATER_MILL_WHEEL.get());
+		// MOD-385: accepts every wheel grade via the shared tag. canPlaceItemThroughFace below still
+		// demands an EMPTY slot (MOD-179), so automation cannot stack wheels or hot-swap through a pipe.
+		return slot == WHEEL_SLOT && stack.is(ModTags.Items.WATER_MILL_WHEELS);
 	}
 
 	/**

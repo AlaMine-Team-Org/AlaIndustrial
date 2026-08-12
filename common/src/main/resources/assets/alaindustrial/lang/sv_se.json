@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "Vakuumkapsel",
   "item.alaindustrial.vacuum_capsule.hint": "Högerklicka på en källvätska för att fylla.",
   "item.alaindustrial.water_mill_wheel": "Vattenhjul",
+  "item.alaindustrial.water_mill_wheel_reinforced": "Förstärkt vattenhjul",
+  "item.alaindustrial.water_mill_wheel_advanced": "Avancerat vattenhjul",
   "item.alaindustrial.wind_gauge": "Vindmätare",
   "item.alaindustrial.windmill_rotor": "Trärotor",
+  "item.alaindustrial.windmill_rotor_reinforced": "Förstärkt rotor",
+  "item.alaindustrial.windmill_rotor_advanced": "Avancerad rotor",
   "item.alaindustrial.wooden_gear": "Träkugghjul",
   "item.alaindustrial.wrench": "Skiftnyckel",
   "item.alaindustrial.wrench.hint": "Shift + högerklick: montera ner blocket",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "Energikondensator",
   "container.alaindustrial.iron_chest_double": "Dubbel järnkista",
   "container.alaindustrial.silver_chest_double": "Dubbel silverkista",
-  "container.alaindustrial.gold_chest_double": "Dubbel guldkista"
+  "container.alaindustrial.gold_chest_double": "Dubbel guldkista",
+  "tag.item.alaindustrial.water_mill_wheels": "Vattenkvarnshjul",
+  "tag.item.alaindustrial.windmill_rotors": "Vindkraftrotorer"
 }

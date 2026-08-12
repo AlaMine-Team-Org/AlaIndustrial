@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "Capsula sottovuoto",
   "item.alaindustrial.vacuum_capsule.hint": "Clic destro su un fluido sorgente per riempirla.",
   "item.alaindustrial.water_mill_wheel": "Ruota idraulica",
+  "item.alaindustrial.water_mill_wheel_reinforced": "Ruota idraulica rinforzata",
+  "item.alaindustrial.water_mill_wheel_advanced": "Ruota idraulica avanzata",
   "item.alaindustrial.wind_gauge": "Anemometro",
   "item.alaindustrial.windmill_rotor": "Rotore in legno",
+  "item.alaindustrial.windmill_rotor_reinforced": "Rotore rinforzato",
+  "item.alaindustrial.windmill_rotor_advanced": "Rotore avanzato",
   "item.alaindustrial.wooden_gear": "Ingranaggio in legno",
   "item.alaindustrial.wrench": "Chiave inglese",
   "item.alaindustrial.wrench.hint": "Shift + clic destro: smontare un blocco",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "Condensatore di energia",
   "container.alaindustrial.iron_chest_double": "Baule di ferro doppio",
   "container.alaindustrial.silver_chest_double": "Baule d'argento doppio",
-  "container.alaindustrial.gold_chest_double": "Baule d'oro doppio"
+  "container.alaindustrial.gold_chest_double": "Baule d'oro doppio",
+  "tag.item.alaindustrial.water_mill_wheels": "Ruote del mulino ad acqua",
+  "tag.item.alaindustrial.windmill_rotors": "Rotori del mulino a vento"
 }

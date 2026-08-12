@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "真空胶囊",
   "item.alaindustrial.vacuum_capsule.hint": "右键点击源液体以填充。",
   "item.alaindustrial.water_mill_wheel": "水轮",
+  "item.alaindustrial.water_mill_wheel_reinforced": "强化水轮",
+  "item.alaindustrial.water_mill_wheel_advanced": "高级水轮",
   "item.alaindustrial.wind_gauge": "风速计",
   "item.alaindustrial.windmill_rotor": "木质转子",
+  "item.alaindustrial.windmill_rotor_reinforced": "强化转子",
+  "item.alaindustrial.windmill_rotor_advanced": "高级转子",
   "item.alaindustrial.wooden_gear": "木齿轮",
   "item.alaindustrial.wrench": "扳手",
   "item.alaindustrial.wrench.hint": "Shift + 右键：拆卸方块",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "能量凝聚器",
   "container.alaindustrial.iron_chest_double": "大型铁箱子",
   "container.alaindustrial.silver_chest_double": "大型银箱子",
-  "container.alaindustrial.gold_chest_double": "大型金箱子"
+  "container.alaindustrial.gold_chest_double": "大型金箱子",
+  "tag.item.alaindustrial.water_mill_wheels": "水车轮",
+  "tag.item.alaindustrial.windmill_rotors": "风车转子"
 }

@@ -2330,68 +2330,6 @@
           ]
         },
         {
-          "id": "water_mill_wheel",
-          "title": "水車",
-          "icon": "alaindustrial:water_mill_wheel",
-          "block_id": "alaindustrial:water_mill_wheel",
-          "pages": [
-            {
-              "type": "text",
-              "title": "水車",
-              "text": "水車の車輪 — 水車の車輪スロットに設置します。これがないと発電しません。発電中に摩耗します。"
-            },
-            {
-              "type": "recipe",
-              "title": "レシピ",
-              "recipe_type": "定形クラフト",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks",
-                "minecraft:stick",
-                "alaindustrial:wooden_gear",
-                "minecraft:stick",
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:water_mill_wheel",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "風力タービンのローター",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "風力タービンのローター",
-              "text": "風力タービンの羽根 — T1/T2の風力タービンのロータースロットに設置します。これがないと発電しません。発電中に摩耗します。"
-            },
-            {
-              "type": "recipe",
-              "title": "レシピ",
-              "recipe_type": "定形クラフト",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "tempered_iron",
           "title": "焼き入れ鉄",
           "icon": "alaindustrial:tempered_iron",
@@ -2419,6 +2357,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "water_mill_wheel",
+          "title": "水車",
+          "icon": "alaindustrial:water_mill_wheel",
+          "block_id": "alaindustrial:water_mill_wheel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "水車",
+              "text": "水車の車輪 — 水車の車輪枠に取り付けます。これがないと発電しません。3 つの等級があり、上位の車輪ほど EU が増え、はるかに長持ちします。発電中に摩耗します。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks",
+                "minecraft:stick",
+                "alaindustrial:wooden_gear",
+                "minecraft:stick",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
             }
           ]
         },
@@ -2662,6 +2631,37 @@
               "type": "text",
               "title": "ゴム",
               "text": "石油と硫黄から作る素材 — 重合機が生ゴムを作り、加熱した加硫機がゴムに変えます。"
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "風力タービンのローター",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "風力タービンのローター",
+              "text": "風力タービンの羽根 — 任意の T1/T2 風車のローター枠に取り付けます。これがないと発電しません。3 つの等級があり、上位のローターほど EU が増え、はるかに長持ちします。発電中に摩耗します。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
             }
           ]
         },

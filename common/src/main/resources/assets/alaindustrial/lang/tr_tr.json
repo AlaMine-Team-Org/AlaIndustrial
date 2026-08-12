@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "Vakum kapsülü",
   "item.alaindustrial.vacuum_capsule.hint": "Doldurmak için bir kaynak sıvıya sağ tıklayın.",
   "item.alaindustrial.water_mill_wheel": "Su çarkı",
+  "item.alaindustrial.water_mill_wheel_reinforced": "Güçlendirilmiş Su Çarkı",
+  "item.alaindustrial.water_mill_wheel_advanced": "Gelişmiş Su Çarkı",
   "item.alaindustrial.wind_gauge": "Rüzgâr Ölçer",
   "item.alaindustrial.windmill_rotor": "Ahşap Rotor",
+  "item.alaindustrial.windmill_rotor_reinforced": "Güçlendirilmiş Rotor",
+  "item.alaindustrial.windmill_rotor_advanced": "Gelişmiş Rotor",
   "item.alaindustrial.wooden_gear": "Ahşap Dişli",
   "item.alaindustrial.wrench": "İngiliz anahtarı",
   "item.alaindustrial.wrench.hint": "Shift + sağ tık: bloğu sök",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "Enerji Yoğunlaştırıcı",
   "container.alaindustrial.iron_chest_double": "Çift Demir Sandık",
   "container.alaindustrial.silver_chest_double": "Çift Gümüş Sandık",
-  "container.alaindustrial.gold_chest_double": "Çift Altın Sandık"
+  "container.alaindustrial.gold_chest_double": "Çift Altın Sandık",
+  "tag.item.alaindustrial.water_mill_wheels": "Su Değirmeni Çarkları",
+  "tag.item.alaindustrial.windmill_rotors": "Rüzgâr Değirmeni Rotorları"
 }

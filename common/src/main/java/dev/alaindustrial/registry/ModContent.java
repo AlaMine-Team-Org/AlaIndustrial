@@ -251,6 +251,11 @@ public final class ModContent {
 	public static Supplier<Item> CABLE_BREAKER = unbound("CABLE_BREAKER");
 	public static Supplier<Item> WINDMILL_ROTOR = unbound("WINDMILL_ROTOR");
 	public static Supplier<Item> WATER_MILL_WHEEL = unbound("WATER_MILL_WHEEL");
+	// MOD-385: the reinforced and advanced grades. Balance lives in ComponentTier, not here.
+	public static Supplier<Item> WINDMILL_ROTOR_REINFORCED = unbound("WINDMILL_ROTOR_REINFORCED");
+	public static Supplier<Item> WINDMILL_ROTOR_ADVANCED = unbound("WINDMILL_ROTOR_ADVANCED");
+	public static Supplier<Item> WATER_MILL_WHEEL_REINFORCED = unbound("WATER_MILL_WHEEL_REINFORCED");
+	public static Supplier<Item> WATER_MILL_WHEEL_ADVANCED = unbound("WATER_MILL_WHEEL_ADVANCED");
 	public static Supplier<Item> WOODEN_GEAR = unbound("WOODEN_GEAR");
 	// Metal gears (MOD-105): crafting components for machinery still to come. Each is a cross of the
 	// tier material around a wooden gear; no consumer recipe uses them yet.

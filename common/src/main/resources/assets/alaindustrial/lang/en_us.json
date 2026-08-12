@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "Vacuum Capsule",
   "item.alaindustrial.vacuum_capsule.hint": "Right-click a source fluid to fill it.",
   "item.alaindustrial.water_mill_wheel": "Water Wheel",
+  "item.alaindustrial.water_mill_wheel_reinforced": "Reinforced Water Wheel",
+  "item.alaindustrial.water_mill_wheel_advanced": "Advanced Water Wheel",
   "item.alaindustrial.wind_gauge": "Wind Gauge",
   "item.alaindustrial.windmill_rotor": "Wooden Rotor",
+  "item.alaindustrial.windmill_rotor_reinforced": "Reinforced Rotor",
+  "item.alaindustrial.windmill_rotor_advanced": "Advanced Rotor",
   "item.alaindustrial.wooden_gear": "Wooden Gear",
   "item.alaindustrial.wrench": "Wrench",
   "item.alaindustrial.wrench.hint": "Shift + right-click: dismantle a block",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "Energy Condenser",
   "container.alaindustrial.iron_chest_double": "Double Iron Chest",
   "container.alaindustrial.silver_chest_double": "Double Silver Chest",
-  "container.alaindustrial.gold_chest_double": "Double Gold Chest"
+  "container.alaindustrial.gold_chest_double": "Double Gold Chest",
+  "tag.item.alaindustrial.water_mill_wheels": "Water Mill Wheels",
+  "tag.item.alaindustrial.windmill_rotors": "Wind Mill Rotors"
 }

@@ -145,10 +145,34 @@ public final class Config {
 	 */
 	public static int windMillRotorEuPerDamage = 480;
 	/**
+	 * Output scale of the plain wooden rotor — the baseline of the MOD-385 ladder, hence 1.0. It is a
+	 * field rather than a hardcoded constant so all three grades read the same way in
+	 * {@link dev.alaindustrial.core.machine.ComponentTier}; raising it buffs every wind mill in the
+	 * world, which is a legitimate server knob but NOT what the reinforced/advanced grades are for.
+	 */
+	public static float windMillRotorOutputMultiplier = 1.0f;
+	/**
 	 * Extra rotor-wear multiplier while a wind mill runs in rain or thunder — mechanical stress on top of
 	 * the already-higher storm output. 1.0 disables the weather bonus. Applies to all three wind mills.
 	 */
 	public static float windMillStormWearFactor = 1.5f;
+	// --- Reinforced / advanced rotor and wheel (MOD-385) — the second and third grades. ---
+	/** Reinforced rotor durability: ×3 the wooden one. Registration-time like every max_damage. */
+	public static int windMillRotorReinforcedMaxDamage = 3000;
+	/**
+	 * EU per durability point of the reinforced rotor. Scaled by the same ×1.25 as its output on
+	 * purpose: wear is charged on EU produced, so leaving this at 480 would make the stronger rotor
+	 * wear 25 % faster and quietly eat a quarter of the promised life gain.
+	 */
+	public static int windMillRotorReinforcedEuPerDamage = 600;
+	/** Reinforced rotor output scale. Applied before the mill's cap, so it cannot raise the ceiling. */
+	public static float windMillRotorReinforcedOutputMultiplier = 1.25f;
+	/** Advanced rotor durability: ×6 the wooden one, ×2 the reinforced one. */
+	public static int windMillRotorAdvancedMaxDamage = 6000;
+	/** EU per durability point of the advanced rotor — ×1.5, matching its output scale. */
+	public static int windMillRotorAdvancedEuPerDamage = 720;
+	/** Advanced rotor output scale. Applied before the mill's cap, so it cannot raise the ceiling. */
+	public static float windMillRotorAdvancedOutputMultiplier = 1.5f;
 	/**
 	 * Water mill wheel max durability (durability bar). Total wheel life is
 	 * {@code waterMillWheelMaxDamage × waterMillWheelEuPerDamage} EU. Like the rotor the max_damage
@@ -161,6 +185,28 @@ public final class Config {
 	 * weather-dependent rotor, so a slightly longer calendar life). Read live every tick.
 	 */
 	public static int waterMillWheelEuPerDamage = 320;
+	/**
+	 * Output scale of the plain wooden wheel — the baseline of the MOD-385 ladder, hence 1.0. Kept a
+	 * field for the same reason as {@link #windMillRotorOutputMultiplier}: uniform grade definitions.
+	 */
+	public static float waterMillWheelOutputMultiplier = 1.0f;
+	/** Reinforced wheel durability: ×3 the wooden one. */
+	public static int waterMillWheelReinforcedMaxDamage = 3000;
+	/** EU per durability point of the reinforced wheel — ×1.25, matching its output scale. */
+	public static int waterMillWheelReinforcedEuPerDamage = 400;
+	/**
+	 * Reinforced wheel output scale. The water mill has no {@code *MaxEuPerTick} of its own — its
+	 * ceiling is structural (4 wheel-swept cells × {@link #waterMillEuPerTick}), and even at the
+	 * advanced grade the result stays far under the LV tier voltage and under a copper cable's
+	 * throughput, so no cap needed to be introduced for MOD-385.
+	 */
+	public static float waterMillWheelReinforcedOutputMultiplier = 1.25f;
+	/** Advanced wheel durability: ×6 the wooden one, ×2 the reinforced one. */
+	public static int waterMillWheelAdvancedMaxDamage = 6000;
+	/** EU per durability point of the advanced wheel — ×1.5, matching its output scale. */
+	public static int waterMillWheelAdvancedEuPerDamage = 480;
+	/** Advanced wheel output scale. */
+	public static float waterMillWheelAdvancedOutputMultiplier = 1.5f;
 	/** Output multiplier when a solar panel sees the sky through a translucent block (leaves, cobweb). MOD-004. */
 	public static float solarTransparentFactor = 0.5f;
 	/** Output multiplier under snow: a snow layer above the panel, or snowfall in a cold biome — MODE_SNOW. */
@@ -1046,6 +1092,38 @@ public final class Config {
 				() -> waterMillWheelMaxDamage, v -> waterMillWheelMaxDamage = v, 1),
 			new IntField("waterMillWheelEuPerDamage", "EU of production per 1 durability point of the water mill wheel (life = maxDamage × this). Read live every tick.",
 				() -> waterMillWheelEuPerDamage, v -> waterMillWheelEuPerDamage = v, 1),
+			// MOD-385: the three-grade component ladder. Output multipliers are applied INSIDE
+			// WindMillOutput/WaterMillOutput.euFor, before their clamp, so no value here can lift a
+			// generator's *MaxEuPerTick ceiling. EU-per-damage tracks the multiplier so the life gain
+			// stays exactly the durability gain.
+			new FloatField("windMillRotorOutputMultiplier", "MOD-385: output scale of the plain wooden rotor — the ladder's 1.0 baseline. Raising it buffs every wind mill, not just upgraded ones.",
+				() -> windMillRotorOutputMultiplier, v -> windMillRotorOutputMultiplier = v, 0.0f),
+			new IntField("windMillRotorReinforcedMaxDamage", "MOD-385: reinforced rotor max durability (×3 the wooden one). Applies at registration (restart).",
+				() -> windMillRotorReinforcedMaxDamage, v -> windMillRotorReinforcedMaxDamage = v, 1),
+			new IntField("windMillRotorReinforcedEuPerDamage", "MOD-385: EU per 1 durability point of the reinforced rotor. Scaled by its ×1.25 output so the life gain is purely the durability gain.",
+				() -> windMillRotorReinforcedEuPerDamage, v -> windMillRotorReinforcedEuPerDamage = v, 1),
+			new FloatField("windMillRotorReinforcedOutputMultiplier", "MOD-385: reinforced rotor output scale. Applied before the mill's cap, so it cannot raise windMillMaxEuPerTick.",
+				() -> windMillRotorReinforcedOutputMultiplier, v -> windMillRotorReinforcedOutputMultiplier = v, 0.0f),
+			new IntField("windMillRotorAdvancedMaxDamage", "MOD-385: advanced rotor max durability (×6 the wooden one). Applies at registration (restart).",
+				() -> windMillRotorAdvancedMaxDamage, v -> windMillRotorAdvancedMaxDamage = v, 1),
+			new IntField("windMillRotorAdvancedEuPerDamage", "MOD-385: EU per 1 durability point of the advanced rotor, scaled by its ×1.5 output.",
+				() -> windMillRotorAdvancedEuPerDamage, v -> windMillRotorAdvancedEuPerDamage = v, 1),
+			new FloatField("windMillRotorAdvancedOutputMultiplier", "MOD-385: advanced rotor output scale. Applied before the mill's cap.",
+				() -> windMillRotorAdvancedOutputMultiplier, v -> windMillRotorAdvancedOutputMultiplier = v, 0.0f),
+			new FloatField("waterMillWheelOutputMultiplier", "MOD-385: output scale of the plain wooden wheel — the ladder's 1.0 baseline.",
+				() -> waterMillWheelOutputMultiplier, v -> waterMillWheelOutputMultiplier = v, 0.0f),
+			new IntField("waterMillWheelReinforcedMaxDamage", "MOD-385: reinforced wheel max durability (×3 the wooden one). Applies at registration (restart).",
+				() -> waterMillWheelReinforcedMaxDamage, v -> waterMillWheelReinforcedMaxDamage = v, 1),
+			new IntField("waterMillWheelReinforcedEuPerDamage", "MOD-385: EU per 1 durability point of the reinforced wheel, scaled by its ×1.25 output.",
+				() -> waterMillWheelReinforcedEuPerDamage, v -> waterMillWheelReinforcedEuPerDamage = v, 1),
+			new FloatField("waterMillWheelReinforcedOutputMultiplier", "MOD-385: reinforced wheel output scale. The water mill has no EU/t cap of its own — its ceiling is 4 wheel cells × waterMillEuPerTick.",
+				() -> waterMillWheelReinforcedOutputMultiplier, v -> waterMillWheelReinforcedOutputMultiplier = v, 0.0f),
+			new IntField("waterMillWheelAdvancedMaxDamage", "MOD-385: advanced wheel max durability (×6 the wooden one). Applies at registration (restart).",
+				() -> waterMillWheelAdvancedMaxDamage, v -> waterMillWheelAdvancedMaxDamage = v, 1),
+			new IntField("waterMillWheelAdvancedEuPerDamage", "MOD-385: EU per 1 durability point of the advanced wheel, scaled by its ×1.5 output.",
+				() -> waterMillWheelAdvancedEuPerDamage, v -> waterMillWheelAdvancedEuPerDamage = v, 1),
+			new FloatField("waterMillWheelAdvancedOutputMultiplier", "MOD-385: advanced wheel output scale.",
+				() -> waterMillWheelAdvancedOutputMultiplier, v -> waterMillWheelAdvancedOutputMultiplier = v, 0.0f),
 			new FloatField("solarTransparentFactor", "Output multiplier when a solar panel sees sky through a translucent block (leaves, cobweb).",
 				() -> solarTransparentFactor, v -> solarTransparentFactor = v, 0.0f),
 			new FloatField("solarSnowFactor", "Output multiplier under snow (a snow layer above, or snowfall in a cold biome).",

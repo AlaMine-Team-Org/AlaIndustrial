@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "真空カプセル",
   "item.alaindustrial.vacuum_capsule.hint": "液体源を右クリックで充填します。",
   "item.alaindustrial.water_mill_wheel": "水車",
+  "item.alaindustrial.water_mill_wheel_reinforced": "強化水車",
+  "item.alaindustrial.water_mill_wheel_advanced": "高度な水車",
   "item.alaindustrial.wind_gauge": "風速計",
   "item.alaindustrial.windmill_rotor": "風力タービンのローター",
+  "item.alaindustrial.windmill_rotor_reinforced": "強化ローター",
+  "item.alaindustrial.windmill_rotor_advanced": "高度なローター",
   "item.alaindustrial.wooden_gear": "木の歯車",
   "item.alaindustrial.wrench": "レンチ",
   "item.alaindustrial.wrench.hint": "Shift + 右クリック: ブロックを分解",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "エネルギー凝縮器",
   "container.alaindustrial.iron_chest_double": "ラージ鉄のチェスト",
   "container.alaindustrial.silver_chest_double": "ラージ銀のチェスト",
-  "container.alaindustrial.gold_chest_double": "ラージ金のチェスト"
+  "container.alaindustrial.gold_chest_double": "ラージ金のチェスト",
+  "tag.item.alaindustrial.water_mill_wheels": "水車の車輪",
+  "tag.item.alaindustrial.windmill_rotors": "風車のローター"
 }

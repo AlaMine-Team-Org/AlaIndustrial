@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "Vakuumkapsel",
   "item.alaindustrial.vacuum_capsule.hint": "Rechtsklick auf eine Quellflüssigkeit zum Befüllen.",
   "item.alaindustrial.water_mill_wheel": "Wasserrad",
+  "item.alaindustrial.water_mill_wheel_reinforced": "Verstärktes Wasserrad",
+  "item.alaindustrial.water_mill_wheel_advanced": "Fortgeschrittenes Wasserrad",
   "item.alaindustrial.wind_gauge": "Windmesser",
   "item.alaindustrial.windmill_rotor": "Windturbinenrotor",
+  "item.alaindustrial.windmill_rotor_reinforced": "Verstärkter Rotor",
+  "item.alaindustrial.windmill_rotor_advanced": "Fortgeschrittener Rotor",
   "item.alaindustrial.wooden_gear": "Holzzahnrad",
   "item.alaindustrial.wrench": "Schraubenschlüssel",
   "item.alaindustrial.wrench.hint": "Shift + Rechtsklick: Block abbauen",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "Energieverdichter",
   "container.alaindustrial.iron_chest_double": "Doppelte Eisentruhe",
   "container.alaindustrial.silver_chest_double": "Doppelte Silbertruhe",
-  "container.alaindustrial.gold_chest_double": "Doppelte Goldtruhe"
+  "container.alaindustrial.gold_chest_double": "Doppelte Goldtruhe",
+  "tag.item.alaindustrial.water_mill_wheels": "Wassermühlenräder",
+  "tag.item.alaindustrial.windmill_rotors": "Windmühlenrotoren"
 }

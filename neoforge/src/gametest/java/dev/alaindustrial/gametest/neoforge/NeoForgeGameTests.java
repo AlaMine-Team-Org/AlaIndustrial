@@ -55,6 +55,7 @@ import dev.alaindustrial.gametest.TemperedIronToolScenarios;
 import dev.alaindustrial.gametest.ItemPipeScenarios;
 import dev.alaindustrial.gametest.PersistenceScenarios;
 import dev.alaindustrial.gametest.EnrichedUraniumTorchScenarios;
+import dev.alaindustrial.gametest.ComponentTierScenarios;
 import dev.alaindustrial.gametest.WaterMillWheelScenarios;
 import dev.alaindustrial.gametest.CablePlacementScenarios;
 import dev.alaindustrial.gametest.GeneratorScenarios;
@@ -1341,6 +1342,19 @@ public final class NeoForgeGameTests {
 				WaterMillWheelScenarios::waterMillWheel_progressTracksWaterFaces);
 		registerTest(event, "water_mill_wheel_slot_filter_is_dedicated", 40, true,
 				WaterMillWheelScenarios::waterMillWheel_slotFilterIsDedicated);
+		// MOD-385: the three-grade component ladder. Same scenario bodies the Fabric lane runs.
+		registerTest(event, "component_tier_water_mill_better_wheel_produces_more_eu", 200, true,
+				ComponentTierScenarios::waterMill_betterWheelProducesMoreEu);
+		registerTest(event, "component_tier_baseline_grade_is_unchanged", 200, true,
+				ComponentTierScenarios::baselineGradeIsUnchanged);
+		registerTest(event, "component_tier_rotor_slot_accepts_every_grade", 40, true,
+				ComponentTierScenarios::rotorSlotAcceptsEveryGrade);
+		registerTest(event, "component_tier_wheel_slot_accepts_every_grade", 40, true,
+				ComponentTierScenarios::wheelSlotAcceptsEveryGrade);
+		// The wind-mill grade scenarios (output comparison, cap, evolution carry-over) are Fabric-only:
+		// they need an open sky column, and this lane's registerTest hardcodes skyAccess=false. Same
+		// split the existing wind-mill rate tests already live with. What DOES run on both loaders is
+		// the part that has to: both slot filters and the water-mill output ladder.
 		registerTest(event, "water_mill_crafting_recipe_resolves", 40, true,
 				WaterMillWheelScenarios::waterMill_craftingRecipeResolves);
 		registerTest(event, "water_mill_wheel_crafting_recipe_resolves", 40, true,

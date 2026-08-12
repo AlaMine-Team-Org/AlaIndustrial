@@ -2330,68 +2330,6 @@
           ]
         },
         {
-          "id": "water_mill_wheel",
-          "title": "Bánh xe nước",
-          "icon": "alaindustrial:water_mill_wheel",
-          "block_id": "alaindustrial:water_mill_wheel",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Bánh xe nước",
-              "text": "Bánh xe của cối nước — lắp vào ô bánh xe của cối nước; thiếu nó thì không phát điện. Bị hao mòn khi phát điện."
-            },
-            {
-              "type": "recipe",
-              "title": "Công thức",
-              "recipe_type": "Chế tạo định hình",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks",
-                "minecraft:stick",
-                "alaindustrial:wooden_gear",
-                "minecraft:stick",
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:water_mill_wheel",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "Rotor gỗ",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Rotor gỗ",
-              "text": "Cánh tuabin gió — lắp vào ô rotor của bất kỳ cối gió T1/T2 nào; thiếu nó thì không phát điện. Bị hao mòn khi phát điện."
-            },
-            {
-              "type": "recipe",
-              "title": "Công thức",
-              "recipe_type": "Chế tạo định hình",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "tempered_iron",
           "title": "Sắt Tôi",
           "icon": "alaindustrial:tempered_iron",
@@ -2419,6 +2357,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "water_mill_wheel",
+          "title": "Bánh xe nước",
+          "icon": "alaindustrial:water_mill_wheel",
+          "block_id": "alaindustrial:water_mill_wheel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bánh xe nước",
+              "text": "Bánh xe cối xay nước — đặt vào ô bánh xe của cối xay nước; không có nó thì không phát điện. Ba cấp: bánh xe tốt hơn tạo ra nhiều EU hơn và bền lâu hơn nhiều. Hao mòn trong khi phát điện."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks",
+                "minecraft:stick",
+                "alaindustrial:wooden_gear",
+                "minecraft:stick",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
             }
           ]
         },
@@ -2662,6 +2631,37 @@
               "type": "text",
               "title": "Cao su",
               "text": "Vật liệu làm từ dầu mỏ và lưu huỳnh — Máy Trùng Hợp tạo cao su thô, rồi Máy Lưu Hóa được nung nóng biến nó thành cao su."
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "Rotor gỗ",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rotor gỗ",
+              "text": "Cánh tuabin gió — đặt vào ô rotor của bất kỳ cối xay gió T1/T2 nào; không có nó thì không phát điện. Ba cấp: rotor tốt hơn tạo ra nhiều EU hơn và bền lâu hơn nhiều. Hao mòn trong khi phát điện."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
             }
           ]
         },

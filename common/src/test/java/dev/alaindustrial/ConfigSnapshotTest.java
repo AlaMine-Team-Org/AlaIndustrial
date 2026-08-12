@@ -122,6 +122,23 @@ class ConfigSnapshotTest {
 		SENTINELS.put("windMillStormWearFactor", 1.8f);
 		SENTINELS.put("waterMillWheelMaxDamage", 707);
 		SENTINELS.put("waterMillWheelEuPerDamage", 251);
+		// MOD-385 component ladder. Every value is distinct from its default, from 0 and from the
+		// field's minimum, and distinct from the OTHER grades' sentinels — a snapshot that reused one
+		// number across grades would pass even if two getters were wired to the same field.
+		SENTINELS.put("windMillRotorOutputMultiplier", 1.7f);
+		SENTINELS.put("windMillRotorReinforcedMaxDamage", 2828);
+		SENTINELS.put("windMillRotorReinforcedEuPerDamage", 373);
+		SENTINELS.put("windMillRotorReinforcedOutputMultiplier", 1.9f);
+		SENTINELS.put("windMillRotorAdvancedMaxDamage", 5858);
+		SENTINELS.put("windMillRotorAdvancedEuPerDamage", 787);
+		SENTINELS.put("windMillRotorAdvancedOutputMultiplier", 2.3f);
+		SENTINELS.put("waterMillWheelOutputMultiplier", 1.6f);
+		SENTINELS.put("waterMillWheelReinforcedMaxDamage", 2727);
+		SENTINELS.put("waterMillWheelReinforcedEuPerDamage", 419);
+		SENTINELS.put("waterMillWheelReinforcedOutputMultiplier", 2.1f);
+		SENTINELS.put("waterMillWheelAdvancedMaxDamage", 5757);
+		SENTINELS.put("waterMillWheelAdvancedEuPerDamage", 523);
+		SENTINELS.put("waterMillWheelAdvancedOutputMultiplier", 2.7f);
 		SENTINELS.put("solarTransparentFactor", 0.625f);
 		SENTINELS.put("solarSnowFactor", 0.375f);
 		SENTINELS.put("solarEvolveTicks", 22_222);

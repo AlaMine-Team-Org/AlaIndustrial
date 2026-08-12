@@ -2330,68 +2330,6 @@
           ]
         },
         {
-          "id": "water_mill_wheel",
-          "title": "জলচাকা",
-          "icon": "alaindustrial:water_mill_wheel",
-          "block_id": "alaindustrial:water_mill_wheel",
-          "pages": [
-            {
-              "type": "text",
-              "title": "জলচাকা",
-              "text": "জলচক্রের চাকা — জলচক্রের চাকা স্লটে বসে; এটি ছাড়া কোনো উৎপাদন নেই। উৎপাদনের সময় ক্ষয় হয়।"
-            },
-            {
-              "type": "recipe",
-              "title": "রেসিপি",
-              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks",
-                "minecraft:stick",
-                "alaindustrial:wooden_gear",
-                "minecraft:stick",
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:water_mill_wheel",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "কাঠের রোটর",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "কাঠের রোটর",
-              "text": "বায়ু টারবাইনের পাখা — যেকোনো T1/T2 বায়ু চক্রের রোটর স্লটে বসে; এটি ছাড়া কোনো উৎপাদন নেই। উৎপাদনের সময় ক্ষয় হয়।"
-            },
-            {
-              "type": "recipe",
-              "title": "রেসিপি",
-              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "tempered_iron",
           "title": "টেম্পার্ড লোহা",
           "icon": "alaindustrial:tempered_iron",
@@ -2419,6 +2357,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "water_mill_wheel",
+          "title": "জলচাকা",
+          "icon": "alaindustrial:water_mill_wheel",
+          "block_id": "alaindustrial:water_mill_wheel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "জলচাকা",
+              "text": "জলকলের চাকা — জলকলের চাকার স্লটে বসানো হয়; এটি ছাড়া কোনো উৎপাদন হয় না। তিনটি শ্রেণি: উন্নত চাকা বেশি EU দেয় এবং অনেক বেশি টেকে। উৎপাদনের সময় ক্ষয় হয়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks",
+                "minecraft:stick",
+                "alaindustrial:wooden_gear",
+                "minecraft:stick",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
             }
           ]
         },
@@ -2662,6 +2631,37 @@
               "type": "text",
               "title": "রাবার",
               "text": "খনিজ তেল ও সালফার থেকে তৈরি উপাদান — পলিমারাইজার কাঁচা রাবার বানায়, তারপর উত্তপ্ত ভালকানাইজার সেটিকে রাবারে পরিণত করে।"
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "কাঠের রোটর",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "কাঠের রোটর",
+              "text": "বায়ু টারবাইনের ব্লেড — যেকোনো T1/T2 বায়ুকলের রোটর স্লটে বসানো হয়; এটি ছাড়া কোনো উৎপাদন হয় না। তিনটি শ্রেণি: উন্নত রোটর বেশি EU দেয় এবং অনেক বেশি টেকে। উৎপাদনের সময় ক্ষয় হয়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
             }
           ]
         },

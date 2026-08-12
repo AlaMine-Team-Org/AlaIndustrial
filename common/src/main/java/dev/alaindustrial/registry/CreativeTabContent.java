@@ -141,7 +141,11 @@ public final class CreativeTabContent {
 		// Cable breaker (MOD-276): a cable accessory, listed with the components it is crafted from.
 		out.accept(ModContent.CABLE_BREAKER.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
+		out.accept(ModContent.WINDMILL_ROTOR_REINFORCED.get());
+		out.accept(ModContent.WINDMILL_ROTOR_ADVANCED.get());
 		out.accept(ModContent.WATER_MILL_WHEEL.get());
+		out.accept(ModContent.WATER_MILL_WHEEL_REINFORCED.get());
+		out.accept(ModContent.WATER_MILL_WHEEL_ADVANCED.get());
 		out.accept(ModContent.WOODEN_GEAR.get());
 		out.accept(ModContent.STONE_GEAR.get());
 		out.accept(ModContent.IRON_GEAR.get());
@@ -326,7 +330,11 @@ public final class CreativeTabContent {
 		// Cable breaker (MOD-276): a cable accessory, listed with the components it is crafted from.
 		out.accept(ModContent.CABLE_BREAKER.get());
 		out.accept(ModContent.WINDMILL_ROTOR.get());
+		out.accept(ModContent.WINDMILL_ROTOR_REINFORCED.get());
+		out.accept(ModContent.WINDMILL_ROTOR_ADVANCED.get());
 		out.accept(ModContent.WATER_MILL_WHEEL.get());
+		out.accept(ModContent.WATER_MILL_WHEEL_REINFORCED.get());
+		out.accept(ModContent.WATER_MILL_WHEEL_ADVANCED.get());
 		out.accept(ModContent.WOODEN_GEAR.get());
 		out.accept(ModContent.STONE_GEAR.get());
 		out.accept(ModContent.IRON_GEAR.get());

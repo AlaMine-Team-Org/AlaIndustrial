@@ -7,6 +7,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
+import dev.alaindustrial.core.machine.ComponentTier;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -27,9 +28,35 @@ import org.jspecify.annotations.Nullable;
 /** Renders the visible wooden rotor in front of wind mill blocks. */
 public final class WindMillRotorBlockEntityRenderer<T extends MachineBlockEntity>
 		implements BlockEntityRenderer<T, WindMillRotorBlockEntityRenderer.State> {
+	/**
+	 * One sprite per rotor grade (MOD-385), so the player reads a farm's upgrade level off the blades
+	 * from a distance instead of having to open every mill. All three live on the same block atlas, so
+	 * {@link #RENDER_TYPE} stays shared and nothing has to be re-baked per grade.
+	 */
 	private static final SpriteId SPRITE =
 			Sheets.BLOCKS_MAPPER.apply(Industrialization.id("wind_mill_rotor_blades_3d"));
+	private static final SpriteId SPRITE_REINFORCED =
+			Sheets.BLOCKS_MAPPER.apply(Industrialization.id("wind_mill_rotor_blades_reinforced_3d"));
+	private static final SpriteId SPRITE_ADVANCED =
+			Sheets.BLOCKS_MAPPER.apply(Industrialization.id("wind_mill_rotor_blades_advanced_3d"));
 	private static final RenderType RENDER_TYPE = SPRITE.renderType(ignored -> Sheets.cutoutBlockItemSheet());
+
+	/**
+	 * The blade sprite for the rotor in {@code stack}. Resolution is client-side and needs no packet of
+	 * its own: {@code MachineBlockEntity.getUpdateTag} is {@code saveWithoutMetadata}, so the machine's
+	 * inventory already reaches every watching client (the same guarantee the mute-chip check relies on).
+	 */
+	private static SpriteId spriteFor(net.minecraft.world.item.ItemStack stack) {
+		ComponentTier tier = ComponentTier.forItemPath(
+				net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath());
+		if (tier == ComponentTier.WINDMILL_ROTOR_REINFORCED) {
+			return SPRITE_REINFORCED;
+		}
+		if (tier == ComponentTier.WINDMILL_ROTOR_ADVANCED) {
+			return SPRITE_ADVANCED;
+		}
+		return SPRITE;
+	}
 	private static final float HALF_SIZE = 1.0F;
 
 	private final SpriteGetter sprites;
@@ -59,8 +86,11 @@ public final class WindMillRotorBlockEntityRenderer<T extends MachineBlockEntity
 		// WindMillBlockEntity. This renderer is only bound to those three block entities, so reading slot 0
 		// directly is safe and gates the blades on ALL of them. (The old `instanceof WindMillBlockEntity`
 		// check silently exempted both T2 mills — they rendered blades even with an empty rotor slot.)
-		boolean hasRotor = !entity.getItem(WindMillBlockEntity.ROTOR_SLOT).isEmpty();
+		net.minecraft.world.item.ItemStack rotor = entity.getItem(WindMillBlockEntity.ROTOR_SLOT);
+		boolean hasRotor = !rotor.isEmpty();
 		state.visible = !interfered && hasRotor;
+		// Grade → sprite (MOD-385). Picked here, in extractRenderState, so `submit` stays a pure draw.
+		state.sprite = hasRotor ? spriteFor(rotor) : SPRITE;
 
 		int production = entity.getDataAccess().get(2);
 		state.angle = production <= 0 ? 0.0F : rotationAngle(entity, partialTicks, production);
@@ -77,7 +107,7 @@ public final class WindMillRotorBlockEntityRenderer<T extends MachineBlockEntity
 		rotateToFacing(poseStack, state.facing);
 		poseStack.translate(0.0F, 0.0F, -0.58F);
 		poseStack.mulPose(Axis.ZP.rotation(state.angle));
-		TextureAtlasSprite sprite = sprites.get(SPRITE);
+		TextureAtlasSprite sprite = sprites.get(state.sprite);
 		// The rotor is a decorative overhang drawn as a flat cutout quad in front of the block. It
 		// spans 2×2 blocks (HALF_SIZE) and floats off the face, so positional block light at the BE's
 		// own coords leaves its corners dark — and the NeoForge custom-geometry pipeline shades
@@ -148,5 +178,7 @@ public final class WindMillRotorBlockEntityRenderer<T extends MachineBlockEntity
 		private Direction facing = Direction.NORTH;
 		private boolean visible;
 		private float angle;
+		/** Blade sprite for the installed rotor grade (MOD-385). */
+		private SpriteId sprite = SPRITE;
 	}
 }

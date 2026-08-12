@@ -2330,68 +2330,6 @@
           ]
         },
         {
-          "id": "water_mill_wheel",
-          "title": "जलचक्र",
-          "icon": "alaindustrial:water_mill_wheel",
-          "block_id": "alaindustrial:water_mill_wheel",
-          "pages": [
-            {
-              "type": "text",
-              "title": "जलचक्र",
-              "text": "जल चक्की का पहिया — जल चक्की के पहिया स्लॉट में रखा जाता है; इसके बिना कोई उत्पादन नहीं। उत्पादन के दौरान घिसता है।"
-            },
-            {
-              "type": "recipe",
-              "title": "रेसिपी",
-              "recipe_type": "आकारित क्राफ्टिंग",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks",
-                "minecraft:stick",
-                "alaindustrial:wooden_gear",
-                "minecraft:stick",
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:water_mill_wheel",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "लकड़ी का रोटर",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "लकड़ी का रोटर",
-              "text": "पवन चक्की के ब्लेड — किसी भी T1/T2 पवन चक्की के रोटर स्लॉट में रखे जाते हैं; इसके बिना कोई उत्पादन नहीं। उत्पादन के दौरान घिसते हैं।"
-            },
-            {
-              "type": "recipe",
-              "title": "रेसिपी",
-              "recipe_type": "आकारित क्राफ्टिंग",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "tempered_iron",
           "title": "टेम्पर्ड लोहा",
           "icon": "alaindustrial:tempered_iron",
@@ -2419,6 +2357,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "water_mill_wheel",
+          "title": "जलचक्र",
+          "icon": "alaindustrial:water_mill_wheel",
+          "block_id": "alaindustrial:water_mill_wheel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "जलचक्र",
+              "text": "जल चक्की का पहिया — जल चक्की के पहिया स्लॉट में लगाया जाता है; इसके बिना कोई उत्पादन नहीं होता। तीन श्रेणियाँ: बेहतर पहिया अधिक EU देता है और कहीं अधिक टिकता है। उत्पादन के दौरान घिसता है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks",
+                "minecraft:stick",
+                "alaindustrial:wooden_gear",
+                "minecraft:stick",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
             }
           ]
         },
@@ -2662,6 +2631,37 @@
               "type": "text",
               "title": "रबर",
               "text": "तेल और गंधक से बना पदार्थ — पॉलिमराइज़र कच्चा रबर बनाता है, फिर गर्म वल्कनाइज़र उसे रबर में बदल देता है।"
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "लकड़ी का रोटर",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "लकड़ी का रोटर",
+              "text": "पवन टरबाइन के ब्लेड — किसी भी T1/T2 पवनचक्की के रोटर स्लॉट में लगाए जाते हैं; इनके बिना कोई उत्पादन नहीं होता। तीन श्रेणियाँ: बेहतर रोटर अधिक EU देता है और कहीं अधिक टिकता है। उत्पादन के दौरान घिसता है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
             }
           ]
         },

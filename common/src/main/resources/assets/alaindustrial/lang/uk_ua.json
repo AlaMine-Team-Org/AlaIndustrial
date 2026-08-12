@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "Вакуумна капсула",
   "item.alaindustrial.vacuum_capsule.hint": "ПКМ по джерелу рідини — наповнити.",
   "item.alaindustrial.water_mill_wheel": "Водяне колесо",
+  "item.alaindustrial.water_mill_wheel_reinforced": "Посилене водяне колесо",
+  "item.alaindustrial.water_mill_wheel_advanced": "Електронне водяне колесо",
   "item.alaindustrial.wind_gauge": "Анемометр",
   "item.alaindustrial.windmill_rotor": "Ротор вітряка",
+  "item.alaindustrial.windmill_rotor_reinforced": "Посилений ротор",
+  "item.alaindustrial.windmill_rotor_advanced": "Електронний ротор",
   "item.alaindustrial.wooden_gear": "Дерев'яна шестірня",
   "item.alaindustrial.wrench": "Гайковий ключ",
   "item.alaindustrial.wrench.hint": "Shift + ПКМ: скрутити блок",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "Згущувач енергії",
   "container.alaindustrial.iron_chest_double": "Подвійна залізна скриня",
   "container.alaindustrial.silver_chest_double": "Подвійна срібна скриня",
-  "container.alaindustrial.gold_chest_double": "Подвійна золота скриня"
+  "container.alaindustrial.gold_chest_double": "Подвійна золота скриня",
+  "tag.item.alaindustrial.water_mill_wheels": "Колеса водяного млина",
+  "tag.item.alaindustrial.windmill_rotors": "Ротори вітряка"
 }

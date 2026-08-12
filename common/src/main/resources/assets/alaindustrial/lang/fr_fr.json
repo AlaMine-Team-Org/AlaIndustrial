@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "Capsule à vide",
   "item.alaindustrial.vacuum_capsule.hint": "Clic droit sur un fluide source pour la remplir.",
   "item.alaindustrial.water_mill_wheel": "Roue à eau",
+  "item.alaindustrial.water_mill_wheel_reinforced": "Roue à eau renforcée",
+  "item.alaindustrial.water_mill_wheel_advanced": "Roue à eau avancée",
   "item.alaindustrial.wind_gauge": "Anémomètre",
   "item.alaindustrial.windmill_rotor": "Rotor en bois",
+  "item.alaindustrial.windmill_rotor_reinforced": "Rotor renforcé",
+  "item.alaindustrial.windmill_rotor_advanced": "Rotor avancé",
   "item.alaindustrial.wooden_gear": "Engrenage en bois",
   "item.alaindustrial.wrench": "Clé",
   "item.alaindustrial.wrench.hint": "Maj + clic droit : démonter un bloc",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "Condenseur d'énergie",
   "container.alaindustrial.iron_chest_double": "Double coffre en fer",
   "container.alaindustrial.silver_chest_double": "Double coffre en argent",
-  "container.alaindustrial.gold_chest_double": "Double coffre en or"
+  "container.alaindustrial.gold_chest_double": "Double coffre en or",
+  "tag.item.alaindustrial.water_mill_wheels": "Roues de moulin à eau",
+  "tag.item.alaindustrial.windmill_rotors": "Rotors d'éolienne"
 }

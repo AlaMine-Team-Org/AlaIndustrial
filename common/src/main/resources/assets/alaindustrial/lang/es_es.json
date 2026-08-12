@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "Cápsula de vacío",
   "item.alaindustrial.vacuum_capsule.hint": "Clic derecho en un fluido fuente para llenarla.",
   "item.alaindustrial.water_mill_wheel": "Rueda hidráulica",
+  "item.alaindustrial.water_mill_wheel_reinforced": "Rueda hidráulica reforzada",
+  "item.alaindustrial.water_mill_wheel_advanced": "Rueda hidráulica avanzada",
   "item.alaindustrial.wind_gauge": "Anemómetro",
   "item.alaindustrial.windmill_rotor": "Rotor de madera",
+  "item.alaindustrial.windmill_rotor_reinforced": "Rotor reforzado",
+  "item.alaindustrial.windmill_rotor_advanced": "Rotor avanzado",
   "item.alaindustrial.wooden_gear": "Engranaje de madera",
   "item.alaindustrial.wrench": "Llave inglesa",
   "item.alaindustrial.wrench.hint": "Shift + clic derecho: desmontar bloque",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "Condensador de energía",
   "container.alaindustrial.iron_chest_double": "Cofre de hierro doble",
   "container.alaindustrial.silver_chest_double": "Cofre de plata doble",
-  "container.alaindustrial.gold_chest_double": "Cofre de oro doble"
+  "container.alaindustrial.gold_chest_double": "Cofre de oro doble",
+  "tag.item.alaindustrial.water_mill_wheels": "Ruedas de molino de agua",
+  "tag.item.alaindustrial.windmill_rotors": "Rotores de molino de viento"
 }

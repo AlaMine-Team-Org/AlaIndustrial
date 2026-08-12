@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"pattern": [
+		"TET",
+		"URU",
+		" G "
+	],
+	"key": {
+		"T": "alaindustrial:tempered_iron_plate",
+		"E": "alaindustrial:electronic_circuit",
+		"U": "#c:ingots/copper",
+		"R": "alaindustrial:water_mill_wheel_reinforced",
+		"G": "alaindustrial:silver_gear"
+	},
+	"result": {
+		"id": "alaindustrial:water_mill_wheel_advanced"
+	}
+}

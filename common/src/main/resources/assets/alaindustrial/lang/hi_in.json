@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "वैक्यूम कैप्सूल",
   "item.alaindustrial.vacuum_capsule.hint": "भरने के लिए किसी स्रोत तरल पर राइट-क्लिक करें।",
   "item.alaindustrial.water_mill_wheel": "जलचक्र",
+  "item.alaindustrial.water_mill_wheel_reinforced": "प्रबलित जलचक्र",
+  "item.alaindustrial.water_mill_wheel_advanced": "उन्नत जलचक्र",
   "item.alaindustrial.wind_gauge": "पवन मापी",
   "item.alaindustrial.windmill_rotor": "लकड़ी का रोटर",
+  "item.alaindustrial.windmill_rotor_reinforced": "प्रबलित रोटर",
+  "item.alaindustrial.windmill_rotor_advanced": "उन्नत रोटर",
   "item.alaindustrial.wooden_gear": "लकड़ी का गियर",
   "item.alaindustrial.wrench": "रिंच",
   "item.alaindustrial.wrench.hint": "Shift + दायाँ क्लिक: ब्लॉक खोलें",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "ऊर्जा संघनित्र",
   "container.alaindustrial.iron_chest_double": "डबल आयरन चेस्ट",
   "container.alaindustrial.silver_chest_double": "डबल सिल्वर चेस्ट",
-  "container.alaindustrial.gold_chest_double": "डबल गोल्ड चेस्ट"
+  "container.alaindustrial.gold_chest_double": "डबल गोल्ड चेस्ट",
+  "tag.item.alaindustrial.water_mill_wheels": "जल चक्की के पहिये",
+  "tag.item.alaindustrial.windmill_rotors": "पवनचक्की के रोटर"
 }

@@ -508,8 +508,12 @@
   "item.alaindustrial.vacuum_capsule": "Vacuümcapsule",
   "item.alaindustrial.vacuum_capsule.hint": "Rechtsklik op een bronvloeistof om te vullen.",
   "item.alaindustrial.water_mill_wheel": "Waterrad",
+  "item.alaindustrial.water_mill_wheel_reinforced": "Versterkt waterrad",
+  "item.alaindustrial.water_mill_wheel_advanced": "Geavanceerd waterrad",
   "item.alaindustrial.wind_gauge": "Windmeter",
   "item.alaindustrial.windmill_rotor": "Molenrotor",
+  "item.alaindustrial.windmill_rotor_reinforced": "Versterkte rotor",
+  "item.alaindustrial.windmill_rotor_advanced": "Geavanceerde rotor",
   "item.alaindustrial.wooden_gear": "Houten tandwiel",
   "item.alaindustrial.wrench": "Moersleutel",
   "item.alaindustrial.wrench.hint": "Shift + rechtsklik: blok demonteren",
@@ -690,5 +694,7 @@
   "block.alaindustrial.energy_condenser": "Energiecondensator",
   "container.alaindustrial.iron_chest_double": "Dubbele ijzeren kist",
   "container.alaindustrial.silver_chest_double": "Dubbele zilveren kist",
-  "container.alaindustrial.gold_chest_double": "Dubbele gouden kist"
+  "container.alaindustrial.gold_chest_double": "Dubbele gouden kist",
+  "tag.item.alaindustrial.water_mill_wheels": "Watermolenraderen",
+  "tag.item.alaindustrial.windmill_rotors": "Windmolenrotoren"
 }

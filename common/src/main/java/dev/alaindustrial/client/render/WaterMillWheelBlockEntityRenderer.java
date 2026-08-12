@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
+import dev.alaindustrial.core.machine.ComponentTier;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -27,6 +28,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Unit;
 import net.minecraft.world.level.Level;
@@ -52,6 +54,26 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 			Sheets.BLOCKS_MAPPER.defaultNamespaceApply("stripped_oak_log");
 	private static final SpriteId AXLE_METAL =
 			Sheets.BLOCKS_MAPPER.defaultNamespaceApply("cut_copper");
+	/**
+	 * Material sprites per wheel grade (MOD-385), so an upgraded mill reads as upgraded from across the
+	 * river rather than only in its GUI. Unlike the wind mill's blades — a single flat quad with a
+	 * dedicated mod texture — the wheel is built from model parts textured with whole-block sprites, so
+	 * a grade is expressed by swapping which block it is MADE of: tempered iron for the reinforced wheel,
+	 * a dedicated dark circuit-board texture with gold traces for the advanced one, matching its item
+	 * icon. Vanilla {@code emerald_block} was tried first and rejected on sight: it is one of the most
+	 * saturated greens in the game and read as "a wheel made of emeralds" rather than as electronics.
+	 * Its own {@code water_mill_wheel_3d.png} plays no part here — that file is a documentation render.
+	 */
+	private static final SpriteId REINFORCED_BODY =
+			Sheets.BLOCKS_MAPPER.apply(Industrialization.id("tempered_iron_block"));
+	private static final SpriteId REINFORCED_SPOKE =
+			Sheets.BLOCKS_MAPPER.apply(Industrialization.id("tempered_iron_plate_block"));
+	private static final SpriteId ADVANCED_BODY =
+			Sheets.BLOCKS_MAPPER.apply(Industrialization.id("circuit_board_block"));
+	private static final SpriteId ADVANCED_SPOKE =
+			Sheets.BLOCKS_MAPPER.apply(Industrialization.id("circuit_board_block"));
+	private static final SpriteId ADVANCED_AXLE =
+			Sheets.BLOCKS_MAPPER.defaultNamespaceApply("gold_block");
 
 	private static final int RIM_SEGMENTS = 24;
 	private static final int SPOKE_COUNT = 8;
@@ -150,7 +172,26 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 				? entity.getBlockState().getValue(HorizontalMachineBlock.FACING)
 				: Direction.NORTH;
 		state.production = entity.getDataAccess().get(2);
-		state.installed = !entity.getItem(WaterMillBlockEntity.WHEEL_SLOT).isEmpty();
+		net.minecraft.world.item.ItemStack wheel = entity.getItem(WaterMillBlockEntity.WHEEL_SLOT);
+		state.installed = !wheel.isEmpty();
+		// Grade → material sprites (MOD-385). Read straight off the slot: the machine's inventory is part
+		// of getUpdateTag (saveWithoutMetadata), so every watching client already has it — no packet needed.
+		ComponentTier tier = state.installed
+				? ComponentTier.forItemPath(BuiltInRegistries.ITEM.getKey(wheel.getItem()).getPath())
+				: null;
+		if (tier == ComponentTier.WATER_MILL_WHEEL_REINFORCED) {
+			state.body = REINFORCED_BODY;
+			state.spoke = REINFORCED_SPOKE;
+			state.axle = AXLE_METAL;
+		} else if (tier == ComponentTier.WATER_MILL_WHEEL_ADVANCED) {
+			state.body = ADVANCED_BODY;
+			state.spoke = ADVANCED_SPOKE;
+			state.axle = ADVANCED_AXLE;
+		} else {
+			state.body = PLANKS;
+			state.spoke = SPOKE_WOOD;
+			state.axle = AXLE_METAL;
+		}
 		// MOD-175/MOD-179: when this mill's wheel overlaps a neighbour's (interference) or would clip
 		// through a solid block (obstruction), hide it entirely instead of drawing a broken wheel. The
 		// mode rides the maxProgress sync channel (slot 3). MODE_NO_WATER does NOT hide the wheel — a
@@ -179,16 +220,16 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 		poseStack.translate(0.0F, 0.0F, -1.02F);
 		poseStack.mulPose(Axis.ZP.rotation(state.angle));
 
-		renderContinuousRim(poseStack, collector, sprites.get(PLANKS), state);
+		renderContinuousRim(poseStack, collector, sprites.get(state.body), state);
 		collector.submitModel(planksModel, Unit.INSTANCE, poseStack,
 				state.lightCoords, OverlayTexture.NO_OVERLAY, -1,
-				PLANKS, sprites, 0, state.breakProgress);
+				state.body, sprites, 0, state.breakProgress);
 		collector.submitModel(timberModel, Unit.INSTANCE, poseStack,
 				state.lightCoords, OverlayTexture.NO_OVERLAY, -1,
-				SPOKE_WOOD, sprites, 0, state.breakProgress);
+				state.spoke, sprites, 0, state.breakProgress);
 		collector.submitModel(axleModel, Unit.INSTANCE, poseStack,
 				state.lightCoords, OverlayTexture.NO_OVERLAY, -1,
-				AXLE_METAL, sprites, 0, state.breakProgress);
+				state.axle, sprites, 0, state.breakProgress);
 		poseStack.popPose();
 	}
 
@@ -347,5 +388,9 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 		private boolean interfered;
 		private float angle;
 		private boolean installed;
+		/** Material sprites of the installed wheel grade (MOD-385); default to the wooden wheel's. */
+		private SpriteId body = PLANKS;
+		private SpriteId spoke = SPOKE_WOOD;
+		private SpriteId axle = AXLE_METAL;
 	}
 }

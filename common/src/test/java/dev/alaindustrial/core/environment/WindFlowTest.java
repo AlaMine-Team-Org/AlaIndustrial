@@ -37,7 +37,7 @@ class WindFlowTest {
 
 	private static int eu(int y) {
 		return WindMillOutput.euFor(y, SEA, true, false, false, MAX_BASE, BLOCKS_PER_BASE, MAX_OUT,
-				RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F);
+				RAIN, THUNDER, CLOUD, DEAD, RIDGE_F, TRACE_F, 1.0f);
 	}
 
 	@Test

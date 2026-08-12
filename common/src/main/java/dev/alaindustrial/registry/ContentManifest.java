@@ -522,6 +522,12 @@ public final class ContentManifest {
 		// Wearing components (MOD-189).
 		defs.put("windmill_rotor", durableComponent(() -> Config.windMillRotorMaxDamage));
 		defs.put("water_mill_wheel", durableComponent(() -> Config.waterMillWheelMaxDamage));
+		// MOD-385: the upper two grades of each component. Same factory — only the durability differs at
+		// registration; output multiplier and wear rate are read live per tick from ComponentTier.
+		defs.put("windmill_rotor_reinforced", durableComponent(() -> Config.windMillRotorReinforcedMaxDamage));
+		defs.put("windmill_rotor_advanced", durableComponent(() -> Config.windMillRotorAdvancedMaxDamage));
+		defs.put("water_mill_wheel_reinforced", durableComponent(() -> Config.waterMillWheelReinforcedMaxDamage));
+		defs.put("water_mill_wheel_advanced", durableComponent(() -> Config.waterMillWheelAdvancedMaxDamage));
 		return Map.copyOf(defs);
 	}
 

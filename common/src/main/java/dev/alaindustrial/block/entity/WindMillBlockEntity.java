@@ -9,8 +9,10 @@ import dev.alaindustrial.core.environment.WindMillClearance;
 import dev.alaindustrial.core.environment.WindMillInterference;
 import dev.alaindustrial.core.environment.WindMillOutput;
 import dev.alaindustrial.core.environment.WindProfile;
+import dev.alaindustrial.core.machine.ComponentTier;
 import dev.alaindustrial.menu.WindMillMenu;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -133,14 +135,16 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 				&& SolarSky.classify(level, pos) == SolarSky.Access.CLEAR;
 	}
 
-	/** Recompute the current EU/t rate from height, open sky and weather. */
-	private int sampleRate(Level level, BlockPos pos) {
+	/** Recompute the current EU/t rate from height, open sky, weather and the installed rotor grade. */
+	private int sampleRate(Level level, BlockPos pos, float rotorFactor) {
 		return WindMillOutput.euFor(pos.getY(), level.getSeaLevel(), openSky(level, pos),
 				level.isRaining(), level.isThundering(),
 				Config.windMillMaxBaseEuPerTick, WindProfile.DEFAULT_BLOCKS_PER_BASE, Config.windMillMaxEuPerTick,
 				Config.windMillRainFactor, Config.windMillThunderFactor,
 				// Shared altitude profile (MOD-347): peaks under the clouds, dies above them.
-				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor);
+				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor,
+				// Rotor grade (MOD-385) — folded in before euFor's cap, so it never lifts the ceiling.
+				rotorFactor);
 	}
 
 	@Override
@@ -164,6 +168,10 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 			return 0;
 		}
 
+		// Rotor grade (MOD-385): resolved every tick from the slot rather than cached, so swapping a
+		// worn rotor for a better one takes effect on the next sample instead of at the next chunk load.
+		ComponentTier rotorTier = tierOf(rotor, ComponentTier.WINDMILL_ROTOR);
+
 		boolean sky = openSky(level, pos);
 		// Blade clearance: a solid block where the spinning 2×2 rotor sweeps stalls the blades. Only
 		// relevant under open sky — a roof above is already fatal and reported as ROOFED (higher priority).
@@ -183,7 +191,7 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 			cachedInterfered = sky && !obstructed && WindMillInterference.hasInterference(level, pos, facing);
 			// An obstruction or interference zeroes the rate (blades cannot turn) regardless of
 			// height or weather.
-			cachedRate = obstructed || cachedInterfered ? 0 : sampleRate(level, pos);
+			cachedRate = obstructed || cachedInterfered ? 0 : sampleRate(level, pos, rotorTier.outputMultiplier());
 			cachedMode = modeFor(sky, obstructed, cachedInterfered, cachedRate,
 					level.isRaining(), level.isThundering());
 			if (cachedRate != previousRate || cachedMode != previousMode) {
@@ -213,7 +221,10 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 		// blades take extra mechanical stress (windMillStormWearFactor) on top of the higher storm output.
 		if (cachedRate > 0) {
 			float weather = (level.isThundering() || level.isRaining()) ? Config.windMillStormWearFactor : 1.0f;
-			wearComponent(level, pos, ROTOR_SLOT, cachedRate, weather, Config.windMillRotorEuPerDamage);
+			// EU-per-damage comes from the rotor's own grade (MOD-385): cachedRate already carries that
+			// grade's output multiplier, so charging wear at the T1 rate would make a better rotor wear
+			// proportionally faster and cancel part of the durability gain it was bought for.
+			wearComponent(level, pos, ROTOR_SLOT, cachedRate, weather, rotorTier.euPerDamage());
 		}
 		return cachedRate;
 	}
@@ -273,7 +284,9 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
 		return switch (slot) {
-			case ROTOR_SLOT -> stack.is(ModContent.WINDMILL_ROTOR.get());
+			// MOD-385: any grade of rotor, not just the wooden one. The tag is the single filter
+			// shared by all three wind mills; a foreign item is still rejected exactly as before.
+			case ROTOR_SLOT -> stack.is(ModTags.Items.WINDMILL_ROTORS);
 			// MOD-211: the chip slot must be EMPTY to accept. Without this, automation stacks chips one at
 			// a time up to 64 (the container sets no max stack size) and the evolution then consumed one
 			// while wiping the rest. Same shape as the MOD-179 wheel-slot guard in WaterMillBlockEntity.

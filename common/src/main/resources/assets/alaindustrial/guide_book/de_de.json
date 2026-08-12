@@ -2330,68 +2330,6 @@
           ]
         },
         {
-          "id": "water_mill_wheel",
-          "title": "Wasserrad",
-          "icon": "alaindustrial:water_mill_wheel",
-          "block_id": "alaindustrial:water_mill_wheel",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Wasserrad",
-              "text": "Das Rad einer Wassermühle — wird in den Radslot der Wassermühle eingesetzt; ohne es keine Erzeugung. Nutzt sich beim Erzeugen ab."
-            },
-            {
-              "type": "recipe",
-              "title": "Rezept",
-              "recipe_type": "Geformtes Handwerk",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks",
-                "minecraft:stick",
-                "alaindustrial:wooden_gear",
-                "minecraft:stick",
-                "minecraft:oak_planks",
-                "minecraft:copper_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:water_mill_wheel",
-              "result_count": 1
-            }
-          ]
-        },
-        {
-          "id": "windmill_rotor",
-          "title": "Windturbinenrotor",
-          "icon": "alaindustrial:windmill_rotor",
-          "block_id": "alaindustrial:windmill_rotor",
-          "pages": [
-            {
-              "type": "text",
-              "title": "Windturbinenrotor",
-              "text": "Windturbinenblätter — werden in den Rotor-Slot jeder T1/T2-Windturbine eingesetzt; ohne sie keine Erzeugung. Nutzen sich beim Erzeugen ab."
-            },
-            {
-              "type": "recipe",
-              "title": "Rezept",
-              "recipe_type": "Geformtes Handwerk",
-              "grid": [
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks",
-                "alaindustrial:copper_cable",
-                "alaindustrial:wooden_gear",
-                "alaindustrial:copper_cable",
-                "minecraft:oak_planks",
-                "minecraft:iron_ingot",
-                "minecraft:oak_planks"
-              ],
-              "result_id": "alaindustrial:windmill_rotor",
-              "result_count": 1
-            }
-          ]
-        },
-        {
           "id": "tempered_iron",
           "title": "Gehärtetes Eisen",
           "icon": "alaindustrial:tempered_iron",
@@ -2419,6 +2357,37 @@
               ],
               "result_id": "alaindustrial:tempered_iron",
               "result_count": 9
+            }
+          ]
+        },
+        {
+          "id": "water_mill_wheel",
+          "title": "Wasserrad",
+          "icon": "alaindustrial:water_mill_wheel",
+          "block_id": "alaindustrial:water_mill_wheel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Wasserrad",
+              "text": "Wasserradschaufeln — werden in den Radplatz einer Wassermühle eingesetzt; ohne sie keine Erzeugung. Drei Stufen: Ein besseres Rad liefert mehr EU und hält deutlich länger. Nutzt sich beim Erzeugen ab."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks",
+                "minecraft:stick",
+                "alaindustrial:wooden_gear",
+                "minecraft:stick",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:water_mill_wheel",
+              "result_count": 1
             }
           ]
         },
@@ -2662,6 +2631,37 @@
               "type": "text",
               "title": "Gummi",
               "text": "Ein Werkstoff aus Öl und Schwefel — der Polymerisator erzeugt Rohkautschuk, den ein beheizter Vulkanisator anschließend zu Gummi verarbeitet."
+            }
+          ]
+        },
+        {
+          "id": "windmill_rotor",
+          "title": "Windturbinenrotor",
+          "icon": "alaindustrial:windmill_rotor",
+          "block_id": "alaindustrial:windmill_rotor",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Windturbinenrotor",
+              "text": "Windturbinenblätter — werden in den Rotorplatz jeder T1/T2-Windmühle eingesetzt; ohne sie keine Erzeugung. Drei Stufen: Ein besserer Rotor liefert mehr EU und hält deutlich länger. Nutzt sich beim Erzeugen ab."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "alaindustrial:wooden_gear",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:iron_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:windmill_rotor",
+              "result_count": 1
             }
           ]
         },
