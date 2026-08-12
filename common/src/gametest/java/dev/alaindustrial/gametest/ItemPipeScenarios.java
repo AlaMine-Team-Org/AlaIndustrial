@@ -728,4 +728,179 @@ public final class ItemPipeScenarios {
 		}
 		helper.succeed();
 	}
+	// ── MOD-405: two unconfigured ends must not shuttle items back and forth ────────────────────
+
+	/**
+	 * The player-reported bug: chest — pipe — chest, nothing configured, and the items rode back and
+	 * forth on their own. NEUTRAL declares a face as both source and target, so each chest qualified
+	 * for both roles and the cursors sent the stack one way this interval and back the next — forever,
+	 * rewriting and re-broadcasting both containers every leg.
+	 *
+	 * <p>Drives far more ticks than one transfer interval on purpose: the churn only shows up once the
+	 * cursors have rotated, so a single-interval check would pass on the broken build too.
+	 */
+	public static void mod405TwoNeutralChestsMoveNothing(GameTestHelper helper) {
+		helper.setBlock(SOURCE, ModContent.IRON_CHEST.get());
+		helper.setBlock(PIPE_A, ModContent.ITEM_PIPE.get());
+		helper.setBlock(PIPE_B, ModContent.ITEM_PIPE.get());
+		helper.setBlock(TARGET, ModContent.IRON_CHEST.get());
+		Container source = container(helper, SOURCE);
+		Container target = container(helper, TARGET);
+		ItemPipeBlockEntity a = pipe(helper, PIPE_A);
+		ItemPipeBlockEntity b = pipe(helper, PIPE_B);
+		if (source == null || target == null || a == null || b == null) {
+			helper.fail("MOD-405 rig block entity missing");
+			return;
+		}
+		// No setFaceMode anywhere: every face keeps its default NEUTRAL, which is exactly what the
+		// player had.
+		source.setItem(0, new ItemStack(Items.IRON_INGOT, 16));
+		a.serverTick(helper.getLevel(), a.getBlockPos(), a.getBlockState());
+		b.serverTick(helper.getLevel(), b.getBlockPos(), b.getBlockState());
+
+		for (int i = 0; i < 200; i++) {
+			ItemNetworkManager.tickAll(helper.getLevel());
+		}
+
+		int sourceCount = source.getItem(0).getCount();
+		int inTarget = 0;
+		for (int slot = 0; slot < target.getContainerSize(); slot++) {
+			inTarget += target.getItem(slot).getCount();
+		}
+		if (sourceCount != 16 || inTarget != 0) {
+			helper.fail("MOD-405: two unconfigured chests shuttled items — source=" + sourceCount
+					+ "/16, target=" + inTarget + ". A NEUTRAL pair of plain containers is churn, not "
+					+ "transport: whatever one hands over, the other hands straight back.");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * The counter-control for the test above, and the reason it cannot be "fixed" by simply refusing
+	 * chest-to-chest: the layout the spec documents — EXTRACT on one end, INSERT on the other — must
+	 * keep working. Here each endpoint holds a single role, so there is no loop to refuse.
+	 */
+	public static void mod405ConfiguredChestPairStillTransfers(GameTestHelper helper) {
+		if (!build(helper)) {
+			return;
+		}
+		ItemNetworkManager.tickAll(helper.getLevel());
+		Container source = container(helper, SOURCE);
+		Container target = container(helper, TARGET);
+		int expected = Math.min(16, Config.itemPipeItemsPerTransfer);
+		int sourceCount = source == null ? -1 : source.getItem(0).getCount();
+		int targetCount = target == null ? -1 : target.getItem(0).getCount();
+		if (sourceCount != 16 - expected || targetCount != expected) {
+			helper.fail("MOD-405 must not break the documented EXTRACT/INSERT layout: source="
+					+ sourceCount + " target=" + targetCount + ", expected " + expected + " moved");
+			return;
+		}
+		helper.succeed();
+	}
+	// ── MOD-408: explicit configuration switches the automatic mode off ─────────────────────────
+
+	/**
+	 * The player-reported case: EXTRACT on one side, the other side never touched — and items still
+	 * moved. NEUTRAL used to mean "takes and gives", so the untouched side accepted them on its own,
+	 * which made INSERT pointless: "EXTRACT + nothing" behaved exactly like "EXTRACT + INSERT".
+	 *
+	 * <p>Now one configured face makes every NEUTRAL face passive, so this line waits for a real
+	 * destination instead of inventing one.
+	 */
+	public static void mod408ExtractWithoutInsertMovesNothing(GameTestHelper helper) {
+		helper.setBlock(SOURCE, ModContent.IRON_CHEST.get());
+		helper.setBlock(PIPE_A, ModContent.ITEM_PIPE.get());
+		helper.setBlock(PIPE_B, ModContent.ITEM_PIPE.get());
+		helper.setBlock(TARGET, ModContent.IRON_CHEST.get());
+		Container source = container(helper, SOURCE);
+		Container target = container(helper, TARGET);
+		ItemPipeBlockEntity a = pipe(helper, PIPE_A);
+		ItemPipeBlockEntity b = pipe(helper, PIPE_B);
+		if (source == null || target == null || a == null || b == null) {
+			helper.fail("MOD-408 rig block entity missing");
+			return;
+		}
+		source.setItem(0, new ItemStack(Items.IRON_INGOT, 16));
+		// Only the taking side is configured. The giving side is left exactly as placed.
+		a.setFaceMode(Direction.WEST, PipeFaceMode.EXTRACT);
+		a.serverTick(helper.getLevel(), a.getBlockPos(), a.getBlockState());
+		b.serverTick(helper.getLevel(), b.getBlockPos(), b.getBlockState());
+
+		for (int i = 0; i < 200; i++) {
+			ItemNetworkManager.tickAll(helper.getLevel());
+		}
+
+		int inTarget = 0;
+		for (int slot = 0; slot < target.getContainerSize(); slot++) {
+			inTarget += target.getItem(slot).getCount();
+		}
+		if (source.getItem(0).getCount() != 16 || inTarget != 0) {
+			helper.fail("MOD-408: EXTRACT with no INSERT anywhere still moved items — source="
+					+ source.getItem(0).getCount() + "/16, target=" + inTarget
+					+ ". Once a face carries a real role, an untouched face must not act as one.");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/** The same rig with the destination actually set — the documented layout still works. */
+	public static void mod408ExtractPlusInsertStillTransfers(GameTestHelper helper) {
+		if (!build(helper)) {
+			return;
+		}
+		ItemNetworkManager.tickAll(helper.getLevel());
+		Container source = container(helper, SOURCE);
+		Container target = container(helper, TARGET);
+		int expected = Math.min(16, Config.itemPipeItemsPerTransfer);
+		int sourceCount = source == null ? -1 : source.getItem(0).getCount();
+		int targetCount = target == null ? -1 : target.getItem(0).getCount();
+		if (sourceCount != 16 - expected || targetCount != expected) {
+			helper.fail("MOD-408 must not break the documented EXTRACT/INSERT layout: source="
+					+ sourceCount + " target=" + targetCount);
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * The automatic mode survives for a line nobody configured: chest → machine with every face left
+	 * alone still feeds the machine. This is the counter-control that stops MOD-408 from being
+	 * "NEUTRAL does nothing" — it only steps aside once a real role exists somewhere on the network.
+	 */
+	public static void mod408UnconfiguredLineStillFeedsAMachine(GameTestHelper helper) {
+		BlockPos chestPos = new BlockPos(1, 2, 1);
+		BlockPos pipePos = new BlockPos(2, 2, 1);
+		BlockPos furnacePos = new BlockPos(3, 2, 1);
+		helper.setBlock(chestPos, ModContent.IRON_CHEST.get());
+		helper.setBlock(pipePos, ModContent.ITEM_PIPE.get());
+		// The macerator, not a vanilla furnace: a furnace takes ORE only through its top face, and this
+		// rig approaches from the side, where it would only ever accept fuel. That is a property of the
+		// furnace, not of the pipe, and it would have made this control test fail for the wrong reason.
+		helper.setBlock(furnacePos, ModContent.MACERATOR.get());
+		Container chest = container(helper, chestPos);
+		Container furnace = container(helper, furnacePos);
+		ItemPipeBlockEntity p = pipe(helper, pipePos);
+		if (chest == null || furnace == null || p == null) {
+			helper.fail("MOD-408 machine rig block entity missing");
+			return;
+		}
+		chest.setItem(0, new ItemStack(Items.RAW_IRON, 16));
+		// Nothing configured anywhere: this must keep working exactly as before.
+		p.serverTick(helper.getLevel(), p.getBlockPos(), p.getBlockState());
+		for (int i = 0; i < 40; i++) {
+			ItemNetworkManager.tickAll(helper.getLevel());
+		}
+
+		int inFurnace = 0;
+		for (int slot = 0; slot < furnace.getContainerSize(); slot++) {
+			inFurnace += furnace.getItem(slot).getCount();
+		}
+		if (inFurnace == 0) {
+			helper.fail("MOD-408 went too far: an unconfigured chest → machine line stopped feeding the "
+					+ "machine. The automatic mode must only step aside once a real role exists.");
+			return;
+		}
+		helper.succeed();
+	}
 }

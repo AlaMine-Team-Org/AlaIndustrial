@@ -60,7 +60,7 @@ public final class IncubatorScenarios {
 	 * duplicate recipes carry an explicit per-class chance and would ignore it.)
 	 */
 	private static void loadTransformJob(IncubatorBlockEntity be) {
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(IncubatorBlockEntity.CHIP_SLOT, new ItemStack(ModContent.MUTATION_CHIP_TRANSFORM.get()));
 		be.setItem(IncubatorBlockEntity.FUEL_SLOT, new ItemStack(ModContent.URANIUM_INGOT.get(), 8));
 		be.setItem(IncubatorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAPIS_LAZULI, 8));
@@ -261,7 +261,7 @@ public final class IncubatorScenarios {
 
 		// Fuel and power in place, but the result has nowhere to land: lapis transforms into redstone
 		// and the slot already holds a full stack of it.
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(IncubatorBlockEntity.FUEL_SLOT, new ItemStack(ModContent.URANIUM_INGOT.get(), 4));
 		be.setItem(IncubatorBlockEntity.OUTPUT_SLOT, new ItemStack(Items.REDSTONE, 64));
 		expectStatus(helper, be, IncubatorStatus.OUTPUT_BLOCKED);
@@ -464,7 +464,7 @@ public final class IncubatorScenarios {
 		withCertainSuccess(() -> {
 			IncubatorBlockEntity be = place(helper);
 			helper.setBlock(POS.above(), Blocks.GLASS);
-			be.getEnergyStorage().amount = AMPLE_EU;
+			be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 			be.setItem(IncubatorBlockEntity.FUEL_SLOT, new ItemStack(ModContent.URANIUM_INGOT.get(), 8));
 			// Lapis on purpose: it HAS a transform recipe. With a diamond — which has none — the test
 			// passed whether the chip gate worked or not, because there was nothing to make either way.
@@ -501,7 +501,7 @@ public final class IncubatorScenarios {
 		withCertainSuccess(() -> {
 			IncubatorBlockEntity be = place(helper);
 			helper.setBlock(POS.above(), Blocks.GLASS);
-			be.getEnergyStorage().amount = AMPLE_EU;
+			be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 			be.setItem(IncubatorBlockEntity.CHIP_SLOT,
 					new ItemStack(ModContent.MUTATION_CHIP_TRANSFORM.get()));
 			be.setItem(IncubatorBlockEntity.FUEL_SLOT, new ItemStack(ModContent.URANIUM_INGOT.get(), 1));

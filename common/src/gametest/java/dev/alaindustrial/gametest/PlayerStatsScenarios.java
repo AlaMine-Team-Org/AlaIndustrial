@@ -63,7 +63,7 @@ public final class PlayerStatsScenarios {
 		if (owner != null) {
 			mac.setOwner(owner, "TestOwner");
 		}
-		mac.getEnergyStorage().amount = 8000; // > any single op's E_op; bypasses the per-tick cap
+		mac.getEnergyStorage().setAmountUntracked(8000); // > any single op's E_op; bypasses the per-tick cap
 		mac.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.EMERALD));
 		return mac;
 	}
@@ -164,7 +164,7 @@ public final class PlayerStatsScenarios {
 			return;
 		}
 		pump.setOwner(player.getUUID(), "TestOwner");
-		pump.getEnergyStorage().amount = Config.pumpEuPerBucket * 4L; // EU for several acquisitions
+		pump.getEnergyStorage().setAmountUntracked(Config.pumpEuPerBucket * 4L); // EU for several acquisitions
 		for (int i = 0; i < 60; i++) { // > pumpScanCooldownTicks: at least one scan+acquire lands
 			pump.serverTick(helper.getLevel(), pump.getBlockPos(),
 					helper.getLevel().getBlockState(pump.getBlockPos()));
@@ -207,7 +207,7 @@ public final class PlayerStatsScenarios {
 		}
 		geo.setOwner(player.getUUID(), "TestOwner");
 		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET));
-		geo.getEnergyStorage().amount = 0; // empty buffer: every produced EU is actually credited
+		geo.getEnergyStorage().setAmountUntracked(0); // empty buffer: every produced EU is actually credited
 
 		BlockPos abs = geo.getBlockPos();
 		for (int i = 0; i < 400; i++) {
@@ -250,7 +250,7 @@ public final class PlayerStatsScenarios {
 		geo.setOwner(player.getUUID(), "TestOwner");
 		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET));
 		long room = 5L; // < geothermalEuPerTick (16), so the cap must bite on the very first tick
-		geo.getEnergyStorage().amount = geo.getEnergyStorage().getCapacity() - room;
+		geo.getEnergyStorage().setAmountUntracked(geo.getEnergyStorage().getCapacity() - room);
 
 		BlockPos abs = geo.getBlockPos();
 		geo.serverTick(helper.getLevel(), abs, helper.getLevel().getBlockState(abs));
@@ -311,7 +311,7 @@ public final class PlayerStatsScenarios {
 		}
 		geo.setOwner(offline, "OfflineOwner");
 		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET));
-		geo.getEnergyStorage().amount = 0; // empty buffer: every produced EU would be credited, if it were
+		geo.getEnergyStorage().setAmountUntracked(0); // empty buffer: every produced EU would be credited, if it were
 		BlockPos abs = geo.getBlockPos();
 		for (int i = 0; i < 400; i++) {
 			geo.serverTick(helper.getLevel(), abs, helper.getLevel().getBlockState(abs));
@@ -359,7 +359,7 @@ public final class PlayerStatsScenarios {
 		}
 
 		player.setGameMode(GameType.CREATIVE);
-		mac.getEnergyStorage().amount = 8000;
+		mac.getEnergyStorage().setAmountUntracked(8000);
 		mac.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.EMERALD));
 		drive(helper, mac, 400); // pass 2: creative, must not move the career total
 		PlayerStatsTracker.get().flush(helper.getLevel().getServer());
@@ -370,7 +370,7 @@ public final class PlayerStatsScenarios {
 		}
 
 		player.setGameMode(GameType.SURVIVAL);
-		mac.getEnergyStorage().amount = 8000;
+		mac.getEnergyStorage().setAmountUntracked(8000);
 		mac.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.EMERALD));
 		drive(helper, mac, 400); // pass 3: back to survival, accrual must resume from afterCreative, not 0
 		PlayerStatsTracker.get().flush(helper.getLevel().getServer());
@@ -504,7 +504,7 @@ public final class PlayerStatsScenarios {
 
 		// Control: with room to spare the panel must actually produce here. Without this the main assertion
 		// below could pass vacuously at night or under a blocked sky, where nothing is generated at all.
-		solar.getEnergyStorage().amount = 0;
+		solar.getEnergyStorage().setAmountUntracked(0);
 		solar.serverTick(helper.getLevel(), abs, helper.getLevel().getBlockState(abs));
 		PlayerStatsTracker.get().flush(server);
 		if (PlayerStatsStore.get(player).euProducedTotal() <= 0) {
@@ -514,7 +514,7 @@ public final class PlayerStatsScenarios {
 		}
 
 		// The real case: buffer pinned to capacity. No EU can be credited, but the clock must keep running.
-		solar.getEnergyStorage().amount = solar.getEnergyStorage().getCapacity();
+		solar.getEnergyStorage().setAmountUntracked(solar.getEnergyStorage().getCapacity());
 		long beforeActive = PlayerStatsStore.get(player).activeTicks();
 		long beforeProduced = PlayerStatsStore.get(player).euProducedTotal();
 		PlayerStatsTracker.get().onServerTick(server); // new tick: clear the per-tick active dedup

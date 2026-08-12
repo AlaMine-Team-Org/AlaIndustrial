@@ -83,7 +83,7 @@ public final class PolymerizerScenarios {
 	/** One bucket of oil + EU → one raw rubber, and the tank ends empty (not merely lower). */
 	public static void fun01OilBecomesRawRubber(GameTestHelper helper) {
 		PolymerizerBlockEntity be = place(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		fill(be, FluidAmounts.BUCKET);
 
 		drive(be, helper, driveTicks());
@@ -140,7 +140,7 @@ public final class PolymerizerScenarios {
 	/** A full tank with an empty energy buffer produces nothing and consumes no oil. */
 	public static void neg01NoPowerNoOutput(GameTestHelper helper) {
 		PolymerizerBlockEntity be = place(helper);
-		be.getEnergyStorage().amount = 0L;
+		be.getEnergyStorage().setAmountUntracked(0L);
 		fill(be, FluidAmounts.BUCKET);
 
 		drive(be, helper, driveTicks());
@@ -169,7 +169,7 @@ public final class PolymerizerScenarios {
 	 */
 	public static void neg02BelowRecipeVolumeIsInert(GameTestHelper helper) {
 		PolymerizerBlockEntity be = place(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		fill(be, FluidAmounts.BUCKET - 1);
 
 		drive(be, helper, driveTicks());
@@ -194,7 +194,7 @@ public final class PolymerizerScenarios {
 	 */
 	public static void con01FullOutputKeepsOil(GameTestHelper helper) {
 		PolymerizerBlockEntity be = place(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		fill(be, FluidAmounts.BUCKET);
 		be.setItem(PolymerizerBlockEntity.OUTPUT_SLOT, new ItemStack(ModContent.RAW_RUBBER.get(), 64));
 
@@ -300,8 +300,10 @@ public final class PolymerizerScenarios {
 		BlockPos abs = helper.absolutePos(POS);
 		PolymerizerBlockEntity src = place(helper);
 
-		long energy0 = 1234L;
-		src.getEnergyStorage().amount = energy0;
+		// Below the machine buffer: since MOD-400 a buffer refuses a charge it cannot hold, so a
+		// round-trip fixture has to start from a state the machine can actually be in.
+		long energy0 = 734L;
+		src.getEnergyStorage().setAmountUntracked(energy0);
 		fill(src, 3 * FluidAmounts.BUCKET);
 		src.getDataAccess().set(2, 11); // index 2 == progress
 

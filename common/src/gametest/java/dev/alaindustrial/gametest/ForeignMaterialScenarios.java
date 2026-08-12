@@ -134,7 +134,7 @@ public final class ForeignMaterialScenarios {
 		}
 		helper.setBlock(MAC, ModContent.MACERATOR.get());
 		MaceratorBlockEntity mac = helper.getBlockEntity(MAC, MaceratorBlockEntity.class);
-		mac.getEnergyStorage().amount = 8000; // more than one operation's E_op
+		mac.getEnergyStorage().setAmountUntracked(8000); // more than one operation's E_op
 		mac.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(ore));
 		for (int i = 0; i < 400; i++) {
 			mac.serverTick(helper.getLevel(), mac.getBlockPos(),

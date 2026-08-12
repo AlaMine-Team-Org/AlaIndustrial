@@ -3,7 +3,7 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.AbstractMachineBlock;
 import dev.alaindustrial.block.HorizontalMachineBlock;
-import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.block.entity.EnergyBlockEntity;
 import dev.alaindustrial.core.energy.EnergyRole;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * <p><b>The invariant is one-directional on purpose.</b> It asserts only that an INERT face
  * ({@link EnergyRole#NONE}) must not accept a cable arm. Today strict equality would in fact pass on
  * every swept block (the chests, which do refuse cables while inheriting non-NONE roles, never reach
- * the comparison — their block entities are not {@link MachineBlockEntity} and the sweep filters
+ * the comparison — their block entities are not {@link EnergyBlockEntity} and the sweep filters
  * them out earlier). The weaker form is deliberate future-proofing: refusing a cable on a live face
  * is a legitimate design choice a block may make — the chests already make it — whereas inviting a
  * cable to a dead face is never anything but a bug. Guarding only the direction that misleads the
@@ -56,10 +56,17 @@ public final class CableFaceParityScenarios {
 	private static final BlockPos PROBE = new BlockPos(1, 2, 1);
 
 	/**
-	 * Floor under the sweep size. Currently 21 blocks qualify; 10 leaves room for real removals while
-	 * still catching a broken filter or registry scan.
+	 * Floor under the sweep size. Currently 21 blocks qualify.
+	 *
+	 * <p>Raised from 10 to 18 in MOD-400. The old floor was set low enough to leave room for removals,
+	 * but that also made it blind to the failure it exists for: when the cable and the two pipes moved
+	 * off {@code MachineBlockEntity} onto the new {@link EnergyBlockEntity}, this sweep's type filter
+	 * would have silently dropped all EIGHT cable grades — 21 blocks down to 13 — and still passed a
+	 * floor of 10, reporting green while no longer checking the very blocks it is named after. A floor
+	 * has to sit close enough to reality to notice a whole family disappearing; 18 still absorbs the
+	 * removal of a couple of blocks.
 	 */
-	private static final int MIN_EXPECTED_BLOCKS = 10;
+	private static final int MIN_EXPECTED_BLOCKS = 18;
 
 	/**
 	 * Sweeps every block registered under the mod's namespace and fails if any face that reports
@@ -92,7 +99,7 @@ public final class CableFaceParityScenarios {
 							+ " the sweep cannot vouch for that block; TC-CABLE-FACE-PARITY");
 				}
 				BlockEntity blockEntity = helper.getLevel().getBlockEntity(helper.absolutePos(PROBE));
-				if (!(blockEntity instanceof MachineBlockEntity machineEntity)) {
+				if (!(blockEntity instanceof EnergyBlockEntity energyEntity)) {
 					helper.setBlock(PROBE, Blocks.AIR);
 					break; // no per-face roles to compare against (chests, plain containers)
 				}
@@ -104,7 +111,7 @@ public final class CableFaceParityScenarios {
 				for (Direction face : Direction.values()) {
 					facesChecked++;
 					boolean acceptsArm = machineBlock.isCableConnectable(placed, face);
-					boolean inert = machineEntity.energyRoleForFace(face) == EnergyRole.NONE;
+					boolean inert = energyEntity.energyRoleForFace(face) == EnergyRole.NONE;
 					if (acceptsArm && inert) {
 						violations.add(id.getPath() + "[" + facingOf(placed) + "]/" + face.getName());
 					}

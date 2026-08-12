@@ -190,7 +190,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		}
 		// Energy is checked before any world work: a station without the price of one action has
 		// nothing to do this tick, and saying so costs one comparison instead of a zone walk.
-		if (energy.amount < Config.gardenDroneEuPerAction) {
+		if (energy.getAmount() < Config.gardenDroneEuPerAction) {
 			return setStatus(GardenDroneStatus.NO_ENERGY);
 		}
 		return performOneAction(serverLevel, pos);
@@ -218,7 +218,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 				if (droneJob != null && level.isLoaded(droneTarget)
 						&& applies(level, droneJob, droneTarget)
 						&& apply(level, droneJob, droneTarget)) {
-					energy.amount -= Config.gardenDroneEuPerAction;
+					energy.drainInternal(Config.gardenDroneEuPerAction);
 					creditUsefulWork(level, Config.gardenDroneEuPerAction);
 				}
 				// Head home along the same leg length, so the return reads as the same flight reversed —
@@ -233,7 +233,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 				flightRemaining = flightTotal + LANDING_PAUSE_TICKS;
 				flightStart = level.getGameTime() + LANDING_PAUSE_TICKS;
 			}
-			markDirtyAndSync();
+			setChangedQuietly();
 			syncBlockEntityToClient();
 			return 0;
 		}
@@ -249,7 +249,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 				continue;
 			}
 			startJob(level, action, target, stationPos);
-			markDirtyAndSync();
+			setChangedQuietly();
 			syncBlockEntityToClient();
 			return setStatus(GardenDroneStatus.WORKING);
 		}
@@ -626,7 +626,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	private int setStatus(GardenDroneStatus next) {
 		if (status != next) {
 			status = next;
-			markDirtyAndSync();
+			setChangedQuietly();
 			syncBlockEntityToClient();
 		}
 		// A working station re-checks every tick; an idle one backs off to the shared idle interval so a

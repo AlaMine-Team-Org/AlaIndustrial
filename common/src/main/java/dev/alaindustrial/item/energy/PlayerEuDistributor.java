@@ -113,12 +113,27 @@ public final class PlayerEuDistributor {
 	 * entirely on an idle call.
 	 */
 	public static long distribute(Player player, long budget, Policy policy) {
+		return distribute(player, budget, policy, 1);
+	}
+
+	/**
+	 * Same, for a caller that pays in batches instead of every tick (MOD-406).
+	 *
+	 * <p>{@code ticks} is how many ticks of contact this one call settles. It scales the per-item
+	 * {@link ItemEnergy#inputRate} ceiling that {@link Policy#respectInputRate} applies, because that
+	 * ceiling is a rate — EU per TICK — and enforcing it per CALL instead would silently divide the
+	 * charging speed by the batch size. The caller scales its own {@code budget} the same way, so a
+	 * player standing still receives exactly what they did when the station paid out every tick; what
+	 * changes is how often their inventory slots are rewritten and re-sent to the client.
+	 */
+	public static long distribute(Player player, long budget, Policy policy, int ticks) {
 		if (budget <= 0) {
 			return 0L;
 		}
+		int batch = Math.max(1, ticks);
 		return policy.spreadEvenly()
-				? distributeEvenly(player, budget, policy)
-				: distributeInScanOrder(player, budget, policy);
+				? distributeEvenly(player, budget, policy, batch)
+				: distributeInScanOrder(player, budget, policy, batch);
 	}
 
 	/**
@@ -129,7 +144,7 @@ public final class PlayerEuDistributor {
 	 * consumer within a few steps anyway, so the order stops mattering after a moment, and no cursor
 	 * has to be persisted on the stack to remember who was next.
 	 */
-	private static long distributeInScanOrder(Player player, long budget, Policy policy) {
+	private static long distributeInScanOrder(Player player, long budget, Policy policy, int batch) {
 		long moved = 0L;
 		// The list index doubles as the vanilla Inventory slot index, which is what the cross-mod bridge
 		// needs to address the slot (both loaders' item capabilities are slot-scoped, not stack-scoped).
@@ -191,8 +206,8 @@ public final class PlayerEuDistributor {
 	 * The loop ends when the budget is spent, nobody wants more, or a pass moves nothing (which is what
 	 * a share rounding down to zero looks like — more targets than EU).
 	 */
-	private static long distributeEvenly(Player player, long budget, Policy policy) {
-		List<Target> targets = collectTargets(player, policy);
+	private static long distributeEvenly(Player player, long budget, Policy policy, int batch) {
+		List<Target> targets = collectTargets(player, policy, batch);
 		if (targets.isEmpty()) {
 			return 0L;
 		}
@@ -234,21 +249,21 @@ public final class PlayerEuDistributor {
 	 * still decides who gets the odd EU left over by an uneven split, and keeping it identical means the
 	 * two modes cannot disagree about <em>where</em> a powered item may hide, only about pacing.
 	 */
-	private static List<Target> collectTargets(Player player, Policy policy) {
+	private static List<Target> collectTargets(Player player, Policy policy, int batch) {
 		List<Target> targets = new ArrayList<>();
 		NonNullList<ItemStack> items = player.getInventory().getNonEquipmentItems();
 		for (int i = 0; i < items.size(); i++) {
-			addTarget(targets, i, items.get(i), policy);
+			addTarget(targets, i, items.get(i), policy, batch);
 		}
-		addTarget(targets, Inventory.SLOT_OFFHAND, player.getItemBySlot(EquipmentSlot.OFFHAND), policy);
-		addTarget(targets, NO_SLOT, player.containerMenu.getCarried(), policy);
+		addTarget(targets, Inventory.SLOT_OFFHAND, player.getItemBySlot(EquipmentSlot.OFFHAND), policy, batch);
+		addTarget(targets, NO_SLOT, player.containerMenu.getCarried(), policy, batch);
 		CraftingContainer grid = player.inventoryMenu.getCraftSlots();
 		for (int i = 0; i < grid.getContainerSize(); i++) {
-			addTarget(targets, NO_SLOT, grid.getItem(i), policy);
+			addTarget(targets, NO_SLOT, grid.getItem(i), policy, batch);
 		}
 		if (policy.includeEquipped()) {
 			for (EquipmentSlot slot : WORN_SLOTS) {
-				addTarget(targets, NO_SLOT, player.getItemBySlot(slot), policy);
+				addTarget(targets, NO_SLOT, player.getItemBySlot(slot), policy, batch);
 			}
 		}
 		return targets;
@@ -260,7 +275,7 @@ public final class PlayerEuDistributor {
 	 * A foreign item is always kept: asking whether it has room means opening a capability lookup and a
 	 * transaction, which is exactly what {@link #give} does anyway.
 	 */
-	private static void addTarget(List<Target> targets, int slot, ItemStack stack, Policy policy) {
+	private static void addTarget(List<Target> targets, int slot, ItemStack stack, Policy policy, int batch) {
 		if (stack.isEmpty() || (policy.skipNoAutoCharge() && stack.is(ModTags.Items.NO_AUTO_CHARGE))) {
 			return;
 		}
@@ -271,7 +286,7 @@ public final class PlayerEuDistributor {
 			// item is unaffected — for count 1 these are the per-item numbers.
 			headroom = ItemEnergy.stackRoom(stack);
 			if (policy.respectInputRate()) {
-				headroom = Math.min(headroom, ItemEnergy.inputRate(stack) * stack.getCount());
+				headroom = Math.min(headroom, ItemEnergy.inputRate(stack) * stack.getCount() * batch);
 			}
 			if (headroom <= 0) {
 				return;

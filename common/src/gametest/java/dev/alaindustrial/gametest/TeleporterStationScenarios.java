@@ -120,7 +120,7 @@ public final class TeleporterStationScenarios {
 		TeleporterBlockEntity station = place(helper);
 		station.setOwner(OWNER, "Steve");
 		station.setPrivate(false);
-		station.getEnergyStorage().amount = 123_456L;
+		station.getEnergyStorage().setAmountUntracked(123_456L);
 
 		var registries = helper.getLevel().registryAccess();
 		CompoundTag tag = station.saveCustomOnly(registries);
@@ -171,7 +171,7 @@ public final class TeleporterStationScenarios {
 		TeleporterBlockEntity station = place(helper);
 		station.setOwner(OWNER, "Steve");
 		station.setPrivate(false);
-		station.getEnergyStorage().amount = 42_000L;
+		station.getEnergyStorage().setAmountUntracked(42_000L);
 
 		DataComponentMap map = station.collectComponents();
 		Long carried = map.get(ModDataComponents.STORED_ENERGY.get());

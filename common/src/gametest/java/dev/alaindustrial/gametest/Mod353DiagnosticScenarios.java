@@ -86,13 +86,13 @@ public final class Mod353DiagnosticScenarios {
 		chain[chain.length - 1] = S1_TELEPORTER;
 
 		if (be(helper, S1_BOX) instanceof BatteryBoxBlockEntity box) {
-			box.getEnergyStorage().amount = Config.batteryBoxBuffer;
+			box.getEnergyStorage().setAmountUntracked(Config.batteryBoxBuffer);
 		} else {
 			helper.fail("scene 1: battery box did not place");
 			return;
 		}
 		if (be(helper, S1_TELEPORTER) instanceof TeleporterBlockEntity t) {
-			t.getEnergyStorage().amount = 0L;
+			t.getEnergyStorage().setAmountUntracked(0L);
 		} else {
 			helper.fail("scene 1: teleporter did not place");
 			return;
@@ -148,13 +148,13 @@ public final class Mod353DiagnosticScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
 
 		if (be(helper, S3_BOX) instanceof BatteryBoxBlockEntity box) {
-			box.getEnergyStorage().amount = Config.batteryBoxBuffer;
+			box.getEnergyStorage().setAmountUntracked(Config.batteryBoxBuffer);
 		} else {
 			helper.fail("scene 3: battery box did not place");
 			return;
 		}
 		if (be(helper, S3_TELEPORTER) instanceof TeleporterBlockEntity t) {
-			t.getEnergyStorage().amount = 0L;
+			t.getEnergyStorage().setAmountUntracked(0L);
 		} else {
 			helper.fail("scene 3: teleporter did not place");
 			return;
@@ -202,13 +202,13 @@ public final class Mod353DiagnosticScenarios {
 		helper.setBlock(M_TELEPORTER, ModContent.TELEPORTER.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
 		if (be(helper, M_BOX) instanceof BatteryBoxBlockEntity box) {
-			box.getEnergyStorage().amount = Config.batteryBoxBuffer;
+			box.getEnergyStorage().setAmountUntracked(Config.batteryBoxBuffer);
 		}
 		if (be(helper, M_TELEPORTER) instanceof TeleporterBlockEntity t) {
-			t.getEnergyStorage().amount = 0L;
+			t.getEnergyStorage().setAmountUntracked(0L);
 		}
 		if (be(helper, M_MACHINE) instanceof dev.alaindustrial.block.entity.MachineBlockEntity m) {
-			m.getEnergyStorage().amount = 0L;
+			m.getEnergyStorage().setAmountUntracked(0L);
 		}
 
 		drive(helper, 60, M_BOX, M_CABLE, M_MACHINE, M_TELEPORTER);
@@ -236,10 +236,10 @@ public final class Mod353DiagnosticScenarios {
 		helper.setBlock(P_CABLE, ModContent.COPPER_CABLE.get());
 		helper.setBlock(P_PAD, ModContent.CHARGE_PAD.get());
 		if (be(helper, P_BOX) instanceof BatteryBoxBlockEntity box) {
-			box.getEnergyStorage().amount = Config.batteryBoxBuffer;
+			box.getEnergyStorage().setAmountUntracked(Config.batteryBoxBuffer);
 		}
 		if (be(helper, P_PAD) instanceof dev.alaindustrial.block.entity.MachineBlockEntity pad) {
-			pad.getEnergyStorage().amount = 0L;
+			pad.getEnergyStorage().setAmountUntracked(0L);
 		} else {
 			helper.fail("charge pad did not place");
 			return;
@@ -279,10 +279,10 @@ public final class Mod353DiagnosticScenarios {
 
 		long start = Config.batteryBoxBuffer / 2;
 		if (be(helper, C_BOX) instanceof BatteryBoxBlockEntity box) {
-			box.getEnergyStorage().amount = start;
+			box.getEnergyStorage().setAmountUntracked(start);
 		}
 		if (be(helper, C_TELEPORTER) instanceof TeleporterBlockEntity t) {
-			t.getEnergyStorage().amount = Config.teleporterBuffer / 50;  // ~2 %, as in the MOD-314 argument
+			t.getEnergyStorage().setAmountUntracked(Config.teleporterBuffer / 50);  // ~2 %, as in the MOD-314 argument
 		}
 
 		drive(helper, 200, C_BOX, C_CABLE, C_TELEPORTER);

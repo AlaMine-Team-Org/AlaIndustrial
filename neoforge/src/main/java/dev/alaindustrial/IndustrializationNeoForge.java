@@ -22,7 +22,7 @@ import dev.alaindustrial.registry.neoforge.ModItemsNeoForge;
 import dev.alaindustrial.registry.neoforge.ModMenusNeoForge;
 import java.util.List;
 import java.util.function.Supplier;
-import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.block.entity.EnergyBlockEntity;
 import dev.alaindustrial.command.AlaCommandCommon;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.item.ItemNetworkManager;
@@ -326,10 +326,12 @@ public final class IndustrializationNeoForge {
 						dev.alaindustrial.core.guide.GuideBookGiver.giveIfNeeded(serverPlayer);
 					}
 				});
+		// MOD-401: one sweep over everything that holds per-level state, instead of naming managers
+		// here. The by-name list is what leaked: the fluid manager was never added to it, so every
+		// unloaded ServerLevel stayed reachable as a key in its map for the life of the process.
 		NeoForge.EVENT_BUS.addListener((LevelEvent.Unload event) -> {
 			if (event.getLevel() instanceof ServerLevel lvl) {
-				NetworkManager.clear(lvl);
-				ItemNetworkManager.clear(lvl);
+				dev.alaindustrial.core.net.LevelStateRegistry.clearLevel(lvl);
 			}
 		});
 		// MOD-133: fold every pending delta before players are saved. ServerStoppingEvent runs before the
@@ -341,8 +343,9 @@ public final class IndustrializationNeoForge {
 			dev.alaindustrial.item.wearable.JetpackLight.shutdown(event.getServer());
 		});
 		NeoForge.EVENT_BUS.addListener((ServerStoppedEvent event) -> {
-			NetworkManager.clearAll();
-			ItemNetworkManager.clearAll();
+			// MOD-401: same sweep, whole-server scope — energy, fluid and item networks plus the
+			// teleporter warmups/cooldowns, whichever of them the run actually loaded.
+			dev.alaindustrial.core.net.LevelStateRegistry.clearAll();
 			dev.alaindustrial.stats.PlayerStatsTracker.get().clear();
 		});
 		// Balance-config reload parity with Fabric (MOD-100, absorbs MOD-041). OnDatapackSyncEvent fires on a
@@ -390,7 +393,7 @@ public final class IndustrializationNeoForge {
 	 * provider is an {@code ICapabilityProvider<BE, Direction, EnergyHandler>}
 	 * ({@code getCapability(BE, Direction)}).
 	 *
-	 * <p>Each machine {@code BlockEntity} extends the common {@code MachineBlockEntity}
+	 * <p>Each powered {@code BlockEntity} extends the common {@code EnergyBlockEntity}
 	 * ({@code implements EnergyPortHost}), so {@code be.energyPort(side)} yields the face-scoped neutral
 	 * {@code EnergyPort}; {@link BufferAsEnergyHandler#of} exposes it as a NeoForge {@code EnergyHandler}
 	 * (returns {@code null} for a {@code NONE} face, which the capability system treats as "no
@@ -404,8 +407,9 @@ public final class IndustrializationNeoForge {
 	 * dir) -> TankAsFluidStorage.of(be.fluidPort(dir)), TYPE)} lines in {@code ModBlockEntities#init()}.
 	 */
 	/**
-	 * Every block entity that exposes an energy port. All of them extend {@link MachineBlockEntity}
-	 * (generators through {@code AbstractGeneratorBlockEntity}, the cable directly), which is both a
+	 * Every block entity that exposes an energy port. All of them extend {@link EnergyBlockEntity}
+	 * (machines and generators through {@code MachineBlockEntity}, the cable and the pipes directly —
+	 * MOD-400 split the energy half of the base out of the machine half), which is both a
 	 * {@code BlockEntity} and an {@code EnergyPortHost} — that shared supertype is what lets the
 	 * registration below be a loop instead of one hand-written pair of lines per machine.
 	 *
@@ -422,7 +426,7 @@ public final class IndustrializationNeoForge {
 	 * <p>A new powered machine is added here, not in the registration body: forgetting it leaves the
 	 * machine silently without energy, which is exactly the failure this list is meant to make obvious.
 	 */
-	private static final List<Supplier<? extends BlockEntityType<? extends MachineBlockEntity>>>
+	private static final List<Supplier<? extends BlockEntityType<? extends EnergyBlockEntity>>>
 			ENERGY_BLOCK_ENTITIES = List.of(
 					ModBlockEntitiesNeoForge.GENERATOR,
 					ModBlockEntitiesNeoForge.SOLAR_PANEL,
@@ -458,7 +462,7 @@ public final class IndustrializationNeoForge {
 
 	private void registerCapabilities(RegisterCapabilitiesEvent event) {
 		BlockCapability<EnergyHandler, Direction> cap = Capabilities.Energy.BLOCK;
-		for (Supplier<? extends BlockEntityType<? extends MachineBlockEntity>> type : ENERGY_BLOCK_ENTITIES) {
+		for (Supplier<? extends BlockEntityType<? extends EnergyBlockEntity>> type : ENERGY_BLOCK_ENTITIES) {
 			event.registerBlockEntity(cap, type.get(),
 					(be, side) -> BufferAsEnergyHandler.of(be.energyPort(side)));
 		}

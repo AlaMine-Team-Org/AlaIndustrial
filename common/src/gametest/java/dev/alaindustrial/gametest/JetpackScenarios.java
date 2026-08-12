@@ -140,7 +140,7 @@ public final class JetpackScenarios {
 		if (box == null) {
 			helper.fail("battery_box block entity missing");
 		}
-		box.getEnergyStorage().amount = box.getEnergyStorage().getCapacity();
+		box.getEnergyStorage().setAmountUntracked(box.getEnergyStorage().getCapacity());
 		box.setItem(BatteryBoxBlockEntity.CHARGE_SLOT, jetpack(0));
 
 		box.serverTick(helper.getLevel(), box.getBlockPos(), helper.getLevel().getBlockState(box.getBlockPos()));

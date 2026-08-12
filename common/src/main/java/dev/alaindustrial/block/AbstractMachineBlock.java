@@ -1,5 +1,6 @@
 package dev.alaindustrial.block;
 
+import dev.alaindustrial.block.entity.EnergyBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModCriteria;
 import dev.alaindustrial.sound.MachineHum;
@@ -127,14 +128,21 @@ public abstract class AbstractMachineBlock extends BaseEntityBlock {
 		return isCableConnectable();
 	}
 
-	/** Server-only ticker that forwards to {@link MachineBlockEntity#serverTick}. */
+	/**
+	 * Server-only ticker that forwards to {@link EnergyBlockEntity#serverTick}.
+	 *
+	 * <p>Dispatches on {@link EnergyBlockEntity}, not {@link MachineBlockEntity}: since MOD-400 the
+	 * cable is an energy block entity without being a machine, and the narrower check would have left
+	 * every cable segment in the world unticked — no lazy network registration, no MOD-061 shape
+	 * migration, no shock.
+	 */
 	protected static <T extends BlockEntity> BlockEntityTicker<T> machineTicker(Level level) {
 		if (level.isClientSide()) {
 			return null;
 		}
 		return (lvl, pos, st, be) -> {
-			if (be instanceof MachineBlockEntity machine) {
-				machine.serverTick(lvl, pos, st);
+			if (be instanceof EnergyBlockEntity energyBlock) {
+				energyBlock.serverTick(lvl, pos, st);
 			}
 		};
 	}
@@ -152,8 +160,8 @@ public abstract class AbstractMachineBlock extends BaseEntityBlock {
 			return hook == null ? null : (lvl, pos, st, be) -> hook.tick(lvl, pos, st);
 		}
 		return (lvl, pos, st, be) -> {
-			if (be instanceof MachineBlockEntity machine) {
-				machine.serverTick(lvl, pos, st);
+			if (be instanceof EnergyBlockEntity energyBlock) {
+				energyBlock.serverTick(lvl, pos, st);
 			}
 		};
 	}

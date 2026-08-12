@@ -192,10 +192,10 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 			if (getOwner() != null && level instanceof ServerLevel activeLevel) {
 				PlayerStatsTracker.get().recordActive(activeLevel.getServer(), getOwner());
 			}
-			long room = energy.getCapacity() - energy.amount;
+			long room = energy.getCapacity() - energy.getAmount();
 			if (room > 0) {
 				long credited = Math.min(room, (long) made);
-				energy.amount += credited;
+				energy.produceInternal(credited);
 				changed = true;
 				// MOD-133: attribute the EU actually credited (not `made` before the cap) to the owner —
 				// career statistics + per-generator breakdown. No-op without an owner or off-server; the
@@ -233,7 +233,7 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 	 *     Empty for the solar panel.
 	 */
 	protected void evolveInto(Level level, BlockPos pos, Block target, Map<Integer, net.minecraft.world.item.ItemStack> slotOverrides) {
-		long saved = energy.amount;
+		long saved = energy.getAmount();
 		// Carry ownership across the evolution. The evolved block is created via setBlockAndUpdate — NOT a
 		// player placement — so setPlacedBy never runs and the new block entity would default to a null
 		// owner. Without this, an evolved T2 generator (wind mills, solar panels) attributes none of its
@@ -257,7 +257,7 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 		level.setBlockAndUpdate(pos, newState);
 		if (level.getBlockEntity(pos) instanceof MachineBlockEntity evolved) {
 			evolved.setOwner(savedOwner, savedOwnerName);
-			evolved.getEnergyStorage().amount = Math.min(saved, evolved.getEnergyStorage().getCapacity());
+			evolved.getEnergyStorage().setAmountUntracked(Math.min(saved, evolved.getEnergyStorage().getCapacity()));
 			for (Map.Entry<Integer, net.minecraft.world.item.ItemStack> entry : slotOverrides.entrySet()) {
 				int slot = entry.getKey();
 				net.minecraft.world.item.ItemStack stack = entry.getValue();

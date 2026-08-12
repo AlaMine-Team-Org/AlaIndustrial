@@ -1,6 +1,7 @@
 package dev.alaindustrial;
 
 import dev.alaindustrial.client.AlaClientConfig;
+import dev.alaindustrial.client.ClientContentManifest;
 import dev.alaindustrial.client.screen.AlaConfigScreen;
 import dev.alaindustrial.client.screen.BatteryBoxScreen;
 import dev.alaindustrial.client.screen.CompressorScreen;
@@ -11,24 +12,17 @@ import dev.alaindustrial.client.screen.ExtractorScreen;
 import dev.alaindustrial.client.ModKeyMappings;
 import dev.alaindustrial.client.screen.GeneratorScreen;
 import dev.alaindustrial.client.screen.GeothermalGeneratorScreen;
-import dev.alaindustrial.client.render.ChestBlockEntityRenderer;
 import dev.alaindustrial.client.screen.MaceratorScreen;
 import dev.alaindustrial.client.screen.PumpScreen;
 import dev.alaindustrial.client.tooltip.MachineTooltips;
 import dev.alaindustrial.client.screen.MoonlitSolarPanelScreen;
 import dev.alaindustrial.client.screen.SolarPanelScreen;
 import dev.alaindustrial.client.screen.WaterMillScreen;
-import dev.alaindustrial.client.render.GardenDroneBlockEntityRenderer;
-import dev.alaindustrial.client.render.EnergyCondenserBlockEntityRenderer;
-import dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer;
 import dev.alaindustrial.client.screen.WindMillScreen;
-import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
 import dev.alaindustrial.client.neoforge.NeoForgeCableGhost;
 import dev.alaindustrial.client.neoforge.NeoForgeNetworkVisualization;
-import dev.alaindustrial.registry.neoforge.ModBlockEntitiesNeoForge;
 import dev.alaindustrial.registry.neoforge.ModMenusNeoForge;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.object.chest.ChestModel;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -129,11 +123,12 @@ public final class IndustrializationNeoForgeClient {
 		// same signature as the Fabric BlockColorRegistry call in IndustrializationClient, with the
 		// list index being the model's tintindex. 26.2 dropped BlockColor: a tint layer is a
 		// BlockTintSource and the in-world hook is colorInWorld(state, level, pos).
+		// MOD-403: the pairs themselves come from the shared ClientContentManifest, so this list cannot
+		// drift from the Fabric one any more; only the event call stays loader-specific.
 		modBus.addListener((net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.BlockTintSources event) -> {
-			event.register(java.util.List.of(dev.alaindustrial.client.render.IncubatorDomeTint.INSTANCE),
-					dev.alaindustrial.registry.ModContent.INCUBATOR_DOME.get());
-			event.register(java.util.List.of(dev.alaindustrial.client.render.FluidPipeTint.INSTANCE),
-					dev.alaindustrial.registry.ModContent.FLUID_PIPE.get());
+			for (ClientContentManifest.BlockTintDef def : ClientContentManifest.BLOCK_TINTS) {
+				event.register(def.sources(), def.block().get());
+			}
 		});
 		// Battery Pouch bundle-style tooltip (MOD-052) — NeoForge counterpart to the Fabric
 		// ClientTooltipComponentCallback mapping in IndustrializationClient.
@@ -241,43 +236,36 @@ public final class IndustrializationNeoForgeClient {
 	}
 
 	/**
-	 * Binds the iron chest's 3D model + animated-lid renderer to its BlockEntity type. Verified
-	 * pattern (neoforge 26.2.0.8-beta): {@code event.registerBlockEntityRenderer(type, factory)}
-	 * where {@code factory} is a {@code BlockEntityRendererProvider<T, S>}. This is the NeoForge
-	 * counterpart to the Fabric {@code BlockEntityRendererRegistry.register} call.
+	 * Binds every block-entity renderer from the shared {@link ClientContentManifest} (MOD-403) — the same
+	 * list the Fabric client plays, so a renderer can no longer exist on one loader only. That mattered
+	 * most here: NeoForge has no client test lane, and a line missing from this method used to be noticed
+	 * first by a player looking at an unrendered block.
+	 *
+	 * <p>Verified pattern (neoforge 26.2.0.8-beta): {@code event.registerBlockEntityRenderer(type,
+	 * factory)} where {@code factory} is a {@code BlockEntityRendererProvider<T, S>}. The pair stays typed
+	 * end to end through {@code RendererRegistrar}, so no cast is involved.
+	 *
+	 * <p>The entity renderer below stays here: its type handle is loader-specific
+	 * ({@code ModEntitiesNeoForge}) and the neutral {@code ModContent} slot is a wildcard, so there is
+	 * nothing typed to share for one registration.
 	 */
 	private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-		// MOD-393: the orb inside the condenser frame. Registered on BOTH loaders — NeoForge has no
-		// client test lane, so a missing line here would first be noticed by a player.
-		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.ENERGY_CONDENSER.get(),
-				EnergyCondenserBlockEntityRenderer::new);
-		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.IRON_CHEST.get(),
-				ChestBlockEntityRenderer::iron);
-		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.SILVER_CHEST.get(),
-				ChestBlockEntityRenderer::silver);
-		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.GOLD_CHEST.get(),
-				ChestBlockEntityRenderer::gold);
-		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.WATER_MILL.get(),
-				WaterMillWheelBlockEntityRenderer::new);
-		// Garden Drone (MOD-277) — NeoForge counterpart of the Fabric registration.
-		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.GARDEN_DRONE_STATION.get(),
-				GardenDroneBlockEntityRenderer::new);
-		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.WIND_MILL.get(),
-				WindMillRotorBlockEntityRenderer::new);
-		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.HIGH_ALTITUDE_WIND_MILL.get(),
-				WindMillRotorBlockEntityRenderer::new);
-		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.STORM_WIND_MILL.get(),
-				WindMillRotorBlockEntityRenderer::new);
-		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.FLUID_TANK.get(),
-				dev.alaindustrial.client.render.FluidTankBlockEntityRenderer::new);
-		// Incubator (MOD-118): bound to the base, draws into the dome chamber above it.
-		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.INCUBATOR.get(),
-				dev.alaindustrial.client.render.IncubatorBlockEntityRenderer::new);
-		// Insulating stand under a bare cable (MOD-279). All cable grades share one BlockEntityType, so
-		// this single registration covers every grade — and it is the first renderer bound to that type,
-		// so nothing is being displaced.
-		event.registerBlockEntityRenderer(ModBlockEntitiesNeoForge.COPPER_CABLE.get(),
-				dev.alaindustrial.client.render.CableAccessoryBlockEntityRenderer::new);
+		ClientContentManifest.RendererRegistrar registrar = new ClientContentManifest.RendererRegistrar() {
+			@Override
+			public <T extends net.minecraft.world.level.block.entity.BlockEntity,
+					S extends net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState>
+					void register(net.minecraft.world.level.block.entity.BlockEntityType<T> type,
+							net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider<T, S> provider) {
+				// NeoForge declares registerBlockEntityRenderer(BlockEntityType<? extends T>,
+				// BlockEntityRendererProvider<T, S>); the witness pins both to this method's own
+				// parameters rather than letting them be inferred through the wildcard.
+				event.<T, S>registerBlockEntityRenderer(type, provider);
+			}
+		};
+		for (ClientContentManifest.BlockEntityRendererDef<?, ?> def
+				: ClientContentManifest.BLOCK_ENTITY_RENDERERS) {
+			def.bindTo(registrar);
+		}
 		// Stock Display Frame (MOD-066): the mod's first entity renderer — NeoForge counterpart to
 		// the Fabric EntityRenderers.register call in IndustrializationClient.
 		event.registerEntityRenderer(
@@ -286,33 +274,15 @@ public final class IndustrializationNeoForgeClient {
 	}
 
 	/**
-	 * Bakes the iron chest model layer (vanilla single-body chest geometry) so the renderer can
-	 * resolve its {@code ModelPart} via {@code EntityModelSet#bakeLayer}. NeoForge counterpart to
-	 * the Fabric {@code ModelLayerRegistry.registerModelLayer} call.
+	 * Bakes every model layer from the shared {@link ClientContentManifest} (MOD-403) so the renderers can
+	 * resolve their {@code ModelPart}s via {@code EntityModelSet#bakeLayer}. NeoForge counterpart to the
+	 * Fabric {@code ModelLayerRegistry.registerModelLayer} loop; both take the same
+	 * {@code (ModelLayerLocation, () -> LayerDefinition)} pair, which is why the manifest needs no
+	 * registrar interface for this one.
 	 */
 	private void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-		event.registerLayerDefinition(GardenDroneBlockEntityRenderer.MODEL_LAYER,
-				GardenDroneBlockEntityRenderer::createLayer);
-		event.registerLayerDefinition(ChestBlockEntityRenderer.IRON_CHEST_LAYER,
-				ChestModel::createSingleBodyLayer);
-		event.registerLayerDefinition(ChestBlockEntityRenderer.SILVER_CHEST_LAYER,
-				ChestModel::createSingleBodyLayer);
-		event.registerLayerDefinition(ChestBlockEntityRenderer.GOLD_CHEST_LAYER,
-				ChestModel::createSingleBodyLayer);
-		// MOD-391: the double-chest halves — 15-wide vanilla left/right bodies, per tier.
-		event.registerLayerDefinition(ChestBlockEntityRenderer.IRON_CHEST_LEFT_LAYER,
-				ChestModel::createDoubleBodyLeftLayer);
-		event.registerLayerDefinition(ChestBlockEntityRenderer.IRON_CHEST_RIGHT_LAYER,
-				ChestModel::createDoubleBodyRightLayer);
-		event.registerLayerDefinition(ChestBlockEntityRenderer.SILVER_CHEST_LEFT_LAYER,
-				ChestModel::createDoubleBodyLeftLayer);
-		event.registerLayerDefinition(ChestBlockEntityRenderer.SILVER_CHEST_RIGHT_LAYER,
-				ChestModel::createDoubleBodyRightLayer);
-		event.registerLayerDefinition(ChestBlockEntityRenderer.GOLD_CHEST_LEFT_LAYER,
-				ChestModel::createDoubleBodyLeftLayer);
-		event.registerLayerDefinition(ChestBlockEntityRenderer.GOLD_CHEST_RIGHT_LAYER,
-				ChestModel::createDoubleBodyRightLayer);
-		event.registerLayerDefinition(WaterMillWheelBlockEntityRenderer.MODEL_LAYER,
-				WaterMillWheelBlockEntityRenderer::createLayer);
+		for (ClientContentManifest.ModelLayerDef def : ClientContentManifest.MODEL_LAYERS) {
+			event.registerLayerDefinition(def.location(), def.definition());
+		}
 	}
 }

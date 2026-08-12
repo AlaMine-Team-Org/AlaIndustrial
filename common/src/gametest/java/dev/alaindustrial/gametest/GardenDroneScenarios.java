@@ -47,7 +47,7 @@ public final class GardenDroneScenarios {
 
 	/** Enough EU for many actions, so a scenario never stalls on an empty buffer mid-way. */
 	private static void charge(GardenDroneStationBlockEntity station) {
-		station.getEnergyStorage().amount = Config.gardenDroneBuffer;
+		station.getEnergyStorage().setAmountUntracked(Config.gardenDroneBuffer);
 	}
 
 	/**
@@ -177,7 +177,7 @@ public final class GardenDroneScenarios {
 	public static void fun04NoEnergyLeavesCropUntouched(GameTestHelper helper) {
 		withIsolatedZone(() -> {
 			GardenDroneStationBlockEntity station = place(helper);
-			station.getEnergyStorage().amount = 0;
+			station.getEnergyStorage().setAmountUntracked(0);
 			helper.setBlock(PLOT, Blocks.FARMLAND);
 			helper.setBlock(PLOT.above(), Blocks.WHEAT.defaultBlockState()
 					.setValue(CropBlock.AGE, CropBlock.MAX_AGE));

@@ -79,7 +79,7 @@ public final class AssemblerScenarios {
 	private static AssemblerBlockEntity assembler(GameTestHelper helper, BlockPos pos) {
 		AssemblerBlockEntity be = AlaGameTestHelper.place(helper, pos, ModContent.ASSEMBLER.get(),
 				AssemblerBlockEntity.class);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		return be;
 	}
 
@@ -280,7 +280,7 @@ public final class AssemblerScenarios {
 					+ count(store, Items.OAK_PLANKS) + " left");
 			return;
 		}
-		long spent = AMPLE_EU - be.getEnergyStorage().amount;
+		long spent = AMPLE_EU - be.getEnergyStorage().getAmount();
 		if (spent != EU_PER_OP) {
 			helper.fail("one operation must cost exactly " + EU_PER_OP + " EU, spent " + spent);
 			return;
@@ -303,9 +303,9 @@ public final class AssemblerScenarios {
 
 		drive(helper, be, ticksFor(3));
 
-		if (be.getEnergyStorage().amount != AMPLE_EU) {
+		if (be.getEnergyStorage().getAmount() != AMPLE_EU) {
 			helper.fail("an assembler with no materials must not spend EU, spent "
-					+ (AMPLE_EU - be.getEnergyStorage().amount));
+					+ (AMPLE_EU - be.getEnergyStorage().getAmount()));
 			return;
 		}
 		if (be.getStatus() != AssemblerStatus.NO_MATERIALS) {
@@ -335,9 +335,9 @@ public final class AssemblerScenarios {
 
 		drive(helper, be, ticksFor(3));
 
-		if (be.getEnergyStorage().amount != AMPLE_EU) {
+		if (be.getEnergyStorage().getAmount() != AMPLE_EU) {
 			helper.fail("an assembler with a full output area must not spend EU, spent "
-					+ (AMPLE_EU - be.getEnergyStorage().amount));
+					+ (AMPLE_EU - be.getEnergyStorage().getAmount()));
 			return;
 		}
 		if (count(store, Items.OAK_PLANKS) != 64) {
@@ -477,7 +477,7 @@ public final class AssemblerScenarios {
 					+ count(store, ModContent.FORGE_HAMMER.get()));
 			return;
 		}
-		long spent = AMPLE_EU - be.getEnergyStorage().amount;
+		long spent = AMPLE_EU - be.getEnergyStorage().getAmount();
 		if (spent != 2 * EU_PER_OP) {
 			helper.fail("two operations must cost exactly " + (2 * EU_PER_OP) + " EU, spent " + spent
 					+ " — a machine still cycling after its materials ran out would spend more");
@@ -587,9 +587,9 @@ public final class AssemblerScenarios {
 					+ count(store, Items.DIAMOND) + " diamonds left of 8");
 			return;
 		}
-		if (be.getEnergyStorage().amount != AMPLE_EU) {
+		if (be.getEnergyStorage().getAmount() != AMPLE_EU) {
 			helper.fail("a blueprint with no recipe must not cost EU, spent "
-					+ (AMPLE_EU - be.getEnergyStorage().amount));
+					+ (AMPLE_EU - be.getEnergyStorage().getAmount()));
 			return;
 		}
 		helper.succeed();
@@ -940,7 +940,7 @@ public final class AssemblerScenarios {
 		menu.setActiveTab(AssemblerMenu.TAB_RECORD);
 		// The player lays out a completely different recipe while the machine works.
 		be.setPatternCell(0, new ItemStack(Items.COBBLESTONE));
-		long before = be.getEnergyStorage().amount;
+		long before = be.getEnergyStorage().getAmount();
 		drive(helper, be, ticksFor(1));
 
 		if (output(be, Items.STICK) != 4) {
@@ -948,7 +948,7 @@ public final class AssemblerScenarios {
 					+ output(be, Items.STICK) + " sticks");
 			return;
 		}
-		long spent = before - be.getEnergyStorage().amount;
+		long spent = before - be.getEnergyStorage().getAmount();
 		if (spent != EU_PER_OP) {
 			helper.fail("one operation costs " + EU_PER_OP + " EU whichever tab is on screen, spent " + spent);
 			return;
@@ -1189,9 +1189,9 @@ public final class AssemblerScenarios {
 					+ "recorded with oak — got " + output(be, Items.STICK) + " sticks");
 			return;
 		}
-		if (be.getEnergyStorage().amount != AMPLE_EU) {
+		if (be.getEnergyStorage().getAmount() != AMPLE_EU) {
 			helper.fail("a blueprint it cannot supply must cost no EU at all, spent "
-					+ (AMPLE_EU - be.getEnergyStorage().amount));
+					+ (AMPLE_EU - be.getEnergyStorage().getAmount()));
 			return;
 		}
 
@@ -1326,9 +1326,9 @@ public final class AssemblerScenarios {
 					+ output(be, Items.OAK_STAIRS) + " oak stairs");
 			return;
 		}
-		if (be.getEnergyStorage().amount != AMPLE_EU) {
+		if (be.getEnergyStorage().getAmount() != AMPLE_EU) {
 			helper.fail("nothing ran, so nothing should have been spent; spent "
-					+ (AMPLE_EU - be.getEnergyStorage().amount));
+					+ (AMPLE_EU - be.getEnergyStorage().getAmount()));
 			return;
 		}
 

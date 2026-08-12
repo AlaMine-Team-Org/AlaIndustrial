@@ -481,18 +481,18 @@ public final class CableShockScenarios {
 		tick(helper, be(helper, CABLE));
 		tick(helper, be(helper, BOX));
 		if (be(helper, GENERATOR) instanceof GeneratorBlockEntity generator) {
-			generator.getEnergyStorage().amount = 0;
+			generator.getEnergyStorage().setAmountUntracked(0);
 			generator.setChanged();
 		}
 		if (be(helper, BOX) instanceof BatteryBoxBlockEntity box) {
-			box.getEnergyStorage().amount = 0;
+			box.getEnergyStorage().setAmountUntracked(0);
 			box.setChanged();
 		}
 	}
 
 	private static void energize(GameTestHelper helper) {
 		if (be(helper, GENERATOR) instanceof GeneratorBlockEntity generator) {
-			generator.getEnergyStorage().amount = Config.generatorBuffer;
+			generator.getEnergyStorage().setAmountUntracked(Config.generatorBuffer);
 			generator.setChanged();
 		}
 		for (int i = 0; i < 3; i++) {

@@ -36,6 +36,12 @@ public final class DistillationColumnScenarios {
 	}
 
 	private static final BlockPos BASE = new BlockPos(1, 2, 1);
+	/**
+	 * "Fill the buffer" for a fixture. Larger than the column's own buffer on purpose and CLAMPED to
+	 * it by {@code setAmountUntracked} (MOD-400) — before that the field was public and would accept a
+	 * charge no machine can hold. Assertions therefore compare against the buffer's capacity, never
+	 * against this number.
+	 */
 	private static final long AMPLE_EU = 8000L;
 
 	/** One warm-up plus one full run plus slack for the scaled-duration knob. */
@@ -69,7 +75,7 @@ public final class DistillationColumnScenarios {
 	/** The signature split: 1000 mB oil + EU → 700 mB diesel (top tank) + 200 mB fuel oil (bottom). */
 	public static void fun01OilSplitsIntoFractions(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		fillOil(be, FluidAmounts.BUCKET);
 
 		drive(be, helper, driveTicks());
@@ -97,7 +103,7 @@ public final class DistillationColumnScenarios {
 	/** Half a warm-up in: progress still 0, oil untouched, but EU visibly spent (heating is not free). */
 	public static void fun02WarmupGatesDistillation(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		fillOil(be, FluidAmounts.BUCKET);
 
 		drive(be, helper, Math.max(2, Config.distillationColumnWarmupTicks / 2));
@@ -110,7 +116,7 @@ public final class DistillationColumnScenarios {
 			helper.fail("warm-up must not produce fractions yet");
 			return;
 		}
-		if (be.getEnergyStorage().getAmount() >= AMPLE_EU) {
+		if (be.getEnergyStorage().getAmount() >= be.getEnergyStorage().getCapacity()) {
 			helper.fail("warm-up must draw EU, buffer still at " + be.getEnergyStorage().getAmount());
 			return;
 		}
@@ -126,7 +132,7 @@ public final class DistillationColumnScenarios {
 	/** With the diesel tank full the column freezes: oil and EU both stay exactly where they were. */
 	public static void con01FullDieselTankFreezes(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		fillOil(be, FluidAmounts.BUCKET);
 		be.dieselTank.fluid = FluidHolder.of(ModContent.DIESEL.get());
 		be.dieselTank.amount = DistillationColumnBlockEntity.TANK_CAPACITY;
@@ -137,7 +143,7 @@ public final class DistillationColumnScenarios {
 			helper.fail("a blocked output must not consume oil, tank is " + be.oilTank.amount + " mB");
 			return;
 		}
-		if (be.getEnergyStorage().getAmount() != AMPLE_EU) {
+		if (be.getEnergyStorage().getAmount() != be.getEnergyStorage().getCapacity()) {
 			helper.fail("a frozen column must not burn EU, buffer at " + be.getEnergyStorage().getAmount());
 			return;
 		}
@@ -315,7 +321,7 @@ public final class DistillationColumnScenarios {
 	/** 1000 mB fuel oil in the intake + EU → 600 mB diesel; the intake ends empty. */
 	public static void crk01FuelOilCracksIntoDiesel(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.oilTank.fluid = FluidHolder.of(ModContent.FUEL_OIL.get());
 		be.oilTank.amount = FluidAmounts.BUCKET;
 
@@ -343,7 +349,7 @@ public final class DistillationColumnScenarios {
 	public static void sec01SectionBoostsDiesel(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
 		helper.setBlock(BASE.above(3), ModContent.RECTIFICATION_SECTION.get());
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		fillOil(be, FluidAmounts.BUCKET);
 
 		drive(be, helper, driveTicks());
@@ -365,7 +371,7 @@ public final class DistillationColumnScenarios {
 	/** At max fouling nothing runs (no EU, no oil consumed); cleanFouling() yields coal and unblocks. */
 	public static void fou01FouledStopsUntilCleaned(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		fillOil(be, FluidAmounts.BUCKET);
 		// Coke it up via the same NBT path the save uses (fouling has no public setter by design).
 		ServerLevel level = helper.getLevel();
@@ -375,7 +381,8 @@ public final class DistillationColumnScenarios {
 
 		drive(be, helper, driveTicks());
 
-		if (be.oilTank.amount != FluidAmounts.BUCKET || be.getEnergyStorage().getAmount() != AMPLE_EU) {
+		if (be.oilTank.amount != FluidAmounts.BUCKET
+				|| be.getEnergyStorage().getAmount() != be.getEnergyStorage().getCapacity()) {
 			helper.fail("a fouled column must freeze: oil " + be.oilTank.amount + " mB, EU "
 					+ be.getEnergyStorage().getAmount());
 			return;
@@ -406,7 +413,7 @@ public final class DistillationColumnScenarios {
 		BlockPos abs = helper.absolutePos(BASE);
 		DistillationColumnBlockEntity src = place(helper);
 
-		src.getEnergyStorage().amount = AMPLE_EU;
+		src.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		fillOil(src, 2 * FluidAmounts.BUCKET);
 		src.dieselTank.fluid = FluidHolder.of(ModContent.DIESEL.get());
 		src.dieselTank.amount = 700;

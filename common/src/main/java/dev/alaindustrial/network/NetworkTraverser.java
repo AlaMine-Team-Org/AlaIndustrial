@@ -1,6 +1,6 @@
 package dev.alaindustrial.network;
 
-import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.block.entity.EnergyBlockEntity;
 import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.EnergyNetworkDiagnostics;
 import dev.alaindustrial.core.energy.NetworkManager;
@@ -146,9 +146,15 @@ public final class NetworkTraverser {
 		return new TraversalResult(cables, producers, consumers, storageSinks, supply, demand, moved, hitLimit);
 	}
 
-	/** Mirror of {@link EnergyNetwork}'s private isStorageSink — true for BatteryBox-like blocks. */
+	/**
+	 * Mirror of {@link EnergyNetwork}'s private isStorageSink — true for BatteryBox-like blocks.
+	 *
+	 * <p>Tests against {@link EnergyBlockEntity}, not {@code MachineBlockEntity} (MOD-400): the
+	 * predicate lives on the energy base, and narrowing the check to the machine subclass would
+	 * answer "not a sink" for anything transport-shaped without ever asking it.
+	 */
 	private static boolean isStorageSink(ServerLevel level, BlockPos pos) {
-		return level.getBlockEntity(pos) instanceof MachineBlockEntity mbe && mbe.isEnergyStorageSink();
+		return level.getBlockEntity(pos) instanceof EnergyBlockEntity be && be.isEnergyStorageSink();
 	}
 
 	/**

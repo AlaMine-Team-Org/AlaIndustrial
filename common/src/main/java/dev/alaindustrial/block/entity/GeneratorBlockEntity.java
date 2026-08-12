@@ -35,7 +35,7 @@ public class GeneratorBlockEntity extends AbstractGeneratorBlockEntity implement
 	@Override
 	protected int produce(Level level, BlockPos pos, BlockState state) {
 		int made = 0;
-		boolean room = energy.amount < energy.getCapacity();
+		boolean room = energy.getAmount() < energy.getCapacity();
 		// Burn only while there is room to store the EU — pause when the buffer is full so fuel is
 		// not wasted with no consumer drawing.
 		if (burnTime > 0 && room) {

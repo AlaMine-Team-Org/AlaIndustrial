@@ -130,7 +130,7 @@ public final class AssemblerPerfScenarios {
 		for (BlockPos pos : ASSEMBLERS) {
 			helper.setBlock(pos, ModContent.ASSEMBLER.get());
 			AssemblerBlockEntity be = helper.getBlockEntity(pos, AssemblerBlockEntity.class);
-			be.getEnergyStorage().amount = Config.assemblerBuffer;
+			be.getEnergyStorage().setAmountUntracked(Config.assemblerBuffer);
 			machines.add(be);
 		}
 		if (first.isEmpty()) {
@@ -144,7 +144,7 @@ public final class AssemblerPerfScenarios {
 		// Phase 3: running. Same rig, one blueprint each, crafting off the shared warehouse.
 		for (AssemblerBlockEntity be : machines) {
 			be.setItem(AssemblerBlockEntity.BLUEPRINT_SLOT_START, stickBlueprint());
-			be.getEnergyStorage().amount = Config.assemblerBuffer;
+			be.getEnergyStorage().setAmountUntracked(Config.assemblerBuffer);
 		}
 		int plansBefore = plans(machines);
 		long running = measure(helper, machines);
@@ -223,7 +223,7 @@ public final class AssemblerPerfScenarios {
 	private static void tick(GameTestHelper helper, List<AssemblerBlockEntity> machines, int ticks) {
 		for (int i = 0; i < ticks; i++) {
 			for (AssemblerBlockEntity be : machines) {
-				be.getEnergyStorage().amount = Config.assemblerBuffer;
+				be.getEnergyStorage().setAmountUntracked(Config.assemblerBuffer);
 				BlockPos pos = be.getBlockPos();
 				BlockState state = helper.getLevel().getBlockState(pos);
 				be.serverTick(helper.getLevel(), pos, state);

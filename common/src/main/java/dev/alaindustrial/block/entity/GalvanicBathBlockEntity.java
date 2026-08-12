@@ -156,13 +156,13 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 		// water out mid-cycle stops the run instead of completing it underpaid (MOD-271's lesson on
 		// the Vulcanizer's batch price).
 		boolean canWork = recipe != null && recipe.hasEnough(input) && fluidTank.amount >= waterPerOp
-				&& energy.amount >= euPerTick && canOutput(result);
+				&& energy.getAmount() >= euPerTick && canOutput(result);
 
 		setStatus(diagnose(recipe, input, result, waterPerOp));
 		updateLit(canWork);
 
 		if (canWork) {
-			energy.amount -= euPerTick;
+			energy.drainInternal(euPerTick);
 			progress++;
 			if (progress >= maxProgress) {
 				progress = 0;

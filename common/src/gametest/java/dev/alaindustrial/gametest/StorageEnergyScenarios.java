@@ -51,7 +51,7 @@ public final class StorageEnergyScenarios {
 		helper.setBlock(DROP, ModContent.BATTERY_BOX.get());
 		if (be(helper, DROP) instanceof BatteryBoxBlockEntity bb) {
 			long charge = Math.min(12345L, bb.getEnergyStorage().getCapacity());
-			bb.getEnergyStorage().amount = charge;
+			bb.getEnergyStorage().setAmountUntracked(charge);
 			DataComponentMap map = bb.collectComponents();
 			Long carried = map.get(ModDataComponents.STORED_ENERGY.get());
 			if (carried == null || carried.longValue() != charge) {
@@ -91,10 +91,10 @@ public final class StorageEnergyScenarios {
 		helper.setBlock(WASH_DST, ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		if (be(helper, WASH_SRC) instanceof BatteryBoxBlockEntity src) {
-			src.getEnergyStorage().amount = Config.batteryBoxBuffer;
+			src.getEnergyStorage().setAmountUntracked(Config.batteryBoxBuffer);
 		}
 		if (be(helper, WASH_DST) instanceof BatteryBoxBlockEntity dst) {
-			dst.getEnergyStorage().amount = 0L;
+			dst.getEnergyStorage().setAmountUntracked(0L);
 		}
 		for (int i = 0; i < 20; i++) {
 			tick(helper, be(helper, WASH_SRC));
@@ -163,8 +163,8 @@ public final class StorageEnergyScenarios {
 			return;
 		}
 		long half = Config.batteryBoxBuffer / 2;
-		donor.getEnergyStorage().amount = half + 3_000L;
-		receiver.getEnergyStorage().amount = half;
+		donor.getEnergyStorage().setAmountUntracked(half + 3_000L);
+		receiver.getEnergyStorage().setAmountUntracked(half);
 		long receiverStart = receiver.getEnergyStorage().getAmount();
 
 		// Phase 1 — let it converge.
@@ -268,8 +268,8 @@ public final class StorageEnergyScenarios {
 			helper.fail("mid-bus BatteryBox was not placed at " + MIDBUS_RING_BOX);
 			return;
 		}
-		donor.getEnergyStorage().amount = Config.batteryBoxBuffer;
-		receiver.getEnergyStorage().amount = 0L;
+		donor.getEnergyStorage().setAmountUntracked(Config.batteryBoxBuffer);
+		receiver.getEnergyStorage().setAmountUntracked(0L);
 
 		for (int i = 0; i < 40; i++) {
 			tick(helper, be(helper, MIDBUS_DONOR));
@@ -340,7 +340,7 @@ public final class StorageEnergyScenarios {
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
 		}
 		if (be(helper, BOTH_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0L;
+			bb.getEnergyStorage().setAmountUntracked(0L);
 		}
 		for (int i = 0; i < 40; i++) {
 			tick(helper, be(helper, BOTH_GEN));
@@ -378,7 +378,7 @@ public final class StorageEnergyScenarios {
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
 		}
 		if (be(helper, STO_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0L;
+			bb.getEnergyStorage().setAmountUntracked(0L);
 		}
 		for (int i = 0; i < 40; i++) {
 			tick(helper, be(helper, STO_GEN));
@@ -435,7 +435,7 @@ public final class StorageEnergyScenarios {
 		helper.setBlock(IDLE_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		if (be(helper, IDLE_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0L;
+			bb.getEnergyStorage().setAmountUntracked(0L);
 		}
 		for (int i = 0; i < 150; i++) {
 			tick(helper, be(helper, IDLE_LIVE_GEN));
@@ -497,13 +497,13 @@ public final class StorageEnergyScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.SOUTH));
 		helper.setBlock(BASE_MAC, ModContent.MACERATOR.get());
 		if (be(helper, BASE_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = Config.batteryBoxBuffer;
+			bb.getEnergyStorage().setAmountUntracked(Config.batteryBoxBuffer);
 		}
 		if (be(helper, BASE_DEAD_GEN) instanceof GeneratorBlockEntity gen) {
-			gen.getEnergyStorage().amount = 0L;
+			gen.getEnergyStorage().setAmountUntracked(0L);
 		}
 		if (be(helper, BASE_MAC) instanceof dev.alaindustrial.block.entity.MaceratorBlockEntity mac) {
-			mac.getEnergyStorage().amount = 0L;
+			mac.getEnergyStorage().setAmountUntracked(0L);
 			mac.setItem(dev.alaindustrial.block.entity.MaceratorBlockEntity.INPUT_SLOT,
 					new ItemStack(Items.RAW_IRON, 8));
 		}
@@ -574,10 +574,10 @@ public final class StorageEnergyScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
 		long boxStart = Config.batteryBoxBuffer / 100L * 99L; // the reported 99 %
 		if (be(helper, CHURN_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = boxStart;
+			bb.getEnergyStorage().setAmountUntracked(boxStart);
 		}
 		if (be(helper, CHURN_MAC) instanceof dev.alaindustrial.block.entity.MaceratorBlockEntity mac) {
-			mac.getEnergyStorage().amount = 0L; // no input item: the buffer only fills, never burns down
+			mac.getEnergyStorage().setAmountUntracked(0L); // no input item: the buffer only fills, never burns down
 		}
 		for (int i = 0; i < 150; i++) {
 			tick(helper, be(helper, CHURN_BOX));
@@ -628,7 +628,7 @@ public final class StorageEnergyScenarios {
 		}
 		long boxStart = Config.batteryBoxBuffer / 100L * 99L;
 		if (be(helper, IDLE_CHURN_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = boxStart;
+			bb.getEnergyStorage().setAmountUntracked(boxStart);
 		}
 		for (int i = 0; i < 60; i++) {
 			tick(helper, be(helper, IDLE_CHURN_BOX));
@@ -667,7 +667,7 @@ public final class StorageEnergyScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		helper.setBlock(LONE_CABLE, ModContent.COPPER_CABLE.get());
 		if (be(helper, LONE_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = Config.batteryBoxBuffer;
+			bb.getEnergyStorage().setAmountUntracked(Config.batteryBoxBuffer);
 		}
 		for (int i = 0; i < 10; i++) {
 			tick(helper, be(helper, LONE_BOX));
@@ -711,10 +711,10 @@ public final class StorageEnergyScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		if (be(helper, BB_GEN) instanceof GeneratorBlockEntity gen) {
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
-			gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+			gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
 		}
 		if (be(helper, BB_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = Config.batteryBoxBuffer - 10L;
+			bb.getEnergyStorage().setAmountUntracked(Config.batteryBoxBuffer - 10L);
 		}
 		for (int i = 0; i < 40; i++) {
 			tick(helper, be(helper, BB_GEN));
@@ -783,13 +783,13 @@ public final class StorageEnergyScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		long genStart = Config.generatorBuffer;
 		if (be(helper, LINE_GEN) instanceof GeneratorBlockEntity gen) {
-			gen.getEnergyStorage().amount = genStart; // no fuel: buffer only goes down
+			gen.getEnergyStorage().setAmountUntracked(genStart); // no fuel: buffer only goes down
 			gen.setChanged();
 		}
 		final long room = 5;
 		long boxStart = Config.batteryBoxBuffer - room;
 		if (be(helper, LINE_MAC) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = boxStart; // leave exactly `room` EU
+			bb.getEnergyStorage().setAmountUntracked(boxStart); // leave exactly `room` EU
 			bb.setChanged();
 		}
 		driveLine(helper, 10);
@@ -824,7 +824,7 @@ public final class StorageEnergyScenarios {
 		helper.setBlock(DROP, ModContent.BATTERY_BOX.get());
 		if (be(helper, DROP) instanceof BatteryBoxBlockEntity bb) {
 			long charge = bb.getEnergyStorage().getCapacity() / 2; // half charge (≠ the 12345 in the other case)
-			bb.getEnergyStorage().amount = charge;
+			bb.getEnergyStorage().setAmountUntracked(charge);
 			DataComponentMap map = bb.collectComponents();
 			Long carried = map.get(ModDataComponents.STORED_ENERGY.get());
 			if (carried == null || carried.longValue() != charge) {

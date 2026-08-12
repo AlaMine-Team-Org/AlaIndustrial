@@ -168,7 +168,7 @@ public class WindMillGameTest {
 		WindMillBlockEntity mill = placeRaised(helper); // raised so base >= 1 (see RAISED_POS)
 		requirePositiveHeightBase(helper, RAISED_POS); // tripwire: fail loudly if the rig ever drops below base 1
 		setClear(helper);
-		mill.getEnergyStorage().amount = 0;
+		mill.getEnergyStorage().setAmountUntracked(0);
 		int ticks = Config.windMillSampleTicks * 2 + 5; // span multiple sample windows
 		long perTick = afterGlobalRate(expectedRate(helper, RAISED_POS));
 		drive(mill, helper, ticks);
@@ -200,7 +200,7 @@ public class WindMillGameTest {
 			helper.fail("thunder rate " + stormRate + " < clear rate " + clearRate + " (weather must not reduce output)");
 		}
 		// Drive one full sample window from a fresh block so the cached rate reflects the storm.
-		mill.getEnergyStorage().amount = 0;
+		mill.getEnergyStorage().setAmountUntracked(0);
 		long perTick = afterGlobalRate(stormRate);
 		drive(mill, helper, Config.windMillSampleTicks);
 		long expected = perTick * Config.windMillSampleTicks;
@@ -224,7 +224,7 @@ public class WindMillGameTest {
 		WindMillBlockEntity mill = place(helper);
 		helper.setBlock(POS.above(), Blocks.STONE);
 		setRaining(helper, true); // even in a storm, a roof kills it
-		mill.getEnergyStorage().amount = 0;
+		mill.getEnergyStorage().setAmountUntracked(0);
 		drive(mill, helper, Config.windMillSampleTicks + 1);
 		long got = mill.getEnergyStorage().getAmount();
 		if (got != 0) {
@@ -249,7 +249,7 @@ public class WindMillGameTest {
 		WindMillBlockEntity mill = place(helper);
 		helper.setBlock(POS.north(), Blocks.STONE); // FACING NORTH → the front block the rotor occupies
 		setRaining(helper, true); // storm would normally maximise output
-		mill.getEnergyStorage().amount = 0;
+		mill.getEnergyStorage().setAmountUntracked(0);
 		drive(mill, helper, Config.windMillSampleTicks + 1);
 		if (mill.getDataAccess().get(3) != WindMillBlockEntity.MODE_OBSTRUCTED) {
 			helper.fail("front-obstructed wind mill mode = " + mill.getDataAccess().get(3)
@@ -269,7 +269,7 @@ public class WindMillGameTest {
 		WindMillBlockEntity mill = place(helper);
 		helper.setBlock(POS.north().east(), Blocks.STONE); // blade tip reaches one block east of the front
 		setRaining(helper, true);
-		mill.getEnergyStorage().amount = 0;
+		mill.getEnergyStorage().setAmountUntracked(0);
 		drive(mill, helper, Config.windMillSampleTicks + 1);
 		if (mill.getDataAccess().get(3) != WindMillBlockEntity.MODE_OBSTRUCTED) {
 			helper.fail("side-obstructed wind mill mode = " + mill.getDataAccess().get(3)
@@ -288,7 +288,7 @@ public class WindMillGameTest {
 		WindMillBlockEntity mill = place(helper);
 		helper.setBlock(POS.north().below(), Blocks.STONE); // the pit's centre is below the front block
 		setRaining(helper, true);
-		mill.getEnergyStorage().amount = 0;
+		mill.getEnergyStorage().setAmountUntracked(0);
 		drive(mill, helper, Config.windMillSampleTicks + 1);
 		if (mill.getDataAccess().get(3) != WindMillBlockEntity.MODE_OBSTRUCTED) {
 			helper.fail("pit-obstructed wind mill mode = " + mill.getDataAccess().get(3)
@@ -325,7 +325,7 @@ public class WindMillGameTest {
 	public void tcWindmill001Prf01_bufferCapsAtMax(GameTestHelper helper) {
 		WindMillBlockEntity mill = place(helper);
 		setRaining(helper, true);
-		mill.getEnergyStorage().amount = Config.windMillBuffer;
+		mill.getEnergyStorage().setAmountUntracked(Config.windMillBuffer);
 		drive(mill, helper, Config.windMillSampleTicks * 2);
 		long got = mill.getEnergyStorage().getAmount();
 		if (got != Config.windMillBuffer) {
@@ -342,7 +342,7 @@ public class WindMillGameTest {
 	@GameTest(skyAccess = true, maxTicks = 120)
 	public void tcWindmill001Per01_energySurvivesNbtRoundTrip(GameTestHelper helper) {
 		WindMillBlockEntity mill = place(helper);
-		mill.getEnergyStorage().amount = 1234; // seed a buffer independent of in-region production
+		mill.getEnergyStorage().setAmountUntracked(1234); // seed a buffer independent of in-region production
 		var registries = helper.getLevel().registryAccess();
 		CompoundTag tag = mill.saveCustomOnly(registries);
 		WindMillBlockEntity restored = new WindMillBlockEntity(mill.getBlockPos(),
@@ -363,7 +363,7 @@ public class WindMillGameTest {
 	@GameTest(skyAccess = true, maxTicks = 120)
 	public void tcWindmill001Con01_pushesToAdjacentBattery(GameTestHelper helper) {
 		WindMillBlockEntity mill = place(helper); // FACING defaults to NORTH → output face is SOUTH
-		mill.getEnergyStorage().amount = mill.getEnergyStorage().getCapacity(); // ample supply to push
+		mill.getEnergyStorage().setAmountUntracked(mill.getEnergyStorage().getCapacity()); // ample supply to push
 
 		// Place the BatteryBox on the mill's SOUTH (back/output) face. The mill sits on the battery's
 		// NORTH side, so the battery must face NORTH to expose its input (front) to the mill's output.
@@ -374,7 +374,7 @@ public class WindMillGameTest {
 		if (battery == null) {
 			helper.fail("battery_box block entity missing after placement");
 		}
-		battery.getEnergyStorage().amount = 0;
+		battery.getEnergyStorage().setAmountUntracked(0);
 		drive(mill, helper, 20);
 		if (battery.getEnergyStorage().getAmount() <= 0) {
 			helper.fail("battery_box on the back face received no EU from the wind mill");
@@ -417,7 +417,7 @@ public class WindMillGameTest {
 	public void tcWindmill001Fun02_noRotorProducesNothing(GameTestHelper helper) {
 		WindMillBlockEntity mill = placeWithoutRotor(helper);
 		setRaining(helper, true); // worst case: storm would normally maximise output
-		mill.getEnergyStorage().amount = 0;
+		mill.getEnergyStorage().setAmountUntracked(0);
 		drive(mill, helper, Config.windMillSampleTicks * 2 + 5);
 		long got = mill.getEnergyStorage().getAmount();
 		if (got != 0) {
@@ -457,8 +457,8 @@ public class WindMillGameTest {
 		WindMillBlockEntity a = place(helper); // FACING NORTH at POS
 		WindMillBlockEntity b = placeNeighbour(helper, POS.east(), Direction.NORTH);
 		setRaining(helper, true);
-		a.getEnergyStorage().amount = 0;
-		b.getEnergyStorage().amount = 0;
+		a.getEnergyStorage().setAmountUntracked(0);
+		b.getEnergyStorage().setAmountUntracked(0);
 		drive(a, helper, Config.windMillSampleTicks + 1);
 		drive(b, helper, Config.windMillSampleTicks + 1);
 		assertMode(helper, a, "side-by-side mill A", WindMillBlockEntity.MODE_INTERFERENCE);
@@ -595,7 +595,7 @@ public class WindMillGameTest {
 		WindMillBlockEntity mill = place(helper); // rotor installed
 		setClear(helper);
 		mill.setItem(WindMillBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_DAY));
-		mill.getEnergyStorage().amount = 1500; // seed EU to verify it carries across the transform
+		mill.getEnergyStorage().setAmountUntracked(1500); // seed EU to verify it carries across the transform
 		mill.setEvolveProgressTicks(Config.windMillEvolveTicks - 1); // one tick short of evolution
 		drive(mill, helper, 1); // the next tick trips the threshold
 		// The block should have transformed — the old BE is no longer the block entity at POS.
@@ -684,7 +684,7 @@ public class WindMillGameTest {
 		WindMillBlockEntity mill = place(helper); // rotor installed
 		setClear(helper);
 		mill.setItem(WindMillBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_NIGHT));
-		mill.getEnergyStorage().amount = 1500; // seed EU to verify it carries across the transform
+		mill.getEnergyStorage().setAmountUntracked(1500); // seed EU to verify it carries across the transform
 		// MOD-133 regression: seed an owner so the test can assert evolution carries it. The evolved block
 		// is created via setBlockAndUpdate (no setPlacedBy), so without the evolveInto owner-transfer the
 		// evolved mill's owner would be null and its production would never reach the player's profile.
@@ -768,7 +768,7 @@ public class WindMillGameTest {
 						+ mill.getItem(WindMillBlockEntity.ROTOR_SLOT).getDamageValue()
 						+ " rate=" + mill.getDataAccess().get(2));
 			}
-			mill.getEnergyStorage().amount = 0;
+			mill.getEnergyStorage().setAmountUntracked(0);
 			drive(mill, helper, Config.windMillSampleTicks + 1);
 			if (mill.getEnergyStorage().getAmount() != 0) {
 				helper.fail("wind mill kept generating after its rotor broke");
@@ -908,7 +908,7 @@ public class WindMillGameTest {
 			WindMillBlockEntity mill = placeRaised(helper); // base >= 1 → rate > 0 under open sky
 			requirePositiveHeightBase(helper, RAISED_POS);
 			setClear(helper);
-			mill.getEnergyStorage().amount = mill.getEnergyStorage().getCapacity(); // FULL buffer, nothing draws it
+			mill.getEnergyStorage().setAmountUntracked(mill.getEnergyStorage().getCapacity()); // FULL buffer, nothing draws it
 			ItemStack rotor = new ItemStack(ModItems.WINDMILL_ROTOR);
 			rotor.setDamageValue(rotor.getMaxDamage() - 1);
 			mill.setItem(WindMillBlockEntity.ROTOR_SLOT, rotor);

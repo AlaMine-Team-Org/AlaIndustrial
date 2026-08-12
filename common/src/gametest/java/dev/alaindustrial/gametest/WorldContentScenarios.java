@@ -45,7 +45,7 @@ public final class WorldContentScenarios {
 		// Geo sink on the pump's west face
 		helper.setBlock(PUMP_SINK, ModContent.GEOTHERMAL_GENERATOR.get());
 		if (be(helper, PUMP) instanceof dev.alaindustrial.block.entity.PumpBlockEntity pump) {
-			pump.getEnergyStorage().amount = Config.pumpEuPerBucket * 4; // ample supply
+			pump.getEnergyStorage().setAmountUntracked(Config.pumpEuPerBucket * 4); // ample supply
 			for (int i = 0; i < 40; i++) {
 				pump.serverTick(level, helper.absolutePos(PUMP),
 						level.getBlockState(helper.absolutePos(PUMP)));

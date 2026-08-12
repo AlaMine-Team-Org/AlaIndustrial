@@ -54,10 +54,35 @@ public final class ChargePadBlockEntity extends MachineBlockEntity {
 	private static final int CONTACT_GRACE_TICKS = 2;
 
 	/**
+	 * Ticks of contact settled by one payout (MOD-406).
+	 *
+	 * <p>The station used to pay every tick, and every payout rewrites the charged stack's energy
+	 * component. A rewritten stack no longer {@code matches} the client's copy, so
+	 * {@code AbstractContainerMenu.broadcastChanges} re-sends that slot — twenty times a second, per
+	 * charged item, plus the cursor and the crafting grid while a screen is open (MOD-082). The player
+	 * sees it as a stuttering inventory and a stuttering sound on whatever they interact with.
+	 *
+	 * <p>Five ticks, matching {@code EnergyBlockEntity}'s client-sync cadence for the same reason: a
+	 * quarter second is short enough that a charge bar still looks live, and it cuts the rewrite rate
+	 * by five. The AMOUNT paid is unchanged — both the budget and the per-item rate ceiling are scaled
+	 * by the number of ticks being settled.
+	 */
+	private static final int PAYOUT_INTERVAL_TICKS = 5;
+
+	/**
 	 * Game time of the last {@link #chargePlayer} call, or -1 before the first one. Transient on purpose:
 	 * a station that loads from disk has nobody on it, whatever was true when the chunk was saved.
 	 */
 	private long lastContactTick = -1L;
+
+	/**
+	 * Contact ticks accrued since the last payout. Reset to 0 by a payout and by a break in contact, so
+	 * a player who steps off and back on cannot bank a larger-than-honest lump sum.
+	 */
+	private int pendingTicks;
+
+	/** The indicator state of the last payout, replayed on the ticks between payouts so it cannot blink. */
+	private ChargePadState lastPayoutState = ChargePadState.READY;
 
 	public ChargePadBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.CHARGE_PAD_BE.get(), pos, state, EnergyTier.LV, 0,
@@ -87,25 +112,49 @@ public final class ChargePadBlockEntity extends MachineBlockEntity {
 		if (!player.blockPosition().equals(worldPosition)) {
 			return;
 		}
-		lastContactTick = serverLevel.getGameTime();
+		// A gap in contact starts a fresh batch: the ticks the player spent elsewhere are not owed to
+		// them, and paying them as a lump sum would let someone hop on and off for a burst of charge.
+		long now = serverLevel.getGameTime();
+		// Leading edge, same shape as EnergyBlockEntity's client sync: the first tick of a fresh contact
+		// pays at once, so stepping onto the station starts charging immediately instead of a quarter
+		// second later. Only the ticks after it are batched.
+		boolean freshContact = lastContactTick < 0 || now - lastContactTick > CONTACT_GRACE_TICKS;
+		if (freshContact) {
+			// A gap in contact starts a fresh batch: the ticks the player spent elsewhere are not owed to
+			// them, and paying them as a lump sum would let someone hop on and off for a burst of charge.
+			pendingTicks = 0;
+		}
+		lastContactTick = now;
 		// Wake first: the station may have been asleep when the player arrived, and the tick that
 		// releases the indicator once they leave has to be running.
 		wake();
-		long budget = Math.min(Config.chargePadOutputRate, energy.amount);
+		pendingTicks++;
+		if (!freshContact && pendingTicks < PAYOUT_INTERVAL_TICKS) {
+			// Between payouts: keep showing what the last one concluded rather than recomputing, or the
+			// indicator would blink CHARGING/READY four ticks out of five.
+			updateIndicator(lastPayoutState);
+			return;
+		}
+		int settled = pendingTicks;
+		pendingTicks = 0;
+		long budget = Math.min((long) Config.chargePadOutputRate * settled, energy.getAmount());
 		if (budget <= 0) {
+			lastPayoutState = ChargePadState.EMPTY;
 			updateIndicator(ChargePadState.EMPTY);
 			return;
 		}
-		long moved = PlayerEuDistributor.distribute(player, budget, PlayerEuDistributor.Policy.STATION);
+		long moved = PlayerEuDistributor.distribute(player, budget, PlayerEuDistributor.Policy.STATION,
+				settled);
 		if (moved > 0) {
 			// Debited directly rather than through a transaction: this is the station's own internal
 			// spend, and routing it through the transaction journal would fire the commit hook and wake
 			// the block on its own energy leaving, which is what EnergyBuffer's contract reserves for
 			// external delivery.
-			energy.amount -= moved;
+			energy.drainInternal(moved);
 			setChanged();
 		}
-		updateIndicator(moved > 0 ? ChargePadState.CHARGING : ChargePadState.READY);
+		lastPayoutState = moved > 0 ? ChargePadState.CHARGING : ChargePadState.READY;
+		updateIndicator(lastPayoutState);
 	}
 
 	/**

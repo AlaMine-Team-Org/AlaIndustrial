@@ -78,9 +78,9 @@ public final class GeneratorEnergyScenarios {
 			helper.fail("generator or battery_box missing after placement");
 		}
 		long genStart = gen.getEnergyStorage().getCapacity() / 2;
-		gen.getEnergyStorage().amount = genStart; // no fuel: buffer can only change via the push path
+		gen.getEnergyStorage().setAmountUntracked(genStart); // no fuel: buffer can only change via the push path
 		gen.setChanged();
-		box.getEnergyStorage().amount = box.getEnergyStorage().getCapacity(); // neighbour full
+		box.getEnergyStorage().setAmountUntracked(box.getEnergyStorage().getCapacity()); // neighbour full
 		box.setChanged();
 		for (int i = 0; i < 20; i++) {
 			tick(helper, gen);
@@ -109,7 +109,7 @@ public final class GeneratorEnergyScenarios {
 		if (mill == null) {
 			helper.fail("wind mill block entity missing after placement");
 		}
-		mill.getEnergyStorage().amount = mill.getEnergyStorage().getCapacity(); // ample supply to push
+		mill.getEnergyStorage().setAmountUntracked(mill.getEnergyStorage().getCapacity()); // ample supply to push
 		mill.setChanged();
 		// The wind mill emits only from its BACK face (opposite of FACING = NORTH → SOUTH), and since
 		// MOD-179 the direct push honors that role too — so the box must sit behind the mill with its
@@ -121,7 +121,7 @@ public final class GeneratorEnergyScenarios {
 		if (box == null) {
 			helper.fail("battery box missing after placement");
 		}
-		box.getEnergyStorage().amount = 0;
+		box.getEnergyStorage().setAmountUntracked(0);
 		for (int i = 0; i < 20; i++) {
 			tick(helper, mill);
 		}
@@ -208,7 +208,7 @@ public final class GeneratorEnergyScenarios {
 						+ mill.getItem(WaterMillBlockEntity.WHEEL_SLOT).getDamageValue());
 				return;
 			}
-			mill.getEnergyStorage().amount = 0;
+			mill.getEnergyStorage().setAmountUntracked(0);
 			for (int i = 0; i < 4; i++) {
 				tick(helper, mill);
 			}
@@ -439,7 +439,7 @@ public final class GeneratorEnergyScenarios {
 		level.getWeatherData().setRaining(false);
 		level.getWeatherData().setThundering(false);
 		level.setRainLevel(0.0f);
-		mill.getEnergyStorage().amount = 0;
+		mill.getEnergyStorage().setAmountUntracked(0);
 		for (int i = 0; i < ticks; i++) {
 			mill.serverTick(level, mill.getBlockPos(), level.getBlockState(mill.getBlockPos()));
 		}
@@ -449,7 +449,7 @@ public final class GeneratorEnergyScenarios {
 		level.getWeatherData().setRaining(true);
 		level.getWeatherData().setThundering(true);
 		level.setRainLevel(1.0f);
-		mill.getEnergyStorage().amount = 0;
+		mill.getEnergyStorage().setAmountUntracked(0);
 		for (int i = 0; i < ticks; i++) {
 			mill.serverTick(level, mill.getBlockPos(), level.getBlockState(mill.getBlockPos()));
 		}
@@ -497,7 +497,7 @@ public final class GeneratorEnergyScenarios {
 			BlockState state = level.getBlockState(panel.getBlockPos());
 			// One warm-up tick populates the sky/weather cache, then measure a single clean tick.
 			panel.serverTick(level, panel.getBlockPos(), state);
-			panel.getEnergyStorage().amount = 0;
+			panel.getEnergyStorage().setAmountUntracked(0);
 			panel.serverTick(level, panel.getBlockPos(), state);
 
 			long gained = panel.getEnergyStorage().getAmount();
@@ -564,7 +564,7 @@ public final class GeneratorEnergyScenarios {
 
 			// ×2 — one measured tick.
 			Config.globalEuRateMultiplier = 2.0f;
-			mill.getEnergyStorage().amount = 0;
+			mill.getEnergyStorage().setAmountUntracked(0);
 			mill.serverTick(level, pos, level.getBlockState(pos));
 			long gained = mill.getEnergyStorage().getAmount();
 			if (gained != mechanical * 2L) {
@@ -588,7 +588,7 @@ public final class GeneratorEnergyScenarios {
 
 			// Floor: a multiplier small enough to round to zero still reports a turning mill as ≥ 1 EU/t.
 			Config.globalEuRateMultiplier = 0.1f;
-			mill.getEnergyStorage().amount = 0;
+			mill.getEnergyStorage().setAmountUntracked(0);
 			mill.serverTick(level, pos, level.getBlockState(pos));
 			long floorGain = mill.getEnergyStorage().getAmount();
 			int floorShown = mill.getDataAccess().get(WindMillBlockEntity.RATE_CHANNEL);
@@ -674,7 +674,7 @@ public final class GeneratorEnergyScenarios {
 		}
 
 		Config.globalEuRateMultiplier = 2.0f;
-		mill.getEnergyStorage().amount = 0;
+		mill.getEnergyStorage().setAmountUntracked(0);
 		mill.serverTick(level, WIND_RAISED, level.getBlockState(WIND_RAISED));
 		long gained = mill.getEnergyStorage().getAmount();
 		if (gained != mechanical * 2L) {
@@ -713,7 +713,7 @@ public final class GeneratorEnergyScenarios {
 			gen.serverTick(helper.getLevel(), gen.getBlockPos(),
 					helper.getLevel().getBlockState(gen.getBlockPos()));
 			// Force buffer full.
-			gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+			gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
 			gen.serverTick(helper.getLevel(), gen.getBlockPos(),
 					helper.getLevel().getBlockState(gen.getBlockPos()));
 			int burn1 = gen.getDataAccess().get(2); // progress == burnTime
@@ -741,7 +741,7 @@ public final class GeneratorEnergyScenarios {
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
 			gen.serverTick(helper.getLevel(), gen.getBlockPos(),
 					helper.getLevel().getBlockState(gen.getBlockPos())); // tick 1 starts the burn
-			gen.getEnergyStorage().amount = 0; // measure one clean tick from empty
+			gen.getEnergyStorage().setAmountUntracked(0); // measure one clean tick from empty
 			gen.serverTick(helper.getLevel(), gen.getBlockPos(),
 					helper.getLevel().getBlockState(gen.getBlockPos()));
 			long made = gen.getEnergyStorage().getAmount();
@@ -853,7 +853,7 @@ public final class GeneratorEnergyScenarios {
 		if (be(helper, GEN) instanceof GeneratorBlockEntity gen) {
 			long cap = gen.getEnergyStorage().getCapacity();
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
-			gen.getEnergyStorage().amount = cap - 1; // BVA: one EU short
+			gen.getEnergyStorage().setAmountUntracked(cap - 1); // BVA: one EU short
 			// A few ticks: the burn must start and produce EU, topping the buffer off to exactly cap.
 			for (int i = 0; i < 5; i++) {
 				gen.serverTick(helper.getLevel(), gen.getBlockPos(),
@@ -880,7 +880,7 @@ public final class GeneratorEnergyScenarios {
 		setClearDay(helper);
 		if (be(helper, SOLAR) instanceof dev.alaindustrial.block.entity.SolarPanelBlockEntity panel) {
 			long cap = Config.solarBuffer;
-			panel.getEnergyStorage().amount = cap - 1;
+			panel.getEnergyStorage().setAmountUntracked(cap - 1);
 			for (int i = 0; i < 5; i++) {
 				panel.serverTick(helper.getLevel(), panel.getBlockPos(),
 						helper.getLevel().getBlockState(panel.getBlockPos()));
@@ -957,7 +957,7 @@ public final class GeneratorEnergyScenarios {
 				geo.serverTick(helper.getLevel(), geo.getBlockPos(),
 						helper.getLevel().getBlockState(geo.getBlockPos()));
 				total += geo.getEnergyStorage().getAmount();
-				geo.getEnergyStorage().amount = 0; // drain, so production never pauses
+				geo.getEnergyStorage().setAmountUntracked(0); // drain, so production never pauses
 			}
 			if (total != expected) {
 				helper.fail("one lava bucket yielded " + total + " EU total, expected exactly " + expected
@@ -1007,7 +1007,7 @@ public final class GeneratorEnergyScenarios {
 		if (be(helper, millPos) instanceof WindMillBlockEntity mill) {
 			mill.setItem(WindMillBlockEntity.ROTOR_SLOT,
 					new ItemStack(dev.alaindustrial.registry.ModContent.WINDMILL_ROTOR.get()));
-			mill.getEnergyStorage().amount = 0;
+			mill.getEnergyStorage().setAmountUntracked(0);
 			for (int i = 0; i < Config.windMillSampleTicks + 5; i++) {
 				mill.serverTick(helper.getLevel(), mill.getBlockPos(),
 						helper.getLevel().getBlockState(mill.getBlockPos()));

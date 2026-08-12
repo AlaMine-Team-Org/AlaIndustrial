@@ -81,7 +81,7 @@ public final class CoreFluidScenarios {
 
 		// Phase 1a: tick the pump alone (geo not yet placed) so the single lava source bucket is
 		// acquired into the pump's own tank, not immediately pushed onward (mirrors the Fabric rig).
-		pump.getEnergyStorage().amount = Config.pumpEuPerBucket;
+		pump.getEnergyStorage().setAmountUntracked(Config.pumpEuPerBucket);
 		tick(helper, pump);
 		boolean sourceGone = !level.getFluidState(lavaAbs)
 				.isSourceOfType(net.minecraft.world.level.material.Fluids.LAVA);
@@ -94,7 +94,7 @@ public final class CoreFluidScenarios {
 			helper.fail("geothermal generator block entity missing after placement");
 			return;
 		}
-		pump.getEnergyStorage().amount = Config.pumpEuPerBucket;
+		pump.getEnergyStorage().setAmountUntracked(Config.pumpEuPerBucket);
 		tick(helper, pump);
 		pumpTankPeak = Math.max(pumpTankPeak, pump.fluidTank.amount);
 		long geoTankPeak = geo.fluidTank.amount;

@@ -7,10 +7,30 @@ base {
     archivesName = "${mod_id}-${project.name}-${minecraft_version}"
 }
 
+// MOD-399 — the sources and javadoc jars are only needed by a release publication, yet EVERY
+// local build paid for them: `withJavadocJar()` hangs `javadoc` + `javadocJar` off `assemble` →
+// `build`. Measured: `:common:javadoc --rerun-tasks` takes 21 seconds, for one subproject of three.
+// Turn them on with a flag: `./gradlew build -PpublishArtifacts`.
+boolean publishArtifacts = project.hasProperty('publishArtifacts')
+
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+    // Called ALWAYS, not behind the flag. Besides the tasks, these two methods create the
+    // consumable configurations `sourcesElements`/`javadocElements`, and common/build.gradle and
+    // neoforge/build.gradle attach a loader attribute to them through `configurations.named(...)`,
+    // which throws UnknownConfigurationException on a missing configuration at CONFIGURATION time.
+    // "Do not create them" here would therefore mean not "no jar" but "the build never starts".
     withSourcesJar()
     withJavadocJar()
+}
+
+// So what is cut is execution, not registration: without the flag the tasks stay in the graph but
+// are skipped (`SKIPPED`), and the 21-second `javadoc` leaves the ordinary build.
+// `remapSourcesJar` (fabric-loom creates it next to `sourcesJar`) is silenced by the same list:
+// otherwise it would go off remapping a jar nobody built.
+if (!publishArtifacts) {
+    tasks.matching { it.name in ['javadoc', 'javadocJar', 'sourcesJar', 'remapSourcesJar'] }
+            .configureEach { it.enabled = false }
 }
 
 tasks.withType(Jar).configureEach {
@@ -34,22 +54,47 @@ jar {
 }
 
 // Build stamp: short git hash + build timestamp, substituted into alaindustrial.build.json
-// so /ala version prints real values instead of raw ${...} placeholders. Falls back to
-// "dev"/"unknown" when git is unavailable (e.g. a clean export without a .git directory).
+// so /ala version prints real values instead of raw ${...} placeholders.
+//
+// MOD-399 — why the time is NOT taken from `new Date()`. Both values end up in
+// `inputs.properties(expandProps)` at the bottom of this file, so changing either one makes
+// `processResources` out of date and drags `jar` → `remapJar` → the gametests along with it. With
+// `new Date().format('yyyy-MM-dd HH:mm')` incrementality lasted exactly until the minute rolled
+// over (measured: two runs inside one minute are UP-TO-DATE, in different minutes they are not).
+//
+// Both values come from ONE git call: the short HEAD hash and the date of THAT commit. The commit
+// date rather than the launch time, because the stamp has to be a function of the inputs and not of
+// the clock: while HEAD has not moved the value is the same and the build stays incremental. It
+// costs no extra invalidation — `githash` already changes on every commit, so the commit date
+// travels with it in the same beat. A release may override it through the ALA_BUILD_TIME
+// environment variable (the real build time).
+//
+// `ignoreExitValue` + try/catch cover a clean export without `.git` and a machine with no git on
+// PATH: there 'dev' remains — exactly the fallback BuildInfo.git() expects. `providers.exec` rather
+// than Groovy's `.execute()`: Gradle 9 removed `Project.exec`, and the same approach already works
+// in gradle/checks.gradle. The date format deliberately carries no space — an argument with a space
+// would need different escaping on Windows and *nix.
 String gitHash = 'dev'
-String buildTime = 'unknown'
+String commitTime = ''
 try {
-    def proc = ['git', 'rev-parse', '--short', 'HEAD'].execute()
-    proc.waitFor()
-    if (proc.exitValue() == 0) {
-        gitHash = proc.text.trim()
+    def git = providers.exec {
+        commandLine 'git', 'log', '-1', '--date=format:%Y-%m-%dT%H:%M', '--format=%h%n%cd'
+        ignoreExitValue = true
+    }
+    if (git.result.get().exitValue == 0) {
+        // Two lines: `%h` (the short hash) and `%cd` (the commit date in the given format).
+        List<String> stamp = git.standardOutput.asText.get().trim().readLines()
+        if (stamp.size() >= 1 && !stamp[0].trim().isEmpty()) {
+            gitHash = stamp[0].trim()
+        }
+        if (stamp.size() >= 2) {
+            commitTime = stamp[1].trim()
+        }
     }
 } catch (Exception ignored) {
+    // git does not run on this machine — 'dev'/'' stay as they are
 }
-try {
-    buildTime = new Date().format('yyyy-MM-dd HH:mm')
-} catch (Exception ignored) {
-}
+String buildTime = System.getenv('ALA_BUILD_TIME')?.trim() ?: (commitTime ?: 'dev')
 
 processResources {
     var expandProps = [
@@ -87,16 +132,23 @@ processResources {
     inputs.properties(expandProps)
 }
 
-publishing {
-    publications {
-        register('mavenJava', MavenPublication) {
-            artifactId base.archivesName.get()
-            from components.java
+// Publication sits behind the flag too (MOD-399). `from components.java` pulls in the
+// `sourcesElements`/`javadocElements` variants, i.e. publishes both the sources and the javadoc
+// jar; without `-PpublishArtifacts` those tasks are disabled and the publication would point at
+// files nobody built. One flag for both facts: "we build the publication artifacts" == "we publish
+// them".
+if (publishArtifacts) {
+    publishing {
+        publications {
+            register('mavenJava', MavenPublication) {
+                artifactId base.archivesName.get()
+                from components.java
+            }
         }
-    }
-    repositories {
-        maven {
-            url System.getenv('local_maven_url')
+        repositories {
+            maven {
+                url System.getenv('local_maven_url')
+            }
         }
     }
 }

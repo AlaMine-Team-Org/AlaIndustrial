@@ -110,14 +110,14 @@ public final class AlloySmelterBlockEntity extends MachineBlockEntity implements
 		// very slot the affordability check approved.
 		int[] assignment = recipe.assign(input, true);
 		ItemStack result = recipe.resultStack();
-		boolean canWork = assignment != null && energy.amount >= euPerTick && canOutput(result);
+		boolean canWork = assignment != null && energy.getAmount() >= euPerTick && canOutput(result);
 
 		updateLit(canWork);
 		if (!canWork) {
 			return IDLE_SLEEP_TICKS;
 		}
 
-		energy.amount -= euPerTick;
+		energy.drainInternal(euPerTick);
 		progress++;
 		if (progress >= maxProgress) {
 			recipe.consume(List.of(items.get(INPUT_SLOT_0), items.get(INPUT_SLOT_1), items.get(INPUT_SLOT_2)),

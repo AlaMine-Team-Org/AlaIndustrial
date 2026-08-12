@@ -84,13 +84,13 @@ public final class CableEnergyScenarios {
 
 		long genStart = Config.generatorBuffer;
 		if (be(helper, LINE_GEN) instanceof GeneratorBlockEntity gen) {
-			gen.getEnergyStorage().amount = genStart; // pre-charged, NO fuel: buffer only goes down
+			gen.getEnergyStorage().setAmountUntracked(genStart); // pre-charged, NO fuel: buffer only goes down
 			gen.setChanged();
 		}
 		final long room = 5;
 		long macStart = Config.maceratorBuffer - room;
 		if (be(helper, LINE_MAC) instanceof MaceratorBlockEntity mac) {
-			mac.getEnergyStorage().amount = macStart; // NO input: never processes, room only shrinks
+			mac.getEnergyStorage().setAmountUntracked(macStart); // NO input: never processes, room only shrinks
 			mac.setChanged();
 		}
 
@@ -345,10 +345,10 @@ public final class CableEnergyScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.NORTH));
 		long cap = EnergyTier.LV.maxVoltage();
 		if (be(helper, LOSS_GEN) instanceof GeneratorBlockEntity gen) {
-			gen.getEnergyStorage().amount = cap * 200;
+			gen.getEnergyStorage().setAmountUntracked(cap * 200);
 		}
 		if (be(helper, LOSS_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0;
+			bb.getEnergyStorage().setAmountUntracked(0);
 		}
 		int ticks = 50;
 		for (int i = 0; i < ticks; i++) {
@@ -400,10 +400,10 @@ public final class CableEnergyScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 
 		if (be(helper, genPos) instanceof GeneratorBlockEntity gen) {
-			gen.getEnergyStorage().amount = EnergyTier.LV.maxVoltage() * 400;
+			gen.getEnergyStorage().setAmountUntracked(EnergyTier.LV.maxVoltage() * 400);
 		}
 		if (be(helper, boxPos) instanceof BatteryBoxBlockEntity box) {
-			box.getEnergyStorage().amount = 0;
+			box.getEnergyStorage().setAmountUntracked(0);
 		}
 
 		driveMod253Line(helper, genPos, cables, boxPos, 100);
@@ -443,7 +443,7 @@ public final class CableEnergyScenarios {
 
 		long capacity = Config.batteryBoxBuffer;
 		if (be(helper, boxPos) instanceof BatteryBoxBlockEntity box) {
-			box.getEnergyStorage().amount = capacity - 1;
+			box.getEnergyStorage().setAmountUntracked(capacity - 1);
 			box.setChanged();
 		}
 		driveMod253Line(helper, genPos, cables, boxPos, 5);
@@ -600,10 +600,10 @@ public final class CableEnergyScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.NORTH));
 		// Over-charge the generator and empty the box so the flow is bounded by the line, not the source.
 		if (be(helper, gen) instanceof GeneratorBlockEntity g) {
-			g.getEnergyStorage().amount = EnergyTier.LV.maxVoltage() * 200;
+			g.getEnergyStorage().setAmountUntracked(EnergyTier.LV.maxVoltage() * 200);
 		}
 		if (be(helper, box) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0;
+			bb.getEnergyStorage().setAmountUntracked(0);
 		}
 		for (int i = 0; i < 50; i++) {
 			tick(helper, be(helper, gen));
@@ -820,7 +820,7 @@ public final class CableEnergyScenarios {
 		BlockPos cable = line.cablePos(0);
 		helper.setBlock(cable, Blocks.AIR);
 		if (be(helper, line.consumerPos()) instanceof MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 0;
+			mac.getEnergyStorage().setAmountUntracked(0);
 		}
 		line.drive(40);
 		long afterBreak = be(helper, line.consumerPos()) instanceof MachineBlockEntity m
@@ -856,10 +856,10 @@ public final class CableEnergyScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		long cap = EnergyTier.LV.maxVoltage();
 		if (be(helper, genPos) instanceof GeneratorBlockEntity gen) {
-			gen.getEnergyStorage().amount = cap * 100; // ample, no fuel: buffer far above any throughput
+			gen.getEnergyStorage().setAmountUntracked(cap * 100); // ample, no fuel: buffer far above any throughput
 		}
 		if (be(helper, boxPos) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0; // empty: room is never the limit
+			bb.getEnergyStorage().setAmountUntracked(0); // empty: room is never the limit
 		}
 		// MOD-070: per-cable throughput is the segment buffer (cableBuffer), not the tier voltage. Drive
 		// several ticks; cumulative delivery is bounded by cableBuffer EU/tick, never a 32 EU packet.
@@ -906,11 +906,11 @@ public final class CableEnergyScenarios {
 		for (BlockPos g : new BlockPos[]{genA, genB}) {
 			if (be(helper, g) instanceof GeneratorBlockEntity gen) {
 				gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
-				gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+				gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
 			}
 		}
 		if (be(helper, boxPos) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0;
+			bb.getEnergyStorage().setAmountUntracked(0);
 		}
 		int ticks = 20;
 		for (int i = 0; i < ticks; i++) {
@@ -969,12 +969,12 @@ public final class CableEnergyScenarios {
 		long genStart = Config.generatorBuffer;
 		for (BlockPos g : new BlockPos[]{ARM_GEN_FAR, ARM_GEN_NEAR}) {
 			if (be(helper, g) instanceof GeneratorBlockEntity gen) {
-				gen.getEnergyStorage().amount = genStart; // no fuel: the buffer can only go down
+				gen.getEnergyStorage().setAmountUntracked(genStart); // no fuel: the buffer can only go down
 				gen.setChanged();
 			}
 		}
 		if (be(helper, ARM_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0L;
+			bb.getEnergyStorage().setAmountUntracked(0L);
 		}
 		for (int i = 0; i < 60; i++) {
 			tick(helper, be(helper, ARM_GEN_FAR));
@@ -1044,12 +1044,12 @@ public final class CableEnergyScenarios {
 		long genStart = Config.generatorBuffer;
 		for (BlockPos g : new BlockPos[]{VERT_GEN_TOP, VERT_GEN_MID}) {
 			if (be(helper, g) instanceof GeneratorBlockEntity gen) {
-				gen.getEnergyStorage().amount = genStart; // no fuel: the buffer can only go down
+				gen.getEnergyStorage().setAmountUntracked(genStart); // no fuel: the buffer can only go down
 				gen.setChanged();
 			}
 		}
 		if (be(helper, VERT_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0L;
+			bb.getEnergyStorage().setAmountUntracked(0L);
 		}
 		for (int i = 0; i < 120; i++) {
 			tick(helper, be(helper, VERT_GEN_TOP));
@@ -1118,11 +1118,11 @@ public final class CableEnergyScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		if (be(helper, SPLIT_GEN) instanceof GeneratorBlockEntity gen) {
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
-			gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+			gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
 		}
 		for (BlockPos b : new BlockPos[]{SPLIT_BOX_WEST, SPLIT_BOX_EAST}) {
 			if (be(helper, b) instanceof BatteryBoxBlockEntity bb) {
-				bb.getEnergyStorage().amount = 0L;
+				bb.getEnergyStorage().setAmountUntracked(0L);
 			}
 		}
 		for (int i = 0; i < 120; i++) {
@@ -1183,14 +1183,14 @@ public final class CableEnergyScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		if (be(helper, MIXED_GEN) instanceof GeneratorBlockEntity gen) {
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
-			gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+			gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
 		}
 		if (be(helper, MIXED_MAC) instanceof MaceratorBlockEntity mac) {
-			mac.getEnergyStorage().amount = 0L;
+			mac.getEnergyStorage().setAmountUntracked(0L);
 			mac.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON, 8));
 		}
 		if (be(helper, MIXED_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0L;
+			bb.getEnergyStorage().setAmountUntracked(0L);
 		}
 		for (int i = 0; i < 160; i++) {
 			tick(helper, be(helper, MIXED_GEN));
@@ -1258,12 +1258,12 @@ public final class CableEnergyScenarios {
 		long genStart = Config.generatorBuffer;
 		for (BlockPos g : new BlockPos[]{SAT_GEN_A, SAT_GEN_B}) {
 			if (be(helper, g) instanceof GeneratorBlockEntity gen) {
-				gen.getEnergyStorage().amount = genStart; // no fuel: the buffer can only go down
+				gen.getEnergyStorage().setAmountUntracked(genStart); // no fuel: the buffer can only go down
 				gen.setChanged();
 			}
 		}
 		if (be(helper, SAT_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0L;
+			bb.getEnergyStorage().setAmountUntracked(0L);
 		}
 		for (int i = 0; i < 40; i++) {
 			tick(helper, be(helper, SAT_GEN_A));
@@ -1324,11 +1324,11 @@ public final class CableEnergyScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		if (be(helper, FORK_GEN) instanceof GeneratorBlockEntity gen) {
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
-			gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+			gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
 		}
 		for (BlockPos b : new BlockPos[]{FORK_BOX_WEST, FORK_BOX_EAST}) {
 			if (be(helper, b) instanceof BatteryBoxBlockEntity bb) {
-				bb.getEnergyStorage().amount = 0L;
+				bb.getEnergyStorage().setAmountUntracked(0L);
 			}
 		}
 		long peakWest = 0;

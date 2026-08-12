@@ -108,7 +108,7 @@ class NeoForgeTxnCacheTest {
 		assertNotNull(server);
 		dev.alaindustrial.core.energy.EnergyBuffer buffer =
 				new dev.alaindustrial.core.energy.EnergyBuffer(10_000, 32, 32, () -> { });
-		buffer.amount = 5_000;
+		buffer.setAmountUntracked(5_000);
 		net.neoforged.neoforge.transfer.energy.EnergyHandler handler =
 				dev.alaindustrial.core.neoforge.BufferAsEnergyHandler.of(buffer);
 		long original = handler.getAmountAsLong();

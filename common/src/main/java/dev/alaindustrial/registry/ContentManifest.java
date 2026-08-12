@@ -2,6 +2,55 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.AlloySmelterBlock;
+import dev.alaindustrial.block.AssemblerBlock;
+import dev.alaindustrial.block.BatteryBoxBlock;
+import dev.alaindustrial.block.CableBlock;
+import dev.alaindustrial.block.CanningMachineBlock;
+import dev.alaindustrial.block.CesuBlock;
+import dev.alaindustrial.block.ChargePadBlock;
+import dev.alaindustrial.block.CompressorBlock;
+import dev.alaindustrial.block.DaylightSolarPanelBlock;
+import dev.alaindustrial.block.DistillationColumnBlock;
+import dev.alaindustrial.block.DistillationColumnMiddleBlock;
+import dev.alaindustrial.block.DistillationColumnTopBlock;
+import dev.alaindustrial.block.ElectricFurnaceBlock;
+import dev.alaindustrial.block.ElectricHeaterBlock;
+import dev.alaindustrial.block.EnergyCondenserBlock;
+import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
+import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
+import dev.alaindustrial.block.ExtractorBlock;
+import dev.alaindustrial.block.FluidPipeBlock;
+import dev.alaindustrial.block.FluidTankBlock;
+import dev.alaindustrial.block.GalvanicBathBlock;
+import dev.alaindustrial.block.GardenDroneStationBlock;
+import dev.alaindustrial.block.GeneratorBlock;
+import dev.alaindustrial.block.GeothermalGeneratorBlock;
+import dev.alaindustrial.block.GoldChestBlock;
+import dev.alaindustrial.block.HighAltitudeWindMillBlock;
+import dev.alaindustrial.block.IncubatorBlock;
+import dev.alaindustrial.block.IncubatorDomeBlock;
+import dev.alaindustrial.block.IronChestBlock;
+import dev.alaindustrial.block.IronFurnaceBlock;
+import dev.alaindustrial.block.ItemPipeBlock;
+import dev.alaindustrial.block.MaceratorBlock;
+import dev.alaindustrial.block.MoonlitSolarPanelBlock;
+import dev.alaindustrial.block.ModLiquidBlock;
+import dev.alaindustrial.block.OilLiquidBlock;
+import dev.alaindustrial.block.PolymerizerBlock;
+import dev.alaindustrial.block.PumpBlock;
+import dev.alaindustrial.block.RectificationSectionBlock;
+import dev.alaindustrial.block.SawmillBlock;
+import dev.alaindustrial.block.SilverChestBlock;
+import dev.alaindustrial.block.SolarPanelBlock;
+import dev.alaindustrial.block.StorageModuleBlock;
+import dev.alaindustrial.block.StormWindMillBlock;
+import dev.alaindustrial.block.TeleporterBlock;
+import dev.alaindustrial.block.TrellisBlock;
+import dev.alaindustrial.block.VulcanizerBlock;
+import dev.alaindustrial.block.WaterMillBlock;
+import dev.alaindustrial.block.WindMillBlock;
+import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CesuBlockEntity;
@@ -106,6 +155,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -218,6 +268,256 @@ public final class ContentManifest {
 			menu("gold_chest", GoldChestMenu::new, s -> ModContent.GOLD_CHEST_MENU = s),
 			// MOD-391 — the double chest's 6-row scrolling window, one type for all three tiers.
 			menu("double_chest", DoubleChestMenu::new, s -> ModContent.DOUBLE_CHEST_MENU = s));
+
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+	// Blocks — the COMPOSITION, not just the definition (MOD-403)
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+
+	/**
+	 * One {@code Block} to register. MOD-190 moved the per-block {@code Properties} chain here
+	 * ({@link #BLOCK_PROPS}); MOD-403 moves the <b>list itself</b>, which until then was kept by hand in
+	 * two files ({@code ModBlocks} on Fabric, {@code ModBlocksNeoForge}) and guarded only by a Python
+	 * set-comparison after the fact. A block declared here registers on BOTH loaders or on neither.
+	 *
+	 * <p><b>What each loader still does.</b> Only the registration <i>mechanism</i> stays loader-side,
+	 * because the two genuinely differ: Fabric constructs the block eagerly and stamps the id itself
+	 * ({@code Properties.of().setId(key)} → {@code Registry.register}), NeoForge hands the same factory to
+	 * {@code DeferredRegister.Blocks#registerBlock}, which calls it later with a {@code Properties} whose id
+	 * it derived from the deferred key. Both call {@link #blockProps} with {@link #id()} — a block can no
+	 * longer be given another block's properties, because neither side chooses the id any more.
+	 *
+	 * <p><b>Order is load-bearing.</b> Both loaders replay {@link #BLOCKS} in list order, and two entries
+	 * depend on an earlier one having registered: {@code enriched_uranium_wall_torch} reads the standing
+	 * torch for its loot table / description (see {@link #BLOCK_PROPS}), and the three liquid blocks read
+	 * their fluid from {@link ModContent}. Keep new entries appended rather than interleaved.
+	 *
+	 * @param <T>     the concrete block class, captured at the constant below so a loader's typed handle
+	 *                ({@code DeferredBlock<GeneratorBlock>}) cannot be wired to the wrong entry
+	 * @param id      registry path ({@code alaindustrial:<id>})
+	 * @param factory builds the block from the loader-supplied {@code Properties}
+	 * @param bind    publishes the registered block into its {@link ModContent} slot
+	 */
+	public record BlockDef<T extends Block>(String id, Function<BlockBehaviour.Properties, T> factory,
+			Consumer<Supplier<Block>> bind) {
+	}
+
+	/**
+	 * Builds a {@link BlockDef}, capturing the block-class generic {@code T} from {@code factory} at the
+	 * call site — the same trick as {@link #menu}. Each constant below is public so a loader's typed handle
+	 * is derived from <i>this</i> entry ({@code handle(ContentManifest.GENERATOR)}) rather than from a
+	 * string key: pointing a {@code DeferredBlock<SolarPanelBlock>} field at the generator entry is then a
+	 * compile error, not a silent mismatch.
+	 */
+	private static <T extends Block> BlockDef<T> block(String id,
+			Function<BlockBehaviour.Properties, T> factory, Consumer<Supplier<Block>> bind) {
+		return new BlockDef<>(id, factory, bind);
+	}
+
+	public static final BlockDef<GeneratorBlock> GENERATOR =
+			block("generator", GeneratorBlock::new, s -> ModContent.GENERATOR = s);
+	public static final BlockDef<SolarPanelBlock> SOLAR_PANEL =
+			block("solar_panel", SolarPanelBlock::new, s -> ModContent.SOLAR_PANEL = s);
+	public static final BlockDef<MoonlitSolarPanelBlock> MOONLIT_SOLAR_PANEL =
+			block("moonlit_solar_panel", MoonlitSolarPanelBlock::new, s -> ModContent.MOONLIT_SOLAR_PANEL = s);
+	public static final BlockDef<DaylightSolarPanelBlock> DAYLIGHT_SOLAR_PANEL =
+			block("daylight_solar_panel", DaylightSolarPanelBlock::new, s -> ModContent.DAYLIGHT_SOLAR_PANEL = s);
+	public static final BlockDef<GeothermalGeneratorBlock> GEOTHERMAL_GENERATOR =
+			block("geothermal_generator", GeothermalGeneratorBlock::new, s -> ModContent.GEOTHERMAL_GENERATOR = s);
+	public static final BlockDef<WaterMillBlock> WATER_MILL =
+			block("water_mill", WaterMillBlock::new, s -> ModContent.WATER_MILL = s);
+	public static final BlockDef<WindMillBlock> WIND_MILL =
+			block("wind_mill", WindMillBlock::new, s -> ModContent.WIND_MILL = s);
+	public static final BlockDef<HighAltitudeWindMillBlock> HIGH_ALTITUDE_WIND_MILL =
+			block("high_altitude_wind_mill", HighAltitudeWindMillBlock::new,
+					s -> ModContent.HIGH_ALTITUDE_WIND_MILL = s);
+	public static final BlockDef<StormWindMillBlock> STORM_WIND_MILL =
+			block("storm_wind_mill", StormWindMillBlock::new, s -> ModContent.STORM_WIND_MILL = s);
+	public static final BlockDef<PumpBlock> PUMP =
+			block("pump", PumpBlock::new, s -> ModContent.PUMP = s);
+	public static final BlockDef<GardenDroneStationBlock> GARDEN_DRONE_STATION =
+			block("garden_drone_station", GardenDroneStationBlock::new, s -> ModContent.GARDEN_DRONE_STATION = s);
+	public static final BlockDef<FluidTankBlock> FLUID_TANK =
+			block("fluid_tank", FluidTankBlock::new, s -> ModContent.FLUID_TANK = s);
+	// Cables (MOD-219 / MOD-259): each grade passes its CableType; rubber insulation keeps the
+	// conductor's tier/cap/buffer and halves its attenuation.
+	public static final BlockDef<CableBlock> COPPER_CABLE =
+			block("copper_cable", p -> new CableBlock(CableType.COPPER, p), s -> ModContent.COPPER_CABLE = s);
+	public static final BlockDef<CableBlock> TIN_CABLE =
+			block("tin_cable", p -> new CableBlock(CableType.TIN, p), s -> ModContent.TIN_CABLE = s);
+	public static final BlockDef<CableBlock> GOLD_CABLE =
+			block("gold_cable", p -> new CableBlock(CableType.GOLD, p), s -> ModContent.GOLD_CABLE = s);
+	public static final BlockDef<CableBlock> ELECTRUM_CABLE =
+			block("electrum_cable", p -> new CableBlock(CableType.ELECTRUM, p), s -> ModContent.ELECTRUM_CABLE = s);
+	public static final BlockDef<CableBlock> INSULATED_COPPER_CABLE =
+			block("insulated_copper_cable", p -> new CableBlock(CableType.INSULATED_COPPER, p),
+					s -> ModContent.INSULATED_COPPER_CABLE = s);
+	public static final BlockDef<CableBlock> INSULATED_TIN_CABLE =
+			block("insulated_tin_cable", p -> new CableBlock(CableType.INSULATED_TIN, p),
+					s -> ModContent.INSULATED_TIN_CABLE = s);
+	public static final BlockDef<CableBlock> INSULATED_GOLD_CABLE =
+			block("insulated_gold_cable", p -> new CableBlock(CableType.INSULATED_GOLD, p),
+					s -> ModContent.INSULATED_GOLD_CABLE = s);
+	public static final BlockDef<CableBlock> INSULATED_ELECTRUM_CABLE =
+			block("insulated_electrum_cable", p -> new CableBlock(CableType.INSULATED_ELECTRUM, p),
+					s -> ModContent.INSULATED_ELECTRUM_CABLE = s);
+	public static final BlockDef<ItemPipeBlock> ITEM_PIPE =
+			block("item_pipe", ItemPipeBlock::new, s -> ModContent.ITEM_PIPE = s);
+	public static final BlockDef<FluidPipeBlock> FLUID_PIPE =
+			block("fluid_pipe", FluidPipeBlock::new, s -> ModContent.FLUID_PIPE = s);
+	public static final BlockDef<MaceratorBlock> MACERATOR =
+			block("macerator", MaceratorBlock::new, s -> ModContent.MACERATOR = s);
+	public static final BlockDef<BatteryBoxBlock> BATTERY_BOX =
+			block("battery_box", BatteryBoxBlock::new, s -> ModContent.BATTERY_BOX = s);
+	public static final BlockDef<CesuBlock> CESU =
+			block("cesu", CesuBlock::new, s -> ModContent.CESU = s);
+	// Teleporter station (MOD-091); visible since MOD-093 completed the feature.
+	public static final BlockDef<TeleporterBlock> TELEPORTER =
+			block("teleporter", TeleporterBlock::new, s -> ModContent.TELEPORTER = s);
+	public static final BlockDef<ElectricFurnaceBlock> ELECTRIC_FURNACE =
+			block("electric_furnace", ElectricFurnaceBlock::new, s -> ModContent.ELECTRIC_FURNACE = s);
+	// Iron Furnace (MOD-115) — fuel-burning smelter between the stone and electric furnaces.
+	public static final BlockDef<IronFurnaceBlock> IRON_FURNACE =
+			block("iron_furnace", IronFurnaceBlock::new, s -> ModContent.IRON_FURNACE = s);
+	public static final BlockDef<ExtractorBlock> EXTRACTOR =
+			block("extractor", ExtractorBlock::new, s -> ModContent.EXTRACTOR = s);
+	public static final BlockDef<CompressorBlock> COMPRESSOR =
+			block("compressor", CompressorBlock::new, s -> ModContent.COMPRESSOR = s);
+	public static final BlockDef<CanningMachineBlock> CANNING_MACHINE =
+			block("canning_machine", CanningMachineBlock::new, s -> ModContent.CANNING_MACHINE = s);
+	public static final BlockDef<SawmillBlock> SAWMILL =
+			block("sawmill", SawmillBlock::new, s -> ModContent.SAWMILL = s);
+	// MOD-275 — the first MV machine; a blueprint-driven auto-crafter.
+	public static final BlockDef<AssemblerBlock> ASSEMBLER =
+			block("assembler", AssemblerBlock::new, s -> ModContent.ASSEMBLER = s);
+	public static final BlockDef<PolymerizerBlock> POLYMERIZER =
+			block("polymerizer", PolymerizerBlock::new, s -> ModContent.POLYMERIZER = s);
+	// Distillation Column (MOD-251): the 1×1×3 tower. Only the base has a BlockItem; the two segment
+	// blocks are placed by the base (setPlacedBy) and are never carried.
+	public static final BlockDef<DistillationColumnBlock> DISTILLATION_COLUMN =
+			block("distillation_column", DistillationColumnBlock::new, s -> ModContent.DISTILLATION_COLUMN = s);
+	public static final BlockDef<DistillationColumnMiddleBlock> DISTILLATION_COLUMN_MIDDLE =
+			block("distillation_column_middle", DistillationColumnMiddleBlock::new,
+					s -> ModContent.DISTILLATION_COLUMN_MIDDLE = s);
+	public static final BlockDef<DistillationColumnTopBlock> DISTILLATION_COLUMN_TOP =
+			block("distillation_column_top", DistillationColumnTopBlock::new,
+					s -> ModContent.DISTILLATION_COLUMN_TOP = s);
+	// Rectification Section (MOD-251 round 2): the optional fourth storey, crafted and placed by hand.
+	public static final BlockDef<RectificationSectionBlock> RECTIFICATION_SECTION =
+			block("rectification_section", RectificationSectionBlock::new,
+					s -> ModContent.RECTIFICATION_SECTION = s);
+	public static final BlockDef<AlloySmelterBlock> ALLOY_SMELTER =
+			block("alloy_smelter", AlloySmelterBlock::new, s -> ModContent.ALLOY_SMELTER = s);
+	public static final BlockDef<VulcanizerBlock> VULCANIZER =
+			block("vulcanizer", VulcanizerBlock::new, s -> ModContent.VULCANIZER = s);
+	public static final BlockDef<GalvanicBathBlock> GALVANIC_BATH =
+			block("galvanic_bath", GalvanicBathBlock::new, s -> ModContent.GALVANIC_BATH = s);
+	public static final BlockDef<ElectricHeaterBlock> ELECTRIC_HEATER =
+			block("electric_heater", ElectricHeaterBlock::new, s -> ModContent.ELECTRIC_HEATER = s);
+	public static final BlockDef<ChargePadBlock> CHARGE_PAD =
+			block("charge_pad", ChargePadBlock::new, s -> ModContent.CHARGE_PAD = s);
+	/** Energy condenser (MOD-393): banks grid surplus into energy clots. */
+	public static final BlockDef<EnergyCondenserBlock> ENERGY_CONDENSER =
+			block("energy_condenser", EnergyCondenserBlock::new, s -> ModContent.ENERGY_CONDENSER = s);
+	public static final BlockDef<IncubatorBlock> INCUBATOR =
+			block("incubator", IncubatorBlock::new, s -> ModContent.INCUBATOR = s);
+	public static final BlockDef<IncubatorDomeBlock> INCUBATOR_DOME =
+			block("incubator_dome", IncubatorDomeBlock::new, s -> ModContent.INCUBATOR_DOME = s);
+	// Cotton trellis (MOD-280) — the mod's first crop; a two-block plant support, not a machine.
+	public static final BlockDef<TrellisBlock> TRELLIS =
+			block("trellis", TrellisBlock::new, s -> ModContent.TRELLIS = s);
+	// Ores: plain Block, harvest tier is tag-driven.
+	public static final BlockDef<Block> TIN_ORE =
+			block("tin_ore", Block::new, s -> ModContent.TIN_ORE = s);
+	public static final BlockDef<Block> DEEPSLATE_TIN_ORE =
+			block("deepslate_tin_ore", Block::new, s -> ModContent.DEEPSLATE_TIN_ORE = s);
+	public static final BlockDef<Block> SILVER_ORE =
+			block("silver_ore", Block::new, s -> ModContent.SILVER_ORE = s);
+	public static final BlockDef<Block> DEEPSLATE_SILVER_ORE =
+			block("deepslate_silver_ore", Block::new, s -> ModContent.DEEPSLATE_SILVER_ORE = s);
+	public static final BlockDef<Block> NICKEL_ORE =
+			block("nickel_ore", Block::new, s -> ModContent.NICKEL_ORE = s);
+	public static final BlockDef<Block> DEEPSLATE_NICKEL_ORE =
+			block("deepslate_nickel_ore", Block::new, s -> ModContent.DEEPSLATE_NICKEL_ORE = s);
+	public static final BlockDef<Block> SULFUR_ORE =
+			block("sulfur_ore", Block::new, s -> ModContent.SULFUR_ORE = s);
+	public static final BlockDef<Block> DEEPSLATE_SULFUR_ORE =
+			block("deepslate_sulfur_ore", Block::new, s -> ModContent.DEEPSLATE_SULFUR_ORE = s);
+	public static final BlockDef<Block> URANIUM_ORE =
+			block("uranium_ore", Block::new, s -> ModContent.URANIUM_ORE = s);
+	public static final BlockDef<Block> DEEPSLATE_URANIUM_ORE =
+			block("deepslate_uranium_ore", Block::new, s -> ModContent.DEEPSLATE_URANIUM_ORE = s);
+	public static final BlockDef<IronChestBlock> IRON_CHEST =
+			block("iron_chest", IronChestBlock::new, s -> ModContent.IRON_CHEST = s);
+	// MOD-287 — modular warehouse block; several face-adjacent ones share one inventory.
+	public static final BlockDef<StorageModuleBlock> STORAGE_MODULE =
+			block("storage_module", StorageModuleBlock::new, s -> ModContent.STORAGE_MODULE = s);
+	// Silver Chest (MOD-087) / Gold Chest (MOD-088) — the tiers above the iron chest. Same block stats.
+	public static final BlockDef<SilverChestBlock> SILVER_CHEST =
+			block("silver_chest", SilverChestBlock::new, s -> ModContent.SILVER_CHEST = s);
+	public static final BlockDef<GoldChestBlock> GOLD_CHEST =
+			block("gold_chest", GoldChestBlock::new, s -> ModContent.GOLD_CHEST = s);
+	// Material / decorative full cubes: cube_all model, one texture per block.
+	public static final BlockDef<Block> TEMPERED_IRON_BLOCK =
+			block("tempered_iron_block", Block::new, s -> ModContent.TEMPERED_IRON_BLOCK = s);
+	// MOD-225 machine casing (crafting base) + MOD-292 MV casing + two decorative plate blocks.
+	public static final BlockDef<Block> MACHINE_CASING =
+			block("machine_casing", Block::new, s -> ModContent.MACHINE_CASING = s);
+	public static final BlockDef<Block> ADVANCED_MACHINE_CASING =
+			block("advanced_machine_casing", Block::new, s -> ModContent.ADVANCED_MACHINE_CASING = s);
+	public static final BlockDef<Block> SILVER_PLATE_BLOCK =
+			block("silver_plate_block", Block::new, s -> ModContent.SILVER_PLATE_BLOCK = s);
+	public static final BlockDef<Block> TEMPERED_IRON_PLATE_BLOCK =
+			block("tempered_iron_plate_block", Block::new, s -> ModContent.TEMPERED_IRON_PLATE_BLOCK = s);
+	// Industrial Workbench (MOD-062) — the Industrialist villager's job-site block.
+	public static final BlockDef<Block> INDUSTRIAL_WORKBENCH =
+			block("industrial_workbench", Block::new, s -> ModContent.INDUSTRIAL_WORKBENCH = s);
+	// Enriched Uranium Torch (MOD-085) — vanilla-behaviour torch, light 14, green flame.
+	// The WALL variant must stay directly after the standing one: its BLOCK_PROPS entry reads the
+	// already-registered standing torch for its loot table and description.
+	public static final BlockDef<EnrichedUraniumTorchBlock> ENRICHED_URANIUM_TORCH =
+			block("enriched_uranium_torch",
+					p -> new EnrichedUraniumTorchBlock(ModParticles.ENRICHED_URANIUM_FLAME, p),
+					s -> ModContent.ENRICHED_URANIUM_TORCH = s);
+	public static final BlockDef<EnrichedUraniumWallTorchBlock> ENRICHED_URANIUM_WALL_TORCH =
+			block("enriched_uranium_wall_torch",
+					p -> new EnrichedUraniumWallTorchBlock(ModParticles.ENRICHED_URANIUM_FLAME, p),
+					s -> ModContent.ENRICHED_URANIUM_WALL_TORCH = s);
+	// Oil (MOD-238) + the two distillation fractions (MOD-251): in-world liquid blocks, no BlockItem —
+	// a liquid block is never held. The fluid comes from ModContent, which BOTH loaders bind before the
+	// block factory runs (Fabric: ModFluids.init() ahead of the replay; NeoForge: the FLUID
+	// RegisterEvent fires before BLOCK).
+	public static final BlockDef<OilLiquidBlock> OIL =
+			block("oil", p -> new OilLiquidBlock(ModContent.OIL.get(), p), s -> ModContent.OIL_BLOCK = s);
+	// ModLiquidBlock, not LiquidBlock: the vanilla constructor is protected and `common` compiles
+	// against the un-widened jar (see ModLiquidBlock's javadoc). No behaviour difference.
+	public static final BlockDef<ModLiquidBlock> DIESEL =
+			block("diesel", p -> new ModLiquidBlock(ModContent.DIESEL.get(), p), s -> ModContent.DIESEL_BLOCK = s);
+	public static final BlockDef<ModLiquidBlock> FUEL_OIL =
+			block("fuel_oil", p -> new ModLiquidBlock(ModContent.FUEL_OIL.get(), p),
+					s -> ModContent.FUEL_OIL_BLOCK = s);
+
+	/**
+	 * Every block, in one shared registration order — the single source of the mod's block composition
+	 * (MOD-403). Both loaders replay this list; see {@link BlockDef}.
+	 *
+	 * <p>Declared after the constants above on purpose: a {@code List.of(...)} initializer may only read
+	 * fields already declared textually above it (otherwise "illegal forward reference").
+	 */
+	public static final List<BlockDef<?>> BLOCKS = List.of(
+			GENERATOR, SOLAR_PANEL, MOONLIT_SOLAR_PANEL, DAYLIGHT_SOLAR_PANEL, GEOTHERMAL_GENERATOR,
+			WATER_MILL, WIND_MILL, HIGH_ALTITUDE_WIND_MILL, STORM_WIND_MILL, PUMP, GARDEN_DRONE_STATION,
+			FLUID_TANK, COPPER_CABLE, TIN_CABLE, GOLD_CABLE, ELECTRUM_CABLE, INSULATED_COPPER_CABLE,
+			INSULATED_TIN_CABLE, INSULATED_GOLD_CABLE, INSULATED_ELECTRUM_CABLE, ITEM_PIPE, FLUID_PIPE,
+			MACERATOR, BATTERY_BOX, CESU, TELEPORTER, ELECTRIC_FURNACE, IRON_FURNACE, EXTRACTOR,
+			COMPRESSOR, CANNING_MACHINE, SAWMILL, ASSEMBLER, POLYMERIZER, DISTILLATION_COLUMN,
+			DISTILLATION_COLUMN_MIDDLE, DISTILLATION_COLUMN_TOP, RECTIFICATION_SECTION, ALLOY_SMELTER,
+			VULCANIZER, GALVANIC_BATH, ELECTRIC_HEATER, CHARGE_PAD, ENERGY_CONDENSER, INCUBATOR,
+			INCUBATOR_DOME, TRELLIS, TIN_ORE, DEEPSLATE_TIN_ORE, SILVER_ORE, DEEPSLATE_SILVER_ORE,
+			NICKEL_ORE, DEEPSLATE_NICKEL_ORE, SULFUR_ORE, DEEPSLATE_SULFUR_ORE, URANIUM_ORE,
+			DEEPSLATE_URANIUM_ORE, IRON_CHEST, STORAGE_MODULE, SILVER_CHEST, GOLD_CHEST,
+			TEMPERED_IRON_BLOCK, MACHINE_CASING, ADVANCED_MACHINE_CASING, SILVER_PLATE_BLOCK,
+			TEMPERED_IRON_PLATE_BLOCK, INDUSTRIAL_WORKBENCH, ENRICHED_URANIUM_TORCH,
+			ENRICHED_URANIUM_WALL_TORCH, OIL, DIESEL, FUEL_OIL);
 
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
@@ -351,7 +651,10 @@ public final class ContentManifest {
 			Map.entry("tempered_iron_plate_block", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("industrial_workbench", machine(p -> p.strength(2.5f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("enriched_uranium_torch", ModBlockProperties::applyTorch),
-			Map.entry("enriched_uranium_wall_torch", ModBlockProperties::applyTorch),
+			// The wall variant adds the vanilla wallVariant mirroring (loot table + description of the
+			// standing torch). MOD-403 moved that override off the two loader files into the shared
+			// helper — see ModBlockProperties#applyWallTorch for the ordering it relies on.
+			Map.entry("enriched_uranium_wall_torch", ModBlockProperties::applyWallTorch),
 			// Distillation fractions (MOD-251): same vanilla liquid-block chain as oil, their own
 			// map colours (diesel golden-yellow, fuel oil dark brown).
 			Map.entry("diesel", p -> p.mapColor(MapColor.COLOR_YELLOW).replaceable().noCollision()
@@ -551,10 +854,14 @@ public final class ContentManifest {
 	 * @param id      registry path ({@code alaindustrial:<id>})
 	 * @param type    the block entity class, so a lookup can verify the caller's expected type
 	 * @param factory the {@code BlockEntity} constructor, shared by both loaders
+	 * @param bind    publishes the registered {@code BlockEntityType} into its {@link ModContent} slot
+	 *                (MOD-403 — before that, each loader wrote out all 40 assignments by hand and a
+	 *                forgotten line surfaced only as a {@code verifyAllBound()} crash at startup)
 	 * @param blocks  registry ids of the blocks this type is valid for
 	 */
 	public record BlockEntityDef<T extends BlockEntity>(String id, Class<T> type,
-			BlockEntityType.BlockEntitySupplier<T> factory, List<String> blocks) {
+			BlockEntityType.BlockEntitySupplier<T> factory,
+			Consumer<Supplier<BlockEntityType<?>>> bind, List<String> blocks) {
 
 		/**
 		 * Resolves {@link #blocks} against the vanilla block registry. Called by each loader when it
@@ -593,61 +900,91 @@ public final class ContentManifest {
 			}
 			return resolved;
 		}
+
+		/**
+		 * The {@code BlockEntityType} this definition produced, typed on {@code T} — resolved from the
+		 * vanilla registry rather than from a loader handle, so client code shared by both loaders can name
+		 * it (MOD-403: the {@code BlockEntityRenderer} manifest).
+		 *
+		 * <p><b>Why the cast is safe.</b> {@link ModContent} keeps its block-entity slots as
+		 * {@code Supplier<BlockEntityType<?>>}, so it cannot hand out a typed handle; the registry cannot
+		 * either. What pins {@code T} is the call site: a {@code BlockEntityDef<T>} is only obtainable
+		 * through {@link ContentManifest#blockEntity(String, Class)}, which throws unless this id's
+		 * definition really produces {@code T} — and the loader built the registered type from THAT
+		 * definition's factory. So the type parameter is checked, just one step earlier than the cast.
+		 *
+		 * <p>Callable only after the loader registered its block-entity types (Fabric:
+		 * {@code ModBlockEntities.init()}; NeoForge: its {@code RegisterEvent}). Both renderer-registration
+		 * hooks run far later than that.
+		 */
+		@SuppressWarnings("unchecked")
+		public BlockEntityType<T> registeredType() {
+			Identifier key = Industrialization.id(id);
+			BlockEntityType<?> registered = BuiltInRegistries.BLOCK_ENTITY_TYPE.getValue(key);
+			if (registered == null) {
+				throw new IllegalStateException("BlockEntityDef '" + id + "': '" + key
+						+ "' is not registered (yet) — asked for its BlockEntityType too early");
+			}
+			return (BlockEntityType<T>) registered;
+		}
 	}
 
 	private static <T extends BlockEntity> BlockEntityDef<T> blockEntity(String id, Class<T> type,
-			BlockEntityType.BlockEntitySupplier<T> factory, String... blocks) {
-		return new BlockEntityDef<>(id, type, factory, List.of(blocks));
+			BlockEntityType.BlockEntitySupplier<T> factory,
+			Consumer<Supplier<BlockEntityType<?>>> bind, String... blocks) {
+		return new BlockEntityDef<>(id, type, factory, bind, List.of(blocks));
 	}
 
 	/** Every {@code BlockEntityType}, declared once for both loaders. See {@link BlockEntityDef}. */
 	public static final List<BlockEntityDef<?>> BLOCK_ENTITIES = List.of(
-			blockEntity("generator", GeneratorBlockEntity.class, GeneratorBlockEntity::new, "generator"),
-			blockEntity("geothermal_generator", GeothermalGeneratorBlockEntity.class, GeothermalGeneratorBlockEntity::new, "geothermal_generator"),
-			blockEntity("solar_panel", SolarPanelBlockEntity.class, SolarPanelBlockEntity::new, "solar_panel"),
-			blockEntity("moonlit_solar_panel", MoonlitSolarPanelBlockEntity.class, MoonlitSolarPanelBlockEntity::new, "moonlit_solar_panel"),
-			blockEntity("daylight_solar_panel", DaylightSolarPanelBlockEntity.class, DaylightSolarPanelBlockEntity::new, "daylight_solar_panel"),
-			blockEntity("copper_cable", CableBlockEntity.class, CableBlockEntity::new, "copper_cable", "tin_cable", "gold_cable", "electrum_cable", "insulated_copper_cable", "insulated_tin_cable", "insulated_gold_cable", "insulated_electrum_cable"),
-			blockEntity("item_pipe", ItemPipeBlockEntity.class, ItemPipeBlockEntity::new, "item_pipe"),
-			blockEntity("fluid_pipe", FluidPipeBlockEntity.class, FluidPipeBlockEntity::new, "fluid_pipe"),
-			blockEntity("macerator", MaceratorBlockEntity.class, MaceratorBlockEntity::new, "macerator"),
-			blockEntity("battery_box", BatteryBoxBlockEntity.class, BatteryBoxBlockEntity::new, "battery_box"),
-			blockEntity("cesu", CesuBlockEntity.class, CesuBlockEntity::new, "cesu"),
-			blockEntity("teleporter", TeleporterBlockEntity.class, TeleporterBlockEntity::new, "teleporter"),
-			blockEntity("electric_furnace", ElectricFurnaceBlockEntity.class, ElectricFurnaceBlockEntity::new, "electric_furnace"),
-			blockEntity("iron_furnace", IronFurnaceBlockEntity.class, IronFurnaceBlockEntity::new, "iron_furnace"),
-			blockEntity("extractor", ExtractorBlockEntity.class, ExtractorBlockEntity::new, "extractor"),
-			blockEntity("compressor", CompressorBlockEntity.class, CompressorBlockEntity::new, "compressor"),
+			blockEntity("generator", GeneratorBlockEntity.class, GeneratorBlockEntity::new, s -> ModContent.GENERATOR_BE = s, "generator"),
+			blockEntity("geothermal_generator", GeothermalGeneratorBlockEntity.class, GeothermalGeneratorBlockEntity::new, s -> ModContent.GEOTHERMAL_GENERATOR_BE = s, "geothermal_generator"),
+			blockEntity("solar_panel", SolarPanelBlockEntity.class, SolarPanelBlockEntity::new, s -> ModContent.SOLAR_PANEL_BE = s, "solar_panel"),
+			blockEntity("moonlit_solar_panel", MoonlitSolarPanelBlockEntity.class, MoonlitSolarPanelBlockEntity::new, s -> ModContent.MOONLIT_SOLAR_PANEL_BE = s, "moonlit_solar_panel"),
+			blockEntity("daylight_solar_panel", DaylightSolarPanelBlockEntity.class, DaylightSolarPanelBlockEntity::new, s -> ModContent.DAYLIGHT_SOLAR_PANEL_BE = s, "daylight_solar_panel"),
+			blockEntity("copper_cable", CableBlockEntity.class, CableBlockEntity::new, s -> ModContent.COPPER_CABLE_BE = s, "copper_cable", "tin_cable", "gold_cable", "electrum_cable", "insulated_copper_cable", "insulated_tin_cable", "insulated_gold_cable", "insulated_electrum_cable"),
+			blockEntity("item_pipe", ItemPipeBlockEntity.class, ItemPipeBlockEntity::new, s -> ModContent.ITEM_PIPE_BE = s, "item_pipe"),
+			blockEntity("fluid_pipe", FluidPipeBlockEntity.class, FluidPipeBlockEntity::new, s -> ModContent.FLUID_PIPE_BE = s, "fluid_pipe"),
+			blockEntity("macerator", MaceratorBlockEntity.class, MaceratorBlockEntity::new, s -> ModContent.MACERATOR_BE = s, "macerator"),
+			blockEntity("battery_box", BatteryBoxBlockEntity.class, BatteryBoxBlockEntity::new, s -> ModContent.BATTERY_BOX_BE = s, "battery_box"),
+			blockEntity("cesu", CesuBlockEntity.class, CesuBlockEntity::new, s -> ModContent.CESU_BE = s, "cesu"),
+			blockEntity("teleporter", TeleporterBlockEntity.class, TeleporterBlockEntity::new, s -> ModContent.TELEPORTER_BE = s, "teleporter"),
+			blockEntity("electric_furnace", ElectricFurnaceBlockEntity.class, ElectricFurnaceBlockEntity::new, s -> ModContent.ELECTRIC_FURNACE_BE = s, "electric_furnace"),
+			blockEntity("iron_furnace", IronFurnaceBlockEntity.class, IronFurnaceBlockEntity::new, s -> ModContent.IRON_FURNACE_BE = s, "iron_furnace"),
+			blockEntity("extractor", ExtractorBlockEntity.class, ExtractorBlockEntity::new, s -> ModContent.EXTRACTOR_BE = s, "extractor"),
+			blockEntity("compressor", CompressorBlockEntity.class, CompressorBlockEntity::new, s -> ModContent.COMPRESSOR_BE = s, "compressor"),
 			blockEntity("canning_machine", CanningMachineBlockEntity.class, CanningMachineBlockEntity::new,
-					"canning_machine"),
-			blockEntity("sawmill", SawmillBlockEntity.class, SawmillBlockEntity::new, "sawmill"),
-			blockEntity("assembler", AssemblerBlockEntity.class, AssemblerBlockEntity::new, "assembler"),
-			blockEntity("polymerizer", PolymerizerBlockEntity.class, PolymerizerBlockEntity::new, "polymerizer"),
+					s -> ModContent.CANNING_MACHINE_BE = s, "canning_machine"),
+			blockEntity("sawmill", SawmillBlockEntity.class, SawmillBlockEntity::new, s -> ModContent.SAWMILL_BE = s, "sawmill"),
+			blockEntity("assembler", AssemblerBlockEntity.class, AssemblerBlockEntity::new, s -> ModContent.ASSEMBLER_BE = s, "assembler"),
+			blockEntity("polymerizer", PolymerizerBlockEntity.class, PolymerizerBlockEntity::new, s -> ModContent.POLYMERIZER_BE = s, "polymerizer"),
 			// MOD-251 — the tower: master BE on the base, one shared proxy type on both segments.
 			blockEntity("distillation_column", DistillationColumnBlockEntity.class,
-					DistillationColumnBlockEntity::new, "distillation_column"),
+					DistillationColumnBlockEntity::new, s -> ModContent.DISTILLATION_COLUMN_BE = s,
+					"distillation_column"),
 			blockEntity("distillation_column_segment", DistillationColumnSegmentBlockEntity.class,
 					DistillationColumnSegmentBlockEntity::new,
+					s -> ModContent.DISTILLATION_COLUMN_SEGMENT_BE = s,
 					"distillation_column_middle", "distillation_column_top"),
-			blockEntity("vulcanizer", VulcanizerBlockEntity.class, VulcanizerBlockEntity::new, "vulcanizer"),
-			blockEntity("alloy_smelter", AlloySmelterBlockEntity.class, AlloySmelterBlockEntity::new, "alloy_smelter"),
-			blockEntity("galvanic_bath", GalvanicBathBlockEntity.class, GalvanicBathBlockEntity::new, "galvanic_bath"),
-			blockEntity("electric_heater", ElectricHeaterBlockEntity.class, ElectricHeaterBlockEntity::new, "electric_heater"),
-			blockEntity("charge_pad", ChargePadBlockEntity.class, ChargePadBlockEntity::new, "charge_pad"),
+			blockEntity("vulcanizer", VulcanizerBlockEntity.class, VulcanizerBlockEntity::new, s -> ModContent.VULCANIZER_BE = s, "vulcanizer"),
+			blockEntity("alloy_smelter", AlloySmelterBlockEntity.class, AlloySmelterBlockEntity::new, s -> ModContent.ALLOY_SMELTER_BE = s, "alloy_smelter"),
+			blockEntity("galvanic_bath", GalvanicBathBlockEntity.class, GalvanicBathBlockEntity::new, s -> ModContent.GALVANIC_BATH_BE = s, "galvanic_bath"),
+			blockEntity("electric_heater", ElectricHeaterBlockEntity.class, ElectricHeaterBlockEntity::new, s -> ModContent.ELECTRIC_HEATER_BE = s, "electric_heater"),
+			blockEntity("charge_pad", ChargePadBlockEntity.class, ChargePadBlockEntity::new, s -> ModContent.CHARGE_PAD_BE = s, "charge_pad"),
 			blockEntity("energy_condenser", EnergyCondenserBlockEntity.class,
-					EnergyCondenserBlockEntity::new, "energy_condenser"),
-			blockEntity("incubator", IncubatorBlockEntity.class, IncubatorBlockEntity::new, "incubator"),
-			blockEntity("pump", PumpBlockEntity.class, PumpBlockEntity::new, "pump"),
-			blockEntity("garden_drone_station", GardenDroneStationBlockEntity.class, GardenDroneStationBlockEntity::new, "garden_drone_station"),
-			blockEntity("fluid_tank", FluidTankBlockEntity.class, FluidTankBlockEntity::new, "fluid_tank"),
-			blockEntity("water_mill", WaterMillBlockEntity.class, WaterMillBlockEntity::new, "water_mill"),
-			blockEntity("wind_mill", WindMillBlockEntity.class, WindMillBlockEntity::new, "wind_mill"),
-			blockEntity("high_altitude_wind_mill", HighAltitudeWindMillBlockEntity.class, HighAltitudeWindMillBlockEntity::new, "high_altitude_wind_mill"),
-			blockEntity("storm_wind_mill", StormWindMillBlockEntity.class, StormWindMillBlockEntity::new, "storm_wind_mill"),
-			blockEntity("iron_chest", IronChestBlockEntity.class, IronChestBlockEntity::new, "iron_chest"),
-			blockEntity("storage_module", StorageModuleBlockEntity.class, StorageModuleBlockEntity::new, "storage_module"),
-			blockEntity("silver_chest", SilverChestBlockEntity.class, SilverChestBlockEntity::new, "silver_chest"),
-			blockEntity("gold_chest", GoldChestBlockEntity.class, GoldChestBlockEntity::new, "gold_chest"));
+					EnergyCondenserBlockEntity::new, s -> ModContent.ENERGY_CONDENSER_BE = s, "energy_condenser"),
+			blockEntity("incubator", IncubatorBlockEntity.class, IncubatorBlockEntity::new, s -> ModContent.INCUBATOR_BE = s, "incubator"),
+			blockEntity("pump", PumpBlockEntity.class, PumpBlockEntity::new, s -> ModContent.PUMP_BE = s, "pump"),
+			blockEntity("garden_drone_station", GardenDroneStationBlockEntity.class, GardenDroneStationBlockEntity::new, s -> ModContent.GARDEN_DRONE_STATION_BE = s, "garden_drone_station"),
+			blockEntity("fluid_tank", FluidTankBlockEntity.class, FluidTankBlockEntity::new, s -> ModContent.FLUID_TANK_BE = s, "fluid_tank"),
+			blockEntity("water_mill", WaterMillBlockEntity.class, WaterMillBlockEntity::new, s -> ModContent.WATER_MILL_BE = s, "water_mill"),
+			blockEntity("wind_mill", WindMillBlockEntity.class, WindMillBlockEntity::new, s -> ModContent.WIND_MILL_BE = s, "wind_mill"),
+			blockEntity("high_altitude_wind_mill", HighAltitudeWindMillBlockEntity.class, HighAltitudeWindMillBlockEntity::new, s -> ModContent.HIGH_ALTITUDE_WIND_MILL_BE = s, "high_altitude_wind_mill"),
+			blockEntity("storm_wind_mill", StormWindMillBlockEntity.class, StormWindMillBlockEntity::new, s -> ModContent.STORM_WIND_MILL_BE = s, "storm_wind_mill"),
+			blockEntity("iron_chest", IronChestBlockEntity.class, IronChestBlockEntity::new, s -> ModContent.IRON_CHEST_BE = s, "iron_chest"),
+			blockEntity("storage_module", StorageModuleBlockEntity.class, StorageModuleBlockEntity::new, s -> ModContent.STORAGE_MODULE_BE = s, "storage_module"),
+			blockEntity("silver_chest", SilverChestBlockEntity.class, SilverChestBlockEntity::new, s -> ModContent.SILVER_CHEST_BE = s, "silver_chest"),
+			blockEntity("gold_chest", GoldChestBlockEntity.class, GoldChestBlockEntity::new, s -> ModContent.GOLD_CHEST_BE = s, "gold_chest"));
 
 	/**
 	 * The definition for block-entity {@code id}, checked against the type the caller expects.

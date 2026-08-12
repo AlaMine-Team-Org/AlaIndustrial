@@ -34,7 +34,7 @@ public abstract class HorizontalMachineBlock extends AbstractMachineBlock {
 
 	/**
 	 * The front ({@code FACING}) face is the player-facing facade — energy-inert by R-NRG-03 (see
-	 * {@link dev.alaindustrial.block.entity.MachineBlockEntity#facingAwareRole}), so a cable must not
+	 * {@link dev.alaindustrial.block.entity.EnergyBlockEntity#facingAwareRole}), so a cable must not
 	 * draw a misleading "energy goes here" arm toward it. The other five faces carry the block's
 	 * working energy role, so they delegate to the face-agnostic {@link #isCableConnectable()} marker
 	 * — which a subclass can still flip to {@code false} (e.g. {@link IronChestBlock}) to stay fully

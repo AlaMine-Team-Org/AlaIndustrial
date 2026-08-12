@@ -46,7 +46,7 @@ public final class MachineEnergyScenarios {
 	public static void maceratorProcessesRecipe(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.MACERATOR.get());
 		if (be(helper, MAC) instanceof MaceratorBlockEntity mac) {
-			mac.getEnergyStorage().amount = 8000; // > any single op's E_op; bypasses the per-tick cap
+			mac.getEnergyStorage().setAmountUntracked(8000); // > any single op's E_op; bypasses the per-tick cap
 			mac.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.EMERALD));
 			for (int i = 0; i < 400; i++) { // > longest machine duration + margin
 				mac.serverTick(helper.getLevel(), mac.getBlockPos(),
@@ -86,9 +86,9 @@ public final class MachineEnergyScenarios {
 		helper.setBlock(PER_POS, ModContent.MACERATOR.get());
 		MaceratorBlockEntity src = helper.getBlockEntity(PER_POS, MaceratorBlockEntity.class);
 
-		long energy0 = 1234L;
+		long energy0 = 734L; // below machineBuffer (800): a buffer cannot hold more than its capacity
 		int progress0 = 7;
-		src.getEnergyStorage().amount = energy0;
+		src.getEnergyStorage().setAmountUntracked(energy0);
 		// setItem() resets progress on an input change, so place the input BEFORE setting progress.
 		src.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON, 3));
 		src.getDataAccess().set(2, progress0); // index 2 == progress
@@ -119,7 +119,7 @@ public final class MachineEnergyScenarios {
 	public static void machineNoPowerNoOutput(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.MACERATOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 0;
+			mac.getEnergyStorage().setAmountUntracked(0);
 			mac.setItem(0, new ItemStack(Items.RAW_IRON, 4));
 			for (int i = 0; i < 400; i++) {
 				mac.serverTick(helper.getLevel(), mac.getBlockPos(),
@@ -148,7 +148,7 @@ public final class MachineEnergyScenarios {
 	public static void machineFullOutputJams(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.MACERATOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 8000;
+			mac.getEnergyStorage().setAmountUntracked(8000);
 			mac.setItem(0, new ItemStack(Items.RAW_IRON, 4));
 			mac.setItem(1, new ItemStack(ModContent.IRON_DUST.get(), 64));
 			for (int i = 0; i < 400; i++) {
@@ -180,7 +180,7 @@ public final class MachineEnergyScenarios {
 	public static void machineInputSwapResetsProgress(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.MACERATOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 8000;
+			mac.getEnergyStorage().setAmountUntracked(8000);
 			mac.setItem(0, new ItemStack(Items.RAW_IRON, 1));
 			int halfway = Config.maceratorDuration / 2;
 			for (int i = 0; i < halfway; i++) {
@@ -223,9 +223,9 @@ public final class MachineEnergyScenarios {
 			helper.fail("electric furnace block entity missing");
 			return;
 		}
-		long energy0 = 2345L;
+		long energy0 = 645L; // below machineBuffer (800), see above
 		int progress0 = 9;
-		src.getEnergyStorage().amount = energy0;
+		src.getEnergyStorage().setAmountUntracked(energy0);
 		src.setItem(0, new ItemStack(Items.RAW_IRON, 3));
 		src.getDataAccess().set(2, progress0);
 		int input0 = src.getItem(0).getCount();
@@ -257,7 +257,7 @@ public final class MachineEnergyScenarios {
 	public static void compressorMakesCopperIngot(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.COMPRESSOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 8000;
+			mac.getEnergyStorage().setAmountUntracked(8000);
 			mac.setItem(0, new ItemStack(dev.alaindustrial.registry.ModContent.COPPER_DUST.get(), 4));
 			for (int i = 0; i < 400; i++) {
 				mac.serverTick(helper.getLevel(), mac.getBlockPos(),
@@ -283,7 +283,7 @@ public final class MachineEnergyScenarios {
 	public static void extractorMakesFlint(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.EXTRACTOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 8000;
+			mac.getEnergyStorage().setAmountUntracked(8000);
 			mac.setItem(0, new ItemStack(Items.GRAVEL, 4));
 			for (int i = 0; i < 400; i++) {
 				mac.serverTick(helper.getLevel(), mac.getBlockPos(),
@@ -309,7 +309,7 @@ public final class MachineEnergyScenarios {
 	public static void furnaceSmeltsRawIron(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.ELECTRIC_FURNACE.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 8000;
+			mac.getEnergyStorage().setAmountUntracked(8000);
 			mac.setItem(0, new ItemStack(Items.RAW_IRON, 4));
 			for (int i = 0; i < 400; i++) {
 				mac.serverTick(helper.getLevel(), mac.getBlockPos(),
@@ -338,7 +338,7 @@ public final class MachineEnergyScenarios {
 		helper.setBlock(MAC, ModContent.ELECTRIC_FURNACE.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
 			long start = 800;
-			mac.getEnergyStorage().amount = start;
+			mac.getEnergyStorage().setAmountUntracked(start);
 			mac.setItem(0, new ItemStack(Items.DIRT, 1));
 			for (int i = 0; i < 200; i++) {
 				mac.serverTick(helper.getLevel(), mac.getBlockPos(),
@@ -348,8 +348,8 @@ public final class MachineEnergyScenarios {
 				helper.fail("furnace produced output from dirt: " + mac.getItem(1));
 				return;
 			}
-			if (mac.getEnergyStorage().amount != start) {
-				helper.fail("furnace spent EU on a non-recipe: " + start + " -> " + mac.getEnergyStorage().amount);
+			if (mac.getEnergyStorage().getAmount() != start) {
+				helper.fail("furnace spent EU on a non-recipe: " + start + " -> " + mac.getEnergyStorage().getAmount());
 				return;
 			}
 			helper.succeed();
@@ -365,7 +365,7 @@ public final class MachineEnergyScenarios {
 	public static void compressorFullOutputJams(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.COMPRESSOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 8000;
+			mac.getEnergyStorage().setAmountUntracked(8000);
 			mac.setItem(0, new ItemStack(dev.alaindustrial.registry.ModContent.COPPER_DUST.get(), 4));
 			mac.setItem(1, new ItemStack(Items.COPPER_INGOT, 64));
 			for (int i = 0; i < 400; i++) {
@@ -396,7 +396,7 @@ public final class MachineEnergyScenarios {
 	public static void extractorInputSwapResetsProgress(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.EXTRACTOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 8000;
+			mac.getEnergyStorage().setAmountUntracked(8000);
 			mac.setItem(0, new ItemStack(Items.BLAZE_ROD, 1));
 			int halfway = Config.extractorDuration / 2;
 			for (int i = 0; i < halfway; i++) {
@@ -430,7 +430,7 @@ public final class MachineEnergyScenarios {
 	public static void extractorBlazeRodToPowder(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.EXTRACTOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 8000;
+			mac.getEnergyStorage().setAmountUntracked(8000);
 			mac.setItem(0, new ItemStack(Items.BLAZE_ROD, 4));
 			for (int i = 0; i < 400; i++) {
 				mac.serverTick(helper.getLevel(), mac.getBlockPos(),
@@ -456,7 +456,7 @@ public final class MachineEnergyScenarios {
 	public static void furnaceSmeltsSandToGlass(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.ELECTRIC_FURNACE.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 8000;
+			mac.getEnergyStorage().setAmountUntracked(8000);
 			mac.setItem(0, new ItemStack(Items.SAND, 4));
 			for (int i = 0; i < 400; i++) {
 				mac.serverTick(helper.getLevel(), mac.getBlockPos(),
@@ -480,7 +480,7 @@ public final class MachineEnergyScenarios {
 	public static void compressorIronDustToIngot(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.COMPRESSOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 8000;
+			mac.getEnergyStorage().setAmountUntracked(8000);
 			mac.setItem(0, new ItemStack(dev.alaindustrial.registry.ModContent.IRON_DUST.get(), 4));
 			for (int i = 0; i < 400; i++) {
 				mac.serverTick(helper.getLevel(), mac.getBlockPos(),
@@ -509,7 +509,7 @@ public final class MachineEnergyScenarios {
 		helper.setBlock(MAC, ModContent.MACERATOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
 			long eOp = (long) Config.maceratorDuration * Config.machineEuPerTick;
-			mac.getEnergyStorage().amount = eOp;
+			mac.getEnergyStorage().setAmountUntracked(eOp);
 			mac.setItem(0, new ItemStack(Items.RAW_IRON, 1));
 			for (int i = 0; i < Config.maceratorDuration; i++) {
 				mac.serverTick(helper.getLevel(), mac.getBlockPos(),
@@ -519,8 +519,8 @@ public final class MachineEnergyScenarios {
 				helper.fail("E_op exact (" + eOp + ") did not complete the maceration");
 				return;
 			}
-			if (mac.getEnergyStorage().amount != 0) {
-				helper.fail("E_op exact should leave amount==0 but got " + mac.getEnergyStorage().amount);
+			if (mac.getEnergyStorage().getAmount() != 0) {
+				helper.fail("E_op exact should leave amount==0 but got " + mac.getEnergyStorage().getAmount());
 				return;
 			}
 			helper.succeed();
@@ -537,7 +537,7 @@ public final class MachineEnergyScenarios {
 	public static void maceratorEopMinusOneStalls(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.MACERATOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = (long) Config.maceratorDuration * Config.machineEuPerTick - 1;
+			mac.getEnergyStorage().setAmountUntracked((long) Config.maceratorDuration * Config.machineEuPerTick - 1);
 			mac.setItem(0, new ItemStack(Items.RAW_IRON, 1));
 			for (int i = 0; i < 400; i++) {
 				mac.serverTick(helper.getLevel(), mac.getBlockPos(),
@@ -570,7 +570,7 @@ public final class MachineEnergyScenarios {
 		helper.setBlock(MAC, ModContent.MACERATOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
 			BlockPos abs = mac.getBlockPos();
-			mac.getEnergyStorage().amount = 8000;
+			mac.getEnergyStorage().setAmountUntracked(8000);
 			mac.setItem(0, new ItemStack(Items.RAW_IRON, 1));
 			for (int i = 0; i < 3; i++) {
 				mac.serverTick(helper.getLevel(), abs, helper.getLevel().getBlockState(abs));
@@ -604,7 +604,7 @@ public final class MachineEnergyScenarios {
 	public static void extractorCactusToGreenDye(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.EXTRACTOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 8000;
+			mac.getEnergyStorage().setAmountUntracked(8000);
 			mac.setItem(0, new ItemStack(Items.CACTUS, 4));
 			for (int i = 0; i < 400; i++) {
 				mac.serverTick(helper.getLevel(), mac.getBlockPos(),
@@ -630,7 +630,7 @@ public final class MachineEnergyScenarios {
 	public static void extractorPumpkinToSeeds(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.EXTRACTOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 8000;
+			mac.getEnergyStorage().setAmountUntracked(8000);
 			mac.setItem(0, new ItemStack(Items.PUMPKIN, 4));
 			for (int i = 0; i < 400; i++) {
 				mac.serverTick(helper.getLevel(), mac.getBlockPos(),
@@ -660,7 +660,7 @@ public final class MachineEnergyScenarios {
 	public static void maceratorIronOreDoublesDust(GameTestHelper helper) {
 		helper.setBlock(MAC, ModContent.MACERATOR.get());
 		if (be(helper, MAC) instanceof dev.alaindustrial.block.entity.MachineBlockEntity mac) {
-			mac.getEnergyStorage().amount = 8000;
+			mac.getEnergyStorage().setAmountUntracked(8000);
 			mac.setItem(0, new ItemStack(Items.IRON_ORE, 4));
 			for (int i = 0; i < 400; i++) {
 				mac.serverTick(helper.getLevel(), mac.getBlockPos(),
@@ -729,7 +729,7 @@ public final class MachineEnergyScenarios {
 			return;
 		}
 		station.setPrivate(false);
-		station.getEnergyStorage().amount = 4242L;
+		station.getEnergyStorage().setAmountUntracked(4242L);
 		DataComponentMap map = station.collectComponents();
 		if (!Boolean.FALSE.equals(map.get(ModDataComponents.TELEPORTER_PRIVATE.get()))) {
 			helper.fail("teleporter did not carry TELEPORTER_PRIVATE on drop: "

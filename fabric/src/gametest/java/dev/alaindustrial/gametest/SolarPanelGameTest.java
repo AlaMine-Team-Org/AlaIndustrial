@@ -151,7 +151,7 @@ public class SolarPanelGameTest {
 		panel.setItem(SolarPanelBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_DAY));
 		// Pre-charge the buffer so the carry-EU assertion is meaningful (default placement leaves 0).
 		long energy0 = 1500L;
-		panel.getEnergyStorage().amount = energy0;
+		panel.getEnergyStorage().setAmountUntracked(energy0);
 		BlockPos abs = panel.getBlockPos();
 		// Brightness is settled now; synchronous driving keeps it constant (no world tick between calls).
 		for (int i = 0; i <= Config.solarEvolveTicks
@@ -300,7 +300,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS.above(), Blocks.GLASS);
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 		drive(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
 		long expected = Math.max(1, Math.round(Config.solarEuPerTick * Config.globalEuRateMultiplier));
@@ -358,7 +358,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS.above(), Blocks.SNOW);
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 		drive(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
 		int snowBase = Math.max(1, Math.round(Config.solarEuPerTick * Config.solarSnowFactor));
@@ -387,7 +387,7 @@ public class SolarPanelGameTest {
 		setClearDay(helper);
 		setRaining(helper, true);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 		drive(panel, helper, 1);
 		int mode = panel.getDataAccess().get(3);
 		long got = panel.getEnergyStorage().getAmount();
@@ -409,7 +409,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS.above(), Blocks.SNOW);
 		setNight(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 		drive(panel, helper, 20);
 		long got = panel.getEnergyStorage().getAmount();
 		int mode = panel.getDataAccess().get(3);
@@ -463,7 +463,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 		drive(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
 		long expected = Math.max(1, Math.round(Config.solarEuPerTick * Config.globalEuRateMultiplier));
@@ -489,7 +489,7 @@ public class SolarPanelGameTest {
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
 		long cap = Config.solarBuffer;
-		panel.getEnergyStorage().amount = cap - 1; // BVA: one EU short of full → must top off, not exceed
+		panel.getEnergyStorage().setAmountUntracked(cap - 1); // BVA: one EU short of full → must top off, not exceed
 		drive(panel, helper, 5);
 		long got = panel.getEnergyStorage().getAmount();
 		if (got != cap) {
@@ -579,7 +579,7 @@ public class SolarPanelGameTest {
 		setNight(helper);
 		setRaining(helper, true); // thunderstorm
 		MoonlitSolarPanelBlockEntity panel = moonlitAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 		int ticks = 20;
 		driveMoonlit(panel, helper, ticks);
 		long amount = panel.getEnergyStorage().getAmount();
@@ -619,7 +619,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS.above(), Blocks.OAK_LEAVES);
 		setNight(helper);
 		MoonlitSolarPanelBlockEntity panel = moonlitAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 		driveMoonlit(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
 		long expected = Math.max(1, Math.round(Math.round(Config.moonlitEuPerTick * Config.solarTransparentFactor)
@@ -646,7 +646,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS, ModBlocks.MOONLIT_SOLAR_PANEL);
 		setNight(helper);
 		MoonlitSolarPanelBlockEntity panel = moonlitAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 		driveMoonlit(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
 		long expected = Math.max(1, Math.round(Config.moonlitEuPerTick * Config.globalEuRateMultiplier));
@@ -663,7 +663,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS, ModBlocks.MOONLIT_SOLAR_PANEL);
 		setNight(helper);
 		MoonlitSolarPanelBlockEntity panel = moonlitAt(helper);
-		panel.getEnergyStorage().amount = Config.solarBuffer;
+		panel.getEnergyStorage().setAmountUntracked(Config.solarBuffer);
 		driveMoonlit(panel, helper, 20);
 		long got = panel.getEnergyStorage().getAmount();
 		if (got != Config.solarBuffer) {
@@ -681,7 +681,7 @@ public class SolarPanelGameTest {
 		SolarPanelBlockEntity panel = panelAt(helper);
 		panel.setItem(SolarPanelBlockEntity.CHIP_SLOT, new ItemStack(ModItems.ALIGNMENT_CHIP_NIGHT));
 		long energy0 = 1500L;
-		panel.getEnergyStorage().amount = energy0;
+		panel.getEnergyStorage().setAmountUntracked(energy0);
 		BlockPos abs = panel.getBlockPos();
 		for (int i = 0; i <= Config.solarEvolveTicks
 				&& helper.getLevel().getBlockState(abs).getBlock() == ModBlocks.SOLAR_PANEL; i++) {
@@ -797,7 +797,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS.above(), Blocks.OAK_LEAVES);
 		setClearDay(helper);
 		AbstractGeneratorBlockEntity panel = genAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 		driveGen(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
 		long expected = Math.max(1, Math.round(Math.round(Config.daylightEuPerTick * Config.solarTransparentFactor)
@@ -817,7 +817,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS.above(), Blocks.GLASS);
 		setClearDay(helper);
 		AbstractGeneratorBlockEntity panel = genAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 		driveGen(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
 		long expected = Math.max(1, Math.round(Config.daylightEuPerTick * Config.globalEuRateMultiplier));
@@ -857,7 +857,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS, ModBlocks.DAYLIGHT_SOLAR_PANEL);
 		setClearDay(helper);
 		AbstractGeneratorBlockEntity panel = genAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 		driveGen(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
 		long expected = Math.max(1, Math.round(Config.daylightEuPerTick * Config.globalEuRateMultiplier));
@@ -874,7 +874,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS, ModBlocks.DAYLIGHT_SOLAR_PANEL);
 		setClearDay(helper);
 		AbstractGeneratorBlockEntity panel = genAt(helper);
-		panel.getEnergyStorage().amount = Config.solarBuffer;
+		panel.getEnergyStorage().setAmountUntracked(Config.solarBuffer);
 		driveGen(panel, helper, 20);
 		long got = panel.getEnergyStorage().getAmount();
 		if (got != Config.solarBuffer) {
@@ -903,7 +903,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS.above(), Blocks.ICE);
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 		drive(panel, helper, 20);
 		long got = panel.getEnergyStorage().getAmount();
 		int mode = panel.getDataAccess().get(3);
@@ -928,7 +928,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS.above(), Blocks.GLOWSTONE);
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 		drive(panel, helper, 20);
 		long got = panel.getEnergyStorage().getAmount();
 		if (got != 0) {
@@ -976,7 +976,7 @@ public class SolarPanelGameTest {
 		float saved = Config.globalEuRateMultiplier;
 		try {
 			Config.globalEuRateMultiplier = 2.0f;
-			panel.getEnergyStorage().amount = 0;
+			panel.getEnergyStorage().setAmountUntracked(0);
 			drive(panel, helper, 1);
 			long got = panel.getEnergyStorage().getAmount();
 			long expected = Math.max(1, Math.round(Config.solarEuPerTick * 2.0f));
@@ -1007,7 +1007,7 @@ public class SolarPanelGameTest {
 		int saved = Config.solarEuPerTick;
 		try {
 			Config.solarEuPerTick = saved * 3;
-			panel.getEnergyStorage().amount = 0;
+			panel.getEnergyStorage().setAmountUntracked(0);
 			drive(panel, helper, 1);
 			long got = panel.getEnergyStorage().getAmount();
 			long expected = Math.max(1, Math.round(Config.solarEuPerTick * Config.globalEuRateMultiplier));
@@ -1033,7 +1033,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().amount = Config.solarBuffer; // ample supply to push, if a route existed
+		panel.getEnergyStorage().setAmountUntracked(Config.solarBuffer); // ample supply to push, if a route existed
 
 		BlockPos batteryPos = POS.relative(Direction.EAST);
 		// BatteryBox input face = FACING (MOD-006). FACING=NORTH means input faces north, not the panel
@@ -1062,7 +1062,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().amount = Config.solarBuffer;
+		panel.getEnergyStorage().setAmountUntracked(Config.solarBuffer);
 
 		BlockPos gapPos = POS.relative(Direction.EAST);
 		BlockPos batteryPos = gapPos.relative(Direction.EAST);
@@ -1091,7 +1091,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().amount = Config.solarBuffer; // generation already running, buffer full
+		panel.getEnergyStorage().setAmountUntracked(Config.solarBuffer); // generation already running, buffer full
 
 		BlockPos batteryPos = POS.relative(Direction.EAST);
 		helper.setBlock(batteryPos, ModBlocks.BATTERY_BOX.defaultBlockState()
@@ -1118,7 +1118,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 
 		BlockPos batteryEastPos = POS.relative(Direction.EAST);
 		BlockPos batterySouthPos = POS.relative(Direction.SOUTH);
@@ -1152,7 +1152,7 @@ public class SolarPanelGameTest {
 		helper.setBlock(POS, ModBlocks.SOLAR_PANEL);
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().amount = 0;
+		panel.getEnergyStorage().setAmountUntracked(0);
 
 		BlockPos batteryPos = POS.relative(Direction.EAST);
 		helper.setBlock(batteryPos, ModBlocks.BATTERY_BOX.defaultBlockState()
@@ -1161,7 +1161,7 @@ public class SolarPanelGameTest {
 		if (battery == null) {
 			helper.fail("battery_box block entity missing after placement");
 		}
-		battery.getEnergyStorage().amount = battery.getEnergyStorage().getCapacity(); // full: cannot accept
+		battery.getEnergyStorage().setAmountUntracked(battery.getEnergyStorage().getCapacity()); // full: cannot accept
 
 		drive(panel, helper, 20); // keep generating while the only receiver is full
 		long panelAmount = panel.getEnergyStorage().getAmount();
@@ -1174,7 +1174,7 @@ public class SolarPanelGameTest {
 		}
 
 		// Free up room in the receiver: delivery must resume automatically, no player action beyond time.
-		battery.getEnergyStorage().amount = 0;
+		battery.getEnergyStorage().setAmountUntracked(0);
 		long before = panel.getEnergyStorage().getAmount();
 		drive(panel, helper, 5);
 		if (battery.getEnergyStorage().getAmount() <= 0) {

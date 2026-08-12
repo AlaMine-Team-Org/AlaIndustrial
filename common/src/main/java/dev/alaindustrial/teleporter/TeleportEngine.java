@@ -166,7 +166,7 @@ public final class TeleportEngine {
 		}
 		player.setDeltaMovement(player.getDeltaMovement().multiply(1.0, 0.0, 1.0));
 		player.setOnGround(true);
-		station.getEnergyStorage().amount -= cost;
+		station.getEnergyStorage().drainInternal(cost);
 		station.setChanged();
 		// The jump is paid for; book it against the player who made it (MOD-361). The station drains its
 		// buffer straight from here rather than through a machine cycle, so nothing else would ever tell

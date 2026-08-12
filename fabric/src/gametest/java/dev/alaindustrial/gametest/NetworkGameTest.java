@@ -113,7 +113,7 @@ public class NetworkGameTest {
 		// Break the only cable: the network must vanish and the macerator must stop receiving.
 		helper.setBlock(CABLE, Blocks.AIR);
 		if (helper.getBlockEntity(MAC, MaceratorBlockEntity.class) instanceof MaceratorBlockEntity mac) {
-			mac.getEnergyStorage().amount = 0;
+			mac.getEnergyStorage().setAmountUntracked(0);
 		}
 		drive(helper, 60);
 		if (NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(CABLE)) != null) {
@@ -132,7 +132,7 @@ public class NetworkGameTest {
 		drive(helper, 60);
 		helper.setBlock(CABLE, Blocks.AIR);
 		if (helper.getBlockEntity(MAC, MaceratorBlockEntity.class) instanceof MaceratorBlockEntity mac) {
-			mac.getEnergyStorage().amount = 0;
+			mac.getEnergyStorage().setAmountUntracked(0);
 		}
 		drive(helper, 40);
 		helper.setBlock(CABLE, ModBlocks.COPPER_CABLE); // rejoin
@@ -376,10 +376,10 @@ public class NetworkGameTest {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		if (be(helper, BB_GEN) instanceof GeneratorBlockEntity gen) {
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
-			gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity(); // ample supply
+			gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity()); // ample supply
 		}
 		if (be(helper, BB_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = Config.batteryBoxBuffer - 10L; // 10 EU short of full
+			bb.getEnergyStorage().setAmountUntracked(Config.batteryBoxBuffer - 10L); // 10 EU short of full
 		}
 		// Drive gen + cables + network + battery_box until topped off (5 cables ⇒ old loss=1 ⇒ stuck at −1).
 		for (int i = 0; i < 40; i++) {
@@ -427,7 +427,7 @@ public class NetworkGameTest {
 		helper.setBlock(PRI_BOX, ModBlocks.BATTERY_BOX);
 		// Scarce, fixed supply: no fuel (no regeneration), generator buffer seeded with exactly 10 EU.
 		if (be(helper, PRI_GEN) instanceof GeneratorBlockEntity gen) {
-			gen.getEnergyStorage().amount = 10L;
+			gen.getEnergyStorage().setAmountUntracked(10L);
 		}
 		// Macerator input empty → it only buffers EU (no consumption masking the share).
 		// Register the network + run a single delivery pass; 10 EU < packetCap so it all fits one tick.
@@ -616,14 +616,14 @@ public class NetworkGameTest {
 				.setValue(HorizontalMachineBlock.FACING, Direction.NORTH));
 		if (be(helper, genA) instanceof GeneratorBlockEntity gen) {
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
-			gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+			gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
 		}
 		if (be(helper, genB) instanceof GeneratorBlockEntity gen) {
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
-			gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+			gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
 		}
 		if (be(helper, boxPos) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0;
+			bb.getEnergyStorage().setAmountUntracked(0);
 		}
 
 		int ticks = 20;
@@ -721,10 +721,10 @@ public class NetworkGameTest {
 		if (be(helper, CAP_GEN) instanceof GeneratorBlockEntity gen) {
 			// No fuel: buffer is fixed but far above any per-tick throughput, so the segment throughput —
 			// not supply — is what limits delivery.
-			gen.getEnergyStorage().amount = EnergyTier.LV.maxVoltage() * 100;
+			gen.getEnergyStorage().setAmountUntracked(EnergyTier.LV.maxVoltage() * 100);
 		}
 		if (be(helper, CAP_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0; // empty: room is never the limiting factor either
+			bb.getEnergyStorage().setAmountUntracked(0); // empty: room is never the limiting factor either
 		}
 
 		// Drive several network ticks: the segment throughput bounds cumulative delivery to cableBuffer
@@ -793,10 +793,10 @@ public class NetworkGameTest {
 		// is pinned at the LV packet cap every tick — deterministic, fuel-independent loss accounting.
 		long cap = EnergyTier.LV.maxVoltage();
 		if (be(helper, LOSS_GEN) instanceof GeneratorBlockEntity gen) {
-			gen.getEnergyStorage().amount = cap * 200;
+			gen.getEnergyStorage().setAmountUntracked(cap * 200);
 		}
 		if (be(helper, LOSS_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0;
+			bb.getEnergyStorage().setAmountUntracked(0);
 		}
 
 		int ticks = 50;
@@ -868,10 +868,10 @@ public class NetworkGameTest {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		long cap = EnergyTier.LV.maxVoltage();
 		if (be(helper, SHORT_GEN) instanceof GeneratorBlockEntity gen) {
-			gen.getEnergyStorage().amount = cap * 200;
+			gen.getEnergyStorage().setAmountUntracked(cap * 200);
 		}
 		if (be(helper, SHORT_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0;
+			bb.getEnergyStorage().setAmountUntracked(0);
 		}
 
 		int ticks = 20;
@@ -921,10 +921,10 @@ public class NetworkGameTest {
 		long cap = EnergyTier.LV.maxVoltage();
 		long capacity = Config.batteryBoxBuffer;
 		if (be(helper, LOSS_GEN) instanceof GeneratorBlockEntity gen) {
-			gen.getEnergyStorage().amount = cap * 200;
+			gen.getEnergyStorage().setAmountUntracked(cap * 200);
 		}
 		if (be(helper, LOSS_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = capacity - 1; // one EU short of full: room = 1
+			bb.getEnergyStorage().setAmountUntracked(capacity - 1); // one EU short of full: room = 1
 		}
 
 		int ticks = 20;
@@ -1056,7 +1056,7 @@ public class NetworkGameTest {
 		// a surplus pushed back by returnRoundRobin would be destroyed, not restored.
 		long genStart = Config.generatorBuffer;
 		if (be(helper, GEN) instanceof GeneratorBlockEntity gen) {
-			gen.getEnergyStorage().amount = genStart;
+			gen.getEnergyStorage().setAmountUntracked(genStart);
 			gen.setChanged();
 		}
 		// Macerator with NO input never processes, so its room only shrinks as it fills. Pre-charge it to
@@ -1066,7 +1066,7 @@ public class NetworkGameTest {
 		final long room = 5;
 		long macStart = Config.maceratorBuffer - room;
 		if (be(helper, MAC) instanceof MaceratorBlockEntity mac) {
-			mac.getEnergyStorage().amount = macStart;
+			mac.getEnergyStorage().setAmountUntracked(macStart);
 			mac.setChanged();
 		}
 
@@ -1530,7 +1530,7 @@ public class NetworkGameTest {
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
 		}
 		if (be(helper, STO_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0L;
+			bb.getEnergyStorage().setAmountUntracked(0L);
 		}
 		for (int i = 0; i < 40; i++) {
 			var gen = be(helper, STO_GEN);
@@ -1579,7 +1579,7 @@ public class NetworkGameTest {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		helper.setBlock(LONE_CABLE, ModBlocks.COPPER_CABLE);
 		if (be(helper, LONE_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = Config.batteryBoxBuffer; // full: plenty to (wrongly) push
+			bb.getEnergyStorage().setAmountUntracked(Config.batteryBoxBuffer); // full: plenty to (wrongly) push
 		}
 		for (int i = 0; i < 10; i++) {
 			var box = be(helper, LONE_BOX);
@@ -1748,5 +1748,16 @@ public class NetworkGameTest {
 					+ " after=" + boxAfterReload + " — delivery did not resume after the simulated reload");
 		}
 		helper.succeed();
+	}
+
+	/**
+	 * @implements MOD-404 — what one network tick over a 50-cable bus costs, asleep and running.
+	 *
+	 * <p>{@code maxTicks} is generous for the same reason the assembler benchmark's is: the body runs
+	 * its three measured phases inside a SINGLE game tick, so the gametest clock is not what bounds it.
+	 */
+	@GameTest(maxTicks = 100)
+	public void perf01_energyNetworkFiftyCableTickCost(GameTestHelper helper) {
+		EnergyNetworkPerfScenarios.perf01FiftyCableLineTickCost(helper);
 	}
 }

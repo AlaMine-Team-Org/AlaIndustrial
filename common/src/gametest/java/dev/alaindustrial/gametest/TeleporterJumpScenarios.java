@@ -126,7 +126,7 @@ public final class TeleporterJumpScenarios {
 		// Private + owned by someone else → refused.
 		station.setOwner(STRANGER, "Someone");
 		station.setPrivate(true);
-		station.getEnergyStorage().amount = station.getEnergyStorage().getCapacity();
+		station.getEnergyStorage().setAmountUntracked(station.getEnergyStorage().getCapacity());
 		if (TeleportEngine.checkPolicy(player, remote, point) != TeleportEngine.Denial.NO_ACCESS) {
 			helper.fail("a private station must refuse a stranger");
 		}
@@ -138,7 +138,7 @@ public final class TeleporterJumpScenarios {
 		}
 
 		// Public but flat → refused, and refused for lack of EU specifically.
-		station.getEnergyStorage().amount = 0;
+		station.getEnergyStorage().setAmountUntracked(0);
 		if (TeleportEngine.checkPolicy(player, remote, point) != TeleportEngine.Denial.NOT_ENOUGH_EU) {
 			helper.fail("a flat station must refuse the jump");
 		}
@@ -161,7 +161,7 @@ public final class TeleporterJumpScenarios {
 		long cost = TeleportEngine.computeCost(player, point);
 		long tooLittle = cost - 1;
 		station.setPrivate(false);
-		station.getEnergyStorage().amount = tooLittle;
+		station.getEnergyStorage().setAmountUntracked(tooLittle);
 
 		if (TeleportEngine.execute(player, point, cost)) {
 			helper.fail("a jump must not fire when the station cannot pay for it");
@@ -181,7 +181,7 @@ public final class TeleporterJumpScenarios {
 		TeleporterBlockEntity station = station(helper);
 		ServerPlayer player = playerNearStation(helper);
 		station.setPrivate(false);
-		station.getEnergyStorage().amount = station.getEnergyStorage().getCapacity();
+		station.getEnergyStorage().setAmountUntracked(station.getEnergyStorage().getCapacity());
 		long before = station.getEnergyStorage().getAmount();
 
 		TeleportPoint point = pointAt(helper, STATION);
@@ -233,7 +233,7 @@ public final class TeleporterJumpScenarios {
 		// Someone else's public station: the EU is theirs, the statistic must still be the jumper's.
 		station.setOwner(STRANGER, "Someone");
 		station.setPrivate(false);
-		station.getEnergyStorage().amount = station.getEnergyStorage().getCapacity();
+		station.getEnergyStorage().setAmountUntracked(station.getEnergyStorage().getCapacity());
 
 		PlayerModStats before = PlayerStatsStore.get(player);
 		TeleportPoint point = pointAt(helper, STATION);
@@ -281,7 +281,7 @@ public final class TeleporterJumpScenarios {
 
 		TeleportPoint point = pointAt(helper, STATION);
 		long cost = TeleportEngine.computeCost(player, point);
-		station.getEnergyStorage().amount = cost - 1; // one EU short: the engine must refuse
+		station.getEnergyStorage().setAmountUntracked(cost - 1); // one EU short: the engine must refuse
 
 		long before = PlayerStatsStore.get(player).euOtherSpentTotal();
 		if (TeleportEngine.execute(player, point, cost)) {

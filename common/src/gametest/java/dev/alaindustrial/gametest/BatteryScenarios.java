@@ -75,12 +75,12 @@ public final class BatteryScenarios {
 			return;
 		}
 		int count = 8;
-		be.getEnergyStorage().amount = Config.batteryBoxBuffer;
+		be.getEnergyStorage().setAmountUntracked(Config.batteryBoxBuffer);
 		be.setItem(BatteryBoxBlockEntity.CHARGE_SLOT, batteries(count, 0));
 
-		long bufferBefore = be.getEnergyStorage().amount;
+		long bufferBefore = be.getEnergyStorage().getAmount();
 		be.serverTick(helper.getLevel(), be.getBlockPos(), be.getBlockState());
-		long spent = bufferBefore - be.getEnergyStorage().amount;
+		long spent = bufferBefore - be.getEnergyStorage().getAmount();
 
 		ItemStack charged = be.getItem(BatteryBoxBlockEntity.CHARGE_SLOT);
 		long perItem = ItemEnergy.get(charged);
@@ -116,7 +116,7 @@ public final class BatteryScenarios {
 		if (be == null) {
 			return;
 		}
-		be.getEnergyStorage().amount = Config.batteryBoxBuffer;
+		be.getEnergyStorage().setAmountUntracked(Config.batteryBoxBuffer);
 		be.setItem(BatteryBoxBlockEntity.CHARGE_SLOT, batteries(BatteryItem.MAX_STACK, 0));
 
 		be.serverTick(helper.getLevel(), be.getBlockPos(), be.getBlockState());
@@ -143,12 +143,12 @@ public final class BatteryScenarios {
 		}
 		int count = 4;
 		long each = Config.batteryBuffer;
-		be.getEnergyStorage().amount = 0;
+		be.getEnergyStorage().setAmountUntracked(0);
 		be.setItem(BatteryBoxBlockEntity.DISCHARGE_SLOT, batteries(count, each));
 
 		be.serverTick(helper.getLevel(), be.getBlockPos(), be.getBlockState());
 
-		long gained = be.getEnergyStorage().amount;
+		long gained = be.getEnergyStorage().getAmount();
 		ItemStack left = be.getItem(BatteryBoxBlockEntity.DISCHARGE_SLOT);
 		long lost = (each - ItemEnergy.get(left)) * count;
 		if (gained <= 0) {

@@ -26,7 +26,7 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity {
 	}
 
 	public boolean canSupplyHeatTick() {
-		return energy.amount >= Config.electricHeaterEuPerTickEffective();
+		return energy.getAmount() >= Config.electricHeaterEuPerTickEffective();
 	}
 
 	/**
@@ -44,10 +44,10 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity {
 	public boolean consumeHeatTick(int overclockers) {
 		int cost = Math.max(1, Math.round(Config.electricHeaterEuPerTickEffective()
 				* (float) Math.pow(Config.overclockerEuFactor, Math.max(0, overclockers))));
-		if (energy.amount < cost) {
+		if (energy.getAmount() < cost) {
 			return false;
 		}
-		energy.amount -= cost;
+		energy.drainInternal(cost);
 		litLeaseTicks = 2;
 		updateLit(true);
 		setChanged();

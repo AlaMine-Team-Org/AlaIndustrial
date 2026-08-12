@@ -141,7 +141,7 @@ public final class ElectricSaberScenarios {
 			helper.fail("the server-side filter must accept the saber too");
 		}
 
-		box.getEnergyStorage().amount = box.getEnergyStorage().getCapacity();
+		box.getEnergyStorage().setAmountUntracked(box.getEnergyStorage().getCapacity());
 		box.setItem(BatteryBoxBlockEntity.CHARGE_SLOT, saber(0));
 		box.serverTick(helper.getLevel(), box.getBlockPos(), helper.getLevel().getBlockState(box.getBlockPos()));
 		long expected = Math.min(EnergyTier.LV.maxVoltage(), Config.electricSaberInputRate);

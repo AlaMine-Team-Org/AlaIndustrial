@@ -123,6 +123,17 @@ public final class AlaCommandCommon {
 									"Failed to read config/alaindustrial.json — check the server log; live balance unchanged."));
 							return 0;
 						}
+						// MOD-402: told apart from ERROR on purpose. Both mean "nothing from the file was
+						// applied", but only this one also REPLACED the running balance — reporting it as
+						// "unchanged" would send an admin hunting for a syntax error that does not exist.
+						case SCHEMA_TOO_NEW -> {
+							ctx.getSource().sendFailure(Component.literal(
+									"config/alaindustrial.json was written by a NEWER build of the mod — "
+											+ "nothing from it was applied and the live balance is now the "
+											+ "mod's built-in defaults. The file on disk is untouched: "
+											+ "upgrade the mod, or edit its schemaVersion down. See the server log."));
+							return 0;
+						}
 					}
 					return Command.SINGLE_SUCCESS;
 				}));

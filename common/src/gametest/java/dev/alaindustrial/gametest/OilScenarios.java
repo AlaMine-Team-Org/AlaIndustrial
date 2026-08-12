@@ -226,7 +226,7 @@ public final class OilScenarios {
 			return;
 		}
 		// EU for exactly three acquisitions; failed scans do not spend EU, so no top-up is needed.
-		pump.getEnergyStorage().amount = (long) sources.length * Config.pumpEuPerBucket;
+		pump.getEnergyStorage().setAmountUntracked((long) sources.length * Config.pumpEuPerBucket);
 
 		// Mid-state at tick 30: the first bucket (scan at ~tick 1) is already through the pump and in
 		// the tank, and the lake is only PARTIALLY drained — at least one source must remain.

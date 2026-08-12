@@ -2,6 +2,7 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.block.ChargePadBlock;
 import dev.alaindustrial.block.ChargePadState;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -71,5 +72,25 @@ public final class ModBlockProperties {
 	public static BlockBehaviour.Properties applyTorch(BlockBehaviour.Properties p) {
 		return p.noCollision().instabreak().lightLevel(state -> 14).sound(SoundType.WOOD)
 				.pushReaction(PushReaction.DESTROY).noOcclusion();
+	}
+
+	/**
+	 * The wall variant of the Enriched Uranium Torch (MOD-085): the torch chain plus the vanilla
+	 * {@code wallVariant} mirroring — it drops and is named as the STANDING torch, so it needs no item
+	 * and no lang key of its own.
+	 *
+	 * <p><b>Why it is here and not in the loader files (MOD-403).</b> Both loaders used to spell this
+	 * override out themselves, each reading its own handle for the standing torch
+	 * ({@code ENRICHED_URANIUM_TORCH.getLootTable()} on Fabric, {@code ENRICHED_URANIUM_TORCH.get()....}
+	 * on NeoForge) — two copies of one rule, exactly the drift class MOD-190 removed everywhere else.
+	 * Reading it through {@link ModContent} makes the rule loader-neutral, at the cost of one ordering
+	 * requirement that was already load-bearing on both sides: the standing torch must be registered
+	 * first. {@code ContentManifest.BLOCKS} states that order once, for both loaders.
+	 */
+	public static BlockBehaviour.Properties applyWallTorch(BlockBehaviour.Properties p) {
+		Block standing = ModContent.ENRICHED_URANIUM_TORCH.get();
+		return applyTorch(p)
+				.overrideLootTable(standing.getLootTable())
+				.overrideDescription(standing.getDescriptionId());
 	}
 }

@@ -3,6 +3,7 @@ package dev.alaindustrial.gametest.neoforge;
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.gametest.AssemblerPerfScenarios;
+import dev.alaindustrial.gametest.EnergyNetworkPerfScenarios;
 import dev.alaindustrial.gametest.ForeignMaterialScenarios;
 import dev.alaindustrial.gametest.CableFaceParityScenarios;
 import dev.alaindustrial.gametest.DoubleChestScenarios;
@@ -541,6 +542,14 @@ public final class NeoForgeGameTests {
 		// three 2200-tick phases inside a single game tick, so the gametest clock is not what bounds it.
 		registerTest(event, "assembler_full_warehouse_tick_cost", 100, true,
 				AssemblerPerfScenarios::perf01FullWarehouseTickCost);
+
+		// MOD-404 — the energy-network tick cost over a 50-cable bus. Same maxTicks reasoning as above:
+		// the three measured phases run inside one game tick. Worth having on THIS lane too, not just on
+		// Fabric: the two loaders reach the same network core through different transaction machinery,
+		// so a regression that only shows up under one of them is exactly what a single-lane benchmark
+		// would miss.
+		registerTest(event, "energy_network_fifty_cable_tick_cost", 100, true,
+				EnergyNetworkPerfScenarios::perf01FiftyCableLineTickCost);
 
 		// Pump: source -> tank -> sink (geo) -> EU. Fluid transport end-to-end on the NeoForge lane.
 		registerTest(event, "pump_source_to_tank_to_sink_to_eu", 100, true,

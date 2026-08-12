@@ -79,7 +79,7 @@ public class BatteryBoxGameTest {
 	public void tcBatteryBox001Per01_chargeSurvivesNbt(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = place(helper);
 		long charge = Math.min(12345L, bat.getEnergyStorage().getCapacity());
-		bat.getEnergyStorage().amount = charge;
+		bat.getEnergyStorage().setAmountUntracked(charge);
 
 		var registries = helper.getLevel().registryAccess();
 		CompoundTag tag = bat.saveCustomOnly(registries);
@@ -103,7 +103,7 @@ public class BatteryBoxGameTest {
 	public void tcBatteryBox001Brk07_energyCarriedByComponent(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = place(helper);
 		long charge = Math.min(12345L, bat.getEnergyStorage().getCapacity());
-		bat.getEnergyStorage().amount = charge;
+		bat.getEnergyStorage().setAmountUntracked(charge);
 
 		// collect = what loot `copy_components source=block_entity` reads off the broken block.
 		DataComponentMap map = bat.collectComponents();
@@ -130,7 +130,7 @@ public class BatteryBoxGameTest {
 	public void tcBatteryBox001Brk07b_machineDropsNoEnergy(GameTestHelper helper) {
 		helper.setBlock(POS, ModBlocks.MACERATOR);
 		MachineBlockEntity mac = helper.getBlockEntity(POS, MachineBlockEntity.class);
-		mac.getEnergyStorage().amount = 5000;
+		mac.getEnergyStorage().setAmountUntracked(5000);
 		if (mac.collectComponents().get(ModDataComponents.STORED_ENERGY.get()) != null) {
 			helper.fail("a machine leaked the STORED_ENERGY component");
 		}
@@ -178,7 +178,7 @@ public class BatteryBoxGameTest {
 	@GameTest
 	public void tcBatteryBox001Prf02_extractFromEmptyReturnsZero(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = place(helper);
-		bat.getEnergyStorage().amount = 0;
+		bat.getEnergyStorage().setAmountUntracked(0);
 		long extracted;
 		try (Transaction tx = Transaction.openOuter()) {
 			extracted = bat.getEnergyStorage().extract(1_000L, FabricEnergyPort.wrap(tx));
@@ -206,7 +206,7 @@ public class BatteryBoxGameTest {
 	public void tcBatteryBox001Prf03_inputRateCappedAtLv(GameTestHelper helper) {
 		helper.setBlock(POS, ModBlocks.BATTERY_BOX); // default FACING = NORTH (input face)
 		BatteryBoxBlockEntity bat = helper.getBlockEntity(POS, BatteryBoxBlockEntity.class);
-		bat.getEnergyStorage().amount = 0;
+		bat.getEnergyStorage().setAmountUntracked(0);
 		EnergyStorage in = EnergyStorage.SIDED.find(helper.getLevel(), helper.absolutePos(POS), Direction.NORTH);
 		if (in == null) {
 			helper.fail("no input-face EnergyStorage view on battery_box");
@@ -235,7 +235,7 @@ public class BatteryBoxGameTest {
 	public void tcBatteryBox001Prf04_outputRateCappedAtLv(GameTestHelper helper) {
 		helper.setBlock(POS, ModBlocks.BATTERY_BOX); // default FACING = NORTH, output = SOUTH
 		BatteryBoxBlockEntity bat = helper.getBlockEntity(POS, BatteryBoxBlockEntity.class);
-		bat.getEnergyStorage().amount = bat.getEnergyStorage().getCapacity();
+		bat.getEnergyStorage().setAmountUntracked(bat.getEnergyStorage().getCapacity());
 		EnergyStorage out = EnergyStorage.SIDED.find(helper.getLevel(), helper.absolutePos(POS), Direction.SOUTH);
 		if (out == null) {
 			helper.fail("no output-face EnergyStorage view on battery_box");
@@ -264,7 +264,7 @@ public class BatteryBoxGameTest {
 	@GameTest
 	public void tcBatteryBox001Neg01_noSelfDrainOver1000Ticks(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = place(helper);
-		bat.getEnergyStorage().amount = 10_000L;
+		bat.getEnergyStorage().setAmountUntracked(10_000L);
 		for (int i = 0; i < 1000; i++) {
 			bat.serverTick(helper.getLevel(), bat.getBlockPos(), helper.getLevel().getBlockState(bat.getBlockPos()));
 		}
@@ -281,7 +281,7 @@ public class BatteryBoxGameTest {
 	@GameTest
 	public void tcBatteryBox001Neg02_noSelfChargeOver1000Ticks(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = place(helper);
-		bat.getEnergyStorage().amount = 0;
+		bat.getEnergyStorage().setAmountUntracked(0);
 		for (int i = 0; i < 1000; i++) {
 			bat.serverTick(helper.getLevel(), bat.getBlockPos(), helper.getLevel().getBlockState(bat.getBlockPos()));
 		}
@@ -300,7 +300,7 @@ public class BatteryBoxGameTest {
 	@GameTest
 	public void tcBatteryBox001Neg03_noLeakToVanillaNeighbor(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = place(helper);
-		bat.getEnergyStorage().amount = 10_000L;
+		bat.getEnergyStorage().setAmountUntracked(10_000L);
 		// Output face is opposite FACING; default FACING = NORTH, so output = SOUTH.
 		BlockPos vanillaPos = POS.relative(Direction.SOUTH);
 		helper.setBlock(vanillaPos, Blocks.FURNACE);
@@ -366,7 +366,7 @@ public class BatteryBoxGameTest {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		if (be(helper, RING_GEN) instanceof GeneratorBlockEntity gen) {
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
-			gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+			gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
 		}
 		for (int i = 0; i < 120; i++) {
 			for (BlockPos p : new BlockPos[] { RING_GEN, RING_CABLE_A, RING_CABLE_B, RING_CABLE_C }) {
@@ -406,7 +406,7 @@ public class BatteryBoxGameTest {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		if (be(helper, BRJ_GEN) instanceof GeneratorBlockEntity gen) {
 			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
-			gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+			gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
 		}
 		java.util.function.BiConsumer<GameTestHelper, Integer> drive = (h, n) -> {
 			for (int i = 0; i < n; i++) {
@@ -444,7 +444,7 @@ public class BatteryBoxGameTest {
 
 		// Rejoin the cable and drain the box back down so we can observe fresh delivery.
 		if (be(helper, BRJ_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = 0;
+			bb.getEnergyStorage().setAmountUntracked(0);
 		}
 		helper.setBlock(BRJ_CABLE, ModBlocks.COPPER_CABLE);
 		drive.accept(helper, 80);
@@ -483,7 +483,7 @@ public class BatteryBoxGameTest {
 			helper.setBlock(g, ModBlocks.GENERATOR);
 			if (be(helper, g) instanceof GeneratorBlockEntity gen) {
 				gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
-				gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+				gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
 			}
 		}
 		helper.setBlock(CAP_CABLE, ModBlocks.COPPER_CABLE);
@@ -555,7 +555,7 @@ public class BatteryBoxGameTest {
 		helper.setBlock(SPLIT_MAC_B, ModBlocks.MACERATOR.defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.SOUTH));
 		if (be(helper, SPLIT_BOX) instanceof BatteryBoxBlockEntity bb) {
-			bb.getEnergyStorage().amount = bb.getEnergyStorage().getCapacity();
+			bb.getEnergyStorage().setAmountUntracked(bb.getEnergyStorage().getCapacity());
 		}
 		// Both macerators' input slots stay empty: no recipe consumption masking the split.
 
@@ -594,7 +594,7 @@ public class BatteryBoxGameTest {
 	@GameTest
 	public void tcBatteryBox001Net02_fullInsertReturnsZero(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = place(helper);
-		bat.getEnergyStorage().amount = bat.getEnergyStorage().getCapacity();
+		bat.getEnergyStorage().setAmountUntracked(bat.getEnergyStorage().getCapacity());
 		long inserted;
 		try (Transaction tx = Transaction.openOuter()) {
 			inserted = bat.getEnergyStorage().insert(100L, FabricEnergyPort.wrap(tx));
@@ -617,7 +617,7 @@ public class BatteryBoxGameTest {
 	@GameTest
 	public void tcBatteryBox001Net03_emptyExtractReturnsZero(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = place(helper);
-		bat.getEnergyStorage().amount = 0;
+		bat.getEnergyStorage().setAmountUntracked(0);
 		long extracted;
 		try (Transaction tx = Transaction.openOuter()) {
 			extracted = bat.getEnergyStorage().extract(100L, FabricEnergyPort.wrap(tx));

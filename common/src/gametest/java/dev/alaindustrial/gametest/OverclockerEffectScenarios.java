@@ -83,7 +83,7 @@ public final class OverclockerEffectScenarios {
 		machine.setItem(0, new ItemStack(Items.RAW_IRON, 8));
 		machine.setItem(machine.upgradeSlotStart() + OVERCLOCK_ARM,
 				new ItemStack(ModContent.OVERCLOCKER_CHIP_I.get()));
-		machine.getEnergyStorage().amount = machine.getEnergyStorage().getCapacity();
+		machine.getEnergyStorage().setAmountUntracked(machine.getEnergyStorage().getCapacity());
 		AlaGameTestHelper.drive(machine, helper, 3);
 
 		int progressBefore = machine.dataAccess.get(DATA_PROGRESS);
@@ -126,7 +126,7 @@ public final class OverclockerEffectScenarios {
 			// Refill before every tick: this measures the RATE the machine burns, not how long its
 			// buffer lasts. Left to drain, the overclocked one would starve and finish LATER, turning
 			// the comparison upside down.
-			machine.getEnergyStorage().amount = machine.getEnergyStorage().getCapacity();
+			machine.getEnergyStorage().setAmountUntracked(machine.getEnergyStorage().getCapacity());
 			int before = machine.dataAccess.get(DATA_ENERGY);
 			AlaGameTestHelper.drive(machine, helper, 1);
 			int drawn = before - machine.dataAccess.get(DATA_ENERGY);

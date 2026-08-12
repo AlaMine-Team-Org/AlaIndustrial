@@ -2,143 +2,139 @@ package dev.alaindustrial.core.item;
 
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
+import dev.alaindustrial.core.net.GraphNetworkManager;
+import dev.alaindustrial.core.net.NetworkOps;
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import dev.alaindustrial.core.energy.GraphComponents;
-import dev.alaindustrial.core.energy.NetworkManager;
 
-/** Per-level incremental graph manager for item pipes. Mirrors the proven energy NetworkManager. */
+/**
+ * Per-level graph manager for item pipes. Since MOD-401 the bookkeeping lives in the shared
+ * {@link GraphNetworkManager} — this class used to be a hand copy of the energy manager, which is
+ * how the three copies came to drift. What is genuinely item-specific stays here:
+ * <ul>
+ *   <li><b>connectivity is a predicate</b> ({@link ItemPipeBlock#shouldConnectTo}), so a face-mode
+ *       change can restore a link as well as break one and the union must follow the re-partition
+ *       (MOD-282);</li>
+ *   <li><b>no tick budget</b> — every awake network ticks every tick, which is why the round-robin
+ *       cursor advances by one instead of by the visited window: two item networks can feed the same
+ *       chest, and rotating the order is what keeps them fair;</li>
+ *   <li><b>a neighbour change re-partitions</b> rather than merely waking the network, unlike energy
+ *       and fluid.</li>
+ * </ul>
+ */
 public final class ItemNetworkManager {
 	private ItemNetworkManager() { }
-	private static final class LevelState {
-		final Map<BlockPos, ItemNetwork> byPos = new LinkedHashMap<>();
-		final Set<ItemNetwork> networks = new LinkedHashSet<>();
-		int tickCursor;
-	}
-	private static final Map<ServerLevel, LevelState> LEVELS = new IdentityHashMap<>();
-	private static LevelState state(ServerLevel level) { return LEVELS.computeIfAbsent(level, l -> new LevelState()); }
+
+	private static final NetworkOps<ServerLevel, ItemNetwork, BlockPos> OPS =
+			new NetworkOps<ServerLevel, ItemNetwork, BlockPos>() {
+				@Override
+				public ItemNetwork create(ServerLevel level) {
+					return new ItemNetwork(level);
+				}
+
+				@Override
+				public Set<BlockPos> nodes(ItemNetwork network) {
+					return network.pipes();
+				}
+
+				@Override
+				public void addNode(ItemNetwork network, BlockPos pos) {
+					network.addPipe(pos);
+				}
+
+				@Override
+				public void removeNode(ItemNetwork network, BlockPos pos) {
+					network.removePipe(pos);
+				}
+
+				@Override
+				public void absorb(ItemNetwork keep, ItemNetwork drop) {
+					keep.absorb(drop);
+				}
+
+				@Override
+				public void markDirty(ItemNetwork network) {
+					network.markDirty();
+				}
+
+				@Override
+				public boolean isAwake(ItemNetwork network) {
+					return network.isAwake();
+				}
+
+				@Override
+				public long tick(ItemNetwork network) {
+					// An item network has no throughput counter the telemetry slot could carry; only the
+					// energy manager reads that slot.
+					network.tick();
+					return 0L;
+				}
+
+				@Override
+				public Iterable<BlockPos> candidates(BlockPos pos) {
+					List<BlockPos> result = new ArrayList<>(6);
+					for (Direction dir : Direction.values()) {
+						result.add(pos.relative(dir).immutable());
+					}
+					return result;
+				}
+
+				@Override
+				public Iterable<BlockPos> connected(ServerLevel level, BlockPos pos) {
+					List<BlockPos> result = new ArrayList<>(6);
+					for (Direction dir : Direction.values()) {
+						if (ItemPipeBlock.shouldConnectTo(level, pos, dir)) {
+							result.add(pos.relative(dir).immutable());
+						}
+					}
+					return result;
+				}
+			};
+
+	/**
+	 * No budget: {@link Integer#MAX_VALUE} means "every awake network, every tick", which is what this
+	 * manager has always done. The cursor therefore has to advance by one to rotate the serving order
+	 * — see {@link GraphNetworkManager.TickCursor#BY_ONE}.
+	 */
+	private static final GraphNetworkManager<ServerLevel, ItemNetwork, BlockPos> GRAPH =
+			new GraphNetworkManager<>("item", OPS, () -> Integer.MAX_VALUE,
+					GraphNetworkManager.TickCursor.BY_ONE);
 
 	public static void register(ItemPipeBlockEntity pipe) {
 		if (!(pipe.getLevel() instanceof ServerLevel level)) return;
-		LevelState state = state(level);
-		BlockPos pos = pipe.getBlockPos().immutable();
-		if (state.byPos.containsKey(pos)) { state.byPos.get(pos).markDirty(); return; }
-		ItemNetwork network = new ItemNetwork(level);
-		network.addPipe(pos);
-		state.byPos.put(pos, network);
-		state.networks.add(network);
-		unionWithNeighbours(state, level, pos);
-	}
-
-	/**
-	 * Merge the network owning {@code pos} with the network of every pipe it currently connects to.
-	 * This is the ONLY place networks are joined: {@link #rebuild} can only split (its traversal is
-	 * bounded by {@code old.pipes()}), so any call site that may have CREATED connectivity has to run
-	 * this afterwards (MOD-282).
-	 */
-	private static void unionWithNeighbours(LevelState state, ServerLevel level, BlockPos pos) {
-		ItemNetwork network = state.byPos.get(pos);
-		if (network == null) return;
-		for (Direction dir : Direction.values()) {
-			ItemNetwork adjacent = state.byPos.get(pos.relative(dir));
-			if (adjacent != null && adjacent != network && ItemPipeBlock.shouldConnectTo(level, pos, dir)) {
-				network = merge(state, network, adjacent);
-			}
-		}
-		network.markDirty();
-	}
-
-	private static ItemNetwork merge(LevelState state, ItemNetwork a, ItemNetwork b) {
-		ItemNetwork keep = a.size() >= b.size() ? a : b;
-		ItemNetwork drop = keep == a ? b : a;
-		keep.absorb(drop);
-		for (BlockPos pos : drop.pipes()) state.byPos.put(pos, keep);
-		state.networks.remove(drop);
-		return keep;
+		GRAPH.register(level, pipe.getBlockPos().immutable());
 	}
 
 	public static void unregister(ItemPipeBlockEntity pipe) {
 		if (!(pipe.getLevel() instanceof ServerLevel level)) return;
-		LevelState state = LEVELS.get(level);
-		if (state == null) return;
-		ItemNetwork network = state.byPos.remove(pipe.getBlockPos());
-		if (network == null) return;
-		network.removePipe(pipe.getBlockPos());
-		if (network.isEmpty()) { state.networks.remove(network); return; }
-		rebuild(state, network);
+		GRAPH.unregister(level, pipe.getBlockPos());
 	}
 
-	/** Rebuild after any removal/config change: face modes can split a component without a block removal. */
+	/** Rebuild after a face-mode change: face modes can split a component without a block removal. */
 	public static void topologyChanged(ServerLevel level, BlockPos pos) {
-		LevelState state = LEVELS.get(level);
-		if (state == null) return;
-		ItemNetwork network = state.byPos.get(pos);
-		if (network == null) return;
-		rebuild(state, network);
-		// A face-mode change can restore a link as well as break one, and rebuild only ever splits.
-		// Without this union a re-enabled pipe-to-pipe joint leaves the two halves as separate networks
-		// forever: the line looks whole and silently moves nothing (MOD-282).
-		unionWithNeighbours(state, level, pos);
+		GRAPH.retopologise(level, pos);
 	}
 
 	/** Network owning {@code pos}, or null. Exposed for tests; mirrors NetworkManager#networkAt. */
 	public static ItemNetwork networkAt(ServerLevel level, BlockPos pos) {
-		LevelState state = LEVELS.get(level);
-		return state == null ? null : state.byPos.get(pos);
-	}
-
-	private static void rebuild(LevelState state, ItemNetwork old) {
-		Set<BlockPos> remaining = new LinkedHashSet<>(old.pipes());
-		state.networks.remove(old);
-		List<Set<BlockPos>> components = GraphComponents.components(remaining,
-				pos -> pipeNeighbours(old.level(), pos));
-		boolean first = true;
-		for (Set<BlockPos> component : components) {
-			ItemNetwork network = first ? old : new ItemNetwork(old.level());
-			if (first) { network.pipes().clear(); first = false; }
-			for (BlockPos pipe : component) { network.addPipe(pipe); state.byPos.put(pipe, network); }
-			network.markDirty();
-			state.networks.add(network);
-		}
-	}
-
-	private static List<BlockPos> pipeNeighbours(ServerLevel level, BlockPos pos) {
-		List<BlockPos> result = new ArrayList<>(6);
-		for (Direction dir : Direction.values()) {
-			if (ItemPipeBlock.shouldConnectTo(level, pos, dir)) result.add(pos.relative(dir).immutable());
-		}
-		return result;
+		return GRAPH.networkAt(level, pos);
 	}
 
 	public static void onNeighbourChanged(ServerLevel level, BlockPos pos) {
-		LevelState state = LEVELS.get(level);
-		if (state != null && state.byPos.get(pos) != null) rebuild(state, state.byPos.get(pos));
+		GRAPH.rebuildAt(level, pos);
 	}
 
 	public static void tickAll(ServerLevel level) {
-		LevelState state = LEVELS.get(level);
-		if (state == null || state.networks.isEmpty()) return;
-		List<ItemNetwork> all = new ArrayList<>(state.networks);
-		if (state.tickCursor >= all.size()) state.tickCursor = 0;
-		for (int i = 0; i < all.size(); i++) {
-			ItemNetwork network = all.get((state.tickCursor + i) % all.size());
-			// Isolate the tick: a neighbouring mod's item capability throwing must not crash the server
-			// tick (MOD-186). On a throw this network is skipped this tick and retried next tick.
-			if (network.isAwake()) {
-				dev.alaindustrial.core.NetworkTickGuard.runIsolated("item", network::tick);
-			}
-		}
-		state.tickCursor = (state.tickCursor + 1) % all.size();
+		GRAPH.tickAll(level);
 	}
 
-	public static void clear(ServerLevel level) { LEVELS.remove(level); }
-	public static void clearAll() { LEVELS.clear(); }
+	/** Drop one level's state (level unload), driven by the shared registry sweep. */
+	public static void clear(ServerLevel level) { GRAPH.clearLevel(level); }
+
+	/** Drop all per-level state (server stop), driven by the shared registry sweep. */
+	public static void clearAll() { GRAPH.clearAll(); }
 }

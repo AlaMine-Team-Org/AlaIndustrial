@@ -140,7 +140,7 @@ public final class EnergyPackScenarios {
 	/** FUN04: the pack is charged in the Battery Box slot, capped by its own intake rate. */
 	public static void fun04ChargeInBatteryBox(GameTestHelper helper) {
 		BatteryBoxBlockEntity box = placeBox(helper);
-		box.getEnergyStorage().amount = box.getEnergyStorage().getCapacity();
+		box.getEnergyStorage().setAmountUntracked(box.getEnergyStorage().getCapacity());
 		box.setItem(BatteryBoxBlockEntity.CHARGE_SLOT, pack(0));
 
 		tickBox(helper, box, 1);

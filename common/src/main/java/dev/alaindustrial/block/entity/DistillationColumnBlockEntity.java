@@ -235,13 +235,13 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 				instanceof dev.alaindustrial.block.RectificationSectionBlock;
 		boolean fouled = fouling >= FOULING_MAX;
 
-		boolean hasEnergy = energy.amount >= euPerTick;
+		boolean hasEnergy = energy.getAmount() >= euPerTick;
 		boolean dieselFits = recipe != null && resultFits(recipe, 0, dieselTank, sectionBonus());
 		boolean fuelOilFits = recipe != null && resultFits(recipe, 1, fuelOilTank, 0);
 		boolean canRun = recipe != null && hasEnergy && dieselFits && fuelOilFits && !fouled;
 
 		if (canRun) {
-			energy.amount -= euPerTick;
+			energy.drainInternal(euPerTick);
 			if (heat < warmup) {
 				// Warming: EU burns, no oil is consumed, no progress accrues. One cold start costs
 				// roughly one distillation's worth of EU — the deliberate price of intermittent power.

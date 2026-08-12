@@ -194,49 +194,9 @@ public final class ModBlockEntities {
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),HIGH_ALTITUDE_WIND_MILL);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),STORM_WIND_MILL);
 
-		// MOD-022 registration facade: publish each eagerly-registered BlockEntityType into the
-		// loader-neutral ModContent so content BE constructors (which read ModContent.X_BE.get() at
-		// runtime) resolve the Fabric instance. NeoForge binds a lazy DeferredHolder into the same handle.
-		ModContent.GENERATOR_BE = () -> GENERATOR;
-		ModContent.GEOTHERMAL_GENERATOR_BE = () -> GEOTHERMAL_GENERATOR;
-		ModContent.SOLAR_PANEL_BE = () -> SOLAR_PANEL;
-		ModContent.MOONLIT_SOLAR_PANEL_BE = () -> MOONLIT_SOLAR_PANEL;
-		ModContent.DAYLIGHT_SOLAR_PANEL_BE = () -> DAYLIGHT_SOLAR_PANEL;
-		ModContent.COPPER_CABLE_BE = () -> COPPER_CABLE;
-		ModContent.ITEM_PIPE_BE = () -> ITEM_PIPE;
-		ModContent.FLUID_PIPE_BE = () -> FLUID_PIPE;
-		ModContent.MACERATOR_BE = () -> MACERATOR;
-		ModContent.BATTERY_BOX_BE = () -> BATTERY_BOX;
-		ModContent.CESU_BE = () -> CESU;
-		ModContent.TELEPORTER_BE = () -> TELEPORTER;
-		ModContent.ELECTRIC_FURNACE_BE = () -> ELECTRIC_FURNACE;
-		ModContent.IRON_FURNACE_BE = () -> IRON_FURNACE;
-		ModContent.EXTRACTOR_BE = () -> EXTRACTOR;
-		ModContent.COMPRESSOR_BE = () -> COMPRESSOR;
-		ModContent.CANNING_MACHINE_BE = () -> CANNING_MACHINE;
-		ModContent.SAWMILL_BE = () -> SAWMILL;
-		ModContent.ASSEMBLER_BE = () -> ASSEMBLER;
-		ModContent.POLYMERIZER_BE = () -> POLYMERIZER;
-		ModContent.DISTILLATION_COLUMN_BE = () -> DISTILLATION_COLUMN;
-		ModContent.DISTILLATION_COLUMN_SEGMENT_BE = () -> DISTILLATION_COLUMN_SEGMENT;
-		ModContent.VULCANIZER_BE = () -> VULCANIZER;
-		ModContent.ALLOY_SMELTER_BE = () -> ALLOY_SMELTER;
-		ModContent.GALVANIC_BATH_BE = () -> GALVANIC_BATH;
-		ModContent.ELECTRIC_HEATER_BE = () -> ELECTRIC_HEATER;
-		ModContent.CHARGE_PAD_BE = () -> CHARGE_PAD;
-		ModContent.ENERGY_CONDENSER_BE = () -> ENERGY_CONDENSER;
-		ModContent.INCUBATOR_BE = () -> INCUBATOR;
-		ModContent.PUMP_BE = () -> PUMP;
-		ModContent.GARDEN_DRONE_STATION_BE = () -> GARDEN_DRONE_STATION;
-		ModContent.FLUID_TANK_BE = () -> FLUID_TANK;
-		ModContent.WATER_MILL_BE = () -> WATER_MILL;
-		ModContent.WIND_MILL_BE = () -> WIND_MILL;
-		ModContent.HIGH_ALTITUDE_WIND_MILL_BE = () -> HIGH_ALTITUDE_WIND_MILL;
-		ModContent.STORM_WIND_MILL_BE = () -> STORM_WIND_MILL;
-		ModContent.IRON_CHEST_BE = () -> IRON_CHEST;
-		ModContent.STORAGE_MODULE_BE = () -> STORAGE_MODULE;
-		ModContent.SILVER_CHEST_BE = () -> SILVER_CHEST;
-		ModContent.GOLD_CHEST_BE = () -> GOLD_CHEST;
+		// MOD-403: the 40 `ModContent.X_BE = () -> X;` lines that used to sit here are gone — each
+		// BLOCK_ENTITIES entry carries its own `bind`, applied by register() below, so a handle can no
+		// longer be left on its throwing placeholder because someone forgot a line.
 
 		// Fluid (lava) storages: the geothermal generator accepts lava, the pump exposes its tank. Both
 		// publish their neutral FluidPort (via FluidPortHost#fluidPort) through the TankAsFluidStorage
@@ -265,9 +225,15 @@ public final class ModBlockEntities {
 	 *
 	 * <p>Fabric registers eagerly, so the blocks are resolved right here — safe because
 	 * {@code ModBlocks.init()} runs before {@code ModBlockEntities.init()} in the entrypoint.
+	 *
+	 * <p><b>MOD-403.</b> The registered type is also published into the entry's {@link ModContent} slot
+	 * here, via the {@code bind} the manifest carries. That replaces 40 hand-written
+	 * {@code ModContent.X_BE = () -> X;} lines per loader whose only guard was a startup crash.
 	 */
 	private static <T extends BlockEntity> BlockEntityType<T> register(ContentManifest.BlockEntityDef<T> def) {
-		return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Industrialization.id(def.id()),
-				new BlockEntityType<>(def.factory(), def.blockSet()));
+		BlockEntityType<T> type = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,
+				Industrialization.id(def.id()), new BlockEntityType<>(def.factory(), def.blockSet()));
+		def.bind().accept(() -> type);
+		return type;
 	}
 }

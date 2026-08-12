@@ -12,7 +12,7 @@ import net.minecraft.util.StringRepresentable;
  * they get different colours rather than sharing one "not charging" look.
  *
  * <p>Deliberately four states and not the boolean {@code lit} every other machine uses: {@code lit}
- * answers only the first question. {@link dev.alaindustrial.block.entity.MachineBlockEntity#updateLit}
+ * answers only the first question. {@link dev.alaindustrial.block.entity.EnergyBlockEntity#updateLit}
  * is typed against {@code BlockStateProperties.LIT}, so it cannot drive this — the station keeps its own
  * property and its own update method.
  */

@@ -74,16 +74,16 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 	 */
 	private void chargeItem() {
 		ItemStack target = getItem(CHARGE_SLOT);
-		if (target.isEmpty() || energy.amount <= 0) {
+		if (target.isEmpty() || energy.getAmount() <= 0) {
 			return;
 		}
 		long rate = Math.min(EnergyTier.LV.maxVoltage(), ItemEnergy.inputRate(target) * target.getCount());
-		long budget = Math.min(Math.min(ItemEnergy.stackRoom(target), energy.amount), rate);
+		long budget = Math.min(Math.min(ItemEnergy.stackRoom(target), energy.getAmount()), rate);
 		long moved = ItemEnergy.stackAdd(target, budget);
 		if (moved <= 0) {
 			return;
 		}
-		energy.amount -= moved;
+		energy.drainInternal(moved);
 		setChanged();
 	}
 
@@ -102,7 +102,7 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 		if (source.isEmpty()) {
 			return;
 		}
-		long room = energy.getCapacity() - energy.amount;
+		long room = energy.getCapacity() - energy.getAmount();
 		if (room <= 0) {
 			return;
 		}
@@ -111,7 +111,7 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 		if (moved <= 0) {
 			return;
 		}
-		energy.amount += moved;
+		energy.produceInternal(moved);
 		setChanged();
 	}
 
@@ -197,15 +197,15 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 	@Override
 	protected void collectImplicitComponents(DataComponentMap.Builder builder) {
 		super.collectImplicitComponents(builder);
-		if (energy.amount > 0) {
-			builder.set(ModDataComponents.STORED_ENERGY.get(), energy.amount);
+		if (energy.getAmount() > 0) {
+			builder.set(ModDataComponents.STORED_ENERGY.get(), energy.getAmount());
 		}
 	}
 
 	@Override
 	protected void applyImplicitComponents(DataComponentGetter getter) {
 		super.applyImplicitComponents(getter);
-		energy.amount = Math.min(getter.getOrDefault(ModDataComponents.STORED_ENERGY.get(), 0L), energy.getCapacity());
+		energy.setAmountUntracked(Math.min(getter.getOrDefault(ModDataComponents.STORED_ENERGY.get(), 0L), energy.getCapacity()));
 	}
 
 	/**

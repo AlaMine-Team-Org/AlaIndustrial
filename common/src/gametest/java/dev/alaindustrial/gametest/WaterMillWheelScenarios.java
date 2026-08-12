@@ -524,7 +524,7 @@ public final class WaterMillWheelScenarios {
 	 */
 	public static void waterMill_energyOnlyFromBackFace(GameTestHelper helper) {
 		WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
-		mill.getEnergyStorage().amount = mill.getEnergyStorage().getCapacity(); // ample supply to push
+		mill.getEnergyStorage().setAmountUntracked(mill.getEnergyStorage().getCapacity()); // ample supply to push
 		BlockPos back = POS.relative(Direction.SOUTH);
 		helper.setBlock(back, ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.NORTH));
@@ -533,8 +533,8 @@ public final class WaterMillWheelScenarios {
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 		var backBox = helper.getBlockEntity(back, dev.alaindustrial.block.entity.BatteryBoxBlockEntity.class);
 		var sideBox = helper.getBlockEntity(side, dev.alaindustrial.block.entity.BatteryBoxBlockEntity.class);
-		backBox.getEnergyStorage().amount = 0;
-		sideBox.getEnergyStorage().amount = 0;
+		backBox.getEnergyStorage().setAmountUntracked(0);
+		sideBox.getEnergyStorage().setAmountUntracked(0);
 		AlaGameTestHelper.drive(mill, helper, 20);
 		if (backBox.getEnergyStorage().getAmount() <= 0) {
 			helper.fail("battery box on the back face received no EU from the water mill");
@@ -711,7 +711,7 @@ public final class WaterMillWheelScenarios {
 			driveOneSide(helper);
 			AlaGameTestHelper.drive(mill, helper, 3);
 
-			mill.getEnergyStorage().amount = 0;
+			mill.getEnergyStorage().setAmountUntracked(0);
 			AlaGameTestHelper.drive(mill, helper, 1);
 			long gained = mill.getEnergyStorage().getAmount();
 			int shown = mill.getDataAccess().get(4);
@@ -758,7 +758,7 @@ public final class WaterMillWheelScenarios {
 			driveOneSide(helper);
 			AlaGameTestHelper.drive(mill, helper, 3);
 
-			mill.getEnergyStorage().amount = 0;
+			mill.getEnergyStorage().setAmountUntracked(0);
 			AlaGameTestHelper.drive(mill, helper, 1);
 			long gained = mill.getEnergyStorage().getAmount();
 			int shown = mill.getDataAccess().get(4);
@@ -872,7 +872,7 @@ public final class WaterMillWheelScenarios {
 				helper.fail("worn-out water wheel was not removed from the slot; damage="
 						+ mill.getItem(WaterMillBlockEntity.WHEEL_SLOT).getDamageValue());
 			}
-			mill.getEnergyStorage().amount = 0;
+			mill.getEnergyStorage().setAmountUntracked(0);
 			AlaGameTestHelper.drive(mill, helper, 3);
 			if (mill.getEnergyStorage().getAmount() != 0) {
 				helper.fail("water mill kept generating after its wheel broke");

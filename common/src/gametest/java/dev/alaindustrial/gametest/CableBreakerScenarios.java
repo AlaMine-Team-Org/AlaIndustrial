@@ -52,11 +52,11 @@ public final class CableBreakerScenarios {
 			tick(helper, be(helper, pos));
 		}
 		if (be(helper, GENERATOR) instanceof GeneratorBlockEntity generator) {
-			generator.getEnergyStorage().amount = 0;
+			generator.getEnergyStorage().setAmountUntracked(0);
 			generator.setChanged();
 		}
 		if (be(helper, BOX) instanceof BatteryBoxBlockEntity box) {
-			box.getEnergyStorage().amount = 0;
+			box.getEnergyStorage().setAmountUntracked(0);
 			box.setChanged();
 		}
 	}
@@ -71,7 +71,7 @@ public final class CableBreakerScenarios {
 	 */
 	private static void energize(GameTestHelper helper) {
 		if (be(helper, GENERATOR) instanceof GeneratorBlockEntity generator) {
-			generator.getEnergyStorage().amount = Config.generatorBuffer;
+			generator.getEnergyStorage().setAmountUntracked(Config.generatorBuffer);
 			generator.setChanged();
 		}
 		for (int i = 0; i < 30; i++) {
@@ -109,7 +109,7 @@ public final class CableBreakerScenarios {
 		}
 
 		// Open it: the far segment leaves the grid with the breaker's own segment.
-		box.getEnergyStorage().amount = 0;
+		box.getEnergyStorage().setAmountUntracked(0);
 		box.setChanged();
 		breaker.setBreakerClosed(false);
 		energize(helper);

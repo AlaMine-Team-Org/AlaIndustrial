@@ -177,7 +177,7 @@ public final class EnergyNetwork {
 	private boolean lineHasRoom() {
 		for (BlockPos pos : topology.cables()) {
 			EnergyBuffer buf = cableBufferAt(pos);
-			if (buf != null && buf.amount < buf.getCapacity()) {
+			if (buf != null && buf.getAmount() < buf.getCapacity()) {
 				return true;
 			}
 		}
@@ -344,7 +344,7 @@ public final class EnergyNetwork {
 		for (BlockPos pos : topology.cables()) {
 			EnergyBuffer buf = cableBufferAt(pos);
 			if (buf != null) {
-				inFlight += buf.amount;
+				inFlight += buf.getAmount();
 			}
 		}
 		for (EnergyLineDistributor.LiveProducer donor : donors) {
@@ -471,23 +471,17 @@ public final class EnergyNetwork {
 		long packetCap = strongestCable.packetCap();
 		double lossPerBlock = strongestCable.lossPerBlock();
 
-		// --- dry-run supply, partitioned by source priority (MOD-070): pure generators vs storage
-		// sources (dual-role BatteryBox with a cabled OUT face). Generators feed the line and charge
-		// storage; storage discharges into the line as backup power (machine deficit) and — since
-		// MOD-314 — as a cascade donor once machines are covered.
-		//
-		// This comment used to end "and NEVER sources for another storage sink — so batteries can't wash
-		// energy through the wires or into each other". That blanket ban was too wide: it did stop washing,
-		// but it also stopped the legitimate case of a full box topping up an empty one, so a player could
-		// not extend their bank by placing a second Battery Box. Washing is now excluded by construction
-		// instead — a donor only feeds a store that is proportionally emptier, only by half the gap, only
-		// above a deadband, and never one that is itself donating this tick. See CascadeShare. ---
+		// --- dry-run supply, split by source priority: pure generators vs storage sources (a dual-role
+		// Battery Box with a cabled OUT face). Generators feed the line and charge storage; a store
+		// discharges through one of three mutually exclusive channels.
+		// Why three and not one — docs/adr/ADR-004-three-storage-discharge-channels.md ---
 		long genSupply = 0;
 		java.util.Set<BlockPos> supplyingProducers = new java.util.LinkedHashSet<>();
 		List<EnergyLineDistributor.LiveProducer> generators = new ArrayList<>(producers.size());
 		List<EnergyLineDistributor.LiveProducer> storageSources = new ArrayList<>();
-		// MOD-255: the positions of the dual-role nodes, so the sink pass below can tell a battery that is
-		// discharging into this very line from an ordinary consumer.
+		// Positions of the dual-role nodes, so the sink pass below can tell a battery that is discharging
+		// into this very line from an ordinary consumer (ADR-002: a node that donates must not also be
+		// served, or it drinks its own discharge back out of the neighbouring cable).
 		Set<BlockPos> storageSourcePositions = new LinkedHashSet<>();
 		for (EnergyTopologyCache.Endpoint ep : producers) {
 			EnergyPort st = storageAt(ep);
@@ -501,9 +495,9 @@ public final class EnergyNetwork {
 				generators.add(new EnergyLineDistributor.LiveProducer(ep.pos(), st));
 				long supply = EnergyTransactions.get().simulate(sim -> st.extract(Long.MAX_VALUE, sim));
 				genSupply += supply;
-				// MOD-214: which producers actually hold EU this tick, decided HERE — outside the
-				// committing transaction opened below. The line kernel needs it to tell a cable that is
-				// genuinely starved from one that is simply about to be refilled by its generator.
+				// Which producers actually HOLD EU this tick, decided here — outside the committing
+				// transaction opened below. The flow field is seeded from these, not from every face
+				// capable of extraction (ADR-003, point 2).
 				if (supply > 0) {
 					supplyingProducers.add(ep.pos());
 				}
@@ -545,63 +539,39 @@ public final class EnergyNetwork {
 		// wired to cables with no consumer) still runs the charge stage below to fill the line to its
 		// buffer capacity — the wire holds and shows the energy even with nowhere to deliver it (MOD-070).
 
-		// MOD-255: a storage node that discharges into this line THIS tick must not also be served from it.
-		// The old no-self-churn rule compared positions, which is dead on the line path (the supply pool is
-		// cable buffers, and a cable is never at the battery's position), so a Battery Box wired on both its
-		// IN and its OUT face drank straight back the EU it had just pushed into the wire: the charge
-		// oscillated between the box and its neighbouring cables and never advanced down the line, leaving
-		// the machines at the far end on 0 EU next to a full battery.
-		//
-		// Discharging is exactly `storageBudget > 0` (see EnergyLineDistributor#chargeAndPropagateLine), so
-		// the two decisions read the same number from the same helper. When generators cover the machines —
-		// or there is no machine at all — the budget is 0, nothing is dropped, and a dual-role box charges
-		// from its input face as before (MOD-214's cabled-output-face layout). The consequence to know: while
-		// machines are hungry and generators fall short, a dual-role box only feeds and does not fill. That
-		// is MOD-009's "machines before storage" rule, now also applied to the battery's own second role.
+		// Channel 1 of 3 — backup power: how much stores may release to cover machine demand the
+		// generators fall short of. Zero when machines are absent or already covered, and that zero is
+		// what opens the next channel. The consequence to know: while machines are hungry, a dual-role
+		// box only feeds and does not fill (ADR-002 applied to the battery's own second role).
 		long storageDischarge = EnergyLineDistributor.storageBudget(machineDemand, genSupply);
 
-		// MOD-314: the storage→storage cascade — a fuller Battery Box topping up an emptier one, so
-		// "extend the bank by placing a second box" works. Computed HERE, before the guard below, because
-		// the guard has to know whether a node is discharging for ANY reason this tick.
-		//
-		// Only when `storageDischarge == 0`, i.e. machines are absent or already covered by generators.
-		// That is MOD-009's "machines before storage" rule (a battery must not top up another battery
-		// while a machine starves) and it also makes the two storage stages mutually exclusive, which is
-		// what keeps one source from injecting 2 × packetCap in a tick — see chargeAndPropagateLine.
-		//
-		// Targets exclude every dual-role position: a node that donates this tick must not also receive,
-		// or two boxes wired on both faces would hand the same EU back and forth, paying MOD-021 loss on
-		// every leg — a slow drain, strictly worse than the bug being fixed. Restricting the RECEIVER to
-		// a pure sink makes that ping-pong structurally impossible rather than merely unlikely.
+		// Channel 2 of 3 — the storage→storage cascade: a fuller box topping up an emptier one, so
+		// "extend the bank by placing a second box" works. Computed BEFORE the guard below, because the
+		// guard has to know whether a node is discharging for ANY reason this tick. Receivers are pure
+		// sinks only, which makes box↔box ping-pong structurally impossible rather than merely unlikely.
+		// Why the channels are mutually exclusive — ADR-004.
 		Map<BlockPos, Long> cascadeAllowances = new LinkedHashMap<>();
 		if (storageDischarge == 0 && !storageSources.isEmpty() && !sinks.isEmpty()) {
 			cascadeAllowances = computeCascadeAllowances(storageSources, sinks, strongestCable.segmentBuffer(),
 					packetCap);
 		}
 
-		// MOD-353: the third and last way a store may discharge — into a sink that the cascade refuses.
-		// Computed only when BOTH earlier stages are closed, which is what keeps the three mutually
-		// exclusive: backup power (machine demand), cascade (fill fractions), feed (flat rate + reserve).
+		// Channel 3 of 3 — feed: into a sink the cascade refuses (Teleporter, Charging Station). Opens
+		// only when BOTH earlier channels are closed. ADR-004 explains why these blocks cannot use the
+		// cascade: proportional balancing would drain a full box into a 25x larger buffer unbidden.
 		Map<BlockPos, Long> feedAllowances = new LinkedHashMap<>();
 		if (storageDischarge == 0 && cascadeAllowances.isEmpty()
 				&& !storageSources.isEmpty() && !sinks.isEmpty()) {
 			feedAllowances = computeFeedAllowances(storageSources, sinks, packetCap);
 		}
 
-		// MOD-255 + MOD-314: a storage node that discharges into this line THIS tick — as backup power OR
-		// as a cascade donor — must not also be served from it, or it drinks its own discharge back out of
-		// the neighbouring cable. Before MOD-314 this read `storageDischarge > 0` alone, which is zero in
-		// exactly the scenario the cascade runs in (no machines), so the guard would have been inert
-		// precisely when it was needed.
-		//
-		// Membership of `storageSources` is NOT the right criterion, and using it re-created the very bug
-		// this task exists to fix. That list is built from `supportsExtraction()`, a pure face-role test
-		// that never looks at the buffer — so an EMPTY box with a cable on its OUT face counts as a
-		// "source". Excluding all of them would drop every box wired mid-bus (cable–box–cable, the layout
-		// MOD-255 documents as ordinary) out of `sinks`, and it would never charge from its full neighbour:
-		// the original symptom, preserved for the more common wiring. Backup discharge does draw from every
-		// storage source, so there the whole set is right; the cascade draws only from donors that actually
-		// got an allowance, so only those are excluded.
+		// A store that discharges into this line THIS tick must not also be served from it (ADR-002).
+		// Note WHICH set is excluded per channel, and that this is not interchangeable: backup discharge
+		// draws from every storage source, so the whole set goes; the cascade and the feed draw only from
+		// donors that actually got an allowance, so only those do. Excluding all sources unconditionally
+		// looks equivalent and is not — `storageSources` is built from a pure face-role test, so an EMPTY
+		// box with a cable on its OUT face is in it, and dropping it from `sinks` means it never charges
+		// from its full neighbour. That is the original bug, preserved for the commonest wiring.
 		if (!storageSourcePositions.isEmpty()) {
 			if (storageDischarge > 0) {
 				sinks.removeIf(c -> storageSourcePositions.contains(c.pos()));
@@ -616,21 +586,11 @@ public final class EnergyNetwork {
 			}
 		}
 
-		// MOD-252: the flow direction is seeded from the endpoints that actually WANT energy this tick, so
-		// EU moves toward demand instead of away from whichever source happens to be nearest.
-		//
-		// EVERY waiting endpoint seeds it — machines AND storage sinks. Seeding is about REACHABILITY, not
-		// about priority: a cable is only ever filled from a source-adjacent cable, and the pull rule is
-		// strictly downhill, so a cable whose potential is above every source-adjacent one has no filling
-		// path at all. Letting machines alone seed the field therefore fenced off the whole stretch of bus
-		// lying past the source relative to the machine: a Battery Box out there read 0/20000 next to dead
-		// cable for as long as any machine anywhere on the net had room — the original MOD-252 symptom,
-		// simply relocated to the far side of the source. MOD-009's class priority is enforced where it
-		// belongs, in the SERVE order below (machines drink from the line before storage sinks do), not by
-		// bending the geometry.
-		//
-		// An empty set means nobody is waiting, which puts the network on the producer-seeded fallback
-		// field and reproduces MOD-070's producer-only line fill exactly.
+		// The flow field is seeded from EVERY endpoint that wants energy this tick — machines AND storage
+		// sinks. Seeding is about REACHABILITY, not priority: narrowing it to machines fences off the
+		// stretch of bus lying past the source, and a store out there never fills. Class priority lives in
+		// the SERVE order below instead. An empty set means nobody is waiting, which falls back to the
+		// producer-seeded field (ADR-003, ADR-001).
 		Set<BlockPos> sinkSeeds = new LinkedHashSet<>();
 		Set<BlockPos> machineSeeds = new LinkedHashSet<>();
 		for (EnergyLineDistributor.LiveConsumer c : machines) {
@@ -640,17 +600,13 @@ public final class EnergyNetwork {
 		for (EnergyLineDistributor.LiveConsumer c : sinks) {
 			sinkSeeds.add(c.pos());
 		}
-		// MOD-214: the producer field must describe distance from a producer that actually supplies, not
-		// from any face capable of extraction. Both fields are published before the distributor reads
-		// propagationOrder / the flow potential, and outside the committing transaction opened below.
-		// MOD-254: the machine subset rides along as the fork tie-break seed set. It biases how a forked
-		// cable buffer is split (machines before storage, geometrically) and nothing else — the flow field
-		// above stays seeded from every waiting endpoint, so reachability is untouched.
+		// Published before the distributor reads propagationOrder / the flow potential, and outside the
+		// committing transaction opened below. The machine subset rides along as the fork tie-break seed
+		// set: it only weighs how a forked buffer is split, never who may be filled (ADR-003, point 3).
 		topology.updateLiveEndpoints(supplyingProducers, sinkSeeds, machineSeeds);
-		// MOD-318: stamp "a generator had EU this tick" for the shock rule. Set here rather than at the
-		// end of the method so it lands on the same tick the cables are actually being fed, and only from
-		// `supplyingProducers`, which holds generators only — a Battery Box sitting on an isolated stretch
-		// must not keep that stretch reading as a live hazard.
+		// Stamp "a generator had EU this tick" for the shock rule — here rather than at the end of the
+		// method, so it lands on the same tick the cables are actually fed. Generators only: a Battery Box
+		// on an isolated stretch must not keep it reading as a live hazard (ADR-007).
 		boolean hasSupply = !supplyingProducers.isEmpty();
 		if (hasSupply) {
 			lastSupplyTick = topology.level().getGameTime();

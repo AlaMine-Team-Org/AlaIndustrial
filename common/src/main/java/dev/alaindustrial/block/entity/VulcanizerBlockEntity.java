@@ -84,7 +84,7 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity implements O
 		// The batch price (MOD-271: four sulfur dust) must be on hand every tick, not just at the
 		// start — pulling dust out mid-cycle stops the run instead of completing it underpaid.
 		boolean canWork = heatEnough && recipe.hasEnough(input)
-				&& energy.amount >= euPerTick && canOutput(result);
+				&& energy.getAmount() >= euPerTick && canOutput(result);
 
 		if (canWork && !WorldHeatSources.consumeForProgress(level, pos, heatSource, overclockerCount())) {
 			canWork = false;
@@ -101,7 +101,7 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity implements O
 			cycleHeatLevel = heatSource.level();
 			result = scaledResult(recipe.resultStack(), cycleHeatLevel);
 		}
-		energy.amount -= euPerTick;
+		energy.drainInternal(euPerTick);
 		progress++;
 		if (progress >= maxProgress) {
 			recipe.consume(List.of(items.get(RAW_RUBBER_SLOT), items.get(SULFUR_SLOT)));

@@ -1,6 +1,8 @@
 package dev.alaindustrial.teleporter;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.core.net.LevelStateHolder;
+import dev.alaindustrial.core.net.LevelStateRegistry;
 import dev.alaindustrial.item.teleport.TeleportPoint;
 import dev.alaindustrial.item.teleport.TeleporterRemoteItem;
 import java.util.HashMap;
@@ -35,6 +37,38 @@ public final class TeleportWarmupManager {
 	private static final Map<UUID, Warmup> WARMUPS = new HashMap<>();
 	/** Player → the server tick their cooldown ends. Authoritative; the item cooldown is only a visual. */
 	private static final Map<UUID, Long> COOLDOWNS = new HashMap<>();
+
+	/*
+	 * MOD-401: enrol in the shared cleanup roster. `clearAll()` was written here from the start
+	 * ("mirroring NetworkManager.clearAll") and, like the fluid manager's, was called from nowhere but
+	 * a gametest teardown — so warmups and cooldowns from one world survived into the next one in the
+	 * same process, where their absolute game-tick deadlines mean nothing. This state is keyed by
+	 * player, not by level, so the level-unload sweep is a no-op for it and only the server-stop sweep
+	 * does work.
+	 */
+	static {
+		LevelStateRegistry.register(new LevelStateHolder() {
+			@Override
+			public String stateId() {
+				return "teleport-warmups";
+			}
+
+			@Override
+			public void clearLevel(Object level) {
+				// Keyed by player UUID: a level unload takes none of it away.
+			}
+
+			@Override
+			public void clearAll() {
+				TeleportWarmupManager.clearAll();
+			}
+
+			@Override
+			public int retained() {
+				return WARMUPS.size() + COOLDOWNS.size();
+			}
+		});
+	}
 
 	/** True if this player is mid-warmup — a second trigger must not start another one. */
 	public static boolean isWarming(ServerPlayer player) {

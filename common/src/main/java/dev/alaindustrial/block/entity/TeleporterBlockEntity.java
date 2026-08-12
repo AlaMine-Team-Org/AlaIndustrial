@@ -128,7 +128,7 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 					case TeleporterStationMenu.DATA_ENERGY_PERMILLE -> {
 						long capacity = energy.getCapacity();
 						yield capacity <= 0 ? 0
-								: (int) Math.min(energy.amount * 1000 / capacity, 1000);
+								: (int) Math.min(energy.getAmount() * 1000 / capacity, 1000);
 					}
 					case TeleporterStationMenu.DATA_PRIVATE -> isPrivate ? 1 : 0;
 					case TeleporterStationMenu.DATA_IS_OWNER -> isOwner(viewer) ? 1 : 0;
@@ -190,8 +190,8 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 	@Override
 	protected void collectImplicitComponents(DataComponentMap.Builder builder) {
 		super.collectImplicitComponents(builder);
-		if (energy.amount > 0) {
-			builder.set(ModDataComponents.STORED_ENERGY.get(), energy.amount);
+		if (energy.getAmount() > 0) {
+			builder.set(ModDataComponents.STORED_ENERGY.get(), energy.getAmount());
 		}
 		if (!isPrivate) {
 			builder.set(ModDataComponents.TELEPORTER_PRIVATE.get(), false);
@@ -201,7 +201,7 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 	@Override
 	protected void applyImplicitComponents(DataComponentGetter getter) {
 		super.applyImplicitComponents(getter);
-		energy.amount = Math.min(getter.getOrDefault(ModDataComponents.STORED_ENERGY.get(), 0L), energy.getCapacity());
+		energy.setAmountUntracked(Math.min(getter.getOrDefault(ModDataComponents.STORED_ENERGY.get(), 0L), energy.getCapacity()));
 		isPrivate = getter.getOrDefault(ModDataComponents.TELEPORTER_PRIVATE.get(), true);
 	}
 }

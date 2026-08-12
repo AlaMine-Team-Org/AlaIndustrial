@@ -117,7 +117,7 @@ public class FluidGameTest {
 		long pumpTankPeak = 0;
 		boolean lavaConsumed = false;
 		if (level.getBlockEntity(pumpAbs) instanceof PumpBlockEntity pump) {
-			pump.getEnergyStorage().amount = Config.pumpEuPerBucket; // stand-in for network supply (≥1 bucket)
+			pump.getEnergyStorage().setAmountUntracked(Config.pumpEuPerBucket); // stand-in for network supply (≥1 bucket)
 			pump.serverTick(level, pumpAbs, level.getBlockState(pumpAbs));
 			pumpTankPeak = Math.max(pumpTankPeak, pump.fluidTank.amount); // acquired, not yet pushed
 		}
@@ -135,7 +135,7 @@ public class FluidGameTest {
 		long geoTankPeak = geoTankBefore;
 		for (int i = 0; i < 4; i++) {
 			if (level.getBlockEntity(pumpAbs) instanceof PumpBlockEntity pump) {
-				pump.getEnergyStorage().amount = Config.pumpEuPerBucket;
+				pump.getEnergyStorage().setAmountUntracked(Config.pumpEuPerBucket);
 				pump.serverTick(level, pumpAbs, level.getBlockState(pumpAbs));
 				pumpTankPeak = Math.max(pumpTankPeak, pump.fluidTank.amount);
 			}
@@ -271,7 +271,7 @@ public class FluidGameTest {
 			helper.fail("expected buffer cap " + Config.geothermalBuffer + " but was " + cap);
 		}
 		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET, 64));
-		geo.getEnergyStorage().amount = cap - 1; // BVA: max-1
+		geo.getEnergyStorage().setAmountUntracked(cap - 1); // BVA: max-1
 		drive(geo, helper, 5);
 		long amount = geo.getEnergyStorage().getAmount();
 		if (amount != cap) {
@@ -344,7 +344,7 @@ public class FluidGameTest {
 		drive(geo, helper, 1); // bucket consumed → lavaTicks = geothermalBurnTicks
 		// Clear the input slot so further intake cannot confound the burn-pause check.
 		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, ItemStack.EMPTY);
-		geo.getEnergyStorage().amount = geo.getEnergyStorage().getCapacity(); // force buffer full
+		geo.getEnergyStorage().setAmountUntracked(geo.getEnergyStorage().getCapacity()); // force buffer full
 		drive(geo, helper, 1);
 		int ticks1 = geo.getDataAccess().get(2); // index 2 == progress (lavaTicks)
 		drive(geo, helper, 1);
@@ -365,7 +365,7 @@ public class FluidGameTest {
 	@GameTest
 	public void tcGeo001Fun06_lavaBucketLoadedWhenEnergyFull(GameTestHelper helper) {
 		GeothermalGeneratorBlockEntity geo = place(helper);
-		geo.getEnergyStorage().amount = geo.getEnergyStorage().getCapacity(); // force buffer full
+		geo.getEnergyStorage().setAmountUntracked(geo.getEnergyStorage().getCapacity()); // force buffer full
 		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET, 1));
 		drive(geo, helper, 1);
 		int lavaTicks = geo.getDataAccess().get(2); // progress = lavaTicks
@@ -435,7 +435,7 @@ public class FluidGameTest {
 		}
 
 		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, ItemStack.EMPTY);
-		geo.getEnergyStorage().amount = geo.getEnergyStorage().getCapacity(); // stop new burns from starting
+		geo.getEnergyStorage().setAmountUntracked(geo.getEnergyStorage().getCapacity()); // stop new burns from starting
 		drive(geo, helper, Config.geothermalBurnTicks + 10); // exhaust any remaining lavaTicks
 		if (helper.getLevel().getBlockState(abs).getValue(BlockStateProperties.LIT)) {
 			helper.fail("geothermal generator must not be LIT once the burn ends");
@@ -482,7 +482,7 @@ public class FluidGameTest {
 		GeothermalGeneratorBlockEntity geo = place(helper);
 		geo.setItem(GeothermalGeneratorBlockEntity.INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET, 1));
 		drive(geo, helper, 1); // tick 1 starts the burn
-		geo.getEnergyStorage().amount = 0; // measure one clean tick from empty
+		geo.getEnergyStorage().setAmountUntracked(0); // measure one clean tick from empty
 		drive(geo, helper, 1);
 		long made = geo.getEnergyStorage().getAmount();
 		if (made != Config.geothermalEuPerTick) {
@@ -499,7 +499,7 @@ public class FluidGameTest {
 	@GameTest
 	public void tcGeo001Prf02_packetCappedAtLv(GameTestHelper helper) {
 		GeothermalGeneratorBlockEntity geo = place(helper);
-		geo.getEnergyStorage().amount = geo.getEnergyStorage().getCapacity(); // buffer full
+		geo.getEnergyStorage().setAmountUntracked(geo.getEnergyStorage().getCapacity()); // buffer full
 
 		BlockPos sink = POS.east();
 		helper.setBlock(sink, ModBlocks.BATTERY_BOX.defaultBlockState()
@@ -508,7 +508,7 @@ public class FluidGameTest {
 		if (batteryBox == null) {
 			helper.fail("battery_box block entity missing after placement");
 		}
-		batteryBox.getEnergyStorage().amount = 0;
+		batteryBox.getEnergyStorage().setAmountUntracked(0);
 
 		drive(geo, helper, 1);
 
@@ -537,7 +537,7 @@ public class FluidGameTest {
 			geo.serverTick(helper.getLevel(), geo.getBlockPos(), helper.getLevel().getBlockState(geo.getBlockPos()));
 			long after = geo.getEnergyStorage().getAmount();
 			totalMade += Math.max(0, after - before);
-			geo.getEnergyStorage().amount = 0; // drain so the cap never masks further production
+			geo.getEnergyStorage().setAmountUntracked(0); // drain so the cap never masks further production
 			int lavaTicksLeft = geo.getDataAccess().get(2); // index 2 == progress (lavaTicks)
 			if (lavaTicksLeft == 0 && geo.getItem(GeothermalGeneratorBlockEntity.INPUT_SLOT).isEmpty()) {
 				break;
@@ -584,7 +584,7 @@ public class FluidGameTest {
 	// precise EnergyFaceGameTest case, which also checks the null port on FACING.
 
 	/**
-	 * @implements TC-PUMP-001-FUN02 — with energy.amount exactly pumpEuPerBucket (1000) and a lava
+	 * @implements TC-PUMP-001-FUN02 — with energy.getAmount() exactly pumpEuPerBucket (1000) and a lava
 	 *     source in front of the pump (FACING face) and an empty tank, one tick acquires 1 bucket and
 	 *     drains the EU to 0. This is also the suite's PRF evidence for pumpEuPerBucket=1000
 	 *     (Config.pumpEuPerBucket, BVA row in pump.md).
@@ -596,7 +596,7 @@ public class FluidGameTest {
 		PumpBlockEntity pump = placePump(helper, POS);
 		BlockPos lavaAbs = helper.absolutePos(POS.relative(Direction.EAST));
 		level.setBlockAndUpdate(lavaAbs, Blocks.LAVA.defaultBlockState());
-		pump.getEnergyStorage().amount = Config.pumpEuPerBucket;
+		pump.getEnergyStorage().setAmountUntracked(Config.pumpEuPerBucket);
 		drivePump(pump, helper, 1);
 		if (pump.fluidTank.amount != FluidAmounts.BUCKET) {
 			helper.fail("expected tank to hold exactly 1 bucket, got " + pump.fluidTank.amount);
@@ -627,8 +627,8 @@ public class FluidGameTest {
 		// The donor also runs its own push-to-neighbour logic each tick (pushLava), which would move
 		// the same bucket the same direction; keep it unpowered so only its EXTRACTION path (pulled by
 		// the other pump's acquireLava) is exercised, not its own push.
-		donor.getEnergyStorage().amount = 0;
-		pump.getEnergyStorage().amount = Config.pumpEuPerBucket;
+		donor.getEnergyStorage().setAmountUntracked(0);
+		pump.getEnergyStorage().setAmountUntracked(Config.pumpEuPerBucket);
 		drivePump(pump, helper, 1);
 		if (pump.getEnergyStorage().getAmount() != 0) {
 			helper.fail("expected the pump to spend its EU acquiring 1 bucket from the donor's tank, still has "
@@ -660,7 +660,7 @@ public class FluidGameTest {
 		GeothermalGeneratorBlockEntity geo = helper.getBlockEntity(geoRel, GeothermalGeneratorBlockEntity.class);
 		EnergyTransactions.get().runCommitting(txn ->
 				pump.fluidTank.insert(FluidHolder.of(Fluids.LAVA), FluidAmounts.BUCKET * 2, txn));
-		pump.getEnergyStorage().amount = Config.machineBuffer;
+		pump.getEnergyStorage().setAmountUntracked(Config.machineBuffer);
 		drivePump(pump, helper, 1);
 		if (pump.fluidTank.amount != 0) {
 			helper.fail("expected the pump's tank to be fully pushed, got " + pump.fluidTank.amount);
@@ -683,7 +683,7 @@ public class FluidGameTest {
 		BlockPos lavaAbs = helper.absolutePos(POS.relative(Direction.EAST));
 		level.setBlockAndUpdate(lavaAbs, Blocks.LAVA.defaultBlockState());
 
-		pump.getEnergyStorage().amount = 0;
+		pump.getEnergyStorage().setAmountUntracked(0);
 		drivePump(pump, helper, 10);
 		if (pump.fluidTank.amount != 0) {
 			helper.fail("without power the tank must stay empty, got " + pump.fluidTank.amount);
@@ -692,7 +692,7 @@ public class FluidGameTest {
 			helper.fail("without power the lava source must remain untouched");
 		}
 
-		pump.getEnergyStorage().amount = Config.pumpEuPerBucket;
+		pump.getEnergyStorage().setAmountUntracked(Config.pumpEuPerBucket);
 		drivePump(pump, helper, 5);
 		if (pump.fluidTank.amount != FluidAmounts.BUCKET) {
 			helper.fail("after power restore expected exactly 1 bucket acquired, got " + pump.fluidTank.amount);
@@ -720,10 +720,10 @@ public class FluidGameTest {
 		helper.setBlock(geoRel, ModBlocks.GEOTHERMAL_GENERATOR);
 		GeothermalGeneratorBlockEntity geo = helper.getBlockEntity(geoRel, GeothermalGeneratorBlockEntity.class);
 
-		pump.getEnergyStorage().amount = Config.machineBuffer;
+		pump.getEnergyStorage().setAmountUntracked(Config.machineBuffer);
 		long euBefore = pump.getEnergyStorage().getAmount();
 		for (int i = 0; i < 5; i++) {
-			pump.getEnergyStorage().amount = Math.max(pump.getEnergyStorage().getAmount(), Config.pumpEuPerBucket);
+			pump.getEnergyStorage().setAmountUntracked(Math.max(pump.getEnergyStorage().getAmount(), Config.pumpEuPerBucket));
 			drivePump(pump, helper, 1);
 		}
 		long euAfter = pump.getEnergyStorage().getAmount();
@@ -745,7 +745,7 @@ public class FluidGameTest {
 	@GameTest
 	public void tcPump001Neg01_noSourceNoAcquisition(GameTestHelper helper) {
 		PumpBlockEntity pump = placePump(helper, POS);
-		pump.getEnergyStorage().amount = Config.machineBuffer;
+		pump.getEnergyStorage().setAmountUntracked(Config.machineBuffer);
 		long euBefore = pump.getEnergyStorage().getAmount();
 		drivePump(pump, helper, 20);
 		if (pump.fluidTank.amount != 0) {
@@ -765,7 +765,7 @@ public class FluidGameTest {
 		PumpBlockEntity pump = placePump(helper, POS);
 		BlockPos lavaAbs = helper.absolutePos(POS.relative(Direction.EAST));
 		level.setBlockAndUpdate(lavaAbs, Blocks.LAVA.defaultBlockState());
-		pump.getEnergyStorage().amount = 0;
+		pump.getEnergyStorage().setAmountUntracked(0);
 		drivePump(pump, helper, 20);
 		if (pump.fluidTank.amount != 0) {
 			helper.fail("tank must stay empty without power, got " + pump.fluidTank.amount);
@@ -789,7 +789,7 @@ public class FluidGameTest {
 		level.setBlockAndUpdate(lavaAbs, Blocks.LAVA.defaultBlockState());
 		EnergyTransactions.get().runCommitting(txn ->
 				pump.fluidTank.insert(FluidHolder.of(Fluids.LAVA), PumpBlockEntity.TANK_CAPACITY, txn));
-		pump.getEnergyStorage().amount = Config.machineBuffer;
+		pump.getEnergyStorage().setAmountUntracked(Config.machineBuffer);
 		long euBefore = pump.getEnergyStorage().getAmount();
 		drivePump(pump, helper, 10);
 		if (pump.fluidTank.amount != PumpBlockEntity.TANK_CAPACITY) {
@@ -816,7 +816,7 @@ public class FluidGameTest {
 		helper.setBlock(POS.relative(Direction.EAST), Blocks.STONE);
 		EnergyTransactions.get().runCommitting(txn ->
 				pump.fluidTank.insert(FluidHolder.of(Fluids.LAVA), FluidAmounts.BUCKET * 2, txn));
-		pump.getEnergyStorage().amount = Config.machineBuffer;
+		pump.getEnergyStorage().setAmountUntracked(Config.machineBuffer);
 		drivePump(pump, helper, 10);
 		if (pump.fluidTank.amount != FluidAmounts.BUCKET * 2) {
 			helper.fail("lava must remain in the pump's tank with no insertable neighbour, got "
@@ -842,7 +842,7 @@ public class FluidGameTest {
 				net.minecraft.world.level.block.LiquidBlock.LEVEL, 2));
 		// Seed enough EU to clear the per-bucket acquisition threshold (pumpEuPerBucket = 1000);
 		// machineBuffer (800) is below it and would leave the pump starved.
-		pump.getEnergyStorage().amount = Config.pumpEuPerBucket;
+		pump.getEnergyStorage().setAmountUntracked(Config.pumpEuPerBucket);
 		drivePump(pump, helper, 5);
 
 		// The pump must successfully acquire the source block through the flowing block
@@ -1095,7 +1095,7 @@ public class FluidGameTest {
 		PumpBlockEntity pump = placePump(helper, POS);
 		BlockPos waterAbs = helper.absolutePos(POS.relative(Direction.EAST));
 		level.setBlockAndUpdate(waterAbs, Blocks.WATER.defaultBlockState());
-		pump.getEnergyStorage().amount = Config.pumpEuPerBucket;
+		pump.getEnergyStorage().setAmountUntracked(Config.pumpEuPerBucket);
 		drivePump(pump, helper, 1);
 		if (pump.fluidTank.amount != FluidAmounts.BUCKET) {
 			helper.fail("expected the tank to hold 1 bucket of water, got " + pump.fluidTank.amount);
@@ -1125,7 +1125,7 @@ public class FluidGameTest {
 		EnergyTransactions.get().runCommitting(txn ->
 				pump.fluidTank.insert(FluidHolder.of(Fluids.LAVA), FluidAmounts.BUCKET, txn));
 		long euBefore = Config.pumpEuPerBucket;
-		pump.getEnergyStorage().amount = euBefore;
+		pump.getEnergyStorage().setAmountUntracked(euBefore);
 		drivePump(pump, helper, 3);
 		if (pump.fluidTank.fluid.is(Fluids.WATER)) {
 			helper.fail("tank must not mix: held lava but accepted water");
@@ -1150,7 +1150,7 @@ public class FluidGameTest {
 	public void tcPump001Fun07_bucketEmptiesIntoTank(GameTestHelper helper) {
 		PumpBlockEntity pump = placePump(helper, POS);
 		pump.setItem(PumpBlockEntity.FILL_INPUT_SLOT, new ItemStack(Items.LAVA_BUCKET));
-		pump.getEnergyStorage().amount = 0; // bucket feed needs no EU
+		pump.getEnergyStorage().setAmountUntracked(0); // bucket feed needs no EU
 		drivePump(pump, helper, 1);
 		if (pump.fluidTank.amount != FluidAmounts.BUCKET) {
 			helper.fail("expected the tank to gain 1 bucket from the lava bucket, got " + pump.fluidTank.amount);
@@ -1180,7 +1180,7 @@ public class FluidGameTest {
 		EnergyTransactions.get().runCommitting(txn ->
 				pump.fluidTank.insert(FluidHolder.of(Fluids.LAVA), FluidAmounts.BUCKET, txn));
 		pump.setItem(PumpBlockEntity.DRAIN_INPUT_SLOT, new ItemStack(Items.BUCKET));
-		pump.getEnergyStorage().amount = 0; // bucket drain needs no EU
+		pump.getEnergyStorage().setAmountUntracked(0); // bucket drain needs no EU
 		long tankBefore = pump.fluidTank.amount;
 		drivePump(pump, helper, 1);
 		if (pump.fluidTank.amount != tankBefore - FluidAmounts.BUCKET) {

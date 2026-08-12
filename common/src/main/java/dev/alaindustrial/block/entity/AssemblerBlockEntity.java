@@ -230,7 +230,7 @@ public class AssemblerBlockEntity extends MachineBlockEntity implements Overcloc
 		int euPerTick = euPerTick();
 		this.maxProgress = effectiveDuration(Config.assemblerDuration);
 		if (progress < maxProgress) {
-			if (energy.amount < euPerTick) {
+			if (energy.getAmount() < euPerTick) {
 				// Wait, keeping the progress: the ingredients are still in the warehouse (they are only
 				// taken at the finish), so nothing is lost and nothing is burnt. Sleeping here rather than
 				// re-checking every tick is free — any delivery into the buffer commits a transaction,
@@ -238,10 +238,10 @@ public class AssemblerBlockEntity extends MachineBlockEntity implements Overcloc
 				setStatus(AssemblerStatus.NO_ENERGY);
 				return IDLE_SLEEP_TICKS;
 			}
-			energy.amount -= euPerTick;
+			energy.drainInternal(euPerTick);
 			progress++;
 			setStatus(AssemblerStatus.READY);
-			markDirtyAndSync();
+			setChangedQuietly();
 			return 0;
 		}
 		// At the finish line: re-plan against the warehouse as it is NOW and commit atomically. A plan
@@ -257,7 +257,7 @@ public class AssemblerBlockEntity extends MachineBlockEntity implements Overcloc
 		progress = 0;
 		activeSlot = -1;
 		setStatus(AssemblerStatus.READY);
-		markDirtyAndSync();
+		setChangedQuietly();
 		syncBlockEntityToClient();
 		return 0;
 	}

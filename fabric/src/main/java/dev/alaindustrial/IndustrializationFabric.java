@@ -400,10 +400,11 @@ public class IndustrializationFabric implements ModInitializer {
 		// MOD-067: auto-give the Guide Book on first join (once per player; SavedData ledger).
 		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
 				dev.alaindustrial.core.guide.GuideBookGiver.giveIfNeeded(handler.player));
-		ServerLevelEvents.UNLOAD.register((server, level) -> {
-			NetworkManager.clear(level);
-			ItemNetworkManager.clear(level);
-		});
+		// MOD-401: one sweep over everything that holds per-level state, instead of naming managers
+		// here. The by-name list is what leaked: the fluid manager was never added to it, so every
+		// unloaded ServerLevel stayed reachable as a key in its map for the life of the process.
+		ServerLevelEvents.UNLOAD.register(
+				(server, level) -> dev.alaindustrial.core.net.LevelStateRegistry.clearLevel(level));
 		// MOD-062: inject the Industrialist house into the vanilla village pools. SERVER_STARTING
 		// fires before any level/worldgen exists — required (pool maxSize memoizes on first use).
 		ServerLifecycleEvents.SERVER_STARTING.register(
@@ -417,8 +418,9 @@ public class IndustrializationFabric implements ModInitializer {
 			dev.alaindustrial.item.wearable.JetpackLight.shutdown(server);
 		});
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
-			NetworkManager.clearAll();
-			ItemNetworkManager.clearAll();
+			// MOD-401: same sweep, whole-server scope — energy, fluid and item networks plus the
+			// teleporter warmups/cooldowns, whichever of them the run actually loaded.
+			dev.alaindustrial.core.net.LevelStateRegistry.clearAll();
 			dev.alaindustrial.stats.PlayerStatsTracker.get().clear();
 		});
 	}

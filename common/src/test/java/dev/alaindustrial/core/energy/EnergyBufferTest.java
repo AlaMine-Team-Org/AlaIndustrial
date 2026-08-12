@@ -43,15 +43,15 @@ class EnergyBufferTest {
 	void insert_cappedByMaxInsertRate() {
 		EnergyBuffer b = buffer(1000, 32, 32);
 		assertEquals(32, b.insert(1000, new FakeTxn()), "insert must not exceed the per-op maxInsert");
-		assertEquals(32, b.amount);
+		assertEquals(32, b.getAmount());
 	}
 
 	@Test
 	void insert_cappedByRemainingCapacity() {
 		EnergyBuffer b = buffer(100, 1000, 1000);
-		b.amount = 95;
+		b.setAmountUntracked(95);
 		assertEquals(5, b.insert(1000, new FakeTxn()), "insert must not overfill past capacity");
-		assertEquals(100, b.amount);
+		assertEquals(100, b.getAmount());
 	}
 
 	@Test
@@ -63,7 +63,7 @@ class EnergyBufferTest {
 	@Test
 	void insert_intoFullBufferMovesNothing() {
 		EnergyBuffer b = buffer(100, 32, 32);
-		b.amount = 100;
+		b.setAmountUntracked(100);
 		FakeTxn tx = new FakeTxn();
 		assertEquals(0, b.insert(32, tx));
 		assertEquals(0, tx.enlistCount, "a zero move must not enlist (no snapshot churn)");
@@ -83,9 +83,9 @@ class EnergyBufferTest {
 	@Test
 	void insert_lastEuReachesExactCapacity() {
 		EnergyBuffer b = buffer(20_000, 32, 32);
-		b.amount = 19_999;
+		b.setAmountUntracked(19_999);
 		assertEquals(1, b.insert(32, new FakeTxn()), "the 1 EU top-off must move");
-		assertEquals(20_000, b.amount, "buffer must reach exact capacity");
+		assertEquals(20_000, b.getAmount(), "buffer must reach exact capacity");
 	}
 
 	// --- extract math: extracted = min(maxExtract, min(maxAmount, amount)) ---
@@ -93,17 +93,17 @@ class EnergyBufferTest {
 	@Test
 	void extract_cappedByMaxExtractRate() {
 		EnergyBuffer b = buffer(1000, 32, 32);
-		b.amount = 500;
+		b.setAmountUntracked(500);
 		assertEquals(32, b.extract(1000, new FakeTxn()));
-		assertEquals(468, b.amount);
+		assertEquals(468, b.getAmount());
 	}
 
 	@Test
 	void extract_cappedByStoredAmount() {
 		EnergyBuffer b = buffer(1000, 1000, 1000);
-		b.amount = 9;
+		b.setAmountUntracked(9);
 		assertEquals(9, b.extract(1000, new FakeTxn()), "cannot extract more than is stored");
-		assertEquals(0, b.amount);
+		assertEquals(0, b.getAmount());
 	}
 
 	@Test
@@ -117,7 +117,7 @@ class EnergyBufferTest {
 	@Test
 	void extract_consumerBufferEmitsNothing() {
 		EnergyBuffer machine = buffer(800, 32, 0); // maxExtract == 0: a pure consumer
-		machine.amount = 800;
+		machine.setAmountUntracked(800);
 		assertEquals(0, machine.extract(32, new FakeTxn()));
 		assertFalse(machine.supportsExtraction());
 	}
@@ -130,7 +130,7 @@ class EnergyBufferTest {
 		FakeTxn tx = new FakeTxn();
 		b.insert(10, tx);
 		assertEquals(1, tx.enlistCount, "a non-zero insert must enlist for snapshot/rollback");
-		b.amount = 500;
+		b.setAmountUntracked(500);
 		b.extract(10, tx);
 		assertEquals(2, tx.enlistCount, "a non-zero extract must enlist too");
 	}
@@ -138,11 +138,11 @@ class EnergyBufferTest {
 	@Test
 	void snapshotRoundTripsAmount() {
 		EnergyBuffer b = buffer(1000, 32, 32);
-		b.amount = 321;
+		b.setAmountUntracked(321);
 		long snap = b.createSnapshot();
-		b.amount = 0;
+		b.setAmountUntracked(0);
 		b.readSnapshot(snap);
-		assertEquals(321, b.amount, "readSnapshot must restore the captured amount (rollback path)");
+		assertEquals(321, b.getAmount(), "readSnapshot must restore the captured amount (rollback path)");
 	}
 
 	// --- construction + capability flags ---
@@ -190,17 +190,17 @@ class EnergyBufferTest {
 		FakeTxn tx = new FakeTxn();
 		assertEquals(0, b.insert(0, tx), "maxAmount=0 is a probe — must return 0 without throwing");
 		assertEquals(0, tx.enlistCount, "a zero probe must not enlist");
-		assertEquals(0, b.amount);
+		assertEquals(0, b.getAmount());
 	}
 
 	@Test
 	void extract_acceptsZeroMaxAmountAsNoOp() {
 		EnergyBuffer b = buffer(1000, 32, 32);
-		b.amount = 50;
+		b.setAmountUntracked(50);
 		FakeTxn tx = new FakeTxn();
 		assertEquals(0, b.extract(0, tx), "maxAmount=0 is a probe — must return 0 without throwing");
 		assertEquals(0, tx.enlistCount);
-		assertEquals(50, b.amount);
+		assertEquals(50, b.getAmount());
 	}
 
 	// --- read-only projections: getAmount/getCapacity return the live fields, never a hardcoded 0 ---
@@ -208,7 +208,7 @@ class EnergyBufferTest {
 	@Test
 	void getAmountAndCapacity_reportLiveFields_notZeroDefaults() {
 		EnergyBuffer b = buffer(10_000, 32, 32);
-		b.amount = 4321;
+		b.setAmountUntracked(4321);
 		assertEquals(4321, b.getAmount(), "getAmount returns the live stored amount");
 		assertEquals(10_000, b.getCapacity(), "getCapacity returns the configured capacity");
 		// Empty buffer still reports capacity, and amount=0 is a real value (not a hardcoded-0 return mutant)
@@ -240,9 +240,9 @@ class EnergyBufferTest {
 	@MethodSource("insertSweep")
 	void insert_neverExceedsCapacity_orDropsBelowStart(long capacity, long maxInsert, long startAmount, long request) {
 		EnergyBuffer b = buffer(capacity, maxInsert, maxInsert);
-		b.amount = startAmount;
+		b.setAmountUntracked(startAmount);
 		long moved = b.insert(request, new FakeTxn());
-		long after = b.amount;
+		long after = b.getAmount();
 		assertTrue(after >= startAmount, "insert must never DECREASE the stored amount");
 		assertTrue(after <= capacity, "insert must never exceed capacity");
 		assertTrue(moved >= 0 && moved <= maxInsert, "returned amount is in [0, maxInsert]");
@@ -255,11 +255,11 @@ class EnergyBufferTest {
 	@MethodSource("insertSweep")
 	void insert_isMonotonicInRequest(long capacity, long maxInsert, long startAmount, long request) {
 		EnergyBuffer smaller = buffer(capacity, maxInsert, maxInsert);
-		smaller.amount = startAmount;
+		smaller.setAmountUntracked(startAmount);
 		long movedSmaller = smaller.insert(request / 2, new FakeTxn());
 
 		EnergyBuffer larger = buffer(capacity, maxInsert, maxInsert);
-		larger.amount = startAmount;
+		larger.setAmountUntracked(startAmount);
 		long movedLarger = larger.insert(request, new FakeTxn());
 		assertTrue(movedLarger >= movedSmaller,
 				"a larger request must move at least as much as a smaller one (no non-monotonic clamp)");
@@ -270,9 +270,9 @@ class EnergyBufferTest {
 	@MethodSource("extractSweep")
 	void extract_neverGoesNegative_orExceedsStart(long capacity, long maxExtract, long startAmount, long request) {
 		EnergyBuffer b = buffer(capacity, maxExtract, maxExtract);
-		b.amount = startAmount;
+		b.setAmountUntracked(startAmount);
 		long moved = b.extract(request, new FakeTxn());
-		long after = b.amount;
+		long after = b.getAmount();
 		assertTrue(after >= 0, "extract must never drive the buffer negative");
 		assertTrue(after <= startAmount, "extract must never INCREASE the stored amount");
 		assertTrue(moved >= 0 && moved <= maxExtract, "returned amount is in [0, maxExtract]");
@@ -289,17 +289,17 @@ class EnergyBufferTest {
 	@MethodSource("extractSweep")
 	void extract_drainingTwiceSecondMoveIsZero(long capacity, long maxExtract, long startAmount, long request) {
 		EnergyBuffer b = buffer(capacity, maxExtract, maxExtract);
-		b.amount = startAmount;
+		b.setAmountUntracked(startAmount);
 		b.extract(request, new FakeTxn());
 		long secondMove = b.extract(request, new FakeTxn());
 		// After the first extract, amount is reduced; the second extract must respect the NEW amount.
 		// In particular, once amount hits 0, every subsequent extract returns 0.
-		if (b.amount == 0) {
+		if (b.getAmount() == 0) {
 			assertEquals(0, secondMove, "once drained, further extracts move nothing");
 		} else {
 			assertTrue(secondMove >= 0);
 		}
-		assertTrue(b.amount >= 0, "buffer never negative even after repeated extracts");
+		assertTrue(b.getAmount() >= 0, "buffer never negative even after repeated extracts");
 	}
 
 	private static Stream<Arguments> insertSweep() {
@@ -327,5 +327,74 @@ class EnergyBufferTest {
 				Arguments.of(1L, 1L, 1L, 1L),           // minimal
 				Arguments.of(1000L, 32L, 500L, 0L)      // zero request
 		);
+	}
+	// --- untracked writes (MOD-400): the machine's own bookkeeping, outside any transaction ---
+
+	/**
+	 * The three untracked writers exist to replace a public mutable field, and the clamp is the part
+	 * the field could not provide: a buffer that accepts 20 000 EU into a 800 EU capacity puts the
+	 * machine in a state the game can never produce, and every later comparison against it reads as
+	 * valid. Four gametest fixtures were doing exactly that until this clamp appeared.
+	 */
+	@Test
+	void setAmountUntracked_clampsIntoTheBuffersOwnRange() {
+		EnergyBuffer b = buffer(800L, 32L, 32L);
+
+		b.setAmountUntracked(20_000L);
+		assertEquals(800L, b.getAmount(), "a charge above capacity is clamped, not stored");
+
+		b.setAmountUntracked(-5L);
+		assertEquals(0L, b.getAmount(), "a negative charge is clamped to empty");
+
+		b.setAmountUntracked(512L);
+		assertEquals(512L, b.getAmount(), "a charge inside the range is stored exactly");
+	}
+
+	/** Draining reports what was actually spent and never goes below empty. */
+	@Test
+	void drainInternal_spendsWhatIsThereAndReportsIt() {
+		EnergyBuffer b = buffer(1000L, 32L, 32L);
+		b.setAmountUntracked(50L);
+
+		assertEquals(20L, b.drainInternal(20L), "a covered drain reports the full amount");
+		assertEquals(30L, b.getAmount());
+		assertEquals(30L, b.drainInternal(100L), "an over-drain reports only what was there");
+		assertEquals(0L, b.getAmount(), "and leaves the buffer empty, never negative");
+		assertEquals(0L, b.drainInternal(10L), "draining an empty buffer moves nothing");
+		assertEquals(0L, b.drainInternal(-5L), "a negative request is a no-op, not a refund");
+	}
+
+	/** Producing reports what was actually stored — that is how a generator learns the buffer is full. */
+	@Test
+	void produceInternal_storesUpToCapacityAndReportsIt() {
+		EnergyBuffer b = buffer(100L, 32L, 32L);
+		b.setAmountUntracked(90L);
+
+		assertEquals(10L, b.produceInternal(50L), "only the room that existed is stored");
+		assertEquals(100L, b.getAmount());
+		assertEquals(0L, b.produceInternal(10L), "a full buffer stores nothing");
+		assertEquals(100L, b.getAmount(), "and does not overflow past capacity");
+		assertEquals(0L, b.produceInternal(-5L), "a negative request is a no-op");
+	}
+
+	/**
+	 * The load-bearing half of "untracked": these three writes must NOT enlist with a transaction and
+	 * must NOT fire the commit hook. The hook means "energy was delivered or drawn from outside", and
+	 * it wakes an idle consumer (R-29) — firing it for a machine spending its own buffer on its own
+	 * work would wake that machine every single tick, which is the cost the sleep gate exists to avoid.
+	 */
+	@Test
+	void untrackedWrites_doNotFireTheCommitHook() {
+		int[] commits = {0};
+		EnergyBuffer b = new EnergyBuffer(1000L, 32L, 32L, () -> commits[0]++);
+
+		b.setAmountUntracked(500L);
+		b.drainInternal(100L);
+		b.produceInternal(50L);
+		assertEquals(0, commits[0], "untracked bookkeeping must not look like an external transfer");
+
+		// Control: the tracked path still does fire it, so the assertion above cannot pass vacuously.
+		b.onFinalCommit();
+		assertEquals(1, commits[0], "the commit hook itself still works");
 	}
 }

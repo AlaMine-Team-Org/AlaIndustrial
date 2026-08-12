@@ -14,19 +14,19 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
-/** Persistent per-face configuration and lifecycle hook for a passive item-pipe segment. */
-public final class ItemPipeBlockEntity extends MachineBlockEntity {
+/**
+ * Persistent per-face configuration and lifecycle hook for a passive item-pipe segment.
+ *
+ * <p>Transport, not a machine (MOD-400): no inventory of its own, no processing progress, no upgrade
+ * panel and no owner — the pipe is bufferless and every item it moves is atomically handed from one
+ * container to the next by {@link ItemNetworkManager}.
+ */
+public final class ItemPipeBlockEntity extends EnergyBlockEntity {
 	private int packedFaceModes;
 	private boolean registered;
 
 	public ItemPipeBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.ITEM_PIPE_BE.get(), pos, state, EnergyTier.LV, 0, 0, 0, 0);
-	}
-
-	/** Transport, not a working machine (MOD-133): no owner, no player stats, no per-segment UUID ballast. */
-	@Override
-	public boolean tracksOwner() {
-		return false;
+		super(ModContent.ITEM_PIPE_BE.get(), pos, state, EnergyTier.LV, 0, 0, 0);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public final class ItemPipeBlockEntity extends MachineBlockEntity {
 		int next = (packedFaceModes & ~(3 << shift)) | (mode.ordinal() << shift);
 		if (next == packedFaceModes) return;
 		packedFaceModes = next;
-		markDirtyAndSync();
+		setChangedQuietly();
 		// Face modes drive a client-only terminal renderer. Persisting alone does not send a BE data
 		// packet, so push the update before the client recomputes the static connection model.
 		syncBlockEntityToClient();

@@ -27,8 +27,12 @@ package dev.alaindustrial.core.energy;
  */
 public class EnergyBuffer implements EnergyPort, EnergyPort.Participant {
 
-	/** Stored EU. Public and mutable for internal drain/production and persistence (see class doc). */
-	public long amount;
+	/**
+	 * Stored EU. Private since MOD-400: every write now goes through a named method that says which
+	 * KIND of write it is (see the class doc), so a reader no longer has to infer from context whether
+	 * a given assignment was meant to be transactional.
+	 */
+	private long amount;
 
 	public final long capacity;
 	public final long maxInsert;
@@ -85,6 +89,53 @@ public class EnergyBuffer implements EnergyPort, EnergyPort.Participant {
 	@Override
 	public long getAmount() {
 		return amount;
+	}
+
+	// --- Untracked writes: the machine's own bookkeeping, deliberately outside the transaction ---
+	//
+	// These three replace the old `public long amount` (MOD-400). They do NOT enlist with a
+	// transaction and do NOT fire onCommit, which is the whole point: a machine spending its own
+	// buffer on its own work is not a transfer, and firing the delivery hook there would wake an idle
+	// consumer every tick (R-29). Each one clamps to [0, capacity] — a guarantee the raw field could
+	// not make, and one that turns "stored a negative charge" from a silent corruption into a no-op.
+
+	/**
+	 * Spend EU on this block's own work (a machine's per-tick drain). Returns what was actually
+	 * spent, which is less than asked only when the buffer holds less.
+	 */
+	public long drainInternal(long eu) {
+		if (eu <= 0) {
+			return 0L;
+		}
+		long spent = Math.min(eu, amount);
+		amount -= spent;
+		return spent;
+	}
+
+	/**
+	 * Add EU this block generated itself (a generator's per-tick output). Returns what was actually
+	 * stored — less than asked when the buffer fills up, which is how a generator learns it should
+	 * stop burning fuel.
+	 */
+	public long produceInternal(long eu) {
+		if (eu <= 0) {
+			return 0L;
+		}
+		long stored = Math.min(eu, capacity - amount);
+		amount += stored;
+		return stored;
+	}
+
+	/**
+	 * Set the stored charge outright: reading a save, restoring from an item component, or arranging a
+	 * test fixture. Not for gameplay — a machine that "sets" its charge is losing or creating EU
+	 * without saying where it went.
+	 *
+	 * <p>Clamped, so a corrupted or hand-edited save cannot install a charge outside the buffer's own
+	 * range and have every later comparison read it as valid.
+	 */
+	public void setAmountUntracked(long eu) {
+		amount = Math.clamp(eu, 0L, capacity);
 	}
 
 	@Override

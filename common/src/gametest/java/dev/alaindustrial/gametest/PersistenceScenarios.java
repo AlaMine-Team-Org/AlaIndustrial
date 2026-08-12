@@ -49,9 +49,11 @@ public final class PersistenceScenarios {
 		helper.setBlock(POS, ModContent.MACERATOR.get());
 		MaceratorBlockEntity src = helper.getBlockEntity(POS, MaceratorBlockEntity.class);
 
-		long energy0 = 1234L;
+		// Below machineBuffer (800): a buffer cannot hold more than its capacity, and since
+		// MOD-400 setAmountUntracked clamps instead of accepting an impossible charge.
+		long energy0 = 734L;
 		int progress0 = 7;
-		src.getEnergyStorage().amount = energy0;
+		src.getEnergyStorage().setAmountUntracked(energy0);
 		// setItem() before setting progress: setItem() on an input-slot item change resets progress to 0
 		// (D-SWAP, R-NRG-10), so the input must be placed first for progress0 to stick.
 		src.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON, 3));
@@ -83,9 +85,9 @@ public final class PersistenceScenarios {
 		helper.setBlock(POS, ModContent.ELECTRIC_FURNACE.get());
 		ElectricFurnaceBlockEntity src = helper.getBlockEntity(POS, ElectricFurnaceBlockEntity.class);
 
-		long energy0 = 5000L;
+		long energy0 = 512L; // below machineBuffer (800) — see the macerator case above
 		int progress0 = 11;
-		src.getEnergyStorage().amount = energy0;
+		src.getEnergyStorage().setAmountUntracked(energy0);
 		// setItem() before setting progress: setItem() on an input-slot item change resets progress to 0
 		// (D-SWAP, R-NRG-10), so the input must be placed first for progress0 to stick.
 		src.setItem(ElectricFurnaceBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON, 4));
@@ -122,7 +124,7 @@ public final class PersistenceScenarios {
 
 		long energy0 = 800L;
 		long lava0 = FluidAmounts.BUCKET * 3;
-		src.getEnergyStorage().amount = energy0;
+		src.getEnergyStorage().setAmountUntracked(energy0);
 		src.fluidTank.amount = lava0;
 		src.fluidTank.fluid = dev.alaindustrial.core.fluid.FluidHolder.of(Fluids.LAVA);
 
@@ -156,7 +158,7 @@ public final class PersistenceScenarios {
 
 		long energy0 = 600L;
 		int evolve0 = 1500;
-		src.getEnergyStorage().amount = energy0;
+		src.getEnergyStorage().setAmountUntracked(energy0);
 		src.setEvolveProgressTicks(evolve0); // raw counter; channel 4 syncs a permille projection
 
 		CompoundTag tag = src.saveCustomOnly(registries);
@@ -186,7 +188,7 @@ public final class PersistenceScenarios {
 
 		long energy0 = 300L;
 		int progress0 = 42;
-		src.getEnergyStorage().amount = energy0;
+		src.getEnergyStorage().setAmountUntracked(energy0);
 		// setItem() before setting progress: setItem() on an input-slot item change resets progress to 0
 		// (D-SWAP, R-NRG-10), so the input must be placed first for progress0 to stick.
 		src.setItem(CompressorBlockEntity.INPUT_SLOT, new ItemStack(Items.CLAY_BALL, 3));
@@ -221,7 +223,7 @@ public final class PersistenceScenarios {
 
 		long energy0 = 400L;
 		int progress0 = 30;
-		src.getEnergyStorage().amount = energy0;
+		src.getEnergyStorage().setAmountUntracked(energy0);
 		// setItem() before setting progress: setItem() on an input-slot item change resets progress to 0
 		// (D-SWAP, R-NRG-10), so the input must be placed first for progress0 to stick.
 		src.setItem(ExtractorBlockEntity.INPUT_SLOT, new ItemStack(Items.BLAZE_ROD, 2));
@@ -259,7 +261,7 @@ public final class PersistenceScenarios {
 		BlockPos abs = be.getBlockPos();
 
 		int ampleEu = 8000; // > any single op's E_op; set directly (bypasses cap)
-		be.getEnergyStorage().amount = ampleEu;
+		be.getEnergyStorage().setAmountUntracked(ampleEu);
 		be.setItem(ElectricFurnaceBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON, 4));
 
 		// Run partway (~50%), then cut power.
@@ -272,7 +274,7 @@ public final class PersistenceScenarios {
 			helper.fail("furnace made no progress before power loss (frozenProgress=" + frozenProgress + ")");
 		}
 
-		be.getEnergyStorage().amount = 0;
+		be.getEnergyStorage().setAmountUntracked(0);
 		for (int i = 0; i < 200; i++) {
 			be.serverTick(level, abs, level.getBlockState(abs));
 		}
@@ -285,7 +287,7 @@ public final class PersistenceScenarios {
 		}
 
 		// Power returns: resumes from the SAME progress (not reset to 0) and finishes.
-		be.getEnergyStorage().amount = ampleEu;
+		be.getEnergyStorage().setAmountUntracked(ampleEu);
 		for (int i = 0; i < 400; i++) {
 			be.serverTick(level, abs, level.getBlockState(abs));
 		}
@@ -368,7 +370,7 @@ public final class PersistenceScenarios {
 		CableBlockEntity src = helper.getBlockEntity(POS, CableBlockEntity.class);
 
 		long energy0 = 7L; // a partially-filled segment (cableBuffer = 12)
-		src.getEnergyStorage().amount = energy0;
+		src.getEnergyStorage().setAmountUntracked(energy0);
 
 		CompoundTag tag = src.saveCustomOnly(registries);
 		CableBlockEntity restored = new CableBlockEntity(abs, level.getBlockState(abs));
@@ -395,7 +397,7 @@ public final class PersistenceScenarios {
 	 *     {@code Progress}/{@code MaxProgress} from the old machine-path persistence. The slim
 	 *     {@code loadAdditional} no longer reads those keys — this test injects NON-ZERO legacy values
 	 *     and pins that loading such a tag does not throw, the buffer round-trips, and the keys are
-	 *     actually dropped (progress stays at its default 0, the right value for a transport segment).
+	 *     actually dropped: a re-save carries {@code Energy} and neither legacy key.
 	 * @covers R-PER-01
 	 */
 	public static void tcCable001Per02_legacyMachineKeysIgnoredOnLoad(GameTestHelper helper) {
@@ -406,7 +408,7 @@ public final class PersistenceScenarios {
 		CableBlockEntity src = helper.getBlockEntity(POS, CableBlockEntity.class);
 
 		// Save a real tag (slim path), then inject the legacy keys by hand.
-		src.getEnergyStorage().amount = 5L;
+		src.getEnergyStorage().setAmountUntracked(5L);
 		CompoundTag tag = src.saveCustomOnly(registries);
 		// Inject a NON-ZERO legacy progress: a slim load must IGNORE it (progress stays 0). If a future
 		// change reverts the slim loadAdditional back to reading these keys, restored progress becomes 7
@@ -418,14 +420,22 @@ public final class PersistenceScenarios {
 		restored.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
 
 		long energy1 = restored.getEnergyStorage().getAmount();
-		// The cable's dataAccess exposes progress on index 2 — it must stay 0 (slim load ignores the
-		// injected legacy key above, and the cable never writes a non-zero progress).
-		int progress1 = restored.getDataAccess().get(2);
 		if (energy1 != 5L) {
 			helper.fail("legacy cable load mismatch: energy 5->" + energy1);
 		}
-		if (progress1 != 0) {
-			helper.fail("legacy cable load mismatch: Progress key must be ignored, but progress = " + progress1);
+		// Since MOD-400 the cable has no progress to read back: it extends EnergyBlockEntity, which has
+		// no `progress` field and no dataAccess at all, so "the legacy key was ignored" is now a
+		// STRUCTURAL fact rather than a value to assert — the old check read index 2 of a data bridge
+		// that no longer exists on this class. What remains checkable, and is what a player's save
+		// actually depends on, is that the injected keys neither throw on load nor come back out on
+		// save: a re-save must produce the slim tag again, with the legacy keys gone for good.
+		CompoundTag resaved = restored.saveCustomOnly(registries);
+		if (resaved.contains("Progress") || resaved.contains("MaxProgress")) {
+			helper.fail("legacy cable keys survived a load/save round-trip: " + resaved
+					+ " — a transport segment must not carry machine progress in its NBT");
+		}
+		if (!resaved.contains("Energy")) {
+			helper.fail("re-saved cable tag lost the Energy key: " + resaved);
 		}
 		helper.succeed();
 	}

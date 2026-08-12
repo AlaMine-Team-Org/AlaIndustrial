@@ -50,7 +50,7 @@ public class MachineGameTest {
 	/** Positive: powered machine with a valid input produces the expected output (≥ minCount). */
 	private void assertProduces(GameTestHelper helper, Block block, ItemStack input, Item expected, int minCount) {
 		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(0, input);
 		drive(be, helper, DRIVE_TICKS);
 		ItemStack out = be.getItem(1);
@@ -64,7 +64,7 @@ public class MachineGameTest {
 	/** Negative: a valid input but NO power yields no output, and progress stays frozen at 0 (R-NRG-10). */
 	private void assertNoPowerNoOutput(GameTestHelper helper, Block block, ItemStack input) {
 		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().amount = 0;
+		be.getEnergyStorage().setAmountUntracked(0);
 		be.setItem(0, input);
 		drive(be, helper, DRIVE_TICKS);
 		if (!be.getItem(1).isEmpty()) {
@@ -79,7 +79,7 @@ public class MachineGameTest {
 	/** Negative: a non-recipe input, even fully powered, yields no output. */
 	private void assertNoRecipeNoOutput(GameTestHelper helper, Block block, ItemStack junk) {
 		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(0, junk);
 		drive(be, helper, DRIVE_TICKS);
 		if (!be.getItem(1).isEmpty()) {
@@ -236,7 +236,7 @@ public class MachineGameTest {
 	@GameTest
 	public void tcMach001Neg03_fullOutputJamsMachine(GameTestHelper helper) {
 		MachineBlockEntity be = place(helper, ModBlocks.MACERATOR);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(0, new ItemStack(Items.RAW_IRON, 4));
 		be.setItem(1, new ItemStack(ModItems.IRON_DUST, 64)); // output slot at max stack
 		drive(be, helper, DRIVE_TICKS);
@@ -338,7 +338,7 @@ public class MachineGameTest {
 	@GameTest
 	public void tcEfurn001Fun04_furnaceDurationIsHalfVanilla(GameTestHelper helper) {
 		MachineBlockEntity be = place(helper, ModBlocks.ELECTRIC_FURNACE);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(0, new ItemStack(ModItems.IRON_DUST, 4));
 		drive(be, helper, Config.electricFurnaceDuration - 1);
 		if (!be.getItem(1).isEmpty()) {
@@ -408,7 +408,7 @@ public class MachineGameTest {
 	private void assertConsumesExactlyOnePerOperation(GameTestHelper helper, Block block, Item inputItem,
 			int startCount, int durationTicks, Item expectedOutput, int expectedOutputCount) {
 		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(0, new ItemStack(inputItem, startCount));
 		drive(be, helper, durationTicks);
 		ItemStack in = be.getItem(0);
@@ -488,7 +488,7 @@ public class MachineGameTest {
 	 */
 	private void assertFullOutputJamsMachine(GameTestHelper helper, Block block, ItemStack input, Item product) {
 		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(0, input);
 		be.setItem(1, new ItemStack(product, 64));
 		drive(be, helper, DRIVE_TICKS);
@@ -523,7 +523,7 @@ public class MachineGameTest {
 	@GameTest
 	public void tcExtr001Neg01a_multipliedOutputFitsAt61(GameTestHelper helper) {
 		MachineBlockEntity be = place(helper, ModBlocks.EXTRACTOR);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(0, new ItemStack(Items.BLAZE_ROD, 4));
 		be.setItem(1, new ItemStack(Items.BLAZE_POWDER, 61));
 		drive(be, helper, DRIVE_TICKS);
@@ -545,7 +545,7 @@ public class MachineGameTest {
 	@GameTest
 	public void tcExtr001Neg01b_multipliedOutputJamsAt62(GameTestHelper helper) {
 		MachineBlockEntity be = place(helper, ModBlocks.EXTRACTOR);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(0, new ItemStack(Items.BLAZE_ROD, 4));
 		be.setItem(1, new ItemStack(Items.BLAZE_POWDER, 62));
 		drive(be, helper, DRIVE_TICKS);
@@ -569,7 +569,7 @@ public class MachineGameTest {
 	 */
 	private void assertWrongItemInOutputNoDupe(GameTestHelper helper, Block block, ItemStack input, ItemStack foreignOutput) {
 		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(0, input.copy());
 		be.setItem(1, foreignOutput.copy());
 		drive(be, helper, DRIVE_TICKS);
@@ -622,14 +622,14 @@ public class MachineGameTest {
 	private void assertNonRecipeNoEuSpent(GameTestHelper helper, Block block, ItemStack junk) {
 		MachineBlockEntity be = place(helper, block);
 		long startAmount = 800; // direct amount=, not TR insert — matches PERFORMANCE.md buffer for all 4 machines
-		be.getEnergyStorage().amount = startAmount;
+		be.getEnergyStorage().setAmountUntracked(startAmount);
 		be.setItem(0, junk);
 		drive(be, helper, DRIVE_TICKS);
 		if (!be.getItem(1).isEmpty()) {
 			helper.fail(block + ": produced output from a non-recipe input");
 		}
-		if (be.getEnergyStorage().amount != startAmount) {
-			helper.fail(block + ": EU was spent on a non-recipe input, amount now " + be.getEnergyStorage().amount);
+		if (be.getEnergyStorage().getAmount() != startAmount) {
+			helper.fail(block + ": EU was spent on a non-recipe input, amount now " + be.getEnergyStorage().getAmount());
 		}
 		helper.succeed();
 	}
@@ -683,7 +683,7 @@ public class MachineGameTest {
 	private void assertInputSwapMidOpResetsProgress(GameTestHelper helper, Block block, ItemStack inputA,
 			ItemStack inputB, int halfwayTicks) {
 		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(0, inputA.copy());
 		drive(be, helper, halfwayTicks);
 		int progressBefore = be.getDataAccess().get(2);
@@ -736,7 +736,7 @@ public class MachineGameTest {
 	private void assertLitTracksActive(GameTestHelper helper, Block block, ItemStack singleInput) {
 		MachineBlockEntity be = place(helper, block);
 		BlockPos abs = be.getBlockPos();
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(0, singleInput.copy());
 		drive(be, helper, 3);
 		if (!helper.getLevel().getBlockState(abs).getValue(BlockStateProperties.LIT)) {
@@ -782,15 +782,15 @@ public class MachineGameTest {
 	private void assertEopExactCompletes(GameTestHelper helper, Block block, ItemStack input, int durationTicks,
 			int euPerTick, Item expectedOutput) {
 		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().amount = (long) durationTicks * euPerTick;
+		be.getEnergyStorage().setAmountUntracked((long) durationTicks * euPerTick);
 		be.setItem(0, input);
 		drive(be, helper, durationTicks);
 		ItemStack out = be.getItem(1);
 		if (out.isEmpty() || !out.is(expectedOutput)) {
 			helper.fail(block + ": E_op exact (" + (durationTicks * euPerTick) + " EU) did not complete the operation");
 		}
-		if (be.getEnergyStorage().amount != 0) {
-			helper.fail(block + ": E_op exact should leave amount==0 but got " + be.getEnergyStorage().amount);
+		if (be.getEnergyStorage().getAmount() != 0) {
+			helper.fail(block + ": E_op exact should leave amount==0 but got " + be.getEnergyStorage().getAmount());
 		}
 		helper.succeed();
 	}
@@ -799,7 +799,7 @@ public class MachineGameTest {
 	private void assertEopMinusOneStalls(GameTestHelper helper, Block block, ItemStack input, int durationTicks,
 			int euPerTick) {
 		MachineBlockEntity be = place(helper, block);
-		be.getEnergyStorage().amount = (long) durationTicks * euPerTick - 1;
+		be.getEnergyStorage().setAmountUntracked((long) durationTicks * euPerTick - 1);
 		be.setItem(0, input);
 		drive(be, helper, DRIVE_TICKS);
 		if (!be.getItem(1).isEmpty()) {
@@ -987,7 +987,7 @@ public class MachineGameTest {
 	private void assertSawsInMode(GameTestHelper helper, SawmillMode mode, ItemStack input, Item expected, int count) {
 		MachineBlockEntity be = place(helper, ModBlocks.SAWMILL);
 		((SawmillBlockEntity) be).setMode(mode);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		int startCount = input.getCount();
 		be.setItem(0, input.copy());
 		drive(be, helper, Config.sawmillDuration);
@@ -1045,7 +1045,7 @@ public class MachineGameTest {
 	public void tcSaw001Con01_onlyActiveModeSaws(GameTestHelper helper) {
 		MachineBlockEntity be = place(helper, ModBlocks.SAWMILL);
 		((SawmillBlockEntity) be).setMode(SawmillMode.STICKS);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(0, new ItemStack(Items.OAK_LOG, 4));
 		drive(be, helper, DRIVE_TICKS);
 		ItemStack out = be.getItem(1);
@@ -1090,7 +1090,7 @@ public class MachineGameTest {
 		MachineBlockEntity be = place(helper, ModBlocks.SAWMILL);
 		SawmillBlockEntity saw = (SawmillBlockEntity) be;
 		saw.setMode(SawmillMode.PLANKS);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(0, new ItemStack(Items.OAK_LOG, 4));
 		drive(be, helper, Config.sawmillDuration / 2);
 		if (be.getDataAccess().get(2) <= 0) {

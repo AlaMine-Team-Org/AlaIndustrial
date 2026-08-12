@@ -71,14 +71,14 @@ public final class CanningMachineScenarios {
 	/** Drive with the buffer topped up every tick, the way a connected cable keeps it fed. */
 	private static void drivePowered(CanningMachineBlockEntity be, GameTestHelper helper, int ticks) {
 		for (int i = 0; i < ticks; i++) {
-			be.getEnergyStorage().amount = AMPLE_EU;
+			be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 			AlaGameTestHelper.drive(be, helper, 1);
 		}
 	}
 
 	/** Drive with no energy at all — the machine must sit still. */
 	private static void driveUnpowered(CanningMachineBlockEntity be, GameTestHelper helper, int ticks) {
-		be.getEnergyStorage().amount = 0L;
+		be.getEnergyStorage().setAmountUntracked(0L);
 		AlaGameTestHelper.drive(be, helper, ticks);
 	}
 

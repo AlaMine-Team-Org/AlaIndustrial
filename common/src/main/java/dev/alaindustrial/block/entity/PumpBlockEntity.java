@@ -156,11 +156,11 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 
 		// 2) Acquire fluid from the FACING block if we have power and tank room.
 		BlockPos acquiredFrom = null;
-		if (energy.amount >= euPerBucket && fluidTank.amount + FluidAmounts.BUCKET <= TANK_CAPACITY) {
+		if (energy.getAmount() >= euPerBucket && fluidTank.amount + FluidAmounts.BUCKET <= TANK_CAPACITY) {
 			if (scanCooldown <= 0) {
 				acquiredFrom = acquireFluid(level, pos, state);
 				if (acquiredFrom != null) {
-					energy.amount -= euPerBucket;
+					energy.drainInternal(euPerBucket);
 					// MOD-264: pumping credits NO mastery. A pump runs unattended, so one AFK session on an
 					// oil vein (~3 677 buckets average, ~5 497 max) used to hand out that many XP points at
 					// the full euPerXp rate — enough to skip one or two ranks outright, while a hand-run

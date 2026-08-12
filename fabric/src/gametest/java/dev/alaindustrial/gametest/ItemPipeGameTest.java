@@ -111,4 +111,32 @@ public final class ItemPipeGameTest {
 	public void mod234FrontFaceIsNotAnEndpoint(GameTestHelper helper) {
 		ItemPipeScenarios.frontFaceIsNotAnEndpoint(helper);
 	}
+	/** @implements MOD-405 — two unconfigured (NEUTRAL) chests must not shuttle items back and forth. */
+	@GameTest(maxTicks = 300)
+	public void mod405TwoNeutralChestsMoveNothing(GameTestHelper helper) {
+		ItemPipeScenarios.mod405TwoNeutralChestsMoveNothing(helper);
+	}
+
+	/** @implements MOD-405 — and the documented EXTRACT/INSERT layout still transfers. */
+	@GameTest
+	public void mod405ConfiguredChestPairStillTransfers(GameTestHelper helper) {
+		ItemPipeScenarios.mod405ConfiguredChestPairStillTransfers(helper);
+	}
+	/** @implements MOD-408 — EXTRACT with no INSERT anywhere moves nothing. */
+	@GameTest(maxTicks = 300)
+	public void mod408ExtractWithoutInsertMovesNothing(GameTestHelper helper) {
+		ItemPipeScenarios.mod408ExtractWithoutInsertMovesNothing(helper);
+	}
+
+	/** @implements MOD-408 — and the configured EXTRACT/INSERT pair still transfers. */
+	@GameTest
+	public void mod408ExtractPlusInsertStillTransfers(GameTestHelper helper) {
+		ItemPipeScenarios.mod408ExtractPlusInsertStillTransfers(helper);
+	}
+
+	/** @implements MOD-408 — an unconfigured line still feeds a machine automatically. */
+	@GameTest(maxTicks = 100)
+	public void mod408UnconfiguredLineStillFeedsAMachine(GameTestHelper helper) {
+		ItemPipeScenarios.mod408UnconfiguredLineStillFeedsAMachine(helper);
+	}
 }

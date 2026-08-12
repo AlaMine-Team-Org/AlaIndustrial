@@ -269,11 +269,11 @@ public final class CableInsulationScenarios {
 				.setValue(HorizontalMachineBlock.FACING, net.minecraft.core.Direction.WEST));
 
 		if (be(helper, generatorPos) instanceof GeneratorBlockEntity generator) {
-			generator.getEnergyStorage().amount = EnergyTier.LV.maxVoltage() * 500;
+			generator.getEnergyStorage().setAmountUntracked(EnergyTier.LV.maxVoltage() * 500);
 			generator.setChanged();
 		}
 		if (be(helper, boxPos) instanceof BatteryBoxBlockEntity box) {
-			box.getEnergyStorage().amount = 0;
+			box.getEnergyStorage().setAmountUntracked(0);
 			box.setChanged();
 		}
 

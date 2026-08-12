@@ -132,7 +132,7 @@ public final class ElectricDrillScenarios {
 			helper.fail("the server-side filter must accept the drill too");
 		}
 
-		box.getEnergyStorage().amount = box.getEnergyStorage().getCapacity();
+		box.getEnergyStorage().setAmountUntracked(box.getEnergyStorage().getCapacity());
 		box.setItem(BatteryBoxBlockEntity.CHARGE_SLOT, drill(0));
 		tickBox(helper, box, 1);
 		long expected = Math.min(EnergyTier.LV.maxVoltage(), Config.electricDrillInputRate);

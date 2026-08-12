@@ -70,7 +70,7 @@ class EnergyBufferPropertyTest {
 		// Force amount ≤ capacity (in-contract: a well-formed buffer never holds more than capacity).
 		long amountBounded = Math.min(amount, capacity);
 		EnergyBuffer b = buffer(capacity, maxInsert, 0);
-		b.amount = amountBounded;
+		b.setAmountUntracked(amountBounded);
 		long moved = b.insert(maxAmount, new FakeTxn());
 		assertTrue(moved >= 0, "insert never negative");
 		assertTrue(moved <= maxInsert, "insert ≤ maxInsert (per-op rate cap)");
@@ -86,7 +86,7 @@ class EnergyBufferPropertyTest {
 			@ForAll("nonNegativeEu") long maxAmount) {
 		long amountBounded = Math.min(amount, capacity);
 		EnergyBuffer b = buffer(capacity, 0, maxExtract);
-		b.amount = amountBounded;
+		b.setAmountUntracked(amountBounded);
 		long moved = b.extract(maxAmount, new FakeTxn());
 		assertTrue(moved >= 0, "extract never negative");
 		assertTrue(moved <= maxExtract, "extract ≤ maxExtract (per-op rate cap)");
@@ -104,10 +104,10 @@ class EnergyBufferPropertyTest {
 			@ForAll("nonNegativeEu") long maxAmount) {
 		long amountBounded = Math.min(amount, capacity);
 		EnergyBuffer b = buffer(capacity, maxInsert, 0);
-		b.amount = amountBounded;
+		b.setAmountUntracked(amountBounded);
 		b.insert(maxAmount, new FakeTxn());
-		assertTrue(b.amount <= capacity, "post-insert amount ≤ capacity (no overfill)");
-		assertTrue(b.amount >= amountBounded, "insert never decreases the stored amount");
+		assertTrue(b.getAmount() <= capacity, "post-insert amount ≤ capacity (no overfill)");
+		assertTrue(b.getAmount() >= amountBounded, "insert never decreases the stored amount");
 	}
 
 	@Property
@@ -118,10 +118,10 @@ class EnergyBufferPropertyTest {
 			@ForAll("nonNegativeEu") long maxAmount) {
 		long amountBounded = Math.min(amount, capacity);
 		EnergyBuffer b = buffer(capacity, 0, maxExtract);
-		b.amount = amountBounded;
+		b.setAmountUntracked(amountBounded);
 		b.extract(maxAmount, new FakeTxn());
-		assertTrue(b.amount >= 0, "post-extract amount ≥ 0 (no negative balance)");
-		assertTrue(b.amount <= amountBounded, "extract never increases the stored amount");
+		assertTrue(b.getAmount() >= 0, "post-extract amount ≥ 0 (no negative balance)");
+		assertTrue(b.getAmount() <= amountBounded, "extract never increases the stored amount");
 	}
 
 	// --- monotonicity invariants ---
@@ -138,10 +138,10 @@ class EnergyBufferPropertyTest {
 		long maxAmountSmall = maxAmountBig / 2;
 		if (maxAmountSmall == maxAmountBig) return; // nothing to compare
 		EnergyBuffer bSmall = buffer(capacity, maxInsert, 0);
-		bSmall.amount = amountBounded;
+		bSmall.setAmountUntracked(amountBounded);
 		long small = bSmall.insert(maxAmountSmall, new FakeTxn());
 		EnergyBuffer bBig = buffer(capacity, maxInsert, 0);
-		bBig.amount = amountBounded;
+		bBig.setAmountUntracked(amountBounded);
 		long big = bBig.insert(maxAmountBig, new FakeTxn());
 		assertTrue(big >= small, "larger request must not move less (non-monotonic clamp suspected)");
 	}
@@ -156,10 +156,10 @@ class EnergyBufferPropertyTest {
 		long maxAmountSmall = maxAmountBig / 2;
 		if (maxAmountSmall == maxAmountBig) return;
 		EnergyBuffer bSmall = buffer(capacity, 0, maxExtract);
-		bSmall.amount = amountBounded;
+		bSmall.setAmountUntracked(amountBounded);
 		long small = bSmall.extract(maxAmountSmall, new FakeTxn());
 		EnergyBuffer bBig = buffer(capacity, 0, maxExtract);
-		bBig.amount = amountBounded;
+		bBig.setAmountUntracked(amountBounded);
 		long big = bBig.extract(maxAmountBig, new FakeTxn());
 		assertTrue(big >= small, "larger extract request must not move less");
 	}
@@ -176,7 +176,7 @@ class EnergyBufferPropertyTest {
 	void insert_allThreeOperandsEqual_returnsThatValue() {
 		// capacity=100, amount=68 → room=32. maxInsert=32, maxAmount=32 → all three min-operands are 32.
 		EnergyBuffer b = buffer(100, 32, 0);
-		b.amount = 68;
+		b.setAmountUntracked(68);
 		assertEquals(32L, b.insert(32, new FakeTxn()),
 				"triple-coincidence case: all three min-operands equal 32 → result 32");
 	}
@@ -185,7 +185,7 @@ class EnergyBufferPropertyTest {
 	void extract_allThreeOperandsEqual_returnsThatValue() {
 		// amount=32, maxExtract=32, maxAmount=32 → all three min-operands are 32.
 		EnergyBuffer b = buffer(100, 0, 32);
-		b.amount = 32;
+		b.setAmountUntracked(32);
 		assertEquals(32L, b.extract(32, new FakeTxn()),
 				"triple-coincidence case: all three min-operands equal 32 → result 32");
 	}

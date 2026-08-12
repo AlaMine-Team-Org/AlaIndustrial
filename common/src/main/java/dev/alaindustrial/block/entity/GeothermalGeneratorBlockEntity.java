@@ -181,7 +181,7 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 		// Convert lavaTicks → EU only when the energy buffer has room (R-NRG-11, TC-GEO-001-NEG04).
 		// Lava is already in lavaTicks, so pausing here wastes nothing.
 		int made = 0;
-		if (lavaTicks > 0 && energy.amount < energy.getCapacity()) {
+		if (lavaTicks > 0 && energy.getAmount() < energy.getCapacity()) {
 			lavaTicks--;
 			made = Config.geothermalEuPerTick;
 		}

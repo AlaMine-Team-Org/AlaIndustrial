@@ -222,15 +222,15 @@ public final class PouchScenarios {
 	/** FUN07: the Battery Box charge slot refills the pouch from the block buffer. */
 	public static void fun07ChargeInBatteryBox(GameTestHelper helper) {
 		BatteryBoxBlockEntity box = placeBox(helper);
-		box.getEnergyStorage().amount = Config.lvPouchBuffer; // exactly one pouch worth
+		box.getEnergyStorage().setAmountUntracked(Config.lvPouchBuffer); // exactly one pouch worth
 		box.setItem(BatteryBoxBlockEntity.CHARGE_SLOT, pouch(0));
 		tickBox(helper, box, 64); // 2000 EU at 32 EU/t needs ⌈2000/32⌉ = 63 ticks
 		ItemStack pouch = box.getItem(BatteryBoxBlockEntity.CHARGE_SLOT);
 		if (ItemEnergy.get(pouch) != Config.lvPouchBuffer) {
 			helper.fail("pouch must be fully charged, got " + ItemEnergy.get(pouch));
 		}
-		if (box.getEnergyStorage().amount != 0) {
-			helper.fail("box must have paid exactly the pouch's charge, left " + box.getEnergyStorage().amount);
+		if (box.getEnergyStorage().getAmount() != 0) {
+			helper.fail("box must have paid exactly the pouch's charge, left " + box.getEnergyStorage().getAmount());
 		}
 		helper.succeed();
 	}
@@ -329,7 +329,7 @@ public final class PouchScenarios {
 	/** PRF01: charging moves at most the LV ceiling (32 EU) per tick. */
 	public static void prf01ChargeRateCap(GameTestHelper helper) {
 		BatteryBoxBlockEntity box = placeBox(helper);
-		box.getEnergyStorage().amount = box.getEnergyStorage().getCapacity();
+		box.getEnergyStorage().setAmountUntracked(box.getEnergyStorage().getCapacity());
 		box.setItem(BatteryBoxBlockEntity.CHARGE_SLOT, pouch(0));
 		tickBox(helper, box, 1);
 		long gained = ItemEnergy.get(box.getItem(BatteryBoxBlockEntity.CHARGE_SLOT));
@@ -342,15 +342,15 @@ public final class PouchScenarios {
 	/** PRF02: the pouch buffer caps at lvPouchBuffer — no overcharge, exact payment. */
 	public static void prf02NoOvercharge(GameTestHelper helper) {
 		BatteryBoxBlockEntity box = placeBox(helper);
-		box.getEnergyStorage().amount = Config.lvPouchBuffer;
+		box.getEnergyStorage().setAmountUntracked(Config.lvPouchBuffer);
 		box.setItem(BatteryBoxBlockEntity.CHARGE_SLOT, pouch(Config.lvPouchBuffer - 10));
 		tickBox(helper, box, 10);
 		ItemStack pouch = box.getItem(BatteryBoxBlockEntity.CHARGE_SLOT);
 		if (ItemEnergy.get(pouch) != Config.lvPouchBuffer) {
 			helper.fail("pouch must stop exactly at capacity, got " + ItemEnergy.get(pouch));
 		}
-		if (box.getEnergyStorage().amount != Config.lvPouchBuffer - 10) {
-			helper.fail("box must pay exactly the missing 10 EU, left " + box.getEnergyStorage().amount);
+		if (box.getEnergyStorage().getAmount() != Config.lvPouchBuffer - 10) {
+			helper.fail("box must pay exactly the missing 10 EU, left " + box.getEnergyStorage().getAmount());
 		}
 		helper.succeed();
 	}

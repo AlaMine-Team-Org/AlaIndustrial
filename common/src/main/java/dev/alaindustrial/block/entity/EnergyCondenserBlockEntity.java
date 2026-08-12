@@ -154,12 +154,12 @@ public class EnergyCondenserBlockEntity extends MachineBlockEntity implements Me
 	/** Banked EU as permille — the GUI channel is 16-bit and 4 000 000 would arrive negative. */
 	public int fillPermille() {
 		long cap = Math.max(1L, energy.getCapacity());
-		return (int) Math.min(1000L, energy.amount * 1000L / cap);
+		return (int) Math.min(1000L, energy.getAmount() * 1000L / cap);
 	}
 
 	/** Tier the current bank is worth: 0 while below the first threshold. */
 	public int tierForBank() {
-		long banked = energy.amount;
+		long banked = energy.getAmount();
 		if (banked >= Config.clotThresholdIII) {
 			return 3;
 		}
@@ -174,7 +174,7 @@ public class EnergyCondenserBlockEntity extends MachineBlockEntity implements Me
 	 * "still missing". 1000 once the top tier is reached, since there is nothing further to reach.
 	 */
 	public int progressToNextTierPermille() {
-		long banked = energy.amount;
+		long banked = energy.getAmount();
 		long from = switch (tierForBank()) {
 			case 0 -> 0L;
 			case 1 -> Config.clotThresholdI;
@@ -236,7 +236,7 @@ public class EnergyCondenserBlockEntity extends MachineBlockEntity implements Me
 				setItem(OUTPUT_SLOT, new ItemStack(want));
 			}
 		}
-		updateLit(energy.amount > 0);
+		updateLit(energy.getAmount() > 0);
 		// Never sleeps: the bank is fed from outside and the shown tier must follow it promptly. The
 		// tick itself is a couple of comparisons.
 		return 0;
@@ -253,7 +253,7 @@ public class EnergyCondenserBlockEntity extends MachineBlockEntity implements Me
 	public ItemStack removeItem(int slot, int count) {
 		ItemStack taken = super.removeItem(slot, count);
 		if (slot == OUTPUT_SLOT && !taken.isEmpty()) {
-			energy.amount = 0;
+			energy.setAmountUntracked(0);
 			setChanged();
 			syncBlockEntityToClient();
 		}

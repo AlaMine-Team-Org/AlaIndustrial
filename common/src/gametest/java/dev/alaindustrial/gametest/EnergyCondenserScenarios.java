@@ -35,7 +35,7 @@ public final class EnergyCondenserScenarios {
 	public static void condenser_tierFollowsTheBank(GameTestHelper helper) {
 		EnergyCondenserBlockEntity be = place(helper);
 
-		be.getEnergyStorage().amount = Config.clotThresholdI - 1;
+		be.getEnergyStorage().setAmountUntracked(Config.clotThresholdI - 1);
 		AlaGameTestHelper.drive(be, helper, 1);
 		if (!be.getItem(EnergyCondenserBlockEntity.OUTPUT_SLOT).isEmpty()) {
 			helper.fail("one EU short of tier I must still yield nothing");
@@ -49,7 +49,7 @@ public final class EnergyCondenserScenarios {
 
 	private static void expectTier(GameTestHelper helper, EnergyCondenserBlockEntity be, long banked,
 			net.minecraft.world.item.Item expected, String label) {
-		be.getEnergyStorage().amount = banked;
+		be.getEnergyStorage().setAmountUntracked(banked);
 		AlaGameTestHelper.drive(be, helper, 1);
 		ItemStack shown = be.getItem(EnergyCondenserBlockEntity.OUTPUT_SLOT);
 		if (!shown.is(expected)) {
@@ -65,15 +65,15 @@ public final class EnergyCondenserScenarios {
 		EnergyCondenserBlockEntity be = place(helper);
 		// Deliberately just short of tier II: the player takes tier I and burns the surplus with it.
 		long banked = Config.clotThresholdII - 1;
-		be.getEnergyStorage().amount = banked;
+		be.getEnergyStorage().setAmountUntracked(banked);
 		AlaGameTestHelper.drive(be, helper, 1);
 
 		ItemStack taken = be.removeItem(EnergyCondenserBlockEntity.OUTPUT_SLOT, 1);
 		if (!taken.is(ModContent.ENERGY_CLOT_I.get())) {
 			helper.fail("just under tier II must hand out tier I, got " + taken);
 		}
-		if (be.getEnergyStorage().amount != 0) {
-			helper.fail("taking the clot must empty the bank, " + be.getEnergyStorage().amount + " left");
+		if (be.getEnergyStorage().getAmount() != 0) {
+			helper.fail("taking the clot must empty the bank, " + be.getEnergyStorage().getAmount() + " left");
 		}
 		helper.succeed();
 	}
@@ -316,7 +316,7 @@ public final class EnergyCondenserScenarios {
 		helper.setBlock(store, ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(dev.alaindustrial.block.HorizontalMachineBlock.FACING, Direction.WEST));
 		MachineBlockEntity box = (MachineBlockEntity) EnergyScenarioSupport.be(helper, store);
-		box.getEnergyStorage().amount = box.getEnergyStorage().getCapacity();
+		box.getEnergyStorage().setAmountUntracked(box.getEnergyStorage().getCapacity());
 		long charged = box.getEnergyStorage().getAmount();
 
 		helper.setBlock(cable, ModContent.GOLD_CABLE.get());

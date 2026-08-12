@@ -165,57 +165,14 @@ public final class ModBlockEntitiesNeoForge {
 	}
 
 	/**
-	 * Bind each {@code BlockEntityType} {@code DeferredHolder} into the loader-neutral {@link ModContent}
-	 * facade, mirroring the {@code ModContent.X_BE = () -> X} assignments in
-	 * {@code dev.alaindustrial.registry.ModBlockEntities#init()} on the Fabric side. Assigned directly
-	 * (a {@code DeferredHolder} is a {@code Supplier}); resolves lazily after the {@code RegisterEvent}.
-	 *
-	 * <p>Bound via {@code HOLDER::get}: a {@code DeferredHolder<_, BlockEntityType<X>>} is a
-	 * {@code Supplier<BlockEntityType<X>>}, but the slot is {@code Supplier<BlockEntityType<?>>} — generics
-	 * are invariant, so the method reference bridges the wildcard while staying lazy (see
-	 * {@code ModBlocksNeoForge#init}).
+	 * Class-load trigger for the {@code @Mod} constructor. Since MOD-403 the {@link ModContent} binding
+	 * happens inside {@link #register} — each {@code BLOCK_ENTITIES} entry carries its own {@code bind} —
+	 * so the 40 hand-written {@code ModContent.X_BE = X::get;} assignments that used to live here are gone,
+	 * along with the failure mode where forgetting one showed up only as a {@code verifyAllBound()} crash.
 	 */
 	public static void init() {
-		ModContent.GENERATOR_BE = GENERATOR::get;
-		ModContent.SOLAR_PANEL_BE = SOLAR_PANEL::get;
-		ModContent.MOONLIT_SOLAR_PANEL_BE = MOONLIT_SOLAR_PANEL::get;
-		ModContent.DAYLIGHT_SOLAR_PANEL_BE = DAYLIGHT_SOLAR_PANEL::get;
-		ModContent.COPPER_CABLE_BE = COPPER_CABLE::get;
-		ModContent.ITEM_PIPE_BE = ITEM_PIPE::get;
-		ModContent.FLUID_PIPE_BE = FLUID_PIPE::get;
-		ModContent.MACERATOR_BE = MACERATOR::get;
-		ModContent.BATTERY_BOX_BE = BATTERY_BOX::get;
-		ModContent.CESU_BE = CESU::get;
-		ModContent.TELEPORTER_BE = TELEPORTER::get;
-		ModContent.ELECTRIC_FURNACE_BE = ELECTRIC_FURNACE::get;
-		ModContent.IRON_FURNACE_BE = IRON_FURNACE::get;
-		ModContent.EXTRACTOR_BE = EXTRACTOR::get;
-		ModContent.COMPRESSOR_BE = COMPRESSOR::get;
-		ModContent.CANNING_MACHINE_BE = CANNING_MACHINE::get;
-		ModContent.SAWMILL_BE = SAWMILL::get;
-		ModContent.ASSEMBLER_BE = ASSEMBLER::get;
-		ModContent.POLYMERIZER_BE = POLYMERIZER::get;
-		ModContent.DISTILLATION_COLUMN_BE = DISTILLATION_COLUMN::get;
-		ModContent.DISTILLATION_COLUMN_SEGMENT_BE = DISTILLATION_COLUMN_SEGMENT::get;
-		ModContent.VULCANIZER_BE = VULCANIZER::get;
-		ModContent.ALLOY_SMELTER_BE = ALLOY_SMELTER::get;
-		ModContent.GALVANIC_BATH_BE = GALVANIC_BATH::get;
-		ModContent.ELECTRIC_HEATER_BE = ELECTRIC_HEATER::get;
-		ModContent.CHARGE_PAD_BE = CHARGE_PAD::get;
-		ModContent.ENERGY_CONDENSER_BE = ENERGY_CONDENSER::get;
-		ModContent.INCUBATOR_BE = INCUBATOR::get;
-		ModContent.GEOTHERMAL_GENERATOR_BE = GEOTHERMAL_GENERATOR::get;
-		ModContent.PUMP_BE = PUMP::get;
-		ModContent.GARDEN_DRONE_STATION_BE = GARDEN_DRONE_STATION::get;
-		ModContent.FLUID_TANK_BE = FLUID_TANK::get;
-		ModContent.WATER_MILL_BE = WATER_MILL::get;
-		ModContent.WIND_MILL_BE = WIND_MILL::get;
-		ModContent.HIGH_ALTITUDE_WIND_MILL_BE = HIGH_ALTITUDE_WIND_MILL::get;
-		ModContent.STORM_WIND_MILL_BE = STORM_WIND_MILL::get;
-		ModContent.IRON_CHEST_BE = IRON_CHEST::get;
-		ModContent.STORAGE_MODULE_BE = STORAGE_MODULE::get;
-		ModContent.SILVER_CHEST_BE = SILVER_CHEST::get;
-		ModContent.GOLD_CHEST_BE = GOLD_CHEST::get;
+		// Intentionally empty: touching this class runs the static registrations above, which bind
+		// ModContent themselves. Kept because the entrypoint calls it in a fixed, documented order.
 	}
 
 	/**
@@ -230,9 +187,18 @@ public final class ModBlockEntitiesNeoForge {
 	 * manifest ids are resolved <b>inside</b> the deferred type supplier, which the register invokes only
 	 * when the block-entity {@code RegisterEvent} fires, by which point every block is registered. That is
 	 * the same guarantee the previous {@code Supplier<Block>} handles relied on.
+	 *
+	 * <p><b>MOD-403.</b> The entry's {@link ModContent} slot is bound here too, via {@code holder::get}: a
+	 * {@code DeferredHolder<_, BlockEntityType<X>>} is a {@code Supplier<BlockEntityType<X>>} while the
+	 * slot is {@code Supplier<BlockEntityType<?>>} — generics are invariant, so the method reference
+	 * bridges the wildcard while staying lazy. Binding at class load is legal for the same reason it was
+	 * in {@code init()}: the holder is a handle, not the value.
 	 */
 	public static <T extends BlockEntity> DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> register(
 			ContentManifest.BlockEntityDef<T> def) {
-		return BLOCK_ENTITIES.register(def.id(), () -> new BlockEntityType<>(def.factory(), def.blockSet()));
+		DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> holder =
+				BLOCK_ENTITIES.register(def.id(), () -> new BlockEntityType<>(def.factory(), def.blockSet()));
+		def.bind().accept(holder::get);
+		return holder;
 	}
 }

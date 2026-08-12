@@ -263,7 +263,7 @@ public final class DemoStand {
 		if (level.getBlockEntity(origin.offset(23, 1, 10)) instanceof PolymerizerBlockEntity polymerizer) {
 			polymerizer.fluidTank.fluid = FluidHolder.of(ModContent.OIL.get());
 			polymerizer.fluidTank.amount = PolymerizerBlockEntity.TANK_CAPACITY;
-			polymerizer.markDirtyAndSync();
+			polymerizer.setChangedQuietly();
 			polymerizer.wake();
 		}
 		// Vulcanizer (MOD-258): the electric heater occupies the block directly below the machine.
@@ -289,7 +289,7 @@ public final class DemoStand {
 		if (level.getBlockEntity(origin.offset(29, 1, 10)) instanceof GalvanicBathBlockEntity bath) {
 			bath.fluidTank.fluid = FluidHolder.of(net.minecraft.world.level.material.Fluids.WATER);
 			bath.fluidTank.amount = GalvanicBathBlockEntity.TANK_CAPACITY;
-			bath.markDirtyAndSync();
+			bath.setChangedQuietly();
 			bath.wake();
 		}
 		// Assembler (MOD-275): the first MV machine. Row z=10 is full from x=2 to x=41 (machines then
@@ -527,8 +527,8 @@ public final class DemoStand {
 
 	private static void chargeBuffer(ServerLevel level, BlockPos origin, int x, int y, int z) {
 		if (level.getBlockEntity(origin.offset(x, y, z)) instanceof MachineBlockEntity machine) {
-			machine.getEnergyStorage().amount = machine.getEnergyStorage().getCapacity();
-			machine.markDirtyAndSync();
+			machine.getEnergyStorage().setAmountUntracked(machine.getEnergyStorage().getCapacity());
+			machine.setChangedQuietly();
 			machine.wake();
 		}
 	}

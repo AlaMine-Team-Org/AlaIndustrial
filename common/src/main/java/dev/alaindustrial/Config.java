@@ -21,6 +21,12 @@ import java.util.function.Supplier;
  * Generators/machines/storage/cables read these at runtime, so a server can rebalance without a
  * code change. Missing keys fall back to the v0.2 default, so the file is forward/backward safe.
  *
+ * <p>The Java API is a flat set of {@code public static} fields and stays that way — hundreds of
+ * call sites, every gametest and every command read {@code Config.<field>} directly. Only the FILE
+ * is structured: since MOD-402 it carries a {@link #SCHEMA_VERSION} and groups its keys into
+ * {@link Section}s, and the load layer migrates an older file into the current shape before reading
+ * it. Adding a knob therefore never needs a migration; changing the file's shape does.
+ *
  * <p>The balance fields and the pure file read/write ({@link #loadFrom(Path)}) are loader-neutral
  * and live in {@code common}. Resolving the per-loader config directory and hooking the
  * datapack-reload event is a platform seam: Fabric wires it in
@@ -1003,17 +1009,139 @@ public final class Config {
 	 */
 	public static boolean oilBurns = true;
 
+	// ---------------------------------------------------------------------------------------------
+	// MOD-402: file layout — schema version, thematic sections and the migration ladder.
+	// NOTE: none of this touches the Java API above. Every consumer keeps reading `Config.<field>`;
+	// only the shape of `config/alaindustrial.json` and the load/save layer changed.
+	// ---------------------------------------------------------------------------------------------
+
 	/**
-	 * Declarative description of every tunable above: json key, doc text, and how the value is read,
-	 * validated and written back. {@link #loadFrom} and {@link #snapshot} walk this list instead of
-	 * repeating each field five times (declaration, staged read, clamp, commit, serialize) — adding a
-	 * knob is now one declaration plus one entry here.
+	 * Layout version of {@code config/alaindustrial.json}, written into the file as
+	 * {@code schemaVersion} and bumped whenever the file's SHAPE or the MEANING of a key changes —
+	 * never for adding a knob (a new key is absent-safe and needs no migration).
 	 *
-	 * <p><b>Order is load-bearing:</b> entries are serialized in list order and each field's
-	 * {@code _comment_} renders immediately before it, so this list must stay in the same order the
-	 * fields are declared above. It must also stay textually BELOW the declarations: each entry
-	 * captures its fallback by reading the field itself, and Java runs static initializers in source
-	 * order, so a list moved above them would capture zeroes.
+	 * <p><b>How to bump it</b> (the whole recipe, deliberately one entry):
+	 * <ol>
+	 *   <li>Write a {@code private static void migrateVNtoVN1(JsonObject file)} that rewrites the
+	 *       document IN PLACE from version {@code N} to {@code N+1} — rename a key, rescale a value,
+	 *       move a knob between sections. It receives the document as it stands after every earlier
+	 *       step, so each migration only has to know about its own hop.</li>
+	 *   <li>Append {@code new Migration(N, Config::migrateVNtoVN1)} to {@link #MIGRATIONS}.</li>
+	 *   <li>Raise this constant to {@code N+1}.</li>
+	 * </ol>
+	 * {@code ConfigSchemaTest} pins the ladder: {@code MIGRATIONS} must hold exactly one step per
+	 * version hop, in ascending order, so a bump without a migration (or a migration without a bump)
+	 * fails the build rather than silently skipping a file.
+	 *
+	 * <p>An OLDER file is migrated step by step and then rewritten in the current shape. A NEWER file
+	 * is refused outright — see {@link #loadFrom}.
+	 */
+	static final int SCHEMA_VERSION = 1;
+
+	/** Json key holding {@link #SCHEMA_VERSION}. Absent = a pre-MOD-402 flat file, i.e. version 0. */
+	private static final String SCHEMA_VERSION_KEY = "schemaVersion";
+
+	/** Inline doc written above {@link #SCHEMA_VERSION_KEY}, same {@code _comment_} idiom as a field. */
+	private static final String SCHEMA_VERSION_DOC =
+			"Layout version of this file. Written by the mod - do not raise it by hand. An older file is"
+					+ " migrated automatically on load; a file from a NEWER mod version is refused (the"
+					+ " server logs a warning and runs on built-in defaults instead of guessing).";
+
+	/**
+	 * Thematic group a tunable belongs to — and, on disk, the JSON object its key lives inside.
+	 *
+	 * <p>The section is declared ON THE FIELD's own {@code FIELDS} entry, right next to its doc string.
+	 * That is the point: a second "key → section" table would be a parallel list to keep in sync by
+	 * hand, which is the exact drift class this repo has already had to build gates against.
+	 *
+	 * <p>Declaration order below is the order the sections render in the file.
+	 */
+	enum Section {
+		GLOBAL("global", "Server-wide multipliers applied on top of everything else."),
+		GENERATORS("generators", "Generator output and the environment that scales it (sky, height, weather),"
+				+ " plus rotor/wheel consumables and generator EU buffers."),
+		MACHINES("machines", "Processing machines: EU/t, operation durations, internal buffers, overclocker"
+				+ " chips, the incubator mutation table, the condenser and the drone station."),
+		STORAGE("storage", "EU stores: battery box, reinforced storage, charging station, and the channel"
+				+ " that feeds a non-cascade sink from a store."),
+		// NB: keep equals signs and apostrophes OUT of a section doc. Gson html-escapes both, so they
+		// land in the written file as bare unicode escapes and read as noise to the operator. The older
+		// field docs already carry that scar; new text does not have to.
+		CABLES("cables", "Cable grades: per-segment buffer (which is also the segment throughput), packet"
+				+ " caps and per-block loss."),
+		SAFETY("safety", "Bare-cable shock hazard and the insulating stands that soften it."),
+		NETWORK("network", "Voltage tiers, buffer capacities per tier, and per-tick network budgets."),
+		TOOLS("tools", "Powered items the player carries or wears: buffers, charge rates and running costs."),
+		LOGISTICS("logistics", "Moving things around: item and fluid pipes, the pump, portable tanks,"
+				+ " the teleporter and the stock display frame."),
+		PLAYER("player", "Mod XP and the player profile curve."),
+		WORLD("world", "World behaviour: bonus chest injection, burning oil, crop growth.");
+
+		/** Json key of the section object. */
+		final String id;
+		/** One-line note written as {@code _comment_<id>} above the section. */
+		final String doc;
+
+		Section(String id, String doc) {
+			this.id = id;
+			this.doc = doc;
+		}
+	}
+
+	/**
+	 * One rung of the schema ladder: "a document stored at {@code fromVersion} becomes a document at
+	 * {@code fromVersion + 1} after {@code apply} has rewritten it in place".
+	 *
+	 * <p>Kept as data rather than a chain of {@code if}s so adding the next hop is one list entry —
+	 * see {@link #SCHEMA_VERSION} for the three-step recipe.
+	 */
+	private record Migration(int fromVersion, Consumer<JsonObject> apply) {
+	}
+
+	/**
+	 * The ladder, ascending, one entry per version hop ({@code MIGRATIONS.get(i).fromVersion() == i},
+	 * {@code MIGRATIONS.size() == SCHEMA_VERSION}). Pinned by {@code ConfigSchemaTest}.
+	 */
+	private static final List<Migration> MIGRATIONS = List.of(
+			new Migration(0, Config::migrateFlatToSections));
+
+	/**
+	 * v0 → v1: the pre-MOD-402 flat file, where all 220 knobs sat at the top level, becomes the
+	 * sectioned one. Every registered key found at the root is moved into its declared section, so a
+	 * server that has been running since before MOD-402 keeps every value it had edited.
+	 *
+	 * <p>This step is load-bearing, not decorative: {@link #loadFrom} stages each field from its
+	 * section object only. Remove this migration and every old install silently reverts to defaults.
+	 */
+	private static void migrateFlatToSections(JsonObject file) {
+		for (ConfigField field : FIELDS) {
+			JsonElement value = file.remove(field.key);
+			if (value == null) {
+				continue;
+			}
+			JsonElement existing = file.get(field.section.id);
+			JsonObject body;
+			if (existing != null && existing.isJsonObject()) {
+				body = existing.getAsJsonObject();
+			} else {
+				body = new JsonObject();
+				file.add(field.section.id, body);
+			}
+			body.add(field.key, value);
+		}
+	}
+
+	/**
+	 * Declarative description of every tunable above: json key, its section, doc text, and how the
+	 * value is read, validated and written back. {@link #loadFrom} and {@link #snapshot} walk this list
+	 * instead of repeating each field five times (declaration, staged read, clamp, commit, serialize) —
+	 * adding a knob is now one declaration plus one entry here.
+	 *
+	 * <p><b>Order is load-bearing:</b> entries are serialized in list order <em>within their section</em>
+	 * and each field's {@code _comment_} renders immediately before it, so this list must stay in the
+	 * same order the fields are declared above. It must also stay textually BELOW the declarations: each
+	 * entry captures its fallback by reading the field itself, and Java runs static initializers in
+	 * source order, so a list moved above them would capture zeroes.
 	 *
 	 * <p>Fields whose declared default IS the recovery value pass no explicit fallback — the value is
 	 * derived from the field, which is what removes the old "same literal typed twice" drift risk. The
@@ -1022,450 +1150,450 @@ public final class Config {
 	 * pass that boundary explicitly, so the exception is visible rather than implied.
 	 */
 	private static final List<ConfigField> FIELDS = List.of(
-			new FloatField("globalEuRateMultiplier", "Multiplier on EVERY generator's EU/t output. 1.0 = unchanged; 2.0 = twice the generation server-wide.",
+			new FloatField("globalEuRateMultiplier", Section.GLOBAL, "Multiplier on EVERY generator's EU/t output. 1.0 = unchanged; 2.0 = twice the generation server-wide.",
 				() -> globalEuRateMultiplier, v -> globalEuRateMultiplier = v, 0.0f),
-			new FloatField("globalMachineSpeedMultiplier", "Machine speed multiplier (energy-neutral): higher = machines draw more EU/t but finish proportionally faster. 1.0 = unchanged.",
+			new FloatField("globalMachineSpeedMultiplier", Section.GLOBAL, "Machine speed multiplier (energy-neutral): higher = machines draw more EU/t but finish proportionally faster. 1.0 = unchanged.",
 				() -> globalMachineSpeedMultiplier, v -> globalMachineSpeedMultiplier = v, 0.0f),
-			new IntField("solarEuPerTick", "Solar panel output in EU/t under clear daytime sky. The energy system's baseline (1).",
+			new IntField("solarEuPerTick", Section.GENERATORS, "Solar panel output in EU/t under clear daytime sky. The energy system's baseline (1).",
 				() -> solarEuPerTick, v -> solarEuPerTick = v, 0),
-			new IntField("daylightEuPerTick", "Evolved daylight-panel output in EU/t during the day.",
+			new IntField("daylightEuPerTick", Section.GENERATORS, "Evolved daylight-panel output in EU/t during the day.",
 				() -> daylightEuPerTick, v -> daylightEuPerTick = v, 0),
-			new IntField("moonlitEuPerTick", "Evolved moonlit-panel output in EU/t at night under clear sky.",
+			new IntField("moonlitEuPerTick", Section.GENERATORS, "Evolved moonlit-panel output in EU/t at night under clear sky.",
 				() -> moonlitEuPerTick, v -> moonlitEuPerTick = v, 0),
-			new IntField("moonlitWeatherEuPerTick", "Moonlit-panel EU/t at night during rain/thunder (a weather trickle).",
+			new IntField("moonlitWeatherEuPerTick", Section.GENERATORS, "Moonlit-panel EU/t at night during rain/thunder (a weather trickle).",
 				() -> moonlitWeatherEuPerTick, v -> moonlitWeatherEuPerTick = v, 0),
-			new IntField("fuelEuPerTick", "Fuel (solid-burnable) generator output in EU/t while burning.",
+			new IntField("fuelEuPerTick", Section.GENERATORS, "Fuel (solid-burnable) generator output in EU/t while burning.",
 				() -> fuelEuPerTick, v -> fuelEuPerTick = v, 0),
-			new IntField("geothermalEuPerTick", "Geothermal (lava) generator output in EU/t while burning lava.",
+			new IntField("geothermalEuPerTick", Section.GENERATORS, "Geothermal (lava) generator output in EU/t while burning lava.",
 				() -> geothermalEuPerTick, v -> geothermalEuPerTick = v, 0),
-			new IntField("geothermalBurnTicks", "Ticks of burn a geothermal generator gets per bucket of lava (20 ticks = 1 second).",
+			new IntField("geothermalBurnTicks", Section.GENERATORS, "Ticks of burn a geothermal generator gets per bucket of lava (20 ticks = 1 second).",
 				() -> geothermalBurnTicks, v -> geothermalBurnTicks = v, 1),
-			new IntField("waterMillEuPerTick", "Water mill EU/t per adjacent water block on its four sides (0..4 EU/t total).",
+			new IntField("waterMillEuPerTick", Section.GENERATORS, "Water mill EU/t per adjacent water block on its four sides (0..4 EU/t total).",
 				() -> waterMillEuPerTick, v -> waterMillEuPerTick = v, 0),
-			new IntField("windCloudY", "Cloud deck Y: the windiest height. Wind climbs to here and collapses above it (shared by all wind mills and the Wind Gauge).",
+			new IntField("windCloudY", Section.GENERATORS, "Cloud deck Y: the windiest height. Wind climbs to here and collapses above it (shared by all wind mills and the Wind Gauge).",
 				() -> windCloudY, v -> windCloudY = v, 0),
-			new IntField("windDeadY", "Y above which only a trace of wind remains — too little to turn any rotor.",
+			new IntField("windDeadY", Section.GENERATORS, "Y above which only a trace of wind remains — too little to turn any rotor.",
 				() -> windDeadY, v -> windDeadY = v, 0),
-			new FloatField("windRidgeFactor", "Fraction of full wind strength reached at a mill branch's ridge; the rest is gained over the shoulder up to windCloudY.",
+			new FloatField("windRidgeFactor", Section.GENERATORS, "Fraction of full wind strength reached at a mill branch's ridge; the rest is gained over the shoulder up to windCloudY.",
 				() -> windRidgeFactor, v -> windRidgeFactor = v, 0.0f),
-			new FloatField("windTraceFactor", "Fraction of full wind strength left above windDeadY (readable on the gauge, 0 EU/t for mills).",
+			new FloatField("windTraceFactor", Section.GENERATORS, "Fraction of full wind strength left above windDeadY (readable on the gauge, 0 EU/t for mills).",
 				() -> windTraceFactor, v -> windTraceFactor = v, 0.0f),
-			new FloatField("windGaugePeakKmh", "Clear-weather wind speed in km/h at the cloud deck — the Wind Gauge's full-scale reading.",
+			new FloatField("windGaugePeakKmh", Section.GENERATORS, "Clear-weather wind speed in km/h at the cloud deck — the Wind Gauge's full-scale reading.",
 				() -> windGaugePeakKmh, v -> windGaugePeakKmh = v, 0.0f),
-			new IntField("windMillMaxBaseEuPerTick", "Wind mill base EU/t at the cloud deck; the altitude profile scales it (MOD-347).",
+			new IntField("windMillMaxBaseEuPerTick", Section.GENERATORS, "Wind mill base EU/t at the cloud deck; the altitude profile scales it (MOD-347).",
 				() -> windMillMaxBaseEuPerTick, v -> windMillMaxBaseEuPerTick = v, 0),
-			new IntField("windMillMaxEuPerTick", "Hard cap on wind mill EU/t after the weather multiplier.",
+			new IntField("windMillMaxEuPerTick", Section.GENERATORS, "Hard cap on wind mill EU/t after the weather multiplier.",
 				() -> windMillMaxEuPerTick, v -> windMillMaxEuPerTick = v, 0),
-			new FloatField("windMillRainFactor", "Wind mill output multiplier while it is raining (not thundering).",
+			new FloatField("windMillRainFactor", Section.GENERATORS, "Wind mill output multiplier while it is raining (not thundering).",
 				() -> windMillRainFactor, v -> windMillRainFactor = v, 0.0f),
-			new FloatField("windMillThunderFactor", "Wind mill output multiplier while it is thundering.",
+			new FloatField("windMillThunderFactor", Section.GENERATORS, "Wind mill output multiplier while it is thundering.",
 				() -> windMillThunderFactor, v -> windMillThunderFactor = v, 0.0f),
-			new IntField("windMillSampleTicks", "How often (ticks) a wind mill re-samples height/sky/weather; rate is cached in between.",
+			new IntField("windMillSampleTicks", Section.GENERATORS, "How often (ticks) a wind mill re-samples height/sky/weather; rate is cached in between.",
 				() -> windMillSampleTicks, v -> windMillSampleTicks = v, 1),
-			new IntField("windMillEvolveTicks", "Active open-sky ticks (with rotor + evolution chip) to evolve a base wind mill into its T2 branch.",
+			new IntField("windMillEvolveTicks", Section.GENERATORS, "Active open-sky ticks (with rotor + evolution chip) to evolve a base wind mill into its T2 branch.",
 				() -> windMillEvolveTicks, v -> windMillEvolveTicks = v, 1),
-			new IntField("highAltWindMillMaxBaseEuPerTick", "High-altitude wind mill (T2) clear-sky height cap in EU/t.",
+			new IntField("highAltWindMillMaxBaseEuPerTick", Section.GENERATORS, "High-altitude wind mill (T2) clear-sky height cap in EU/t.",
 				() -> highAltWindMillMaxBaseEuPerTick, v -> highAltWindMillMaxBaseEuPerTick = v, 0),
-			new IntField("highAltWindMillBlocksPerBase", "Blocks of height above sea level per +1 EU/t of base on the high-altitude T2 variant.",
+			new IntField("highAltWindMillBlocksPerBase", Section.GENERATORS, "Blocks of height above sea level per +1 EU/t of base on the high-altitude T2 variant.",
 				() -> highAltWindMillBlocksPerBase, v -> highAltWindMillBlocksPerBase = v, 1),
-			new FloatField("highAltWindMillRainFactor", "High-altitude T2 wind mill output multiplier while it is raining.",
+			new FloatField("highAltWindMillRainFactor", Section.GENERATORS, "High-altitude T2 wind mill output multiplier while it is raining.",
 				() -> highAltWindMillRainFactor, v -> highAltWindMillRainFactor = v, 0.0f),
-			new FloatField("highAltWindMillThunderFactor", "High-altitude T2 wind mill output multiplier while it is thundering.",
+			new FloatField("highAltWindMillThunderFactor", Section.GENERATORS, "High-altitude T2 wind mill output multiplier while it is thundering.",
 				() -> highAltWindMillThunderFactor, v -> highAltWindMillThunderFactor = v, 0.0f),
-			new IntField("highAltWindMillMaxEuPerTick", "Hard cap on high-altitude T2 wind mill EU/t after the weather multiplier.",
+			new IntField("highAltWindMillMaxEuPerTick", Section.GENERATORS, "Hard cap on high-altitude T2 wind mill EU/t after the weather multiplier.",
 				() -> highAltWindMillMaxEuPerTick, v -> highAltWindMillMaxEuPerTick = v, 0),
-			new IntField("stormWindMillMaxBaseEuPerTick", "Storm wind mill (T2) clear-sky height cap in EU/t before the weather multiplier.",
+			new IntField("stormWindMillMaxBaseEuPerTick", Section.GENERATORS, "Storm wind mill (T2) clear-sky height cap in EU/t before the weather multiplier.",
 				() -> stormWindMillMaxBaseEuPerTick, v -> stormWindMillMaxBaseEuPerTick = v, 0),
-			new FloatField("stormWindMillRainFactor", "Storm T2 wind mill output multiplier while it is raining.",
+			new FloatField("stormWindMillRainFactor", Section.GENERATORS, "Storm T2 wind mill output multiplier while it is raining.",
 				() -> stormWindMillRainFactor, v -> stormWindMillRainFactor = v, 0.0f),
-			new FloatField("stormWindMillThunderFactor", "Storm T2 wind mill output multiplier while it is thundering.",
+			new FloatField("stormWindMillThunderFactor", Section.GENERATORS, "Storm T2 wind mill output multiplier while it is thundering.",
 				() -> stormWindMillThunderFactor, v -> stormWindMillThunderFactor = v, 0.0f),
-			new IntField("stormWindMillMaxEuPerTick", "Hard cap on storm T2 wind mill EU/t after the weather multiplier.",
+			new IntField("stormWindMillMaxEuPerTick", Section.GENERATORS, "Hard cap on storm T2 wind mill EU/t after the weather multiplier.",
 				() -> stormWindMillMaxEuPerTick, v -> stormWindMillMaxEuPerTick = v, 0),
-			new IntField("windMillRotorMaxDamage", "Wind mill rotor max durability (bar). Applies at registration (restart); tune life via the EU-per-damage rate. Shared by all three wind mills.",
+			new IntField("windMillRotorMaxDamage", Section.GENERATORS, "Wind mill rotor max durability (bar). Applies at registration (restart); tune life via the EU-per-damage rate. Shared by all three wind mills.",
 				() -> windMillRotorMaxDamage, v -> windMillRotorMaxDamage = v, 1),
-			new IntField("windMillRotorEuPerDamage", "EU of production per 1 durability point of the wind mill rotor (life = maxDamage × this). Read live every tick.",
+			new IntField("windMillRotorEuPerDamage", Section.GENERATORS, "EU of production per 1 durability point of the wind mill rotor (life = maxDamage × this). Read live every tick.",
 				() -> windMillRotorEuPerDamage, v -> windMillRotorEuPerDamage = v, 1),
-			new FloatField("windMillStormWearFactor", "Extra rotor wear multiplier while running in rain/thunder (1.0 = off). Applies to all three wind mills.",
+			new FloatField("windMillStormWearFactor", Section.GENERATORS, "Extra rotor wear multiplier while running in rain/thunder (1.0 = off). Applies to all three wind mills.",
 				() -> windMillStormWearFactor, v -> windMillStormWearFactor = v, 1.0f),
-			new IntField("waterMillWheelMaxDamage", "Water mill wheel max durability (bar). Applies at registration (restart); tune life via the EU-per-damage rate.",
+			new IntField("waterMillWheelMaxDamage", Section.GENERATORS, "Water mill wheel max durability (bar). Applies at registration (restart); tune life via the EU-per-damage rate.",
 				() -> waterMillWheelMaxDamage, v -> waterMillWheelMaxDamage = v, 1),
-			new IntField("waterMillWheelEuPerDamage", "EU of production per 1 durability point of the water mill wheel (life = maxDamage × this). Read live every tick.",
+			new IntField("waterMillWheelEuPerDamage", Section.GENERATORS, "EU of production per 1 durability point of the water mill wheel (life = maxDamage × this). Read live every tick.",
 				() -> waterMillWheelEuPerDamage, v -> waterMillWheelEuPerDamage = v, 1),
 			// MOD-385: the three-grade component ladder. Output multipliers are applied INSIDE
 			// WindMillOutput/WaterMillOutput.euFor, before their clamp, so no value here can lift a
 			// generator's *MaxEuPerTick ceiling. EU-per-damage tracks the multiplier so the life gain
 			// stays exactly the durability gain.
-			new FloatField("windMillRotorOutputMultiplier", "MOD-385: output scale of the plain wooden rotor — the ladder's 1.0 baseline. Raising it buffs every wind mill, not just upgraded ones.",
+			new FloatField("windMillRotorOutputMultiplier", Section.GENERATORS, "MOD-385: output scale of the plain wooden rotor — the ladder's 1.0 baseline. Raising it buffs every wind mill, not just upgraded ones.",
 				() -> windMillRotorOutputMultiplier, v -> windMillRotorOutputMultiplier = v, 0.0f),
-			new IntField("windMillRotorReinforcedMaxDamage", "MOD-385: reinforced rotor max durability (×3 the wooden one). Applies at registration (restart).",
+			new IntField("windMillRotorReinforcedMaxDamage", Section.GENERATORS, "MOD-385: reinforced rotor max durability (×3 the wooden one). Applies at registration (restart).",
 				() -> windMillRotorReinforcedMaxDamage, v -> windMillRotorReinforcedMaxDamage = v, 1),
-			new IntField("windMillRotorReinforcedEuPerDamage", "MOD-385: EU per 1 durability point of the reinforced rotor. Scaled by its ×1.25 output so the life gain is purely the durability gain.",
+			new IntField("windMillRotorReinforcedEuPerDamage", Section.GENERATORS, "MOD-385: EU per 1 durability point of the reinforced rotor. Scaled by its ×1.25 output so the life gain is purely the durability gain.",
 				() -> windMillRotorReinforcedEuPerDamage, v -> windMillRotorReinforcedEuPerDamage = v, 1),
-			new FloatField("windMillRotorReinforcedOutputMultiplier", "MOD-385: reinforced rotor output scale. Applied before the mill's cap, so it cannot raise windMillMaxEuPerTick.",
+			new FloatField("windMillRotorReinforcedOutputMultiplier", Section.GENERATORS, "MOD-385: reinforced rotor output scale. Applied before the mill's cap, so it cannot raise windMillMaxEuPerTick.",
 				() -> windMillRotorReinforcedOutputMultiplier, v -> windMillRotorReinforcedOutputMultiplier = v, 0.0f),
-			new IntField("windMillRotorAdvancedMaxDamage", "MOD-385: advanced rotor max durability (×6 the wooden one). Applies at registration (restart).",
+			new IntField("windMillRotorAdvancedMaxDamage", Section.GENERATORS, "MOD-385: advanced rotor max durability (×6 the wooden one). Applies at registration (restart).",
 				() -> windMillRotorAdvancedMaxDamage, v -> windMillRotorAdvancedMaxDamage = v, 1),
-			new IntField("windMillRotorAdvancedEuPerDamage", "MOD-385: EU per 1 durability point of the advanced rotor, scaled by its ×1.5 output.",
+			new IntField("windMillRotorAdvancedEuPerDamage", Section.GENERATORS, "MOD-385: EU per 1 durability point of the advanced rotor, scaled by its ×1.5 output.",
 				() -> windMillRotorAdvancedEuPerDamage, v -> windMillRotorAdvancedEuPerDamage = v, 1),
-			new FloatField("windMillRotorAdvancedOutputMultiplier", "MOD-385: advanced rotor output scale. Applied before the mill's cap.",
+			new FloatField("windMillRotorAdvancedOutputMultiplier", Section.GENERATORS, "MOD-385: advanced rotor output scale. Applied before the mill's cap.",
 				() -> windMillRotorAdvancedOutputMultiplier, v -> windMillRotorAdvancedOutputMultiplier = v, 0.0f),
-			new FloatField("waterMillWheelOutputMultiplier", "MOD-385: output scale of the plain wooden wheel — the ladder's 1.0 baseline.",
+			new FloatField("waterMillWheelOutputMultiplier", Section.GENERATORS, "MOD-385: output scale of the plain wooden wheel — the ladder's 1.0 baseline.",
 				() -> waterMillWheelOutputMultiplier, v -> waterMillWheelOutputMultiplier = v, 0.0f),
-			new IntField("waterMillWheelReinforcedMaxDamage", "MOD-385: reinforced wheel max durability (×3 the wooden one). Applies at registration (restart).",
+			new IntField("waterMillWheelReinforcedMaxDamage", Section.GENERATORS, "MOD-385: reinforced wheel max durability (×3 the wooden one). Applies at registration (restart).",
 				() -> waterMillWheelReinforcedMaxDamage, v -> waterMillWheelReinforcedMaxDamage = v, 1),
-			new IntField("waterMillWheelReinforcedEuPerDamage", "MOD-385: EU per 1 durability point of the reinforced wheel, scaled by its ×1.25 output.",
+			new IntField("waterMillWheelReinforcedEuPerDamage", Section.GENERATORS, "MOD-385: EU per 1 durability point of the reinforced wheel, scaled by its ×1.25 output.",
 				() -> waterMillWheelReinforcedEuPerDamage, v -> waterMillWheelReinforcedEuPerDamage = v, 1),
-			new FloatField("waterMillWheelReinforcedOutputMultiplier", "MOD-385: reinforced wheel output scale. The water mill has no EU/t cap of its own — its ceiling is 4 wheel cells × waterMillEuPerTick.",
+			new FloatField("waterMillWheelReinforcedOutputMultiplier", Section.GENERATORS, "MOD-385: reinforced wheel output scale. The water mill has no EU/t cap of its own — its ceiling is 4 wheel cells × waterMillEuPerTick.",
 				() -> waterMillWheelReinforcedOutputMultiplier, v -> waterMillWheelReinforcedOutputMultiplier = v, 0.0f),
-			new IntField("waterMillWheelAdvancedMaxDamage", "MOD-385: advanced wheel max durability (×6 the wooden one). Applies at registration (restart).",
+			new IntField("waterMillWheelAdvancedMaxDamage", Section.GENERATORS, "MOD-385: advanced wheel max durability (×6 the wooden one). Applies at registration (restart).",
 				() -> waterMillWheelAdvancedMaxDamage, v -> waterMillWheelAdvancedMaxDamage = v, 1),
-			new IntField("waterMillWheelAdvancedEuPerDamage", "MOD-385: EU per 1 durability point of the advanced wheel, scaled by its ×1.5 output.",
+			new IntField("waterMillWheelAdvancedEuPerDamage", Section.GENERATORS, "MOD-385: EU per 1 durability point of the advanced wheel, scaled by its ×1.5 output.",
 				() -> waterMillWheelAdvancedEuPerDamage, v -> waterMillWheelAdvancedEuPerDamage = v, 1),
-			new FloatField("waterMillWheelAdvancedOutputMultiplier", "MOD-385: advanced wheel output scale.",
+			new FloatField("waterMillWheelAdvancedOutputMultiplier", Section.GENERATORS, "MOD-385: advanced wheel output scale.",
 				() -> waterMillWheelAdvancedOutputMultiplier, v -> waterMillWheelAdvancedOutputMultiplier = v, 0.0f),
-			new FloatField("solarTransparentFactor", "Output multiplier when a solar panel sees sky through a translucent block (leaves, cobweb).",
+			new FloatField("solarTransparentFactor", Section.GENERATORS, "Output multiplier when a solar panel sees sky through a translucent block (leaves, cobweb).",
 				() -> solarTransparentFactor, v -> solarTransparentFactor = v, 0.0f),
-			new FloatField("solarSnowFactor", "Output multiplier under snow (a snow layer above, or snowfall in a cold biome).",
+			new FloatField("solarSnowFactor", Section.GENERATORS, "Output multiplier under snow (a snow layer above, or snowfall in a cold biome).",
 				() -> solarSnowFactor, v -> solarSnowFactor = v, 0.0f),
-			new IntField("solarEvolveTicks", "Active sky-time ticks needed to evolve a base solar panel into its T2 branch.",
+			new IntField("solarEvolveTicks", Section.GENERATORS, "Active sky-time ticks needed to evolve a base solar panel into its T2 branch.",
 				() -> solarEvolveTicks, v -> solarEvolveTicks = v, 1),
-			new IntField("solarSkySampleTicks", "How often (ticks) a solar panel re-samples sky access + weather; verdict is cached between samples.",
+			new IntField("solarSkySampleTicks", Section.GENERATORS, "How often (ticks) a solar panel re-samples sky access + weather; verdict is cached between samples.",
 				() -> solarSkySampleTicks, v -> solarSkySampleTicks = v, 1),
-			new IntField("pumpEuPerBucket", "EU the pump spends per bucket of fluid it moves (extract + push).",
+			new IntField("pumpEuPerBucket", Section.LOGISTICS, "EU the pump spends per bucket of fluid it moves (extract + push).",
 				() -> pumpEuPerBucket, v -> pumpEuPerBucket = v, 0),
-			new IntField("pumpScanCooldownTicks", "How many ticks the pump waits after a BFS scan before scanning again.",
+			new IntField("pumpScanCooldownTicks", Section.LOGISTICS, "How many ticks the pump waits after a BFS scan before scanning again.",
 				() -> pumpScanCooldownTicks, v -> pumpScanCooldownTicks = v, 1),
-			new IntField("pumpScanMaxDistance", "Max Manhattan distance the pump BFS searches for a fluid source.",
+			new IntField("pumpScanMaxDistance", Section.LOGISTICS, "Max Manhattan distance the pump BFS searches for a fluid source.",
 				() -> pumpScanMaxDistance, v -> pumpScanMaxDistance = v, 1),
-			new IntField("pumpScanMaxVisited", "Max blocks the pump BFS visits per scan, caps lag.",
+			new IntField("pumpScanMaxVisited", Section.LOGISTICS, "Max blocks the pump BFS visits per scan, caps lag.",
 				() -> pumpScanMaxVisited, v -> pumpScanMaxVisited = v, 1),
-			new IntField("fluidTankCapacity", "Portable fluid tank capacity in mB (1000 mB = 1 bucket). Applies to newly placed tanks.",
+			new IntField("fluidTankCapacity", Section.LOGISTICS, "Portable fluid tank capacity in mB (1000 mB = 1 bucket). Applies to newly placed tanks.",
 				() -> fluidTankCapacity, v -> fluidTankCapacity = v, 1),
-			new IntField("teleporterBuffer", "Teleporter station EU buffer. Applies to newly placed stations.",
+			new IntField("teleporterBuffer", Section.LOGISTICS, "Teleporter station EU buffer. Applies to newly placed stations.",
 				() -> teleporterBuffer, v -> teleporterBuffer = v, 1),
-			new IntField("teleporterBaseCost", "Flat EU part of a jump's price (paid even for a short hop).",
+			new IntField("teleporterBaseCost", Section.LOGISTICS, "Flat EU part of a jump's price (paid even for a short hop).",
 				() -> teleporterBaseCost, v -> teleporterBaseCost = v, 0),
-			new IntField("teleporterCostPerBlock", "Added EU per block of straight-line distance to the target station.",
+			new IntField("teleporterCostPerBlock", Section.LOGISTICS, "Added EU per block of straight-line distance to the target station.",
 				() -> teleporterCostPerBlock, v -> teleporterCostPerBlock = v, 0),
-			new IntField("teleporterWarmupTicks", "Warmup before a jump fires (20 ticks = 1 second). Cancelled by damage.",
+			new IntField("teleporterWarmupTicks", Section.LOGISTICS, "Warmup before a jump fires (20 ticks = 1 second). Cancelled by damage.",
 				() -> teleporterWarmupTicks, v -> teleporterWarmupTicks = v, 0),
-			new IntField("teleporterCooldownTicks", "Per-player anti-spam lockout after landing (ticks).",
+			new IntField("teleporterCooldownTicks", Section.LOGISTICS, "Per-player anti-spam lockout after landing (ticks).",
 				() -> teleporterCooldownTicks, v -> teleporterCooldownTicks = v, 0),
-			new IntField("teleporterWarmupCancelRadius", "Moving further than this many blocks from where warmup started cancels the jump.",
+			new IntField("teleporterWarmupCancelRadius", Section.LOGISTICS, "Moving further than this many blocks from where warmup started cancels the jump.",
 				() -> teleporterWarmupCancelRadius, v -> teleporterWarmupCancelRadius = v, 1),
-			new IntField("teleporterMaxPoints", "Max stations one teleport remote can hold.",
+			new IntField("teleporterMaxPoints", Section.LOGISTICS, "Max stations one teleport remote can hold.",
 				() -> teleporterMaxPoints, v -> teleporterMaxPoints = v, 1),
-			new IntField("batteryBoxBuffer", "Battery Box EU buffer. Applies to newly placed blocks (already-placed keep their capacity until the chunk reloads).",
+			new IntField("batteryBoxBuffer", Section.STORAGE, "Battery Box EU buffer. Applies to newly placed blocks (already-placed keep their capacity until the chunk reloads).",
 				() -> batteryBoxBuffer, v -> batteryBoxBuffer = v, 1),
-			new IntField("cesuBuffer", "Reinforced Energy Storage (MV) EU buffer. Applies to newly placed blocks (already-placed keep their capacity until the chunk reloads).",
+			new IntField("cesuBuffer", Section.STORAGE, "Reinforced Energy Storage (MV) EU buffer. Applies to newly placed blocks (already-placed keep their capacity until the chunk reloads).",
 				() -> cesuBuffer, v -> cesuBuffer = v, 1),
-			new IntField("storageFeedRate", "EU/tick a storage block feeds a non-cascade sink (teleporter, charging station) over cable. 0 disables the channel.",
+			new IntField("storageFeedRate", Section.STORAGE, "EU/tick a storage block feeds a non-cascade sink (teleporter, charging station) over cable. 0 disables the channel.",
 				() -> storageFeedRate, v -> storageFeedRate = v, 0),
-			new DoubleField("storageFeedReserveFraction", "Share of its capacity a storage block keeps for itself when feeding a non-cascade sink over cable (0..1). Below this line the channel is shut, so a teleporter can never drain the base's bank.",
+			new DoubleField("storageFeedReserveFraction", Section.STORAGE, "Share of its capacity a storage block keeps for itself when feeding a non-cascade sink over cable (0..1). Below this line the channel is shut, so a teleporter can never drain the base's bank.",
 				() -> storageFeedReserveFraction, v -> storageFeedReserveFraction = v, 0.0, 1.0),
-			new IntField("maceratorBuffer", "Macerator EU buffer. Applies to newly placed blocks.",
+			new IntField("maceratorBuffer", Section.MACHINES, "Macerator EU buffer. Applies to newly placed blocks.",
 				() -> maceratorBuffer, v -> maceratorBuffer = v, 1),
-			new IntField("machineBuffer", "Shared EU buffer for ordinary LV processing machines: electric furnace, compressor, extractor, sawmill, polymerizer and vulcanizer. Applies to newly placed blocks.",
+			new IntField("machineBuffer", Section.MACHINES, "Shared EU buffer for ordinary LV processing machines: electric furnace, compressor, extractor, sawmill, polymerizer and vulcanizer. Applies to newly placed blocks.",
 				() -> machineBuffer, v -> machineBuffer = v, 1),
-			new IntField("electricHeaterBuffer", "Electric Heater EU buffer. Applies to newly placed blocks.",
+			new IntField("electricHeaterBuffer", Section.MACHINES, "Electric Heater EU buffer. Applies to newly placed blocks.",
 				() -> electricHeaterBuffer, v -> electricHeaterBuffer = v, 1),
-			new IntField("chargePadBuffer", "Charging Station EU buffer. Sized to a visit, not an operation: the station banks power while idle so it can charge a player's gear in one burst. Applies to newly placed blocks.",
+			new IntField("chargePadBuffer", Section.STORAGE, "Charging Station EU buffer. Sized to a visit, not an operation: the station banks power while idle so it can charge a player's gear in one burst. Applies to newly placed blocks.",
 				() -> chargePadBuffer, v -> chargePadBuffer = v, 1),
-			new IntField("chargePadInputRate", "Max EU/t the Charging Station accepts from the grid. A ceiling, not a promise - a copper cable delivers 12, a gold one 48, an adjacent Battery Box 32.",
+			new IntField("chargePadInputRate", Section.STORAGE, "Max EU/t the Charging Station accepts from the grid. A ceiling, not a promise - a copper cable delivers 12, a gold one 48, an adjacent Battery Box 32.",
 				() -> chargePadInputRate, v -> chargePadInputRate = v, 1),
-			new IntField("chargePadOutputRate", "Max EU/t the Charging Station hands to the player standing on it, shared across every powered item they carry (each item still capped by its own input rate).",
+			new IntField("chargePadOutputRate", Section.STORAGE, "Max EU/t the Charging Station hands to the player standing on it, shared across every powered item they carry (each item still capped by its own input rate).",
 				() -> chargePadOutputRate, v -> chargePadOutputRate = v, 1),
-			new IntField("pumpBuffer", "Pump EU buffer. Applies to newly placed blocks.",
+			new IntField("pumpBuffer", Section.LOGISTICS, "Pump EU buffer. Applies to newly placed blocks.",
 				() -> pumpBuffer, v -> pumpBuffer = v, 1),
-			new IntField("generatorBuffer", "Fuel generator EU buffer. Applies to newly placed blocks.",
+			new IntField("generatorBuffer", Section.GENERATORS, "Fuel generator EU buffer. Applies to newly placed blocks.",
 				() -> generatorBuffer, v -> generatorBuffer = v, 1),
-			new IntField("geothermalBuffer", "Geothermal generator EU buffer. Applies to newly placed blocks.",
+			new IntField("geothermalBuffer", Section.GENERATORS, "Geothermal generator EU buffer. Applies to newly placed blocks.",
 				() -> geothermalBuffer, v -> geothermalBuffer = v, 1),
-			new IntField("waterMillBuffer", "Water mill EU buffer. Applies to newly placed blocks.",
+			new IntField("waterMillBuffer", Section.GENERATORS, "Water mill EU buffer. Applies to newly placed blocks.",
 				() -> waterMillBuffer, v -> waterMillBuffer = v, 1),
-			new IntField("windMillBuffer", "Wind mill (T1) EU buffer. Applies to newly placed blocks.",
+			new IntField("windMillBuffer", Section.GENERATORS, "Wind mill (T1) EU buffer. Applies to newly placed blocks.",
 				() -> windMillBuffer, v -> windMillBuffer = v, 1),
-			new IntField("t2WindMillBuffer", "Shared EU buffer for both T2 wind mills (high-altitude + storm). Applies to newly placed blocks.",
+			new IntField("t2WindMillBuffer", Section.GENERATORS, "Shared EU buffer for both T2 wind mills (high-altitude + storm). Applies to newly placed blocks.",
 				() -> t2WindMillBuffer, v -> t2WindMillBuffer = v, 1),
-			new IntField("solarBuffer", "Solar panel EU buffer. Applies to newly placed blocks.",
+			new IntField("solarBuffer", Section.GENERATORS, "Solar panel EU buffer. Applies to newly placed blocks.",
 				() -> solarBuffer, v -> solarBuffer = v, 1),
-			new IntField("cableBuffer", "Per-cable working EU buffer — the live transport-segment buffer (MOD-070). Tiny by design so a wall of cables can't be used as bulk storage. Applies to newly placed cables.",
+			new IntField("cableBuffer", Section.CABLES, "Per-cable working EU buffer — the live transport-segment buffer (MOD-070). Tiny by design so a wall of cables can't be used as bulk storage. Applies to newly placed cables.",
 				() -> cableBuffer, v -> cableBuffer = v, 1),
-			new IntField("itemPipeItemsPerTransfer", "Items an item-pipe network moves per transfer. With the interval below this sets throughput.",
+			new IntField("itemPipeItemsPerTransfer", Section.LOGISTICS, "Items an item-pipe network moves per transfer. With the interval below this sets throughput.",
 				() -> itemPipeItemsPerTransfer, v -> itemPipeItemsPerTransfer = v, 1),
-			new IntField("itemPipeTransferIntervalTicks", "Server ticks between item-pipe transfers (20 = once per second).",
+			new IntField("itemPipeTransferIntervalTicks", Section.LOGISTICS, "Server ticks between item-pipe transfers (20 = once per second).",
 				() -> itemPipeTransferIntervalTicks, v -> itemPipeTransferIntervalTicks = v, 1),
-			new IntField("fluidPipeSegmentBuffer", "Per-segment fluid buffer in mB — also the segment's throughput, since fluid flows through the buffer one hop per tick (MOD-151). Applies to newly placed pipes.",
+			new IntField("fluidPipeSegmentBuffer", Section.LOGISTICS, "Per-segment fluid buffer in mB — also the segment's throughput, since fluid flows through the buffer one hop per tick (MOD-151). Applies to newly placed pipes.",
 				() -> fluidPipeSegmentBuffer, v -> fluidPipeSegmentBuffer = v, 1),
-			new IntField("fluidNetworksPerTick", "Fluid networks processed per server tick; the rest round-robin to later ticks.",
+			new IntField("fluidNetworksPerTick", Section.NETWORK, "Fluid networks processed per server tick; the rest round-robin to later ticks.",
 				() -> fluidNetworksPerTick, v -> fluidNetworksPerTick = v, 1),
-			new IntField("lvPouchCapacity", "Battery Pouch item-storage capacity in weight units (one ordinary item = 1).",
+			new IntField("lvPouchCapacity", Section.TOOLS, "Battery Pouch item-storage capacity in weight units (one ordinary item = 1).",
 				() -> lvPouchCapacity, v -> lvPouchCapacity = v, 1),
-			new IntField("lvPouchBuffer", "Battery Pouch EU buffer.",
+			new IntField("lvPouchBuffer", Section.TOOLS, "Battery Pouch EU buffer.",
 				() -> lvPouchBuffer, v -> lvPouchBuffer = v, 1),
-			new IntField("lvPouchDrainPerSecond", "EU the pouch drains per second while carried and holding items (locks at 0 EU until recharged).",
+			new IntField("lvPouchDrainPerSecond", Section.TOOLS, "EU the pouch drains per second while carried and holding items (locks at 0 EU until recharged).",
 				() -> lvPouchDrainPerSecond, v -> lvPouchDrainPerSecond = v, 0),
-			new IntField("batteryBuffer", "Battery EU buffer, PER ITEM (a stack of 16 carries 16x this).",
+			new IntField("batteryBuffer", Section.TOOLS, "Battery EU buffer, PER ITEM (a stack of 16 carries 16x this).",
 				() -> batteryBuffer, v -> batteryBuffer = v, 1),
-			new IntField("batteryInputRate", "Max EU/t one battery accepts while charging in a slot.",
+			new IntField("batteryInputRate", Section.TOOLS, "Max EU/t one battery accepts while charging in a slot.",
 				() -> batteryInputRate, v -> batteryInputRate = v, 1),
-			new IntField("batteryTransferPerUse", "EU one right-click moves from the battery into the item in the other hand.",
+			new IntField("batteryTransferPerUse", Section.TOOLS, "EU one right-click moves from the battery into the item in the other hand.",
 				() -> batteryTransferPerUse, v -> batteryTransferPerUse = v, 1),
-			new IntField("energyPackBuffer", "Energy Pack (worn) EU buffer.",
+			new IntField("energyPackBuffer", Section.TOOLS, "Energy Pack (worn) EU buffer.",
 				() -> energyPackBuffer, v -> energyPackBuffer = v, 1),
-			new IntField("energyPackInputRate", "Max EU/t the Energy Pack accepts while charging in a slot.",
+			new IntField("energyPackInputRate", Section.TOOLS, "Max EU/t the Energy Pack accepts while charging in a slot.",
 				() -> energyPackInputRate, v -> energyPackInputRate = v, 1),
-			new IntField("energyPackOutputRate", "Max EU/t the worn Energy Pack hands out to powered items in the inventory.",
+			new IntField("energyPackOutputRate", Section.TOOLS, "Max EU/t the worn Energy Pack hands out to powered items in the inventory.",
 				() -> energyPackOutputRate, v -> energyPackOutputRate = v, 1),
-			new IntField("electricDrillBuffer", "Electric Drill EU buffer.",
+			new IntField("electricDrillBuffer", Section.TOOLS, "Electric Drill EU buffer.",
 				() -> electricDrillBuffer, v -> electricDrillBuffer = v, 1),
-			new IntField("electricDrillEuPerBlock", "EU the drill spends per block mined at powered speed (below this it mines at hand speed for free).",
+			new IntField("electricDrillEuPerBlock", Section.TOOLS, "EU the drill spends per block mined at powered speed (below this it mines at hand speed for free).",
 				() -> electricDrillEuPerBlock, v -> electricDrillEuPerBlock = v, 1),
-			new IntField("electricDrillInputRate", "Max EU/t the drill accepts while charging in a slot.",
+			new IntField("electricDrillInputRate", Section.TOOLS, "Max EU/t the drill accepts while charging in a slot.",
 				() -> electricDrillInputRate, v -> electricDrillInputRate = v, 1),
-			new IntField("electricDrillTorchEuCost", "EU the drill spends to place a torch on right-click.",
+			new IntField("electricDrillTorchEuCost", Section.TOOLS, "EU the drill spends to place a torch on right-click.",
 				() -> electricDrillTorchEuCost, v -> electricDrillTorchEuCost = v, 0),
-			new IntField("electricChainsawBuffer", "Electric Chainsaw EU buffer.",
+			new IntField("electricChainsawBuffer", Section.TOOLS, "Electric Chainsaw EU buffer.",
 				() -> electricChainsawBuffer, v -> electricChainsawBuffer = v, 1),
-			new IntField("electricChainsawEuPerBlock", "EU the chainsaw spends per block cut at powered speed (below this it cuts at hand speed for free).",
+			new IntField("electricChainsawEuPerBlock", Section.TOOLS, "EU the chainsaw spends per block cut at powered speed (below this it cuts at hand speed for free).",
 				() -> electricChainsawEuPerBlock, v -> electricChainsawEuPerBlock = v, 1),
-			new IntField("electricChainsawInputRate", "Max EU/t the chainsaw accepts while charging in a slot.",
+			new IntField("electricChainsawInputRate", Section.TOOLS, "Max EU/t the chainsaw accepts while charging in a slot.",
 				() -> electricChainsawInputRate, v -> electricChainsawInputRate = v, 1),
-			new IntField("electricShovelBuffer", "Electric Shovel EU buffer.",
+			new IntField("electricShovelBuffer", Section.TOOLS, "Electric Shovel EU buffer.",
 				() -> electricShovelBuffer, v -> electricShovelBuffer = v, 1),
-			new IntField("electricShovelEuPerBlock", "EU the shovel spends per block dug at powered speed (below this it digs at hand speed for free).",
+			new IntField("electricShovelEuPerBlock", Section.TOOLS, "EU the shovel spends per block dug at powered speed (below this it digs at hand speed for free).",
 				() -> electricShovelEuPerBlock, v -> electricShovelEuPerBlock = v, 1),
-			new IntField("electricShovelInputRate", "Max EU/t the shovel accepts while charging in a slot.",
+			new IntField("electricShovelInputRate", Section.TOOLS, "Max EU/t the shovel accepts while charging in a slot.",
 				() -> electricShovelInputRate, v -> electricShovelInputRate = v, 1),
-			new IntField("electricHoeBuffer", "Electric Hoe EU buffer.",
+			new IntField("electricHoeBuffer", Section.TOOLS, "Electric Hoe EU buffer.",
 				() -> electricHoeBuffer, v -> electricHoeBuffer = v, 1),
-			new IntField("electricHoeEuPerBlock", "EU the hoe spends per block broken at powered speed (below this it breaks at hand speed for free; tilling is always free).",
+			new IntField("electricHoeEuPerBlock", Section.TOOLS, "EU the hoe spends per block broken at powered speed (below this it breaks at hand speed for free; tilling is always free).",
 				() -> electricHoeEuPerBlock, v -> electricHoeEuPerBlock = v, 1),
-			new IntField("electricHoeTillEuCost", "EU the hoe spends per successful right-click conversion (tilling soil).",
+			new IntField("electricHoeTillEuCost", Section.TOOLS, "EU the hoe spends per successful right-click conversion (tilling soil).",
 				() -> electricHoeTillEuCost, v -> electricHoeTillEuCost = v, 0),
-			new IntField("electricHoeInputRate", "Max EU/t the hoe accepts while charging in a slot.",
+			new IntField("electricHoeInputRate", Section.TOOLS, "Max EU/t the hoe accepts while charging in a slot.",
 				() -> electricHoeInputRate, v -> electricHoeInputRate = v, 1),
-			new IntField("electricSaberBuffer", "Electric Saber EU buffer.",
+			new IntField("electricSaberBuffer", Section.TOOLS, "Electric Saber EU buffer.",
 				() -> electricSaberBuffer, v -> electricSaberBuffer = v, 1),
-			new IntField("electricSaberEuPerHit", "EU the saber spends per powered hit (below this it hits as a plain sword for free).",
+			new IntField("electricSaberEuPerHit", Section.TOOLS, "EU the saber spends per powered hit (below this it hits as a plain sword for free).",
 				() -> electricSaberEuPerHit, v -> electricSaberEuPerHit = v, 1),
-			new IntField("electricSaberInputRate", "Max EU/t the saber accepts while charging in a slot.",
+			new IntField("electricSaberInputRate", Section.TOOLS, "Max EU/t the saber accepts while charging in a slot.",
 				() -> electricSaberInputRate, v -> electricSaberInputRate = v, 1),
-			new IntField("electricSaberShockSeconds", "Seconds of Slowness II a powered saber hit leaves on the target (0 disables).",
+			new IntField("electricSaberShockSeconds", Section.TOOLS, "Seconds of Slowness II a powered saber hit leaves on the target (0 disables).",
 				() -> electricSaberShockSeconds, v -> electricSaberShockSeconds = v, 0),
-			new IntField("fluxweaveBuffer", "EU buffer of each Fluxweave armour piece.",
+			new IntField("fluxweaveBuffer", Section.TOOLS, "EU buffer of each Fluxweave armour piece.",
 				() -> fluxweaveBuffer, v -> fluxweaveBuffer = v, 1),
-			new IntField("fluxweaveInputRate", "Max EU/t a Fluxweave piece accepts while charging in a slot.",
+			new IntField("fluxweaveInputRate", Section.TOOLS, "Max EU/t a Fluxweave piece accepts while charging in a slot.",
 				() -> fluxweaveInputRate, v -> fluxweaveInputRate = v, 1),
-			new IntField("fluxweaveUpkeepEuPerSecond", "EU/second a charged, worn Fluxweave piece burns to keep its bonuses on.",
+			new IntField("fluxweaveUpkeepEuPerSecond", Section.TOOLS, "EU/second a charged, worn Fluxweave piece burns to keep its bonuses on.",
 				() -> fluxweaveUpkeepEuPerSecond, v -> fluxweaveUpkeepEuPerSecond = v, 0),
-			new IntField("fluxweaveFallDamageReductionPercent", "Percent of fall damage Fluxweave boots absorb while charged (clamped to 90 in code).",
+			new IntField("fluxweaveFallDamageReductionPercent", Section.TOOLS, "Percent of fall damage Fluxweave boots absorb while charged (clamped to 90 in code).",
 				() -> fluxweaveFallDamageReductionPercent, v -> fluxweaveFallDamageReductionPercent = v, 0),
-			new IntField("fluxweaveRunSpeedPercent", "Percent added to run speed by charged Fluxweave leggings.",
+			new IntField("fluxweaveRunSpeedPercent", Section.TOOLS, "Percent added to run speed by charged Fluxweave leggings.",
 				() -> fluxweaveRunSpeedPercent, v -> fluxweaveRunSpeedPercent = v, 0),
-			new IntField("fluxweaveOxygenBonus", "OXYGEN_BONUS levels granted by a charged Fluxweave helmet.",
+			new IntField("fluxweaveOxygenBonus", Section.TOOLS, "OXYGEN_BONUS levels granted by a charged Fluxweave helmet.",
 				() -> fluxweaveOxygenBonus, v -> fluxweaveOxygenBonus = v, 0),
-			new IntField("fluxweaveSwimEfficiency", "Percent of water movement efficiency granted by a charged Fluxweave helmet.",
+			new IntField("fluxweaveSwimEfficiency", Section.TOOLS, "Percent of water movement efficiency granted by a charged Fluxweave helmet.",
 				() -> fluxweaveSwimEfficiency, v -> fluxweaveSwimEfficiency = v, 0),
-			new IntField("fluxweaveChargedToughness", "Extra armour toughness on a charged Fluxweave chestplate.",
+			new IntField("fluxweaveChargedToughness", Section.TOOLS, "Extra armour toughness on a charged Fluxweave chestplate.",
 				() -> fluxweaveChargedToughness, v -> fluxweaveChargedToughness = v, 0),
-			new IntField("fluxweaveKnockbackResistance", "Percent of knockback resisted by a charged Fluxweave chestplate.",
+			new IntField("fluxweaveKnockbackResistance", Section.TOOLS, "Percent of knockback resisted by a charged Fluxweave chestplate.",
 				() -> fluxweaveKnockbackResistance, v -> fluxweaveKnockbackResistance = v, 0),
-			new IntField("fluxweaveStepHeightBonus", "Extra step height (hundredths of a block) from charged Fluxweave leggings with the assist toggled on.",
+			new IntField("fluxweaveStepHeightBonus", Section.TOOLS, "Extra step height (hundredths of a block) from charged Fluxweave leggings with the assist toggled on.",
 				() -> fluxweaveStepHeightBonus, v -> fluxweaveStepHeightBonus = v, 0),
-			new IntField("fluxweaveRegenEuPerHeal", "EU the Fluxweave helmet spends per half-heart healed by the 4/4 set bonus.",
+			new IntField("fluxweaveRegenEuPerHeal", Section.TOOLS, "EU the Fluxweave helmet spends per half-heart healed by the 4/4 set bonus.",
 				() -> fluxweaveRegenEuPerHeal, v -> fluxweaveRegenEuPerHeal = v, 1),
-			new IntField("jetpackBuffer", "Jetpack EU buffer.",
+			new IntField("jetpackBuffer", Section.TOOLS, "Jetpack EU buffer.",
 				() -> jetpackBuffer, v -> jetpackBuffer = v, 1),
-			new IntField("jetpackEuPerTick", "EU the jetpack burns per tick of thrust (jump held while airborne).",
+			new IntField("jetpackEuPerTick", Section.TOOLS, "EU the jetpack burns per tick of thrust (jump held while airborne).",
 				() -> jetpackEuPerTick, v -> jetpackEuPerTick = v, 1),
-			new IntField("jetpackInputRate", "Max EU/t the jetpack accepts while charging in a slot.",
+			new IntField("jetpackInputRate", Section.TOOLS, "Max EU/t the jetpack accepts while charging in a slot.",
 				() -> jetpackInputRate, v -> jetpackInputRate = v, 1),
-			new IntField("jetpackMaxY", "Altitude ceiling (block Y) above which the jetpack engine refuses to thrust.",
+			new IntField("jetpackMaxY", Section.TOOLS, "Altitude ceiling (block Y) above which the jetpack engine refuses to thrust.",
 				() -> jetpackMaxY, v -> jetpackMaxY = v, 1),
-			new IntField("jetpackFlightLightLevel", "Light level (0-15) a thrusting jetpack casts around the flyer; 0 disables the glow.",
+			new IntField("jetpackFlightLightLevel", Section.TOOLS, "Light level (0-15) a thrusting jetpack casts around the flyer; 0 disables the glow.",
 				() -> jetpackFlightLightLevel, v -> jetpackFlightLightLevel = v, 0),
-			new IntField("magnetBuffer", "Electromagnet EU buffer.",
+			new IntField("magnetBuffer", Section.TOOLS, "Electromagnet EU buffer.",
 				() -> magnetBuffer, v -> magnetBuffer = v, 1),
-			new IntField("magnetInputRate", "Max EU/t the electromagnet accepts while charging in a slot.",
+			new IntField("magnetInputRate", Section.TOOLS, "Max EU/t the electromagnet accepts while charging in a slot.",
 				() -> magnetInputRate, v -> magnetInputRate = v, 1),
-			new IntField("magnetRange", "Electromagnet pull radius in blocks around the carrier.",
+			new IntField("magnetRange", Section.TOOLS, "Electromagnet pull radius in blocks around the carrier.",
 				() -> magnetRange, v -> magnetRange = v, 1),
-			new IntField("magnetEuPerItem", "EU the electromagnet spends per item pulled each scan tick (an idle scan is free).",
+			new IntField("magnetEuPerItem", Section.TOOLS, "EU the electromagnet spends per item pulled each scan tick (an idle scan is free).",
 				() -> magnetEuPerItem, v -> magnetEuPerItem = v, 1),
-			new IntField("magnetScanIntervalTicks", "How often (ticks) the electromagnet scans for and pulls nearby drops.",
+			new IntField("magnetScanIntervalTicks", Section.TOOLS, "How often (ticks) the electromagnet scans for and pulls nearby drops.",
 				() -> magnetScanIntervalTicks, v -> magnetScanIntervalTicks = v, 1),
-			new IntField("stockFrameScanIntervalTicks", "How often (ticks) a Stock Display Frame rescans the container behind it.",
+			new IntField("stockFrameScanIntervalTicks", Section.LOGISTICS, "How often (ticks) a Stock Display Frame rescans the container behind it.",
 				() -> stockFrameScanIntervalTicks, v -> stockFrameScanIntervalTicks = v, 1),
-			new DoubleField("scytheBonusSeedMultiplier", "Global multiplier on the scythe's per-tier bonus-seed chance (1.0 = shipped ladder, 0.0 = mechanic off; a tier is clamped to 1.0).",
+			new DoubleField("scytheBonusSeedMultiplier", Section.TOOLS, "Global multiplier on the scythe's per-tier bonus-seed chance (1.0 = shipped ladder, 0.0 = mechanic off; a tier is clamped to 1.0).",
 				() -> scytheBonusSeedMultiplier, v -> scytheBonusSeedMultiplier = v, 0.0, 0.0),
-			new IntField("machineEuPerTick", "Base EU/t a processing machine draws while running (energy per operation = this x its duration).",
+			new IntField("machineEuPerTick", Section.MACHINES, "Base EU/t a processing machine draws while running (energy per operation = this x its duration).",
 				() -> machineEuPerTick, v -> machineEuPerTick = v, 1),
-			new IntField("maceratorDuration", "Ticks a macerator takes per operation at 1.0 speed.",
+			new IntField("maceratorDuration", Section.MACHINES, "Ticks a macerator takes per operation at 1.0 speed.",
 				() -> maceratorDuration, v -> maceratorDuration = v, 1),
-			new IntField("incubatorEuPerTick", "EU/t the incubator draws while running (4x the machine standard).",
+			new IntField("incubatorEuPerTick", Section.MACHINES, "EU/t the incubator draws while running (4x the machine standard).",
 				() -> incubatorEuPerTick, v -> incubatorEuPerTick = v, 1),
-			new IntField("incubatorBuffer", "Incubator internal EU buffer.",
+			new IntField("incubatorBuffer", Section.MACHINES, "Incubator internal EU buffer.",
 				() -> incubatorBuffer, v -> incubatorBuffer = v, 1),
-			new IntField("mutationDurationTransform", "Ticks an incubator transform attempt takes at 1.0 speed.",
+			new IntField("mutationDurationTransform", Section.MACHINES, "Ticks an incubator transform attempt takes at 1.0 speed.",
 				() -> mutationDurationTransform, v -> mutationDurationTransform = v, 1),
-			new IntField("mutationDurationDuplicate", "Ticks an incubator duplicate attempt takes at 1.0 speed.",
+			new IntField("mutationDurationDuplicate", Section.MACHINES, "Ticks an incubator duplicate attempt takes at 1.0 speed.",
 				() -> mutationDurationDuplicate, v -> mutationDurationDuplicate = v, 1),
-			new IntField("mutationDurationCreate", "Ticks an incubator create attempt takes at 1.0 speed.",
+			new IntField("mutationDurationCreate", Section.MACHINES, "Ticks an incubator create attempt takes at 1.0 speed.",
 				() -> mutationDurationCreate, v -> mutationDurationCreate = v, 1),
-			new IntField("mutationAttemptsPerIngot", "Mutation attempts one uranium ingot powers before it burns to ash.",
+			new IntField("mutationAttemptsPerIngot", Section.MACHINES, "Mutation attempts one uranium ingot powers before it burns to ash.",
 				() -> mutationAttemptsPerIngot, v -> mutationAttemptsPerIngot = v, 1),
-			new DoubleField("mutationChanceTransform", "Base success chance of a transform mutation (0..1).",
+			new DoubleField("mutationChanceTransform", Section.MACHINES, "Base success chance of a transform mutation (0..1).",
 				() -> mutationChanceTransform, v -> mutationChanceTransform = v, 0.0, 0.0),
-			new DoubleField("mutationChanceDuplicate", "Base success chance of a duplicate mutation (0..1).",
+			new DoubleField("mutationChanceDuplicate", Section.MACHINES, "Base success chance of a duplicate mutation (0..1).",
 				() -> mutationChanceDuplicate, v -> mutationChanceDuplicate = v, 0.0, 0.0),
-			new DoubleField("mutationChanceCreate", "Base success chance of a create mutation (0..1).",
+			new DoubleField("mutationChanceCreate", Section.MACHINES, "Base success chance of a create mutation (0..1).",
 				() -> mutationChanceCreate, v -> mutationChanceCreate = v, 0.0, 0.0),
-			new DoubleField("mutationChanceCap", "Ceiling on the total mutation success chance (base + gene bonus).",
+			new DoubleField("mutationChanceCap", Section.MACHINES, "Ceiling on the total mutation success chance (base + gene bonus).",
 				() -> mutationChanceCap, v -> mutationChanceCap = v, 0.0, 0.0),
-			new DoubleField("mutationSlagChance", "Share of attempts yielding irradiated slag instead of an empty miss.",
+			new DoubleField("mutationSlagChance", Section.MACHINES, "Share of attempts yielding irradiated slag instead of an empty miss.",
 				() -> mutationSlagChance, v -> mutationSlagChance = v, 0.0, 0.0),
-			new DoubleField("mutationGradeRare", "Share of successful mutations rolling the rare grade.",
+			new DoubleField("mutationGradeRare", Section.MACHINES, "Share of successful mutations rolling the rare grade.",
 				() -> mutationGradeRare, v -> mutationGradeRare = v, 0.0, 0.0),
-			new DoubleField("mutationGradeEpic", "Share of successful mutations rolling the epic grade.",
+			new DoubleField("mutationGradeEpic", Section.MACHINES, "Share of successful mutations rolling the epic grade.",
 				() -> mutationGradeEpic, v -> mutationGradeEpic = v, 0.0, 0.0),
-			new DoubleField("mutationGradeLegendary", "Share of successful mutations rolling the legendary grade.",
+			new DoubleField("mutationGradeLegendary", Section.MACHINES, "Share of successful mutations rolling the legendary grade.",
 				() -> mutationGradeLegendary, v -> mutationGradeLegendary = v, 0.0, 0.0),
-			new IntField("gardenDroneBuffer", "Garden Drone station internal EU buffer.",
+			new IntField("gardenDroneBuffer", Section.MACHINES, "Garden Drone station internal EU buffer.",
 				() -> gardenDroneBuffer, v -> gardenDroneBuffer = v, 1),
-			new IntField("gardenDroneEuPerAction", "EU the Garden Drone spends per completed action (till/plant/fertilize/harvest); idle costs nothing.",
+			new IntField("gardenDroneEuPerAction", Section.MACHINES, "EU the Garden Drone spends per completed action (till/plant/fertilize/harvest); idle costs nothing.",
 				() -> gardenDroneEuPerAction, v -> gardenDroneEuPerAction = v, 1),
-			new IntField("gardenDroneRange", "Garden Drone zone-scan radius in blocks around the station.",
+			new IntField("gardenDroneRange", Section.MACHINES, "Garden Drone zone-scan radius in blocks around the station.",
 				() -> gardenDroneRange, v -> gardenDroneRange = v, 1),
-			new IntField("gardenDroneScanIntervalTicks", "Ticks between Garden Drone zone rebuilds after cache invalidation.",
+			new IntField("gardenDroneScanIntervalTicks", Section.MACHINES, "Ticks between Garden Drone zone rebuilds after cache invalidation.",
 				() -> gardenDroneScanIntervalTicks, v -> gardenDroneScanIntervalTicks = v, 1),
-			new IntField("gardenDroneFlightTicksPerBlock", "Ticks the Garden Drone flies per block of distance before its action lands.",
+			new IntField("gardenDroneFlightTicksPerBlock", Section.MACHINES, "Ticks the Garden Drone flies per block of distance before its action lands.",
 				() -> gardenDroneFlightTicksPerBlock, v -> gardenDroneFlightTicksPerBlock = v, 0),
 			// Minimum 1 on both: a 0 divisor would divide by zero inside the plant's random tick (MOD-169).
-			new IntField("cottonRootingChanceDivisor", "Cotton trellis: 1-in-this chance of advancing one rooting stage per random tick (higher = longer initial growth).",
+			new IntField("cottonRootingChanceDivisor", Section.WORLD, "Cotton trellis: 1-in-this chance of advancing one rooting stage per random tick (higher = longer initial growth).",
 				() -> cottonRootingChanceDivisor, v -> cottonRootingChanceDivisor = v, 1),
-			new IntField("cottonFruitingChanceDivisor", "Cotton trellis: 1-in-this chance of advancing one fruiting stage per random tick (the repeating harvest cycle).",
+			new IntField("cottonFruitingChanceDivisor", Section.WORLD, "Cotton trellis: 1-in-this chance of advancing one fruiting stage per random tick (the repeating harvest cycle).",
 				() -> cottonFruitingChanceDivisor, v -> cottonFruitingChanceDivisor = v, 1),
-			new IntField("electricFurnaceDuration", "Ticks an electric furnace takes per smelt at 1.0 speed.",
+			new IntField("electricFurnaceDuration", Section.MACHINES, "Ticks an electric furnace takes per smelt at 1.0 speed.",
 				() -> electricFurnaceDuration, v -> electricFurnaceDuration = v, 1),
-			new IntField("compressorDuration", "Ticks a compressor takes per operation at 1.0 speed.",
+			new IntField("compressorDuration", Section.MACHINES, "Ticks a compressor takes per operation at 1.0 speed.",
 				() -> compressorDuration, v -> compressorDuration = v, 1),
-			new IntField("extractorDuration", "Ticks an extractor takes per operation at 1.0 speed.",
+			new IntField("extractorDuration", Section.MACHINES, "Ticks an extractor takes per operation at 1.0 speed.",
 				() -> extractorDuration, v -> extractorDuration = v, 1),
-			new IntField("sawmillDuration", "Ticks a sawmill takes per cut at 1.0 speed (all four modes).",
+			new IntField("sawmillDuration", Section.MACHINES, "Ticks a sawmill takes per cut at 1.0 speed (all four modes).",
 				() -> sawmillDuration, v -> sawmillDuration = v, 1),
-			new IntField("polymerizerDuration", "Ticks a polymerizer takes to turn one bucket of oil into raw rubber at 1.0 speed.",
+			new IntField("polymerizerDuration", Section.MACHINES, "Ticks a polymerizer takes to turn one bucket of oil into raw rubber at 1.0 speed.",
 				() -> polymerizerDuration, v -> polymerizerDuration = v, 1),
-			new IntField("vulcanizerDuration", "Fallback ticks a vulcanizer operation takes at 1.0 speed; shipped recipe energy 400 / machineEuPerTick 2 = 200.",
+			new IntField("vulcanizerDuration", Section.MACHINES, "Fallback ticks a vulcanizer operation takes at 1.0 speed; shipped recipe energy 400 / machineEuPerTick 2 = 200.",
 				() -> vulcanizerDuration, v -> vulcanizerDuration = v, 1),
-			new IntField("canningMachineDuration", "Ticks the canning machine takes per ration at 1.0 speed; x machineEuPerTick 2 = 200 EU per ration.",
+			new IntField("canningMachineDuration", Section.MACHINES, "Ticks the canning machine takes per ration at 1.0 speed; x machineEuPerTick 2 = 200 EU per ration.",
 				() -> canningMachineDuration, v -> canningMachineDuration = v, 1),
-			new IntField("canningFoodValuePerCan", "Food value in tenths (nutrition + saturation) the canning machine consumes per ration. Must exceed the ration's own 96, or canning becomes a food duplicator.",
+			new IntField("canningFoodValuePerCan", Section.MACHINES, "Food value in tenths (nutrition + saturation) the canning machine consumes per ration. Must exceed the ration's own 96, or canning becomes a food duplicator.",
 				() -> canningFoodValuePerCan, v -> canningFoodValuePerCan = v, 97),
-			new IntField("distillationColumnDuration", "Fallback ticks one distillation takes at 1.0 speed; shipped recipe energy 400 / machineEuPerTick 2 = 200.",
+			new IntField("distillationColumnDuration", Section.MACHINES, "Fallback ticks one distillation takes at 1.0 speed; shipped recipe energy 400 / machineEuPerTick 2 = 200.",
 				() -> distillationColumnDuration, v -> distillationColumnDuration = v, 1),
-			new IntField("distillationColumnWarmupTicks", "Ticks a cold distillation column heats (at machineEuPerTick) before it can distil; cooling is twice as slow.",
+			new IntField("distillationColumnWarmupTicks", Section.MACHINES, "Ticks a cold distillation column heats (at machineEuPerTick) before it can distil; cooling is twice as slow.",
 				() -> distillationColumnWarmupTicks, v -> distillationColumnWarmupTicks = v, 1),
-			new IntField("galvanicBathDuration", "Fallback ticks a galvanic bath operation takes at 1.0 speed; shipped recipe energy 1000 / machineEuPerTick 2 = 500.",
+			new IntField("galvanicBathDuration", Section.MACHINES, "Fallback ticks a galvanic bath operation takes at 1.0 speed; shipped recipe energy 1000 / machineEuPerTick 2 = 500.",
 				() -> galvanicBathDuration, v -> galvanicBathDuration = v, 1),
-			new FloatField("overclockerSpeedFactor", "MOD-392: duration multiplier per overclocker chip (0.8 = each chip cuts one operation to 80% of its length).",
+			new FloatField("overclockerSpeedFactor", Section.MACHINES, "MOD-392: duration multiplier per overclocker chip (0.8 = each chip cuts one operation to 80% of its length).",
 				() -> overclockerSpeedFactor, v -> overclockerSpeedFactor = v, 0.0f),
-			new FloatField("overclockerEuFactor", "MOD-392: EU/t multiplier per overclocker chip (2.0 = each chip doubles the draw). With 0.8 speed this makes every chip cost 60% more energy per operation.",
+			new FloatField("overclockerEuFactor", Section.MACHINES, "MOD-392: EU/t multiplier per overclocker chip (2.0 = each chip doubles the draw). With 0.8 speed this makes every chip cost 60% more energy per operation.",
 				() -> overclockerEuFactor, v -> overclockerEuFactor = v, 1.0f),
-			new IntField("overclockerMaxPerMachine", "MOD-392: absolute ceiling on overclocker chips in one machine; the tier cap (base EU/t x factor^n <= tier voltage) usually bites first.",
+			new IntField("overclockerMaxPerMachine", Section.MACHINES, "MOD-392: absolute ceiling on overclocker chips in one machine; the tier cap (base EU/t x factor^n <= tier voltage) usually bites first.",
 				() -> overclockerMaxPerMachine, v -> overclockerMaxPerMachine = v, 0),
-			new IntField("condenserCapacity", "MOD-393: ceiling of the energy condenser's bank; equals the tier-III clot threshold, so it stops drawing once nothing higher is reachable.",
+			new IntField("condenserCapacity", Section.MACHINES, "MOD-393: ceiling of the energy condenser's bank; equals the tier-III clot threshold, so it stops drawing once nothing higher is reachable.",
 				() -> condenserCapacity, v -> condenserCapacity = v, 1),
-			new IntField("condenserInputRate", "MOD-393: EU/t the energy condenser accepts — one MV packet, about 32 basic solar panels. Machines are protected by the network's serve order, not by this number; absorbing a bigger surplus means placing more condensers.",
+			new IntField("condenserInputRate", Section.MACHINES, "MOD-393: EU/t the energy condenser accepts — one MV packet, about 32 basic solar panels. Machines are protected by the network's serve order, not by this number; absorbing a bigger surplus means placing more condensers.",
 				() -> condenserInputRate, v -> condenserInputRate = v, 1),
-			new IntField("clotThresholdI", "MOD-393: banked EU needed before the condenser can yield a tier-I energy clot.",
+			new IntField("clotThresholdI", Section.MACHINES, "MOD-393: banked EU needed before the condenser can yield a tier-I energy clot.",
 				() -> clotThresholdI, v -> clotThresholdI = v, 1),
-			new IntField("clotThresholdII", "MOD-393: banked EU for a tier-II clot (four times tier I).",
+			new IntField("clotThresholdII", Section.MACHINES, "MOD-393: banked EU for a tier-II clot (four times tier I).",
 				() -> clotThresholdII, v -> clotThresholdII = v, 1),
-			new IntField("clotThresholdIII", "MOD-393: banked EU for a tier-III clot (four times tier II).",
+			new IntField("clotThresholdIII", Section.MACHINES, "MOD-393: banked EU for a tier-III clot (four times tier II).",
 				() -> clotThresholdIII, v -> clotThresholdIII = v, 1),
-			new IntField("alloySmelterEuPerTick", "EU/t the alloy smelter draws while running (MOD-064). Four times the machine standard, like the incubator.",
+			new IntField("alloySmelterEuPerTick", Section.MACHINES, "EU/t the alloy smelter draws while running (MOD-064). Four times the machine standard, like the incubator.",
 				() -> alloySmelterEuPerTick, v -> alloySmelterEuPerTick = v, 1),
-			new IntField("alloySmelterDuration", "Fallback ticks one alloying operation takes at 1.0 speed (MOD-064); shipped recipe energy 1200 / alloySmelterEuPerTick 8 = 150.",
+			new IntField("alloySmelterDuration", Section.MACHINES, "Fallback ticks one alloying operation takes at 1.0 speed (MOD-064); shipped recipe energy 1200 / alloySmelterEuPerTick 8 = 150.",
 				() -> alloySmelterDuration, v -> alloySmelterDuration = v, 1),
-			new IntField("assemblerEuPerTick", "EU/tick the assembler draws while crafting (MOD-275). MV rate: six times an LV machine.",
+			new IntField("assemblerEuPerTick", Section.MACHINES, "EU/tick the assembler draws while crafting (MOD-275). MV rate: six times an LV machine.",
 				() -> assemblerEuPerTick, v -> assemblerEuPerTick = v, 1),
-			new IntField("assemblerDuration", "Ticks one assembler craft takes at 1.0 speed (MOD-275). 40 = 2 seconds, the pace of the genre.",
+			new IntField("assemblerDuration", Section.MACHINES, "Ticks one assembler craft takes at 1.0 speed (MOD-275). 40 = 2 seconds, the pace of the genre.",
 				() -> assemblerDuration, v -> assemblerDuration = v, 1),
-			new IntField("assemblerBuffer", "EU buffer of the assembler (MOD-275) — 25 operations at 480 EU each.",
+			new IntField("assemblerBuffer", Section.MACHINES, "EU buffer of the assembler (MOD-275) — 25 operations at 480 EU each.",
 				() -> assemblerBuffer, v -> assemblerBuffer = v, 1),
-			new IntField("galvanicBathWaterPerOp", "mB of water a galvanic bath consumes per completed operation (not part of the recipe JSON).",
+			new IntField("galvanicBathWaterPerOp", Section.MACHINES, "mB of water a galvanic bath consumes per completed operation (not part of the recipe JSON).",
 				() -> galvanicBathWaterPerOp, v -> galvanicBathWaterPerOp = v, 1),
-			new IntField("electricHeaterEuPerTick", "EU/t an Electric Heater spends while the Vulcanizer directly above it advances; idle heater draws nothing.",
+			new IntField("electricHeaterEuPerTick", Section.MACHINES, "EU/t an Electric Heater spends while the Vulcanizer directly above it advances; idle heater draws nothing.",
 				() -> electricHeaterEuPerTick, v -> electricHeaterEuPerTick = v, 1),
-			new IntField("ironFurnaceCookTime", "Ticks the (fuel-based) iron furnace takes to smelt one item. Vanilla furnace = 200.",
+			new IntField("ironFurnaceCookTime", Section.MACHINES, "Ticks the (fuel-based) iron furnace takes to smelt one item. Vanilla furnace = 200.",
 				() -> ironFurnaceCookTime, v -> ironFurnaceCookTime = v, 1),
-			new IntField("euPerXp", "MOD-133 player profile: useful EU (from completed machine operations) per 1 point of mod XP. Higher = slower progression. Starting value, tune after playtest.",
+			new IntField("euPerXp", Section.PLAYER, "MOD-133 player profile: useful EU (from completed machine operations) per 1 point of mod XP. Higher = slower progression. Starting value, tune after playtest.",
 				() -> euPerXp, v -> euPerXp = v, 1, 1),
-			new IntField("euPerXpGenerated", "MOD-133 player profile: produced EU (actually credited into a generator buffer, never idle overflow) per 1 point of mod XP. Much higher than euPerXp on purpose - a generator runs unattended, so it only trickles. Starting value, tune after playtest.",
+			new IntField("euPerXpGenerated", Section.PLAYER, "MOD-133 player profile: produced EU (actually credited into a generator buffer, never idle overflow) per 1 point of mod XP. Much higher than euPerXp on purpose - a generator runs unattended, so it only trickles. Starting value, tune after playtest.",
 				() -> euPerXpGenerated, v -> euPerXpGenerated = v, 1, 1),
-			new IntField("xpLevelOneCost", "MOD-133: XP cost of the first level (1->2); each later level costs levelXpMultiplier x the previous. Starting value.",
+			new IntField("xpLevelOneCost", Section.PLAYER, "MOD-133: XP cost of the first level (1->2); each later level costs levelXpMultiplier x the previous. Starting value.",
 				() -> xpLevelOneCost, v -> xpLevelOneCost = v, 1, 1),
-			new FloatField("levelXpMultiplier", "MOD-133: per-level XP cost multiplier (exponential curve over 40 levels). Must be > 1.0.",
+			new FloatField("levelXpMultiplier", Section.PLAYER, "MOD-133: per-level XP cost multiplier (exponential curve over 40 levels). Must be > 1.0.",
 				() -> levelXpMultiplier, v -> levelXpMultiplier = v, 1.0f),
-			new IntField("statsFlushTicks", "MOD-133: how often (server ticks) in-memory player stats fold into the attachment and sync. 100 = every 5s.",
+			new IntField("statsFlushTicks", Section.PLAYER, "MOD-133: how often (server ticks) in-memory player stats fold into the attachment and sync. 100 = every 5s.",
 				() -> statsFlushTicks, v -> statsFlushTicks = v, 1),
-			new IntField("tierLvVoltage", "Max packet voltage (EU) and per-tick transfer cap for the LV tier (cable, generator, machine, storage). Mirrored into EnergyTier.LV.",
+			new IntField("tierLvVoltage", Section.NETWORK, "Max packet voltage (EU) and per-tick transfer cap for the LV tier (cable, generator, machine, storage). Mirrored into EnergyTier.LV.",
 				() -> tierLvVoltage, v -> tierLvVoltage = v, 1),
-			new IntField("tierMvVoltage", "Max packet voltage for the MV tier (4x LV by convention). Mirrored into EnergyTier.MV.",
+			new IntField("tierMvVoltage", Section.NETWORK, "Max packet voltage for the MV tier (4x LV by convention). Mirrored into EnergyTier.MV.",
 				() -> tierMvVoltage, v -> tierMvVoltage = v, 1),
-			new IntField("tierHvVoltage", "Max packet voltage for the HV tier (4x MV by convention). Mirrored into EnergyTier.HV.",
+			new IntField("tierHvVoltage", Section.NETWORK, "Max packet voltage for the HV tier (4x MV by convention). Mirrored into EnergyTier.HV.",
 				() -> tierHvVoltage, v -> tierHvVoltage = v, 1),
-			new IntField("tierLvCapacity", "Default internal buffer capacity for LV machines that do not override it. Mirrored into EnergyTier.LV.",
+			new IntField("tierLvCapacity", Section.NETWORK, "Default internal buffer capacity for LV machines that do not override it. Mirrored into EnergyTier.LV.",
 				() -> tierLvCapacity, v -> tierLvCapacity = v, 1),
-			new IntField("tierMvCapacity", "Default internal buffer capacity for MV machines. Mirrored into EnergyTier.MV.",
+			new IntField("tierMvCapacity", Section.NETWORK, "Default internal buffer capacity for MV machines. Mirrored into EnergyTier.MV.",
 				() -> tierMvCapacity, v -> tierMvCapacity = v, 1),
-			new IntField("tierHvCapacity", "Default internal buffer capacity for HV machines. Mirrored into EnergyTier.HV.",
+			new IntField("tierHvCapacity", Section.NETWORK, "Default internal buffer capacity for HV machines. Mirrored into EnergyTier.HV.",
 				() -> tierHvCapacity, v -> tierHvCapacity = v, 1),
-			new DoubleField("copperCableLossPerBlock", "Fraction of throughput attenuated per copper cable block (0.02 = 2% of the remaining flow per block).",
+			new DoubleField("copperCableLossPerBlock", Section.CABLES, "Fraction of throughput attenuated per copper cable block (0.02 = 2% of the remaining flow per block).",
 				() -> copperCableLossPerBlock, v -> copperCableLossPerBlock = v, 0.0, 0.0),
-			new BoolField("bareCableShockEnabled", "When true, energized bare cables damage players on direct contact and emit shock feedback. false disables the entire mechanic.",
+			new BoolField("bareCableShockEnabled", Section.SAFETY, "When true, energized bare cables damage players on direct contact and emit shock feedback. false disables the entire mechanic.",
 				() -> bareCableShockEnabled, v -> bareCableShockEnabled = v),
-			new FloatField("bareCableShockLvDamage", "Damage from direct contact with an energized bare LV cable, in half-hearts.",
+			new FloatField("bareCableShockLvDamage", Section.SAFETY, "Damage from direct contact with an energized bare LV cable, in half-hearts.",
 				() -> bareCableShockLvDamage, v -> bareCableShockLvDamage = v, 0.0f),
-			new FloatField("bareCableShockMvDamage", "Damage from direct contact with an energized bare MV cable, in half-hearts.",
+			new FloatField("bareCableShockMvDamage", Section.SAFETY, "Damage from direct contact with an energized bare MV cable, in half-hearts.",
 				() -> bareCableShockMvDamage, v -> bareCableShockMvDamage = v, 0.0f),
-			new FloatField("bareCableShockHvDamage", "Damage from direct contact with an energized bare HV cable, in half-hearts.",
+			new FloatField("bareCableShockHvDamage", Section.SAFETY, "Damage from direct contact with an energized bare HV cable, in half-hearts.",
 				() -> bareCableShockHvDamage, v -> bareCableShockHvDamage = v, 0.0f),
-			new DoubleField("bareCableShockProximityRadius", "Extra blocks the shock hazard reaches beyond a bare cable segment's own cell in every direction (0 = direct-touch only).",
+			new DoubleField("bareCableShockProximityRadius", Section.SAFETY, "Extra blocks the shock hazard reaches beyond a bare cable segment's own cell in every direction (0 = direct-touch only).",
 				() -> bareCableShockProximityRadius, v -> bareCableShockProximityRadius = v, 0.0, 0.0),
-			new DoubleField("insulationLossMultiplier", "Multiplier applied to bare-cable attenuation for rubber-insulated tin/copper cables (0.5 = half the loss; throughput and packet cap are unchanged).",
+			new DoubleField("insulationLossMultiplier", Section.CABLES, "Multiplier applied to bare-cable attenuation for rubber-insulated tin/copper cables (0.5 = half the loss; throughput and packet cap are unchanged).",
 				() -> insulationLossMultiplier, v -> insulationLossMultiplier = v, 0.0, 0.0),
-			new DoubleField("shockGuardWoodHitChance", "Chance (0..1) a shock still lands through a plank insulating stand under a bare cable (1 = no protection, 0 = blocks every hit).",
+			new DoubleField("shockGuardWoodHitChance", Section.SAFETY, "Chance (0..1) a shock still lands through a plank insulating stand under a bare cable (1 = no protection, 0 = blocks every hit).",
 				() -> shockGuardWoodHitChance, v -> shockGuardWoodHitChance = v, 0.0, 0.0),
-			new DoubleField("shockGuardWoolHitChance", "Chance (0..1) a shock still lands through a wool insulating stand under a bare cable (1 = no protection, 0 = blocks every hit).",
+			new DoubleField("shockGuardWoolHitChance", Section.SAFETY, "Chance (0..1) a shock still lands through a wool insulating stand under a bare cable (1 = no protection, 0 = blocks every hit).",
 				() -> shockGuardWoolHitChance, v -> shockGuardWoolHitChance = v, 0.0, 0.0),
-			new DoubleField("shockGuardGlassHitChance", "Chance (0..1) a shock still lands through a glass insulating stand under a bare cable (1 = no protection, 0 = blocks every hit).",
+			new DoubleField("shockGuardGlassHitChance", Section.SAFETY, "Chance (0..1) a shock still lands through a glass insulating stand under a bare cable (1 = no protection, 0 = blocks every hit).",
 				() -> shockGuardGlassHitChance, v -> shockGuardGlassHitChance = v, 0.0, 0.0),
-			new IntField("shockGuardGraceTicks", "Contact ticks a player is spared after an insulating stand absorbs a shock, so the reduced chance is per contact rather than re-rolled every tick.",
+			new IntField("shockGuardGraceTicks", Section.SAFETY, "Contact ticks a player is spared after an insulating stand absorbs a shock, so the reduced chance is per contact rather than re-rolled every tick.",
 				() -> shockGuardGraceTicks, v -> shockGuardGraceTicks = v, 0),
-			new IntField("tinCableBuffer", "Per-segment working EU buffer of a tin cable = its real throughput (8 EU/t, narrower than copper's 12).",
+			new IntField("tinCableBuffer", Section.CABLES, "Per-segment working EU buffer of a tin cable = its real throughput (8 EU/t, narrower than copper's 12).",
 				() -> tinCableBuffer, v -> tinCableBuffer = v, 1),
-			new IntField("tinCablePacketCap", "Per-tick ceiling on EU drawn from one source through a tin cable (8 EU/t, below the LV tier voltage by design).",
+			new IntField("tinCablePacketCap", Section.CABLES, "Per-tick ceiling on EU drawn from one source through a tin cable (8 EU/t, below the LV tier voltage by design).",
 				() -> tinCablePacketCap, v -> tinCablePacketCap = v, 1),
-			new DoubleField("tinCableLossPerBlock", "Fraction of throughput attenuated per tin cable block (0.006 = 0.6% of the remaining flow per block; a 1 EU/t solar trickle floors to zero loss).",
+			new DoubleField("tinCableLossPerBlock", Section.CABLES, "Fraction of throughput attenuated per tin cable block (0.006 = 0.6% of the remaining flow per block; a 1 EU/t solar trickle floors to zero loss).",
 				() -> tinCableLossPerBlock, v -> tinCableLossPerBlock = v, 0.0, 0.0),
-			new IntField("goldCableBuffer", "Per-segment working EU buffer of a gold (MV) cable = its real throughput (48 EU/t, 4x copper).",
+			new IntField("goldCableBuffer", Section.CABLES, "Per-segment working EU buffer of a gold (MV) cable = its real throughput (48 EU/t, 4x copper).",
 				() -> goldCableBuffer, v -> goldCableBuffer = v, 1),
-			new DoubleField("goldCableLossPerBlock", "Fraction of throughput attenuated per gold cable block (0.03 = 3% of the remaining flow per block; worse than copper by design - gold buys throughput, not distance).",
+			new DoubleField("goldCableLossPerBlock", Section.CABLES, "Fraction of throughput attenuated per gold cable block (0.03 = 3% of the remaining flow per block; worse than copper by design - gold buys throughput, not distance).",
 				() -> goldCableLossPerBlock, v -> goldCableLossPerBlock = v, 0.0, 0.0),
-			new IntField("electrumCableBuffer", "Per-segment working EU buffer of an electrum (HV) cable = its real throughput (192 EU/t, 4x gold).",
+			new IntField("electrumCableBuffer", Section.CABLES, "Per-segment working EU buffer of an electrum (HV) cable = its real throughput (192 EU/t, 4x gold).",
 				() -> electrumCableBuffer, v -> electrumCableBuffer = v, 1),
-			new DoubleField("electrumCableLossPerBlock", "Fraction of throughput attenuated per electrum cable block (0.005 = 0.5% of the remaining flow per block; the lowest in the mod - electrum pays in craft cost, not in distance).",
+			new DoubleField("electrumCableLossPerBlock", Section.CABLES, "Fraction of throughput attenuated per electrum cable block (0.005 = 0.5% of the remaining flow per block; the lowest in the mod - electrum pays in craft cost, not in distance).",
 				() -> electrumCableLossPerBlock, v -> electrumCableLossPerBlock = v, 0.0, 0.0),
-			new IntField("networksPerTick", "Max awake energy networks processed per server tick; the rest are deferred round-robin.",
+			new IntField("networksPerTick", Section.NETWORK, "Max awake energy networks processed per server tick; the rest are deferred round-robin.",
 				() -> networksPerTick, v -> networksPerTick = v, 1),
-			new IntField("networkAnalyzerMaxTraversedNetworks", "Cap on networks the Network Analyzer's Traverse mode walks (visualization only, never affects energy).",
+			new IntField("networkAnalyzerMaxTraversedNetworks", Section.NETWORK, "Cap on networks the Network Analyzer's Traverse mode walks (visualization only, never affects energy).",
 				() -> networkAnalyzerMaxTraversedNetworks, v -> networkAnalyzerMaxTraversedNetworks = v, 1),
-			new BoolField("bonusChestEnabled", "When true, mod starter items are injected into the vanilla bonus chest at world creation (vanilla loot kept). false = purely vanilla bonus chest.",
+			new BoolField("bonusChestEnabled", Section.WORLD, "When true, mod starter items are injected into the vanilla bonus chest at world creation (vanilla loot kept). false = purely vanilla bonus chest.",
 				() -> bonusChestEnabled, v -> bonusChestEnabled = v),
-			new BoolField("oilBurns", "When true, oil ignites from adjacent fire or flint-and-steel and the burn spreads across the pool; lava alone does not ignite it. false = oil is inert.",
+			new BoolField("oilBurns", Section.WORLD, "When true, oil ignites from adjacent fire or flint-and-steel and the burn spreads across the pool; lava alone does not ignite it. false = oil is inert.",
 				() -> oilBurns, v -> oilBurns = v));
 
 	/** Effective machine drain per tick after the speed multiplier (E_op stays ~constant). */
@@ -1513,8 +1641,23 @@ public final class Config {
 		LOADED,
 		/** File was absent; the current defaults were written to it. */
 		DEFAULTS_WRITTEN,
-		/** File existed but could not be parsed (bad JSON / wrong value type); live balance is unchanged. */
-		ERROR
+		/**
+		 * File existed but could not be parsed (bad JSON, or a value of the wrong type). The apply is
+		 * atomic, so the live balance is left exactly as it was.
+		 */
+		ERROR,
+		/**
+		 * The file declares a {@code schemaVersion} newer than {@link #SCHEMA_VERSION} (MOD-402): this
+		 * build cannot know what its keys mean. Nothing from it is applied, the file on disk is left
+		 * untouched, and the live balance is reset to the mod's built-in defaults.
+		 *
+		 * <p><b>Why this is its own outcome and not {@link #ERROR}.</b> The two differ in the one fact an
+		 * admin needs: {@code ERROR} leaves the running balance alone, this one replaces it. Folding them
+		 * together made {@code /ala config reload} report "live balance unchanged" while the balance had in
+		 * fact just been reset — the reader would go looking for a syntax error instead of for the version
+		 * mismatch that actually happened.
+		 */
+		SCHEMA_TOO_NEW
 	}
 
 	/** Reload from the loader-bound {@link #configPath}. Thin wrapper for the reload command + reload listeners. */
@@ -1525,11 +1668,20 @@ public final class Config {
 	/**
 	 * Load the config file at {@code path}, or write the current defaults if it does not exist yet.
 	 *
+	 * <p><b>Versioned (MOD-402):</b> the file carries {@code schemaVersion}. An older one (including a
+	 * pre-MOD-402 file, which has no such key and counts as version 0) is walked up the
+	 * {@link #MIGRATIONS} ladder before anything is read, so an existing server keeps every value it had
+	 * edited. A file from a NEWER mod build is refused: this build cannot know what its keys mean, so
+	 * nothing is applied, the balance falls back to the compiled defaults, the file on disk is left
+	 * alone, and the reason goes to the log at WARN. Silently reading a newer format is exactly the
+	 * "config shadow" failure this task existed to end.
+	 *
 	 * <p><b>Atomic:</b> every field is parsed into locals first (a wrong-type value throws before anything is
 	 * applied), then committed to the static fields in one block — a single typo in the file can never leave the
 	 * live balance half-updated. <b>Self-healing on load:</b> after a successful parse the file is re-serialized in
-	 * canonical form (field comments + any newly added mod fields) and rewritten only when its content actually
-	 * differs, so existing installs gain the inline comments and the write is idempotent (no churn on {@code /reload}).
+	 * canonical form (sections + field comments + any newly added mod fields) and rewritten only when its content
+	 * actually differs, so existing installs gain the inline comments and the write is idempotent (no churn on
+	 * {@code /reload}).
 	 * <b>Minecraft-free:</b> uses plain Gson (not {@code net.minecraft.GsonHelper}) so the loader-neutral L1 test
 	 * suite, which runs without the Minecraft jar, can exercise the file logic directly.
 	 */
@@ -1543,11 +1695,28 @@ public final class Config {
 			String raw = Files.readString(path);
 			JsonObject o = JsonParser.parseString(raw).getAsJsonObject();
 
+			int fileVersion = readSchemaVersion(o);
+			if (fileVersion > SCHEMA_VERSION) {
+				Industrialization.LOGGER.warn("[config] {} declares schemaVersion {}, but this build only"
+						+ " understands {}. NOTHING from the file was applied — the balance is now the mod's"
+						+ " built-in defaults, and the file is left untouched. Downgrade the file or upgrade"
+						+ " the mod.", path, fileVersion, SCHEMA_VERSION);
+				resetToDefaults();
+				return LoadResult.SCHEMA_TOO_NEW;
+			}
+			migrate(o, fileVersion, path);
+
 			// --- staging: parse + validate every field into pending commits; a present-but-wrong-type
-			//     key throws here, before any static field is touched (atomic all-or-nothing apply below). ---
+			//     key throws here, before any static field is touched (atomic all-or-nothing apply below).
+			//     Each field is read out of its own section object, resolved once up front so a section
+			//     holding something other than an object also fails before any commit. ---
+			JsonObject[] bodies = new JsonObject[Section.values().length];
+			for (Section section : Section.values()) {
+				bodies[section.ordinal()] = sectionBody(o, section);
+			}
 			List<Runnable> pending = new ArrayList<>(FIELDS.size());
 			for (ConfigField field : FIELDS) {
-				pending.add(field.stage(o));
+				pending.add(field.stage(bodies[field.section.ordinal()]));
 			}
 
 			// --- commit: apply all staged values at once (nothing above threw, so this is all-or-nothing). ---
@@ -1580,16 +1749,81 @@ public final class Config {
 		return new GsonBuilder().setPrettyPrinting().create().toJson(snapshot());
 	}
 
+	/**
+	 * Layout version recorded in {@code file}. Absent means "written before MOD-402", i.e. the flat
+	 * layout, which is version 0 — the one case where a missing key is information rather than a
+	 * default. A present-but-not-a-number value throws, exactly like any other wrong-type key.
+	 */
+	private static int readSchemaVersion(JsonObject file) {
+		JsonElement e = file.get(SCHEMA_VERSION_KEY);
+		if (e == null || e.isJsonNull()) {
+			return 0;
+		}
+		if (e.isJsonPrimitive() && e.getAsJsonPrimitive().isNumber()) {
+			return e.getAsInt();
+		}
+		throw new IllegalArgumentException("config key '" + SCHEMA_VERSION_KEY + "' must be a number, got " + e);
+	}
+
+	/**
+	 * Walk {@code file} up the {@link #MIGRATIONS} ladder from {@code fileVersion} to
+	 * {@link #SCHEMA_VERSION}, rewriting it in place. Called before staging, so the rest of the load
+	 * only ever sees a current-shape document. Nothing is written back here — what lands on disk is
+	 * {@link #canonicalJson()}, rebuilt from the live values by the self-heal step.
+	 */
+	private static void migrate(JsonObject file, int fileVersion, Path path) {
+		if (fileVersion >= SCHEMA_VERSION) {
+			return;
+		}
+		for (Migration step : MIGRATIONS) {
+			if (step.fromVersion() >= fileVersion) {
+				step.apply().accept(file);
+			}
+		}
+		Industrialization.LOGGER.info("[config] migrated {} from schemaVersion {} to {}",
+				path, fileVersion, SCHEMA_VERSION);
+	}
+
+	/**
+	 * The section's object inside {@code file}, or an empty one when the section is absent (every key
+	 * in it then falls back to its live value, the same contract a missing key has always had). A
+	 * section key present with a non-object value is a typo in the operator's file and throws, so the
+	 * load aborts before any commit instead of silently ignoring a whole group of knobs.
+	 */
+	private static JsonObject sectionBody(JsonObject file, Section section) {
+		JsonElement e = file.get(section.id);
+		if (e == null || e.isJsonNull()) {
+			return new JsonObject();
+		}
+		if (e.isJsonObject()) {
+			return e.getAsJsonObject();
+		}
+		throw new IllegalArgumentException("config section '" + section.id + "' must be an object, got " + e);
+	}
+
+	/**
+	 * Restore every tunable to the value compiled into this build — the state a fresh install starts
+	 * from. Used by {@link #loadFrom} when the file's schema is from the future: leaving whatever the
+	 * previous load happened to apply would mean the server keeps running on a file nobody can read
+	 * any more, which is the silent-corruption case this guard exists to prevent.
+	 */
+	private static void resetToDefaults() {
+		for (ConfigField field : FIELDS) {
+			field.resetToDefault();
+		}
+	}
+
 	/** Ignore line-ending + surrounding-whitespace differences when deciding whether to rewrite the file. */
 	private static String normalize(String s) {
 		return s.replace("\r\n", "\n").strip();
 	}
 
 	/**
-	 * Read an int by key with the {@link net.minecraft.util.GsonHelper}-equivalent contract, but on plain Gson so
-	 * {@link Config} carries no {@code net.minecraft} dependency: return {@code def} if the key is absent/null,
-	 * else the number — and <b>throw</b> if the key is present but not a number (this is what makes a typo abort
-	 * the whole load instead of silently applying a partial file). {@code _comment_*} keys are never requested.
+	 * Read an int by key from a section body with the {@link net.minecraft.util.GsonHelper}-equivalent contract,
+	 * but on plain Gson so {@link Config} carries no {@code net.minecraft} dependency: return {@code def} if the
+	 * key is absent/null, else the number — and <b>throw</b> if the key is present but not a number (this is what
+	 * makes a typo abort the whole load instead of silently applying a partial file). {@code _comment_*} keys are
+	 * never requested.
 	 */
 	private static int getInt(JsonObject o, String key, int def) {
 		JsonElement e = o.get(key);
@@ -1643,17 +1877,31 @@ public final class Config {
 		throw new IllegalArgumentException("config key '" + key + "' must be a boolean, got " + e);
 	}
 
+	/**
+	 * The whole current balance as the canonical document: {@code schemaVersion} first, then one object
+	 * per {@link Section} in enum order, each holding its fields in {@code FIELDS} order with their
+	 * inline {@code _comment_} doc above them.
+	 */
 	private static JsonObject snapshot() {
-		JsonObject o = new JsonObject();
-		for (ConfigField field : FIELDS) {
-			field.write(o);
+		JsonObject root = new JsonObject();
+		root.addProperty("_comment_" + SCHEMA_VERSION_KEY, SCHEMA_VERSION_DOC);
+		root.addProperty(SCHEMA_VERSION_KEY, SCHEMA_VERSION);
+		for (Section section : Section.values()) {
+			JsonObject body = new JsonObject();
+			for (ConfigField field : FIELDS) {
+				if (field.section == section) {
+					field.write(body);
+				}
+			}
+			root.addProperty("_comment_" + section.id, section.doc);
+			root.add(section.id, body);
 		}
-		return o;
+		return root;
 	}
 
-	/** Add an inline {@code _comment_<field>} doc string immediately before its field (Gson keeps insertion
-	 * order, so the comment renders on the line above). Ignored on read — {@link #getInt}/{@link #getFloat}
-	 * only ever request the real field keys. */
+	/** Add an inline {@code _comment_<field>} doc string immediately before its field, inside the field's
+	 * section object (Gson keeps insertion order, so the comment renders on the line above). Ignored on
+	 * read — {@link #getInt}/{@link #getFloat} only ever request the real field keys. */
 	private static void c(JsonObject o, String field, String text) {
 		o.addProperty("_comment_" + field, text);
 	}
@@ -1665,22 +1913,31 @@ public final class Config {
 	 */
 	private abstract static class ConfigField {
 		final String key;
+		/** Which JSON object this key lives in (MOD-402); declared with the field, never in a side table. */
+		final Section section;
 		final String doc;
 
-		ConfigField(String key, String doc) {
+		ConfigField(String key, Section section, String doc) {
 			this.key = key;
+			this.section = section;
 			this.doc = doc;
 		}
 
 		/**
-		 * Parse and validate this field out of {@code file}, returning the action that commits it.
-		 * Throws if the key is present with a wrong type — that is what aborts the whole load before
-		 * any field is applied, keeping {@link #loadFrom} all-or-nothing.
+		 * Parse and validate this field out of {@code body} — its own section's object — returning the
+		 * action that commits it. Throws if the key is present with a wrong type: that is what aborts
+		 * the whole load before any field is applied, keeping {@link #loadFrom} all-or-nothing.
 		 */
-		abstract Runnable stage(JsonObject file);
+		abstract Runnable stage(JsonObject body);
 
-		/** Append the current live value (and its doc comment) to the canonical snapshot. */
+		/** Append the current live value (and its doc comment) to its section in the canonical snapshot. */
 		abstract void write(JsonObject out);
+
+		/**
+		 * Put the field back to the value compiled into this build (captured when the registry was
+		 * built, before any file could touch it). Used by {@link #resetToDefaults()}.
+		 */
+		abstract void resetToDefault();
 	}
 
 	private static final class IntField extends ConfigField {
@@ -1690,17 +1947,18 @@ public final class Config {
 		private final Integer minimum;
 		private final Integer floorTo;
 
-		IntField(String key, String doc, IntSupplier getter, IntConsumer setter) {
-			this(key, doc, getter, setter, null, null);
+		IntField(String key, Section section, String doc, IntSupplier getter, IntConsumer setter) {
+			this(key, section, doc, getter, setter, null, null);
 		}
 
-		IntField(String key, String doc, IntSupplier getter, IntConsumer setter, Integer minimum) {
-			this(key, doc, getter, setter, minimum, null);
+		IntField(String key, Section section, String doc, IntSupplier getter, IntConsumer setter,
+				Integer minimum) {
+			this(key, section, doc, getter, setter, minimum, null);
 		}
 
-		IntField(String key, String doc, IntSupplier getter, IntConsumer setter, Integer minimum,
-				Integer floorTo) {
-			super(key, doc);
+		IntField(String key, Section section, String doc, IntSupplier getter, IntConsumer setter,
+				Integer minimum, Integer floorTo) {
+			super(key, section, doc);
 			this.getter = getter;
 			this.setter = setter;
 			this.fallback = getter.getAsInt();
@@ -1709,8 +1967,8 @@ public final class Config {
 		}
 
 		@Override
-		Runnable stage(JsonObject file) {
-			int v = getInt(file, key, getter.getAsInt());
+		Runnable stage(JsonObject body) {
+			int v = getInt(body, key, getter.getAsInt());
 			if (minimum != null && v < minimum) {
 				v = floorTo != null ? floorTo : fallback;
 			}
@@ -1723,6 +1981,11 @@ public final class Config {
 			c(out, key, doc);
 			out.addProperty(key, getter.getAsInt());
 		}
+
+		@Override
+		void resetToDefault() {
+			setter.accept(fallback);
+		}
 	}
 
 	private static final class FloatField extends ConfigField {
@@ -1731,13 +1994,13 @@ public final class Config {
 		private final float fallback;
 		private final Float minimumExclusive;
 
-		FloatField(String key, String doc, FloatSupplier getter, FloatConsumer setter) {
-			this(key, doc, getter, setter, null);
+		FloatField(String key, Section section, String doc, FloatSupplier getter, FloatConsumer setter) {
+			this(key, section, doc, getter, setter, null);
 		}
 
-		FloatField(String key, String doc, FloatSupplier getter, FloatConsumer setter,
+		FloatField(String key, Section section, String doc, FloatSupplier getter, FloatConsumer setter,
 				Float minimumExclusive) {
-			super(key, doc);
+			super(key, section, doc);
 			this.getter = getter;
 			this.setter = setter;
 			this.fallback = getter.get();
@@ -1745,8 +2008,8 @@ public final class Config {
 		}
 
 		@Override
-		Runnable stage(JsonObject file) {
-			float v = getFloat(file, key, getter.get());
+		Runnable stage(JsonObject body) {
+			float v = getFloat(body, key, getter.get());
 			if (minimumExclusive != null && v <= minimumExclusive) {
 				v = fallback;
 			}
@@ -1759,26 +2022,33 @@ public final class Config {
 			c(out, key, doc);
 			out.addProperty(key, getter.get());
 		}
+
+		@Override
+		void resetToDefault() {
+			setter.accept(fallback);
+		}
 	}
 
 	private static final class DoubleField extends ConfigField {
 		private final DoubleSupplier getter;
 		private final DoubleConsumer setter;
+		private final double fallback;
 		private final double minimum;
 		private final double floorTo;
 
-		DoubleField(String key, String doc, DoubleSupplier getter, DoubleConsumer setter,
+		DoubleField(String key, Section section, String doc, DoubleSupplier getter, DoubleConsumer setter,
 				double minimum, double floorTo) {
-			super(key, doc);
+			super(key, section, doc);
 			this.getter = getter;
 			this.setter = setter;
+			this.fallback = getter.getAsDouble();
 			this.minimum = minimum;
 			this.floorTo = floorTo;
 		}
 
 		@Override
-		Runnable stage(JsonObject file) {
-			double v = getDouble(file, key, getter.getAsDouble());
+		Runnable stage(JsonObject body) {
+			double v = getDouble(body, key, getter.getAsDouble());
 			if (v < minimum) {
 				v = floorTo;
 			}
@@ -1791,21 +2061,28 @@ public final class Config {
 			c(out, key, doc);
 			out.addProperty(key, getter.getAsDouble());
 		}
+
+		@Override
+		void resetToDefault() {
+			setter.accept(fallback);
+		}
 	}
 
 	private static final class BoolField extends ConfigField {
 		private final BooleanSupplier getter;
 		private final Consumer<Boolean> setter;
+		private final boolean fallback;
 
-		BoolField(String key, String doc, BooleanSupplier getter, Consumer<Boolean> setter) {
-			super(key, doc);
+		BoolField(String key, Section section, String doc, BooleanSupplier getter, Consumer<Boolean> setter) {
+			super(key, section, doc);
 			this.getter = getter;
 			this.setter = setter;
+			this.fallback = getter.getAsBoolean();
 		}
 
 		@Override
-		Runnable stage(JsonObject file) {
-			boolean applied = getBool(file, key, getter.getAsBoolean());
+		Runnable stage(JsonObject body) {
+			boolean applied = getBool(body, key, getter.getAsBoolean());
 			return () -> setter.accept(applied);
 		}
 
@@ -1813,6 +2090,11 @@ public final class Config {
 		void write(JsonObject out) {
 			c(out, key, doc);
 			out.addProperty(key, getter.getAsBoolean());
+		}
+
+		@Override
+		void resetToDefault() {
+			setter.accept(fallback);
 		}
 	}
 

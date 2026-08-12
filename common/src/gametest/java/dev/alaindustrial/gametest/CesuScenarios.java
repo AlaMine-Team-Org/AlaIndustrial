@@ -58,7 +58,7 @@ public final class CesuScenarios {
 			return;
 		}
 		for (long charge : new long[] { 0L, Config.cesuBuffer / 2L, Config.cesuBuffer }) {
-			be.getEnergyStorage().amount = charge;
+			be.getEnergyStorage().setAmountUntracked(charge);
 			ContainerData data = be.getDataAccess();
 			for (int channel = 0; channel < data.getCount(); channel++) {
 				int value = data.get(channel);
@@ -85,7 +85,7 @@ public final class CesuScenarios {
 			return;
 		}
 		long charge = Config.cesuBuffer * 3L / 4L;
-		be.getEnergyStorage().amount = charge;
+		be.getEnergyStorage().setAmountUntracked(charge);
 		ContainerData data = be.getDataAccess();
 
 		long readCapacity = (long) data.get(CesuBlockEntity.DATA_CAPACITY_SCALED) * CesuBlockEntity.SYNC_SCALE;
@@ -113,7 +113,7 @@ public final class CesuScenarios {
 		if (be == null) {
 			return;
 		}
-		be.getEnergyStorage().amount = 0;
+		be.getEnergyStorage().setAmountUntracked(0);
 
 		ItemStack pack = new ItemStack(ModContent.ENERGY_PACK.get());
 		long packCharge = ItemEnergy.capacity(pack);
@@ -124,13 +124,13 @@ public final class CesuScenarios {
 		ItemEnergy.set(pack, packCharge);
 		be.setItem(CesuBlockEntity.DISCHARGE_SLOT, pack);
 
-		long before = be.getEnergyStorage().amount;
+		long before = be.getEnergyStorage().getAmount();
 		// One server tick of the block's own logic.
 		be.serverTick(helper.getLevel(), be.getBlockPos(), be.getBlockState());
-		long moved = be.getEnergyStorage().amount - before;
+		long moved = be.getEnergyStorage().getAmount() - before;
 
 		if (moved <= 0) {
-			helper.fail("discharge slot moved no EU: buffer still " + be.getEnergyStorage().amount);
+			helper.fail("discharge slot moved no EU: buffer still " + be.getEnergyStorage().getAmount());
 			return;
 		}
 		if (moved > dev.alaindustrial.core.energy.EnergyTier.MV.maxVoltage()) {

@@ -188,9 +188,9 @@ final class EnergyLineDistributor {
 		long[] lineTotal = {0L};
 		for (BlockPos pos : touched) {
 			EnergyBuffer buf = cableBufferAt.apply(pos);
-			if (buf != null && buf.amount > 0) {
+			if (buf != null && buf.getAmount() > 0) {
 				lineSupply.add(new LiveProducer(pos, buf));
-				lineTotal[0] += buf.amount;
+				lineTotal[0] += buf.getAmount();
 			}
 		}
 		if (lineSupply.isEmpty()) {
@@ -360,7 +360,7 @@ final class EnergyLineDistributor {
 				if (buf == null) {
 					continue;
 				}
-				long room = buf.getCapacity() - buf.amount;
+				long room = buf.getCapacity() - buf.getAmount();
 				if (room <= 0) {
 					continue;
 				}
@@ -394,7 +394,7 @@ final class EnergyLineDistributor {
 	 * maximum simply drains toward demand on both sides.
 	 *
 	 * <p><b>MOD-254 — the sweep is DONOR-centric and its buffer is SHARED.</b> It used to run over
-	 * receivers, each one taking {@code min(free, donor.amount, packetCap)} from every upstream neighbour it
+	 * receivers, each one taking {@code min(free, donor.getAmount(), packetCap)} from every upstream neighbour it
 	 * found: whichever receiver the iteration reached first emptied the donor and the rest got nothing. At a
 	 * seam that is fatal rather than merely unfair — the seam on a source's own cable is exactly where the
 	 * line forks toward the demand on either side, so one branch received the source's entire output and the
@@ -424,7 +424,7 @@ final class EnergyLineDistributor {
 		boolean[] machineWard = new boolean[DIRECTIONS.length];
 		for (BlockPos pos : propagationOrder) {
 			EnergyBuffer donor = cableBufferAt.apply(pos);
-			if (donor == null || donor.amount <= 0) {
+			if (donor == null || donor.getAmount() <= 0) {
 				continue;
 			}
 			Integer pFromBoxed = flowPotential.apply(pos);
@@ -446,7 +446,7 @@ final class EnergyLineDistributor {
 				}
 				// The claimant's room is capped by the tier packet here, so the split below can treat it as
 				// the claimant's whole appetite and never hand out more than one packet per hop.
-				long room = Math.min(to.getCapacity() - to.amount, packetCap);
+				long room = Math.min(to.getCapacity() - to.getAmount(), packetCap);
 				if (room <= 0) {
 					continue;
 				}
@@ -462,7 +462,7 @@ final class EnergyLineDistributor {
 			if (n == 0) {
 				continue;
 			}
-			long[] give = shareAmongClaimants(donor.amount, free, machineWard, n, rotation);
+			long[] give = shareAmongClaimants(donor.getAmount(), free, machineWard, n, rotation);
 			for (int i = 0; i < n; i++) {
 				if (give[i] > 0) {
 					donor.extract(give[i], tx);
@@ -582,7 +582,7 @@ final class EnergyLineDistributor {
 				continue;
 			}
 			// Capped by the tier packet for the same reason the sweep above caps it: one hop, one packet.
-			long room = Math.min(to.getCapacity() - to.amount, packetCap);
+			long room = Math.min(to.getCapacity() - to.getAmount(), packetCap);
 			Integer toDistance = producerDistance.apply(pos);
 			if (room <= 0 || toDistance == null) {
 				continue;
@@ -597,10 +597,10 @@ final class EnergyLineDistributor {
 					continue; // only pull from strictly closer to the source
 				}
 				EnergyBuffer from = cableBufferAt.apply(np);
-				if (from == null || from.amount < from.getCapacity()) {
+				if (from == null || from.getAmount() < from.getCapacity()) {
 					continue; // surplus only — see the contract above
 				}
-				long got = from.extract(Math.min(room, from.amount), tx);
+				long got = from.extract(Math.min(room, from.getAmount()), tx);
 				if (got <= 0) {
 					continue;
 				}

@@ -59,9 +59,9 @@ public final class ComponentTierScenarios {
 	private static long bankedWith(GameTestHelper helper, MachineBlockEntity machine, int slot,
 			Item component) {
 		machine.setItem(slot, new ItemStack(component));
-		machine.getEnergyStorage().amount = 0L;
+		machine.getEnergyStorage().setAmountUntracked(0L);
 		AlaGameTestHelper.drive(machine, helper, DRIVE_TICKS);
-		return machine.getEnergyStorage().amount;
+		return machine.getEnergyStorage().getAmount();
 	}
 
 	/**
@@ -236,7 +236,7 @@ public final class ComponentTierScenarios {
 					() -> ModContent.WINDMILL_ROTOR_REINFORCED.get(),
 					() -> ModContent.WINDMILL_ROTOR_ADVANCED.get())) {
 				mill.setItem(WindMillBlockEntity.ROTOR_SLOT, new ItemStack(grade.get()));
-				mill.getEnergyStorage().amount = 0L;
+				mill.getEnergyStorage().setAmountUntracked(0L);
 				AlaGameTestHelper.drive(mill, helper, DRIVE_TICKS);
 				int mechanical = mill.getDataAccess().get(2);
 				highest = Math.max(highest, mechanical);

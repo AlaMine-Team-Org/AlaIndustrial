@@ -62,7 +62,7 @@ public final class AlloySmelterScenarios {
 	 */
 	private static void drivePowered(AlloySmelterBlockEntity be, GameTestHelper helper, int ticks) {
 		for (int i = 0; i < ticks; i++) {
-			be.getEnergyStorage().amount = AMPLE_EU;
+			be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 			AlaGameTestHelper.drive(be, helper, 1);
 		}
 	}
@@ -184,7 +184,7 @@ public final class AlloySmelterScenarios {
 	public static void con03NoEnergyBlocksWork(GameTestHelper helper) {
 		AlloySmelterBlockEntity be = place(helper);
 		load(be, copper(3), tin(1), ItemStack.EMPTY);
-		be.getEnergyStorage().amount = 0L;
+		be.getEnergyStorage().setAmountUntracked(0L);
 		AlaGameTestHelper.drive(be, helper, driveTicks());
 		assertOutputEmpty(be, helper, "an unpowered smelter must not produce");
 		helper.succeed();
@@ -243,14 +243,20 @@ public final class AlloySmelterScenarios {
 			Config.globalMachineSpeedMultiplier = 2.0f;
 			AlloySmelterBlockEntity be = place(helper);
 			load(be, copper(3), tin(1), ItemStack.EMPTY);
-			long before = 20_000L;
-			be.getEnergyStorage().amount = before;
-			// Drive without topping up, so the drop measures the true cost of the operation.
+			// The cost is measured by REFILLING each tick and summing what was drawn, not by setting a
+			// huge charge once and reading the drop. One operation costs 1200 EU while machineBuffer
+			// holds 800, so a single fill cannot cover it — the old fixture worked only because the
+			// buffer field was public and would accept 20 000 EU in a 800 EU buffer, a state no machine
+			// can reach in game. Topping up mid-run is exactly what a connected cable does (MOD-400).
+			long cap = be.getEnergyStorage().getCapacity();
+			be.getEnergyStorage().setAmountUntracked(cap);
+			long spent = 0L;
 			for (int i = 0; i < Config.scaledDuration(Config.alloySmelterDuration) + 5; i++) {
 				AlaGameTestHelper.drive(be, helper, 1);
+				spent += cap - be.getEnergyStorage().getAmount();
+				be.getEnergyStorage().setAmountUntracked(cap);
 			}
 			assertOutput(be, helper, ModContent.BRONZE_INGOT.get(), 2, "3 copper + 1 tin at 2x speed");
-			long spent = before - be.getEnergyStorage().amount;
 			// The recipe costs 1200 EU; allow one tick of slack for integer rounding of the rate.
 			long slack = 2L * euPerTickForTest();
             if (Math.abs(spent - 1200L) > slack) {

@@ -78,6 +78,130 @@ public class ArchitectureRules {
 					+ "static field initializer in common/ throws `already frozen` as soon as the "
 					+ "class loads there, while Fabric shows no symptom at all");
 
+	/** The packages whose iteration order is load-bearing. Kept explicit so the rule cannot silently widen. */
+	private static final String[] NETWORK_CORE_PACKAGES = {
+		"dev.alaindustrial.core.energy..",
+		"dev.alaindustrial.core.fluid..",
+		"dev.alaindustrial.core.item..",
+		"dev.alaindustrial.core.net..",
+	};
+
+	/**
+	 * Iteration order in the network core must not depend on a hash or on the JVM run (ADR-006).
+	 *
+	 * <p>{@code HashSet}/{@code HashMap} order follows the key's hash, and the key here is a
+	 * {@code BlockPos} holding ABSOLUTE coordinates; {@code Set.of}/{@code copyOf} order follows a salt
+	 * regenerated on every JVM start. That order leaks into game behaviour — which of two equidistant
+	 * consumers is served first, which branch of a fork wins — and it has: the same layout behaved
+	 * differently depending on where it was built, and a gametest was green alone and red in the full run.
+	 *
+	 * <p><b>Why this moved here from the text-scanning gate (MOD-404).</b> The Python rule matched source
+	 * text, so it could be defeated by a line break inside the expression and had to carry a
+	 * "did I scan enough files" floor to avoid silently passing on nothing. Bytecode has neither problem:
+	 * a constructor call is a constructor call however it was written, and if the packages below vanish
+	 * ArchUnit fails on an empty match rather than going quietly green.
+	 *
+	 * <p>An empty {@code Set.of()} / {@code Map.of()} is deliberately allowed: a collection with no
+	 * elements has no order to be wrong about, and it is the idiom for "no seeds this tick".
+	 */
+	@ArchTest
+	static final ArchRule networkCoreUsesOrderedCollections = noClasses()
+			.that().resideInAnyPackage(NETWORK_CORE_PACKAGES)
+			.should(useUnorderedCollections())
+			.because("iteration order in the network core decides who gets energy first; a hash- or "
+					+ "salt-dependent order makes the same base behave differently between runs "
+					+ "(see docs/adr/ADR-006-ordered-collections-in-core.md)");
+
+	/**
+	 * A machine must derive its drain and its operation length through the INSTANCE helpers
+	 * ({@code effectiveEuPerTick} / {@code effectiveDuration}), never through the static
+	 * {@code Config} shortcuts.
+	 *
+	 * <p>{@code Config.machineEuPerTickEffective()} and {@code Config.scaledDuration()} are static: they
+	 * do not know which block asked, so they cannot see the overclocker chips in its upgrade panel
+	 * (MOD-392). A machine calling them from its tick silently ignores the upgrade — the player spent
+	 * the resources and nothing happened. This is not hypothetical: the assembler ignored the global
+	 * speed multiplier entirely, and the distillation column's warm-up did not scale.
+	 *
+	 * <p><b>Why bytecode beats the text rule it replaces.</b> The Python version had to keep a
+	 * nine-entry allow-list of files that call these legitimately from their CONSTRUCTOR (seeding
+	 * {@code maxProgress} before any inventory exists). Bytecode sees the enclosing code unit, so the
+	 * exception becomes a precise structural condition — "not from a constructor" — instead of a list
+	 * of names that a tenth machine would have to be added to by hand.
+	 */
+	@ArchTest
+	static final ArchRule machinesUseOverclockHelpers = noClasses()
+			.that().resideInAPackage("dev.alaindustrial.block.entity..")
+			.and().doNotHaveSimpleName("MachineBlockEntity")
+			.should(callStaticRateShortcutOutsideConstructor())
+			.because("the static Config shortcuts cannot see a machine's overclocker chips: call "
+					+ "effectiveEuPerTick(base) / effectiveDuration(base) instead. Seeding from a "
+					+ "constructor stays allowed — there is no inventory to read a chip from yet");
+
+	/** Unordered-collection uses the network core may not contain. */
+	private static ArchCondition<JavaClass> useUnorderedCollections() {
+		return new ArchCondition<>("use hash- or salt-ordered collections") {
+			@Override
+			public void check(JavaClass item, ConditionEvents events) {
+				for (JavaCodeUnit codeUnit : item.getCodeUnits()) {
+					for (var call : codeUnit.getConstructorCallsFromSelf()) {
+						String owner = call.getTargetOwner().getSimpleName();
+						if ("HashMap".equals(owner) || "HashSet".equals(owner)) {
+							events.add(SimpleConditionEvent.violated(item,
+									"new " + owner + " in " + codeUnit.getFullName()
+											+ " — take the Linked variant"));
+						}
+					}
+					for (JavaMethodCall call : codeUnit.getMethodCallsFromSelf()) {
+						String owner = call.getTargetOwner().getSimpleName();
+						String name = call.getName();
+						boolean factory = ("Set".equals(owner) || "Map".equals(owner))
+								&& ("of".equals(name) || "copyOf".equals(name));
+						// `Set.of()` with no arguments has no order to get wrong; only the populated
+						// overloads are salted, so the empty one stays allowed.
+						if (factory && !call.getTarget().getRawParameterTypes().isEmpty()) {
+							events.add(SimpleConditionEvent.violated(item,
+									owner + "." + name + "(…) in " + codeUnit.getFullName()
+											+ " — iteration order is salted per JVM run; take "
+											+ "LinkedHashSet/LinkedHashMap or List.of"));
+						}
+						if ("Collectors".equals(owner) && ("toSet".equals(name) || "toMap".equals(name))) {
+							events.add(SimpleConditionEvent.violated(item,
+									"Collectors." + name + " in " + codeUnit.getFullName()
+											+ " — take toCollection(LinkedHashSet::new) / a toMap "
+											+ "overload with LinkedHashMap::new"));
+						}
+					}
+				}
+			}
+		};
+	}
+
+	/** The static {@code Config} rate shortcuts, called from anywhere but a constructor. */
+	private static ArchCondition<JavaClass> callStaticRateShortcutOutsideConstructor() {
+		return new ArchCondition<>("call a static Config rate shortcut outside a constructor") {
+			@Override
+			public void check(JavaClass item, ConditionEvents events) {
+				for (JavaCodeUnit codeUnit : item.getCodeUnits()) {
+					if ("<init>".equals(codeUnit.getName())) {
+						continue; // constructor seeding: no inventory exists yet, so no chip to read
+					}
+					for (JavaMethodCall call : codeUnit.getMethodCallsFromSelf()) {
+						if (!"Config".equals(call.getTargetOwner().getSimpleName())) {
+							continue;
+						}
+						String name = call.getName();
+						if ("machineEuPerTickEffective".equals(name) || "scaledDuration".equals(name)) {
+							events.add(SimpleConditionEvent.violated(item,
+									"Config." + name + "() in " + codeUnit.getFullName()
+											+ " — static, so it cannot see the overclocker chips"));
+						}
+					}
+				}
+			}
+		};
+	}
+
 	private static ArchCondition<JavaClass> notCallFromStaticInitializer(String ownerSimpleName,
 			String methodName) {
 		String description = "not call " + ownerSimpleName + "." + methodName

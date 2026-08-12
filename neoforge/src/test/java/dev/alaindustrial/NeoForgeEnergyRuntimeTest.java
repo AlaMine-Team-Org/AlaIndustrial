@@ -66,7 +66,7 @@ class NeoForgeEnergyRuntimeTest {
 	/** A buffer that both accepts and emits up to {@code rate} per op — the general symmetric case. */
 	private static EnergyBuffer buffer(long capacity, long rate, long amount) {
 		EnergyBuffer b = new EnergyBuffer(capacity, rate, rate, () -> {});
-		b.amount = amount;
+		b.setAmountUntracked(amount);
 		return b;
 	}
 
@@ -94,7 +94,7 @@ class NeoForgeEnergyRuntimeTest {
 
 		gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
 		long seeded = gen.getEnergyStorage().getCapacity();
-		gen.getEnergyStorage().amount = seeded;
+		gen.getEnergyStorage().setAmountUntracked(seeded);
 
 		// Generator FACING defaults to NORTH and is energy-inert; SOUTH is an OUT face.
 		EnergyHandler genHandler = BufferAsEnergyHandler.of(gen.energyPort(Direction.SOUTH));
@@ -159,7 +159,7 @@ class NeoForgeEnergyRuntimeTest {
 	void case2_longToIntSaturationNoCorruption() {
 		long huge = 5_000_000_000L;               // > Integer.MAX_VALUE (2_147_483_647)
 		EnergyBuffer big = new EnergyBuffer(huge, huge, huge, () -> {}); // per-op limits also huge
-		big.amount = huge;
+		big.setAmountUntracked(huge);
 		EnergyHandler h = BufferAsEnergyHandler.of(big);
 
 		// Getters keep the true long (no int narrowing on read).
@@ -199,7 +199,7 @@ class NeoForgeEnergyRuntimeTest {
 	void case3_roleGating() {
 		// Producer via buffer limits: maxInsert == 0.
 		EnergyBuffer producer = new EnergyBuffer(10_000, 0, 32, () -> {});
-		producer.amount = 5_000;
+		producer.setAmountUntracked(5_000);
 		EnergyHandler producerH = BufferAsEnergyHandler.of(producer);
 		try (Transaction tx = Transaction.openRoot()) {
 			assertEquals(0, producerH.insert(32, tx), "producer (maxInsert==0) must reject insertion");
@@ -209,7 +209,7 @@ class NeoForgeEnergyRuntimeTest {
 
 		// Consumer via buffer limits: maxExtract == 0.
 		EnergyBuffer consumer = new EnergyBuffer(10_000, 32, 0, () -> {});
-		consumer.amount = 5_000;
+		consumer.setAmountUntracked(5_000);
 		EnergyHandler consumerH = BufferAsEnergyHandler.of(consumer);
 		try (Transaction tx = Transaction.openRoot()) {
 			assertEquals(0, consumerH.extract(32, tx), "consumer (maxExtract==0) must reject extraction");
@@ -268,7 +268,7 @@ class NeoForgeEnergyRuntimeTest {
 	void case5_exactTopOff() {
 		long cap = 10_000;
 		EnergyBuffer b = new EnergyBuffer(cap, 32, 32, () -> {});
-		b.amount = cap - 1; // one EU short
+		b.setAmountUntracked(cap - 1); // one EU short
 		EnergyHandler h = BufferAsEnergyHandler.of(b);
 
 		int inserted;

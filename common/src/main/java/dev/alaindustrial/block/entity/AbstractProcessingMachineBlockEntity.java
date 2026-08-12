@@ -33,7 +33,7 @@ import net.minecraft.world.level.block.state.BlockState;
  *       progress resets to zero; mere power loss or a full output does NOT reset it (it resumes
  *       when work can continue).</li>
  *   <li><b>Idle sleep</b> — when no work is possible, returns {@link #IDLE_SLEEP_TICKS} so the base
- *       {@link MachineBlockEntity#serverTick} gate can skip the next few ticks until inventory /
+ *       {@link EnergyBlockEntity#serverTick} gate can skip the next few ticks until inventory /
  *       energy changes wake it.</li>
  *   <li><b>XP credit</b> — on a completed op, the full EU cost is credited to the owner via
  *       {@link #creditUsefulWork} (the only XP source in the mod).</li>
@@ -110,12 +110,12 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 		int baseDuration = solution.hasRecipe() && solution.energy() > 0
 				? Math.max(1, solution.energy() / Config.machineEuPerTick) : defaultDuration;
 		this.maxProgress = effectiveDuration(baseDuration);
-		boolean canWork = solution.hasRecipe() && energy.amount >= euPerTick && canOutput(solution.result());
+		boolean canWork = solution.hasRecipe() && energy.getAmount() >= euPerTick && canOutput(solution.result());
 
 		updateLit(canWork);
 
 		if (canWork) {
-			energy.amount -= euPerTick;
+			energy.drainInternal(euPerTick);
 			progress++;
 			if (progress >= maxProgress) {
 				progress = 0;

@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
  * Processing machine that faces the player and shows an active ("on") model while working. Adds the
  * {@code lit} blockstate property on top of {@link HorizontalMachineBlock#FACING}, matching the
  * {@code facing=*,lit=*} model variants. The block entity flips {@code lit} via
- * {@link dev.alaindustrial.block.entity.MachineBlockEntity#updateLit(boolean)}.
+ * {@link dev.alaindustrial.block.entity.EnergyBlockEntity#updateLit(boolean)}.
  */
 public abstract class LitMachineBlock extends HorizontalMachineBlock {
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;

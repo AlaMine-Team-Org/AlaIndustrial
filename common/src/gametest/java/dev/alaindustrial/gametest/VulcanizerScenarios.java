@@ -92,7 +92,7 @@ public final class VulcanizerScenarios {
 		if (heater == null) {
 			helper.fail("electric-heater block entity missing after placement");
 		}
-		heater.getEnergyStorage().amount = energy;
+		heater.getEnergyStorage().setAmountUntracked(energy);
 		return heater;
 	}
 
@@ -116,7 +116,7 @@ public final class VulcanizerScenarios {
 				poweredHeater(helper, AMPLE_EU);
 			}
 			VulcanizerBlockEntity be = placeMachine(helper);
-			be.getEnergyStorage().amount = AMPLE_EU;
+			be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 			stock(be, 2);
 
 			drive(be, helper, operationTicks());
@@ -175,7 +175,7 @@ public final class VulcanizerScenarios {
 	/** With no heat, neither progress, EU nor ingredients move. */
 	public static void neg01NoHeatNoWork(GameTestHelper helper) {
 		VulcanizerBlockEntity be = placeMachine(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		stock(be, 1);
 
 		drive(be, helper, 3);
@@ -208,7 +208,7 @@ public final class VulcanizerScenarios {
 	public static void con01OutputJamFreezesBothConsumers(GameTestHelper helper) {
 		ElectricHeaterBlockEntity heater = poweredHeater(helper, AMPLE_EU);
 		VulcanizerBlockEntity be = placeMachine(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		stock(be, 1);
 		be.setItem(VulcanizerBlockEntity.OUTPUT_SLOT, new ItemStack(ModContent.RUBBER.get(), 64));
 
@@ -228,7 +228,7 @@ public final class VulcanizerScenarios {
 	public static void con02HeaterIsDemandDriven(GameTestHelper helper) {
 		ElectricHeaterBlockEntity heater = poweredHeater(helper, AMPLE_EU);
 		VulcanizerBlockEntity be = placeMachine(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		stock(be, 1);
 		int cost = Config.electricHeaterEuPerTickEffective();
 
@@ -274,7 +274,7 @@ public final class VulcanizerScenarios {
 	public static void reg01HeatUpgradeRestartsCycle(GameTestHelper helper) {
 		passiveHeat(helper, Blocks.CAMPFIRE);
 		VulcanizerBlockEntity be = placeMachine(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		stock(be, 1);
 		drive(be, helper, 1);
 		if (be.cycleHeatLevel() != 1) {
@@ -298,7 +298,7 @@ public final class VulcanizerScenarios {
 	public static void reg03HeatDowngradeRestartsCycle(GameTestHelper helper) {
 		poweredHeater(helper, AMPLE_EU);
 		VulcanizerBlockEntity be = placeMachine(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		stock(be, 1);
 		drive(be, helper, 1);
 		if (be.getDataAccess().get(2) != 1 || be.cycleHeatLevel() != 3) {
@@ -326,7 +326,7 @@ public final class VulcanizerScenarios {
 	public static void neg04PartialSulfurBatchDoesNotWork(GameTestHelper helper) {
 		passiveHeat(helper, Blocks.CAMPFIRE);
 		VulcanizerBlockEntity be = placeMachine(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(VulcanizerBlockEntity.RAW_RUBBER_SLOT,
 				new ItemStack(ModContent.RAW_RUBBER.get(), RAW_RUBBER_PER_OPERATION));
 		be.setItem(VulcanizerBlockEntity.SULFUR_SLOT,
@@ -386,7 +386,7 @@ public final class VulcanizerScenarios {
 	public static void sta01RoundTripPreservesInFlightCycle(GameTestHelper helper) {
 		passiveHeat(helper, Blocks.CAMPFIRE);
 		VulcanizerBlockEntity src = placeMachine(helper);
-		src.getEnergyStorage().amount = 321L;
+		src.getEnergyStorage().setAmountUntracked(321L);
 		stock(src, 3);
 		drive(src, helper, 1);
 
@@ -409,7 +409,7 @@ public final class VulcanizerScenarios {
 	public static void fun03RubberProductionAdvancement(GameTestHelper helper) {
 		passiveHeat(helper, Blocks.CAMPFIRE);
 		VulcanizerBlockEntity be = placeMachine(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		stock(be, 1);
 		drive(be, helper, operationTicks());
 		assertOutput(helper, be, 1);

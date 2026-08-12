@@ -70,7 +70,7 @@ public final class CanningMachineBlockEntity extends MachineBlockEntity
 		// an idle machine never eats food it cannot turn into anything.
 		boolean pressReady = !items.get(CAN_SLOT).isEmpty()
 				&& canOutput()
-				&& energy.amount >= euPerTick;
+				&& energy.getAmount() >= euPerTick;
 
 		boolean changed = pressReady && absorbFood(valuePerRation);
 		boolean canWork = pressReady && CanningMath.hasFullRation(foodBuffer, valuePerRation);
@@ -87,7 +87,7 @@ public final class CanningMachineBlockEntity extends MachineBlockEntity
 			return IDLE_SLEEP_TICKS;
 		}
 
-		energy.amount -= euPerTick;
+		energy.drainInternal(euPerTick);
 		progress++;
 		if (progress >= maxProgress) {
 			progress = 0;

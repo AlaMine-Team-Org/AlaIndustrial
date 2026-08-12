@@ -38,7 +38,7 @@ import org.jspecify.annotations.Nullable;
  * unregisters on {@link #setRemoved()}. Cable transport is a throughput limit owned by the network
  * (tier packetCap per consumer), not an EU-destroying toll — see MOD-009.
  */
-public class CableBlockEntity extends MachineBlockEntity {
+public class CableBlockEntity extends EnergyBlockEntity {
 	/** Game tick of the most recent committed energy transfer; transient by design. */
 	private long lastEnergyTransferTick = Long.MIN_VALUE;
 
@@ -84,29 +84,25 @@ public class CableBlockEntity extends MachineBlockEntity {
 	private boolean breakerClosed = true;
 
 	/**
-	 * Persist the cable-segment buffer and the insulating stand — NOT the full machine-path keys. The
-	 * cable has no inventory (0 slots), no processing state (progress is always 0) and no owner
-	 * (transport, not a working machine), so the base class's {@code Progress}/{@code MaxProgress}/
-	 * {@code items} keys would all be empty/zero. Skipping them keeps per-cable NBT minimal —
-	 * meaningful on a base with hundreds of cable segments — and also avoids a redundant duplicate
-	 * {@code "Energy"} write that a {@code super} call would perform before {@link #saveEnergyOnly}
-	 * wrote it again.
+	 * Persist the cable-segment buffer (through {@code super}) and the insulating stand. Since MOD-400
+	 * the cable is an {@link EnergyBlockEntity}, so the base writes nothing but the {@code "Energy"}
+	 * key — the {@code Progress}/{@code MaxProgress}/{@code items} keys of the machine path are gone
+	 * along with the fields behind them. That keeps per-cable NBT minimal, which is meaningful on a
+	 * base with hundreds of segments.
 	 *
 	 * <p>Backward-compat: existing player saves that DO carry the legacy {@code Progress}/
 	 * {@code MaxProgress} keys (always 0 on a cable) round-trip cleanly — they are simply ignored on
-	 * load (defaults remain 0, which is the correct value for a transport segment that never
-	 * processes anything). A save from before MOD-279 has no {@code "ShockGuard"} key and reads back
-	 * as {@link ShockGuardMaterial#NONE}, which is exactly right for a cable laid before stands existed.
+	 * load. A save from before MOD-279 has no {@code "ShockGuard"} key and reads back as
+	 * {@link ShockGuardMaterial#NONE}, which is exactly right for a cable laid before stands existed.
 	 *
-	 * <p>This slim path is also what carries the stand to the <b>client</b>: the inherited
+	 * <p>This path is also what carries the stand to the <b>client</b>: the inherited
 	 * {@code getUpdateTag} is {@code saveWithoutMetadata}, which routes through this very method, so
 	 * writing the key here is all the renderer needs — no bespoke packet (see
 	 * {@code CableAccessoryBlockEntityRenderer}).
 	 */
 	@Override
 	protected void saveAdditional(ValueOutput output) {
-		// Intentionally NOT calling super.saveAdditional — we want the slim path, not the machine path.
-		saveEnergyOnly(output);
+		super.saveAdditional(output);
 		if (shockGuard != null) {
 			output.putString("ShockGuard", BuiltInRegistries.BLOCK.getKey(shockGuard).toString());
 		}
@@ -120,8 +116,7 @@ public class CableBlockEntity extends MachineBlockEntity {
 
 	@Override
 	protected void loadAdditional(ValueInput input) {
-		// Intentionally NOT calling super.loadAdditional — see saveAdditional above.
-		loadEnergyOnly(input);
+		super.loadAdditional(input);
 		shockGuard = readShockGuard(input.getStringOr("ShockGuard", ""));
 		breakerInstalled = input.getBooleanOr("Breaker", false);
 		// Default true, mirroring the field: a save from before MOD-276 has neither key and must read
@@ -177,6 +172,9 @@ public class CableBlockEntity extends MachineBlockEntity {
 		shockGuard = block;
 		setChanged();
 		syncBlockEntityToClient();
+		// A stand is the one accessory whose upkeep lives in the tick (dropShockGuardIfObstructed), and
+		// a bare segment may well have been asleep when the player installed it (MOD-400).
+		wake();
 	}
 
 	public CableBlockEntity(BlockPos pos, BlockState state) {
@@ -193,7 +191,7 @@ public class CableBlockEntity extends MachineBlockEntity {
 		//
 		// The state's block is read before the super() call (legal: it is derived from a constructor
 		// parameter), which is what lets one BlockEntityType back three differently-tuned blocks.
-		super(ModContent.COPPER_CABLE_BE.get(), pos, state, CableBlock.typeOf(state).tier(), 0,
+		super(ModContent.COPPER_CABLE_BE.get(), pos, state, CableBlock.typeOf(state).tier(),
 				CableBlock.typeOf(state).segmentBuffer(), CableBlock.typeOf(state).packetCap(),
 				CableBlock.typeOf(state).packetCap());
 	}
@@ -278,12 +276,6 @@ public class CableBlockEntity extends MachineBlockEntity {
 		return network != null && network.hasLiveSupply(server.getGameTime());
 	}
 
-	/** Transport, not a working machine (MOD-133): no owner, no player stats, no per-segment UUID ballast. */
-	@Override
-	public boolean tracksOwner() {
-		return false;
-	}
-
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
 		// Register lazily on the first server tick: by now the level is set and the chunk (with its
@@ -296,10 +288,43 @@ public class CableBlockEntity extends MachineBlockEntity {
 		// machine's front face before MOD-061 would keep drawing the misleading arm forever.
 		validateShape(level, pos, state);
 		dropShockGuardIfObstructed(level, pos);
-		shockNearbyPlayers(level, pos, state);
-		// Transport is owned by the network tick, not the cable; the per-cable check above is trivial,
-		// so cables stay awake (return 0) rather than manage a sleep timer (R-29).
-		return 0;
+		return sleepUnlessThereIsSomethingToReactTo(shockNearbyPlayers(level, pos, state));
+	}
+
+	/**
+	 * How long this segment may skip its tick (MOD-400). Transport itself is owned by the network tick,
+	 * so a segment's own tick exists purely to react to two things — and it sleeps when neither can
+	 * happen. On a base with thousands of segments this was tens of thousands of calls per second
+	 * spent deciding to do nothing.
+	 *
+	 * <p><b>The two reasons to stay awake, and why nothing else qualifies:</b>
+	 * <ul>
+	 *   <li><b>An insulating stand (MOD-279).</b> {@link #dropShockGuardIfObstructed} must see a
+	 *       neighbour appearing <em>under</em> a segment that already carries a stand. A segment WITH a
+	 *       stand therefore never sleeps — and the check itself early-returns on {@code shockGuard ==
+	 *       null}, so a sleeping segment is by definition one that check has nothing to do on. The
+	 *       stand rule is unchanged in both directions.</li>
+	 *   <li><b>The proximity shock (MOD-260/MOD-269).</b> {@code hazard} is the answer
+	 *       {@link #shockNearbyPlayers} just computed from the very guards that decide whether anyone
+	 *       can be shocked at all — returned rather than recomputed here, so the sleep condition and
+	 *       the shock condition cannot drift apart. A live hazard keeps ticking; a segment that is
+	 *       de-energized, insulated, or on a grid with no supply cannot shock anyone this tick, and
+	 *       energy arriving is what changes that — which fires the buffer's commit hook and
+	 *       {@link #wake}s it on the spot. Direct-contact shock never went through the tick at all
+	 *       ({@code CableBlock.entityInside}), so it is untouched.</li>
+	 * </ul>
+	 *
+	 * <p>The one-shot work is unaffected: {@link #ensureRegistered()} and {@link #validateShape} both
+	 * run on the FIRST tick (a fresh block entity starts with a zero sleep counter) and are idempotent
+	 * afterwards, and the breaker re-joins the graph through its own setter rather than by waiting for
+	 * a tick.
+	 *
+	 * <p><b>Known bound:</b> turning {@code bareCableShockEnabled} (or the radius) back ON at runtime
+	 * reaches already-sleeping segments within {@link #IDLE_SLEEP_TICKS} rather than instantly. It is
+	 * bounded, it only affects the proximity radius, and a config reload is an operator action.
+	 */
+	private int sleepUnlessThereIsSomethingToReactTo(boolean hazard) {
+		return shockGuard == null && !hazard ? IDLE_SLEEP_TICKS : 0;
 	}
 
 	/**
@@ -312,9 +337,10 @@ public class CableBlockEntity extends MachineBlockEntity {
 	 *
 	 * <p><b>Why here and not in {@code validateShape}.</b> That method is a one-shot migration guarded
 	 * by {@link #shapeValidated}: it runs once per load and then early-returns forever, so a neighbour
-	 * placed minutes later would never be seen. This check is unguarded and runs every tick, which is
-	 * affordable for the same reason {@link #shockNearbyPlayers}'s guards are — the common case is a
-	 * segment with no stand at all, which costs one enum comparison and returns.
+	 * placed minutes later would never be seen. This check is unguarded and runs on every tick of a
+	 * segment that carries a stand — and a segment that carries one never sleeps (MOD-400), so the
+	 * cover is the same as before the sleep gate existed. A segment WITHOUT a stand is precisely the
+	 * case this method no-ops on, which is why letting it sleep costs nothing.
 	 * {@link dev.alaindustrial.block.CableBlock#neighborChanged} calls it too, so the reaction is
 	 * immediate rather than up to a tick late.
 	 */
@@ -341,29 +367,35 @@ public class CableBlockEntity extends MachineBlockEntity {
 	 * {@link CableBlock#tryShockPlayer} so the per-player rules (creative/spectator, invulnerability
 	 * window) stay defined in exactly one place.
 	 *
-	 * <p><b>The cheap constant guards come first, and that ordering is load-bearing.</b> Cables never
-	 * sleep (see {@link #onServerTick}), so this runs for every segment on every tick — a base can hold
-	 * hundreds. Config-off, insulated and de-energized segments therefore return before touching the
-	 * player list at all, which is what keeps MOD-260's shipped "no tick overhead when disabled"
-	 * guarantee true. For the same reason this walks {@link ServerLevel#players()} (a handful of
-	 * entries, no allocation) instead of a broadphase entity query.
+	 * <p><b>The cheap constant guards come first, and that ordering is load-bearing.</b> This runs for
+	 * every awake segment on every tick — a base can hold hundreds. Config-off, insulated and
+	 * de-energized segments therefore return before touching the player list at all, which is what keeps
+	 * MOD-260's shipped "no tick overhead when disabled" guarantee true. For the same reason this walks
+	 * {@link ServerLevel#players()} (a handful of entries, no allocation) instead of a broadphase entity
+	 * query.
 	 *
 	 * <p>A clear-line check keeps the radius honest: without it a cable buried in a wall or floor would
 	 * shock a player on the far side of solid stone, which is neither intuitive nor what the radius is
 	 * for. Occlusion is only tested for players already inside the zone, so the raycast is rare.
+	 *
+	 * @return whether this segment is a live proximity hazard right now — i.e. whether it got past the
+	 *         guard chain above. {@link #sleepUnlessThereIsSomethingToReactTo} consumes this instead of
+	 *         re-deriving the same condition, so "may this segment sleep" and "may this segment shock"
+	 *         are answered by one expression and can never disagree.
 	 */
-	private void shockNearbyPlayers(Level level, BlockPos pos, BlockState state) {
+	private boolean shockNearbyPlayers(Level level, BlockPos pos, BlockState state) {
 		double radius = Config.bareCableShockProximityRadius;
 		if (!Config.bareCableShockEnabled || radius <= 0 || !(level instanceof ServerLevel serverLevel)
 				|| !(state.getBlock() instanceof CableBlock cableBlock)
 				|| cableBlock.type().isInsulated() || !isEnergizedForShock()) {
-			return;
+			return false;
 		}
 		for (ServerPlayer player : serverLevel.players()) {
 			if (isWithinShockReach(serverLevel, pos, player)) {
 				cableBlock.tryShockPlayer(serverLevel, pos, player);
 			}
 		}
+		return true;
 	}
 
 	/**
@@ -473,6 +505,7 @@ public class CableBlockEntity extends MachineBlockEntity {
 		applyBreakerToNetwork();
 		setChanged();
 		syncBlockEntityToClient();
+		wake(); // the switch changed what this segment is; re-evaluate on the next tick (MOD-400)
 	}
 
 	/**
@@ -492,6 +525,7 @@ public class CableBlockEntity extends MachineBlockEntity {
 		applyBreakerToNetwork();
 		setChanged();
 		syncBlockEntityToClient();
+		wake(); // the switch changed what this segment is; re-evaluate on the next tick (MOD-400)
 	}
 
 	/**
@@ -556,7 +590,7 @@ public class CableBlockEntity extends MachineBlockEntity {
 	 * writes the corrected state with {@link Block#UPDATE_CLIENTS} (NOT {@code setBlockAndUpdate} /
 	 * {@code UPDATE_ALL}): {@code UPDATE_CLIENTS} omits the {@code UPDATE_NEIGHBORS} bit, so it does
 	 * NOT re-enter through {@link dev.alaindustrial.block.CableBlock#neighborChanged} →
-	 * {@link NetworkManager#onNeighbourChanged} (precedent: {@code MachineBlockEntity.updateLit}).
+	 * {@link NetworkManager#onNeighbourChanged} (precedent: {@code EnergyBlockEntity.updateLit}).
 	 * Vanilla still runs a bounded {@code updateShape} cascade on the six neighbours (gate
 	 * {@code (flags & 16) == 0 && limit > 0}, {@code limit = 512}) — that is desired and safe: it
 	 * lets the neighbours re-derive their own flags from this cable's unchanged presence.

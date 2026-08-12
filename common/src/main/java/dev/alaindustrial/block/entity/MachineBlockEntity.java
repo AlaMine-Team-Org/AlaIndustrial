@@ -2,29 +2,15 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
-import dev.alaindustrial.core.energy.EnergyBuffer;
-import dev.alaindustrial.core.energy.EnergyPort;
-import dev.alaindustrial.core.energy.EnergyPortHost;
-import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
-import dev.alaindustrial.core.energy.FaceEnergyPort;
 import dev.alaindustrial.core.upgrade.OverclockMath;
 import dev.alaindustrial.item.misc.OverclockerChipItem;
 import dev.alaindustrial.registry.ModContent;
-// MOD-022 Phase 2: the energy spine now runs on the common EnergyPort/EnergyBuffer abstraction — no
-// loader energy API is imported here, so this base class (and its content subclasses) can live in
-// common. The buffer is a platform-neutral EnergyBuffer; each loader exposes it as its native
-// capability through the FabricEnergyPort / NeoForgeEnergyPort adapters and its own transaction system.
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
@@ -32,49 +18,46 @@ import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The spine of every Industrialization machine: an energy buffer, an item inventory, a generic
- * processing progress counter, server tick, persistence and live GUI sync.
+ * The spine of every Industrialization machine: the energy half inherited from
+ * {@link EnergyBlockEntity} plus an item inventory, a generic processing progress counter, upgrade
+ * slots, ownership and live GUI sync.
  *
  * <p>To add a new machine, subclass this, pass slot count / tier / capacity / I-O limits to
- * the constructor, and implement {@link #serverTick}. The base handles energy storage,
- * inventory ({@link Container}), NBT persistence (via {@link ValueInput}/{@link ValueOutput}),
- * and the {@link #dataAccess} bridge that syncs energy + progress to an open screen.
+ * the constructor, and implement {@link #onServerTick}. The base handles inventory
+ * ({@link Container}), NBT persistence (via {@link ValueInput}/{@link ValueOutput}), and the
+ * {@link #dataAccess} bridge that syncs energy + progress to an open screen.
+ *
+ * <p><b>A machine, not merely a powered block (MOD-400).</b> Transport blocks — the cable and the two
+ * pipes — extend {@link EnergyBlockEntity} directly: they have no inventory, no progress, no upgrade
+ * panel and no owner, so nothing here applies to them. Everything in this class may therefore assume
+ * it is looking at a real machine.
  */
-public abstract class MachineBlockEntity extends BlockEntity implements WorldlyContainer, EnergyPortHost {
-	/** Idle-sleep safety net (R-29): how long an idle machine skips its full tick before re-checking. */
-	protected static final int IDLE_SLEEP_TICKS = 40;
+public abstract class MachineBlockEntity extends EnergyBlockEntity implements WorldlyContainer {
 
 	/** Upgrade slots appended to the tail of every GUI machine's inventory (MOD-080). */
 	public static final int UPGRADE_SLOT_COUNT = 4;
 	/** The active upgrade slot on the MVP panel (upgrade-block index 0); the mute chip goes here. */
 	public static final int ACTIVE_UPGRADE_INDEX = 0;
 
-	protected final EnergyBuffer energy;
 	protected final NonNullList<ItemStack> items;
 	/** Count of machine-specific slots (indices 0..baseSlots-1); upgrade slots follow at the tail. */
 	protected final int baseSlots;
-	protected final EnergyTier tier;
 	protected int progress;
 	protected int maxProgress;
-	/** Ticks left to skip {@link #onServerTick}; reset to 0 by {@link #wake()} when external state changes. */
-	private int sleepTicks;
 
 	/**
 	 * The player who placed this machine (MOD-133). Set once at placement by
 	 * {@link dev.alaindustrial.block.AbstractMachineBlock#setPlacedBy}; re-assigned on every re-place
 	 * (it does not ride the dropped item). Null for a machine placed by non-player means (structure,
 	 * {@code /ala demo} stand) — the player-stats hooks treat a null owner as a no-op. Gated by
-	 * {@link #tracksOwner()}: transport blocks (cable, item pipe) opt out and never persist it.
+	 * {@link #tracksOwner()}.
 	 */
 	@Nullable
 	private UUID owner;
@@ -83,22 +66,16 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 
 	protected MachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state,
 			EnergyTier tier, int slots, long capacity, long maxInsert, long maxExtract) {
-		super(type, pos, state);
-		this.tier = tier;
+		super(type, pos, state, tier, capacity, maxInsert, maxExtract);
 		this.baseSlots = slots;
 		// Every GUI machine gets four upgrade slots appended to the tail of `items` (MOD-080). "GUI
-		// machine" = a MenuProvider; the screenless blocks (cables, the pipes, the electric heater, the
-		// charging station) are not, so they keep their zero slots. Appending at the tail leaves
-		// existing indices (0=input, 1=output, …)
+		// machine" = a MenuProvider; the screenless blocks (the electric heater, the charging station)
+		// are not, so they keep their zero slots. Appending at the tail leaves existing indices
+		// (0=input, 1=output, …)
 		// and their gametests untouched. `this instanceof` is well-defined here: the object's runtime
 		// type is the concrete subclass throughout super-construction.
 		int total = slots + (this instanceof MenuProvider && hasUpgradePanel() ? UPGRADE_SLOT_COUNT : 0);
 		this.items = NonNullList.withSize(total, ItemStack.EMPTY);
-		// The onCommit hook fires once when the outermost transaction that moved energy through this
-		// buffer commits (was MachineEnergyStorage.onFinalCommit): persist + GUI-sync, then wake. A
-		// committed insert/extract is external delivery/draw, which must wake an idle consumer (R-29);
-		// internal per-tick drain mutates `energy.amount` directly (no transaction) and never fires this.
-		this.energy = new EnergyBuffer(capacity, maxInsert, maxExtract, this::onEnergyTransactionCommitted);
 	}
 
 	/**
@@ -117,137 +94,16 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		return true;
 	}
 
-	/**
-	 * Called after a transaction that changed this block's energy buffer commits. Subclasses may extend
-	 * the hook, but must call {@code super}: persistence, client sync and idle wake-up live here.
-	 */
-	protected void onEnergyTransactionCommitted() {
-		markDirtyAndSync();
-		wake();
-	}
-
-	/**
-	 * Server-side tick entry point (called from the block's ticker). Wraps {@link #onServerTick} with
-	 * an idle-sleep gate (R-29): when a machine reports it has no work to do, it skips the next few
-	 * ticks instead of re-running its full logic every tick. External changes — inventory mutation,
-	 * energy delivery (via the {@link EnergyBuffer} commit hook), or an explicit {@link #wake()}
-	 * — reset the timer so a sleeping machine resumes on the very next tick. Generators, storage,
-	 * cables and the pump return 0 (never sleep); processing machines return {@link #IDLE_SLEEP_TICKS}
-	 * when idle.
-	 */
-	public final void serverTick(net.minecraft.world.level.Level level, BlockPos pos, BlockState state) {
-		if (sleepTicks > 0) {
-			sleepTicks--;
-			return;
-		}
-		sleepTicks = Math.max(0, onServerTick(level, pos, state));
-	}
-
-	/**
-	 * Per-tick machine logic. Returns the number of ticks the machine may sleep before its next full
-	 * tick: 0 keeps it ticking every tick, a positive value lets the {@link #serverTick} gate skip
-	 * that many ticks. Was {@code serverTick} before the idle-sleep gate (R-29) was introduced.
-	 */
-	protected abstract int onServerTick(net.minecraft.world.level.Level level, BlockPos pos, BlockState state);
-
-	/** Wake a sleeping machine so its next {@link #serverTick} runs {@link #onServerTick} immediately. */
-	public void wake() {
-		sleepTicks = 0;
-	}
-
-	public EnergyBuffer getEnergyStorage() {
-		return energy;
-	}
-
-	/**
-	 * Energy role exposed on a given WORLD face (R-NRG-03). Default {@link EnergyRole#BOTH}
-	 * (cables / symmetric storage); generators override to OUT, consumer machines to IN, and the
-	 * BatteryBox to a mixed output-face layout.
-	 */
-	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return EnergyRole.BOTH;
-	}
-
-	/**
-	 * Applies a block's working energy role to every face EXCEPT its {@link HorizontalMachineBlock#FACING}
-	 * front, which is inert ({@link EnergyRole#NONE}) — no cable/hopper connects through it (R-NRG-03).
-	 * Blocks without a FACING property keep the working role on all faces.
-	 */
-	protected EnergyRole facingAwareRole(Direction worldFace, EnergyRole workingRole) {
-		BlockState st = getBlockState();
-		if (st.hasProperty(HorizontalMachineBlock.FACING) && worldFace == st.getValue(HorizontalMachineBlock.FACING)) {
-			return EnergyRole.NONE;
-		}
-		return workingRole;
-	}
-
-	/** The neutral energy-port view for a face, enforcing its role; {@code null} means the face is inert. */
-	@Override
-	public EnergyPort energyPort(Direction worldFace) {
-		EnergyRole role = energyRoleForFace(worldFace);
-		return role == EnergyRole.NONE ? null : new FaceEnergyPort(energy, role);
-	}
-
-	/**
-	 * True if this block is a pure energy <em>store</em> (e.g. BatteryBox) rather than a working machine.
-	 * The {@link dev.alaindustrial.core.energy.EnergyNetwork} serves working machines before storage sinks so
-	 * a large buffer can't starve them, and never charges a sink from itself (MOD-009). Default false.
-	 */
-	public boolean isEnergyStorageSink() {
-		return false;
-	}
-
-	/**
-	 * True if this store may take part in the storage→storage cascade (MOD-314): a fuller battery topping
-	 * up an emptier one until their fill fractions meet.
-	 *
-	 * <p>Deliberately narrower than {@link #isEnergyStorageSink()} and deliberately a named predicate
-	 * rather than an {@code instanceof BatteryBoxBlockEntity} at the call site. The Teleporter is also a
-	 * storage sink, with a buffer 25× a Battery Box's, so a fraction-balancing cascade would quietly drain
-	 * a full box into it down to ~2 % with no generator on the network and no action by the player — a
-	 * balance change nobody asked for, and one that contradicts the Teleporter's own documented model of
-	 * banking EU from a surplus. Whoever adds the next store answers this question explicitly instead of
-	 * inheriting an answer from a type check somewhere else. Default false.
-	 */
-	public boolean acceptsCascade() {
-		return false;
-	}
-
-	/**
-	 * EU/tick this block may draw from a <b>store</b> over cable when nothing else on the segment is
-	 * asking for power (MOD-353). Default 0 — the channel is opt-in, so no existing block changes.
-	 *
-	 * <p>This is the third and last of a trio that is easy to confuse, so state all three together:
-	 * <ul>
-	 *   <li>{@link #isEnergyStorageSink()} — "serve me after the working machines". It says nothing about
-	 *       where the energy may come from.</li>
-	 *   <li>{@link #acceptsCascade()} — "another store may equalise into me by fill fraction".
-	 *       Proportional, and therefore refused to anything with a buffer far larger than a Battery
-	 *       Box (MOD-314 R3).</li>
-	 *   <li>{@code storageFeedRate()} — "a store may trickle into me at this flat rate, and only from
-	 *       what it holds above its own reserve". Absolute, capped and reserve-guarded, which is exactly
-	 *       what makes it safe for the blocks the cascade must keep refusing.</li>
-	 * </ul>
-	 *
-	 * <p>A block that is <em>not</em> an {@link #isEnergyStorageSink()} has no use for this: an ordinary
-	 * machine already creates machine demand, which opens the existing backup-discharge stage.
-	 */
-	public long storageFeedRate() {
-		return 0L;
-	}
-
-	public EnergyTier getTier() {
-		return tier;
-	}
-
 	// --- Ownership (MOD-133): who placed this machine, for per-player statistics/XP ---
 
 	/**
 	 * Whether this machine records its placer as {@code owner}. Default {@code true} for every
-	 * working machine, generator and storage block. Transport blocks (cable, item pipe) override to
-	 * {@code false}: they never earn player stats and are the most numerous block in a base, so
-	 * carrying a per-segment UUID would be pure NBT ballast. When false, {@code owner} is neither set
-	 * at placement nor persisted.
+	 * working machine, generator and storage block: they all earn player stats.
+	 *
+	 * <p>Before MOD-400 this also existed so the transport blocks could opt out — carrying a per-segment
+	 * UUID on the most numerous block in a base is pure NBT ballast. They are no longer machines at all,
+	 * so nothing overrides this today; it stays as the seam for a machine that must not record a placer.
+	 * When false, {@code owner} is neither set at placement nor persisted.
 	 */
 	public boolean tracksOwner() {
 		return true;
@@ -297,44 +153,6 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		return dataAccess;
 	}
 
-	/** Mark dirty so the chunk saves; energy/progress reach an open screen via {@link #dataAccess}. */
-	public void markDirtyAndSync() {
-		setChanged();
-	}
-
-	/** Push inventory/NBT-visible machine changes to clients watching this chunk. */
-	protected void syncBlockEntityToClient() {
-		if (level != null && !level.isClientSide()) {
-			BlockState state = getBlockState();
-			level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_CLIENTS);
-		}
-	}
-
-	@Override
-	public Packet<ClientGamePacketListener> getUpdatePacket() {
-		return ClientboundBlockEntityDataPacket.create(this);
-	}
-
-	@Override
-	public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-		return saveWithoutMetadata(provider);
-	}
-
-	/**
-	 * Flip the block's {@code lit} state to match whether the machine is working, so it shows its
-	 * active ("on") model. No-op for blocks without a {@code lit} blockstate (cables, solar panels).
-	 */
-	protected void updateLit(boolean working) {
-		if (level == null || level.isClientSide()) {
-			return;
-		}
-		BlockState state = getBlockState();
-		if (state.hasProperty(BlockStateProperties.LIT)
-				&& state.getValue(BlockStateProperties.LIT) != working) {
-			level.setBlock(worldPosition, state.setValue(BlockStateProperties.LIT, working), Block.UPDATE_CLIENTS);
-		}
-	}
-
 	/**
 	 * How many sync channels {@link #getDataAccess()} projects — the single source of the width, read by
 	 * both sides (MOD-235). The block entity's {@code getCount()} returns it, and the machine's <b>client</b>
@@ -350,7 +168,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		@Override
 		public int get(int index) {
 			return switch (index) {
-				case 0 -> (int) Math.min(Integer.MAX_VALUE, energy.amount);
+				case 0 -> (int) Math.min(Integer.MAX_VALUE, energy.getAmount());
 				case 1 -> (int) Math.min(Integer.MAX_VALUE, energy.getCapacity());
 				case 2 -> progress;
 				case 3 -> maxProgress;
@@ -361,7 +179,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		@Override
 		public void set(int index, int value) {
 			switch (index) {
-				case 0 -> energy.amount = value;
+				case 0 -> energy.setAmountUntracked(value);
 				case 2 -> progress = value;
 				case 3 -> maxProgress = value;
 				default -> {
@@ -379,8 +197,9 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 
 	@Override
 	protected void saveAdditional(ValueOutput output) {
+		// super writes the energy buffer under "Energy" — the machine keys follow it, in the order they
+		// have always been written, so an existing save round-trips unchanged.
 		super.saveAdditional(output);
-		saveEnergyOnly(output);
 		output.putInt("Progress", progress);
 		output.putInt("MaxProgress", maxProgress);
 		ContainerHelper.saveAllItems(output, items);
@@ -393,20 +212,9 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		}
 	}
 
-	/**
-	 * Write only the energy buffer under the canonical {@code "Energy"} key. Exposed so transport
-	 * blocks (cable, item pipe) that have nothing but a buffer can avoid persisting the always-zero
-	 * {@code Progress}/{@code MaxProgress} and an empty items list that the full machine path would
-	 * otherwise write. Key name is unchanged for save-format compatibility.
-	 */
-	protected void saveEnergyOnly(ValueOutput output) {
-		output.putLong("Energy", energy.amount);
-	}
-
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		loadEnergyOnly(input);
 		progress = input.getIntOr("Progress", 0);
 		maxProgress = input.getIntOr("MaxProgress", 0);
 		items.clear();
@@ -415,15 +223,6 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 			owner = input.read("Owner", UUIDUtil.CODEC).orElse(null);
 			ownerName = input.getStringOr("OwnerName", "");
 		}
-	}
-
-	/**
-	 * Read only the energy buffer written by {@link #saveEnergyOnly}. Symmetric counterpart for
-	 * transport blocks; the machine-specific keys are left untouched on the input (the cable never
-	 * wrote them, so absent reads as the default {@code 0L}).
-	 */
-	protected void loadEnergyOnly(ValueInput input) {
-		energy.amount = input.getLongOr("Energy", 0L);
 	}
 
 	// --- Evolvable persistence helper (shared by SolarPanelBlockEntity + WindMillBlockEntity) ---
@@ -493,7 +292,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 	/**
 	 * Whether swapping the input item mid-operation resets processing progress. Processing machines
 	 * (macerator/furnace/compressor/extractor) override to {@code true} per spec (TC-MACH-001-FUN04):
-	 * changing the input starts the new operation from zero. Generators/cables keep {@code false}.
+	 * changing the input starts the new operation from zero. Generators keep {@code false}.
 	 */
 	protected boolean resetProgressOnInputChange() {
 		return false;
@@ -533,7 +332,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 		return baseSlots;
 	}
 
-	/** Whether this machine carries upgrade slots (all GUI machines do; the cable does not). */
+	/** Whether this machine carries upgrade slots (all GUI machines do). */
 	public boolean hasUpgradeSlots() {
 		return items.size() > baseSlots;
 	}
@@ -591,7 +390,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements WorldlyC
 	 * <p>Opt-in on purpose: a block that has not routed its tick through
 	 * {@link #effectiveEuPerTick}/{@link #effectiveDuration} must not advertise a chip slot that
 	 * silently does nothing — a dead upgrade reads as a bug, and a machine added later would inherit
-	 * the lie for free. Generators, storage and transport stay {@code false}.
+	 * the lie for free. Generators and storage stay {@code false}.
 	 *
 	 * <p>{@code final}, and reading a marker interface rather than a per-class boolean, because the
 	 * upgrade panel has to answer the same question on the CLIENT, where there is no block entity at

@@ -73,7 +73,7 @@ public final class GeneratorScenarios {
 		GeneratorBlockEntity gen = placeGenerator(helper);
 		long cap = gen.getEnergyStorage().getCapacity();
 		gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
-		gen.getEnergyStorage().amount = cap - 1; // BVA: max-1
+		gen.getEnergyStorage().setAmountUntracked(cap - 1); // BVA: max-1
 		drive(gen, helper, 5);
 		long amount = gen.getEnergyStorage().getAmount();
 		if (amount != cap) {
@@ -102,7 +102,7 @@ public final class GeneratorScenarios {
 		GeneratorBlockEntity gen = placeGenerator(helper);
 		gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
 		drive(gen, helper, 1); // start a burn so burnTime > 0
-		gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity(); // force buffer full
+		gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity()); // force buffer full
 		drive(gen, helper, 1);
 		int burn1 = gen.getDataAccess().get(2); // index 2 = progress = burnTime
 		drive(gen, helper, 1);
@@ -229,10 +229,10 @@ public final class GeneratorScenarios {
 		// Generator pre-charged to half, NO fuel: produce() == 0, so its buffer can only change via the
 		// push path — any drop is a leak, not production noise. It publishes maxInsert == 0.
 		long genStart = gen.getEnergyStorage().getCapacity() / 2;
-		gen.getEnergyStorage().amount = genStart;
+		gen.getEnergyStorage().setAmountUntracked(genStart);
 		gen.setChanged();
 		// Neighbour full: a correct push moves 0 and extracts nothing from the generator.
-		box.getEnergyStorage().amount = box.getEnergyStorage().getCapacity();
+		box.getEnergyStorage().setAmountUntracked(box.getEnergyStorage().getCapacity());
 		box.setChanged();
 
 		drive(gen, helper, 20);
@@ -268,7 +268,7 @@ public final class GeneratorScenarios {
 		GeneratorBlockEntity gen = placeGenerator(helper);
 		gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
 		drive(gen, helper, 1);              // tick 1 starts the burn
-		gen.getEnergyStorage().amount = 0;  // measure one clean tick from empty
+		gen.getEnergyStorage().setAmountUntracked(0);  // measure one clean tick from empty
 		drive(gen, helper, 1);
 		long made = gen.getEnergyStorage().getAmount();
 		if (made != Config.fuelEuPerTick) {
@@ -344,7 +344,7 @@ public final class GeneratorScenarios {
 		gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
 		// Pre-charge the buffer: at 8 EU/t the first neighbour in Direction order would drain it before
 		// the others get any (direct distribute has no fair split — that's the network's job, R-NRG-08).
-		gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+		gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
 
 		// First serverTick on the cable registers it with the NetworkManager (level + neighbours loaded).
 		cable.serverTick(helper.getLevel(), cablePos, helper.getLevel().getBlockState(cablePos));
@@ -406,7 +406,7 @@ public final class GeneratorScenarios {
 	 */
 	public static void tcGen001Prf02_packetCappedAtLv(GameTestHelper helper) {
 		GeneratorBlockEntity gen = placeGenerator(helper);
-		gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity(); // buffer near/at full
+		gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity()); // buffer near/at full
 
 		BlockPos sink = POS.east(); // (2,2,1): generator is on its WEST side → face WEST so input meets it (MOD-006)
 		helper.setBlock(sink, ModContent.BATTERY_BOX.get().defaultBlockState()
@@ -415,7 +415,7 @@ public final class GeneratorScenarios {
 		if (battery_box == null) {
 			helper.fail("battery_box block entity missing after placement");
 		}
-		battery_box.getEnergyStorage().amount = 0;
+		battery_box.getEnergyStorage().setAmountUntracked(0);
 
 		drive(gen, helper, 1); // single tick -> DirectAdjacencyDistributor.distribute, capped at srcTier.maxVoltage()=32
 
@@ -449,7 +449,7 @@ public final class GeneratorScenarios {
 		// Not burning: empty the fuel slot and fill the buffer so a burn cannot start (produce() needs
 		// room). updateLit(false) on the next tick must clear LIT.
 		gen.setItem(GeneratorBlockEntity.FUEL_SLOT, ItemStack.EMPTY);
-		gen.getEnergyStorage().amount = gen.getEnergyStorage().getCapacity();
+		gen.getEnergyStorage().setAmountUntracked(gen.getEnergyStorage().getCapacity());
 		drive(gen, helper, 3);
 		if (helper.getLevel().getBlockState(abs).getValue(BlockStateProperties.LIT)) {
 			helper.fail("generator must not be LIT once the burn ends");

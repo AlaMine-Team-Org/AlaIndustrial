@@ -1,18 +1,13 @@
 package dev.alaindustrial;
 
 import dev.alaindustrial.client.AlaClientConfig;
+import dev.alaindustrial.client.ClientContentManifest;
 import dev.alaindustrial.client.screen.CompressorScreen;
 import dev.alaindustrial.client.screen.ElectricFurnaceScreen;
 import dev.alaindustrial.client.hud.EnergyPackHud;
-import dev.alaindustrial.client.render.ChestBlockEntityRenderer;
 import dev.alaindustrial.client.tooltip.MachineTooltips;
 import dev.alaindustrial.client.ModKeyMappings;
 import dev.alaindustrial.client.screen.SolarPanelScreen;
-import dev.alaindustrial.client.render.GardenDroneBlockEntityRenderer;
-import dev.alaindustrial.client.render.EnergyCondenserBlockEntityRenderer;
-import dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer;
-import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
-import dev.alaindustrial.registry.ModBlockEntities;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
@@ -23,7 +18,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.model.object.chest.ChestModel;
 
 /**
  * Client entrypoint for Industrialization. Binds machine menus to their screens and registers the
@@ -206,8 +200,9 @@ public class IndustrializationClient implements ClientModInitializer {
 	}
 
 	/**
-	 * Registers the mod's block tint sources — the incubator dome takes the colour of the glass it
-	 * was built from (MOD-118), the mod's first block colour provider.
+	 * Registers the mod's block tint sources from the shared {@link ClientContentManifest} (MOD-403) —
+	 * the incubator dome takes the colour of the glass it was built from (MOD-118), the fluid pipe the
+	 * colour of what flows through it.
 	 *
 	 * <p>Verified against fabric-rendering-v1 25.2.0+2b0d8a229e (the module bundled in fabric-api
 	 * {@code 0.153.0+26.2}): {@code BlockColorRegistry.register(List<BlockTintSource>, Block...)},
@@ -216,12 +211,10 @@ public class IndustrializationClient implements ClientModInitializer {
 	 * in-world hook is {@code colorInWorld(state, level, pos)}, with no tint-index argument.
 	 */
 	private void registerBlockColors() {
-		net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry.register(
-				java.util.List.of(dev.alaindustrial.client.render.IncubatorDomeTint.INSTANCE),
-				dev.alaindustrial.registry.ModContent.INCUBATOR_DOME.get());
-		net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry.register(
-				java.util.List.of(dev.alaindustrial.client.render.FluidPipeTint.INSTANCE),
-				dev.alaindustrial.registry.ModContent.FLUID_PIPE.get());
+		for (ClientContentManifest.BlockTintDef def : ClientContentManifest.BLOCK_TINTS) {
+			net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry.register(
+					def.sources(), def.block().get());
+		}
 	}
 
 	/** Installs the world-overlay / client-hook singletons (network viz, cable preview, hum, tooltip keys). */
@@ -241,57 +234,36 @@ public class IndustrializationClient implements ClientModInitializer {
 		});
 	}
 
-	/** Registers the block-entity / entity renderers and bakes their model layers. */
+	/**
+	 * Registers the block-entity renderers and bakes their model layers, both replayed from the shared
+	 * {@link ClientContentManifest} (MOD-403) — the same set the NeoForge client plays, so a renderer can
+	 * no longer exist on one loader only. The pair stays typed end to end through {@code RendererRegistrar},
+	 * so no cast is involved.
+	 *
+	 * <p>The entity renderer below stays here: its type handle is loader-specific ({@code ModEntities} vs
+	 * {@code ModEntitiesNeoForge}) and the neutral {@code ModContent} slot is a wildcard, so there is
+	 * nothing typed to share for one registration.
+	 */
 	private void registerBlockEntityRenderers() {
-		// Storage chests: 3D model + animated lid, one shared renderer per tier texture. Register the
-		// BlockEntityRenderer against each chest BE type, and bake the chest model layer (vanilla
-		// single-body chest geometry).
-		BlockEntityRendererRegistry.register(ModBlockEntities.IRON_CHEST, ChestBlockEntityRenderer::iron);
-		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.IRON_CHEST_LAYER,
-				ChestModel::createSingleBodyLayer);
-		// MOD-391: the double-chest halves — 15-wide vanilla left/right bodies, per tier.
-		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.IRON_CHEST_LEFT_LAYER,
-				ChestModel::createDoubleBodyLeftLayer);
-		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.IRON_CHEST_RIGHT_LAYER,
-				ChestModel::createDoubleBodyRightLayer);
-		BlockEntityRendererRegistry.register(ModBlockEntities.SILVER_CHEST, ChestBlockEntityRenderer::silver);
-		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.SILVER_CHEST_LAYER,
-				ChestModel::createSingleBodyLayer);
-		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.SILVER_CHEST_LEFT_LAYER,
-				ChestModel::createDoubleBodyLeftLayer);
-		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.SILVER_CHEST_RIGHT_LAYER,
-				ChestModel::createDoubleBodyRightLayer);
-		BlockEntityRendererRegistry.register(ModBlockEntities.GOLD_CHEST, ChestBlockEntityRenderer::gold);
-		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.GOLD_CHEST_LAYER,
-				ChestModel::createSingleBodyLayer);
-		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.GOLD_CHEST_LEFT_LAYER,
-				ChestModel::createDoubleBodyLeftLayer);
-		ModelLayerRegistry.registerModelLayer(ChestBlockEntityRenderer.GOLD_CHEST_RIGHT_LAYER,
-				ChestModel::createDoubleBodyRightLayer);
-		ModelLayerRegistry.registerModelLayer(WaterMillWheelBlockEntityRenderer.MODEL_LAYER,
-				WaterMillWheelBlockEntityRenderer::createLayer);
-		BlockEntityRendererRegistry.register(ModBlockEntities.WATER_MILL, WaterMillWheelBlockEntityRenderer::new);
-		// MOD-393: the orb inside the condenser frame — its speed and glow are the block's gauge.
-		BlockEntityRendererRegistry.register(ModBlockEntities.ENERGY_CONDENSER,
-				EnergyCondenserBlockEntityRenderer::new);
-		// Garden Drone (MOD-277): the drone is geometry this renderer places above its station, not an entity.
-		ModelLayerRegistry.registerModelLayer(GardenDroneBlockEntityRenderer.MODEL_LAYER,
-				GardenDroneBlockEntityRenderer::createLayer);
-		BlockEntityRendererRegistry.register(ModBlockEntities.GARDEN_DRONE_STATION,
-				GardenDroneBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.register(ModBlockEntities.WIND_MILL, WindMillRotorBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.register(ModBlockEntities.HIGH_ALTITUDE_WIND_MILL, WindMillRotorBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.register(ModBlockEntities.STORM_WIND_MILL, WindMillRotorBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.register(ModBlockEntities.FLUID_TANK,
-				dev.alaindustrial.client.render.FluidTankBlockEntityRenderer::new);
-		// Incubator (MOD-118): bound to the base, draws into the dome chamber above it.
-		BlockEntityRendererRegistry.register(ModBlockEntities.INCUBATOR,
-				dev.alaindustrial.client.render.IncubatorBlockEntityRenderer::new);
-		// Insulating stand under a bare cable (MOD-279). All cable grades share one BlockEntityType, so
-		// this single registration covers every grade — and it is the first renderer bound to that type,
-		// so nothing is being displaced.
-		BlockEntityRendererRegistry.register(ModBlockEntities.COPPER_CABLE,
-				dev.alaindustrial.client.render.CableAccessoryBlockEntityRenderer::new);
+		ClientContentManifest.RendererRegistrar registrar = new ClientContentManifest.RendererRegistrar() {
+			@Override
+			public <T extends net.minecraft.world.level.block.entity.BlockEntity,
+					S extends net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState>
+					void register(net.minecraft.world.level.block.entity.BlockEntityType<T> type,
+							net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider<T, S> provider) {
+				// Fabric declares register(BlockEntityType<E>, BlockEntityRendererProvider<? super E,
+				// ? super S>); the witness pins both to this method's own parameters instead of letting
+				// the render-state variable be inferred from a wildcard bound.
+				BlockEntityRendererRegistry.<T, S>register(type, provider);
+			}
+		};
+		for (ClientContentManifest.BlockEntityRendererDef<?, ?> def
+				: ClientContentManifest.BLOCK_ENTITY_RENDERERS) {
+			def.bindTo(registrar);
+		}
+		for (ClientContentManifest.ModelLayerDef def : ClientContentManifest.MODEL_LAYERS) {
+			ModelLayerRegistry.registerModelLayer(def.location(), def.definition()::get);
+		}
 
 		// Stock Display Frame (MOD-066): the mod's first entity renderer. Vanilla EntityRenderers.register
 		// is the path Fabric's own docs recommend (their EntityRendererRegistry is a thin legacy wrapper).

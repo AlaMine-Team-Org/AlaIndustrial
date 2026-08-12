@@ -35,8 +35,11 @@ import net.minecraft.world.level.storage.ValueOutput;
  * <p><b>Single variant per segment.</b> The buffer is a plain {@link FluidTank}, which already refuses
  * a second fluid while it holds one — so "you cannot mix water and lava in the same line" needs no
  * code of its own.
+ *
+ * <p><b>Transport, not a machine (MOD-400).</b> The segment holds a fluid buffer and nothing else: no
+ * item inventory, no processing progress, no upgrade panel, no owner.
  */
-public final class FluidPipeBlockEntity extends MachineBlockEntity implements FluidPortHost {
+public final class FluidPipeBlockEntity extends EnergyBlockEntity implements FluidPortHost {
 
 	/** The segment's live buffer. Public for the same reason the tank block's is: direct drain/fill. */
 	public final FluidTank fluidBuffer = new FluidTank(Config.fluidPipeSegmentBuffer,
@@ -46,13 +49,7 @@ public final class FluidPipeBlockEntity extends MachineBlockEntity implements Fl
 	private boolean registered;
 
 	public FluidPipeBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.FLUID_PIPE_BE.get(), pos, state, EnergyTier.LV, 0, 0, 0, 0);
-	}
-
-	/** Transport, not a working machine (MOD-133): no owner, no player stats, no per-segment UUID. */
-	@Override
-	public boolean tracksOwner() {
-		return false;
+		super(ModContent.FLUID_PIPE_BE.get(), pos, state, EnergyTier.LV, 0, 0, 0);
 	}
 
 	@Override
@@ -93,7 +90,7 @@ public final class FluidPipeBlockEntity extends MachineBlockEntity implements Fl
 			return;
 		}
 		packedFaceModes = next;
-		markDirtyAndSync();
+		setChangedQuietly();
 		syncBlockEntityToClient();
 		if (level instanceof ServerLevel server) {
 			FluidNetworkManager.topologyChanged(server, worldPosition);

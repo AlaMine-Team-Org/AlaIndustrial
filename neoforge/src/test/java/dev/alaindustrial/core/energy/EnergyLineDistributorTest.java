@@ -145,7 +145,7 @@ class EnergyLineDistributorTest {
 	private static EnergyBuffer cableBuffer(long capacity, long amount) {
 		EnergyBuffer b = new EnergyBuffer(capacity, capacity, capacity, () -> {
 		});
-		b.amount = amount;
+		b.setAmountUntracked(amount);
 		return b;
 	}
 
@@ -239,8 +239,8 @@ class EnergyLineDistributorTest {
 
 		// packetCap = 32 caps each consumer's per-tick draw, so the consumer takes 32 of cableA's 50.
 		assertEquals(32, moved, "consumer pulled up to packetCap (32) from cableA");
-		assertEquals(18, line.buffers.get(cableA).amount, "cableA leftover = 50 − 32");
-		assertEquals(50, line.buffers.get(cableB).amount, "cableB untouched (not adjacent to consumer)");
+		assertEquals(18, line.buffers.get(cableA).getAmount(), "cableA leftover = 50 − 32");
+		assertEquals(50, line.buffers.get(cableB).getAmount(), "cableB untouched (not adjacent to consumer)");
 	}
 
 	@Test
@@ -284,7 +284,7 @@ class EnergyLineDistributorTest {
 		d.chargeAndPropagateLine(generators, List.of(), 0L, 10_000L, 32, txns.txn, 0);
 
 		// Per-source packet cap = 32, so the generator injects at most 32 EU into the line this tick.
-		assertEquals(32, line.buffers.get(new BlockPos(0, 0, 0)).amount,
+		assertEquals(32, line.buffers.get(new BlockPos(0, 0, 0)).getAmount(),
 				"source-adjacent cable filled up to packetCap (32) this tick");
 		assertEquals(10_000L - 32L, generator.amount, "generator drawn exactly 32 EU");
 	}
@@ -360,16 +360,16 @@ class EnergyLineDistributorTest {
 		EnergyLineDistributor d = line.distributor(Map.of());
 		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 0);
 
-		assertEquals(0, line.buffers.get(p4).amount, "pass 1: the far cable handed its charge downhill");
-		assertEquals(12, line.buffers.get(p3).amount, "pass 1: charge advanced exactly one hop, to potential 3");
-		assertEquals(0, line.buffers.get(p2).amount, "pass 1: charge must NOT skip a hop");
-		assertEquals(0, line.buffers.get(p1).amount, "pass 1: charge must NOT reach the sink-side cable");
+		assertEquals(0, line.buffers.get(p4).getAmount(), "pass 1: the far cable handed its charge downhill");
+		assertEquals(12, line.buffers.get(p3).getAmount(), "pass 1: charge advanced exactly one hop, to potential 3");
+		assertEquals(0, line.buffers.get(p2).getAmount(), "pass 1: charge must NOT skip a hop");
+		assertEquals(0, line.buffers.get(p1).getAmount(), "pass 1: charge must NOT reach the sink-side cable");
 
 		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 0);
 
-		assertEquals(12, line.buffers.get(p2).amount, "pass 2: one more hop, to potential 2");
-		assertEquals(0, line.buffers.get(p3).amount, "pass 2: the charge left potential 3");
-		assertEquals(0, line.buffers.get(p1).amount, "pass 2: still exactly one hop per pass");
+		assertEquals(12, line.buffers.get(p2).getAmount(), "pass 2: one more hop, to potential 2");
+		assertEquals(0, line.buffers.get(p3).getAmount(), "pass 2: the charge left potential 3");
+		assertEquals(0, line.buffers.get(p1).getAmount(), "pass 2: still exactly one hop per pass");
 	}
 
 	/**
@@ -388,8 +388,8 @@ class EnergyLineDistributorTest {
 		EnergyLineDistributor d = line.distributor(Map.of());
 		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 0);
 
-		assertEquals(12, line.buffers.get(left).amount, "equal-potential neighbours must not exchange");
-		assertEquals(0, line.buffers.get(right).amount, "equal-potential neighbours must not exchange");
+		assertEquals(12, line.buffers.get(left).getAmount(), "equal-potential neighbours must not exchange");
+		assertEquals(0, line.buffers.get(right).getAmount(), "equal-potential neighbours must not exchange");
 	}
 
 	/**
@@ -423,11 +423,11 @@ class EnergyLineDistributorTest {
 		EnergyLineDistributor d = line.distributor(Map.of());
 		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 0);
 
-		assertEquals(6, line.buffers.get(westNear).amount, "the west branch got its half of the fork");
-		assertEquals(6, line.buffers.get(eastNear).amount, "the east branch got its half of the fork");
-		assertEquals(0, line.buffers.get(fork).amount, "the whole fork buffer moved — nothing stranded");
-		assertEquals(0, line.buffers.get(westFar).amount, "still exactly one hop per pass");
-		assertEquals(0, line.buffers.get(eastFar).amount, "still exactly one hop per pass");
+		assertEquals(6, line.buffers.get(westNear).getAmount(), "the west branch got its half of the fork");
+		assertEquals(6, line.buffers.get(eastNear).getAmount(), "the east branch got its half of the fork");
+		assertEquals(0, line.buffers.get(fork).getAmount(), "the whole fork buffer moved — nothing stranded");
+		assertEquals(0, line.buffers.get(westFar).getAmount(), "still exactly one hop per pass");
+		assertEquals(0, line.buffers.get(eastFar).getAmount(), "still exactly one hop per pass");
 	}
 
 	/**
@@ -456,9 +456,9 @@ class EnergyLineDistributorTest {
 		EnergyLineDistributor d = line.distributor(Map.of());
 		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 0);
 
-		assertEquals(8, line.buffers.get(westNear).amount, "the machine-ward branch takes the larger share");
-		assertEquals(4, line.buffers.get(eastNear).amount, "the storage-ward branch is still served");
-		assertEquals(0, line.buffers.get(fork).amount, "the whole fork buffer moved — nothing stranded");
+		assertEquals(8, line.buffers.get(westNear).getAmount(), "the machine-ward branch takes the larger share");
+		assertEquals(4, line.buffers.get(eastNear).getAmount(), "the storage-ward branch is still served");
+		assertEquals(0, line.buffers.get(fork).getAmount(), "the whole fork buffer moved — nothing stranded");
 	}
 
 	/**
@@ -488,16 +488,16 @@ class EnergyLineDistributorTest {
 
 		EnergyLineDistributor d = line.distributor(Map.of());
 		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 0);
-		assertEquals(0, line.buffers.get(fork).amount, "tick 1: the single EU moved off the seam");
+		assertEquals(0, line.buffers.get(fork).getAmount(), "tick 1: the single EU moved off the seam");
 
-		line.buffers.get(fork).amount = 1; // the generator refills the seam for the next tick
+		line.buffers.get(fork).setAmountUntracked(1); // the generator refills the seam for the next tick
 		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 1);
 
-		assertEquals(1, line.buffers.get(westNear).amount,
+		assertEquals(1, line.buffers.get(westNear).getAmount(),
 				"the west branch got the spare EU on exactly one of the two offsets");
-		assertEquals(1, line.buffers.get(eastNear).amount,
+		assertEquals(1, line.buffers.get(eastNear).getAmount(),
 				"the east branch got it on the other — a fixed award order starves this branch forever");
-		assertEquals(0, line.buffers.get(fork).amount, "tick 2: nothing stranded at the seam");
+		assertEquals(0, line.buffers.get(fork).getAmount(), "tick 2: nothing stranded at the seam");
 	}
 
 	/**
@@ -525,12 +525,12 @@ class EnergyLineDistributorTest {
 
 		int fed = 0;
 		for (BlockPos b : branches) {
-			long got = line.buffers.get(b).amount;
+			long got = line.buffers.get(b).getAmount();
 			assertTrue(got <= 1, "no branch may take a second EU while another has none, got " + got);
 			fed += got > 0 ? 1 : 0;
 		}
 		assertEquals(2, fed, "the two spare EU landed on two different branches");
-		assertEquals(0, line.buffers.get(junction).amount, "the whole junction buffer moved");
+		assertEquals(0, line.buffers.get(junction).getAmount(), "the whole junction buffer moved");
 	}
 
 	/**
@@ -561,7 +561,7 @@ class EnergyLineDistributorTest {
 		long drawnAFirst = 10_000L - a.amount;
 		long drawnBFirst = 10_000L - b.amount;
 
-		line.buffers.get(cable).amount = 0; // the consumer drained the segment again
+		line.buffers.get(cable).setAmountUntracked(0); // the consumer drained the segment again
 		d.chargeAndPropagateLine(sources, List.of(), 0L, 20_000L, 32, txns.txn, 1);
 		long drawnASecond = 10_000L - a.amount - drawnAFirst;
 		long drawnBSecond = 10_000L - b.amount - drawnBFirst;
@@ -607,8 +607,8 @@ class EnergyLineDistributorTest {
 		long moved = d.serveConsumersFromLine(consumers, 32, COPPER_LOSS, txns.txn, 0);
 
 		assertEquals(10, moved, "consumer got only what the one drawable cable held, not a full packet");
-		assertEquals(0, line.buffers.get(west).amount, "the drawable cable was drained");
-		assertEquals(50, line.buffers.get(east).amount,
+		assertEquals(0, line.buffers.get(west).getAmount(), "the drawable cable was drained");
+		assertEquals(50, line.buffers.get(east).getAmount(),
 				"the cable on a non-accepting face must be untouched — that is the self-churn path");
 	}
 
@@ -635,8 +635,8 @@ class EnergyLineDistributorTest {
 				(pos, dir) -> true, (pos, dir) -> dir == Direction.EAST);
 		d.chargeAndPropagateLine(generators, List.of(), 0L, 10_000L, 32, txns.txn, 0);
 
-		assertEquals(32, line.buffers.get(east).amount, "the emitting face filled its cable up to packetCap");
-		assertEquals(0, line.buffers.get(west).amount,
+		assertEquals(32, line.buffers.get(east).getAmount(), "the emitting face filled its cable up to packetCap");
+		assertEquals(0, line.buffers.get(west).getAmount(),
 				"the cable on a non-emitting face must stay empty — a source must not leak out of its input");
 		assertEquals(10_000L - 32L, source.amount, "exactly one packet left the source, not two");
 	}
@@ -666,7 +666,7 @@ class EnergyLineDistributorTest {
 		StubPort source = new StubPort(sourcePos, 10_000, 10_000, true, false);
 
 		long before = consumer.amount + source.amount
-				+ line.buffers.get(c1).amount + line.buffers.get(c2).amount + line.buffers.get(c3).amount;
+				+ line.buffers.get(c1).getAmount() + line.buffers.get(c2).getAmount() + line.buffers.get(c3).getAmount();
 
 		EnergyLineDistributor d = line.distributor(Map.of(consumerPos, 3));
 		d.serveConsumersFromLine(
@@ -677,7 +677,7 @@ class EnergyLineDistributorTest {
 				900L, 10_000L, 32, txns.txn, 0);
 
 		long after = consumer.amount + source.amount
-				+ line.buffers.get(c1).amount + line.buffers.get(c2).amount + line.buffers.get(c3).amount;
+				+ line.buffers.get(c1).getAmount() + line.buffers.get(c2).getAmount() + line.buffers.get(c3).getAmount();
 		assertEquals(before, after, "a full kernel pass at zero loss must neither create nor destroy EU");
 		assertTrue(consumer.amount > 100, "fixture sanity: the consumer actually received something");
 	}
@@ -714,7 +714,7 @@ class EnergyLineDistributorTest {
 		// source" — a regression that would silently double-throughput a BatteryBox cluster.
 		assertTrue(drawnA <= 32L, "producer A draw bounded by packetCap; got " + drawnA);
 		assertTrue(drawnB <= 32L, "producer B draw bounded by packetCap; got " + drawnB);
-		assertEquals(drawnA + drawnB, line.buffers.get(new BlockPos(0, 0, 0)).amount,
+		assertEquals(drawnA + drawnB, line.buffers.get(new BlockPos(0, 0, 0)).getAmount(),
 				"all drawn EU lands in the cable buffer");
 	}
 
@@ -757,7 +757,7 @@ class EnergyLineDistributorTest {
 		// ...and — the regression guard — the cap is PER-SOURCE, so all three fill their packet: total
 		// is 96, not a merged/per-target 32. Room (1000) is far larger, so it cannot mask the collapse.
 		assertEquals(96L, total, "per-source cap: 3 sources each give 32 → total 96, not a merged 32");
-		assertEquals(total, line.buffers.get(cable).amount,
+		assertEquals(total, line.buffers.get(cable).getAmount(),
 				"all drawn EU lands in the cable buffer");
 	}
 
@@ -813,10 +813,10 @@ class EnergyLineDistributorTest {
 					0L, 10_000L, 32, txns.txn, 0);
 		}
 
-		assertEquals(12, line.buffers.get(C1).amount, "negative control: the corridor saturates end to end");
-		assertEquals(12, line.buffers.get(C3).amount, "negative control: the source-side cable is full");
-		assertEquals(0, line.buffers.get(S1).amount, "MOD-318: the spur has no downhill path and stays dead");
-		assertEquals(0, line.buffers.get(S2).amount, "MOD-318: and so does the rest of it");
+		assertEquals(12, line.buffers.get(C1).getAmount(), "negative control: the corridor saturates end to end");
+		assertEquals(12, line.buffers.get(C3).getAmount(), "negative control: the source-side cable is full");
+		assertEquals(0, line.buffers.get(S1).getAmount(), "MOD-318: the spur has no downhill path and stays dead");
+		assertEquals(0, line.buffers.get(S2).getAmount(), "MOD-318: and so does the rest of it");
 	}
 
 	/**
@@ -840,10 +840,10 @@ class EnergyLineDistributorTest {
 					0L, 10_000L, 32, txns.txn, 0);
 		}
 
-		assertEquals(12, line.buffers.get(S1).amount, "the stranded segment now carries charge");
-		assertEquals(12, line.buffers.get(S2).amount, "and the fill front reached the end of the spur");
-		assertEquals(12, line.buffers.get(C1).amount, "the corridor is still served end to end");
-		assertEquals(12, line.buffers.get(C2).amount, "the fill pass did not rob the corridor");
+		assertEquals(12, line.buffers.get(S1).getAmount(), "the stranded segment now carries charge");
+		assertEquals(12, line.buffers.get(S2).getAmount(), "and the fill front reached the end of the spur");
+		assertEquals(12, line.buffers.get(C1).getAmount(), "the corridor is still served end to end");
+		assertEquals(12, line.buffers.get(C2).getAmount(), "the fill pass did not rob the corridor");
 	}
 
 	/**
@@ -854,17 +854,17 @@ class EnergyLineDistributorTest {
 	@Test
 	void fillStrandedOneHop_advancesTheFillFrontOneCablePerPass() {
 		LineFixture line = spurRig();
-		line.buffers.get(C3).amount = 12; // brim-full donor, nothing else in the rig
+		line.buffers.get(C3).setAmountUntracked(12); // brim-full donor, nothing else in the rig
 
 		EnergyLineDistributor d = line.distributor(Map.of());
 		d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
-		assertEquals(12, line.buffers.get(S1).amount, "pass 1: the packet advanced exactly one hop");
-		assertEquals(0, line.buffers.get(S2).amount, "pass 1: it must NOT skip down the whole spur");
-		assertEquals(0, line.buffers.get(C3).amount, "pass 1: it came out of the saturated corridor cable");
+		assertEquals(12, line.buffers.get(S1).getAmount(), "pass 1: the packet advanced exactly one hop");
+		assertEquals(0, line.buffers.get(S2).getAmount(), "pass 1: it must NOT skip down the whole spur");
+		assertEquals(0, line.buffers.get(C3).getAmount(), "pass 1: it came out of the saturated corridor cable");
 
 		d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
-		assertEquals(12, line.buffers.get(S2).amount, "pass 2: one more hop outward");
-		assertEquals(0, line.buffers.get(S1).amount, "pass 2: still exactly one hop per pass");
+		assertEquals(12, line.buffers.get(S2).getAmount(), "pass 2: one more hop outward");
+		assertEquals(0, line.buffers.get(S1).getAmount(), "pass 2: still exactly one hop per pass");
 	}
 
 	/**
@@ -875,28 +875,28 @@ class EnergyLineDistributorTest {
 	@Test
 	void fillStrandedOneHop_leavesADonorThatIsNotBrimFullAlone() {
 		LineFixture line = spurRig();
-		line.buffers.get(C3).amount = 11; // one EU short of full: still working for the machines
+		line.buffers.get(C3).setAmountUntracked(11); // one EU short of full: still working for the machines
 
 		EnergyLineDistributor d = line.distributor(Map.of());
 		d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
 
-		assertEquals(11, line.buffers.get(C3).amount, "a partly drained donor must not be tapped");
-		assertEquals(0, line.buffers.get(S1).amount, "so the spur waits for genuine surplus");
+		assertEquals(11, line.buffers.get(C3).getAmount(), "a partly drained donor must not be tapped");
+		assertEquals(0, line.buffers.get(S1).getAmount(), "so the spur waits for genuine surplus");
 	}
 
 	/** The pass moves EU between buffers and neither mints nor destroys any. */
 	@Test
 	void fillStrandedOneHop_conservesEu() {
 		LineFixture line = spurRig();
-		line.buffers.get(C3).amount = 12;
-		long before = line.buffers.values().stream().mapToLong(b -> b.amount).sum();
+		line.buffers.get(C3).setAmountUntracked(12);
+		long before = line.buffers.values().stream().mapToLong(b -> b.getAmount()).sum();
 
 		EnergyLineDistributor d = line.distributor(Map.of());
 		for (int i = 0; i < 5; i++) {
 			d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
 		}
 
-		assertEquals(before, line.buffers.values().stream().mapToLong(b -> b.amount).sum(),
+		assertEquals(before, line.buffers.values().stream().mapToLong(b -> b.getAmount()).sum(),
 				"the stranded fill must neither create nor destroy EU");
 	}
 }

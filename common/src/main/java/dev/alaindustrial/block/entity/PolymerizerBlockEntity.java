@@ -142,11 +142,11 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 		this.maxProgress = effectiveDuration(baseDuration);
 
 		ItemStack result = recipe != null ? recipe.resultStack() : ItemStack.EMPTY;
-		boolean canWork = recipe != null && energy.amount >= euPerTick && canOutput(result);
+		boolean canWork = recipe != null && energy.getAmount() >= euPerTick && canOutput(result);
 		updateLit(canWork);
 
 		if (canWork) {
-			energy.amount -= euPerTick;
+			energy.drainInternal(euPerTick);
 			progress++;
 			if (progress >= maxProgress) {
 				progress = 0;

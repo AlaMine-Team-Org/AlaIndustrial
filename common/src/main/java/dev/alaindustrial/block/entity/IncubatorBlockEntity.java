@@ -194,7 +194,7 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 		// has not happened yet. The exact outcome is checked only once it exists, below.
 		boolean canWork = formed
 				&& recipe != null
-				&& energy.amount >= euPerTick
+				&& energy.getAmount() >= euPerTick
 				&& charge > 0
 				&& hasRoomForPlainResult(recipe)
 				&& !(pendingOutcome != null && !hasRoomForOutcome(recipe));
@@ -210,7 +210,7 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 			return IDLE_SLEEP_TICKS;
 		}
 
-		energy.amount -= euPerTick;
+		energy.drainInternal(euPerTick);
 		progress++;
 		if (progress >= maxProgress) {
 			// The dice are thrown here, at the end of a cycle that has already been paid for — never

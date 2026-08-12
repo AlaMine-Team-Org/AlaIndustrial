@@ -137,8 +137,16 @@ jobs:
 
       # One root build compiles all modules (common + fabric + neoforge) and runs
       # the Fabric server gametests as part of :fabric:build.
+      #
+      # ALA_BUILD_TIME stamps the real publish time into the released jar. A local build has no such
+      # variable and falls back to the HEAD commit date on purpose: the stamp has to be a function of
+      # the build's INPUTS, or processResources stops being up-to-date the moment the clock ticks over
+      # a minute — which used to invalidate jar, remapJar and every gametest with it. A release build
+      # is a clean one-shot, so re-stamping it costs nothing.
       - name: Build
-        run: ./gradlew build --no-daemon --stacktrace
+        run: |
+          export ALA_BUILD_TIME="$(date -u +%Y-%m-%dT%H:%M)"
+          ./gradlew build --no-daemon --stacktrace
 
       # In-world behaviour tests for BOTH loaders must pass before a release ships.
       # :fabric:runGameTest = Fabric server gametests; :neoforge:runGameTests =

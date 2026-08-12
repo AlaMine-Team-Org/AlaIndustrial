@@ -82,7 +82,7 @@ public final class ChargePadScenarios {
 	private static ChargePadBlockEntity placePad(GameTestHelper helper, long eu) {
 		ChargePadBlockEntity be = AlaGameTestHelper.place(helper, PAD, ModContent.CHARGE_PAD.get(),
 				ChargePadBlockEntity.class);
-		be.getEnergyStorage().amount = eu;
+		be.getEnergyStorage().setAmountUntracked(eu);
 		return be;
 	}
 
@@ -135,9 +135,9 @@ public final class ChargePadScenarios {
 		if (ItemEnergy.get(tool) != expected) {
 			helper.fail("carried drill must gain " + expected + " EU in one tick, got " + ItemEnergy.get(tool));
 		}
-		if (pad.getEnergyStorage().amount != Config.chargePadBuffer - expected) {
+		if (pad.getEnergyStorage().getAmount() != Config.chargePadBuffer - expected) {
 			helper.fail("the station must pay exactly what it handed out, left "
-					+ pad.getEnergyStorage().amount);
+					+ pad.getEnergyStorage().getAmount());
 		}
 		if (stateAt(helper) != ChargePadState.CHARGING) {
 			helper.fail("indicator must read CHARGING while energy is moving, got " + stateAt(helper));
@@ -165,9 +165,9 @@ public final class ChargePadScenarios {
 			helper.fail("a worn jetpack must be charged at its own input rate: expected " + expected
 					+ " EU, got " + ItemEnergy.get(worn));
 		}
-		if (pad.getEnergyStorage().amount != Config.chargePadBuffer - expected) {
+		if (pad.getEnergyStorage().getAmount() != Config.chargePadBuffer - expected) {
 			helper.fail("the station must pay exactly what the worn item took, left "
-					+ pad.getEnergyStorage().amount);
+					+ pad.getEnergyStorage().getAmount());
 		}
 		helper.succeed();
 	}
@@ -280,8 +280,8 @@ public final class ChargePadScenarios {
 			helper.fail("the station must hand out exactly its per-tick output (" + tickBudget()
 					+ " EU) when demand exceeds it, handed out " + total);
 		}
-		if (pad.getEnergyStorage().amount != Config.chargePadBuffer - tickBudget()) {
-			helper.fail("the station must pay exactly its output, left " + pad.getEnergyStorage().amount);
+		if (pad.getEnergyStorage().getAmount() != Config.chargePadBuffer - tickBudget()) {
+			helper.fail("the station must pay exactly its output, left " + pad.getEnergyStorage().getAmount());
 		}
 		helper.succeed();
 	}
@@ -348,9 +348,9 @@ public final class ChargePadScenarios {
 
 		pad.chargePlayer(helper.getLevel(), player);
 
-		if (pad.getEnergyStorage().amount != Config.chargePadBuffer) {
+		if (pad.getEnergyStorage().getAmount() != Config.chargePadBuffer) {
 			helper.fail("a station with nothing to charge must spend nothing, left "
-					+ pad.getEnergyStorage().amount);
+					+ pad.getEnergyStorage().getAmount());
 		}
 		if (stateAt(helper) != ChargePadState.READY) {
 			helper.fail("indicator must read READY for a full visitor, got " + stateAt(helper));
@@ -375,7 +375,7 @@ public final class ChargePadScenarios {
 		if (stateAt(helper) != ChargePadState.CHARGING) {
 			helper.fail("precondition: the station should be charging before the visitor leaves");
 		}
-		long banked = pad.getEnergyStorage().amount;
+		long banked = pad.getEnergyStorage().getAmount();
 
 		// REAL ticks, not AlaGameTestHelper.drive: staleness is measured against the game clock, and
 		// calling serverTick in a loop re-runs the block without advancing that clock — the contact
@@ -388,9 +388,9 @@ public final class ChargePadScenarios {
 						helper.fail("indicator must fall back to IDLE once contact goes stale, got "
 								+ stateAt(helper));
 					}
-					if (pad.getEnergyStorage().amount != banked) {
+					if (pad.getEnergyStorage().getAmount() != banked) {
 						helper.fail("an unoccupied station must not spend EU, went from " + banked
-								+ " to " + pad.getEnergyStorage().amount);
+								+ " to " + pad.getEnergyStorage().getAmount());
 					}
 				})
 				.thenSucceed();
@@ -410,8 +410,8 @@ public final class ChargePadScenarios {
 		if (ItemEnergy.get(tool) != 0) {
 			helper.fail("a spectator must not be charged, moved " + ItemEnergy.get(tool));
 		}
-		if (pad.getEnergyStorage().amount != Config.chargePadBuffer) {
-			helper.fail("a spectator must not drain the station, left " + pad.getEnergyStorage().amount);
+		if (pad.getEnergyStorage().getAmount() != Config.chargePadBuffer) {
+			helper.fail("a spectator must not drain the station, left " + pad.getEnergyStorage().getAmount());
 		}
 		helper.succeed();
 	}
@@ -459,7 +459,7 @@ public final class ChargePadScenarios {
 		BlockPos neighbourPos = PAD.offset(1, 0, 0);
 		ChargePadBlockEntity neighbour = AlaGameTestHelper.place(helper, neighbourPos,
 				ModContent.CHARGE_PAD.get(), ChargePadBlockEntity.class);
-		neighbour.getEnergyStorage().amount = Config.chargePadBuffer;
+		neighbour.getEnergyStorage().setAmountUntracked(Config.chargePadBuffer);
 
 		ServerPlayer player = survivalPlayer(helper);
 		ItemStack tool = drill(0);
@@ -474,9 +474,9 @@ public final class ChargePadScenarios {
 			helper.fail("a straddling player must be served once per tick: expected " + expected
 					+ " EU, got " + ItemEnergy.get(tool));
 		}
-		if (neighbour.getEnergyStorage().amount != Config.chargePadBuffer) {
+		if (neighbour.getEnergyStorage().getAmount() != Config.chargePadBuffer) {
 			helper.fail("the station the player is NOT standing in must spend nothing, left "
-					+ neighbour.getEnergyStorage().amount);
+					+ neighbour.getEnergyStorage().getAmount());
 		}
 		helper.succeed();
 	}
@@ -524,17 +524,17 @@ public final class ChargePadScenarios {
 		if (box == null) {
 			helper.fail("battery box block entity missing at " + boxPos);
 		}
-		box.getEnergyStorage().amount = Config.batteryBoxBuffer;
+		box.getEnergyStorage().setAmountUntracked(Config.batteryBoxBuffer);
 
 		AlaGameTestHelper.drive(box, helper, 5);
 
-		if (pad.getEnergyStorage().amount <= 0) {
+		if (pad.getEnergyStorage().getAmount() <= 0) {
 			helper.fail("the station must accept EU from an adjacent source, still holding "
-					+ pad.getEnergyStorage().amount);
+					+ pad.getEnergyStorage().getAmount());
 		}
-		if (box.getEnergyStorage().amount >= Config.batteryBoxBuffer) {
+		if (box.getEnergyStorage().getAmount() >= Config.batteryBoxBuffer) {
 			helper.fail("the energy must come OUT of the source, not out of thin air — box still at "
-					+ box.getEnergyStorage().amount);
+					+ box.getEnergyStorage().getAmount());
 		}
 		helper.succeed();
 	}
@@ -553,6 +553,98 @@ public final class ChargePadScenarios {
 		if (restored.getEnergyStorage().getAmount() != 4321L) {
 			helper.fail("the banked buffer must round-trip through NBT, got "
 					+ restored.getEnergyStorage().getAmount());
+		}
+		helper.succeed();
+	}
+	// ── MOD-406: paying in batches must not change how much is paid ──────────────────────────────
+
+	/**
+	 * Twenty ticks of standing still deliver exactly what the per-tick station delivered, and the
+	 * per-item rate ceiling is still honoured in EU per TICK.
+	 *
+	 * <p>Why this matters beyond arithmetic: the station used to rewrite the charged stack's energy
+	 * component on every single tick, and a rewritten stack stops matching the client's copy, so the
+	 * slot is re-sent twenty times a second (plus the cursor and crafting grid while a screen is open).
+	 * That is what the player felt as a stuttering inventory and a stuttering sound. Batching fixes the
+	 * rewrite rate — this test pins that it fixed nothing else.
+	 *
+	 * <p>The number is chosen so the item's own input rate binds, not the station budget: that is the
+	 * ceiling a naive "just call it less often" would quietly divide by the batch size, turning a
+	 * performance fix into a nerf.
+	 */
+	public static void mod406BatchedPayoutMatchesPerTickTotal(GameTestHelper helper) {
+		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
+		ServerPlayer player = survivalPlayer(helper);
+		ItemStack tool = drill(0);
+		player.getInventory().setItem(0, tool);
+		long rate = ItemEnergy.inputRate(tool);
+
+		// Two facts, and the first one is the safety property: at NO point may the player hold more than
+		// the contact they have actually earned. A batch that paid for ticks the player had not yet
+		// stood through would be an energy dupe on a timer, which is the way this optimisation could go
+		// wrong without anyone noticing.
+		int ticks = 21;
+		for (int i = 1; i <= ticks; i++) {
+			pad.chargePlayer(helper.getLevel(), player);
+			long earnedSoFar = Math.min(rate * i, ItemEnergy.capacity(tool));
+			if (ItemEnergy.get(tool) > earnedSoFar) {
+				helper.fail("MOD-406: after " + i + " ticks the item holds " + ItemEnergy.get(tool)
+						+ " EU but only " + earnedSoFar + " was earned — a batch paid for contact that "
+						+ "had not happened yet");
+				return;
+			}
+		}
+
+		// Second fact: nothing is LOST either. 21 ticks is the leading edge plus four whole cadences, so
+		// on that boundary the batched total must equal the per-tick total exactly. (Between boundaries
+		// up to one cadence is legitimately still owed — it arrives with the next payout.)
+		long expected = Math.min(rate * ticks, ItemEnergy.capacity(tool));
+		long got = ItemEnergy.get(tool);
+		if (got != expected) {
+			helper.fail("MOD-406: " + ticks + " ticks of contact delivered " + got + " EU, expected "
+					+ expected + " (rate " + rate + "/t). Batching must change the CADENCE of payouts, "
+					+ "never the amount — and the per-item rate ceiling is per TICK, not per call.");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * The batching itself, observed the only way a gametest can see it: how many ticks actually change
+	 * the stack. With a per-tick payout all twenty do; batched, only the leading edge and every fifth
+	 * tick after it.
+	 *
+	 * <p>Asserts a ceiling rather than an exact count, so the cadence constant can be retuned without
+	 * rewriting the test — but a ceiling far below twenty, so reverting to per-tick payouts reddens it.
+	 */
+	public static void mod406PayoutsAreBatchedNotPerTick(GameTestHelper helper) {
+		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
+		ServerPlayer player = survivalPlayer(helper);
+		ItemStack tool = drill(0);
+		player.getInventory().setItem(0, tool);
+
+		int ticks = 20;
+		int rewrites = 0;
+		long previous = ItemEnergy.get(tool);
+		for (int i = 0; i < ticks; i++) {
+			pad.chargePlayer(helper.getLevel(), player);
+			long now = ItemEnergy.get(tool);
+			if (now != previous) {
+				rewrites++;
+				previous = now;
+			}
+		}
+
+		// 20 ticks / 5-tick cadence = 4, plus the leading edge = 5. Eight leaves room to retune.
+		if (rewrites > 8) {
+			helper.fail("MOD-406: the stack was rewritten " + rewrites + " times in " + ticks
+					+ " ticks — the station is still paying every tick, and every payout re-sends the "
+					+ "slot to the client");
+			return;
+		}
+		if (rewrites == 0) {
+			helper.fail("MOD-406: the stack was never charged at all — this test would pass vacuously");
+			return;
 		}
 		helper.succeed();
 	}

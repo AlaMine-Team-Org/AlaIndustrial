@@ -64,7 +64,7 @@ public final class GalvanicBathScenarios {
 	/** Stock the machine for exactly one operation, with {@code fibre} as the fibre input. */
 	private static GalvanicBathBlockEntity stocked(GameTestHelper helper, ItemStack fibre) {
 		GalvanicBathBlockEntity be = place(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(GalvanicBathBlockEntity.FIBER_SLOT, fibre);
 		be.setItem(GalvanicBathBlockEntity.SILVER_SLOT, new ItemStack(ModContent.SILVER_DUST.get()));
 		// Fill the tank right up: one operation now drinks four buckets, so a single bucket would
@@ -88,7 +88,7 @@ public final class GalvanicBathScenarios {
 	 */
 	private static void drivePowered(GalvanicBathBlockEntity be, GameTestHelper helper, int ticks) {
 		for (int i = 0; i < ticks; i++) {
-			be.getEnergyStorage().amount = AMPLE_EU;
+			be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 			AlaGameTestHelper.drive(be, helper, 1);
 		}
 	}
@@ -157,7 +157,7 @@ public final class GalvanicBathScenarios {
 	 */
 	public static void con01DryTankBlocksWork(GameTestHelper helper) {
 		GalvanicBathBlockEntity be = place(helper);
-		be.getEnergyStorage().amount = AMPLE_EU;
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(GalvanicBathBlockEntity.FIBER_SLOT, new ItemStack(Items.STRING));
 		be.setItem(GalvanicBathBlockEntity.SILVER_SLOT, new ItemStack(ModContent.SILVER_DUST.get()));
 		// tank deliberately left empty
