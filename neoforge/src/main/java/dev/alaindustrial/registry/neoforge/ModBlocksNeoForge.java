@@ -11,6 +11,7 @@ import dev.alaindustrial.block.EnergyCondenserBlock;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
+import dev.alaindustrial.block.CanningMachineBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.IncubatorBlock;
 import dev.alaindustrial.block.TrellisBlock;
@@ -99,6 +100,8 @@ public final class ModBlocksNeoForge {
 			BLOCKS.registerBlock("extractor", ExtractorBlock::new, props("extractor"));
 	public static final DeferredBlock<CompressorBlock> COMPRESSOR =
 			BLOCKS.registerBlock("compressor", CompressorBlock::new, props("compressor"));
+	public static final DeferredBlock<CanningMachineBlock> CANNING_MACHINE =
+			BLOCKS.registerBlock("canning_machine", CanningMachineBlock::new, props("canning_machine"));
 	public static final DeferredBlock<SawmillBlock> SAWMILL =
 			BLOCKS.registerBlock("sawmill", SawmillBlock::new, props("sawmill"));
 	// MOD-275 — the first MV machine; a blueprint-driven auto-crafter.
@@ -305,6 +308,7 @@ public final class ModBlocksNeoForge {
 		ModContent.IRON_FURNACE = IRON_FURNACE::get;
 		ModContent.EXTRACTOR = EXTRACTOR::get;
 		ModContent.COMPRESSOR = COMPRESSOR::get;
+		ModContent.CANNING_MACHINE = CANNING_MACHINE::get;
 		ModContent.SAWMILL = SAWMILL::get;
 		ModContent.ASSEMBLER = ASSEMBLER::get;
 		ModContent.POLYMERIZER = POLYMERIZER::get;

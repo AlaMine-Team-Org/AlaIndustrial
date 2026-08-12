@@ -191,6 +191,8 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> COAL_DUST = manifestItem("coal_dust");
 	public static final DeferredItem<Item> DIAMOND_DUST = manifestItem("diamond_dust");
 	public static final DeferredItem<Item> EMERALD_DUST = manifestItem("emerald_dust");
+	public static final DeferredItem<Item> EMPTY_CAN = manifestItem("empty_can");
+	public static final DeferredItem<Item> CANNED_RATION = manifestItem("canned_ration");
 	public static final DeferredItem<Item> LAPIS_DUST = manifestItem("lapis_dust");
 	public static final DeferredItem<Item> TIN_DUST = manifestItem("tin_dust");
 	public static final DeferredItem<Item> RAW_TIN = manifestItem("raw_tin");
@@ -387,6 +389,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("extractor", ModBlocksNeoForge.EXTRACTOR);
 	public static final DeferredItem<BlockItem> COMPRESSOR_ITEM =
 			ITEMS.registerSimpleBlockItem("compressor", ModBlocksNeoForge.COMPRESSOR);
+	public static final DeferredItem<BlockItem> CANNING_MACHINE_ITEM =
+			ITEMS.registerSimpleBlockItem("canning_machine", ModBlocksNeoForge.CANNING_MACHINE);
 	public static final DeferredItem<BlockItem> SAWMILL_ITEM =
 			ITEMS.registerSimpleBlockItem("sawmill", ModBlocksNeoForge.SAWMILL);
 	public static final DeferredItem<BlockItem> ASSEMBLER_ITEM =
@@ -573,6 +577,8 @@ public final class ModItemsNeoForge {
 		ModContent.COAL_DUST = COAL_DUST;
 		ModContent.DIAMOND_DUST = DIAMOND_DUST;
 		ModContent.EMERALD_DUST = EMERALD_DUST;
+		ModContent.EMPTY_CAN = EMPTY_CAN;
+		ModContent.CANNED_RATION = CANNED_RATION;
 		ModContent.LAPIS_DUST = LAPIS_DUST;
 		ModContent.TIN_DUST = TIN_DUST;
 		ModContent.RAW_TIN = RAW_TIN;
@@ -654,6 +660,7 @@ public final class ModItemsNeoForge {
 		ModContent.IRON_FURNACE_ITEM = IRON_FURNACE_ITEM;
 		ModContent.EXTRACTOR_ITEM = EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = COMPRESSOR_ITEM;
+		ModContent.CANNING_MACHINE_ITEM = CANNING_MACHINE_ITEM;
 		ModContent.SAWMILL_ITEM = SAWMILL_ITEM;
 		ModContent.ASSEMBLER_ITEM = ASSEMBLER_ITEM;
 		ModContent.POLYMERIZER_ITEM = POLYMERIZER_ITEM;

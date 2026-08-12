@@ -4,6 +4,7 @@ import dev.alaindustrial.registry.ModRecipes;
 import java.util.List;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import dev.alaindustrial.client.screen.AlloySmelterScreen;
+import dev.alaindustrial.client.screen.CanningMachineScreen;
 import dev.alaindustrial.client.screen.CompressorScreen;
 import dev.alaindustrial.client.screen.ElectricFurnaceScreen;
 import dev.alaindustrial.client.screen.ExtractorScreen;
@@ -89,6 +90,21 @@ public final class MachineRecipeViewerTargets {
 	/** The alloy smelter's click target. The rect tracks {@code AlloySmelterScreen.PROGRESS}. */
 	public static final List<AlloyTarget> ALLOY_ALL = List.of(
 			new AlloyTarget(AlloySmelterScreen.class, ModRecipes.ALLOYING, new GuiRect(79, 38, 25, 9)));
+
+	/**
+	 * And a fourth list for the Canning Machine (MOD-383), which has no {@link ModRecipes.Kind} to key on
+	 * at all: it matches no JSON recipe, so its category is built from {@link CanningExchange} instead.
+	 * The record therefore carries no kind — the screen and its hitbox are the whole target, and the
+	 * loader plugins pair it with their own single canning category id.
+	 */
+	public record CanningTarget(
+			Class<? extends AbstractContainerScreen<?>> screenClass,
+			GuiRect progressArea) {
+	}
+
+	/** The canning machine's click target. The rect tracks {@code CanningMachineScreen.PROGRESS}. */
+	public static final List<CanningTarget> CANNING_ALL = List.of(
+			new CanningTarget(CanningMachineScreen.class, new GuiRect(79, 31, 25, 9)));
 
 	/** The four sawmill recipe families, in button order — used by REI/JEI to open every mode from the sprite. */
 	public static final List<ModRecipes.Kind> SAWMILL_KINDS = List.of(

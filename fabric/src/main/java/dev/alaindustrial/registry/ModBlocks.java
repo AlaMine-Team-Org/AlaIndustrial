@@ -13,6 +13,7 @@ import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.ItemPipeBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
 import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
+import dev.alaindustrial.block.CanningMachineBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.IncubatorBlock;
@@ -184,6 +185,9 @@ public final class ModBlocks {
 
 	public static final ResourceKey<Block> COMPRESSOR_KEY = key("compressor");
 	public static final Block COMPRESSOR = register(COMPRESSOR_KEY, new CompressorBlock(props(COMPRESSOR_KEY)));
+	public static final ResourceKey<Block> CANNING_MACHINE_KEY = key("canning_machine");
+	public static final Block CANNING_MACHINE =
+			register(CANNING_MACHINE_KEY, new CanningMachineBlock(props(CANNING_MACHINE_KEY)));
 
 	public static final ResourceKey<Block> SAWMILL_KEY = key("sawmill");
 	public static final Block SAWMILL = register(SAWMILL_KEY, new SawmillBlock(props(SAWMILL_KEY)));
@@ -403,6 +407,7 @@ public final class ModBlocks {
 		ModContent.ELECTRIC_FURNACE = () -> ELECTRIC_FURNACE;
 		ModContent.EXTRACTOR = () -> EXTRACTOR;
 		ModContent.COMPRESSOR = () -> COMPRESSOR;
+		ModContent.CANNING_MACHINE = () -> CANNING_MACHINE;
 		ModContent.SAWMILL = () -> SAWMILL;
 		ModContent.ASSEMBLER = () -> ASSEMBLER;
 		ModContent.POLYMERIZER = () -> POLYMERIZER;

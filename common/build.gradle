@@ -220,6 +220,12 @@ pitest {
     // (HudSmootherTest, LevelMathTest, GuidePaginatorTest, TemperedGearRollTest) invisible to PIT.
     targetTests = ['dev.alaindustrial.*Test']
     excludedClasses = [
+            // MOD-383: CanningRules answers "may this stack go in the machine", which means it reads
+            // ItemStack / Items / DataComponents.FOOD — Minecraft types common's L1 classpath does not
+            // have, so every mutant here would be a guaranteed NO_COVERAGE. The arithmetic it delegates
+            // to (CanningMath) is deliberately Minecraft-free and stays IN the run, covered by
+            // CanningMathTest; the predicate itself is covered by the L2 gametests instead.
+            'dev.alaindustrial.core.food.CanningRules',
             'dev.alaindustrial.core.energy.EnergyLookup',
             'dev.alaindustrial.core.energy.DirectAdjacencyDistributor', // was EnergyNet (renamed MOD-168 #7)
             'dev.alaindustrial.core.energy.EnergyNetwork',

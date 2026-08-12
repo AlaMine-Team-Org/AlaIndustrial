@@ -3,6 +3,7 @@ package dev.alaindustrial.command.demo;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
@@ -231,6 +232,15 @@ public final class DemoStand {
 		placeWorkingMachine(level, origin, 8, 10, ModContent.COMPRESSOR.get(),
 				new ItemStack(ModContent.IRON_DUST.get(), 64));
 		placeWorkingMachine(level, origin, 11, 10, ModContent.EXTRACTOR.get(), new ItemStack(Items.GRAVEL, 64));
+		// Canning Machine (MOD-383): placeWorkingMachine does not fit — it fills slot 0 only, and this
+		// machine needs both a food stack and a stack of empty cans before it will run at all. Set on
+		// the second row because the first is full.
+		set(level, origin, 11, 1, 12, ModContent.CANNING_MACHINE.get());
+		chargeBuffer(level, origin, 11, 1, 12);
+		fillSlot(level, origin, 11, 1, 12, CanningMachineBlockEntity.FOOD_SLOT,
+				new ItemStack(Items.COOKED_BEEF, 64));
+		fillSlot(level, origin, 11, 1, 12, CanningMachineBlockEntity.CAN_SLOT,
+				new ItemStack(ModContent.EMPTY_CAN.get(), 64));
 		// Sawmill (MOD-150): pre-charged + a stack of logs → visibly sawing (default PLANKS mode).
 		placeWorkingMachine(level, origin, 17, 10, ModContent.SAWMILL.get(), new ItemStack(Items.OAK_LOG, 64));
 		// Incubator (MOD-118): the 1x2 multiblock. Glass goes on top so the base assembles it into the

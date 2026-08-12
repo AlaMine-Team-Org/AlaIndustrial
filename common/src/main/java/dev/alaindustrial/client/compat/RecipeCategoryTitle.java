@@ -39,6 +39,18 @@ public final class RecipeCategoryTitle {
 		return Component.empty().append(blockName).append(": ").append(Component.translatable(modeKey));
 	}
 
+	/**
+	 * Title of the Canning Machine's category (MOD-383).
+	 *
+	 * <p>The one category here that is not named after a block or a machine mode: the machine has no
+	 * recipe {@link ModRecipes.Kind} at all, so {@link #of} cannot reach it, and its cards describe a
+	 * process ("Canning") rather than the block. Resolved here anyway so REI and JEI cannot end up
+	 * titling the same category differently — the exact drift this class was extracted to stop.
+	 */
+	public static Component canning() {
+		return Component.translatable("jei.alaindustrial.category.canning");
+	}
+
 	/** The lang key of the mode that works this family, or {@code null} if no mode claims it. */
 	@Nullable
 	private static String modeKeyOf(ModRecipes.Kind kind) {

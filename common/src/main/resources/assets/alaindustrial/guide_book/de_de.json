@@ -391,7 +391,7 @@
               "type": "stats",
               "title": "Werte",
               "lines": [
-                "Energy: 12 EU/т приём"
+                "Energy: 128 EU/т приём"
               ]
             },
             {
@@ -953,6 +953,45 @@
                 "minecraft:iron_ingot"
               ],
               "result_id": "alaindustrial:compressor",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "canning_machine",
+          "title": "Canning Machine",
+          "icon": "alaindustrial:canning_machine",
+          "block_id": "alaindustrial:canning_machine",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Canning Machine",
+              "text": "An LV machine that renders any food down to identical rations. Rations stack together no matter what they were made from, so a dozen slots of assorted scraps collapse into one."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energy: 200 EU/паёк",
+                "Puffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:tin_plate",
+                "minecraft:piston",
+                "alaindustrial:tin_plate",
+                "alaindustrial:tin_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:tin_plate",
+                "alaindustrial:tin_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tin_plate"
+              ],
+              "result_id": "alaindustrial:canning_machine",
               "result_count": 1
             }
           ]
@@ -2477,6 +2516,37 @@
           ]
         },
         {
+          "id": "mutation_chip_duplicate",
+          "title": "Duplication Chip",
+          "icon": "alaindustrial:mutation_chip_duplicate",
+          "block_id": "alaindustrial:mutation_chip_duplicate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Duplication Chip",
+              "text": "Three chips set the Incubator's mode — duplicate, transform or create. They are never consumed, but without one the machine will not start."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:amethyst_shard",
+                "alaindustrial:empty_chip",
+                "minecraft:amethyst_shard",
+                "",
+                "alaindustrial:uranium_plate",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:mutation_chip_duplicate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "advanced_circuit",
           "title": "Fortgeschrittene Schaltung",
           "icon": "alaindustrial:advanced_circuit",
@@ -2539,6 +2609,19 @@
           ]
         },
         {
+          "id": "resonant_shard",
+          "title": "Resonant Shard",
+          "icon": "alaindustrial:resonant_shard",
+          "block_id": "alaindustrial:resonant_shard",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Resonant Shard",
+              "text": "Materials only the Incubator yields: the four first rungs of the evolution ladders, plus depleted uranium and irradiated slag."
+            }
+          ]
+        },
+        {
           "id": "empty_chip",
           "title": "Leerer Chip",
           "icon": "alaindustrial:empty_chip",
@@ -2583,6 +2666,19 @@
           ]
         },
         {
+          "id": "energy_clot_i",
+          "title": "Energy Clot I",
+          "icon": "alaindustrial:energy_clot_i",
+          "block_id": "alaindustrial:energy_clot_i",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Energy Clot I",
+              "text": "Three tiers of clots — the grid's surplus, frozen solid by the Energy Condenser. The only ingredient overclockers are made of."
+            }
+          ]
+        },
+        {
           "id": "network_analyzer",
           "title": "Netzwerkanalysator",
           "icon": "alaindustrial:network_analyzer",
@@ -2609,6 +2705,37 @@
                 "minecraft:copper_ingot"
               ],
               "result_id": "alaindustrial:network_analyzer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_cloth",
+          "title": "Fluxweave Cloth",
+          "icon": "alaindustrial:fluxweave_cloth",
+          "block_id": "alaindustrial:fluxweave_cloth",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fluxweave Cloth",
+              "text": "The EU armour intermediates: thread is plated in the Galvanic Bath, four threads make one bolt of cloth — and cloth is what repairs the finished set."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:flux_thread",
+                "alaindustrial:flux_thread",
+                "",
+                "alaindustrial:flux_thread",
+                "alaindustrial:flux_thread",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_cloth",
               "result_count": 1
             }
           ]

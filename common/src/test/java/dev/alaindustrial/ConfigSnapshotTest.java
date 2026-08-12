@@ -228,6 +228,8 @@ class ConfigSnapshotTest {
 		SENTINELS.put("sawmillDuration", 130);
 		SENTINELS.put("polymerizerDuration", 333);
 		SENTINELS.put("vulcanizerDuration", 334);
+		SENTINELS.put("canningMachineDuration", 137);
+		SENTINELS.put("canningFoodValuePerCan", 181);
 		SENTINELS.put("distillationColumnDuration", 335);
 		SENTINELS.put("distillationColumnWarmupTicks", 336);
 		SENTINELS.put("galvanicBathDuration", 335);

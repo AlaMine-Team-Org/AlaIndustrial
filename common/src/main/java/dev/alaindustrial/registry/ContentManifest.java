@@ -6,7 +6,14 @@ import dev.alaindustrial.block.entity.AssemblerBlockEntity;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CesuBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
+import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
+import dev.alaindustrial.core.food.CanningMath;
+import dev.alaindustrial.menu.CanningMachineMenu;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.component.Consumable;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
@@ -175,6 +182,7 @@ public final class ContentManifest {
 			menu("electric_furnace", ElectricFurnaceMenu::new, s -> ModContent.ELECTRIC_FURNACE_MENU = s),
 			menu("extractor", ExtractorMenu::new, s -> ModContent.EXTRACTOR_MENU = s),
 			menu("compressor", CompressorMenu::new, s -> ModContent.COMPRESSOR_MENU = s),
+			menu("canning_machine", CanningMachineMenu::new, s -> ModContent.CANNING_MACHINE_MENU = s),
 			menu("sawmill", SawmillMenu::new, s -> ModContent.SAWMILL_MENU = s),
 			// MOD-275 — the assembler: blueprint queue, ghost pattern grid, six-slot output.
 			menu("assembler", AssemblerMenu::new, s -> ModContent.ASSEMBLER_MENU = s),
@@ -267,6 +275,7 @@ public final class ContentManifest {
 					.lightLevel(ModBlockProperties::litLight))),
 			Map.entry("extractor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("compressor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			Map.entry("canning_machine", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("sawmill", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			// MOD-064: the smelter glows through its crucible windows while melting, so it lights like
 			// the other machines with a lit front texture.
@@ -447,7 +456,7 @@ public final class ContentManifest {
 				"bronze_ingot", "cupronickel_ingot", "electrum_ingot", "invar_ingot",
 				"coal_dust", "copper_coil", "copper_dust", "copper_plate", "cotton_fiber",
 				"cotton_seeds", "depleted_uranium", "diamond_dust", "electronic_circuit",
-				"emerald_dust", "flux_thread", "fluxweave_cloth", "garden_drone", "gold_dust",
+				"emerald_dust", "empty_can", "flux_thread", "fluxweave_cloth", "garden_drone", "gold_dust",
 				"gold_gear", "gold_plate", "iron_dust", "iron_gear", "iron_plate",
 				"irradiated_diamond", "irradiated_slag", "lapis_dust", "mutagen_dust",
 				"nickel_dust", "nickel_ingot", "nickel_plate", "raw_nickel", "raw_rubber",
@@ -461,6 +470,36 @@ public final class ContentManifest {
 		// Battery (MOD-083): the stackable EU carrier. Charge is per item, so the stack size is what
 		// keeps stack transfers exact — see BatteryItem for why 16 and not 64.
 		defs.put("battery", p -> new BatteryItem(p.stacksTo(BatteryItem.MAX_STACK)));
+		// Canned Ration (MOD-383): the mod's first edible item, and the one place its food numbers are
+		// declared. Its nutrition is fixed no matter what went into the machine — that is precisely
+		// what lets every ration stack with every other one, which is the entire point of the machine
+		// (a ration that remembered its source would carry a different component and never merge).
+		// Its Consumable is built here rather than inherited from the source food, so effects like a
+		// golden apple's regeneration have nowhere to travel.
+		defs.put("canned_ration", p -> new Item(p.food(
+				new FoodProperties.Builder()
+						.nutrition(CanningMath.RATION_NUTRITION)
+						.saturationModifier(CanningMath.RATION_SATURATION_MODIFIER)
+						// Deliberately NOT alwaysEdible: a full player cannot eat this, exactly like every
+						// ordinary food. Being edible at a full bar was tried and dropped — it let the
+						// player top the hunger bar off at will, which is a power vanilla reserves for the
+						// golden apple, and it is not what this machine is for.
+						.build(),
+				Consumable.builder()
+						.consumeSeconds(CanningMath.RATION_CONSUME_SECONDS)
+						// DRINK rather than EAT: the drink pose tips the item up to the mouth, which is
+						// what eating straight out of a tin looks like — the eat pose holds it flat and
+						// reads as biting a loaf. The SOUND stays the ordinary eating one, so it is chewed
+						// like a steak while being held like a can.
+						.animation(ItemUseAnimation.DRINK)
+						.sound(SoundEvents.GENERIC_EAT)
+						// Vanilla's drink preset turns particles off; kept on here so bits still fly and
+						// the act reads as a meal rather than a swig.
+						.hasConsumeParticles(true)
+						// A metallic clink as the emptied tin is thrown away — the one cue that this was
+						// a can and not a bowl.
+						.soundAfterConsume(SoundEvents.ARMOR_EQUIP_IRON)
+						.build())));
 		// Upgrade chips (MOD-080): the blank and the mute upgrade, each with its hint lines.
 		defs.put("empty_chip", hintItem("empty_chip"));
 		defs.put("mute_chip", hintItem("mute_chip"));
@@ -573,6 +612,8 @@ public final class ContentManifest {
 			blockEntity("iron_furnace", IronFurnaceBlockEntity.class, IronFurnaceBlockEntity::new, "iron_furnace"),
 			blockEntity("extractor", ExtractorBlockEntity.class, ExtractorBlockEntity::new, "extractor"),
 			blockEntity("compressor", CompressorBlockEntity.class, CompressorBlockEntity::new, "compressor"),
+			blockEntity("canning_machine", CanningMachineBlockEntity.class, CanningMachineBlockEntity::new,
+					"canning_machine"),
 			blockEntity("sawmill", SawmillBlockEntity.class, SawmillBlockEntity::new, "sawmill"),
 			blockEntity("assembler", AssemblerBlockEntity.class, AssemblerBlockEntity::new, "assembler"),
 			blockEntity("polymerizer", PolymerizerBlockEntity.class, PolymerizerBlockEntity::new, "polymerizer"),

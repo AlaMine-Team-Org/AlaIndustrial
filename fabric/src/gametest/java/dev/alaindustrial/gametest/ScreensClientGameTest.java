@@ -82,6 +82,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // the whole tower — see placeScreenBlock.
             new Screen("distillation_column", "distillation_column", "Distillation Column"),
             new Screen("vulcanizer", "vulcanizer", "Vulcanizer"),
+            new Screen("canning_machine", "canning_machine", "Canning Machine"),
             new Screen("alloy_smelter", "alloy_smelter", "Alloy Smelter"),
             new Screen("galvanic_bath", "galvanic_bath", "Galvanic Bath"),
             new Screen("cesu", "cesu", "CESU"),

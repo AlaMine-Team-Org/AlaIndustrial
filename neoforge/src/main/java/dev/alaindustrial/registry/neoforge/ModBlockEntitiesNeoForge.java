@@ -10,6 +10,7 @@ import dev.alaindustrial.block.entity.ChargePadBlockEntity;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
+import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnSegmentBlockEntity;
@@ -105,6 +106,8 @@ public final class ModBlockEntitiesNeoForge {
 			register(ContentManifest.blockEntity("extractor", ExtractorBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CompressorBlockEntity>> COMPRESSOR =
 			register(ContentManifest.blockEntity("compressor", CompressorBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CanningMachineBlockEntity>> CANNING_MACHINE =
+			register(ContentManifest.blockEntity("canning_machine", CanningMachineBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SawmillBlockEntity>> SAWMILL =
 			register(ContentManifest.blockEntity("sawmill", SawmillBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AssemblerBlockEntity>> ASSEMBLER =
@@ -188,6 +191,7 @@ public final class ModBlockEntitiesNeoForge {
 		ModContent.IRON_FURNACE_BE = IRON_FURNACE::get;
 		ModContent.EXTRACTOR_BE = EXTRACTOR::get;
 		ModContent.COMPRESSOR_BE = COMPRESSOR::get;
+		ModContent.CANNING_MACHINE_BE = CANNING_MACHINE::get;
 		ModContent.SAWMILL_BE = SAWMILL::get;
 		ModContent.ASSEMBLER_BE = ASSEMBLER::get;
 		ModContent.POLYMERIZER_BE = POLYMERIZER::get;

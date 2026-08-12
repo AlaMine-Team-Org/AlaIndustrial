@@ -10,6 +10,7 @@ import dev.alaindustrial.block.entity.ChargePadBlockEntity;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
+import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnSegmentBlockEntity;
@@ -82,6 +83,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<IronFurnaceBlockEntity> IRON_FURNACE;
 	public static BlockEntityType<ExtractorBlockEntity> EXTRACTOR;
 	public static BlockEntityType<CompressorBlockEntity> COMPRESSOR;
+	public static BlockEntityType<CanningMachineBlockEntity> CANNING_MACHINE;
 	public static BlockEntityType<SawmillBlockEntity> SAWMILL;
 	public static BlockEntityType<AssemblerBlockEntity> ASSEMBLER;
 	public static BlockEntityType<PolymerizerBlockEntity> POLYMERIZER;
@@ -126,6 +128,7 @@ public final class ModBlockEntities {
 		IRON_FURNACE = register(ContentManifest.blockEntity("iron_furnace", IronFurnaceBlockEntity.class));
 		EXTRACTOR = register(ContentManifest.blockEntity("extractor", ExtractorBlockEntity.class));
 		COMPRESSOR = register(ContentManifest.blockEntity("compressor", CompressorBlockEntity.class));
+		CANNING_MACHINE = register(ContentManifest.blockEntity("canning_machine", CanningMachineBlockEntity.class));
 		SAWMILL = register(ContentManifest.blockEntity("sawmill", SawmillBlockEntity.class));
 		ASSEMBLER = register(ContentManifest.blockEntity("assembler", AssemblerBlockEntity.class));
 		POLYMERIZER = register(ContentManifest.blockEntity("polymerizer", PolymerizerBlockEntity.class));
@@ -171,6 +174,7 @@ public final class ModBlockEntities {
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ELECTRIC_FURNACE);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),EXTRACTOR);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),COMPRESSOR);
+			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),CANNING_MACHINE);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),SAWMILL);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ASSEMBLER);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),INCUBATOR);
@@ -209,6 +213,7 @@ public final class ModBlockEntities {
 		ModContent.IRON_FURNACE_BE = () -> IRON_FURNACE;
 		ModContent.EXTRACTOR_BE = () -> EXTRACTOR;
 		ModContent.COMPRESSOR_BE = () -> COMPRESSOR;
+		ModContent.CANNING_MACHINE_BE = () -> CANNING_MACHINE;
 		ModContent.SAWMILL_BE = () -> SAWMILL;
 		ModContent.ASSEMBLER_BE = () -> ASSEMBLER;
 		ModContent.POLYMERIZER_BE = () -> POLYMERIZER;

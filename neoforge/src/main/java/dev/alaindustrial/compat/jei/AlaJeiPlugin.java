@@ -3,6 +3,7 @@ package dev.alaindustrial.compat.jei;
 import dev.alaindustrial.client.compat.RecipeCategoryTitle;
 import dev.alaindustrial.client.screen.MachineScreen;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.client.compat.CanningExchange;
 import dev.alaindustrial.client.compat.MachineRecipeViewerTargets;
 import dev.alaindustrial.client.compat.RecipeViewerInfo;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
@@ -97,6 +98,10 @@ public final class AlaJeiPlugin implements IModPlugin {
 		Block column = ModBlocksNeoForge.DISTILLATION_COLUMN.get();
 		registration.addRecipeCategories(new FluidOutputJeiCategory(AlaJeiRecipeTypes.DISTILLING,
 				column, column.getName(), guiHelper));
+		// MOD-383: the canning machine. No recipe type at all — the cards are computed from the item
+		// registry (CanningExchange), so the title comes from its own lang key rather than a block name.
+		registration.addRecipeCategories(new CanningJeiCategory(AlaJeiRecipeTypes.CANNING,
+				ModBlocksNeoForge.CANNING_MACHINE.get(), RecipeCategoryTitle.canning(), guiHelper));
 	}
 
 	@Override
@@ -129,6 +134,11 @@ public final class AlaJeiPlugin implements IModPlugin {
 		Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI recipe(s) for {}", distilling.size(),
 				ModRecipes.DISTILLING.id());
 		registration.addRecipes(AlaJeiRecipeTypes.DISTILLING, distilling);
+		// MOD-383: one canning card per accepted food, derived from the (by now frozen) item registry
+		// rather than from the recipe map — this machine has no recipes to collect.
+		List<CanningExchange.Card> canning = CanningExchange.cards();
+		Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI canning card(s)", canning.size());
+		registration.addRecipes(AlaJeiRecipeTypes.CANNING, canning);
 		// Informational pages (MOD-043): for blocks/items with no crafting recipe — the solar panel
 		// evolution line today — JEI's built-in ingredient info gives a paginated, auto-wrapping page.
 		// Title + lines come from the same loader-neutral source the Fabric REI integration uses.
@@ -163,6 +173,9 @@ public final class AlaJeiPlugin implements IModPlugin {
 		// MOD-251: the distillation column performs the distilling family.
 		registration.addCraftingStation(AlaJeiRecipeTypes.DISTILLING,
 				(ItemLike) ModBlocksNeoForge.DISTILLATION_COLUMN.get());
+		// MOD-383: the canning machine works its own (recipe-less) category.
+		registration.addCraftingStation(AlaJeiRecipeTypes.CANNING,
+				(ItemLike) ModBlocksNeoForge.CANNING_MACHINE.get());
 		// MOD-076: the electric furnace also performs vanilla smelting — ElectricFurnaceBlockEntity
 		// falls back to RecipeType.SMELTING when no alaindustrial:smelting recipe matches — so it is a
 		// crafting station for JEI's built-in minecraft:smelting category too (ore smelting,
@@ -235,6 +248,14 @@ public final class AlaJeiPlugin implements IModPlugin {
 					target.screenClass(),
 					rect.x(), rect.y(), rect.width(), rect.height(),
 					AlaJeiRecipeTypes.ALLOYING);
+		}
+		// MOD-383: the canning machine has no recipe kind, so its target list carries only the hitbox.
+		for (MachineRecipeViewerTargets.CanningTarget target : MachineRecipeViewerTargets.CANNING_ALL) {
+			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
+			registration.addRecipeClickArea(
+					target.screenClass(),
+					rect.x(), rect.y(), rect.width(), rect.height(),
+					AlaJeiRecipeTypes.CANNING);
 		}
 		// MOD-080: keep JEI's item grid clear of the upgrade panel + gear tab on every machine screen.
 		registration.addGuiContainerHandler((Class) MachineScreen.class, new AlaJeiGuiExtraAreasHandler());

@@ -100,6 +100,7 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.ELECTRIC_FURNACE_MENU.get(), ElectricFurnaceScreen::new),
 			screen(() -> ModContent.EXTRACTOR_MENU.get(), ExtractorScreen::new),
 			screen(() -> ModContent.COMPRESSOR_MENU.get(), CompressorScreen::new),
+			screen(() -> ModContent.CANNING_MACHINE_MENU.get(), CanningMachineScreen::new),
 			screen(() -> ModContent.SAWMILL_MENU.get(), SawmillScreen::new),
 			screen(() -> ModContent.ASSEMBLER_MENU.get(), AssemblerScreen::new),
 			screen(() -> ModContent.INCUBATOR_MENU.get(), IncubatorScreen::new),

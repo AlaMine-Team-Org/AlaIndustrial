@@ -1,19 +1,22 @@
-## 0.1.87
+## 0.1.88
 
-<p><img alt="Ala Industrial fix patch banner" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.87/release-media/v0.1.87/changelog.jpeg" width="720"></p>
+<p><img alt="Canning Machine turning assorted food into stacked rations" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.88/release-media/v0.1.88/changelog.webp" width="720"></p>
 
-A fix release: the Compressor finally has a sound, machine hums no longer break on the first world load, and two tools stopped eating your right-clicks.
+Food finally gets an industrial answer: one machine turns a drawer of leftovers into a single stack.
 
 ### New
 
-- **The Compressor has a sound.** A dull mechanical thump while it presses, silence when it idles. The Mute Chip quiets it like any other machine.
+- **Canning Machine — any food in, identical rations out.** Berries, bread, carrots, harvest
+  scraps: a dozen slots collapse into one.
+- **Rations always stack together**, whatever they were made from. That is the whole point.
+- **Empty cans** are crafted from tin plates and a glass pane, so tin finally has something to
+  spend itself on.
 
-### Fixed
+### Good to know
 
-- **Machine hums no longer break on the first world load.** A machine heard in the first seconds after a world loads used to sound ragged and broken up, then play fine after a rejoin. Fixed for every machine whose hum can greet you on the way in — macerator, generator, electric furnace, extractor, compressor, solar panels, water mill and the garden drone.
-- **A flat Electric Drill no longer wastes your right-click.** With torches in your inventory, a drill out of charge swallowed the click even where a torch could not have gone anyway, so your off-hand item never fired. Where a torch can actually go, it still tells you the drill needs charging.
-- **Diamond-tipped tools can be enchanted again**, and a flat Electric Hoe no longer eats a right-click on a block it cannot till.
-
-### Improved
-
-- **Guide site:** four new item pages — energy clots, mutation chips, flux thread and cloth, and the incubator's mutation products — plus corrected numbers and cleaner text in every language.
+- A ration restores 8 hunger but does not hold you for long, and it is quicker to eat than
+  ordinary food.
+- Rich food buys more rations than scraps, and canning always costs a little value — it is a
+  convenience, not free food.
+- Side effects are lost in processing: a canned golden apple only feeds you.
+- Hazardous food is refused — raw chicken, rotten flesh, poisonous potato, pufferfish, spider eye.

@@ -157,6 +157,8 @@ public final class ModItems {
 	public static final Item COAL_DUST = manifestItem("coal_dust");
 	public static final Item DIAMOND_DUST = manifestItem("diamond_dust");
 	public static final Item EMERALD_DUST = manifestItem("emerald_dust");
+	public static final Item EMPTY_CAN = manifestItem("empty_can");
+	public static final Item CANNED_RATION = manifestItem("canned_ration");
 	public static final Item LAPIS_DUST = manifestItem("lapis_dust");
 	public static final Item TIN_DUST = manifestItem("tin_dust");
 	public static final Item RAW_TIN = manifestItem("raw_tin");
@@ -277,6 +279,7 @@ public final class ModItems {
 	public static final BlockItem ELECTRIC_FURNACE_ITEM = blockItem("electric_furnace", ModBlocks.ELECTRIC_FURNACE);
 	public static final BlockItem EXTRACTOR_ITEM = blockItem("extractor", ModBlocks.EXTRACTOR);
 	public static final BlockItem COMPRESSOR_ITEM = blockItem("compressor", ModBlocks.COMPRESSOR);
+	public static final BlockItem CANNING_MACHINE_ITEM = blockItem("canning_machine", ModBlocks.CANNING_MACHINE);
 	public static final BlockItem SAWMILL_ITEM = blockItem("sawmill", ModBlocks.SAWMILL);
 	public static final BlockItem ASSEMBLER_ITEM = blockItem("assembler", ModBlocks.ASSEMBLER);
 	public static final BlockItem POLYMERIZER_ITEM = blockItem("polymerizer", ModBlocks.POLYMERIZER);
@@ -775,6 +778,8 @@ public final class ModItems {
 		ModContent.COAL_DUST = () -> COAL_DUST;
 		ModContent.DIAMOND_DUST = () -> DIAMOND_DUST;
 		ModContent.EMERALD_DUST = () -> EMERALD_DUST;
+		ModContent.EMPTY_CAN = () -> EMPTY_CAN;
+		ModContent.CANNED_RATION = () -> CANNED_RATION;
 		ModContent.LAPIS_DUST = () -> LAPIS_DUST;
 		ModContent.TIN_DUST = () -> TIN_DUST;
 		ModContent.RAW_TIN = () -> RAW_TIN;
@@ -862,6 +867,7 @@ public final class ModItems {
 		ModContent.ELECTRIC_FURNACE_ITEM = () -> ELECTRIC_FURNACE_ITEM;
 		ModContent.EXTRACTOR_ITEM = () -> EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = () -> COMPRESSOR_ITEM;
+		ModContent.CANNING_MACHINE_ITEM = () -> CANNING_MACHINE_ITEM;
 		ModContent.SAWMILL_ITEM = () -> SAWMILL_ITEM;
 		ModContent.ASSEMBLER_ITEM = () -> ASSEMBLER_ITEM;
 		ModContent.POLYMERIZER_ITEM = () -> POLYMERIZER_ITEM;

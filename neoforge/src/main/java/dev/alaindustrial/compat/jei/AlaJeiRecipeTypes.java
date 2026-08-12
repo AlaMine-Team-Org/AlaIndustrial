@@ -1,12 +1,14 @@
 package dev.alaindustrial.compat.jei;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.client.compat.CanningExchange;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.AlloyingRecipe;
 import dev.alaindustrial.recipe.FluidOutputRecipe;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
 import dev.alaindustrial.registry.ModRecipes;
 import mezz.jei.api.recipe.types.IRecipeHolderType;
+import mezz.jei.api.recipe.types.IRecipeType;
 
 final class AlaJeiRecipeTypes {
 	static final IRecipeHolderType<AlaProcessingRecipe> MACERATION =
@@ -49,6 +51,15 @@ final class AlaJeiRecipeTypes {
 	 */
 	static final IRecipeHolderType<FluidOutputRecipe> DISTILLING =
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.DISTILLING.id()));
+
+	/**
+	 * The Canning Machine (MOD-383). The one viewer type here that is NOT an {@link IRecipeHolderType}:
+	 * the machine matches no JSON recipe, so there is no {@code Recipe} class to hold. Its cards are
+	 * {@link CanningExchange.Card} records derived from the item registry, and
+	 * {@link IRecipeType#create(net.minecraft.resources.Identifier, Class)} accepts any POJO.
+	 */
+	static final IRecipeType<CanningExchange.Card> CANNING =
+			IRecipeType.create(Industrialization.id("canning"), CanningExchange.Card.class);
 
 	private AlaJeiRecipeTypes() {
 	}

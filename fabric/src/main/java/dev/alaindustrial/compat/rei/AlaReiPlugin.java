@@ -3,6 +3,7 @@ package dev.alaindustrial.compat.rei;
 import dev.alaindustrial.client.compat.RecipeCategoryTitle;
 import dev.alaindustrial.client.screen.MachineScreen;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.client.compat.CanningExchange;
 import dev.alaindustrial.client.compat.MachineRecipeViewerTargets;
 import dev.alaindustrial.client.compat.RecipeViewerInfo;
 import dev.alaindustrial.registry.ModBlocks;
@@ -113,6 +114,10 @@ public class AlaReiPlugin implements REIClientPlugin {
 		// MOD-064: the alloy smelter's multi-component family. One category, its own display type.
 		registry.add(new AlloyingCategory(ModBlocks.ALLOY_SMELTER, ModBlocks.ALLOY_SMELTER.getName()));
 		registry.addWorkstations(AlloyingDisplay.CATEGORY, EntryStacks.of(ModBlocks.ALLOY_SMELTER));
+		// MOD-383: the canning machine. No recipe type at all — the cards are computed from the item
+		// registry (CanningExchange), so the title comes from its own lang key rather than a block name.
+		registry.add(new CanningCategory(ModBlocks.CANNING_MACHINE, RecipeCategoryTitle.canning()));
+		registry.addWorkstations(CanningDisplay.CATEGORY, EntryStacks.of(ModBlocks.CANNING_MACHINE));
 		// Informational category: the T2 solar branches (and future evolution lines) with no crafting
 		// recipe. The base solar_panel is craftable, so it is intentionally not linked here.
 		registry.add(new AlaInfoCategory());
@@ -131,6 +136,11 @@ public class AlaReiPlugin implements REIClientPlugin {
 		// recipe card has room for.
 		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.mutationGradeEntries()) {
 			registry.add(new AlaInfoDisplay(entry));
+		}
+		// MOD-383: one canning card per accepted food. Also pure client-side data — the sweep over the
+		// (by now frozen) item registry happens on the first call, here.
+		for (CanningExchange.Card card : CanningExchange.cards()) {
+			registry.add(new CanningDisplay(card));
 		}
 	}
 
@@ -183,6 +193,11 @@ public class AlaReiPlugin implements REIClientPlugin {
 		for (MachineRecipeViewerTargets.AlloyTarget target : MachineRecipeViewerTargets.ALLOY_ALL) {
 			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
 			registerClickArea(registry, target.screenClass(), rect, AlloyingDisplay.CATEGORY);
+		}
+		// MOD-383: the canning machine has no recipe kind, so its target list carries only the hitbox.
+		for (MachineRecipeViewerTargets.CanningTarget target : MachineRecipeViewerTargets.CANNING_ALL) {
+			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
+			registerClickArea(registry, target.screenClass(), rect, CanningDisplay.CATEGORY);
 		}
 		// MOD-080: keep REI's item grid clear of the upgrade panel + gear tab on every machine screen.
 		registry.exclusionZones().register((Class) MachineScreen.class, new AlaReiExclusionZones());

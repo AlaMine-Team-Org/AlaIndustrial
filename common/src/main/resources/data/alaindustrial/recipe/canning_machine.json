@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "P": "minecraft:piston",
+    "T": "alaindustrial:tin_plate",
+    "M": "alaindustrial:machine_casing",
+    "E": "alaindustrial:electronic_circuit"
+  },
+  "pattern": [
+    "TPT",
+    "TMT",
+    "TET"
+  ],
+  "result": {
+    "id": "alaindustrial:canning_machine"
+  }
+}

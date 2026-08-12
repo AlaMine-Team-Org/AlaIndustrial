@@ -581,6 +581,14 @@ public final class Config {
 	/** Vulcanizer (MOD-258): ticks per operation at 1.0 speed. The shipped recipe costs 400 EU, so at
 	 * the ordinary-machine rate of 2 EU/t the operation takes 200 ticks at every heat tier. */
 	public static int vulcanizerDuration = 200;
+	/** Ticks the canning machine spends pressing one ration; × machineEuPerTick = 200 EU per ration. */
+	public static int canningMachineDuration = 100;
+	/**
+	 * Food value, in tenths of a point, that one ration costs (MOD-383). Must stay above the ration's
+	 * own value of 96 — that gap is the processing loss, and it is the only thing standing between
+	 * this machine and a food duplicator.
+	 */
+	public static int canningFoodValuePerCan = 120;
 	/** Distillation Column (MOD-251): fallback ticks per distillation at 1.0 speed. The shipped recipe
 	 * costs 400 EU, so at the ordinary-machine rate of 2 EU/t one run takes 200 ticks — deliberately
 	 * the Polymerizer's exact tier: both turn one bucket of pumped crude into product. */
@@ -1273,6 +1281,10 @@ public final class Config {
 				() -> polymerizerDuration, v -> polymerizerDuration = v, 1),
 			new IntField("vulcanizerDuration", "Fallback ticks a vulcanizer operation takes at 1.0 speed; shipped recipe energy 400 / machineEuPerTick 2 = 200.",
 				() -> vulcanizerDuration, v -> vulcanizerDuration = v, 1),
+			new IntField("canningMachineDuration", "Ticks the canning machine takes per ration at 1.0 speed; x machineEuPerTick 2 = 200 EU per ration.",
+				() -> canningMachineDuration, v -> canningMachineDuration = v, 1),
+			new IntField("canningFoodValuePerCan", "Food value in tenths (nutrition + saturation) the canning machine consumes per ration. Must exceed the ration's own 96, or canning becomes a food duplicator.",
+				() -> canningFoodValuePerCan, v -> canningFoodValuePerCan = v, 97),
 			new IntField("distillationColumnDuration", "Fallback ticks one distillation takes at 1.0 speed; shipped recipe energy 400 / machineEuPerTick 2 = 200.",
 				() -> distillationColumnDuration, v -> distillationColumnDuration = v, 1),
 			new IntField("distillationColumnWarmupTicks", "Ticks a cold distillation column heats (at machineEuPerTick) before it can distil; cooling is twice as slow.",

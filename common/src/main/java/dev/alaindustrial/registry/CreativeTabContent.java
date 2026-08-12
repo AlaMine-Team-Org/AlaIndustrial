@@ -121,6 +121,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.NICKEL_DUST.get());
 		out.accept(ModContent.SULFUR_DUST.get());
 		out.accept(ModContent.URANIUM_DUST.get());
+		out.accept(ModContent.EMPTY_CAN.get());
 		plates(out);
 		out.accept(ModContent.ELECTRONIC_CIRCUIT.get());
 		// MOD-299 — the MV tier of the circuit, listed right after its LV predecessor.
@@ -205,6 +206,7 @@ public final class CreativeTabContent {
 		out.accept(ModContent.IRON_FURNACE_ITEM.get());
 		out.accept(ModContent.EXTRACTOR_ITEM.get());
 		out.accept(ModContent.COMPRESSOR_ITEM.get());
+		out.accept(ModContent.CANNING_MACHINE_ITEM.get());
 		out.accept(ModContent.SAWMILL_ITEM.get());
 		out.accept(ModContent.INCUBATOR_ITEM.get());
 		out.accept(ModContent.PUMP_ITEM.get());
@@ -272,6 +274,11 @@ public final class CreativeTabContent {
 		out.accept(ModContent.RAW_URANIUM.get());
 		out.accept(ModContent.URANIUM_DUST.get());
 		out.accept(ModContent.URANIUM_INGOT.get());
+		// Canning line (MOD-383): the tin can and what the machine fills it with. They sit with the
+		// materials rather than in a food group because the mod has no food tab — the ration is the
+		// first edible item here.
+		out.accept(ModContent.EMPTY_CAN.get());
+		out.accept(ModContent.CANNED_RATION.get());
 		// MOD-064 alloys: made from the metals above rather than mined, so they close the list.
 		out.accept(ModContent.BRONZE_INGOT.get());
 		out.accept(ModContent.INVAR_INGOT.get());

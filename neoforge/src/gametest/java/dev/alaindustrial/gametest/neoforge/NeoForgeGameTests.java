@@ -35,6 +35,7 @@ import dev.alaindustrial.gametest.MagnetScenarios;
 import dev.alaindustrial.gametest.OilScenarios;
 import dev.alaindustrial.gametest.FluxweaveArmorScenarios;
 import dev.alaindustrial.gametest.AlloySmelterScenarios;
+import dev.alaindustrial.gametest.CanningMachineScenarios;
 import dev.alaindustrial.gametest.GalvanicBathScenarios;
 import dev.alaindustrial.gametest.DistillationColumnScenarios;
 import dev.alaindustrial.gametest.PolymerizerScenarios;
@@ -1145,6 +1146,37 @@ public final class NeoForgeGameTests {
 		// AlloySmelterGameTest suite. The rule worth the most here is FUN02: this is the mod's only
 		// machine whose inputs are matched as an unordered multiset, so a regression to a positional
 		// compare would leave FUN01 green and show up only there.
+		// Canning Machine (MOD-383). Registered by hand and deliberately: nothing gates this lane the
+		// way gametest_check.py gates fabric.mod.json, so a scenario missing from here simply never
+		// runs on NeoForge and verifyAll stays green about it.
+		registerTest(event, "canning_machine_food_becomes_ration", 400, true,
+				CanningMachineScenarios::fun01FoodBecomesRation);
+		registerTest(event, "canning_machine_rations_from_different_foods_stack", 600, true,
+				CanningMachineScenarios::fun02RationsFromDifferentFoodsStack);
+		registerTest(event, "canning_machine_rich_food_yields_more", 1200, true,
+				CanningMachineScenarios::fun03RichFoodYieldsMoreRations);
+		registerTest(event, "canning_machine_no_cans_means_food_untouched", 600, true,
+				CanningMachineScenarios::con01NoCansMeansFoodUntouched);
+		registerTest(event, "canning_machine_no_power_no_output", 600, true,
+				CanningMachineScenarios::con02NoPowerNoOutput);
+		registerTest(event, "canning_machine_full_output_jams", 600, true,
+				CanningMachineScenarios::con03FullOutputJams);
+		registerTest(event, "canning_machine_hazardous_food_refused", 200, true,
+				CanningMachineScenarios::reg01HazardousFoodRefused);
+		registerTest(event, "canning_machine_ration_refused_as_input", 200, true,
+				CanningMachineScenarios::reg02RationRefusedAsInput);
+		registerTest(event, "canning_machine_non_food_refused", 200, true,
+				CanningMachineScenarios::reg03NonFoodRefused);
+		registerTest(event, "canning_machine_value_strictly_decreases", 1200, true,
+				CanningMachineScenarios::dup01ValueStrictlyDecreases);
+		registerTest(event, "canning_machine_buffer_survives_reload", 400, true,
+				CanningMachineScenarios::per01BufferSurvivesReload);
+		registerTest(event, "canning_machine_ration_feeds_exactly", 200, true,
+				CanningMachineScenarios::eat01RationFeedsExactly);
+		registerTest(event, "canning_machine_full_player_cannot_eat", 200, true,
+				CanningMachineScenarios::eat02FullPlayerCannotEat);
+		registerTest(event, "canning_machine_no_side_effects_carried", 200, true,
+				CanningMachineScenarios::eat03NoSideEffectsCarried);
 		registerTest(event, "alloy_smelter_bronze_is_smelted", 400, true,
 				AlloySmelterScenarios::fun01BronzeIsSmelted);
 		registerTest(event, "alloy_smelter_order_does_not_matter", 400, true,

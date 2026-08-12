@@ -81,6 +81,7 @@
 			"dev.alaindustrial.gametest.DistillationColumnGameTest",
 			"dev.alaindustrial.gametest.GalvanicBathGameTest",
 			"dev.alaindustrial.gametest.AlloySmelterGameTest",
+			"dev.alaindustrial.gametest.CanningMachineGameTest",
 			"dev.alaindustrial.gametest.FluxweaveArmorGameTest",
 			"dev.alaindustrial.gametest.VulcanizerGameTest",
 			"dev.alaindustrial.gametest.ChargePadGameTest"

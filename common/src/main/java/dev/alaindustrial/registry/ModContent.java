@@ -4,6 +4,7 @@ import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.menu.EnergyCondenserMenu;
 import dev.alaindustrial.menu.CesuMenu;
+import dev.alaindustrial.menu.CanningMachineMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import dev.alaindustrial.menu.DistillationColumnMenu;
@@ -132,6 +133,7 @@ public final class ModContent {
 	public static Supplier<Block> ELECTRIC_FURNACE = unbound("ELECTRIC_FURNACE");
 	public static Supplier<Block> EXTRACTOR = unbound("EXTRACTOR");
 	public static Supplier<Block> COMPRESSOR = unbound("COMPRESSOR");
+	public static Supplier<Block> CANNING_MACHINE = unbound("CANNING_MACHINE");
 	public static Supplier<Block> SAWMILL = unbound("SAWMILL");
 	/** MOD-275 — the first MV machine: stamps crafting-table recipes from blueprints. */
 	public static Supplier<Block> ASSEMBLER = unbound("ASSEMBLER");
@@ -274,6 +276,8 @@ public final class ModContent {
 	public static Supplier<Item> COAL_DUST = unbound("COAL_DUST");
 	public static Supplier<Item> DIAMOND_DUST = unbound("DIAMOND_DUST");
 	public static Supplier<Item> EMERALD_DUST = unbound("EMERALD_DUST");
+	public static Supplier<Item> EMPTY_CAN = unbound("EMPTY_CAN");
+	public static Supplier<Item> CANNED_RATION = unbound("CANNED_RATION");
 	public static Supplier<Item> LAPIS_DUST = unbound("LAPIS_DUST");
 	public static Supplier<Item> TIN_DUST = unbound("TIN_DUST");
 	public static Supplier<Item> RAW_TIN = unbound("RAW_TIN");
@@ -415,6 +419,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> ELECTRIC_FURNACE_ITEM = unbound("ELECTRIC_FURNACE_ITEM");
 	public static Supplier<BlockItem> EXTRACTOR_ITEM = unbound("EXTRACTOR_ITEM");
 	public static Supplier<BlockItem> COMPRESSOR_ITEM = unbound("COMPRESSOR_ITEM");
+	public static Supplier<BlockItem> CANNING_MACHINE_ITEM = unbound("CANNING_MACHINE_ITEM");
 	public static Supplier<BlockItem> SAWMILL_ITEM = unbound("SAWMILL_ITEM");
 	public static Supplier<BlockItem> ASSEMBLER_ITEM = unbound("ASSEMBLER_ITEM");
 	public static Supplier<BlockItem> POLYMERIZER_ITEM = unbound("POLYMERIZER_ITEM");
@@ -480,6 +485,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> ELECTRIC_FURNACE_BE = unbound("ELECTRIC_FURNACE_BE");
 	public static Supplier<BlockEntityType<?>> EXTRACTOR_BE = unbound("EXTRACTOR_BE");
 	public static Supplier<BlockEntityType<?>> COMPRESSOR_BE = unbound("COMPRESSOR_BE");
+	public static Supplier<BlockEntityType<?>> CANNING_MACHINE_BE = unbound("CANNING_MACHINE_BE");
 	public static Supplier<BlockEntityType<?>> SAWMILL_BE = unbound("SAWMILL_BE");
 	public static Supplier<BlockEntityType<?>> ASSEMBLER_BE = unbound("ASSEMBLER_BE");
 	public static Supplier<BlockEntityType<?>> POLYMERIZER_BE = unbound("POLYMERIZER_BE");
@@ -518,6 +524,7 @@ public final class ModContent {
 	public static Supplier<MenuType<ElectricFurnaceMenu>> ELECTRIC_FURNACE_MENU = unbound("ELECTRIC_FURNACE_MENU");
 	public static Supplier<MenuType<ExtractorMenu>> EXTRACTOR_MENU = unbound("EXTRACTOR_MENU");
 	public static Supplier<MenuType<CompressorMenu>> COMPRESSOR_MENU = unbound("COMPRESSOR_MENU");
+	public static Supplier<MenuType<CanningMachineMenu>> CANNING_MACHINE_MENU = unbound("CANNING_MACHINE_MENU");
 	public static Supplier<MenuType<SawmillMenu>> SAWMILL_MENU = unbound("SAWMILL_MENU");
 	public static Supplier<MenuType<AssemblerMenu>> ASSEMBLER_MENU = unbound("ASSEMBLER_MENU");
 	public static Supplier<MenuType<PolymerizerMenu>> POLYMERIZER_MENU = unbound("POLYMERIZER_MENU");
