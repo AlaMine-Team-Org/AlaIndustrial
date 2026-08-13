@@ -343,24 +343,24 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
-<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="13 pages">13</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <a class="cat-link active" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="10 pages">10</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="11 pages">11</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="19 pages">19</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="19 pages">19</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -385,7 +385,7 @@
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>consumer with buffer</td></tr><tr><td>Buffer (EU/FE)</td><td>4000</td></tr><tr><td>Max input (EU/FE/tick)</td><td>32 (LV)</td></tr><tr><td>Max output (EU/FE/tick)</td><td>n/a (does not emit)</td></tr><tr><td>EU/FE per action</td><td><strong>8</strong></td></tr></tbody></table>
 
-<p>The station connects to the energy network like any consumer, on all its working faces. EU/FE is spent <strong>only for a completed action</strong> — tilling, planting, fertilizing, or harvesting one tile — following the <a href="../machines/electric_heater.html">Electric Heater</a> pattern: idling (nothing to do in the zone — out of seeds/fertilizer, or every tile already tended) costs 0 EU/FE, and the station goes into idle-sleep via <code>MachineBlockEntity.onServerTick</code> instead of wasting energy or becoming a parasitic sink on the network.</p>
+<p>The station connects to the energy network like any consumer, on all its working faces. EU/FE is spent <strong>only for a completed action</strong> — tilling, planting, fertilizing, or harvesting one tile — following the <a href="../machines/electric_heater.html">Electric Heater</a> pattern: idling (nothing to do in the zone — out of seeds/fertilizer, or every tile already tended) costs 0 EU/FE, and the station goes into idle sleep instead of wasting energy or becoming a parasitic sink on the network.</p>
 
 <h2>Processing</h2>
 
@@ -440,10 +440,6 @@
 <h2>Progression</h2>
 
 <p>Tier: LV. Power: any LV source, e.g. <a href="../generators/generator.html">Generator</a>. Supersedes (no code): "Crop Matron" and "Crop Harvester" one block instead of two stationary ones with the same outcome. Requires: an electronic circuit to craft, like most of the mod's LV machines.</p>
-
-<h2>Balance</h2>
-
-<p>A 4000 EU/FE buffer and a 32 EU/FE/tick (LV) intake — matched to the <a href="../fluid-machines/pump.html">Pump</a> (= 4000) and the Electromagnet (= 5000): the station belongs to the same class of "EU/FE-costed zone scanner", not a one-off expensive operation like an Incubator mutation. The 8 EU/FE per-action cost sits near the Electromagnet's per-item cost (= 2), adjusted upward because a station action is more involved than pulling one item — it mutates a world block, not just moves an item. A radius of 9 rather than 5 (like ) reflects the intended UX ("the player places the station next to the farm") — the station sits at the farm's edge, not its center, and 8 would fall one tile short of a 9×9 plot's far corner. The 20-tick cache-rebuild interval matches the mod's established cadence for zone scanners (/). All numbers are starting values for balance tuning, not copied from another mod.</p>
 
 <h2>Related</h2>
 

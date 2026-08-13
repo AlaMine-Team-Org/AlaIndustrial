@@ -343,24 +343,24 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
-<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="13 pages">13</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="10 pages">10</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="11 pages">11</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="19 pages">19</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="19 pages">19</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -393,6 +393,14 @@
 
 <p>A normal container window — no energy or progress bars, just the storage grid and your inventory below it.</p>
 
+<h2>Double Chest</h2>
+
+<p>Two silver chests placed side by side, facing the same way, <strong>merge into one double chest of 90 slots</strong> — following the vanilla placement rules exactly: without sneaking the new chest joins a matching neighbour automatically, sneak-clicking the side of a lone neighbour attaches to it deliberately, and sneak-placing elsewhere keeps it single. Different tiers never merge.</p>
+
+<p><strong>The double's window</strong> shows 6 rows; the rest are reached with the scrollbar on the right (like the storage module's warehouse window). Shift-click reaches the hidden rows too. <strong>Lid and sound are shared</strong>: both halves lift the lid together and the opening sound plays once, from the seam. <strong>Automation sees the double as one container</strong>: a hopper, dropper or item pipe that hits a full half continues into the other. <strong>Breaking one half</strong> reverts the other to a single chest; each half spills only its own contents. An open double window closes when either half is broken. A stock display frame on either half shows the combined total.</p>
+
+<p>Along with the doubles, every tier gained two vanilla conveniences: a <strong>comparator</strong> reads the chest's fullness (a double reads combined, the same from either half), and the chest can be <strong>waterlogged</strong> like a vanilla one.</p>
+
 <h2>Block Properties</h2>
 
 <p>A short chest block (like all vanilla chests). Any pickaxe breaks it; it drops itself and spills its contents.</p>
@@ -405,7 +413,7 @@
 
 <h2>Progression</h2>
 
-<p>The chest line goes: vanilla copper chest (27) → <a href="iron_chest.html">Iron Chest</a> (36) → <strong>Silver Chest (45)</strong> → <a href="gold_chest.html">Gold Chest</a> (54). The diamond chest isn't in the mod yet.</p>
+<p>The chest line goes: vanilla copper chest (27) → <a href="iron_chest.html">Iron Chest</a> (36) → <strong>Silver Chest (45)</strong> → <a href="gold_chest.html">Gold Chest</a> (54) → <a href="electrum_chest.html">Electrum Chest</a> (81).</p>
 
 <h2>Related</h2>
 

@@ -343,24 +343,24 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
-<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="13 pages">13</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="10 pages">10</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="11 pages">11</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="19 pages">19</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="19 pages">19</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -398,6 +398,8 @@
 <p><strong>How long it takes.</strong> Don't be fooled by the 128: the pace is limited <strong>not only</strong> by the station but by how fast each item can take charge — 32 EU/FE/t. So 128 EU/FE/t is only ever reached with <strong>four items charging at once</strong>; a single item always draws its own 32 EU/FE/t no matter how much the station offers.</p>
 
 <p><strong>Everything charges at once.</strong> The station splits its output between every item that needs charge rather than serving them in turn: a full set of armour fills together instead of two pieces at a time. The more you are carrying, the slower each piece goes — the station's total rate does not change with their number.</p>
+
+<p><strong>Charge arrives in batches.</strong> The station credits you not every tick but four times a second, handing over what accrued in between. The speed is unchanged — the same amount per second — but the charge bar updates less often. This is for the game's sake: every credit rewrites the item and re-sends the slot to your client, and at twenty credits a second that read as a stuttering inventory. The first credit lands the moment you step onto the plate, so there is no delay at the start.</p>
 
 <p>Which means the time by the biggest thing in your loadout, not by the size of the station's buffer.</p>
 
@@ -452,12 +454,6 @@
 <table><thead><tr><th></th><th></th><th></th></tr></thead><tbody><tr><td>Copper Cable</td><td>Copper Cable</td><td>Copper Cable</td></tr><tr><td>Iron Plate</td><td>Battery</td><td>Iron Plate</td></tr><tr><td>Iron Plate</td><td>Electronic Circuit</td><td>Iron Plate</td></tr></tbody></table>
 
 <p>The copper cables on top are the charging coil, the battery at the centre sets the buffer, and the circuit runs the distribution.</p>
-
-<h2>Balance</h2>
-
-<p>The station is deliberately <strong>no faster</strong> than a machine's charge slot for a single item: a Battery Box slot gives that item the same 32 EU/FE/t. What the station buys you is that it serves <strong>everything at once</strong> and needs no clicks at all. It is convenience, not speed.</p>
-
-<p>Its buffer (20,000 EU/FE) matches the <a href="battery_box.html">Battery Box</a> — the station is essentially a small personal store that spends itself on the player instead of on machines.</p>
 
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="charging station alaindustrial:charge_pad" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="32" height="32"></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="32" height="32"></div> <div class="cell" title="Copper Cable"><img src="../assets/item/copper_cable_3d.png" alt="Copper Cable" width="32" height="32"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Battery"><img src="../assets/item/battery_3d.png" alt="Battery" width="32" height="32"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Electronic Circuit"><img src="../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Any Iron Plate"><img src="../assets/item/iron_plate_3d.png" alt="Any Iron Plate" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Charging Station"><img src="../assets/item/charge_pad_3d.png" alt="Charging Station" width="32" height="32"></div><div class="result-name">Charging Station</div></div></div></div></div>

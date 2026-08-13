@@ -343,24 +343,24 @@
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="3 pages">3</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="12 pages">12</span></a>
-<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="13 pages">13</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="13 pages">13</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="10 pages">10</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="11 pages">11</span></a>
 <div class="group-title">Items</div>
-<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="1 page">1</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="15 pages">15</span></a>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="19 pages">19</span></a>
 <a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="19 pages">19</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -389,7 +389,7 @@
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Role</td><td>convenience item with an EU/FE buffer: a consumer at a charger</td></tr><tr><td>Buffer</td><td>5,000 EU/FE</td></tr><tr><td>Charging</td><td>Battery Box slot / worn pack, ≤ 32 EU/FE/tick (capped by the LV ceiling)</td></tr><tr><td>Draw</td><td>2 EU/FE per item pulled each scan tick; an idle scan is free</td></tr><tr><td>Passive drain</td><td>none (only for actual pulling)</td></tr><tr><td>Component</td><td>(Long, persistent + networkSynchronized) — the shared component of every powered item in the mod</td></tr></tbody></table>
 
-<p>The draw is taken <strong>server-side only</strong> (in 26.2 is called only on a <code>ServerLevel</code>). A creative/spectating owner pays nothing (the shared <code>ItemEnergy.spend</code> rule, — the magnet still pulls.</p>
+<p>The draw is taken <strong>server-side only</strong> (in 26.2 is called only on a <code>ServerLevel</code>). A creative/spectating owner pays nothing (the rule shared by every EU/FE item) — the magnet still pulls.</p>
 
 <h2>Inventory</h2>
 
@@ -418,12 +418,6 @@ IEI</code></pre>
 <h2>Progression</h2>
 
 <p>An LV-tier convenience item: it solves the classic tech-mod pain "walking a mine — loot comes to me". Available after the <a href="../energy-storage/battery_box.html">Battery Box</a> and copper coil / circuit: without LV infrastructure the magnet can be neither crafted nor charged. Filters (tag whitelist/blacklist), suppressor zones and radius tier scaling (LV/MV/HV) are future work.</p>
-
-<h2>Balance</h2>
-
-<table><thead><tr><th>Parameter</th><th>Value</th><th>Config key</th></tr></thead><tbody><tr><td>EU/FE buffer</td><td><strong>5,000</strong></td><td></td></tr><tr><td>Draw per item</td><td><strong>2</strong> EU/FE/tick</td><td></td></tr><tr><td>EU/FE intake</td><td><strong>32</strong> EU/FE/tick</td><td></td></tr><tr><td>Radius (tier 1)</td><td><strong>5</strong> blocks</td><td></td></tr><tr><td>Scan interval</td><td><strong>1</strong> tick</td><td></td></tr><tr><td>Seek speed</td><td>0.55 blocks/tick</td><td>— (<code>SEEK_SPEED</code> constant)</td></tr><tr><td>Per-pass cap</td><td>64 items</td><td>— (<code>MAX_ITEMS_PER_SCAN</code> constant)</td></tr></tbody></table>
-
-<p>5,000 EU/FE at 2 EU/FE/item·tick is hundreds of picked-up items per charge: a cheap, LV consumable.</p>
 
 <h2>Related</h2>
 

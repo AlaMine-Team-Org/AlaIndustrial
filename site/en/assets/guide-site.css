@@ -37,4 +37,49 @@ body{font-size:20px;line-height:1.5;background:linear-gradient(90deg,#0e0e11,#17
 @media(max-width:560px){.content table{display:block;overflow-x:auto}.sitenav{padding-inline:8px;gap:8px}.sitenav .brand{font-size:20px}.brand-icon{width:30px;height:30px}.platform-link:nth-child(1){display:none}.block-card{display:block;text-align:center;padding:22px 16px}.block-card .icon{margin:0 auto 13px}.content h2{font-family:'VT323',monospace;font-size:23px}.content p,.content li{font-size:19px}.concept-list{display:block}.concept-card{margin-bottom:13px}}
 @media(max-width:900px){.home-search{margin:-46px 0 32px}.journey-grid{grid-template-columns:1fr}.home-systems .home-system-card{grid-column:span 6}}
 @media(max-width:560px){.home-search kbd{display:none}.home-systems{display:block}.home-system-card{margin-bottom:14px}.home-stats{grid-template-columns:1fr 1fr}.home-stats>div{border-bottom:2px solid var(--edge)}}
+/* Download statistics block on the front page (MOD-412). guide-site.js fills it from
+   data/stats.json; until data arrives the whole block stays hidden, so the generated
+   HTML never carries a figure of its own. */
+.stats-block{margin:30px 0 6px}
+.stats-block[hidden],.st-card[hidden],.st-loaders[hidden],.st-chart[hidden]{display:none}
+.stats-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 13px}
+.stats-head .module-kicker{margin:0}
+.stats-updated{margin-left:auto;color:var(--muted2);font:16px 'VT323',monospace}
+.st-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:13px}
+.st-card{padding:14px 16px;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent 55%),#292d32;border:3px solid var(--edge);outline:1px solid #626872;outline-offset:-5px;box-shadow:6px 6px var(--edge)}
+.st-card.lead{background:linear-gradient(135deg,rgba(85,255,255,.12),transparent 58%),#292d32;outline-color:#2ca5a5}
+.st-card .k{display:flex;align-items:center;gap:8px;color:#dfe0e4;font:17px 'VT323',monospace;letter-spacing:.5px}
+.st-card .k img{width:20px;height:20px;object-fit:contain;image-rendering:pixelated}
+.st-card .k svg{width:18px;height:18px;flex:0 0 18px}
+.st-card b{display:block;margin:5px 0 2px;color:var(--gold);font:700 40px/1 'VT323',monospace;font-variant-numeric:tabular-nums;text-shadow:3px 3px #0b0d10}
+.st-card .d{color:#7ee787;font:16px 'VT323',monospace}
+.st-card .d.flat{color:var(--muted2)}
+.st-chart{position:relative;padding:15px 18px 10px;background:#25282d;border:3px solid var(--edge);outline:1px solid #5c626b;outline-offset:-6px;box-shadow:6px 6px var(--edge)}
+.st-chart-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:11px}
+.st-chart-top strong{color:#fff;font:700 21px 'VT323',monospace}
+.st-unit{color:var(--muted2);font:16px 'VT323',monospace}
+.st-ranges{margin-left:auto;display:flex;gap:5px}
+.st-range{min-height:32px;padding:3px 11px;color:#dfe0e4;background:#31353b;border:2px solid var(--edge);outline:1px solid #5a606a;outline-offset:-4px;box-shadow:3px 3px var(--edge);cursor:pointer;font:700 17px 'VT323',monospace}
+.st-range:hover{background:#3d424a}
+.st-range[aria-pressed="true"]{color:#101216;background:var(--gold);outline-color:#8a6f10}
+.st-chart svg{width:100%;height:auto;display:block;touch-action:none}
+.st-hit{fill:transparent}
+.st-hit.on{fill:rgba(255,255,255,.08)}
+.st-tip{position:absolute;z-index:5;padding:6px 10px;pointer-events:none;opacity:0;transition:opacity .08s;color:#fff;background:#101216;border:2px solid var(--edge);outline:1px solid #6c727b;outline-offset:-4px;box-shadow:4px 4px rgba(0,0,0,.5);font:17px 'VT323',monospace;white-space:nowrap}
+.st-tip b{color:var(--gold);font-weight:700}
+.st-tip.on{opacity:1}
+.st-empty{padding:26px;text-align:center;color:#d7d8dd;border:2px dashed #686e77}
+.st-loaders{margin-top:13px;padding:15px 18px;background:#292d32;border:3px solid var(--edge);outline:1px solid #5c626b;outline-offset:-6px;box-shadow:6px 6px var(--edge)}
+.st-loaders h3{margin:0 0 12px;color:var(--gold);font:700 21px 'VT323',monospace}
+.st-split{display:flex;gap:3px;padding:4px;background:#101216;border:2px solid var(--edge);box-shadow:inset 2px 2px rgba(0,0,0,.5)}
+.st-split i{flex:1;height:22px;border:1px solid #0c0e11}
+.st-split i.aqua{background:linear-gradient(180deg,#8bffff,#22b6b6);box-shadow:inset 0 -3px rgba(0,0,0,.35)}
+.st-split i.gold{background:linear-gradient(180deg,#ffe98a,#d8a413);box-shadow:inset 0 -3px rgba(0,0,0,.35)}
+.st-legend{display:flex;flex-wrap:wrap;gap:22px;margin-top:10px;color:#e2e3e7;font:18px 'VT323',monospace}
+.st-legend b{color:#fff;font-variant-numeric:tabular-nums}
+.st-legend i{display:inline-block;width:13px;height:13px;margin-right:7px;border:2px solid var(--edge)}
+.st-legend i.aqua{background:#55ffff}.st-legend i.gold{background:var(--gold)}
+.st-table{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+@media(max-width:900px){.st-kpi{grid-template-columns:1fr 1fr}.st-ranges{margin-left:0;width:100%}}
+@media(max-width:560px){.st-kpi{gap:9px}.st-card b{font-size:32px}.st-card .k{font-size:16px}.st-legend{gap:12px;font-size:17px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}

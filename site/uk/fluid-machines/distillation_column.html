@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="uk" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Перегінна колона — Ala Industrial — Гід</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <button class="nav-toggle" type="button" aria-label="Відкрити меню" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  <div class="platform-links" aria-label="Project links">
+    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+  </div>
+  <details class="language-menu"><summary aria-label="Language">UA</summary><div class="language-popover"><span>UA</span><a href="../../en/fluid-machines/distillation_column.html">EN</a><a href="../../ru/fluid-machines/distillation_column.html">RU</a><a href="../../zh_cn/fluid-machines/distillation_column.html">中文</a><a href="../../ja_jp/fluid-machines/distillation_column.html">日本語</a></div></details>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Огляд</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../assets/item/tempered_iron_pickaxe.png" alt=""><span>З чого почати</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
+<div class="group-title">Енергія</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="9 сторінок">9</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
+<div class="group-title">Переробка</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="13 сторінок">13</span></a>
+<a class="cat-link active" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<div class="group-title">Логістика</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<div class="group-title">Світ та автоматизація</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<div class="group-title">Інше</div>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="11 сторінок">11</span></a>
+<div class="group-title">Предмети</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="19 сторінок">19</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="19 сторінок">19</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../fluid-machines/index.html">Машини для рідин</a><span class="sep">/</span><span>Перегінна колона</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <div class="icon placeholder">⚡</div>
+    <div class="info">
+      <h1>Перегінна колона</h1>
+      <div class="block-id">alaindustrial:distillation_column</div>
+      <div class="tags"><span class="tag cat" style="background:#38bdf8">Машини для рідин</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Реалізовано</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">fluid_input</span><span class="tag">oil</span><span class="tag">diesel</span><span class="tag">fuel-oil</span><span class="tag">multiblock</span></div>
+    </div>
+  </div>
+</div>
+<h2>Зведення</h2>
+
+<p><strong>Перегінна колона</strong> — вишка заввишки в три блоки, найвища машина моду та його перший мультиблок. Вежа збирається з трьох однакових сегментів, поставлених один на одного. Усередині — три баки: у середину заливається сира <a href="../materials/oil.html">нафта</a>, угорі конденсується <a href="../materials/diesel.html">дизель</a> — легка цільова фракція, донизу стікає <a href="../materials/fuel_oil.html">мазут</a> — важкий залишок. Нічого налаштовувати не треба: розкладка однакова в будь-якої колони й читається сама — «легке — вгорі, важке — внизу».</p>
+
+<blockquote><strong>Міні-приклад:</strong> насос качає нафту з озера в середину вежі, другий насос забирає дизель з верхівки, третій — мазут біля основи. Кабель до основи — і міні-НПЗ працює сам, доки в озері є нафта.</blockquote>
+
+<p>Холодна колона спочатку <strong>прогрівається</strong> (~10 секунд під напругою), і лише потім гонить. У прогрітої працюючої вежі світяться віконця, а з верхівки йде пара — за силуетом бази здалеку видно, працює НПЗ чи стоїть.</p>
+
+<h2>Мультиблок</h2>
+
+<table><thead><tr><th>Сегмент</th><th>Роль</th><th>Рідина</th></tr></thead><tbody><tr><td>Верх</td><td>конденсатор</td><td><strong>дизель — вихід</strong></td></tr><tr><td>Середина</td><td>приймач сировини</td><td><strong>нафта — вхід</strong></td></tr><tr><td>Низ</td><td>куб-основа («мозок»)</td><td><strong>мазут — вихід</strong> + вхід енергії</td></tr></tbody></table>
+
+<p><strong>Збирається руками</strong> (раунд 3): крафтиться один вид блока-сегмента; поставте <strong>три сегменти один на одного</strong> — вежа збереться сама (нижній стає основою-«мозком», верхні два перетворюються на середню та верхню секції, чутно брязкіт ковадла). Одиночний сегмент — інертна заготовка: портів і меню в нього немає, клік підказує, як добудувати. Розбирання дзеркальне: злам будь-якого сегмента <strong>деградує</strong> вежу — зламаний падає предметом сегмента, решта повертаються в заготовки на своїх місцях, а основа <strong>зберігає баки й нагар</strong> у собі. Ніщо не зникає й не дублюється. ГУІ відкривається кліком по <strong>будь-якому</strong> сегменту зібраної вежі. <strong>Ректифікаційна секція</strong> (окремий крафтовий блок) ставиться <strong>на</strong> верхівку — вежа виростає до чотирьох блоків, втрати падають з 10 % до 5 %: кожна перегонка дає <strong>+50 mB дизелю</strong> (750/200). Пара переїжджає на секцію. Секція — звичайний блок зі своїм дропом; зняв — бонус зник.</p>
+
+<h2>Енергія</h2>
+
+<p>Колона лише споживає EU/FE; енергія підводиться до <strong>основи</strong> з будь-якої її грані (бічні та нижня). Середина й верхівка енергію не приймають — кабель до них не підключається.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Внутрішній буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вхід</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Споживання</td><td>2 EU/FE/такт (робота і прогрів)</td></tr></tbody></table>
+
+<h2>Прогрів</h2>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Час прогріву</td><td>200 тиків (~10 с)</td></tr><tr><td>Ціна холодного старту</td><td>~400 EU/FE (одна «порожня» перегонка)</td></tr><tr><td>Остигання</td><td>удвічі повільніше за нагрів — при втраті живлення або нафти</td></tr><tr><td>Повний вихідний бак</td><td>завмирання: тепло <strong>тримається</strong>, EU/FE не витрачається</td></tr></tbody></table>
+
+<p>Для НПЗ, що працює безперервно, прогрів непомітний; смикати живлення туди-сюди — невигідно.</p>
+
+<h2>Рідина</h2>
+
+<p>Три баки по 10 відер. Вхідний приймає будь-яку нафту зі спільномодовим теґом <code>c:oil</code>; вихідні наповнює лише сама машина, сусіди можуть тільки забирати.</p>
+
+<table><thead><tr><th>Бак</th><th>Обсяг</th><th>Доступ ззовні</th></tr></thead><tbody><tr><td>Нафта (середина)</td><td>10 000 mB</td><td>лише заливка</td></tr><tr><td>Дизель (верх)</td><td>10 000 mB</td><td>лише забір</td></tr><tr><td>Мазут (низ)</td><td>10 000 mB</td><td>лише забір</td></tr></tbody></table>
+
+<h2>Процесинг</h2>
+
+<p><code>1000 mB нафти + 400 EU/FE → 700 mB дизелю + 200 mB мазуту</code>. 900 із 1000 mB — 10 % іде «в легкі гази»: переробка в моді ніколи не множить обсяг. З ректифікаційною секцією — <code>750 mB дизелю + 200 mB мазуту</code> (втрати 5 %).</p>
+
+<p><strong>Крекінг.</strong> Колона вміє переганяти і власний залишок: залийте <strong>мазут</strong> у вхідний бак — <code>1000 mB мазуту + 400 EU/FE → 600 mB дизелю</code>. За енергією це помітний плюс (6 000 EU/FE мазуту → 7 200 EU/FE дизелю мінус 400 EU/FE перегонки), а головне — конверсія в щільне паливо: гравець сам вирішує, палити дешевий мазут як є чи прогнати його вдруге.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>200 тиків (~10 с)</td></tr><tr><td>Ціна операції</td><td>400 EU/FE</td></tr><tr><td>Вихід</td><td>700 mB дизелю + 200 mB мазуту</td></tr></tbody></table>
+
+<p>Якщо якийсь із вихідних баків не вміщує свою фракцію, колона <strong>завмирає цілком</strong>: EU/FE не витрачається, нафта не витрачається, ніщо не знищується. Обидві фракції завжди виходять разом — напівоперацій не буває.</p>
+
+<h2>Обслуговування</h2>
+
+<p>З кожною перегонкою в колоні накопичується <strong>нагар</strong> (+2 %); на <strong>100 %</strong> (≈50 операцій) колона стає зі статусом «Закоксована» — EU/FE не витрачається, сировина не витрачається. <strong>ПКМ гайковим ключем</strong> по будь-якому сегменту вигрібає нагар: колона чиста, а гравцеві падає <strong>1–3 вугілля</strong> (скільки — залежить від ступеня засмічення). Шифт-ПКМ ключем залишається розбиранням вежі. Засмічення видно на шкалі в ГУІ, воно зберігається при перезаході <strong>і при зламі вежі</strong> — пере-постановка чистку не замінює.</p>
+
+<h2>Інвентар</h2>
+
+<p>Шість слотів — три пари тари, по одній на кожен бак.</p>
+
+<table><thead><tr><th>Пара</th><th>Приймає</th><th>Віддає</th></tr></thead><tbody><tr><td>Нафта (ліворуч)</td><td>повне відро/капсула з нафтою</td><td>порожня тара</td></tr><tr><td>Дизель (праворуч угорі)</td><td>порожня тара</td><td>відро дизелю</td></tr><tr><td>Мазут (праворуч унизу)</td><td>порожня тара</td><td>відро мазуту</td></tr></tbody></table>
+
+<p>Автоматизація кладе тару лише у вхідні слоти пар і забирає з вихідних.</p>
+
+<h2>Інтерфейс</h2>
+
+<p>У центрі екрана — <strong>міні-силует самої вежі</strong>: у його трьох віконцях видно реальні рівні трьох баків (дизель угорі, нафта посередині, мазут унизу), під час роботи по нафтовому вікну піднімаються бульбашки, основа світиться теплом у міру прогріву, а зі встановленою секцією в силуету виростає четвертий поверх. Ліворуч шкала нафти з парою тари, праворуч шкали фракцій зі своїми парами, поруч із силуетом — <strong>шкала нагару</strong>, біля правого краю — запас енергії. Нижче — постійний статус-рядок («Перегонка», «Прогрів… N %», «Немає енергії», «Немає сировини», «Бак дизелю повний», «Бак мазуту повний», «Закоксована») і рядок точних обсягів у mB з кольоровими мітками баків.</p>
+
+<h2>Властивості блока</h2>
+
+<p>Вежа — об'ємна 3D-колона (гранована труба ~12px з фланцями, бічною драбинкою та вентилем), а не стовп із кубів. У кожного сегмента — <strong>кольорові патрубки</strong> з боку його рідини: чорні (нафта) посередині, жовті (дизель) угорі, бурі (мазут) біля основи — куди тицяти насос, видно без тултіпів. Під час роботи світяться віконця; пара йде лише в прогрітої працюючої колони.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Форма</td><td>колона ~12px з фланцями й патрубками (не окклюдер)</td></tr><tr><td>Міцність</td><td>3.0</td></tr><tr><td>Вибухостійкість</td><td>6.0</td></tr><tr><td>Інструмент</td><td>кайло</td></tr><tr><td>Зберігає рідину</td><td><strong>так</strong> — при розбиранні баки лишаються в основі, при її зламі їдуть у дропі</td></tr><tr><td>Зберігає прогрів при зламі</td><td>ні</td></tr></tbody></table>
+
+<h2>Звук</h2>
+
+<p>Мовчить — усвідомлене рішення (2026-08-09), зафіксоване в реєстрі звуків. Уся індикація візуальна: віконця, пара, статус-рядок.</p>
+
+<h2>Рецепти</h2>
+
+<table><thead><tr><th>Вхід</th><th>Вихід</th></tr></thead><tbody><tr><td>1000 mB нафти</td><td>700 mB дизелю + 200 mB мазуту (750 із секцією)</td></tr><tr><td>1000 mB мазуту</td><td>600 mB дизелю (крекінг, 400 EU/FE)</td></tr></tbody></table>
+
+<p>Далі обидві фракції йдуть у рідкопаливний генератор (наступна задача гілки): дизель — 12 EU/FE/такт, мазут — 6 EU/FE/такт.</p>
+
+<h2>Прогресія</h2>
+
+<p>Тир: LV. Ставиться після насоса й першої нафти; крафт помітно дорожчий за рядову машину — два корпуси машин, схема й пластини на «трубу». Нетто з відра нафти: 9 600 EU/FE виходу − 1 400 EU/FE витрат (насос + перегонка = <strong>8 200 EU/FE</strong> — слабше за вугілля (12 800) і лаву (15 000) за одиницю, але озеро поруч із базою годує НПЗ саме. Досягнення <strong>«Нафтопереробка»</strong> — за постановку колони (гілка «Чорне золото»).</p>
+
+<h2>Пов'язане</h2>
+
+<p><a href="../materials/oil.html">Нафта</a> — сировина: де шукати і як викачати. <a href="../materials/diesel.html">Дизель</a> — цільова фракція. <a href="../materials/fuel_oil.html">Мазут</a> — важкий залишок. <a href="pump.html">Насос</a> — качає нафту в колону і фракції з неї. <a href="../fluid-storage/fluid_tank.html">Переносний бак</a> — буфер фракцій поруч із вежею.</p>
+
+<h2>Крафт</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="перегінна колона alaindustrial:distillation_column" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаку</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Залізна пластина"><img src="../assets/item/iron_plate_3d.png" alt="Залізна пластина" width="32" height="32"></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Залізна пластина"><img src="../assets/item/iron_plate_3d.png" alt="Залізна пластина" width="32" height="32"></div> <div class="cell" title="Мідна пластина"><img src="../assets/item/copper_plate_3d.png" alt="Мідна пластина" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Мідна пластина"><img src="../assets/item/copper_plate_3d.png" alt="Мідна пластина" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Машинний корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинний корпус" width="32" height="32"></div> <div class="cell" title="Any Iron Ingot"><img src="../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Перегінна колона"><span class="ricon-ph">?</span></div><div class="result-name">Перегінна колона</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>
