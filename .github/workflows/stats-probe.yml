@@ -1,0 +1,48 @@
+# Temporary probe: does the existing Modrinth token carry the analytics scope?
+# Prints the HTTP status and the SHAPE of the response only — never the token.
+# Delete this workflow once the answer is known.
+name: Stats probe
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query the analytics endpoint
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.error, urllib.request
+
+          token = os.environ.get("MODRINTH_TOKEN", "")
+          print("token present:", bool(token), "| length:", len(token))
+
+          url = ("https://api.modrinth.com/v3/analytics/downloads"
+                 '?project_ids=%5B%22ACLWFBlU%22%5D&resolution_minutes=1440')
+          req = urllib.request.Request(url, headers={
+              "Authorization": token,
+              "User-Agent": "Ma3auka/AlaIndustrial-stats (+https://github.com/AlaMine-Team-Org/AlaIndustrial)",
+          })
+          try:
+              with urllib.request.urlopen(req, timeout=30) as resp:
+                  body = json.load(resp)
+                  print("HTTP", resp.status)
+                  print("top-level type:", type(body).__name__)
+                  print("keys:", list(body)[:5] if isinstance(body, dict) else "n/a")
+                  text = json.dumps(body)[:600]
+                  print("sample:", text)
+                  if isinstance(body, dict):
+                      for key, value in list(body.items())[:1]:
+                          print("first project:", key, "| points:",
+                                len(value) if hasattr(value, "__len__") else "?")
+                          print("first rows:", json.dumps(value)[:400])
+          except urllib.error.HTTPError as exc:
+              print("HTTP", exc.code)
+              print("body:", exc.read().decode()[:300])
+          PY
