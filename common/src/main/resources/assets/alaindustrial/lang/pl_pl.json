@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "Płynne aktywa",
   "advancements.alaindustrial.geothermal_power.description": "Wytwórz generator geotermalny",
   "advancements.alaindustrial.geothermal_power.title": "Energia geotermalna",
-  "advancements.alaindustrial.gold_chest.description": "Umieść Złotą skrzynię, magazyn najwyższej klasy",
+  "advancements.alaindustrial.gold_chest.description": "Umieść Złotą skrzynię, poziom wyżej od srebra",
+  "advancements.alaindustrial.electrum_chest.description": "Umieść Elektrumową skrzynię, magazyn najwyższej klasy",
   "advancements.alaindustrial.gold_chest.title": "Złoty skarbiec",
+  "advancements.alaindustrial.electrum_chest.title": "Elektrumowy skarbiec",
   "advancements.alaindustrial.industrialization.description": "Zbuduj rozdrabniacz, piec elektryczny, kompresor i ekstraktor",
   "advancements.alaindustrial.industrialization.title": "Industrializacja",
   "advancements.alaindustrial.iron_chest.description": "Umieść Żelazną skrzynię",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "Kabel złoty",
   "block.alaindustrial.electrum_cable": "Kabel elektrumowy",
   "block.alaindustrial.gold_chest": "Złota skrzynia",
+  "block.alaindustrial.electrum_chest": "Elektrumowa skrzynia",
   "block.alaindustrial.high_altitude_wind_mill": "Niebiański wiatrak",
   "block.alaindustrial.incubator": "Inkubator",
   "block.alaindustrial.incubator_dome": "Kopuła inkubatora",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "Podwójna żelazna skrzynia",
   "container.alaindustrial.silver_chest_double": "Podwójna srebrna skrzynia",
   "container.alaindustrial.gold_chest_double": "Podwójna złota skrzynia",
+  "container.alaindustrial.electrum_chest_double": "Podwójna elektrumowa skrzynia",
   "tag.item.alaindustrial.water_mill_wheels": "Koła młyna wodnego",
   "tag.item.alaindustrial.windmill_rotors": "Wirniki wiatraka"
 }

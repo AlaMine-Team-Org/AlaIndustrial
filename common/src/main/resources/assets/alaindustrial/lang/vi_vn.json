@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "Tài sản lưu động",
   "advancements.alaindustrial.geothermal_power.description": "Chế tạo Máy phát điện địa nhiệt",
   "advancements.alaindustrial.geothermal_power.title": "Sức mạnh địa nhiệt",
-  "advancements.alaindustrial.gold_chest.description": "Đặt một Rương Vàng, kho chứa cấp cao nhất",
+  "advancements.alaindustrial.gold_chest.description": "Đặt một Rương Vàng, cấp trên bạc",
+  "advancements.alaindustrial.electrum_chest.description": "Đặt một Rương Electrum, kho chứa cấp cao nhất",
   "advancements.alaindustrial.gold_chest.title": "Két vàng",
+  "advancements.alaindustrial.electrum_chest.title": "Két Electrum",
   "advancements.alaindustrial.industrialization.description": "Chế tạo Máy nghiền, Lò điện, Máy nén và Máy chiết xuất",
   "advancements.alaindustrial.industrialization.title": "Công nghiệp hóa",
   "advancements.alaindustrial.iron_chest.description": "Đặt một Rương Sắt",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "Cáp Vàng",
   "block.alaindustrial.electrum_cable": "Cáp Electrum",
   "block.alaindustrial.gold_chest": "Rương Vàng",
+  "block.alaindustrial.electrum_chest": "Rương Electrum",
   "block.alaindustrial.high_altitude_wind_mill": "Cối gió trời",
   "block.alaindustrial.incubator": "Lồng ấp",
   "block.alaindustrial.incubator_dome": "Vòm lồng ấp",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "Rương Sắt Đôi",
   "container.alaindustrial.silver_chest_double": "Rương Bạc Đôi",
   "container.alaindustrial.gold_chest_double": "Rương Vàng Đôi",
+  "container.alaindustrial.electrum_chest_double": "Rương Electrum Đôi",
   "tag.item.alaindustrial.water_mill_wheels": "Bánh xe cối xay nước",
   "tag.item.alaindustrial.windmill_rotors": "Rotor cối xay gió"
 }

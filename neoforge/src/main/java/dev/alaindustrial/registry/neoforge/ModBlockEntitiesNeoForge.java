@@ -31,6 +31,7 @@ import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
+import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
@@ -160,6 +161,9 @@ public final class ModBlockEntitiesNeoForge {
 	// Pure container (no EnergyPort) — no capability binding. Gold chest = tier above the silver chest.
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GoldChestBlockEntity>> GOLD_CHEST =
 			register(ContentManifest.blockEntity("gold_chest", GoldChestBlockEntity.class));
+	// Electrum chest = tier above the gold chest; also a pure container, so also no capability binding.
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectrumChestBlockEntity>> ELECTRUM_CHEST =
+			register(ContentManifest.blockEntity("electrum_chest", ElectrumChestBlockEntity.class));
 
 	private ModBlockEntitiesNeoForge() {
 	}

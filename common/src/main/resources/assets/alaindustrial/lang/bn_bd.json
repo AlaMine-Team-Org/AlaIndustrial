@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "তরল সম্পদ",
   "advancements.alaindustrial.geothermal_power.description": "একটি ভূতাপীয় জেনারেটর তৈরি করুন",
   "advancements.alaindustrial.geothermal_power.title": "ভূতাপীয় শক্তি",
-  "advancements.alaindustrial.gold_chest.description": "সোনার চেস্ট স্থাপন করুন, সর্বোচ্চ স্তরের ভাণ্ডার",
+  "advancements.alaindustrial.gold_chest.description": "সোনার চেস্ট স্থাপন করুন, রুপার এক স্তর উপরে",
+  "advancements.alaindustrial.electrum_chest.description": "ইলেকট্রাম চেস্ট স্থাপন করুন, সর্বোচ্চ স্তরের ভাণ্ডার",
   "advancements.alaindustrial.gold_chest.title": "সোনার ভল্ট",
+  "advancements.alaindustrial.electrum_chest.title": "ইলেকট্রাম ভল্ট",
   "advancements.alaindustrial.industrialization.description": "একটি পেষক যন্ত্র, বৈদ্যুতিক চুল্লি, সংকোচক এবং নিষ্কর্ষক তৈরি করুন",
   "advancements.alaindustrial.industrialization.title": "শিল্পায়ন",
   "advancements.alaindustrial.iron_chest.description": "একটি আয়রন চেস্ট স্থাপন করুন",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "সোনার কেবল",
   "block.alaindustrial.electrum_cable": "ইলেকট্রামের কেবল",
   "block.alaindustrial.gold_chest": "সোনার চেস্ট",
+  "block.alaindustrial.electrum_chest": "ইলেকট্রাম চেস্ট",
   "block.alaindustrial.high_altitude_wind_mill": "আকাশ চক্র",
   "block.alaindustrial.incubator": "ইনকিউবেটর",
   "block.alaindustrial.incubator_dome": "ইনকিউবেটর গম্বুজ",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "ডাবল আয়রন চেস্ট",
   "container.alaindustrial.silver_chest_double": "ডাবল রূপা চেস্ট",
   "container.alaindustrial.gold_chest_double": "ডাবল সোনার চেস্ট",
+  "container.alaindustrial.electrum_chest_double": "ডাবল ইলেকট্রাম চেস্ট",
   "tag.item.alaindustrial.water_mill_wheels": "জলকলের চাকা",
   "tag.item.alaindustrial.windmill_rotors": "বায়ুকলের রোটর"
 }

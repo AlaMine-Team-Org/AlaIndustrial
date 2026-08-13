@@ -31,6 +31,7 @@ import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
+import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
@@ -110,6 +111,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<SilverChestBlockEntity> SILVER_CHEST;
 	// Gold chest is likewise a pure Container (no EnergyPort) — no Team Reborn EnergyStorage.SIDED line.
 	public static BlockEntityType<GoldChestBlockEntity> GOLD_CHEST;
+	public static BlockEntityType<ElectrumChestBlockEntity> ELECTRUM_CHEST;
 
 	public static void init() {
 		GENERATOR = register(ContentManifest.blockEntity("generator", GeneratorBlockEntity.class));
@@ -152,6 +154,7 @@ public final class ModBlockEntities {
 		STORAGE_MODULE = register(ContentManifest.blockEntity("storage_module", StorageModuleBlockEntity.class));
 		SILVER_CHEST = register(ContentManifest.blockEntity("silver_chest", SilverChestBlockEntity.class));
 		GOLD_CHEST = register(ContentManifest.blockEntity("gold_chest", GoldChestBlockEntity.class));
+		ELECTRUM_CHEST = register(ContentManifest.blockEntity("electrum_chest", ElectrumChestBlockEntity.class));
 
 			// EnergyStorage.SIDED registration: explicit per-block lines, one per energy-exposing block
 			// entity. This is deliberately NOT driven from a shared loader-neutral list: such a list would

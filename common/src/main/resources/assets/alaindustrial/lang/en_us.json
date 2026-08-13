@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "Liquid Assets",
   "advancements.alaindustrial.geothermal_power.description": "Craft a Geothermal Generator",
   "advancements.alaindustrial.geothermal_power.title": "Geothermal Power",
-  "advancements.alaindustrial.gold_chest.description": "Place a Gold Chest, the top-tier storage",
+  "advancements.alaindustrial.gold_chest.description": "Place a Gold Chest, the tier above silver",
+  "advancements.alaindustrial.electrum_chest.description": "Place an Electrum Chest, the top-tier storage",
   "advancements.alaindustrial.gold_chest.title": "Golden Vault",
+  "advancements.alaindustrial.electrum_chest.title": "Electrum Reserve",
   "advancements.alaindustrial.industrialization.description": "Build a Macerator, Electric Furnace, Compressor and Extractor",
   "advancements.alaindustrial.industrialization.title": "Industrialization",
   "advancements.alaindustrial.iron_chest.description": "Place an Iron Chest",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "Gold Cable",
   "block.alaindustrial.electrum_cable": "Electrum Cable",
   "block.alaindustrial.gold_chest": "Gold Chest",
+  "block.alaindustrial.electrum_chest": "Electrum Chest",
   "block.alaindustrial.high_altitude_wind_mill": "Sky Mill",
   "block.alaindustrial.incubator": "Incubator",
   "block.alaindustrial.incubator_dome": "Incubator Dome",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "Double Iron Chest",
   "container.alaindustrial.silver_chest_double": "Double Silver Chest",
   "container.alaindustrial.gold_chest_double": "Double Gold Chest",
+  "container.alaindustrial.electrum_chest_double": "Double Electrum Chest",
   "tag.item.alaindustrial.water_mill_wheels": "Water Mill Wheels",
   "tag.item.alaindustrial.windmill_rotors": "Wind Mill Rotors"
 }

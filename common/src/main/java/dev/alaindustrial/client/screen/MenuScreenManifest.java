@@ -128,6 +128,8 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.STORAGE_MODULE_MENU_6.get(), StorageScreen6::new),
 			screen(() -> ModContent.SILVER_CHEST_MENU.get(), SilverChestScreen::new),
 			screen(() -> ModContent.GOLD_CHEST_MENU.get(), GoldChestScreen::new),
-			// MOD-391 — the double chest's scrolling window, one screen for all three tiers.
+			// MOD-409 — the electrum tier's own scrolling window (six rows over nine).
+			screen(() -> ModContent.ELECTRUM_CHEST_MENU.get(), ElectrumChestScreen::new),
+			// MOD-391 — the double chest's scrolling window, one screen for every tier.
 			screen(() -> ModContent.DOUBLE_CHEST_MENU.get(), DoubleChestScreen::new));
 }

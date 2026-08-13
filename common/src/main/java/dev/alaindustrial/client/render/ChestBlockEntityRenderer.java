@@ -5,6 +5,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.AbstractModChestBlock;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.AbstractChestBlockEntity;
+import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
@@ -89,10 +90,17 @@ public class ChestBlockEntityRenderer<T extends AbstractChestBlockEntity>
 			new ModelLayerLocation(Industrialization.id("gold_chest_left"), "main");
 	public static final ModelLayerLocation GOLD_CHEST_RIGHT_LAYER =
 			new ModelLayerLocation(Industrialization.id("gold_chest_right"), "main");
+	public static final ModelLayerLocation ELECTRUM_CHEST_LAYER =
+			new ModelLayerLocation(Industrialization.id("electrum_chest"), "main");
+	public static final ModelLayerLocation ELECTRUM_CHEST_LEFT_LAYER =
+			new ModelLayerLocation(Industrialization.id("electrum_chest_left"), "main");
+	public static final ModelLayerLocation ELECTRUM_CHEST_RIGHT_LAYER =
+			new ModelLayerLocation(Industrialization.id("electrum_chest_right"), "main");
 
 	private static final MultiblockChestResources<SpriteId> IRON_SPRITES = sprites("iron");
 	private static final MultiblockChestResources<SpriteId> SILVER_SPRITES = sprites("silver");
 	private static final MultiblockChestResources<SpriteId> GOLD_SPRITES = sprites("gold");
+	private static final MultiblockChestResources<SpriteId> ELECTRUM_SPRITES = sprites("electrum");
 
 	private final MultiblockChestResources<ChestModel> models;
 	private final SpriteGetter spriteGetter;
@@ -128,6 +136,14 @@ public class ChestBlockEntityRenderer<T extends AbstractChestBlockEntity>
 		return new ChestBlockEntityRenderer<>(context,
 				new MultiblockChestResources<>(GOLD_CHEST_LAYER, GOLD_CHEST_LEFT_LAYER, GOLD_CHEST_RIGHT_LAYER),
 				GOLD_SPRITES);
+	}
+
+	public static ChestBlockEntityRenderer<ElectrumChestBlockEntity> electrum(
+			BlockEntityRendererProvider.Context context) {
+		return new ChestBlockEntityRenderer<>(context,
+				new MultiblockChestResources<>(ELECTRUM_CHEST_LAYER, ELECTRUM_CHEST_LEFT_LAYER,
+						ELECTRUM_CHEST_RIGHT_LAYER),
+				ELECTRUM_SPRITES);
 	}
 
 	@Override

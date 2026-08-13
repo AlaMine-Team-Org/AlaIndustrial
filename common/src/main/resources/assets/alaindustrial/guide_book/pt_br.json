@@ -2221,6 +2221,44 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "electrum_chest",
+          "title": "Electrum Chest",
+          "icon": "alaindustrial:electrum_chest",
+          "block_id": "alaindustrial:electrum_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Electrum Chest",
+              "text": "An 81-slot chest — the tier above gold. Nine rows behind a six-row window with a scrollbar. Needs no energy."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energy: 81 slot"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:gold_chest",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },

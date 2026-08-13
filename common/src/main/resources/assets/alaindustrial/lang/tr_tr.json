@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "Likit Varlıklar",
   "advancements.alaindustrial.geothermal_power.description": "Bir Jeotermal Jeneratör üret",
   "advancements.alaindustrial.geothermal_power.title": "Jeotermal Güç",
-  "advancements.alaindustrial.gold_chest.description": "En üst seviye depo olan Altın Sandığı yerleştir",
+  "advancements.alaindustrial.gold_chest.description": "Gümüşün bir üst seviyesi olan Altın Sandığı yerleştir",
+  "advancements.alaindustrial.electrum_chest.description": "En üst seviye depo olan Elektrum Sandığı yerleştir",
   "advancements.alaindustrial.gold_chest.title": "Altın Kasa",
+  "advancements.alaindustrial.electrum_chest.title": "Elektrum Kasa",
   "advancements.alaindustrial.industrialization.description": "Bir Öğütücü, Elektrikli Fırın, Sıkıştırıcı ve Çıkarıcı yap",
   "advancements.alaindustrial.industrialization.title": "Sanayileşme",
   "advancements.alaindustrial.iron_chest.description": "Bir Demir Sandık yerleştir",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "Altın Kablo",
   "block.alaindustrial.electrum_cable": "Elektrum Kablo",
   "block.alaindustrial.gold_chest": "Altın Sandık",
+  "block.alaindustrial.electrum_chest": "Elektrum Sandık",
   "block.alaindustrial.high_altitude_wind_mill": "Gökyüzü Türbini",
   "block.alaindustrial.incubator": "Kuluçka",
   "block.alaindustrial.incubator_dome": "Kuluçka Kubbesi",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "Çift Demir Sandık",
   "container.alaindustrial.silver_chest_double": "Çift Gümüş Sandık",
   "container.alaindustrial.gold_chest_double": "Çift Altın Sandık",
+  "container.alaindustrial.electrum_chest_double": "Çift Elektrum Sandık",
   "tag.item.alaindustrial.water_mill_wheels": "Su Değirmeni Çarkları",
   "tag.item.alaindustrial.windmill_rotors": "Rüzgâr Değirmeni Rotorları"
 }

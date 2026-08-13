@@ -446,7 +446,8 @@ public class IndustrializationFabric implements ModInitializer {
 					return joined == null ? null
 							: net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(joined, side);
 				},
-				ModBlocks.IRON_CHEST, ModBlocks.SILVER_CHEST, ModBlocks.GOLD_CHEST);
+				ModBlocks.IRON_CHEST, ModBlocks.SILVER_CHEST, ModBlocks.GOLD_CHEST,
+				ModBlocks.ELECTRUM_CHEST);
 	}
 
 	/**

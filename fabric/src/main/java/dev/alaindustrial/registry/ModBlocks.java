@@ -104,6 +104,7 @@ public final class ModBlocks {
 	public static final Block STORAGE_MODULE = handle(ContentManifest.STORAGE_MODULE);
 	public static final Block SILVER_CHEST = handle(ContentManifest.SILVER_CHEST);
 	public static final Block GOLD_CHEST = handle(ContentManifest.GOLD_CHEST);
+	public static final Block ELECTRUM_CHEST = handle(ContentManifest.ELECTRUM_CHEST);
 	public static final Block TEMPERED_IRON_BLOCK = handle(ContentManifest.TEMPERED_IRON_BLOCK);
 	public static final Block MACHINE_CASING = handle(ContentManifest.MACHINE_CASING);
 	public static final Block ADVANCED_MACHINE_CASING = handle(ContentManifest.ADVANCED_MACHINE_CASING);

@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "Ativos Líquidos",
   "advancements.alaindustrial.geothermal_power.description": "Fabrique um Gerador Geotérmico",
   "advancements.alaindustrial.geothermal_power.title": "Energia Geotérmica",
-  "advancements.alaindustrial.gold_chest.description": "Coloque um Baú de Ouro, o armazenamento de nível máximo",
+  "advancements.alaindustrial.gold_chest.description": "Coloque um Baú de Ouro, o nível acima da prata",
+  "advancements.alaindustrial.electrum_chest.description": "Coloque um Baú de Electro, o armazenamento de nível máximo",
   "advancements.alaindustrial.gold_chest.title": "Cofre Dourado",
+  "advancements.alaindustrial.electrum_chest.title": "Cofre de Electro",
   "advancements.alaindustrial.industrialization.description": "Construa um Triturador, uma Fornalha Elétrica, um Compressor e um Extrator",
   "advancements.alaindustrial.industrialization.title": "Industrialização",
   "advancements.alaindustrial.iron_chest.description": "Coloque um Baú de Ferro",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "Cabo de Ouro",
   "block.alaindustrial.electrum_cable": "Cabo de Electro",
   "block.alaindustrial.gold_chest": "Baú de Ouro",
+  "block.alaindustrial.electrum_chest": "Baú de Electro",
   "block.alaindustrial.high_altitude_wind_mill": "Moinho Celeste",
   "block.alaindustrial.incubator": "Incubadora",
   "block.alaindustrial.incubator_dome": "Cúpula da incubadora",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "Baú de Ferro Duplo",
   "container.alaindustrial.silver_chest_double": "Baú de Prata Duplo",
   "container.alaindustrial.gold_chest_double": "Baú de Ouro Duplo",
+  "container.alaindustrial.electrum_chest_double": "Baú de Electro Duplo",
   "tag.item.alaindustrial.water_mill_wheels": "Rodas de moinho d'água",
   "tag.item.alaindustrial.windmill_rotors": "Rotores de moinho de vento"
 }

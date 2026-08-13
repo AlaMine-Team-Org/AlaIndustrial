@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "तरल संपत्ति",
   "advancements.alaindustrial.geothermal_power.description": "एक भूतापीय जेनरेटर बनाएं",
   "advancements.alaindustrial.geothermal_power.title": "भूतापीय ऊर्जा",
-  "advancements.alaindustrial.gold_chest.description": "गोल्ड चेस्ट रखें, सर्वोच्च स्तर का भंडार",
+  "advancements.alaindustrial.gold_chest.description": "गोल्ड चेस्ट रखें, चांदी से एक स्तर ऊपर",
+  "advancements.alaindustrial.electrum_chest.description": "इलेक्ट्रम चेस्ट रखें, सर्वोच्च स्तर का भंडार",
   "advancements.alaindustrial.gold_chest.title": "सुनहरी तिजोरी",
+  "advancements.alaindustrial.electrum_chest.title": "इलेक्ट्रम तिजोरी",
   "advancements.alaindustrial.industrialization.description": "एक पेषक, विद्युत भट्ठी, कंप्रेसर और एक्सट्रैक्टर बनाएं",
   "advancements.alaindustrial.industrialization.title": "औद्योगीकरण",
   "advancements.alaindustrial.iron_chest.description": "एक आयरन चेस्ट रखें",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "सोने की केबल",
   "block.alaindustrial.electrum_cable": "इलेक्ट्रम की केबल",
   "block.alaindustrial.gold_chest": "गोल्ड चेस्ट",
+  "block.alaindustrial.electrum_chest": "इलेक्ट्रम चेस्ट",
   "block.alaindustrial.high_altitude_wind_mill": "आकाश चक्की",
   "block.alaindustrial.incubator": "इनक्यूबेटर",
   "block.alaindustrial.incubator_dome": "इनक्यूबेटर गुंबद",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "डबल आयरन चेस्ट",
   "container.alaindustrial.silver_chest_double": "डबल सिल्वर चेस्ट",
   "container.alaindustrial.gold_chest_double": "डबल गोल्ड चेस्ट",
+  "container.alaindustrial.electrum_chest_double": "डबल इलेक्ट्रम चेस्ट",
   "tag.item.alaindustrial.water_mill_wheels": "जल चक्की के पहिये",
   "tag.item.alaindustrial.windmill_rotors": "पवनचक्की के रोटर"
 }

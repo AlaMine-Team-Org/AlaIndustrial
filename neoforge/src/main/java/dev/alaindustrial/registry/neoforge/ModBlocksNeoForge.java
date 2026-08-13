@@ -25,6 +25,7 @@ import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.GardenDroneStationBlock;
 import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
+import dev.alaindustrial.block.ElectrumChestBlock;
 import dev.alaindustrial.block.GoldChestBlock;
 import dev.alaindustrial.block.HighAltitudeWindMillBlock;
 import dev.alaindustrial.block.IncubatorBlock;
@@ -172,6 +173,7 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<StorageModuleBlock> STORAGE_MODULE = handle(ContentManifest.STORAGE_MODULE);
 	public static final DeferredBlock<SilverChestBlock> SILVER_CHEST = handle(ContentManifest.SILVER_CHEST);
 	public static final DeferredBlock<GoldChestBlock> GOLD_CHEST = handle(ContentManifest.GOLD_CHEST);
+	public static final DeferredBlock<ElectrumChestBlock> ELECTRUM_CHEST = handle(ContentManifest.ELECTRUM_CHEST);
 	public static final DeferredBlock<Block> TEMPERED_IRON_BLOCK = handle(ContentManifest.TEMPERED_IRON_BLOCK);
 	public static final DeferredBlock<Block> MACHINE_CASING = handle(ContentManifest.MACHINE_CASING);
 	public static final DeferredBlock<Block> ADVANCED_MACHINE_CASING =

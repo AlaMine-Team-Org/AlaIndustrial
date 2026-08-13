@@ -1,0 +1,33 @@
+{
+  "parent": "alaindustrial:gold_chest",
+  "display": {
+    "icon": {
+      "id": "alaindustrial:electrum_chest"
+    },
+    "title": {
+      "translate": "advancements.alaindustrial.electrum_chest.title"
+    },
+    "description": {
+      "translate": "advancements.alaindustrial.electrum_chest.description"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "electrum_chest": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "alaindustrial:electrum_chest"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "electrum_chest"
+    ]
+  ]
+}

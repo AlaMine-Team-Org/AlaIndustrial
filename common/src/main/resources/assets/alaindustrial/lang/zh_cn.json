@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "流动资产",
   "advancements.alaindustrial.geothermal_power.description": "合成一台地热发电机",
   "advancements.alaindustrial.geothermal_power.title": "地热发电",
-  "advancements.alaindustrial.gold_chest.description": "放置一个金箱子——最顶级的储物方式",
+  "advancements.alaindustrial.gold_chest.description": "放置一个金箱子——比银箱子高一级",
+  "advancements.alaindustrial.electrum_chest.description": "放置一个琥珀金箱子——最顶级的储物方式",
   "advancements.alaindustrial.gold_chest.title": "黄金宝库",
+  "advancements.alaindustrial.electrum_chest.title": "琥珀金宝库",
   "advancements.alaindustrial.industrialization.description": "制作粉碎机、电力熔炉、压缩机和提取机",
   "advancements.alaindustrial.industrialization.title": "工业化",
   "advancements.alaindustrial.iron_chest.description": "放置一个铁箱子",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "金缆",
   "block.alaindustrial.electrum_cable": "琥珀金缆",
   "block.alaindustrial.gold_chest": "金箱子",
+  "block.alaindustrial.electrum_chest": "琥珀金箱子",
   "block.alaindustrial.high_altitude_wind_mill": "天空风车",
   "block.alaindustrial.incubator": "培育舱",
   "block.alaindustrial.incubator_dome": "培育舱穹顶",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "大型铁箱子",
   "container.alaindustrial.silver_chest_double": "大型银箱子",
   "container.alaindustrial.gold_chest_double": "大型金箱子",
+  "container.alaindustrial.electrum_chest_double": "大型琥珀金箱子",
   "tag.item.alaindustrial.water_mill_wheels": "水车轮",
   "tag.item.alaindustrial.windmill_rotors": "风车转子"
 }

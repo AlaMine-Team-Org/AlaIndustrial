@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "Жидкие активы",
   "advancements.alaindustrial.geothermal_power.description": "Скрафтите геотермальный генератор",
   "advancements.alaindustrial.geothermal_power.title": "Геотермальная мощь",
-  "advancements.alaindustrial.gold_chest.description": "Разместите золотой сундук — вершину линейки хранения",
+  "advancements.alaindustrial.gold_chest.description": "Разместите золотой сундук — тир выше серебряного",
+  "advancements.alaindustrial.electrum_chest.description": "Разместите электрумовый сундук — вершину линейки хранения",
   "advancements.alaindustrial.gold_chest.title": "Золотое хранилище",
+  "advancements.alaindustrial.electrum_chest.title": "Электрумовое хранилище",
   "advancements.alaindustrial.industrialization.description": "Постройте дробитель, электропечь, компрессор и экстрактор",
   "advancements.alaindustrial.industrialization.title": "Индустриализация",
   "advancements.alaindustrial.iron_chest.description": "Разместите железный сундук",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "Золотой кабель",
   "block.alaindustrial.electrum_cable": "Электрумовый кабель",
   "block.alaindustrial.gold_chest": "Золотой сундук",
+  "block.alaindustrial.electrum_chest": "Электрумовый сундук",
   "block.alaindustrial.high_altitude_wind_mill": "Небесный ветряк",
   "block.alaindustrial.incubator": "Инкубатор",
   "block.alaindustrial.incubator_dome": "Купол инкубатора",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "Двойной железный сундук",
   "container.alaindustrial.silver_chest_double": "Двойной серебряный сундук",
   "container.alaindustrial.gold_chest_double": "Двойной золотой сундук",
+  "container.alaindustrial.electrum_chest_double": "Двойной электрумовый сундук",
   "tag.item.alaindustrial.water_mill_wheels": "Колёса водяной мельницы",
   "tag.item.alaindustrial.windmill_rotors": "Роторы ветряка"
 }

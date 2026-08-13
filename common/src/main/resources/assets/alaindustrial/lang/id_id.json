@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "Aset Likuid",
   "advancements.alaindustrial.geothermal_power.description": "Buat Generator Geotermal",
   "advancements.alaindustrial.geothermal_power.title": "Tenaga Geotermal",
-  "advancements.alaindustrial.gold_chest.description": "Pasang Peti Emas, penyimpanan kelas tertinggi",
+  "advancements.alaindustrial.gold_chest.description": "Pasang Peti Emas, tingkat di atas perak",
+  "advancements.alaindustrial.electrum_chest.description": "Pasang Peti Elektrum, penyimpanan kelas tertinggi",
   "advancements.alaindustrial.gold_chest.title": "Brankas Emas",
+  "advancements.alaindustrial.electrum_chest.title": "Brankas Elektrum",
   "advancements.alaindustrial.industrialization.description": "Bangun Penggiling, Tungku Listrik, Kompresor, dan Ekstraktor",
   "advancements.alaindustrial.industrialization.title": "Industrialisasi",
   "advancements.alaindustrial.iron_chest.description": "Pasang Peti Besi",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "Kabel Emas",
   "block.alaindustrial.electrum_cable": "Kabel Elektrum",
   "block.alaindustrial.gold_chest": "Peti Emas",
+  "block.alaindustrial.electrum_chest": "Peti Elektrum",
   "block.alaindustrial.high_altitude_wind_mill": "Kincir Langit",
   "block.alaindustrial.incubator": "Inkubator",
   "block.alaindustrial.incubator_dome": "Kubah Inkubator",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "Peti Besi Ganda",
   "container.alaindustrial.silver_chest_double": "Peti Perak Ganda",
   "container.alaindustrial.gold_chest_double": "Peti Emas Ganda",
+  "container.alaindustrial.electrum_chest_double": "Peti Elektrum Ganda",
   "tag.item.alaindustrial.water_mill_wheels": "Roda Kincir Air",
   "tag.item.alaindustrial.windmill_rotors": "Rotor Kincir Angin"
 }

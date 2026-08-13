@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "Beni liquidi",
   "advancements.alaindustrial.geothermal_power.description": "Crea un generatore geotermico",
   "advancements.alaindustrial.geothermal_power.title": "Energia geotermica",
-  "advancements.alaindustrial.gold_chest.description": "Piazza un baule d'oro, il deposito di massimo livello",
+  "advancements.alaindustrial.gold_chest.description": "Piazza un baule d'oro, il livello sopra l'argento",
+  "advancements.alaindustrial.electrum_chest.description": "Piazza un baule di elettro, il deposito di massimo livello",
   "advancements.alaindustrial.gold_chest.title": "Caveau dorato",
+  "advancements.alaindustrial.electrum_chest.title": "Caveau di elettro",
   "advancements.alaindustrial.industrialization.description": "Costruisci un trituratore, una fornace elettrica, un compressore e un estrattore",
   "advancements.alaindustrial.industrialization.title": "Industrializzazione",
   "advancements.alaindustrial.iron_chest.description": "Piazza un baule di ferro",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "Cavo d'oro",
   "block.alaindustrial.electrum_cable": "Cavo di elettro",
   "block.alaindustrial.gold_chest": "Baule d'oro",
+  "block.alaindustrial.electrum_chest": "Baule di elettro",
   "block.alaindustrial.high_altitude_wind_mill": "Turbina d'alta quota",
   "block.alaindustrial.incubator": "Incubatrice",
   "block.alaindustrial.incubator_dome": "Cupola dell’incubatrice",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "Baule di ferro doppio",
   "container.alaindustrial.silver_chest_double": "Baule d'argento doppio",
   "container.alaindustrial.gold_chest_double": "Baule d'oro doppio",
+  "container.alaindustrial.electrum_chest_double": "Baule di elettro doppio",
   "tag.item.alaindustrial.water_mill_wheels": "Ruote del mulino ad acqua",
   "tag.item.alaindustrial.windmill_rotors": "Rotori del mulino a vento"
 }

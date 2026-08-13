@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "Vloeibaar kapitaal",
   "advancements.alaindustrial.geothermal_power.description": "Vervaardig een geothermische generator",
   "advancements.alaindustrial.geothermal_power.title": "Geothermische energie",
-  "advancements.alaindustrial.gold_chest.description": "Plaats een Gouden kist, de beste opslag",
+  "advancements.alaindustrial.gold_chest.description": "Plaats een Gouden kist, de trede boven zilver",
+  "advancements.alaindustrial.electrum_chest.description": "Plaats een Elektrumkist, de beste opslag",
   "advancements.alaindustrial.gold_chest.title": "Gouden kluis",
+  "advancements.alaindustrial.electrum_chest.title": "Elektrumkluis",
   "advancements.alaindustrial.industrialization.description": "Bouw een vermaler, elektrische oven, compressor en extractor",
   "advancements.alaindustrial.industrialization.title": "Industrialisatie",
   "advancements.alaindustrial.iron_chest.description": "Plaats een IJzeren kist",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "Gouden kabel",
   "block.alaindustrial.electrum_cable": "Elektrumkabel",
   "block.alaindustrial.gold_chest": "Gouden kist",
+  "block.alaindustrial.electrum_chest": "Elektrumkist",
   "block.alaindustrial.high_altitude_wind_mill": "Hemelse molen",
   "block.alaindustrial.incubator": "Incubator",
   "block.alaindustrial.incubator_dome": "Incubatorkoepel",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "Dubbele ijzeren kist",
   "container.alaindustrial.silver_chest_double": "Dubbele zilveren kist",
   "container.alaindustrial.gold_chest_double": "Dubbele gouden kist",
+  "container.alaindustrial.electrum_chest_double": "Dubbele elektrumkist",
   "tag.item.alaindustrial.water_mill_wheels": "Watermolenraderen",
   "tag.item.alaindustrial.windmill_rotors": "Windmolenrotoren"
 }

@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "Flüssige Werte",
   "advancements.alaindustrial.geothermal_power.description": "Stelle einen Geothermalgenerator her",
   "advancements.alaindustrial.geothermal_power.title": "Geothermale Kraft",
-  "advancements.alaindustrial.gold_chest.description": "Platziere eine Goldtruhe, den Speicher der Spitzenklasse",
+  "advancements.alaindustrial.gold_chest.description": "Platziere eine Goldtruhe, die Stufe über Silber",
+  "advancements.alaindustrial.electrum_chest.description": "Platziere eine Elektrumtruhe, den Speicher der Spitzenklasse",
   "advancements.alaindustrial.gold_chest.title": "Goldener Tresor",
+  "advancements.alaindustrial.electrum_chest.title": "Elektrum-Tresor",
   "advancements.alaindustrial.industrialization.description": "Baue einen Brecher, einen Elektroofen, einen Kompressor und einen Extraktor",
   "advancements.alaindustrial.industrialization.title": "Industrialisierung",
   "advancements.alaindustrial.iron_chest.description": "Platziere eine Eisentruhe",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "Goldkabel",
   "block.alaindustrial.electrum_cable": "Elektrumkabel",
   "block.alaindustrial.gold_chest": "Goldtruhe",
+  "block.alaindustrial.electrum_chest": "Elektrumtruhe",
   "block.alaindustrial.high_altitude_wind_mill": "Höhenwindturbine",
   "block.alaindustrial.incubator": "Inkubator",
   "block.alaindustrial.incubator_dome": "Inkubatorkuppel",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "Doppelte Eisentruhe",
   "container.alaindustrial.silver_chest_double": "Doppelte Silbertruhe",
   "container.alaindustrial.gold_chest_double": "Doppelte Goldtruhe",
+  "container.alaindustrial.electrum_chest_double": "Doppelte Elektrumtruhe",
   "tag.item.alaindustrial.water_mill_wheels": "Wassermühlenräder",
   "tag.item.alaindustrial.windmill_rotors": "Windmühlenrotoren"
 }

@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "Activos líquidos",
   "advancements.alaindustrial.geothermal_power.description": "Fabrica un generador geotérmico",
   "advancements.alaindustrial.geothermal_power.title": "Energía geotérmica",
-  "advancements.alaindustrial.gold_chest.description": "Coloca un cofre de oro, el almacenamiento de nivel máximo",
+  "advancements.alaindustrial.gold_chest.description": "Coloca un cofre de oro, el nivel superior a la plata",
+  "advancements.alaindustrial.electrum_chest.description": "Coloca un cofre de electro, el almacenamiento de nivel máximo",
   "advancements.alaindustrial.gold_chest.title": "Bóveda dorada",
+  "advancements.alaindustrial.electrum_chest.title": "Bóveda de electro",
   "advancements.alaindustrial.industrialization.description": "Construye un triturador, un horno eléctrico, un compresor y un extractor",
   "advancements.alaindustrial.industrialization.title": "Industrialización",
   "advancements.alaindustrial.iron_chest.description": "Coloca un cofre de hierro",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "Cable de oro",
   "block.alaindustrial.electrum_cable": "Cable de electro",
   "block.alaindustrial.gold_chest": "Cofre de oro",
+  "block.alaindustrial.electrum_chest": "Cofre de electro",
   "block.alaindustrial.high_altitude_wind_mill": "Molino del cielo",
   "block.alaindustrial.incubator": "Incubadora",
   "block.alaindustrial.incubator_dome": "Cúpula de incubadora",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "Cofre de hierro doble",
   "container.alaindustrial.silver_chest_double": "Cofre de plata doble",
   "container.alaindustrial.gold_chest_double": "Cofre de oro doble",
+  "container.alaindustrial.electrum_chest_double": "Cofre de electro doble",
   "tag.item.alaindustrial.water_mill_wheels": "Ruedas de molino de agua",
   "tag.item.alaindustrial.windmill_rotors": "Rotores de molino de viento"
 }

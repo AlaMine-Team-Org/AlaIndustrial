@@ -309,6 +309,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.IRON_CHEST_ITEM);
 		show(out, ModContent.SILVER_CHEST_ITEM);
 		show(out, ModContent.GOLD_CHEST_ITEM);
+		show(out, ModContent.ELECTRUM_CHEST_ITEM);
 		show(out, ModContent.STORAGE_MODULE_ITEM);
 		show(out, ModContent.STOCK_DISPLAY_FRAME_ITEM);
 	}

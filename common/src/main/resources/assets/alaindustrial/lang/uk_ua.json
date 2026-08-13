@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "Рідкі активи",
   "advancements.alaindustrial.geothermal_power.description": "Скрафтіть геотермальний генератор",
   "advancements.alaindustrial.geothermal_power.title": "Геотермальна потужність",
-  "advancements.alaindustrial.gold_chest.description": "Розмістіть золоту скриню — вершину лінійки зберігання",
+  "advancements.alaindustrial.gold_chest.description": "Розмістіть золоту скриню — тир вище срібної",
+  "advancements.alaindustrial.electrum_chest.description": "Розмістіть електрумову скриню — вершину лінійки зберігання",
   "advancements.alaindustrial.gold_chest.title": "Золоте сховище",
+  "advancements.alaindustrial.electrum_chest.title": "Електрумове сховище",
   "advancements.alaindustrial.industrialization.description": "Побудуйте Подрібнювач, Електричну піч, Компресор та Екстрактор",
   "advancements.alaindustrial.industrialization.title": "Індустріалізація",
   "advancements.alaindustrial.iron_chest.description": "Розмістіть залізну скриню",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "Золотий кабель",
   "block.alaindustrial.electrum_cable": "Електрумовий кабель",
   "block.alaindustrial.gold_chest": "Золота скриня",
+  "block.alaindustrial.electrum_chest": "Електрумова скриня",
   "block.alaindustrial.high_altitude_wind_mill": "Небесний вітряк",
   "block.alaindustrial.incubator": "Інкубатор",
   "block.alaindustrial.incubator_dome": "Купол інкубатора",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "Подвійна залізна скриня",
   "container.alaindustrial.silver_chest_double": "Подвійна срібна скриня",
   "container.alaindustrial.gold_chest_double": "Подвійна золота скриня",
+  "container.alaindustrial.electrum_chest_double": "Подвійна електрумова скриня",
   "tag.item.alaindustrial.water_mill_wheels": "Колеса водяного млина",
   "tag.item.alaindustrial.windmill_rotors": "Ротори вітряка"
 }

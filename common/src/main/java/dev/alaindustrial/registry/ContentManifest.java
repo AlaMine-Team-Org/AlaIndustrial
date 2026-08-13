@@ -26,6 +26,7 @@ import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.GardenDroneStationBlock;
 import dev.alaindustrial.block.GeneratorBlock;
 import dev.alaindustrial.block.GeothermalGeneratorBlock;
+import dev.alaindustrial.block.ElectrumChestBlock;
 import dev.alaindustrial.block.GoldChestBlock;
 import dev.alaindustrial.block.HighAltitudeWindMillBlock;
 import dev.alaindustrial.block.IncubatorBlock;
@@ -77,6 +78,7 @@ import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
+import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
@@ -115,6 +117,7 @@ import dev.alaindustrial.menu.ElectricFurnaceMenu;
 import dev.alaindustrial.menu.ExtractorMenu;
 import dev.alaindustrial.menu.GeneratorMenu;
 import dev.alaindustrial.menu.GeothermalGeneratorMenu;
+import dev.alaindustrial.menu.ElectrumChestMenu;
 import dev.alaindustrial.menu.GoldChestMenu;
 import dev.alaindustrial.menu.HighAltitudeWindMillMenu;
 import dev.alaindustrial.menu.IronChestMenu;
@@ -266,7 +269,10 @@ public final class ContentManifest {
 			menu("storage_module_6", StorageMenu6::new, s -> ModContent.STORAGE_MODULE_MENU_6 = s),
 			menu("silver_chest", SilverChestMenu::new, s -> ModContent.SILVER_CHEST_MENU = s),
 			menu("gold_chest", GoldChestMenu::new, s -> ModContent.GOLD_CHEST_MENU = s),
-			// MOD-391 — the double chest's 6-row scrolling window, one type for all three tiers.
+			// MOD-409 — the electrum tier: 81 slots behind the same 6-row scrolling window, so this
+			// is a single chest wearing the warehouse/double-chest machinery rather than a taller panel.
+			menu("electrum_chest", ElectrumChestMenu::new, s -> ModContent.ELECTRUM_CHEST_MENU = s),
+			// MOD-391 — the double chest's 6-row scrolling window, one type for every tier.
 			menu("double_chest", DoubleChestMenu::new, s -> ModContent.DOUBLE_CHEST_MENU = s));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
@@ -456,6 +462,10 @@ public final class ContentManifest {
 			block("silver_chest", SilverChestBlock::new, s -> ModContent.SILVER_CHEST = s);
 	public static final BlockDef<GoldChestBlock> GOLD_CHEST =
 			block("gold_chest", GoldChestBlock::new, s -> ModContent.GOLD_CHEST = s);
+	// Electrum Chest (MOD-409) — the tier above gold. Same block stats; the difference is inside
+	// (81 slots) and in the window (six rows + scrollbar instead of a taller panel).
+	public static final BlockDef<ElectrumChestBlock> ELECTRUM_CHEST =
+			block("electrum_chest", ElectrumChestBlock::new, s -> ModContent.ELECTRUM_CHEST = s);
 	// Material / decorative full cubes: cube_all model, one texture per block.
 	public static final BlockDef<Block> TEMPERED_IRON_BLOCK =
 			block("tempered_iron_block", Block::new, s -> ModContent.TEMPERED_IRON_BLOCK = s);
@@ -514,7 +524,7 @@ public final class ContentManifest {
 			VULCANIZER, GALVANIC_BATH, ELECTRIC_HEATER, CHARGE_PAD, ENERGY_CONDENSER, INCUBATOR,
 			INCUBATOR_DOME, TRELLIS, TIN_ORE, DEEPSLATE_TIN_ORE, SILVER_ORE, DEEPSLATE_SILVER_ORE,
 			NICKEL_ORE, DEEPSLATE_NICKEL_ORE, SULFUR_ORE, DEEPSLATE_SULFUR_ORE, URANIUM_ORE,
-			DEEPSLATE_URANIUM_ORE, IRON_CHEST, STORAGE_MODULE, SILVER_CHEST, GOLD_CHEST,
+			DEEPSLATE_URANIUM_ORE, IRON_CHEST, STORAGE_MODULE, SILVER_CHEST, GOLD_CHEST, ELECTRUM_CHEST,
 			TEMPERED_IRON_BLOCK, MACHINE_CASING, ADVANCED_MACHINE_CASING, SILVER_PLATE_BLOCK,
 			TEMPERED_IRON_PLATE_BLOCK, INDUSTRIAL_WORKBENCH, ENRICHED_URANIUM_TORCH,
 			ENRICHED_URANIUM_WALL_TORCH, OIL, DIESEL, FUEL_OIL);
@@ -642,6 +652,7 @@ public final class ContentManifest {
 			Map.entry("storage_module", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("silver_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("gold_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
+			Map.entry("electrum_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			Map.entry("tempered_iron_block", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL))),
 			// MOD-225: machine casing (crafting base for machines) + two decorative plate blocks.
 			Map.entry("machine_casing", machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL))),
@@ -984,7 +995,8 @@ public final class ContentManifest {
 			blockEntity("iron_chest", IronChestBlockEntity.class, IronChestBlockEntity::new, s -> ModContent.IRON_CHEST_BE = s, "iron_chest"),
 			blockEntity("storage_module", StorageModuleBlockEntity.class, StorageModuleBlockEntity::new, s -> ModContent.STORAGE_MODULE_BE = s, "storage_module"),
 			blockEntity("silver_chest", SilverChestBlockEntity.class, SilverChestBlockEntity::new, s -> ModContent.SILVER_CHEST_BE = s, "silver_chest"),
-			blockEntity("gold_chest", GoldChestBlockEntity.class, GoldChestBlockEntity::new, s -> ModContent.GOLD_CHEST_BE = s, "gold_chest"));
+			blockEntity("gold_chest", GoldChestBlockEntity.class, GoldChestBlockEntity::new, s -> ModContent.GOLD_CHEST_BE = s, "gold_chest"),
+			blockEntity("electrum_chest", ElectrumChestBlockEntity.class, ElectrumChestBlockEntity::new, s -> ModContent.ELECTRUM_CHEST_BE = s, "electrum_chest"));
 
 	/**
 	 * The definition for block-entity {@code id}, checked against the type the caller expects.

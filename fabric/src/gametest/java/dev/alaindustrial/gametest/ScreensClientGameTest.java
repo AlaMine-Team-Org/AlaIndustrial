@@ -103,6 +103,10 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             new Screen("iron_chest", "iron_chest", "Iron Chest"),
             new Screen("silver_chest", "silver_chest", "Silver Chest"),
             new Screen("gold_chest", "gold_chest", "Gold Chest"),
+            // MOD-409: the electrum tier — the first SINGLE chest whose window scrolls. The frame is
+            // worth having precisely because of that: it must show the scrollbar ACTIVE (nine rows
+            // behind a six-row panel), unlike every other single-chest frame above it.
+            new Screen("electrum_chest", "electrum_chest", "Electrum Chest"),
             // MOD-391: the double chest's shared 6-row scrolling window. The stand is a PAIR of iron
             // chests (see placeScreenBlock) and the click lands on the right half — the menu joins
             // both, so the frame shows the scrollbar and the per-tier "Double Iron Chest" title.

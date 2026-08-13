@@ -2221,6 +2221,44 @@
               "result_count": 1
             }
           ]
+        },
+        {
+          "id": "electrum_chest",
+          "title": "Электрумовый сундук",
+          "icon": "alaindustrial:electrum_chest",
+          "block_id": "alaindustrial:electrum_chest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Электрумовый сундук",
+              "text": "Сундук на 81 слот — тир выше золотого. Девять рядов за окном на шесть рядов с полосой прокрутки. Энергии не требует."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 81 слот"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:gold_chest",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot",
+                "alaindustrial:electrum_ingot"
+              ],
+              "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
         }
       ]
     },

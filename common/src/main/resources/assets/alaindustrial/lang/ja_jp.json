@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "流動資産",
   "advancements.alaindustrial.geothermal_power.description": "地熱発電機をクラフトしよう",
   "advancements.alaindustrial.geothermal_power.title": "地熱発電",
-  "advancements.alaindustrial.gold_chest.description": "最上位の収納、金のチェストを設置しよう",
+  "advancements.alaindustrial.gold_chest.description": "銀の一つ上の階層、金のチェストを設置しよう",
+  "advancements.alaindustrial.electrum_chest.description": "最上位の収納、エレクトラムのチェストを設置しよう",
   "advancements.alaindustrial.gold_chest.title": "黄金の金庫",
+  "advancements.alaindustrial.electrum_chest.title": "エレクトラムの金庫",
   "advancements.alaindustrial.industrialization.description": "粉砕機、電気かまど、圧縮機、抽出機を作ろう",
   "advancements.alaindustrial.industrialization.title": "工業化",
   "advancements.alaindustrial.iron_chest.description": "鉄のチェストを設置しよう",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "金ケーブル",
   "block.alaindustrial.electrum_cable": "エレクトラムケーブル",
   "block.alaindustrial.gold_chest": "金のチェスト",
+  "block.alaindustrial.electrum_chest": "エレクトラムのチェスト",
   "block.alaindustrial.high_altitude_wind_mill": "スカイミル",
   "block.alaindustrial.incubator": "インキュベーター",
   "block.alaindustrial.incubator_dome": "インキュベータードーム",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "ラージ鉄のチェスト",
   "container.alaindustrial.silver_chest_double": "ラージ銀のチェスト",
   "container.alaindustrial.gold_chest_double": "ラージ金のチェスト",
+  "container.alaindustrial.electrum_chest_double": "ラージエレクトラムのチェスト",
   "tag.item.alaindustrial.water_mill_wheels": "水車の車輪",
   "tag.item.alaindustrial.windmill_rotors": "風車のローター"
 }

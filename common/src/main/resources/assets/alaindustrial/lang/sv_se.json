@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "Flytande tillgångar",
   "advancements.alaindustrial.geothermal_power.description": "Tillverka en geotermisk generator",
   "advancements.alaindustrial.geothermal_power.title": "Geotermisk kraft",
-  "advancements.alaindustrial.gold_chest.description": "Placera en Guldkista, förvaringens toppklass",
+  "advancements.alaindustrial.gold_chest.description": "Placera en Guldkista, steget över silver",
+  "advancements.alaindustrial.electrum_chest.description": "Placera en Elektrumkista, förvaringens toppklass",
   "advancements.alaindustrial.gold_chest.title": "Gyllene valv",
+  "advancements.alaindustrial.electrum_chest.title": "Elektrumvalv",
   "advancements.alaindustrial.industrialization.description": "Bygg en krossare, elektrisk ugn, kompressor och extraktor",
   "advancements.alaindustrial.industrialization.title": "Industrialisering",
   "advancements.alaindustrial.iron_chest.description": "Placera en Järnkista",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "Guldkabel",
   "block.alaindustrial.electrum_cable": "Elektrumkabel",
   "block.alaindustrial.gold_chest": "Guldkista",
+  "block.alaindustrial.electrum_chest": "Elektrumkista",
   "block.alaindustrial.high_altitude_wind_mill": "Himmelskvarn",
   "block.alaindustrial.incubator": "Inkubator",
   "block.alaindustrial.incubator_dome": "Inkubatorkupol",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "Dubbel järnkista",
   "container.alaindustrial.silver_chest_double": "Dubbel silverkista",
   "container.alaindustrial.gold_chest_double": "Dubbel guldkista",
+  "container.alaindustrial.electrum_chest_double": "Dubbel elektrumkista",
   "tag.item.alaindustrial.water_mill_wheels": "Vattenkvarnshjul",
   "tag.item.alaindustrial.windmill_rotors": "Vindkraftrotorer"
 }

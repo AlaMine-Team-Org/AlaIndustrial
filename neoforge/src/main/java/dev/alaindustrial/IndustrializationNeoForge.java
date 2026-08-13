@@ -515,6 +515,7 @@ public final class IndustrializationNeoForge {
 		registerChestContainer(event, itemCap, ModBlockEntitiesNeoForge.IRON_CHEST);
 		registerChestContainer(event, itemCap, ModBlockEntitiesNeoForge.SILVER_CHEST);
 		registerChestContainer(event, itemCap, ModBlockEntitiesNeoForge.GOLD_CHEST);
+		registerChestContainer(event, itemCap, ModBlockEntitiesNeoForge.ELECTRUM_CHEST);
 		// MOD-287: the warehouse module. Without this line the pipe is blind to it on this loader
 		// only — Fabric wraps any Container through a global fallback — which is exactly the
 		// asymmetry the MOD-193 note below describes.

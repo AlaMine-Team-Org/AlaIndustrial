@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "Liquidités",
   "advancements.alaindustrial.geothermal_power.description": "Fabriquez un Générateur Géothermique",
   "advancements.alaindustrial.geothermal_power.title": "Puissance géothermique",
-  "advancements.alaindustrial.gold_chest.description": "Placez un coffre en or, le stockage de niveau supérieur",
+  "advancements.alaindustrial.gold_chest.description": "Placez un coffre en or, le palier au-dessus de l'argent",
+  "advancements.alaindustrial.electrum_chest.description": "Placez un coffre en électrum, le stockage de niveau supérieur",
   "advancements.alaindustrial.gold_chest.title": "Coffre-fort doré",
+  "advancements.alaindustrial.electrum_chest.title": "Coffre-fort en électrum",
   "advancements.alaindustrial.industrialization.description": "Construisez un broyeur, un four électrique, un compresseur et un extracteur",
   "advancements.alaindustrial.industrialization.title": "Industrialisation",
   "advancements.alaindustrial.iron_chest.description": "Placez un coffre en fer",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "Câble en or",
   "block.alaindustrial.electrum_cable": "Câble en électrum",
   "block.alaindustrial.gold_chest": "Coffre en or",
+  "block.alaindustrial.electrum_chest": "Coffre en électrum",
   "block.alaindustrial.high_altitude_wind_mill": "Moulin céleste",
   "block.alaindustrial.incubator": "Incubateur",
   "block.alaindustrial.incubator_dome": "Dôme d’incubateur",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "Double coffre en fer",
   "container.alaindustrial.silver_chest_double": "Double coffre en argent",
   "container.alaindustrial.gold_chest_double": "Double coffre en or",
+  "container.alaindustrial.electrum_chest_double": "Double coffre en électrum",
   "tag.item.alaindustrial.water_mill_wheels": "Roues de moulin à eau",
   "tag.item.alaindustrial.windmill_rotors": "Rotors d'éolienne"
 }

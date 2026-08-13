@@ -403,14 +403,19 @@ public final class DemoStand {
 	}
 
 	/**
-	 * Zone <b>misc</b> (row z=10): iron chest, silver chest, gold chest, tempered iron block, and a powered
-	 * sunken lava cell feeding the adjacent geothermal generator's tank.
+	 * Zone <b>misc</b> (row z=10): the four storage-chest tiers side by side (iron, silver, gold,
+	 * electrum), tempered iron block, and a powered sunken lava cell feeding the adjacent geothermal
+	 * generator's tank.
 	 */
 	private static void buildMisc(ServerLevel level, BlockPos origin) {
 		set(level, origin, 30, 1, 10, ModContent.IRON_CHEST.get());
 		set(level, origin, 31, 1, 10, ModContent.SILVER_CHEST.get());
 		set(level, origin, 32, 1, 10, ModContent.GOLD_CHEST.get());
-		set(level, origin, 33, 1, 10, ModContent.TEMPERED_IRON_BLOCK.get());
+		// MOD-409: the electrum tier keeps the storage ladder contiguous (30→33), so the row reads as
+		// a progression. The tempered iron block it displaced moved to the free cell at x=28 rather
+		// than sharing a cell — two `set` calls on one cell silently drop one block (MOD-292).
+		set(level, origin, 33, 1, 10, ModContent.ELECTRUM_CHEST.get());
+		set(level, origin, 28, 1, 10, ModContent.TEMPERED_IRON_BLOCK.get());
 		// MOD-287: two storage modules side by side on the shelf above the plate blocks — adjacent on
 		// purpose, so the stand shows them merged into one warehouse rather than two separate ones.
 		// x=32/33 rather than 30/31: MOD-292 owns (30, 3, 10) for the MV casing that has to sit directly

@@ -7,6 +7,7 @@ import dev.alaindustrial.gametest.EnergyNetworkPerfScenarios;
 import dev.alaindustrial.gametest.ForeignMaterialScenarios;
 import dev.alaindustrial.gametest.CableFaceParityScenarios;
 import dev.alaindustrial.gametest.DoubleChestScenarios;
+import dev.alaindustrial.gametest.ElectrumChestScenarios;
 import dev.alaindustrial.gametest.FluidPipeScenarios;
 import dev.alaindustrial.gametest.CableEnergyScenarios;
 import dev.alaindustrial.gametest.AdvancedCircuitScenarios;
@@ -667,6 +668,10 @@ public final class NeoForgeGameTests {
 
 		// Double chest (MOD-391, TC-CHEST-001) — same loader-neutral bodies as the Fabric suite.
 		registerTest(event, "double_chest_pair_forms_and_joins", 40, true, DoubleChestScenarios::fun01PairFormsAndJoins);
+		// MOD-409 — the electrum tier: a SINGLE chest taller than its window (suite TC-CHEST-002).
+		registerTest(event, "electrum_chest_window_scrolls", 40, true, ElectrumChestScenarios::fun01SingleChestWindowScrolls);
+		registerTest(event, "electrum_chest_shift_click_hidden_rows", 40, true, ElectrumChestScenarios::fun02ShiftClickReachesHiddenRows);
+		registerTest(event, "electrum_chest_never_pairs_with_gold", 40, true, ElectrumChestScenarios::fun03NeverPairsWithGold);
 		registerTest(event, "double_chest_cross_tier_never_pairs", 40, true, DoubleChestScenarios::fun02CrossTierNeverPairs);
 		registerTest(event, "double_chest_sneak_stays_single", 40, true, DoubleChestScenarios::fun03PlacementSneakStaysSingle);
 		registerTest(event, "double_chest_break_reverts_partner", 40, true, DoubleChestScenarios::fun04BreakHalfRevertsPartner);

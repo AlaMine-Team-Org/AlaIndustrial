@@ -49,8 +49,10 @@
   "advancements.alaindustrial.fluid_storage.title": "유동 자산",
   "advancements.alaindustrial.geothermal_power.description": "지열 발전기를 제작하세요",
   "advancements.alaindustrial.geothermal_power.title": "지열 발전",
-  "advancements.alaindustrial.gold_chest.description": "최상위 저장소인 금 상자를 설치하세요",
+  "advancements.alaindustrial.gold_chest.description": "은보다 한 단계 위인 금 상자를 설치하세요",
+  "advancements.alaindustrial.electrum_chest.description": "최상위 저장소인 호박금 상자를 설치하세요",
   "advancements.alaindustrial.gold_chest.title": "황금 금고",
+  "advancements.alaindustrial.electrum_chest.title": "호박금 금고",
   "advancements.alaindustrial.industrialization.description": "분쇄기, 전기 화로, 압축기, 추출기를 제작하세요",
   "advancements.alaindustrial.industrialization.title": "산업화",
   "advancements.alaindustrial.iron_chest.description": "철 상자를 설치하세요",
@@ -138,6 +140,7 @@
   "block.alaindustrial.gold_cable": "금 케이블",
   "block.alaindustrial.electrum_cable": "호박금 케이블",
   "block.alaindustrial.gold_chest": "금 상자",
+  "block.alaindustrial.electrum_chest": "호박금 상자",
   "block.alaindustrial.high_altitude_wind_mill": "고공 풍력 터빈",
   "block.alaindustrial.incubator": "인큐베이터",
   "block.alaindustrial.incubator_dome": "인큐베이터 돔",
@@ -695,6 +698,7 @@
   "container.alaindustrial.iron_chest_double": "대형 철 상자",
   "container.alaindustrial.silver_chest_double": "대형 은 상자",
   "container.alaindustrial.gold_chest_double": "대형 금 상자",
+  "container.alaindustrial.electrum_chest_double": "대형 호박금 상자",
   "tag.item.alaindustrial.water_mill_wheels": "물레방아 바퀴",
   "tag.item.alaindustrial.windmill_rotors": "풍차 회전날"
 }
