@@ -1,0 +1,64 @@
+# Collect download statistics for the guide site once a day.
+#
+# Neither Modrinth nor CurseForge exposes a public day-by-day history, so the
+# history is this file: one cumulative snapshot per day in data/stats.json, which
+# the site turns into the chart on its front page.
+#
+# data/stats.json deliberately lives OUTSIDE site/ — the wiki publish flow mirrors
+# site/ with `robocopy /MIR`, which deletes anything the private repo does not
+# have, and the site's stale gate treats extra files in site/ as drift.
+# pages-deploy.yml copies the file into the Pages artifact at deploy time.
+name: Stats
+
+on:
+  schedule:
+    # 04:17 UTC — deliberately off the top of the hour: scheduled runs queue
+    # globally and drift the most at :00.
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write      # commit the snapshot
+  actions: write       # trigger the Pages deploy below
+
+concurrency:
+  group: stats
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Collect snapshot
+        env:
+          # Optional. Without it the script falls back to the keyless cfwidget
+          # mirror; Modrinth needs no key at all.
+          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
+        run: python .github/scripts/fetch-stats.py --out data/stats.json
+
+      - name: Commit if changed
+        id: commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/stats.json
+          if git diff --staged --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "no change — nothing to commit"
+          else
+            git commit -m "chore(stats): daily download snapshot [skip ci]"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish updated data to Pages
+        # A push made with GITHUB_TOKEN does not start other workflows, so the
+        # deploy has to be asked for explicitly — workflow_dispatch is one of the
+        # few events that token may raise.
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run pages-deploy.yml --ref main

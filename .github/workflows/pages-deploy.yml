@@ -9,6 +9,7 @@ on:
     branches: [main]
     paths:
       - 'site/**'
+      - 'data/**'
       - '.github/workflows/pages-deploy.yml'
   workflow_dispatch:
 
@@ -34,6 +35,21 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
+      # Download stats (data/stats.json, written by stats.yml) are served next to
+      # the site, but must not be COMMITTED inside site/: the wiki publish flow
+      # mirrors that directory with `robocopy /MIR` and would delete them, and the
+      # site's stale gate would report them as drift. Copying them in here keeps
+      # site/ byte-identical to what the generator produces.
+      - name: Add stats data to the artifact
+        run: |
+          if [ -f data/stats.json ]; then
+            mkdir -p site/data
+            cp data/stats.json site/data/stats.json
+            echo "stats.json added ($(wc -c < data/stats.json) bytes)"
+          else
+            echo "no data/stats.json yet — the site hides the block on its own"
+          fi
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3

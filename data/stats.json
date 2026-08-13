@@ -1,0 +1,16 @@
+{
+ "generated": "2026-08-13T12:41:49Z",
+ "totals": {
+  "modrinth": 3634,
+  "curseforge": 2836,
+  "followers": 5,
+  "version": "0.1.91",
+  "loaders": {
+   "fabric": 1783,
+   "neoforge": 1849
+  }
+ },
+ "series": [
+  ["2026-08-13", 3634, 2836]
+ ]
+}
