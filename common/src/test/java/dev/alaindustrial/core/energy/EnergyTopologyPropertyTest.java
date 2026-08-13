@@ -77,7 +77,7 @@ class EnergyTopologyPropertyTest {
 			demand += r;
 		}
 		long moveTotal = EnergyShare.deliverable(supply, demand);
-		long[] shares = EnergyShare.split(moveTotal, room, demand, cap);
+		long[] shares = EnergyShare.split(moveTotal, room, demand, cap, 0);
 		long delivered = 0;
 		long lost = 0;
 		long moved = 0;
@@ -139,7 +139,7 @@ class EnergyTopologyPropertyTest {
 		for (long r : room) {
 			demand += r;
 		}
-		long[] shares = EnergyShare.split(EnergyShare.deliverable(supply, demand), room, demand, cap);
+		long[] shares = EnergyShare.split(EnergyShare.deliverable(supply, demand), room, demand, cap, 0);
 		for (int i = 0; i < room.length; i++) {
 			assertTrue(shares[i] <= room[i],
 					"consumer " + i + " was handed " + shares[i] + " EU into " + room[i] + " of room");

@@ -131,7 +131,7 @@ class EnergySharePropertyTest {
 		long[] room = unbox(roomBoxed);
 		long demand = 0;
 		for (long r : room) demand += r;
-		long[] share = EnergyShare.split(moveTotal, room, demand, packetCap);
+		long[] share = EnergyShare.split(moveTotal, room, demand, packetCap, 0);
 		assertEquals(room.length, share.length, "share length matches room length");
 		for (int i = 0; i < room.length; i++) {
 			assertTrue(share[i] >= 0, "share[" + i + "] ≥ 0");
@@ -148,7 +148,7 @@ class EnergySharePropertyTest {
 		long[] room = unbox(roomBoxed);
 		long demand = 0;
 		for (long r : room) demand += r;
-		long[] share = EnergyShare.split(moveTotal, room, demand, packetCap);
+		long[] share = EnergyShare.split(moveTotal, room, demand, packetCap, 0);
 		long sum = 0;
 		for (long s : share) sum += s;
 		assertTrue(sum <= moveTotal, "sum(share) ≤ moveTotal (no over-distribution)");
@@ -164,7 +164,7 @@ class EnergySharePropertyTest {
 	void split_smallOfferWithHeadroom_isFullyPlaced() {
 		// moveTotal=5, room=[10,10,10], demand=30, packetCap=32: every consumer has slack.
 		// Proportional: floorDiv(5*10,30)=1 each → 3, remainder 2 → placed on first two → [2,2,1] = 5.
-		long[] share = EnergyShare.split(5, new long[] {10, 10, 10}, 30, 32);
+		long[] share = EnergyShare.split(5, new long[] {10, 10, 10}, 30, 32, 0);
 		long sum = 0;
 		for (long s : share) sum += s;
 		assertEquals(5L, sum, "small offer with full headroom must be fully placed (no stranded EU)");

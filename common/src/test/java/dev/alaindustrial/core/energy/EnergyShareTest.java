@@ -99,14 +99,14 @@ class EnergyShareTest {
 
 	@Test
 	void split_exactProportions_noRemainder() {
-		long[] share = EnergyShare.split(10, new long[] {5, 3, 2}, 10, 32);
+		long[] share = EnergyShare.split(10, new long[] {5, 3, 2}, 10, 32, 0);
 		assertArrayEquals(new long[] {5, 3, 2}, share);
 	}
 
 	@Test
 	void split_roundingRemainder_fullyRedistributed() {
 		// 8 EU over three equal rooms of 3 (demand 9): floor gives 2+2+2=6, remainder 2 handed out.
-		long[] share = EnergyShare.split(8, new long[] {3, 3, 3}, 9, 32);
+		long[] share = EnergyShare.split(8, new long[] {3, 3, 3}, 9, 32, 0);
 		assertEquals(8L, sum(share), "every deliverable EU is placed (remainder not lost)");
 		for (long s : share) {
 			assertTrue(s <= 3, "never exceeds a consumer's room");
@@ -116,7 +116,7 @@ class EnergyShareTest {
 	@Test
 	void split_packetCapLimitsDelivery() {
 		// One consumer with huge room but a 32 EU/t cap: at most 32 moves even though 40 was offered.
-		long[] share = EnergyShare.split(40, new long[] {100}, 100, 32);
+		long[] share = EnergyShare.split(40, new long[] {100}, 100, 32, 0);
 		assertArrayEquals(new long[] {32}, share);
 	}
 
@@ -126,7 +126,7 @@ class EnergyShareTest {
 		long[] room = {7, 1, 50, 12};
 		long demand = Arrays.stream(room).sum();
 		long moveTotal = 40; // ≤ demand, per the production contract
-		long[] share = EnergyShare.split(moveTotal, room, demand, packetCap);
+		long[] share = EnergyShare.split(moveTotal, room, demand, packetCap, 0);
 		long total = 0;
 		for (int i = 0; i < room.length; i++) {
 			assertTrue(share[i] >= 0, "no negative share");
@@ -139,12 +139,12 @@ class EnergyShareTest {
 
 	@Test
 	void split_zeroMoveTotal_givesAllZeros() {
-		assertArrayEquals(new long[] {0, 0}, EnergyShare.split(0, new long[] {5, 5}, 10, 32));
+		assertArrayEquals(new long[] {0, 0}, EnergyShare.split(0, new long[] {5, 5}, 10, 32, 0));
 	}
 
 	@Test
 	void split_singleConsumer_takesItsCappedShare() {
-		assertArrayEquals(new long[] {16}, EnergyShare.split(16, new long[] {20}, 20, 32));
+		assertArrayEquals(new long[] {16}, EnergyShare.split(16, new long[] {20}, 20, 32, 0));
 	}
 
 	// --- pitest-driven additions: kill the surviving mutants ---
@@ -157,16 +157,21 @@ class EnergyShareTest {
 	 *   <li>L66 — a negated {@code i < room.length} skips the loop, falling back to greedy remainder fill;</li>
 	 *   <li>L67 — a {@code *}→{@code /} on {@code moveTotal * room[i]} miscomputes each share.</li>
 	 * </ul>
-	 * Both produce {@code [7,1,32,0]} (greedy by order) instead of the proportional {@code [6,0,28,6]}.
+	 * Both produce {@code [7,1,32,0]} (greedy by order) instead of the proportional main-loop result.
 	 * The exact-value assertion kills both. (The {@code *}→{@code /} mutation is mostly masked by the
-	 * remainder-redistribution loop on smaller cases; this asymmetric {@code room} is the minimal case
-	 * where the cap-bound largest consumer strands the surplus and the divergence shows.)
+	 * remainder loop on smaller cases; this asymmetric {@code room} is the minimal case where the
+	 * cap-bound largest consumer strands the surplus and the divergence shows.)
+	 *
+	 * <p>MOD-413: the proportional floors are {@code [4,0,28,6]} (assigned 38 of 40); the 2-EU
+	 * remainder is now dealt one EU at a time from the rotation offset (0 here), landing on consumers
+	 * 0 and 1 — hence {@code [5,1,28,6]}, not the pre-MOD-413 greedy {@code [6,0,28,6]} where the
+	 * first consumer swallowed both.
 	 */
 	@Test
 	void split_distributesProportionallyToRoom_notGreedilyByOrder() {
-		long[] share = EnergyShare.split(40, new long[] {7, 1, 50, 12}, 70, 32);
-		assertArrayEquals(new long[] {6, 0, 28, 6}, share,
-				"share must follow room proportions (40×room/70), not greedy first-fit");
+		long[] share = EnergyShare.split(40, new long[] {7, 1, 50, 12}, 70, 32, 0);
+		assertArrayEquals(new long[] {5, 1, 28, 6}, share,
+				"share must follow room proportions (40×room/70) with the remainder dealt round-robin");
 	}
 
 	/**
@@ -181,7 +186,7 @@ class EnergyShareTest {
 	void split_proportionalKernel_exactSharesForAsymmetricRoom() {
 		// moveTotal=18, room=[3,1,20,5], demand=29, packetCap=32.
 		// Correct: floorDiv(18*3,29)=1... let the assertion document the actual proportional shares.
-		long[] share = EnergyShare.split(18, new long[] {3, 1, 20, 5}, 29, 32);
+		long[] share = EnergyShare.split(18, new long[] {3, 1, 20, 5}, 29, 32, 0);
 		long total = sum(share);
 		assertTrue(total <= 18, "total ≤ moveTotal");
 		// The big-room consumer (index 2) must get strictly more than the small-room one (index 0):
@@ -201,7 +206,7 @@ class EnergyShareTest {
 		// moveTotal=4, room=[3,3], demand=6: floorDiv(4*3,6)=2 each → assigned 4, remainder 0. Boring.
 		// moveTotal=5, room=[3,3], demand=6: floorDiv(5*3,6)=2 each → assigned 4, remainder 1.
 		// The remainder 1 must land on consumer 0 (first with headroom), giving [3,2].
-		long[] share = EnergyShare.split(5, new long[] {3, 3}, 6, 32);
+		long[] share = EnergyShare.split(5, new long[] {3, 3}, 6, 32, 0);
 		assertArrayEquals(new long[] {3, 2}, share, "the single-EU remainder must be placed, not stranded");
 	}
 
@@ -218,7 +223,7 @@ class EnergyShareTest {
 		// Proportional: floorDiv(10*3,9)=3 each → assigned 9, remainder 1 → placed on consumer 0 → [3,3,3] capped... 
 		// actually 3 each already at room, remainder 1 has nowhere to go. Use room that has slack:
 		// moveTotal=10, room=[4,4,4], demand=12, packetCap=32: floorDiv(10*4,12)=3 each → assigned 9, rem 1 → [4,3,3].
-		long[] share = EnergyShare.split(10, new long[] {4, 4, 4}, 12, 32);
+		long[] share = EnergyShare.split(10, new long[] {4, 4, 4}, 12, 32, 0);
 		assertEquals(10L, sum(share), "remainder fully redistributed when consumers have headroom");
 		for (long s : share) {
 			assertTrue(s <= 4, "never exceeds room");
@@ -234,9 +239,9 @@ class EnergyShareTest {
 	 */
 	@Test
 	void split_negativeMoveTotalOrDemand_returnsAllZeros() {
-		assertArrayEquals(new long[] {0, 0}, EnergyShare.split(-5, new long[] {3, 3}, 6, 32),
+		assertArrayEquals(new long[] {0, 0}, EnergyShare.split(-5, new long[] {3, 3}, 6, 32, 0),
 				"negative moveTotal must short-circuit to zero shares");
-		assertArrayEquals(new long[] {0, 0}, EnergyShare.split(10, new long[] {3, 3}, -6, 32),
+		assertArrayEquals(new long[] {0, 0}, EnergyShare.split(10, new long[] {3, 3}, -6, 32, 0),
 				"negative demand must short-circuit to zero shares");
 	}
 
@@ -270,26 +275,46 @@ class EnergyShareTest {
 	 *       ⇒ {@code assigned == 0}, {@code remainder = moveTotal - assigned = 0} ⇒ the remainder loop
 	 *       body never fires ⇒ {@code share = [0, 0, …]}, identical to the guarded early return.</li>
 	 *
-	 *   <li><b>{@code split} L75 — {@code while (… && remainder > 0)}</b>. {@code remainder} is
-	 *       initialised as {@code moveTotal - assigned} where {@code assigned = Σ share[i]} and every
-	 *       {@code share[i]} is floored down, so {@code remainder >= 0} always. The flip {@code >} →
-	 *       {@code >=} only adds an iteration when {@code remainder == 0}; in that iteration
-	 *       {@code extra = min(0, min(room[i] - share[i], packetCap - share[i])) = 0} (the inner
-	 *       {@code min} arguments are ≥ 0 since {@code share[i] <= room[i]} and {@code share[i] <= packetCap}
-	 *       by L68–69), and {@code if (extra > 0)} on L77 skips the mutation ⇒ the extra iteration is a
-	 *       no-op ⇒ the mutant is observationally identical.</li>
-	 *
-	 *   <li><b>{@code split} L77 — {@code if (extra > 0)}</b>. The flip {@code >} → {@code >=} only
-	 *       matters when {@code extra == 0}; the body is {@code share[i] += 0; remainder -= 0;}, both
-	 *       no-ops ⇒ indistinguishable.</li>
+	 *   <li><b>{@code split} — the OUTER {@code while (remainder > 0 && progress)} guard</b>
+	 *       (MOD-413: the loop now deals one EU per consumer per sweep from a rotated start, but the
+	 *       boundary argument survives the rewrite). {@code remainder} is initialised as
+	 *       {@code moveTotal - assigned} where {@code assigned = Σ share[i]} and every
+	 *       {@code share[i]} is floored down, so {@code remainder >= 0} always. A {@code >} →
+	 *       {@code >=} flip only adds a sweep when {@code remainder == 0}; the INNER loop's own
+	 *       {@code remainder > 0} condition then fails on its first check, nothing is dealt,
+	 *       {@code progress} stays false and the loop exits ⇒ the extra sweep is a no-op ⇒
+	 *       observationally identical. (The INNER guard's flip is NOT equivalent — it would deal an
+	 *       EU that does not exist and push {@code sum(share)} past {@code moveTotal}, which
+	 *       {@code split_sumNeverExceedsMoveTotal} kills.)</li>
 	 * </ul>
 	 *
 	 * <p>See MOD-113 task.md "Equivalent mutants" for the recorded audit. Not killable by any test.
 	 */
+	/**
+	 * The MOD-413 defect, pinned at the unit level: at a trickle (supply below the consumer count)
+	 * every proportional share floors to zero and the WHOLE flow is remainder. Dealt greedily from
+	 * index 0 — the pre-MOD-413 behaviour — the first consumer in list order took 100% of the supply
+	 * on every tick and the machine behind the other branch of a symmetric fork sat at 0 EU forever
+	 * (the player report this task started from). The rotation must move the single EU across
+	 * consumers as the network's tick cursor advances.
+	 */
+	@Test
+	void split_trickleRemainder_rotatesAcrossConsumers() {
+		assertArrayEquals(new long[] {1, 0}, EnergyShare.split(1, new long[] {32, 32}, 64, 32, 0),
+				"rotation 0: the single EU lands on consumer 0");
+		assertArrayEquals(new long[] {0, 1}, EnergyShare.split(1, new long[] {32, 32}, 64, 32, 1),
+				"rotation 1: the same tick-cursor advance moves it to consumer 1");
+		assertArrayEquals(new long[] {1, 0}, EnergyShare.split(1, new long[] {32, 32}, 64, 32, 2),
+				"rotation 2: and back — long-run shares equalise");
+		// A free-running cursor may sit anywhere near Integer.MAX_VALUE; floorMod keeps it in range.
+		assertArrayEquals(new long[] {0, 1}, EnergyShare.split(1, new long[] {32, 32}, 64, 32, Integer.MAX_VALUE),
+				"a huge cursor value is reduced with floorMod, not %");
+	}
+
 	@Test
 	void split_demandZero_returnsZerosWithoutArithmeticException() {
 		long[] share = assertDoesNotThrow(
-				() -> EnergyShare.split(10, new long[] {3, 3}, 0, 32),
+				() -> EnergyShare.split(10, new long[] {3, 3}, 0, 32, 0),
 				"demand == 0 must short-circuit BEFORE the floorDiv divides by zero");
 		assertArrayEquals(new long[] {0, 0}, share,
 				"demand == 0 yields all-zero shares (no distribution possible)");
@@ -304,7 +329,7 @@ class EnergyShareTest {
 	@ParameterizedTest
 	@MethodSource("splitSweep")
 	void split_invariantsHold(long moveTotal, long[] room, long demand, long packetCap) {
-		long[] share = EnergyShare.split(moveTotal, room, demand, packetCap);
+		long[] share = EnergyShare.split(moveTotal, room, demand, packetCap, 0);
 		assertEquals(room.length, share.length, "share array matches room length");
 		long total = 0;
 		for (int i = 0; i < room.length; i++) {
@@ -320,13 +345,13 @@ class EnergyShareTest {
 	@ParameterizedTest
 	@MethodSource("splitSweep")
 	void split_monotonicInMoveTotal(long moveTotal, long[] room, long demand, long packetCap) {
-		long[] baseline = EnergyShare.split(moveTotal, room, demand, packetCap);
+		long[] baseline = EnergyShare.split(moveTotal, room, demand, packetCap, 0);
 		// Offer twice as much (capped so the test stays meaningful when room saturates).
 		long doubledOffer = Math.min(moveTotal * 2, demand);
 		if (doubledOffer <= moveTotal) {
 			return; // nothing to compare (room already saturated at baseline)
 		}
-		long[] boosted = EnergyShare.split(doubledOffer, room, demand, packetCap);
+		long[] boosted = EnergyShare.split(doubledOffer, room, demand, packetCap, 0);
 		for (int i = 0; i < room.length; i++) {
 			assertTrue(boosted[i] >= baseline[i],
 					"a larger offer must not shrink any consumer's share (non-monotonic clamp suspected)");

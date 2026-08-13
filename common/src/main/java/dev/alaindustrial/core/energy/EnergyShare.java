@@ -55,15 +55,29 @@ public final class EnergyShare {
 	/**
 	 * Split {@code moveTotal} EU across consumers proportionally to each one's free {@code room},
 	 * capping every consumer at {@code packetCap} (the tier's per-tick transfer limit). Any rounding
-	 * remainder is handed out to consumers that still have headroom, in order.
+	 * remainder is dealt out ONE EU at a time, round-robin from a caller-rotated start.
+	 *
+	 * <p><b>The remainder is the whole game at a trickle (MOD-413).</b> When the supply is smaller
+	 * than the consumer count — one solar panel's {@code solarEuPerTick = 1} feeding two machines
+	 * behind a fork — every proportional share floors to zero and the ENTIRE flow is remainder.
+	 * Handing it out greedily from index 0 (as this method did) gave the first consumer in list
+	 * order 100% of the supply on every tick and the second exactly nothing, forever; the list order
+	 * is geometric, so which machine starved was decided by the build's world coordinates. This is
+	 * the same defect the MOD-254 review removed from the cable-fork split
+	 * ({@code EnergyLineDistributor#shareAmongClaimants}); this method is its serve-path twin and
+	 * uses the same cure: no consumer takes a second EU while another that still has headroom has
+	 * taken none, and the starting point advances with the network's tick cursor. Deterministic —
+	 * the rotation is a tick counter, never a random source.
 	 *
 	 * @param moveTotal total EU to distribute (≥ 0, already net of loss)
 	 * @param room      free capacity per consumer (each ≥ 0)
 	 * @param demand    sum of {@code room} (caller-provided to match the live path; must be &gt; 0)
 	 * @param packetCap per-consumer per-tick cap (tier voltage)
+	 * @param rotation  per-tick rotation offset for the remainder's starting consumer; reduced with
+	 *     {@link Math#floorMod} against the consumer count, so a free-running counter is safe
 	 * @return per-consumer EU share, same length/order as {@code room}; sum ≤ {@code moveTotal}
 	 */
-	public static long[] split(long moveTotal, long[] room, long demand, long packetCap) {
+	public static long[] split(long moveTotal, long[] room, long demand, long packetCap, int rotation) {
 		long[] share = new long[room.length];
 		if (moveTotal <= 0 || demand <= 0) {
 			return share;
@@ -76,13 +90,20 @@ public final class EnergyShare {
 			share[i] = s;
 			assigned += s;
 		}
-		// Distribute the rounding remainder to consumers that still have room (capped by packetCap).
+		// Deal the rounding remainder one EU per consumer per sweep, starting at the rotating
+		// offset. A sweep that hands out nothing means every consumer is at its room or packet cap,
+		// which is the only exit besides an exhausted remainder — so the loop always terminates.
 		long remainder = moveTotal - assigned;
-		for (int i = 0; i < room.length && remainder > 0; i++) {
-			long extra = Math.min(remainder, Math.min(room[i] - share[i], packetCap - share[i]));
-			if (extra > 0) {
-				share[i] += extra;
-				remainder -= extra;
+		boolean progress = true;
+		while (remainder > 0 && progress) {
+			progress = false;
+			for (int k = 0; k < room.length && remainder > 0; k++) {
+				int i = Math.floorMod(rotation + k, room.length);
+				if (share[i] < Math.min(room[i], packetCap)) {
+					share[i]++;
+					remainder--;
+					progress = true;
+				}
 			}
 		}
 		return share;

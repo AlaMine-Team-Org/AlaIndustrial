@@ -566,6 +566,15 @@ final class EnergyLineDistributor {
 	 * So when demand rises the spur drains back toward the machines on its own, and the wire behaves as
 	 * the buffer MOD-070 made it.
 	 *
+	 * <p><b>"Brim-full" alone is not "surplus" (MOD-413).</b> This pass runs right after the sweep, so a
+	 * donor can be full only because the sweep filled it THIS tick — with the packet that is still on its
+	 * way to a waiting machine. Taking it reverses the sweep's transfer inside the same tick: on the
+	 * player rig that bit, the spur toward a topped-off machine and the junction cable swapped one packet
+	 * back and forth forever while the machine on the other branch sat at 24/800 EU with the whole line
+	 * saturated behind it. So a donor is only touchable when it ALSO has nowhere left to push — no
+	 * strictly-downhill cable neighbour with room (see {@link #donorStillOwedDownhill}). A packet that
+	 * can still advance toward demand is delivery, not surplus.
+	 *
 	 * <p>Loss-free, like every other cable-to-cable move: the resistive cost is charged once, per consumer,
 	 * on delivery.
 	 *
@@ -600,6 +609,9 @@ final class EnergyLineDistributor {
 				if (from == null || from.getAmount() < from.getCapacity()) {
 					continue; // surplus only — see the contract above
 				}
+				if (donorStillOwedDownhill(np)) {
+					continue; // MOD-413: full, but its packet can still advance toward demand
+				}
 				long got = from.extract(Math.min(room, from.getAmount()), tx);
 				if (got <= 0) {
 					continue;
@@ -614,6 +626,34 @@ final class EnergyLineDistributor {
 				room -= inserted;
 			}
 		}
+	}
+
+	/**
+	 * Does this brim-full stranded-fill donor still owe its packet to the corridor (MOD-413)? True when
+	 * any strictly-downhill flow-potential cable neighbour has room: the sweep will carry the donor's
+	 * charge there on its next pass, so the charge is delivery in transit, not surplus, and
+	 * {@link #fillStrandedOneHop} must not siphon it into a spur. Only once everything below the donor
+	 * is full has the corridor genuinely nowhere to put the packet — that is the surplus the stranded
+	 * fill exists to mop up. Reads {@link #flowPotential}, which in sink mode (the only mode with a
+	 * non-empty stranded set) is the distance to the nearest waiting sink.
+	 */
+	private boolean donorStillOwedDownhill(BlockPos donorPos) {
+		Integer donorPotential = flowPotential.apply(donorPos);
+		if (donorPotential == null) {
+			return false;
+		}
+		for (Direction dir : DIRECTIONS) {
+			BlockPos np = donorPos.relative(dir);
+			Integer p = flowPotential.apply(np);
+			if (p == null || p >= donorPotential) {
+				continue;
+			}
+			EnergyBuffer buf = cableBufferAt.apply(np);
+			if (buf != null && buf.getAmount() < buf.getCapacity()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -636,7 +676,11 @@ final class EnergyLineDistributor {
 			demand += room[i];
 		}
 		long moveTotal = EnergyShare.deliverable(remainingSupply[0], demand);
-		long[] share = EnergyShare.split(moveTotal, room, demand, packetCap);
+		// MOD-413: the cursor rotates the remainder's starting consumer. At a trickle (supply below
+		// the consumer count) the whole flow is remainder, and a fixed start point fed the first
+		// consumer in geometric list order 100% of it forever — the fork defect MOD-254 fixed on the
+		// cable side, alive on the serve side.
+		long[] share = EnergyShare.split(moveTotal, room, demand, packetCap, producerCursor);
 
 		long moved = 0;
 		long consumed = 0; // EU drawn from producers and not returned = delivered + cable loss

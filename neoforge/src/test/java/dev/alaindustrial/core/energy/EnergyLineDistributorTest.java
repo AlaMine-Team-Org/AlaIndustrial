@@ -847,14 +847,18 @@ class EnergyLineDistributorTest {
 	}
 
 	/**
-	 * One hop per pass, the same inertia the downhill sweep has. Without a generator there is exactly one
-	 * packet in the rig, so where it sits after each pass is unambiguous — a pass that filled the whole
-	 * spur at once would put 12 EU in {@code S2} on the first call.
+	 * One hop per pass, the same inertia the downhill sweep has. The corridor is saturated end to end
+	 * (MOD-413: a donor with downhill room is delivery in transit and untouchable, so only a saturated
+	 * corridor holds genuine surplus), and {@code C3} is manually refilled between passes the way
+	 * {@code chargeLineFrom} closes a real tick. A pass that filled the whole spur at once would put
+	 * 12 EU in {@code S2} on the first call.
 	 */
 	@Test
 	void fillStrandedOneHop_advancesTheFillFrontOneCablePerPass() {
 		LineFixture line = spurRig();
-		line.buffers.get(C3).setAmountUntracked(12); // brim-full donor, nothing else in the rig
+		line.buffers.get(C1).setAmountUntracked(12);
+		line.buffers.get(C2).setAmountUntracked(12);
+		line.buffers.get(C3).setAmountUntracked(12); // saturated corridor: C3's packet is true surplus
 
 		EnergyLineDistributor d = line.distributor(Map.of());
 		d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
@@ -862,9 +866,33 @@ class EnergyLineDistributorTest {
 		assertEquals(0, line.buffers.get(S2).getAmount(), "pass 1: it must NOT skip down the whole spur");
 		assertEquals(0, line.buffers.get(C3).getAmount(), "pass 1: it came out of the saturated corridor cable");
 
+		// The source closes the tick by refilling the corridor (chargeLineFrom); without it S1 would be
+		// a donor the sweep still owes downhill (C3 has room now) and the front would rightly wait.
+		line.buffers.get(C3).setAmountUntracked(12);
 		d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
 		assertEquals(12, line.buffers.get(S2).getAmount(), "pass 2: one more hop outward");
-		assertEquals(0, line.buffers.get(S1).getAmount(), "pass 2: still exactly one hop per pass");
+		assertEquals(12, line.buffers.get(S1).getAmount(), "pass 2: S1 handed its packet on and was refilled from C3");
+		assertEquals(0, line.buffers.get(C3).getAmount(), "pass 2: still exactly one hop per unit per pass");
+	}
+
+	/**
+	 * The MOD-413 defect, pinned: "brim-full" alone is not "surplus". A corridor cable can be full only
+	 * because the sweep filled it THIS tick with a packet still on its way to a waiting machine — on the
+	 * player rig, the spur toward a topped-off machine and the junction swapped one packet back and forth
+	 * forever while the machine on the other branch starved at 24/800 EU behind a fully saturated line.
+	 * A donor with a strictly-downhill cable neighbour that still has room must not be siphoned.
+	 */
+	@Test
+	void fillStrandedOneHop_leavesAloneADonorTheSweepStillOwesDownhill() {
+		LineFixture line = spurRig();
+		line.buffers.get(C3).setAmountUntracked(12); // full — but C2 below it is empty: delivery in transit
+
+		EnergyLineDistributor d = line.distributor(Map.of());
+		d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
+
+		assertEquals(12, line.buffers.get(C3).getAmount(),
+				"a full donor with downhill room keeps its packet for the sweep");
+		assertEquals(0, line.buffers.get(S1).getAmount(), "the spur waits until the corridor is saturated");
 	}
 
 	/**
@@ -888,7 +916,9 @@ class EnergyLineDistributorTest {
 	@Test
 	void fillStrandedOneHop_conservesEu() {
 		LineFixture line = spurRig();
-		line.buffers.get(C3).setAmountUntracked(12);
+		line.buffers.get(C1).setAmountUntracked(12);
+		line.buffers.get(C2).setAmountUntracked(12);
+		line.buffers.get(C3).setAmountUntracked(12); // saturated, so the pass genuinely moves EU (MOD-413)
 		long before = line.buffers.values().stream().mapToLong(b -> b.getAmount()).sum();
 
 		EnergyLineDistributor d = line.distributor(Map.of());
