@@ -35,8 +35,11 @@ jobs:
       - name: Collect snapshot
         env:
           # Optional. Without it the script falls back to the keyless cfwidget
-          # mirror; Modrinth needs no key at all.
+          # mirror; the plain Modrinth totals need no key at all.
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
+          # Used only to recover the days that predate the first snapshot, via the
+          # Modrinth analytics endpoint. Without it the series simply starts today.
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         run: python .github/scripts/fetch-stats.py --out data/stats.json
 
       - name: Commit if changed

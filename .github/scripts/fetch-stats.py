@@ -56,6 +56,45 @@ def fetch_modrinth() -> dict:
     }
 
 
+def fetch_modrinth_history() -> dict:
+    """Day-by-day Modrinth downloads, oldest first, as {date: downloads}.
+
+    Needs MODRINTH_TOKEN with the analytics scope. The endpoint lives on v3 and is
+    absent from the published OpenAPI document; it answers
+    {project_id: {unix_seconds: downloads}} at resolution_minutes=1440.
+    """
+    token = os.environ.get("MODRINTH_TOKEN", "").strip()
+    if not token:
+        return {}
+    url = ("https://api.modrinth.com/v3/analytics/downloads"
+           '?project_ids=%5B%22' + MODRINTH_ID + '%22%5D&resolution_minutes=1440'
+           "&start_date=2026-01-01T00:00:00Z")
+    data = get_json(url, {"Authorization": token})
+    buckets = data.get(MODRINTH_ID, {})
+    return {
+        datetime.datetime.fromtimestamp(int(ts), datetime.timezone.utc).date().isoformat(): int(n)
+        for ts, n in buckets.items()
+    }
+
+
+def backfill(series: list, history: dict) -> list:
+    """Prepend days recovered from Modrinth analytics to the snapshot series.
+
+    CurseForge has no public history, so those days carry None in its slot: the site
+    counts Modrinth alone for them and marks the figure as partial. Inventing a
+    CurseForge number would look precise and be wrong.
+    """
+    if not history:
+        return series
+    known = {row[0] for row in series}
+    restored, running = [], 0
+    for date in sorted(history):
+        running += history[date]
+        if date not in known:
+            restored.append([date, running, None])
+    return sorted(series + restored, key=lambda row: row[0])
+
+
 def fetch_curseforge() -> int:
     """Total downloads. Official API when a key is present, cfwidget otherwise."""
     key = os.environ.get("CURSEFORGE_API_KEY", "").strip()
@@ -121,6 +160,13 @@ def main() -> int:
         series[-1] = [today, mr_total, cf_total]   # re-run on the same UTC day
     else:
         series.append([today, mr_total, cf_total])
+
+    # Restore the days that predate the first snapshot (once — later runs find them
+    # already present and change nothing).
+    try:
+        series = backfill(series, fetch_modrinth_history())
+    except (urllib.error.URLError, KeyError, ValueError) as exc:
+        print(f"WARN  backfill skipped: {exc}", file=sys.stderr)
 
     totals = dict(previous.get("totals", {}))
     totals.update({"modrinth": mr_total, "curseforge": cf_total})
