@@ -1,0 +1,49 @@
+# Temporary probe: per-country download breakdown from the Modrinth analytics API.
+# Prints aggregated numbers only — never the token. Delete once the data is collected.
+name: Stats probe
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Country breakdown
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.error, urllib.request
+
+          token = os.environ["MODRINTH_TOKEN"]
+          UA = "Ma3auka/AlaIndustrial-stats (+https://github.com/AlaMine-Team-Org/AlaIndustrial)"
+
+          def get(path):
+              req = urllib.request.Request(
+                  "https://api.modrinth.com/v3/analytics/" + path,
+                  headers={"Authorization": token, "User-Agent": UA})
+              with urllib.request.urlopen(req, timeout=30) as resp:
+                  return json.load(resp)
+
+          query = ('countries/%s?project_ids=%%5B%%22ACLWFBlU%%22%%5D'
+                   '&start_date=2026-01-01T00:00:00Z')
+          for metric in ("downloads", "views"):
+              try:
+                  body = get(query % metric)
+              except urllib.error.HTTPError as exc:
+                  print(f"{metric}: HTTP {exc.code} {exc.read().decode()[:200]}")
+                  continue
+              rows = body.get("ACLWFBlU", body)
+              if isinstance(rows, dict):
+                  pairs = sorted(rows.items(), key=lambda kv: -kv[1])
+                  total = sum(v for _, v in pairs)
+                  print(f"=== {metric}: total={total}, countries={len(pairs)} ===")
+                  for code, value in pairs:
+                      print(f"{code}\t{value}\t{value / total * 100:.2f}%")
+              else:
+                  print(f"{metric}: unexpected shape {json.dumps(body)[:300]}")
+          PY
