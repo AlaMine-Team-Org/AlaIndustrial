@@ -24,7 +24,8 @@ jobs:
           print("token present:", bool(token), "| length:", len(token))
 
           url = ("https://api.modrinth.com/v3/analytics/downloads"
-                 '?project_ids=%5B%22ACLWFBlU%22%5D&resolution_minutes=1440')
+                 '?project_ids=%5B%22ACLWFBlU%22%5D&resolution_minutes=1440'
+                 "&start_date=2026-07-01T00:00:00Z&end_date=2026-08-14T00:00:00Z")
           req = urllib.request.Request(url, headers={
               "Authorization": token,
               "User-Agent": "Ma3auka/AlaIndustrial-stats (+https://github.com/AlaMine-Team-Org/AlaIndustrial)",
@@ -38,10 +39,15 @@ jobs:
                   text = json.dumps(body)[:600]
                   print("sample:", text)
                   if isinstance(body, dict):
+                      import datetime
                       for key, value in list(body.items())[:1]:
-                          print("first project:", key, "| points:",
-                                len(value) if hasattr(value, "__len__") else "?")
-                          print("first rows:", json.dumps(value)[:400])
+                          points = sorted((int(ts), n) for ts, n in value.items())
+                          print("points:", len(points), "| sum:", sum(n for _, n in points))
+                          fmt = lambda ts: datetime.datetime.fromtimestamp(
+                              ts, datetime.timezone.utc).date().isoformat()
+                          print("range:", fmt(points[0][0]), "->", fmt(points[-1][0]))
+                          print("first 5:", [(fmt(ts), n) for ts, n in points[:5]])
+                          print("last 3:", [(fmt(ts), n) for ts, n in points[-3:]])
           except urllib.error.HTTPError as exc:
               print("HTTP", exc.code)
               print("body:", exc.read().decode()[:300])
