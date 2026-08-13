@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": "#c:plates/silver",
+    "G": "#c:glass_blocks/colorless",
+    "N": "minecraft:soul_sand",
+    "E": "alaindustrial:electronic_circuit"
+  },
+  "pattern": [
+    "SGS",
+    "GNG",
+    "SES"
+  ],
+  "result": {
+    "id": "alaindustrial:soul_vessel"
+  }
+}

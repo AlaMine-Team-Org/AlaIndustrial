@@ -318,6 +318,20 @@ class ConfigSnapshotTest {
 		SENTINELS.put("gardenDroneRange", 9);
 		SENTINELS.put("gardenDroneScanIntervalTicks", 35);
 		SENTINELS.put("gardenDroneFlightTicksPerBlock", 23);
+		// Mob Repeller (MOD-278). Every sentinel is distinct from the default, from 0 and from the
+		// field's own minimum, so a getter stubbed to any of those is caught.
+		SENTINELS.put("mobRepellerRange", 11);
+		SENTINELS.put("mobRepellerRangeMv", 19);
+		SENTINELS.put("mobRepellerRangeHv", 29);
+		SENTINELS.put("mobRepellerEuPerTick", 5);
+		SENTINELS.put("mobRepellerEuPerTickMv", 13);
+		SENTINELS.put("mobRepellerEuPerTickHv", 41);
+		SENTINELS.put("mobRepellerBuffer", 2222);
+		SENTINELS.put("mobRepellerBufferMv", 8888);
+		SENTINELS.put("mobRepellerBufferHv", 33333);
+		SENTINELS.put("mobRepellerScanIntervalTicks", 17);
+		SENTINELS.put("mobRepellerEvolveKillsMv", 88);
+		SENTINELS.put("mobRepellerEvolveKillsHv", 275);
 		// Cotton growth divisors.
 		SENTINELS.put("cottonRootingChanceDivisor", 27);
 		SENTINELS.put("cottonFruitingChanceDivisor", 14);

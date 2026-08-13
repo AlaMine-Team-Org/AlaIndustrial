@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "alaindustrial:block/mob_repeller_hv"
+    },
+    "lit=true": {
+      "model": "alaindustrial:block/mob_repeller_hv_lit"
+    }
+  }
+}

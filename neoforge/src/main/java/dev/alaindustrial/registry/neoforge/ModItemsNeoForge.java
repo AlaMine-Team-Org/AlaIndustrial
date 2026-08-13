@@ -71,6 +71,9 @@ public final class ModItemsNeoForge {
 			manifestItem("empty_chip");
 	public static final DeferredItem<Item> MUTE_CHIP =
 			manifestItem("mute_chip");
+	/** Soul Vessel (MOD-278): the Mob Repeller upgrade currency. */
+	public static final DeferredItem<Item> SOUL_VESSEL =
+			manifestItem("soul_vessel");
 	/** Overclocker chips (MOD-392/393): three tiers trading energy for machine speed. */
 	public static final DeferredItem<Item> OVERCLOCKER_CHIP_I = manifestItem("overclocker_chip_i");
 	public static final DeferredItem<Item> OVERCLOCKER_CHIP_II = manifestItem("overclocker_chip_ii");
@@ -423,6 +426,12 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("charge_pad", ModBlocksNeoForge.CHARGE_PAD);
 	public static final DeferredItem<BlockItem> ENERGY_CONDENSER_ITEM =
 			ITEMS.registerSimpleBlockItem("energy_condenser", ModBlocksNeoForge.ENERGY_CONDENSER);
+	public static final DeferredItem<BlockItem> MOB_REPELLER_ITEM =
+			ITEMS.registerSimpleBlockItem("mob_repeller", ModBlocksNeoForge.MOB_REPELLER);
+	public static final DeferredItem<BlockItem> MOB_REPELLER_MV_ITEM =
+			ITEMS.registerSimpleBlockItem("mob_repeller_mv", ModBlocksNeoForge.MOB_REPELLER_MV);
+	public static final DeferredItem<BlockItem> MOB_REPELLER_HV_ITEM =
+			ITEMS.registerSimpleBlockItem("mob_repeller_hv", ModBlocksNeoForge.MOB_REPELLER_HV);
 	public static final DeferredItem<BlockItem> INCUBATOR_ITEM =
 			ITEMS.registerSimpleBlockItem("incubator", ModBlocksNeoForge.INCUBATOR);
 	public static final DeferredItem<BlockItem> TRELLIS_ITEM =
@@ -688,6 +697,10 @@ public final class ModItemsNeoForge {
 		ModContent.ELECTRIC_HEATER_ITEM = ELECTRIC_HEATER_ITEM;
 		ModContent.CHARGE_PAD_ITEM = CHARGE_PAD_ITEM;
 		ModContent.ENERGY_CONDENSER_ITEM = ENERGY_CONDENSER_ITEM;
+		ModContent.MOB_REPELLER_ITEM = MOB_REPELLER_ITEM;
+		ModContent.MOB_REPELLER_MV_ITEM = MOB_REPELLER_MV_ITEM;
+		ModContent.MOB_REPELLER_HV_ITEM = MOB_REPELLER_HV_ITEM;
+		ModContent.SOUL_VESSEL = SOUL_VESSEL;
 		ModContent.INCUBATOR_ITEM = INCUBATOR_ITEM;
 		ModContent.TRELLIS_ITEM = TRELLIS_ITEM;
 		ModContent.MUTATION_CHIP_TRANSFORM = MUTATION_CHIP_TRANSFORM;

@@ -1,6 +1,8 @@
 package dev.alaindustrial.client;
 
+import dev.alaindustrial.client.render.RepellerDomeRenderer;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
+import dev.alaindustrial.network.RepellerDomePayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
@@ -24,11 +26,16 @@ public final class NetworkVisualizationClient {
 	public static void init() {
 		ClientPlayNetworking.registerGlobalReceiver(NetworkAnalyzerPayload.TYPE,
 				(payload, context) -> NetworkOverlayRenderer.updatePayload(payload));
+		// MOD-278: the repeller dome answer toggles this client's personal dome for that block.
+		ClientPlayNetworking.registerGlobalReceiver(RepellerDomePayload.TYPE,
+				(payload, context) -> RepellerDomeRenderer.receive(payload));
 		LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES.register(NetworkVisualizationClient::render);
 	}
 
 	private static void render(LevelRenderContext context) {
 		NetworkOverlayRenderer.submitFrame(context.submitNodeCollector(),
+				context.levelState().cameraRenderState);
+		RepellerDomeRenderer.submitFrame(context.submitNodeCollector(),
 				context.levelState().cameraRenderState);
 	}
 }

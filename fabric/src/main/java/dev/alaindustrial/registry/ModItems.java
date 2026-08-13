@@ -95,6 +95,8 @@ public final class ModItems {
 	public static final Item FLUXWEAVE_CLOTH = manifestItem("fluxweave_cloth");
 	public static final Item UNSTABLE_ISOTOPE = manifestItem("unstable_isotope");
 	public static final Item MUTE_CHIP = manifestItem("mute_chip");
+	/** Soul Vessel (MOD-278): the Mob Repeller upgrade currency. */
+	public static final Item SOUL_VESSEL = manifestItem("soul_vessel");
 	/** Overclocker chips (MOD-392/393): three tiers trading energy for machine speed. */
 	public static final Item OVERCLOCKER_CHIP_I = manifestItem("overclocker_chip_i");
 	public static final Item OVERCLOCKER_CHIP_II = manifestItem("overclocker_chip_ii");
@@ -301,6 +303,9 @@ public final class ModItems {
 	public static final BlockItem ELECTRIC_HEATER_ITEM = blockItem("electric_heater", ModBlocks.ELECTRIC_HEATER);
 	public static final BlockItem CHARGE_PAD_ITEM = blockItem("charge_pad", ModBlocks.CHARGE_PAD);
 	public static final BlockItem ENERGY_CONDENSER_ITEM = blockItem("energy_condenser", ModBlocks.ENERGY_CONDENSER);
+	public static final BlockItem MOB_REPELLER_ITEM = blockItem("mob_repeller", ModBlocks.MOB_REPELLER);
+	public static final BlockItem MOB_REPELLER_MV_ITEM = blockItem("mob_repeller_mv", ModBlocks.MOB_REPELLER_MV);
+	public static final BlockItem MOB_REPELLER_HV_ITEM = blockItem("mob_repeller_hv", ModBlocks.MOB_REPELLER_HV);
 	public static final BlockItem INCUBATOR_ITEM = blockItem("incubator", ModBlocks.INCUBATOR);
 	public static final BlockItem TRELLIS_ITEM = blockItem("trellis", ModBlocks.TRELLIS);
 	public static final BlockItem PUMP_ITEM = blockItem("pump", ModBlocks.PUMP);
@@ -889,6 +894,10 @@ public final class ModItems {
 		ModContent.ELECTRIC_HEATER_ITEM = () -> ELECTRIC_HEATER_ITEM;
 		ModContent.CHARGE_PAD_ITEM = () -> CHARGE_PAD_ITEM;
 		ModContent.ENERGY_CONDENSER_ITEM = () -> ENERGY_CONDENSER_ITEM;
+		ModContent.MOB_REPELLER_ITEM = () -> MOB_REPELLER_ITEM;
+		ModContent.MOB_REPELLER_MV_ITEM = () -> MOB_REPELLER_MV_ITEM;
+		ModContent.MOB_REPELLER_HV_ITEM = () -> MOB_REPELLER_HV_ITEM;
+		ModContent.SOUL_VESSEL = () -> SOUL_VESSEL;
 		ModContent.INCUBATOR_ITEM = () -> INCUBATOR_ITEM;
 		ModContent.TRELLIS_ITEM = () -> TRELLIS_ITEM;
 		ModContent.MUTATION_CHIP_TRANSFORM = () -> MUTATION_CHIP_TRANSFORM;

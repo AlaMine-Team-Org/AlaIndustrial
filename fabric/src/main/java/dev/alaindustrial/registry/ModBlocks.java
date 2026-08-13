@@ -87,6 +87,9 @@ public final class ModBlocks {
 	public static final Block ELECTRIC_HEATER = handle(ContentManifest.ELECTRIC_HEATER);
 	public static final Block CHARGE_PAD = handle(ContentManifest.CHARGE_PAD);
 	public static final Block ENERGY_CONDENSER = handle(ContentManifest.ENERGY_CONDENSER);
+	public static final Block MOB_REPELLER = handle(ContentManifest.MOB_REPELLER);
+	public static final Block MOB_REPELLER_MV = handle(ContentManifest.MOB_REPELLER_MV);
+	public static final Block MOB_REPELLER_HV = handle(ContentManifest.MOB_REPELLER_HV);
 	public static final Block INCUBATOR = handle(ContentManifest.INCUBATOR);
 	public static final Block INCUBATOR_DOME = handle(ContentManifest.INCUBATOR_DOME);
 	public static final Block TRELLIS = handle(ContentManifest.TRELLIS);

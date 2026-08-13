@@ -58,6 +58,7 @@ public final class ModDataComponents {
 	public static final Identifier MAGNET_ENABLED_ID = Industrialization.id("magnet_enabled");
 	public static final Identifier STEP_ASSIST_ENABLED_ID = Industrialization.id("step_assist_enabled");
 	public static final Identifier SABER_ACTIVE_ID = Industrialization.id("saber_active");
+	public static final Identifier SOUL_VESSEL_KILLS_ID = Industrialization.id("soul_vessel_kills");
 
 	/** Rarity grade rolled by the incubator on a successful mutation (MOD-118). */
 	public static final Identifier MUTATION_GRADE_ID = Industrialization.id("mutation_grade");
@@ -217,6 +218,25 @@ public final class ModDataComponents {
 		return DataComponentType.<Boolean>builder()
 				.persistent(Codec.BOOL)
 				.networkSynchronized(ByteBufCodecs.BOOL)
+				.build();
+	}
+
+	/**
+	 * Soul Vessel kill counter (MOD-278): personal hostile-mob kills accumulated on the stack. Absent
+	 * = 0, so a crafted-fresh vessel stays component-identical and stackable with other empty ones;
+	 * the first counted kill writes the component and the vessel stops stacking from then on
+	 * (different components never merge — by design, each vessel keeps its own memory). Read/written
+	 * only via {@link dev.alaindustrial.item.misc.SoulVesselItem}.
+	 */
+	public static Supplier<DataComponentType<Integer>> SOUL_VESSEL_KILLS = () -> {
+		throw new IllegalStateException("ModDataComponents.SOUL_VESSEL_KILLS read before its loader bound it");
+	};
+
+	/** Build the {@code soul_vessel_kills} type both loaders register (MOD-278). */
+	public static DataComponentType<Integer> createSoulVesselKills() {
+		return DataComponentType.<Integer>builder()
+				.persistent(Codec.INT)
+				.networkSynchronized(ByteBufCodecs.VAR_INT)
 				.build();
 	}
 

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "S": "#c:plates/silver",
+    "L": "minecraft:soul_lantern",
+    "C": "alaindustrial:advanced_machine_casing",
+    "A": "alaindustrial:advanced_circuit",
+    "O": "alaindustrial:copper_coil"
+  },
+  "pattern": [
+    "SLS",
+    "OCO",
+    "SAS"
+  ],
+  "result": {
+    "id": "alaindustrial:mob_repeller"
+  }
+}

@@ -110,7 +110,13 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // MOD-391: the double chest's shared 6-row scrolling window. The stand is a PAIR of iron
             // chests (see placeScreenBlock) and the click lands on the right half — the menu joins
             // both, so the frame shows the scrollbar and the per-tier "Double Iron Chest" title.
-            new Screen("double_chest", "iron_chest", "Double Iron Chest"));
+            new Screen("double_chest", "iron_chest", "Double Iron Chest"),
+            // MOD-278: the three guard-field tiers. Their panels are identical apart from the block
+            // that opens them, and that is exactly what the frames guard — the vessel slot and the
+            // dome button must survive on EVERY tier, not just the crafted one.
+            new Screen("mob_repeller", "mob_repeller", "Mob Repeller"),
+            new Screen("mob_repeller_mv", "mob_repeller_mv", "Mob Repeller MV"),
+            new Screen("mob_repeller_hv", "mob_repeller_hv", "Mob Repeller HV"));
 
     /**
      * Screens re-shot under a long locale. Russian labels run noticeably longer than English ones, so a

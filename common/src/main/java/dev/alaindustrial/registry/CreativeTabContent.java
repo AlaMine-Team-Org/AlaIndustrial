@@ -202,6 +202,8 @@ public final class CreativeTabContent {
 		show(out, ModContent.ENERGY_CLOT_I);
 		show(out, ModContent.ENERGY_CLOT_II);
 		show(out, ModContent.ENERGY_CLOT_III);
+		// Soul Vessel (MOD-278): the Mob Repeller's upgrade currency — a component, not a tool.
+		show(out, ModContent.SOUL_VESSEL);
 		// Cable breaker (MOD-276): a cable accessory, listed with the components it is crafted from.
 		show(out, ModContent.CABLE_BREAKER);
 		show(out, ModContent.WINDMILL_ROTOR);
@@ -281,6 +283,9 @@ public final class CreativeTabContent {
 		show(out, ModContent.PUMP_ITEM);
 		show(out, ModContent.FLUID_TANK_ITEM);
 		show(out, ModContent.FLUID_PIPE_ITEM);
+		// The item pipe sits next to the fluid pipe: the two carriers are one idea, and a player looking
+		// for "the pipe" should find both without scrolling to another group.
+		show(out, ModContent.ITEM_PIPE_ITEM);
 		// MOD-251: the distillation tower - one item, three blocks tall when placed, plus its optional
 		// fourth storey (losses 10 % -> 5 %).
 		show(out, ModContent.DISTILLATION_COLUMN_ITEM);
@@ -303,7 +308,8 @@ public final class CreativeTabContent {
 
 	/** 6 - item logistics: the pipe first, then what it moves things between. */
 	private static void itemLogistics(Sink out) {
-		show(out, ModContent.ITEM_PIPE_ITEM);
+		// The item pipe itself now sits beside the fluid pipe in fluids(); this group is the containers
+		// it serves. (Both groups feed the same tabs, so the pipe is still listed exactly once.)
 		// The chest tiers, in upgrade order (36 -> 45 -> 54). Silver and Gold were missing here while
 		// present in the Fabric list, so NeoForge players saw neither in any tab - MOD-102.
 		show(out, ModContent.IRON_CHEST_ITEM);
@@ -367,6 +373,9 @@ public final class CreativeTabContent {
 		show(out, ModContent.ADVANCED_CIRCUIT);
 		show(out, ModContent.ASSEMBLY_BLUEPRINT);
 		show(out, ModContent.COPPER_COIL);
+		// Soul Vessel (MOD-278): the Mob Repeller's upgrade currency, listed with the other parts a
+		// machine is fed. Also in ingredients() — that group feeds the vanilla Ingredients tab.
+		show(out, ModContent.SOUL_VESSEL);
 		// Wearing parts (MOD-189/MOD-385): each line runs plain -> reinforced -> advanced.
 		show(out, ModContent.WINDMILL_ROTOR);
 		show(out, ModContent.WINDMILL_ROTOR_REINFORCED);
@@ -443,6 +452,12 @@ public final class CreativeTabContent {
 		// in vanilla Building Blocks; listed here too so players browsing the mod's tab find it.
 		show(out, ModContent.INDUSTRIAL_WORKBENCH_ITEM);
 		show(out, ModContent.ENRICHED_URANIUM_TORCH_ITEM);
+		// Mob Repeller family (MOD-278): the crafted LV block then its two evolved tiers. Listed here
+		// as well as in utility() because those are different tabs — utility() feeds vanilla's
+		// Functional Blocks, and only what main() calls reaches the mod's OWN tab.
+		show(out, ModContent.MOB_REPELLER_ITEM);
+		show(out, ModContent.MOB_REPELLER_MV_ITEM);
+		show(out, ModContent.MOB_REPELLER_HV_ITEM);
 	}
 
 	/** 13 - the armour and weapon lines, plain tempered iron first, then the EU set. */
@@ -468,6 +483,11 @@ public final class CreativeTabContent {
 	/** Decorative/utility blocks that live in vanilla Functional Blocks — the Enriched Uranium Torch (MOD-085). */
 	private static void utility(Sink out) {
 		show(out, ModContent.ENRICHED_URANIUM_TORCH_ITEM);
+		// Mob Repeller family (MOD-278): the crafted LV block followed by the two evolved tiers, which
+		// have no recipe of their own — same listing shape as the evolved wind mills and solar panels.
+		show(out, ModContent.MOB_REPELLER_ITEM);
+		show(out, ModContent.MOB_REPELLER_MV_ITEM);
+		show(out, ModContent.MOB_REPELLER_HV_ITEM);
 	}
 
 	private static void generators(Sink out) {
@@ -490,9 +510,11 @@ public final class CreativeTabContent {
 	 * {@link #fluids} instead, next to the pump and the tank it cannot work without (MOD-407).
 	 */
 	private static void machines(Sink out) {
-		show(out, ModContent.MACERATOR_ITEM);
-		show(out, ModContent.ELECTRIC_FURNACE_ITEM);
+		// The smelting line before the crusher: the Iron Furnace is the first machine a player builds
+		// (no power needed), the Electric Furnace is its powered successor, and only then the Macerator.
 		show(out, ModContent.IRON_FURNACE_ITEM);
+		show(out, ModContent.ELECTRIC_FURNACE_ITEM);
+		show(out, ModContent.MACERATOR_ITEM);
 		show(out, ModContent.EXTRACTOR_ITEM);
 		show(out, ModContent.COMPRESSOR_ITEM);
 		show(out, ModContent.SAWMILL_ITEM);

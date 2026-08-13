@@ -433,6 +433,12 @@ public final class DemoStand {
 		set(level, origin, 32, 2, 10, ModContent.TEMPERED_IRON_PLATE_BLOCK.get());
 		// Industrial Workbench (MOD-062): the Industrialist villager's job-site block on display.
 		set(level, origin, 33, 2, 10, ModContent.INDUSTRIAL_WORKBENCH.get());
+		// Mob Repeller tier ladder (MOD-278): the three tiers side by side on the shelf, so the trim
+		// difference (iron / silver / electrum) is visible in one glance — that trim IS the tier readout
+		// in the world. They are placed unpowered: a live field would shove this stand's own test mobs.
+		set(level, origin, 34, 3, 10, ModContent.MOB_REPELLER.get());
+		set(level, origin, 35, 3, 10, ModContent.MOB_REPELLER_MV.get());
+		set(level, origin, 36, 3, 10, ModContent.MOB_REPELLER_HV.get());
 		set(level, origin, 34, -1, 10, FLOOR);
 		set(level, origin, 34, 0, 10, Blocks.LAVA);
 		// Oil (MOD-238): a sunken one-block oil pool, same pattern as the lava pool above. Kept

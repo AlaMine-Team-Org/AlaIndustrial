@@ -131,5 +131,10 @@ public final class MenuScreenManifest {
 			// MOD-409 — the electrum tier's own scrolling window (six rows over nine).
 			screen(() -> ModContent.ELECTRUM_CHEST_MENU.get(), ElectrumChestScreen::new),
 			// MOD-391 — the double chest's scrolling window, one screen for every tier.
-			screen(() -> ModContent.DOUBLE_CHEST_MENU.get(), DoubleChestScreen::new));
+			screen(() -> ModContent.DOUBLE_CHEST_MENU.get(), DoubleChestScreen::new),
+			// MOD-278 — the guard field: one screen class, one menu type per tier (a shared menu class
+			// would make the menu↔screen pairing indistinguishable to the compiler).
+			screen(() -> ModContent.MOB_REPELLER_MENU.get(), MobRepellerScreen::new),
+			screen(() -> ModContent.MOB_REPELLER_MV_MENU.get(), MobRepellerMvScreen::new),
+			screen(() -> ModContent.MOB_REPELLER_HV_MENU.get(), MobRepellerHvScreen::new));
 }

@@ -16,6 +16,9 @@ import dev.alaindustrial.block.DistillationColumnTopBlock;
 import dev.alaindustrial.block.ElectricFurnaceBlock;
 import dev.alaindustrial.block.ElectricHeaterBlock;
 import dev.alaindustrial.block.EnergyCondenserBlock;
+import dev.alaindustrial.block.MobRepellerBlock;
+import dev.alaindustrial.block.MobRepellerHvBlock;
+import dev.alaindustrial.block.MobRepellerMvBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
 import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
 import dev.alaindustrial.block.ExtractorBlock;
@@ -156,6 +159,12 @@ public final class ModBlocksNeoForge {
 	/** Energy condenser (MOD-393): banks grid surplus into energy clots. */
 	public static final DeferredBlock<EnergyCondenserBlock> ENERGY_CONDENSER =
 			handle(ContentManifest.ENERGY_CONDENSER);
+	public static final DeferredBlock<MobRepellerBlock> MOB_REPELLER =
+			handle(ContentManifest.MOB_REPELLER);
+	public static final DeferredBlock<MobRepellerMvBlock> MOB_REPELLER_MV =
+			handle(ContentManifest.MOB_REPELLER_MV);
+	public static final DeferredBlock<MobRepellerHvBlock> MOB_REPELLER_HV =
+			handle(ContentManifest.MOB_REPELLER_HV);
 	public static final DeferredBlock<IncubatorBlock> INCUBATOR = handle(ContentManifest.INCUBATOR);
 	public static final DeferredBlock<IncubatorDomeBlock> INCUBATOR_DOME = handle(ContentManifest.INCUBATOR_DOME);
 	public static final DeferredBlock<TrellisBlock> TRELLIS = handle(ContentManifest.TRELLIS);

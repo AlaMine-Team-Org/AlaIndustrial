@@ -158,6 +158,8 @@ public class IndustrializationFabric implements ModInitializer {
 				ModDataComponents.TELEPORTER_PRIVATE_ID, ModDataComponents.createTeleporterPrivate());
 		ModDataComponents.MAGNET_ENABLED = registerDataComponent(
 				ModDataComponents.MAGNET_ENABLED_ID, ModDataComponents.createMagnetEnabled());
+		ModDataComponents.SOUL_VESSEL_KILLS = registerDataComponent(
+				ModDataComponents.SOUL_VESSEL_KILLS_ID, ModDataComponents.createSoulVesselKills());
 		ModDataComponents.STEP_ASSIST_ENABLED = registerDataComponent(
 				ModDataComponents.STEP_ASSIST_ENABLED_ID, ModDataComponents.createStepAssistEnabled());
 		ModDataComponents.SABER_ACTIVE = registerDataComponent(
@@ -322,6 +324,9 @@ public class IndustrializationFabric implements ModInitializer {
 		// and the client receiver in NetworkVisualizationClient; NeoForge does both through
 		// RegisterPayloadHandlersEvent. Sending is neutral via NetworkDispatcher (installed above).
 		PayloadTypeRegistry.clientboundPlay().register(NetworkAnalyzerPayload.TYPE, NetworkAnalyzerPayload.CODEC);
+		// MOD-278: the repeller dome answer — personal, one per button press.
+		PayloadTypeRegistry.clientboundPlay().register(dev.alaindustrial.network.RepellerDomePayload.TYPE,
+				dev.alaindustrial.network.RepellerDomePayload.CODEC);
 		// Teleport screen-fade level (MOD-106) — sent every tick of a jump's last second; the client
 		// clears itself when the levels stop, so a cancel needs no packet of its own.
 		PayloadTypeRegistry.clientboundPlay().register(
@@ -390,6 +395,8 @@ public class IndustrializationFabric implements ModInitializer {
 			if (entity instanceof net.minecraft.server.level.ServerPlayer player) {
 				dev.alaindustrial.teleporter.TeleportWarmupManager.cancel(player);
 			}
+			// MOD-278: a hostile mob killed by a player personally banks one soul into their vessel.
+			dev.alaindustrial.entity.SoulVesselKills.onDeath(entity, source);
 		});
 		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
 			// MOD-133: flush this player's pending stats while they are still online (their tail would

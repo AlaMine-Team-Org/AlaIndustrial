@@ -465,6 +465,64 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 				Config.overclockerSpeedFactor, overclockerCount());
 	}
 
+	// --- Tier evolution (MOD-211, generalized in MOD-278): replace this block with a grown branch ---
+
+	/**
+	 * Replace this machine with its evolved branch — shared by the solar panel and wind mill
+	 * evolution paths (MOD-211) and the Mob Repeller tier ladder (MOD-278). Carries stored EU
+	 * (clamped to the evolved block's capacity), preserves the FACING blockstate when both the old
+	 * and new blocks have one, and consumes the trigger slot (the caller passes {@code slotOverrides}
+	 * that does both jobs specific to this machine's slot layout — e.g. clearing {@code CHIP_SLOT} on
+	 * both, and snapshotting the wind-mill rotor so it can be re-placed on the evolved mill).
+	 *
+	 * <p>Lived in {@code AbstractGeneratorBlockEntity} until MOD-278: nothing in the body is
+	 * generator-specific (owner, energy, FACING, slots — all base state), and the repeller is a
+	 * consumer, so the seam moved up rather than being copied down.
+	 *
+	 * @param target the block to evolve into (e.g. {@code ModContent.DAYLIGHT_SOLAR_PANEL.get()})
+	 * @param slotOverrides additional slots to copy from this machine into the evolved block BEFORE
+	 *     the energy transfer (e.g. the wind mill's rotor slot). Map of slot index → stack to place.
+	 *     Empty for the solar panel.
+	 */
+	protected void evolveInto(net.minecraft.world.level.Level level, BlockPos pos,
+			net.minecraft.world.level.block.Block target,
+			java.util.Map<Integer, ItemStack> slotOverrides) {
+		long saved = energy.getAmount();
+		// Carry ownership across the evolution. The evolved block is created via setBlockAndUpdate — NOT a
+		// player placement — so setPlacedBy never runs and the new block entity would default to a null
+		// owner. Without this, an evolved T2 generator (wind mills, solar panels) attributes none of its
+		// production to the player: it silently vanished from the profile's per-generator breakdown (MOD-133).
+		java.util.UUID savedOwner = getOwner();
+		String savedOwnerName = getOwnerName();
+		for (java.util.Map.Entry<Integer, ItemStack> entry : slotOverrides.entrySet()) {
+			// Caller has already snapshotted these into the overrides map; clear the source slot so the
+			// block's inventory reads empty before the swap (the chip slot is always cleared here too —
+			// see callers).
+			items.set(entry.getKey(), ItemStack.EMPTY);
+		}
+		BlockState oldState = getBlockState();
+		BlockState newState = target.defaultBlockState();
+		// Preserve FACING when both old and new blocks have it (wind mill family); the solar panels
+		// have no FACING, so this is a no-op for them.
+		if (oldState.hasProperty(HorizontalMachineBlock.FACING)
+				&& newState.hasProperty(HorizontalMachineBlock.FACING)) {
+			newState = newState.setValue(HorizontalMachineBlock.FACING, oldState.getValue(HorizontalMachineBlock.FACING));
+		}
+		level.setBlockAndUpdate(pos, newState);
+		if (level.getBlockEntity(pos) instanceof MachineBlockEntity evolved) {
+			evolved.setOwner(savedOwner, savedOwnerName);
+			evolved.getEnergyStorage().setAmountUntracked(Math.min(saved, evolved.getEnergyStorage().getCapacity()));
+			for (java.util.Map.Entry<Integer, ItemStack> entry : slotOverrides.entrySet()) {
+				int slot = entry.getKey();
+				ItemStack stack = entry.getValue();
+				if (!stack.isEmpty() && slot >= 0 && slot < evolved.getContainerSize()) {
+					evolved.setItem(slot, stack);
+				}
+			}
+			evolved.setChanged();
+		}
+	}
+
 	// --- Sided automation (R-GUI-05/R-GUI-07): hoppers/pipes must respect slot roles ---
 
 	/** Which slots are extractable by automation. Default: none (storage/generators keep their items). */

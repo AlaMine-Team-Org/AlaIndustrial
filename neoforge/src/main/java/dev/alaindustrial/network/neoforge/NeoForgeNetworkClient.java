@@ -3,7 +3,9 @@ package dev.alaindustrial.network.neoforge;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.hud.TeleportFadeHud;
 import dev.alaindustrial.client.hud.TeleportNotice;
+import dev.alaindustrial.client.render.RepellerDomeRenderer;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
+import dev.alaindustrial.network.RepellerDomePayload;
 import dev.alaindustrial.network.TeleportFadePayload;
 import dev.alaindustrial.network.TeleportNoticePayload;
 import org.jetbrains.annotations.Nullable;
@@ -54,5 +56,13 @@ public final class NeoForgeNetworkClient {
 	 */
 	public static void receiveNotice(TeleportNoticePayload payload) {
 		TeleportNotice.receive(payload.message());
+	}
+
+	/**
+	 * Called on the client main thread when a repeller dome answer arrives (MOD-278). Toggles the dome
+	 * for that block in the loader-neutral renderer — same call Fabric's receiver makes.
+	 */
+	public static void receiveRepellerDome(RepellerDomePayload payload) {
+		RepellerDomeRenderer.receive(payload);
 	}
 }

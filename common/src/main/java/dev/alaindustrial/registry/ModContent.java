@@ -3,6 +3,9 @@ package dev.alaindustrial.registry;
 import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.menu.EnergyCondenserMenu;
+import dev.alaindustrial.menu.MobRepellerHvMenu;
+import dev.alaindustrial.menu.MobRepellerMenu;
+import dev.alaindustrial.menu.MobRepellerMvMenu;
 import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.CanningMachineMenu;
 import dev.alaindustrial.menu.CompressorMenu;
@@ -155,6 +158,11 @@ public final class ModContent {
 	public static Supplier<Block> CHARGE_PAD = unbound("CHARGE_PAD");
 	// Energy condenser (MOD-393): banks the grid's surplus and packs it into an energy clot.
 	public static Supplier<Block> ENERGY_CONDENSER = unbound("ENERGY_CONDENSER");
+	// Mob Repeller tier family (MOD-278): LV is crafted, MV/HV are only ever reached by evolving the
+	// tier below with a full Soul Vessel — same shape as the solar panel's evolved branches.
+	public static Supplier<Block> MOB_REPELLER = unbound("MOB_REPELLER");
+	public static Supplier<Block> MOB_REPELLER_MV = unbound("MOB_REPELLER_MV");
+	public static Supplier<Block> MOB_REPELLER_HV = unbound("MOB_REPELLER_HV");
 	public static Supplier<Block> INCUBATOR = unbound("INCUBATOR");
 	public static Supplier<Block> INCUBATOR_DOME = unbound("INCUBATOR_DOME");
 	/** Cotton trellis (MOD-280) — the mod's first crop: a two-block support carrying a perennial plant. */
@@ -238,6 +246,8 @@ public final class ModContent {
 	public static Supplier<Item> MUTAGEN_DUST = unbound("MUTAGEN_DUST");
 	public static Supplier<Item> UNSTABLE_ISOTOPE = unbound("UNSTABLE_ISOTOPE");
 	public static Supplier<Item> MUTE_CHIP = unbound("MUTE_CHIP");
+	/** Soul Vessel (MOD-278): the repeller's upgrade currency, filled by the player's own kills. */
+	public static Supplier<Item> SOUL_VESSEL = unbound("SOUL_VESSEL");
 	// Overclocker chips (MOD-392/393): three tiers, one per panel arm slot. Each shortens the operation
 	// and raises the draw; the machine's own voltage tier caps which of them it can actually feed
 	// (MachineBlockEntity.overclockerCap).
@@ -439,6 +449,9 @@ public final class ModContent {
 	public static Supplier<BlockItem> ELECTRIC_HEATER_ITEM = unbound("ELECTRIC_HEATER_ITEM");
 	public static Supplier<BlockItem> CHARGE_PAD_ITEM = unbound("CHARGE_PAD_ITEM");
 	public static Supplier<BlockItem> ENERGY_CONDENSER_ITEM = unbound("ENERGY_CONDENSER_ITEM");
+	public static Supplier<BlockItem> MOB_REPELLER_ITEM = unbound("MOB_REPELLER_ITEM");
+	public static Supplier<BlockItem> MOB_REPELLER_MV_ITEM = unbound("MOB_REPELLER_MV_ITEM");
+	public static Supplier<BlockItem> MOB_REPELLER_HV_ITEM = unbound("MOB_REPELLER_HV_ITEM");
 	public static Supplier<BlockItem> INCUBATOR_ITEM = unbound("INCUBATOR_ITEM");
 	public static Supplier<BlockItem> TRELLIS_ITEM = unbound("TRELLIS_ITEM");
 	public static Supplier<BlockItem> PUMP_ITEM = unbound("PUMP_ITEM");
@@ -506,6 +519,9 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
 	public static Supplier<BlockEntityType<?>> ENERGY_CONDENSER_BE = unbound("ENERGY_CONDENSER_BE");
+	public static Supplier<BlockEntityType<?>> MOB_REPELLER_BE = unbound("MOB_REPELLER_BE");
+	public static Supplier<BlockEntityType<?>> MOB_REPELLER_MV_BE = unbound("MOB_REPELLER_MV_BE");
+	public static Supplier<BlockEntityType<?>> MOB_REPELLER_HV_BE = unbound("MOB_REPELLER_HV_BE");
 	public static Supplier<BlockEntityType<?>> INCUBATOR_BE = unbound("INCUBATOR_BE");
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
 	public static Supplier<BlockEntityType<?>> GARDEN_DRONE_STATION_BE = unbound("GARDEN_DRONE_STATION_BE");
@@ -544,6 +560,11 @@ public final class ModContent {
 	public static Supplier<MenuType<IncubatorMenu>> INCUBATOR_MENU = unbound("INCUBATOR_MENU");
 	public static Supplier<MenuType<BatteryBoxMenu>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");
 	public static Supplier<MenuType<EnergyCondenserMenu>> ENERGY_CONDENSER_MENU = unbound("ENERGY_CONDENSER_MENU");
+	// One menu type per repeller tier: a type maps to exactly one block for stillValid, and the three
+	// tiers are three blocks — the menu CLASS is shared (MobRepellerMenu), only the type differs.
+	public static Supplier<MenuType<MobRepellerMenu>> MOB_REPELLER_MENU = unbound("MOB_REPELLER_MENU");
+	public static Supplier<MenuType<MobRepellerMvMenu>> MOB_REPELLER_MV_MENU = unbound("MOB_REPELLER_MV_MENU");
+	public static Supplier<MenuType<MobRepellerHvMenu>> MOB_REPELLER_HV_MENU = unbound("MOB_REPELLER_HV_MENU");
 	public static Supplier<MenuType<CesuMenu>> CESU_MENU = unbound("CESU_MENU");
 	/** Teleporter station screen (MOD-093): EU bar, owner, private/public toggle. */
 	public static Supplier<MenuType<TeleporterStationMenu>> TELEPORTER_STATION_MENU =

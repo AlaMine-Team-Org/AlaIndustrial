@@ -1,6 +1,7 @@
 package dev.alaindustrial.network.neoforge;
 
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
+import dev.alaindustrial.network.RepellerDomePayload;
 import dev.alaindustrial.network.TeleportFadePayload;
 import dev.alaindustrial.network.TeleportNoticePayload;
 import dev.alaindustrial.network.FluxweaveStepAssistPayload;
@@ -35,6 +36,10 @@ public final class NeoForgeNetwork {
 		PayloadRegistrar registrar = event.registrar("1");
 		registrar.playToClient(NetworkAnalyzerPayload.TYPE, NetworkAnalyzerPayload.CODEC,
 				(payload, context) -> context.enqueueWork(() -> NeoForgeNetworkClient.receive(payload)));
+		// MOD-278: the repeller dome answer — personal, one per button press; the client toggles it.
+		registrar.playToClient(RepellerDomePayload.TYPE, RepellerDomePayload.CODEC,
+				(payload, context) -> context.enqueueWork(
+						() -> NeoForgeNetworkClient.receiveRepellerDome(payload)));
 		// Teleport screen-fade level (MOD-106) — one float per tick of a jump's last second. The client
 		// clears itself once the levels stop arriving, so a cancelled warmup needs no packet of its own.
 		registrar.playToClient(TeleportFadePayload.TYPE, TeleportFadePayload.CODEC,

@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "particle": "alaindustrial:block/mob_repeller_hv_side_on",
+    "top": "alaindustrial:block/mob_repeller_hv_top_on",
+    "bottom": "alaindustrial:block/machine_bottom",
+    "side": "alaindustrial:block/mob_repeller_hv_side_on"
+  }
+}

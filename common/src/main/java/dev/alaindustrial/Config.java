@@ -795,6 +795,46 @@ public final class Config {
 	 */
 	public static int gardenDroneFlightTicksPerBlock = 11;
 
+	// --- Mob Repeller (MOD-278): tiered guard field that expels hostile mobs for EU. ---
+	/** Zone radius in blocks around the LV block (a cube, matching the highlight dome). */
+	public static int mobRepellerRange = 8;
+	/** Zone radius of the MV tier. */
+	public static int mobRepellerRangeMv = 16;
+	/** Zone radius of the HV tier. */
+	public static int mobRepellerRangeHv = 24;
+	/**
+	 * Field upkeep in EU/t while enabled — a constant drain, NOT a per-expulsion tariff. The field is
+	 * the useful work (a base stays clean whether or not a mob wanders in tonight), so unlike the
+	 * demand-driven heater this block pays around the clock; at 0 EU the field goes dark.
+	 *
+	 * <p>8 EU/t on the LV tier is four times an ordinary processing machine ({@link #machineEuPerTick}
+	 * = 2) and eight times a bare solar panel: protection is meant to cost real generation — a fuel
+	 * generator's whole output, or eight panels — rather than being a torch substitute you bolt on and
+	 * forget. Retuned upward after the first playtest, where the original 2 EU/t read as free.
+	 */
+	public static int mobRepellerEuPerTick = 8;
+	/** MV field upkeep — ×4 of LV, the same step the voltage ladder takes. */
+	public static int mobRepellerEuPerTickMv = 32;
+	/**
+	 * HV field upkeep — ×2 of MV rather than ×4. The top tier already demands an HV line and 32 000 EU
+	 * of buffer; another fourfold jump (128 EU/t) would put it past a geothermal pair for a radius
+	 * that is only half again as wide, and the tier would stop being worth reaching.
+	 */
+	public static int mobRepellerEuPerTickHv = 64;
+	/** Internal EU buffer of the LV block. */
+	public static int mobRepellerBuffer = 2000;
+	/** Internal EU buffer of the MV tier. */
+	public static int mobRepellerBufferMv = 8000;
+	/** Internal EU buffer of the HV tier. */
+	public static int mobRepellerBufferHv = 32000;
+	/** Ticks between zone sweeps. Ten (half a second) keeps the boundary dance tight without paying
+	 * the entity scan every tick; the upkeep drain still applies every tick regardless. */
+	public static int mobRepellerScanIntervalTicks = 10;
+	/** Personal hostile kills a Soul Vessel must hold to evolve the LV block into the MV tier. */
+	public static int mobRepellerEvolveKillsMv = 80;
+	/** Personal hostile kills to evolve the MV block into the HV tier; also the vessel's hard cap. */
+	public static int mobRepellerEvolveKillsHv = 250;
+
 	// --- Cotton trellis (MOD-280): the mod's first crop. ---
 	/**
 	 * Chance divisor for one rooting stage of the trellis: on each random tick of a moist, lit
@@ -1470,6 +1510,30 @@ public final class Config {
 				() -> gardenDroneScanIntervalTicks, v -> gardenDroneScanIntervalTicks = v, 1),
 			new IntField("gardenDroneFlightTicksPerBlock", Section.MACHINES, "Ticks the Garden Drone flies per block of distance before its action lands.",
 				() -> gardenDroneFlightTicksPerBlock, v -> gardenDroneFlightTicksPerBlock = v, 0),
+			new IntField("mobRepellerRange", Section.MACHINES, "Mob Repeller LV zone radius in blocks (a cube around the block).",
+				() -> mobRepellerRange, v -> mobRepellerRange = v, 1),
+			new IntField("mobRepellerRangeMv", Section.MACHINES, "Mob Repeller MV zone radius in blocks.",
+				() -> mobRepellerRangeMv, v -> mobRepellerRangeMv = v, 1),
+			new IntField("mobRepellerRangeHv", Section.MACHINES, "Mob Repeller HV zone radius in blocks.",
+				() -> mobRepellerRangeHv, v -> mobRepellerRangeHv = v, 1),
+			new IntField("mobRepellerEuPerTick", Section.MACHINES, "Mob Repeller LV field upkeep in EU per tick while enabled (constant drain, not per expulsion).",
+				() -> mobRepellerEuPerTick, v -> mobRepellerEuPerTick = v, 1),
+			new IntField("mobRepellerEuPerTickMv", Section.MACHINES, "Mob Repeller MV field upkeep in EU per tick.",
+				() -> mobRepellerEuPerTickMv, v -> mobRepellerEuPerTickMv = v, 1),
+			new IntField("mobRepellerEuPerTickHv", Section.MACHINES, "Mob Repeller HV field upkeep in EU per tick.",
+				() -> mobRepellerEuPerTickHv, v -> mobRepellerEuPerTickHv = v, 1),
+			new IntField("mobRepellerBuffer", Section.MACHINES, "Mob Repeller LV internal EU buffer.",
+				() -> mobRepellerBuffer, v -> mobRepellerBuffer = v, 1),
+			new IntField("mobRepellerBufferMv", Section.MACHINES, "Mob Repeller MV internal EU buffer.",
+				() -> mobRepellerBufferMv, v -> mobRepellerBufferMv = v, 1),
+			new IntField("mobRepellerBufferHv", Section.MACHINES, "Mob Repeller HV internal EU buffer.",
+				() -> mobRepellerBufferHv, v -> mobRepellerBufferHv = v, 1),
+			new IntField("mobRepellerScanIntervalTicks", Section.MACHINES, "Ticks between Mob Repeller zone sweeps (the upkeep drain still applies every tick).",
+				() -> mobRepellerScanIntervalTicks, v -> mobRepellerScanIntervalTicks = v, 1),
+			new IntField("mobRepellerEvolveKillsMv", Section.MACHINES, "Personal hostile kills a Soul Vessel needs to evolve the LV repeller into MV.",
+				() -> mobRepellerEvolveKillsMv, v -> mobRepellerEvolveKillsMv = v, 1),
+			new IntField("mobRepellerEvolveKillsHv", Section.MACHINES, "Personal hostile kills to evolve the MV repeller into HV; also the vessel hard cap.",
+				() -> mobRepellerEvolveKillsHv, v -> mobRepellerEvolveKillsHv = v, 1),
 			// Minimum 1 on both: a 0 divisor would divide by zero inside the plant's random tick (MOD-169).
 			new IntField("cottonRootingChanceDivisor", Section.WORLD, "Cotton trellis: 1-in-this chance of advancing one rooting stage per random tick (higher = longer initial growth).",
 				() -> cottonRootingChanceDivisor, v -> cottonRootingChanceDivisor = v, 1),

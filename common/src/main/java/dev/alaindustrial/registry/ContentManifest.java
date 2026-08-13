@@ -30,6 +30,9 @@ import dev.alaindustrial.block.ElectrumChestBlock;
 import dev.alaindustrial.block.GoldChestBlock;
 import dev.alaindustrial.block.HighAltitudeWindMillBlock;
 import dev.alaindustrial.block.IncubatorBlock;
+import dev.alaindustrial.block.MobRepellerBlock;
+import dev.alaindustrial.block.MobRepellerHvBlock;
+import dev.alaindustrial.block.MobRepellerMvBlock;
 import dev.alaindustrial.block.IncubatorDomeBlock;
 import dev.alaindustrial.block.IronChestBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
@@ -82,6 +85,9 @@ import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
+import dev.alaindustrial.block.entity.MobRepellerBlockEntity;
+import dev.alaindustrial.block.entity.MobRepellerHvBlockEntity;
+import dev.alaindustrial.block.entity.MobRepellerMvBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
@@ -105,6 +111,7 @@ import dev.alaindustrial.item.energy.BatteryItem;
 import dev.alaindustrial.item.misc.HintItem;
 import dev.alaindustrial.item.misc.MutationChipItem;
 import dev.alaindustrial.item.misc.OverclockerChipItem;
+import dev.alaindustrial.item.misc.SoulVesselItem;
 import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.menu.EnergyCondenserMenu;
@@ -129,6 +136,9 @@ import dev.alaindustrial.menu.PolymerizerMenu;
 import dev.alaindustrial.menu.GardenDroneStationMenu;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.menu.IncubatorMenu;
+import dev.alaindustrial.menu.MobRepellerHvMenu;
+import dev.alaindustrial.menu.MobRepellerMenu;
+import dev.alaindustrial.menu.MobRepellerMvMenu;
 import dev.alaindustrial.menu.SawmillMenu;
 import dev.alaindustrial.menu.SilverChestMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
@@ -273,7 +283,12 @@ public final class ContentManifest {
 			// is a single chest wearing the warehouse/double-chest machinery rather than a taller panel.
 			menu("electrum_chest", ElectrumChestMenu::new, s -> ModContent.ELECTRUM_CHEST_MENU = s),
 			// MOD-391 — the double chest's 6-row scrolling window, one type for every tier.
-			menu("double_chest", DoubleChestMenu::new, s -> ModContent.DOUBLE_CHEST_MENU = s));
+			menu("double_chest", DoubleChestMenu::new, s -> ModContent.DOUBLE_CHEST_MENU = s),
+			// MOD-278 — the guard field, one menu per tier (same class, tier-specific client factory:
+			// a menu type must map to exactly one block for stillValid, and the tiers are three blocks).
+			menu("mob_repeller", MobRepellerMenu::new, s -> ModContent.MOB_REPELLER_MENU = s),
+			menu("mob_repeller_mv", MobRepellerMvMenu::new, s -> ModContent.MOB_REPELLER_MV_MENU = s),
+			menu("mob_repeller_hv", MobRepellerHvMenu::new, s -> ModContent.MOB_REPELLER_HV_MENU = s));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// Blocks — the COMPOSITION, not just the definition (MOD-403)
@@ -424,6 +439,12 @@ public final class ContentManifest {
 	/** Energy condenser (MOD-393): banks grid surplus into energy clots. */
 	public static final BlockDef<EnergyCondenserBlock> ENERGY_CONDENSER =
 			block("energy_condenser", EnergyCondenserBlock::new, s -> ModContent.ENERGY_CONDENSER = s);
+	public static final BlockDef<MobRepellerBlock> MOB_REPELLER =
+			block("mob_repeller", MobRepellerBlock::new, s -> ModContent.MOB_REPELLER = s);
+	public static final BlockDef<MobRepellerMvBlock> MOB_REPELLER_MV =
+			block("mob_repeller_mv", MobRepellerMvBlock::new, s -> ModContent.MOB_REPELLER_MV = s);
+	public static final BlockDef<MobRepellerHvBlock> MOB_REPELLER_HV =
+			block("mob_repeller_hv", MobRepellerHvBlock::new, s -> ModContent.MOB_REPELLER_HV = s);
 	public static final BlockDef<IncubatorBlock> INCUBATOR =
 			block("incubator", IncubatorBlock::new, s -> ModContent.INCUBATOR = s);
 	public static final BlockDef<IncubatorDomeBlock> INCUBATOR_DOME =
@@ -521,7 +542,8 @@ public final class ContentManifest {
 			MACERATOR, BATTERY_BOX, CESU, TELEPORTER, ELECTRIC_FURNACE, IRON_FURNACE, EXTRACTOR,
 			COMPRESSOR, CANNING_MACHINE, SAWMILL, ASSEMBLER, POLYMERIZER, DISTILLATION_COLUMN,
 			DISTILLATION_COLUMN_MIDDLE, DISTILLATION_COLUMN_TOP, RECTIFICATION_SECTION, ALLOY_SMELTER,
-			VULCANIZER, GALVANIC_BATH, ELECTRIC_HEATER, CHARGE_PAD, ENERGY_CONDENSER, INCUBATOR,
+			VULCANIZER, GALVANIC_BATH, ELECTRIC_HEATER, CHARGE_PAD, ENERGY_CONDENSER,
+			MOB_REPELLER, MOB_REPELLER_MV, MOB_REPELLER_HV, INCUBATOR,
 			INCUBATOR_DOME, TRELLIS, TIN_ORE, DEEPSLATE_TIN_ORE, SILVER_ORE, DEEPSLATE_SILVER_ORE,
 			NICKEL_ORE, DEEPSLATE_NICKEL_ORE, SULFUR_ORE, DEEPSLATE_SULFUR_ORE, URANIUM_ORE,
 			DEEPSLATE_URANIUM_ORE, IRON_CHEST, STORAGE_MODULE, SILVER_CHEST, GOLD_CHEST, ELECTRUM_CHEST,
@@ -621,6 +643,14 @@ public final class ContentManifest {
 			// It glows while the bank holds anything, which is also the "it is working" signal.
 			Map.entry("energy_condenser", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.noOcclusion().lightLevel(ModBlockProperties::litLight))),
+			// MOD-278 — the guard field. The soul emitter glows while the field is up, which is also the
+			// "it is powered" signal; identical chain on all three tiers so only the trim differs.
+			Map.entry("mob_repeller", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.lightLevel(ModBlockProperties::repellerLight))),
+			Map.entry("mob_repeller_mv", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.lightLevel(ModBlockProperties::repellerLight))),
+			Map.entry("mob_repeller_hv", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.lightLevel(ModBlockProperties::repellerLight))),
 			// The emitter ring lights the chamber while an operation runs, so the block emits too.
 			Map.entry("incubator", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.lightLevel(ModBlockProperties::litLight))),
@@ -842,6 +872,10 @@ public final class ContentManifest {
 		defs.put("windmill_rotor_advanced", durableComponent(() -> Config.windMillRotorAdvancedMaxDamage));
 		defs.put("water_mill_wheel_reinforced", durableComponent(() -> Config.waterMillWheelReinforcedMaxDamage));
 		defs.put("water_mill_wheel_advanced", durableComponent(() -> Config.waterMillWheelAdvancedMaxDamage));
+		// Soul Vessel (MOD-278): the repeller's upgrade currency. stacksTo(1) is not a balance knob —
+		// the kill counter is a stack component, and stacks with different components never merge, so a
+		// stackable vessel would only ever look broken.
+		defs.put("soul_vessel", p -> new SoulVesselItem(p.stacksTo(1)));
 		return Map.copyOf(defs);
 	}
 
@@ -996,7 +1030,10 @@ public final class ContentManifest {
 			blockEntity("storage_module", StorageModuleBlockEntity.class, StorageModuleBlockEntity::new, s -> ModContent.STORAGE_MODULE_BE = s, "storage_module"),
 			blockEntity("silver_chest", SilverChestBlockEntity.class, SilverChestBlockEntity::new, s -> ModContent.SILVER_CHEST_BE = s, "silver_chest"),
 			blockEntity("gold_chest", GoldChestBlockEntity.class, GoldChestBlockEntity::new, s -> ModContent.GOLD_CHEST_BE = s, "gold_chest"),
-			blockEntity("electrum_chest", ElectrumChestBlockEntity.class, ElectrumChestBlockEntity::new, s -> ModContent.ELECTRUM_CHEST_BE = s, "electrum_chest"));
+			blockEntity("electrum_chest", ElectrumChestBlockEntity.class, ElectrumChestBlockEntity::new, s -> ModContent.ELECTRUM_CHEST_BE = s, "electrum_chest"),
+			blockEntity("mob_repeller", MobRepellerBlockEntity.class, MobRepellerBlockEntity::new, s -> ModContent.MOB_REPELLER_BE = s, "mob_repeller"),
+			blockEntity("mob_repeller_mv", MobRepellerMvBlockEntity.class, MobRepellerMvBlockEntity::new, s -> ModContent.MOB_REPELLER_MV_BE = s, "mob_repeller_mv"),
+			blockEntity("mob_repeller_hv", MobRepellerHvBlockEntity.class, MobRepellerHvBlockEntity::new, s -> ModContent.MOB_REPELLER_HV_BE = s, "mob_repeller_hv"));
 
 	/**
 	 * The definition for block-entity {@code id}, checked against the type the caller expects.

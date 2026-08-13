@@ -46,6 +46,16 @@ public final class ModBlockProperties {
 	}
 
 	/**
+	 * Light emission of a running Mob Repeller (MOD-278): <b>14</b> — the vanilla torch level, one
+	 * above the machines' 13. The block is base lighting as much as it is defence: a player who wires
+	 * one up expects the yard around it to stop being pitch dark, and 14 is the number every player
+	 * already has a feel for from torches.
+	 */
+	public static int repellerLight(BlockState state) {
+		return state.getValue(BlockStateProperties.LIT) ? 14 : 0;
+	}
+
+	/**
 	 * Per-state light emission for the Charging Station (MOD-274). Unlike {@link #litLight} this reads a
 	 * four-valued {@code state} property, so the levels live on {@link ChargePadState} itself rather than
 	 * as magic numbers here — the enum is where "what is the station telling the player" is decided.

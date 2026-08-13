@@ -15,6 +15,7 @@ import dev.alaindustrial.gametest.CableInsulationScenarios;
 import dev.alaindustrial.gametest.CableBreakerScenarios;
 import dev.alaindustrial.gametest.CableShockScenarios;
 import dev.alaindustrial.gametest.ChargePadScenarios;
+import dev.alaindustrial.gametest.MobRepellerScenarios;
 import dev.alaindustrial.gametest.CoreFluidScenarios;
 import dev.alaindustrial.gametest.GeneratorEnergyScenarios;
 import dev.alaindustrial.gametest.MachineEnergyScenarios;
@@ -749,6 +750,19 @@ public final class NeoForgeGameTests {
 		// Charging Station (MOD-274, TC-PAD-001) — same loader-neutral bodies as the Fabric
 		// ChargePadGameTest suite: the transfer, worn gear, the tag and input-rate guards, the
 		// indicator states, the idle release and the energy-face contract.
+		// Mob Repeller (MOD-278, TC-REP-001) — same loader-neutral bodies as the Fabric
+		// MobRepellerGameTest suite: the field sweep and its upkeep, the passive-mob guard, the
+		// tier evolution through a full Soul Vessel, and the personal-kill accounting.
+		registerTest(event, "repeller_expels_and_bills", 40, true, MobRepellerScenarios::fun01ExpelsHostileAndBillsUpkeep);
+		registerTest(event, "repeller_ignores_passive", 40, true, MobRepellerScenarios::fun02IgnoresPassiveMobs);
+		registerTest(event, "repeller_unpowered_is_dark", 40, true, MobRepellerScenarios::fun03UnpoweredFieldIsDark);
+		registerTest(event, "repeller_vessel_evolves_tier", 40, true, MobRepellerScenarios::fun04FullVesselEvolvesTier);
+		registerTest(event, "repeller_partial_vessel_no_evolve", 40, true, MobRepellerScenarios::neg01PartialVesselDoesNotEvolve);
+		registerTest(event, "repeller_foreign_item_rejected", 40, true, MobRepellerScenarios::neg04ForeignItemRejected);
+		registerTest(event, "repeller_player_kill_banks_soul", 40, true, MobRepellerScenarios::fun05PlayerKillBanksSoul);
+		registerTest(event, "repeller_real_kill_through_hook", 40, true, MobRepellerScenarios::fun06RealKillThroughLoaderHook);
+		registerTest(event, "repeller_non_player_kill_banks_nothing", 40, true, MobRepellerScenarios::neg02NonPlayerKillBanksNothing);
+		registerTest(event, "repeller_passive_kill_banks_nothing", 40, true, MobRepellerScenarios::neg03PassiveKillBanksNothing);
 		registerTest(event, "pad_charges_carried_item", 40, true, ChargePadScenarios::fun01ChargesCarriedItem);
 		registerTest(event, "pad_charges_worn_equipment", 40, true, ChargePadScenarios::fun02ChargesWornEquipment);
 		registerTest(event, "pad_charges_pack_despite_tag", 40, true, ChargePadScenarios::fun03ChargesEnergyPackDespiteTag);

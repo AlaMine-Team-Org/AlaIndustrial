@@ -2045,6 +2045,27 @@
           ]
         },
         {
+          "id": "mob_repeller_hv",
+          "title": "Большой отпугиватель",
+          "icon": "alaindustrial:mob_repeller_hv",
+          "block_id": "alaindustrial:mob_repeller_hv",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Большой отпугиватель",
+              "text": "Высшая ступень охранного поля — радиус 24 блока за 64 EU/т; растёт из среднего через Сосуд душ."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 64 EU/t (поле)",
+                "Буфер: 32000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "industrial_workbench",
           "title": "Верстак индустриалиста",
           "icon": "alaindustrial:industrial_workbench",
@@ -2123,6 +2144,45 @@
               "lines": [
                 "Энергия: 1 000 EU работы машин = 1 очко мастерства"
               ]
+            }
+          ]
+        },
+        {
+          "id": "mob_repeller",
+          "title": "Малый отпугиватель",
+          "icon": "alaindustrial:mob_repeller",
+          "block_id": "alaindustrial:mob_repeller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Малый отпугиватель",
+              "text": "Охранное EU-поле — пока запитан, враждебные мобы убегают из радиуса 8 блоков и не могут подойти. Растёт до среднего и большого через Сосуд душ."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 8 EU/t (поле)",
+                "Буфер: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "minecraft:soul_lantern",
+                "alaindustrial:silver_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:copper_coil",
+                "alaindustrial:silver_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:silver_plate"
+              ],
+              "result_id": "alaindustrial:mob_repeller",
+              "result_count": 1
             }
           ]
         },
@@ -2219,6 +2279,27 @@
               ],
               "result_id": "alaindustrial:stock_display_frame",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "mob_repeller_mv",
+          "title": "Средний отпугиватель",
+          "icon": "alaindustrial:mob_repeller_mv",
+          "block_id": "alaindustrial:mob_repeller_mv",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Средний отпугиватель",
+              "text": "Вторая ступень охранного поля — радиус 16 блоков за 32 EU/т; растёт из малого через Сосуд душ."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 32 EU/t (поле)",
+                "Буфер: 8000 EU"
+              ]
             }
           ]
         },
@@ -3476,6 +3557,37 @@
                 ""
               ],
               "result_id": "alaindustrial:teleporter_remote",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "soul_vessel",
+          "title": "Сосуд душ",
+          "icon": "alaindustrial:soul_vessel",
+          "block_id": "alaindustrial:soul_vessel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Сосуд душ",
+              "text": "Накопитель душ для прокачки Отпугивателя мобов — заполняется только личными убийствами враждебных мобов; полный сосуд расходуется на эволюцию блока."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "minecraft:glass",
+                "alaindustrial:silver_plate",
+                "minecraft:glass",
+                "minecraft:soul_sand",
+                "minecraft:glass",
+                "alaindustrial:silver_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:silver_plate"
+              ],
+              "result_id": "alaindustrial:soul_vessel",
               "result_count": 1
             }
           ]

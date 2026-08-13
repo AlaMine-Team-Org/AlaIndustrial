@@ -8,6 +8,9 @@ import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
+import dev.alaindustrial.block.entity.MobRepellerBlockEntity;
+import dev.alaindustrial.block.entity.MobRepellerHvBlockEntity;
+import dev.alaindustrial.block.entity.MobRepellerMvBlockEntity;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
@@ -131,6 +134,12 @@ public final class ModBlockEntitiesNeoForge {
 			register(ContentManifest.blockEntity("charge_pad", ChargePadBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnergyCondenserBlockEntity>> ENERGY_CONDENSER =
 			register(ContentManifest.blockEntity("energy_condenser", EnergyCondenserBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MobRepellerBlockEntity>> MOB_REPELLER =
+			register(ContentManifest.blockEntity("mob_repeller", MobRepellerBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MobRepellerMvBlockEntity>> MOB_REPELLER_MV =
+			register(ContentManifest.blockEntity("mob_repeller_mv", MobRepellerMvBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MobRepellerHvBlockEntity>> MOB_REPELLER_HV =
+			register(ContentManifest.blockEntity("mob_repeller_hv", MobRepellerHvBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IncubatorBlockEntity>> INCUBATOR =
 			register(ContentManifest.blockEntity("incubator", IncubatorBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeothermalGeneratorBlockEntity>> GEOTHERMAL_GENERATOR =

@@ -2,6 +2,7 @@ package dev.alaindustrial.client.render;
 
 import java.util.List;
 import net.minecraft.client.renderer.gizmos.DrawableGizmoPrimitives;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 /**
@@ -197,6 +198,36 @@ final class OverlayGeometry {
 	 */
 	static void addJointCube(DrawableGizmoPrimitives gizmos, Vec3 center, float halfSize, int color) {
 		addBox(gizmos, center, halfSize, halfSize, halfSize, color);
+	}
+
+	/**
+	 * A translucent filled box plus a bright wireframe on the same bounds — the shape a "zone of
+	 * effect" wants (MOD-278's repeller dome; the Fabric cable-placement preview draws the same pair
+	 * by hand). Fill and edge are separate colours because a single translucent volume reads as fog
+	 * at 24 blocks: the wireframe is what actually tells the player which cell is the boundary.
+	 *
+	 * <p>Any colour with {@code alpha < 255} is routed to vanilla's translucent gizmo group
+	 * automatically, so the fill needs no extra setup here.
+	 */
+	public static void addBoxOutline(DrawableGizmoPrimitives gizmos, AABB box, int fillColor,
+			int edgeColor, float edgeWidth) {
+		Vec3 center = box.getCenter();
+		addBox(gizmos, center, box.getXsize() / 2, box.getYsize() / 2, box.getZsize() / 2, fillColor);
+
+		Vec3 min = new Vec3(box.minX, box.minY, box.minZ);
+		Vec3 max = new Vec3(box.maxX, box.maxY, box.maxZ);
+		// Four verticals + two horizontal rings; every edge of the cube exactly once.
+		for (int i = 0; i < 4; i++) {
+			double x = (i == 0 || i == 3) ? min.x : max.x;
+			double z = (i < 2) ? min.z : max.z;
+			gizmos.addLine(new Vec3(x, min.y, z), new Vec3(x, max.y, z), edgeColor, edgeWidth);
+		}
+		for (double y : new double[] {min.y, max.y}) {
+			gizmos.addLine(new Vec3(min.x, y, min.z), new Vec3(max.x, y, min.z), edgeColor, edgeWidth);
+			gizmos.addLine(new Vec3(max.x, y, min.z), new Vec3(max.x, y, max.z), edgeColor, edgeWidth);
+			gizmos.addLine(new Vec3(max.x, y, max.z), new Vec3(min.x, y, max.z), edgeColor, edgeWidth);
+			gizmos.addLine(new Vec3(min.x, y, max.z), new Vec3(min.x, y, min.z), edgeColor, edgeWidth);
+		}
 	}
 
 	/** {@link #addJointCube} generalized to per-axis half-extents — same outward winding. */

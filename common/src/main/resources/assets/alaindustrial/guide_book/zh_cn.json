@@ -2045,6 +2045,27 @@
           ]
         },
         {
+          "id": "mob_repeller_hv",
+          "title": "Large Mob Repeller",
+          "icon": "alaindustrial:mob_repeller_hv",
+          "block_id": "alaindustrial:mob_repeller_hv",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Large Mob Repeller",
+              "text": "The top guard-field tier — a 24-block radius at 64 EU/t; grown from the medium one with a Soul Vessel."
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "Energy: 64 EU/t (поле)",
+                "Buffer: 32000 EU"
+              ]
+            }
+          ]
+        },
+        {
           "id": "industrial_workbench",
           "title": "工业工作台",
           "icon": "alaindustrial:industrial_workbench",
@@ -2123,6 +2144,45 @@
               "lines": [
                 "能量：机器运转 1 000 EU = 1 点精通"
               ]
+            }
+          ]
+        },
+        {
+          "id": "mob_repeller",
+          "title": "Small Mob Repeller",
+          "icon": "alaindustrial:mob_repeller",
+          "block_id": "alaindustrial:mob_repeller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Small Mob Repeller",
+              "text": "A guard EU-field — while powered, hostile mobs flee an 8-block radius and cannot approach. Grows into the medium and large tiers via the Soul Vessel."
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "Energy: 8 EU/t (поле)",
+                "Buffer: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "minecraft:soul_lantern",
+                "alaindustrial:silver_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:copper_coil",
+                "alaindustrial:silver_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:silver_plate"
+              ],
+              "result_id": "alaindustrial:mob_repeller",
+              "result_count": 1
             }
           ]
         },
@@ -2219,6 +2279,27 @@
               ],
               "result_id": "alaindustrial:stock_display_frame",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "mob_repeller_mv",
+          "title": "Medium Mob Repeller",
+          "icon": "alaindustrial:mob_repeller_mv",
+          "block_id": "alaindustrial:mob_repeller_mv",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Medium Mob Repeller",
+              "text": "The second guard-field tier — a 16-block radius at 32 EU/t; grown from the small one with a Soul Vessel."
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "Energy: 32 EU/t (поле)",
+                "缓冲：8000 EU"
+              ]
             }
           ]
         },
@@ -3476,6 +3557,37 @@
                 ""
               ],
               "result_id": "alaindustrial:teleporter_remote",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "soul_vessel",
+          "title": "Soul Vessel",
+          "icon": "alaindustrial:soul_vessel",
+          "block_id": "alaindustrial:soul_vessel",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Soul Vessel",
+              "text": "A soul reservoir that upgrades the Mob Repeller — filled only by the player's own hostile-mob kills; a full vessel is consumed to evolve the block."
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:silver_plate",
+                "minecraft:glass",
+                "alaindustrial:silver_plate",
+                "minecraft:glass",
+                "minecraft:soul_sand",
+                "minecraft:glass",
+                "alaindustrial:silver_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:silver_plate"
+              ],
+              "result_id": "alaindustrial:soul_vessel",
               "result_count": 1
             }
           ]

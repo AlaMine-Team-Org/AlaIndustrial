@@ -309,6 +309,8 @@ public final class IndustrializationNeoForge {
 			if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player) {
 				dev.alaindustrial.teleporter.TeleportWarmupManager.cancel(player);
 			}
+			// MOD-278: a hostile mob killed by a player personally banks one soul into their vessel.
+			dev.alaindustrial.entity.SoulVesselKills.onDeath(event.getEntity(), event.getSource());
 		});
 		NeoForge.EVENT_BUS.addListener(
 				(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) -> {
@@ -434,6 +436,9 @@ public final class IndustrializationNeoForge {
 					ModBlockEntitiesNeoForge.DAYLIGHT_SOLAR_PANEL,
 					ModBlockEntitiesNeoForge.COPPER_CABLE,
 					ModBlockEntitiesNeoForge.MACERATOR,
+					ModBlockEntitiesNeoForge.MOB_REPELLER,
+					ModBlockEntitiesNeoForge.MOB_REPELLER_MV,
+					ModBlockEntitiesNeoForge.MOB_REPELLER_HV,
 					ModBlockEntitiesNeoForge.BATTERY_BOX,
 					ModBlockEntitiesNeoForge.TELEPORTER,
 					ModBlockEntitiesNeoForge.ELECTRIC_FURNACE,

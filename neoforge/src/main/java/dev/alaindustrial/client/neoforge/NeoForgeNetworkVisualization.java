@@ -1,6 +1,7 @@
 package dev.alaindustrial.client.neoforge;
 
 import dev.alaindustrial.client.render.NetworkOverlayRenderer;
+import dev.alaindustrial.client.render.RepellerDomeRenderer;
 import dev.alaindustrial.network.neoforge.NeoForgeNetworkClient;
 import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
 
@@ -33,6 +34,9 @@ public final class NeoForgeNetworkVisualization {
 	public static void onSubmitCustomGeometry(SubmitCustomGeometryEvent event) {
 		NetworkOverlayRenderer.updatePayload(NeoForgeNetworkClient.latest());
 		NetworkOverlayRenderer.submitFrame(event.getSubmitNodeCollector(),
+				event.getLevelRenderState().cameraRenderState);
+		// MOD-278: the personal repeller dome rides the same frame point (see RepellerDomeRenderer).
+		RepellerDomeRenderer.submitFrame(event.getSubmitNodeCollector(),
 				event.getLevelRenderState().cameraRenderState);
 	}
 }
