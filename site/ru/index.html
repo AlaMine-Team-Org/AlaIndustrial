@@ -314,7 +314,7 @@
 </section>
 <div class="home-search" role="search"><span aria-hidden="true">⌕</span><input id="wiki-search" type="search" placeholder="Что вы хотите построить?" autocomplete="off"><kbd>Ctrl K</kbd></div>
 <section class="stats-block home-module" id="stats-block" hidden
-         data-src="../data/stats.json" data-l10n="{&quot;updated&quot;: &quot;обновлено {d}&quot;, &quot;week_suffix&quot;: &quot;за неделю&quot;, &quot;followers&quot;: &quot;{n} подписчиков&quot;, &quot;chart&quot;: &quot;Динамика скачиваний&quot;, &quot;per_day&quot;: &quot;в день&quot;, &quot;per_week&quot;: &quot;в неделю&quot;, &quot;per_month&quot;: &quot;в месяц&quot;, &quot;no_data&quot;: &quot;Истории пока мало — график появится, когда накопятся данные.&quot;, &quot;dl_forms&quot;: [&quot;скачивание&quot;, &quot;скачивания&quot;, &quot;скачиваний&quot;]}">
+         data-src="../data/stats.json" data-l10n="{&quot;updated&quot;: &quot;обновлено {d}&quot;, &quot;week_suffix&quot;: &quot;за неделю&quot;, &quot;followers&quot;: &quot;{n} подписчиков&quot;, &quot;chart&quot;: &quot;Динамика скачиваний&quot;, &quot;per_day&quot;: &quot;в день&quot;, &quot;per_week&quot;: &quot;в неделю&quot;, &quot;per_month&quot;: &quot;в месяц&quot;, &quot;no_data&quot;: &quot;Истории пока мало — график появится, когда накопятся данные.&quot;, &quot;partial_note&quot;: &quot;* только Modrinth — у CurseForge нет статистики по дням.&quot;, &quot;dl_forms&quot;: [&quot;скачивание&quot;, &quot;скачивания&quot;, &quot;скачиваний&quot;]}">
   <div class="stats-head"><div class="module-kicker">Статистика</div>
     <span class="stats-updated" id="st-updated"></span></div>
   <div class="st-kpi">
@@ -332,6 +332,7 @@
       <span class="st-unit" id="st-unit"></span>
       <div class="st-ranges" role="group"><button type="button" class="st-range" data-range="30" aria-pressed="false">30 дней</button><button type="button" class="st-range" data-range="90" aria-pressed="false">90 дней</button><button type="button" class="st-range" data-range="365" aria-pressed="false">год</button><button type="button" class="st-range" data-range="all" aria-pressed="true">всё время</button></div></div>
     <div id="st-chart-body"></div>
+    <div class="st-note" id="st-note" hidden></div>
     <div class="st-tip" id="st-tip"></div>
   </div>
   <div class="st-loaders" id="st-loaders" hidden>

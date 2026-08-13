@@ -68,6 +68,8 @@ body{font-size:20px;line-height:1.5;background:linear-gradient(90deg,#0e0e11,#17
 .st-tip{position:absolute;z-index:5;padding:6px 10px;pointer-events:none;opacity:0;transition:opacity .08s;color:#fff;background:#101216;border:2px solid var(--edge);outline:1px solid #6c727b;outline-offset:-4px;box-shadow:4px 4px rgba(0,0,0,.5);font:17px 'VT323',monospace;white-space:nowrap}
 .st-tip b{color:var(--gold);font-weight:700}
 .st-tip.on{opacity:1}
+.st-note{margin:8px 2px 0;color:var(--muted2);font:16px 'VT323',monospace}
+.st-note[hidden]{display:none}
 .st-empty{padding:26px;text-align:center;color:#d7d8dd;border:2px dashed #686e77}
 .st-loaders{margin-top:13px;padding:15px 18px;background:#292d32;border:3px solid var(--edge);outline:1px solid #5c626b;outline-offset:-6px;box-shadow:6px 6px var(--edge)}
 .st-loaders h3{margin:0 0 12px;color:var(--gold);font:700 21px 'VT323',monospace}

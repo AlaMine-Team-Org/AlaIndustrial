@@ -63,12 +63,16 @@
         const [d0, m0, c0] = series[i - 1];
         const [d1, m1, c1] = series[i];
         const gap = Math.max(1, Math.round((Date.parse(d1) - Date.parse(d0)) / 86400000));
-        const per = (m1 - m0 + c1 - c0) / gap;
+        /* CurseForge publishes no history, so days restored from Modrinth analytics
+           carry null in its place. Such a day counts Modrinth only and is marked, so
+           the tooltip can say the figure is not the full picture. */
+        const partial = c0 === null || c1 === null;
+        const per = (m1 - m0 + (partial ? 0 : c1 - c0)) / gap;
         for (let g = gap; g >= 1; g--) {
           out.push({
             date: new Date(Date.parse(d1) - (g - 1) * 86400000).toISOString().slice(0, 10),
             v: Math.max(0, Math.round(per)),
-            est: gap > 1,
+            est: gap > 1 || partial,
           });
         }
       }
@@ -147,6 +151,14 @@
         data.map(d => '<tr><th scope="row">' + (d.end && d.end !== d.date
           ? fmtDate(d.date) + ' — ' + fmtDate(d.end) : fmtDate(d.date)) +
           '</th><td>' + nf.format(d.v) + '</td></tr>').join('') + '</tbody></table>';
+
+      /* Footnote explaining the asterisk, shown only while the visible range
+         actually contains such days. */
+      const note = document.getElementById('st-note');
+      if (note) {
+        note.textContent = L.partial_note || '';
+        note.hidden = !L.partial_note || !data.some(d => d.est);
+      }
 
       const svg = host.querySelector('svg');
       const marker = host.querySelector('#st-marker');

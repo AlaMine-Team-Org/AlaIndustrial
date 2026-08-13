@@ -314,7 +314,7 @@
 </section>
 <div class="home-search" role="search"><span aria-hidden="true">⌕</span><input id="wiki-search" type="search" placeholder="你想要建造什么？" autocomplete="off"><kbd>Ctrl K</kbd></div>
 <section class="stats-block home-module" id="stats-block" hidden
-         data-src="../data/stats.json" data-l10n="{&quot;updated&quot;: &quot;更新于 {d}&quot;, &quot;week_suffix&quot;: &quot;本周新增&quot;, &quot;followers&quot;: &quot;{n} 位关注者&quot;, &quot;chart&quot;: &quot;下载趋势&quot;, &quot;per_day&quot;: &quot;每天&quot;, &quot;per_week&quot;: &quot;每周&quot;, &quot;per_month&quot;: &quot;每月&quot;, &quot;no_data&quot;: &quot;数据还不够——积累一段时间后将显示图表。&quot;, &quot;dl_forms&quot;: [&quot;次下载&quot;]}">
+         data-src="../data/stats.json" data-l10n="{&quot;updated&quot;: &quot;更新于 {d}&quot;, &quot;week_suffix&quot;: &quot;本周新增&quot;, &quot;followers&quot;: &quot;{n} 位关注者&quot;, &quot;chart&quot;: &quot;下载趋势&quot;, &quot;per_day&quot;: &quot;每天&quot;, &quot;per_week&quot;: &quot;每周&quot;, &quot;per_month&quot;: &quot;每月&quot;, &quot;no_data&quot;: &quot;数据还不够——积累一段时间后将显示图表。&quot;, &quot;partial_note&quot;: &quot;* 仅 Modrinth —— CurseForge 不提供每日数据。&quot;, &quot;dl_forms&quot;: [&quot;次下载&quot;]}">
   <div class="stats-head"><div class="module-kicker">统计</div>
     <span class="stats-updated" id="st-updated"></span></div>
   <div class="st-kpi">
@@ -332,6 +332,7 @@
       <span class="st-unit" id="st-unit"></span>
       <div class="st-ranges" role="group"><button type="button" class="st-range" data-range="30" aria-pressed="false">30 天</button><button type="button" class="st-range" data-range="90" aria-pressed="false">90 天</button><button type="button" class="st-range" data-range="365" aria-pressed="false">一年</button><button type="button" class="st-range" data-range="all" aria-pressed="true">全部时间</button></div></div>
     <div id="st-chart-body"></div>
+    <div class="st-note" id="st-note" hidden></div>
     <div class="st-tip" id="st-tip"></div>
   </div>
   <div class="st-loaders" id="st-loaders" hidden>

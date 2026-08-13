@@ -314,7 +314,7 @@
 </section>
 <div class="home-search" role="search"><span aria-hidden="true">⌕</span><input id="wiki-search" type="search" placeholder="何を作りたいですか？" autocomplete="off"><kbd>Ctrl K</kbd></div>
 <section class="stats-block home-module" id="stats-block" hidden
-         data-src="../data/stats.json" data-l10n="{&quot;updated&quot;: &quot;{d} 更新&quot;, &quot;week_suffix&quot;: &quot;今週&quot;, &quot;followers&quot;: &quot;フォロワー {n} 人&quot;, &quot;chart&quot;: &quot;ダウンロードの推移&quot;, &quot;per_day&quot;: &quot;1日あたり&quot;, &quot;per_week&quot;: &quot;1週あたり&quot;, &quot;per_month&quot;: &quot;1か月あたり&quot;, &quot;no_data&quot;: &quot;履歴がまだ足りません。データがたまるとグラフが表示されます。&quot;, &quot;dl_forms&quot;: [&quot;ダウンロード&quot;]}">
+         data-src="../data/stats.json" data-l10n="{&quot;updated&quot;: &quot;{d} 更新&quot;, &quot;week_suffix&quot;: &quot;今週&quot;, &quot;followers&quot;: &quot;フォロワー {n} 人&quot;, &quot;chart&quot;: &quot;ダウンロードの推移&quot;, &quot;per_day&quot;: &quot;1日あたり&quot;, &quot;per_week&quot;: &quot;1週あたり&quot;, &quot;per_month&quot;: &quot;1か月あたり&quot;, &quot;no_data&quot;: &quot;履歴がまだ足りません。データがたまるとグラフが表示されます。&quot;, &quot;partial_note&quot;: &quot;* Modrinth のみ — CurseForge は日別データを公開していません。&quot;, &quot;dl_forms&quot;: [&quot;ダウンロード&quot;]}">
   <div class="stats-head"><div class="module-kicker">統計</div>
     <span class="stats-updated" id="st-updated"></span></div>
   <div class="st-kpi">
@@ -332,6 +332,7 @@
       <span class="st-unit" id="st-unit"></span>
       <div class="st-ranges" role="group"><button type="button" class="st-range" data-range="30" aria-pressed="false">30日</button><button type="button" class="st-range" data-range="90" aria-pressed="false">90日</button><button type="button" class="st-range" data-range="365" aria-pressed="false">1年</button><button type="button" class="st-range" data-range="all" aria-pressed="true">全期間</button></div></div>
     <div id="st-chart-body"></div>
+    <div class="st-note" id="st-note" hidden></div>
     <div class="st-tip" id="st-tip"></div>
   </div>
   <div class="st-loaders" id="st-loaders" hidden>

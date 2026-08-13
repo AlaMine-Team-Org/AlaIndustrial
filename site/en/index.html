@@ -314,7 +314,7 @@
 </section>
 <div class="home-search" role="search"><span aria-hidden="true">⌕</span><input id="wiki-search" type="search" placeholder="What do you want to build?" autocomplete="off"><kbd>Ctrl K</kbd></div>
 <section class="stats-block home-module" id="stats-block" hidden
-         data-src="../data/stats.json" data-l10n="{&quot;updated&quot;: &quot;updated {d}&quot;, &quot;week_suffix&quot;: &quot;this week&quot;, &quot;followers&quot;: &quot;{n} followers&quot;, &quot;chart&quot;: &quot;Downloads over time&quot;, &quot;per_day&quot;: &quot;per day&quot;, &quot;per_week&quot;: &quot;per week&quot;, &quot;per_month&quot;: &quot;per month&quot;, &quot;no_data&quot;: &quot;Not enough history yet — the chart appears once data accumulates.&quot;, &quot;dl_forms&quot;: [&quot;downloads&quot;]}">
+         data-src="../data/stats.json" data-l10n="{&quot;updated&quot;: &quot;updated {d}&quot;, &quot;week_suffix&quot;: &quot;this week&quot;, &quot;followers&quot;: &quot;{n} followers&quot;, &quot;chart&quot;: &quot;Downloads over time&quot;, &quot;per_day&quot;: &quot;per day&quot;, &quot;per_week&quot;: &quot;per week&quot;, &quot;per_month&quot;: &quot;per month&quot;, &quot;no_data&quot;: &quot;Not enough history yet — the chart appears once data accumulates.&quot;, &quot;partial_note&quot;: &quot;* Modrinth only — CurseForge publishes no day-by-day history.&quot;, &quot;dl_forms&quot;: [&quot;downloads&quot;]}">
   <div class="stats-head"><div class="module-kicker">Statistics</div>
     <span class="stats-updated" id="st-updated"></span></div>
   <div class="st-kpi">
@@ -332,6 +332,7 @@
       <span class="st-unit" id="st-unit"></span>
       <div class="st-ranges" role="group"><button type="button" class="st-range" data-range="30" aria-pressed="false">30 days</button><button type="button" class="st-range" data-range="90" aria-pressed="false">90 days</button><button type="button" class="st-range" data-range="365" aria-pressed="false">year</button><button type="button" class="st-range" data-range="all" aria-pressed="true">all time</button></div></div>
     <div id="st-chart-body"></div>
+    <div class="st-note" id="st-note" hidden></div>
     <div class="st-tip" id="st-tip"></div>
   </div>
   <div class="st-loaders" id="st-loaders" hidden>
