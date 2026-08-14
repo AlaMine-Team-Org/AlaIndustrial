@@ -19,8 +19,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Loader-neutral gametest bodies for the Electric Shovel's right-click interactions (MOD-379, suite
- * TC-SHOVEL-001). Same pattern as {@link ElectricHoeScenarios}: plain {@code GameTestHelper} bodies
+ * Loader-neutral gametest bodies for the Electric Shovel (suite TC-SHOVEL-001) — its right-click
+ * interactions (MOD-379) and, since MOD-364, the base tool's own EU contract. Same pattern as
+ * {@link ElectricHoeScenarios}: plain {@code GameTestHelper} bodies
  * wrapped by the Fabric {@code ElectricShovelGameTest} suite and registered on the NeoForge
  * {@code gameTestServer} lane via {@code NeoForgeGameTests} — both loaders run the SAME logic.
  *
@@ -45,10 +46,39 @@ import net.minecraft.world.phys.Vec3;
  * runs a vanilla {@code minecraft:diamond_shovel} through the identical fixture: it is the oracle that
  * keeps FUN01 honest, and it was exactly this comparison that proved the sibling hoe defect in-world in
  * MOD-378.
+ *
+ * <h2>Where the base EU contract lives</h2>
+ * The six forms shared with the chainsaw and the hoe (charging, drain, hand-speed collapse, free
+ * instant-break blocks, speed/drops, persistence) are written once in
+ * {@link ElectricToolEnergyScenarios}. What stays here is {@link #ENERGY}, the one place in the repo
+ * that says which tool those forms are run against for the shovel.
  */
 public final class ElectricShovelScenarios {
 
 	private ElectricShovelScenarios() {}
+
+	/**
+	 * The shovel's slice of the shared EU contract (MOD-364), declared here and nowhere else so that
+	 * naming the wrong tool would mean writing {@code ModContent.ELECTRIC_SHOVEL} inside another tool's
+	 * suite. {@link ElectricToolEnergyScenarios#energyCaseRosterIsHonest} checks every field of it against
+	 * the real item.
+	 *
+	 * <p>Fixtures: dirt is the shovel's own {@code #mineable/shovel} domain; stone is the negative; a
+	 * snow layer (hardness 0.1 in the 26.2 sources) is the soft block, which is exactly the case
+	 * {@code ElectricShovelItem.mineBlock}'s javadoc calls out as NOT free after MOD-389 corrected the
+	 * opposite claim.
+	 */
+	public static final ElectricToolEnergyScenarios.ToolCase ENERGY =
+			new ElectricToolEnergyScenarios.ToolCase(
+					"electric_shovel",
+					ModContent.ELECTRIC_SHOVEL,
+					() -> Config.electricShovelEuPerBlock,
+					() -> Config.electricShovelBuffer,
+					() -> Config.electricShovelInputRate,
+					() -> Blocks.DIRT,
+					() -> Blocks.STONE,
+					() -> Blocks.SNOW,
+					9.0f);
 
 	/** The block that gets flattened or doused. Air is forced above it: vanilla only paths a block with
 	 * air on top ({@code ShovelItem.useOn} gates the flatten branch on
@@ -214,5 +244,37 @@ public final class ElectricShovelScenarios {
 			helper.fail("right-clicking a lit campfire with the electric shovel must douse it");
 		}
 		helper.succeed();
+	}
+
+	// ── MOD-364 — the base tool's EU contract (shared forms, shovel parameters) ──────────────────────
+
+	/** TC-SHOVEL-001-FUN05 — accepted by the Battery Box charge slot and charged at its intake rate. */
+	public static void fun05ChargeInBatteryBox(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.chargeInBatteryBox(helper, ENERGY);
+	}
+
+	/** TC-SHOVEL-001-FUN06 — digging one dirt block drains exactly {@code electricShovelEuPerBlock}. */
+	public static void fun06DrainOnMineBlock(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.drainOnMineBlock(helper, ENERGY);
+	}
+
+	/** TC-SHOVEL-001-FUN07 — one EU below the cost it digs for free, at exactly hand speed. */
+	public static void fun07NoDrainBelowCost(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.noDrainBelowCost(helper, ENERGY);
+	}
+
+	/** TC-SHOVEL-001-FUN08 — a torch (hardness 0.0) is free, a snow layer (0.1) is not. */
+	public static void fun08ZeroHardnessFreeSnowCosts(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.zeroHardnessFreeSoftBlockCosts(helper, ENERGY);
+	}
+
+	/** TC-SHOVEL-001-FUN09 — 9.0 on shovel blocks while charged, 1.0f flat, drops kept either way. */
+	public static void fun09SpeedAndDrops(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.speedAndDrops(helper, ENERGY);
+	}
+
+	/** TC-SHOVEL-001-PER01 — charge survives a copy, 0 EU drops the component, writes clamp. */
+	public static void per01ChargeRoundTrip(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.chargeRoundTrip(helper, ENERGY);
 	}
 }

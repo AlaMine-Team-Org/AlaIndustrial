@@ -38,8 +38,19 @@ public class WindMillScreen extends MachineScreen<WindMillMenu> {
 	private static final float STATUS_UV_X     = 177.0F;
 	private static final float STATUS_UV_Y     = 0.0F;
 
-	// ── Idle-status text row (centred, between the rotor slot and the evolution bar) ──
-	private static final int STATUS_TEXT_Y = 50;
+	/**
+	 * Baseline of the status row (centred, between the rotor slot and the evolution bar).
+	 *
+	 * <p>Public so the L3 stand can crop its pixel gate to the row's REAL position instead of a copy of
+	 * this number (MOD-371, the same reason as {@code WaterMillScreen.STATUS_TEXT_Y}). A copy would
+	 * survive a layout change silently: the row would move, the gate would keep measuring the band it
+	 * was written for, find nothing changing there, and stay green while showing nothing.
+	 *
+	 * <p>Deliberately NOT shared with the two T2 wind mills, which declare their own. The three screens
+	 * are laid out independently, so a shared constant would tie a change in one of them to the gates of
+	 * the other two — and the gate is supposed to follow the screen it belongs to.
+	 */
+	public static final int STATUS_TEXT_Y = 50;
 
 	// ── Evo bar fill zone (x=55..130, y=70..76 = 76×7) ─────────────────────────
 	private static final int   EVO_X          = 55;

@@ -4,10 +4,11 @@ import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 /**
- * L2 functional suite for the Diamond-Tipped Electric Hoe (MOD-378, suite TC-HOE-001). Thin Fabric
- * wrappers: the bodies are loader-neutral in {@code common/.../gametest/ElectricHoeScenarios} and the
- * SAME bodies run on the NeoForge {@code gameTestServer} lane ({@code NeoForgeGameTests}) — both loaders
- * exercise identical logic.
+ * L2 functional suite for the Electric Hoe (suite TC-HOE-001) — the diamond-tipped upgrade (MOD-378),
+ * the flat-hoe click paths (MOD-389) and the base tool's EU contract including paid tilling (MOD-364).
+ * Thin Fabric wrappers: the bodies are loader-neutral in
+ * {@code common/.../gametest/ElectricHoeScenarios} and the SAME bodies run on the NeoForge
+ * {@code gameTestServer} lane ({@code NeoForgeGameTests}) — both loaders exercise identical logic.
  */
 public class ElectricHoeGameTest {
 
@@ -65,5 +66,88 @@ public class ElectricHoeGameTest {
 	@GameTest
 	public void tcHoe001Fun05_flatHoeOnTillableStillRefuses(GameTestHelper helper) {
 		ElectricHoeScenarios.fun05FlatHoeOnTillableStillRefuses(helper);
+	}
+
+	/**
+	 * @implements TC-HOE-001-FUN06 — the hoe is accepted by both Battery Box charge-slot filters and
+	 *     charges there at min(LV ceiling, its own intake rate) (MOD-364).
+	 */
+	@GameTest
+	public void tcHoe001Fun06_chargeInBatteryBox(GameTestHelper helper) {
+		ElectricHoeScenarios.fun06ChargeInBatteryBox(helper);
+	}
+
+	/**
+	 * @implements TC-HOE-001-FUN07 — breaking one hay block with a charged hoe drains exactly
+	 *     electricHoeEuPerBlock (MOD-364).
+	 */
+	@GameTest
+	public void tcHoe001Fun07_drainOnMineBlock(GameTestHelper helper) {
+		ElectricHoeScenarios.fun07DrainOnMineBlock(helper);
+	}
+
+	/**
+	 * @implements TC-HOE-001-FUN08 — one EU below the per-block cost the hoe breaks for free and at
+	 *     exactly hand speed 1.0f on its own domain block (MOD-364).
+	 */
+	@GameTest
+	public void tcHoe001Fun08_noDrainBelowCost(GameTestHelper helper) {
+		ElectricHoeScenarios.fun08NoDrainBelowCost(helper);
+	}
+
+	/**
+	 * @implements TC-HOE-001-FUN09 — a zero-hardness block costs nothing, while a moss block (0.1) costs
+	 *     the full per-block drain (MOD-364).
+	 */
+	@GameTest
+	public void tcHoe001Fun09_zeroHardnessFreeMossCosts(GameTestHelper helper) {
+		ElectricHoeScenarios.fun09ZeroHardnessFreeMossCosts(helper);
+	}
+
+	/**
+	 * @implements TC-HOE-001-FUN10 — 9.0 on hoe blocks while charged, exactly 1.0f one EU below the cost,
+	 *     drops kept either way and refused on a foreign block (MOD-364).
+	 */
+	@GameTest
+	public void tcHoe001Fun10_speedAndDrops(GameTestHelper helper) {
+		ElectricHoeScenarios.fun10SpeedAndDrops(helper);
+	}
+
+	/**
+	 * @implements TC-HOE-001-FUN11 — a successful till drains exactly electricHoeTillEuCost; the only path
+	 *     where the hoe spends EU in normal play, and it was covered by nothing (MOD-364).
+	 */
+	@GameTest
+	public void tcHoe001Fun11_tillDrainsExactlyTillCost(GameTestHelper helper) {
+		ElectricHoeScenarios.fun11TillDrainsExactlyTillCost(helper);
+	}
+
+	/**
+	 * @implements TC-HOE-001-FUN12 — one EU below the till cost the hoe refuses with CONSUME, leaves the
+	 *     plot dirt and does not touch the buffer; the boundary FUN05's zero-charge case cannot see
+	 *     (MOD-364).
+	 */
+	@GameTest
+	public void tcHoe001Fun12_tillRefusedJustBelowCost(GameTestHelper helper) {
+		ElectricHoeScenarios.fun12TillRefusedJustBelowCost(helper);
+	}
+
+	/**
+	 * @implements TC-HOE-001-FUN13 — a CHARGED hoe clicking a block no hoe can till returns PASS and keeps
+	 *     every EU; the charged twin of NEG01, whose flat hoe makes its charge check a fixture assertion
+	 *     rather than a statement about spending (MOD-364).
+	 */
+	@GameTest
+	public void tcHoe001Fun13_chargedHoeOnNonTillableKeepsBuffer(GameTestHelper helper) {
+		ElectricHoeScenarios.fun13ChargedHoeOnNonTillableKeepsBuffer(helper);
+	}
+
+	/**
+	 * @implements TC-HOE-001-PER01 — charge survives a stack copy, 0 EU removes the component, and writes
+	 *     clamp at capacity (MOD-364).
+	 */
+	@GameTest
+	public void tcHoe001Per01_chargeRoundTrip(GameTestHelper helper) {
+		ElectricHoeScenarios.per01ChargeRoundTrip(helper);
 	}
 }

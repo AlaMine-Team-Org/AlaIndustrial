@@ -513,7 +513,7 @@ public final class Config {
 	 * the hoe still breaks (and drops), but at hand speed and free — see ElectricHoeItem. Set to the
 	 * drill's 50 by customer decision: the hoe's block set ({@code #minecraft:mineable/hoe} — hay,
 	 * leaves, sponge, moss, nether wart block) is small, so a cheap rate would make the tool spend
-	 * nothing at all. Tilling itself is free. */
+	 * nothing at all. Tilling is billed separately, by {@link #electricHoeTillEuCost}. */
 	public static int electricHoeEuPerBlock = 50;
 	/** EU the hoe spends per successful right-click conversion (tilling soil, coarse dirt → dirt, …).
 	 * Unlike the shovel's free dirt paths, tilling is powered: it is the hoe's whole job, and if it were
@@ -1408,7 +1408,7 @@ public final class Config {
 				() -> electricShovelInputRate, v -> electricShovelInputRate = v, 1),
 			new IntField("electricHoeBuffer", Section.TOOLS, "Electric Hoe EU buffer.",
 				() -> electricHoeBuffer, v -> electricHoeBuffer = v, 1),
-			new IntField("electricHoeEuPerBlock", Section.TOOLS, "EU the hoe spends per block broken at powered speed (below this it breaks at hand speed for free; tilling is always free).",
+			new IntField("electricHoeEuPerBlock", Section.TOOLS, "EU the hoe spends per block broken at powered speed (below this it breaks at hand speed for free). Tilling is powered too and is billed separately by electricHoeTillEuCost.",
 				() -> electricHoeEuPerBlock, v -> electricHoeEuPerBlock = v, 1),
 			new IntField("electricHoeTillEuCost", Section.TOOLS, "EU the hoe spends per successful right-click conversion (tilling soil).",
 				() -> electricHoeTillEuCost, v -> electricHoeTillEuCost = v, 0),

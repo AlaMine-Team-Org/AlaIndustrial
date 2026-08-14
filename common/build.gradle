@@ -317,12 +317,18 @@ pitest {
             //     instanceof StemBlock/SweetBerryBushBlock, comparisons against Blocks.CACTUS), not a
             //     decision over numbers. Covered by the Fabric/NeoForge L2 scythe + garden-drone tests.
             //   - FluidNetwork / FluidNetworkManager: mirror the already-excluded EnergyNetwork and
-            //     NetworkManager — ServerLevel/BlockPos/Direction throughout. Honest caveat, recorded
-            //     rather than glossed: each holds a genuinely extractable MC-free rule (the
-            //     "move half the difference" anti-slosh threshold in propagateOneHop, and the
-            //     round-robin tick cursor in tickAll, which is duplicated across three managers).
-            //     Extracting them is worth ~29 mutants (~0.6 pt) and touches live fluid transport, so
-            //     it is its own task rather than a rider on a gate fix — see MOD-324's log.
+            //     NetworkManager — ServerLevel/BlockPos/Direction throughout. The caveat this entry
+            //     used to carry ("each still holds an extractable MC-free rule, worth ~29 mutants")
+            //     has since been discharged, and by two different tasks:
+            //       * MOD-401 replaced all three hand-written managers with one framework, so the
+            //         round-robin tick cursor now lives in core.net.GraphNetworkManager — inside the
+            //         `core.*` glob, mutated, and covered by GraphNetworkManagerTest. What is left of
+            //         FluidNetworkManager is the ops adapter and three-line delegates.
+            //       * MOD-333 moved the "move half the difference" anti-slosh rule (the gap, the
+            //         `<= 1` threshold, the halving) and the intake-room test out of FluidNetwork into
+            //         core.fluid.FluidFlowMath — likewise under the glob, covered by FluidFlowMathTest.
+            //     Both classes STAY excluded: what remains of them is honestly MC-coupled, so putting
+            //     them back in the run would only manufacture guaranteed-NO_COVERAGE mutants again.
             // Do NOT justify these with the "future NeoForge L1.5 pitest lane" the MOD-144 block above
             // mentions: MOD-110 phase 2 proved that lane impossible (FML's ClassLoadingGuardian
             // intercepts classloading) and deleted its config. These exclusions are permanent under the

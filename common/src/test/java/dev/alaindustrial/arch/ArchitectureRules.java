@@ -78,16 +78,32 @@ public class ArchitectureRules {
 					+ "static field initializer in common/ throws `already frozen` as soon as the "
 					+ "class loads there, while Fabric shows no symptom at all");
 
-	/** The packages whose iteration order is load-bearing. Kept explicit so the rule cannot silently widen. */
-	private static final String[] NETWORK_CORE_PACKAGES = {
+	/**
+	 * The packages whose iteration order is load-bearing. Kept explicit so the rule cannot silently widen.
+	 *
+	 * <p>The first four are the network core of ADR-006, where the order decides who gets energy. The rest
+	 * were added by MOD-313, where it decides what the player SEES: the analyzer overlay's tube geometry
+	 * and the order of the rows in the dashboard. Same defect, different surface — an order that changed
+	 * with the JVM run or with the base's absolute coordinates.
+	 *
+	 * <p><b>Deliberately NOT here: {@code dev.alaindustrial.client.render}.</b> Its two unordered sets
+	 * ({@code NetworkOverlayRenderer}'s joints and endpoints) are only ever asked {@code contains}; the
+	 * geometry that used to depend on them is now ordered inside {@link
+	 * dev.alaindustrial.network.NetworkTopology#tubeRuns} instead, where the guarantee belongs. Listing a
+	 * package whose sets are never iterated would spend the rule's credibility on non-defects.
+	 */
+	private static final String[] ORDER_SENSITIVE_PACKAGES = {
 		"dev.alaindustrial.core.energy..",
 		"dev.alaindustrial.core.fluid..",
 		"dev.alaindustrial.core.item..",
 		"dev.alaindustrial.core.net..",
+		"dev.alaindustrial.network..",
+		"dev.alaindustrial.stats..",
+		"dev.alaindustrial.client.dashboard..",
 	};
 
 	/**
-	 * Iteration order in the network core must not depend on a hash or on the JVM run (ADR-006).
+	 * Iteration order in order-sensitive code must not depend on a hash or on the JVM run (ADR-006).
 	 *
 	 * <p>{@code HashSet}/{@code HashMap} order follows the key's hash, and the key here is a
 	 * {@code BlockPos} holding ABSOLUTE coordinates; {@code Set.of}/{@code copyOf} order follows a salt
@@ -105,11 +121,11 @@ public class ArchitectureRules {
 	 * elements has no order to be wrong about, and it is the idiom for "no seeds this tick".
 	 */
 	@ArchTest
-	static final ArchRule networkCoreUsesOrderedCollections = noClasses()
-			.that().resideInAnyPackage(NETWORK_CORE_PACKAGES)
+	static final ArchRule orderSensitiveCodeUsesOrderedCollections = noClasses()
+			.that().resideInAnyPackage(ORDER_SENSITIVE_PACKAGES)
 			.should(useUnorderedCollections())
-			.because("iteration order in the network core decides who gets energy first; a hash- or "
-					+ "salt-dependent order makes the same base behave differently between runs "
+			.because("iteration order here decides who gets energy first and what the player sees; a hash- "
+					+ "or salt-dependent order makes the same base behave differently between runs "
 					+ "(see docs/adr/ADR-006-ordered-collections-in-core.md)");
 
 	/**
@@ -138,40 +154,83 @@ public class ArchitectureRules {
 					+ "effectiveEuPerTick(base) / effectiveDuration(base) instead. Seeding from a "
 					+ "constructor stays allowed — there is no inventory to read a chip from yet");
 
-	/** Unordered-collection uses the network core may not contain. */
+	/**
+	 * Unordered-collection uses order-sensitive code may not contain.
+	 *
+	 * <p><b>References count, not only calls (MOD-313).</b> {@code new HashMap<>()} is a constructor CALL;
+	 * {@code HashMap::new} handed to a factory parameter is a constructor REFERENCE, a different kind of
+	 * access that {@code getConstructorCallsFromSelf()} does not report at all. The rule was blind to it,
+	 * and the blind spot was not theoretical — {@code PlayerModStats}' packet codec was built on exactly
+	 * that form, and the gate stayed green over it. A rule that cannot see the shape the defect actually
+	 * takes is not a gate.
+	 *
+	 * <p><b>{@code satisfied}, not {@code violated} — and this is not a naming preference (MOD-313).</b>
+	 * A condition handed to {@code noClasses().should(…)} is wrapped in {@code ArchConditions.never(…)},
+	 * which INVERTS every event it produces. So the phrase to complete is "no class should <b>use</b>
+	 * unordered collections": a class that does is one that SATISFIES this condition, and the inversion
+	 * turns that into the failure. Reporting {@code violated} here reads naturally and is exactly
+	 * backwards — it inverts to "no problem", and the rule then cannot fail on anything, which is how it
+	 * was found: widening the zone to a package holding two plain {@code new HashSet<>()} left the build
+	 * green. Probed both ways before and after the fix. The same trap applies to
+	 * {@link #callStaticRateShortcutOutsideConstructor()}; it does NOT apply to
+	 * {@link #notCallFromStaticInitializer}, which is consumed by {@code classes().should(…)} and is
+	 * therefore not inverted.
+	 */
 	private static ArchCondition<JavaClass> useUnorderedCollections() {
 		return new ArchCondition<>("use hash- or salt-ordered collections") {
 			@Override
 			public void check(JavaClass item, ConditionEvents events) {
 				for (JavaCodeUnit codeUnit : item.getCodeUnits()) {
 					for (var call : codeUnit.getConstructorCallsFromSelf()) {
-						String owner = call.getTargetOwner().getSimpleName();
-						if ("HashMap".equals(owner) || "HashSet".equals(owner)) {
-							events.add(SimpleConditionEvent.violated(item,
-									"new " + owner + " in " + codeUnit.getFullName()
-											+ " — take the Linked variant"));
-						}
+						checkConstructor(item, events, codeUnit, call.getTargetOwner().getSimpleName(), "new ");
+					}
+					// `HashMap::new` — same constructor, reached through a method handle instead of a
+					// `new` instruction, and reported under a different accessor.
+					for (var reference : codeUnit.getConstructorReferencesFromSelf()) {
+						checkConstructor(item, events, codeUnit,
+								reference.getTargetOwner().getSimpleName(), "a reference to new ");
 					}
 					for (JavaMethodCall call : codeUnit.getMethodCallsFromSelf()) {
-						String owner = call.getTargetOwner().getSimpleName();
-						String name = call.getName();
-						boolean factory = ("Set".equals(owner) || "Map".equals(owner))
-								&& ("of".equals(name) || "copyOf".equals(name));
-						// `Set.of()` with no arguments has no order to get wrong; only the populated
-						// overloads are salted, so the empty one stays allowed.
-						if (factory && !call.getTarget().getRawParameterTypes().isEmpty()) {
-							events.add(SimpleConditionEvent.violated(item,
-									owner + "." + name + "(…) in " + codeUnit.getFullName()
-											+ " — iteration order is salted per JVM run; take "
-											+ "LinkedHashSet/LinkedHashMap or List.of"));
-						}
-						if ("Collectors".equals(owner) && ("toSet".equals(name) || "toMap".equals(name))) {
-							events.add(SimpleConditionEvent.violated(item,
-									"Collectors." + name + " in " + codeUnit.getFullName()
-											+ " — take toCollection(LinkedHashSet::new) / a toMap "
-											+ "overload with LinkedHashMap::new"));
-						}
+						checkMethod(item, events, codeUnit, call.getTargetOwner().getSimpleName(),
+								call.getName(), call.getTarget().getRawParameterTypes().isEmpty(), "");
 					}
+					// `Set::of` / `Map::copyOf` as a method reference. The "empty overload is fine"
+					// exception carries over unchanged: a reference binds to ONE overload, and its
+					// parameter list is the one that overload declares.
+					for (var reference : codeUnit.getMethodReferencesFromSelf()) {
+						checkMethod(item, events, codeUnit, reference.getTargetOwner().getSimpleName(),
+								reference.getName(), reference.getTarget().getRawParameterTypes().isEmpty(),
+								"a reference to ");
+					}
+				}
+			}
+
+			private void checkConstructor(JavaClass item, ConditionEvents events, JavaCodeUnit codeUnit,
+					String owner, String shape) {
+				if ("HashMap".equals(owner) || "HashSet".equals(owner)) {
+					events.add(SimpleConditionEvent.satisfied(item,
+							shape + owner + " in " + codeUnit.getFullName()
+									+ " — take the Linked variant"));
+				}
+			}
+
+			private void checkMethod(JavaClass item, ConditionEvents events, JavaCodeUnit codeUnit,
+					String owner, String name, boolean noParameters, String shape) {
+				boolean factory = ("Set".equals(owner) || "Map".equals(owner))
+						&& ("of".equals(name) || "copyOf".equals(name));
+				// `Set.of()` with no arguments has no order to get wrong; only the populated
+				// overloads are salted, so the empty one stays allowed.
+				if (factory && !noParameters) {
+					events.add(SimpleConditionEvent.satisfied(item,
+							shape + owner + "." + name + "(…) in " + codeUnit.getFullName()
+									+ " — iteration order is salted per JVM run; take "
+									+ "LinkedHashSet/LinkedHashMap or List.of"));
+				}
+				if ("Collectors".equals(owner) && ("toSet".equals(name) || "toMap".equals(name))) {
+					events.add(SimpleConditionEvent.satisfied(item,
+							shape + "Collectors." + name + " in " + codeUnit.getFullName()
+									+ " — take toCollection(LinkedHashSet::new) / a toMap "
+									+ "overload with LinkedHashMap::new"));
 				}
 			}
 		};
@@ -192,7 +251,7 @@ public class ArchitectureRules {
 						}
 						String name = call.getName();
 						if ("machineEuPerTickEffective".equals(name) || "scaledDuration".equals(name)) {
-							events.add(SimpleConditionEvent.violated(item,
+							events.add(SimpleConditionEvent.satisfied(item,
 									"Config." + name + "() in " + codeUnit.getFullName()
 											+ " — static, so it cannot see the overclocker chips"));
 						}

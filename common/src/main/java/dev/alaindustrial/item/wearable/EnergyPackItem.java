@@ -170,7 +170,10 @@ public class EnergyPackItem extends Item {
 		if (budget <= 0) {
 			return 0L;
 		}
-		long moved = PlayerEuDistributor.distribute(player, budget, PlayerEuDistributor.Policy.WORN_PACK);
+		// Only the EU total matters here; the item count and remaining room the record also carries are
+		// the Charging Station's business (MOD-416), and this path reports them as unmeasured.
+		long moved = PlayerEuDistributor.distribute(player, budget, PlayerEuDistributor.Policy.WORN_PACK)
+				.movedEu();
 		// The pack pays once for the whole step, not once per consumer: each write to its charge is a
 		// component write and a stack resync, and with several pouches that would be several of them
 		// for one logical transfer. Creative keeps the charge — the debit is dropped inside

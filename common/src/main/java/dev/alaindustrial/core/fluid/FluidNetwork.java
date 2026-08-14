@@ -171,10 +171,15 @@ public final class FluidNetwork {
 
 	/**
 	 * Even out neighbouring segments by one hop. Moving only half of the difference keeps a line from
-	 * sloshing back and forth between two segments on consecutive ticks.
+	 * sloshing back and forth between two segments on consecutive ticks. The arithmetic of that rule —
+	 * the gap, the {@code <= 1} threshold and the halving — lives in {@link FluidFlowMath}, where an L1
+	 * suite can reach it; this method keeps only the part that needs a world.
 	 */
 	private void propagateOneHop() {
 		List<BlockPos> ordered = new ArrayList<>(pipes);
+		// asLong, not the translation-invariant PosOrder rule — kept deliberately (MOD-313): equalising
+		// halves the difference on every hop, so the pass converges to the same levels whatever order it
+		// visits in. All this sort owes is to be total and stable. See ItemNetwork.ENDPOINT_ORDER.
 		ordered.sort(Comparator.comparingLong(BlockPos::asLong));
 		for (BlockPos pos : ordered) {
 			FluidPipeBlockEntity from = pipeAt(pos);
@@ -190,11 +195,12 @@ public final class FluidNetwork {
 				if (to == null) {
 					continue;
 				}
-				long difference = from.fluidBuffer.amount - to.fluidBuffer.amount;
-				if (difference <= 1) {
+				long difference = FluidFlowMath.imbalance(from.fluidBuffer.amount, to.fluidBuffer.amount);
+				if (FluidFlowMath.tooSmallToHop(difference)) {
 					continue;
 				}
-				moveFluid(from.fluidBuffer, to.fluidBuffer, from.fluidBuffer.fluid, difference / 2);
+				moveFluid(from.fluidBuffer, to.fluidBuffer, from.fluidBuffer.fluid,
+						FluidFlowMath.hopAmount(difference));
 				if (from.fluidBuffer.amount <= 0) {
 					break;
 				}
@@ -209,8 +215,8 @@ public final class FluidNetwork {
 			if (pipe == null) {
 				continue;
 			}
-			long room = pipe.fluidBuffer.getCapacity() - pipe.fluidBuffer.amount;
-			if (room <= 0) {
+			long room = FluidFlowMath.room(pipe.fluidBuffer.getCapacity(), pipe.fluidBuffer.amount);
+			if (FluidFlowMath.noRoomLeft(room)) {
 				continue;
 			}
 			BlockPos donor = source.pipe().relative(source.side());

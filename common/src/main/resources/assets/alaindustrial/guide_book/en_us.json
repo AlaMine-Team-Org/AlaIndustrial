@@ -346,7 +346,7 @@
             {
               "type": "text",
               "title": "Charging Station",
-              "text": "A plate that charges everything powered on the player standing on it — inventory, offhand and worn gear alike — with no interface to open."
+              "text": "A plate that charges everything powered on the player standing on it — inventory, offhand and worn gear alike — without asking for a single click."
             },
             {
               "type": "stats",

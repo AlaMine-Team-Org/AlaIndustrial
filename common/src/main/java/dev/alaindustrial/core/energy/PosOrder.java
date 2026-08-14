@@ -22,6 +22,17 @@ package dev.alaindustrial.core.energy;
  * {@code (0,64,-1)} sorts after {@code (0,64,0)}, yet shifting both by +1 on z puts {@code (0,64,0)}
  * before {@code (0,64,1)} — a plain translation flipping the order. The same flip happens across
  * {@code y = 0}, which sits in the middle of the normal build range.
+ *
+ * <p><b>Where this rule is deliberately NOT applied (MOD-313).</b> The item and fluid transport networks
+ * still sort by {@code asLong()}, and that is a reviewed decision rather than an oversight — otherwise
+ * two neighbouring files would state opposite things about the same comparator. The distinction is what
+ * the order DECIDES. Here it decides how a fixed amount of EU is split between equally entitled
+ * consumers, so translation invariance is a balance property: the same base must not pay differently for
+ * standing somewhere else. In {@code ItemNetwork} it only picks where a round robin starts its lap
+ * (every endpoint is served within the cycle either way), and in {@code FluidNetwork.propagateOneHop} the
+ * pass halves each difference and converges to the same levels whatever order it walks. Those two owe
+ * their cursors only a TOTAL and STABLE order, which {@code asLong} is. See the comments at both sort
+ * sites.
  */
 public final class PosOrder {
 	private PosOrder() {

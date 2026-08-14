@@ -39,6 +39,8 @@ import net.minecraft.world.entity.player.ChatVisiblity;
  *   <li>MOD-393  — {@link RendererStands#checkEnergyCondenserOrb}      — the condenser orb draws, and hides on an empty bank
  *   <li>MOD-354  — {@link WaterMillGuiStand#checkWaterMillStatusRow}   — the water mill's GUI status row draws, and draws
  *       a different label per state
+ *   <li>MOD-371  — {@link WindMillGuiStand#checkWindMillStatusRows}   — the same row on all three wind mills; no blank
+ *       state exists there, so the anchor is a duplicate frame plus an exhaustive pairwise comparison
  *   <li>MOD-275  — {@link AssemblerGuiStands}                          — the Assembler window: tabs, queue, blueprint preview
  *   <li>MOD-275  — {@link BlueprintIconStands}                         — a recorded blueprint's own icon carries its product
  *   <li>MOD-287  — {@link StorageModuleStands#checkStorageModuleSeams} — storage-module connected textures

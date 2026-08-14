@@ -3,8 +3,10 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.BuildInfo;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.core.NetworkTickGuard;
+import dev.alaindustrial.registry.ContentManifest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
@@ -415,6 +418,104 @@ public final class AlaCommonScenarios {
 	 * (the scythe / trellis platforms) and 8 is what Fabric's own default template ships.
 	 */
 	private static final double MIN_RIG_STRUCTURE_SIZE = 8.0;
+
+	/**
+	 * MOD-417 — every {@code BlockEntityDef.blockSet()} is unmodifiable, ordered, and is the set the
+	 * registered {@code BlockEntityType} actually answers {@code isValid} from.
+	 *
+	 * <p><b>Why a game test and not a unit test.</b> {@code blockSet()} resolves registry ids, so it
+	 * needs live registries; and the invariant is about what reaches the GAME, which means it has to be
+	 * checked on both loaders — each builds its {@code BlockEntityType} in its own registration code
+	 * (Fabric eagerly, NeoForge inside a deferred supplier).
+	 *
+	 * <p><b>Why it checks four things and not one.</b> A single "add throws" assertion is satisfied by
+	 * several wrong fixes:
+	 * <ul>
+	 *   <li>{@code Set.copyOf} would be unmodifiable but SALTED — iteration order varies per JVM run —
+	 *       so the order assertion is what pins {@code Collections.unmodifiableSet};</li>
+	 *   <li>an unmodifiable wrapper that only blocks {@code add} would leave {@code remove}/{@code clear}
+	 *       open, so all three are exercised;</li>
+	 *   <li>a set that is immutable but never reaches the registry would pass every assertion above,
+	 *       so {@code registeredType().isValid(...)} closes the loop against the live type — vanilla's
+	 *       {@code isValid} reads the {@code validBlocks} field directly, so agreement here means the
+	 *       manifest's set really is the one the game consults.</li>
+	 * </ul>
+	 *
+	 * <p>The roster floor is deliberate: an empty {@code BLOCK_ENTITIES} would make every loop below
+	 * vacuous and the test would pass by checking nothing.
+	 */
+	public static void blockEntityBlockSetsAreImmutable(GameTestHelper helper) {
+		if (ContentManifest.BLOCK_ENTITIES.isEmpty()) {
+			helper.fail("ContentManifest.BLOCK_ENTITIES is empty — every assertion below would be "
+					+ "vacuous, so this counts as a failure, not as 'nothing to check'.");
+			return;
+		}
+		for (ContentManifest.BlockEntityDef<?> def : ContentManifest.BLOCK_ENTITIES) {
+			Set<Block> blocks = def.blockSet();
+
+			List<Block> expected = new ArrayList<>();
+			for (String blockId : def.blocks()) {
+				expected.add(BuiltInRegistries.BLOCK.getValue(Industrialization.id(blockId)));
+			}
+			if (!expected.equals(new ArrayList<>(blocks))) {
+				helper.fail("BlockEntityDef '" + def.id() + "': blockSet() iterates in " + blocks
+						+ " but the manifest declares " + expected + " — the set must keep insertion "
+						+ "order (Set.copyOf is salted and would drift between runs).");
+				return;
+			}
+
+			Block foreign = Blocks.STONE;
+			if (!mutationIsRefused(() -> blocks.add(foreign))) {
+				helper.fail("BlockEntityDef '" + def.id() + "': blockSet().add(...) succeeded — the set "
+						+ "handed to new BlockEntityType<>(factory, blockSet()) is stored by reference "
+						+ "and read by isValid(), so a mutable one lets any caller silently change which "
+						+ "blocks the type attaches to (MOD-417).");
+				return;
+			}
+			Block first = expected.getFirst();
+			if (!mutationIsRefused(() -> blocks.remove(first))) {
+				helper.fail("BlockEntityDef '" + def.id() + "': blockSet().remove(...) succeeded — "
+						+ "blocking add() alone is not immutability (MOD-417).");
+				return;
+			}
+			if (!mutationIsRefused(blocks::clear)) {
+				helper.fail("BlockEntityDef '" + def.id() + "': blockSet().clear() succeeded — "
+						+ "blocking add()/remove() alone is not immutability (MOD-417).");
+				return;
+			}
+			if (!expected.equals(new ArrayList<>(blocks))) {
+				helper.fail("BlockEntityDef '" + def.id() + "': the refused mutations still changed the "
+						+ "set — it now reads " + blocks + " instead of " + expected + ".");
+				return;
+			}
+
+			BlockEntityType<?> type = def.registeredType();
+			for (Block block : expected) {
+				if (!type.isValid(block.defaultBlockState())) {
+					helper.fail("BlockEntityDef '" + def.id() + "': the REGISTERED BlockEntityType does "
+							+ "not accept " + blockId(block) + ", which the manifest lists — the set this "
+							+ "test asserted on is not the set the game uses.");
+					return;
+				}
+			}
+			if (type.isValid(foreign.defaultBlockState())) {
+				helper.fail("BlockEntityDef '" + def.id() + "': the registered BlockEntityType accepts "
+						+ blockId(foreign) + ", which the manifest never listed.");
+				return;
+			}
+		}
+		helper.succeed();
+	}
+
+	/** {@code true} when the mutation was refused with {@link UnsupportedOperationException}. */
+	private static boolean mutationIsRefused(Runnable mutation) {
+		try {
+			mutation.run();
+			return false;
+		} catch (UnsupportedOperationException expected) {
+			return true;
+		}
+	}
 
 	private static TagKey<Block> blockTag(String path) {
 		return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("c", path));

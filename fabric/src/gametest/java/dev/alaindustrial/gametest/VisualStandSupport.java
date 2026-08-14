@@ -104,6 +104,72 @@ public final class VisualStandSupport {
     }
 
     /**
+     * Pixels that differ inside ONE band of a machine window, and nowhere else (MOD-371).
+     *
+     * <p>Cropping is what makes a "these two frames differ" gate mean anything: a machine screen has
+     * several elements that legitimately change between the states under test — the energy bar, a slot's
+     * contents, a progress sprite — and any of them left inside the band could satisfy the gate on its
+     * own while the element actually under test was broken. The band therefore has to be argued from
+     * geometry at the call site, which is why the bounds are parameters here rather than constants.
+     *
+     * <p>Lives here rather than in each stand because a copied comparison is a copied tolerance, and a
+     * copied tolerance is two independent numbers that happen to agree — the defect MOD-362 removed from
+     * {@link #differsAt}. {@link ShotRecorder#markComparedFiles} is called here for the same reason it is
+     * called inside {@link #differingPixels}: registering the comparison at the ~30 call sites instead
+     * means one of them eventually forgets, and the manifest then understates how deeply the suite checked.
+     *
+     * @param windowBox {@code {leftPos, topPos, imageWidth, guiScaledWidth}} in GUI-scaled units, as
+     *                  measured inside {@code runOnClient} when the frame was taken
+     * @param x0        band's left edge, as an offset inside the window (GUI units)
+     * @param x1        band's right edge, exclusive, as an offset inside the window (GUI units)
+     * @param bandY     band's top edge, as an offset inside the window (GUI units)
+     * @param bandH     band height (GUI units)
+     */
+    public static int differingPixelsInBand(Path first, Path second, int[] windowBox,
+                                            int x0, int x1, int bandY, int bandH) {
+        ShotRecorder.markComparedFiles(first, second);
+        if (windowBox == null) {
+            throw new AssertionError("[GUITEST] the window was never measured — the band cannot be placed");
+        }
+        try {
+            BufferedImage a = ImageIO.read(first.toFile());
+            BufferedImage b = ImageIO.read(second.toFile());
+            if (a == null || b == null) {
+                throw new AssertionError("[GUITEST] could not decode " + first + " / " + second);
+            }
+            // Screenshots are in physical pixels, the box and the band in GUI-scaled units.
+            int scale = Math.max(1, a.getWidth() / windowBox[3]);
+            int px0 = Math.max(0, (windowBox[0] + x0) * scale);
+            int py0 = Math.max(0, (windowBox[1] + bandY) * scale);
+            int px1 = Math.min(a.getWidth(), (windowBox[0] + x1) * scale);
+            int py1 = Math.min(a.getHeight(), (windowBox[1] + bandY + bandH) * scale);
+            int differing = 0;
+            for (int y = py0; y < py1; y++) {
+                for (int x = px0; x < px1; x++) {
+                    if (differsAt(a, b, x, y)) {
+                        differing++;
+                    }
+                }
+            }
+            return differing;
+        } catch (IOException e) {
+            throw new AssertionError("[GUITEST] could not read screenshots for the band gate", e);
+        }
+    }
+
+    /**
+     * The band a gate measured, spelled out for its failure message.
+     *
+     * <p>Built from the same four numbers {@link #differingPixelsInBand} was handed, on purpose. A gate
+     * that describes its band with its own literals drifts away from the band it actually measures, and
+     * then sends whoever is fixing it to the wrong rows — MOD-354 shipped exactly that (a diagnostic
+     * reading {@code y 44..56} over a band of {@code y 43..55}) and had to fix it in review.
+     */
+    public static String describeBand(int x0, int x1, int bandY, int bandH) {
+        return "x " + x0 + ".." + x1 + ", y " + bandY + ".." + (bandY + bandH) + " inside the window";
+    }
+
+    /**
      * The single "these two pixels differ" rule every pixel gate in this suite shares.
      *
      * <p>Delegates to {@link Tolerance#CHANNEL_24} instead of carrying its own copy of the literal 24

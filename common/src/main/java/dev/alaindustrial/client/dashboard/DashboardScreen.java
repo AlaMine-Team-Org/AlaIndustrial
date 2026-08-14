@@ -181,9 +181,9 @@ public final class DashboardScreen extends Screen {
 		int inRight = right - 8;
 		moduleTitle(g, Component.translatable("gui.alaindustrial.dashboard.breakdown"), inX, y + 5);
 		int rowY = y + 18;
-		List<Map.Entry<Identifier, Long>> byGen = stats.producedByGenerator().entrySet().stream()
-				.sorted((a, b) -> Long.compare(b.getValue(), a.getValue()))
-				.toList();
+		// Ranking rule lives on the record (MOD-313) — sorting by EU alone left equal rows in map order,
+		// which changed on every launch.
+		List<Map.Entry<Identifier, Long>> byGen = stats.rankedGenerators();
 		if (byGen.isEmpty()) {
 			g.text(this.font, Component.translatable("gui.alaindustrial.dashboard.breakdown.empty"),
 					inX, rowY, GuiStyle.TEXT_DIM, false);

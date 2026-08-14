@@ -23,6 +23,17 @@ public final class ItemNetwork {
 	 * {@code HashSet}, whose iteration order shifts when the set's composition changes; a numeric
 	 * round-robin cursor over that shifting order would occasionally skip or double-serve an endpoint.
 	 * Sorting by {@code (BlockPos, side)} gives the cursor a stable meaning across rebuilds.
+	 *
+	 * <p><b>{@code asLong()} on purpose, and NOT the translation-invariant {@link
+	 * dev.alaindustrial.core.energy.PosOrder} rule (MOD-313, reviewed and kept).</b> The energy core needs
+	 * translation invariance because its order decides how a fixed amount of EU is SPLIT between equally
+	 * entitled consumers — so "the same layout behaves the same wherever it is built" is a balance
+	 * property there. Here the order only picks where the round robin starts its lap: every source and
+	 * every target is served within the cycle regardless, so moving a pipe network can at most shift
+	 * which endpoint goes first, never how much anything gets. What this comparator owes the cursor is
+	 * that it be TOTAL and STABLE across rebuilds, which {@code asLong} is. Changing it would reorder
+	 * service in every existing build for no behavioural gain, so it stays — the mismatch with
+	 * {@code PosOrder} is a decision, not an oversight.
 	 */
 	private static final Comparator<Endpoint> ENDPOINT_ORDER =
 			Comparator.comparingLong((Endpoint e) -> e.pos().asLong()).thenComparingInt(e -> e.side().ordinal());

@@ -1,9 +1,10 @@
 package dev.alaindustrial.network;
 
+import dev.alaindustrial.core.energy.PosOrder;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -22,11 +23,33 @@ public final class NetworkTopology {
 	private NetworkTopology() {
 	}
 
-	/** One undirected adjacency between two network positions, canonically ordered by {@link BlockPos#asLong()}
-	 * so the same pair always compares equal regardless of discovery order. */
+	/**
+	 * The geometric order every method here sorts by — see {@link PosOrder} for the rule and for why it
+	 * is x/y/z rather than the packed {@code BlockPos.asLong()} (MOD-313).
+	 *
+	 * <p>It is what makes this class's output depend on the SHAPE of the network and on nothing else:
+	 * not on the order the payload happened to list its positions in, not on which bucket a
+	 * {@code HashSet} put an absolute {@code BlockPos} in, and not on where in the world the base was
+	 * built. The overlay the player sees is therefore the same picture every time the same base is
+	 * scanned.
+	 *
+	 * <p>Deliberately a second declaration rather than a reuse of {@code EnergyTopologyCache}'s
+	 * package-private twin: both delegate to {@link PosOrder}, which is the single source of the RULE,
+	 * and the alternative was widening a cache internal into public API for a two-line comparator.
+	 */
+	public static final Comparator<BlockPos> POSITION_ORDER =
+			(a, b) -> PosOrder.compare(a.getX(), a.getY(), a.getZ(), b.getX(), b.getY(), b.getZ());
+
+	/** One undirected adjacency between two network positions, canonically ordered by
+	 * {@link #POSITION_ORDER} so the same pair always compares equal regardless of discovery order —
+	 * and so that translating a build leaves the pair oriented the same way (MOD-313; the previous
+	 * {@code asLong()} canonicalisation swapped {@code a}/{@code b} across the y=0 and z=0 planes). */
 	public record NetworkEdge(BlockPos a, BlockPos b) {
 		public NetworkEdge {
-			if (a.asLong() > b.asLong()) {
+			// PosOrder directly, not POSITION_ORDER: initialising a nested type does NOT initialise its
+			// enclosing class, so a caller who builds an edge without ever touching NetworkTopology's
+			// own members would read a null comparator field.
+			if (PosOrder.compare(a.getX(), a.getY(), a.getZ(), b.getX(), b.getY(), b.getZ()) > 0) {
 				BlockPos tmp = a;
 				a = b;
 				b = tmp;
@@ -48,17 +71,24 @@ public final class NetworkTopology {
 	 * Every adjacent pair across cables, producers and consumers combined, each pair kept once. Producers and
 	 * consumers are included as graph nodes (not just cables) so the "last mile" between a generator/machine and
 	 * its cable is drawn too, instead of leaving those endpoints visually disconnected from the network.
+	 *
+	 * <p>The returned list is in {@link #POSITION_ORDER} of the node the edge was discovered from, so it
+	 * depends only on the network's shape — not on the order the three input lists happen to arrive in
+	 * (MOD-313). Before that the node set was a {@code HashSet} and the edge order followed its buckets,
+	 * i.e. the base's absolute coordinates.
 	 */
 	public static List<NetworkEdge> fullAdjacency(List<BlockPos> cables, List<BlockPos> producers,
 			List<BlockPos> consumers) {
-		Set<BlockPos> nodes = new HashSet<>(cables);
+		Set<BlockPos> nodes = new LinkedHashSet<>(cables);
 		nodes.addAll(producers);
 		nodes.addAll(consumers);
 		if (nodes.isEmpty()) {
 			return List.of();
 		}
+		List<BlockPos> orderedNodes = new ArrayList<>(nodes);
+		orderedNodes.sort(POSITION_ORDER);
 		Set<NetworkEdge> edges = new LinkedHashSet<>();
-		for (BlockPos pos : nodes) {
+		for (BlockPos pos : orderedNodes) {
 			for (Direction dir : Direction.values()) {
 				BlockPos neighbour = pos.relative(dir);
 				if (nodes.contains(neighbour)) {
@@ -84,13 +114,13 @@ public final class NetworkTopology {
 		if (edges.isEmpty() || producers.isEmpty()) {
 			return List.of();
 		}
-		Map<BlockPos, List<BlockPos>> adjacency = new HashMap<>();
+		Map<BlockPos, List<BlockPos>> adjacency = new LinkedHashMap<>();
 		for (NetworkEdge edge : edges) {
 			adjacency.computeIfAbsent(edge.a(), k -> new ArrayList<>()).add(edge.b());
 			adjacency.computeIfAbsent(edge.b(), k -> new ArrayList<>()).add(edge.a());
 		}
 
-		Map<BlockPos, Integer> distance = new HashMap<>();
+		Map<BlockPos, Integer> distance = new LinkedHashMap<>();
 		Queue<BlockPos> queue = new ArrayDeque<>();
 		for (BlockPos producer : producers) {
 			if (distance.putIfAbsent(producer, 0) == null) {
@@ -127,15 +157,20 @@ public final class NetworkTopology {
 	 * {@code allNodes} must include every position that might need a marker (cables, producers,
 	 * consumers) even ones with no edges at all — an isolated single-cable network still needs *a*
 	 * marker, since nothing else indicates its position.
+	 *
+	 * <p>The returned set iterates in {@link #POSITION_ORDER} (MOD-313), so callers that walk it get the
+	 * same sequence for the same shape wherever it stands.
 	 */
 	public static Set<BlockPos> jointNodes(List<BlockPos> allNodes, List<NetworkEdge> edges) {
-		Map<BlockPos, List<BlockPos>> adjacency = new HashMap<>();
+		Map<BlockPos, List<BlockPos>> adjacency = new LinkedHashMap<>();
 		for (NetworkEdge edge : edges) {
 			adjacency.computeIfAbsent(edge.a(), k -> new ArrayList<>()).add(edge.b());
 			adjacency.computeIfAbsent(edge.b(), k -> new ArrayList<>()).add(edge.a());
 		}
-		Set<BlockPos> joints = new HashSet<>();
-		for (BlockPos node : allNodes) {
+		List<BlockPos> orderedNodes = new ArrayList<>(allNodes);
+		orderedNodes.sort(POSITION_ORDER);
+		Set<BlockPos> joints = new LinkedHashSet<>();
+		for (BlockPos node : orderedNodes) {
 			List<BlockPos> neighbours = adjacency.getOrDefault(node, List.of());
 			if (neighbours.size() != 2 || !isStraightThrough(node, neighbours.get(0), neighbours.get(1))) {
 				joints.add(node);
@@ -163,19 +198,28 @@ public final class NetworkTopology {
 	 * <p>Only the tube's static outline uses this — {@link #flowDirections}' BFS distance gradient and
 	 * the flow-dot animation keep working off the original block-by-block {@code edges}, since the
 	 * flow animation's per-block phase timing depends on that granularity.
+	 *
+	 * <p><b>Which end of a run is {@code from} is decided here, not by the caller (MOD-313).</b> A run is
+	 * walked outward from whichever of its two joints is reached first, so the start joints are walked in
+	 * {@link #POSITION_ORDER} — a sorted copy, taken on entry. {@code jointNodes} is therefore used purely
+	 * as a membership test and may be any {@link Set}: the caller cannot make {@code TubeRun.from}/
+	 * {@code to} flip by handing over a {@code HashSet}, which is exactly how the overlay used to end up
+	 * with a different geometry per run for one unchanged base.
 	 */
 	public static List<TubeRun> tubeRuns(List<BlockPos> allNodes, List<NetworkEdge> edges, Set<BlockPos> jointNodes) {
-		Map<BlockPos, List<BlockPos>> adjacency = new HashMap<>();
+		Map<BlockPos, List<BlockPos>> adjacency = new LinkedHashMap<>();
 		for (NetworkEdge edge : edges) {
 			adjacency.computeIfAbsent(edge.a(), k -> new ArrayList<>()).add(edge.b());
 			adjacency.computeIfAbsent(edge.b(), k -> new ArrayList<>()).add(edge.a());
 		}
 
-		Set<NetworkEdge> visitedHops = new HashSet<>();
+		Set<NetworkEdge> visitedHops = new LinkedHashSet<>();
 		List<TubeRun> runs = new ArrayList<>();
 		int maxSteps = allNodes.size() + 1;
+		List<BlockPos> orderedJoints = new ArrayList<>(jointNodes);
+		orderedJoints.sort(POSITION_ORDER);
 
-		for (BlockPos joint : jointNodes) {
+		for (BlockPos joint : orderedJoints) {
 			for (BlockPos neighbour : adjacency.getOrDefault(joint, List.of())) {
 				if (!visitedHops.add(new NetworkEdge(joint, neighbour))) {
 					continue;

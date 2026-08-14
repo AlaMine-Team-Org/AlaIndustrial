@@ -3,8 +3,12 @@ package dev.alaindustrial.stats;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -63,16 +67,58 @@ public record PlayerModStats(
 			ByteBufCodecs.VAR_LONG, PlayerModStats::euProducedTotal,
 			ByteBufCodecs.VAR_LONG, PlayerModStats::euUsefulConsumedTotal,
 			ByteBufCodecs.VAR_INT, PlayerModStats::highestLevelReached,
-			ByteBufCodecs.map(HashMap::new, Identifier.STREAM_CODEC, ByteBufCodecs.VAR_LONG),
+			// LinkedHashMap, not HashMap (MOD-313): the decoder's map factory is what decides the order the
+			// client sees, and a hash map throws away the order the server wrote the entries in.
+			ByteBufCodecs.map(LinkedHashMap::new, Identifier.STREAM_CODEC, ByteBufCodecs.VAR_LONG),
 			PlayerModStats::producedByGenerator,
 			ByteBufCodecs.VAR_LONG, PlayerModStats::activeTicks,
 			ByteBufCodecs.VAR_LONG, PlayerModStats::euOtherSpentTotal,
 			PlayerModStats::new);
 
-	/** Canonical constructor defensively copies the map so the record stays truly immutable. */
+	/**
+	 * Canonical constructor defensively copies the map so the record stays truly immutable.
+	 *
+	 * <p><b>Ordered copy, not {@code Map.copyOf} (MOD-313).</b> {@code Map.copyOf} returns an
+	 * {@code ImmutableCollections} map whose iteration order is salted with a value drawn once per JVM
+	 * start, so the same save produced a different order of this map on every launch. That order reached
+	 * the player: it was the tie-break behind the dashboard's generator breakdown, and rows with equal EU
+	 * swapped places between sessions. The insertion-ordered copy keeps the map stable; the displayed
+	 * order additionally does not depend on it at all, see {@link #rankedGenerators()}.
+	 *
+	 * <p>The explicit null checks restore what {@code Map.copyOf} used to enforce for free — a
+	 * {@link LinkedHashMap} accepts a null key and a null value, and either would fail much later, at
+	 * encode time, far from whoever put it in.
+	 */
 	public PlayerModStats {
-		producedByGenerator = Map.copyOf(producedByGenerator);
+		Map<Identifier, Long> ordered = new LinkedHashMap<>();
+		for (Map.Entry<Identifier, Long> entry : producedByGenerator.entrySet()) {
+			ordered.put(Objects.requireNonNull(entry.getKey(), "producedByGenerator key"),
+					Objects.requireNonNull(entry.getValue(), "producedByGenerator value"));
+		}
+		producedByGenerator = Collections.unmodifiableMap(ordered);
 	}
+
+	/**
+	 * {@link #producedByGenerator} as the dashboard ranks it: most EU first, ties broken by registry id.
+	 *
+	 * <p><b>The tie-break is the point (MOD-313).</b> Ranking by EU alone leaves equal rows in whatever
+	 * order the map iterates, and two generators sitting on the same total is not an edge case — it is
+	 * what a fresh world looks like, and what any two idle generators look like. {@link Identifier} is
+	 * {@link Comparable}, so using it as the second key makes the breakdown a function of the DATA and of
+	 * nothing else: same numbers, same rows, in the same order, on every launch.
+	 *
+	 * <p>Lives on the record rather than in the screen so it can be tested without a client: the rule is
+	 * about the data, and a screen is not a place a rule can be checked.
+	 */
+	public List<Map.Entry<Identifier, Long>> rankedGenerators() {
+		return producedByGenerator.entrySet().stream().sorted(BY_OUTPUT_THEN_ID).toList();
+	}
+
+	/** Descending EU, then ascending registry id — the total order behind {@link #rankedGenerators()}. */
+	private static final Comparator<Map.Entry<Identifier, Long>> BY_OUTPUT_THEN_ID = (a, b) -> {
+		int byOutput = Long.compare(b.getValue(), a.getValue());
+		return byOutput != 0 ? byOutput : a.getKey().compareTo(b.getKey());
+	};
 
 	/**
 	 * Career XP: the machine term plus the generator trickle. Both divisors are clamped to ≥1 (config

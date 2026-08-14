@@ -20,10 +20,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Loader-neutral gametest bodies for the Diamond-Tipped Electric Hoe (MOD-378, suite TC-HOE-001). Same
- * pattern as {@link ElectricChainsawScenarios}: plain {@code GameTestHelper} bodies wrapped by the Fabric
- * {@code ElectricHoeGameTest} suite and registered on the NeoForge {@code gameTestServer} lane via
- * {@code NeoForgeGameTests} — both loaders run the SAME logic.
+ * Loader-neutral gametest bodies for the Electric Hoe (suite TC-HOE-001) — the diamond-tipped upgrade
+ * (MOD-378), the flat-hoe click paths (MOD-389) and, since MOD-364, the base tool's own EU contract
+ * including <b>paid tilling</b>. Same pattern as {@link ElectricChainsawScenarios}: plain
+ * {@code GameTestHelper} bodies wrapped by the Fabric {@code ElectricHoeGameTest} suite and registered on
+ * the NeoForge {@code gameTestServer} lane via {@code NeoForgeGameTests} — both loaders run the SAME
+ * logic.
  *
  * <p>Numbers come from {@link Config} (electricHoeBuffer, electricHoeEuPerBlock, electricHoeTillEuCost),
  * and moisture is read back off the real {@code FarmlandBlock} state rather than from a re-implementation
@@ -38,6 +40,28 @@ import net.minecraft.world.phys.Vec3;
 public final class ElectricHoeScenarios {
 
 	private ElectricHoeScenarios() {}
+
+	/**
+	 * The hoe's slice of the shared EU contract (MOD-364), declared here and nowhere else so that naming
+	 * the wrong tool would mean writing {@code ModContent.ELECTRIC_HOE} inside another tool's suite.
+	 * {@link ElectricToolEnergyScenarios#energyCaseRosterIsHonest} checks every field of it against the
+	 * real item.
+	 *
+	 * <p>Fixtures: a hay block is the hoe's own {@code #mineable/hoe} domain; stone is the negative; a
+	 * moss block (hardness 0.1 in the 26.2 sources, and in {@code #mineable/hoe}) is the soft block that
+	 * must still cost full price.
+	 */
+	public static final ElectricToolEnergyScenarios.ToolCase ENERGY =
+			new ElectricToolEnergyScenarios.ToolCase(
+					"electric_hoe",
+					ModContent.ELECTRIC_HOE,
+					() -> Config.electricHoeEuPerBlock,
+					() -> Config.electricHoeBuffer,
+					() -> Config.electricHoeInputRate,
+					() -> Blocks.HAY_BLOCK,
+					() -> Blocks.STONE,
+					() -> Blocks.MOSS_BLOCK,
+					9.0f);
 
 	/** The plot that gets tilled. Air is forced above it: vanilla's grass/dirt tillables are gated on
 	 * {@code HoeItem.onlyIfAirAbove}. */
@@ -263,5 +287,134 @@ public final class ElectricHoeScenarios {
 		}
 		helper.assertBlockPresent(Blocks.DIRT, SOIL);
 		helper.succeed();
+	}
+
+	// ── MOD-364 — paid tilling, the one path where the hoe actually spends EU ────────────────────────
+
+	/**
+	 * TC-HOE-001-FUN11 — a successful till drains exactly {@code electricHoeTillEuCost}.
+	 *
+	 * <p>This is the single most important gap MOD-364 closed. Tilling is the only thing the hoe does in
+	 * normal play that costs energy at all — {@code mineBlock} charges for breaking hay and leaves, but
+	 * nobody buys an electric hoe to break hay — and until now <b>no test on either loader read the buffer
+	 * after a till that worked</b>. TC-HOE-001-FUN02 tills, but with a full buffer it never looks at the
+	 * charge; TC-HOE-001-FUN05 and NEG01 only cover the two refusal paths. An
+	 * {@code ItemEnergy.spend(...)} deleted from
+	 * {@link dev.alaindustrial.item.tool.ElectricHoeItem#useOn} passed every gate in the repo, which is
+	 * exactly the defect the task description calls "the hoe never spends a single EU in normal play".
+	 *
+	 * <p>Both halves are asserted: the plot really became farmland (otherwise "the charge did not move"
+	 * would be true of a hoe that simply did nothing), and the charge moved by exactly the till cost.
+	 */
+	public static void fun11TillDrainsExactlyTillCost(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		long buffer = Config.electricHoeBuffer;
+		player.setItemInHand(InteractionHand.MAIN_HAND, hoe(buffer));
+		prepareSoil(helper, Blocks.DIRT);
+		helper.assertBlockPresent(Blocks.DIRT, SOIL);
+
+		InteractionResult result = useOnSoil(helper, player);
+
+		if (!result.consumesAction()) {
+			helper.fail("a charged hoe tilling dirt must report a consumed action, got " + result);
+		}
+		helper.assertBlockPresent(Blocks.FARMLAND, SOIL);
+		long left = ItemEnergy.get(player.getMainHandItem());
+		long expected = buffer - Config.electricHoeTillEuCost;
+		if (left != expected) {
+			helper.fail("tilling must drain exactly electricHoeTillEuCost (" + Config.electricHoeTillEuCost
+					+ "), charge went " + buffer + " → " + left + ", expected " + expected);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-HOE-001-FUN12 — one EU below the till cost the hoe refuses, and the refusal is free.
+	 *
+	 * <p>The boundary partner of FUN11. TC-HOE-001-FUN05 already covers a hoe at zero, but zero is not a
+	 * boundary: a gate written {@code > cost} instead of {@code >= cost}, or one comparing against the
+	 * wrong config key, is still red at zero and green at {@code cost - 1}. This case is the only one that
+	 * moves when the comparison is off by one. It also asserts what FUN05 does not — that the buffer is
+	 * untouched by a refusal, so a hoe cannot be charged for work it declined to do.
+	 */
+	public static void fun12TillRefusedJustBelowCost(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		long below = Config.electricHoeTillEuCost - 1;
+		player.setItemInHand(InteractionHand.MAIN_HAND, hoe(below));
+		prepareSoil(helper, Blocks.DIRT);
+		helper.assertBlockPresent(Blocks.DIRT, SOIL);
+
+		InteractionResult result = useOnSoil(helper, player);
+
+		if (result != InteractionResult.CONSUME) {
+			helper.fail("a hoe one EU below the till cost (" + below + ") must refuse with CONSUME, got " + result);
+		}
+		helper.assertBlockPresent(Blocks.DIRT, SOIL);
+		long left = ItemEnergy.get(player.getMainHandItem());
+		if (left != below) {
+			helper.fail("a refused till must not touch the buffer, charge went " + below + " → " + left);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-HOE-001-FUN13 — a <b>charged</b> hoe clicking a block no hoe can till passes the click on and
+	 * keeps every EU.
+	 *
+	 * <p>The charged twin of NEG01, and the reason NEG01 alone is not enough: NEG01 runs a flat hoe, so
+	 * its {@code charge == 0} check is a fixture assertion, not a statement about spending. Only a full
+	 * buffer can show that the tool did not pay for a click it correctly declined — which is what a
+	 * spend moved above the {@code wouldTill} gate, or one keyed on the wrong result, would break.
+	 */
+	public static void fun13ChargedHoeOnNonTillableKeepsBuffer(GameTestHelper helper) {
+		ServerPlayer player = makeSurvivalPlayer(helper);
+		long buffer = Config.electricHoeBuffer;
+		player.setItemInHand(InteractionHand.MAIN_HAND, hoe(buffer));
+		prepareSoil(helper, Blocks.STONE);
+		helper.assertBlockPresent(Blocks.STONE, SOIL);
+
+		InteractionResult result = useOnSoil(helper, player);
+
+		if (result != InteractionResult.PASS) {
+			helper.fail("a charged hoe clicking stone must return PASS so the off-hand still runs, got " + result);
+		}
+		helper.assertBlockPresent(Blocks.STONE, SOIL);
+		long left = ItemEnergy.get(player.getMainHandItem());
+		if (left != buffer) {
+			helper.fail("a click the hoe declined must cost nothing, charge went " + buffer + " → " + left);
+		}
+		helper.succeed();
+	}
+
+	// ── MOD-364 — the base tool's EU contract (shared forms, hoe parameters) ─────────────────────────
+
+	/** TC-HOE-001-FUN06 — accepted by the Battery Box charge slot and charged at its intake rate. */
+	public static void fun06ChargeInBatteryBox(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.chargeInBatteryBox(helper, ENERGY);
+	}
+
+	/** TC-HOE-001-FUN07 — breaking one hay block drains exactly {@code electricHoeEuPerBlock}. */
+	public static void fun07DrainOnMineBlock(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.drainOnMineBlock(helper, ENERGY);
+	}
+
+	/** TC-HOE-001-FUN08 — one EU below the cost it breaks for free, at exactly hand speed. */
+	public static void fun08NoDrainBelowCost(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.noDrainBelowCost(helper, ENERGY);
+	}
+
+	/** TC-HOE-001-FUN09 — a torch (hardness 0.0) is free, a moss block (0.1) is not. */
+	public static void fun09ZeroHardnessFreeMossCosts(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.zeroHardnessFreeSoftBlockCosts(helper, ENERGY);
+	}
+
+	/** TC-HOE-001-FUN10 — 9.0 on hoe blocks while charged, 1.0f flat, drops kept either way. */
+	public static void fun10SpeedAndDrops(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.speedAndDrops(helper, ENERGY);
+	}
+
+	/** TC-HOE-001-PER01 — charge survives a copy, 0 EU drops the component, writes clamp. */
+	public static void per01ChargeRoundTrip(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.chargeRoundTrip(helper, ENERGY);
 	}
 }

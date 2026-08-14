@@ -1,8 +1,8 @@
 package dev.alaindustrial.stats;
 
 import dev.alaindustrial.Config;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -47,12 +47,12 @@ public final class PlayerStatsTracker {
 		long euConsumed;
 		long euOtherSpent;
 		long activeTicks;
-		final Map<Identifier, Long> byGenerator = new HashMap<>();
+		final Map<Identifier, Long> byGenerator = new LinkedHashMap<>();
 	}
 
-	private final Map<UUID, Delta> pending = new HashMap<>();
+	private final Map<UUID, Delta> pending = new LinkedHashMap<>();
 	/** Players whose generators already counted an "active tick" this server tick (dedup, R: activeTicks). */
-	private final Set<UUID> activeThisTick = new HashSet<>();
+	private final Set<UUID> activeThisTick = new LinkedHashSet<>();
 	private int tickCounter;
 
 	private PlayerStatsTracker() {
@@ -172,7 +172,9 @@ public final class PlayerStatsTracker {
 
 	private void applyDelta(ServerPlayer player, Delta delta) {
 		PlayerModStats before = PlayerStatsStore.get(player);
-		Map<Identifier, Long> mergedGenerators = new HashMap<>(before.producedByGenerator());
+		// Ordered copy (MOD-313): this is the map that becomes the record's, and the record now
+		// promises insertion order — a HashMap here would discard it one line before it is kept.
+		Map<Identifier, Long> mergedGenerators = new LinkedHashMap<>(before.producedByGenerator());
 		delta.byGenerator.forEach((id, eu) -> mergedGenerators.merge(id, eu, Long::sum));
 
 		long newConsumed = before.euUsefulConsumedTotal() + delta.euConsumed;

@@ -5,7 +5,7 @@ import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.EnergyNetworkDiagnostics;
 import dev.alaindustrial.core.energy.NetworkManager;
 import java.util.ArrayDeque;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Queue;
@@ -77,7 +77,10 @@ public final class NetworkTraverser {
 	 * adjacent cable networks until none remain or the cap is hit.
 	 */
 	private static TraversalResult traverseThrough(ServerLevel level, EnergyNetwork start, int maxNetworks) {
-		Set<EnergyNetwork> visited = new HashSet<>();
+		// LinkedHashSet, although this set is never iterated: EnergyNetwork has no equals/hashCode of its
+		// own, so a HashSet here buckets by IDENTITY hash — a value that differs on every JVM start
+		// (MOD-313). Keeping it ordered means the collection can never quietly start leaking that.
+		Set<EnergyNetwork> visited = new LinkedHashSet<>();
 		Queue<EnergyNetwork> queue = new ArrayDeque<>();
 		visited.add(start);
 		queue.add(start);
@@ -101,7 +104,7 @@ public final class NetworkTraverser {
 
 			// Partition this network's endpoints: storage sinks go to their own bucket (they render as
 			// bridge nodes), everything else stays a producer/consumer.
-			Set<BlockPos> netSinks = new HashSet<>();
+			Set<BlockPos> netSinks = new LinkedHashSet<>();
 			for (BlockPos pos : d.producerPositions()) {
 				if (isStorageSink(level, pos)) {
 					storageSinks.add(pos);
@@ -121,7 +124,15 @@ public final class NetworkTraverser {
 
 			// Bridge step: from each storage sink in this network, peek at the 6 neighbours. A neighbour
 			// cable that belongs to a not-yet-visited network is a bridge into it.
-			for (BlockPos sinkPos : netSinks) {
+			//
+			// The sinks are walked in geometric order (MOD-313). It decides the order neighbour networks
+			// are queued in, and therefore both the order their cables land in the result and — once
+			// `maxNetworks` is reached — which of them was already collected and which is dropped. Sorted
+			// here rather than left to the set: `netSinks` is fed from the network's own endpoint lists,
+			// so without this the answer would follow whatever order those arrive in.
+			List<BlockPos> orderedSinks = new ArrayList<>(netSinks);
+			orderedSinks.sort(NetworkTopology.POSITION_ORDER);
+			for (BlockPos sinkPos : orderedSinks) {
 				for (Direction dir : Direction.values()) {
 					EnergyNetwork adj = NetworkManager.networkAt(level, sinkPos.relative(dir));
 					if (adj != null && visited.add(adj)) {

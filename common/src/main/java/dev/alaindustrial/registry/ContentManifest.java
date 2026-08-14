@@ -116,6 +116,7 @@ import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.menu.EnergyCondenserMenu;
 import dev.alaindustrial.menu.CesuMenu;
+import dev.alaindustrial.menu.ChargePadMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import dev.alaindustrial.menu.DistillationColumnMenu;
@@ -150,6 +151,7 @@ import dev.alaindustrial.menu.WindMillMenu;
 import dev.alaindustrial.menu.AlloySmelterMenu;
 import dev.alaindustrial.menu.VulcanizerMenu;
 import dev.alaindustrial.menu.GalvanicBathMenu;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -261,6 +263,8 @@ public final class ContentManifest {
 			menu("battery_box", BatteryBoxMenu::new, s -> ModContent.BATTERY_BOX_MENU = s),
 			menu("energy_condenser", EnergyCondenserMenu::new, s -> ModContent.ENERGY_CONDENSER_MENU = s),
 			menu("cesu", CesuMenu::new, s -> ModContent.CESU_MENU = s),
+			// MOD-416 — the charging station's readout: the mod's only slotless machine menu.
+			menu("charge_pad", ChargePadMenu::new, s -> ModContent.CHARGE_PAD_MENU = s),
 			menu("teleporter_station", TeleporterStationMenu::new, s -> ModContent.TELEPORTER_STATION_MENU = s),
 			menu("teleporter_remote", TeleporterRemoteMenu::new, s -> ModContent.TELEPORTER_REMOTE_MENU = s),
 			menu("daylight_solar_panel", DaylightSolarPanelMenu::new, s -> ModContent.DAYLIGHT_SOLAR_PANEL_MENU = s),
@@ -917,6 +921,25 @@ public final class ContentManifest {
 		 * <p>An unknown id throws instead of quietly resolving to {@code AIR}: a typo here would otherwise
 		 * produce a block entity that never attaches to anything, which is precisely the silent failure
 		 * this manifest exists to remove.
+		 *
+		 * <p><b>The returned set is UNMODIFIABLE (MOD-417), and that is load-bearing.</b> Both loaders
+		 * hand this exact instance to {@code new BlockEntityType<>(factory, blockSet())}, and the vanilla
+		 * constructor stores the reference as-is — it does not copy. {@code isValid(BlockState)} then reads
+		 * that very set on every block-entity attach. Before the manifest, each loader passed
+		 * {@code Set.of(...)}, so the field was unmodifiable by construction; building it here turned it
+		 * into a live mutable collection aliased by a registered {@code BlockEntityType}, where a stray
+		 * {@code add}/{@code remove} would silently change which blocks the type attaches to. That
+		 * regression was accidental, undocumented and uncovered, so it is closed rather than kept.
+		 *
+		 * <p><b>Why {@code Collections.unmodifiableSet} and not {@code Set.copyOf}.</b> {@code Set.copyOf}
+		 * is salted — its iteration order varies between JVM runs — and the resolution below depends on a
+		 * stable order for its duplicate diagnostics and for reproducible error messages. The wrapper
+		 * keeps insertion order (i.e. the order of {@link #blocks}) and adds immutability on top.
+		 *
+		 * <p><b>What this does NOT do.</b> It does not stop a NeoForge mod extending our types through
+		 * {@code BlockEntityTypeAddBlocksEvent}: that event copies {@code getValidBlocks()} into a fresh
+		 * {@code HashSet} and REPLACES the field through a mixin accessor, so it never touches the set we
+		 * pass. Extensibility there is unchanged by this method, in either direction.
 		 */
 		public Set<Block> blockSet() {
 			// The strictness below is not belt-and-braces: it replaces guarantees the vanilla/NeoForge
@@ -943,7 +966,7 @@ public final class ContentManifest {
 							+ "' listed twice");
 				}
 			}
-			return resolved;
+			return Collections.unmodifiableSet(resolved);
 		}
 
 		/**

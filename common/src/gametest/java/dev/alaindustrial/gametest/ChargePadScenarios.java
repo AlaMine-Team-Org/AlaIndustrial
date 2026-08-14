@@ -18,6 +18,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -647,5 +648,133 @@ public final class ChargePadScenarios {
 			return;
 		}
 		helper.succeed();
+	}
+
+	// ── GUI + SND — the readout and the click (MOD-416) ──────────────────────────────────────────
+
+	/**
+	 * GUI01: the readout channels carry the payout that actually happened.
+	 *
+	 * <p>The numbers are asserted against {@link Config} and the item's own input rate rather than
+	 * against literals, because a literal here would pass on any balance and prove nothing about the
+	 * wiring. What this guards is that the three channels are fed from the real transfer — swap the
+	 * distributor's report for a constant and the rate or the item count goes wrong.
+	 */
+	public static void gui01ReadoutTracksPayout(GameTestHelper helper) {
+		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
+		ServerPlayer player = survivalPlayer(helper);
+		ItemStack tool = drill(0);
+		player.getInventory().setItem(0, tool);
+
+		pad.chargePlayer(helper.getLevel(), player);
+
+		ContainerData data = pad.getDataAccess();
+		// The first tick of contact pays at once (the leading edge), so one tick's worth settled.
+		long expectedRate = Math.min(tickBudget(), ItemEnergy.inputRate(tool));
+		if (data.get(ChargePadBlockEntity.DATA_RATE) != expectedRate) {
+			helper.fail("delivery channel should read " + expectedRate + " EU/t, got "
+					+ data.get(ChargePadBlockEntity.DATA_RATE));
+			return;
+		}
+		if (data.get(ChargePadBlockEntity.DATA_ITEMS) != 1) {
+			helper.fail("one carried item was charged, the channel says "
+					+ data.get(ChargePadBlockEntity.DATA_ITEMS));
+			return;
+		}
+		if (data.get(ChargePadBlockEntity.DATA_ETA) <= 0) {
+			helper.fail("a drill that took one tick's charge still has room, so the estimate must be "
+					+ "positive, got " + data.get(ChargePadBlockEntity.DATA_ETA));
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * GUI02: an unoccupied station reports nothing, and every channel survives the wire.
+	 *
+	 * <p>The second half is the cheap guard for a whole class of "it worked on my integrated server"
+	 * bugs: {@code ContainerData} ships each channel as a SIGNED 16-bit short, so anything outside
+	 * ±32767 arrives negative on a real client. Sweeping every channel catches it without a client test.
+	 */
+	public static void gui02ReadoutClearsWhenAlone(GameTestHelper helper) {
+		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
+		ServerPlayer player = survivalPlayer(helper);
+		player.getInventory().setItem(0, drill(0));
+
+		pad.chargePlayer(helper.getLevel(), player);
+		if (pad.getDataAccess().get(ChargePadBlockEntity.DATA_RATE) <= 0) {
+			helper.fail("precondition: the station must be delivering before the visitor leaves");
+			return;
+		}
+
+		// Real ticks, for the same reason as FUN08: staleness is measured against the game clock.
+		helper.startSequence()
+				.thenExecuteFor(6, () -> { })
+				.thenExecute(() -> {
+					ContainerData data = pad.getDataAccess();
+					for (int channel = 0; channel < data.getCount(); channel++) {
+						int value = data.get(channel);
+						if ((short) value != value) {
+							helper.fail("channel " + channel + " carries " + value
+									+ ", which does not survive the 16-bit ContainerData sync");
+							return;
+						}
+					}
+					if (data.get(ChargePadBlockEntity.DATA_RATE) != 0
+							|| data.get(ChargePadBlockEntity.DATA_ITEMS) != 0
+							|| data.get(ChargePadBlockEntity.DATA_ETA) != 0) {
+						helper.fail("an unoccupied station must report nothing, got rate="
+								+ data.get(ChargePadBlockEntity.DATA_RATE) + " items="
+								+ data.get(ChargePadBlockEntity.DATA_ITEMS) + " eta="
+								+ data.get(ChargePadBlockEntity.DATA_ETA));
+					}
+				})
+				.thenSucceed();
+	}
+
+	/**
+	 * SND01: the plate clicks once per visit, and the grid cannot make it click again.
+	 *
+	 * <p>Asserted on the armed flag rather than on audio, which a gametest cannot hear. That is the
+	 * property worth guarding anyway: the station is a storage sink, so every intake from the grid wakes
+	 * it and walks back into the "contact went stale" branch. Without the flag the plate would click at a
+	 * departure that already happened, over and over, for as long as the station kept refilling.
+	 */
+	public static void snd01ClickIsOnePerVisit(GameTestHelper helper) {
+		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
+		ServerPlayer player = survivalPlayer(helper);
+		player.getInventory().setItem(0, drill(0));
+
+		pad.chargePlayer(helper.getLevel(), player);
+		if (!pad.isClickOffPending()) {
+			helper.fail("arriving on the plate must arm the departure click");
+			return;
+		}
+		// Standing still is not a second arrival: the arrival click hangs on the fresh-contact edge.
+		pad.chargePlayer(helper.getLevel(), player);
+		if (!pad.isClickOffPending()) {
+			helper.fail("staying on the plate must not disarm the departure click");
+			return;
+		}
+
+		helper.startSequence()
+				.thenExecuteFor(6, () -> { })
+				.thenExecute(() -> {
+					if (pad.isClickOffPending()) {
+						helper.fail("the departure click must fire once contact goes stale");
+						return;
+					}
+					// Now do what the grid does to an empty station: fill it and wake it.
+					pad.getEnergyStorage().setAmountUntracked(Config.chargePadBuffer);
+					pad.wake();
+				})
+				.thenExecuteFor(6, () -> { })
+				.thenExecute(() -> {
+					if (pad.isClickOffPending()) {
+						helper.fail("waking an unoccupied station re-armed the departure click — the "
+								+ "plate would click at a visitor who left long ago");
+					}
+				})
+				.thenSucceed();
 	}
 }

@@ -4,7 +4,8 @@ import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 /**
- * L2 functional suite for the Electric Shovel's right-click interactions (MOD-379, suite TC-SHOVEL-001).
+ * L2 functional suite for the Electric Shovel (suite TC-SHOVEL-001) — its right-click interactions
+ * (MOD-379) and the base tool's EU contract (MOD-364).
  * Thin Fabric wrappers: the bodies are loader-neutral in
  * {@code common/.../gametest/ElectricShovelScenarios} and the SAME bodies run on the NeoForge
  * {@code gameTestServer} lane ({@code NeoForgeGameTests}) — both loaders exercise identical logic.
@@ -48,5 +49,61 @@ public class ElectricShovelGameTest {
 	@GameTest
 	public void tcShovel001Fun04_shovelDousesLitCampfire(GameTestHelper helper) {
 		ElectricShovelScenarios.fun04ShovelDousesLitCampfire(helper);
+	}
+
+	/**
+	 * @implements TC-SHOVEL-001-FUN05 — the shovel is accepted by both Battery Box charge-slot filters and
+	 *     charges there at min(LV ceiling, its own intake rate) (MOD-364).
+	 */
+	@GameTest
+	public void tcShovel001Fun05_chargeInBatteryBox(GameTestHelper helper) {
+		ElectricShovelScenarios.fun05ChargeInBatteryBox(helper);
+	}
+
+	/**
+	 * @implements TC-SHOVEL-001-FUN06 — digging one dirt block with a charged shovel drains exactly
+	 *     electricShovelEuPerBlock (MOD-364).
+	 */
+	@GameTest
+	public void tcShovel001Fun06_drainOnMineBlock(GameTestHelper helper) {
+		ElectricShovelScenarios.fun06DrainOnMineBlock(helper);
+	}
+
+	/**
+	 * @implements TC-SHOVEL-001-FUN07 — one EU below the per-block cost the shovel digs for free and at
+	 *     exactly hand speed 1.0f on its own domain block (MOD-364).
+	 */
+	@GameTest
+	public void tcShovel001Fun07_noDrainBelowCost(GameTestHelper helper) {
+		ElectricShovelScenarios.fun07NoDrainBelowCost(helper);
+	}
+
+	/**
+	 * @implements TC-SHOVEL-001-FUN08 — a zero-hardness block costs nothing, while a snow layer (0.1)
+	 *     costs the full per-block drain, which is the claim the item's javadoc makes and had no test
+	 *     behind it (MOD-364).
+	 */
+	@GameTest
+	public void tcShovel001Fun08_zeroHardnessFreeSnowCosts(GameTestHelper helper) {
+		ElectricShovelScenarios.fun08ZeroHardnessFreeSnowCosts(helper);
+	}
+
+	/**
+	 * @implements TC-SHOVEL-001-FUN09 — 9.0 on shovel blocks while charged, exactly 1.0f one EU below the
+	 *     cost, drops kept either way and refused on a foreign block; the shovel's first speed coverage of
+	 *     any kind (MOD-364).
+	 */
+	@GameTest
+	public void tcShovel001Fun09_speedAndDrops(GameTestHelper helper) {
+		ElectricShovelScenarios.fun09SpeedAndDrops(helper);
+	}
+
+	/**
+	 * @implements TC-SHOVEL-001-PER01 — charge survives a stack copy, 0 EU removes the component, and
+	 *     writes clamp at capacity (MOD-364).
+	 */
+	@GameTest
+	public void tcShovel001Per01_chargeRoundTrip(GameTestHelper helper) {
+		ElectricShovelScenarios.per01ChargeRoundTrip(helper);
 	}
 }

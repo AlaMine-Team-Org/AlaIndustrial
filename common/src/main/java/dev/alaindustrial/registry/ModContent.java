@@ -7,6 +7,7 @@ import dev.alaindustrial.menu.MobRepellerHvMenu;
 import dev.alaindustrial.menu.MobRepellerMenu;
 import dev.alaindustrial.menu.MobRepellerMvMenu;
 import dev.alaindustrial.menu.CesuMenu;
+import dev.alaindustrial.menu.ChargePadMenu;
 import dev.alaindustrial.menu.CanningMachineMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
@@ -566,6 +567,8 @@ public final class ModContent {
 	public static Supplier<MenuType<MobRepellerMvMenu>> MOB_REPELLER_MV_MENU = unbound("MOB_REPELLER_MV_MENU");
 	public static Supplier<MenuType<MobRepellerHvMenu>> MOB_REPELLER_HV_MENU = unbound("MOB_REPELLER_HV_MENU");
 	public static Supplier<MenuType<CesuMenu>> CESU_MENU = unbound("CESU_MENU");
+	/** Charging Station readout (MOD-416): buffer bar plus delivery rate, item count and estimate. */
+	public static Supplier<MenuType<ChargePadMenu>> CHARGE_PAD_MENU = unbound("CHARGE_PAD_MENU");
 	/** Teleporter station screen (MOD-093): EU bar, owner, private/public toggle. */
 	public static Supplier<MenuType<TeleporterStationMenu>> TELEPORTER_STATION_MENU =
 			unbound("TELEPORTER_STATION_MENU");

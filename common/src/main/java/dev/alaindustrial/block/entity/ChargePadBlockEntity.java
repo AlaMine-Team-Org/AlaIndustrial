@@ -6,12 +6,23 @@ import dev.alaindustrial.block.ChargePadState;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.energy.PlayerEuDistributor;
+import dev.alaindustrial.menu.ChargePadMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -44,7 +55,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * awake forever, drawing from the grid for nobody. A timestamp cannot get stuck: it simply stops being
  * recent.
  */
-public final class ChargePadBlockEntity extends MachineBlockEntity {
+public final class ChargePadBlockEntity extends MachineBlockEntity implements MenuProvider {
 
 	/**
 	 * How stale the last contact may be before the station calls itself unoccupied. Two ticks, not one,
@@ -84,9 +95,54 @@ public final class ChargePadBlockEntity extends MachineBlockEntity {
 	/** The indicator state of the last payout, replayed on the ticks between payouts so it cannot blink. */
 	private ChargePadState lastPayoutState = ChargePadState.READY;
 
+	/**
+	 * Live readout for the screen (MOD-416), refreshed on every payout and cleared when the visitor
+	 * leaves. Transient like {@link #lastContactTick}: a station loaded from disk is serving nobody,
+	 * whatever was true when the chunk was saved.
+	 *
+	 * <p>Measured on the SERVER and shipped as finished numbers rather than derived on the client,
+	 * because the ingredients are not client knowledge: {@code ItemEnergy.capacity} reads {@link Config},
+	 * and the mod never syncs the config to clients. A client doing this arithmetic would draw numbers
+	 * from its own local balance on any server that retuned one.
+	 */
+	private int rateEuPerTick;
+	private int itemsCharging;
+	private int etaSeconds;
+
+	/**
+	 * Whether the step-off click still owes to be played. Set when someone arrives, cleared the moment it
+	 * fires, so {@link #onServerTick} cannot replay it — the station is a storage sink and wakes again on
+	 * every intake from the grid, which would otherwise re-run the "contact went stale" branch forever.
+	 */
+	private boolean clickOffPending;
+
 	public ChargePadBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.CHARGE_PAD_BE.get(), pos, state, EnergyTier.LV, 0,
 				Config.chargePadBuffer, Config.chargePadInputRate, 0L);
+	}
+
+	/**
+	 * No upgrade panel — and this is load-bearing, not cosmetic. {@code MachineBlockEntity}'s constructor
+	 * sizes the inventory as {@code slots + (this instanceof MenuProvider && hasUpgradePanel() ? 4 : 0)},
+	 * so the moment this class gained a menu (MOD-416) the plate would silently have grown four slots:
+	 * hoppers would start filling a floor plate, the NBT layout would change under existing worlds, and
+	 * the screen would advertise upgrades the station has never accepted. {@link ChargePadMenu} answers
+	 * the same — both sides must agree, the slot indices depend on it.
+	 */
+	@Override
+	public boolean hasUpgradePanel() {
+		return false;
+	}
+
+	/**
+	 * Test seam (MOD-416): whether the departure click is still owed.
+	 *
+	 * <p>Exposed because the invariant behind it is otherwise unobservable — a gametest cannot hear a
+	 * sound, and the property worth guarding is not "a click happened" but "the click is armed exactly
+	 * once per visit and is not re-armed when the grid wakes an unoccupied station".
+	 */
+	public boolean isClickOffPending() {
+		return clickOffPending;
 	}
 
 	/**
@@ -123,6 +179,12 @@ public final class ChargePadBlockEntity extends MachineBlockEntity {
 			// A gap in contact starts a fresh batch: the ticks the player spent elsewhere are not owed to
 			// them, and paying them as a lump sum would let someone hop on and off for a burst of charge.
 			pendingTicks = 0;
+			// MOD-416: the arrival click. Hung on this edge and no other — entityInside fires once per
+			// tick per cell the player's box overlaps, so anything less selective would play twenty times
+			// a second, and the guards above have already excluded spectators and the neighbouring cells
+			// a sprinting player clips through.
+			playClick(serverLevel, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON);
+			clickOffPending = true;
 		}
 		lastContactTick = now;
 		// Wake first: the station may have been asleep when the player arrived, and the tick that
@@ -139,12 +201,14 @@ public final class ChargePadBlockEntity extends MachineBlockEntity {
 		pendingTicks = 0;
 		long budget = Math.min((long) Config.chargePadOutputRate * settled, energy.getAmount());
 		if (budget <= 0) {
+			clearReadout();
 			lastPayoutState = ChargePadState.EMPTY;
 			updateIndicator(ChargePadState.EMPTY);
 			return;
 		}
-		long moved = PlayerEuDistributor.distribute(player, budget, PlayerEuDistributor.Policy.STATION,
-				settled);
+		PlayerEuDistributor.Result payout = PlayerEuDistributor.distribute(player, budget,
+				PlayerEuDistributor.Policy.STATION, settled);
+		long moved = payout.movedEu();
 		if (moved > 0) {
 			// Debited directly rather than through a transaction: this is the station's own internal
 			// spend, and routing it through the transaction journal would fire the commit hook and wake
@@ -153,8 +217,49 @@ public final class ChargePadBlockEntity extends MachineBlockEntity {
 			energy.drainInternal(moved);
 			setChanged();
 		}
+		updateReadout(payout, settled);
 		lastPayoutState = moved > 0 ? ChargePadState.CHARGING : ChargePadState.READY;
 		updateIndicator(lastPayoutState);
+	}
+
+	/**
+	 * Turns one payout into the three numbers the screen shows (MOD-416).
+	 *
+	 * <p>The rate is the batch divided by the ticks it settled, so it reads as EU per tick however often
+	 * the station actually pays — the payout interval is an implementation detail the player should never
+	 * see. The estimate divides the gear's remaining room by that rate, which is what makes it honest on a
+	 * thin supply line: a station fed by copper cable delivers less, so the wait it reports grows instead
+	 * of promising the 128 EU/t ceiling it cannot reach.
+	 *
+	 * <p>Everything is clamped into signed 16 bits, because {@code ContainerData} ships each channel as a
+	 * short: a value above 32767 arrives NEGATIVE on the client rather than merely wrong. Charge and
+	 * capacity fit by construction (the buffer is 20 000), the rate is capped at 128 by config, but the
+	 * estimate is a quotient and a nearly-idle station can push it arbitrarily high.
+	 */
+	private void updateReadout(PlayerEuDistributor.Result payout, int settled) {
+		rateEuPerTick = settled > 0 ? (int) (payout.movedEu() / settled) : 0;
+		itemsCharging = Math.max(0, payout.itemsServed());
+		long room = payout.remainingRoom();
+		if (room > 0 && rateEuPerTick > 0) {
+			// Round up: "1 s left" on a job that still needs part of a second is friendlier than a 0 that
+			// reads as "done" while the bar is still moving.
+			long ticks = (room + rateEuPerTick - 1) / rateEuPerTick;
+			etaSeconds = (int) Math.min(Short.MAX_VALUE, (ticks + 19) / 20);
+		} else {
+			etaSeconds = 0;
+		}
+	}
+
+	/** Blank the readout — the screen renders a dash rather than a zero that would read as a real number. */
+	private void clearReadout() {
+		rateEuPerTick = 0;
+		itemsCharging = 0;
+		etaSeconds = 0;
+	}
+
+	/** One-shot click at the plate, vanilla volume and pitch — the same 4-arg call the vanilla plate makes. */
+	private void playClick(ServerLevel level, SoundEvent sound) {
+		level.playSound(null, worldPosition, sound, SoundSource.BLOCKS);
 	}
 
 	/**
@@ -166,6 +271,17 @@ public final class ChargePadBlockEntity extends MachineBlockEntity {
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
 		if (lastContactTick >= 0 && level.getGameTime() - lastContactTick <= CONTACT_GRACE_TICKS) {
 			return 0;
+		}
+		// MOD-416: the departure click, guarded by a flag rather than by the staleness test above. This
+		// branch is NOT reached once per visit — the station is a storage sink, so every intake from the
+		// grid wakes it and walks straight back in here with the same stale timestamp. Without the flag
+		// the plate would click at a departure that already happened, over and over.
+		if (clickOffPending) {
+			clickOffPending = false;
+			clearReadout();
+			if (level instanceof ServerLevel serverLevel) {
+				playClick(serverLevel, SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF);
+			}
 		}
 		updateIndicator(ChargePadState.IDLE);
 		return IDLE_SLEEP_TICKS;
@@ -237,5 +353,69 @@ public final class ChargePadBlockEntity extends MachineBlockEntity {
 	@Override
 	public EnergyRole energyRoleForFace(Direction worldFace) {
 		return EnergyRole.IN;
+	}
+
+	/**
+	 * Seven-wide data — hides {@link MachineBlockEntity#DATA_COUNT} on purpose so this name always states
+	 * <em>this</em> machine's width, both here and in {@link ChargePadMenu}'s client stub. The width lives
+	 * in exactly one place for a reason: when it was a literal on both sides, adding a channel to a block
+	 * entity alone threw {@code ArrayIndexOutOfBoundsException} on the client render thread while every
+	 * server test stayed green (MOD-235).
+	 */
+	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 3;
+
+	/** EU per tick currently flowing into whoever stands on the plate. */
+	public static final int DATA_RATE = 4;
+	/** How many carried items are taking charge right now. */
+	public static final int DATA_ITEMS = 5;
+	/** Seconds until the visitor's gear is full; {@code 0} means "nothing to report", drawn as a dash. */
+	public static final int DATA_ETA = 6;
+
+	/**
+	 * Base 0..3 plus the three readout channels. Channels 2 and 3 ({@code progress}/{@code maxProgress})
+	 * are left untouched rather than reused: their meaning varies per machine and other machines' block
+	 * entity renderers read them, so borrowing the indices for something else is how a GUI feature ported
+	 * between machines quietly breaks the target's renderer.
+	 */
+	private final ContainerData chargePadData = new ContainerData() {
+		@Override
+		public int get(int index) {
+			return switch (index) {
+				case DATA_RATE -> rateEuPerTick;
+				case DATA_ITEMS -> itemsCharging;
+				case DATA_ETA -> etaSeconds;
+				default -> ChargePadBlockEntity.this.dataAccess.get(index);
+			};
+		}
+
+		@Override
+		public void set(int index, int value) {
+			// The three readout channels are derived and server-authoritative: they are computed from a
+			// payout, never assigned from outside.
+			if (index < DATA_RATE) {
+				ChargePadBlockEntity.this.dataAccess.set(index, value);
+			}
+		}
+
+		@Override
+		public int getCount() {
+			return DATA_COUNT;
+		}
+	};
+
+	@Override
+	public ContainerData getDataAccess() {
+		return chargePadData;
+	}
+
+	@Override
+	public Component getDisplayName() {
+		return Component.translatable("block.alaindustrial.charge_pad");
+	}
+
+	@Override
+	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
+		return new ChargePadMenu(syncId, inventory, this,
+				ContainerLevelAccess.create(getLevel(), getBlockPos()));
 	}
 }

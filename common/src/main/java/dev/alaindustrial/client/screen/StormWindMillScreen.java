@@ -22,8 +22,15 @@ public class StormWindMillScreen extends MachineScreen<StormWindMillMenu> {
 	private static final float STATUS_UV_X = 177.0F;
 	private static final float STATUS_UV_Y = 0.0F;
 
-	/** Centred idle-status label row (between the rotor slot and the inventory label). */
-	private static final int STATUS_TEXT_Y = 50;
+	/**
+	 * Centred idle-status label row (between the rotor slot and the inventory label).
+	 *
+	 * <p>Public so the L3 stand crops its pixel gate to the row's real position rather than to a copy of
+	 * this number (MOD-371): a copy would keep measuring the old band after a layout change and stay
+	 * green over a row that had moved out of it. This screen keeps its own constant instead of sharing
+	 * one with the T1 mill — the layouts are independent, and so are their gates.
+	 */
+	public static final int STATUS_TEXT_Y = 50;
 
 	public StormWindMillScreen(StormWindMillMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title, IMAGE_WIDTH, IMAGE_HEIGHT);

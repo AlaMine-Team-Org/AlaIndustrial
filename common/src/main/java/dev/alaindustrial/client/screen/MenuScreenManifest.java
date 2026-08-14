@@ -112,6 +112,9 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.BATTERY_BOX_MENU.get(), BatteryBoxScreen::new),
 			screen(() -> ModContent.ENERGY_CONDENSER_MENU.get(), EnergyCondenserScreen::new),
 			screen(() -> ModContent.CESU_MENU.get(), CesuScreen::new),
+			// MOD-416 — kept at the same index as its MENUS entry; the parity gate compares order, not
+			// just membership.
+			screen(() -> ModContent.CHARGE_PAD_MENU.get(), ChargePadScreen::new),
 			screen(() -> ModContent.TELEPORTER_STATION_MENU.get(), TeleporterStationScreen::new),
 			screen(() -> ModContent.TELEPORTER_REMOTE_MENU.get(), TeleporterRemoteScreen::new),
 			screen(() -> ModContent.DAYLIGHT_SOLAR_PANEL_MENU.get(), DaylightSolarPanelScreen::new),

@@ -346,7 +346,7 @@
             {
               "type": "text",
               "title": "Estação de Carregamento",
-              "text": "Uma placa que carrega todo o equipamento energizado do jogador que está sobre ela — inventário, mão secundária e equipamento vestido — sem nenhuma interface para abrir."
+              "text": "Uma placa que carrega todo o equipamento energizado do jogador que está sobre ela — inventário, mão secundária e equipamento vestido — sem um único clique."
             },
             {
               "type": "stats",

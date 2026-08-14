@@ -346,7 +346,7 @@
             {
               "type": "text",
               "title": "Stacja ładowania",
-              "text": "Płyta, która ładuje cały zasilany ekwipunek gracza stojącego na niej — plecak, drugą rękę i noszone wyposażenie — bez żadnego interfejsu."
+              "text": "Płyta, która ładuje cały zasilany ekwipunek gracza stojącego na niej — plecak, drugą rękę i noszone wyposażenie — bez ani jednego kliknięcia."
             },
             {
               "type": "stats",

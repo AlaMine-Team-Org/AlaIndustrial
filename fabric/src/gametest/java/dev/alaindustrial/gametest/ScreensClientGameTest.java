@@ -86,6 +86,11 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             new Screen("alloy_smelter", "alloy_smelter", "Alloy Smelter"),
             new Screen("galvanic_bath", "galvanic_bath", "Galvanic Bath"),
             new Screen("cesu", "cesu", "CESU"),
+            // MOD-416: the charging station, the mod's only slotless screen. The stand opens it from
+            // BESIDE the plate, so the frame captures the idle state — the three lower rows drawn as a
+            // dash rather than as zeroes, which is exactly the state worth guarding against regressing
+            // into "0 items at 0 EU/t".
+            new Screen("charge_pad", "charge_pad", "Charging Station"),
             // MOD-393: the condenser's readout IS its mechanic (which tier now, how far to the
             // next), so the frame is what guards those two lines against silently vanishing.
             new Screen("energy_condenser", "energy_condenser", "Energy Condenser"),

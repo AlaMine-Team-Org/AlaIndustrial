@@ -346,7 +346,7 @@
             {
               "type": "text",
               "title": "Station de recharge",
-              "text": "Une plaque qui recharge tout l'équipement alimenté du joueur qui se tient dessus — inventaire, seconde main et équipement porté — sans aucune interface à ouvrir."
+              "text": "Une plaque qui recharge tout l'équipement alimenté du joueur qui se tient dessus — inventaire, seconde main et équipement porté — sans le moindre clic."
             },
             {
               "type": "stats",

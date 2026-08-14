@@ -346,7 +346,7 @@
             {
               "type": "text",
               "title": "Stazione di ricarica",
-              "text": "Una piastra che ricarica tutto l'equipaggiamento alimentato del giocatore che ci sta sopra — inventario, mano secondaria ed equipaggiamento indossato — senza alcuna interfaccia da aprire."
+              "text": "Una piastra che ricarica tutto l'equipaggiamento alimentato del giocatore che ci sta sopra — inventario, mano secondaria ed equipaggiamento indossato — senza un solo clic."
             },
             {
               "type": "stats",

@@ -144,4 +144,15 @@ public class AlaCommonGameTest {
 	public void gametestRigStructureFitsRigs(GameTestHelper helper) {
 		AlaCommonScenarios.gametestRigStructureFitsRigs(helper);
 	}
+
+	/**
+	 * MOD-417 guard — the block set the shared manifest hands to every {@code BlockEntityType} is
+	 * unmodifiable and ordered, and it is the set the REGISTERED type answers {@code isValid} from.
+	 * Parametric over {@code ContentManifest.BLOCK_ENTITIES}, so a new block entity is covered without
+	 * editing this file. Body is loader-neutral — the NeoForge lane runs the same one.
+	 */
+	@GameTest
+	public void blockEntityBlockSetsAreImmutable(GameTestHelper helper) {
+		AlaCommonScenarios.blockEntityBlockSetsAreImmutable(helper);
+	}
 }

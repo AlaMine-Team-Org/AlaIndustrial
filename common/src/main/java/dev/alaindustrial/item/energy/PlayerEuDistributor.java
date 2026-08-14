@@ -108,11 +108,35 @@ public final class PlayerEuDistributor {
 	}
 
 	/**
-	 * Spreads up to {@code budget} EU across everything powered the player is carrying and returns how
-	 * much actually landed. Writes nothing when it returns 0, so the caller can skip its own bookkeeping
-	 * entirely on an idle call.
+	 * What one {@link #distribute} call did (MOD-416).
+	 *
+	 * <p>Declared here rather than in its own file on purpose: {@code pitest_check.py} requires every
+	 * Minecraft-free class under {@code common/src/main} to be listed as a mutation target, and the
+	 * {@code item.energy} package is not covered by the target globs. The scan works per FILE, so a
+	 * record nested in this Minecraft-coupled one adds no new standalone class — the same reason
+	 * {@link Policy} lives here.
+	 *
+	 * @param movedEu total EU that actually landed
+	 * @param itemsServed how many distinct targets took any charge — what the Charging Station's screen
+	 *     reports as "charging N items" — or <b>{@code -1} when the mode did not measure it</b>
+	 * @param remainingRoom room left across the mod's own powered targets after this call, or
+	 *     <b>{@code -1} when the mode did not measure it</b>
+	 *
+	 * <p>Only the even split measures the last two; the scan-order path used by the worn pack reports
+	 * {@code -1} for both rather than a half-counted number (see {@code distributeInScanOrder}). Foreign
+	 * items are excluded from {@code remainingRoom} either way — only their own handler knows their room.
 	 */
-	public static long distribute(Player player, long budget, Policy policy) {
+	public record Result(long movedEu, int itemsServed, long remainingRoom) {
+		/** Nothing moved, nothing measured — the answer for an idle call. */
+		public static final Result NOTHING = new Result(0L, 0, -1L);
+	}
+
+	/**
+	 * Spreads up to {@code budget} EU across everything powered the player is carrying and reports what
+	 * happened. Writes nothing when nothing moves, so the caller can skip its own bookkeeping entirely
+	 * on an idle call.
+	 */
+	public static Result distribute(Player player, long budget, Policy policy) {
 		return distribute(player, budget, policy, 1);
 	}
 
@@ -126,9 +150,9 @@ public final class PlayerEuDistributor {
 	 * player standing still receives exactly what they did when the station paid out every tick; what
 	 * changes is how often their inventory slots are rewritten and re-sent to the client.
 	 */
-	public static long distribute(Player player, long budget, Policy policy, int ticks) {
+	public static Result distribute(Player player, long budget, Policy policy, int ticks) {
 		if (budget <= 0) {
-			return 0L;
+			return Result.NOTHING;
 		}
 		int batch = Math.max(1, ticks);
 		return policy.spreadEvenly()
@@ -144,7 +168,7 @@ public final class PlayerEuDistributor {
 	 * consumer within a few steps anyway, so the order stops mattering after a moment, and no cursor
 	 * has to be persisted on the stack to remember who was next.
 	 */
-	private static long distributeInScanOrder(Player player, long budget, Policy policy, int batch) {
+	private static Result distributeInScanOrder(Player player, long budget, Policy policy, int batch) {
 		long moved = 0L;
 		// The list index doubles as the vanilla Inventory slot index, which is what the cross-mod bridge
 		// needs to address the slot (both loaders' item capabilities are slot-scoped, not stack-scoped).
@@ -168,7 +192,11 @@ public final class PlayerEuDistributor {
 		if (policy.includeEquipped() && budget > 0) {
 			moved += chargeEquipped(player, budget, policy);
 		}
-		return moved;
+		// Neither count is measured here, and both say so rather than guessing. Two of the four passes
+		// above (the open screen, the worn gear) report one aggregated total rather than per-item results,
+		// so a counter wired into the other two would be a number that looks exact and is not. The worn
+		// pack — this path's only caller — reads movedEu alone.
+		return new Result(moved, -1, -1L);
 	}
 
 	/**
@@ -183,6 +211,8 @@ public final class PlayerEuDistributor {
 		private final int slot;
 		private final ItemStack stack;
 		private long headroom;
+		/** Whether this target took anything at all this call — counted once, however many passes served it. */
+		private boolean served;
 
 		Target(int slot, ItemStack stack, long headroom) {
 			this.slot = slot;
@@ -206,11 +236,15 @@ public final class PlayerEuDistributor {
 	 * The loop ends when the budget is spent, nobody wants more, or a pass moves nothing (which is what
 	 * a share rounding down to zero looks like — more targets than EU).
 	 */
-	private static long distributeEvenly(Player player, long budget, Policy policy, int batch) {
+	private static Result distributeEvenly(Player player, long budget, Policy policy, int batch) {
 		List<Target> targets = collectTargets(player, policy, batch);
 		if (targets.isEmpty()) {
-			return 0L;
+			return Result.NOTHING;
 		}
+		// The round below drains `targets` as items fill up, so the roster is copied first: both figures
+		// reported to the Charging Station are measured over everyone who entered the round, not over
+		// whoever happened to survive it.
+		List<Target> roster = List.copyOf(targets);
 		long moved = 0L;
 		while (budget > 0 && !targets.isEmpty()) {
 			long share = budget / targets.size();
@@ -229,6 +263,7 @@ public final class PlayerEuDistributor {
 					it.remove();
 					continue;
 				}
+				target.served = true;
 				target.headroom -= sent;
 				if (target.headroom <= 0) {
 					it.remove();
@@ -241,7 +276,20 @@ public final class PlayerEuDistributor {
 				break;
 			}
 		}
-		return moved;
+		int servedCount = 0;
+		long room = 0L;
+		for (Target target : roster) {
+			if (target.served) {
+				servedCount++;
+			}
+			// Unclamped room, read AFTER the transfer — the stacks were written in place, so this is what
+			// is genuinely left rather than what one batch was allowed to move. Foreign items are skipped:
+			// their capacity is not ours to know, and ItemEnergy reports 0 for them.
+			if (ItemEnergy.capacity(target.stack) > 0) {
+				room += ItemEnergy.stackRoom(target.stack);
+			}
+		}
+		return new Result(moved, servedCount, room);
 	}
 
 	/**

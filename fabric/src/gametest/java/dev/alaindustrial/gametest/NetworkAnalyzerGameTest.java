@@ -28,4 +28,9 @@ public class NetworkAnalyzerGameTest {
 	public void mod047_traverseCapFlagsLimit(GameTestHelper helper) {
 		NetworkAnalyzerScenarios.mod047_traverseCapFlagsLimit(helper);
 	}
+
+	@GameTest
+	public void mod313_traverseCrossesSinksInGeometricOrder(GameTestHelper helper) {
+		NetworkAnalyzerScenarios.mod313_traverseCrossesSinksInGeometricOrder(helper);
+	}
 }

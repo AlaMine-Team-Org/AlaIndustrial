@@ -138,4 +138,22 @@ public class ChargePadGameTest {
 	public void mod406PayoutsAreBatchedNotPerTick(GameTestHelper helper) {
 		ChargePadScenarios.mod406PayoutsAreBatchedNotPerTick(helper);
 	}
+
+	/** @implements TC-PAD-001-GUI01 — the screen's channels carry the payout that actually happened. */
+	@GameTest
+	public void tcPad001Gui01_readoutTracksPayout(GameTestHelper helper) {
+		ChargePadScenarios.gui01ReadoutTracksPayout(helper);
+	}
+
+	/** @implements TC-PAD-001-GUI02 — an empty station reports nothing, and every channel fits a short. */
+	@GameTest
+	public void tcPad001Gui02_readoutClearsWhenAlone(GameTestHelper helper) {
+		ChargePadScenarios.gui02ReadoutClearsWhenAlone(helper);
+	}
+
+	/** @implements TC-PAD-001-SND01 — one click per visit; a grid refill cannot replay the departure. */
+	@GameTest
+	public void tcPad001Snd01_clickIsOnePerVisit(GameTestHelper helper) {
+		ChargePadScenarios.snd01ClickIsOnePerVisit(helper);
+	}
 }

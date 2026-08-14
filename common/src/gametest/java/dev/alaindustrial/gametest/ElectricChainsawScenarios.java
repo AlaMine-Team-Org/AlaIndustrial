@@ -18,18 +18,47 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Loader-neutral gametest bodies for the Diamond-Tipped Electric Chainsaw (MOD-374, suite
- * TC-CHAINSAW-001). Same pattern as {@link ElectricDrillScenarios}: plain {@code GameTestHelper}
- * bodies wrapped by the Fabric {@code ElectricChainsawGameTest} suite and registered on the NeoForge
- * {@code gameTestServer} lane via {@code NeoForgeGameTests} — both loaders exercise the SAME logic.
+ * Loader-neutral gametest bodies for the Electric Chainsaw (suite TC-CHAINSAW-001) — the
+ * diamond-tipped upgrade (MOD-374) and, since MOD-364, the base tool's own EU contract. Same pattern as
+ * {@link ElectricDrillScenarios}: plain {@code GameTestHelper} bodies wrapped by the Fabric
+ * {@code ElectricChainsawGameTest} suite and registered on the NeoForge {@code gameTestServer} lane via
+ * {@code NeoForgeGameTests} — both loaders exercise the SAME logic.
  *
  * <p>Numbers come from {@link Config} (electricChainsawBuffer, electricChainsawEuPerBlock) — the
  * balance source of truth. Drops are read through {@link Block#getDrops}, i.e. the real vanilla loot
  * tables, not a re-implementation of what they are believed to do.
+ *
+ * <p>The six base-contract forms (charging, drain, hand-speed collapse, free instant-break blocks,
+ * speed/drops, persistence) are shared with the shovel and the hoe and live in
+ * {@link ElectricToolEnergyScenarios}; what stays here is {@link #ENERGY}, the one place in the repo
+ * that says which tool those forms are run against for the chainsaw.
  */
 public final class ElectricChainsawScenarios {
 
 	private ElectricChainsawScenarios() {}
+
+	/**
+	 * The chainsaw's slice of the shared EU contract (MOD-364), declared here and nowhere else so that
+	 * naming the wrong tool would mean writing {@code ModContent.ELECTRIC_CHAINSAW} inside another tool's
+	 * suite. {@link ElectricToolEnergyScenarios#energyCaseRosterIsHonest} checks every field of it against
+	 * the real item.
+	 *
+	 * <p>Fixtures: oak log is the chainsaw's own {@code #mineable/axe} domain; stone is the negative;
+	 * oak leaves (hardness 0.2 in the 26.2 sources) is the soft block that must still cost full price and
+	 * is also the base tool's only coverage of the third {@code Tool.Rule} — {@code #minecraft:leaves} at
+	 * full speed, which vanilla does not file under axes at all.
+	 */
+	public static final ElectricToolEnergyScenarios.ToolCase ENERGY =
+			new ElectricToolEnergyScenarios.ToolCase(
+					"electric_chainsaw",
+					ModContent.ELECTRIC_CHAINSAW,
+					() -> Config.electricChainsawEuPerBlock,
+					() -> Config.electricChainsawBuffer,
+					() -> Config.electricChainsawInputRate,
+					() -> Blocks.OAK_LOG,
+					() -> Blocks.STONE,
+					() -> Blocks.OAK_LEAVES,
+					9.0f);
 
 	private static final BlockPos LEAF = new BlockPos(1, 2, 1);
 
@@ -208,5 +237,37 @@ public final class ElectricChainsawScenarios {
 			helper.fail("the base chainsaw must NOT drop oak leaves as the leaf block");
 		}
 		helper.succeed();
+	}
+
+	// ── MOD-364 — the base tool's EU contract (shared forms, chainsaw parameters) ────────────────────
+
+	/** TC-CHAINSAW-001-FUN04 — accepted by the Battery Box charge slot and charged at its intake rate. */
+	public static void fun04ChargeInBatteryBox(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.chargeInBatteryBox(helper, ENERGY);
+	}
+
+	/** TC-CHAINSAW-001-FUN05 — cutting one oak log drains exactly {@code electricChainsawEuPerBlock}. */
+	public static void fun05DrainOnMineBlock(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.drainOnMineBlock(helper, ENERGY);
+	}
+
+	/** TC-CHAINSAW-001-FUN06 — one EU below the cost it cuts for free, at exactly hand speed. */
+	public static void fun06NoDrainBelowCost(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.noDrainBelowCost(helper, ENERGY);
+	}
+
+	/** TC-CHAINSAW-001-FUN07 — a torch (hardness 0.0) is free, oak leaves (0.2) are not. */
+	public static void fun07ZeroHardnessFreeLeavesCost(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.zeroHardnessFreeSoftBlockCosts(helper, ENERGY);
+	}
+
+	/** TC-CHAINSAW-001-FUN08 — 9.0 on logs AND leaves while charged, 1.0f flat, drops kept either way. */
+	public static void fun08SpeedAndDrops(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.speedAndDrops(helper, ENERGY);
+	}
+
+	/** TC-CHAINSAW-001-PER01 — charge survives a copy, 0 EU drops the component, writes clamp. */
+	public static void per01ChargeRoundTrip(GameTestHelper helper) {
+		ElectricToolEnergyScenarios.chargeRoundTrip(helper, ENERGY);
 	}
 }

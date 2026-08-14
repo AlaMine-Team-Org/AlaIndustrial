@@ -22,10 +22,11 @@ import org.slf4j.LoggerFactory;
  * exact {@code ContainerData} the state under test needs.
  *
  * <p>Split out of {@code GuiClientGameTest} by MOD-404. {@link #shootGuiScreenshots} is the catalogue;
- * everything below it is the shooter each entry uses. Three subjects are big enough to own a file of
+ * everything below it is the shooter each entry uses. Four subjects are big enough to own a file of
  * their own and are called from here rather than inlined: the water mill's status row
- * ({@link WaterMillGuiStand}), the Assembler window ({@link AssemblerGuiStands}) and the blueprint item
- * icon ({@link BlueprintIconStands}).
+ * ({@link WaterMillGuiStand}), the same row on the three wind mills ({@link WindMillGuiStand}), the
+ * Assembler window ({@link AssemblerGuiStands}) and the blueprint item icon
+ * ({@link BlueprintIconStands}).
  *
  * <p>Note what this file does NOT prove: opening a screen this way skips the block interaction, the
  * server's menu-open packet and the real synced data. That path is {@code ScreensClientGameTest}'s.
@@ -102,6 +103,9 @@ public final class MachineGuiStands {
 
         // ── Water Mill — the status row in every state it can show (MOD-354) ─────────
         WaterMillGuiStand.checkWaterMillStatusRow(context);
+
+        // ── Wind Mills (T1 + both T2) — the same row, in every state it can DRAW (MOD-371) ──
+        WindMillGuiStand.checkWindMillStatusRows(context);
 
         // ── Machines without custom screens (one shot each) ──────────────────────────
         shootMenu(context, "gui_moonlit_solar_panel", ModContent.MOONLIT_SOLAR_PANEL_MENU.get(), "Moonlit Solar Panel");

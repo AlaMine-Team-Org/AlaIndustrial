@@ -778,6 +778,10 @@ public final class NeoForgeGameTests {
 		registerTest(event, "pad_faces_intake_only", 40, true, ChargePadScenarios::nrg01EveryFaceIsIntakeOnly);
 		registerTest(event, "pad_buffer_persists", 40, true, ChargePadScenarios::nrg02BufferPersists);
 		registerTest(event, "pad_takes_energy_from_neighbour", 40, true, ChargePadScenarios::nrg03TakesEnergyFromNeighbour);
+		// MOD-416 — the readout channels and the one-click-per-visit rule.
+		registerTest(event, "pad_readout_tracks_payout", 40, true, ChargePadScenarios::gui01ReadoutTracksPayout);
+		registerTest(event, "pad_readout_clears_when_alone", 40, true, ChargePadScenarios::gui02ReadoutClearsWhenAlone);
+		registerTest(event, "pad_click_is_one_per_visit", 40, true, ChargePadScenarios::snd01ClickIsOnePerVisit);
 
 		// Electric Drill (MOD-079, TC-DRILL-001) — same loader-neutral bodies as the Fabric
 		// ElectricDrillGameTest suite: charge slot, EU drain, hand-speed fallback, pickaxe tags, enchants.
@@ -826,6 +830,17 @@ public final class NeoForgeGameTests {
 		registerTest(event, "chainsaw_diamond_tip_silk_toggle_leaves", 40, true, ElectricChainsawScenarios::fun02DiamondTipSilkToggleOnLeaves);
 		registerTest(event, "chainsaw_base_has_no_silk_mode", 40, true, ElectricChainsawScenarios::fun03BaseChainsawHasNoSilkMode);
 
+		// MOD-364 (TC-CHAINSAW-001-FUN04..08, -PER01): the BASE tool's EU contract — six forms shared with
+		// the shovel and the hoe, run here with the chainsaw's own ToolCase. Bodies in
+		// ElectricToolEnergyScenarios; the case is declared once, inside ElectricChainsawScenarios.
+		registerTest(event, "chainsaw_charge_in_battery_box", 80, true, ElectricChainsawScenarios::fun04ChargeInBatteryBox);
+		registerTest(event, "chainsaw_drain_on_mine_block", 40, true, ElectricChainsawScenarios::fun05DrainOnMineBlock);
+		registerTest(event, "chainsaw_no_drain_below_cost", 40, true, ElectricChainsawScenarios::fun06NoDrainBelowCost);
+		registerTest(event, "chainsaw_zero_hardness_free_leaves_cost", 40, true,
+				ElectricChainsawScenarios::fun07ZeroHardnessFreeLeavesCost);
+		registerTest(event, "chainsaw_speed_and_drops", 40, true, ElectricChainsawScenarios::fun08SpeedAndDrops);
+		registerTest(event, "chainsaw_charge_round_trip", 40, true, ElectricChainsawScenarios::per01ChargeRoundTrip);
+
 		// MOD-378 (TC-HOE-001-FUN01..04): the hoe's diamond-tipped upgrade breaks faster at the same tier
 		// and hands every plot it tills full moisture, while the base hoe leaves plots dry and a flat
 		// upgrade cannot water farmland it did not just create.
@@ -841,11 +856,37 @@ public final class NeoForgeGameTests {
 		registerTest(event, "hoe_flat_on_non_tillable_passes", 40, true, ElectricHoeScenarios::neg01FlatHoeOnNonTillableDoesNotSwallowClick);
 		registerTest(event, "hoe_flat_on_tillable_still_refuses", 40, true, ElectricHoeScenarios::fun05FlatHoeOnTillableStillRefuses);
 
+		// MOD-364 (TC-HOE-001-FUN06..10, -PER01): the BASE tool's EU contract, six shared forms with the
+		// hoe's own ToolCase.
+		registerTest(event, "hoe_charge_in_battery_box", 80, true, ElectricHoeScenarios::fun06ChargeInBatteryBox);
+		registerTest(event, "hoe_drain_on_mine_block", 40, true, ElectricHoeScenarios::fun07DrainOnMineBlock);
+		registerTest(event, "hoe_no_drain_below_cost", 40, true, ElectricHoeScenarios::fun08NoDrainBelowCost);
+		registerTest(event, "hoe_zero_hardness_free_moss_costs", 40, true, ElectricHoeScenarios::fun09ZeroHardnessFreeMossCosts);
+		registerTest(event, "hoe_speed_and_drops", 40, true, ElectricHoeScenarios::fun10SpeedAndDrops);
+		registerTest(event, "hoe_charge_round_trip", 40, true, ElectricHoeScenarios::per01ChargeRoundTrip);
+
+		// MOD-364 (TC-HOE-001-FUN11..13): paid tilling. This lane carries the weight here — tilling runs
+		// through the tillability probe, the ONE place the two loaders genuinely differ (vanilla TILLABLES
+		// on Fabric vs getToolModifiedState on NeoForge), so the spend could go missing on this side alone.
+		registerTest(event, "hoe_till_drains_till_cost", 40, true, ElectricHoeScenarios::fun11TillDrainsExactlyTillCost);
+		registerTest(event, "hoe_till_refused_just_below_cost", 40, true, ElectricHoeScenarios::fun12TillRefusedJustBelowCost);
+		registerTest(event, "hoe_charged_on_non_tillable_keeps_buffer", 40, true,
+				ElectricHoeScenarios::fun13ChargedHoeOnNonTillableKeepsBuffer);
+
 		// MOD-389 (TC-ETOOL-001-FUN01..02): the three diamond-tipped upgrades belong to the same
 		// membership tags as their base tools, so the enchanting table accepts them — a recurrence of the
 		// MOD-057 defect, caught here on both loaders.
 		registerTest(event, "electric_tool_tip_membership_tags", 40, true, ElectricToolTagScenarios::fun01TipMembershipTags);
 		registerTest(event, "electric_tool_tip_enchantment_accepted", 40, true, ElectricToolTagScenarios::fun02TipEnchantmentAccepted);
+
+		// MOD-364 (TC-ETOOL-001-FUN03..05): the same tag/enchant ground for the BASE tools — the shovel had
+		// no coverage here at all, having no upgrade — plus the audit of the ToolCase table that the
+		// eighteen shared EU tests are parameterised from.
+		registerTest(event, "electric_tool_base_membership_tags", 40, true, ElectricToolTagScenarios::fun03BaseMembershipTags);
+		registerTest(event, "electric_tool_base_enchantment_accepted", 40, true,
+				ElectricToolTagScenarios::fun04BaseEnchantmentAccepted);
+		registerTest(event, "electric_tool_energy_case_roster", 40, true,
+				ElectricToolTagScenarios::fun05EnergyCaseRosterIsHonest);
 
 		// MOD-379 (TC-SHOVEL-001-FUN01..04): the shovel's right-click interactions. This lane is the one
 		// that matters — the shovel could not path or douse on NeoForge at all until the item declared
@@ -854,6 +895,16 @@ public final class NeoForgeGameTests {
 		registerTest(event, "shovel_vanilla_paths_same_fixture", 40, true, ElectricShovelScenarios::fun02VanillaShovelPathsTheSameFixture);
 		registerTest(event, "shovel_path_making_is_free", 40, true, ElectricShovelScenarios::fun03PathMakingIsFree);
 		registerTest(event, "shovel_douses_lit_campfire", 40, true, ElectricShovelScenarios::fun04ShovelDousesLitCampfire);
+
+		// MOD-364 (TC-SHOVEL-001-FUN05..09, -PER01): the BASE tool's EU contract, six shared forms with the
+		// shovel's own ToolCase. The shovel had no speed or drain coverage of any kind before this.
+		registerTest(event, "shovel_charge_in_battery_box", 80, true, ElectricShovelScenarios::fun05ChargeInBatteryBox);
+		registerTest(event, "shovel_drain_on_mine_block", 40, true, ElectricShovelScenarios::fun06DrainOnMineBlock);
+		registerTest(event, "shovel_no_drain_below_cost", 40, true, ElectricShovelScenarios::fun07NoDrainBelowCost);
+		registerTest(event, "shovel_zero_hardness_free_snow_costs", 40, true,
+				ElectricShovelScenarios::fun08ZeroHardnessFreeSnowCosts);
+		registerTest(event, "shovel_speed_and_drops", 40, true, ElectricShovelScenarios::fun09SpeedAndDrops);
+		registerTest(event, "shovel_charge_round_trip", 40, true, ElectricShovelScenarios::per01ChargeRoundTrip);
 
 		// MOD-132 Electromagnet (suite TC-MAGNET-001) — same neutral bodies as the Fabric MagnetGameTest.
 		registerTest(event, "magnet_pulls_nearby_drop", 40, true, MagnetScenarios::fun01PullsNearbyDrop);
@@ -1533,6 +1584,8 @@ public final class NeoForgeGameTests {
 				NetworkAnalyzerScenarios::mod047_stopAtStorageStaysInSegment);
 		registerTest(event, "mod047_traverse_cap_flags_limit", 40, true,
 				NetworkAnalyzerScenarios::mod047_traverseCapFlagsLimit);
+		registerTest(event, "mod313_traverse_crosses_sinks_in_geometric_order", 40, true,
+				NetworkAnalyzerScenarios::mod313_traverseCrossesSinksInGeometricOrder);
 
 		// Teleporter station: buffer, privacy, drops, role in the network.
 		registerTest(event, "tc_tele001_fun02_buffer_matches_config", 40, true,
@@ -1703,6 +1756,11 @@ public final class NeoForgeGameTests {
 		// template, which silently made every drop count in this lane unreliable.
 		registerTest(event, "gametest_rig_structure_fits_rigs", 40, true,
 				AlaCommonScenarios::gametestRigStructureFitsRigs);
+		// MOD-417 guard: the manifest's block set reaches THIS loader's BlockEntityType through a
+		// deferred supplier rather than an eager register, so immutability has to be proven here too —
+		// Fabric being green says nothing about the NeoForge construction path.
+		registerTest(event, "block_entity_block_sets_are_immutable", 40, true,
+				AlaCommonScenarios::blockEntityBlockSetsAreImmutable);
 	}
 
 	/**

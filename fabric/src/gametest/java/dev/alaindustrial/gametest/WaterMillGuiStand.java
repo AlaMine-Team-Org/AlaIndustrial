@@ -1,7 +1,6 @@
 package dev.alaindustrial.gametest;
 
 import static dev.alaindustrial.gametest.VisualStandSupport.awaitMenuScreen;
-import static dev.alaindustrial.gametest.VisualStandSupport.differsAt;
 
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.client.screen.WaterMillScreen;
@@ -13,10 +12,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.nio.file.Path;
-import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -221,36 +217,25 @@ public final class WaterMillGuiStand {
         return path;
     }
 
-    /** Pixels that differ inside the water mill's status row, and nowhere else. */
+    /**
+     * Pixels that differ inside the water mill's status row, and nowhere else.
+     *
+     * <p>The comparison itself moved to {@link VisualStandSupport#differingPixelsInBand} when MOD-371
+     * needed the same band gate for the three wind mills. A third copy would have been a third private
+     * tolerance, which is what {@code VisualStandSupport} exists to prevent; the numbers that describe
+     * THIS screen's band stay here, where they can be argued about against this screen's layout.
+     */
     private static int differingPixelsInStatusRow(Path first, Path second) {
-        ShotRecorder.markComparedFiles(first, second);
+        return VisualStandSupport.differingPixelsInBand(first, second, waterMillWindowBox,
+                WATER_MILL_ROW_X, rowRightEdge(), WaterMillScreen.STATUS_TEXT_Y - 1, WATER_MILL_ROW_H);
+    }
+
+    /** The band's right edge: the window's own width, i.e. everything to the right of the energy bar. */
+    private static int rowRightEdge() {
         if (waterMillWindowBox == null) {
             throw new AssertionError("[GUITEST][MOD-354] the water mill window was never measured");
         }
-        try {
-            BufferedImage a = ImageIO.read(first.toFile());
-            BufferedImage b = ImageIO.read(second.toFile());
-            if (a == null || b == null) {
-                throw new AssertionError("[GUITEST][MOD-354] could not decode " + first + " / " + second);
-            }
-            // Screenshots are in physical pixels, the box in GUI-scaled units.
-            int scale = Math.max(1, a.getWidth() / waterMillWindowBox[3]);
-            int x0 = (waterMillWindowBox[0] + WATER_MILL_ROW_X) * scale;
-            int y0 = (waterMillWindowBox[1] + WaterMillScreen.STATUS_TEXT_Y - 1) * scale;
-            int x1 = Math.min(a.getWidth(), (waterMillWindowBox[0] + waterMillWindowBox[2]) * scale);
-            int y1 = Math.min(a.getHeight(), y0 + WATER_MILL_ROW_H * scale);
-            int differing = 0;
-            for (int y = Math.max(0, y0); y < y1; y++) {
-                for (int x = Math.max(0, x0); x < x1; x++) {
-                    if (differsAt(a, b, x, y)) {
-                        differing++;
-                    }
-                }
-            }
-            return differing;
-        } catch (IOException e) {
-            throw new AssertionError("[GUITEST][MOD-354] could not read screenshots for the status-row gate", e);
-        }
+        return waterMillWindowBox[2];
     }
 
     /** Requires two status rows to be visibly different pictures, above the measured noise floor. */
@@ -262,10 +247,10 @@ public final class WaterMillGuiStand {
             throw new AssertionError("[GUITEST][MOD-354] " + what + " changed only " + delta
                     + " px in the status row (noise floor " + noise + " px, required > " + required
                     + ") — the two states draw the same row, or the row does not draw at all. The band is "
-                    + "x " + WATER_MILL_ROW_X + "..176, y " + (WaterMillScreen.STATUS_TEXT_Y - 1) + ".."
-                    + (WaterMillScreen.STATUS_TEXT_Y - 1 + WATER_MILL_ROW_H) + " inside the window; if the "
-                    + "layout moved, move STATUS_TEXT_Y with it rather than widening this gate. Compare "
-                    + first.getFileName() + " with " + second.getFileName() + ".");
+                    + VisualStandSupport.describeBand(WATER_MILL_ROW_X, rowRightEdge(),
+                            WaterMillScreen.STATUS_TEXT_Y - 1, WATER_MILL_ROW_H)
+                    + "; if the layout moved, move STATUS_TEXT_Y with it rather than widening this gate. "
+                    + "Compare " + first.getFileName() + " with " + second.getFileName() + ".");
         }
     }
 }

@@ -346,7 +346,7 @@
             {
               "type": "text",
               "title": "Estación de carga",
-              "text": "Una placa que carga todo el equipo alimentado del jugador que se sitúa encima — inventario, mano secundaria y equipo puesto — sin ninguna interfaz que abrir."
+              "text": "Una placa que carga todo el equipo alimentado del jugador que se sitúa encima — inventario, mano secundaria y equipo puesto — sin necesidad de un solo clic."
             },
             {
               "type": "stats",
