@@ -184,12 +184,22 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity implements O
 	}
 
 	/**
-	 * Restarts an in-flight batch when its heat tier changes. Inputs are committed only on completion,
-	 * so resetting progress is lossless and prevents both a permanently paused cycle and a last-tick
-	 * upgrade exploit.
+	 * Restarts an in-flight batch when its heat tier <b>drops</b>. Inputs are committed only on
+	 * completion, so resetting progress is lossless and prevents a permanently paused cycle from
+	 * finishing at a heat the machine no longer has.
+	 *
+	 * <p><b>A rising tier does not restart it (MOD-418)</b>, though it used to: any change did. That was
+	 * safe while every heat source was either instantly there or instantly gone, and became a punishment
+	 * the moment the Electric Heater grew a warm-up — crossing from x2 to x3 mid-batch would have thrown
+	 * away up to a full operation's progress, so the block would have felt worse the better it got.
+	 *
+	 * <p>The last-tick upgrade exploit stays closed, because it was never this reset that closed it: the
+	 * output is scaled by {@link #cycleHeatLevel}, captured on the batch's first paid tick, so a batch
+	 * that sees a hotter source late still finishes at the tier it actually ran on. The next batch picks
+	 * up the new one.
 	 */
 	private void resetCycleForHeatChange(HeatSource currentHeat) {
-		if (cycleHeatLevel > 0 && currentHeat.level() != cycleHeatLevel) {
+		if (cycleHeatLevel > 0 && currentHeat.level() < cycleHeatLevel) {
 			progress = 0;
 			cycleHeatLevel = 0;
 			setChanged();

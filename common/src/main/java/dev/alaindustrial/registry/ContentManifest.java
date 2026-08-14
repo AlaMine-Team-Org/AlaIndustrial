@@ -117,6 +117,7 @@ import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.menu.EnergyCondenserMenu;
 import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.ChargePadMenu;
+import dev.alaindustrial.menu.ElectricHeaterMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import dev.alaindustrial.menu.DistillationColumnMenu;
@@ -257,6 +258,8 @@ public final class ContentManifest {
 			menu("distillation_column", DistillationColumnMenu::new,
 					s -> ModContent.DISTILLATION_COLUMN_MENU = s),
 			menu("vulcanizer", VulcanizerMenu::new, s -> ModContent.VULCANIZER_MENU = s),
+			// MOD-418 — the heater under it: a slotless readout for the warm-up ramp it now has.
+			menu("electric_heater", ElectricHeaterMenu::new, s -> ModContent.ELECTRIC_HEATER_MENU = s),
 			// MOD-064 — the alloy smelter: three interchangeable component slots, one result slot.
 			menu("alloy_smelter", AlloySmelterMenu::new, s -> ModContent.ALLOY_SMELTER_MENU = s),
 			menu("galvanic_bath", GalvanicBathMenu::new, s -> ModContent.GALVANIC_BATH_MENU = s),
@@ -635,8 +638,10 @@ public final class ContentManifest {
 			Map.entry("galvanic_bath", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("vulcanizer", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.lightLevel(ModBlockProperties::litLight))),
+			// MOD-418: the heater's glow is a four-rung thermometer, not the boolean litLight the rest of
+			// the machine family uses — see HeaterGlow.
 			Map.entry("electric_heater", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
-					.lightLevel(ModBlockProperties::litLight))),
+					.lightLevel(ModBlockProperties::heaterLight))),
 			// noOcclusion for the same reason as the drone dock: a 4px plate would otherwise cull the
 			// faces around it as if a solid cube sat there. The light is four-valued rather than lit/unlit
 			// — see ChargePadState.

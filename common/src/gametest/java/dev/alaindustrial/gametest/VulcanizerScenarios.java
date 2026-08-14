@@ -96,6 +96,35 @@ public final class VulcanizerScenarios {
 		return heater;
 	}
 
+	/** A heater buffer big enough for a full cold start plus a batch, whatever the config says. */
+	private static long heaterEu() {
+		return Config.electricHeaterBuffer;
+	}
+
+	/**
+	 * Places a heater under {@code machine} and runs its warm-up to completion (MOD-418).
+	 *
+	 * <p>Warmed the way the game warms it — its own ticks, spending its own EU, while the machine above
+	 * sits blocked on heat — and never by poking the field. The gate IS the mechanic here, so a scenario
+	 * that wants tier-3 heat has to prove the gate can be passed at all. The machine must already be
+	 * stocked when this is called, or the heater correctly refuses to light and stays cold.
+	 *
+	 * <p>The buffer is topped back up afterwards, so callers get a full heater and can still measure
+	 * spending against it.
+	 */
+	private static ElectricHeaterBlockEntity hotHeater(GameTestHelper helper, VulcanizerBlockEntity machine) {
+		ElectricHeaterBlockEntity heater = poweredHeater(helper, heaterEu());
+		machine.onHeatNeighbourChanged();
+		drive(machine, helper, 1); // the machine reports NO_HEAT, which is what lights the heater
+		drive(heater, helper, Config.electricHeaterWarmupTicks + 2);
+		if (!heater.isHot()) {
+			helper.fail("heater is not hot after " + Config.electricHeaterWarmupTicks
+					+ " warming ticks; permille=" + heater.heatPermille());
+		}
+		heater.getEnergyStorage().setAmountUntracked(heaterEu());
+		return heater;
+	}
+
 	private static void assertOutput(GameTestHelper helper, VulcanizerBlockEntity be, int count) {
 		ItemStack output = be.getItem(VulcanizerBlockEntity.OUTPUT_SLOT);
 		if (!output.is(ModContent.RUBBER.get()) || output.getCount() != count) {
@@ -112,12 +141,16 @@ public final class VulcanizerScenarios {
 				passiveHeat(helper, Blocks.CAMPFIRE);
 			} else if (expected == 2) {
 				passiveHeat(helper, Blocks.LAVA);
-			} else {
-				poweredHeater(helper, AMPLE_EU);
 			}
 			VulcanizerBlockEntity be = placeMachine(helper);
 			be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 			stock(be, 2);
+			if (expected == 3) {
+				// MOD-418: tier 3 is the WARMED heater, and lighting it needs the machine already
+				// stocked above — so unlike the passive sources this one goes in after the machine.
+				hotHeater(helper, be);
+				be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+			}
 
 			drive(be, helper, operationTicks());
 
@@ -126,6 +159,120 @@ public final class VulcanizerScenarios {
 				helper.fail("heat x" + expected + " must consume exactly one operation's inputs");
 				return;
 			}
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * The warm-up gate end to end (MOD-418): a cold heater is not a heat source, so the machine above
+	 * produces NOTHING until the ramp finishes — and then runs at x3 from its first working tick.
+	 *
+	 * <p>The first half is the real assertion and the reason the scenario exists: it is exactly what
+	 * separates "the stove has to be lit" from "the stove runs weaker while cold". Driving a full
+	 * operation's worth of ticks and demanding an empty output slot would fail on any design that let a
+	 * cold heater supply some lesser tier.
+	 */
+	public static void fun04ColdHeaterProducesNothingUntilWarm(GameTestHelper helper) {
+		ElectricHeaterBlockEntity heater = poweredHeater(helper, heaterEu());
+		VulcanizerBlockEntity be = placeMachine(helper);
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+		stock(be, 1);
+
+		if (heater.isHot() || heater.heatPermille() != 0) {
+			helper.fail("a freshly placed heater must start stone cold");
+			return;
+		}
+
+		// A whole operation's worth of machine ticks against a cold heater: nothing may come out.
+		drive(be, helper, operationTicks());
+		if (!be.getItem(VulcanizerBlockEntity.OUTPUT_SLOT).isEmpty()) {
+			helper.fail("a cold heater produced " + be.getItem(VulcanizerBlockEntity.OUTPUT_SLOT)
+					+ " — it must be no heat source at all until warm");
+			return;
+		}
+		if (!holdsOperations(be, 1)) {
+			helper.fail("waiting on heat must not consume inputs");
+			return;
+		}
+
+		// Now let it light, and the very next batch is the full tier.
+		drive(heater, helper, Config.electricHeaterWarmupTicks + 2);
+		if (!heater.isHot()) {
+			helper.fail("heater did not finish warming; permille=" + heater.heatPermille());
+			return;
+		}
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+		heater.getEnergyStorage().setAmountUntracked(heaterEu());
+		be.onHeatNeighbourChanged();
+		drive(be, helper, operationTicks());
+		assertOutput(helper, be, 3);
+		helper.succeed();
+	}
+
+	/**
+	 * Warming costs EU, and only while something is actually waiting on the heat (MOD-418).
+	 *
+	 * <p>This is the guard on the block's founding promise. The gate design gave the heater an idle draw
+	 * for the first time, and the obvious implementation — "warm whenever powered" — would have a heater
+	 * under an empty machine, or under no machine at all, quietly burning its buffer forever.
+	 */
+	public static void fun06LoneHeaterNeverWarmsAndSpendsNothing(GameTestHelper helper) {
+		ElectricHeaterBlockEntity heater = poweredHeater(helper, heaterEu());
+
+		// No machine above at all.
+		drive(heater, helper, Config.electricHeaterWarmupTicks);
+		if (heater.heatPermille() != 0 || heater.getEnergyStorage().getAmount() != heaterEu()) {
+			helper.fail("a heater with nothing above it warmed or spent EU: permille="
+					+ heater.heatPermille() + " energy=" + heater.getEnergyStorage().getAmount());
+			return;
+		}
+
+		// A machine above, but with nothing to make: still nothing to heat.
+		VulcanizerBlockEntity be = placeMachine(helper);
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+		drive(be, helper, 2);
+		drive(heater, helper, Config.electricHeaterWarmupTicks);
+		if (heater.heatPermille() != 0 || heater.getEnergyStorage().getAmount() != heaterEu()) {
+			helper.fail("a heater under an EMPTY machine warmed or spent EU: permille="
+					+ heater.heatPermille() + " energy=" + heater.getEnergyStorage().getAmount());
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A heater with nothing to do cools at HALF the rate it warmed (MOD-418), so a hopper pausing between
+	 * batches costs a little of the ramp rather than all of it.
+	 *
+	 * <p>The upper bound is the real assertion: cooling one step per idle tick — the obvious
+	 * implementation — would drop ~40 here and fail, which is what makes this a control rather than a
+	 * restatement of the code.
+	 */
+	public static void fun05IdleHeaterCoolsAtHalfRate(GameTestHelper helper) {
+		int warmup = Config.electricHeaterWarmupTicks;
+		VulcanizerBlockEntity be = placeMachine(helper);
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+		stock(be, 1);
+		ElectricHeaterBlockEntity heater = hotHeater(helper, be);
+
+		// Take the work away: an empty machine is not waiting on heat, so the heater is purely cooling.
+		be.setItem(VulcanizerBlockEntity.RAW_RUBBER_SLOT, ItemStack.EMPTY);
+		be.setItem(VulcanizerBlockEntity.SULFUR_SLOT, ItemStack.EMPTY);
+		drive(be, helper, 1);
+		long energyBefore = heater.getEnergyStorage().getAmount();
+		int before = heater.heatPermille();
+
+		drive(heater, helper, 40);
+
+		int droppedTicks = (before - heater.heatPermille()) * warmup / 1000;
+		if (droppedTicks < 18 || droppedTicks > 22) {
+			helper.fail("40 idle ticks must shed ~20 ticks of warm-up (half rate), shed " + droppedTicks);
+			return;
+		}
+		if (heater.getEnergyStorage().getAmount() != energyBefore) {
+			helper.fail("cooling must be free; heater spent "
+					+ (energyBefore - heater.getEnergyStorage().getAmount()) + " EU");
+			return;
 		}
 		helper.succeed();
 	}
@@ -206,16 +353,18 @@ public final class VulcanizerScenarios {
 
 	/** A full output freezes the operation before either the machine or electric heater spends EU. */
 	public static void con01OutputJamFreezesBothConsumers(GameTestHelper helper) {
-		ElectricHeaterBlockEntity heater = poweredHeater(helper, AMPLE_EU);
 		VulcanizerBlockEntity be = placeMachine(helper);
 		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		stock(be, 1);
+		ElectricHeaterBlockEntity heater = hotHeater(helper, be);
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(VulcanizerBlockEntity.OUTPUT_SLOT, new ItemStack(ModContent.RUBBER.get(), 64));
 
 		drive(be, helper, 3);
+		drive(heater, helper, 3);
 
 		if (be.getDataAccess().get(2) != 0 || be.getEnergyStorage().getAmount() != AMPLE_EU
-				|| heater.getEnergyStorage().getAmount() != AMPLE_EU) {
+				|| heater.getEnergyStorage().getAmount() != heaterEu()) {
 			helper.fail("blocked output spent progress or EU: progress=" + be.getDataAccess().get(2)
 					+ " machine=" + be.getEnergyStorage().getAmount()
 					+ " heater=" + heater.getEnergyStorage().getAmount());
@@ -226,14 +375,15 @@ public final class VulcanizerScenarios {
 
 	/** The heater pays exactly one configured tariff only when the Vulcanizer advances. */
 	public static void con02HeaterIsDemandDriven(GameTestHelper helper) {
-		ElectricHeaterBlockEntity heater = poweredHeater(helper, AMPLE_EU);
 		VulcanizerBlockEntity be = placeMachine(helper);
 		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		stock(be, 1);
+		ElectricHeaterBlockEntity heater = hotHeater(helper, be);
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		int cost = Config.electricHeaterEuPerTickEffective();
 
 		drive(be, helper, 1);
-		if (be.getDataAccess().get(2) != 1 || heater.getEnergyStorage().getAmount() != AMPLE_EU - cost) {
+		if (be.getDataAccess().get(2) != 1 || heater.getEnergyStorage().getAmount() != heaterEu() - cost) {
 			helper.fail("one useful tick must drain exactly " + cost + " heater EU");
 			return;
 		}
@@ -253,10 +403,16 @@ public final class VulcanizerScenarios {
 	/** The electric heater accepts the exact tariff, commits it once, and rejects a second draw. */
 	public static void con03HeaterTariffIsAtomicAtThreshold(GameTestHelper helper) {
 		int cost = Config.electricHeaterEuPerTickEffective();
-		ElectricHeaterBlockEntity heater = poweredHeater(helper, cost);
+		VulcanizerBlockEntity be = placeMachine(helper);
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+		stock(be, 1);
+		// Must be WARM before the tariff means anything: a cold heater is not a heat source (MOD-418),
+		// so it would not be discoverable at any buffer level.
+		ElectricHeaterBlockEntity heater = hotHeater(helper, be);
+		heater.getEnergyStorage().setAmountUntracked(cost);
 		if (WorldHeatSources.resolve(helper.getLevel(), helper.absolutePos(MACHINE))
 				!= HeatSource.ELECTRIC_HEATER) {
-			helper.fail("heater with the exact tariff was not discoverable");
+			helper.fail("warm heater with the exact tariff was not discoverable");
 			return;
 		}
 		if (!heater.consumeHeatTick() || heater.getEnergyStorage().getAmount() != 0L) {
@@ -270,36 +426,55 @@ public final class VulcanizerScenarios {
 		helper.succeed();
 	}
 
-	/** Raising heat restarts the batch at zero and completes with the new tier. */
-	public static void reg01HeatUpgradeRestartsCycle(GameTestHelper helper) {
+	/**
+	 * Raising heat mid-batch keeps the batch running and finishes it at the tier it started on; the NEXT
+	 * batch gets the better tier.
+	 *
+	 * <p>This scenario asserted the opposite until MOD-418 ("raising heat restarts the batch at zero").
+	 * Restarting was harmless while every source was instantly present or instantly gone, and became a
+	 * punishment the moment the Electric Heater grew a warm-up: crossing from x2 to x3 partway through
+	 * would throw away up to a whole operation, so the block would have felt worse the better it got.
+	 *
+	 * <p>The anti-cheese half is what the {@code assertOutput(..., 1)} pins: upgrading the source on the
+	 * batch's second tick must NOT turn that batch into x2 — it finishes at the captured tier, and only
+	 * the following one is worth more.
+	 */
+	public static void reg01HeatUpgradeFinishesBatchAtCapturedTier(GameTestHelper helper) {
+		// Campfire -> lava, because that is now the only upgrade that can happen mid-batch: an electric
+		// heater is either hot (tier 3) or not a heat source at all (MOD-418), so it has no partial tier
+		// to climb out of while a batch is running.
 		passiveHeat(helper, Blocks.CAMPFIRE);
 		VulcanizerBlockEntity be = placeMachine(helper);
 		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		stock(be, 1);
 		drive(be, helper, 1);
 		if (be.cycleHeatLevel() != 1) {
-			helper.fail("first campfire tick did not snapshot heat level 1");
+			helper.fail("first campfire tick did not snapshot heat level 1, got " + be.cycleHeatLevel());
 			return;
 		}
 
-		poweredHeater(helper, AMPLE_EU);
+		passiveHeat(helper, Blocks.LAVA);
 		be.onHeatNeighbourChanged();
-		if (be.getDataAccess().get(2) != 0 || be.cycleHeatLevel() != 0) {
-			helper.fail("heat upgrade did not restart the in-flight cycle");
+		if (be.getDataAccess().get(2) != 1 || be.cycleHeatLevel() != 1) {
+			helper.fail("heat upgrade threw away the in-flight cycle: progress="
+					+ be.getDataAccess().get(2) + " tier=" + be.cycleHeatLevel());
 			return;
 		}
-		drive(be, helper, operationTicks());
 
-		assertOutput(helper, be, 3);
+		// And the anti-cheese half: reaching tier 2 partway through must not pay this batch out at x2.
+		drive(be, helper, operationTicks());
+		assertOutput(helper, be, 1);
 		helper.succeed();
 	}
 
 	/** Dropping from electric heat to lava restarts and completes at x2 without replacing the machine. */
 	public static void reg03HeatDowngradeRestartsCycle(GameTestHelper helper) {
-		poweredHeater(helper, AMPLE_EU);
 		VulcanizerBlockEntity be = placeMachine(helper);
 		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		stock(be, 1);
+		// Must be a WARMED heater: only tier 3 is a downgrade when it becomes lava's tier 2 (MOD-418).
+		hotHeater(helper, be);
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		drive(be, helper, 1);
 		if (be.getDataAccess().get(2) != 1 || be.cycleHeatLevel() != 3) {
 			helper.fail("electric heat did not start a tier-3 cycle");

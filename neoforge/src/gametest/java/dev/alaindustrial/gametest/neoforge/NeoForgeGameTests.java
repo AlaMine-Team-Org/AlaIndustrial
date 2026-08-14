@@ -1366,8 +1366,14 @@ public final class NeoForgeGameTests {
 				VulcanizerScenarios::con02HeaterIsDemandDriven);
 		registerTest(event, "vulcanizer_heater_tariff_is_atomic_at_threshold", 40, true,
 				VulcanizerScenarios::con03HeaterTariffIsAtomicAtThreshold);
-		registerTest(event, "vulcanizer_heat_upgrade_restarts_cycle", 300, true,
-				VulcanizerScenarios::reg01HeatUpgradeRestartsCycle);
+		registerTest(event, "vulcanizer_heat_upgrade_finishes_batch_at_captured_tier", 300, true,
+				VulcanizerScenarios::reg01HeatUpgradeFinishesBatchAtCapturedTier);
+		registerTest(event, "electric_heater_cold_produces_nothing_until_warm", 700, true,
+				VulcanizerScenarios::fun04ColdHeaterProducesNothingUntilWarm);
+		registerTest(event, "electric_heater_idle_cools_at_half_rate", 400, true,
+				VulcanizerScenarios::fun05IdleHeaterCoolsAtHalfRate);
+		registerTest(event, "electric_heater_lone_never_warms", 500, true,
+				VulcanizerScenarios::fun06LoneHeaterNeverWarmsAndSpendsNothing);
 		registerTest(event, "vulcanizer_automation_keeps_inputs_separated", 40, true,
 				VulcanizerScenarios::reg02AutomationKeepsInputsSeparated);
 		registerTest(event, "vulcanizer_heat_downgrade_restarts_cycle", 300, true,

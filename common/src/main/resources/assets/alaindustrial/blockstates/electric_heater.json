@@ -1,12 +1,20 @@
 {
   "variants": {
-    "facing=north,lit=false": { "model": "alaindustrial:block/electric_heater" },
-    "facing=south,lit=false": { "model": "alaindustrial:block/electric_heater", "y": 180 },
-    "facing=west,lit=false": { "model": "alaindustrial:block/electric_heater", "y": 270 },
-    "facing=east,lit=false": { "model": "alaindustrial:block/electric_heater", "y": 90 },
-    "facing=north,lit=true": { "model": "alaindustrial:block/electric_heater_on" },
-    "facing=south,lit=true": { "model": "alaindustrial:block/electric_heater_on", "y": 180 },
-    "facing=west,lit=true": { "model": "alaindustrial:block/electric_heater_on", "y": 270 },
-    "facing=east,lit=true": { "model": "alaindustrial:block/electric_heater_on", "y": 90 }
+    "facing=north,glow=cold": { "model": "alaindustrial:block/electric_heater" },
+    "facing=south,glow=cold": { "model": "alaindustrial:block/electric_heater", "y": 180 },
+    "facing=west,glow=cold": { "model": "alaindustrial:block/electric_heater", "y": 270 },
+    "facing=east,glow=cold": { "model": "alaindustrial:block/electric_heater", "y": 90 },
+    "facing=north,glow=warm": { "model": "alaindustrial:block/electric_heater_warm" },
+    "facing=south,glow=warm": { "model": "alaindustrial:block/electric_heater_warm", "y": 180 },
+    "facing=west,glow=warm": { "model": "alaindustrial:block/electric_heater_warm", "y": 270 },
+    "facing=east,glow=warm": { "model": "alaindustrial:block/electric_heater_warm", "y": 90 },
+    "facing=north,glow=hot": { "model": "alaindustrial:block/electric_heater_hot" },
+    "facing=south,glow=hot": { "model": "alaindustrial:block/electric_heater_hot", "y": 180 },
+    "facing=west,glow=hot": { "model": "alaindustrial:block/electric_heater_hot", "y": 270 },
+    "facing=east,glow=hot": { "model": "alaindustrial:block/electric_heater_hot", "y": 90 },
+    "facing=north,glow=glowing": { "model": "alaindustrial:block/electric_heater_on" },
+    "facing=south,glow=glowing": { "model": "alaindustrial:block/electric_heater_on", "y": 180 },
+    "facing=west,glow=glowing": { "model": "alaindustrial:block/electric_heater_on", "y": 270 },
+    "facing=east,glow=glowing": { "model": "alaindustrial:block/electric_heater_on", "y": 90 }
   }
 }

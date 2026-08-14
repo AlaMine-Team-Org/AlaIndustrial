@@ -9,22 +9,36 @@ import java.util.Locale;
  * L1 tests. {@link WorldHeatSources} is the thin world-facing adapter.
  */
 public enum HeatSource {
-	NONE(0),
-	CAMPFIRE(1),
-	LAVA(2),
-	MAGMA(2),
-	LAVA_CAULDRON(2),
-	ELECTRIC_HEATER(3);
+	NONE(0, -1),
+	CAMPFIRE(1, 0),
+	LAVA(2, 1),
+	MAGMA(2, 1),
+	LAVA_CAULDRON(2, 1),
+	ELECTRIC_HEATER(3, 2);
 
 	private static final HeatSource[] VALUES = values();
 	private final int level;
+	private final int iconIndex;
 
-	HeatSource(int level) {
+	HeatSource(int level, int iconIndex) {
 		this.level = level;
+		this.iconIndex = iconIndex;
 	}
 
 	public int level() {
 		return level;
+	}
+
+	/**
+	 * Column of this source's icon in the Vulcanizer atlas, or {@code -1} for "draw nothing".
+	 *
+	 * <p>Keyed on the source rather than derived from {@link #level()}, which is what the screen used to
+	 * do. The two happen to agree today, and the derivation is the kind that stops being true quietly:
+	 * it only holds while every level maps to exactly one picture, so the first source that shares a
+	 * level with a different-looking one would silently draw the wrong icon rather than fail to compile.
+	 */
+	public int iconIndex() {
+		return iconIndex;
 	}
 
 	/** One unit of recipe output per heat level; no heat produces nothing. */

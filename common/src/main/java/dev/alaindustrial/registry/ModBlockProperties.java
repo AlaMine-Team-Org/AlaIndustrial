@@ -2,6 +2,7 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.block.ChargePadBlock;
 import dev.alaindustrial.block.ChargePadState;
+import dev.alaindustrial.block.ElectricHeaterBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -65,6 +66,16 @@ public final class ModBlockProperties {
 	 */
 	public static int chargePadLight(BlockState state) {
 		return state.getValue(ChargePadBlock.STATE).lightLevel();
+	}
+
+	/**
+	 * Per-rung light emission for the Electric Heater (MOD-418). Like {@link #chargePadLight} this reads
+	 * a four-valued property instead of {@code lit}, and for the same reason the levels live on
+	 * {@link dev.alaindustrial.block.HeaterGlow} rather than here: the enum is where "how hot does this
+	 * look" is decided, and a heater ramps rather than switches.
+	 */
+	public static int heaterLight(BlockState state) {
+		return state.getValue(ElectricHeaterBlock.GLOW).lightLevel();
 	}
 
 	/**

@@ -17,8 +17,11 @@ public final class WorldHeatSources {
 	public static HeatSource resolve(Level level, BlockPos machinePos) {
 		BlockPos below = machinePos.below();
 		BlockState state = level.getBlockState(below);
+		// MOD-418: a heater is a heat source only once it is HOT. Below that it is a stove being lit —
+		// it supplies nothing and the machine above waits, rather than running at some partial tier.
 		if (state.is(ModContent.ELECTRIC_HEATER.get())
 				&& level.getBlockEntity(below) instanceof ElectricHeaterBlockEntity heater
+				&& heater.isHot()
 				&& heater.canSupplyHeatTick()) {
 			return HeatSource.ELECTRIC_HEATER;
 		}

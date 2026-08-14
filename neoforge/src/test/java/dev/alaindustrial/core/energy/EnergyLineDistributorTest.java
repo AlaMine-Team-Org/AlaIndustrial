@@ -846,6 +846,64 @@ class EnergyLineDistributorTest {
 		assertEquals(12, line.buffers.get(C2).getAmount(), "the fill pass did not rob the corridor");
 	}
 
+	// --- MOD-419: the one donor the MOD-413 guard structurally cannot protect ---
+
+	/** Terminal-corridor rig: the machine hangs off C1, and a spur hangs off C1 as well. */
+	private static final BlockPos T_MACHINE = new BlockPos(0, 0, 0);
+	private static final BlockPos T_C1 = new BlockPos(1, 0, 0);
+	private static final BlockPos T_C2 = new BlockPos(2, 0, 0);
+	private static final BlockPos T_C3 = new BlockPos(3, 0, 0);
+	private static final BlockPos T_SPUR = new BlockPos(1, 1, 0);
+	private static final BlockPos T_GEN = new BlockPos(4, 0, 0);
+
+	/**
+	 * A waiting machine on the LAST cable of the corridor must keep being fed (MOD-419).
+	 *
+	 * <p>The rig is the player's world reduced to five blocks: a machine on {@code C1}, and a spur cable
+	 * hanging off that same {@code C1} — the shape you get for free by stacking two machines, because the
+	 * cable feeding the lower one is then also adjacent to the cable column serving the upper one.
+	 *
+	 * <p>{@code C1} is the terminal corridor cable, so its flow potential is 1 — the field minimum, since
+	 * {@code floodFromSinks} seeds every cable touching a waiting sink at exactly 1. That makes it the one
+	 * donor {@link EnergyLineDistributor#donorStillOwedDownhill} can never defend: the guard only looks
+	 * for a strictly-lower CABLE neighbour with room, and nothing can be strictly lower than the minimum.
+	 * The packet therefore ping-pongs forever — the sweep pushes it spur→C1 downhill, the stranded fill
+	 * takes it straight back C1→spur — and the machine, served at the START of the tick, always finds C1
+	 * empty.
+	 *
+	 * <p>Started from the exact frozen state read out of the save: spur brim-full, terminal cable at zero.
+	 * On the code this test was written against the machine receives <b>nothing, ever</b>.
+	 */
+	@Test
+	void fullTick_keepsFeedingAMachineOnTheTerminalCorridorCable() {
+		LineFixture line = new LineFixture();
+		line.cable(T_C1, 1, 12, 0);    // terminal cable, emptied by the previous tick's siphon
+		line.cable(T_C2, 2, 12, 12);
+		line.cable(T_C3, 3, 12, 12);
+		line.cable(T_SPUR, 2, 12, 12); // the spur is already full — it wants nothing, it just churns
+		line.strandedOrder = List.of(T_SPUR);
+		line.producerDistance.putAll(Map.of(T_C3, 1, T_C2, 2, T_C1, 3, T_SPUR, 4));
+
+		StubPort machine = new StubPort(T_MACHINE, 10_000, 0, false, true);
+		List<EnergyLineDistributor.LiveConsumer> consumers =
+				List.of(new EnergyLineDistributor.LiveConsumer(T_MACHINE, machine, 10_000));
+		StubPort gen = new StubPort(T_GEN, 10_000, 10_000, true, false);
+		EnergyLineDistributor d = line.distributor(Map.of(T_MACHINE, 1));
+
+		long delivered = 0;
+		for (int i = 0; i < 40; i++) {
+			delivered += d.serveConsumersFromLine(consumers, 32, COPPER_LOSS, txns.txn, 0);
+			d.chargeAndPropagateLine(List.of(new EnergyLineDistributor.LiveProducer(T_GEN, gen)), List.of(),
+					0L, 10_000L, 32, txns.txn, 0);
+		}
+
+		assertTrue(delivered > 0,
+				"MOD-419: the machine on the terminal corridor cable was starved for 40 ticks while the "
+						+ "generator was full — the stranded fill siphoned its cable every tick");
+		assertTrue(machine.getAmount() >= 12,
+				"the machine should keep filling, not just catch one stray packet; got " + machine.getAmount());
+	}
+
 	/**
 	 * One hop per pass, the same inertia the downhill sweep has. The corridor is saturated end to end
 	 * (MOD-413: a donor with downhill room is delivery in transit and untouchable, so only a saturated

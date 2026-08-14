@@ -3,6 +3,8 @@ package dev.alaindustrial.gametest;
 import static dev.alaindustrial.gametest.VisualStandSupport.awaitMenuScreen;
 import static dev.alaindustrial.gametest.VisualStandSupport.takeCleanScreenshot;
 
+import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
+import dev.alaindustrial.block.entity.ElectricHeaterStatus;
 import dev.alaindustrial.menu.MachineMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -130,6 +132,17 @@ public final class MachineGuiStands {
         shootMenuWithState(context, "gui_electric_furnace_full",
                 ModContent.ELECTRIC_FURNACE_MENU.get(), "Electric Furnace",
                 CAP, CAP, BURN, BURN);
+
+        // ── Electric Heater (MOD-418) — the two rungs that change what the machine above gets ───────
+        // The block's own catalogue frame can only ever show a cold, unattached heater, because the
+        // stand opens it from a bare block: warm-up 0 %, both lower rows a dash. That leaves the whole
+        // point of the screen — the thermometer fill, its colour ramp and the x2/x3 row — drawn by no
+        // automated check at all. These two inject the state instead.
+        shootElectricHeater(context, "gui_electric_heater_warming", CAP * 3 / 4, CAP,
+                470, 4, ElectricHeaterStatus.WARMING);
+        // Fully warmed: the thermometer must cap in the distinct ready colour, not merely "more orange".
+        shootElectricHeater(context, "gui_electric_heater_hot", CAP, CAP,
+                1000, 4, ElectricHeaterStatus.HOT);
 
         // ── Sawmill (MOD-215) — three states ─────────────────────────────────────────
         // The machine has its own atlas, its own saw-blade progress sprite and a row of mode buttons
@@ -366,6 +379,36 @@ public final class MachineGuiStands {
                 menu.injectTestChannel(4, mode);
                 menu.injectTestChannel(5, charge);
                 menu.injectTestChannel(6, formed);
+            }
+        });
+        awaitMenuScreen(context);
+        java.nio.file.Path path = takeCleanScreenshot(context, name);
+        LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
+    }
+
+    /**
+     * Electric Heater variant of {@link #shootMenuWithState} (MOD-418): also fills the three channels
+     * the block adds — the warm-up permille, the billed rate and the status ordinal.
+     *
+     * <p>Needed for the same reason the incubator's variant is: those three channels ARE this screen.
+     * The catalogue frame in {@code ScreensClientGameTest} opens a bare block, so it can only ever
+     * photograph a cold, unattached heater with both lower rows dashed — the thermometer fill and its
+     * colour ramp would be drawn by no check at all.
+     */
+    private static void shootElectricHeater(ClientGameTestContext context, String name,
+                                            int energy, int capacity, int heatPermille, int rate,
+                                            ElectricHeaterStatus status) {
+        LOG.info("[GUITEST] opening {} (E={}/{} heat={} rate={} status={})",
+                name, energy, capacity, heatPermille, rate, status);
+        context.runOnClient(mc -> {
+            MenuScreens.create(ModContent.ELECTRIC_HEATER_MENU.get(), mc, 0,
+                    Component.literal("Electric Heater"));
+            if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                    && acs.getMenu() instanceof MachineMenu menu) {
+                menu.injectTestData(energy, capacity, 0, 0);
+                menu.injectTestChannel(ElectricHeaterBlockEntity.DATA_HEAT, heatPermille);
+                menu.injectTestChannel(ElectricHeaterBlockEntity.DATA_RATE, rate);
+                menu.injectTestChannel(ElectricHeaterBlockEntity.DATA_STATUS, status.ordinal());
             }
         });
         awaitMenuScreen(context);

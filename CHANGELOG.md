@@ -1,16 +1,16 @@
-## 0.1.94
+## 0.1.95
 
-<p><img alt="Charging Station screen in Ala Industrial 0.1.94" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.94/release-media/v0.1.94/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.95 electric heater screen" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.95/release-media/v0.1.95/changelog.png" width="720"></p>
 
-> **The Charging Station finally tells you what it is doing.** Right-click it and every number you used to guess at is on screen.
+The Electric Heater is now a furnace you have to light, and a machine sitting under another machine finally gets power.
 
-### New
+### Improved
 
-- **A screen on the Charging Station.** Right-click shows stored energy, how fast it hands charge out, how many items it is filling, and the time left until everything is topped up.
-- **The plate clicks.** Stepping on and stepping off each make a metal pressure-plate click, so you hear it engage while looking the other way. Standing on the plate still never opens the screen — step on, walk off, same as before.
+- **The Electric Heater warms up.** Cold, it gives no heat at all — the Vulcanizer above waits about ten seconds, then runs at ×3 straight away.
+- **It has a screen.** Warm-up thermometer, energy reserve, and what it actually costs per tick.
+- **You can read it without opening anything.** The coils glow brighter as they heat, and a fully warmed heater lets heat escape the seam with the machine above.
+- **It costs more to run.** 6 EU/t and a 2400 EU buffer — one cold start plus one batch even with the cable cut. With nothing to heat it still costs nothing.
 
 ### Fixed
 
-- **Your dashboard stops reshuffling.** Generators putting out the same amount kept swapping rows every time you rejoined a world. They now hold one fixed order.
-- **The Network Analyzer draws the same build the same way.** Scanning one setup twice could lay the highlight out differently, and the result depended on where in the world your base happened to stand.
-- **The config file no longer lies about the hoe.** It said tilling was free. Tilling costs 50 EU, and has ever since it became a paid action.
+- **A machine under another machine no longer starves.** It used to take a little power and then freeze forever, while moving it anywhere else charged it instantly.

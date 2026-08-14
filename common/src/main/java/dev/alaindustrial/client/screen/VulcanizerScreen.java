@@ -59,10 +59,12 @@ public final class VulcanizerScreen extends ProgressMachineScreen<VulcanizerMenu
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		super.drawMachineFrame(graphics, mouseX, mouseY, partialTick);
-		int level = menu.getHeatSource().level();
-		if (level > 0) {
+		// Indexed by SOURCE, not by heat level (MOD-418): a warming Electric Heater supplies level 2, and
+		// the old level-indexed lookup would have drawn the lava icon over a plainly electric machine.
+		int icon = menu.getHeatSource().iconIndex();
+		if (icon >= 0) {
 			graphics.blit(RenderPipelines.GUI_TEXTURED, texture(), leftPos + HEAT_X, topPos + HEAT_Y,
-					176.0F + (level - 1) * HEAT_W, HEAT_ICON_V, HEAT_W, HEAT_H, TEX_SIZE, TEX_SIZE);
+					176.0F + icon * HEAT_W, HEAT_ICON_V, HEAT_W, HEAT_H, TEX_SIZE, TEX_SIZE);
 		}
 	}
 

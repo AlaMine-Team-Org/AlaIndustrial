@@ -267,8 +267,11 @@ public final class DemoStand {
 			polymerizer.wake();
 		}
 		// Vulcanizer (MOD-258): the electric heater occupies the block directly below the machine.
-		// Both buffers are charged and both positional inputs are stocked, so the stand demonstrates
-		// the tier-3 setup and its x3 rubber output rather than an idle shell.
+		// Both buffers are charged and both positional inputs are stocked, so the stand demonstrates a
+		// running pair rather than an idle shell. The heater is placed COLD on purpose (MOD-418): the
+		// pair opens at x2 with the thermometer climbing and settles at x3 once the first batch has paid
+		// for the warm-up, which is the mechanic worth showing — a stand pre-heated behind the player's
+		// back would show the destination and hide the ramp.
 		set(level, origin, 26, 1, 10, ModContent.ELECTRIC_HEATER.get());
 		chargeBuffer(level, origin, 26, 1, 10);
 		set(level, origin, 26, 2, 10, ModContent.VULCANIZER.get());

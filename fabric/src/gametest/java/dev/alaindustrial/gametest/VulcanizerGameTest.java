@@ -16,6 +16,23 @@ public class VulcanizerGameTest {
 		VulcanizerScenarios.fun02AllPassiveHeatSourcesResolve(helper);
 	}
 
+	/** MOD-418: a stalled operation, then a full warm-up, then a real batch — a wide tick budget. */
+	@GameTest(maxTicks = 700)
+	public void tcEheat001Fun04_coldHeaterProducesNothingUntilWarm(GameTestHelper helper) {
+		VulcanizerScenarios.fun04ColdHeaterProducesNothingUntilWarm(helper);
+	}
+
+	@GameTest(maxTicks = 400)
+	public void tcEheat001Fun05_idleHeaterCoolsAtHalfRate(GameTestHelper helper) {
+		VulcanizerScenarios.fun05IdleHeaterCoolsAtHalfRate(helper);
+	}
+
+	/** MOD-418: the guard on "no work above means no cost" — drives two full warm-up budgets. */
+	@GameTest(maxTicks = 500)
+	public void tcEheat001Fun06_loneHeaterNeverWarms(GameTestHelper helper) {
+		VulcanizerScenarios.fun06LoneHeaterNeverWarmsAndSpendsNothing(helper);
+	}
+
 	@GameTest
 	public void tcVulc001Neg01_noHeatNoWork(GameTestHelper helper) {
 		VulcanizerScenarios.neg01NoHeatNoWork(helper);
@@ -52,8 +69,8 @@ public class VulcanizerGameTest {
 	}
 
 	@GameTest(maxTicks = 300)
-	public void tcVulc001Reg01_heatUpgradeRestartsCycle(GameTestHelper helper) {
-		VulcanizerScenarios.reg01HeatUpgradeRestartsCycle(helper);
+	public void tcVulc001Reg01_heatUpgradeFinishesBatchAtCapturedTier(GameTestHelper helper) {
+		VulcanizerScenarios.reg01HeatUpgradeFinishesBatchAtCapturedTier(helper);
 	}
 
 	@GameTest

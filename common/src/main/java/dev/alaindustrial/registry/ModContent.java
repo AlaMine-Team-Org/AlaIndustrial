@@ -8,6 +8,7 @@ import dev.alaindustrial.menu.MobRepellerMenu;
 import dev.alaindustrial.menu.MobRepellerMvMenu;
 import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.ChargePadMenu;
+import dev.alaindustrial.menu.ElectricHeaterMenu;
 import dev.alaindustrial.menu.CanningMachineMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
@@ -556,6 +557,8 @@ public final class ModContent {
 	public static Supplier<MenuType<PolymerizerMenu>> POLYMERIZER_MENU = unbound("POLYMERIZER_MENU");
 	public static Supplier<MenuType<DistillationColumnMenu>> DISTILLATION_COLUMN_MENU = unbound("DISTILLATION_COLUMN_MENU");
 	public static Supplier<MenuType<VulcanizerMenu>> VULCANIZER_MENU = unbound("VULCANIZER_MENU");
+	/** Electric Heater readout (MOD-418): warm-up thermometer, heat multiplier and the billed rate. */
+	public static Supplier<MenuType<ElectricHeaterMenu>> ELECTRIC_HEATER_MENU = unbound("ELECTRIC_HEATER_MENU");
 	public static Supplier<MenuType<AlloySmelterMenu>> ALLOY_SMELTER_MENU = unbound("ALLOY_SMELTER_MENU");
 	public static Supplier<MenuType<GalvanicBathMenu>> GALVANIC_BATH_MENU = unbound("GALVANIC_BATH_MENU");
 	public static Supplier<MenuType<IncubatorMenu>> INCUBATOR_MENU = unbound("INCUBATOR_MENU");

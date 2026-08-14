@@ -276,6 +276,7 @@ class ConfigSnapshotTest {
 		SENTINELS.put("fluxweaveStepHeightBonus", 47);
 		SENTINELS.put("fluxweaveRegenEuPerHeal", 339);
 		SENTINELS.put("electricHeaterEuPerTick", 5);
+		SENTINELS.put("electricHeaterWarmupTicks", 173);
 		SENTINELS.put("ironFurnaceCookTime", 160);
 		// Player stats / XP.
 		SENTINELS.put("euPerXp", 1500);

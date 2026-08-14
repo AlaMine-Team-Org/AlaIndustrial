@@ -191,6 +191,7 @@ pitest {
                      // that method is mutated instead of silently uncounted.
                      'dev.alaindustrial.block.entity.Overclockable',
                      'dev.alaindustrial.block.entity.DistillationColumnStatus',
+                     'dev.alaindustrial.block.entity.ElectricHeaterStatus',
                      'dev.alaindustrial.block.entity.GalvanicBathStatus',
                      'dev.alaindustrial.block.entity.GardenDroneAction',
                      'dev.alaindustrial.block.entity.GardenDroneStatus',

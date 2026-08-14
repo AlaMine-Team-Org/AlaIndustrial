@@ -49,6 +49,13 @@ final class EnergyLineDistributor {
 	 */
 	private static final long MACHINE_WARD_WEIGHT = 2L;
 
+	/**
+	 * Flow potential of a cable that a waiting sink is standing on, and therefore the minimum of the
+	 * whole sink field. Mirrors the literal {@code EnergyTopologyCache.floodFromSinks} seeds its frontier
+	 * with; the two must agree, and this is the only place outside that method that needs to know it.
+	 */
+	private static final int SINK_ADJACENT_POTENTIAL = 1;
+
 	private final Predicate<BlockPos> isCable;
 	private final Function<BlockPos, EnergyBuffer> cableBufferAt;
 	private final Function<BlockPos, Integer> consumerDistance;
@@ -636,11 +643,23 @@ final class EnergyLineDistributor {
 	 * is full has the corridor genuinely nowhere to put the packet — that is the surplus the stranded
 	 * fill exists to mop up. Reads {@link #flowPotential}, which in sink mode (the only mode with a
 	 * non-empty stranded set) is the distance to the nearest waiting sink.
+	 *
+	 * <p><b>MOD-419.</b> Asking only about cable neighbours left exactly one donor undefendable, and it
+	 * was the most important one: the LAST cable of the corridor, the one a waiting machine actually
+	 * drinks from. {@code floodFromSinks} seeds every cable touching a waiting sink at
+	 * {@value #SINK_ADJACENT_POTENTIAL}, so such a cable sits at the field minimum and can never have a
+	 * strictly-lower neighbour — the loop below could only ever answer "owes nothing", and the stranded
+	 * fill emptied it every single tick. The machine, served at the start of the next tick, then found
+	 * its cable at zero forever, while the network reported full generators and a healthy demand.
+	 * A terminal cable owes its packet too; it just owes it to a consumer rather than to another cable.
 	 */
 	private boolean donorStillOwedDownhill(BlockPos donorPos) {
 		Integer donorPotential = flowPotential.apply(donorPos);
 		if (donorPotential == null) {
 			return false;
+		}
+		if (donorPotential <= SINK_ADJACENT_POTENTIAL) {
+			return true;
 		}
 		for (Direction dir : DIRECTIONS) {
 			BlockPos np = donorPos.relative(dir);

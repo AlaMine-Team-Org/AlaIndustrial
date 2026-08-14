@@ -82,6 +82,11 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // the whole tower — see placeScreenBlock.
             new Screen("distillation_column", "distillation_column", "Distillation Column"),
             new Screen("vulcanizer", "vulcanizer", "Vulcanizer"),
+            // MOD-418: the heater under it, the mod's second slotless screen. The stand places a bare,
+            // unpowered heater with nothing above it, so the frame captures the resting state — an empty
+            // thermometer beside an empty energy bar, and the two lower rows drawn as a dash. That is the
+            // state worth guarding: regressing it into "x0 heat at 0 EU/t" would read as a measurement.
+            new Screen("electric_heater", "electric_heater", "Electric Heater"),
             new Screen("canning_machine", "canning_machine", "Canning Machine"),
             new Screen("alloy_smelter", "alloy_smelter", "Alloy Smelter"),
             new Screen("galvanic_bath", "galvanic_bath", "Galvanic Bath"),

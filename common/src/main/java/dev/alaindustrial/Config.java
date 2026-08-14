@@ -314,9 +314,10 @@ public final class Config {
 	/** Shared buffer for ordinary LV processing machines: electric furnace, compressor, extractor,
 	 * sawmill, polymerizer and vulcanizer. */
 	public static int machineBuffer = 800;
-	/** Electric Heater EU buffer. At the default 2 EU/t it holds two complete 200-tick
-	 * vulcanization operations and smooths a thin LV supply without becoming bulk storage. */
-	public static int electricHeaterBuffer = 800;
+	/** Electric Heater EU buffer. At the default 6 EU/t it holds one cold start (1200 EU) plus one
+	 * complete 200-tick vulcanization (1200 EU) and smooths a thin LV supply without becoming bulk
+	 * storage — a fully charged heater can light itself and serve one batch with the cable cut. */
+	public static int electricHeaterBuffer = 2400;
 	/** Pump EU buffer. Sized to hold several buckets' worth of pump cost (pumpEuPerBucket = 1000) so the
 	 * energy network can keep the pump fed without stalling just below the per-bucket threshold. NOTE
 	 * (MOD-070): a single copper cable now carries {@link #cableBuffer} EU/tick (the segment buffer, e.g.
@@ -731,9 +732,29 @@ public final class Config {
 	 * thread: the bath is meant to be thirsty, so a full 10-bucket tank yields only two threads and the
 	 * player is pushed to pipe water in from a pump rather than carry it. */
 	public static int galvanicBathWaterPerOp = 4000;
-	/** Electric Heater (MOD-258): EU/t spent only while a Vulcanizer directly above it advances.
-	 * Idle heating is free; the speed multiplier scales this rate together with processing duration. */
-	public static int electricHeaterEuPerTick = 2;
+	/**
+	 * Electric Heater (MOD-258): EU/t it spends, both while warming up and while a Vulcanizer directly
+	 * above it advances. Three times the ordinary machine tariff on purpose — heat is the block's whole
+	 * product, and at the old 2 EU/t it was cheaper than the machine it served, which read as free.
+	 *
+	 * <p>The pair therefore draws {@code 6 + 2 = 8 EU/t}, still inside a copper cable's 12; the first
+	 * overclocker chip is what pushes it onto gold, which is the intended progression rather than an
+	 * accident.
+	 */
+	public static int electricHeaterEuPerTick = 6;
+	/**
+	 * Electric Heater (MOD-418): ticks a cold heater spends warming before it is a heat source at all.
+	 *
+	 * <p>Until it is hot it supplies NOTHING, so the machine above simply waits — the heater is a stove
+	 * being lit, not a dial. Warming is its own idle draw at {@link #electricHeaterEuPerTick}; the block
+	 * still costs nothing when there is no work waiting on it, because it only warms while a machine
+	 * above is actually blocked on heat. Cooling runs at half this rate, so a brief pause in the input
+	 * feed costs a slice of the ramp rather than all of it.
+	 *
+	 * <p>200 keeps the arithmetic memorable: warming costs 1200 EU, exactly what one vulcanization costs,
+	 * so {@link #electricHeaterBuffer} is one cold start plus one batch.
+	 */
+	public static int electricHeaterWarmupTicks = 200;
 
 	// --- Incubator (MOD-118): the mod's most energy-hungry LV machine. ---
 	/**
@@ -1591,6 +1612,8 @@ public final class Config {
 				() -> galvanicBathWaterPerOp, v -> galvanicBathWaterPerOp = v, 1),
 			new IntField("electricHeaterEuPerTick", Section.MACHINES, "EU/t an Electric Heater spends while the Vulcanizer directly above it advances; idle heater draws nothing.",
 				() -> electricHeaterEuPerTick, v -> electricHeaterEuPerTick = v, 1),
+			new IntField("electricHeaterWarmupTicks", Section.MACHINES, "MOD-418: paid heat ticks a cold Electric Heater needs before it supplies tier-3 heat (x3 output); until then it supplies tier 2 (x2). Cooling is twice as slow.",
+				() -> electricHeaterWarmupTicks, v -> electricHeaterWarmupTicks = v, 1),
 			new IntField("ironFurnaceCookTime", Section.MACHINES, "Ticks the (fuel-based) iron furnace takes to smelt one item. Vanilla furnace = 200.",
 				() -> ironFurnaceCookTime, v -> ironFurnaceCookTime = v, 1),
 			new IntField("euPerXp", Section.PLAYER, "MOD-133 player profile: useful EU (from completed machine operations) per 1 point of mod XP. Higher = slower progression. Starting value, tune after playtest.",
