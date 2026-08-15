@@ -58,6 +58,7 @@ import dev.alaindustrial.gametest.TemperedIronToolScenarios;
 import dev.alaindustrial.gametest.ItemPipeScenarios;
 import dev.alaindustrial.gametest.PersistenceScenarios;
 import dev.alaindustrial.gametest.EnrichedUraniumTorchScenarios;
+import dev.alaindustrial.gametest.ComponentRepairBenchScenarios;
 import dev.alaindustrial.gametest.ComponentTierScenarios;
 import dev.alaindustrial.gametest.WaterMillWheelScenarios;
 import dev.alaindustrial.gametest.CablePlacementScenarios;
@@ -1436,6 +1437,31 @@ public final class NeoForgeGameTests {
 				ComponentTierScenarios::rotorSlotAcceptsEveryGrade);
 		registerTest(event, "component_tier_wheel_slot_accepts_every_grade", 40, true,
 				ComponentTierScenarios::wheelSlotAcceptsEveryGrade);
+		// MOD-384: the component repair bench. Same scenario bodies the Fabric lane runs. The evolution
+		// carry-over scenario is Fabric-only for the same reason as the wind-mill ones above — it needs an
+		// open sky column and this lane's registerTest hardcodes skyAccess=false.
+		registerTest(event, "repair_bench_repairs_worn_rotor", 900, true,
+				ComponentRepairBenchScenarios::repairsWornRotorAndLowersCeiling);
+		registerTest(event, "repair_bench_ceiling_ladder_is_linear", 3200, true,
+				ComponentRepairBenchScenarios::ceilingLadderIsLinearAcrossRepeatedRepairs);
+		registerTest(event, "repair_bench_every_grade_has_its_material", 4200, true,
+				ComponentRepairBenchScenarios::everyGradeRepairsWithItsOwnMaterial);
+		registerTest(event, "repair_bench_missing_material_freezes_progress", 1000, true,
+				ComponentRepairBenchScenarios::missingMaterialFreezesProgressRatherThanResetting);
+		registerTest(event, "repair_bench_spent_component_is_refused", 1600, true,
+				ComponentRepairBenchScenarios::spentComponentIsRefusedWithoutSpendingAnything);
+		registerTest(event, "repair_bench_intact_component_is_not_touched", 900, true,
+				ComponentRepairBenchScenarios::intactComponentIsNotTouched);
+		registerTest(event, "repair_bench_wrong_grade_material_rejected", 900, true,
+				ComponentRepairBenchScenarios::wrongGradeMaterialIsRejected);
+		registerTest(event, "repair_bench_slots_reject_what_they_should", 40, true,
+				ComponentRepairBenchScenarios::slotsRejectWhatTheyShould);
+		registerTest(event, "repair_bench_extraction_opens_when_done", 900, true,
+				ComponentRepairBenchScenarios::extractionOpensOnlyWhenTheBenchIsDone);
+		registerTest(event, "repair_bench_repaired_part_survives_round_trip", 900, true,
+				ComponentRepairBenchScenarios::repairedPartSurvivesNbtRoundTrip);
+		registerTest(event, "repair_bench_repaired_wheel_still_wears", 1400, true,
+				ComponentRepairBenchScenarios::repairedWheelStillWearsInTheMill);
 		// The wind-mill grade scenarios (output comparison, cap, evolution carry-over) are Fabric-only:
 		// they need an open sky column, and this lane's registerTest hardcodes skyAccess=false. Same
 		// split the existing wind-mill rate tests already live with. What DOES run on both loaders is

@@ -34,17 +34,23 @@ public final class AlaInfoCategory implements DisplayCategory<AlaInfoDisplay> {
 	private final me.shedaniel.rei.api.common.category.CategoryIdentifier<AlaInfoDisplay> categoryId;
 	private final String titleKey;
 	private final net.minecraft.world.level.ItemLike icon;
+	private final List<dev.alaindustrial.client.compat.RecipeViewerInfo.Entry> pages;
 
 	/**
 	 * @param categoryId which informational category this instance serves — the class is shared by the
 	 *                   evolution pages and the machine-info pages (MOD-420), which differ only in id,
 	 *                   title and icon.
+	 * @param pages      the entries this category will show. Needed because {@link #getDisplayHeight()}
+	 *                   is asked for ONE height for the whole category (REI gives it no display), so the
+	 *                   category has to size itself against its tallest page — see MOD-422.
 	 */
 	public AlaInfoCategory(me.shedaniel.rei.api.common.category.CategoryIdentifier<AlaInfoDisplay> categoryId,
-			String titleKey, net.minecraft.world.level.ItemLike icon) {
+			String titleKey, net.minecraft.world.level.ItemLike icon,
+			List<dev.alaindustrial.client.compat.RecipeViewerInfo.Entry> pages) {
 		this.categoryId = categoryId;
 		this.titleKey = titleKey;
 		this.icon = icon;
+		this.pages = pages;
 	}
 
 	private static final int PADDING_X = 6;
@@ -52,8 +58,33 @@ public final class AlaInfoCategory implements DisplayCategory<AlaInfoDisplay> {
 	private static final int LINE_HEIGHT = 10;
 	private static final int TITLE_TO_BODY_GAP = 4;
 	private static final int BOTTOM_PAD = 8;
-	/** Maximum body lines (post-wrap) we reserve vertical space for in the fixed category height. */
-	private static final int MAX_BODY_LINES = 8;
+	/**
+	 * Floor for the reserved body lines, not a ceiling (MOD-422).
+	 *
+	 * <p>It used to be the ceiling, and that silently truncated nothing — it overflowed instead: the
+	 * draw loop below emits one label per visual line however many there are, and the panel neither
+	 * clips nor scrolls, so everything past the reserved height was painted outside the background.
+	 * English fit in eight lines, which is why the defect was invisible on the development language;
+	 * the Russian "mutation grades" page measured nineteen. Height is now derived from the real text
+	 * (see {@link #bodyLines()}), and this constant only keeps short pages from collapsing.
+	 */
+	private static final int MIN_BODY_LINES = 8;
+
+	/**
+	 * Hard ceiling, derived from REI's own layout maths — not a taste call.
+	 *
+	 * <p>{@code DefaultDisplayViewingScreen} sizes its window as
+	 * {@code 36 + (displayHeight + 4) * (displaysPerPage + 1)}, so the screen a category demands grows
+	 * with this class's height. Minecraft's smallest supported GUI is 240 logical pixels tall, which
+	 * leaves {@code 240 - 36 - 4 = 200} for the card, i.e. seventeen body lines. Growing past that
+	 * trades one defect for a worse one: instead of text spilling over the panel, the whole panel stops
+	 * fitting the screen on a small window or a large GUI scale — and there the player cannot even
+	 * scroll to the rest.
+	 *
+	 * <p>Nothing shipped comes close (the longest page is eleven lines after MOD-422 trimmed the
+	 * mutation-grade text), so this is a backstop against a future edit, not a live constraint.
+	 */
+	private static final int MAX_BODY_LINES = 17;
 	/** Standard recipe width this category uses; padded on both sides for text. */
 	private static final int DISPLAY_WIDTH = 160;
 
@@ -74,9 +105,36 @@ public final class AlaInfoCategory implements DisplayCategory<AlaInfoDisplay> {
 
 	@Override
 	public int getDisplayHeight() {
-		// Fixed (not display-aware) — reserve space for the longest page after word-wrap.
-		// MAX_BODY_LINES absorbs the T2 branches' 3 source lines expanding to ~5-8 visual lines.
-		return TOP_PAD + LINE_HEIGHT + TITLE_TO_BODY_GAP + LINE_HEIGHT * MAX_BODY_LINES + BOTTOM_PAD;
+		return TOP_PAD + LINE_HEIGHT + TITLE_TO_BODY_GAP + LINE_HEIGHT * bodyLines() + BOTTOM_PAD;
+	}
+
+	/**
+	 * Body lines to reserve: the tallest page in this category, measured with the SAME splitter and
+	 * width {@link #setupDisplay} draws with, so the reservation cannot disagree with the drawing.
+	 *
+	 * <p>Measured live rather than cached: the wrap depends on the active language and on
+	 * {@link dev.alaindustrial.Config} values interpolated into the lines, both of which change
+	 * without this object being rebuilt.
+	 *
+	 * <p>Falls back to the floor if the font is not up yet — REI can query a category before the
+	 * client finishes loading, and a crash there would take the whole recipe screen with it.
+	 */
+	private int bodyLines() {
+		Minecraft client = Minecraft.getInstance();
+		if (client == null || client.font == null) {
+			return MIN_BODY_LINES;
+		}
+		StringSplitter splitter = client.font.getSplitter();
+		int maxTextWidth = DISPLAY_WIDTH - PADDING_X * 2;
+		int longest = MIN_BODY_LINES;
+		for (dev.alaindustrial.client.compat.RecipeViewerInfo.Entry page : pages) {
+			int lines = 0;
+			for (Component line : dev.alaindustrial.client.compat.RecipeViewerInfo.buildLines(page)) {
+				lines += splitter.splitLines(line, maxTextWidth, Style.EMPTY).size();
+			}
+			longest = Math.max(longest, lines);
+		}
+		return Math.min(longest, MAX_BODY_LINES);
 	}
 
 	@Override

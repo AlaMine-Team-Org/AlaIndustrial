@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "facing=north,lit=false": { "model": "alaindustrial:block/component_repair_bench" },
+    "facing=south,lit=false": { "model": "alaindustrial:block/component_repair_bench", "y": 180 },
+    "facing=west,lit=false": { "model": "alaindustrial:block/component_repair_bench", "y": 270 },
+    "facing=east,lit=false": { "model": "alaindustrial:block/component_repair_bench", "y": 90 },
+    "facing=north,lit=true": { "model": "alaindustrial:block/component_repair_bench_on" },
+    "facing=south,lit=true": { "model": "alaindustrial:block/component_repair_bench_on", "y": 180 },
+    "facing=west,lit=true": { "model": "alaindustrial:block/component_repair_bench_on", "y": 270 },
+    "facing=east,lit=true": { "model": "alaindustrial:block/component_repair_bench_on", "y": 90 }
+  }
+}

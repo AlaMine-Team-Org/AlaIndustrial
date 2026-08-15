@@ -65,32 +65,38 @@ public enum ComponentTier {
 	WINDMILL_ROTOR("windmill_rotor",
 			() -> Config.windMillRotorOutputMultiplier,
 			() -> Config.windMillRotorEuPerDamage,
-			() -> Config.windMillRotorMaxDamage),
+			() -> Config.windMillRotorMaxDamage,
+			() -> Config.repairBenchTier1EuCost),
 	/** Reinforced rotor — tempered iron and an iron gear: ×1.25 output, ×3 durability. */
 	WINDMILL_ROTOR_REINFORCED("windmill_rotor_reinforced",
 			() -> Config.windMillRotorReinforcedOutputMultiplier,
 			() -> Config.windMillRotorReinforcedEuPerDamage,
-			() -> Config.windMillRotorReinforcedMaxDamage),
+			() -> Config.windMillRotorReinforcedMaxDamage,
+			() -> Config.repairBenchTier2EuCost),
 	/** Advanced rotor — electronic circuitry: ×1.50 output, ×6 durability. The top grade. */
 	WINDMILL_ROTOR_ADVANCED("windmill_rotor_advanced",
 			() -> Config.windMillRotorAdvancedOutputMultiplier,
 			() -> Config.windMillRotorAdvancedEuPerDamage,
-			() -> Config.windMillRotorAdvancedMaxDamage),
+			() -> Config.windMillRotorAdvancedMaxDamage,
+			() -> Config.repairBenchTier3EuCost),
 	/** Wooden water wheel — the shipped T1 baseline. */
 	WATER_MILL_WHEEL("water_mill_wheel",
 			() -> Config.waterMillWheelOutputMultiplier,
 			() -> Config.waterMillWheelEuPerDamage,
-			() -> Config.waterMillWheelMaxDamage),
+			() -> Config.waterMillWheelMaxDamage,
+			() -> Config.repairBenchTier1EuCost),
 	/** Reinforced wheel — tempered iron and an iron gear: ×1.25 output, ×3 durability. */
 	WATER_MILL_WHEEL_REINFORCED("water_mill_wheel_reinforced",
 			() -> Config.waterMillWheelReinforcedOutputMultiplier,
 			() -> Config.waterMillWheelReinforcedEuPerDamage,
-			() -> Config.waterMillWheelReinforcedMaxDamage),
+			() -> Config.waterMillWheelReinforcedMaxDamage,
+			() -> Config.repairBenchTier2EuCost),
 	/** Advanced wheel — electronic circuitry: ×1.50 output, ×6 durability. The top grade. */
 	WATER_MILL_WHEEL_ADVANCED("water_mill_wheel_advanced",
 			() -> Config.waterMillWheelAdvancedOutputMultiplier,
 			() -> Config.waterMillWheelAdvancedEuPerDamage,
-			() -> Config.waterMillWheelAdvancedMaxDamage);
+			() -> Config.waterMillWheelAdvancedMaxDamage,
+			() -> Config.repairBenchTier3EuCost);
 
 	/**
 	 * A {@code float}-valued supplier. {@link java.util.function.DoubleSupplier} would force every
@@ -108,13 +114,15 @@ public enum ComponentTier {
 	private final FloatSupplier outputMultiplier;
 	private final IntSupplier euPerDamage;
 	private final IntSupplier maxDamage;
+	private final IntSupplier repairEuCost;
 
 	ComponentTier(String itemPath, FloatSupplier outputMultiplier, IntSupplier euPerDamage,
-			IntSupplier maxDamage) {
+			IntSupplier maxDamage, IntSupplier repairEuCost) {
 		this.itemPath = itemPath;
 		this.outputMultiplier = outputMultiplier;
 		this.euPerDamage = euPerDamage;
 		this.maxDamage = maxDamage;
+		this.repairEuCost = repairEuCost;
 	}
 
 	/** Stable registry path of this grade's item — never rename without a save migration. */
@@ -138,9 +146,27 @@ public enum ComponentTier {
 	/**
 	 * The durability bar this grade's item is registered with. Baked at registration time, so a config
 	 * change needs a restart — the same contract the T1 component has had since MOD-189.
+	 *
+	 * <p>Since MOD-384 this doubles as the <b>original</b> ceiling the repair bench decays from: a
+	 * repaired stack carries a lowered per-stack {@code max_damage} component, so its own
+	 * {@code getMaxDamage()} is no longer the baseline and cannot be used to compute the next step.
 	 */
 	public int maxDamage() {
 		return maxDamage.getAsInt();
+	}
+
+	/**
+	 * EU one repair of this grade costs at the repair bench (MOD-384). Read live from {@link Config},
+	 * like every other number here.
+	 *
+	 * <p>Rotor and wheel of the same grade deliberately share one config key — unlike
+	 * {@link #maxDamage()} and {@link #euPerDamage()}, which stay separate per family. Repair cost is
+	 * priced off the grade's <em>materials</em> (plain plate → tempered plate → circuit), and those are
+	 * identical for the rotor and the wheel of a grade, so two keys holding the same number for ever
+	 * would be a rename waiting to drift rather than a knob anyone would turn independently.
+	 */
+	public int repairEuCost() {
+		return repairEuCost.getAsInt();
 	}
 
 	/**

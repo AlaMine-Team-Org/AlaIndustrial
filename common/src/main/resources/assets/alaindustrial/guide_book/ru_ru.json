@@ -1075,6 +1075,45 @@
           ]
         },
         {
+          "id": "component_repair_bench",
+          "title": "Ремонтный верстак",
+          "icon": "alaindustrial:component_repair_bench",
+          "block_id": "alaindustrial:component_repair_bench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ремонтный верстак",
+              "text": "Восстанавливает изношенный ротор ветряка и колесо водяной мельницы за один предмет и EU — но каждая починка навсегда снижает запас прочности детали."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 5000–18000 EU/оп",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:component_repair_bench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "assembler",
           "title": "Сборочный автомат",
           "icon": "alaindustrial:assembler",
@@ -1238,14 +1277,14 @@
             {
               "type": "text",
               "title": "Электронагреватель",
-              "text": "Вспомогательный LV-блок без GUI, который даёт Вулканизатору максимальный уровень тепла ×3. Расходует EU только по запросу работающей машины над ним."
+              "text": "Вспомогательный LV-блок под Вулканизатором. Сначала разогревается, а прогревшись даёт максимальный нагрев ×3. Пока холодный — источником тепла не является."
             },
             {
               "type": "stats",
               "title": "Характеристики",
               "lines": [
-                "Энергия: 2 EU/t",
-                "Буфер: 800 EU"
+                "Энергия: 6 EU/t",
+                "Буфер: 2400 EU"
               ]
             },
             {

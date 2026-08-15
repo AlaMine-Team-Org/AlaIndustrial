@@ -401,6 +401,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("extractor", ModBlocksNeoForge.EXTRACTOR);
 	public static final DeferredItem<BlockItem> COMPRESSOR_ITEM =
 			ITEMS.registerSimpleBlockItem("compressor", ModBlocksNeoForge.COMPRESSOR);
+	public static final DeferredItem<BlockItem> COMPONENT_REPAIR_BENCH_ITEM =
+			ITEMS.registerSimpleBlockItem("component_repair_bench", ModBlocksNeoForge.COMPONENT_REPAIR_BENCH);
 	public static final DeferredItem<BlockItem> CANNING_MACHINE_ITEM =
 			ITEMS.registerSimpleBlockItem("canning_machine", ModBlocksNeoForge.CANNING_MACHINE);
 	public static final DeferredItem<BlockItem> SAWMILL_ITEM =
@@ -685,6 +687,7 @@ public final class ModItemsNeoForge {
 		ModContent.IRON_FURNACE_ITEM = IRON_FURNACE_ITEM;
 		ModContent.EXTRACTOR_ITEM = EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = COMPRESSOR_ITEM;
+		ModContent.COMPONENT_REPAIR_BENCH_ITEM = COMPONENT_REPAIR_BENCH_ITEM;
 		ModContent.CANNING_MACHINE_ITEM = CANNING_MACHINE_ITEM;
 		ModContent.SAWMILL_ITEM = SAWMILL_ITEM;
 		ModContent.ASSEMBLER_ITEM = ASSEMBLER_ITEM;

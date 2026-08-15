@@ -59,6 +59,7 @@ public final class ModDataComponents {
 	public static final Identifier STEP_ASSIST_ENABLED_ID = Industrialization.id("step_assist_enabled");
 	public static final Identifier SABER_ACTIVE_ID = Industrialization.id("saber_active");
 	public static final Identifier SOUL_VESSEL_KILLS_ID = Industrialization.id("soul_vessel_kills");
+	public static final Identifier REPAIR_COUNT_ID = Industrialization.id("repair_count");
 
 	/** Rarity grade rolled by the incubator on a successful mutation (MOD-118). */
 	public static final Identifier MUTATION_GRADE_ID = Industrialization.id("mutation_grade");
@@ -234,6 +235,31 @@ public final class ModDataComponents {
 
 	/** Build the {@code soul_vessel_kills} type both loaders register (MOD-278). */
 	public static DataComponentType<Integer> createSoulVesselKills() {
+		return DataComponentType.<Integer>builder()
+				.persistent(Codec.INT)
+				.networkSynchronized(ByteBufCodecs.VAR_INT)
+				.build();
+	}
+
+	/**
+	 * How many times this rotor/wheel has been through the repair bench (MOD-384). Absent = 0, so a
+	 * freshly crafted component stays component-identical to any other and the tooltip stays clean until
+	 * the first repair. Read/written only via
+	 * {@link dev.alaindustrial.item.misc.DurableComponentItem}.
+	 *
+	 * <p>It has to live on the stack rather than be derived from the lowered {@code max_damage}: the two
+	 * are set together, but only this one survives a config change to the decay step, and only this one
+	 * can answer "how many repairs are left" without assuming the step never moved.
+	 *
+	 * <p>Network-synchronised because the tooltip is drawn client-side, and persistent because the whole
+	 * point is that the limit survives a re-login.
+	 */
+	public static Supplier<DataComponentType<Integer>> REPAIR_COUNT = () -> {
+		throw new IllegalStateException("ModDataComponents.REPAIR_COUNT read before its loader bound it");
+	};
+
+	/** Build the {@code repair_count} type both loaders register (MOD-384). */
+	public static DataComponentType<Integer> createRepairCount() {
 		return DataComponentType.<Integer>builder()
 				.persistent(Codec.INT)
 				.networkSynchronized(ByteBufCodecs.VAR_INT)

@@ -339,6 +339,13 @@ class ConfigSnapshotTest {
 		// Alloy smelter (MOD-064).
 		SENTINELS.put("alloySmelterEuPerTick", 19);
 		SENTINELS.put("alloySmelterDuration", 233);
+		// MOD-384 repair bench. Sentinels are deliberately unlike the defaults (8 / 5000 / 10000 / 18000 /
+		// 20) and unlike each other, so a getter lambda stubbed to another field's value still dies.
+		SENTINELS.put("repairBenchEuPerTick", 21);
+		SENTINELS.put("repairBenchTier1EuCost", 5137);
+		SENTINELS.put("repairBenchTier2EuCost", 10429);
+		SENTINELS.put("repairBenchTier3EuCost", 17683);
+		SENTINELS.put("repairBenchMaxDamageDecayPercent", 23);
 		// Assembler (MOD-288/289).
 		SENTINELS.put("assemblerEuPerTick", 26);
 		SENTINELS.put("assemblerDuration", 88);

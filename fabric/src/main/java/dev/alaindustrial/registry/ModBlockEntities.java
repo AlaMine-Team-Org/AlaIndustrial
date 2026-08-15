@@ -14,6 +14,7 @@ import dev.alaindustrial.block.entity.MobRepellerMvBlockEntity;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
+import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnSegmentBlockEntity;
@@ -87,6 +88,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<IronFurnaceBlockEntity> IRON_FURNACE;
 	public static BlockEntityType<ExtractorBlockEntity> EXTRACTOR;
 	public static BlockEntityType<CompressorBlockEntity> COMPRESSOR;
+	public static BlockEntityType<ComponentRepairBenchBlockEntity> COMPONENT_REPAIR_BENCH;
 	public static BlockEntityType<CanningMachineBlockEntity> CANNING_MACHINE;
 	public static BlockEntityType<SawmillBlockEntity> SAWMILL;
 	public static BlockEntityType<AssemblerBlockEntity> ASSEMBLER;
@@ -136,6 +138,7 @@ public final class ModBlockEntities {
 		IRON_FURNACE = register(ContentManifest.blockEntity("iron_furnace", IronFurnaceBlockEntity.class));
 		EXTRACTOR = register(ContentManifest.blockEntity("extractor", ExtractorBlockEntity.class));
 		COMPRESSOR = register(ContentManifest.blockEntity("compressor", CompressorBlockEntity.class));
+		COMPONENT_REPAIR_BENCH = register(ContentManifest.blockEntity("component_repair_bench", ComponentRepairBenchBlockEntity.class));
 		CANNING_MACHINE = register(ContentManifest.blockEntity("canning_machine", CanningMachineBlockEntity.class));
 		SAWMILL = register(ContentManifest.blockEntity("sawmill", SawmillBlockEntity.class));
 		ASSEMBLER = register(ContentManifest.blockEntity("assembler", AssemblerBlockEntity.class));
@@ -186,6 +189,7 @@ public final class ModBlockEntities {
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ELECTRIC_FURNACE);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),EXTRACTOR);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),COMPRESSOR);
+			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),COMPONENT_REPAIR_BENCH);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),CANNING_MACHINE);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),SAWMILL);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ASSEMBLER);

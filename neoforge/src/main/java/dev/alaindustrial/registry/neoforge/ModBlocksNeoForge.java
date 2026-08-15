@@ -8,6 +8,7 @@ import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.CanningMachineBlock;
 import dev.alaindustrial.block.CesuBlock;
 import dev.alaindustrial.block.ChargePadBlock;
+import dev.alaindustrial.block.ComponentRepairBenchBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
 import dev.alaindustrial.block.DistillationColumnBlock;
@@ -137,6 +138,8 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<IronFurnaceBlock> IRON_FURNACE = handle(ContentManifest.IRON_FURNACE);
 	public static final DeferredBlock<ExtractorBlock> EXTRACTOR = handle(ContentManifest.EXTRACTOR);
 	public static final DeferredBlock<CompressorBlock> COMPRESSOR = handle(ContentManifest.COMPRESSOR);
+	public static final DeferredBlock<ComponentRepairBenchBlock> COMPONENT_REPAIR_BENCH =
+			handle(ContentManifest.COMPONENT_REPAIR_BENCH);
 	public static final DeferredBlock<CanningMachineBlock> CANNING_MACHINE =
 			handle(ContentManifest.CANNING_MACHINE);
 	public static final DeferredBlock<SawmillBlock> SAWMILL = handle(ContentManifest.SAWMILL);

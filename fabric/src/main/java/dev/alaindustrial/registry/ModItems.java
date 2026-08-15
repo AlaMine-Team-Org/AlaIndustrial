@@ -286,6 +286,8 @@ public final class ModItems {
 	public static final BlockItem ELECTRIC_FURNACE_ITEM = blockItem("electric_furnace", ModBlocks.ELECTRIC_FURNACE);
 	public static final BlockItem EXTRACTOR_ITEM = blockItem("extractor", ModBlocks.EXTRACTOR);
 	public static final BlockItem COMPRESSOR_ITEM = blockItem("compressor", ModBlocks.COMPRESSOR);
+	public static final BlockItem COMPONENT_REPAIR_BENCH_ITEM =
+			blockItem("component_repair_bench", ModBlocks.COMPONENT_REPAIR_BENCH);
 	public static final BlockItem CANNING_MACHINE_ITEM = blockItem("canning_machine", ModBlocks.CANNING_MACHINE);
 	public static final BlockItem SAWMILL_ITEM = blockItem("sawmill", ModBlocks.SAWMILL);
 	public static final BlockItem ASSEMBLER_ITEM = blockItem("assembler", ModBlocks.ASSEMBLER);
@@ -882,6 +884,7 @@ public final class ModItems {
 		ModContent.ELECTRIC_FURNACE_ITEM = () -> ELECTRIC_FURNACE_ITEM;
 		ModContent.EXTRACTOR_ITEM = () -> EXTRACTOR_ITEM;
 		ModContent.COMPRESSOR_ITEM = () -> COMPRESSOR_ITEM;
+		ModContent.COMPONENT_REPAIR_BENCH_ITEM = () -> COMPONENT_REPAIR_BENCH_ITEM;
 		ModContent.CANNING_MACHINE_ITEM = () -> CANNING_MACHINE_ITEM;
 		ModContent.SAWMILL_ITEM = () -> SAWMILL_ITEM;
 		ModContent.ASSEMBLER_ITEM = () -> ASSEMBLER_ITEM;

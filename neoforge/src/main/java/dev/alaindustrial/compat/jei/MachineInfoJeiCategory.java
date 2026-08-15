@@ -43,9 +43,15 @@ final class MachineInfoJeiCategory implements IRecipeCategory<RecipeViewerInfo.E
 	private static final int SLOT_X = 2, SLOT_Y = 2;
 	private static final int TITLE_X = 24, TITLE_Y = 7;
 	private static final int BODY_Y = 26;
-	/** Body lines reserved after word-wrap — the same budget the REI side draws to. */
-	private static final int MAX_BODY_LINES = 8;
-	private static final int HEIGHT = BODY_Y + LINE_HEIGHT * MAX_BODY_LINES + PADDING;
+	/**
+	 * Floor for the reserved body lines, not a ceiling — the REI side's twin (MOD-422). A fixed
+	 * ceiling overflowed instead of truncating: the draw loop emits every visual line and the panel
+	 * neither clips nor scrolls, so a long locale painted outside the background.
+	 */
+	private static final int MIN_BODY_LINES = 8;
+
+	/** Ceiling, mirroring the REI side: a card taller than this stops fitting the smallest supported GUI. */
+	private static final int MAX_BODY_LINES = 17;
 
 	private static final int TITLE_COLOR = 0xFF303030;
 	private static final int BODY_COLOR = 0xFF404040;
@@ -78,7 +84,29 @@ final class MachineInfoJeiCategory implements IRecipeCategory<RecipeViewerInfo.E
 
 	@Override
 	public int getHeight() {
-		return HEIGHT;
+		return BODY_Y + LINE_HEIGHT * bodyLines() + PADDING;
+	}
+
+	/**
+	 * Body lines to reserve: the tallest page this category shows, measured with the same splitter and
+	 * width {@link #draw} wraps with. Measured live — the wrap depends on the active language and on
+	 * config values interpolated into the lines. Falls back to the floor before the font is up.
+	 */
+	private int bodyLines() {
+		Minecraft client = Minecraft.getInstance();
+		if (client == null || client.font == null) {
+			return MIN_BODY_LINES;
+		}
+		int maxTextWidth = WIDTH - PADDING * 2;
+		int longest = MIN_BODY_LINES;
+		for (RecipeViewerInfo.Entry page : pages()) {
+			int lines = 0;
+			for (Component line : RecipeViewerInfo.buildLines(page)) {
+				lines += client.font.getSplitter().splitLines(line, maxTextWidth, Style.EMPTY).size();
+			}
+			longest = Math.max(longest, lines);
+		}
+		return Math.min(longest, MAX_BODY_LINES);
 	}
 
 	@Override

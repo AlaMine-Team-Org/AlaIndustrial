@@ -73,6 +73,8 @@ public final class ModDataComponentsNeoForge {
 
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> MAGNET_ENABLED =
 			DATA_COMPONENTS.register("magnet_enabled", ModDataComponents::createMagnetEnabled);
+	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> REPAIR_COUNT =
+			DATA_COMPONENTS.register("repair_count", ModDataComponents::createRepairCount);
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> SOUL_VESSEL_KILLS =
 			DATA_COMPONENTS.register("soul_vessel_kills", ModDataComponents::createSoulVesselKills);
 	public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> STEP_ASSIST_ENABLED =
@@ -101,6 +103,7 @@ public final class ModDataComponentsNeoForge {
 		ModDataComponents.TELEPORTER_POINTS = TELEPORTER_POINTS;
 		ModDataComponents.MAGNET_ENABLED = MAGNET_ENABLED;
 		ModDataComponents.SOUL_VESSEL_KILLS = SOUL_VESSEL_KILLS;
+		ModDataComponents.REPAIR_COUNT = REPAIR_COUNT;
 		ModDataComponents.STEP_ASSIST_ENABLED = STEP_ASSIST_ENABLED;
 		ModDataComponents.SABER_ACTIVE = SABER_ACTIVE;
 		ModDataComponents.MUTATION_GRADE = MUTATION_GRADE;

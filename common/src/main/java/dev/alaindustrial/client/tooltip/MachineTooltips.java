@@ -5,6 +5,7 @@ import dev.alaindustrial.block.BatteryBoxBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.AlloySmelterBlock;
 import dev.alaindustrial.block.CableBlock;
+import dev.alaindustrial.block.ComponentRepairBenchBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.SawmillBlock;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
@@ -168,6 +169,7 @@ public final class MachineTooltips {
 				|| block instanceof MaceratorBlock
 				|| block instanceof ElectricFurnaceBlock
 				|| block instanceof CompressorBlock
+				|| block instanceof ComponentRepairBenchBlock
 				|| block instanceof ExtractorBlock
 				|| block instanceof IncubatorBlock
 				|| block instanceof AlloySmelterBlock
@@ -482,6 +484,7 @@ public final class MachineTooltips {
 				|| block instanceof MaceratorBlock
 				|| block instanceof ElectricFurnaceBlock
 				|| block instanceof CompressorBlock
+				|| block instanceof ComponentRepairBenchBlock
 				|| block instanceof SawmillBlock
 				|| block instanceof ExtractorBlock
 				|| block instanceof IncubatorBlock
@@ -519,6 +522,10 @@ public final class MachineTooltips {
 		} else if (block instanceof CompressorBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.compressorDuration)));
+		} else if (block instanceof ComponentRepairBenchBlock) {
+			lines.add(tt("energy_input", Config.repairBenchEuPerTick));
+			lines.add(tt("duration_ticks", Config.scaledDuration(
+					Config.repairBenchTier1EuCost / Math.max(1, Config.repairBenchEuPerTick))));
 		} else if (block instanceof SawmillBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.sawmillDuration)));
@@ -592,6 +599,11 @@ public final class MachineTooltips {
 			lines.add(tt("buffer", Config.machineBuffer));
 			lines.add(tt("energy_per_op",
 					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.compressorDuration)));
+		} else if (block instanceof ComponentRepairBenchBlock) {
+			lines.add(tier());
+			lines.add(tt("buffer", Config.machineBuffer));
+			// Per-op cost is per GRADE (5000 / 10000 / 18000); the T1 figure stands in here.
+			lines.add(tt("energy_per_op", Config.repairBenchTier1EuCost));
 		} else if (block instanceof SawmillBlock) {
 			lines.add(tier());
 			lines.add(tt("buffer", Config.machineBuffer));

@@ -73,6 +73,7 @@ public final class ModBlocks {
 	public static final Block IRON_FURNACE = handle(ContentManifest.IRON_FURNACE);
 	public static final Block EXTRACTOR = handle(ContentManifest.EXTRACTOR);
 	public static final Block COMPRESSOR = handle(ContentManifest.COMPRESSOR);
+	public static final Block COMPONENT_REPAIR_BENCH = handle(ContentManifest.COMPONENT_REPAIR_BENCH);
 	public static final Block CANNING_MACHINE = handle(ContentManifest.CANNING_MACHINE);
 	public static final Block SAWMILL = handle(ContentManifest.SAWMILL);
 	public static final Block ASSEMBLER = handle(ContentManifest.ASSEMBLER);

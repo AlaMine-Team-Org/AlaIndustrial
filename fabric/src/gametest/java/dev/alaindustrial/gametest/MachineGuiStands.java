@@ -7,6 +7,8 @@ import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterStatus;
 import dev.alaindustrial.menu.MachineMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
+import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
+import dev.alaindustrial.core.machine.RepairStatus;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModItems;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -294,6 +296,22 @@ public final class MachineGuiStands {
         shootMenuWithState(context, "gui_compressor_done",
                 ModContent.COMPRESSOR_MENU.get(), "Compressor",
                 CAP, CAP, BURN, BURN);
+
+        // ── Component Repair Bench — four states ─────────────────────────────────
+        // The fourth channel is the RepairStatus code, and it is the point of these frames: three of
+        // the bench's four idle states look identical without the caption under the slots.
+        // State 1: empty — nothing loaded, so the status row is deliberately blank.
+        shootRepairBench(context, "gui_component_repair_bench_idle",
+                0, CAP, 0, BURN, RepairStatus.NO_TARGET);
+        // State 2: repairing — half way, energy at 75 %.
+        shootRepairBench(context, "gui_component_repair_bench_repairing",
+                CAP * 3 / 4, CAP, BURN / 2, BURN, RepairStatus.READY);
+        // State 3: the fixable refusal — a worn component but no matching plate.
+        shootRepairBench(context, "gui_component_repair_bench_needs_material",
+                CAP, CAP, 0, BURN, RepairStatus.NEEDS_MATERIAL);
+        // State 4: the permanent refusal — this is the caption a player must never miss.
+        shootRepairBench(context, "gui_component_repair_bench_limit",
+                CAP, CAP, 0, BURN, RepairStatus.LIMIT_REACHED);
     }
 
     /** BatteryBox screen with a half-charged Battery Pouch injected into the charge slot (MOD-052). */
@@ -366,6 +384,29 @@ public final class MachineGuiStands {
      * the loaded ingot, and whether the dome is in place. Those three drive the charge pips and the
      * status line, which is the whole point of photographing this screen.
      */
+    /**
+     * Component Repair Bench variant of {@link #shootMenuWithState} (MOD-384): also fills the status
+     * channel, because the bench's whole screen-level behaviour is the caption it prints there.
+     */
+    private static void shootRepairBench(ClientGameTestContext context, String name,
+                                         int energy, int capacity, int progress, int maxProgress,
+                                         RepairStatus status) {
+        LOG.info("[GUITEST] opening {} (E={}/{} P={}/{} status={})",
+                name, energy, capacity, progress, maxProgress, status);
+        context.runOnClient(mc -> {
+            MenuScreens.create(ModContent.COMPONENT_REPAIR_BENCH_MENU.get(), mc, 0,
+                    Component.literal("Component Repair Bench"));
+            if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                    && acs.getMenu() instanceof MachineMenu menu) {
+                menu.injectTestData(energy, capacity, progress, maxProgress);
+                menu.injectTestChannel(ComponentRepairBenchBlockEntity.STATUS_CHANNEL, status.code());
+            }
+        });
+        awaitMenuScreen(context);
+        java.nio.file.Path path = takeCleanScreenshot(context, name);
+        LOG.info("[GUITEST] screenshot {} -> {}", name, path.toAbsolutePath());
+    }
+
     private static void shootIncubator(ClientGameTestContext context, String name,
                                        int energy, int capacity, int progress, int maxProgress,
                                        int mode, int charge, int formed) {

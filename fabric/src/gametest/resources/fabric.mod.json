@@ -65,6 +65,7 @@
       "dev.alaindustrial.gametest.EnergyCondenserGameTest",
       "dev.alaindustrial.gametest.WaterMillWheelGameTest",
       "dev.alaindustrial.gametest.ComponentTierGameTest",
+      "dev.alaindustrial.gametest.ComponentRepairBenchGameTest",
       "dev.alaindustrial.gametest.ItemPipeGameTest",
       "dev.alaindustrial.gametest.FluidPipeGameTest",
       "dev.alaindustrial.gametest.FluidTankGameTest",

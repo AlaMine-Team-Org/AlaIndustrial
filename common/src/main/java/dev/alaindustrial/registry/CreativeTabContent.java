@@ -517,6 +517,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.MACERATOR_ITEM);
 		show(out, ModContent.EXTRACTOR_ITEM);
 		show(out, ModContent.COMPRESSOR_ITEM);
+		show(out, ModContent.COMPONENT_REPAIR_BENCH_ITEM);
 		show(out, ModContent.SAWMILL_ITEM);
 		show(out, ModContent.ALLOY_SMELTER_ITEM);
 		show(out, ModContent.CANNING_MACHINE_ITEM);

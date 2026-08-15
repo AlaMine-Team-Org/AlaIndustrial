@@ -52,7 +52,7 @@ public final class MenuDataWidthScenarios {
 	 * lets coverage fall to zero unnoticed. Adding a machine menu means bumping this by one.
 	 */
 	// 31 -> 32 (MOD-418): the Electric Heater's warm-up readout.
-	private static final int EXPECTED_MACHINE_MENUS = 32;
+	private static final int EXPECTED_MACHINE_MENUS = 33;
 
 	/** Reused single cell inside the test region; each machine is placed here, read, then cleared. */
 	private static final BlockPos PROBE = new BlockPos(1, 2, 1);

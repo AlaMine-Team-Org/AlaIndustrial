@@ -14,6 +14,7 @@ import dev.alaindustrial.block.entity.MobRepellerMvBlockEntity;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
+import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnSegmentBlockEntity;
@@ -110,6 +111,8 @@ public final class ModBlockEntitiesNeoForge {
 			register(ContentManifest.blockEntity("extractor", ExtractorBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CompressorBlockEntity>> COMPRESSOR =
 			register(ContentManifest.blockEntity("compressor", CompressorBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ComponentRepairBenchBlockEntity>> COMPONENT_REPAIR_BENCH =
+			register(ContentManifest.blockEntity("component_repair_bench", ComponentRepairBenchBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CanningMachineBlockEntity>> CANNING_MACHINE =
 			register(ContentManifest.blockEntity("canning_machine", CanningMachineBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SawmillBlockEntity>> SAWMILL =

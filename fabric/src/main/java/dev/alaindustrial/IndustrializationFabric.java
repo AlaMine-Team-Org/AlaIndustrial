@@ -160,6 +160,8 @@ public class IndustrializationFabric implements ModInitializer {
 				ModDataComponents.MAGNET_ENABLED_ID, ModDataComponents.createMagnetEnabled());
 		ModDataComponents.SOUL_VESSEL_KILLS = registerDataComponent(
 				ModDataComponents.SOUL_VESSEL_KILLS_ID, ModDataComponents.createSoulVesselKills());
+		ModDataComponents.REPAIR_COUNT = registerDataComponent(
+				ModDataComponents.REPAIR_COUNT_ID, ModDataComponents.createRepairCount());
 		ModDataComponents.STEP_ASSIST_ENABLED = registerDataComponent(
 				ModDataComponents.STEP_ASSIST_ENABLED_ID, ModDataComponents.createStepAssistEnabled());
 		ModDataComponents.SABER_ACTIVE = registerDataComponent(

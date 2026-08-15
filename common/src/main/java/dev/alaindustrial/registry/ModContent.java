@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry;
 
 import dev.alaindustrial.menu.AssemblerMenu;
+import dev.alaindustrial.menu.ComponentRepairBenchMenu;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.menu.EnergyCondenserMenu;
 import dev.alaindustrial.menu.MobRepellerHvMenu;
@@ -139,6 +140,8 @@ public final class ModContent {
 	public static Supplier<Block> ELECTRIC_FURNACE = unbound("ELECTRIC_FURNACE");
 	public static Supplier<Block> EXTRACTOR = unbound("EXTRACTOR");
 	public static Supplier<Block> COMPRESSOR = unbound("COMPRESSOR");
+	/** Component Repair Bench (MOD-384) — restores worn rotors and wheels. */
+	public static Supplier<Block> COMPONENT_REPAIR_BENCH = unbound("COMPONENT_REPAIR_BENCH");
 	public static Supplier<Block> CANNING_MACHINE = unbound("CANNING_MACHINE");
 	public static Supplier<Block> SAWMILL = unbound("SAWMILL");
 	/** MOD-275 — the first MV machine: stamps crafting-table recipes from blueprints. */
@@ -438,6 +441,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> ELECTRIC_FURNACE_ITEM = unbound("ELECTRIC_FURNACE_ITEM");
 	public static Supplier<BlockItem> EXTRACTOR_ITEM = unbound("EXTRACTOR_ITEM");
 	public static Supplier<BlockItem> COMPRESSOR_ITEM = unbound("COMPRESSOR_ITEM");
+	public static Supplier<BlockItem> COMPONENT_REPAIR_BENCH_ITEM = unbound("COMPONENT_REPAIR_BENCH_ITEM");
 	public static Supplier<BlockItem> CANNING_MACHINE_ITEM = unbound("CANNING_MACHINE_ITEM");
 	public static Supplier<BlockItem> SAWMILL_ITEM = unbound("SAWMILL_ITEM");
 	public static Supplier<BlockItem> ASSEMBLER_ITEM = unbound("ASSEMBLER_ITEM");
@@ -508,6 +512,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> ELECTRIC_FURNACE_BE = unbound("ELECTRIC_FURNACE_BE");
 	public static Supplier<BlockEntityType<?>> EXTRACTOR_BE = unbound("EXTRACTOR_BE");
 	public static Supplier<BlockEntityType<?>> COMPRESSOR_BE = unbound("COMPRESSOR_BE");
+	public static Supplier<BlockEntityType<?>> COMPONENT_REPAIR_BENCH_BE = unbound("COMPONENT_REPAIR_BENCH_BE");
 	public static Supplier<BlockEntityType<?>> CANNING_MACHINE_BE = unbound("CANNING_MACHINE_BE");
 	public static Supplier<BlockEntityType<?>> SAWMILL_BE = unbound("SAWMILL_BE");
 	public static Supplier<BlockEntityType<?>> ASSEMBLER_BE = unbound("ASSEMBLER_BE");
@@ -551,6 +556,8 @@ public final class ModContent {
 	public static Supplier<MenuType<ElectricFurnaceMenu>> ELECTRIC_FURNACE_MENU = unbound("ELECTRIC_FURNACE_MENU");
 	public static Supplier<MenuType<ExtractorMenu>> EXTRACTOR_MENU = unbound("EXTRACTOR_MENU");
 	public static Supplier<MenuType<CompressorMenu>> COMPRESSOR_MENU = unbound("COMPRESSOR_MENU");
+	public static Supplier<MenuType<ComponentRepairBenchMenu>> COMPONENT_REPAIR_BENCH_MENU =
+			unbound("COMPONENT_REPAIR_BENCH_MENU");
 	public static Supplier<MenuType<CanningMachineMenu>> CANNING_MACHINE_MENU = unbound("CANNING_MACHINE_MENU");
 	public static Supplier<MenuType<SawmillMenu>> SAWMILL_MENU = unbound("SAWMILL_MENU");
 	public static Supplier<MenuType<AssemblerMenu>> ASSEMBLER_MENU = unbound("ASSEMBLER_MENU");

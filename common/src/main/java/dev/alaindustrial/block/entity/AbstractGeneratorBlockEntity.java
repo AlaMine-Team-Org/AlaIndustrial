@@ -57,11 +57,21 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 	 * the game on the classpath) and behaves identically on both loaders, whose item handles are
 	 * different types. The namespace is checked here because the enum matches on the path alone.
 	 *
+	 * <p><b>{@code public} since MOD-384</b>, because the repair bench asks the same question and is not
+	 * a generator. It could not move to {@link ComponentTier} — that enum is deliberately Minecraft-free
+	 * and this resolution needs {@code ItemStack} — and a private copy in the bench would have been the
+	 * third implementation of the same three lines (the two BE renderers already carry a namespace-less
+	 * variant). Reusing the canonical one keeps "which grade is this stack" a single answer, which is the
+	 * whole reason MOD-385 centralised the ladder in the first place. Static, so nothing inherits
+	 * generator behaviour to get at it.
+	 *
 	 * @param stack the component slot's contents; empty or unrecognised falls back
-	 * @param fallback the grade to assume when {@code stack} names no known component — always this
-	 *     family's T1, so an unreadable slot degrades to baseline behaviour instead of zero output
+	 * @param fallback the grade to assume when {@code stack} names no known component. A generator
+	 *     passes its family's T1, so an unreadable slot degrades to baseline behaviour instead of zero
+	 *     output; a caller that must instead DISTINGUISH "no known component" — the repair bench, which
+	 *     has nothing to repair then — passes {@code null} and checks the result
 	 */
-	protected static ComponentTier tierOf(ItemStack stack, ComponentTier fallback) {
+	public static ComponentTier tierOf(ItemStack stack, ComponentTier fallback) {
 		if (stack.isEmpty()) {
 			return fallback;
 		}

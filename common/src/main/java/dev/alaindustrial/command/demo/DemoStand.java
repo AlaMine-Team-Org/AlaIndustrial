@@ -4,6 +4,7 @@ import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
+import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
@@ -241,6 +242,16 @@ public final class DemoStand {
 				new ItemStack(Items.COOKED_BEEF, 64));
 		fillSlot(level, origin, 11, 1, 12, CanningMachineBlockEntity.CAN_SLOT,
 				new ItemStack(ModContent.EMPTY_CAN.get(), 64));
+		// Component Repair Bench (MOD-384): placeWorkingMachine does not fit either — its target slot
+		// needs a component that is actually WORN, and a pristine rotor would leave the bench idle on the
+		// stand. So the rotor is damaged by hand first, then paired with its T1 material (an iron plate).
+		set(level, origin, 14, 1, 12, ModContent.COMPONENT_REPAIR_BENCH.get());
+		chargeBuffer(level, origin, 14, 1, 12);
+		ItemStack wornRotor = new ItemStack(ModContent.WINDMILL_ROTOR.get());
+		wornRotor.setDamageValue(wornRotor.getMaxDamage() / 2);
+		fillSlot(level, origin, 14, 1, 12, ComponentRepairBenchBlockEntity.TARGET_SLOT, wornRotor);
+		fillSlot(level, origin, 14, 1, 12, ComponentRepairBenchBlockEntity.MATERIAL_SLOT,
+				new ItemStack(ModContent.IRON_PLATE.get(), 64));
 		// Sawmill (MOD-150): pre-charged + a stack of logs → visibly sawing (default PLANKS mode).
 		placeWorkingMachine(level, origin, 17, 10, ModContent.SAWMILL.get(), new ItemStack(Items.OAK_LOG, 64));
 		// Incubator (MOD-118): the 1x2 multiblock. Glass goes on top so the base assembles it into the

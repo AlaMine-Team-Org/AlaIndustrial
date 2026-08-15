@@ -444,6 +444,7 @@ public final class IndustrializationNeoForge {
 					ModBlockEntitiesNeoForge.ELECTRIC_FURNACE,
 					ModBlockEntitiesNeoForge.EXTRACTOR,
 					ModBlockEntitiesNeoForge.COMPRESSOR,
+					ModBlockEntitiesNeoForge.COMPONENT_REPAIR_BENCH,
 					ModBlockEntitiesNeoForge.CANNING_MACHINE,
 					ModBlockEntitiesNeoForge.SAWMILL,
 					ModBlockEntitiesNeoForge.ASSEMBLER,
@@ -496,6 +497,7 @@ public final class IndustrializationNeoForge {
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.ELECTRIC_FURNACE);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.EXTRACTOR);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.COMPRESSOR);
+		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.COMPONENT_REPAIR_BENCH);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.CANNING_MACHINE);
 		registerItemContainer(event, itemCap, ModBlockEntitiesNeoForge.SAWMILL);
 		// MOD-393: the condenser's output slot, so a pipe or hopper can take the clot on NeoForge too.

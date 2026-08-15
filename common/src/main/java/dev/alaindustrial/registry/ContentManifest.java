@@ -9,6 +9,7 @@ import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.CanningMachineBlock;
 import dev.alaindustrial.block.CesuBlock;
 import dev.alaindustrial.block.ChargePadBlock;
+import dev.alaindustrial.block.ComponentRepairBenchBlock;
 import dev.alaindustrial.block.CompressorBlock;
 import dev.alaindustrial.block.DaylightSolarPanelBlock;
 import dev.alaindustrial.block.DistillationColumnBlock;
@@ -68,6 +69,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.component.Consumable;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
+import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
@@ -108,6 +110,7 @@ import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.item.energy.BatteryItem;
+import dev.alaindustrial.item.misc.DurableComponentItem;
 import dev.alaindustrial.item.misc.HintItem;
 import dev.alaindustrial.item.misc.MutationChipItem;
 import dev.alaindustrial.item.misc.OverclockerChipItem;
@@ -118,6 +121,7 @@ import dev.alaindustrial.menu.EnergyCondenserMenu;
 import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.ChargePadMenu;
 import dev.alaindustrial.menu.ElectricHeaterMenu;
+import dev.alaindustrial.menu.ComponentRepairBenchMenu;
 import dev.alaindustrial.menu.CompressorMenu;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import dev.alaindustrial.menu.DistillationColumnMenu;
@@ -248,6 +252,8 @@ public final class ContentManifest {
 			menu("electric_furnace", ElectricFurnaceMenu::new, s -> ModContent.ELECTRIC_FURNACE_MENU = s),
 			menu("extractor", ExtractorMenu::new, s -> ModContent.EXTRACTOR_MENU = s),
 			menu("compressor", CompressorMenu::new, s -> ModContent.COMPRESSOR_MENU = s),
+			menu("component_repair_bench", ComponentRepairBenchMenu::new,
+					s -> ModContent.COMPONENT_REPAIR_BENCH_MENU = s),
 			menu("canning_machine", CanningMachineMenu::new, s -> ModContent.CANNING_MACHINE_MENU = s),
 			menu("sawmill", SawmillMenu::new, s -> ModContent.SAWMILL_MENU = s),
 			// MOD-275 — the assembler: blueprint queue, ghost pattern grid, six-slot output.
@@ -410,6 +416,10 @@ public final class ContentManifest {
 			block("extractor", ExtractorBlock::new, s -> ModContent.EXTRACTOR = s);
 	public static final BlockDef<CompressorBlock> COMPRESSOR =
 			block("compressor", CompressorBlock::new, s -> ModContent.COMPRESSOR = s);
+	// Component Repair Bench (MOD-384) — restores worn rotors/wheels instead of recrafting them.
+	public static final BlockDef<ComponentRepairBenchBlock> COMPONENT_REPAIR_BENCH =
+			block("component_repair_bench", ComponentRepairBenchBlock::new,
+					s -> ModContent.COMPONENT_REPAIR_BENCH = s);
 	public static final BlockDef<CanningMachineBlock> CANNING_MACHINE =
 			block("canning_machine", CanningMachineBlock::new, s -> ModContent.CANNING_MACHINE = s);
 	public static final BlockDef<SawmillBlock> SAWMILL =
@@ -547,7 +557,7 @@ public final class ContentManifest {
 			FLUID_TANK, COPPER_CABLE, TIN_CABLE, GOLD_CABLE, ELECTRUM_CABLE, INSULATED_COPPER_CABLE,
 			INSULATED_TIN_CABLE, INSULATED_GOLD_CABLE, INSULATED_ELECTRUM_CABLE, ITEM_PIPE, FLUID_PIPE,
 			MACERATOR, BATTERY_BOX, CESU, TELEPORTER, ELECTRIC_FURNACE, IRON_FURNACE, EXTRACTOR,
-			COMPRESSOR, CANNING_MACHINE, SAWMILL, ASSEMBLER, POLYMERIZER, DISTILLATION_COLUMN,
+			COMPRESSOR, COMPONENT_REPAIR_BENCH, CANNING_MACHINE, SAWMILL, ASSEMBLER, POLYMERIZER, DISTILLATION_COLUMN,
 			DISTILLATION_COLUMN_MIDDLE, DISTILLATION_COLUMN_TOP, RECTIFICATION_SECTION, ALLOY_SMELTER,
 			VULCANIZER, GALVANIC_BATH, ELECTRIC_HEATER, CHARGE_PAD, ENERGY_CONDENSER,
 			MOB_REPELLER, MOB_REPELLER_MV, MOB_REPELLER_HV, INCUBATOR,
@@ -614,6 +624,7 @@ public final class ContentManifest {
 					.lightLevel(ModBlockProperties::litLight))),
 			Map.entry("extractor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("compressor", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
+			Map.entry("component_repair_bench", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("canning_machine", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("sawmill", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			// MOD-064: the smelter glows through its crucible windows while melting, so it lights like
@@ -794,9 +805,14 @@ public final class ContentManifest {
 	 * component, so wear renders as the standard durability bar and the item becomes non-stackable.
 	 * {@code max} is read from {@link Config} when the item is constructed — i.e. at registration, so a
 	 * config change still needs a restart; the wear RATE is read live each tick in the block entity.
+	 *
+	 * <p>Note what {@code durability(max)} actually is since MOD-384: the item's DEFAULT ceiling, not a
+	 * fixed one. {@code max_damage} is an ordinary stack component, so the repair bench lowers it on the
+	 * individual stack it repairs and {@code ItemStack.getMaxDamage()} reads that override.
+	 * {@link DurableComponentItem} carries the matching tooltip.
 	 */
 	private static Function<Item.Properties, ? extends Item> durableComponent(IntSupplier maxDamage) {
-		return p -> new Item(p.durability(maxDamage.getAsInt()));
+		return p -> new DurableComponentItem(p.durability(maxDamage.getAsInt()));
 	}
 
 	private static Map<String, Function<Item.Properties, ? extends Item>> buildItemFactories() {
@@ -1019,6 +1035,7 @@ public final class ContentManifest {
 			blockEntity("item_pipe", ItemPipeBlockEntity.class, ItemPipeBlockEntity::new, s -> ModContent.ITEM_PIPE_BE = s, "item_pipe"),
 			blockEntity("fluid_pipe", FluidPipeBlockEntity.class, FluidPipeBlockEntity::new, s -> ModContent.FLUID_PIPE_BE = s, "fluid_pipe"),
 			blockEntity("macerator", MaceratorBlockEntity.class, MaceratorBlockEntity::new, s -> ModContent.MACERATOR_BE = s, "macerator"),
+			blockEntity("component_repair_bench", ComponentRepairBenchBlockEntity.class, ComponentRepairBenchBlockEntity::new, s -> ModContent.COMPONENT_REPAIR_BENCH_BE = s, "component_repair_bench"),
 			blockEntity("battery_box", BatteryBoxBlockEntity.class, BatteryBoxBlockEntity::new, s -> ModContent.BATTERY_BOX_BE = s, "battery_box"),
 			blockEntity("cesu", CesuBlockEntity.class, CesuBlockEntity::new, s -> ModContent.CESU_BE = s, "cesu"),
 			blockEntity("teleporter", TeleporterBlockEntity.class, TeleporterBlockEntity::new, s -> ModContent.TELEPORTER_BE = s, "teleporter"),

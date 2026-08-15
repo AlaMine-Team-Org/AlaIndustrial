@@ -120,13 +120,18 @@ public class AlaReiPlugin implements REIClientPlugin {
 		registry.addWorkstations(CanningDisplay.CATEGORY, EntryStacks.of(ModBlocks.CANNING_MACHINE));
 		// Informational category: the T2 solar branches (and future evolution lines) with no crafting
 		// recipe. The base solar_panel is craftable, so it is intentionally not linked here.
+		// The pages are handed over so the category can size itself against its tallest one (MOD-422).
+		java.util.List<RecipeViewerInfo.Entry> evolutionPages = new java.util.ArrayList<>(
+				RecipeViewerInfo.solarEvolutionEntries());
+		evolutionPages.addAll(RecipeViewerInfo.mutationGradeEntries());
 		registry.add(new AlaInfoCategory(AlaInfoDisplay.CATEGORY, "jei.alaindustrial.category.evolution",
-				dev.alaindustrial.registry.ModContent.ALIGNMENT_CHIP_DAY.get()));
+				dev.alaindustrial.registry.ModContent.ALIGNMENT_CHIP_DAY.get(), evolutionPages));
 		registry.addWorkstations(AlaInfoDisplay.CATEGORY, EntryStacks.of(ModBlocks.DAYLIGHT_SOLAR_PANEL));
 		registry.addWorkstations(AlaInfoDisplay.CATEGORY, EntryStacks.of(ModBlocks.MOONLIT_SOLAR_PANEL));
 		// MOD-420: machines that have no recipe at all — their GUIs used to answer nothing when clicked.
 		registry.add(new AlaInfoCategory(AlaInfoDisplay.MACHINE_CATEGORY,
-				"jei.alaindustrial.category.machine_info", ModBlocks.GEOTHERMAL_GENERATOR));
+				"jei.alaindustrial.category.machine_info", ModBlocks.GEOTHERMAL_GENERATOR,
+				RecipeViewerInfo.machineInfoEntries()));
 		registry.addWorkstations(AlaInfoDisplay.MACHINE_CATEGORY, EntryStacks.of(ModBlocks.GEOTHERMAL_GENERATOR));
 		registry.addWorkstations(AlaInfoDisplay.MACHINE_CATEGORY, EntryStacks.of(ModBlocks.ENERGY_CONDENSER));
 	}

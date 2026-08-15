@@ -1075,6 +1075,45 @@
           ]
         },
         {
+          "id": "component_repair_bench",
+          "title": "Component Repair Bench",
+          "icon": "alaindustrial:component_repair_bench",
+          "block_id": "alaindustrial:component_repair_bench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Component Repair Bench",
+              "text": "Restores a worn wind mill rotor or water mill wheel for one item and some EU — but every repair permanently lowers that part's durability ceiling."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energy: 5000–18000 EU/op",
+                "Bufer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "minecraft:iron_ingot",
+                "alaindustrial:machine_casing",
+                "minecraft:iron_ingot",
+                "minecraft:iron_ingot",
+                "alaindustrial:electronic_circuit",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:component_repair_bench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "assembler",
           "title": "Perakit",
           "icon": "alaindustrial:assembler",
@@ -1238,14 +1277,14 @@
             {
               "type": "text",
               "title": "Pemanas Listrik",
-              "text": "Blok pendukung LV tanpa antarmuka yang memberi Vulkanisator panas maksimum ×3. Blok ini hanya memakai EU saat mesin di atasnya benar-benar bekerja."
+              "text": "An LV support block that sits under the Vulcanizer. It has to warm up first; once hot it gives the maximum x3 heat. While cold it is not a heat source at all."
             },
             {
               "type": "stats",
               "title": "Statistik",
               "lines": [
-                "Energi: 2 EU/t",
-                "Bufer: 800 EU"
+                "Energy: 6 EU/t",
+                "Buffer: 2400 EU"
               ]
             },
             {

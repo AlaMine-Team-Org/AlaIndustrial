@@ -718,6 +718,35 @@ public final class Config {
 	public static int alloySmelterEuPerTick = 8;
 	public static int alloySmelterDuration = 150;
 
+	// --- MOD-384 component repair bench. Restores a worn rotor/wheel instead of replacing it, at the
+	// price of a permanently lower durability ceiling. Its own rate, like the alloy smelter above: at the
+	// shared 2 EU/t a T3 repair would run 9000 ticks (7.5 minutes) and read as broken rather than
+	// expensive. At 8 EU/t the three grades take 625 / 1250 / 2250 ticks (~31 / 62 / 112 s).
+	/** EU/t the repair bench draws while repairing. Four times the machine standard. */
+	public static int repairBenchEuPerTick = 8;
+	/**
+	 * EU one repair of a T1 component costs (plain {@code windmill_rotor} / {@code water_mill_wheel}).
+	 * The material side is deliberately cheap — ONE plate — so energy, not metal, is what a repair
+	 * really spends; see {@code docs/PERFORMANCE.md} for the full economy.
+	 */
+	public static int repairBenchTier1EuCost = 5000;
+	/** EU one repair of a reinforced (T2) component costs — double T1, matching its dearer material. */
+	public static int repairBenchTier2EuCost = 10000;
+	/** EU one repair of an advanced (T3) component costs. */
+	public static int repairBenchTier3EuCost = 18000;
+	/**
+	 * How much of the component's ORIGINAL durability ceiling one repair burns, in percent. Linear in
+	 * the original, not compounding on the current value: at 20 % that is 1000 → 800 → 600 → 400 → 200.
+	 * Integer percent keeps it exact for every grade (see {@code core.machine.ComponentRepair}).
+	 *
+	 * <p><b>This single knob also sets how many repairs a component gets</b> — four here, because a
+	 * fifth would leave nothing to restore. There is deliberately no separate count: a second knob
+	 * could disagree with this one, and a bench refusing a part that still had most of its ceiling
+	 * read as an arbitrary rule rather than as wear. 0 disables the decay, which also makes repairs
+	 * unlimited.
+	 */
+	public static int repairBenchMaxDamageDecayPercent = 20;
+
 	// --- MOD-275 assembler. The first MV machine: six times the LV rate, but a short operation.
 	// 12 EU/t x 40 ticks = 480 EU per craft — dearer than crafting by hand, cheaper than a processing
 	// step, so the machine buys time rather than resources. Raised from 8 EU/t after the playtest:
@@ -1602,6 +1631,16 @@ public final class Config {
 				() -> alloySmelterEuPerTick, v -> alloySmelterEuPerTick = v, 1),
 			new IntField("alloySmelterDuration", Section.MACHINES, "Fallback ticks one alloying operation takes at 1.0 speed (MOD-064); shipped recipe energy 1200 / alloySmelterEuPerTick 8 = 150.",
 				() -> alloySmelterDuration, v -> alloySmelterDuration = v, 1),
+			new IntField("repairBenchEuPerTick", Section.MACHINES, "EU/t the component repair bench draws while repairing (MOD-384). Four times the machine standard, like the alloy smelter.",
+				() -> repairBenchEuPerTick, v -> repairBenchEuPerTick = v, 1),
+			new IntField("repairBenchTier1EuCost", Section.MACHINES, "MOD-384: EU one repair of a T1 rotor/wheel costs (material: 1 iron plate). 5000 EU / 8 EU-t = 625 ticks.",
+				() -> repairBenchTier1EuCost, v -> repairBenchTier1EuCost = v, 1),
+			new IntField("repairBenchTier2EuCost", Section.MACHINES, "MOD-384: EU one repair of a reinforced rotor/wheel costs (material: 1 tempered iron plate).",
+				() -> repairBenchTier2EuCost, v -> repairBenchTier2EuCost = v, 1),
+			new IntField("repairBenchTier3EuCost", Section.MACHINES, "MOD-384: EU one repair of an advanced rotor/wheel costs (material: 1 electronic circuit).",
+				() -> repairBenchTier3EuCost, v -> repairBenchTier3EuCost = v, 1),
+			new IntField("repairBenchMaxDamageDecayPercent", Section.MACHINES, "MOD-384: percent of the ORIGINAL durability ceiling one repair burns, linear (1000 -> 800 -> 600 -> 400). Also sets how many repairs a part gets (four at 20%). 0 disables the decay and the limit with it.",
+				() -> repairBenchMaxDamageDecayPercent, v -> repairBenchMaxDamageDecayPercent = v, 0),
 			new IntField("assemblerEuPerTick", Section.MACHINES, "EU/tick the assembler draws while crafting (MOD-275). MV rate: six times an LV machine.",
 				() -> assemblerEuPerTick, v -> assemblerEuPerTick = v, 1),
 			new IntField("assemblerDuration", Section.MACHINES, "Ticks one assembler craft takes at 1.0 speed (MOD-275). 40 = 2 seconds, the pace of the genre.",
