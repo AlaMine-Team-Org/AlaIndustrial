@@ -357,11 +357,11 @@
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="19 страниц">19</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="19 страниц">19</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../machines/index.html">Машины</a><span class="sep">/</span><span>Электронагреватель</span></div>
@@ -371,28 +371,54 @@
     <div class="info">
       <h1>Электронагреватель</h1>
       <div class="block-id">alaindustrial:electric_heater</div>
-      <div class="tags"><span class="tag cat" style="background:#ff7a45">Машины</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Реализовано</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">heat</span><span class="tag">support</span></div>
+      <div class="tags"><span class="tag cat" style="background:#ff7a45">Машины</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Реализовано</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">heat</span><span class="tag">support</span><span class="tag">warmup</span></div>
     </div>
   </div>
 </div>
 
 <h2>Сводка</h2>
 
-<p><strong>Электронагреватель</strong> ставится прямо под <a href="vulcanizer.html">Вулканизатором</a> и даёт уровень тепла 3. Благодаря этому одна операция из одного каучука и одной пыли серы выдаёт три резины.</p>
+<p><strong>Электронагреватель</strong> ставится прямо под <a href="vulcanizer.html">Вулканизатором</a> и даёт ему максимальный уровень тепла — 3, то есть три резины с одной порции сырья вместо одной на костре.</p>
+
+<p>Но не сразу. Это печь, которую надо разжечь: холодный нагреватель <strong>вообще не источник тепла</strong>, и Вулканизатор над ним просто ждёт, пока тот выйдет на рабочую температуру. Разогрев занимает около десяти секунд, после чего машина стартует сразу на ×3.</p>
+
+<blockquote><strong>Мини-пример:</strong> поставьте нагреватель под Вулканизатор, подведите LV-кабель и загрузите сырьё. Первые ~10 секунд ничего не происходит, термометр на экране нагревателя ползёт вверх, спирали блока разгораются. Как только термометр полон — пошла резина, сразу по три.</blockquote>
 
 <h2>Энергия</h2>
 
-<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Внутренний буфер</td><td>800 EU/FE</td></tr><tr><td>Макс. вход</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Потребление</td><td>2 EU/FE/такт по запросу</td></tr><tr><td>Холостой расход</td><td>0 EU/FE</td></tr></tbody></table>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Внутренний буфер</td><td>2400 EU/FE</td></tr><tr><td>Макс. вход</td><td>32 EU/FE/такт (LV)</td></tr><tr><td>Потребление</td><td>6 EU/FE/такт</td></tr><tr><td>Разогрев</td><td>200 тактов (~10 с), 1200 EU/FE</td></tr><tr><td>Расход, когда греть некого</td><td>0 EU/FE</td></tr></tbody></table>
 
-<p>Нагреватель списывает энергию только в тот тик, когда Вулканизатор непосредственно над ним реально продвигает операцию. Нет рецепта, питания у машины или места в выходе — нагреватель не расходует EU/FE и не светится.</p>
+<p>Нагреватель — самая дорогая часть связки: 6 EU/FE/такт против 2 EU/FE/такт у самого Вулканизатора. Так и задумано — тепло и есть его продукт, а на прежней ставке он выходил дешевле машины, которую обслуживает, и не ощущался вовсе. Пара суммарно потребляет <strong>8 EU/FE/такт</strong>, что ещё укладывается в медный кабель (12 EU/FE/такт).</p>
+
+<p>Числа замкнуты: разогрев стоит 1200 EU/FE, ровно столько же стоит одна партия Вулканизатора, а буфер равен 2400 EU/FE. То есть <strong>полностью заряженный нагреватель способен разжечься и отработать одну партию даже с перерезанным кабелем</strong>.</p>
+
+<p><strong>Разогрев тратит энергию сам по себе</strong> — это единственный режим, в котором блок платит не за чужую работу. Но включается он не «просто потому что подведено питание», а только когда машине сверху действительно нечем работать, кроме как ждать тепла. Нагреватель, под которым нет машины, или под машиной без сырья, по-прежнему стоит холодным и <strong>не тратит ничего</strong>.</p>
+
+<p>Если машина сверху разогнана <a href="../upgrades/overclocker_upgrade.html">ускорителями</a>, нагреватель платит тот же множитель — иначе разогнанная пара платила бы за тепло меньше. Своей панели улучшений у него нет: множитель приезжает от машины, которую он греет.</p>
+
+<blockquote><strong>Осторожно с разгоном.</strong> На третьей ступени ускорителя машина сверху требует от нагревателя 48 EU/FE/такт, а его LV-вход держит только 32. Буфер такую пару какое-то время вытянет, потом нагреватель начнёт проседать. Практический потолок для связки — вторая ступень.</blockquote>
+
+<h2>Остывание</h2>
+
+<p>Когда греть некого, нагреватель остывает <strong>вдвое медленнее</strong>, чем разогревался: полный откат занимает около 20 секунд. Это сделано ради пауз — воронка, задержавшая подачу сырья на пару секунд, стоит вам небольшой части разогрева, а не всего.</p>
+
+<p>Остывание бесплатно. И пока машина сверху ждёт работы — например, стоит без собственной энергии — нагреватель <strong>держит температуру</strong>, не тратя при этом ничего: он не сбрасывает разогрев только потому, что соседу временно нечем платить.</p>
 
 <h2>Интерфейс</h2>
 
-<p>GUI нет. Состояние видно по свечению блока и индикатору тепла в экране Вулканизатора.</p>
+<p>Экран открывается правым кликом. Слотов у него нет — в нагреватель нечего класть; он берёт энергию из кабеля и отдаёт тепло вверх. Экран нужен затем, чтобы разогрев было видно и можно было планировать, а не угадывать.</p>
+
+<table><thead><tr><th>Слева</th><th>Справа</th></tr></thead><tbody><tr><td>Шкала запаса энергии</td><td>Термометр разогрева</td></tr></tbody></table>
+
+<p>Термометр залит по шкале накала — от тёмного уголька через красно-оранжевый к яркому золоту на полном разогреве. Последний шаг видно сразу: именно он означает, что машина сверху пошла работать.</p>
+
+<table><thead><tr><th>Строка</th><th>Что значит</th></tr></thead><tbody><tr><td>Прогрев</td><td>Температура в процентах — всегда настоящая, это свойство самого блока</td></tr><tr><td>Нагрев</td><td>×3, когда тепло реально отдаётся, и прочерк, пока нагреватель разогревается</td></tr><tr><td>Расход</td><td>Сколько EU/FE в такт нагреватель списывает, с учётом ускорителей машины сверху</td></tr></tbody></table>
+
+<p>Внизу — строка состояния: «Сверху нет машины», «Нет энергии», «Прогревается», «Прогрет», «Остывает» или «Холодный». Первые две выделены красным: это то, что чинит игрок.</p>
 
 <h2>Свойства блока</h2>
 
-<p>Источник тепла уровня 3 только для блока непосредственно сверху. EU/FE-потребитель LV; принимает энергию через доступные боковые грани. Кирка; при разрушении выпадает сам блок.</p>
+<p>Источник тепла только для блока непосредственно сверху и только в прогретом состоянии. EU/FE-потребитель LV; принимает энергию через доступные боковые грани. <strong>Свечение меняется с температурой</strong> — четыре ступени от тёмной до раскалённой. Состояние видно в мире, не открывая экран. У полностью прогретого блока из стыка с машиной пробивается жар. Частицы идут только на полном прогреве: это сигнал «идёт ×3», а не постоянный фон. Кирка; при разрушении выпадает сам блок.</p>
 
 <h2>Рецепт</h2>
 
@@ -400,7 +426,7 @@
 
 <h2>Связи</h2>
 
-<p><a href="vulcanizer.html">Вулканизатор</a> — единственный текущий потребитель тепла. Лава и магматический блок дают бесплатный уровень 2; костёр — уровень 1.</p>
+<p><a href="vulcanizer.html">Вулканизатор</a> — единственный текущий потребитель тепла. <a href="../upgrades/overclocker_upgrade.html">Ускоритель</a> — стоит в машине сверху, но оплачивает его и нагреватель. Лава и магматический блок дают бесплатный уровень 2 без всякого разогрева; костёр — уровень 1. Пока нагреватель разжигается, лава под машиной работала бы уже сейчас — это и есть цена ×3.</p>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="электронагреватель alaindustrial:electric_heater" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любая красная пыль"><img src="../assets/item/redstone_3d.png" alt="Любая красная пыль" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любой золотой слиток"><img src="../assets/item/gold_ingot_3d.png" alt="Любой золотой слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любая красная пыль"><img src="../assets/item/redstone_3d.png" alt="Любая красная пыль" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Машинный корпус"><img src="../assets/item/machine_casing_3d.png" alt="Машинный корпус" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Электронная схема"><img src="../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любой железный слиток"><img src="../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Электронагреватель"><img src="../assets/item/electric_heater_3d.png" alt="Электронагреватель" width="32" height="32"></div><div class="result-name">Электронагреватель</div></div></div></div></div>

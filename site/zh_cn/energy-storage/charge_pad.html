@@ -357,11 +357,11 @@
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="11 个页面">11</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="19 个页面">19</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="19 个页面">19</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../energy-storage/index.html">储能装置</a><span class="sep">/</span><span>充电站</span></div>
@@ -379,9 +379,9 @@
 
 <p><strong>充电站</strong> 是一块高度只有方块四分之一的扁平板，玩家只需站上去即可。站立的期间，充电站会 <strong>同时</strong> 为玩家身上所有的可充电装备充电：快捷栏和背包里的工具、左手中的物品，以及 <strong>穿戴在身上</strong> 的——能量背包、喷气背包、通量织物护甲套装。</p>
 
-<blockquote><strong>小例子：</strong> 从矿洞回来，手里的电钻半空、喷气背包也快没电了——站在基地入口的充电板上，一边整理箱子，一边装备就自动充满了。不用打开任何窗口。</blockquote>
+<blockquote><strong>小例子：</strong> 从矿洞回来，手里的电钻半空、喷气背包也快没电了——站在基地入口的充电板上，一边整理箱子，一边装备就自动充满了。整个过程不需要点击一次。</blockquote>
 
-<p>充电站 <strong>没有界面</strong>：没什么可打开的，全部反馈都来自脚下的指示灯颜色。</p>
+<p>充电本身不需要打开窗口：站上去就开始。充电站确实有一个界面，但它是 <strong>可选的</strong>——那是给想看具体数字的人准备的参考面板，而不是工作的前提。不看它只会少看到数字：无论界面开着还是关着，充电板的行为完全一样。</p>
 
 <h2>能量</h2>
 
@@ -417,13 +417,35 @@
 
 <h2>界面</h2>
 
-<p>没有界面。取而代之的是一个有四种状态的指示器：板面四角的四盏灯加上中央的线圈环，并在侧面用发光条带复述一遍（这样既能从上方、也能从远处读出状态）。</p>
+<p>充电站有两条互相独立的反馈渠道：脚下的指示器是主要的，供走动中的游戏使用；界面是辅助的，供想要精确数字的人使用。</p>
+
+<h3>指示器</h3>
+
+<p>一个有四种状态的指示器：板面四角的四盏灯加上中央的线圈环，并在侧面用发光条带复述一遍（这样既能从上方、也能从远处读出状态）。</p>
 
 <table><thead><tr><th>指示灯</th><th>含义</th><th>光照等级</th></tr></thead><tbody><tr><td>暗</td><td>充电站上没人</td><td>0</td></tr><tr><td>蓝</td><td>正在充电</td><td>10</td></tr><tr><td>绿</td><td>玩家身上所有装备已充满——可以走了</td><td>10</td></tr><tr><td>红</td><td>充电站没电了</td><td>3</td></tr></tbody></table>
 
 <p>红色与绿色刻意不同：它们是不同的问题、有不同的解决办法。绿是"你准备好了"，红是"充电站无电可分，需要发电"。</p>
 
 <p>充电期间会有火花从板上腾起。</p>
+
+<h3>咔哒声</h3>
+
+<p>充电站会像金属压力板一样发出咔哒声：踩上去时响一次，离开时再响一次。这是一种确认——即使背对着它、看不见灯光也看不见火花，声音也能告诉你压板已经识别到了你。</p>
+
+<p>咔哒声 <strong>每次造访只响一次</strong>，而不是每刻都响：沿着一排充电站跑过去，每座只给你一声，而不是一串。以旁观者模式穿过压板不会发出任何声音——旁观者也不会被充电。</p>
+
+<h3>界面窗口</h3>
+
+<p>界面通过 <strong>右键</strong> 打开，站在板上时也可以。踩上去并不会打开它：否则每走一步都会弹出窗口、妨碍行走，而充电站的全部意义就在于你可以踩上去然后继续忙自己的事。</p>
+
+<p>界面上没有槽位——充电站里没什么可放的，它充的是玩家身上的东西。它显示四项数值：</p>
+
+<table><thead><tr><th>行</th><th>含义</th></tr></thead><tbody><tr><td>电量</td><td>充电站的储量及其缓冲区，以 EU/FE 和百分比表示</td></tr><tr><td>输出</td><td>此刻每刻送给玩家多少 EU/FE</td></tr><tr><td>充电中</td><td>同时有多少件物品在接受充电</td></tr><tr><td>剩余时间</td><td>站在板上那位玩家的装备充满所需的预计时间</td></tr></tbody></table>
+
+<p>界面显示的是 <strong>充电站此刻正在做什么</strong>，而不是查看者自己口袋里有什么：如果一位玩家站在板上、另一位打开界面，后者看到的是充电站与前者之间的工作。板上无人时，下面三行显示破折号——充电站没有输出，也就无可显示。</p>
+
+<p>「剩余时间」按站在板上那位玩家的装备计算，而不是按充电站自身的缓冲区：玩家关心的是何时可以离开。它由当前输出速率推算，所以在供电线路较细时它会如实增长——充电站送出多少，取决于它能收进多少。</p>
 
 <h2>行为</h2>
 

@@ -357,11 +357,11 @@
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="11 pages">11</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="19 pages">19</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="19 pages">19</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="20 pages">20</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../energy-storage/index.html">Energy Storage</a><span class="sep">/</span><span>Charging Station</span></div>
@@ -379,9 +379,9 @@
 
 <p>The <strong>Charging Station</strong> is a flat plate, a quarter of a block tall, that you simply stand on. While you're on it, it charges <strong>everything</strong> you're carrying at once: tools in your hotbar and backpack, whatever is in your offhand, and your <strong>worn</strong> gear too — the Energy Pack, the Jetpack, a set of Fluxweave armour.</p>
 
-<blockquote><strong>Mini-example:</strong> you come back from the mine with a half-empty drill and a low jetpack — step onto the plate by your base entrance, get on with sorting your chests, and your gear tops itself up while you do. Not a single window to open.</blockquote>
+<blockquote><strong>Mini-example:</strong> you come back from the mine with a half-empty drill and a low jetpack — step onto the plate by your base entrance, get on with sorting your chests, and your gear tops itself up while you do. Not a single click needed.</blockquote>
 
-<p>The station has <strong>no interface</strong>: there is nothing to open, and the colour of the indicator under your feet is the entire feedback loop.</p>
+<p>Charging never asks you to open a window: step on and it runs. The station does have a screen, but it is <strong>optional</strong> — a reference panel for whoever wants the numbers, not a condition for the plate to work. Ignore it and the only thing you lose is the numbers: the plate behaves identically with the screen open and closed.</p>
 
 <h2>Energy</h2>
 
@@ -417,13 +417,35 @@
 
 <h2>Interface</h2>
 
-<p>There isn't one. In its place is a four-state indicator: four lamps at the corners of the plate and a coil ring at its centre, mirrored by a lit strip along its edge so the state reads both from above and from across the room.</p>
+<p>The station has two independent feedback channels: the indicator under your feet is the primary one, for play on the move, and the screen is the secondary one, for whoever wants exact numbers.</p>
+
+<h3>Indicator</h3>
+
+<p>A four-state indicator: four lamps at the corners of the plate and a coil ring at its centre, mirrored by a lit strip along its edge so the state reads both from above and from across the room.</p>
 
 <table><thead><tr><th>Indicator</th><th>Meaning</th><th>Light</th></tr></thead><tbody><tr><td>Dark</td><td>Nobody is standing on it</td><td>0</td></tr><tr><td>Blue</td><td>Charging</td><td>10</td></tr><tr><td>Green</td><td>Everything on you is already full — off you go</td><td>10</td></tr><tr><td>Red</td><td>The station is out of power</td><td>3</td></tr></tbody></table>
 
 <p>Red and green are deliberately distinct: they are different problems with different fixes. Green means "you're ready"; red means "the station has nothing to give, go build generation".</p>
 
 <p>Sparks lift off the plate while it is charging.</p>
+
+<h3>Click</h3>
+
+<p>The station clicks like a metal pressure plate: once when you step on, once when you step off. It is an acknowledgement — the sound tells you the plate registered you even when you are facing the other way and can see neither lamps nor sparks.</p>
+
+<p>The click sounds <strong>once per visit</strong>, not once per tick: sprinting along a row of stations gets you one click from each, not a burst. A spectator drifting through the plate clicks nothing at all — they do not charge either.</p>
+
+<h3>Screen</h3>
+
+<p>The screen opens on <strong>right-click</strong>, including while you are standing on the plate. Stepping on does not open it: a window popping up on every step would get in the way of walking, and the whole point of the station is that you can step on it and get on with your business.</p>
+
+<p>There are no slots on the screen — there is nothing to put into the station, it charges what is on you. It shows four values:</p>
+
+<table><thead><tr><th>Row</th><th>Meaning</th></tr></thead><tbody><tr><td>Charge</td><td>The station's reserve and its buffer, in EU/FE and per cent</td></tr><tr><td>Delivery</td><td>How many EU/FE per tick are going to the player right now</td></tr><tr><td>Charging</td><td>How many items are taking charge at once</td></tr><tr><td>Time left</td><td>Estimated time until the gear of whoever stands on the plate is full</td></tr></tbody></table>
+
+<p>The screen shows <strong>what the station is doing right now</strong>, not what is in the viewer's own pockets: if one player stands on the plate and another opens the screen, the second sees the station's work with the first. With nobody on the plate, the three lower rows show a dash — the station is delivering nothing, so there is nothing to report.</p>
+
+<p>"Time left" is measured against the gear of whoever stands on the plate rather than the station's own buffer: what the player wants to know is when they can leave. It is derived from the current delivery rate, so on a thin supply line it honestly grows — the station gives out exactly as much as it manages to take in.</p>
 
 <h2>Behaviour</h2>
 

@@ -357,11 +357,11 @@
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="11 страниц">11</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>Утилитарные блоки</span><span class="cat-count" aria-label="14 страниц">14</span></a>
 <div class="group-title">Предметы</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>Апгрейды</span><span class="cat-count" aria-label="2 страницы">2</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненты</span><span class="cat-count" aria-label="19 страниц">19</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="19 страниц">19</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>Игровые предметы</span><span class="cat-count" aria-label="20 страниц">20</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Главная</a><span class="sep">/</span><a href="../machines/index.html">Машины</a><span class="sep">/</span><span>Вулканизатор</span></div>
@@ -390,9 +390,13 @@
 
 <p>Источник читается в блоке непосредственно под машиной.</p>
 
-<table><thead><tr><th>Источник</th><th>Уровень</th><th>Выход</th></tr></thead><tbody><tr><td>Зажжённый обычный или душевный костёр</td><td>1</td><td>1 резина</td></tr><tr><td>Лава, лавовый котёл или магматический блок</td><td>2</td><td>2 резины</td></tr><tr><td><a href="electric_heater.html">Электронагреватель</a></td><td>3</td><td>3 резины</td></tr></tbody></table>
+<table><thead><tr><th>Источник</th><th>Уровень</th><th>Выход</th></tr></thead><tbody><tr><td>Зажжённый обычный или душевный костёр</td><td>1</td><td>1 резина</td></tr><tr><td>Лава, лавовый котёл или магматический блок</td><td>2</td><td>2 резины</td></tr><tr><td><a href="electric_heater.html">Электронагреватель</a>, прогретый</td><td>3</td><td>3 резины</td></tr></tbody></table>
 
-<p>На любом уровне расход одинаков: <strong>1 сырой каучук + 4 пыли серы</strong>. Нагрев умножает выход, но не цену партии, поэтому сильный источник тепла — главный способ растянуть найденную серу. Если источник или уровень нагрева меняется во время операции, прогресс безопасно начинается заново с текущим множителем. Ингредиенты при перезапуске не расходуются, а подмена нагрева в последний тик не повышает выход почти завершённой операции.</p>
+<p>На любом уровне расход одинаков: <strong>1 сырой каучук + 4 пыли серы</strong>. Нагрев умножает выход, но не цену партии, поэтому сильный источник тепла — главный способ растянуть найденную серу.</p>
+
+<p>Электронагреватель в этой таблице стоит особняком: пока он не разогрелся, он <strong>не источник тепла вообще</strong>, и машина над ним ждёт. Разогрев занимает около десяти секунд, зато потом Вулканизатор сразу работает на ×3. Подробности — в <a href="electric_heater.html">его спеке</a>.</p>
+
+<p>Если уровень нагрева <strong>падает</strong> во время операции, прогресс безопасно начинается заново с новым множителем; ингредиенты при перезапуске не расходуются. Если уровень <strong>растёт</strong>, партия спокойно доигрывается на том множителе, с которым началась, и повышение достаётся уже следующей — так подмена нагрева в последний тик не повышает выход почти завершённой операции.</p>
 
 <h2>Инвентарь и автоматизация</h2>
 

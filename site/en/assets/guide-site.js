@@ -205,6 +205,13 @@
       const total = (t.modrinth || 0) + (t.curseforge || 0);
       if (!total) return;
       const all = dailyFrom(data.series || []);
+      /* Snapshots are dated with the day they close, so the newest one is always
+         yesterday and the chart ends there. Should a row for the current day turn
+         up anyway — a hand-edited file, an older collector — it is still filling
+         up, and its bar would grow from a sliver all day and read as a crash in
+         downloads. Never draw a day that is not over. */
+      const todayUTC = new Date().toISOString().slice(0, 10);
+      while (all.length && all[all.length - 1].date >= todayUTC) all.pop();
       const week = all.slice(-7).reduce((s, d) => s + d.v, 0);
       const prev = all.slice(-14, -7).reduce((s, d) => s + d.v, 0);
       const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };

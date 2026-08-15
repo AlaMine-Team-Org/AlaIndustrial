@@ -357,11 +357,11 @@
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="11 ページ">11</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="19 ページ">19</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="19 ページ">19</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../machines/index.html">マシン</a><span class="sep">/</span><span>電気ヒーター</span></div>
@@ -371,27 +371,53 @@
     <div class="info">
       <h1>電気ヒーター</h1>
       <div class="block-id">alaindustrial:electric_heater</div>
-      <div class="tags"><span class="tag cat" style="background:#ff7a45">マシン</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">実装済み</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">heat</span><span class="tag">support</span></div>
+      <div class="tags"><span class="tag cat" style="background:#ff7a45">マシン</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">実装済み</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">heat</span><span class="tag">support</span><span class="tag">warmup</span></div>
     </div>
   </div>
 </div>
 <h2>概要</h2>
 
-<p><strong>電気ヒーター</strong> は <a href="vulcanizer.html">加硫機</a> のすぐ下に置き、熱レベル3を与えます。これにより、生ゴム1つと硫黄の粉1つからの1回の操作でゴム ×3 が産出されます。</p>
+<p><strong>電気ヒーター</strong> は <a href="vulcanizer.html">加硫機</a> のすぐ下に置き、最大の熱レベル — 3 — を与えます。つまり、焚き火の上でのゴム1個ではなく、材料1回分からゴムが3個産出されます。</p>
+
+<p>ただし、すぐにではありません。これは火を入れる必要のあるかまどです：低温のヒーターは<strong>そもそも熱源ではなく</strong>、その上の加硫機は、ヒーターが稼働温度に達するまでただ待ちます。予熱には約10秒かかり、そのあと機械はいきなり ×3 で動き出します。</p>
+
+<blockquote><strong>ミニ例：</strong> 加硫機の下にヒーターを置き、LV ケーブルをつないで材料を入れます。最初の約10秒は何も起こらず、ヒーターの画面の温度計が上がっていき、ブロックのコイルが赤みを帯びていきます。温度計が満たされた瞬間からゴムが、しかも3個ずつ出てきます。</blockquote>
 
 <h2>エネルギー</h2>
 
-<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>内部バッファ</td><td>800 EU/FE</td></tr><tr><td>最大入力</td><td>32 EU/FE/t（LV）</td></tr><tr><td>消費</td><td>要求時 2 EU/FE/t</td></tr><tr><td>アイドリング消費</td><td>0 EU/FE</td></tr></tbody></table>
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>内部バッファ</td><td>2400 EU/FE</td></tr><tr><td>最大入力</td><td>32 EU/FE/t（LV）</td></tr><tr><td>消費</td><td>6 EU/FE/t</td></tr><tr><td>予熱</td><td>200ティック（約10秒）、1200 EU/FE</td></tr><tr><td>温めるものがないときの消費</td><td>0 EU/FE</td></tr></tbody></table>
 
-<p>ヒーターがエネルギーを消費するのは、真上の加硫機が実際に操作を進めるティックだけです。レシピがない、上の機械への給電がない、出力に空きがない — いずれの場合もヒーターは EU/FE を消費せず、発光もありません。</p>
+<p>ヒーターはこの組み合わせでいちばん高くつく側です：加硫機自身の 2 EU/FE/t に対して 6 EU/FE/t。これは意図的なものです — 熱こそがヒーターの産物であり、以前の消費量では自分が世話をする機械より安上がりで、存在感がまったくありませんでした。2台合わせて <strong>8 EU/FE/t</strong> で、これはまだ銅ケーブル（12 EU/FE/t）に収まります。</p>
+
+<p>数字は互いに閉じています：予熱は 1200 EU/FE、加硫機のバッチ1回もちょうど同じ 1200 EU/FE、そしてバッファは 2400 EU/FE。つまり<strong>満充電のヒーターは、ケーブルを切られていても自分に火を入れて、さらにバッチ1回を回しきれます</strong>。</p>
+
+<p><strong>予熱はそれ自体でエネルギーを使います</strong> — 他人の仕事以外のものにこのブロックが支払う唯一のモードです。とはいえ「電気がつながっているから」という理由で始まるのではありません：上の機械が本当に熱を待つ以外にやることがないときにだけ始まります。上に機械がないヒーターや、材料の入っていない機械の下のヒーターは、これまでどおり低温のまま立っていて、<strong>何も消費しません</strong>。</p>
+
+<p>上の機械が<a href="../upgrades/overclocker_upgrade.html">オーバークロックチップ</a>で加速されている場合、ヒーターも同じ倍率を支払います — そうでなければ、加速した組み合わせのほうが熱を安く買えてしまうからです。ヒーター自身にアップグレードパネルはありません：倍率は、ヒーターが温めている機械から届きます。</p>
+
+<blockquote><strong>オーバークロックにはご注意。</strong> オーバークロックチップの3段目では、上の機械はヒーターに 48 EU/FE/t を要求しますが、ヒーターの LV 入力が受けられるのは 32 までです。バッファはこの組み合わせをしばらく支えますが、やがてヒーターが追いつかなくなります。この2台の実用上の上限は2段目です。</blockquote>
+
+<h2>冷却</h2>
+
+<p>温めるものがないとき、ヒーターは温まったときの<strong>半分の速さ</strong>で冷めていきます：完全に元へ戻るのに約20秒かかります。これは中断のための余裕です — ホッパーが数秒だけ材料の供給を遅らせても、失うのは予熱の一部だけで、すべてではありません。</p>
+
+<p>冷却は無料です。そして上の機械が仕事を待っている間 — たとえば自分のエネルギーが切れて止まっている間 — ヒーターは<strong>温度を保ち</strong>、その間も何も消費しません：隣が一時的に支払えないというだけの理由で、予熱を捨てたりはしないのです。</p>
 
 <h2>インターフェース</h2>
 
-<p>GUI はありません。状態はブロックの発光と、加硫機の画面の熱インジケーターで分かります。</p>
+<p>画面は右クリックで開きます。スロットはありません — ヒーターに入れるものは何もなく、ケーブルからエネルギーを受け取って上へ熱を渡すだけです。画面があるのは、予熱を勘に頼らず、見て計画できるようにするためです。</p>
+
+<table><thead><tr><th>左</th><th>右</th></tr></thead><tbody><tr><td>エネルギー残量バー</td><td>予熱の温度計</td></tr></tbody></table>
+
+<p>温度計は白熱の色階で満たされます — 暗い熾火から赤橙を経て、完全に予熱されると明るい金色へ。この最後の段差はすぐ目に入ります：まさにそれが、上の機械が動き出したという合図だからです。</p>
+
+<table><thead><tr><th>行</th><th>意味</th></tr></thead><tbody><tr><td>予熱</td><td>パーセント表示の温度 — 常に実際の値で、ブロック自身の性質です</td></tr><tr><td>熱</td><td>熱が実際に渡されているときは ×3、ヒーターが予熱中の間はダッシュ</td></tr><tr><td>消費</td><td>ヒーターが1ティックあたり消費する EU/FE。上の機械のオーバークロックチップも織り込み済み</td></tr></tbody></table>
+
+<p>下部はステータス行です：「上に機械がありません」「エネルギーがありません」「予熱中」「適温」「冷却中」「低温」。最初の2つは赤で強調されます：プレイヤーが直すべきものだからです。</p>
 
 <h2>ブロック属性</h2>
 
-<p>すぐ上のブロックに対してのみ熱レベル3の熱源。 LV の EU/FE 消費者。利用可能な側面からエネルギーを受け付けます。 ツルハシ。破壊時にブロック自体がドロップします。</p>
+<p>すぐ上のブロックに対してのみ、しかも適温に達しているときにだけ熱源になります。 LV の EU/FE 消費者。利用可能な側面からエネルギーを受け付けます。 <strong>発光は温度とともに変化します</strong> — 暗い状態から灼熱まで4段階。画面を開かなくてもワールドで状態が分かります。 完全に予熱されたブロックは、機械との継ぎ目から熱を漏らします。パーティクルが出るのは完全予熱のときだけです：常時の演出ではなく「×3 で動いている」という合図です。 ツルハシ。破壊時にブロック自体がドロップします。</p>
 
 <h2>レシピ</h2>
 
@@ -399,7 +425,7 @@
 
 <h2>関連項目</h2>
 
-<p><a href="vulcanizer.html">加硫機</a> — 現在唯一の熱の消費者。 溶岩とマグマブロックは無料でレベル2を、焚き火はレベル1を与えます。</p>
+<p><a href="vulcanizer.html">加硫機</a> — 現在唯一の熱の消費者。 <a href="../upgrades/overclocker_upgrade.html">オーバークロックチップ</a> — 上の機械に入りますが、その分はヒーターも支払います。 溶岩とマグマブロックは予熱なしで無料のレベル2を、焚き火はレベル1を与えます。ヒーターが火を入れている間、機械の下の溶岩ならもう働いているはずです — それが ×3 の代償です。</p>
 
 <h2>クラフト</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="電気ヒーター alaindustrial:electric_heater" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかのレッドストーン粉"><img src="../assets/item/redstone_3d.png" alt="いずれかのレッドストーン粉" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの金インゴット"><img src="../assets/item/gold_ingot_3d.png" alt="いずれかの金インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかのレッドストーン粉"><img src="../assets/item/redstone_3d.png" alt="いずれかのレッドストーン粉" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="マシンケース"><img src="../assets/item/machine_casing_3d.png" alt="マシンケース" width="32" height="32"></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="電子回路"><img src="../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="電気ヒーター"><img src="../assets/item/electric_heater_3d.png" alt="電気ヒーター" width="32" height="32"></div><div class="result-name">電気ヒーター</div></div></div></div></div>

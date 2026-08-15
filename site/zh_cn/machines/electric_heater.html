@@ -357,11 +357,11 @@
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="11 个页面">11</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <div class="group-title">物品</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="19 个页面">19</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="19 个页面">19</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="20 个页面">20</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../machines/index.html">机器</a><span class="sep">/</span><span>电热器</span></div>
@@ -371,27 +371,53 @@
     <div class="info">
       <h1>电热器</h1>
       <div class="block-id">alaindustrial:electric_heater</div>
-      <div class="tags"><span class="tag cat" style="background:#ff7a45">机器</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">heat</span><span class="tag">support</span></div>
+      <div class="tags"><span class="tag cat" style="background:#ff7a45">机器</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">heat</span><span class="tag">support</span><span class="tag">warmup</span></div>
     </div>
   </div>
 </div>
 <h2>概览</h2>
 
-<p><strong>电热器</strong> 直接放置在 <a href="vulcanizer.html">硫化机</a> 下方，提供 3 级热源。如此一来，用一份橡胶和一份硫磺粉进行的一次操作可产出三份橡胶。</p>
+<p><strong>电热器</strong> 直接放置在 <a href="vulcanizer.html">硫化机</a> 下方，为它提供最高一级的热量——3 级，也就是一份原料产出三份橡胶，而不是在营火上的一份。</p>
+
+<p>但不是立刻就能做到。它是一座需要点燃的炉子：低温的电热器<strong>根本不是热源</strong>，它上方的硫化机只会一直等，直到它升到工作温度。预热大约需要十秒，之后机器直接以 ×3 开始运转。</p>
+
+<blockquote><strong>小示例：</strong> 把电热器放在硫化机下方，接上 LV 电缆并装入原料。最初的约 10 秒什么都不会发生，电热器界面上的温度计不断爬升，方块的电热丝逐渐发红。温度计一满，橡胶就开始产出，而且一次三份。</blockquote>
 
 <h2>能量</h2>
 
-<table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>内部缓存</td><td>800 EU/FE</td></tr><tr><td>最大输入</td><td>32 EU/FE/刻（LV）</td></tr><tr><td>消耗</td><td>按需 2 EU/FE/刻</td></tr><tr><td>空闲消耗</td><td>0 EU/FE</td></tr></tbody></table>
+<table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>内部缓存</td><td>2400 EU/FE</td></tr><tr><td>最大输入</td><td>32 EU/FE/刻（LV）</td></tr><tr><td>消耗</td><td>6 EU/FE/刻</td></tr><tr><td>预热</td><td>200 刻（约 10 秒），1200 EU/FE</td></tr><tr><td>无对象可加热时的消耗</td><td>0 EU/FE</td></tr></tbody></table>
 
-<p>电热器仅在其正上方的硫化机真正推进操作的这一刻才扣除能量。如果没有配方、机器未供能或输出无空位，电热器不会消耗 EU/FE，也不会发光。</p>
+<p>电热器是这一对方块中最费电的部分：6 EU/FE/刻，而硫化机本身只要 2 EU/FE/刻。这是有意为之——热量正是它的产物，而按照原先的费率，它比自己服务的机器还便宜，存在感几乎为零。这一对合计消耗 <strong>8 EU/FE/刻</strong>，仍然在铜缆的承载范围内（12 EU/FE/刻）。</p>
+
+<p>这些数字彼此闭合：预热耗费 1200 EU/FE，硫化机的一批同样是 1200 EU/FE，而缓存正好是 2400 EU/FE。也就是说，<strong>充满电的电热器即使电缆被切断，也够自己点燃一次再跑完一批生产</strong>。</p>
+
+<p><strong>预热本身就要花电</strong> — 这是这个方块唯一一种不是在为别人的工作付费的模式。但它并不会「只要接上电就开始」：只有当上方的机器确实除了等热量以外无事可做时，预热才会启动。上方没有机器的电热器，或者上方机器里没有原料时，它照样保持低温，<strong>什么都不消耗</strong>。</p>
+
+<p>如果上方的机器装了<a href="../upgrades/overclocker_upgrade.html">超频芯片</a>，电热器会按同样的倍率付费——否则超频后的这一对反而在热量上花得更少。电热器自己没有升级面板：倍率来自它所加热的那台机器。</p>
+
+<blockquote><strong>超频请当心。</strong> 装到第三级超频芯片时，上方机器会向电热器索取 48 EU/FE/刻，而它的 LV 输入只能承受 32。缓存还能支撑这一对一段时间，之后电热器就会跟不上。这一对方块的实际上限是第二级。</blockquote>
+
+<h2>冷却</h2>
+
+<p>没有加热对象时，电热器的冷却速度只有升温时的<strong>一半</strong>：完全退回低温大约需要 20 秒。这是为停顿留出的余地——漏斗把原料耽搁了几秒，只会让你损失一小段预热，而不是全部。</p>
+
+<p>冷却是免费的。而且在上方机器等待工作的时候——比如它自己没有能量——电热器会<strong>保持温度</strong>，其间同样什么都不消耗：它不会仅仅因为邻居暂时付不起钱就把预热扔掉。</p>
 
 <h2>界面</h2>
 
-<p>没有 GUI。可通过方块的发光以及硫化机界面中的热源指示器查看状态。</p>
+<p>右键打开界面。界面没有槽位——电热器里没有东西可放；它从电缆取电，向上输出热量。界面的作用是让预热可以被看见、被规划，而不是靠猜。</p>
+
+<table><thead><tr><th>左侧</th><th>右侧</th></tr></thead><tbody><tr><td>能量储量条</td><td>预热温度计</td></tr></tbody></table>
+
+<p>温度计按白炽色阶填充——从暗红余烬经红橙色，到完全预热时的明亮金色。最后这一跳变一眼就能看到：它正表示上方的机器开始干活了。</p>
+
+<table><thead><tr><th>行</th><th>含义</th></tr></thead><tbody><tr><td>预热</td><td>以百分比表示的温度——始终是真实值，这是方块自身的属性</td></tr><tr><td>热量</td><td>热量真正输出时显示 ×3，电热器还在预热时显示短横</td></tr><tr><td>消耗</td><td>电热器每刻扣除多少 EU/FE，已计入上方机器的超频芯片</td></tr></tbody></table>
+
+<p>底部是状态行：「上方没有机器」「没有能量」「预热中」「已达温度」「冷却中」或「低温」。前两条以红色标出：它们才是玩家需要处理的问题。</p>
 
 <h2>方块属性</h2>
 
-<p>仅对正上方方块提供 3 级热源。 LV 等级的 EU/FE 消费端，通过可用的侧面接收能量。 使用镐采集；破坏时方块本身掉落。</p>
+<p>仅对正上方的方块提供热源，且仅在已达温度时提供。 LV 等级的 EU/FE 消费端，通过可用的侧面接收能量。 <strong>发光随温度变化</strong> — 从暗到炽热共四档。不打开界面也能在世界里看出它的状态。 完全预热的方块会从与机器的接缝处透出热气。粒子只在完全预热时出现：这是「正在 ×3」的信号，而不是常驻的背景效果。 使用镐采集；破坏时方块本身掉落。</p>
 
 <h2>配方</h2>
 
@@ -399,7 +425,7 @@
 
 <h2>相关内容</h2>
 
-<p><a href="vulcanizer.html">硫化机</a> — 目前唯一的热源消费者。 岩浆和岩浆块提供免费的 2 级热源；营火为 1 级。</p>
+<p><a href="vulcanizer.html">硫化机</a> — 目前唯一的热源消费者。 <a href="../upgrades/overclocker_upgrade.html">超频芯片</a> — 装在上方的机器里，但它的开销也由电热器分担。 熔岩和岩浆块无需任何预热就提供免费的 2 级热源；营火为 1 级。在电热器点燃自己的这段时间里，机器下面的熔岩早已在干活了——这就是 ×3 的代价。</p>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="电热器 alaindustrial:electric_heater" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意红石粉"><img src="../assets/item/redstone_3d.png" alt="任意红石粉" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意金锭"><img src="../assets/item/gold_ingot_3d.png" alt="任意金锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意红石粉"><img src="../assets/item/redstone_3d.png" alt="任意红石粉" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="机器外壳"><img src="../assets/item/machine_casing_3d.png" alt="机器外壳" width="32" height="32"></div> <div class="cell" title="任意铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电子电路"><img src="../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="任意铁锭"><img src="../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="电热器"><img src="../assets/item/electric_heater_3d.png" alt="电热器" width="32" height="32"></div><div class="result-name">电热器</div></div></div></div></div>

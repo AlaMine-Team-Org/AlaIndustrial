@@ -357,11 +357,11 @@
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="11 ページ">11</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="2 ページ">2</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="19 ページ">19</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="19 ページ">19</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="20 ページ">20</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../energy-storage/index.html">エネルギー貯蔵</a><span class="sep">/</span><span>充電ステーション</span></div>
@@ -379,9 +379,9 @@
 
 <p><strong>充電ステーション</strong>はブロックの高さ 4 分の 1 の薄いプレートで、プレイヤーがただ乗るだけです。乗っている間、ステーションは<strong>すべて</strong>の装備を一気に充電します：ホットバーとバックパック内のツール、左手のアイテム、そして<strong>装着している</strong>エネルギーパック、ジェットパック、フラックス織一式です。</p>
 
-<blockquote><strong>ミニ例：</strong> 半分空になったドリルと消耗したジェットパックを抱えて坑道から戻り——拠点入口のプレートに乗って、チェストの整理をしているうちに装備が勝手に充電されました。ウィンドウを 1 つも開く必要はありません。</blockquote>
+<blockquote><strong>ミニ例：</strong> 半分空になったドリルと消耗したジェットパックを抱えて坑道から戻り——拠点入口のプレートに乗って、チェストの整理をしているうちに装備が勝手に充電されました。クリックは 1 回も要りません。</blockquote>
 
-<p>ステーションに<strong>インターフェースはありません</strong>：開くものはなく、フィードバックはすべて足元のインジケーターの色です。</p>
+<p>充電そのものにウィンドウを開く必要はありません：乗れば動きます。ステーションに画面はありますが、これは<strong>任意</strong>です——数値を知りたい人のための参照パネルであって、動作の条件ではありません。見なくても失うのは数値だけで、プレート自体の挙動は画面を開いていても閉じていても同じです。</p>
 
 <h2>エネルギー</h2>
 
@@ -417,13 +417,35 @@
 
 <h2>インターフェース</h2>
 
-<p>インターフェースはありません。代わりに 4 状態のインジケーターがあります：プレート四隅の 4 つのランプと中央のコイルの輪で、側面の光る帯で重複表示されます（状態が上からも遠くからも読めるように）。</p>
+<p>ステーションには独立した 2 つのフィードバック経路があります：足元のインジケーターが主で、動きながらの遊びのため。画面が従で、正確な数値が欲しい人のためです。</p>
+
+<h3>インジケーター</h3>
+
+<p>4 状態のインジケーターがあります：プレート四隅の 4 つのランプと中央のコイルの輪で、側面の光る帯で重複表示されます（状態が上からも遠くからも読めるように）。</p>
 
 <table><thead><tr><th>インジケーター</th><th>意味</th><th>光</th></tr></thead><tbody><tr><td>暗い</td><td>ステーションに誰もいない</td><td>0</td></tr><tr><td>青</td><td>充電中</td><td>10</td></tr><tr><td>緑</td><td>プレイヤーのすべてがすでに充電済み——行って OK</td><td>10</td></tr><tr><td>赤</td><td>ステーションのエネルギーが切れた</td><td>3</td></tr></tbody></table>
 
 <p>赤と緑は意図的に区別されます：それぞれ異なる問題で、異なる解決策だからです。緑は「準備 OK」、赤は「ステーションが分け与えられない、発電が必要」です。</p>
 
 <p>充電中、プレートから火花が立ち上ります。</p>
+
+<h3>クリック音</h3>
+
+<p>ステーションは金属の感圧板と同じ音で鳴ります：乗ったときに 1 回、降りたときに 1 回。これは「認識した」という合図です——別の方向を向いていてランプも火花も見えないときでも、音でプレートが反応したと分かります。</p>
+
+<p>音が鳴るのは<strong>1 回の訪問につき 1 回</strong>で、毎ティックではありません：ステーションの列を走り抜けても、鳴るのは各 1 回であって連打にはなりません。スペクテイターがプレートをすり抜けても何も鳴りません——充電もされないからです。</p>
+
+<h3>画面</h3>
+
+<p>画面は<strong>右クリック</strong>で開きます。プレートに乗ったままでも開けます。乗っただけでは開きません：一歩ごとにウィンドウが出ては歩く邪魔になりますし、乗ったまま自分の用事を続けられることこそがステーションの狙いだからです。</p>
+
+<p>画面にスロットはありません——ステーションに入れるものはなく、充電するのはプレイヤーが身に着けているものです。表示される値は 4 つです：</p>
+
+<table><thead><tr><th>行</th><th>意味</th></tr></thead><tbody><tr><td>充電量</td><td>ステーションの残量とバッファ（EU/FE とパーセント）</td></tr><tr><td>供給</td><td>今この瞬間にプレイヤーへ渡している 1 ティックあたりの EU/FE</td></tr><tr><td>充電中</td><td>同時に充電を受けているアイテムの数</td></tr><tr><td>残り時間</td><td>プレートに乗っている人の装備が満充電になるまでの推定時間</td></tr></tbody></table>
+
+<p>画面が示すのは<strong>ステーションが今行っていること</strong>であり、見ている人の手持ちではありません：あるプレイヤーがプレートに乗り、別のプレイヤーが画面を開いた場合、後者に見えるのは前者に対するステーションの働きです。プレートに誰もいないときは、下 3 行はダッシュを表示します——供給していない以上、示すものがないからです。</p>
+
+<p>「残り時間」はステーション自身のバッファではなく、プレートに乗っている人の装備を基準に計算します：プレイヤーが知りたいのは、いつ立ち去れるかだからです。現在の供給速度から導くため、配線が細ければ正直に伸びます——ステーションは受け取れる分だけしか渡せません。</p>
 
 <h2>挙動</h2>
 
