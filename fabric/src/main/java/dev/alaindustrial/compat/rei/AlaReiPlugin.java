@@ -120,9 +120,15 @@ public class AlaReiPlugin implements REIClientPlugin {
 		registry.addWorkstations(CanningDisplay.CATEGORY, EntryStacks.of(ModBlocks.CANNING_MACHINE));
 		// Informational category: the T2 solar branches (and future evolution lines) with no crafting
 		// recipe. The base solar_panel is craftable, so it is intentionally not linked here.
-		registry.add(new AlaInfoCategory());
+		registry.add(new AlaInfoCategory(AlaInfoDisplay.CATEGORY, "jei.alaindustrial.category.evolution",
+				dev.alaindustrial.registry.ModContent.ALIGNMENT_CHIP_DAY.get()));
 		registry.addWorkstations(AlaInfoDisplay.CATEGORY, EntryStacks.of(ModBlocks.DAYLIGHT_SOLAR_PANEL));
 		registry.addWorkstations(AlaInfoDisplay.CATEGORY, EntryStacks.of(ModBlocks.MOONLIT_SOLAR_PANEL));
+		// MOD-420: machines that have no recipe at all — their GUIs used to answer nothing when clicked.
+		registry.add(new AlaInfoCategory(AlaInfoDisplay.MACHINE_CATEGORY,
+				"jei.alaindustrial.category.machine_info", ModBlocks.GEOTHERMAL_GENERATOR));
+		registry.addWorkstations(AlaInfoDisplay.MACHINE_CATEGORY, EntryStacks.of(ModBlocks.GEOTHERMAL_GENERATOR));
+		registry.addWorkstations(AlaInfoDisplay.MACHINE_CATEGORY, EntryStacks.of(ModBlocks.ENERGY_CONDENSER));
 	}
 
 	@Override
@@ -130,12 +136,17 @@ public class AlaReiPlugin implements REIClientPlugin {
 		// Build one static informational display per entry. Pure client-side data (block/item refs +
 		// Config values), so it is added directly here rather than synced via ServerDisplayRegistry.
 		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.solarEvolutionEntries()) {
-			registry.add(new AlaInfoDisplay(entry));
+			registry.add(new AlaInfoDisplay(entry, AlaInfoDisplay.CATEGORY));
 		}
 		// MOD-118: the incubator's rarity grades — a second roll on top of every success, which no
 		// recipe card has room for.
 		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.mutationGradeEntries()) {
-			registry.add(new AlaInfoDisplay(entry));
+			registry.add(new AlaInfoDisplay(entry, AlaInfoDisplay.CATEGORY));
+		}
+		// MOD-420: the geothermal generator and the energy condenser — no recipe kind, no recipe JSON,
+		// so the only thing a viewer can show for them is this page.
+		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.machineInfoEntries()) {
+			registry.add(new AlaInfoDisplay(entry, AlaInfoDisplay.MACHINE_CATEGORY));
 		}
 		// MOD-383: one canning card per accepted food. Also pure client-side data — the sweep over the
 		// (by now frozen) item registry happens on the first call, here.
@@ -198,6 +209,11 @@ public class AlaReiPlugin implements REIClientPlugin {
 		for (MachineRecipeViewerTargets.CanningTarget target : MachineRecipeViewerTargets.CANNING_ALL) {
 			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
 			registerClickArea(registry, target.screenClass(), rect, CanningDisplay.CATEGORY);
+		}
+		// MOD-420: machines with no recipe at all open their informational page instead.
+		for (MachineRecipeViewerTargets.InfoTarget target : MachineRecipeViewerTargets.INFO_ALL) {
+			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
+			registerClickArea(registry, target.screenClass(), rect, AlaInfoDisplay.MACHINE_CATEGORY);
 		}
 		// MOD-080: keep REI's item grid clear of the upgrade panel + gear tab on every machine screen.
 		registry.exclusionZones().register((Class) MachineScreen.class, new AlaReiExclusionZones());

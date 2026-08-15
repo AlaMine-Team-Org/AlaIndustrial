@@ -2,6 +2,7 @@ package dev.alaindustrial.compat.jei;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.compat.CanningExchange;
+import dev.alaindustrial.client.compat.RecipeViewerInfo;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.AlloyingRecipe;
 import dev.alaindustrial.recipe.FluidOutputRecipe;
@@ -60,6 +61,14 @@ final class AlaJeiRecipeTypes {
 	 */
 	static final IRecipeType<CanningExchange.Card> CANNING =
 			IRecipeType.create(Industrialization.id("canning"), CanningExchange.Card.class);
+
+	/**
+	 * Machines with no recipe at all (MOD-420) — the geothermal generator and the energy condenser.
+	 * Like {@link #CANNING} this is not an {@link IRecipeHolderType}: the "recipes" are the shared
+	 * loader-neutral {@link RecipeViewerInfo.Entry} records, not anything the recipe manager holds.
+	 */
+	static final IRecipeType<RecipeViewerInfo.Entry> MACHINE_INFO =
+			IRecipeType.create(Industrialization.id("machine_info"), RecipeViewerInfo.Entry.class);
 
 	private AlaJeiRecipeTypes() {
 	}

@@ -112,6 +112,41 @@ public final class RecipeViewerInfo {
 				Line.of("jei.alaindustrial.mutation_grades.line4"))));
 	}
 
+	/**
+	 * Machines whose behaviour is not expressible as a recipe (MOD-420). A processing machine gets its
+	 * card for free — it has a {@link dev.alaindustrial.registry.ModRecipes.Kind} and JSON recipes, so
+	 * the viewer can draw "these items in, those items out". These two have neither: the geothermal
+	 * generator burns lava through hardcoded item checks, and the condenser has no input item at all —
+	 * it eats surplus EU and prints a clot once the bank passes a threshold. Without this page their
+	 * GUIs answer nothing when clicked.
+	 *
+	 * <p>Deliberately terse: {@code AlaInfoCategory} reserves eight visual lines after word-wrap at
+	 * ~148 px and neither clips nor scrolls, so a ninth line would simply hang outside the panel. Every
+	 * line here is written to survive Russian, the longest of the twenty shipped locales.
+	 *
+	 * <p>Titles reuse the blocks' own {@code block.alaindustrial.*} keys rather than dedicated ones:
+	 * the page names the machine, and a second key could only ever drift away from the first.
+	 */
+	public static List<Entry> machineInfoEntries() {
+		return List.of(
+				// Geothermal generator: two accepted fuels, a fixed burn, and the emptied container back.
+				new Entry(ModContent.GEOTHERMAL_GENERATOR, "block.alaindustrial.geothermal_generator", List.of(
+						Line.of("jei.alaindustrial.geothermal_generator.line1"),
+						new Line("jei.alaindustrial.geothermal_generator.line2", List.of(
+								() -> Config.geothermalEuPerTick,
+								() -> Config.geothermalBurnTicks,
+								() -> Config.geothermalEuPerTick * Config.geothermalBurnTicks)),
+						Line.of("jei.alaindustrial.geothermal_generator.line3"))),
+				// Condenser: the intake rate, the first threshold, and the one rule that surprises players —
+				// taking the clot clears the whole bank, not the tier's price.
+				new Entry(ModContent.ENERGY_CONDENSER, "block.alaindustrial.energy_condenser", List.of(
+						new Line("jei.alaindustrial.energy_condenser.line1", List.of(
+								() -> Config.condenserInputRate)),
+						new Line("jei.alaindustrial.energy_condenser.line2", List.of(
+								() -> Config.clotThresholdI / 1000)),
+						Line.of("jei.alaindustrial.energy_condenser.line3"))));
+	}
+
 	/** A 0..1 share as whole percent — the unit every number on the grade page is written in. */
 	private static int percent(double share) {
 		return (int) Math.round(share * 100.0);

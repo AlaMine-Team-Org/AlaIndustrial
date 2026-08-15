@@ -1,16 +1,11 @@
-## 0.1.95
+## 0.1.96
 
-<p><img alt="Ala Industrial 0.1.95 electric heater screen" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.95/release-media/v0.1.95/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.96 — machine info page in the recipe viewer" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.96/release-media/v0.1.96/changelog.png" width="720"></p>
 
-The Electric Heater is now a furnace you have to light, and a machine sitting under another machine finally gets power.
+Two machines that never explained themselves finally do.
 
-### Improved
+### New
 
-- **The Electric Heater warms up.** Cold, it gives no heat at all — the Vulcanizer above waits about ten seconds, then runs at ×3 straight away.
-- **It has a screen.** Warm-up thermometer, energy reserve, and what it actually costs per tick.
-- **You can read it without opening anything.** The coils glow brighter as they heat, and a fully warmed heater lets heat escape the seam with the machine above.
-- **It costs more to run.** 6 EU/t and a 2400 EU buffer — one cold start plus one batch even with the cable cut. With nothing to heat it still costs nothing.
-
-### Fixed
-
-- **A machine under another machine no longer starves.** It used to take a little power and then freeze forever, while moving it anywhere else charged it instantly.
+- **The Geothermal Generator and the Energy Condenser have an info page.** Click the arrow in the generator, or the ring in the condenser, and the recipe viewer opens a card explaining how the machine works.
+- **The numbers on the card are your server's own.** Fuel, output per unit and the clot thresholds are read from the config, so a retuned server never shows a page that lies.
+- **The condenser's slot still takes one click.** Only the ring above it opens the card, so pulling a clot out works exactly as before.

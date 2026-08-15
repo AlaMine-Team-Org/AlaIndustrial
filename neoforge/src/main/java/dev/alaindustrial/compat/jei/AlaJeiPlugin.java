@@ -102,6 +102,11 @@ public final class AlaJeiPlugin implements IModPlugin {
 		// registry (CanningExchange), so the title comes from its own lang key rather than a block name.
 		registration.addRecipeCategories(new CanningJeiCategory(AlaJeiRecipeTypes.CANNING,
 				ModBlocksNeoForge.CANNING_MACHINE.get(), RecipeCategoryTitle.canning(), guiHelper));
+		// MOD-420: machines with no recipe of any kind. Its own category rather than JEI's built-in
+		// ingredient info, because a click area opens a category unfocused — see MachineInfoJeiCategory.
+		registration.addRecipeCategories(new MachineInfoJeiCategory(AlaJeiRecipeTypes.MACHINE_INFO,
+				ModBlocksNeoForge.GEOTHERMAL_GENERATOR.get(),
+				Component.translatable("jei.alaindustrial.category.machine_info"), guiHelper));
 	}
 
 	@Override
@@ -159,6 +164,12 @@ public final class AlaJeiPlugin implements IModPlugin {
 			registration.addIngredientInfo((net.minecraft.world.level.ItemLike) entry.owner().get(),
 					description.toArray(new Component[0]));
 		}
+
+		// MOD-420: the geothermal generator and the energy condenser. These go into our own category
+		// rather than addIngredientInfo, because their GUI click areas have to open something focused.
+		List<RecipeViewerInfo.Entry> machineInfo = MachineInfoJeiCategory.pages();
+		Industrialization.LOGGER.info("Registering {} AlaIndustrial JEI machine-info page(s)", machineInfo.size());
+		registration.addRecipes(AlaJeiRecipeTypes.MACHINE_INFO, machineInfo);
 	}
 
 	@Override
@@ -176,6 +187,12 @@ public final class AlaJeiPlugin implements IModPlugin {
 		// MOD-383: the canning machine works its own (recipe-less) category.
 		registration.addCraftingStation(AlaJeiRecipeTypes.CANNING,
 				(ItemLike) ModBlocksNeoForge.CANNING_MACHINE.get());
+		// MOD-420: both machine-info pages are "worked at" the machine they describe, so clicking either
+		// block in JEI opens the category — the NeoForge twin of REI's addWorkstations calls.
+		registration.addCraftingStation(AlaJeiRecipeTypes.MACHINE_INFO,
+				(ItemLike) ModBlocksNeoForge.GEOTHERMAL_GENERATOR.get());
+		registration.addCraftingStation(AlaJeiRecipeTypes.MACHINE_INFO,
+				(ItemLike) ModBlocksNeoForge.ENERGY_CONDENSER.get());
 		// MOD-076: the electric furnace also performs vanilla smelting — ElectricFurnaceBlockEntity
 		// falls back to RecipeType.SMELTING when no alaindustrial:smelting recipe matches — so it is a
 		// crafting station for JEI's built-in minecraft:smelting category too (ore smelting,
@@ -256,6 +273,14 @@ public final class AlaJeiPlugin implements IModPlugin {
 					target.screenClass(),
 					rect.x(), rect.y(), rect.width(), rect.height(),
 					AlaJeiRecipeTypes.CANNING);
+		}
+		// MOD-420: machines with no recipe at all open their informational page instead.
+		for (MachineRecipeViewerTargets.InfoTarget target : MachineRecipeViewerTargets.INFO_ALL) {
+			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
+			registration.addRecipeClickArea(
+					target.screenClass(),
+					rect.x(), rect.y(), rect.width(), rect.height(),
+					AlaJeiRecipeTypes.MACHINE_INFO);
 		}
 		// MOD-080: keep JEI's item grid clear of the upgrade panel + gear tab on every machine screen.
 		registration.addGuiContainerHandler((Class) MachineScreen.class, new AlaJeiGuiExtraAreasHandler());

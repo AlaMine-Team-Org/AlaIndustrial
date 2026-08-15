@@ -28,16 +28,27 @@ import org.jetbrains.annotations.Nullable;
  * round-tripped through the server-side {@code ServerDisplayRegistry}.
  */
 public final class AlaInfoDisplay implements Display {
-	/** Single category id shared by all informational pages. */
+	/** Evolution lines — panels obtained by evolving another block rather than by crafting. */
 	public static final CategoryIdentifier<AlaInfoDisplay> CATEGORY =
 			CategoryIdentifier.of(dev.alaindustrial.Industrialization.id("evolution_info"));
 
+	/**
+	 * Machines with no recipe of any kind (MOD-420). A SECOND category rather than more pages in the
+	 * first: a click area opens its category whole and with no focus on a particular page, so every
+	 * extra page in a category is one more the player has to leaf past to reach the one they clicked
+	 * for. Keeping the two subjects apart also keeps both titles honest.
+	 */
+	public static final CategoryIdentifier<AlaInfoDisplay> MACHINE_CATEGORY =
+			CategoryIdentifier.of(dev.alaindustrial.Industrialization.id("machine_info"));
+
+	private final CategoryIdentifier<AlaInfoDisplay> category;
 	private final EntryIngredient ownerEntry;
 	private final Component title;
 	private final List<Component> lines;
 
-	public AlaInfoDisplay(Entry entry) {
+	public AlaInfoDisplay(Entry entry, CategoryIdentifier<AlaInfoDisplay> category) {
 		ItemLike owner = entry.owner().get();
+		this.category = category;
 		this.ownerEntry = EntryIngredients.of(owner);
 		this.title = RecipeViewerInfo.title(entry);
 		this.lines = RecipeViewerInfo.buildLines(entry);
@@ -53,7 +64,7 @@ public final class AlaInfoDisplay implements Display {
 
 	@Override
 	public CategoryIdentifier<?> getCategoryIdentifier() {
-		return CATEGORY;
+		return category;
 	}
 
 	@Override

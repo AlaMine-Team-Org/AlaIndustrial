@@ -7,7 +7,9 @@ import dev.alaindustrial.client.screen.AlloySmelterScreen;
 import dev.alaindustrial.client.screen.CanningMachineScreen;
 import dev.alaindustrial.client.screen.CompressorScreen;
 import dev.alaindustrial.client.screen.ElectricFurnaceScreen;
+import dev.alaindustrial.client.screen.EnergyCondenserScreen;
 import dev.alaindustrial.client.screen.ExtractorScreen;
+import dev.alaindustrial.client.screen.GeothermalGeneratorScreen;
 import dev.alaindustrial.client.screen.IncubatorScreen;
 import dev.alaindustrial.client.screen.MaceratorScreen;
 import dev.alaindustrial.client.screen.PolymerizerScreen;
@@ -105,6 +107,36 @@ public final class MachineRecipeViewerTargets {
 	/** The canning machine's click target. The rect tracks {@code CanningMachineScreen.PROGRESS}. */
 	public static final List<CanningTarget> CANNING_ALL = List.of(
 			new CanningTarget(CanningMachineScreen.class, new GuiRect(79, 31, 25, 9)));
+
+	/**
+	 * And a fifth list for machines that have no recipe of any kind (MOD-420) — not even a computed one
+	 * like the canning machine's. These open the informational category instead: see
+	 * {@link RecipeViewerInfo#machineInfoEntries()}. Like {@link CanningTarget} the record carries no
+	 * kind, because there is none to carry.
+	 */
+	public record InfoTarget(
+			Class<? extends AbstractContainerScreen<?>> screenClass,
+			GuiRect progressArea) {
+	}
+
+	/**
+	 * Click targets for the machine-info pages. Both rects were verified by a pixel scan of the
+	 * machine's own atlas rather than copied from another screen:
+	 *
+	 * <ul>
+	 *   <li><b>Geothermal generator</b> — the arrow between the fuel and container slots occupies
+	 *       x 82..91, y 38..44 in {@code textures/gui/container/geothermal_generator.png}. It is baked
+	 *       into the frame (the screen draws no progress sprite of its own), so there is no
+	 *       {@code ARROW_*} constant to track — this rect IS the measurement.</li>
+	 *   <li><b>Energy condenser</b> — the ring gauge, but only its band ABOVE the output slot. The full
+	 *       ring bounding box would swallow the slot at (80,38): a click area covering a slot steals the
+	 *       click, and the player could no longer take the clot out. The rect stops at y 37 for that
+	 *       reason. Geometry tracks {@code EnergyCondenserScreen.CX/CY/FILL_R_OUT}.</li>
+	 * </ul>
+	 */
+	public static final List<InfoTarget> INFO_ALL = List.of(
+			new InfoTarget(GeothermalGeneratorScreen.class, new GuiRect(82, 38, 10, 7)),
+			new InfoTarget(EnergyCondenserScreen.class, new GuiRect(57, 15, 63, 23)));
 
 	/** The four sawmill recipe families, in button order — used by REI/JEI to open every mode from the sprite. */
 	public static final List<ModRecipes.Kind> SAWMILL_KINDS = List.of(

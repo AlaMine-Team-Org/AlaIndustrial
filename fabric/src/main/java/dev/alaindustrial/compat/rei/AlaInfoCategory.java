@@ -31,6 +31,22 @@ import net.minecraft.network.chat.Style;
  * evolution line is a new {@link dev.alaindustrial.client.compat.RecipeViewerInfo.Entry}, not a new category.
  */
 public final class AlaInfoCategory implements DisplayCategory<AlaInfoDisplay> {
+	private final me.shedaniel.rei.api.common.category.CategoryIdentifier<AlaInfoDisplay> categoryId;
+	private final String titleKey;
+	private final net.minecraft.world.level.ItemLike icon;
+
+	/**
+	 * @param categoryId which informational category this instance serves — the class is shared by the
+	 *                   evolution pages and the machine-info pages (MOD-420), which differ only in id,
+	 *                   title and icon.
+	 */
+	public AlaInfoCategory(me.shedaniel.rei.api.common.category.CategoryIdentifier<AlaInfoDisplay> categoryId,
+			String titleKey, net.minecraft.world.level.ItemLike icon) {
+		this.categoryId = categoryId;
+		this.titleKey = titleKey;
+		this.icon = icon;
+	}
+
 	private static final int PADDING_X = 6;
 	private static final int TOP_PAD = 6;
 	private static final int LINE_HEIGHT = 10;
@@ -43,18 +59,17 @@ public final class AlaInfoCategory implements DisplayCategory<AlaInfoDisplay> {
 
 	@Override
 	public me.shedaniel.rei.api.common.category.CategoryIdentifier<? extends AlaInfoDisplay> getCategoryIdentifier() {
-		return AlaInfoDisplay.CATEGORY;
+		return categoryId;
 	}
 
 	@Override
 	public Component getTitle() {
-		return Component.translatable("jei.alaindustrial.category.evolution");
+		return Component.translatable(titleKey);
 	}
 
 	@Override
 	public Renderer getIcon() {
-		// The category is about evolution chips; the day chip is a representative icon.
-		return EntryStacks.of(dev.alaindustrial.registry.ModContent.ALIGNMENT_CHIP_DAY.get());
+		return EntryStacks.of(icon);
 	}
 
 	@Override
