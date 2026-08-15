@@ -3,7 +3,9 @@
 
 Neither marketplace exposes a public day-by-day history, so the history is built
 here: one cumulative snapshot per day, and the site turns snapshots into daily
-figures. Sources:
+figures. The run is scheduled just after midnight UTC and the row it writes is
+dated YESTERDAY — the counters it reads are exactly what that day closed with.
+Sources:
 
   * Modrinth  — public API, no key: project totals, followers and per-version
                 downloads (the latter give the Fabric / NeoForge split).
@@ -155,11 +157,22 @@ def main() -> int:
     mr_total = modrinth["downloads"] if modrinth else last[1]
     cf_total = cf_total if cf_total is not None else last[2]
 
-    today = datetime.datetime.now(datetime.timezone.utc).date().isoformat()
-    if series and series[-1][0] == today:
-        series[-1] = [today, mr_total, cf_total]   # re-run on the same UTC day
+    # The counters read right now describe everything up to this moment, so the day
+    # they close is YESTERDAY — the run is scheduled just after midnight UTC. Dating
+    # the row with the current day would label it with a day that has not happened
+    # yet: the site draws a bar as the difference between two neighbouring snapshots
+    # and puts it under the later date.
+    day = (datetime.datetime.now(datetime.timezone.utc).date()
+           - datetime.timedelta(days=1)).isoformat()
+    if series and series[-1][0] == day:
+        series[-1] = [day, mr_total, cf_total]   # re-run for the same day
+    elif series and series[-1][0] > day:
+        # A manual run in the middle of a day: the day it would write is already
+        # closed, and overwriting it would pour part of today into it. Leave the
+        # history alone and refresh the headline totals only.
+        print(f"NOTE  {series[-1][0]} is already recorded — series left untouched")
     else:
-        series.append([today, mr_total, cf_total])
+        series.append([day, mr_total, cf_total])
 
     # Restore the days that predate the first snapshot (once — later runs find them
     # already present and change nothing).
@@ -185,7 +198,7 @@ def main() -> int:
     }
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(dump(payload), encoding="utf-8")
-    print(f"OK    {today}: modrinth={mr_total} curseforge={cf_total} "
+    print(f"OK    series reaches {series[-1][0]}: modrinth={mr_total} curseforge={cf_total} "
           f"total={mr_total + cf_total} points={len(series)}")
     return 0
 

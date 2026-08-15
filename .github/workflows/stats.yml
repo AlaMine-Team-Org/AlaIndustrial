@@ -12,9 +12,14 @@ name: Stats
 
 on:
   schedule:
-    # 04:17 UTC — deliberately off the top of the hour: scheduled runs queue
-    # globally and drift the most at :00.
-    - cron: '17 4 * * *'
+    # 00:37 UTC — just after midnight, so the counters read here are what the day
+    # that just ended closed with; fetch-stats.py dates the row with YESTERDAY.
+    # It used to run at 04:17 and date the row with the current day, which put
+    # yesterday's downloads under today's label on the chart.
+    # :37 and not :00 — scheduled runs queue globally and drift the most at the
+    # top of the hour. Drift here is harmless: it moves away from midnight, so
+    # the row still lands on the same day either way.
+    - cron: '37 0 * * *'
   workflow_dispatch:
 
 permissions:
@@ -38,7 +43,8 @@ jobs:
           # mirror; the plain Modrinth totals need no key at all.
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
           # Used only to recover the days that predate the first snapshot, via the
-          # Modrinth analytics endpoint. Without it the series simply starts today.
+          # Modrinth analytics endpoint. Without it the series simply starts
+          # with yesterday.
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         run: python .github/scripts/fetch-stats.py --out data/stats.json
 
@@ -54,6 +60,7 @@ jobs:
           else
             git commit -m "chore(stats): daily download snapshot [skip ci]"
             git push
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
@@ -64,4 +71,23 @@ jobs:
         if: steps.commit.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh workflow run pages-deploy.yml --ref main
+          PUSHED_SHA: ${{ steps.commit.outputs.sha }}
+        run: |
+          # `--ref main` is resolved on GitHub's side, and right after a push that
+          # can still answer with the PREVIOUS tip: the deploy then ships an older
+          # data/stats.json and the site sits a day stale until something else
+          # deploys. That is exactly what happened on 2026-08-14 (deploy #40 ran
+          # green on aabbf1c, the commit before the snapshot). So wait until the
+          # branch is visibly at the commit we just pushed.
+          for attempt in $(seq 1 15); do
+            head=$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)
+            if [ "$head" = "$PUSHED_SHA" ]; then
+              gh workflow run pages-deploy.yml --ref main
+              echo "dispatched deploy for $PUSHED_SHA"
+              exit 0
+            fi
+            echo "main still reads $head, waiting for $PUSHED_SHA ($attempt/15)"
+            sleep 4
+          done
+          echo "::error::main never caught up with $PUSHED_SHA — deploy not dispatched"
+          exit 1
