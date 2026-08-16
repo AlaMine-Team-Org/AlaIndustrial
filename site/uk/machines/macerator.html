@@ -139,6 +139,18 @@
     color:var(--gold); text-decoration:none; white-space:nowrap;
     text-shadow:2px 2px 0 var(--line2); }
   .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
   .sitenav .lang-switch { margin-left:auto; color:var(--txt);
     font-family:'Press Start 2P',monospace; font-size:10px;
     padding:6px 10px; border:2px solid var(--line2);
@@ -324,15 +336,20 @@
 <body>
 
 <nav class="sitenav">
-  <button class="nav-toggle" type="button" aria-label="Відкрити меню" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
-  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
-  <div class="platform-links" aria-label="Project links">
-    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
-    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
-    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
-    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Відкрити меню" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
   </div>
-  <details class="language-menu"><summary aria-label="Language">UA</summary><div class="language-popover"><span>UA</span><a href="../../en/machines/macerator.html">EN</a><a href="../../ru/machines/macerator.html">RU</a><a href="../../zh_cn/machines/macerator.html">中文</a><a href="../../ja_jp/machines/macerator.html">日本語</a></div></details>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../assets/item/guide_book_3d.png" alt="">Увесь контент</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <details class="language-menu"><summary aria-label="Language">UA</summary><div class="language-popover"><span>UA</span><a href="../../en/machines/macerator.html">EN</a><a href="../../ru/machines/macerator.html">RU</a><a href="../../zh_cn/machines/macerator.html">中文</a><a href="../../ja_jp/machines/macerator.html">日本語</a></div></details>
+  </div>
 </nav>
 
 <div class="layout">
@@ -346,14 +363,14 @@
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <div class="group-title">Переробка</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="13 сторінок">13</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
 <div class="group-title">Логістика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Світ та автоматизація</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="16 сторінок">16</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>

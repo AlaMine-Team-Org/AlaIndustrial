@@ -80,6 +80,18 @@
     color:var(--gold); text-decoration:none; white-space:nowrap;
     text-shadow:2px 2px 0 var(--line2); }
   .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
   .sitenav .lang-switch { margin-left:auto; color:var(--txt);
     font-family:'Press Start 2P',monospace; font-size:10px;
     padding:6px 10px; border:2px solid var(--line2);
@@ -265,15 +277,20 @@
 <body>
 
 <nav class="sitenav">
-  <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
-  <a class="brand" href="index.html"><img class="brand-icon" src="favicon.png" alt=""> Ala Industrial</a>
-  <div class="platform-links" aria-label="Project links">
-    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="assets/platform/curseforge.png" alt="CurseForge"></a>
-    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="assets/platform/modrinth.ico" alt="Modrinth"></a>
-    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="assets/platform/github.svg" alt="GitHub"></a>
-    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="assets/platform/discord.svg" alt="Discord"></a>
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="index.html"><img class="brand-icon" src="favicon.png" alt=""> Ala Industrial</a>
   </div>
-  <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../en/index.html">EN</a><a href="../ru/index.html">RU</a><a href="../uk/index.html">UA</a><a href="../ja_jp/index.html">日本語</a></div></details>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="all-content.html"><img src="assets/item/guide_book_3d.png" alt="">全部内容</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../en/index.html">EN</a><a href="../ru/index.html">RU</a><a href="../uk/index.html">UA</a><a href="../ja_jp/index.html">日本語</a></div></details>
+  </div>
 </nav>
 
 <div class="layout">
@@ -287,14 +304,14 @@
 <a class="cat-link" href="energy-storage/index.html"><img class="nav-icon" src="assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="energy-transfer/index.html"><img class="nav-icon" src="assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
-<a class="cat-link" href="machines/index.html"><img class="nav-icon" src="assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="13 个页面">13</span></a>
+<a class="cat-link" href="machines/index.html"><img class="nav-icon" src="assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <a class="cat-link" href="fluid-machines/index.html"><img class="nav-icon" src="assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="item-transport/index.html"><img class="nav-icon" src="assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <a class="cat-link" href="fluid-transport/index.html"><img class="nav-icon" src="assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <a class="cat-link" href="fluid-storage/index.html"><img class="nav-icon" src="assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">世界与自动化</div>
-<a class="cat-link" href="materials/index.html"><img class="nav-icon" src="assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<a class="cat-link" href="materials/index.html"><img class="nav-icon" src="assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="16 个页面">16</span></a>
 <a class="cat-link" href="agriculture/index.html"><img class="nav-icon" src="assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="advanced-machines/index.html"><img class="nav-icon" src="assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
@@ -309,7 +326,7 @@
 <section class="home-hero">
   <div class="home-hero-copy"><div class="hero-kicker">系统运行中 · MINECRAFT 26.2</div>
   <h1>Ala Industrial 指南</h1><p>Ala Industrial 工业科技模组文档 —— 发电机、机器、储能装置、能量传输等等。</p>
-  <div class="hero-actions"><a class="wiki-button primary" href="getting-started.html">⚡ 开启旅程</a><a class="wiki-button" href="recipes.html"><img src="assets/item/crafting_table_3d.png" alt="">查看配方</a></div></div>
+  <div class="hero-actions"><a class="wiki-button primary" href="getting-started.html">⚡ 开启旅程</a><a class="wiki-button" href="recipes.html"><img src="assets/item/crafting_table_3d.png" alt="">查看配方</a><a class="wiki-button" href="all-content.html"><img src="assets/item/guide_book_3d.png" alt="">全部内容</a></div></div>
   <div class="home-hero-art"><div class="energy-orbit" aria-hidden="true"></div><img src="assets/item/solar_panel_3d.png" alt="" width="260" height="260"><span>+1 EU/FE</span></div>
 </section>
 <div class="home-search" role="search"><span aria-hidden="true">⌕</span><input id="wiki-search" type="search" placeholder="你想要建造什么？" autocomplete="off"><kbd>Ctrl K</kbd></div>
@@ -347,9 +364,9 @@
 <section class="home-module"><div class="module-kicker">你的第一座工厂</div><h2>实现自动化的三步</h2><div class="journey-grid"><a class="journey-card" href="materials/index.html"><img src="assets/item/raw_tin.png" alt=""><strong>寻找资源</strong><span>开采新矿石并准备各种组件。</span></a><a class="journey-card" href="generators/index.html"><img src="assets/item/solar_panel_3d.png" alt=""><strong>产出 EU/FE</strong><span>搭建发电机并用电缆连接网络。</span></a><a class="journey-card" href="machines/macerator.html"><img src="assets/item/macerator_3d.png" alt=""><strong>矿石翻倍</strong><span>为粉碎机供电，加工已开采的矿石。</span></a></div></section>
 <section class="home-module"><div class="module-kicker">知识库</div><h2>探索模组的各个系统</h2>
 <div class="home-systems" id="home-systems">
-<a class="home-system-card wide" data-search="发电机 产出 EU/FE：燃料、岩浆、阳光、水力、动能。" href="generators/index.html"><img src="assets/item/solar_panel_3d.png" alt="" width="88" height="88"><strong>发电机</strong><span>产出 EU/FE：燃料、岩浆、阳光、水力、动能。</span><small>9 个页面</small></a><a class="home-system-card" data-search="储能装置 储存 EU/FE 并按需输出。" href="energy-storage/index.html"><img src="assets/item/battery_box_3d.png" alt="" width="88" height="88"><strong>储能装置</strong><span>储存 EU/FE 并按需输出。</span><small>4 个页面</small></a><a class="home-system-card wide" data-search="能量传输 用于传输 EU/FE 的电缆。" href="energy-transfer/index.html"><img src="assets/item/copper_cable_3d.png" alt="" width="88" height="88"><strong>能量传输</strong><span>用于传输 EU/FE 的电缆。</span><small>8 个页面</small></a><a class="home-system-card" data-search="机器 消耗 EU/FE，按配方加工物品。" href="machines/index.html"><img src="assets/item/macerator_3d.png" alt="" width="88" height="88"><strong>机器</strong><span>消耗 EU/FE，按配方加工物品。</span><small>13 个页面</small></a><a class="home-system-card" data-search="流体机器 用于抽取液体的泵。" href="fluid-machines/index.html"><img src="assets/item/pump_3d.png" alt="" width="88" height="88"><strong>流体机器</strong><span>用于抽取液体的泵。</span><small>2 个页面</small></a><a class="home-system-card" data-search="物品物流 物品管道与分拣。" href="item-transport/index.html"><img src="assets/item/item_pipe.png" alt="" width="88" height="88"><strong>物品物流</strong><span>物品管道与分拣。</span><small>1 个页面</small></a><a class="home-system-card" data-search="流体物流 流体管道、阀门、泵。" href="fluid-transport/index.html"><img src="assets/item/fluid_pipe.png" alt="" width="88" height="88"><strong>流体物流</strong><span>流体管道、阀门、泵。</span><small>1 个页面</small></a><a class="home-system-card" data-search="流体储存 储罐与容器。" href="fluid-storage/index.html"><img src="assets/item/fluid_tank_3d.png" alt="" width="88" height="88"><strong>流体储存</strong><span>储罐与容器。</span><small>1 个页面</small></a><a class="home-system-card" data-search="材料 可开采的金属/资源：矿石 + 粗矿/粉/锭形态。" href="materials/index.html"><img src="assets/item/uranium_ore_3d.png" alt="" width="88" height="88"><strong>材料</strong><span>可开采的金属/资源：矿石 + 粗矿/粉/锭形态。</span><small>15 个页面</small></a><a class="home-system-card" data-search="农业 突变孵化器与藤架。" href="agriculture/index.html"><img src="assets/item/cotton_fiber.png" alt="" width="88" height="88"><strong>农业</strong><span>突变孵化器与藤架。</span><small>3 个页面</small></a><a class="home-system-card" data-search="高级机器 传送装置与进阶机器。" href="advanced-machines/index.html"><img src="assets/item/teleporter_3d.png" alt="" width="88" height="88"><strong>高级机器</strong><span>传送装置与进阶机器。</span><small>1 个页面</small></a><a class="home-system-card" data-search="实用方块 箱子、照明、工作台。" href="utility/index.html"><img src="assets/item/iron_chest_3d.png" alt="" width="88" height="88"><strong>实用方块</strong><span>箱子、照明、工作台。</span><small>14 个页面</small></a><a class="home-system-card" data-search="升级配件 机器静音芯片。" href="upgrades/index.html"><img src="assets/item/empty_chip.png" alt="" width="88" height="88"><strong>升级配件</strong><span>机器静音芯片。</span><small>2 个页面</small></a><a class="home-system-card" data-search="组件 电路、外壳、齿轮、线圈。" href="components/index.html"><img src="assets/item/electronic_circuit_3d.png" alt="" width="88" height="88"><strong>组件</strong><span>电路、外壳、齿轮、线圈。</span><small>19 个页面</small></a><a class="home-system-card" data-search="游戏物品 电力物品与手持工具：电池储物袋、回火铁。" href="items/index.html"><img src="assets/item/battery_pouch.png" alt="" width="88" height="88"><strong>游戏物品</strong><span>电力物品与手持工具：电池储物袋、回火铁。</span><small>20 个页面</small></a>
+<a class="home-system-card wide" data-search="发电机 产出 EU/FE：燃料、岩浆、阳光、水力、动能。" href="generators/index.html"><img src="assets/item/solar_panel_3d.png" alt="" width="88" height="88"><strong>发电机</strong><span>产出 EU/FE：燃料、岩浆、阳光、水力、动能。</span><small>9 个页面</small></a><a class="home-system-card" data-search="储能装置 储存 EU/FE 并按需输出。" href="energy-storage/index.html"><img src="assets/item/battery_box_3d.png" alt="" width="88" height="88"><strong>储能装置</strong><span>储存 EU/FE 并按需输出。</span><small>4 个页面</small></a><a class="home-system-card wide" data-search="能量传输 用于传输 EU/FE 的电缆。" href="energy-transfer/index.html"><img src="assets/item/copper_cable_3d.png" alt="" width="88" height="88"><strong>能量传输</strong><span>用于传输 EU/FE 的电缆。</span><small>8 个页面</small></a><a class="home-system-card" data-search="机器 消耗 EU/FE，按配方加工物品。" href="machines/index.html"><img src="assets/item/macerator_3d.png" alt="" width="88" height="88"><strong>机器</strong><span>消耗 EU/FE，按配方加工物品。</span><small>15 个页面</small></a><a class="home-system-card" data-search="流体机器 用于抽取液体的泵。" href="fluid-machines/index.html"><img src="assets/item/pump_3d.png" alt="" width="88" height="88"><strong>流体机器</strong><span>用于抽取液体的泵。</span><small>2 个页面</small></a><a class="home-system-card" data-search="物品物流 物品管道与分拣。" href="item-transport/index.html"><img src="assets/item/item_pipe.png" alt="" width="88" height="88"><strong>物品物流</strong><span>物品管道与分拣。</span><small>1 个页面</small></a><a class="home-system-card" data-search="流体物流 流体管道、阀门、泵。" href="fluid-transport/index.html"><img src="assets/item/fluid_pipe.png" alt="" width="88" height="88"><strong>流体物流</strong><span>流体管道、阀门、泵。</span><small>1 个页面</small></a><a class="home-system-card" data-search="流体储存 储罐与容器。" href="fluid-storage/index.html"><img src="assets/item/fluid_tank_3d.png" alt="" width="88" height="88"><strong>流体储存</strong><span>储罐与容器。</span><small>1 个页面</small></a><a class="home-system-card" data-search="材料 可开采的金属/资源：矿石 + 粗矿/粉/锭形态。" href="materials/index.html"><img src="assets/item/uranium_ore_3d.png" alt="" width="88" height="88"><strong>材料</strong><span>可开采的金属/资源：矿石 + 粗矿/粉/锭形态。</span><small>16 个页面</small></a><a class="home-system-card" data-search="农业 突变孵化器与藤架。" href="agriculture/index.html"><img src="assets/item/cotton_fiber.png" alt="" width="88" height="88"><strong>农业</strong><span>突变孵化器与藤架。</span><small>3 个页面</small></a><a class="home-system-card" data-search="高级机器 传送装置与进阶机器。" href="advanced-machines/index.html"><img src="assets/item/teleporter_3d.png" alt="" width="88" height="88"><strong>高级机器</strong><span>传送装置与进阶机器。</span><small>1 个页面</small></a><a class="home-system-card" data-search="实用方块 箱子、照明、工作台。" href="utility/index.html"><img src="assets/item/iron_chest_3d.png" alt="" width="88" height="88"><strong>实用方块</strong><span>箱子、照明、工作台。</span><small>14 个页面</small></a><a class="home-system-card" data-search="升级配件 机器静音芯片。" href="upgrades/index.html"><img src="assets/item/empty_chip.png" alt="" width="88" height="88"><strong>升级配件</strong><span>机器静音芯片。</span><small>2 个页面</small></a><a class="home-system-card" data-search="组件 电路、外壳、齿轮、线圈。" href="components/index.html"><img src="assets/item/electronic_circuit_3d.png" alt="" width="88" height="88"><strong>组件</strong><span>电路、外壳、齿轮、线圈。</span><small>19 个页面</small></a><a class="home-system-card" data-search="游戏物品 电力物品与手持工具：电池储物袋、回火铁。" href="items/index.html"><img src="assets/item/battery_pouch.png" alt="" width="88" height="88"><strong>游戏物品</strong><span>电力物品与手持工具：电池储物袋、回火铁。</span><small>20 个页面</small></a>
 </div><div class="empty-search" id="empty-search">未找到结果</div></section>
-<div class="home-stats"><div><b>113</b><span>个指南页面</span></div><div><b>32</b><span>EU/FE · LV</span></div><div><b>2×</b><span>矿石产出</span></div><div><b>2</b><span>个加载器</span></div></div>
+<div class="home-stats"><div><b>116</b><span>个指南页面</span></div><div><b>32</b><span>EU/FE · LV</span></div><div><b>2×</b><span>矿石产出</span></div><div><b>2</b><span>个加载器</span></div></div>
   </main>
 </div>
 

@@ -139,6 +139,18 @@
     color:var(--gold); text-decoration:none; white-space:nowrap;
     text-shadow:2px 2px 0 var(--line2); }
   .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
   .sitenav .lang-switch { margin-left:auto; color:var(--txt);
     font-family:'Press Start 2P',monospace; font-size:10px;
     padding:6px 10px; border:2px solid var(--line2);
@@ -324,15 +336,20 @@
 <body>
 
 <nav class="sitenav">
-  <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
-  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
-  <div class="platform-links" aria-label="Project links">
-    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
-    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
-    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
-    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
   </div>
-  <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/items/soul_vessel.html">EN</a><a href="../../ru/items/soul_vessel.html">RU</a><a href="../../uk/items/soul_vessel.html">UA</a><a href="../../ja_jp/items/soul_vessel.html">日本語</a></div></details>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../assets/item/guide_book_3d.png" alt="">全部内容</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/items/soul_vessel.html">EN</a><a href="../../ru/items/soul_vessel.html">RU</a><a href="../../uk/items/soul_vessel.html">UA</a><a href="../../ja_jp/items/soul_vessel.html">日本語</a></div></details>
+  </div>
 </nav>
 
 <div class="layout">
@@ -346,14 +363,14 @@
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <div class="group-title">加工</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="13 个页面">13</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">世界与自动化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="16 个页面">16</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
@@ -367,7 +384,7 @@
     <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../items/index.html">游戏物品</a><span class="sep">/</span><span>灵魂容器</span></div>
 <div class="block-card">
   <div class="card-head">
-    <img class="icon" src="../assets/item/soul_vessel.png" alt="灵魂容器" width="64" height="64">
+    <img class="icon" src="../assets/item/soul_vessel_3d.png" alt="灵魂容器" width="64" height="64">
     <div class="info">
       <h1>灵魂容器</h1>
       <div class="block-id">alaindustrial:soul_vessel</div>
@@ -398,7 +415,7 @@
 [银板] [电子电路] [银板]</code></pre>
 
 <h2>合成</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="灵魂容器 alaindustrial:soul_vessel" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意银板"><img src="../assets/item/silver_plate_3d.png" alt="任意银板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意无色玻璃"><img src="../assets/item/glass_3d.png" alt="任意无色玻璃" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意银板"><img src="../assets/item/silver_plate_3d.png" alt="任意银板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意无色玻璃"><img src="../assets/item/glass_3d.png" alt="任意无色玻璃" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell placeholder" title="Soul Sand" aria-label="Soul Sand"><span>soul s</span></div> <div class="cell" title="任意无色玻璃"><img src="../assets/item/glass_3d.png" alt="任意无色玻璃" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意银板"><img src="../assets/item/silver_plate_3d.png" alt="任意银板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电子电路"><img src="../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="任意银板"><img src="../assets/item/silver_plate_3d.png" alt="任意银板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="灵魂容器"><img src="../assets/item/soul_vessel.png" alt="灵魂容器" width="32" height="32"></div><div class="result-name">灵魂容器</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="灵魂容器 alaindustrial:soul_vessel" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意银板"><img src="../assets/item/silver_plate_3d.png" alt="任意银板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意无色玻璃"><img src="../assets/item/glass_3d.png" alt="任意无色玻璃" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意银板"><img src="../assets/item/silver_plate_3d.png" alt="任意银板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意无色玻璃"><img src="../assets/item/glass_3d.png" alt="任意无色玻璃" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell placeholder" title="Soul Sand" aria-label="Soul Sand"><span>soul s</span></div> <div class="cell" title="任意无色玻璃"><img src="../assets/item/glass_3d.png" alt="任意无色玻璃" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意银板"><img src="../assets/item/silver_plate_3d.png" alt="任意银板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电子电路"><img src="../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="任意银板"><img src="../assets/item/silver_plate_3d.png" alt="任意银板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="灵魂容器"><img src="../assets/item/soul_vessel_3d.png" alt="灵魂容器" width="32" height="32"></div><div class="result-name">灵魂容器</div></div></div></div></div>
   </main>
 </div>
 

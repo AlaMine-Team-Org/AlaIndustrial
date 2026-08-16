@@ -139,6 +139,18 @@
     color:var(--gold); text-decoration:none; white-space:nowrap;
     text-shadow:2px 2px 0 var(--line2); }
   .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
   .sitenav .lang-switch { margin-left:auto; color:var(--txt);
     font-family:'Press Start 2P',monospace; font-size:10px;
     padding:6px 10px; border:2px solid var(--line2);
@@ -324,15 +336,20 @@
 <body>
 
 <nav class="sitenav">
-  <button class="nav-toggle" type="button" aria-label="Open menu" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
-  <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
-  <div class="platform-links" aria-label="Project links">
-    <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
-    <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
-    <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
-    <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
   </div>
-  <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../../ru/materials/uranium.html">RU</a><a href="../../uk/materials/uranium.html">UA</a><a href="../../zh_cn/materials/uranium.html">中文</a><a href="../../ja_jp/materials/uranium.html">日本語</a></div></details>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../assets/item/guide_book_3d.png" alt="">All Content</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/jGGeVXf3FN" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <details class="language-menu"><summary aria-label="Language">EN</summary><div class="language-popover"><span>EN</span><a href="../../ru/materials/uranium.html">RU</a><a href="../../uk/materials/uranium.html">UA</a><a href="../../zh_cn/materials/uranium.html">中文</a><a href="../../ja_jp/materials/uranium.html">日本語</a></div></details>
+  </div>
 </nav>
 
 <div class="layout">
@@ -346,14 +363,14 @@
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="13 pages">13</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="1 page">1</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="15 pages">15</span></a>
+<a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="16 pages">16</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -381,9 +398,11 @@
 
 <blockquote><strong>Mini-example:</strong> same two processing routes as tin — furnace for 1 ingot per ore, Macerator for 2. But uranium is roughly seven times rarer than diamond, so each block and each raw drop matters; macerate, don't furnace.</blockquote>
 
-<p>There is no vanilla uranium, so the ingot is a mod item. Uranium is not sitting idle: its dust goes into the enriched uranium torch, the ingot is part of the teleporter's recipe, and the incubator spends the ingot as an irradiation charge during mutations (one ingot covers three attempts, leaving behind depleted uranium). The full nuclear branch (enrichment, RTG, reactor) will be added later.</p>
+<p>There is no vanilla uranium, so the ingot is a mod item. Uranium is not sitting idle: its dust goes into the enriched uranium torch, the ingot is part of the teleporter's recipe, and the incubator spends the ingot as an irradiation charge during mutations (one ingot covers three attempts, leaving behind depleted uranium).</p>
 
-<table><thead><tr><th>Form</th><th>How you get it</th></tr></thead><tbody><tr><td>Ore (stone / deepslate)</td><td>mined in the world; pickaxe drops raw, Silk Touch gives the block</td></tr><tr><td>Raw</td><td>the pickaxe drop from the ore; smelts into an ingot</td></tr><tr><td>Dust</td><td>a block of ore (or the raw) grinds into 2 dust; an ingot grinds into 1</td></tr><tr><td>Ingot</td><td>smelting the raw, the ore, or the dust</td></tr></tbody></table>
+<p><strong>There is a second processing route as well — through the <a href="../machines/thermal_centrifuge.html">Thermal Centrifuge</a>.</strong> Instead of smelting the dust into an ingot you can split it in two: dust → 2 shavings → (Compressor) → 2 refined uranium. Together with the macerator's doubling that gives <strong>four</strong> units from a single ore block instead of one from a plain smelt — but it takes a line with a heater and a redstone signal. The full nuclear branch (reactor, RTG) comes later; refined uranium is the groundwork for it.</p>
+
+<table><thead><tr><th>Form</th><th>How you get it</th></tr></thead><tbody><tr><td>Ore (stone / deepslate)</td><td>mined in the world; pickaxe drops raw, Silk Touch gives the block</td></tr><tr><td>Raw</td><td>the pickaxe drop from the ore; smelts into an ingot</td></tr><tr><td>Dust</td><td>a block of ore (or the raw) grinds into 2 dust; an ingot grinds into 1</td></tr><tr><td>Ingot</td><td>smelting the raw, the ore, or the dust</td></tr><tr><td>Shavings</td><td>the dust splits in two in the Thermal Centrifuge</td></tr><tr><td>Refined uranium</td><td>pressing the shavings in the Compressor, 1:1</td></tr></tbody></table>
 
 <h2>Where to find it</h2>
 
@@ -405,7 +424,9 @@
 
 <h2>Progression</h2>
 
-<p>Uranium is reserved for the nuclear track — enrichment, RTG, reactor — which arrives in later phases. But even now it has consumers: the dust goes into the <a href="../utility/enriched_uranium_torch.html">Enriched Uranium Torch</a>, the ingot is part of the <a href="../advanced-machines/teleporter.html">Teleporter</a> recipe, and the <a href="../agriculture/incubator.html">Incubator</a> spends the ingot as an irradiation charge during mutations (one ingot — three attempts, leaving depleted uranium). A spare ingot can also be sold to the industrialist villager for emeralds.</p>
+<p>Uranium is reserved for the nuclear track — the reactor and the RTG — which arrives in later phases. But even now it has consumers: the dust goes into the <a href="../utility/enriched_uranium_torch.html">Enriched Uranium Torch</a>, the ingot is part of the <a href="../advanced-machines/teleporter.html">Teleporter</a> recipe, and the <a href="../agriculture/incubator.html">Incubator</a> spends the ingot as an irradiation charge during mutations (one ingot — three attempts, leaving depleted uranium). A spare ingot can also be sold to the industrialist villager for emeralds.</p>
+
+<p>The first step of the nuclear track is already done: the <a href="../machines/thermal_centrifuge.html">Thermal Centrifuge</a> yields <strong>refined uranium</strong> — the material that makes a heater line worth building. It has no consumers of its own yet; it piles up for the future reactor.</p>
 
 <h2>Related</h2>
 
