@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "experience": 0.7,
+  "group": "palladium_ingot",
+  "ingredient": "alaindustrial:raw_palladium",
+  "result": {
+    "id": "alaindustrial:palladium_ingot"
+  }
+}

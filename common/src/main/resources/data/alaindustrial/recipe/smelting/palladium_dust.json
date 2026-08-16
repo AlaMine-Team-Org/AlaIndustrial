@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:smelting",
+  "ingredient": "#c:dusts/palladium",
+  "result": {
+    "id": "alaindustrial:palladium_ingot",
+    "count": 1
+  },
+  "energy": 200
+}

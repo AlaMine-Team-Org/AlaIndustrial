@@ -490,6 +490,10 @@ public final class ContentManifest {
 			block("uranium_ore", Block::new, s -> ModContent.URANIUM_ORE = s);
 	public static final BlockDef<Block> DEEPSLATE_URANIUM_ORE =
 			block("deepslate_uranium_ore", Block::new, s -> ModContent.DEEPSLATE_URANIUM_ORE = s);
+	// MOD-423 — the only Nether ore, hence the only one WITHOUT a deepslate twin: the host rock
+	// there is netherrack/basalt/blackstone, and no deepslate strata exist to carry a second variant.
+	public static final BlockDef<Block> PALLADIUM_ORE =
+			block("palladium_ore", Block::new, s -> ModContent.PALLADIUM_ORE = s);
 	public static final BlockDef<IronChestBlock> IRON_CHEST =
 			block("iron_chest", IronChestBlock::new, s -> ModContent.IRON_CHEST = s);
 	// MOD-287 — modular warehouse block; several face-adjacent ones share one inventory.
@@ -563,7 +567,8 @@ public final class ContentManifest {
 			MOB_REPELLER, MOB_REPELLER_MV, MOB_REPELLER_HV, INCUBATOR,
 			INCUBATOR_DOME, TRELLIS, TIN_ORE, DEEPSLATE_TIN_ORE, SILVER_ORE, DEEPSLATE_SILVER_ORE,
 			NICKEL_ORE, DEEPSLATE_NICKEL_ORE, SULFUR_ORE, DEEPSLATE_SULFUR_ORE, URANIUM_ORE,
-			DEEPSLATE_URANIUM_ORE, IRON_CHEST, STORAGE_MODULE, SILVER_CHEST, GOLD_CHEST, ELECTRUM_CHEST,
+			DEEPSLATE_URANIUM_ORE, PALLADIUM_ORE,
+			IRON_CHEST, STORAGE_MODULE, SILVER_CHEST, GOLD_CHEST, ELECTRUM_CHEST,
 			TEMPERED_IRON_BLOCK, MACHINE_CASING, ADVANCED_MACHINE_CASING, SILVER_PLATE_BLOCK,
 			TEMPERED_IRON_PLATE_BLOCK, INDUSTRIAL_WORKBENCH, ENRICHED_URANIUM_TORCH,
 			ENRICHED_URANIUM_WALL_TORCH, OIL, DIESEL, FUEL_OIL);
@@ -697,6 +702,9 @@ public final class ContentManifest {
 			Map.entry("deepslate_sulfur_ore", machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE))),
 			Map.entry("uranium_ore", machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE))),
 			Map.entry("deepslate_uranium_ore", machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE))),
+			// MOD-423 — Nether ore. Tougher than the overworld ores (4.5 like the deepslate variants),
+			// but nowhere near ancient debris' 30.0/1200.0: palladium is meant to be mined, not besieged.
+			Map.entry("palladium_ore", machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.NETHER_ORE))),
 			Map.entry("iron_chest", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion())),
 			// MOD-287 — plain full cube, no noOcclusion(): unlike the chests it has no 3D renderer.
 			Map.entry("storage_module", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
@@ -828,7 +836,9 @@ public final class ContentManifest {
 				"emerald_dust", "empty_can", "flux_thread", "fluxweave_cloth", "garden_drone", "gold_dust",
 				"gold_gear", "gold_plate", "iron_dust", "iron_gear", "iron_plate",
 				"irradiated_diamond", "irradiated_slag", "lapis_dust", "mutagen_dust",
-				"nickel_dust", "nickel_ingot", "nickel_plate", "raw_nickel", "raw_rubber",
+				"nickel_dust", "nickel_ingot", "nickel_plate",
+				"palladium_dust", "palladium_ingot", "palladium_plate",
+				"raw_nickel", "raw_palladium", "raw_rubber",
 				"raw_silver", "raw_sulfur", "raw_tin", "raw_uranium", "resonant_shard", "rubber",
 				"silver_dust", "silver_gear", "silver_ingot", "silver_plate", "stone_gear",
 				"sulfur_dust", "tempered_iron", "tempered_iron_plate", "tin_dust", "tin_ingot",

@@ -51,6 +51,21 @@ public final class ModWorldGen {
 	public static final TagKey<Biome> HAS_OIL_GEYSERS =
 			TagKey.create(Registries.BIOME, Industrialization.id("has_oil_geysers"));
 
+	/**
+	 * Biomes that generate palladium ore (MOD-423). Defaults to {@code #c:is_nether}
+	 * ({@code data/alaindustrial/tags/worldgen/biome/has_palladium_ore.json}), the convention tag both
+	 * loaders ship, which already includes {@code #minecraft:is_nether}.
+	 *
+	 * <p>A mod tag rather than {@link BiomeSelectors#foundInTheNether()} on purpose (MOD-423 audit):
+	 * that selector picks biomes by DIMENSION and NeoForge has no equivalent — its biome modifiers
+	 * only accept an id, a list or a tag. Using it would silently generate the ore in untagged modded
+	 * biomes on Fabric and not on NeoForge, and no gate in this repo compares the two worldgen paths.
+	 * Going through a tag keeps both loaders on the same declaration and lets a pack switch the ore
+	 * off symmetrically — which the hardcoded {@code foundInOverworld()} ore calls below still cannot.
+	 */
+	public static final TagKey<Biome> HAS_PALLADIUM_ORE =
+			TagKey.create(Registries.BIOME, Industrialization.id("has_palladium_ore"));
+
 	public static void init() {
 		// MOD-238 audit: alaindustrial:oil_lake_filter, the placement modifier that keeps oil features
 		// out of villages/mineshafts/Ancient Cities. Registered before any datapack load, because the
@@ -95,5 +110,13 @@ public final class ModWorldGen {
 				BiomeSelectors.foundInOverworld(),
 				GenerationStep.Decoration.UNDERGROUND_ORES,
 				ResourceKey.create(Registries.PLACED_FEATURE, Industrialization.id("uranium_ore")));
+		// MOD-423 — the Nether ore. UNDERGROUND_ORES rather than vanilla's UNDERGROUND_DECORATION for
+		// Nether ores: that step is empty in all five Nether biomes, so our feature is the only edge in
+		// FeatureSorter's graph there — the cheapest way to stay clear of "Feature order cycle found",
+		// which throws on world load. It also matches the step the NeoForge side declares.
+		BiomeModifications.addFeature(
+				BiomeSelectors.tag(HAS_PALLADIUM_ORE),
+				GenerationStep.Decoration.UNDERGROUND_ORES,
+				ResourceKey.create(Registries.PLACED_FEATURE, Industrialization.id("palladium_ore")));
 	}
 }

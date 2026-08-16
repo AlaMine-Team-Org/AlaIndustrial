@@ -104,6 +104,7 @@ public final class ModBlocks {
 	public static final Block DEEPSLATE_SULFUR_ORE = handle(ContentManifest.DEEPSLATE_SULFUR_ORE);
 	public static final Block URANIUM_ORE = handle(ContentManifest.URANIUM_ORE);
 	public static final Block DEEPSLATE_URANIUM_ORE = handle(ContentManifest.DEEPSLATE_URANIUM_ORE);
+	public static final Block PALLADIUM_ORE = handle(ContentManifest.PALLADIUM_ORE);
 	public static final Block IRON_CHEST = handle(ContentManifest.IRON_CHEST);
 	public static final Block STORAGE_MODULE = handle(ContentManifest.STORAGE_MODULE);
 	public static final Block SILVER_CHEST = handle(ContentManifest.SILVER_CHEST);

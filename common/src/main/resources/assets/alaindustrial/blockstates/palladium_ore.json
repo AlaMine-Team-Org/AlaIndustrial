@@ -1,0 +1,18 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "alaindustrial:block/palladium_ore"
+      },
+      {
+        "model": "alaindustrial:block/palladium_ore_1"
+      },
+      {
+        "model": "alaindustrial:block/palladium_ore_2"
+      },
+      {
+        "model": "alaindustrial:block/palladium_ore_3"
+      }
+    ]
+  }
+}

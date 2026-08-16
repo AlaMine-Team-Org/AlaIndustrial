@@ -1,0 +1,8 @@
+{
+	"type": "neoforge:add_features",
+	"biomes": "#alaindustrial:has_palladium_ore",
+	"features": [
+		"alaindustrial:palladium_ore"
+	],
+	"step": "underground_ores"
+}

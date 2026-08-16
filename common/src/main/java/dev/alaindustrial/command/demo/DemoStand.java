@@ -401,15 +401,23 @@ public final class DemoStand {
 		set(level, origin, 31, 1, 26, ModContent.FLUID_TANK.get());
 	}
 
-	/** Zone <b>ores</b>: a 5×2 wall at z=4 — stone variants on top, deepslate variants below. */
+	/**
+	 * Zone <b>ores</b>: a 5×2 wall at z=4 — stone variants on top, deepslate variants below — plus
+	 * the Nether ore appended as a single column.
+	 *
+	 * <p>Palladium (MOD-423) breaks the pairing the wall was built around: it is the only ore of the
+	 * mod without a deepslate twin, because its host rock is netherrack/basalt/blackstone. Rather
+	 * than pad the grid with a filler block, it gets its own column with the ore on both rows, so the
+	 * wall stays rectangular and {@code DemoStandGameTest} still sees every registered block.
+	 */
 	private static void buildOreWall(ServerLevel level, BlockPos origin) {
 		Block[][] wall = {
 				{ModContent.TIN_ORE.get(), ModContent.SILVER_ORE.get(),
 						ModContent.NICKEL_ORE.get(), ModContent.URANIUM_ORE.get(),
-						ModContent.SULFUR_ORE.get()},
+						ModContent.SULFUR_ORE.get(), ModContent.PALLADIUM_ORE.get()},
 				{ModContent.DEEPSLATE_TIN_ORE.get(), ModContent.DEEPSLATE_SILVER_ORE.get(),
 						ModContent.DEEPSLATE_NICKEL_ORE.get(), ModContent.DEEPSLATE_URANIUM_ORE.get(),
-						ModContent.DEEPSLATE_SULFUR_ORE.get()}};
+						ModContent.DEEPSLATE_SULFUR_ORE.get(), ModContent.PALLADIUM_ORE.get()}};
 		for (int i = 0; i < wall[0].length; i++) {
 			set(level, origin, 34 + i, 2, 4, wall[0][i]);
 			set(level, origin, 34 + i, 1, 4, wall[1][i]);

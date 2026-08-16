@@ -182,6 +182,8 @@ public final class ModContent {
 	public static Supplier<Block> DEEPSLATE_SULFUR_ORE = unbound("DEEPSLATE_SULFUR_ORE");
 	public static Supplier<Block> URANIUM_ORE = unbound("URANIUM_ORE");
 	public static Supplier<Block> DEEPSLATE_URANIUM_ORE = unbound("DEEPSLATE_URANIUM_ORE");
+	/** MOD-423 — Nether ore; no deepslate twin exists (netherrack/basalt/blackstone host). */
+	public static Supplier<Block> PALLADIUM_ORE = unbound("PALLADIUM_ORE");
 	// Iron Chest — a pure-storage block (no energy), so its BE extends vanilla
 	// BaseContainerBlockEntity, not the mod's MachineBlockEntity. See docs/blocks/iron_chest.md.
 	public static Supplier<Block> IRON_CHEST = unbound("IRON_CHEST");
@@ -320,6 +322,9 @@ public final class ModContent {
 	public static Supplier<Item> URANIUM_DUST = unbound("URANIUM_DUST");
 	public static Supplier<Item> RAW_URANIUM = unbound("RAW_URANIUM");
 	public static Supplier<Item> URANIUM_INGOT = unbound("URANIUM_INGOT");
+	public static Supplier<Item> PALLADIUM_DUST = unbound("PALLADIUM_DUST");
+	public static Supplier<Item> RAW_PALLADIUM = unbound("RAW_PALLADIUM");
+	public static Supplier<Item> PALLADIUM_INGOT = unbound("PALLADIUM_INGOT");
 	public static Supplier<Item> NETWORK_ANALYZER = unbound("NETWORK_ANALYZER");
 	/** Wind Gauge (MOD-347) — hand instrument that reads the wind flow at the player's position. */
 	public static Supplier<Item> WIND_GAUGE = unbound("WIND_GAUGE");
@@ -382,6 +387,7 @@ public final class ModContent {
 	public static Supplier<Item> SILVER_PLATE = unbound("SILVER_PLATE");
 	public static Supplier<Item> NICKEL_PLATE = unbound("NICKEL_PLATE");
 	public static Supplier<Item> URANIUM_PLATE = unbound("URANIUM_PLATE");
+	public static Supplier<Item> PALLADIUM_PLATE = unbound("PALLADIUM_PLATE");
 	public static Supplier<Item> TEMPERED_IRON_PLATE = unbound("TEMPERED_IRON_PLATE");
 	// Forge Hammer (MOD-078) — pre-machine hand tool: ingot + hammer on the grid → plate; the hammer
 	// stays and loses 1 durability per plate. Behaviour lives in dev.alaindustrial.item.tool.HammerItem
@@ -475,6 +481,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> DEEPSLATE_SULFUR_ORE_ITEM = unbound("DEEPSLATE_SULFUR_ORE_ITEM");
 	public static Supplier<BlockItem> URANIUM_ORE_ITEM = unbound("URANIUM_ORE_ITEM");
 	public static Supplier<BlockItem> DEEPSLATE_URANIUM_ORE_ITEM = unbound("DEEPSLATE_URANIUM_ORE_ITEM");
+	public static Supplier<BlockItem> PALLADIUM_ORE_ITEM = unbound("PALLADIUM_ORE_ITEM");
 	public static Supplier<BlockItem> IRON_CHEST_ITEM = unbound("IRON_CHEST_ITEM");
 	public static Supplier<BlockItem> STORAGE_MODULE_ITEM = unbound("STORAGE_MODULE_ITEM");
 	public static Supplier<BlockItem> IRON_FURNACE_ITEM = unbound("IRON_FURNACE_ITEM");

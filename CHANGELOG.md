@@ -1,14 +1,13 @@
-## 0.1.97
+## 0.1.98
 
-<p><img alt="Component Repair Bench placed next to a cable line" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.97/release-media/v0.1.97/changelog.png" width="720"></p>
+<p><img alt="Palladium ore in the Nether" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.98/release-media/v0.1.98/changelog.png" width="720"></p>
 
-Worn machine parts can be repaired now instead of thrown away.
+There is something worth mining in the Nether now.
 
 ### New
 
-- **Repair worn rotors and wheels** at the new Component Repair Bench — one plate and some power brings a part back to full.
-- **Repairs are not free.** Each one costs a fifth of the part's lifespan, so after four the part is spent and has to be replaced.
-
-### Bug Fixes
-
-- **Info cards no longer spill outside the panel** in the recipe viewer — they grow to fit the text in any language.
+- **A new ore hides in the Nether: palladium.** Netherrack, basalt or blackstone, roughly Y 8–32, in small veins.
+- **Bring a diamond pickaxe.** Iron and anything below it breaks the block and drops nothing.
+- **Easier to hunt than ancient debris.** Around half the veins break through a cave wall, so you can actually spot them.
+- **Refines like the other metals** — raw, dust, ingot and plate. The furnace gives one ingot per ore, the macerator doubles it.
+- **A vein reads as one formation.** The block carries four looks that line up with each other instead of repeating one frame.

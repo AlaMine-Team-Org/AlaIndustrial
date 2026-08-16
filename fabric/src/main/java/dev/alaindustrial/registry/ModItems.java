@@ -186,6 +186,9 @@ public final class ModItems {
 	public static final Item URANIUM_DUST = manifestItem("uranium_dust");
 	public static final Item RAW_URANIUM = manifestItem("raw_uranium");
 	public static final Item URANIUM_INGOT = manifestItem("uranium_ingot");
+	public static final Item PALLADIUM_DUST = manifestItem("palladium_dust");
+	public static final Item RAW_PALLADIUM = manifestItem("raw_palladium");
+	public static final Item PALLADIUM_INGOT = manifestItem("palladium_ingot");
 	public static final Item NETWORK_ANALYZER = networkAnalyzer("network_analyzer");
 	public static final Item WIND_GAUGE = windGauge("wind_gauge");
 	public static final Item WRENCH = wrench("wrench");
@@ -250,6 +253,7 @@ public final class ModItems {
 	public static final Item SILVER_PLATE = manifestItem("silver_plate");
 	public static final Item NICKEL_PLATE = manifestItem("nickel_plate");
 	public static final Item URANIUM_PLATE = manifestItem("uranium_plate");
+	public static final Item PALLADIUM_PLATE = manifestItem("palladium_plate");
 	public static final Item TEMPERED_IRON_PLATE = manifestItem("tempered_iron_plate");
 	// Forge Hammer (MOD-078): pre-machine hand tool — ingot + hammer on the grid → plate; the hammer
 	// stays and loses 1 durability per plate via the Fabric craft-remainder hook (HammerItemFabric).
@@ -329,6 +333,7 @@ public final class ModItems {
 	public static final BlockItem DEEPSLATE_SULFUR_ORE_ITEM = blockItem("deepslate_sulfur_ore", ModBlocks.DEEPSLATE_SULFUR_ORE);
 	public static final BlockItem URANIUM_ORE_ITEM = blockItem("uranium_ore", ModBlocks.URANIUM_ORE);
 	public static final BlockItem DEEPSLATE_URANIUM_ORE_ITEM = blockItem("deepslate_uranium_ore", ModBlocks.DEEPSLATE_URANIUM_ORE);
+	public static final BlockItem PALLADIUM_ORE_ITEM = blockItem("palladium_ore", ModBlocks.PALLADIUM_ORE);
 	public static final BlockItem IRON_CHEST_ITEM = blockItem("iron_chest", ModBlocks.IRON_CHEST);
 	public static final BlockItem STORAGE_MODULE_ITEM =
 			blockItem("storage_module", ModBlocks.STORAGE_MODULE);
@@ -816,6 +821,9 @@ public final class ModItems {
 		ModContent.URANIUM_DUST = () -> URANIUM_DUST;
 		ModContent.RAW_URANIUM = () -> RAW_URANIUM;
 		ModContent.URANIUM_INGOT = () -> URANIUM_INGOT;
+		ModContent.PALLADIUM_DUST = () -> PALLADIUM_DUST;
+		ModContent.RAW_PALLADIUM = () -> RAW_PALLADIUM;
+		ModContent.PALLADIUM_INGOT = () -> PALLADIUM_INGOT;
 		ModContent.NETWORK_ANALYZER = () -> NETWORK_ANALYZER;
 		ModContent.WIND_GAUGE = () -> WIND_GAUGE;
 		ModContent.GUIDE_BOOK = () -> GUIDE_BOOK;
@@ -852,6 +860,7 @@ public final class ModItems {
 		ModContent.SILVER_PLATE = () -> SILVER_PLATE;
 		ModContent.NICKEL_PLATE = () -> NICKEL_PLATE;
 		ModContent.URANIUM_PLATE = () -> URANIUM_PLATE;
+		ModContent.PALLADIUM_PLATE = () -> PALLADIUM_PLATE;
 		ModContent.TEMPERED_IRON_PLATE = () -> TEMPERED_IRON_PLATE;
 		ModContent.FORGE_HAMMER = () -> FORGE_HAMMER;
 		ModContent.OIL_BUCKET = () -> OIL_BUCKET;
@@ -936,6 +945,7 @@ public final class ModItems {
 		ModContent.DEEPSLATE_SULFUR_ORE_ITEM = () -> DEEPSLATE_SULFUR_ORE_ITEM;
 		ModContent.URANIUM_ORE_ITEM = () -> URANIUM_ORE_ITEM;
 		ModContent.DEEPSLATE_URANIUM_ORE_ITEM = () -> DEEPSLATE_URANIUM_ORE_ITEM;
+		ModContent.PALLADIUM_ORE_ITEM = () -> PALLADIUM_ORE_ITEM;
 		ModContent.IRON_CHEST_ITEM = () -> IRON_CHEST_ITEM;
 		ModContent.STORAGE_MODULE_ITEM = () -> STORAGE_MODULE_ITEM;
 		ModContent.IRON_FURNACE_ITEM = () -> IRON_FURNACE_ITEM;

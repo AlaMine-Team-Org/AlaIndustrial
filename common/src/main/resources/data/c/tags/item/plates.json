@@ -8,6 +8,7 @@
     "#c:plates/silver",
     "#c:plates/nickel",
     "#c:plates/uranium",
-    "#c:plates/tempered_iron"
+    "#c:plates/tempered_iron",
+    "#c:plates/palladium"
   ]
 }

@@ -1704,6 +1704,19 @@
           ]
         },
         {
+          "id": "palladium_ore",
+          "title": "Palladium Ore",
+          "icon": "alaindustrial:palladium_ore",
+          "block_id": "alaindustrial:palladium_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Palladium Ore",
+              "text": "The mod's only Nether ore — hidden in netherrack, basalt and blackstone, requires a diamond pickaxe, and processes into dust, ingot and plate."
+            }
+          ]
+        },
+        {
           "id": "silver_plate_block",
           "title": "Revestimento de Prata",
           "icon": "alaindustrial:silver_plate_block",

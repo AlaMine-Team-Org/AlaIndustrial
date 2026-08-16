@@ -39,14 +39,18 @@ public final class OreScenarios {
 	/** Reused single cell inside the test region; placed, asserted, cleared per block. */
 	private static final BlockPos PROBE = new BlockPos(1, 2, 1);
 
-	/** All 10 ore blocks under test, stone/deepslate pairs are implicit in the flat list. */
+	/**
+	 * All 11 ore blocks under test. Stone/deepslate pairs are implicit in the flat list — except
+	 * palladium (MOD-423), the Nether ore, which has no deepslate twin and appears once.
+	 */
 	private static List<Block> ores() {
 		return List.of(
 				ModContent.TIN_ORE.get(), ModContent.DEEPSLATE_TIN_ORE.get(),
 				ModContent.SILVER_ORE.get(), ModContent.DEEPSLATE_SILVER_ORE.get(),
 				ModContent.NICKEL_ORE.get(), ModContent.DEEPSLATE_NICKEL_ORE.get(),
 				ModContent.SULFUR_ORE.get(), ModContent.DEEPSLATE_SULFUR_ORE.get(),
-				ModContent.URANIUM_ORE.get(), ModContent.DEEPSLATE_URANIUM_ORE.get());
+				ModContent.URANIUM_ORE.get(), ModContent.DEEPSLATE_URANIUM_ORE.get(),
+				ModContent.PALLADIUM_ORE.get());
 	}
 
 	/** Stone-variant ores (hardness 3.0, SoundType.STONE) — see the BLOCK_PROPS manifest. */
@@ -56,12 +60,15 @@ public final class OreScenarios {
 				ModContent.SULFUR_ORE.get(), ModContent.URANIUM_ORE.get());
 	}
 
-	/** Deepslate-variant ores (hardness 4.5, SoundType.DEEPSLATE) — see the BLOCK_PROPS manifest. */
+	/**
+	 * Blocks carrying the 4.5 hardness tier — the deepslate variants plus palladium (MOD-423), which
+	 * matches their hardness while sounding like NETHER_ORE. See the BLOCK_PROPS manifest.
+	 */
 	private static List<Block> deepslateOres() {
 		return List.of(
 				ModContent.DEEPSLATE_TIN_ORE.get(), ModContent.DEEPSLATE_SILVER_ORE.get(),
 				ModContent.DEEPSLATE_NICKEL_ORE.get(), ModContent.DEEPSLATE_SULFUR_ORE.get(),
-				ModContent.DEEPSLATE_URANIUM_ORE.get());
+				ModContent.DEEPSLATE_URANIUM_ORE.get(), ModContent.PALLADIUM_ORE.get());
 	}
 
 	/**
@@ -86,22 +93,32 @@ public final class OreScenarios {
 	}
 
 	/**
+	 * Diamond-tier ores — tagged {@code minecraft:needs_diamond_tool}: a diamond pickaxe or better
+	 * is required to harvest (palladium, MOD-423). One tier above uranium, matching the vanilla tag
+	 * that already gates ancient debris.
+	 */
+	private static List<Block> diamondTierOres() {
+		return List.of(ModContent.PALLADIUM_ORE.get());
+	}
+
+	/**
 	 * Ore block -> its {@code raw_<metal>} item, per the loot tables under
 	 * {@code data/alaindustrial/loot_table/blocks/*_ore.json}: a normal pickaxe drops the raw material
 	 * (vanilla ore semantics), Silk Touch drops the ore block itself.
 	 */
 	private static Map<Block, Item> rawItems() {
-		return Map.of(
-				ModContent.TIN_ORE.get(), ModContent.RAW_TIN.get(),
-				ModContent.DEEPSLATE_TIN_ORE.get(), ModContent.RAW_TIN.get(),
-				ModContent.SILVER_ORE.get(), ModContent.RAW_SILVER.get(),
-				ModContent.DEEPSLATE_SILVER_ORE.get(), ModContent.RAW_SILVER.get(),
-				ModContent.NICKEL_ORE.get(), ModContent.RAW_NICKEL.get(),
-				ModContent.DEEPSLATE_NICKEL_ORE.get(), ModContent.RAW_NICKEL.get(),
-				ModContent.SULFUR_ORE.get(), ModContent.RAW_SULFUR.get(),
-				ModContent.DEEPSLATE_SULFUR_ORE.get(), ModContent.RAW_SULFUR.get(),
-				ModContent.URANIUM_ORE.get(), ModContent.RAW_URANIUM.get(),
-				ModContent.DEEPSLATE_URANIUM_ORE.get(), ModContent.RAW_URANIUM.get());
+		return Map.ofEntries(
+				Map.entry(ModContent.TIN_ORE.get(), ModContent.RAW_TIN.get()),
+				Map.entry(ModContent.DEEPSLATE_TIN_ORE.get(), ModContent.RAW_TIN.get()),
+				Map.entry(ModContent.SILVER_ORE.get(), ModContent.RAW_SILVER.get()),
+				Map.entry(ModContent.DEEPSLATE_SILVER_ORE.get(), ModContent.RAW_SILVER.get()),
+				Map.entry(ModContent.NICKEL_ORE.get(), ModContent.RAW_NICKEL.get()),
+				Map.entry(ModContent.DEEPSLATE_NICKEL_ORE.get(), ModContent.RAW_NICKEL.get()),
+				Map.entry(ModContent.SULFUR_ORE.get(), ModContent.RAW_SULFUR.get()),
+				Map.entry(ModContent.DEEPSLATE_SULFUR_ORE.get(), ModContent.RAW_SULFUR.get()),
+				Map.entry(ModContent.URANIUM_ORE.get(), ModContent.RAW_URANIUM.get()),
+				Map.entry(ModContent.DEEPSLATE_URANIUM_ORE.get(), ModContent.RAW_URANIUM.get()),
+				Map.entry(ModContent.PALLADIUM_ORE.get(), ModContent.RAW_PALLADIUM.get()));
 	}
 
 	/**
@@ -212,6 +229,23 @@ public final class OreScenarios {
 			for (ItemStack ok : List.of(iron, diamond, netherite)) {
 				if (!ok.isCorrectToolForDrops(state)) {
 					helper.fail(ore + " rejects " + ok.getItem() + " — an iron+ pickaxe must harvest uranium ore (TC-ORE-001-BRK02)");
+				}
+			}
+		}
+
+		// Diamond-tier ore (palladium, MOD-423): iron is ALSO too low here; only diamond/netherite harvest.
+		for (Block ore : diamondTierOres()) {
+			helper.setBlock(PROBE, ore);
+			BlockState state = level.getBlockState(abs);
+			helper.setBlock(PROBE, Blocks.AIR);
+			for (ItemStack tooLow : List.of(wood, gold, stone, iron)) {
+				if (tooLow.isCorrectToolForDrops(state)) {
+					helper.fail(ore + " accepts " + tooLow.getItem() + " as a correct tool — palladium ore must require a DIAMOND pickaxe or better (TC-ORE-001-BRK02)");
+				}
+			}
+			for (ItemStack ok : List.of(diamond, netherite)) {
+				if (!ok.isCorrectToolForDrops(state)) {
+					helper.fail(ore + " rejects " + ok.getItem() + " — a diamond+ pickaxe must harvest palladium ore (TC-ORE-001-BRK02)");
 				}
 			}
 		}

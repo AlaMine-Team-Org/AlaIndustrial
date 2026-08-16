@@ -46,6 +46,7 @@ execute unless data storage svm:data blocks.pickaxe[{namespace:"alaindustrial",i
 execute unless data storage svm:data blocks.pickaxe[{namespace:"alaindustrial",id:"deepslate_sulfur_ore"}] run function svm:add_block {namespace:"alaindustrial",id:"deepslate_sulfur_ore",category:"pickaxe"}
 execute unless data storage svm:data blocks.pickaxe[{namespace:"alaindustrial",id:"uranium_ore"}] run function svm:add_block {namespace:"alaindustrial",id:"uranium_ore",category:"pickaxe"}
 execute unless data storage svm:data blocks.pickaxe[{namespace:"alaindustrial",id:"deepslate_uranium_ore"}] run function svm:add_block {namespace:"alaindustrial",id:"deepslate_uranium_ore",category:"pickaxe"}
+execute unless data storage svm:data blocks.pickaxe[{namespace:"alaindustrial",id:"palladium_ore"}] run function svm:add_block {namespace:"alaindustrial",id:"palladium_ore",category:"pickaxe"}
 
 execute store result score after ala_vm.state run data get storage svm:data blocks.pickaxe
 scoreboard players set done ala_vm.state 1

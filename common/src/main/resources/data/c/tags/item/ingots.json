@@ -8,6 +8,7 @@
     "#c:ingots/bronze",
     "#c:ingots/invar",
     "#c:ingots/cupronickel",
-    "#c:ingots/electrum"
+    "#c:ingots/electrum",
+    "#c:ingots/palladium"
   ]
 }

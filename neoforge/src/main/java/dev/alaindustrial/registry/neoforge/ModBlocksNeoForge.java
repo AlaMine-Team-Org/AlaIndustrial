@@ -181,6 +181,7 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<Block> DEEPSLATE_SULFUR_ORE = handle(ContentManifest.DEEPSLATE_SULFUR_ORE);
 	public static final DeferredBlock<Block> URANIUM_ORE = handle(ContentManifest.URANIUM_ORE);
 	public static final DeferredBlock<Block> DEEPSLATE_URANIUM_ORE = handle(ContentManifest.DEEPSLATE_URANIUM_ORE);
+	public static final DeferredBlock<Block> PALLADIUM_ORE = handle(ContentManifest.PALLADIUM_ORE);
 	public static final DeferredBlock<IronChestBlock> IRON_CHEST = handle(ContentManifest.IRON_CHEST);
 	public static final DeferredBlock<StorageModuleBlock> STORAGE_MODULE = handle(ContentManifest.STORAGE_MODULE);
 	public static final DeferredBlock<SilverChestBlock> SILVER_CHEST = handle(ContentManifest.SILVER_CHEST);

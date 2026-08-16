@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "#c:ingots/palladium",
+  "result": {
+    "id": "alaindustrial:palladium_plate",
+    "count": 1
+  },
+  "energy": 260
+}

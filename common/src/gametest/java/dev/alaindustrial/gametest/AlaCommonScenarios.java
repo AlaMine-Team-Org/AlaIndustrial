@@ -363,16 +363,34 @@ public final class AlaCommonScenarios {
 			assertItemInTag(failures, "raw_" + material, "raw_materials/" + material);
 		}
 
+		// Palladium (MOD-423) is checked apart from the loop above: it is the only ore without a
+		// deepslate twin (Nether host rock), so the paired stone/deepslate assertions do not apply.
+		// Its ground tag is ores_in_ground/netherrack rather than stone/deepslate.
+		Block palladiumOre = ore("palladium_ore");
+		BlockState palladiumState = palladiumOre.defaultBlockState();
+		if (!palladiumState.is(cOres)) {
+			failures.add(blockId(palladiumOre) + " not in #c:ores");
+		}
+		if (!palladiumState.is(blockTag("ores/palladium"))) {
+			failures.add(blockId(palladiumOre) + " not in #c:ores/palladium");
+		}
+		if (!palladiumState.is(blockTag("ores_in_ground/netherrack"))) {
+			failures.add(blockId(palladiumOre) + " not in #c:ores_in_ground/netherrack");
+		}
+		assertItemInTag(failures, "palladium_ore", "ores");
+		assertItemInTag(failures, "raw_palladium", "raw_materials");
+		assertItemInTag(failures, "raw_palladium", "raw_materials/palladium");
+
 		// Sulfur is a non-metal: it deliberately has no ingot form.
-		for (String metal : new String[] { "tin", "silver", "nickel", "uranium" }) {
+		for (String metal : new String[] { "tin", "silver", "nickel", "uranium", "palladium" }) {
 			assertItemInTag(failures, metal + "_ingot", "ingots");
 			assertItemInTag(failures, metal + "_ingot", "ingots/" + metal);
 		}
 
 		// Dusts (MOD-114): full processing-chain material tag for unification/grinding mods. Covers
 		// the mod's own metals plus dusts of vanilla materials it produces.
-		for (String mat : new String[] { "tin", "silver", "nickel", "sulfur", "uranium", "copper", "iron",
-				"gold", "coal", "diamond", "emerald", "lapis" }) {
+		for (String mat : new String[] { "tin", "silver", "nickel", "sulfur", "uranium", "palladium",
+				"copper", "iron", "gold", "coal", "diamond", "emerald", "lapis" }) {
 			assertItemInTag(failures, mat + "_dust", "dusts");
 			assertItemInTag(failures, mat + "_dust", "dusts/" + mat);
 		}

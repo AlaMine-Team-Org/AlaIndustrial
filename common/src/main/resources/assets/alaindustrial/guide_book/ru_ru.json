@@ -1704,6 +1704,19 @@
           ]
         },
         {
+          "id": "palladium_ore",
+          "title": "Палладиевая руда",
+          "icon": "alaindustrial:palladium_ore",
+          "block_id": "alaindustrial:palladium_ore",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Палладиевая руда",
+              "text": "Единственная руда мода из Ада — прячется в незераке, базальте и чернокамне, требует алмазной кирки и перерабатывается в пыль, слиток и пластину."
+            }
+          ]
+        },
+        {
           "id": "silver_plate_block",
           "title": "Серебряная обшивка",
           "icon": "alaindustrial:silver_plate_block",

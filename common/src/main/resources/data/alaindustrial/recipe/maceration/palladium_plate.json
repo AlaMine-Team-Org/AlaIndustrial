@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "#c:plates/palladium",
+  "result": {
+    "id": "alaindustrial:palladium_dust",
+    "count": 1
+  },
+  "energy": 300
+}

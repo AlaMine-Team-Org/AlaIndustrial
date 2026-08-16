@@ -135,6 +135,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.SILVER_PLATE);
 		show(out, ModContent.NICKEL_PLATE);
 		show(out, ModContent.URANIUM_PLATE);
+		show(out, ModContent.PALLADIUM_PLATE);
 		show(out, ModContent.TEMPERED_IRON_PLATE);
 	}
 
@@ -164,6 +165,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.SILVER_INGOT);
 		show(out, ModContent.NICKEL_INGOT);
 		show(out, ModContent.URANIUM_INGOT);
+		show(out, ModContent.PALLADIUM_INGOT);
 		show(out, ModContent.BRONZE_INGOT);
 		show(out, ModContent.INVAR_INGOT);
 		show(out, ModContent.CUPRONICKEL_INGOT);
@@ -173,6 +175,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.RAW_NICKEL);
 		show(out, ModContent.RAW_SULFUR);
 		show(out, ModContent.RAW_URANIUM);
+		show(out, ModContent.RAW_PALLADIUM);
 		show(out, ModContent.IRON_DUST);
 		show(out, ModContent.COPPER_DUST);
 		show(out, ModContent.GOLD_DUST);
@@ -185,6 +188,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.NICKEL_DUST);
 		show(out, ModContent.SULFUR_DUST);
 		show(out, ModContent.URANIUM_DUST);
+		show(out, ModContent.PALLADIUM_DUST);
 		show(out, ModContent.EMPTY_CAN);
 		plates(out);
 		show(out, ModContent.ELECTRONIC_CIRCUIT);
@@ -239,6 +243,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.DEEPSLATE_SULFUR_ORE_ITEM);
 		show(out, ModContent.URANIUM_ORE_ITEM);
 		show(out, ModContent.DEEPSLATE_URANIUM_ORE_ITEM);
+		show(out, ModContent.PALLADIUM_ORE_ITEM);
 		show(out, ModContent.TRELLIS_ITEM);
 		show(out, ModContent.COTTON_SEEDS);
 	}
@@ -410,6 +415,10 @@ public final class CreativeTabContent {
 		show(out, ModContent.NICKEL_INGOT);
 		show(out, ModContent.RAW_SULFUR);
 		show(out, ModContent.SULFUR_DUST);
+		// MOD-423 — the Nether metal; sits after the overworld chain it is a tier above.
+		show(out, ModContent.RAW_PALLADIUM);
+		show(out, ModContent.PALLADIUM_DUST);
+		show(out, ModContent.PALLADIUM_INGOT);
 		show(out, ModContent.TEMPERED_IRON);
 		// Dusts of vanilla materials: what the macerator gives back from ordinary ore.
 		show(out, ModContent.IRON_DUST);
