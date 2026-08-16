@@ -1,0 +1,57 @@
+# Post the daily download report to Telegram and check the stats pipeline.
+#
+# This is the watchdog for Stats (stats.yml) + Pages deploy: it reports
+# yesterday's downloads and, in the same message, says whether the collector
+# produced a row for that day at all and whether the deployed site serves the
+# very snapshot the repository holds.
+name: Stats report
+
+on:
+  schedule:
+    # 01:07 UTC — half an hour after the collector (00:37) and well past the Pages
+    # deploy it triggers, which takes about two minutes.
+    #
+    # This job has a schedule of its OWN and does not hang off workflow_run of the
+    # collector on purpose: when GitHub drops a scheduled run — the exact failure
+    # worth hearing about — no workflow_run event is raised either, and the
+    # watchdog would stay silent about the silence. It has to wake up by itself.
+    - cron: '7 1 * * *'
+  workflow_dispatch:
+  push:
+    # `branches` is not optional here: a `paths` filter is NOT applied to tag
+    # pushes, and this repository pushes a v* tag on every release. Without the
+    # branch filter each release would fire a report.
+    branches: [main]
+    paths:
+      - '.github/scripts/report-stats.py'
+      - '.github/workflows/stats-report.yml'
+
+permissions:
+  contents: read
+
+# A unique group per run, so a queued nightly report can never be cancelled by a
+# later one. A shared group with cancel-in-progress: false looks safe but is not:
+# GitHub keeps only ONE pending run per group and silently drops the older —
+# which would be the nightly report the moment anything else starts.
+concurrency:
+  group: stats-report-${{ github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Send report
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        # The site check waits up to five minutes for Pages to catch up, so a
+        # healthy day is not reported as a failed deploy just because the deploy
+        # was a minute behind.
+        run: python .github/scripts/report-stats.py --site-wait 300
