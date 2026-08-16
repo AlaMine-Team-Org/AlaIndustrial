@@ -225,6 +225,9 @@ public final class ModItemsNeoForge {
 	public static final DeferredItem<Item> URANIUM_DUST = manifestItem("uranium_dust");
 	public static final DeferredItem<Item> RAW_URANIUM = manifestItem("raw_uranium");
 	public static final DeferredItem<Item> URANIUM_INGOT = manifestItem("uranium_ingot");
+	// MOD-424: the centrifuge's product, and what smelting it yields.
+	public static final DeferredItem<Item> URANIUM_SHAVINGS = manifestItem("uranium_shavings");
+	public static final DeferredItem<Item> REFINED_URANIUM = manifestItem("refined_uranium");
 	public static final DeferredItem<Item> PALLADIUM_DUST = manifestItem("palladium_dust");
 	public static final DeferredItem<Item> RAW_PALLADIUM = manifestItem("raw_palladium");
 	public static final DeferredItem<Item> PALLADIUM_INGOT = manifestItem("palladium_ingot");
@@ -426,6 +429,8 @@ public final class ModItemsNeoForge {
 			ITEMS.registerSimpleBlockItem("vulcanizer", ModBlocksNeoForge.VULCANIZER);
 	public static final DeferredItem<BlockItem> GALVANIC_BATH_ITEM =
 			ITEMS.registerSimpleBlockItem("galvanic_bath", ModBlocksNeoForge.GALVANIC_BATH);
+	public static final DeferredItem<BlockItem> THERMAL_CENTRIFUGE_ITEM =
+			ITEMS.registerSimpleBlockItem("thermal_centrifuge", ModBlocksNeoForge.THERMAL_CENTRIFUGE);
 	public static final DeferredItem<BlockItem> ELECTRIC_HEATER_ITEM =
 			ITEMS.registerSimpleBlockItem("electric_heater", ModBlocksNeoForge.ELECTRIC_HEATER);
 	public static final DeferredItem<BlockItem> CHARGE_PAD_ITEM =
@@ -631,6 +636,8 @@ public final class ModItemsNeoForge {
 		ModContent.URANIUM_DUST = URANIUM_DUST;
 		ModContent.RAW_URANIUM = RAW_URANIUM;
 		ModContent.URANIUM_INGOT = URANIUM_INGOT;
+		ModContent.URANIUM_SHAVINGS = URANIUM_SHAVINGS;
+		ModContent.REFINED_URANIUM = REFINED_URANIUM;
 		ModContent.PALLADIUM_DUST = PALLADIUM_DUST;
 		ModContent.RAW_PALLADIUM = RAW_PALLADIUM;
 		ModContent.PALLADIUM_INGOT = PALLADIUM_INGOT;
@@ -707,6 +714,7 @@ public final class ModItemsNeoForge {
 		ModContent.VULCANIZER_ITEM = VULCANIZER_ITEM;
 		ModContent.ALLOY_SMELTER_ITEM = ALLOY_SMELTER_ITEM;
 		ModContent.GALVANIC_BATH_ITEM = GALVANIC_BATH_ITEM;
+		ModContent.THERMAL_CENTRIFUGE_ITEM = THERMAL_CENTRIFUGE_ITEM;
 		ModContent.ELECTRIC_HEATER_ITEM = ELECTRIC_HEATER_ITEM;
 		ModContent.CHARGE_PAD_ITEM = CHARGE_PAD_ITEM;
 		ModContent.ENERGY_CONDENSER_ITEM = ENERGY_CONDENSER_ITEM;

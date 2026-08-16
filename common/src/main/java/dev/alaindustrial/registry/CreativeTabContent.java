@@ -188,6 +188,9 @@ public final class CreativeTabContent {
 		show(out, ModContent.NICKEL_DUST);
 		show(out, ModContent.SULFUR_DUST);
 		show(out, ModContent.URANIUM_DUST);
+		// MOD-424 - the centrifuge's chain, in the order it happens: dust -> shavings -> refined.
+		show(out, ModContent.URANIUM_SHAVINGS);
+		show(out, ModContent.REFINED_URANIUM);
 		show(out, ModContent.PALLADIUM_DUST);
 		show(out, ModContent.EMPTY_CAN);
 		plates(out);
@@ -444,6 +447,10 @@ public final class CreativeTabContent {
 		show(out, ModContent.RAW_URANIUM);
 		show(out, ModContent.URANIUM_DUST);
 		show(out, ModContent.URANIUM_INGOT);
+		// The centrifuge branch, right after the plain smelting one it forks from: the same dust either
+		// becomes an ingot in a furnace or twice as many shavings here, which press into refined uranium.
+		show(out, ModContent.URANIUM_SHAVINGS);
+		show(out, ModContent.REFINED_URANIUM);
 		show(out, ModContent.DEPLETED_URANIUM);
 		show(out, ModContent.UNSTABLE_ISOTOPE);
 		show(out, ModContent.IRRADIATED_SLAG);
@@ -531,6 +538,8 @@ public final class CreativeTabContent {
 		show(out, ModContent.ALLOY_SMELTER_ITEM);
 		show(out, ModContent.CANNING_MACHINE_ITEM);
 		show(out, ModContent.ELECTRIC_HEATER_ITEM);
+		// MOD-424 - directly after the heater it stands on, because it does nothing without one.
+		show(out, ModContent.THERMAL_CENTRIFUGE_ITEM);
 		// Agriculture: the station and the drone it flies.
 		show(out, ModContent.INCUBATOR_ITEM);
 		show(out, ModContent.GARDEN_DRONE_STATION_ITEM);

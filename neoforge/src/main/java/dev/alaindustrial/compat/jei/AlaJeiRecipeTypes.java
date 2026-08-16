@@ -24,6 +24,8 @@ final class AlaJeiRecipeTypes {
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.VULCANIZING.id()));
 	static final IRecipeHolderType<AlaProcessingRecipe> GALVANIC_BATH =
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.GALVANIC_BATH.id()));
+	static final IRecipeHolderType<AlaProcessingRecipe> CENTRIFUGING =
+			IRecipeHolderType.create(Industrialization.id(ModRecipes.CENTRIFUGING.id()));
 	static final IRecipeHolderType<AlaProcessingRecipe> SAWING_PLANKS =
 			IRecipeHolderType.create(Industrialization.id(ModRecipes.SAWING_PLANKS.id()));
 	static final IRecipeHolderType<AlaProcessingRecipe> SAWING_STICKS =
@@ -102,6 +104,9 @@ final class AlaJeiRecipeTypes {
 		}
 		if (kind == ModRecipes.VULCANIZING) {
 			return VULCANIZING;
+		}
+		if (kind == ModRecipes.CENTRIFUGING) {
+			return CENTRIFUGING;
 		}
 		if (kind == ModRecipes.SAWING_PLANKS) {
 			return SAWING_PLANKS;

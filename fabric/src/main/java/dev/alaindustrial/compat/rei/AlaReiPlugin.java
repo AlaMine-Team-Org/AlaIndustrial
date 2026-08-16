@@ -59,6 +59,7 @@ public class AlaReiPlugin implements REIClientPlugin {
 			machine(ModRecipes.EXTRACTING, ModBlocks.EXTRACTOR),
 			machine(ModRecipes.VULCANIZING, ModBlocks.VULCANIZER),
 			machine(ModRecipes.GALVANIC_BATH, ModBlocks.GALVANIC_BATH),
+			machine(ModRecipes.CENTRIFUGING, ModBlocks.THERMAL_CENTRIFUGE),
 			// Sawmill (MOD-150): four mode families, all worked at the same sawmill block.
 			machine(ModRecipes.SAWING_PLANKS, ModBlocks.SAWMILL),
 			machine(ModRecipes.SAWING_STICKS, ModBlocks.SAWMILL),

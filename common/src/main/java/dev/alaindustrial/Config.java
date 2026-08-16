@@ -634,6 +634,32 @@ public final class Config {
 	/** Vulcanizer (MOD-258): ticks per operation at 1.0 speed. The shipped recipe costs 400 EU, so at
 	 * the ordinary-machine rate of 2 EU/t the operation takes 200 ticks at every heat tier. */
 	public static int vulcanizerDuration = 200;
+	/**
+	 * Thermal Centrifuge (MOD-424): ticks per operation at 1.0 speed. The shipped recipe costs 800 EU at
+	 * this machine's own 4 EU/t tariff, so one dust becomes two shavings in 200 ticks.
+	 */
+	public static int thermalCentrifugeDuration = 200;
+	/**
+	 * EU/t the Thermal Centrifuge spends while spinning up or processing. Double the ordinary machine
+	 * rate: it is the second doubling step on the mod's rarest ore, and it runs on top of a heater, so
+	 * the pair (4 + 6 = 10 EU/t) is deliberately close to the copper cable's 12 EU/t ceiling.
+	 */
+	public static int thermalCentrifugeEuPerTick = 4;
+	/**
+	 * Ticks a stopped rotor needs to reach working speed once the redstone signal arrives.
+	 *
+	 * <p>Twice the heater's warm-up rather than equal to it (playtest, 2026-08-16): matching the two made
+	 * the rotor feel weightless — it was always ready the moment the heat was, so the spin never
+	 * registered as its own thing. At double, the heater finishes first and the machine visibly waits on
+	 * its own mass, which is the whole point of a centrifuge.
+	 */
+	public static int thermalCentrifugeSpinupTicks = 400;
+	/**
+	 * EU/t a spun-up centrifuge spends with nothing to process — the cost of holding revolutions instead
+	 * of coasting to a stop. Small on purpose: it should read as "standing by", not as a penalty for
+	 * leaving the lever on. Below this, the rotor sheds speed at half the rate it gained it.
+	 */
+	public static int thermalCentrifugeIdleEuPerTick = 1;
 	/** Ticks the canning machine spends pressing one ration; × machineEuPerTick = 200 EU per ration. */
 	public static int canningMachineDuration = 100;
 	/**
@@ -1601,6 +1627,14 @@ public final class Config {
 				() -> polymerizerDuration, v -> polymerizerDuration = v, 1),
 			new IntField("vulcanizerDuration", Section.MACHINES, "Fallback ticks a vulcanizer operation takes at 1.0 speed; shipped recipe energy 400 / machineEuPerTick 2 = 200.",
 				() -> vulcanizerDuration, v -> vulcanizerDuration = v, 1),
+			new IntField("thermalCentrifugeDuration", Section.MACHINES, "Fallback ticks a thermal centrifuge operation takes at 1.0 speed; shipped recipe energy 800 / thermalCentrifugeEuPerTick 4 = 200.",
+				() -> thermalCentrifugeDuration, v -> thermalCentrifugeDuration = v, 1),
+			new IntField("thermalCentrifugeEuPerTick", Section.MACHINES, "EU/t a thermal centrifuge spends while spinning up or processing; with the heater below the pair draws 10 EU/t.",
+				() -> thermalCentrifugeEuPerTick, v -> thermalCentrifugeEuPerTick = v, 1),
+			new IntField("thermalCentrifugeSpinupTicks", Section.MACHINES, "Ticks a stopped centrifuge rotor needs to reach working speed after the redstone signal arrives; it sheds speed at half this rate.",
+				() -> thermalCentrifugeSpinupTicks, v -> thermalCentrifugeSpinupTicks = v, 1),
+			new IntField("thermalCentrifugeIdleEuPerTick", Section.MACHINES, "EU/t a spun-up thermal centrifuge spends holding revolutions with nothing to process.",
+				() -> thermalCentrifugeIdleEuPerTick, v -> thermalCentrifugeIdleEuPerTick = v, 1),
 			new IntField("canningMachineDuration", Section.MACHINES, "Ticks the canning machine takes per ration at 1.0 speed; x machineEuPerTick 2 = 200 EU per ration.",
 				() -> canningMachineDuration, v -> canningMachineDuration = v, 1),
 			new IntField("canningFoodValuePerCan", Section.MACHINES, "Food value in tenths (nutrition + saturation) the canning machine consumes per ration. Must exceed the ration's own 96, or canning becomes a food duplicator.",

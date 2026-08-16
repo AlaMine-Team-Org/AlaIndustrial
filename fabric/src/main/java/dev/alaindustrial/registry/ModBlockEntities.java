@@ -23,6 +23,7 @@ import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
+import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
@@ -98,6 +99,7 @@ public final class ModBlockEntities {
 	public static BlockEntityType<VulcanizerBlockEntity> VULCANIZER;
 	public static BlockEntityType<AlloySmelterBlockEntity> ALLOY_SMELTER;
 	public static BlockEntityType<GalvanicBathBlockEntity> GALVANIC_BATH;
+	public static BlockEntityType<ThermalCentrifugeBlockEntity> THERMAL_CENTRIFUGE;
 	public static BlockEntityType<ElectricHeaterBlockEntity> ELECTRIC_HEATER;
 	public static BlockEntityType<ChargePadBlockEntity> CHARGE_PAD;
 	public static BlockEntityType<EnergyCondenserBlockEntity> ENERGY_CONDENSER;
@@ -148,6 +150,7 @@ public final class ModBlockEntities {
 		VULCANIZER = register(ContentManifest.blockEntity("vulcanizer", VulcanizerBlockEntity.class));
 		ALLOY_SMELTER = register(ContentManifest.blockEntity("alloy_smelter", AlloySmelterBlockEntity.class));
 		GALVANIC_BATH = register(ContentManifest.blockEntity("galvanic_bath", GalvanicBathBlockEntity.class));
+		THERMAL_CENTRIFUGE = register(ContentManifest.blockEntity("thermal_centrifuge", ThermalCentrifugeBlockEntity.class));
 		ELECTRIC_HEATER = register(ContentManifest.blockEntity("electric_heater", ElectricHeaterBlockEntity.class));
 		CHARGE_PAD = register(ContentManifest.blockEntity("charge_pad", ChargePadBlockEntity.class));
 		ENERGY_CONDENSER = register(ContentManifest.blockEntity("energy_condenser", EnergyCondenserBlockEntity.class));
@@ -200,6 +203,7 @@ public final class ModBlockEntities {
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),VULCANIZER);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ALLOY_SMELTER);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),GALVANIC_BATH);
+			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),THERMAL_CENTRIFUGE);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ELECTRIC_HEATER);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),CHARGE_PAD);
 			EnergyStorage.SIDED.registerForBlockEntity((be, dir) -> PortAsEnergyStorage.of(be.energyPort(dir)),ENERGY_CONDENSER);

@@ -196,6 +196,9 @@ pitest {
                      'dev.alaindustrial.block.entity.GardenDroneAction',
                      'dev.alaindustrial.block.entity.GardenDroneStatus',
                      'dev.alaindustrial.block.entity.VulcanizerStatus',
+                     // MOD-424: the centrifuge's status enum — MC-free like the six above, listed here
+                     // WITH its L1 suite (ThermalCentrifugeStatusTest), not a release later.
+                     'dev.alaindustrial.block.entity.ThermalCentrifugeStatus',
                      'dev.alaindustrial.client.compat.FluidOutputViewerModel',
                      'dev.alaindustrial.client.compat.RecipeViewerLayout',
                      'dev.alaindustrial.recipe.CraftingGridMapping',

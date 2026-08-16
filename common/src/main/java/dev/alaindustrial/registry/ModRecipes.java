@@ -124,6 +124,11 @@ public final class ModRecipes {
 	// Galvanic Bath (MOD-127): fibre + silver dust → flux thread. Two item inputs like the Vulcanizer;
 	// the water the bath also consumes is a fixed config cost, not a recipe field (see the block entity).
 	public static final Kind GALVANIC_BATH = new Kind("galvanic_bath", 1000);
+	// Thermal Centrifuge (MOD-424): the second doubling step on an ore, after the macerator's. Carries its
+	// own draw (4 EU/t against the shared 2), so the kind must be told — energy / euPerTick is what the
+	// recipe viewers print as the operation's length, and a wrong divisor here shows players a wrong time.
+	public static final Kind CENTRIFUGING =
+			new Kind("centrifuging", 800, () -> Config.thermalCentrifugeEuPerTick);
 	// Sawmill (MOD-150): one Kind per cutting mode (planks/sticks/slabs/stairs). defaultEnergy 160 =
 	// sawmillDuration (80) × machineEuPerTick (2); every shipped sawing JSON sets energy: 160 explicitly.
 	public static final Kind SAWING_PLANKS = new Kind("sawing_planks", 160);
@@ -144,7 +149,7 @@ public final class ModRecipes {
 			new Kind("mutation_create", 8000, () -> Config.incubatorEuPerTick);
 
 	private static final Kind[] ALL = {MACERATION, SMELTING, COMPRESSING, EXTRACTING, VULCANIZING,
-			GALVANIC_BATH, SAWING_PLANKS, SAWING_STICKS, SAWING_SLABS, SAWING_STAIRS,
+			GALVANIC_BATH, CENTRIFUGING, SAWING_PLANKS, SAWING_STICKS, SAWING_SLABS, SAWING_STAIRS,
 			MUTATION_TRANSFORM, MUTATION_DUPLICATE, MUTATION_CREATE};
 
 	/** All recipe families, in registration order (used by both loaders' registration). */

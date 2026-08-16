@@ -50,6 +50,7 @@ import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.block.StorageModuleBlock;
 import dev.alaindustrial.block.StormWindMillBlock;
 import dev.alaindustrial.block.TeleporterBlock;
+import dev.alaindustrial.block.ThermalCentrifugeBlock;
 import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.WaterMillBlock;
@@ -156,6 +157,8 @@ public final class ModBlocksNeoForge {
 	public static final DeferredBlock<AlloySmelterBlock> ALLOY_SMELTER = handle(ContentManifest.ALLOY_SMELTER);
 	public static final DeferredBlock<VulcanizerBlock> VULCANIZER = handle(ContentManifest.VULCANIZER);
 	public static final DeferredBlock<GalvanicBathBlock> GALVANIC_BATH = handle(ContentManifest.GALVANIC_BATH);
+	public static final DeferredBlock<ThermalCentrifugeBlock> THERMAL_CENTRIFUGE =
+			handle(ContentManifest.THERMAL_CENTRIFUGE);
 	public static final DeferredBlock<ElectricHeaterBlock> ELECTRIC_HEATER =
 			handle(ContentManifest.ELECTRIC_HEATER);
 	public static final DeferredBlock<ChargePadBlock> CHARGE_PAD = handle(ContentManifest.CHARGE_PAD);

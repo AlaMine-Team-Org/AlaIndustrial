@@ -104,6 +104,12 @@ public final class ShotFamilies {
             new Object[] {"condenser_orb", new Family(ShotGroup.BER, List.of("R-VIS-01"),
                     "Energy condenser orb: the orb is drawn above a charged bank and is absent on an "
                             + "empty one — its presence IS the charge readout")},
+            new Object[] {"centrifuge_rotor", new Family(ShotGroup.BER, List.of("R-VIS-01", "R-VIS-04"),
+                    "Thermal centrifuge rotor: the basket is drawn inside the housing and moves between "
+                            + "the two spinning frames, while the two stopped frames are identical; the "
+                            + "dark spindle and its green core show between the vanes, and nothing pokes "
+                            + "through the frame. The _side frame is the same rotor through the left "
+                            + "window — front and side must frame it alike")},
 
             // ── Items ───────────────────────────────────────────────────────────────────────
             new Object[] {"item_", new Family(ShotGroup.ITEM, List.of("R-VIS-05"),

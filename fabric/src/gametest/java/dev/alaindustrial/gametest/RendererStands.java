@@ -4,15 +4,20 @@ import static dev.alaindustrial.gametest.VisualStandSupport.differingPixels;
 import static dev.alaindustrial.gametest.VisualStandSupport.explainWithDiff;
 import static dev.alaindustrial.gametest.VisualStandSupport.takeCleanScreenshot;
 
+import dev.alaindustrial.block.LitMachineBlock;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
+import dev.alaindustrial.client.render.ThermalCentrifugeBlockEntityRenderer;
 import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
+import dev.alaindustrial.core.machine.RotorSpin;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import java.nio.file.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +25,10 @@ import org.slf4j.LoggerFactory;
 /**
  * Every stand that proves a {@code BlockEntityRenderer}'s geometry really reaches the captured frame:
  * the water mill's wheel (MOD-024), the three wind mills' rotors (MOD-232), the incubator's floating
- * item (MOD-118) and the energy condenser's orb (MOD-393).
+ * item (MOD-118), the energy condenser's orb (MOD-393) and the thermal centrifuge's rotor (MOD-424).
  *
  * <p>Split out of {@code GuiClientGameTest} by MOD-404. They belong together because they are the same
- * test, four times over, and the shape of it is the load-bearing part:
+ * test, five times over, and the shape of it is the load-bearing part:
  * <ul>
  *   <li><b>Renderer gate</b> — the CLIENT block entity must be in the exact state the renderer draws
  *       in. Every one of these renderers returns early on some state, so a rig that walls the thing in
@@ -68,6 +73,19 @@ public final class RendererStands {
     private static final int ORB_X = 170;
     private static final int ORB_Y = 101;
     private static final int ORB_Z = 150;
+
+    /** Where the thermal centrifuge stands for {@link #checkThermalCentrifugeRotor}. */
+    private static final int ROTOR_X = 190;
+    private static final int ROTOR_Y = 101;
+    private static final int ROTOR_Z = 150;
+    /** Position of that centrifuge, for the client-side renderer gate. */
+    private static final BlockPos ROTOR_POS = new BlockPos(ROTOR_X, ROTOR_Y, ROTOR_Z);
+    /**
+     * How far a player's eye sits above the feet a {@code tp} places. Subtracting it is what puts the
+     * camera level with the rotor's axis instead of looking down on the machine from head height — the
+     * difference between a window that fills the frame and one squinted at across its own top edge.
+     */
+    private static final double EYE_HEIGHT = 1.62;
 
     private RendererStands() {
     }
@@ -301,6 +319,156 @@ public final class RendererStands {
                     + "EnergyCondenserBlockEntityRenderer's geometry is not in the captured frame, or the "
                     + "orb no longer hides on an empty bank. " + explainWithDiff(withOrb, emptyA));
         }
+    }
+
+    // ────────────────────────────────────────────────────────────────────────────────
+    // Thermal centrifuge — BER rotor visual (MOD-424)
+    // ────────────────────────────────────────────────────────────────────────────────
+
+    /**
+     * MOD-424: proves the centrifuge's rotor reaches the captured frame, and that it TURNS.
+     *
+     * <p><b>The toggle is the machine's state, not the block.</b> Cutting the redstone signal stops the
+     * rotor dead — {@code RotorSpin.angle} is a hard zero at zero spin — while leaving the housing, its
+     * open window, the floor and everything else in shot untouched. Photographing the block against bare
+     * ground instead would compare the whole machine and pass even if the rotor never drew a triangle,
+     * which is the failure this exists to catch (MOD-231).
+     *
+     * <p><b>Why the gate measures motion rather than presence.</b> The rotor is drawn whether or not it
+     * is turning — it is hardware, not a readout — so "with vs without" is not available here the way it
+     * is for the condenser's orb. Worse, the rotor carries four vanes per tier and is therefore symmetric
+     * every 90&deg;, so comparing a stopped rotor against a spinning one could legitimately land on two
+     * near-identical poses and fail on a healthy build. So the measurement is turned around: two frames a
+     * few ticks apart while it spins must differ far more than two frames a few ticks apart while it is
+     * stopped. That single comparison covers three separate claims — the geometry is in the frame, it is
+     * animated, and it really does stop when the signal goes away.
+     */
+    public static void checkThermalCentrifugeRotor(ClientGameTestContext context,
+            TestSingleplayerContext singleplayer) {
+        TestServerContext server = singleplayer.getServer();
+        // Rain and night both put moving or dimming pixels into the stopped baseline; that baseline has
+        // to be driver dithering alone or the gate loses the ability to fail (MOD-232).
+        server.runCommand("weather clear");
+        server.runCommand("time set day");
+        server.runCommand("fill " + (ROTOR_X - 4) + " " + ROTOR_Y + " " + (ROTOR_Z - 4) + " "
+                + (ROTOR_X + 4) + " " + (ROTOR_Y + 4) + " " + (ROTOR_Z + 4) + " minecraft:air");
+        server.runCommand("fill " + (ROTOR_X - 4) + " " + (ROTOR_Y - 1) + " " + (ROTOR_Z - 4) + " "
+                + (ROTOR_X + 4) + " " + (ROTOR_Y - 1) + " " + (ROTOR_Z + 4) + " minecraft:smooth_stone");
+        // facing=south turns the housing's window towards the camera, which then leaves the far side free
+        // for the redstone block holding the motor's start signal — hidden behind the machine's own back
+        // wall, so it contributes no pixels to either pair of frames.
+        server.runCommand("setblock " + ROTOR_X + " " + ROTOR_Y + " " + ROTOR_Z
+                + " alaindustrial:thermal_centrifuge[facing=south]");
+        setCentrifugeSignal(server, true);
+        // Spin is persisted state, so the ramp is one command instead of 400 ticks of lane time. The
+        // value is deliberately far past any spin-up length: loadAdditional clamps it to the configured
+        // ceiling, so this reads "fully wound" whatever thermalCentrifugeSpinupTicks happens to be — and
+        // the EU is what keeps it there, since a spun-up rotor that cannot pay the idle rate sheds speed.
+        server.runCommand("data merge block " + ROTOR_X + " " + ROTOR_Y + " " + ROTOR_Z
+                + " {Spin: 100000, Energy: 2000L}");
+
+        server.runCommand("gamemode spectator @p");
+        server.runCommand("tp @p " + (ROTOR_X + 0.5) + " " + (ROTOR_Y + 0.5 - EYE_HEIGHT) + " "
+                + (ROTOR_Z + 1.8) + " 180 0");
+        singleplayer.getClientLevel().waitForChunksRender();
+        // Only now is the machine's chunk inside the client's view distance — a client-side
+        // getBlockEntity before the teleport returns null (MOD-231).
+        context.waitTicks(20);
+
+        assertRotorRendererGate(context);
+
+        Path spinningA = takeCleanScreenshot(context, "centrifuge_rotor_spinning_a");
+        LOG.info("[GUITEST][CENTRIFUGE] centrifuge_rotor_spinning_a -> {}", spinningA.toAbsolutePath());
+        context.waitTicks(5);
+        Path spinningB = takeCleanScreenshot(context, "centrifuge_rotor_spinning_b");
+
+        setCentrifugeSignal(server, false);
+        // Long enough for the machine to see the neighbour change, zero its spin and push that to the
+        // client. The block's neighbourChanged deliberately bypasses the 40-tick idle sleep for exactly
+        // this, so ten ticks is generous rather than tight.
+        context.waitTicks(10);
+        Path stoppedA = takeCleanScreenshot(context, "centrifuge_rotor_stopped_a");
+        context.waitTicks(5);
+        Path stoppedB = takeCleanScreenshot(context, "centrifuge_rotor_stopped_b");
+
+        int spinDelta = differingPixels(spinningA, spinningB);
+        int stoppedNoise = differingPixels(stoppedA, stoppedB);
+        // 4x the measured floor, and at least 400 px — the condenser orb's numbers, and for the same
+        // reason: the rotor is seen through an 8x8-pixel window rather than filling a 2x2-block quad like
+        // the wind mill's blades, and a threshold a healthy build cannot clear is a gate that gets
+        // deleted rather than fixed.
+        int required = Math.max(4 * stoppedNoise, 400);
+        LOG.info("[GUITEST][CENTRIFUGE] rotor pixel gate: spinning delta={} px, stopped baseline={} px, "
+                + "required>{}", spinDelta, stoppedNoise, required);
+        if (spinDelta < required) {
+            throw new AssertionError("[GUITEST][CENTRIFUGE] five ticks of a spun-up rotor changed only "
+                    + spinDelta + " px (stopped baseline " + stoppedNoise + " px, required > " + required
+                    + ") — either ThermalCentrifugeBlockEntityRenderer's geometry is not in the captured "
+                    + "frame, or the rotor is being drawn frozen (check that spinPermille reaches the "
+                    + "client and that RotorSpin.angle is fed the game clock). "
+                    + explainWithDiff(spinningA, spinningB));
+        }
+
+        // Restore the signal, then walk round to the left face. The housing is open on three sides, and a
+        // suite that only ever photographs the front would not notice a side window that framed nothing —
+        // the model cuts those openings and the bars back out by hand, and they are the pieces with no
+        // shared geometry to fall back on. Logged, not gated: the pixel gate above already proves the
+        // renderer reaches a frame, and a second copy of it here would measure the same claim twice.
+        setCentrifugeSignal(server, true);
+        context.waitTicks(10);
+        // Same 1.3 blocks off the block's CENTRE as the front camera — the coordinates here are the
+        // block's minimum corner, so the half-block has to be added before the standoff is subtracted.
+        server.runCommand("tp @p " + (ROTOR_X + 0.5 - 1.3) + " " + (ROTOR_Y + 0.5 - EYE_HEIGHT) + " "
+                + (ROTOR_Z + 0.5) + " 270 0");
+        singleplayer.getClientLevel().waitForChunksRender();
+        context.waitTicks(5);
+        LOG.info("[GUITEST][CENTRIFUGE] centrifuge_rotor_side -> {}",
+                takeCleanScreenshot(context, "centrifuge_rotor_side").toAbsolutePath());
+    }
+
+    /**
+     * Renderer gate: the CLIENT copy of the machine must be in the state the rotor renderer animates in.
+     *
+     * <p>Reads the same two inputs {@code ThermalCentrifugeBlockEntityRenderer.extractRenderState} reads —
+     * the synced spin permille and the {@code LIT} blockstate — and runs them through the very rate
+     * function the renderer uses, so a rig that leaves the machine unpowered, unsignalled or spun down
+     * fails HERE instead of producing a green screenshot of a motionless rotor.
+     */
+    private static void assertRotorRendererGate(ClientGameTestContext context) {
+        context.runOnClient(mc -> {
+            BlockEntity be = mc.level.getBlockEntity(ROTOR_POS);
+            if (!(be instanceof ThermalCentrifugeBlockEntity centrifuge)) {
+                throw new AssertionError("[GUITEST][CENTRIFUGE] client has no ThermalCentrifugeBlockEntity "
+                        + "at " + ROTOR_POS + " (got " + be + ", block state "
+                        + mc.level.getBlockState(ROTOR_POS) + ") — the rig is broken, or the camera is "
+                        + "still too far away for the client to have loaded that chunk");
+            }
+            Object renderer = mc.getBlockEntityRenderDispatcher().getRenderer(centrifuge);
+            if (!(renderer instanceof ThermalCentrifugeBlockEntityRenderer)) {
+                throw new AssertionError("[GUITEST][CENTRIFUGE] the thermal centrifuge has no "
+                        + "ThermalCentrifugeBlockEntityRenderer registered (got " + renderer
+                        + ") — the rotor cannot reach any frame at all");
+            }
+            BlockState state = mc.level.getBlockState(ROTOR_POS);
+            boolean lit = state.hasProperty(LitMachineBlock.LIT) && state.getValue(LitMachineBlock.LIT);
+            int permille = centrifuge.spinPermille();
+            float rate = RotorSpin.radiansPerTick(permille, lit);
+            LOG.info("[GUITEST][CENTRIFUGE] renderer gate: spin={}permille lit={} rate={} rad/tick",
+                    permille, lit, rate);
+            if (permille < 900 || rate <= 0.0F) {
+                throw new AssertionError("[GUITEST][CENTRIFUGE] the rotor renderer would draw a MOTIONLESS "
+                        + "rotor: spin=" + permille + " permille, lit=" + lit + ", rate=" + rate
+                        + " rad/tick (expected spin >= 900). The machine only holds its revolutions while "
+                        + "it has a redstone signal AND enough EU to pay thermalCentrifugeIdleEuPerTick — "
+                        + "check the redstone block behind it and the Energy the rig merged in.");
+            }
+        });
+    }
+
+    /** The held redstone signal that is this machine's motor switch, placed on its hidden back side. */
+    private static void setCentrifugeSignal(TestServerContext server, boolean on) {
+        server.runCommand("setblock " + ROTOR_X + " " + ROTOR_Y + " " + (ROTOR_Z - 1) + " "
+                + (on ? "minecraft:redstone_block" : "minecraft:air"));
     }
 
     // ────────────────────────────────────────────────────────────────────────────────

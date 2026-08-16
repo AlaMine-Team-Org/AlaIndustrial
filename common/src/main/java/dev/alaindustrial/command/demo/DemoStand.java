@@ -9,6 +9,7 @@ import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
+import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
@@ -291,6 +292,22 @@ public final class DemoStand {
 				new ItemStack(ModContent.RAW_RUBBER.get(), 64));
 		fillSlot(level, origin, 26, 2, 10, VulcanizerBlockEntity.SULFUR_SLOT,
 				new ItemStack(ModContent.SULFUR_DUST.get(), 64));
+		// Thermal Centrifuge (MOD-424): the same heater-underneath pair as the vulcanizer, on the second
+		// machines row because z=10 is full from x=2 to x=41. Three things must be true before this machine
+		// turns at all, so all three are set up rather than only the two the other stands need: the heater
+		// below, a stack of uranium dust, and — the one no other machine on the stand wants — a held
+		// redstone signal. A redstone BLOCK rather than a lever: the lever's default state is unpowered and
+		// wall-mounted, so `set` (which places defaultBlockState and never calls setPlacedBy) would leave a
+		// dead switch and an idle centrifuge. It is placed LAST of the three so its neighbour update reaches
+		// an already-built machine. Like the vulcanizer's, the heater starts cold on purpose: the stand shows
+		// the rotor spinning up while the thermometer climbs, which is the mechanic worth watching.
+		set(level, origin, 17, 1, 12, ModContent.ELECTRIC_HEATER.get());
+		chargeBuffer(level, origin, 17, 1, 12);
+		set(level, origin, 17, 2, 12, ModContent.THERMAL_CENTRIFUGE.get());
+		chargeBuffer(level, origin, 17, 2, 12);
+		fillSlot(level, origin, 17, 2, 12, ThermalCentrifugeBlockEntity.INPUT_SLOT,
+				new ItemStack(ModContent.URANIUM_DUST.get(), 64));
+		set(level, origin, 18, 2, 12, Blocks.REDSTONE_BLOCK);
 		// Galvanic Bath (MOD-127): like the polymerizer its feedstock is a fluid, so the tank is stocked
 		// directly rather than through a bucket — one bucket would buy four operations and then the stand
 		// would show an idle machine. Both item inputs are filled so it plates continuously.

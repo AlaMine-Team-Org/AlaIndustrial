@@ -21,6 +21,7 @@ import dev.alaindustrial.block.GardenDroneStationBlock;
 import dev.alaindustrial.block.PumpBlock;
 import dev.alaindustrial.block.GalvanicBathBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
+import dev.alaindustrial.block.ThermalCentrifugeBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.ElectricHeaterBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
@@ -492,6 +493,7 @@ public final class MachineTooltips {
 				|| block instanceof PolymerizerBlock
 				|| block instanceof GalvanicBathBlock
 				|| block instanceof VulcanizerBlock
+				|| block instanceof ThermalCentrifugeBlock
 				|| block instanceof ElectricHeaterBlock
 				|| block instanceof BatteryBoxBlock
 				|| block instanceof CableBlock;
@@ -541,6 +543,10 @@ public final class MachineTooltips {
 		} else if (block instanceof VulcanizerBlock) {
 			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
 			lines.add(tt("duration_ticks", Config.scaledDuration(Config.vulcanizerDuration)));
+		} else if (block instanceof ThermalCentrifugeBlock) {
+			// Its own rate, not machineEuPerTick — the rotor costs more than an ordinary machine tick.
+			lines.add(tt("energy_input", thermalCentrifugeEuPerTick()));
+			lines.add(tt("duration_ticks", Config.scaledDuration(Config.thermalCentrifugeDuration)));
 		} else if (block instanceof ElectricHeaterBlock) {
 			lines.add(tt("energy_input", Config.electricHeaterEuPerTickEffective()));
 			lines.add(tt("capacity", Config.electricHeaterBuffer));
@@ -629,6 +635,11 @@ public final class MachineTooltips {
 			lines.add(tt("buffer", Config.machineBuffer));
 			lines.add(tt("energy_per_op",
 					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.vulcanizerDuration)));
+		} else if (block instanceof ThermalCentrifugeBlock) {
+			lines.add(tier());
+			lines.add(tt("buffer", Config.machineBuffer));
+			lines.add(tt("energy_per_op",
+					thermalCentrifugeEuPerTick() * Config.scaledDuration(Config.thermalCentrifugeDuration)));
 		} else if (block instanceof ElectricHeaterBlock) {
 			lines.add(tier());
 		} else if (block instanceof IncubatorBlock) {
@@ -674,6 +685,15 @@ public final class MachineTooltips {
 	 */
 	private static int incubatorEuPerTick() {
 		return Math.max(1, Math.round(Config.incubatorEuPerTick * Config.globalMachineSpeedMultiplier));
+	}
+
+	/**
+	 * The centrifuge's effective drain, scaled the same way {@link #incubatorEuPerTick()} scales the
+	 * incubator's: this machine has its own rate rather than the shared {@code machineEuPerTick}, so
+	 * {@code Config.machineEuPerTickEffective()} would quote the wrong number here (MOD-424).
+	 */
+	private static int thermalCentrifugeEuPerTick() {
+		return Math.max(1, Math.round(Config.thermalCentrifugeEuPerTick * Config.globalMachineSpeedMultiplier));
 	}
 
 	/**

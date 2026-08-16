@@ -186,6 +186,9 @@ public final class ModItems {
 	public static final Item URANIUM_DUST = manifestItem("uranium_dust");
 	public static final Item RAW_URANIUM = manifestItem("raw_uranium");
 	public static final Item URANIUM_INGOT = manifestItem("uranium_ingot");
+	// MOD-424: the centrifuge's product, and what smelting it yields.
+	public static final Item URANIUM_SHAVINGS = manifestItem("uranium_shavings");
+	public static final Item REFINED_URANIUM = manifestItem("refined_uranium");
 	public static final Item PALLADIUM_DUST = manifestItem("palladium_dust");
 	public static final Item RAW_PALLADIUM = manifestItem("raw_palladium");
 	public static final Item PALLADIUM_INGOT = manifestItem("palladium_ingot");
@@ -306,6 +309,8 @@ public final class ModItems {
 			blockItem("alloy_smelter", ModBlocks.ALLOY_SMELTER);
 	public static final BlockItem GALVANIC_BATH_ITEM =
 			blockItem("galvanic_bath", ModBlocks.GALVANIC_BATH);
+	public static final BlockItem THERMAL_CENTRIFUGE_ITEM =
+			blockItem("thermal_centrifuge", ModBlocks.THERMAL_CENTRIFUGE);
 	public static final BlockItem ELECTRIC_HEATER_ITEM = blockItem("electric_heater", ModBlocks.ELECTRIC_HEATER);
 	public static final BlockItem CHARGE_PAD_ITEM = blockItem("charge_pad", ModBlocks.CHARGE_PAD);
 	public static final BlockItem ENERGY_CONDENSER_ITEM = blockItem("energy_condenser", ModBlocks.ENERGY_CONDENSER);
@@ -821,6 +826,8 @@ public final class ModItems {
 		ModContent.URANIUM_DUST = () -> URANIUM_DUST;
 		ModContent.RAW_URANIUM = () -> RAW_URANIUM;
 		ModContent.URANIUM_INGOT = () -> URANIUM_INGOT;
+		ModContent.URANIUM_SHAVINGS = () -> URANIUM_SHAVINGS;
+		ModContent.REFINED_URANIUM = () -> REFINED_URANIUM;
 		ModContent.PALLADIUM_DUST = () -> PALLADIUM_DUST;
 		ModContent.RAW_PALLADIUM = () -> RAW_PALLADIUM;
 		ModContent.PALLADIUM_INGOT = () -> PALLADIUM_INGOT;
@@ -903,6 +910,7 @@ public final class ModItems {
 		ModContent.VULCANIZER_ITEM = () -> VULCANIZER_ITEM;
 		ModContent.ALLOY_SMELTER_ITEM = () -> ALLOY_SMELTER_ITEM;
 		ModContent.GALVANIC_BATH_ITEM = () -> GALVANIC_BATH_ITEM;
+		ModContent.THERMAL_CENTRIFUGE_ITEM = () -> THERMAL_CENTRIFUGE_ITEM;
 		ModContent.ELECTRIC_HEATER_ITEM = () -> ELECTRIC_HEATER_ITEM;
 		ModContent.CHARGE_PAD_ITEM = () -> CHARGE_PAD_ITEM;
 		ModContent.ENERGY_CONDENSER_ITEM = () -> ENERGY_CONDENSER_ITEM;

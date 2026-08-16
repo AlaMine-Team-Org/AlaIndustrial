@@ -23,6 +23,7 @@ import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
+import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
@@ -131,6 +132,9 @@ public final class ModBlockEntitiesNeoForge {
 			register(ContentManifest.blockEntity("alloy_smelter", AlloySmelterBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GalvanicBathBlockEntity>>
 			GALVANIC_BATH = register(ContentManifest.blockEntity("galvanic_bath", GalvanicBathBlockEntity.class));
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ThermalCentrifugeBlockEntity>>
+			THERMAL_CENTRIFUGE =
+					register(ContentManifest.blockEntity("thermal_centrifuge", ThermalCentrifugeBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ElectricHeaterBlockEntity>> ELECTRIC_HEATER =
 			register(ContentManifest.blockEntity("electric_heater", ElectricHeaterBlockEntity.class));
 	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ChargePadBlockEntity>> CHARGE_PAD =

@@ -3,6 +3,7 @@ package dev.alaindustrial.block.entity;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.heat.HeatConsumer;
 import dev.alaindustrial.core.heat.HeatSource;
 import dev.alaindustrial.core.heat.WorldHeatSources;
 import dev.alaindustrial.menu.VulcanizerMenu;
@@ -29,7 +30,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 /** Two-input LV processing machine: raw rubber + sulfur dust + external heat → rubber. */
-public final class VulcanizerBlockEntity extends MachineBlockEntity implements Overclockable, MenuProvider {
+public final class VulcanizerBlockEntity extends MachineBlockEntity
+		implements Overclockable, MenuProvider, HeatConsumer {
 	public static final int RAW_RUBBER_SLOT = 0;
 	public static final int SULFUR_SLOT = 1;
 	public static final int OUTPUT_SLOT = 2;
@@ -179,6 +181,20 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity implements O
 		return status;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>For the Vulcanizer that is exactly two of its statuses. {@code NO_HEAT} is "stocked and ready,
+	 * blocked only by the heater"; {@code READY} is "the heater is already serving us" and must count
+	 * too, or the heater would cool between two paid ticks of a batch it is actively heating. This test
+	 * used to live inside {@code ElectricHeaterBlockEntity} as a hard-coded status comparison; MOD-424
+	 * moved it here so a second heated machine could answer for itself.
+	 */
+	@Override
+	public boolean isWaitingOnHeat() {
+		return status == VulcanizerStatus.NO_HEAT || status == VulcanizerStatus.READY;
+	}
+
 	public int cycleHeatLevel() {
 		return cycleHeatLevel;
 	}
@@ -207,6 +223,7 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity implements O
 	}
 
 	/** Called by the block's neighbour callback to bypass the base class's 40-tick idle sleep. */
+	@Override
 	public void onHeatNeighbourChanged() {
 		if (level != null) {
 			heatSource = WorldHeatSources.resolve(level, worldPosition);

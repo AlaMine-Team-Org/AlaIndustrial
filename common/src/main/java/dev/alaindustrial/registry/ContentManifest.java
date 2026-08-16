@@ -51,6 +51,7 @@ import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.block.StorageModuleBlock;
 import dev.alaindustrial.block.StormWindMillBlock;
 import dev.alaindustrial.block.TeleporterBlock;
+import dev.alaindustrial.block.ThermalCentrifugeBlock;
 import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.WaterMillBlock;
@@ -105,6 +106,7 @@ import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
+import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
@@ -151,6 +153,7 @@ import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
+import dev.alaindustrial.menu.ThermalCentrifugeMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
 import dev.alaindustrial.menu.AlloySmelterMenu;
@@ -301,7 +304,9 @@ public final class ContentManifest {
 			// a menu type must map to exactly one block for stillValid, and the tiers are three blocks).
 			menu("mob_repeller", MobRepellerMenu::new, s -> ModContent.MOB_REPELLER_MENU = s),
 			menu("mob_repeller_mv", MobRepellerMvMenu::new, s -> ModContent.MOB_REPELLER_MV_MENU = s),
-			menu("mob_repeller_hv", MobRepellerHvMenu::new, s -> ModContent.MOB_REPELLER_HV_MENU = s));
+			menu("mob_repeller_hv", MobRepellerHvMenu::new, s -> ModContent.MOB_REPELLER_HV_MENU = s),
+			// MOD-424 — the thermal centrifuge: rotor gauge + status line over the usual two slots.
+			menu("thermal_centrifuge", ThermalCentrifugeMenu::new, s -> ModContent.THERMAL_CENTRIFUGE_MENU = s));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// Blocks — the COMPOSITION, not just the definition (MOD-403)
@@ -449,6 +454,9 @@ public final class ContentManifest {
 			block("vulcanizer", VulcanizerBlock::new, s -> ModContent.VULCANIZER = s);
 	public static final BlockDef<GalvanicBathBlock> GALVANIC_BATH =
 			block("galvanic_bath", GalvanicBathBlock::new, s -> ModContent.GALVANIC_BATH = s);
+	// Thermal Centrifuge (MOD-424): redstone-started, heated from below; doubles a dust a second time.
+	public static final BlockDef<ThermalCentrifugeBlock> THERMAL_CENTRIFUGE =
+			block("thermal_centrifuge", ThermalCentrifugeBlock::new, s -> ModContent.THERMAL_CENTRIFUGE = s);
 	public static final BlockDef<ElectricHeaterBlock> ELECTRIC_HEATER =
 			block("electric_heater", ElectricHeaterBlock::new, s -> ModContent.ELECTRIC_HEATER = s);
 	public static final BlockDef<ChargePadBlock> CHARGE_PAD =
@@ -571,7 +579,9 @@ public final class ContentManifest {
 			IRON_CHEST, STORAGE_MODULE, SILVER_CHEST, GOLD_CHEST, ELECTRUM_CHEST,
 			TEMPERED_IRON_BLOCK, MACHINE_CASING, ADVANCED_MACHINE_CASING, SILVER_PLATE_BLOCK,
 			TEMPERED_IRON_PLATE_BLOCK, INDUSTRIAL_WORKBENCH, ENRICHED_URANIUM_TORCH,
-			ENRICHED_URANIUM_WALL_TORCH, OIL, DIESEL, FUEL_OIL);
+			ENRICHED_URANIUM_WALL_TORCH, OIL, DIESEL, FUEL_OIL,
+			// MOD-424 — appended rather than filed next to VULCANIZER, per the ordering note above.
+			THERMAL_CENTRIFUGE);
 
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
@@ -654,6 +664,11 @@ public final class ContentManifest {
 			Map.entry("galvanic_bath", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL))),
 			Map.entry("vulcanizer", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.lightLevel(ModBlockProperties::litLight))),
+			// MOD-424 — the centrifuge housing is an open frame around the rotor, so its getShape is inset
+			// (1..15) and noOcclusion is mandatory: a non-full shape must not cull its neighbours (R-PHY-05).
+			// It glows through those openings while the rotor is doing work, hence litLight.
+			Map.entry("thermal_centrifuge", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					.noOcclusion().lightLevel(ModBlockProperties::litLight))),
 			// MOD-418: the heater's glow is a four-rung thermometer, not the boolean litLight the rest of
 			// the machine family uses — see HeaterGlow.
 			Map.entry("electric_heater", machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
@@ -839,11 +854,13 @@ public final class ContentManifest {
 				"nickel_dust", "nickel_ingot", "nickel_plate",
 				"palladium_dust", "palladium_ingot", "palladium_plate",
 				"raw_nickel", "raw_palladium", "raw_rubber",
-				"raw_silver", "raw_sulfur", "raw_tin", "raw_uranium", "resonant_shard", "rubber",
+				"raw_silver", "raw_sulfur", "raw_tin", "raw_uranium",
+				// MOD-424: the centrifuge's product and what smelting it yields.
+				"refined_uranium", "resonant_shard", "rubber",
 				"silver_dust", "silver_gear", "silver_ingot", "silver_plate", "stone_gear",
 				"sulfur_dust", "tempered_iron", "tempered_iron_plate", "tin_dust", "tin_ingot",
 				"tin_plate", "unstable_isotope", "uranium_dust", "uranium_ingot", "uranium_plate",
-				"wooden_gear")) {
+				"uranium_shavings", "wooden_gear")) {
 			defs.put(id, Item::new);
 		}
 		// Battery (MOD-083): the stackable EU carrier. Charge is per item, so the stack size is what
@@ -1088,7 +1105,10 @@ public final class ContentManifest {
 			blockEntity("electrum_chest", ElectrumChestBlockEntity.class, ElectrumChestBlockEntity::new, s -> ModContent.ELECTRUM_CHEST_BE = s, "electrum_chest"),
 			blockEntity("mob_repeller", MobRepellerBlockEntity.class, MobRepellerBlockEntity::new, s -> ModContent.MOB_REPELLER_BE = s, "mob_repeller"),
 			blockEntity("mob_repeller_mv", MobRepellerMvBlockEntity.class, MobRepellerMvBlockEntity::new, s -> ModContent.MOB_REPELLER_MV_BE = s, "mob_repeller_mv"),
-			blockEntity("mob_repeller_hv", MobRepellerHvBlockEntity.class, MobRepellerHvBlockEntity::new, s -> ModContent.MOB_REPELLER_HV_BE = s, "mob_repeller_hv"));
+			blockEntity("mob_repeller_hv", MobRepellerHvBlockEntity.class, MobRepellerHvBlockEntity::new, s -> ModContent.MOB_REPELLER_HV_BE = s, "mob_repeller_hv"),
+			blockEntity("thermal_centrifuge", ThermalCentrifugeBlockEntity.class,
+					ThermalCentrifugeBlockEntity::new, s -> ModContent.THERMAL_CENTRIFUGE_BE = s,
+					"thermal_centrifuge"));
 
 	/**
 	 * The definition for block-entity {@code id}, checked against the type the caller expects.

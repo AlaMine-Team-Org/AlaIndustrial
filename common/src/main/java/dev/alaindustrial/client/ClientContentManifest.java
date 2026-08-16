@@ -11,6 +11,7 @@ import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
+import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.client.render.CableAccessoryBlockEntityRenderer;
@@ -21,6 +22,7 @@ import dev.alaindustrial.client.render.FluidTankBlockEntityRenderer;
 import dev.alaindustrial.client.render.GardenDroneBlockEntityRenderer;
 import dev.alaindustrial.client.render.IncubatorBlockEntityRenderer;
 import dev.alaindustrial.client.render.IncubatorDomeTint;
+import dev.alaindustrial.client.render.ThermalCentrifugeBlockEntityRenderer;
 import dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer;
 import dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer;
 import dev.alaindustrial.registry.ContentManifest;
@@ -153,6 +155,10 @@ public final class ClientContentManifest {
 			// Incubator (MOD-118): bound to the base, draws into the dome chamber above it.
 			renderer(ContentManifest.blockEntity("incubator", IncubatorBlockEntity.class),
 					IncubatorBlockEntityRenderer::new),
+			// Thermal Centrifuge (MOD-424): the rotor turning inside the housing's open window — the only
+			// way the redstone gate and the 400-tick spin-up are visible from outside the GUI.
+			renderer(ContentManifest.blockEntity("thermal_centrifuge", ThermalCentrifugeBlockEntity.class),
+					ThermalCentrifugeBlockEntityRenderer::new),
 			// Insulating stand under a bare cable (MOD-279). All cable grades share one BlockEntityType,
 			// so this single registration covers every grade.
 			renderer(ContentManifest.blockEntity("copper_cable", CableBlockEntity.class),
@@ -191,7 +197,9 @@ public final class ClientContentManifest {
 			new ModelLayerDef(WaterMillWheelBlockEntityRenderer.MODEL_LAYER,
 					WaterMillWheelBlockEntityRenderer::createLayer),
 			new ModelLayerDef(GardenDroneBlockEntityRenderer.MODEL_LAYER,
-					GardenDroneBlockEntityRenderer::createLayer));
+					GardenDroneBlockEntityRenderer::createLayer),
+			new ModelLayerDef(ThermalCentrifugeBlockEntityRenderer.MODEL_LAYER,
+					ThermalCentrifugeBlockEntityRenderer::createLayer));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// Block tint sources

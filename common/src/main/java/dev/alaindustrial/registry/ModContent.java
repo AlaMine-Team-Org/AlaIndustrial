@@ -37,6 +37,7 @@ import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
+import dev.alaindustrial.menu.ThermalCentrifugeMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
 import dev.alaindustrial.menu.AlloySmelterMenu;
@@ -158,6 +159,8 @@ public final class ModContent {
 	/** Alloy Smelter (MOD-064) — three interchangeable component slots melt into one alloy. */
 	public static Supplier<Block> ALLOY_SMELTER = unbound("ALLOY_SMELTER");
 	public static Supplier<Block> GALVANIC_BATH = unbound("GALVANIC_BATH");
+	/** Thermal Centrifuge (MOD-424) — redstone-started, heated from below; doubles a dust a second time. */
+	public static Supplier<Block> THERMAL_CENTRIFUGE = unbound("THERMAL_CENTRIFUGE");
 	public static Supplier<Block> ELECTRIC_HEATER = unbound("ELECTRIC_HEATER");
 	/** Charging Station (MOD-274) — the plate that tops up the gear of whoever stands on it. */
 	public static Supplier<Block> CHARGE_PAD = unbound("CHARGE_PAD");
@@ -322,6 +325,10 @@ public final class ModContent {
 	public static Supplier<Item> URANIUM_DUST = unbound("URANIUM_DUST");
 	public static Supplier<Item> RAW_URANIUM = unbound("RAW_URANIUM");
 	public static Supplier<Item> URANIUM_INGOT = unbound("URANIUM_INGOT");
+	// MOD-424 — the second doubling: the centrifuge turns one uranium dust into two shavings, and
+	// smelting a shaving gives refined uranium. Four ingots per ore block once macerated first.
+	public static Supplier<Item> URANIUM_SHAVINGS = unbound("URANIUM_SHAVINGS");
+	public static Supplier<Item> REFINED_URANIUM = unbound("REFINED_URANIUM");
 	public static Supplier<Item> PALLADIUM_DUST = unbound("PALLADIUM_DUST");
 	public static Supplier<Item> RAW_PALLADIUM = unbound("RAW_PALLADIUM");
 	public static Supplier<Item> PALLADIUM_INGOT = unbound("PALLADIUM_INGOT");
@@ -458,6 +465,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> VULCANIZER_ITEM = unbound("VULCANIZER_ITEM");
 	public static Supplier<BlockItem> ALLOY_SMELTER_ITEM = unbound("ALLOY_SMELTER_ITEM");
 	public static Supplier<BlockItem> GALVANIC_BATH_ITEM = unbound("GALVANIC_BATH_ITEM");
+	public static Supplier<BlockItem> THERMAL_CENTRIFUGE_ITEM = unbound("THERMAL_CENTRIFUGE_ITEM");
 	public static Supplier<BlockItem> ELECTRIC_HEATER_ITEM = unbound("ELECTRIC_HEATER_ITEM");
 	public static Supplier<BlockItem> CHARGE_PAD_ITEM = unbound("CHARGE_PAD_ITEM");
 	public static Supplier<BlockItem> ENERGY_CONDENSER_ITEM = unbound("ENERGY_CONDENSER_ITEM");
@@ -530,6 +538,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> VULCANIZER_BE = unbound("VULCANIZER_BE");
 	public static Supplier<BlockEntityType<?>> ALLOY_SMELTER_BE = unbound("ALLOY_SMELTER_BE");
 	public static Supplier<BlockEntityType<?>> GALVANIC_BATH_BE = unbound("GALVANIC_BATH_BE");
+	public static Supplier<BlockEntityType<?>> THERMAL_CENTRIFUGE_BE = unbound("THERMAL_CENTRIFUGE_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
 	public static Supplier<BlockEntityType<?>> ENERGY_CONDENSER_BE = unbound("ENERGY_CONDENSER_BE");
@@ -575,6 +584,9 @@ public final class ModContent {
 	public static Supplier<MenuType<ElectricHeaterMenu>> ELECTRIC_HEATER_MENU = unbound("ELECTRIC_HEATER_MENU");
 	public static Supplier<MenuType<AlloySmelterMenu>> ALLOY_SMELTER_MENU = unbound("ALLOY_SMELTER_MENU");
 	public static Supplier<MenuType<GalvanicBathMenu>> GALVANIC_BATH_MENU = unbound("GALVANIC_BATH_MENU");
+	/** Thermal Centrifuge readout (MOD-424): rotor spin-up gauge + the status line for its three gates. */
+	public static Supplier<MenuType<ThermalCentrifugeMenu>> THERMAL_CENTRIFUGE_MENU =
+			unbound("THERMAL_CENTRIFUGE_MENU");
 	public static Supplier<MenuType<IncubatorMenu>> INCUBATOR_MENU = unbound("INCUBATOR_MENU");
 	public static Supplier<MenuType<BatteryBoxMenu>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");
 	public static Supplier<MenuType<EnergyCondenserMenu>> ENERGY_CONDENSER_MENU = unbound("ENERGY_CONDENSER_MENU");

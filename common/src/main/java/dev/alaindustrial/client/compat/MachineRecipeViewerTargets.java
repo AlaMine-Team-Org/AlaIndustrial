@@ -15,6 +15,7 @@ import dev.alaindustrial.client.screen.MaceratorScreen;
 import dev.alaindustrial.client.screen.PolymerizerScreen;
 import dev.alaindustrial.client.screen.SawmillScreen;
 import dev.alaindustrial.client.screen.GalvanicBathScreen;
+import dev.alaindustrial.client.screen.ThermalCentrifugeScreen;
 import dev.alaindustrial.client.screen.VulcanizerScreen;
 
 /**
@@ -42,6 +43,8 @@ public final class MachineRecipeViewerTargets {
 			new Target(CompressorScreen.class, ModRecipes.COMPRESSING, new GuiRect(81, 34, 25, 18)),
 			new Target(ExtractorScreen.class, ModRecipes.EXTRACTING, new GuiRect(80, 37, 29, 10)),
 			new Target(VulcanizerScreen.class, ModRecipes.VULCANIZING, new GuiRect(79, 31, 25, 9)),
+			// MOD-424: the rect tracks ThermalCentrifugeScreen.PROGRESS — the shared golden arrow at (82,38).
+			new Target(ThermalCentrifugeScreen.class, ModRecipes.CENTRIFUGING, new GuiRect(82, 38, 25, 9)),
 			// Galvanic Bath (MOD-127): the arrow sits at (86,35), 24x17 — clicking it opens the
 			// bath's recipes in JEI/REI instead of only reporting why it is idle.
 			new Target(GalvanicBathScreen.class, ModRecipes.GALVANIC_BATH, new GuiRect(86, 35, 24, 17)),

@@ -1,0 +1,8 @@
+{
+  "parent": "alaindustrial:block/thermal_centrifuge",
+  "textures": {
+    "top": "alaindustrial:block/thermal_centrifuge_top_on",
+    "front": "alaindustrial:block/thermal_centrifuge_front_on",
+    "side": "alaindustrial:block/thermal_centrifuge_side_on"
+  }
+}

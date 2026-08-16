@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "alaindustrial:uranium_shavings",
+  "result": {
+    "id": "alaindustrial:refined_uranium",
+    "count": 1
+  },
+  "energy": 260
+}

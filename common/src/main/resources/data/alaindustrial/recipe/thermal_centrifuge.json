@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "R": "minecraft:redstone",
+    "T": "alaindustrial:tempered_iron",
+    "I": "#c:ingots/iron",
+    "M": "alaindustrial:machine_casing",
+    "E": "alaindustrial:electronic_circuit"
+  },
+  "pattern": [
+    "TIT",
+    "RMR",
+    "IEI"
+  ],
+  "result": {
+    "id": "alaindustrial:thermal_centrifuge"
+  }
+}

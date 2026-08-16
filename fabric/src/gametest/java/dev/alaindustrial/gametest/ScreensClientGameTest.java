@@ -87,6 +87,11 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // thermometer beside an empty energy bar, and the two lower rows drawn as a dash. That is the
             // state worth guarding: regressing it into "x0 heat at 0 EU/t" would read as a measurement.
             new Screen("electric_heater", "electric_heater", "Electric Heater"),
+            // MOD-424: the stand places a bare, unpowered centrifuge, so the frame captures the resting
+            // state — an empty rotor gauge beside an empty energy bar, under the "needs a redstone signal"
+            // status line. That is the state worth guarding: this machine's whole point is that it does
+            // nothing until switched on, and a regression into a spinning idle would read as working.
+            new Screen("thermal_centrifuge", "thermal_centrifuge", "Thermal Centrifuge"),
             new Screen("canning_machine", "canning_machine", "Canning Machine"),
             new Screen("alloy_smelter", "alloy_smelter", "Alloy Smelter"),
             new Screen("galvanic_bath", "galvanic_bath", "Galvanic Bath"),

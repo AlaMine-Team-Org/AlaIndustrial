@@ -5,6 +5,7 @@ import dev.alaindustrial.block.ElectricHeaterBlock;
 import dev.alaindustrial.block.HeaterGlow;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.heat.HeatConsumer;
 import dev.alaindustrial.menu.ElectricHeaterMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -23,8 +24,9 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 /**
- * Demand-driven LV heat source. It spends EU only through {@link #consumeHeatTick()}, called by a
- * Vulcanizer that is about to advance one useful processing tick.
+ * Demand-driven LV heat source. It spends EU only through {@link #consumeHeatTick()}, called by the
+ * {@link HeatConsumer} directly above that is about to advance one useful processing tick — the
+ * Vulcanizer, or since MOD-424 the Thermal Centrifuge.
  *
  * <p><b>Warm-up (MOD-418).</b> A cold heater is not a heat source at all: it must spend
  * {@link Config#electricHeaterWarmupTicks} ticks lighting itself before the machine above can run, and
@@ -154,9 +156,7 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity implemen
 		// A lowered config value must not leave phantom heat behind.
 		heat = Math.min(heat, warmupTicks());
 
-		VulcanizerBlockEntity consumer = level.getBlockEntity(pos.above()) instanceof VulcanizerBlockEntity v
-				? v
-				: null;
+		HeatConsumer consumer = level.getBlockEntity(pos.above()) instanceof HeatConsumer c ? c : null;
 		costEuPerTick = heatTickCost(consumer != null ? consumer.overclockerCount() : 0);
 
 		if (litLeaseTicks > 0) {
@@ -219,23 +219,17 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity implemen
 	 * Whether the machine above is waiting on heat right now — the single gate on both warming and
 	 * holding, and therefore on every EU this block spends outside a served tick.
 	 *
-	 * <p>{@code NO_HEAT} is "stocked and ready, blocked only by us", which is exactly what should light
-	 * the stove. {@code READY} is "we are already supplying it", which must count too: dropping it would
-	 * make the heater cool underneath a machine it is actively serving between two paid ticks.
-	 *
-	 * <p>Everything else — no consumer at all, missing inputs, no recipe, a jammed output — means there
-	 * is genuinely nothing to heat, and the heater goes back to costing nothing. That is the block's
-	 * founding promise and the warm-up does not get to break it.
+	 * <p>What counts as "waiting" is the consumer's own business — see
+	 * {@link HeatConsumer#isWaitingOnHeat()}, which spells out that both "stocked and blocked only by us"
+	 * and "already being served" must answer true, while missing inputs, a jammed output or a machine
+	 * switched off at the lever must answer false. That is the block's founding promise — a heater with
+	 * nothing to heat costs exactly zero — and the warm-up does not get to break it.
 	 */
-	private static boolean hasWorkPending(VulcanizerBlockEntity consumer) {
-		if (consumer == null) {
-			return false;
-		}
-		VulcanizerStatus above = consumer.status();
-		return above == VulcanizerStatus.NO_HEAT || above == VulcanizerStatus.READY;
+	private static boolean hasWorkPending(HeatConsumer consumer) {
+		return consumer != null && consumer.isWaitingOnHeat();
 	}
 
-	private ElectricHeaterStatus idleStatus(VulcanizerBlockEntity consumer) {
+	private ElectricHeaterStatus idleStatus(HeatConsumer consumer) {
 		if (consumer == null) {
 			return ElectricHeaterStatus.NO_CONSUMER;
 		}

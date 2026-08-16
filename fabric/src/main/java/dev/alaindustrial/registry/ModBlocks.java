@@ -85,6 +85,7 @@ public final class ModBlocks {
 	public static final Block ALLOY_SMELTER = handle(ContentManifest.ALLOY_SMELTER);
 	public static final Block VULCANIZER = handle(ContentManifest.VULCANIZER);
 	public static final Block GALVANIC_BATH = handle(ContentManifest.GALVANIC_BATH);
+	public static final Block THERMAL_CENTRIFUGE = handle(ContentManifest.THERMAL_CENTRIFUGE);
 	public static final Block ELECTRIC_HEATER = handle(ContentManifest.ELECTRIC_HEATER);
 	public static final Block CHARGE_PAD = handle(ContentManifest.CHARGE_PAD);
 	public static final Block ENERGY_CONDENSER = handle(ContentManifest.ENERGY_CONDENSER);

@@ -141,5 +141,7 @@ public final class MenuScreenManifest {
 			// would make the menu↔screen pairing indistinguishable to the compiler).
 			screen(() -> ModContent.MOB_REPELLER_MENU.get(), MobRepellerScreen::new),
 			screen(() -> ModContent.MOB_REPELLER_MV_MENU.get(), MobRepellerMvScreen::new),
-			screen(() -> ModContent.MOB_REPELLER_HV_MENU.get(), MobRepellerHvScreen::new));
+			screen(() -> ModContent.MOB_REPELLER_HV_MENU.get(), MobRepellerHvScreen::new),
+			// MOD-424 — last, at the same index as its MENUS entry.
+			screen(() -> ModContent.THERMAL_CENTRIFUGE_MENU.get(), ThermalCentrifugeScreen::new));
 }

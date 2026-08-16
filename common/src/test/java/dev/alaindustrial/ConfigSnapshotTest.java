@@ -251,6 +251,14 @@ class ConfigSnapshotTest {
 		SENTINELS.put("distillationColumnWarmupTicks", 336);
 		SENTINELS.put("galvanicBathDuration", 335);
 		SENTINELS.put("galvanicBathWaterPerOp", 336);
+		// Thermal centrifuge (MOD-424). All four have a minimum of 1; the two rate fields default to
+		// 4 and 1, so their sentinels must be neither of those nor 0, and the two tick fields both
+		// default to 200 — distinct sentinels here keep a getter that returns its NEIGHBOUR's field
+		// (rather than 0) catchable, which identical values would hide.
+		SENTINELS.put("thermalCentrifugeDuration", 341);
+		SENTINELS.put("thermalCentrifugeEuPerTick", 342);
+		SENTINELS.put("thermalCentrifugeSpinupTicks", 343);
+		SENTINELS.put("thermalCentrifugeIdleEuPerTick", 344);
 		// Overclocker chip (MOD-392). The EU factor must stay above its own minimum of 1.0, and the
 		// speed factor above 0.0 — a sentinel that trips the clamp would be silently rewritten on load.
 		SENTINELS.put("overclockerSpeedFactor", 0.55f);

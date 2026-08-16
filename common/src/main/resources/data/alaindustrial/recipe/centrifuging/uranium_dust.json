@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:centrifuging",
+  "ingredient": "alaindustrial:uranium_dust",
+  "result": {
+    "id": "alaindustrial:uranium_shavings",
+    "count": 2
+  },
+  "energy": 800
+}
