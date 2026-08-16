@@ -91,8 +91,13 @@ try {
             commitTime = stamp[1].trim()
         }
     }
-} catch (Exception ignored) {
-    // git does not run on this machine — 'dev'/'' stay as they are
+} catch (Exception e) {
+    // git does not run on this machine — 'dev'/'' stay as they are. Say so: in a RELEASE build a
+    // `git: dev` stamp means the artifact cannot be traced back to a commit, and until now the only
+    // sign of that was the stamp itself. The paired BuildInfo.java already logs at runtime; this
+    // closes the build-side half.
+    logger.warn("[alaindustrial] could not read the git stamp ({}: {}) — the build will be marked "
+            + "'dev' and will not carry a commit hash.", e.getClass().getSimpleName(), e.message)
 }
 String buildTime = System.getenv('ALA_BUILD_TIME')?.trim() ?: (commitTime ?: 'dev')
 

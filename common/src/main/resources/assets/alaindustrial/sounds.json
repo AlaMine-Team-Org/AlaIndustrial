@@ -128,5 +128,25 @@
         "preload": true
       }
     ]
+  },
+  "canning_machine_hum": {
+    "subtitle": "subtitles.alaindustrial.canning_machine_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:canning_machine_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
+  "galvanic_bath_hum": {
+    "subtitle": "subtitles.alaindustrial.galvanic_bath_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:galvanic_bath_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
   }
 }

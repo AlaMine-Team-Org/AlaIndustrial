@@ -456,7 +456,10 @@ public final class WaterMillWheelScenarios {
 		assertMode(helper, a, "mill A next to wheeled B", WaterMillBlockEntity.MODE_INTERFERENCE);
 		b.setItem(WaterMillBlockEntity.WHEEL_SLOT, ItemStack.EMPTY);
 		AlaGameTestHelper.drive(b, helper, 1); // B resets its own state immediately (no wheel)
-		assertMode(helper, b, "bare mill B", WaterMillBlockEntity.MODE_OK);
+		// MOD-430: a bare mill reports MODE_NO_WHEEL, not MODE_OK. It used to claim OK on the reasoning
+		// that an empty slot needs no explanation, which left the GUI's status row blank and the player
+		// with a working-looking screen making nothing.
+		assertMode(helper, b, "bare mill B", WaterMillBlockEntity.MODE_NO_WHEEL);
 		AlaGameTestHelper.drive(a, helper, 21);
 		// Dry mill → the "no water" hint; the point is that A is no longer interfered.
 		assertMode(helper, a, "mill A after B's wheel was removed", WaterMillBlockEntity.MODE_NO_WATER);

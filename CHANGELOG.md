@@ -1,19 +1,21 @@
-## 0.1.100
+## 0.1.101
 
-<p><img alt="Ala Industrial 0.1.100 machine front faces" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.100/release-media/v0.1.100/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.101 update preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.101/release-media/v0.1.101/changelog.png" width="720"></p>
 
-The Pump finally makes a sound — and now stays lit long enough for you to hear it.
+Two more machines found their voice, and the Water Mill finally tells you what it is waiting for.
 
 ### New
 
-- **The Pump has a working sound.** A wet suction of liquid pulled into a pipe, kept clear of the Extractor's hiss and the Water Mill's splash.
-- A **Mute Chip** silences it like any other machine, and the subtitle shows up in every language.
+- **The Canning Machine rattles.** A light metallic clatter of tin down the line while it packs.
+- **The Galvanic Bath hums.** A faint ionic buzz of electrolysis while it plates.
+- Both tones are deliberately unlike the ones already in use — the press thud, the pump suction, the grinder — so you can tell what is running without looking. The silence chip mutes them like everything else, and subtitles are there in every language.
 
 ### Fixed
 
-- **The Pump was impossible to hear.** Moving a bucket takes a single tick, so its light and its sound flashed for a twentieth of a second and were gone. It now stays lit and audible for three seconds after each transfer, and reads as running without a break while it keeps pumping.
-- The Pump's front face **no longer flickers** while it works, for the same reason.
+- **The Water Mill says "No wheel".** Place one down and open it, and the screen used to be blank: it looked like it was working, made nothing, and gave no hint. It now names what is missing, the way the Wind Turbine has always announced a missing rotor.
+- The mill's status line is never empty any more. "No wheel", "No water", "Blocked", "Wheel interference" — or how much it is currently making.
 
 ### Improved
 
-- **Redrawn front faces** on the Water Mill, Sawmill, Incubator, Electric Heater and Pump.
+- Bad numbers in the config file no longer vanish without a word. Type a value the mod cannot use and it says so in the log, instead of quietly swapping it out and rewriting your file.
+- A pump whose search fails now reports it with coordinates. Before, "nothing to pump here" and "the search broke" looked exactly the same.

@@ -202,6 +202,32 @@ public final class ModSounds {
 		return SoundEvent.createVariableRangeEvent(PUMP_HUM_ID);
 	}
 
+	/** The registry id for the canning machine's working loop — a single lit machine, pattern A. */
+	public static final Identifier CANNING_MACHINE_HUM_ID = Industrialization.id("canning_machine_hum");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> CANNING_MACHINE_HUM = () -> {
+		throw new IllegalStateException("ModSounds.CANNING_MACHINE_HUM read before its loader bound it");
+	};
+
+	/** Build the canning-machine-hum event instance both loaders register (variable range, single stationary machine). */
+	public static SoundEvent createCanningMachineHum() {
+		return SoundEvent.createVariableRangeEvent(CANNING_MACHINE_HUM_ID);
+	}
+
+	/** The registry id for the galvanic bath's working loop — a single lit machine, pattern A. */
+	public static final Identifier GALVANIC_BATH_HUM_ID = Industrialization.id("galvanic_bath_hum");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> GALVANIC_BATH_HUM = () -> {
+		throw new IllegalStateException("ModSounds.GALVANIC_BATH_HUM read before its loader bound it");
+	};
+
+	/** Build the galvanic-bath-hum event instance both loaders register (variable range, single stationary machine). */
+	public static SoundEvent createGalvanicBathHum() {
+		return SoundEvent.createVariableRangeEvent(GALVANIC_BATH_HUM_ID);
+	}
+
 	private ModSounds() {
 	}
 }

@@ -65,6 +65,19 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 	 * hide the wheel: a dry wheel stands still but stays rendered.
 	 */
 	public static final int MODE_NO_WATER = 3;
+	/**
+	 * No wheel in the slot — the mill cannot run at all, and says so.
+	 *
+	 * <p>Before MOD-430 a bare mill reported {@link #MODE_OK}, on the reasoning that "an empty slot is
+	 * its own message". In the GUI it was not: the status row simply stayed blank, so a player who had
+	 * not yet learned that the mill needs a wheel saw a working-looking screen that produced nothing
+	 * and offered no clue. The Wind Turbine has told that story since day one with
+	 * {@code MODE_NO_ROTOR}; this is the same answer to the same question.
+	 *
+	 * <p>It also splits a conflated meaning: {@code MODE_OK} used to cover both "running normally" and
+	 * "nothing to run with", which forced the screen to re-ask the slot to tell them apart.
+	 */
+	public static final int MODE_NO_WHEEL = 4;
 
 	/** LV output packet cap (32 EU/t), shared with the other LV generators. */
 	private static final int MAX_EXTRACT = 32;
@@ -140,7 +153,7 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 			// No wheel → nothing rendered, nothing to clash with. Force a rescan when a wheel returns.
 			cachedInterfered = false;
 			scanCounter = 0;
-			setState(0, MODE_OK);
+			setState(0, MODE_NO_WHEEL);
 			return 0;
 		}
 		Direction facing = state.hasProperty(HorizontalMachineBlock.FACING)

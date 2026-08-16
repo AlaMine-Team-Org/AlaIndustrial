@@ -70,26 +70,22 @@ public class WaterMillScreen extends MachineScreen<WaterMillMenu> {
 
 	/** Centered status row: production while the wheel turns, the idle reason otherwise. */
 	private void drawStatusText(GuiGraphicsExtractor graphics) {
+		// The mode is decided on the server (MOD-430): the screen no longer second-guesses it by looking
+		// at the slot. A bare mill used to arrive here as MODE_OK, and the row was left blank on the
+		// reasoning that the empty slot speaks for itself — it did not. A player who has not yet learned
+		// that the mill needs a wheel saw a working-looking screen making nothing, with no clue why.
 		String modeKey = switch (this.menu.getMode()) {
 			case WaterMillBlockEntity.MODE_INTERFERENCE -> "gui.alaindustrial.water_mill.mode.interference";
 			case WaterMillBlockEntity.MODE_OBSTRUCTED -> "gui.alaindustrial.water_mill.mode.obstructed";
-			case WaterMillBlockEntity.MODE_NO_WATER ->
-					this.menu.getSlot(0).hasItem() ? "gui.alaindustrial.water_mill.mode.no_water" : null;
+			case WaterMillBlockEntity.MODE_NO_WATER -> "gui.alaindustrial.water_mill.mode.no_water";
+			case WaterMillBlockEntity.MODE_NO_WHEEL -> "gui.alaindustrial.water_mill.mode.no_wheel";
 			default -> null;
 		};
-		Component label;
 		boolean idle = modeKey != null;
-		if (idle) {
-			label = Component.translatable(modeKey);
-		} else if (this.menu.getSlot(0).hasItem()) {
-			// MODE_OK with a wheel installed — the mill is running, so show what it makes (MOD-348).
-			label = outputLine(this.menu.getProductionRate());
-		} else {
-			// MODE_OK with an EMPTY slot is the "no wheel yet" state, not a running mill: the block entity
-			// reports MODE_OK there because a bare mill has nothing to clash with. The empty slot itself is
-			// the message, so the row stays blank rather than claiming an output of 0.
-			return;
-		}
+		// MODE_OK now means exactly one thing — a wheel is in, unobstructed and wet — so the row shows
+		// what the mill makes (MOD-348). The "empty slot" case can no longer reach here: it arrives as
+		// MODE_NO_WHEEL and is handled above.
+		Component label = idle ? Component.translatable(modeKey) : outputLine(this.menu.getProductionRate());
 		int tx = this.leftPos + (this.imageWidth - this.font.width(label)) / 2;
 		graphics.text(this.font, label, tx, this.topPos + STATUS_TEXT_Y,
 				idle ? GuiStyle.TEXT_DIM : GuiStyle.TEXT, false);

@@ -137,26 +137,31 @@ public final class WaterMillGuiStand {
         Path obstructed = shootWaterMill(context, "obstructed",
                 "A solid block sits in the swept area: the row reads \"Blocked\"",
                 E, 0, WaterMillBlockEntity.MODE_OBSTRUCTED, 0, true);
-        // No wheel: the block entity reports MODE_OK because a bare mill has nothing to clash with, and the
-        // screen deliberately leaves the row EMPTY rather than claiming an output of 0. That blank row is the
-        // reference every other frame is measured against.
+        // No wheel. Until MOD-430 this frame was the BLANK one: a bare mill reported MODE_OK and the screen
+        // left the row empty, on the reasoning that the empty slot was message enough. It was not -- the
+        // player saw a working-looking screen making nothing. The mill now reports MODE_NO_WHEEL and says so,
+        // exactly like the Wind Turbine's "No rotor". The row is consequently never blank any more, which
+        // makes the comparisons below stronger rather than weaker: they now contrast two different labels
+        // instead of a label against nothing.
         Path noWheel = shootWaterMill(context, "no_wheel",
-                "No wheel: the row is deliberately EMPTY - the empty slot is the message, and a mill with no "
-                        + "wheel must not claim an output of 0",
-                E, 0, OK, 0, false);
+                "No wheel installed: the row reads \"No wheel\" in the dim colour and the status gear is "
+                        + "dark. Before MOD-430 this row was blank and the player had no clue what was missing",
+                E, 0, WaterMillBlockEntity.MODE_NO_WHEEL, 0, false);
+        // The noise floor is measured between two shots of the SAME state, so it never depended on the row
+        // being blank -- only on the two frames being identical. Nothing in this band animates.
         Path noWheelB = shootWaterMill(context, "no_wheel_again",
-                "The blank row shot a second time: the noise floor every threshold below is measured against",
-                E, 0, OK, 0, false);
+                "The same frame shot a second time: the noise floor every threshold below is measured against",
+                E, 0, WaterMillBlockEntity.MODE_NO_WHEEL, 0, false);
 
         // Nothing in this band animates, so the honest expectation is zero. Measuring it anyway is what
         // turns every threshold below into a claim about the row instead of a claim about the driver.
         int noise = differingPixelsInStatusRow(noWheel, noWheelB);
         LOG.info("[GUITEST][MOD-354] status-row noise floor: {} px", noise);
 
-        assertStatusRowDiffers("running label vs blank row", running, noWheel, noise, MIN_ROW_DELTA);
-        assertStatusRowDiffers("\"no water\" vs blank row", noWater, noWheel, noise, MIN_ROW_DELTA);
-        assertStatusRowDiffers("\"interference\" vs blank row", interference, noWheel, noise, MIN_ROW_DELTA);
-        assertStatusRowDiffers("\"obstructed\" vs blank row", obstructed, noWheel, noise, MIN_ROW_DELTA);
+        assertStatusRowDiffers("running label vs \"no wheel\"", running, noWheel, noise, MIN_ROW_DELTA);
+        assertStatusRowDiffers("\"no water\" vs \"no wheel\"", noWater, noWheel, noise, MIN_ROW_DELTA);
+        assertStatusRowDiffers("\"interference\" vs \"no wheel\"", interference, noWheel, noise, MIN_ROW_DELTA);
+        assertStatusRowDiffers("\"obstructed\" vs \"no wheel\"", obstructed, noWheel, noise, MIN_ROW_DELTA);
 
         assertStatusRowDiffers("running label vs \"no water\"", running, noWater, noise, MIN_ROW_DELTA);
         assertStatusRowDiffers("\"no water\" vs \"interference\"", noWater, interference, noise, MIN_ROW_DELTA);
@@ -175,7 +180,7 @@ public final class WaterMillGuiStand {
      * @param rate  effective generation in EU/t — channel 4 (MOD-348), after the global rate multiplier
      *              since MOD-356; injected straight into the channel here, so what the screen prints is
      *              exactly this number and the gates never depend on how the machine would compute it
-     * @param wheel whether the component slot holds a water wheel; an empty slot blanks the row
+     * @param wheel whether the component slot holds a water wheel; empty pairs with MODE_NO_WHEEL
      */
     private static Path shootWaterMill(ClientGameTestContext context, String state, String checks,
                                        int energy, int sides, int mode, int rate, boolean wheel) {

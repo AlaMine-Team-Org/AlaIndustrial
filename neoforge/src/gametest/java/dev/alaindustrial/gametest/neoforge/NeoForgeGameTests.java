@@ -42,6 +42,7 @@ import dev.alaindustrial.gametest.CanningMachineScenarios;
 import dev.alaindustrial.gametest.GalvanicBathScenarios;
 import dev.alaindustrial.gametest.DistillationColumnScenarios;
 import dev.alaindustrial.gametest.PolymerizerScenarios;
+import dev.alaindustrial.gametest.ThermalCentrifugeScenarios;
 import dev.alaindustrial.gametest.VulcanizerScenarios;
 import dev.alaindustrial.gametest.GardenDroneScenarios;
 import dev.alaindustrial.gametest.MenuDataWidthScenarios;
@@ -1345,6 +1346,31 @@ public final class NeoForgeGameTests {
 				DistillationColumnScenarios::sec01SectionBoostsDiesel);
 		registerTest(event, "distillation_column_fouled_stops_until_cleaned", 1000, true,
 				DistillationColumnScenarios::fou01FouledStopsUntilCleaned);
+
+		// MOD-425 Thermal Centrifuge. Nothing gates this list — gametest_check.py only reads the Fabric
+		// entrypoints, and loader_parity_check.py covers blocks/BEs/menus, not scenarios. A scenario
+		// missing here passes verifyAll in silence, so the only proof it is wired is the canary: break
+		// the redstone gate on purpose and watch this lane name the failing test.
+		registerTest(event, "thermal_centrifuge_no_signal_costs_nothing", 600, true,
+				ThermalCentrifugeScenarios::neg01NoSignalCostsNothingAnywhere);
+		registerTest(event, "thermal_centrifuge_spin_up_costs_working_rate", 40, true,
+				ThermalCentrifugeScenarios::fun01SpinUpCostsTheWorkingRate);
+		registerTest(event, "thermal_centrifuge_signal_wakes_machine_immediately", 40, true,
+				ThermalCentrifugeScenarios::fun05SignalWakesTheMachineImmediately);
+		registerTest(event, "thermal_centrifuge_full_spin_takes_config_ticks", 200, true,
+				ThermalCentrifugeScenarios::fun02FullSpinTakesExactlyConfigTicks);
+		registerTest(event, "thermal_centrifuge_cut_signal_drops_spin", 200, true,
+				ThermalCentrifugeScenarios::fun03CutSignalDropsTheSpinOutright);
+		registerTest(event, "thermal_centrifuge_starved_rotor_freezes_after_one_shed", 200, true,
+				ThermalCentrifugeScenarios::neg02StarvedRotorShedsOneRevolutionThenFreezes);
+		registerTest(event, "thermal_centrifuge_passive_heat_does_not_start_it", 1000, true,
+				ThermalCentrifugeScenarios::neg03PassiveHeatDoesNotStartIt);
+		registerTest(event, "thermal_centrifuge_hot_heater_makes_two_shavings", 600, true,
+				ThermalCentrifugeScenarios::fun04HotHeaterMakesTwoShavings);
+		registerTest(event, "thermal_centrifuge_blocked_output_stops_work", 600, true,
+				ThermalCentrifugeScenarios::con01BlockedOutputStopsWorkAndNamesIt);
+		registerTest(event, "thermal_centrifuge_spin_survives_reload", 300, true,
+				ThermalCentrifugeScenarios::sta01SpinSurvivesReload);
 
 		// Vulcanizer + external heat (MOD-258, suite TC-VULC-001). These are the same bodies as the
 		// Fabric wrappers and cover the two-input recipe, heat multipliers, demand-driven electric

@@ -2098,6 +2098,19 @@ public final class Config {
 		 */
 		abstract Runnable stage(JsonObject body);
 
+		/**
+		 * Report an out-of-range value being replaced by a safe one. Shared by all three numeric
+		 * field types so the three call sites cannot drift apart in wording, and so the player sees
+		 * the same line whichever key they got wrong. Says what was rejected AND what replaced it —
+		 * "value ignored" alone would leave the player guessing what the mod is actually running on.
+		 */
+		static void warnOutOfRange(String key, Number rejected, Number replacement) {
+			Industrialization.LOGGER.warn(
+					"[config] key '{}' has out-of-range value {} — using {} instead. The file will be "
+							+ "rewritten with the replacement, so your edit will not survive this run.",
+					key, rejected, replacement);
+		}
+
 		/** Append the current live value (and its doc comment) to its section in the canonical snapshot. */
 		abstract void write(JsonObject out);
 
@@ -2138,7 +2151,16 @@ public final class Config {
 		Runnable stage(JsonObject body) {
 			int v = getInt(body, key, getter.getAsInt());
 			if (minimum != null && v < minimum) {
-				v = floorTo != null ? floorTo : fallback;
+				int replacement = floorTo != null ? floorTo : fallback;
+				// The substitution itself is deliberate and load-bearing -- machineEuPerTick: 0 used to
+				// crash the world on a divide-by-zero (MOD-169), and ConfigFileTest pins this behaviour.
+				// What was wrong is that it happened in total silence while the canonicalizing self-heal
+				// then rewrote the file, so the player's edit was not merely ignored, it was erased from
+				// disk with nothing in the log. A wrong TYPE is already reported loudly (loading fails);
+				// a wrong VALUE being silent was an unexplained asymmetry. Behaviour unchanged -- only
+				// the reporting.
+				warnOutOfRange(key, v, replacement);
+				v = replacement;
 			}
 			int applied = v;
 			return () -> setter.accept(applied);
@@ -2179,6 +2201,7 @@ public final class Config {
 		Runnable stage(JsonObject body) {
 			float v = getFloat(body, key, getter.get());
 			if (minimumExclusive != null && v <= minimumExclusive) {
+				warnOutOfRange(key, v, fallback);
 				v = fallback;
 			}
 			float applied = v;
@@ -2218,6 +2241,7 @@ public final class Config {
 		Runnable stage(JsonObject body) {
 			double v = getDouble(body, key, getter.getAsDouble());
 			if (v < minimum) {
+				warnOutOfRange(key, v, floorTo);
 				v = floorTo;
 			}
 			double applied = v;

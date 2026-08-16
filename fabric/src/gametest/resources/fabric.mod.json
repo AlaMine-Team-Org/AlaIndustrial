@@ -87,6 +87,7 @@
       "dev.alaindustrial.gametest.AlloySmelterGameTest",
       "dev.alaindustrial.gametest.CanningMachineGameTest",
       "dev.alaindustrial.gametest.FluxweaveArmorGameTest",
+      "dev.alaindustrial.gametest.ThermalCentrifugeGameTest",
       "dev.alaindustrial.gametest.VulcanizerGameTest",
       "dev.alaindustrial.gametest.ChargePadGameTest"
     ]
