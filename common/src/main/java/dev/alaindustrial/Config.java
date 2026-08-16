@@ -243,6 +243,12 @@ public final class Config {
 	public static int pumpScanMaxDistance = 32;
 	/** Max blocks the pump BFS visits per scan, caps lag. */
 	public static int pumpScanMaxVisited = 512;
+	/** MOD-143: how many ticks {@code lit} (and the working hum loop) stays on after the pump's last
+	 * actual bucket transfer. A single pull is a one-tick atomic event — no {@code lit}, so no sound
+	 * would ever have time to be heard without this hold. 60 ticks (3s) covers pump_hum.ogg's own loop
+	 * length (~3.4s) and, at the pump's normal cadence under steady power, overlaps the next pull so
+	 * sustained pumping reads as continuously lit rather than flickering. */
+	public static int pumpLitHoldTicks = 60;
 
 	/** Portable passive tank capacity (MOD-111): 8 buckets, intentionally below machine tanks (10). */
 	public static int fluidTankCapacity = 8000;
@@ -1384,6 +1390,8 @@ public final class Config {
 				() -> pumpScanMaxDistance, v -> pumpScanMaxDistance = v, 1),
 			new IntField("pumpScanMaxVisited", Section.LOGISTICS, "Max blocks the pump BFS visits per scan, caps lag.",
 				() -> pumpScanMaxVisited, v -> pumpScanMaxVisited = v, 1),
+			new IntField("pumpLitHoldTicks", Section.LOGISTICS, "How many ticks lit (and the working hum) stays on after the pump's last bucket transfer.",
+				() -> pumpLitHoldTicks, v -> pumpLitHoldTicks = v, 0),
 			new IntField("fluidTankCapacity", Section.LOGISTICS, "Portable fluid tank capacity in mB (1000 mB = 1 bucket). Applies to newly placed tanks.",
 				() -> fluidTankCapacity, v -> fluidTankCapacity = v, 1),
 			new IntField("teleporterBuffer", Section.LOGISTICS, "Teleporter station EU buffer. Applies to newly placed stations.",

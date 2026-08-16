@@ -1,5 +1,5 @@
 {
   "textures": {
-    "particle": "alaindustrial:block/iron_chest_front"
+    "particle": "minecraft:block/iron_block"
   }
 }

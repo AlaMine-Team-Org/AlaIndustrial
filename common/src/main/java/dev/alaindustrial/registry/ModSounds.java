@@ -189,6 +189,19 @@ public final class ModSounds {
 		return SoundEvent.createFixedRangeEvent(GARDEN_DRONE_FLY_ID, 8.0f);
 	}
 
+	/** The registry id for the pump working loop (MOD-143) — a single lit machine, pattern A. */
+	public static final Identifier PUMP_HUM_ID = Industrialization.id("pump_hum");
+
+	/** Bound once per loader before any block plays it; unbound = loud failure, never a silent NPE. */
+	public static Supplier<SoundEvent> PUMP_HUM = () -> {
+		throw new IllegalStateException("ModSounds.PUMP_HUM read before its loader bound it");
+	};
+
+	/** Build the pump-hum event instance both loaders register (variable range, like the compressor). */
+	public static SoundEvent createPumpHum() {
+		return SoundEvent.createVariableRangeEvent(PUMP_HUM_ID);
+	}
+
 	private ModSounds() {
 	}
 }

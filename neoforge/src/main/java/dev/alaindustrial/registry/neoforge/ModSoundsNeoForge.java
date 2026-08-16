@@ -53,6 +53,9 @@ public final class ModSoundsNeoForge {
 	public static final DeferredHolder<SoundEvent, SoundEvent> GARDEN_DRONE_FLY =
 			SOUNDS.register("garden_drone_fly", ModSounds::createGardenDroneFly);
 
+	public static final DeferredHolder<SoundEvent, SoundEvent> PUMP_HUM =
+			SOUNDS.register("pump_hum", ModSounds::createPumpHum);
+
 	/** Bind the neutral handles to the deferred holders. Called from the {@code @Mod} ctor after register. */
 	public static void init() {
 		ModSounds.MACERATOR_GRIND = MACERATOR_GRIND;
@@ -67,6 +70,7 @@ public final class ModSoundsNeoForge {
 		ModSounds.WIND_MILL_HUM = WIND_MILL_HUM;
 		ModSounds.COMPRESSOR_HUM = COMPRESSOR_HUM;
 		ModSounds.GARDEN_DRONE_FLY = GARDEN_DRONE_FLY;
+		ModSounds.PUMP_HUM = PUMP_HUM;
 	}
 
 	private ModSoundsNeoForge() {

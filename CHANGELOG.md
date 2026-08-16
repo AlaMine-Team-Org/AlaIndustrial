@@ -1,15 +1,19 @@
-## 0.1.99
+## 0.1.100
 
-<p><img alt="Thermal Centrifuge running on top of an Electric Heater" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.99/release-media/v0.1.99/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial 0.1.100 machine front faces" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.100/release-media/v0.1.100/changelog.png" width="720"></p>
 
-A machine you have to switch on, and uranium finally worth the trip.
+The Pump finally makes a sound — and now stays lit long enough for you to hear it.
 
 ### New
 
-- **The Thermal Centrifuge doubles your ore a second time.** One ore block becomes four units of metal instead of one.
-- **Dust in, shavings out, then press them.** The macerator splits ore into dust, the centrifuge splits each dust into two shavings, and a compressor squeezes those into refined uranium.
-- **It needs a lever.** Hold a redstone signal on it or nothing happens — no signal, no spin, no power drawn at all.
-- **Give it twenty seconds.** The rotor has to reach speed before any work starts. Cut the signal and it stops dead and loses the spin.
-- **Leave it running between batches.** Holding revolutions costs a trickle; starting from a dead stop costs two operations' worth.
-- **Only an Electric Heater underneath will do.** Lava and campfires won't start this one.
-- **Watch the rotor.** The housing is open on three sides — slow while idling, quick while working, still when the lever is off.
+- **The Pump has a working sound.** A wet suction of liquid pulled into a pipe, kept clear of the Extractor's hiss and the Water Mill's splash.
+- A **Mute Chip** silences it like any other machine, and the subtitle shows up in every language.
+
+### Fixed
+
+- **The Pump was impossible to hear.** Moving a bucket takes a single tick, so its light and its sound flashed for a twentieth of a second and were gone. It now stays lit and audible for three seconds after each transfer, and reads as running without a break while it keeps pumping.
+- The Pump's front face **no longer flickers** while it works, for the same reason.
+
+### Improved
+
+- **Redrawn front faces** on the Water Mill, Sawmill, Incubator, Electric Heater and Pump.

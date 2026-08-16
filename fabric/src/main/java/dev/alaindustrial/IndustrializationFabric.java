@@ -298,6 +298,8 @@ public class IndustrializationFabric implements ModInitializer {
 				ModSounds.COMPRESSOR_HUM_ID, ModSounds.createCompressorHum());
 		ModSounds.GARDEN_DRONE_FLY = registerSound(
 				ModSounds.GARDEN_DRONE_FLY_ID, ModSounds.createGardenDroneFly());
+		ModSounds.PUMP_HUM = registerSound(
+				ModSounds.PUMP_HUM_ID, ModSounds.createPumpHum());
 	}
 
 	/**

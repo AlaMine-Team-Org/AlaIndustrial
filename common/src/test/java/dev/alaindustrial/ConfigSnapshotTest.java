@@ -148,6 +148,7 @@ class ConfigSnapshotTest {
 		SENTINELS.put("pumpScanCooldownTicks", 44);
 		SENTINELS.put("pumpScanMaxDistance", 64);
 		SENTINELS.put("pumpScanMaxVisited", 1024);
+		SENTINELS.put("pumpLitHoldTicks", 90);
 		SENTINELS.put("fluidTankCapacity", 12_000);
 		// Teleporter.
 		SENTINELS.put("teleporterBuffer", 611_000);

@@ -118,5 +118,15 @@
         "preload": true
       }
     ]
+  },
+  "pump_hum": {
+    "subtitle": "subtitles.alaindustrial.pump_hum",
+    "sounds": [
+      {
+        "name": "alaindustrial:pump_hum",
+        "stream": false,
+        "preload": true
+      }
+    ]
   }
 }

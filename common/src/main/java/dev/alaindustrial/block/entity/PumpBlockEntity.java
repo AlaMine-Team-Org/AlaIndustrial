@@ -101,6 +101,16 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 	/** Ticks remaining before the pump is allowed to run a BFS source scan again. */
 	private int scanCooldown = 0;
 
+	/**
+	 * MOD-143: ticks remaining before {@code lit} (and the working hum loop) turns back off. A bucket
+	 * transfer is a one-tick atomic event — {@code worked} is true for exactly the tick it happens —
+	 * so without a hold, {@code lit} would flip on and off within the same tick and no sound would ever
+	 * have time to play. Reset to {@link Config#pumpLitHoldTicks} on every {@code worked} tick, ticks
+	 * down otherwise; sustained pumping re-triggers it faster than it can expire, so continuous pulls
+	 * read as continuously lit rather than flickering. Cosmetic only — not persisted.
+	 */
+	private int litHoldTicks = 0;
+
 	public PumpBlockEntity(BlockPos pos, BlockState state) {
 		// EU consumer: maxInsert = tier voltage (so the network sees a consumer), maxExtract = 0.
 		// Buffer (Config.pumpBuffer) must be >= pumpEuPerBucket so the pump can actually accumulate a
@@ -186,7 +196,13 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 		this.progress = (int) Math.min(Integer.MAX_VALUE, fluidTank.amount);
 		this.maxProgress = (int) Math.min(Integer.MAX_VALUE, TANK_CAPACITY);
 
-		updateLit(worked);
+		// MOD-143: sustain lit/sound past the single tick `worked` is true — see litHoldTicks javadoc.
+		if (worked) {
+			litHoldTicks = Config.pumpLitHoldTicks;
+		} else if (litHoldTicks > 0) {
+			litHoldTicks--;
+		}
+		updateLit(litHoldTicks > 0);
 		if (worked) {
 			setChanged();
 		}

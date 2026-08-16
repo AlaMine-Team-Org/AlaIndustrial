@@ -3,7 +3,10 @@ package dev.alaindustrial.block;
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModSounds;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -39,7 +42,7 @@ import net.minecraft.world.phys.BlockHitResult;
  * the action do we hand off to {@code useWithoutItem} (the GUI). Any other held item falls through to
  * the default (GUI on empty hand).
  */
-public class PumpBlock extends LitMachineBlock {
+public class PumpBlock extends LitMachineBlock implements MachineHumProvider {
 	public static final MapCodec<PumpBlock> CODEC = simpleCodec(PumpBlock::new);
 
 	public PumpBlock(Properties properties) {
@@ -59,7 +62,13 @@ public class PumpBlock extends LitMachineBlock {
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
-		return machineTicker(level);
+		// Hum ticker: drives the client loop off the vanilla lit blockstate (pattern A). MOD-143.
+		return humMachineTicker(level);
+	}
+
+	@Override
+	public Supplier<SoundEvent> humSound() {
+		return ModSounds.PUMP_HUM;
 	}
 
 	/**
