@@ -49,7 +49,6 @@ TIMEOUT = 30
 # grows unexpectedly.
 MSG_BUDGET = 3900
 MAX_LINE = 300          # a single line longer than this is clipped, not dropped
-MAX_VERSION = 24        # the version string comes from Modrinth: treat as untrusted
 
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -170,8 +169,20 @@ def clip(text: str, limit: int) -> str:
     return text if len(text) <= limit else text[: limit - 1] + "…"
 
 
+def esc(value) -> str:
+    """Escape a value for the HTML parse mode. Every substitution goes through it."""
+    return (str(value).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+
+
+def split_bar(percent, cells=10, left="\U0001F7E6", right="\U0001F7E8"):
+    """One shared bar for the loader split, the way the site draws it."""
+    filled = js_round(percent / 100.0 * cells)
+    filled = max(0, min(cells, filled))
+    return left * filled + right * (cells - filled)
+
+
 def build_report(data, today, site_result):
-    """Return (headline lines, problem lines)."""
+    """Return (message lines as HTML, problem lines as plain text)."""
     problems = []
     day = today - datetime.timedelta(days=1)
     day_iso = day.isoformat()
@@ -194,10 +205,12 @@ def build_report(data, today, site_result):
         if entry["date"] == day_iso:
             today_entry = entry
 
-    lines = ["Ala Industrial — downloads, %s" % fmt_day(day)]
+    lines = ["\U0001F4CA <b>Ala Industrial</b> — downloads",
+             "<i>%s</i>" % esc(fmt_day(day)),
+             ""]
 
     if today_entry is None:
-        lines.append("Day: no snapshot yet")
+        lines.append("\U0001F4E5 Day: <b>no snapshot</b>")
         newest = rows[-1][0] if rows else "—"
         problems.append("no row for %s — the collector last recorded %s"
                         % (day_iso, newest))
@@ -222,8 +235,9 @@ def build_report(data, today, site_result):
                 marks.append("estimate")
             problems.append("CurseForge counter did not move: either a quiet day or a "
                             "value carried over from the previous one")
-        lines.append("Day: %s%s" % (number(today_entry["value"]),
-                                    " (%s)" % ", ".join(marks) if marks else ""))
+        lines.append("\U0001F4E5 Day: <b>%s</b>%s" % (
+            esc(number(today_entry["value"])),
+            " <i>(%s)</i>" % esc(", ".join(marks)) if marks else ""))
 
     # Totals. A missing counter is unknown, not zero: `totals.get(x) or 0` would
     # print a confident 0 and quietly shrink the grand total.
@@ -235,7 +249,9 @@ def build_report(data, today, site_result):
         problems.append("totals.curseforge is missing or not a number")
     grand = (modrinth or 0) + (curseforge or 0)
 
-    week_note = ""
+    lines.append("\U0001F4E6 Total: <b>%s</b>" % (
+        esc(number(grand)) if (modrinth is not None or curseforge is not None) else "unknown"))
+
     if days:
         week = sum(entry["value"] for entry in days[-7:])
         previous = sum(entry["value"] for entry in days[-14:-7])
@@ -247,20 +263,22 @@ def build_report(data, today, site_result):
             # it from the rounded percent instead would print "+0%" for a week
             # that fell from 700 to 699.
             sign = "+" if week >= previous else ""
-            week_note = " (+%s in 7 days, %s%d%%)" % (number(week), sign, percent)
+            arrow = "\U0001F4C8" if week >= previous else "\U0001F4C9"
+            lines.append("%s Week: <b>%s</b> <i>(%s%d%% vs previous)</i>"
+                         % (arrow, esc(number(week)), sign, percent))
         else:
-            week_note = " (+%s in 7 days)" % number(week)
+            lines.append("\U0001F4C5 Week: <b>%s</b>" % esc(number(week)))
 
-    lines.append("Total: %s%s" % (number(grand) if (modrinth is not None or curseforge is not None)
-                                  else "unknown", week_note))
+    lines.append("")
 
     followers = totals.get("followers")
-    lines.append("Modrinth: %s (%s followers)" % (
-        number(modrinth) if modrinth is not None else "unknown",
-        number(followers) if is_number(followers) else "?"))
+    lines.append("\U0001F7E2 Modrinth: <b>%s</b>%s" % (
+        esc(number(modrinth)) if modrinth is not None else "unknown",
+        " · \U0001F465 %s" % esc(number(followers)) if is_number(followers) else ""))
     if not is_number(followers):
         problems.append("totals.followers is missing or not a number")
-    lines.append("CurseForge: %s" % (number(curseforge) if curseforge is not None else "unknown"))
+    lines.append("\U0001F7E0 CurseForge: <b>%s</b>" % (
+        esc(number(curseforge)) if curseforge is not None else "unknown"))
 
     loaders = totals.get("loaders")
     if not isinstance(loaders, dict):
@@ -269,19 +287,16 @@ def build_report(data, today, site_result):
     neoforge = loaders.get("neoforge") if is_number(loaders.get("neoforge")) else None
     if fabric is None or neoforge is None:
         problems.append("totals.loaders is incomplete")
-        lines.append("Fabric / NeoForge: unknown")
     else:
         loader_sum = fabric + neoforge
         if loader_sum:
             fabric_pct = js_round(fabric / loader_sum * 100)
-            lines.append("Fabric: %s (%d%%) / NeoForge: %s (%d%%)" % (
-                number(fabric), fabric_pct, number(neoforge), 100 - fabric_pct))
-        else:
-            lines.append("Fabric / NeoForge: no downloads recorded")
-
-    version = totals.get("version")
-    lines.append("Version: %s" % (clip(version, MAX_VERSION) if isinstance(version, str) and version
-                                  else "unknown"))
+            lines.append("")
+            lines.append(split_bar(fabric_pct))
+            lines.append("\U0001F7E6 Fabric: <b>%s</b> · %d%%"
+                         % (esc(number(fabric)), fabric_pct))
+            lines.append("\U0001F7E8 NeoForge: <b>%s</b> · %d%%"
+                         % (esc(number(neoforge)), 100 - fabric_pct))
 
     generated = data.get("generated")
     if not isinstance(generated, str) or not generated:
@@ -346,8 +361,18 @@ def check_site(url, local_generated, wait_seconds, poll_seconds):
 # telegram                                                                      #
 # --------------------------------------------------------------------------- #
 
-def escape_html(text: str) -> str:
-    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+TAG_RE = re.compile(r"<[^>]+>")
+
+
+def to_plain(line: str) -> str:
+    """The message as Telegram shows it: markup stripped, entities resolved.
+
+    This is both the fallback body when Telegram refuses the markup and the
+    string the length budget is measured on — the 4096 limit applies to the
+    PARSED text, so tags themselves do not count against it.
+    """
+    text = TAG_RE.sub("", line)
+    return (text.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&"))
 
 
 def utf16_len(text: str) -> int:
@@ -364,21 +389,25 @@ def render(lines, html):
     line silence everything after it.
     """
     kept, used, skipped = [], 0, 0
-    for index, line in enumerate(lines):
-        line = clip(line, MAX_LINE)
-        body = escape_html(line) if html else line
-        if html and index == 0:
-            body = "<b>%s</b>" % body
-        cost = utf16_len(line) + (1 if kept else 0)
+    for line in lines:
+        plain = to_plain(line)
+        if len(plain) > MAX_LINE:
+            # Clipping the markup itself could sever a tag; clip the plain text
+            # and re-escape it instead.
+            plain = clip(plain, MAX_LINE)
+            line = esc(plain)
+        body = line if html else plain
+        cost = utf16_len(plain) + (1 if kept else 0)
         if used + cost > MSG_BUDGET:
-            skipped += 1
+            if plain:
+                skipped += 1
             continue
         kept.append(body)
         used += cost
     if skipped:
         tail = "... %d more line(s) omitted" % skipped
         if used + utf16_len(tail) + 1 <= MSG_BUDGET:
-            kept.append(escape_html(tail) if html else tail)
+            kept.append(esc(tail) if html else tail)
     return "\n".join(kept)
 
 
@@ -488,11 +517,13 @@ def collect(args):
                                  args.site_wait, args.site_poll)
 
     lines, problems = build_report(data, today, site_result)
+    # A clean run says nothing about the checks: a healthy report should read as
+    # the day's figures and nothing else. Only a failed check earns a line — and
+    # then it is the loudest thing in the message.
     if problems:
-        lines.append("Checks: %d issue(s)" % len(problems))
-        lines.extend("- %s" % problem for problem in problems)
-    else:
-        lines.append("Checks: all clear")
+        lines.append("")
+        lines.append("⚠️ <b>Checks: %d issue(s)</b>" % len(problems))
+        lines.extend("• %s" % esc(problem) for problem in problems)
     return lines
 
 
@@ -506,13 +537,23 @@ def main(argv=None):
         # would mean total silence on the worst day. Report the failure through
         # the same channel; the class name is enough to act on and cannot leak a
         # secret the way an exception's own text might.
-        lines = ["Ala Industrial — download report FAILED",
-                 "The report could not be built: %s" % type(exc).__name__,
-                 "Data file: %s" % clip(args.stats, 120),
+        lines = ["\U0001F6A8 <b>Ala Industrial — report FAILED</b>",
+                 "",
+                 "The report could not be built: <b>%s</b>" % esc(type(exc).__name__),
+                 "Data file: %s" % esc(clip(args.stats, 120)),
                  "Check the Stats workflow and data/stats.json."]
 
     if args.dry_run:
-        print(render(lines, html=False))
+        # The report is full of emoji, and a Windows console on a legacy code page
+        # raises UnicodeEncodeError on print() — a preview mode that crashes on
+        # the maintainer's own terminal is useless. Write UTF-8 bytes directly.
+        text = (render(lines, html=False) + "\n").encode("utf-8", "replace")
+        stream = getattr(sys.stdout, "buffer", None)
+        if stream is None:
+            print(text.decode("utf-8", "replace").encode("ascii", "replace").decode("ascii"))
+        else:
+            stream.write(text)
+            stream.flush()
         return 0
 
     token = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
