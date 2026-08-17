@@ -87,6 +87,9 @@ public final class ModTags {
 		/** Upgrades that belong in the overclocker arm — the three tiers of the chip (MOD-393). */
 		public static final TagKey<Item> UPGRADE_OVERCLOCK = key("upgrade/overclock");
 
+		/** Upgrades that belong in the statistics arm — the statistics chip (MOD-125). */
+		public static final TagKey<Item> UPGRADE_STATS = key("upgrade/stats");
+
 		/**
 		 * Fibre the Galvanic Bath plates with silver to make flux thread (MOD-127): vanilla string and
 		 * our own cotton fibre (MOD-280). A tag rather than two recipes because the two are meant to be

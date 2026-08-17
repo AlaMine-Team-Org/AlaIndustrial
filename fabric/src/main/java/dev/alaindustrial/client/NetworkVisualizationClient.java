@@ -1,6 +1,7 @@
 package dev.alaindustrial.client;
 
 import dev.alaindustrial.client.render.RepellerDomeRenderer;
+import dev.alaindustrial.network.MachineStatsPayload;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.RepellerDomePayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -29,6 +30,9 @@ public final class NetworkVisualizationClient {
 		// MOD-278: the repeller dome answer toggles this client's personal dome for that block.
 		ClientPlayNetworking.registerGlobalReceiver(RepellerDomePayload.TYPE,
 				(payload, context) -> RepellerDomeRenderer.receive(payload));
+		// MOD-125: machine statistics for the open screen's panel.
+		ClientPlayNetworking.registerGlobalReceiver(MachineStatsPayload.TYPE,
+				(payload, context) -> MachineStatsClient.receive(payload));
 		LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES.register(NetworkVisualizationClient::render);
 	}
 

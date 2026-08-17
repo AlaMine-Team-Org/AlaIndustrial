@@ -30,6 +30,9 @@ public final class AlaClientConfig {
 	/** Dragged offset of the upgrade panel from its docked position (MOD-080). Persisted between sessions. */
 	public static int upgradePanelDX = 0;
 	public static int upgradePanelDY = 0;
+	/** Dragged offset of the statistics panel from its docked position (MOD-125). Persisted between sessions. */
+	public static int statsPanelDX = 0;
+	public static int statsPanelDY = 0;
 
 	private static Path path;
 
@@ -81,6 +84,8 @@ public final class AlaClientConfig {
 					drillHudEnabled = GsonHelper.getAsBoolean(o, "drillHudEnabled", drillHudEnabled);
 					upgradePanelDX = GsonHelper.getAsInt(o, "upgradePanelDX", upgradePanelDX);
 					upgradePanelDY = GsonHelper.getAsInt(o, "upgradePanelDY", upgradePanelDY);
+					statsPanelDX = GsonHelper.getAsInt(o, "statsPanelDX", statsPanelDX);
+					statsPanelDY = GsonHelper.getAsInt(o, "statsPanelDY", statsPanelDY);
 				}
 				Industrialization.LOGGER.info("[client-config] loaded {}", path);
 			} else {
@@ -117,6 +122,8 @@ public final class AlaClientConfig {
 		o.addProperty("drillHudEnabled", snapshot.drillHudEnabled());
 		o.addProperty("upgradePanelDX", upgradePanelDX);
 		o.addProperty("upgradePanelDY", upgradePanelDY);
+		o.addProperty("statsPanelDX", statsPanelDX);
+		o.addProperty("statsPanelDY", statsPanelDY);
 		return o;
 	}
 
@@ -124,6 +131,13 @@ public final class AlaClientConfig {
 	public static void savePanelPosition(int dx, int dy) {
 		upgradePanelDX = dx;
 		upgradePanelDY = dy;
+		save();
+	}
+
+	/** Persist the dragged statistics-panel offset (MOD-125). Called on drag release, not every frame. */
+	public static void saveStatsPanelPosition(int dx, int dy) {
+		statsPanelDX = dx;
+		statsPanelDY = dy;
 		save();
 	}
 

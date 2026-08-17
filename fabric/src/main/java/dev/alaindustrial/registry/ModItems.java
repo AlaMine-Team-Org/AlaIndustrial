@@ -99,6 +99,7 @@ public final class ModItems {
 	public static final Item FLUXWEAVE_CLOTH = manifestItem("fluxweave_cloth");
 	public static final Item UNSTABLE_ISOTOPE = manifestItem("unstable_isotope");
 	public static final Item MUTE_CHIP = manifestItem("mute_chip");
+	public static final Item STATS_CHIP = manifestItem("stats_chip");
 	/** Soul Vessel (MOD-278): the Mob Repeller upgrade currency. */
 	public static final Item SOUL_VESSEL = manifestItem("soul_vessel");
 	/** Overclocker chips (MOD-392/393): three tiers trading energy for machine speed. */
@@ -778,6 +779,7 @@ public final class ModItems {
 		ModContent.ALIGNMENT_CHIP_NIGHT = () -> ALIGNMENT_CHIP_NIGHT;
 		ModContent.EMPTY_CHIP = () -> EMPTY_CHIP;
 		ModContent.MUTE_CHIP = () -> MUTE_CHIP;
+		ModContent.STATS_CHIP = () -> STATS_CHIP;
 		ModContent.OVERCLOCKER_CHIP_I = () -> OVERCLOCKER_CHIP_I;
 		ModContent.OVERCLOCKER_CHIP_II = () -> OVERCLOCKER_CHIP_II;
 		ModContent.OVERCLOCKER_CHIP_III = () -> OVERCLOCKER_CHIP_III;

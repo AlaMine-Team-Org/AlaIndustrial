@@ -119,6 +119,12 @@ public final class MachineGuiStands {
         // Dragged over the GUI: proves the panel is a top overlay (GUI slots/text do not bleed over it).
         shootMenuWithPanelOpen(context, "gui_macerator_upgrades_dragged", ModContent.MACERATOR_MENU.get(), "Macerator", CAP, CAP, -120, 60);
 
+        // ── MOD-125: statistics panel — the two states a player can actually meet ──
+        // Without a chip the panel must say so rather than showing an empty box.
+        shootStatsPanel(context, "gui_macerator_stats_no_chip", ModContent.MACERATOR_MENU.get(), "Macerator", CAP, false);
+        // With a chip fitted: the frame, the title, the close cross and the "waiting for data" line.
+        shootStatsPanel(context, "gui_macerator_stats_open", ModContent.MACERATOR_MENU.get(), "Macerator", CAP, true);
+
         // ── Electric Furnace — three states ──────────────────────────────────────────
         // State 1: empty — no fuel, no energy
         shootMenuWithState(context, "gui_electric_furnace_empty",
@@ -504,6 +510,42 @@ public final class MachineGuiStands {
         awaitMenuScreen(context);
         java.nio.file.Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST][MOD-080] screenshot {} -> {}", name, path.toAbsolutePath());
+    }
+
+    /**
+     * MOD-125: a machine screen with the STATISTICS panel expanded, with and without a chip fitted.
+     *
+     * <p>Two frames because the panel has two states a player meets before any data arrives, and they
+     * must not look alike: with no chip it has to explain that one is needed, and with a chip it has to
+     * read as "measuring, data on its way". The frame also proves the panel docks left of the GUI, that
+     * the close cross sits on its plate, and that the gear tab is no longer printed over the panel.
+     *
+     * @param capacity buffer size to inject, so the machine behind the panel looks powered
+     * @param withChip whether a statistics chip sits in the panel's stats arm
+     */
+    private static void shootStatsPanel(ClientGameTestContext context, String name,
+                                        MenuType<?> type, String displayName, int capacity, boolean withChip) {
+        LOG.info("[GUITEST][MOD-125] opening {} (stats panel, chip={})", name, withChip);
+        context.runOnClient(mc -> {
+            MenuScreens.create(type, mc, 0, Component.literal(displayName));
+            if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                    && acs.getMenu() instanceof MachineMenu menu) {
+                menu.injectTestData(capacity, capacity, 0, 0);
+                if (withChip) {
+                    for (net.minecraft.world.inventory.Slot s : menu.slots) {
+                        if (s instanceof MachineMenu.UpgradeSlot up
+                                && up.kind() == dev.alaindustrial.menu.UpgradeSlotKind.STATS) {
+                            s.set(new ItemStack(dev.alaindustrial.registry.ModContent.STATS_CHIP.get()));
+                            break;
+                        }
+                    }
+                }
+                menu.toggleStatsPanel();
+            }
+        });
+        awaitMenuScreen(context);
+        java.nio.file.Path path = takeCleanScreenshot(context, name);
+        LOG.info("[GUITEST][MOD-125] screenshot {} -> {}", name, path.toAbsolutePath());
     }
 
     /**

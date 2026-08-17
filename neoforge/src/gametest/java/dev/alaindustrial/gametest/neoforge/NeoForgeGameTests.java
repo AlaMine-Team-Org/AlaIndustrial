@@ -75,6 +75,7 @@ import dev.alaindustrial.gametest.EnergyCondenserScenarios;
 import dev.alaindustrial.gametest.OverclockerEffectScenarios;
 import dev.alaindustrial.gametest.OverclockerPanelScenarios;
 import dev.alaindustrial.gametest.MuteChipScenarios;
+import dev.alaindustrial.gametest.StatsChipScenarios;
 import dev.alaindustrial.gametest.FluidTankScenarios;
 import dev.alaindustrial.gametest.AlaCommonScenarios;
 import dev.alaindustrial.registry.ModContent;
@@ -1733,6 +1734,16 @@ public final class NeoForgeGameTests {
 				OreScenarios::tcOre001Phy02_fullCubeHitbox);
 		registerTest(event, "tc_ore001_phy04_non_flammable", 40, true,
 				OreScenarios::tcOre001Phy04_nonFlammable);
+
+		// Statistics chip (MOD-125): the gate that decides whether a machine measures at all.
+		registerTest(event, "stats_chip_without_chip_nothing_is_measured", 120, true,
+				StatsChipScenarios::statsChip_withoutChipNothingIsMeasured);
+		registerTest(event, "stats_chip_with_chip_the_counters_run", 120, true,
+				StatsChipScenarios::statsChip_withChipTheCountersRun);
+		registerTest(event, "stats_chip_counting_starts_when_the_chip_is_fitted", 140, true,
+				StatsChipScenarios::statsChip_countingStartsWhenTheChipIsFitted);
+		registerTest(event, "stats_chip_removing_the_chip_keeps_what_was_counted", 140, true,
+				StatsChipScenarios::statsChip_removingTheChipKeepsWhatWasCounted);
 
 		// Silence chip: active slot, persistence, slot filters, drops.
 		registerTest(event, "mute_chip_is_muted_reflects_active_slot", 40, true,

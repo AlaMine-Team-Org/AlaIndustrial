@@ -1,9 +1,11 @@
 package dev.alaindustrial.network.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.client.MachineStatsClient;
 import dev.alaindustrial.client.hud.TeleportFadeHud;
 import dev.alaindustrial.client.hud.TeleportNotice;
 import dev.alaindustrial.client.render.RepellerDomeRenderer;
+import dev.alaindustrial.network.MachineStatsPayload;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.RepellerDomePayload;
 import dev.alaindustrial.network.TeleportFadePayload;
@@ -64,5 +66,13 @@ public final class NeoForgeNetworkClient {
 	 */
 	public static void receiveRepellerDome(RepellerDomePayload payload) {
 		RepellerDomeRenderer.receive(payload);
+	}
+
+	/**
+	 * Called on the client main thread when a machine statistics snapshot arrives (MOD-125). Hands it to
+	 * the loader-neutral landing point, which routes it to the open menu — same call Fabric's receiver makes.
+	 */
+	public static void receiveMachineStats(MachineStatsPayload payload) {
+		MachineStatsClient.receive(payload);
 	}
 }

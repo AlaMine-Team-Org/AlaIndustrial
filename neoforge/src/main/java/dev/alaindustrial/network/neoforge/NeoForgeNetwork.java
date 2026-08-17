@@ -1,5 +1,6 @@
 package dev.alaindustrial.network.neoforge;
 
+import dev.alaindustrial.network.MachineStatsPayload;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.RepellerDomePayload;
 import dev.alaindustrial.network.TeleportFadePayload;
@@ -40,6 +41,10 @@ public final class NeoForgeNetwork {
 		registrar.playToClient(RepellerDomePayload.TYPE, RepellerDomePayload.CODEC,
 				(payload, context) -> context.enqueueWork(
 						() -> NeoForgeNetworkClient.receiveRepellerDome(payload)));
+		// MOD-125: one machine's career statistics, pushed from its open menu every 40 ticks.
+		registrar.playToClient(MachineStatsPayload.TYPE, MachineStatsPayload.CODEC,
+				(payload, context) -> context.enqueueWork(
+						() -> NeoForgeNetworkClient.receiveMachineStats(payload)));
 		// Teleport screen-fade level (MOD-106) — one float per tick of a jump's last second. The client
 		// clears itself once the levels stop arriving, so a cancelled warmup needs no packet of its own.
 		registrar.playToClient(TeleportFadePayload.TYPE, TeleportFadePayload.CODEC,

@@ -2,7 +2,9 @@ package dev.alaindustrial.client.screen;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.client.ReadoutFormat;
 import dev.alaindustrial.menu.MachineMenu;
+import dev.alaindustrial.network.MachineStatsPayload;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -54,7 +56,12 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	protected static final Identifier UPGRADES_ATLAS =
 			Industrialization.id("textures/gui/container/upgrades_tab_variants/upgrades_tab_small_01_gear.png");
 
+	/** Frame of the statistics panel (MOD-125). Its own PNG so the art can be edited without touching code. */
+	protected static final Identifier STATS_PANEL_TEXTURE =
+			Industrialization.id("textures/gui/container/stats_panel.png");
+
 	private UpgradePanelController panel;
+	private StatsPanelController statsPanel;
 
 	public MachineScreen(T menu, Inventory inventory, Component title) {
 		super(menu, inventory, title);
@@ -71,6 +78,7 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
 		// (Re)build the panel controller — re-clamps the persisted offset to this screen size on resize.
 		this.panel = new UpgradePanelController(this.menu, this.leftPos, this.topPos, this.width, this.height);
+		this.statsPanel = new StatsPanelController(this.menu, this.leftPos, this.topPos, this.width, this.height);
 	}
 
 	/** The controller (null before {@link #init()}). Used by subclasses only in rare override cases. */
@@ -234,10 +242,16 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	@Override
 	public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		panel.finishCloseIfReady();
+		statsPanel.finishCloseIfReady();
 		super.extractContents(graphics, mouseX, mouseY, partialTick);
 		// Above the slots (so a hint is not hidden by the slot art), below the panel (so a dragged
 		// panel covers it like it covers everything else).
 		drawGhostHints(graphics);
+		// MOD-125 draw order: BOTH tabs first, then whichever panels are open. A tab is a handle, a panel
+		// is content, and content wins — otherwise the gear printed over the statistics panel's text (and
+		// the statistics tab over the upgrade panel's art). The upgrade panel keeps a transparent corner
+		// exactly so its own gear still shows through it.
+		drawStatsTab(graphics);
 		// Overlay pass — above the GUI's slots, items and labels.
 		if (this.menu.hasUpgradePanel() && this.menu.isPanelOpen()) {
 			drawPanel(graphics, mouseX, mouseY);
@@ -248,6 +262,9 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		// that opted out (MOD-393) shows no gear — a button that opens nothing reads as broken.
 		if (this.menu.hasUpgradePanel()) {
 			drawTabButton(graphics);
+		}
+		if (this.menu.isStatsPanelOpen()) {
+			drawStatsPanel(graphics, mouseX, mouseY);
 		}
 	}
 
@@ -318,6 +335,183 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		}
 	}
 
+	// --- Statistics panel (MOD-125) ---------------------------------------------------------------
+
+	/** Row pitch inside the statistics panel: 8px glyphs with a 3px gutter, the vanilla readout rhythm. */
+	private static final int STAT_ROW_H = 11;
+
+	/**
+	 * Paint the statistics panel.
+	 *
+	 * <p>Drawn with {@code fill} rather than blitted from the atlas: the upgrade panel's art is a cross
+	 * shaped around four slots, and a readout needs a plain rectangle. Building that from the same
+	 * {@link GuiStyle} tones the rest of the mod uses costs four rectangles and keeps the two docks
+	 * looking like one system without a second 159×145 sprite that would have to be redrawn every time a
+	 * row is added.
+	 */
+	private void drawStatsPanel(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		int px = statsPanel.panelX(this.leftPos);
+		int py = statsPanel.panelY(this.topPos);
+		int pw = StatsPanelController.PANEL_W;
+		int ph = StatsPanelController.PANEL_H;
+
+		// Blitted from its own texture rather than drawn with fill(): the frame is artwork, and artwork
+		// belongs in a PNG an artist can open. Everything below only writes text into it.
+		graphics.blit(RenderPipelines.GUI_TEXTURED, STATS_PANEL_TEXTURE, px, py,
+				0.0F, 0.0F, pw, ph, TEX_SIZE, TEX_SIZE);
+
+		graphics.text(this.font, Component.translatable("gui.alaindustrial.stats.title"),
+				px + 8, py + 7, GuiStyle.TEXT, false);
+
+		// The × itself lives in the panel texture, centred there by construction. Only the press flash is
+		// drawn here — the font's "x" glyph sat low and left of the plate, which is what showed in game.
+		if (System.currentTimeMillis() < statsPanel.closePressUntil()) {
+			int cx = statsPanel.closeX(this.leftPos);
+			int cy = statsPanel.closeY(this.topPos);
+			graphics.fill(cx, cy, cx + StatsPanelController.CLOSE_SIZE, cy + StatsPanelController.CLOSE_SIZE,
+					UpgradePanelController.PRESS_DARKEN);
+		}
+
+		MachineStatsPayload stats = this.menu.stats();
+		if (stats == null) {
+			// Two different silences, and telling them apart is the difference between "wait a moment" and
+			// "this machine will never show you anything until you fit a chip".
+			boolean chipFitted = this.menu.hasStatsChipInPanel();
+			int wrapY = wrappedText(graphics, Component.translatable(chipFitted
+					? "gui.alaindustrial.stats.waiting" : "gui.alaindustrial.stats.no_chip"), px, py + 26);
+			if (!chipFitted) {
+				wrappedText(graphics, Component.translatable("gui.alaindustrial.stats.no_chip_hint"),
+						px, wrapY + 2);
+			}
+			return;
+		}
+
+		int y = py + 26;
+		long[] parts = ReadoutFormat.durationParts(stats.activeTicks());
+		y = statRow(graphics, px, y, "gui.alaindustrial.stats.uptime",
+				Component.translatable("gui.alaindustrial.stats.duration",
+						parts[0], ReadoutFormat.clock(parts[1], parts[2])).getString(),
+				stats.activeTicks(), mouseX, mouseY, false);
+		// Processed count sits with the working time: both answer "what has this machine actually done",
+		// as opposed to the energy block below, which answers "at what cost". Shown only where it can be
+		// non-zero — a generator processes nothing and would just carry a permanent 0.
+		if (stats.itemsProcessed() > 0) {
+			y = statRow(graphics, px, y, "gui.alaindustrial.stats.processed",
+					ReadoutFormat.compact(stats.itemsProcessed()),
+					stats.itemsProcessed(), mouseX, mouseY, false);
+		}
+
+		// Only the rows this block can actually answer. A generator has no "received", a consumer has no
+		// "generated", and a row of zeroes is worse than no row: it invites the player to look for a fault.
+		if (stats.energyGenerated() > 0) {
+			y = statRow(graphics, px, y, "gui.alaindustrial.stats.generated",
+					ReadoutFormat.compact(stats.energyGenerated()) + " EU",
+					stats.energyGenerated(), mouseX, mouseY, true);
+		}
+		if (stats.energyOut() > 0) {
+			y = statRow(graphics, px, y, "gui.alaindustrial.stats.sent",
+					ReadoutFormat.compact(stats.energyOut()) + " EU",
+					stats.energyOut(), mouseX, mouseY, true);
+		}
+		if (stats.energyIn() > 0) {
+			y = statRow(graphics, px, y, "gui.alaindustrial.stats.received",
+					ReadoutFormat.compact(stats.energyIn()) + " EU",
+					stats.energyIn(), mouseX, mouseY, true);
+		}
+		if (stats.energyConsumed() > 0) {
+			y = statRow(graphics, px, y, "gui.alaindustrial.stats.spent",
+					ReadoutFormat.compact(stats.energyConsumed()) + " EU",
+					stats.energyConsumed(), mouseX, mouseY, true);
+		}
+
+		y += 3;
+		graphics.fill(px + 7, y, px + pw - 7, y + 1, GuiStyle.PANEL_LO);
+		y += 4;
+
+		boolean stale = this.menu.statsAreStale();
+		y = statRow(graphics, px, y, "gui.alaindustrial.stats.now",
+				stats.euRate() + " EU/t", stats.euRate(), mouseX, mouseY, false, stale);
+		if (stats.peakEuRate() > 0) {
+			y = statRow(graphics, px, y, "gui.alaindustrial.stats.peak",
+					stats.peakEuRate() + " EU/t", stats.peakEuRate(), mouseX, mouseY, false);
+		}
+
+		y += 3;
+		graphics.fill(px + 7, y, px + pw - 7, y + 1, GuiStyle.PANEL_LO);
+		y += 4;
+
+		y = statRow(graphics, px, y, "gui.alaindustrial.stats.connections",
+				stats.sources() + " / " + stats.sinks(), 0, mouseX, mouseY, false);
+
+		graphics.text(this.font, Component.translatable(stale
+						? "gui.alaindustrial.stats.idle" : "gui.alaindustrial.stats.live"),
+				px + 9, py + ph - 14, GuiStyle.TEXT_DIM, false);
+	}
+
+	/** Inner width available to panel text: the box minus the same gutter on both sides. */
+	private static final int STAT_TEXT_W = StatsPanelController.PANEL_W - 18;
+
+	/**
+	 * Draw a line that may not fit, wrapped at the panel's inner width, and return the y below it.
+	 *
+	 * <p>Needed because the panel is a fixed 159px while its strings are translated into twenty
+	 * languages: the Russian hint for fitting a chip already overflowed it, and German and Turkish
+	 * run longer still. Wrapping is measured, not guessed at authoring time.
+	 */
+	private int wrappedText(GuiGraphicsExtractor graphics, Component text, int px, int y) {
+		for (FormattedCharSequence line : this.font.split(text, STAT_TEXT_W)) {
+			graphics.text(this.font, line, px + 9, y, GuiStyle.TEXT_DIM, false);
+			y += 10;
+		}
+		return y;
+	}
+
+	private int statRow(GuiGraphicsExtractor graphics, int px, int y, String labelKey, String value,
+			long exact, int mouseX, int mouseY, boolean tooltip) {
+		return statRow(graphics, px, y, labelKey, value, exact, mouseX, mouseY, tooltip, false);
+	}
+
+	/**
+	 * One label/value line. The value is right-aligned so the column of numbers can be scanned vertically,
+	 * and an abbreviated figure carries its exact value in a tooltip — the panel has room for "1.2M EU",
+	 * the player checking a build needs the digits.
+	 */
+	private int statRow(GuiGraphicsExtractor graphics, int px, int y, String labelKey, String value,
+			long exact, int mouseX, int mouseY, boolean tooltip, boolean dim) {
+		int pw = StatsPanelController.PANEL_W;
+		int color = dim ? GuiStyle.TEXT_DIM : GuiStyle.TEXT;
+		int valueW = this.font.width(value);
+		int valueX = px + pw - 9 - valueW;
+		// The value is the number the player came for, so the LABEL is what gives way when a translation
+		// is too long for the row: it is ellipsised to whatever space the value leaves, instead of the two
+		// running into each other.
+		int labelRoom = Math.max(0, STAT_TEXT_W - valueW - 4);
+		FormattedCharSequence label = this.font.split(Component.translatable(labelKey), labelRoom)
+				.stream().findFirst().orElse(FormattedCharSequence.EMPTY);
+		graphics.text(this.font, label, px + 9, y, color, false);
+		graphics.text(this.font, Component.literal(value), valueX, y, color, false);
+		if (tooltip && mouseY >= y - 1 && mouseY < y + STAT_ROW_H - 1 && mouseX >= px + 7 && mouseX < px + pw - 7) {
+			graphics.setTooltipForNextFrame(this.font,
+					Component.literal(ReadoutFormat.exact(exact) + " EU"), mouseX, mouseY);
+		}
+		return y + STAT_ROW_H;
+	}
+
+	private void drawStatsTab(GuiGraphicsExtractor graphics) {
+		int bx = statsPanel.tabX(this.leftPos);
+		int by = statsPanel.tabY(this.topPos);
+		boolean flash = System.currentTimeMillis() < statsPanel.tabPressUntil();
+		int off = flash ? 1 : 0;
+		graphics.blit(RenderPipelines.GUI_TEXTURED, UPGRADES_ATLAS, bx + off, by + off,
+				(float) StatsPanelController.TAB_U, (float) StatsPanelController.TAB_V,
+				StatsPanelController.TAB_W, StatsPanelController.TAB_H,
+				UpgradePanelController.ATLAS, UpgradePanelController.ATLAS);
+		if (flash) {
+			graphics.fill(bx + off, by + off, bx + off + StatsPanelController.TAB_W,
+					by + off + StatsPanelController.TAB_H, UpgradePanelController.PRESS_DARKEN);
+		}
+	}
+
 	private void drawTabButton(GuiGraphicsExtractor graphics) {
 		int bx = panel.gearX(this.leftPos);
 		int by = panel.gearY(this.topPos);
@@ -355,6 +549,17 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 			graphics.setTooltipForNextFrame(this.font, lines, mouseX, mouseY);
 			return;
 		}
+		if (statsPanel.isOverTab(mouseX, mouseY, this.leftPos, this.topPos)) {
+			graphics.setTooltipForNextFrame(this.font,
+					Component.translatable("gui.alaindustrial.stats.title"), mouseX, mouseY);
+			return;
+		}
+		if (this.menu.isStatsPanelOpen()
+				&& statsPanel.isOverPanel(mouseX, mouseY, this.leftPos, this.topPos)) {
+			// Modal over its own footprint: the row tooltips are emitted while drawing, and nothing from
+			// the GUI beneath may show through.
+			return;
+		}
 		if (this.menu.isPanelOpen() && panel.isOverPanel(mouseX, mouseY, this.leftPos, this.topPos)) {
 			// Modal: show only the panel's own tooltips, nothing from the GUI beneath it.
 			Slot hovered = upgradeSlotAt(mouseX, mouseY);
@@ -368,10 +573,13 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		super.extractTooltip(graphics, mouseX, mouseY);
 	}
 
-	/** Suppress the machine's bar tooltips (energy/fluid) when the mouse is over the open panel. */
+	/** Suppress the machine's bar tooltips (energy/fluid) when the mouse is over an open panel. */
 	@Override
 	protected boolean isHovering(int left, int top, int w, int h, double mx, double my) {
 		if (this.menu.isPanelOpen() && panel.isOverPanel(mx, my, this.leftPos, this.topPos)) {
+			return false;
+		}
+		if (this.menu.isStatsPanelOpen() && statsPanel.isOverPanel(mx, my, this.leftPos, this.topPos)) {
 			return false;
 		}
 		return super.isHovering(left, top, w, h, mx, my);
@@ -379,12 +587,23 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 
 	// --- Recipe-viewer exclusion (MOD-080): absolute screen rects the viewers must keep clear ---
 
-	/** The gear tab (always) and the open panel (dynamic, drag-aware) as absolute screen rectangles. */
+	/**
+	 * The tabs (always) and whichever panel is open (dynamic, drag-aware) as absolute screen rectangles.
+	 *
+	 * <p>The statistics dock must be declared here in the same breath as it is drawn (MOD-125): both tabs
+	 * stick out to the RIGHT of the frame, which is exactly where REI/JEI park their item list. A dock the
+	 * viewer does not know about gets overdrawn by that list — the well-known failure this hook exists to
+	 * prevent.
+	 */
 	public List<Rect2i> extraGuiAreas() {
-		List<Rect2i> areas = new ArrayList<>(2);
+		List<Rect2i> areas = new ArrayList<>(4);
 		areas.add(panel.gearArea(this.leftPos, this.topPos));
 		if (this.menu.isPanelOpen()) {
 			areas.add(panel.panelArea(this.leftPos, this.topPos));
+		}
+		areas.add(statsPanel.tabArea(this.leftPos, this.topPos));
+		if (this.menu.isStatsPanelOpen()) {
+			areas.add(statsPanel.panelArea(this.leftPos, this.topPos));
 		}
 		return areas;
 	}
@@ -398,6 +617,25 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		if (btn == 0 && this.menu.hasUpgradePanel()
 				&& panel.isOverGear(event.x(), event.y(), this.leftPos, this.topPos)) {
 			panel.onGearClick();
+			return true;
+		}
+		// MOD-125: the statistics tab. No opt-out check — every machine has statistics to show.
+		if (btn == 0 && statsPanel.isOverTab(event.x(), event.y(), this.leftPos, this.topPos)) {
+			statsPanel.onTabClick();
+			return true;
+		}
+		// The statistics panel is modal over its footprint, like the upgrade one, but has nothing to click
+		// inside it except the close button — a readout takes no input.
+		if (this.menu.isStatsPanelOpen()
+				&& statsPanel.isOverPanel(event.x(), event.y(), this.leftPos, this.topPos)) {
+			if (btn == 0 && statsPanel.isOverClose(event.x(), event.y(), this.leftPos, this.topPos)) {
+				statsPanel.onCloseClick();
+				return true;
+			}
+			// A readout has nothing to click, so the whole surface is a drag handle.
+			if (btn == 0) {
+				statsPanel.beginDrag(event.x(), event.y());
+			}
 			return true;
 		}
 		// The open panel is modal over its footprint: consume every click so nothing beneath reacts.
@@ -427,6 +665,10 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 			panel.dragTo(event.x(), event.y(), this.leftPos, this.topPos, this.width, this.height);
 			return true;
 		}
+		if (statsPanel.dragging() && event.button() == 0) {
+			statsPanel.dragTo(event.x(), event.y(), this.leftPos, this.topPos, this.width, this.height);
+			return true;
+		}
 		return super.mouseDragged(event, dragX, dragY);
 	}
 
@@ -434,6 +676,10 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	public boolean mouseReleased(MouseButtonEvent event) {
 		if (panel.dragging() && event.button() == 0) {
 			panel.endDrag();
+			return true;
+		}
+		if (statsPanel.dragging() && event.button() == 0) {
+			statsPanel.endDrag();
 			return true;
 		}
 		return super.mouseReleased(event);

@@ -201,6 +201,10 @@ pitest {
                      'dev.alaindustrial.block.entity.ThermalCentrifugeStatus',
                      'dev.alaindustrial.client.compat.FluidOutputViewerModel',
                      'dev.alaindustrial.client.compat.RecipeViewerLayout',
+                     // MOD-125: the shared readout formatter (compact magnitudes, duration parts). Pure
+                     // string/arithmetic work with no Minecraft on it, listed here WITH the class and
+                     // its L1 suite (ReadoutFormatTest) rather than a release later.
+                     'dev.alaindustrial.client.ReadoutFormat',
                      'dev.alaindustrial.recipe.CraftingGridMapping',
                      // MOD-064: the alloy smelter's order-independent slot assignment, lifted out of
                      // AlloyingRecipe precisely so it could be tested without Minecraft on the

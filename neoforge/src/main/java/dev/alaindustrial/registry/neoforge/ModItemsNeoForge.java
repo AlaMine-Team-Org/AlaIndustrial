@@ -75,6 +75,9 @@ public final class ModItemsNeoForge {
 			manifestItem("empty_chip");
 	public static final DeferredItem<Item> MUTE_CHIP =
 			manifestItem("mute_chip");
+	/** MOD-125: fitted to a machine's upgrade panel, it is what makes that machine keep statistics. */
+	public static final DeferredItem<Item> STATS_CHIP =
+			manifestItem("stats_chip");
 	/** Soul Vessel (MOD-278): the Mob Repeller upgrade currency. */
 	public static final DeferredItem<Item> SOUL_VESSEL =
 			manifestItem("soul_vessel");
@@ -588,6 +591,7 @@ public final class ModItemsNeoForge {
 		ModContent.ALIGNMENT_CHIP_NIGHT = ALIGNMENT_CHIP_NIGHT;
 		ModContent.EMPTY_CHIP = EMPTY_CHIP;
 		ModContent.MUTE_CHIP = MUTE_CHIP;
+		ModContent.STATS_CHIP = STATS_CHIP;
 		ModContent.OVERCLOCKER_CHIP_I = OVERCLOCKER_CHIP_I;
 		ModContent.OVERCLOCKER_CHIP_II = OVERCLOCKER_CHIP_II;
 		ModContent.OVERCLOCKER_CHIP_III = OVERCLOCKER_CHIP_III;

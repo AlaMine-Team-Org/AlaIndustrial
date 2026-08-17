@@ -900,6 +900,7 @@ public final class ContentManifest {
 		// Upgrade chips (MOD-080): the blank and the mute upgrade, each with its hint lines.
 		defs.put("empty_chip", hintItem("empty_chip"));
 		defs.put("mute_chip", hintItem("mute_chip"));
+		defs.put("stats_chip", hintItem("stats_chip"));
 		defs.put("overclocker_chip_i", overclockerChip("overclocker_chip_i", 1));
 		defs.put("overclocker_chip_ii", overclockerChip("overclocker_chip_ii", 2));
 		defs.put("overclocker_chip_iii", overclockerChip("overclocker_chip_iii", 3));

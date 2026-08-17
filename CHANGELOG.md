@@ -1,12 +1,17 @@
-## 0.1.102
+## 0.1.103
 
-<p><img alt="Ala Industrial 0.1.102 random jump preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.102/release-media/v0.1.102/changelog.webp" width="720"></p>
+<p><img alt="Ala Industrial 0.1.103 statistics panel preview" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.103/release-media/v0.1.103/changelog.png" width="720"></p>
 
-Teleporters learned a second trick: sending you somewhere you have never been.
+Machines can tell you what they have actually been doing — once you fit them with the new chip.
 
 ### New
 
-- **Random jumps.** A **Random** button now sits next to Teleport in the remote. A flat 50,000 EU throws you 500–5,000 blocks away in the Overworld, and the landing coordinates go straight to chat.
-- **Stations need the upgrade first.** Craft a Random Jump Chip — a Spatial Crystal, then a Resonance Coil, then the chip — and shift-right-click a station with it. The chip is used up, and it survives the block being broken, so moving a base costs nothing.
-- **Upgraded stations are obvious.** Teal corners light up on their faces, so you can tell at a glance which one can send you off.
-- **A safe landing or none at all.** No lava, no water, no landing inside a block. If nothing safe turns up, the jump is refused and you are charged nothing.
+- **Statistics Chip.** Craft it from a copper coil, an empty chip, two glass panes and redstone, then drop it into the right slot of the upgrade panel.
+- **A panel of real numbers.** Working time, items processed, energy received, spent, generated and sent to the grid, the current and peak rate, and how many neighbours are wired in.
+- **Working time means working.** A machine that sat unpowered all week reports zero, not a week.
+- **Drag it where you like.** The panel opens on the left of the interface and remembers where you put it.
+- **No chip, no cost.** An un-instrumented machine measures nothing at all, so a base full of them runs exactly as it did before.
+
+### Fixed
+
+- **Geothermal and fuel generators show their output.** Their rate readout was missing entirely.

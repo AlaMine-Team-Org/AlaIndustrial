@@ -193,6 +193,12 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 		// MOD-356: the GUI has to show what actually reaches the buffer, so the effective rate is published
 		// here — after the multiplier — and not from inside produce(), which only knows the mechanical one.
 		publishEffectiveRate(made);
+		// MOD-125: the same number, fed to the statistics panel from ONE place for every generator. It sits
+		// here rather than inside publishEffectiveRate because that method is overridden by only some
+		// generators — solar publishes on channel 2, the mills on 4 and 6, and the geothermal and fuel
+		// generators override nothing at all. Hanging the panel off the overrides would have left those two
+		// with a permanently empty rate; hanging it off the shared tick cannot.
+		recordEuRate(made);
 		boolean changed = false;
 		if (made > 0) {
 			// MOD-156: "active in the mod" time is credited whenever the generator is RUNNING, before and

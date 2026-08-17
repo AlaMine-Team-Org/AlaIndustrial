@@ -266,6 +266,8 @@ public final class ModContent {
 	public static Supplier<Item> MUTAGEN_DUST = unbound("MUTAGEN_DUST");
 	public static Supplier<Item> UNSTABLE_ISOTOPE = unbound("UNSTABLE_ISOTOPE");
 	public static Supplier<Item> MUTE_CHIP = unbound("MUTE_CHIP");
+	/** MOD-125: fitted to a machine's upgrade panel, it is what makes that machine keep statistics. */
+	public static Supplier<Item> STATS_CHIP = unbound("STATS_CHIP");
 	/** Soul Vessel (MOD-278): the repeller's upgrade currency, filled by the player's own kills. */
 	public static Supplier<Item> SOUL_VESSEL = unbound("SOUL_VESSEL");
 	// Overclocker chips (MOD-392/393): three tiers, one per panel arm slot. Each shortens the operation

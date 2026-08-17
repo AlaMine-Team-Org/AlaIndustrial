@@ -2471,6 +2471,37 @@
           ]
         },
         {
+          "id": "stats_chip",
+          "title": "Чип статистики",
+          "icon": "alaindustrial:stats_chip",
+          "block_id": "alaindustrial:stats_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Чип статистики",
+              "text": "Апгрейд, который заставляет машину вести учёт своей работы — время, энергию и обработанные предметы."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "",
+                "alaindustrial:copper_coil",
+                "",
+                "#c:glass_panes",
+                "alaindustrial:empty_chip",
+                "#c:glass_panes",
+                "",
+                "minecraft:redstone",
+                ""
+              ],
+              "result_id": "alaindustrial:stats_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mute_chip",
           "title": "Чип-глушитель",
           "icon": "alaindustrial:mute_chip",

@@ -337,6 +337,10 @@ public class IndustrializationFabric implements ModInitializer {
 		// MOD-278: the repeller dome answer — personal, one per button press.
 		PayloadTypeRegistry.clientboundPlay().register(dev.alaindustrial.network.RepellerDomePayload.TYPE,
 				dev.alaindustrial.network.RepellerDomePayload.CODEC);
+		// MOD-125: one machine's career statistics, pushed from its open menu every 40 ticks. Only ever
+		// travels while a player has that machine's screen open.
+		PayloadTypeRegistry.clientboundPlay().register(dev.alaindustrial.network.MachineStatsPayload.TYPE,
+				dev.alaindustrial.network.MachineStatsPayload.CODEC);
 		// Teleport screen-fade level (MOD-106) — sent every tick of a jump's last second; the client
 		// clears itself when the levels stop, so a cancel needs no packet of its own.
 		PayloadTypeRegistry.clientboundPlay().register(

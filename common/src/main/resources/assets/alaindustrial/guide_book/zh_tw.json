@@ -2471,6 +2471,37 @@
           ]
         },
         {
+          "id": "stats_chip",
+          "title": "Statistics Chip",
+          "icon": "alaindustrial:stats_chip",
+          "block_id": "alaindustrial:stats_chip",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Statistics Chip",
+              "text": "An upgrade that makes a machine keep a record of its work — time, energy and items processed."
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "",
+                "alaindustrial:copper_coil",
+                "",
+                "#c:glass_panes",
+                "alaindustrial:empty_chip",
+                "#c:glass_panes",
+                "",
+                "minecraft:redstone",
+                ""
+              ],
+              "result_id": "alaindustrial:stats_chip",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "mute_chip",
           "title": "靜音晶片",
           "icon": "alaindustrial:mute_chip",

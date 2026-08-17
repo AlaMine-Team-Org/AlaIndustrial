@@ -206,6 +206,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.ALIGNMENT_CHIP_NIGHT);
 		show(out, ModContent.EMPTY_CHIP);
 		show(out, ModContent.MUTE_CHIP);
+		show(out, ModContent.STATS_CHIP);
 		show(out, ModContent.OVERCLOCKER_CHIP_I);
 		show(out, ModContent.OVERCLOCKER_CHIP_II);
 		show(out, ModContent.OVERCLOCKER_CHIP_III);
@@ -368,6 +369,7 @@ public final class CreativeTabContent {
 		show(out, ModContent.ENERGY_CLOT_II);
 		show(out, ModContent.ENERGY_CLOT_III);
 		show(out, ModContent.MUTE_CHIP);
+		show(out, ModContent.STATS_CHIP);
 		// Evolution chips: not upgrade-panel parts, but the same "a chip you apply to a block" idea.
 		show(out, ModContent.EMPTY_CHIP);
 		show(out, ModContent.ALIGNMENT_CHIP_DAY);

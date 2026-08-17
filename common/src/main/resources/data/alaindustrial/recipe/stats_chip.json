@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "K": "alaindustrial:copper_coil",
+    "G": "#c:glass_panes",
+    "E": "alaindustrial:empty_chip",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    " K ",
+    "GEG",
+    " R "
+  ],
+  "result": { "id": "alaindustrial:stats_chip" }
+}

@@ -114,6 +114,10 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 
 		updateLit(canWork);
 
+		// MOD-125: the statistics panel's "now" line for a consumer is its draw, and a stopped machine must
+		// report 0 rather than keep its last reading — the same contract generators follow.
+		recordEuRate(canWork ? euPerTick : 0);
+
 		if (canWork) {
 			energy.drainInternal(euPerTick);
 			progress++;
@@ -121,6 +125,7 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 				progress = 0;
 				items.get(INPUT_SLOT).shrink(1);
 				addOutput(solution.result());
+				recordItemProcessed(); // MOD-125: lifetime operation counter (persisted, drawn later)
 				creditUsefulWork(level, (long) euPerTick * maxProgress); // MOD-133: completed op → XP
 			}
 			setChanged();

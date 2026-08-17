@@ -2,6 +2,9 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
+import dev.alaindustrial.core.energy.EnergyLookup;
+import dev.alaindustrial.core.energy.EnergyPort;
+import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.upgrade.OverclockMath;
 import dev.alaindustrial.item.misc.OverclockerChipItem;
@@ -18,6 +21,7 @@ import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -203,6 +207,7 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 		output.putInt("Progress", progress);
 		output.putInt("MaxProgress", maxProgress);
 		ContainerHelper.saveAllItems(output, items);
+		saveStats(output);
 		// MOD-133: owner persisted here (NBT keys "Owner"/"OwnerName") for every tracking machine.
 		// The teleporter station used the same keys before this moved to the base, so existing
 		// stations round-trip without a data migration.
@@ -219,10 +224,167 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 		maxProgress = input.getIntOr("MaxProgress", 0);
 		items.clear();
 		ContainerHelper.loadAllItems(input, items);
+		loadStats(input);
 		if (tracksOwner()) {
 			owner = input.read("Owner", UUIDUtil.CODEC).orElse(null);
 			ownerName = input.getStringOr("OwnerName", "");
 		}
+	}
+
+	// --- Block statistics (MOD-125) --------------------------------------------------------------
+
+	/**
+	 * Ticks this block has actually WORKED — produced or consumed EU — not ticks since it was placed.
+	 *
+	 * <p>The distinction is the whole meaning of the readout. A furnace sitting unpowered in a corner for
+	 * a week has an age of a week and a working time of zero, and reporting the age under the label
+	 * "working time" is simply a false number: it climbs on a machine that has never run once.
+	 *
+	 * <p>Accumulated per tick, which is safe precisely BECAUSE of the sleep gate rather than in spite of
+	 * it: a block skips its tick only while idle, and an idle tick is one this counter must not count
+	 * anyway. (An age-since-placed counter is the opposite case and could NOT be accumulated this way.)
+	 */
+	private long activeTicks;
+
+	/** Last per-tick EU rate this block reported. Session state: never persisted, 0 after a reload. */
+	private int currentEuRate;
+
+	/** Highest {@link #currentEuRate} seen since the block entity loaded. Session state, deliberately. */
+	private int peakEuRate;
+
+	/**
+	 * Whether a statistics chip is fitted (MOD-125). Without one this block measures nothing at all: no
+	 * counters advance, nothing is written to its save tag, and no packet is ever built for it.
+	 *
+	 * <p>That is the point of making it a chip rather than a free feature — telemetry is something the
+	 * player chooses to install where it matters, and a base full of un-instrumented machines costs
+	 * exactly what it did before this task existed.
+	 */
+	public boolean hasStatsChip() {
+		if (!hasUpgradeSlots()) {
+			return false;
+		}
+		for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
+			if (getUpgradeStack(i).is(ModContent.STATS_CHIP.get())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Record this tick's EU rate — production for a generator, draw for a consumer. Called from the
+	 * generator/machine tick, so a subclass never has to remember to feed the statistics panel.
+	 *
+	 * <p>A non-zero rate is also this block's definition of "working", so the working-time counter is
+	 * advanced from the same call: the two answers can never disagree about whether the machine ran.
+	 *
+	 * <p>Gated on the chip, and the energy counters in the buffer are gated with it, so "measuring
+	 * starts when you install the sensor" holds for every number the panel can show — not just the ones
+	 * that happen to pass through here.
+	 */
+	public void recordEuRate(int euPerTick) {
+		boolean measuring = hasStatsChip();
+		energy.setCountersEnabled(measuring);
+		if (!measuring) {
+			currentEuRate = 0;
+			return;
+		}
+		int rate = Math.max(0, euPerTick);
+		currentEuRate = rate;
+		if (rate > peakEuRate) {
+			peakEuRate = rate;
+		}
+		if (rate > 0) {
+			activeTicks++;
+		}
+	}
+
+	/** Ticks this block spent actually working. */
+	public long activeTicks() {
+		return activeTicks;
+	}
+
+	public int currentEuRate() {
+		return currentEuRate;
+	}
+
+	public int peakEuRate() {
+		return peakEuRate;
+	}
+
+	/**
+	 * How many of the six direct faces currently sit against a usable energy port, split into sources
+	 * (something that could feed this block) and sinks (something this block could feed).
+	 *
+	 * <p>Six lookups, run only when a statistics packet is actually being built — not per tick, and never
+	 * a walk of the cable graph. A cable neighbour counts as one connection, not as everything behind it:
+	 * answering "what is on the other end of the wire" is the network analyzer's job, not this panel's.
+	 *
+	 * @return sources in the low 16 bits, sinks in the next 16 — packed because the pair travels together
+	 *     and a two-field return would need a record no other caller wants
+	 */
+	public int countDirectConnections() {
+		if (level == null) {
+			return 0;
+		}
+		int sources = 0;
+		int sinks = 0;
+		EnergyLookup lookup = EnergyLookup.get();
+		for (Direction dir : Direction.values()) {
+			EnergyRole role = energyRoleForFace(dir);
+			if (role == EnergyRole.NONE) {
+				continue;
+			}
+			EnergyPort port = lookup.find(level, worldPosition.relative(dir), dir.getOpposite());
+			if (port == null) {
+				continue;
+			}
+			// Mirror the direct-push rules (R-NRG-03): a face that cannot extract has no sink behind it
+			// even when the neighbour would accept energy, and vice versa.
+			if (role.canInsert() && port.supportsExtraction()) {
+				sources++;
+			}
+			if (role.canExtract() && port.supportsInsertion()) {
+				sinks++;
+			}
+		}
+		return (sources & 0xFFFF) | ((sinks & 0xFFFF) << 16);
+	}
+
+	private void saveStats(ValueOutput output) {
+		output.putLong("StatsActiveTicks", activeTicks);
+		output.putLong("StatsEnergyIn", energy.getTotalEnergyIn());
+		output.putLong("StatsEnergyOut", energy.getTotalEnergyOut());
+		output.putLong("StatsEnergyGenerated", energy.getTotalEnergyGenerated());
+		output.putLong("StatsEnergyConsumed", energy.getTotalEnergyConsumed());
+		output.putLong("StatsItemsProcessed", totalItemsProcessed);
+	}
+
+	private void loadStats(ValueInput input) {
+		activeTicks = input.getLongOr("StatsActiveTicks", 0L);
+		energy.restoreCounters(
+				input.getLongOr("StatsEnergyIn", 0L),
+				input.getLongOr("StatsEnergyOut", 0L),
+				input.getLongOr("StatsEnergyGenerated", 0L),
+				input.getLongOr("StatsEnergyConsumed", 0L));
+		totalItemsProcessed = input.getLongOr("StatsItemsProcessed", 0L);
+	}
+
+	/**
+	 * Completed operations over this block's lifetime. Counted and persisted from the start (MOD-125) even
+	 * though the MVP panel does not draw it: the machines task that will show it then needs no save
+	 * migration, and a counter that starts at zero on every existing machine would be worse than useless.
+	 */
+	private long totalItemsProcessed;
+
+	public long totalItemsProcessed() {
+		return totalItemsProcessed;
+	}
+
+	/** Count one finished operation. Called by the processing machines when they commit a result. */
+	public void recordItemProcessed() {
+		totalItemsProcessed++;
 	}
 
 	// --- Evolvable persistence helper (shared by SolarPanelBlockEntity + WindMillBlockEntity) ---

@@ -15,17 +15,21 @@ import org.jspecify.annotations.Nullable;
  * player sees where a chip goes before trying it. It also caps stacking for free — one overclocker
  * per machine, because there is exactly one arm that takes one.
  *
- * <p>A kind with a {@code null} tag is reserved: visible, greyed out, accepts nothing. The remaining
- * two arms are held for the modules of MOD-286 (ejector, puller, energy storage, redstone inverter);
- * adding one is a tag plus a hint glyph, not a change to this mechanism.
+ * <p>A kind with a {@code null} tag is reserved: visible, greyed out, accepts nothing. The last free arm
+ * is held for the modules of MOD-286 (ejector, puller, energy storage, redstone inverter); adding one is
+ * a tag plus a hint glyph, not a change to this mechanism.
+ *
+ * <p><b>MOD-125 took arm 2</b> for the statistics chip. MOD-286 planned four modules across the two arms
+ * that were free, so it is now one arm short and will have to widen the panel or group its modules —
+ * noted here because nothing else in the code says the arm was spoken for.
  */
 public enum UpgradeSlotKind {
 	/** Panel arm 0 (left): the mute chip. */
 	MUTE(ModTags.Items.UPGRADE_MUTE),
 	/** Panel arm 1 (top): the overclocker chips, one of the three tiers. */
 	OVERCLOCK(ModTags.Items.UPGRADE_OVERCLOCK),
-	/** Panel arm 2 (right): reserved for a future module (MOD-286). */
-	RESERVED_RIGHT(null),
+	/** Panel arm 2 (right): the statistics chip (MOD-125) — without it a machine keeps no statistics. */
+	STATS(ModTags.Items.UPGRADE_STATS),
 	/** Panel arm 3 (bottom): reserved for a future module (MOD-286). */
 	RESERVED_BOTTOM(null),
 	/**
@@ -58,7 +62,7 @@ public enum UpgradeSlotKind {
 		return switch (index) {
 			case 0 -> MUTE;
 			case 1 -> OVERCLOCK;
-			case 2 -> RESERVED_RIGHT;
+			case 2 -> STATS;
 			default -> RESERVED_BOTTOM;
 		};
 	}

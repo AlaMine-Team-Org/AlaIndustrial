@@ -58,6 +58,10 @@ public final class ShotFamilies {
             new Object[] {"gui_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
                     "Machine screen: the energy and progress bars match the numbers behind them, "
                             + "nothing is clipped and no label overlaps a slot")},
+            new Object[] {"gui_macerator_stats_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
+                    "Statistics panel (MOD-125): docked left of the GUI with nothing printed over it, "
+                            + "every row inside the frame, the close cross centred on its plate, and the "
+                            + "no-chip state saying a chip is needed instead of showing an empty box")},
             new Object[] {"gui_solar_panel_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
                     "Solar panel readout: output and buffer match the light level the scene is set to "
                             + "(day / night / rain / partial shade)")},

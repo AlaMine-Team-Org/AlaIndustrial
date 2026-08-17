@@ -2,9 +2,12 @@ package dev.alaindustrial.menu;
 
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.item.misc.OverclockerChipItem;
+import dev.alaindustrial.network.MachineStatsPayload;
+import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.registry.ContentManifest;
 import dev.alaindustrial.registry.ModTags;
 import java.util.function.BooleanSupplier;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +18,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Shared menu base for Industrialization machines. Adds the machine's slots (subclass-defined) plus the
@@ -57,8 +61,12 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	protected final ContainerData data;
 	private final ContainerLevelAccess access;
 	private final Block block;
+	/** The viewer. Needed to address the statistics packet (MOD-125); vanilla's menu keeps no player. */
+	private final Player player;
 	/** Client-only: whether the upgrade panel is expanded. The screen toggles it; the server ignores it. */
 	private boolean panelOpen;
+	/** Client-only: whether the statistics panel is expanded (MOD-125). Docks opposite the upgrade panel. */
+	private boolean statsPanelOpen;
 
 	protected MachineMenu(MenuType<?> type, int syncId, Inventory playerInventory,
 			Container machine, ContainerData data, ContainerLevelAccess access, Block block) {
@@ -67,6 +75,7 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 		this.data = data;
 		this.access = access;
 		this.block = block;
+		this.player = playerInventory.player;
 		addMachineSlots();
 		addUpgradeSlots();
 		addPlayerInventory(playerInventory);
@@ -221,6 +230,153 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	public boolean togglePanel() {
 		panelOpen = !panelOpen;
 		return panelOpen;
+	}
+
+	// --- Statistics panel (MOD-125) ---------------------------------------------------------------
+
+	/** Ticks between two statistics packets for one open screen. Two seconds: fast enough to read as live. */
+	private static final int STATS_SYNC_INTERVAL_TICKS = 40;
+
+	/** Client-only statistics-panel state (see {@link #statsPanelOpen}). */
+	public boolean isStatsPanelOpen() {
+		return statsPanelOpen;
+	}
+
+	/** Toggle the statistics panel (screen-driven); returns the new state. */
+	public boolean toggleStatsPanel() {
+		statsPanelOpen = !statsPanelOpen;
+		return statsPanelOpen;
+	}
+
+	/** Server-side: ticks since the last statistics packet went out to this viewer. */
+	private int ticksSinceStatsSync;
+
+	/** Server-side: {@code energyGenerated + energyConsumed} at the last packet, to derive the window rate. */
+	private long lastThroughputSample = -1L;
+
+	/** Server-side: the snapshot last sent to this viewer, so an unchanged one can be skipped. */
+	private @Nullable MachineStatsPayload lastSentStats;
+
+	/** Client-side: the most recent snapshot, or {@code null} until the first packet lands. */
+	private @Nullable MachineStatsPayload stats;
+
+	/** Client-side: {@code System.currentTimeMillis()} when {@link #stats} last changed. */
+	private long statsReceivedAt;
+
+	/**
+	 * Push this viewer's statistics snapshot, throttled.
+	 *
+	 * <p>Riding {@code broadcastChanges} is what keeps the promise "no open GUI, no traffic": vanilla calls
+	 * it once per tick for an OPEN menu and stops the moment the screen closes, so nothing here has to scan
+	 * the player list or ask a block who is watching it. The counter is per-menu, i.e. per viewer, and dies
+	 * with the screen.
+	 *
+	 * <p>The {@code instanceof} is both the block-entity lookup and the side guard: server-side
+	 * {@code machine} IS the block entity ({@code MachineBlockEntity implements WorldlyContainer}), while a
+	 * client menu is backed by a {@code SimpleContainer} and falls through.
+	 */
+	@Override
+	public void broadcastChanges() {
+		super.broadcastChanges();
+		if (++ticksSinceStatsSync < STATS_SYNC_INTERVAL_TICKS) {
+			return;
+		}
+		ticksSinceStatsSync = 0;
+		if (!(machine instanceof MachineBlockEntity be) || !(player instanceof ServerPlayer serverPlayer)) {
+			return;
+		}
+		// No chip, no telemetry — not even the packet. This is what makes the feature free for a base
+		// that has not opted into it: an un-instrumented machine never builds a snapshot at all.
+		if (!be.hasStatsChip()) {
+			lastSentStats = null;
+			return;
+		}
+		MachineStatsPayload next = snapshot(be);
+		// Silence when nothing changed. An idle machine skips its tick, so none of its numbers move, and
+		// re-sending an identical snapshot every two seconds would be pure noise — this is the idle-sleep
+		// rule falling out of the data instead of needing a timer of its own. It also means the packet
+		// only ever costs anything on machines that are actually doing something.
+		//
+		// The client reads the resulting silence as "idle" (see statsAreStale), which is why the first
+		// snapshot after a quiet spell must still go out: it is what turns the label back to "updating".
+		if (next.equals(lastSentStats)) {
+			return;
+		}
+		lastSentStats = next;
+		NetworkDispatcher.get().sendToPlayer(serverPlayer, next);
+	}
+
+	/**
+	 * Build the snapshot, deriving the window rate from the career totals rather than sampling the tick.
+	 *
+	 * <p>Throughput (produced + consumed) is monotonic, so the difference between two packets divided by the
+	 * interval is the true average over that window — including the ticks the block spent asleep, which a
+	 * per-tick sample would simply miss. The first packet has no previous sample and falls back to the
+	 * block's instantaneous rate rather than reporting a bogus average over an unknown span.
+	 */
+	private MachineStatsPayload snapshot(MachineBlockEntity be) {
+		long throughput = be.getEnergyStorage().getTotalEnergyGenerated()
+				+ be.getEnergyStorage().getTotalEnergyConsumed();
+		int windowRate;
+		if (lastThroughputSample < 0) {
+			windowRate = be.currentEuRate();
+		} else {
+			windowRate = (int) Math.min(Integer.MAX_VALUE,
+					Math.max(0L, throughput - lastThroughputSample) / STATS_SYNC_INTERVAL_TICKS);
+		}
+		lastThroughputSample = throughput;
+		return new MachineStatsPayload(containerId, be.activeTicks(),
+				be.getEnergyStorage().getTotalEnergyIn(), be.getEnergyStorage().getTotalEnergyOut(),
+				be.getEnergyStorage().getTotalEnergyGenerated(), be.getEnergyStorage().getTotalEnergyConsumed(),
+				windowRate, be.peakEuRate(), be.countDirectConnections(), be.totalItemsProcessed());
+	}
+
+	/** Client-side: accept a snapshot addressed to THIS menu. A stale packet for another screen is dropped. */
+	public void acceptStats(MachineStatsPayload payload) {
+		if (payload.containerId() != containerId) {
+			return;
+		}
+		this.stats = payload;
+		this.statsReceivedAt = System.currentTimeMillis();
+	}
+
+	/** Client-side: the latest snapshot, or {@code null} before the first packet arrives. */
+	public @Nullable MachineStatsPayload stats() {
+		return stats;
+	}
+
+	/**
+	 * Whether a statistics chip sits in the panel, answered from the CONTAINER rather than the block
+	 * entity so the client can ask it too — vanilla keeps the menu's dummy container in sync with the
+	 * real inventory, while the block entity is server-only. Same trick {@link #installedOverclockerTier}
+	 * uses, and for the same reason.
+	 */
+	public boolean hasStatsChipInPanel() {
+		if (!hasUpgradePanel()) {
+			return false;
+		}
+		int start = baseSlotCount();
+		if (start < 0) {
+			return false;
+		}
+		for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
+			if (machine.getItem(start + i).is(ModTags.Items.UPGRADE_STATS)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Client-side: whether the machine has gone quiet.
+	 *
+	 * <p>Derived from packet silence rather than carried as a flag, because silence is exactly what an idle
+	 * machine produces: an asleep block skips its tick, so its numbers stop changing and the panel would
+	 * otherwise look frozen — indistinguishable from a bug. Two and a half intervals of nothing is the
+	 * threshold, wide enough that a single late packet does not blink the label on.
+	 */
+	public boolean statsAreStale() {
+		return stats != null && System.currentTimeMillis() - statsReceivedAt > STATS_SYNC_INTERVAL_TICKS * 50L * 5 / 2;
 	}
 
 	private void addPlayerInventory(Inventory inventory) {
